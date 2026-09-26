@@ -297,6 +297,23 @@ opened none. Seven remain.
     row into a serial split, which the inventory cannot see; the three stores were then checked
     serial by serial, read-only, and none is split (audit §4.4). It closes here, by prompt 02,, on
     this board's §4.
+  - **Narrowed (2026-09-26) by `datastore-integrity` prompt 01**
+    ([log](../datastore-integrity/logs/01-checked-replicated-write.md)). The write is now **loud and
+    recorded**, not yet repaired. Every replicated get, store and validate goes through one helper,
+    `ShardedPool._replicated_write`, which commits a row in the primary's new
+    `replication_in_flight` table (operation, class, controlling shard, serial, start time) before
+    the controlling shard's call and deletes it only after every replica has answered and been
+    checked. No crash point leaves the shards different with nothing on disk saying so; the log's
+    commit-point table walks each path. Every replica's answer is checked against the
+    controller's serial (a split such as the audit's step 4 now raises `ReplicationMismatch`, and
+    leaves the record set); replica stores of `wavenumber_exit_time` and `BackgroundModel` insert or
+    verify by serial; `BackgroundModel` value rows carry the controller's serials; and one
+    driver-chosen timestamp is stamped on every copy, so correct copies are row-identical. A
+    replicated write refuses over a record that is already set. **What is left, for prompt 02:**
+    nothing yet reads the record at open, so a store left with it set opens and then refuses every
+    replicated write; repairing such a store by copying forward from the recorded controller, and
+    refusing any other divergence (including one written before this change), is prompt 02, which
+    closes this issue.
 - **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
     `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)

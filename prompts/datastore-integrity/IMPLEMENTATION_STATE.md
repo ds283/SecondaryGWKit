@@ -1,6 +1,6 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-26 · **Status: 1 of 10 prompts landed (01). 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
 and 04 are ready.
@@ -50,7 +50,7 @@ becomes an exact match; the adjacent issues are out of scope.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
+| 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Make the replicated write checked, idempotent and recorded"* | [`logs/01-…`](logs/01-checked-replicated-write.md) |
 | 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
@@ -75,10 +75,10 @@ what 01–04 find; what waits is their method.
 
 | Item | Kind | Description | Prompt | Status |
 |---|---|---|---|---|
-| W1 | **FACILITY** | `replication_in_flight` in the primary: one row, committed before the controller's call, deleted after the last replica returns. One helper through which the get, store and validate paths all go. | 01 | ⬜ |
-| W2 | **GUARD** | Every replica's answer checked against the controller's serial, scalar and vector forms; `ReplicationMismatch` names the shard, class and both serials. | 01 | ⬜ |
-| W3 | **REMEDY** | Replica stores of `wavenumber_exit_time` and `BackgroundModel` insert-or-verify by serial; `BackgroundModel` replicas pass each value's serial, so copies are row-identical. | 01 | ⬜ |
-| W4 | **REMEDY** | One timestamp per replicated write, chosen by the driver and passed to every shard through `Datastore._insert`. | 01 | ⬜ |
+| W1 | **FACILITY** | `replication_in_flight` in the primary: one row, committed before the controller's call, deleted after the last replica returns. One helper through which the get, store and validate paths all go. | 01 | ✅ `ShardedPool._replicated_write`; the record is committed before every replicated call, and left set by any failure after it |
+| W2 | **GUARD** | Every replica's answer checked against the controller's serial, scalar and vector forms; `ReplicationMismatch` names the shard, class and both serials. | 01 | ✅ `Datastore/replication.py`; get (both forms), store and validate checked before the record is cleared |
+| W3 | **REMEDY** | Replica stores of `wavenumber_exit_time` and `BackgroundModel` insert-or-verify by serial; `BackgroundModel` replicas pass each value's serial, so copies are row-identical. | 01 | ✅ |
+| W4 | **REMEDY** | One timestamp per replicated write, chosen by the driver and passed to every shard through `Datastore._insert`. | 01 | ✅ `insert_timestamp`, a per-call argument; absent on every sharded write |
 | W5 | **FACILITY** | `_reconcile_replicated_tables()` in the constructor, before any actor, no Ray: hot journals rolled back, every replicated table compared across shards by full row (timestamp exempt for old rows). | 02 | ⬜ |
 | W6 | **REMEDY** | With an in-flight record set, the missing rows of its class copied forward from its controller, `BackgroundModel` as a unit with `validated` recomputed; the record then cleared. | 02 | ⬜ |
 | W7 | **GUARD** | Any other difference refuses the open with `ReplicatedDivergence`, including a serial split and a row the controller lacks. Closes `[00-replicated-writes-can-diverge-across-shards]`. | 02 | ⬜ |
@@ -125,7 +125,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 
 | Issue | Owning board | Prompt |
 |---|---|---|
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | 01, closed by 02 |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | 01 (**narrowed** 2026-09-26), closed by 02 |
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | 03 |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
@@ -179,3 +179,17 @@ None yet.
 ## 5. Baselines
 
 README §7. Re-measured at every dispatch.
+
+### 5.1 After prompt 01 (2026-09-26)
+
+Measured on the tree of prompt 01's commit, with README §7's command. Before it, at `65cd4b7`: the
+same, with Datastore at 206.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK (the known wall-clock flake did not fire) |
+| CosmologyModels | 39 OK |
+| Datastore | **232 OK** (206 + the 26 of `test_replicated_write.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint unchanged |

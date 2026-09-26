@@ -638,6 +638,171 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         # is a replica, rather than a fresh insert. If so, it's _my_id field will be set.
         if hasattr(obj, "_my_id") and obj._my_id is not None:
             payload.update({"serial": obj._my_id})
+        replica = "serial" in payload
+
+        # now serialize the sampled output points
+        units: UnitsLike = obj._units
+        GeV = units.GeV
+        GeV4 = pow(GeV, 4.0)
+        Kelvin = units.Kelvin
+        Mpc = units.Mpc
+
+        def value_payload(value: BackgroundModelValue, model_serial: int) -> dict:
+            return {
+                "model_serial": model_serial,
+                "z_serial": value.z.store_id,
+                "Hubble_GeV": value.Hubble / GeV,
+                "rho_GeV": value.rho / GeV4,
+                "wBackground": value.wBackground,
+                "wPerturbations": value.wPerturbations,
+                "tau_Mpc": value.tau / Mpc,
+                "tau_lo_Mpc": value.tau_lo / Mpc,
+                "cs_tau_Mpc": value.cs_tau / Mpc,
+                "cs_tau_lo_Mpc": value.cs_tau_lo / Mpc,
+                "friction_F": value.friction_F,
+                "T_photon_GeV": value.T_photon / GeV,
+                "T_photon_Kelvin": value.T_photon / Kelvin,
+                "d_lnH_dz": value.d_lnH_dz,
+                "d2_lnH_dz2": value.d2_lnH_dz2,
+                "d3_lnH_dz3": value.d3_lnH_dz3,
+                "d_wPerturbations_dz": value.d_wPerturbations_dz,
+                "d2_wPerturbations_dz2": value.d2_wPerturbations_dz2,
+            }
+
+        # a replica carries the controlling shard's serial, and so does each of its values:
+        # ShardedPool sends every other shard the controller's stored object. A replica inserts or
+        # verifies, by serial (prompts/datastore-integrity, prompt 01, W3), and writes each value
+        # row under the controller's value serial, so that every copy is row-identical:
+        #   - no row with this serial and no row with this key: insert it under the serial;
+        #   - a row with this serial whose columns, tags and value rows equal the object's: return
+        #     it, write nothing;
+        #   - a row with this serial that differs, or the key held under another serial: raise.
+        # The controlling shard's own store (no serial yet) is unchanged.
+        if replica:
+            from Datastore.replication import ReplicationMismatch, differing_columns
+
+            serial = payload["serial"]
+            tag_table = tables["BackgroundModel_tags"]
+            value_table = tables["BackgroundModelValue"]
+            tag_serials = sorted(tag.store_id for tag in obj.tags)
+
+            def mismatch(replica_serial, detail):
+                return ReplicationMismatch(
+                    None, "BackgroundModel", serial, replica_serial, detail=detail
+                )
+
+            def stored_tags(model_serial):
+                return sorted(
+                    conn.execute(
+                        sqla.select(tag_table.c.tag_serial).filter(
+                            tag_table.c.model_serial == model_serial
+                        )
+                    )
+                    .scalars()
+                    .all()
+                )
+
+            row = (
+                conn.execute(sqla.select(table).filter(table.c.serial == serial))
+                .mappings()
+                .one_or_none()
+            )
+            if row is not None:
+                # "validated" is not compared: store() writes False, and validate() is what
+                # sets it afterwards
+                differing = differing_columns(
+                    {k: v for k, v in payload.items() if k != "validated"}, row
+                )
+                if len(differing) > 0:
+                    raise mismatch(
+                        serial, f"the row under this serial differs in {differing}"
+                    )
+                if stored_tags(serial) != tag_serials:
+                    raise mismatch(
+                        serial,
+                        f"its tags are {stored_tags(serial)}, the controller's {tag_serials}",
+                    )
+
+                stored_values = {
+                    r["serial"]: r
+                    for r in conn.execute(
+                        sqla.select(value_table).filter(
+                            value_table.c.model_serial == serial
+                        )
+                    ).mappings()
+                }
+                expected_values = {value._my_id: value for value in obj.values}
+                if set(stored_values) != set(expected_values):
+                    raise mismatch(
+                        serial,
+                        f"its value rows have serials {sorted(stored_values)}, "
+                        f"the controller's {sorted(expected_values)}",
+                    )
+                for value_serial, value in expected_values.items():
+                    differing = differing_columns(
+                        value_payload(value, serial), stored_values[value_serial]
+                    )
+                    if len(differing) > 0:
+                        raise mismatch(
+                            serial,
+                            f"value row {value_serial} differs in {differing}",
+                        )
+                return obj
+
+            # the key is what build() would serve: the identity columns the inventory reads,
+            # among validated rows, with exactly these tags. An unvalidated row of the same key
+            # is not served by build(), and a store interrupted before its validation leaves one
+            # on every shard, which a later store legitimately writes beside
+            key_columns = (
+                "cosmology_type",
+                "cosmology_serial",
+                "tau_gauss_order",
+                "cs_tau_gauss_order",
+                "friction_F_gauss_order",
+                "source_grid_digest",
+                "source_grid_construction",
+                "z_init_serial",
+            )
+            candidates = (
+                conn.execute(
+                    sqla.select(table.c.serial).filter(
+                        table.c.validated == True,
+                        *[table.c[name] == payload[name] for name in key_columns],
+                    )
+                )
+                .scalars()
+                .all()
+            )
+            for other in candidates:
+                if stored_tags(other) == tag_serials:
+                    raise mismatch(other, "the key is held under another serial")
+
+            # the value serials are the controller's, and none may already be taken here. They
+            # are looked for by range and intersected, so no statement grows with the sample count
+            value_serials = [value._my_id for value in obj.values]
+            if any(value_serial is None for value_serial in value_serials):
+                raise mismatch(
+                    serial, "the controller's object does not carry its value serials"
+                )
+            existing_values = set()
+            if len(value_serials) > 0:
+                in_range = (
+                    conn.execute(
+                        sqla.select(value_table.c.serial).filter(
+                            value_table.c.serial.between(
+                                min(value_serials), max(value_serials)
+                            )
+                        )
+                    )
+                    .scalars()
+                    .all()
+                )
+                existing_values = set(in_range) & set(value_serials)
+            if len(existing_values) > 0:
+                raise mismatch(
+                    serial,
+                    f"value serials {sorted(existing_values)} are already taken on this shard",
+                )
 
         store_id = inserter(conn, payload)
 
@@ -651,39 +816,14 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 conn, tag_inserter, obj, tag
             )
 
-        # now serialize the sampled output points
-        units: UnitsLike = obj._units
-        GeV = units.GeV
-        GeV4 = pow(GeV, 4.0)
-        Kelvin = units.Kelvin
-        Mpc = units.Mpc
-
         value_inserter = inserters["BackgroundModelValue"]
         for value in obj.values:
             value: BackgroundModelValue
-            value_id = value_inserter(
-                conn,
-                {
-                    "model_serial": store_id,
-                    "z_serial": value.z.store_id,
-                    "Hubble_GeV": value.Hubble / GeV,
-                    "rho_GeV": value.rho / GeV4,
-                    "wBackground": value.wBackground,
-                    "wPerturbations": value.wPerturbations,
-                    "tau_Mpc": value.tau / Mpc,
-                    "tau_lo_Mpc": value.tau_lo / Mpc,
-                    "cs_tau_Mpc": value.cs_tau / Mpc,
-                    "cs_tau_lo_Mpc": value.cs_tau_lo / Mpc,
-                    "friction_F": value.friction_F,
-                    "T_photon_GeV": value.T_photon / GeV,
-                    "T_photon_Kelvin": value.T_photon / Kelvin,
-                    "d_lnH_dz": value.d_lnH_dz,
-                    "d2_lnH_dz2": value.d2_lnH_dz2,
-                    "d3_lnH_dz3": value.d3_lnH_dz3,
-                    "d_wPerturbations_dz": value.d_wPerturbations_dz,
-                    "d2_wPerturbations_dz2": value.d2_wPerturbations_dz2,
-                },
-            )
+            value_data = value_payload(value, store_id)
+            if replica:
+                # the controller's serial for this value row
+                value_data["serial"] = value._my_id
+            value_id = value_inserter(conn, value_data)
 
             # set store_id on behalf of the GkNumericValue instance
             value._my_id = value_id

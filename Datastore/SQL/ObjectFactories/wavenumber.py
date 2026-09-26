@@ -313,6 +313,62 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         if hasattr(obj, "_my_id") and obj._my_id is not None:
             payload.update({"serial": obj._my_id})
 
+        # an object that already carries a serial is a replica: ShardedPool sends every other
+        # shard the controlling shard's stored object. A replica inserts or verifies, by serial
+        # (prompts/datastore-integrity, prompt 01, W3):
+        #   - no row with this serial and no row with this key: insert it under the serial;
+        #   - a row with this serial whose columns equal the object's: return it, write nothing;
+        #   - a row with this serial that differs, or the key held under another serial: raise.
+        # The controlling shard's own store (no serial yet) is unchanged.
+        if "serial" in payload:
+            from Datastore.replication import ReplicationMismatch, differing_columns
+
+            serial = payload["serial"]
+            row = (
+                conn.execute(sqla.select(table).filter(table.c.serial == serial))
+                .mappings()
+                .one_or_none()
+            )
+            if row is not None:
+                differing = differing_columns(payload, row)
+                if len(differing) > 0:
+                    raise ReplicationMismatch(
+                        None,
+                        "wavenumber_exit_time",
+                        serial,
+                        serial,
+                        detail=f"the row under this serial differs in {differing}",
+                    )
+                return obj
+
+            # the key is what the inventory takes as this row's identity: the wavenumber, the
+            # cosmology (type and row), atol, rtol and stepping, compared exactly
+            key_columns = (
+                "wavenumber_serial",
+                "cosmology_type",
+                "cosmology_serial",
+                "atol_serial",
+                "rtol_serial",
+                "stepping",
+            )
+            others = (
+                conn.execute(
+                    sqla.select(table.c.serial).filter(
+                        *[table.c[name] == payload[name] for name in key_columns]
+                    )
+                )
+                .scalars()
+                .all()
+            )
+            if len(others) > 0:
+                raise ReplicationMismatch(
+                    None,
+                    "wavenumber_exit_time",
+                    serial,
+                    others[0],
+                    detail="the key is held under another serial",
+                )
+
         store_id = inserter(conn, payload)
 
         # set store_id on behalf of constructed object

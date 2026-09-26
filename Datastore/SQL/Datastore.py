@@ -74,6 +74,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
 )
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
 from Datastore.SQL.schema import build_schema
+from Datastore.replication import ReplicationMismatch
 from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
@@ -389,7 +390,18 @@ class Datastore:
                 for line in msgs:
                     print(line)
 
-    def object_get(self, ObjectClass, **kwargs):
+    def object_get(
+        self, ObjectClass, *, insert_timestamp: Optional[datetime] = None, **kwargs
+    ):
+        """
+        Get-or-insert one object (keyword payload) or several (``payload_data``).
+
+        ``insert_timestamp``, when given, is the timestamp every row this call inserts is stamped
+        with, in place of ``datetime.now()``. ShardedPool passes one per replicated write, the
+        same to every shard, so that copies of a replicated row are identical
+        (prompts/datastore-integrity, prompt 01). It is a per-call argument and never actor state.
+        Without it the call behaves exactly as before; no sharded write passes it.
+        """
         if isinstance(ObjectClass, str):
             cls_name = ObjectClass
         else:
@@ -408,7 +420,10 @@ class Datastore:
             record = self._schema[cls_name]
 
             tab = record["table"]
-            inserter = record["insert"]
+
+            # the inserters for this call: the actor's own, or bound to the override
+            inserters = self._inserters_for(insert_timestamp)
+            inserter = inserters.get(cls_name, record["insert"])
 
             # obtain type of factory class for this storable
             factory = self._factories[cls_name]
@@ -433,7 +448,7 @@ class Datastore:
                             table=tab,
                             inserter=inserter,
                             tables=self._tables,
-                            inserters=self._inserters,
+                            inserters=inserters,
                         )
                         for p in payload_data
                     ]
@@ -490,7 +505,15 @@ class Datastore:
 
         return objects
 
-    def object_store(self, objects):
+    def object_store(self, objects, *, insert_timestamp: Optional[datetime] = None):
+        """
+        Store one object or a list of them.
+
+        ``insert_timestamp`` is as for object_get: the timestamp of every row this call inserts,
+        in place of ``datetime.now()``, passed by ShardedPool for a replicated store and by
+        nothing else. A replica's store() may raise ReplicationMismatch, which does not know its
+        shard; it is re-raised here naming this actor.
+        """
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False
@@ -506,6 +529,7 @@ class Datastore:
         ) as mgr:
             store_data = {}
             output_objects = []
+            inserters = self._inserters_for(insert_timestamp)
             with self._engine.begin() as conn:
                 for obj in payload_data:
                     cls_name = type(obj).__name__
@@ -518,20 +542,22 @@ class Datastore:
                         record = self._schema[cls_name]
 
                         tab = record["table"]
-                        inserter = record["insert"]
+                        inserter = inserters.get(cls_name, record["insert"])
 
                         factory = self._factories[cls_name]
 
-                        output_objects.append(
-                            factory.store(
+                        try:
+                            stored = factory.store(
                                 obj,
                                 conn=conn,
                                 table=tab,
                                 inserter=inserter,
                                 tables=self._tables,
-                                inserters=self._inserters,
+                                inserters=inserters,
                             )
-                        )
+                        except ReplicationMismatch as e:
+                            raise e.with_shard(self._my_name)
+                        output_objects.append(stored)
 
                     cls_data["number"] += 1
                     cls_data["time"] += item_timer.elapsed
@@ -547,7 +573,34 @@ class Datastore:
 
         return output_objects
 
-    def _insert(self, schema, table, conn, payload):
+    def _inserters_for(self, insert_timestamp: Optional[datetime]):
+        """
+        The inserters for one call. With no timestamp override they are the actor's own, exactly
+        as before. With one, every table's inserter is bound to it for this call only: the
+        override travels in the call's arguments and is never kept on the actor, so one call's
+        timestamp cannot leak into the next.
+        """
+        if insert_timestamp is None:
+            return self._inserters
+
+        return {
+            cls_name: functools.partial(
+                self._insert,
+                self._schema[cls_name],
+                tab,
+                insert_timestamp=insert_timestamp,
+            )
+            for cls_name, tab in self._tables.items()
+        }
+
+    def _insert(
+        self,
+        schema,
+        table,
+        conn,
+        payload,
+        insert_timestamp: Optional[datetime] = None,
+    ):
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (schema='{schema}')")
 
@@ -580,7 +633,12 @@ class Datastore:
             if uses_version:
                 payload = payload | {"version": self._version.store_id}
             if uses_timestamp:
-                payload = payload | {"timestamp": datetime.now()}
+                # a replicated write stamps every shard with the driver's one timestamp
+                # (object_get / object_store); every other insert stamps its own time
+                timestamp = (
+                    insert_timestamp if insert_timestamp is not None else datetime.now()
+                )
+                payload = payload | {"timestamp": timestamp}
             if uses_stepping:
                 if "stepping" not in payload:
                     raise KeyError("Expected 'stepping' field in payload")

@@ -14,6 +14,7 @@ from Datastore.SQL import Datastore
 from Datastore.SQL.Datastore import PathType, ReadTableConfigType
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
+from Datastore.replication import ReplicationInFlight, ReplicationMismatch
 from Datastore.shard_paths import (
     resolve_shard_path,
     is_legacy_record,
@@ -41,6 +42,21 @@ class _RelocationPlan(NamedTuple):
     dst_files: Dict[int, Path]
     dst_records: Dict[int, str]
     temp_primary: Optional[Path]
+
+
+class _Replication(NamedTuple):
+    """
+    What follows a controlling shard's answer in a replicated write (ShardedPool._replicated_write):
+    the serial to record, how to submit the call to one replica, and how to check its answer.
+    """
+
+    # the store_id to write into the in-flight record, or None if there is no single one (a
+    # vectorized get)
+    store_id: Optional[int]
+    # submit(handle, timestamp) -> ref: the call to one replica
+    submit: Callable
+    # check(shard_id, answer): raise ReplicationMismatch if the replica's answer differs
+    check: Callable
 
 
 class _DeletionPlan(NamedTuple):
@@ -128,6 +144,9 @@ class ShardedPool:
 
         self._profile_agent = profile_agent
 
+        # true only while _replicated_write runs; replicated calls never overlap in the driver
+        self._replication_active: bool = False
+
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
             raise RuntimeError(
@@ -166,6 +185,10 @@ class ShardedPool:
             # fail closed, before any actor exists: a Datastore actor given a missing shard file
             # creates an empty database there, and the pool would open with nothing in it
             self._check_shard_files()
+
+            # a store written before the replicated write was recorded has no in-flight table;
+            # create it, empty, only once the store has been checked
+            self._replication_in_flight_table.create(self._engine, checkfirst=True)
 
             num_shards = len(self._shard_db_files)
             print(
@@ -330,6 +353,23 @@ class ShardedPool:
             sqla.Column("table", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
             sqla.Column("key_attr", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
         )
+        # at most one row, naming the replicated write in progress: committed before the
+        # controlling shard's call is submitted and deleted after the last replica's call has
+        # returned and been checked (_replicated_write). A row here means the shards may differ,
+        # and that the controlling shard's rows of this class are the right ones
+        self._replication_in_flight_table = sqla.Table(
+            "replication_in_flight",
+            self._metadata,
+            sqla.Column(
+                "operation", sqla.String(DEFAULT_STRING_LENGTH), nullable=False
+            ),
+            sqla.Column(
+                "class_name", sqla.String(DEFAULT_STRING_LENGTH), nullable=False
+            ),
+            sqla.Column("controller_shard", sqla.Integer, nullable=False),
+            sqla.Column("store_id", sqla.Integer, nullable=True),
+            sqla.Column("started", sqla.DateTime(), nullable=False),
+        )
 
     def _write_shard_data(self):
         self._shard_file_table.create(self._engine)
@@ -337,6 +377,7 @@ class ShardedPool:
         self._shard_key_table.create(self._engine)
         self._replicated_tables_table.create(self._engine)
         self._sharded_tables_table.create(self._engine)
+        self._replication_in_flight_table.create(self._engine)
 
         # each shard is recorded relative to the primary's directory. Every shard is created as a
         # sibling of the primary, so this is its bare file name, and the store stays readable when
@@ -1158,85 +1199,215 @@ class ShardedPool:
             f'Unable to dispatch object_get() for item of type "{cls_name}"'
         )
 
-    def _get_impl_replicated_table(self, cls_name, kwargs):
-        # pick a shard id at random to be the "controlling" shard.
-        # we will push an initial 'get' to this controlling shard.
-        # if a new database object was created by the get, we then have to push a replica
-        # to all the other shards
-        shard_ids = list(self._shards.keys())
-        i = random.randrange(len(shard_ids))
+    # THE REPLICATED WRITE
+    #
+    # A replicated object is written on a controlling shard, chosen at random per call, and then
+    # sent to every other shard, each in its own transaction. _replicated_write is the one path
+    # the get, store and validate of a replicated class take, and the one place that writes and
+    # clears the primary's replication_in_flight record (prompts/datastore-integrity, prompt 01):
+    #
+    #   1. the record is committed on the primary, in its own transaction, naming the operation,
+    #      the class and the controlling shard. If one is already there, nothing is written;
+    #   2. the controlling shard's call is submitted and its answer read;
+    #   3. if a replication follows, the record's store_id is filled in (when there is one) and
+    #      every replica's call is submitted, each with the controller's serial;
+    #   4. every replica's answer is checked against the controller's; a difference raises
+    #      ReplicationMismatch;
+    #   5. only then is the record deleted.
+    #
+    # Any exception after step 1 leaves the record set, whether or not the shards in fact differ:
+    # a failure reported by the controlling shard may have followed its commit (an actor that dies
+    # after committing), and the record is what says so. One timestamp, chosen here, is passed to
+    # every shard, so that copies of a row are identical.
 
-        # swap this entry with the last element, then pop it
-        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
-        shard_key = shard_ids.pop()
+    def _replicated_write(
+        self,
+        operation: str,
+        cls_name: str,
+        submit_controller: Callable,
+        replication: Callable,
+        store_id: Optional[int] = None,
+    ):
+        """
+        Run one replicated write, and return (the controlling shard's ref, its answer).
 
-        # for replicated tables, we should query/insert into *one* datastore, and then enforce
-        # that all other datastores get the same store_id; here, there is no need to use our internal
-        # information about the next-allocated store_id, and in fact doing so would make the logic
-        # here much more complicated. So we avoid that.
-        ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
-        objects = ray.get(ref)
+        ``submit_controller(handle, timestamp)`` submits the controlling shard's call and returns
+        its ref. ``replication(controller_shard_id, answer)`` returns None if nothing is to be
+        replicated, or a _Replication saying how. ``store_id`` is written into the record at once
+        when it is known before the controller's call (a validate).
+        """
+        if getattr(self, "_replication_active", False):
+            # replicated calls never overlap in the driver (audit §4.1); this makes it an assertion
+            raise RuntimeError(
+                f'ShardedPool: a replicated {operation} of "{cls_name}" was started while another '
+                "replicated write was in progress. Replicated writes must not overlap"
+            )
+        self._replication_active = True
+        try:
+            # pick a shard id at random to be the "controlling" shard: swap this entry with the
+            # last element, then pop it
+            shard_ids = list(self._shards.keys())
+            i = random.randrange(len(shard_ids))
+            shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+            controller = shard_ids.pop()
 
-        # was this a vectorized get?
-        if "payload_data" in kwargs:
-            payload_data = kwargs["payload_data"]
+            # the one timestamp of this write, and the record's start time
+            timestamp = datetime.now()
 
-            if len(payload_data) != len(objects):
-                raise RuntimeError(
-                    f"object_get() data returned from selected datastore (shared={shard_key}) has a different length (length={len(objects)}) to payload data (length={len(payload_data)})"
+            record_table = self._replication_in_flight_table
+
+            # 1. the record, committed before the controlling shard's call is submitted
+            with self._engine.begin() as conn:
+                existing = conn.execute(sqla.select(record_table)).mappings().first()
+                if existing is not None:
+                    raise ReplicationInFlight(self._primary_file, dict(existing))
+                conn.execute(
+                    sqla.insert(record_table),
+                    {
+                        "operation": operation,
+                        "class_name": cls_name,
+                        "controller_shard": controller,
+                        "store_id": store_id,
+                        "started": timestamp,
+                    },
                 )
 
-            # add explicit serial specifier
-            new_payload = []
-            for i in range(len(payload_data)):
-                # if this object has a valid store_id and has the _new_insert or _updated metadata
-                # flags set, push to all the remaining shards in order to keep them in sync
-                if (
-                    hasattr(objects[i], "_my_id")
-                    and objects[i]._my_id is not None
-                    and (
-                        hasattr(objects[i], "_new_insert")
-                        or hasattr(objects[i], "_updated")
-                    )
-                ):
-                    payload_data[i]["serial"] = objects[i].store_id
-                    new_payload.append(payload_data[i])
+            # 2. the controlling shard
+            ref = submit_controller(self._shards[controller], timestamp)
+            answer = ray.get(ref)
 
-            # queue work items to replicate each object in all other shards (recall that shard_key has already been popped from shard_ids,
-            # so there is no double insertion here)
-            ray.get(
-                [
-                    self._shards[key].object_get.remote(
-                        cls_name, payload_data=new_payload
-                    )
+            # 3. the replicas, if anything is to be replicated
+            plan = replication(controller, answer)
+            if plan is not None:
+                if plan.store_id is not None and plan.store_id != store_id:
+                    with self._engine.begin() as conn:
+                        result = conn.execute(
+                            sqla.update(record_table).values(store_id=plan.store_id)
+                        )
+                        if result.rowcount != 1:
+                            raise RuntimeError(
+                                f"ShardedPool: the replication_in_flight record of a replicated "
+                                f'{operation} of "{cls_name}" has {result.rowcount} rows, expected 1'
+                            )
+
+                # every replica's call is submitted before any answer is read
+                replica_refs = [
+                    (key, plan.submit(self._shards[key], timestamp))
                     for key in shard_ids
                 ]
-            )
-        else:
-            # this was a scalar get
+                replica_answers = ray.get([r for _, r in replica_refs])
 
-            # if this object has a valid store_id and has the _new_insert or _updated
-            # metadata flags set, push to all remaining shards in order to keep them in sync
-            if (
-                hasattr(objects, "_my_id")
-                and objects._my_id is not None
-                and (hasattr(objects, "_new_insert") or hasattr(objects, "_updated"))
-            ):
-                ray.get(
-                    [
-                        self._shards[key].object_get.remote(
-                            cls_name, serial=objects.store_id, **kwargs
+                # 4. every answer checked against the controller's, before the record is cleared
+                for (key, _), replica_answer in zip(replica_refs, replica_answers):
+                    plan.check(key, replica_answer)
+
+            # 5. every shard holds what the controller holds: clear the record
+            with self._engine.begin() as conn:
+                result = conn.execute(sqla.delete(record_table))
+                if result.rowcount != 1:
+                    raise RuntimeError(
+                        f"ShardedPool: the replication_in_flight record of a replicated "
+                        f'{operation} of "{cls_name}" has {result.rowcount} rows, expected 1'
+                    )
+
+            return ref, answer
+
+        finally:
+            self._replication_active = False
+
+    @staticmethod
+    def _needs_replication(obj) -> bool:
+        """A get's answer is replicated if it has a serial and was inserted or updated."""
+        return (
+            hasattr(obj, "_my_id")
+            and obj._my_id is not None
+            and (hasattr(obj, "_new_insert") or hasattr(obj, "_updated"))
+        )
+
+    def _get_impl_replicated_table(self, cls_name, kwargs):
+        # we push an initial 'get' to the controlling shard. If a new database object was created
+        # (or an existing one updated) by the get, we then push a replica to all the other shards,
+        # with the controller's store_id, and require each to answer with that store_id.
+        # For replicated tables there is no need to use our internal information about the
+        # next-allocated store_id, and in fact doing so would make the logic here much more
+        # complicated. So we avoid that.
+        def submit_controller(handle, timestamp):
+            return handle.object_get.remote(
+                cls_name, insert_timestamp=timestamp, **kwargs
+            )
+
+        def replication(controller, objects):
+            # was this a vectorized get?
+            if "payload_data" in kwargs:
+                payload_data = kwargs["payload_data"]
+
+                if len(payload_data) != len(objects):
+                    raise RuntimeError(
+                        f"object_get() data returned from selected datastore (shared={controller}) has a different length (length={len(objects)}) to payload data (length={len(payload_data)})"
+                    )
+
+                # add explicit serial specifier to each object that must be replicated
+                new_payload = []
+                expected = []
+                for i in range(len(payload_data)):
+                    if ShardedPool._needs_replication(objects[i]):
+                        payload_data[i]["serial"] = objects[i].store_id
+                        new_payload.append(payload_data[i])
+                        expected.append(objects[i].store_id)
+
+                # a get that inserts nothing needs no replication
+                if len(new_payload) == 0:
+                    return None
+
+                def submit(handle, timestamp):
+                    return handle.object_get.remote(
+                        cls_name, insert_timestamp=timestamp, payload_data=new_payload
+                    )
+
+                def check(shard_id, answers):
+                    returned = [getattr(a, "_my_id", None) for a in answers]
+                    if len(returned) != len(expected):
+                        raise ReplicationMismatch(
+                            shard_id,
+                            cls_name,
+                            expected,
+                            returned,
+                            detail=f"the replica returned {len(returned)} objects for {len(expected)}",
                         )
-                        for key in shard_ids
-                    ]
+                    for want, got in zip(expected, returned):
+                        if got != want:
+                            raise ReplicationMismatch(shard_id, cls_name, want, got)
+
+                return _Replication(store_id=None, submit=submit, check=check)
+
+            # this was a scalar get
+            if not ShardedPool._needs_replication(objects):
+                return None
+
+            serial = objects.store_id
+
+            def submit(handle, timestamp):
+                return handle.object_get.remote(
+                    cls_name, serial=serial, insert_timestamp=timestamp, **kwargs
                 )
+
+            def check(shard_id, answer):
+                got = getattr(answer, "_my_id", None)
+                if got != serial:
+                    raise ReplicationMismatch(shard_id, cls_name, serial, got)
+
+            return _Replication(store_id=serial, submit=submit, check=check)
+
+        ref, objects = self._replicated_write(
+            "get", cls_name, submit_controller, replication
+        )
 
         # test whether this query was for a shard key, and, if so, assign any shard keys
         # that are missing
         if cls_name == self._ShardKeyType_name:
             self._assign_shard_keys(objects)
 
-        # return original object (we just discard any copies returned from other shards)
+        # return the controlling shard's object; every replica's answer has been checked against it
         return ref
 
     def _get_impl_sharded_table(self, cls_name, kwargs):
@@ -1345,29 +1516,52 @@ class ShardedPool:
 
         return work_refs
 
+    @staticmethod
+    def _value_serials(obj) -> Optional[List[Optional[int]]]:
+        """The serials of an object's value rows, if it carries any (BackgroundModel), else None."""
+        values = getattr(obj, "_values", None)
+        if values is None:
+            return None
+        return [getattr(value, "_my_id", None) for value in values]
+
     def _store_impl_replicated_table(self, cls_name, item):
-        # pick a shard id at random to be the "controlling" shard
-        # we will push an initial 'store' to this controlling shard.
-        # if a new database object was created by the get, we then have to push a replica
-        # to all the other shards
-        shard_ids = list(self._shards.keys())
-        i = random.randrange(len(shard_ids))
+        # we push an initial 'store' to the controlling shard, and then push the object, complete
+        # with its new store_id (and its value rows' serials), to all the other shards, each of
+        # which inserts it under those serials or verifies that it already holds it
+        def submit_controller(handle, timestamp):
+            return handle.object_store.remote(item, insert_timestamp=timestamp)
 
-        # swap this entry with the last element, then pop it
-        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
-        shard_key = shard_ids.pop()
+        def replication(controller, obj):
+            if not hasattr(obj, "_my_id") or obj._my_id is None:
+                raise RuntimeError(
+                    f'Stored object of type "{cls_name}" was not assigned a store_id field'
+                )
 
-        ref = self._shards[shard_key].object_store.remote(item)
-        obj = ray.get(ref)
+            serial = obj._my_id
+            value_serials = ShardedPool._value_serials(obj)
 
-        # now push the object, complete with its new 'store_id', to all the other shards
-        if not hasattr(obj, "_my_id") or obj._my_id is None:
-            raise RuntimeError(
-                f'Stored object of type "{cls_name}" was not assigned a store_id field'
-            )
+            def submit(handle, timestamp):
+                return handle.object_store.remote(obj, insert_timestamp=timestamp)
 
-        ray.get([self._shards[key].object_store.remote(obj) for key in shard_ids])
+            def check(shard_id, answer):
+                got = getattr(answer, "_my_id", None)
+                if got != serial:
+                    raise ReplicationMismatch(shard_id, cls_name, serial, got)
+                got_values = ShardedPool._value_serials(answer)
+                if got_values != value_serials:
+                    raise ReplicationMismatch(
+                        shard_id,
+                        cls_name,
+                        serial,
+                        got,
+                        detail=f"its value rows have serials {got_values}, the controller's {value_serials}",
+                    )
 
+            return _Replication(store_id=serial, submit=submit, check=check)
+
+        ref, _ = self._replicated_write(
+            "store", cls_name, submit_controller, replication
+        )
         return [ref]
 
     def _store_impl_sharded_table(self, cls_name, item):
@@ -1418,32 +1612,40 @@ class ShardedPool:
         return work_refs
 
     def _validate_impl_replicated_table(self, cls_name, item):
-        # pick a shard id at random to be the "controlling" shard
-        # we will push an initial 'validate' to this controlling shard.
-        shard_ids = list(self._shards.keys())
-        i = random.randrange(len(shard_ids))
+        # we push an initial 'validate' to the controlling shard. If it validates, every other
+        # shard validates its own copy, and every outcome must equal the controller's
+        serial = getattr(item, "_my_id", None)
 
-        # swap this entry with the last element, then pop it
-        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
-        shard_key = shard_ids.pop()
+        def submit_controller(handle, timestamp):
+            return handle.object_validate.remote(item)
 
-        ref = self._shards[shard_key].object_validate.remote(item)
-        outcome = ray.get(ref)
+        def replication(controller, outcome):
+            # if object did not validate, do not push validation requests to remaining shards
+            if outcome is False or outcome is None:
+                return None
 
-        # if object did not validate, do not push validation requests to remaining shards
-        if outcome is False or outcome is None:
-            return [ref]
+            def submit(handle, timestamp):
+                return handle.object_validate.remote(item)
 
-        outcomes = ray.get(
-            [self._shards[key].object_validate.remote(item) for key in shard_ids]
+            def check(shard_id, replica_outcome):
+                if replica_outcome != outcome:
+                    print(f"!! Validation outcomes did not agree between shards:")
+                    print(
+                        f"|    controller (shard {controller}) = {outcome}, shard {shard_id} = {replica_outcome}"
+                    )
+                    raise ReplicationMismatch(
+                        shard_id,
+                        cls_name,
+                        serial,
+                        serial,
+                        detail=f"its validation outcome is {replica_outcome}, the controller's {outcome}",
+                    )
+
+            return _Replication(store_id=serial, submit=submit, check=check)
+
+        ref, _ = self._replicated_write(
+            "validate", cls_name, submit_controller, replication, store_id=serial
         )
-        if any(oc is not True for oc in outcomes):
-            print(f"!! Validation outcomes did not agree between shards:")
-            print(f"|    outcomes = {outcomes}")
-            raise RuntimeError(
-                f'Object validation produced different outcomes on different shards for replicated object of type "{cls_name}"'
-            )
-
         return [ref]
 
     def _validate_impl_sharded_table(self, cls_name, item):
