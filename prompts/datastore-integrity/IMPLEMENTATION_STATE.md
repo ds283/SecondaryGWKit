@@ -1,9 +1,9 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 2 of 10 prompts landed (01, 04). 01–04 and 06–09 are
-written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
-the same day. 05 waits on the orchestrator's release, against 04's `KNOWN_UNFIXED` /
-`KNOWN_UNFIXED_COLUMNS` list, and 10 on 01–09. `store-retirement`
+**Last updated:** 2026-09-26 · **Status: 2 of 10 prompts landed (01, 04), both reviewed. 01–04 and
+06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+the same day. 05 is written against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists once the
+user has decided on the 04 review's findings (§1), and 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -126,6 +126,74 @@ dispatched one at a time, never concurrently in this checkout, in either order.
 - Opening an existing store with this tree adds an empty table to its primary. The sidecar records
   no file hash, and the inventory reads only shards, so no fingerprint moves (log 01,
   observation 3).
+
+**Orchestrator review of prompt 04 (2026-09-26).** Run against `6a97d8a`, dispatched from
+`304ad95` with the tree and the index clean. Checks 1, 5, 6 and 8 passed. Checks 2, 3, 4 and 7
+passed with the findings below. Nothing on a build path, so §5's stop did not fire.
+- **Scope.** Five files: the one named test module, the log, the two boards and the index.
+  `Datastore/SQL/` and `docs/datastore-integrity-audit/` are untouched, and no other test file is
+  modified.
+- **Nothing weakened.** Every removed line in the module is docstring point 3 or 6, the old
+  `typing` import, `analyse_factories`' docstring, the `build()`-only loop, or `KNOWN_UNFIXED = {}`,
+  and each is replaced by a stronger form. All 20 `EXPECTED_COVERAGE` entries at `HEAD~1` are still
+  there. The one new `KNOWN_BLIND` entry has a reason. The four tests keep their names and
+  assertions.
+- **`KNOWN_UNFIXED`.** Exactly the five the probes predicted, none new: `WKB_criterio` ×2 (P6) in
+  `KNOWN_UNFIXED`, and `z_serial`, `model_id` (P6) and the `validated` insert key (P8) in a new
+  `KNOWN_UNFIXED_COLUMNS`. Check 6: those last three are `probe_03.out`'s three.
+- **Live paths**, checked independently of the log. `_build_impl_*` is reached only through its
+  own Value factory's `build()`. No `object_get` in `main.py`, `ComputeTargets/` or `extract_*.py`
+  names a Value class, and no factory calls a Value factory's `build()`. `main.py` reads those rows
+  only through `object_read_batch` (`main.py:2429`). `OneLoopIntegral` is never built. So all five
+  defects are dead code: not reached during a build, on a resume, or from extraction.
+- **Mutations.** (i)–(iv) applied with plain `git apply` and gave their logged results: (i)
+  `failures=2`, (ii) `failures=1`, (iii) `failures=1` (G2 only), (iv) `failures=1`. **(v) did not
+  apply** (finding 4). With only its hunk header corrected it gave the logged `failures=4`,
+  `test_analyser_coverage_is_undiminished` among them. The tree was clean after each revert.
+- **`var/`.** Snapshot of 46 files and 10 directories, byte-identical before and after.
+- **Suites.** Run serially: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
+  Datastore 235 (+3), LiouvilleGreen 148 (1 skipped), RunRegistry 199. `black --check` is clean.
+- **Boards.** The issue is on the datastore-readback board's §4 with a closing note naming the
+  commit by subject. Its index row is gone, and the count went from 104 to 103.
+
+**Findings.**
+1. **Reach is not "every function" (check 3).** The analyser visits `build`, `read_batch` and a
+   hard-coded pair, `_ROW_HELPERS = {"_build_impl_serial", "_build_impl_model"}`. G1 asked for
+   every function, and item G1 above says so. Measured: `validate_on_startup` holds a decidable row
+   binding in seven factories (`BackgroundModel`, `GkNumericIntegration`, `GkSource`,
+   `GkWKBIntegration`, `QuadSource`, `TkNumericIntegration`, `TkWKBIntegration`). None is visited,
+   and **all seven are clean today**. A future helper under another name would be skipped with no
+   test failing. The log does not record this as a deviation.
+2. **The coverage pin does not see the helpers separately (check 3).** A binding's identity has no
+   function name in it, so each class's `_build_impl_serial` and `_build_impl_model` collapse into
+   one key (16 → 10; the log explains the arithmetic but not this consequence). Measured by removing
+   one name from `_ROW_HELPERS`:
+   - removing `_build_impl_model` **fails no test at all**;
+   - removing `_build_impl_serial` fails only because both `WKB_criterio` entries live there. Once
+     prompt 05 strikes them, that also fails nothing.
+
+   Mutation (v), which removes everything together, is caught. Removing the helpers one at a time
+   is not.
+3. **G2 skips an unresolved table without declaring it (check 3).** G2 asked that "what cannot be
+   resolved" be declared in `KNOWN_BLIND` with its reason. `KNOWN_BLIND_COLUMNS` declares only
+   dynamic *names*. The 30 references whose *table* is not resolved (29 `subquery.c.*`, 1
+   `query.c.serial`, of 1,224) are skipped. Docstring point 6 mentions them, but no test pins them,
+   so a new unresolvable base would be skipped silently. G2 also walks only class methods, never
+   `OneLoopIntegral`'s module-level `read_batch` (21 references). I resolved those 21 by hand, and
+   all name real columns, so **nothing is missed today**.
+4. **Mutation (v)'s recorded diff is corrupt (check 7).** Its header says `@@ -462,16 +462,12 @@`,
+   but the hunk has 14 old lines and 10 new. `git apply` refuses it (`corrupt patch at line 24`).
+   The log says all five passed `git apply --check`. With `-462,14 +462,10` it applies and behaves
+   as logged. The log is not edited; this entry is the correction.
+5. **`KNOWN_UNFIXED` is two structures, not one (unlogged).** README §4 fixes the interface as one
+   `KNOWN_UNFIXED` holding every defect. Column-existence defects are keyed by
+   (module, class, function, table, name), not the module's `module:class → [attrs]`, and they went
+   into a separate `KNOWN_UNFIXED_COLUMNS` with its own currency test. That is a reasonable shape,
+   but prompt 05 must be written to empty **both**.
+
+None of these hides a defect in today's tree. Findings 1–3 limit how well the instrument protects
+prompt 05's work against a later refactor. **Whether they are fixed before 05, carried into 05, or
+accepted is the user's call**, and prompt 05 is released to be written once that is decided.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
