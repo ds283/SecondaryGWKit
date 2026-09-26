@@ -37,10 +37,17 @@ theoretical one; three of them exist in this tree today.
    reports it as undecidable rather than as a defect. ``sqla_wavenumber_exit_time_factory`` is
    again the case in point.
 
-3. **Only ``build()``.** ``read_batch()`` reads rows too, through a nested ``make_object(row)``
-   whose ``row`` is a function parameter the analyser cannot link back to a query, and its
-   ``SELECT`` is extended by ``add_columns`` in a loop. ``read_batch`` is therefore not checked
-   at all. See the issue opened against this in the campaign board.
+3. **Only structural shape, not semantics.** The guard (extended by
+   ``prompts/datastore-integrity`` prompt 04 to ``read_batch`` and every ``_build_impl_*`` helper,
+   by inlining a nested ``make_obj``/``make_object`` helper as a for-loop over the row variable the
+   comprehension that calls it iterates over) still compares column *names*, never what a column is
+   *used for*. It cannot see a ``.label(...)`` attached to the wrong source column
+   (``GkNumericIntegration.py``'s two ``…_is_response`` labels, both taken from ``.source``, audit
+   §3.11), a column correctly selected but never passed on to the object it builds
+   (``TkWKBValue.read_batch``'s missing ``friction``, audit §3.11), or a correctly selected column
+   used with the wrong meaning (``QuadSourceIntegral.read_batch`` labels a wavenumber serial and
+   then uses it as an exit-time ``store_id``, audit §3.2). Those need a round-trip test that
+   actually executes a query, not this guard -- prompt 05's P9.
 
 4. **Rows whose query cannot be resolved.** A row taken from a query built in a nested helper,
    or assembled conditionally, is not decidable. ``sqla_BackgroundModelFactory.build`` is the
@@ -58,15 +65,23 @@ theoretical one; three of them exist in this tree today.
    :meth:`TestFactorySelectColumns.test_blind_spots_are_the_declared_ones` fail when a refactor
    moves a read out of sight, rather than letting the guard pass vacuously.
 
-6. **Column existence.** A ``SELECT`` naming a column the table does not have would be caught by
-   SQLAlchemy at query-build time, not here; this test compares reads against requests, not
-   requests against the schema.
+6. **Column existence, only where the table is resolvable and the name is a literal.**
+   ``TestColumnExistence`` (prompt 04, G2) resolves every ``<var>.c.<name>`` / ``<var>.c["<name>"]``
+   whose ``<var>`` is the factory's own ``table``, a ``tables["X"]``, or an ``.alias(...)`` of
+   either, against the columns ``build_schema`` actually declares, and does the same for every key
+   of a dict passed to an ``inserter``/``value_inserter`` call -- catching a wrong name before any
+   query or insert ever runs. It still cannot decide ``subquery.c.<name>`` (derived from columns
+   already checked when the subquery itself was built) or a column named at runtime by an f-string,
+   such as ``wavenumber.py`` and ``QuadSourceIntegral.py``'s ``z_exit_..._e{z_offset}`` loops; both
+   are structurally skipped, and the second is declared, with the reason, in
+   ``KNOWN_BLIND_COLUMNS``.
 """
 
 import ast
+import copy
 import unittest
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 FACTORY_DIR = Path(__file__).parents[2] / "Datastore" / "SQL" / "ObjectFactories"
 
@@ -366,18 +381,97 @@ def analyse_build(fn: ast.FunctionDef, module: str, cls: str) -> List[Finding]:
     return [finding for finding in findings if len(finding.reads) > 0]
 
 
+# The ``build()`` helpers a lookup delegates its whole query to. ``build()`` itself dispatches to
+# one of these by shape (a stored serial, or the full set of physical values); neither is named
+# ``build``, so the original analyser never visited them (audit §3.10).
+_ROW_HELPERS = frozenset({"_build_impl_serial", "_build_impl_model"})
+
+
+def inline_nested_row_helper(
+    fn: ast.FunctionDef,
+) -> Tuple[ast.FunctionDef, Optional[Tuple[str, str, str]]]:
+    """
+    Return a copy of ``fn`` with its nested one-argument row helper (``make_obj``/``make_object``)
+    inlined as a for-loop over the row variable the comprehension that calls it iterates over --
+    the one link ``analyse_build`` cannot make on its own, a helper's row parameter to the query it
+    is called with.
+
+    Returns ``(fn, None)`` when there is no such nested helper, or when the comprehension that
+    calls it cannot be found (so there is nothing to link it to) -- the caller then knows inlining
+    linked nothing, as for ``OneLoopIntegral.py``'s module-level ``read_batch``, whose
+    ``make_object`` is defined but never called.
+    """
+    fn = copy.deepcopy(fn)
+    nested = [n for n in fn.body if isinstance(n, ast.FunctionDef)]
+    if not nested:
+        return fn, None
+    helper = nested[0]
+    if not helper.args.args:
+        return fn, None
+    param = helper.args.args[0].arg
+
+    # the row variable: the name the comprehension that calls the helper iterates over
+    row_var = None
+    for node in ast.walk(fn):
+        if isinstance(node, ast.ListComp) and isinstance(node.elt, ast.Call):
+            if isinstance(node.elt.func, ast.Name) and node.elt.func.id == helper.name:
+                row_var = node.generators[0].iter.id
+    if row_var is None:
+        return fn, None
+
+    fn.body = [n for n in fn.body if n is not helper]
+    loop = ast.For(
+        target=ast.Name(id=param, ctx=ast.Store()),
+        iter=ast.Name(id=row_var, ctx=ast.Load()),
+        body=helper.body,
+        orelse=[],
+        lineno=helper.lineno,
+    )
+    fn.body.insert(len(fn.body) - 1, loop)
+    ast.fix_missing_locations(fn)
+    return fn, (helper.name, param, row_var)
+
+
+def analyse_read_batch(fn: ast.FunctionDef, module: str, cls: str) -> List[Finding]:
+    """
+    ``read_batch``'s nested row helper is inlined (see ``inline_nested_row_helper``) and the
+    result walked exactly as a ``build()`` is.
+
+    When inlining links nothing -- the module-level ``OneLoopIntegral.read_batch`` is the one case
+    in this tree -- ``analyse_build`` returns no findings at all, and a hole that produces no
+    findings is invisible to ``test_analyser_coverage_is_undiminished`` and
+    ``test_blind_spots_are_the_declared_ones`` alike, which is exactly the silently-blind failure
+    mode this guard exists to refuse. So a single undecidable Finding is manufactured for the whole
+    function, which puts it in ``KNOWN_BLIND`` rather than nowhere.
+    """
+    inlined, _link = inline_nested_row_helper(fn)
+    findings = analyse_build(inlined, module, cls)
+    if findings:
+        return findings
+    blind = Finding(module, cls, "read_batch", fn.lineno, None)
+    blind.reads.add("<no row binding could be resolved>")
+    return [blind]
+
+
 def analyse_factories() -> List[Finding]:
-    """Every row-variable binding under ObjectFactories/ that a ``build()`` reads attributes off."""
+    """
+    Every row-variable binding under ``ObjectFactories/`` that ``build()``, a ``_build_impl_*``
+    helper it delegates to, or ``read_batch`` reads attributes off.
+    """
     findings = []
     for path in sorted(FACTORY_DIR.glob("*.py")):
         tree = ast.parse(path.read_text(), filename=str(path))
         for cls in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-            for fn in [
-                n
-                for n in cls.body
-                if isinstance(n, ast.FunctionDef) and n.name == "build"
-            ]:
-                findings.extend(analyse_build(fn, path.name, cls.name))
+            for fn in [n for n in cls.body if isinstance(n, ast.FunctionDef)]:
+                if fn.name == "build" or fn.name in _ROW_HELPERS:
+                    findings.extend(analyse_build(fn, path.name, cls.name))
+                elif fn.name == "read_batch":
+                    findings.extend(analyse_read_batch(fn, path.name, cls.name))
+        # OneLoopIntegral.py's read_batch is a module-level function, not a method, and build()
+        # delegates nothing to it -- it is simply never wired up (audit §3.12).
+        for fn in tree.body:
+            if isinstance(fn, ast.FunctionDef) and fn.name == "read_batch":
+                findings.extend(analyse_read_batch(fn, path.name, "<module-level>"))
     return findings
 
 
@@ -392,7 +486,21 @@ def analyse_factories() -> List[Finding]:
 # reading row_data.Hubble where the column is Hubble_GeV -- which its own §4 forbade it to fix.
 # That defect was fixed on 2026-09-22 and the entry struck; see
 # Datastore/tests/test_backgroundmodelvalue_roundtrip.py, which now exercises that build().
-KNOWN_UNFIXED = {}
+#
+# prompts/datastore-integrity prompt 04 extended the analyser to _build_impl_serial /
+# _build_impl_model and read_batch (docs/datastore-integrity-audit.md §3.10, probe_02), and found
+# one further defect class, in both WKB value factories: `_build_impl_serial` reads
+# `row_data.WKB_criterio` (missing the trailing "n") where the column selected and the table
+# column are both `WKB_criterion`. Real -- every hit raises AttributeError -- and carried
+# deliberately rather than fixed here; prompt 05's P6 empties it.
+KNOWN_UNFIXED = {
+    "GkWKBIntegration.py:sqla_GkWKBValue_factory": [
+        "WKB_criterio"
+    ],  # P6; GkWKBIntegration.py:947
+    "TkWKBIntegration.py:sqla_TkWKBValue_factory": [
+        "WKB_criterio"
+    ],  # P6; TkWKBIntegration.py:1001
+}
 
 
 # The row-variable bindings the analyser can see and decide, as "module:class.variable". Pinned
@@ -422,6 +530,25 @@ EXPECTED_COVERAGE = frozenset(
         "redshift.py:sqla_redshift_factory.row_data",
         "wavenumber.py:sqla_wavenumber_factory.row_data",
         "wavenumber.py:sqla_wavenumber_exit_time_factory.row_data",
+        # Added by prompts/datastore-integrity prompt 04 (G1), extending the analyser to
+        # read_batch and the _build_impl_* helpers. A binding's identity here is
+        # "module:class.variable", with no function in it -- a convention this test already used
+        # for build() (a variable rebound mid-function is still one key, e.g.
+        # BackgroundModel.py:sqla_BackgroundModelFactory.row above) -- so the 16 sites
+        # docs/datastore-integrity-audit/lookup_keys/probe_02_readback_guard_by_hand.py lists
+        # (one per function) collapse to 10 here: each class's _build_impl_serial and
+        # _build_impl_model bind the same "row_data", and read_batch's inlined loop binds "row",
+        # so a class with both contributes 2 keys, not 3. The log for prompt 04 explains this.
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory.row_data",
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory.row",
+        "GkSource.py:sqla_GkSourceValue_factory.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory.row",
+        "QuadSource.py:sqla_QuadSourceValue_factory.row_data",
+        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.row",
+        "TkNumericIntegration.py:sqla_TkNumericValue_factory.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory.row",
     }
 )
 
@@ -436,6 +563,17 @@ KNOWN_BLIND = {
     # decide it. A path-insensitive analyser must decline rather than guess.
     "BackgroundModel.py:sqla_BackgroundModelFactory.row_data": (
         "row comes from rows[0] of a conditionally-built query in a nested helper"
+    ),
+    # Added by prompts/datastore-integrity prompt 04 (G1). OneLoopIntegral.py's read_batch is a
+    # module-level function, not a method, and build() never delegates to it: its make_object is
+    # defined but never called, and the function has no return statement at all (audit §3.12,
+    # probe_02). Inlining therefore links nothing to the query, and analyse_read_batch manufactures
+    # this one undecidable Finding for the whole function so the hole is declared rather than
+    # invisible. Out of scope for this campaign beyond that (README D3): the rest of
+    # OneLoopIntegral's factory is for when the target is actually built.
+    "OneLoopIntegral.py:<module-level>.read_batch": (
+        "make_object(row_data) is defined but never called, and the function has no return "
+        "statement, so no row variable can be linked to a query"
     ),
 }
 
@@ -514,4 +652,266 @@ class TestFactorySelectColumns(unittest.TestCase):
             set(KNOWN_BLIND),
             "the analyser cannot decide a row read it is not declared blind to. Extend it, or "
             "declare the hole in KNOWN_BLIND with the reason it cannot be closed.",
+        )
+
+
+# ---------------------------------------------------------------------------------------------
+# G2 -- column existence (prompts/datastore-integrity prompt 04). A SELECT or an insert naming a
+# column the table does not have is not caught by anything above: the read-back guard compares
+# reads against requests, never requests against the schema (module docstring, point 6). SQLAlchemy
+# only raises on this at query-build time, i.e. only when the code actually runs; on a path nothing
+# runs today it is a silent, permanent AttributeError-in-waiting. This resolves every
+# ``<var>.c.<name>`` / ``<var>.c["<name>"]`` in the factory sources, and every key of every dict
+# passed to an ``inserter``/``value_inserter`` call, against the schema
+# ``build_schema(MetaData(), _factories)`` actually builds. It needs no Ray, no engine and no store
+# -- ``build_schema`` only declares SQLAlchemy Table objects in memory.
+# ---------------------------------------------------------------------------------------------
+
+import sqlalchemy as sqla  # noqa: E402
+
+from Datastore.SQL.Datastore import _factories  # noqa: E402
+from Datastore.SQL.schema import build_schema  # noqa: E402
+
+# Column-existence defects found today, each (module, class, function, table, name) exactly as
+# ColumnProblem below reports it. Each names the board item that will fix it (prompt 05, board §2);
+# a struck entry that has not been fixed is caught by
+# test_known_unfixed_columns_are_still_present, mirroring KNOWN_UNFIXED / P6 above.
+ColumnProblem = Tuple[str, str, str, str, str]
+
+KNOWN_UNFIXED_COLUMNS: Set[ColumnProblem] = {
+    # P6: sqla_GkSourceValue_factory._build_impl_serial reads table.c.z_serial
+    # (GkSource.py:766); GkSourceValue has no such column.
+    (
+        "GkSource.py",
+        "sqla_GkSourceValue_factory",
+        "_build_impl_serial",
+        "GkSourceValue",
+        "z_serial",
+    ),
+    # P6: sqla_QuadSourceValue_factory._build_impl_model reads quadsource_table.c.model_id
+    # (QuadSource.py:672); QuadSource has no such column (it has model_serial).
+    (
+        "QuadSource.py",
+        "sqla_QuadSourceValue_factory",
+        "_build_impl_model",
+        "QuadSource",
+        "model_id",
+    ),
+    # P8: sqla_OneLoopIntegral_factory.store writes an insert key "validated"
+    # (OneLoopIntegral.py:222) to a table with no such column -- D3: the mechanical defects only,
+    # the rest logged for when OneLoopIntegral is actually built.
+    (
+        "OneLoopIntegral.py",
+        "sqla_OneLoopIntegral_factory",
+        "store",
+        "OneLoopIntegral [insert key]",
+        "validated",
+    ),
+}
+
+# Sites where a table variable resolves (it is the factory's own `table`, a `tables["X"]`, or an
+# alias of either) but the column name is built at runtime -- either by an f-string, or by a plain
+# loop variable ranging over a tuple of literal names declared a few lines above it -- and so
+# cannot be resolved to a literal string statically. Structurally undecidable, not a defect. Keyed
+# as "module.py:class.function", each naming every dynamic pattern at that site.
+KNOWN_BLIND_COLUMNS: Dict[str, str] = {
+    "wavenumber.py:sqla_wavenumber_exit_time_factory.build": (
+        'table.c[f"z_exit_suph_e{z_offset}"] / table.c[f"z_exit_subh_e{z_offset}"], looped over '
+        "WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS / _SUBHORIZON_EFOLDS"
+    ),
+    "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch": (
+        'q_exit_tab.c[f"z_exit_suph_e{z_offset}"] / r_exit_tab.c[f"z_exit_suph_e{z_offset}"] / '
+        'q_exit_tab.c[f"z_exit_subh_e{z_offset}"] / r_exit_tab.c[f"z_exit_subh_e{z_offset}"], same '
+        "loops"
+    ),
+    # `table.c[name] == payload[name] for name in key_columns`: `name` is a loop variable, not a
+    # constant, even though `key_columns` a few lines above it is a tuple of string literals --
+    # resolving it would mean tracking a loop variable back to the tuple it ranges over, which
+    # this resolver does not do. Both are prompt 01's replica insert-or-verify check (W3).
+    "wavenumber.py:sqla_wavenumber_exit_time_factory.store": (
+        "table.c[name] for name in key_columns, a tuple of literal column names"
+    ),
+    "BackgroundModel.py:sqla_BackgroundModelFactory.store": (
+        "table.c[name] for name in key_columns, a tuple of literal column names"
+    ),
+}
+
+
+def _table_of(expr: ast.AST, env: Dict[str, str]) -> Optional[str]:
+    """The schema table name `expr` denotes, resolved the way probe_03 does: the factory's own
+    `table`, `tables["X"]`, a plain local bound to one of those, or an `.alias(...)` of either.
+    """
+    if (
+        isinstance(expr, ast.Subscript)
+        and isinstance(expr.value, ast.Name)
+        and expr.value.id == "tables"
+        and isinstance(expr.slice, ast.Constant)
+    ):
+        return expr.slice.value
+    if isinstance(expr, ast.Name):
+        return env.get(expr.id)
+    if (
+        isinstance(expr, ast.Call)
+        and isinstance(expr.func, ast.Attribute)
+        and expr.func.attr == "alias"
+    ):
+        return _table_of(expr.func.value, env)
+    return None
+
+
+def _column_ref(node: ast.AST) -> Optional[Tuple[ast.AST, str, bool]]:
+    """`(base, name, dynamic)` for a `<base>.c.<name>` / `<base>.c["<name>"]` node, else None.
+    `dynamic` is True for `<base>.c[f"..."]`, whose name cannot be read off statically.
+    """
+    if (
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Attribute)
+        and node.value.attr == "c"
+    ):
+        return node.value.value, node.attr, False
+    if (
+        isinstance(node, ast.Subscript)
+        and isinstance(node.value, ast.Attribute)
+        and node.value.attr == "c"
+    ):
+        base = node.value.value
+        index = node.slice
+        if isinstance(index, ast.Constant) and isinstance(index.value, str):
+            return base, index.value, False
+        return base, "<dynamic>", True
+    return None
+
+
+def column_existence_problems() -> Tuple[Set[ColumnProblem], Dict[str, Set[str]]]:
+    """
+    Every `<var>.c.<name>` / insert-payload key in the factory sources that resolves to a table but
+    not to one of its columns, as `(module, class, function, table, name)`; and, separately, every
+    site where the table resolves but the column name does not (a dynamic f-string), as
+    `{"module.py:class.function": {pattern, ...}}`.
+    """
+    built = build_schema(sqla.MetaData(), _factories)
+    columns = {name: set(t.c.keys()) for name, t in built.tables.items()}
+    cls_to_table = {f.__name__: name for name, f in _factories.items()}
+
+    problems: Set[ColumnProblem] = set()
+    blind: Dict[str, Set[str]] = {}
+
+    for path in sorted(FACTORY_DIR.glob("*.py")):
+        tree = ast.parse(path.read_text(), filename=str(path))
+        for cls in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
+            own = cls_to_table.get(cls.name)
+            for fn in [n for n in cls.body if isinstance(n, ast.FunctionDef)]:
+                env: Dict[str, str] = {}
+                if own is not None:
+                    env["table"] = own
+
+                site = f"{path.name}:{cls.name}.{fn.name}"
+
+                for node in sorted(
+                    (n for n in ast.walk(fn) if hasattr(n, "lineno")),
+                    key=lambda n: (n.lineno, n.col_offset),
+                ):
+                    if isinstance(node, ast.Assign) and len(node.targets) == 1:
+                        tgt = node.targets[0]
+                        if isinstance(tgt, ast.Name):
+                            t = _table_of(node.value, env)
+                            if t is not None:
+                                env[tgt.id] = t
+
+                    ref = _column_ref(node)
+                    if ref is None:
+                        continue
+                    base, name, dynamic = ref
+                    t = _table_of(base, env)
+                    if t is None or t not in columns:
+                        continue
+                    if dynamic:
+                        blind.setdefault(site, set()).add(f"{ast.unparse(node)} ({t})")
+                    elif name not in columns[t]:
+                        problems.add((path.name, cls.name, fn.name, t, name))
+
+                # insert payload keys: inserter(conn, {...}) / value_inserter(conn, {...}), where
+                # value_inserter = inserters["X"] for some literal X
+                for node in ast.walk(fn):
+                    if not (
+                        isinstance(node, ast.Call)
+                        and isinstance(node.func, ast.Name)
+                        and node.func.id.endswith("inserter")
+                        and len(node.args) == 2
+                        and isinstance(node.args[1], ast.Dict)
+                    ):
+                        continue
+                    target = own
+                    if node.func.id != "inserter":
+                        for a in ast.walk(fn):
+                            if (
+                                isinstance(a, ast.Assign)
+                                and isinstance(a.targets[0], ast.Name)
+                                and a.targets[0].id == node.func.id
+                                and isinstance(a.value, ast.Subscript)
+                                and isinstance(a.value.slice, ast.Constant)
+                            ):
+                                target = a.value.slice.value
+                    if target not in columns:
+                        continue
+                    for k in node.args[1].keys:
+                        if (
+                            isinstance(k, ast.Constant)
+                            and k.value not in columns[target]
+                        ):
+                            problems.add(
+                                (
+                                    path.name,
+                                    cls.name,
+                                    fn.name,
+                                    f"{target} [insert key]",
+                                    k.value,
+                                )
+                            )
+
+    return problems, blind
+
+
+class TestColumnExistence(unittest.TestCase):
+    """G2: every `<table>.c.<name>` and every insert key resolves against the schema
+    `build_schema` builds. Shape (b) of the module docstring's point 6."""
+
+    def setUp(self):
+        self.problems, self.blind = column_existence_problems()
+
+    def test_column_references_resolve_against_schema(self):
+        """
+        The guard proper. A `<table>.c.<name>` or an insert key naming a column the schema does
+        not have raises AttributeError / is silently dropped only when the code actually runs;
+        this catches it statically instead.
+        """
+        self.assertEqual(
+            self.problems,
+            KNOWN_UNFIXED_COLUMNS,
+            "a factory names a column its table does not have. If this is newly broken, correct "
+            "the name -- or, if it is a known defect being carried deliberately, move it into "
+            "KNOWN_UNFIXED_COLUMNS naming the issue that owns it.",
+        )
+
+    def test_known_unfixed_columns_are_still_present(self):
+        """A fixed defect must be struck from KNOWN_UNFIXED_COLUMNS, not left to rot there."""
+        for entry in KNOWN_UNFIXED_COLUMNS:
+            self.assertIn(
+                entry,
+                self.problems,
+                f"{entry} no longer names a column absent from its table: if it has been fixed, "
+                "remove its KNOWN_UNFIXED_COLUMNS entry",
+            )
+
+    def test_dynamic_column_sites_are_the_declared_ones(self):
+        """
+        A resolvable table with a runtime-built column name is neither cleared nor convicted. The
+        sites that exist are declared above with every dynamic pattern found there; a new one is a
+        decision for a person.
+        """
+        self.assertEqual(
+            set(self.blind),
+            set(KNOWN_BLIND_COLUMNS),
+            "a new site resolves its table but not a literal column name. Declare it in "
+            "KNOWN_BLIND_COLUMNS with the patterns found there, or teach the resolver to decide it.",
         )

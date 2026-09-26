@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-26 · **104 open** across seventeen campaigns.
+**Last updated:** 2026-09-26 · **103 open** across seventeen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -649,8 +649,9 @@ user's direction — the real one on the `GkTk-remedial` board that owns it — 
 out to be the one-line fix it looked like.
 
 Its one remaining issue, `[01-read-batch-is-outside-the-guard]`, was **assigned to
-`prompts/datastore-integrity` prompt 04 on 2026-09-26**, and its row moved to §1.15. It stays on
-this campaign's board, and closes there.
+`prompts/datastore-integrity` prompt 04 on 2026-09-26**, and its row moved to §1.15. **That prompt
+closed it the same day**, on this campaign's board's §4 (*"Extend the read-back guard to
+read_batch and column existence"*); its row is deleted here. No issue remains open on this board.
 
 ### 1.11 The run registry campaign
 
@@ -750,7 +751,6 @@ three rows, none assigned to a prompt.
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | **→ prompt 03.** README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03a must sweep it through `_solve_horizon_exit` and never through the datastore. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | **→ prompt 03.** `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | **→ prompt 03.** `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
-| `[01-read-batch-is-outside-the-guard]` | datastore-readback | **→ prompt 04.** The guard covers `build()` only. `read_batch()` reads rows through a nested helper's parameter and is checked by nothing, and it is on the live path rather than only on resume. |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | **→ prompt 05.** **Confirmed** in memory by the datastore-integrity audit: every tagged `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` fails (`no such column: anon_1.serial`), so extraction from any run-labelled store fails. |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | **→ prompt 05.** The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | **→ prompt 05.** `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |

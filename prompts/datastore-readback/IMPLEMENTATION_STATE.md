@@ -1,12 +1,14 @@
 # Datastore read-back campaign — implementation state
 
-**Last updated:** 2026-09-22 · **Status: STARTED — 1 of 1 written prompts landed (01), plus one
+**Last updated:** 2026-09-26 · **Status: STARTED — 1 of 1 written prompts landed (01), plus one
 direct follow-up.** Prompt 01 landed the one-line `QuadSourceIntegral` fix, the static guard in the
 new `Datastore/tests/` root, and the audit of every object factory. **Stored `QuadSourceIntegral`
 rows read back**; the interrupted `handover-A3-baseline-lambdacdm` run is resumable, which is the
 user's to do. The audit's own finding, `[01-backgroundmodelvalue-hubble]`, was then **closed at the
 user's direction** (§4), which took `sqla_BackgroundModelValue_factory.build()` from never-executed
-to covered. One issue remains open in §3.
+to covered. **`[01-read-batch-is-outside-the-guard]`**, assigned to `prompts/datastore-integrity`
+prompt 04 on 2026-09-26, **closed the same day** when that prompt landed — see §4. No issue remains
+open in §3.
 
 **Campaign:** [`README.md`](README.md) ·
 **Datastore:** `var/datastores/handover-A3-baseline-lambdacdm.sqlite` and its manifest ·
@@ -47,31 +49,43 @@ per campaign README §5 items 1 and 2; it has no prompt file because none was wr
 
 ## 3. Active and unresolved issues
 
-- **[01-read-batch-is-outside-the-guard]** *(opened 2026-09-22 by prompt 01)* — the guard covers
-  `build()` only, because that is what prompt §3 scopes it to. **`read_batch()` reads rows too and
-  is checked by nothing.** `sqla_QuadSourceIntegral_factory.read_batch` (`:530`) alone reads some
-  sixty attributes off a `row` that is the parameter of a nested `make_object`, from a query
-  extended by `add_columns` in two loops — neither shape is one the static analyser can follow, so
-  extending the existing check to it is not a matter of widening a glob. The defect class is equally
-  possible there, and `read_batch` is on the **live** path (`Datastore.object_read_batch`), not only
-  on resume: it has been exercised, which is weak evidence that it is currently clean but is no
-  guarantee for the columns a given call does not touch. **Impact:** the guard's coverage is
-  narrower than "the factories are guarded" would suggest, and a later reader could take the
-  green suite for more than it says. The module docstring and the log both state the limit; this
-  issue is so that it is not only stated. **Next step:** either teach the analyser to link a nested
-  helper's row parameter to the query it is called with, or write prompt §3 shape **(b)**, the
-  in-memory round trip, for `read_batch`. Not attempted in prompt 01: widening the guard is a change
-  with its own risk and would have obscured the one-line diff that commit exists to prove.
-  Measurement: [`logs/01-quadsourceintegral-readback.md`](logs/01-quadsourceintegral-readback.md),
-  "What it cannot see" item 3. Indexed at `docs/OPEN_ISSUES.md` §1.10.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 04, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.10). It
-    closes here, on this board's §4.
+None.
 
 ---
 
 ## 4. Resolved issues
+
+- **[01-read-batch-is-outside-the-guard]** *(opened 2026-09-22 by prompt 01; **closed 2026-09-26**,
+  by `prompts/datastore-integrity` prompt 04)* — the guard covered `build()` only, because that is
+  what prompt §3 scoped it to. **`read_batch()` reads rows too and was checked by nothing.**
+  `sqla_QuadSourceIntegral_factory.read_batch` (`:530`) alone read some sixty attributes off a `row`
+  that is the parameter of a nested `make_object`, from a query extended by `add_columns` in two
+  loops — neither shape is one the static analyser could follow, so extending the existing check to
+  it was not a matter of widening a glob. The defect class was equally possible there, and
+  `read_batch` is on the **live** path (`Datastore.object_read_batch`), not only on resume: it had
+  been exercised, which was weak evidence that it was currently clean but no guarantee for the
+  columns a given call does not touch. **Impact:** the guard's coverage was narrower than "the
+  factories are guarded" would suggest, and a later reader could take the green suite for more than
+  it said. The module docstring and the log both stated the limit; this issue was so that it was not
+  only stated. **Assigned (2026-09-26)** to
+  [`prompts/datastore-integrity`](../datastore-integrity/README.md) prompt 04, which fixes it before
+  the archival A3 v2 store is built
+  ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.10).
+  **Closed by commit *"Extend the read-back guard to read_batch and column existence"* (prompt 04,
+  2026-09-26).** `analyse_factories()` (`Datastore/tests/test_factory_select_columns.py`) now visits
+  every `read_batch` (inlining its nested `make_obj`/`make_object` helper's row parameter as a
+  for-loop over the row variable the calling comprehension iterates over — the one link the original
+  analyser could not make) and every `_build_impl_serial` / `_build_impl_model` helper `build()`
+  delegates to. `QuadSourceIntegral.read_batch`'s ~60 reads are now covered and clean. A second test,
+  `TestColumnExistence`, closes the column-existence half of the same audit finding (§3.10's point
+  6). Not closed by this commit, and recorded as `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` for
+  prompt 05 to fix: `WKB_criterio` (both WKB value factories), `GkSource.py`'s `z_serial`,
+  `QuadSource.py`'s `model_id`, `OneLoopIntegral.py`'s `validated` insert key — none reached by
+  `main.py` during a build, a resume, or an extraction script (log 04,
+  [`prompts/datastore-integrity/logs/04-extend-the-read-back-guard.md`](../datastore-integrity/logs/04-extend-the-read-back-guard.md)).
+  Measurement: [`logs/01-quadsourceintegral-readback.md`](logs/01-quadsourceintegral-readback.md),
+  "What it cannot see" item 3, and the datastore-integrity log above. Deleted from
+  `docs/OPEN_ISSUES.md` §1.15 in the closing commit.
 
 - **[01-backgroundmodelvalue-hubble]** *(opened 2026-09-22 by prompt 01; **retired 2026-09-22 as a
   duplicate**, and the defect fixed under item R4)* — `sqla_BackgroundModelValue_factory.build()`

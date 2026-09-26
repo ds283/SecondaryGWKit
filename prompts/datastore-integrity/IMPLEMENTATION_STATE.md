@@ -1,9 +1,10 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 1 of 10 prompts landed (01), reviewed. 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
-the same day. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
-closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
-and 04 are ready.
+**Last updated:** 2026-09-26 · **Status: 2 of 10 prompts landed (01, 04). 01–04 and 06–09 are
+written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+the same day. 05 waits on the orchestrator's release, against 04's `KNOWN_UNFIXED` /
+`KNOWN_UNFIXED_COLUMNS` list, and 10 on 01–09. `store-retirement`
+closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
 defect be fixed before the A3 v2 store is built, the first store meant to have archival value. The
@@ -53,8 +54,8 @@ becomes an exact match; the adjacent issues are out of scope.
 | 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Make the replicated write checked, idempotent and recorded"* | [`logs/01-…`](logs/01-checked-replicated-write.md) |
 | 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
-| 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
-| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04 | — | — | — |
+| 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
+| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04's list; release is the orchestrator's | — | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
@@ -147,9 +148,9 @@ what 01–04 find; what waits is their method.
 | L3 | **GUARD** | `.scalar()` → `one_or_none()` on the eight identity lookups (audit §3.8), so a duplicate raises. | 03 | ⬜ |
 | L4 | **REMEDY** | `redshift.build` matches `z = 0` (audit §3.9). | 03 | ⬜ |
 | L5 | **RECORD** | `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` narrowed: after L1 the two scripts miss rather than silently reuse. | 03 | ⬜ |
-| G1 | **GUARD** | The read-back guard visits every function of every factory, `read_batch` and `_build_impl_*` included, linking a nested helper's parameter to its row. | 04 | ⬜ |
-| G2 | **GUARD** | A column-existence test: every `<table>.c.<name>` and every insert key resolves against the built schema. | 04 | ⬜ |
-| G3 | **RECORD** | `KNOWN_UNFIXED`: what G1–G2 find today, for prompt 05 to empty. Closes `[01-read-batch-is-outside-the-guard]`. | 04 | ⬜ |
+| G1 | **GUARD** | The read-back guard visits every function of every factory, `read_batch` and `_build_impl_*` included, linking a nested helper's parameter to its row. | 04 | ✅ `analyse_read_batch` / `inline_nested_row_helper`; `EXPECTED_COVERAGE` grows by 10 (probe_02.out's 16 collapse under the module's existing "module:class.variable" key — see log) |
+| G2 | **GUARD** | A column-existence test: every `<table>.c.<name>` and every insert key resolves against the built schema. | 04 | ✅ `TestColumnExistence` / `column_existence_problems`, same module |
+| G3 | **RECORD** | `KNOWN_UNFIXED`: what G1–G2 find today, for prompt 05 to empty. Closes `[01-read-batch-is-outside-the-guard]`. | 04 | ✅ `KNOWN_UNFIXED` +2 (both `WKB_criterio`, P6), `KNOWN_UNFIXED_COLUMNS` (new) +3 (`z_serial`/`model_id`, P6; `validated` insert key, P8) — the five the probes predicted, nothing new |
 | P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05 | ⏸️ |
 | P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05 | ⏸️ |
 | P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05 | ⏸️ |
@@ -189,7 +190,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | 03 |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
-| `[01-read-batch-is-outside-the-guard]` | datastore-readback | 04 |
+| `[01-read-batch-is-outside-the-guard]` | datastore-readback | 04 (**closed** 2026-09-26, on that board's §4) |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05 |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05 |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05 |
@@ -253,3 +254,19 @@ same, with Datastore at 206.
 | Datastore | **232 OK** (206 + the 26 of `test_replicated_write.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK; the golden fingerprint unchanged |
+
+### 5.2 After prompt 04 (2026-09-26)
+
+Measured on the tree of prompt 04's commit, with README §7's command, serially (ComputeTargets run
+alone, to avoid the known wall-clock flake under parallel load).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **235 OK** (232 + the 3 of the new `TestColumnExistence`; G1 added no new test methods) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check Datastore/tests/test_factory_select_columns.py` is clean.
