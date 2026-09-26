@@ -61,6 +61,11 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
+**Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
+carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
+and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26). 01 and 04 are
+dispatched one at a time, never concurrently in this checkout, in either order.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
