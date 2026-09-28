@@ -1,10 +1,11 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 01, 04, 04b, 05a, 05b and 05c have landed; all but 05c
-are reviewed, and 05c awaits the orchestrator's review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
-(yes) later the same day. 04b landed the same day it was written, from the 04 review's findings.
-**05 is written** (2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
-([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a, 05b and 05c landed 2026-09-28. 02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
+**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, and 05 as
+05a–05c), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
+2026-09-28** as 05a → 05b → 05c, in one orchestrator session
+([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **Next: 02 → 03 → 06**, each with its
+own orchestrator note; 07 waits on 05 and 06. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -415,6 +416,103 @@ record; the orchestrator's review, when it runs, is recorded separately.
   and an unused `z_source` key, both outside 05c's permitted edits.
 - **For 07.** The four `z_init` filters in the WKB value reads are what 07's `numeric_serial`
   replaces. The refusal keys on `wkb_serial`, and stays valid.
+
+**Orchestrator review of prompt 05c (2026-09-28).** Run against `1d0f08f`, dispatched from
+`199be29` (the review of 05b) with the tree and the index clean, nothing running, and the §5.5
+baselines re-measured on `HEAD`. The dispatch stopped once, at 05c §6's "an existing test fails".
+The user decided the stop in chat (see the landing paragraph above) and the agent resumed.
+Every check in `orchestrator/prompt-05.md` §3 passed.
+- **Scope.** Ten files: the four named factories, the new `test_value_reads_parent_key.py`,
+  `test_read_path_mechanics.py`, the log, both boards and the index. `main.py`, `extract_*.py`,
+  `ComputeTargets/`, the guard module, `orchestrator/` and every other `docs/` file are
+  untouched. In `test_read_path_mechanics.py` there are exactly four edits: the three payloads the
+  05a review named gain `atol`/`rtol`, and the friction test reads its own one-parent store, as the
+  user decided. Every factory hunk is a §2 change:
+  - `break_point_kind` and the required tolerances in the three numeric reads, with a refusal like
+    the parents' for a store without the column;
+  - `z_init` as `TkNumericValue`'s one key, with its two messages corrected;
+  - the optional `z_init` in the four WKB reads;
+  - the parent serial selected into each value `read_batch`'s row query, and the refusal;
+  - P5's two labels.
+- **The refusal.** Read in the code:
+  - `GkNumericValue.read_batch` and `GkWKBValue.read_batch` group the fetched rows by
+    `z_source_serial` and raise `MultipleResultsFound` when a group has more than one distinct
+    parent serial (`integration_serial` / `wkb_serial`);
+  - `TkWKBValue.read_batch` raises when the rows hold more than one `wkb_serial`.
+
+  One parent returns what it returned before, and no parent returns `[]`. There is one query, and
+  the refusal is decided on its rows. I ran test 3, `main.py`'s payload shape over one parent per
+  `z_source` at three `z_source`s, and both live reads passed.
+- **The keys match the parents.** `break_point_kind` is compared with
+  `GkNumericIntegration.BREAK_POINT_KIND` / `TkNumericIntegration.BREAK_POINT_KIND`. These are the
+  compute targets' constants, the same expression as the parents' `build()` (`GkNumericIntegration.py:249`,
+  `TkNumericIntegration.py:253`). `z_init` is matched with the parents' own
+  `abs(z_init − z) < DEFAULT_FLOAT_PRECISION` (`GkWKBIntegration.py:280`, `TkWKBIntegration.py:287`).
+- **Live paths.** Checked independently by `git grep` over every `.py` outside the factories and
+  tests. The only caller of the six reads is `main.py`'s `build_missing_GkSource`
+  (`:2391–2429`), which reads `GkNumericValue` and `GkWKBValue` through `object_read_batch`.
+  `main.py:2412` already passes the tolerance pair for `GkNumericValue`, and passes no `z_init`.
+  Nothing else reads the value classes. `docs/gktk-remedial/analyse_scoped_run.py` and
+  `tools/inventory_report.py` only name their tables, and `probe_05` is a measurement record.
+  Nothing outside the tests reads `redshift.is_response`, so P5 changes no live behaviour. No store
+  under `var/` was opened. Nothing in the code suggests a store built under one policy and one set
+  of run tags holds two parents per `(k, z_source)`. Where one does, the read now refuses at
+  exactly the point where `main.py` would have silently overwritten one parent's value with the
+  other's.
+- **The `read_batch` pin.** `READ_BATCH_ROUND_TRIPS` has five entries. They equal both the test's
+  own walk and an independent AST walk of `ObjectFactories/`: `GkNumericValue`, `GkWKBValue`,
+  `TkWKBValue`, `QuadSourceIntegral`, `OneLoopIntegral`. **P9 is closed.**
+- **The guard.** Nothing moved, as predicted. Recomputed with the guard's own functions, every
+  pin equals what is pinned: coverage 44, blind 1, 9 unresolved-table pairs, 13 unchecked inserts,
+  no shortfalls and no column problems. The one shape chosen for the guard's sake, a `for` loop in
+  place of a set comprehension, is logged, and it opened the issue below.
+- **Mutations.** All six, extracted from the committed log, applied with plain `git apply` and gave
+  exactly the logged counts: (i) `failures=1, errors=1`, (ii) `failures=4`, (iii) `errors=2`, (iv)
+  `failures=2`, (v) `failures=1`, (vi) `failures=1`. Each reverted clean.
+- **`var/`, suites, `black`, boards.** The snapshot was byte-identical (46 files, 10 directories),
+  as it was before every dispatch this session. AdaptiveLevin 32, ComputeTargets 552,
+  CosmologyModels 39, Datastore 287 (+20, the new module's 20 methods), LiouvilleGreen 148
+  (1 skipped), RunRegistry 199, run serially. `black --check` is clean. The issue is on the
+  store-fingerprint board's §4, with a closing note naming the commit by subject. The index went
+  from 101 to 101 (one row deleted, `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]`
+  added; rows counted), dated 2026-09-28.
+
+**Findings.**
+1. **The 05a review missed the two-parent friction fixture.** Its finding 1 said the tolerance
+   payloads were the only collision with 05c. `TestTkWKBValueFriction` also stored two parents for
+   one `(model, k)` and read them with `tags=[]`. The agent stopped correctly, and the user decided
+   it. The lesson for later reviews: when a prompt adds a refusal, check every existing fixture
+   against the refusal's condition, not only against the fields the prompt changes.
+2. **The scratchpad was shared.** The 05c agent wrote its own `replay.py` over the orchestrator's
+   script of the same name in the session scratchpad. Its assertion fired before anything was
+   written, and the tree was untouched. Later orchestrator notes should give each dispatched agent
+   its own scratch subdirectory.
+3. **The row-based refusal**, carried to 09 above, is as 05c §2 specifies. It is not a defect of
+   05c. It is a limit that 09's K6 must not rely past.
+
+None needs the user.
+
+**Prompt 05 has landed (2026-09-28), as 05a–05c, all reviewed.** Its charter is met:
+- P1–P9 are done, and P9 is closed;
+- `KNOWN_UNFIXED` and `KNOWN_UNFIXED_COLUMNS` are both empty;
+- its three issues are closed: `[00-tagged-read-batch-joins-an-unselected-alias]`,
+  `[00-oneloop-lookup-joins-the-wrong-tag-table]` and
+  `[00-numeric-value-parent-lookup-omits-break-point-kind]`.
+
+**Next dispatches: 02 → 03 → 06**, each with its own orchestrator note, written just before it is
+dispatched. 07's gate is 05 **and** 06, and 06 follows 03, which follows 02. So 07 is not next,
+although 05 has landed.
+
+**Carried to 07's orchestrator notes** (in addition to the three bullets above):
+- The WKB value reads now take an optional `z_init`, filtered with the parents' absolute
+  `DEFAULT_FLOAT_PRECISION` expression, and refuse a second parent: per `z_source` for
+  `GkWKBValue`, per `(model, k)` for `TkWKBValue`. When 07 removes `z_init` from the key and adds
+  `numeric_serial`, it replaces those four filters. It does not replace the refusal, which is
+  decided on `wkb_serial`.
+- `test_value_reads_parent_key.py`'s `TestZInitSelects` and the two `…two_z_inits` refusal tests
+  exercise `z_init` as a key. 07 must name them and say how they follow its key (README §5 rule 7).
+- `main.py`'s `build_missing_GkSource` passes no `z_init`, so today it relies on the refusal alone.
+  07's own change to `main.py`'s existence queries must keep test 3's live payload working.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
