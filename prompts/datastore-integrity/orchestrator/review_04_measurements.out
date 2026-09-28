@@ -1,0 +1,77 @@
+== A. row bindings by function (every function; read_batch inlined)
+   bindings per function name: {'_build_impl_model': 6, '_build_impl_serial': 6, 'build': 21, 'read_batch': 5, 'validate_on_startup': 7}
+   bindings in functions 04 does not visit: 7
+   BackgroundModel.py:sqla_BackgroundModelFactory.validate_on_startup.model  decidable  missing=[]
+   GkNumericIntegration.py:sqla_GkNumericIntegration_factory.validate_on_startup.integration  decidable  missing=[]
+   GkSource.py:sqla_GkSource_factory.validate_on_startup.obj  decidable  missing=[]
+   GkWKBIntegration.py:sqla_GkWKBIntegration_factory.validate_on_startup.integration  decidable  missing=[]
+   QuadSource.py:sqla_QuadSource_factory.validate_on_startup.calc  decidable  missing=[]
+   TkNumericIntegration.py:sqla_TkNumericIntegration_factory.validate_on_startup.integration  decidable  missing=[]
+   TkWKBIntegration.py:sqla_TkWKBIntegration_factory.validate_on_startup.integration  decidable  missing=[]
+== B. drop one visited helper from _ROW_HELPERS: does anything fail?
+   without _build_impl_model: coverage pin passes; KNOWN_UNFIXED pin passes
+   without _build_impl_serial: coverage pin passes; KNOWN_UNFIXED pin FAILS
+== C. G2: references whose table does not resolve
+   .c. references, class methods and module-level functions: 1245
+   unresolved: 44 at 12 (function, base) pairs
+      1  GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_model  base=subquery
+      5  GkNumericIntegration.py:sqla_GkNumericValue_factory.read_batch  base=subquery
+      1  GkSource.py:sqla_GkSourceValue_factory._build_impl_model  base=subquery
+      4  GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_model  base=subquery
+      8  GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch  base=subquery
+      1  OneLoopIntegral.py:<module-level>.read_batch  base=query
+     13  OneLoopIntegral.py:<module-level>.read_batch  base=table
+      1  QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model  base=subquery
+      1  QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch  base=query
+      1  TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_model  base=subquery
+      4  TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_model  base=subquery
+      4  TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch  base=subquery
+   tables['X'] naming no schema table: 0
+== D. function-qualified identity, every function visited
+   decidable: 43; blind: 2 ['BackgroundModel.py:sqla_BackgroundModelFactory.build.row_data', 'OneLoopIntegral.py:<module-level>.read_batch.read_batch']
+   04's EXPECTED_COVERAGE: 30; missing from the projection: []
+   in the projection but not in 04's: ['BackgroundModel.py:sqla_BackgroundModelFactory.model', 'GkNumericIntegration.py:sqla_GkNumericIntegration_factory.integration', 'GkSource.py:sqla_GkSource_factory.obj', 'GkWKBIntegration.py:sqla_GkWKBIntegration_factory.integration', 'QuadSource.py:sqla_QuadSource_factory.calc', 'TkNumericIntegration.py:sqla_TkNumericIntegration_factory.integration', 'TkWKBIntegration.py:sqla_TkWKBIntegration_factory.integration']
+   _build_impl_* and read_batch bindings: 16 (probe_02.out lists 16)
+    BackgroundModel.py:sqla_BackgroundModelFactory.build.row
+    BackgroundModel.py:sqla_BackgroundModelFactory.validate_on_startup.model
+    BackgroundModel.py:sqla_BackgroundModelValue_factory.build.row_data
+    GkNumericIntegration.py:sqla_GkNumericIntegration_factory.build.row
+    GkNumericIntegration.py:sqla_GkNumericIntegration_factory.build.row_data
+    GkNumericIntegration.py:sqla_GkNumericIntegration_factory.validate_on_startup.integration
+    GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_model.row_data
+    GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_serial.row_data
+    GkNumericIntegration.py:sqla_GkNumericValue_factory.read_batch.row
+    GkSource.py:sqla_GkSourceValue_factory._build_impl_model.row_data
+    GkSource.py:sqla_GkSourceValue_factory._build_impl_serial.row_data
+    GkSource.py:sqla_GkSource_factory.build.row
+    GkSource.py:sqla_GkSource_factory.build.row_data
+    GkSource.py:sqla_GkSource_factory.validate_on_startup.obj
+    GkSourcePolicyData.py:sqla_GkSourcePolicyData_factory.build.row_data
+    GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row
+    GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row_data
+    GkWKBIntegration.py:sqla_GkWKBIntegration_factory.validate_on_startup.integration
+    GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_model.row_data
+    GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_serial.row_data
+    GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch.row
+    OneLoopIntegral.py:sqla_OneLoopIntegral_factory.build.row_data
+    QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.row_data
+    QuadSource.py:sqla_QuadSourceValue_factory._build_impl_serial.row_data
+    QuadSource.py:sqla_QuadSource_factory.build.row
+    QuadSource.py:sqla_QuadSource_factory.build.row_data
+    QuadSource.py:sqla_QuadSource_factory.validate_on_startup.calc
+    QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.build.row_data
+    QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch.row
+    TkNumericIntegration.py:sqla_TkNumericIntegration_factory.build.row
+    TkNumericIntegration.py:sqla_TkNumericIntegration_factory.build.row_data
+    TkNumericIntegration.py:sqla_TkNumericIntegration_factory.validate_on_startup.integration
+    TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_model.row_data
+    TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_serial.row_data
+    TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row
+    TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row_data
+    TkWKBIntegration.py:sqla_TkWKBIntegration_factory.validate_on_startup.integration
+    TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_model.row_data
+    TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_serial.row_data
+    TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch.row
+    redshift.py:sqla_redshift_factory.build.row_data
+    wavenumber.py:sqla_wavenumber_exit_time_factory.build.row_data
+    wavenumber.py:sqla_wavenumber_factory.build.row_data

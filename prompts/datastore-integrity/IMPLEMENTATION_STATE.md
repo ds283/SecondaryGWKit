@@ -1,9 +1,10 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 2 of 10 prompts landed (01, 04), both reviewed. 01–04 and
+**Last updated:** 2026-09-28 · **Status: 2 of 10 prompts landed (01, 04), both reviewed. 01–04 and
 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
-the same day. 05 is written against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists once the
-user has decided on the 04 review's findings (§1), and 10 waits on 01–09. `store-retirement`
+the same day. 04b, written 2026-09-28 from the 04 review's findings,
+is ready; 05 is written against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists once 04b has
+landed and been reviewed, and 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -55,7 +56,8 @@ becomes an exact match; the adjacent issues are out of scope.
 | 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
-| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04's list; release is the orchestrator's | — | — | — |
+| 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ ready | — | — |
+| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04b; release is the orchestrator's | — | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
@@ -195,6 +197,12 @@ None of these hides a defect in today's tree. Findings 1–3 limit how well the 
 prompt 05's work against a later refactor. **Whether they are fixed before 05, carried into 05, or
 accepted is the user's call**, and prompt 05 is released to be written once that is decided.
 
+**Decided (2026-09-28):** the user chose to fix findings 1–3 before 05, in a short follow-up prompt,
+[`04b-tighten-the-read-back-guard.md`](04b-tighten-the-read-back-guard.md) (items G4–G6). Its target
+figures come from [`orchestrator/review_04_measurements.py`](orchestrator/review_04_measurements.py)
+and its `.out`. Findings 4 and 5 stand as recorded here: 04b takes its mutation diffs from `git diff`, and
+05 is written to empty both unfixed lists. 05 is released once 04b has landed and been reviewed.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -219,6 +227,9 @@ what 01–04 find; what waits is their method.
 | G1 | **GUARD** | The read-back guard visits every function of every factory, `read_batch` and `_build_impl_*` included, linking a nested helper's parameter to its row. | 04 | ✅ `analyse_read_batch` / `inline_nested_row_helper`; `EXPECTED_COVERAGE` grows by 10 (probe_02.out's 16 collapse under the module's existing "module:class.variable" key — see log) |
 | G2 | **GUARD** | A column-existence test: every `<table>.c.<name>` and every insert key resolves against the built schema. | 04 | ✅ `TestColumnExistence` / `column_existence_problems`, same module |
 | G3 | **RECORD** | `KNOWN_UNFIXED`: what G1–G2 find today, for prompt 05 to empty. Closes `[01-read-batch-is-outside-the-guard]`. | 04 | ✅ `KNOWN_UNFIXED` +2 (both `WKB_criterio`, P6), `KNOWN_UNFIXED_COLUMNS` (new) +3 (`z_serial`/`model_id`, P6; `validated` insert key, P8) — the five the probes predicted, nothing new |
+| G4 | **GUARD** | The analyser visits every function of every factory class and every module-level function, not a list of names; `validate_on_startup`'s seven bindings join coverage. | 04b | ⬜ |
+| G5 | **GUARD** | `EXPECTED_COVERAGE` and `KNOWN_BLIND` keyed by function, so each helper is pinned on its own; its projection keeps all 30 of 04's entries. | 04b | ⬜ |
+| G6 | **GUARD** | G2 walks module-level functions, reports an unknown `tables["X"]` as a problem, and pins every unresolved table base and unchecked insert with a reason. | 04b | ⬜ |
 | P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05 | ⏸️ |
 | P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05 | ⏸️ |
 | P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05 | ⏸️ |

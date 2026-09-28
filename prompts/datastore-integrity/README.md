@@ -81,6 +81,7 @@ eleven and found the classes wider than recorded:
 | 02 | [`02-repair-or-refuse-at-open.md`](02-repair-or-refuse-at-open.md) | A driver-side step in `ShardedPool.__init__`, before any actor exists: roll back hot journals, compare every replicated table across shards, copy forward from the in-flight record's controller, **refuse to open** on anything else. Closes `[00-replicated-writes-can-diverge-across-shards]`. | **written**; after 01 |
 | 03 | [`03-exact-identity-lookups.md`](03-exact-identity-lookups.md) | Exit time by serial equality, the query out of the loop. `IntegrationSolver` by `==`. `.scalar()` → `one_or_none()` on every identity lookup. `redshift` at `z = 0`. Closes three issues. | **written**; after 02 |
 | 04 | [`04-extend-the-read-back-guard.md`](04-extend-the-read-back-guard.md) | The guard over `read_batch` and every `_build_impl_*`, and a column-existence test. Records what it finds as known-unfixed. Closes `[01-read-batch-is-outside-the-guard]`. | **written**; independent of 01–03 |
+| 04b | [`04b-tighten-the-read-back-guard.md`](04b-tighten-the-read-back-guard.md) | Findings 1–3 of the review of 04: every function visited, not a list of names; the function in the coverage identity; G2 declares every unresolved table and unchecked insert, and walks module-level functions. Fixes no factory. *(Added 2026-09-28, by the user's decision on the review.)* | **written** 2026-09-28; after 04 |
 | 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads, each refusing more than one parent per `z_source`; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on 04 (D2, D3 decided) |
 | 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **written** 2026-09-26; after 03 |
 | 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **written** 2026-09-26; after 05 and 06 |
@@ -96,7 +97,7 @@ golden fingerprint, and 07–09 on D4. 09 exists only if D1 is taken. 10 is writ
 
 **Order.**
 - 01 → 02 → 03: 02 repairs what 01 records, and 03 changes lookups on the classes 01–02 replicate.
-- 04 is independent of 01–03 and may run beside them; 05 follows 04.
+- 04 is independent of 01–03 and may run beside them; 04b follows 04, and 05 follows 04b.
 - 06 → 07 → 08 → 09: each changes the schema, and one change at a time keeps each revertible. 08
   and 09 both change `QuadSourceIntegral`'s key; 08 is the decided one and goes first.
 - 06 follows 03, whose two `stepping_mode` flags it corrects. 07 follows 05 as well as 06, because
