@@ -1,11 +1,11 @@
 # Datastore integrity campaign — implementation state
 
 **Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 02, 04, 04b, and 05 as
-05a–05c); all but 02 reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+05a–05c), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
-`[00-replicated-writes-can-diverge-across-shards]`; its review is pending. **Next: 03 → 06**, each
+`[00-replicated-writes-can-diverge-across-shards]`; reviewed the same day. **Next: 03 → 06**, each
 with its own orchestrator note; 07 waits on 05 and 06. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
@@ -73,7 +73,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26). 01 and 04 are
 dispatched one at a time, never concurrently in this checkout, in either order. Since then:
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
-(2026-09-28, both used), and [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, ready).
+(2026-09-28, both used), and [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used).
 
 **Decided for 02 (2026-09-28, the user, while its note was written).**
 `test_replicated_write.py`'s `TestWriteOverASetRecord.test_a_reopened_pool_refuses` pins 01's
@@ -551,6 +551,105 @@ own record; the orchestrator's review, when it runs, is recorded separately.
   board's §4.
 - **Issue opened.** `[02-the-version-row-is-written-outside-the-in-flight-record]` (§3.3).
 - **Log:** [`logs/02-…`](logs/02-repair-or-refuse-at-open.md).
+
+**Orchestrator review of prompt 02 (2026-09-28).** Run against `f4b2c91`, dispatched from
+`65ee1d3` with the tree and the index clean, nothing `running`, and no other worktree. All eleven
+checks in `orchestrator/prompt-02.md` §3 passed. The repair and refusal logic was read against the
+code, not the log.
+- **Scope.** Nine files: the four permitted code files, the new test module, the log, the two
+  boards and the index. The forbidden paths are empty, and `docs/` changes only in
+  `docs/OPEN_ISSUES.md`. `--diff-filter=M` over tests shows only `test_replicated_write.py` and
+  `standin_pool.py`, which gains two functions and changes none.
+  - `ShardedPool.py` has six hunks: two import lines (deviation 9), three in the constructor, and one
+    block of new methods placed straight after `_check_shard_files` ends, before the shared
+    `SHARD RECORDS` static helpers.
+  - No hunk is in `_replicated_write`, the three `_…_impl_replicated_table` methods,
+    `_assign_shard_keys` or the closed-store block.
+- **Before any actor, no Ray.** The call is on the existing-store branch only, after
+  `_check_shard_files`, before the in-flight table's `create(checkfirst=True)` and the broker. A
+  new store skips it and keeps `reconciliation = None`. README §4's three names exist as fixed.
+- **The comparison is W5's.**
+  - **Classes.** They come from the constructor's `replicated_tables`, `config/sharding.py`'s list,
+    checked here: all 13 names have a table, so none is skipped silently.
+  - **Tag tables.** The foreign-key rule picks up `BackgroundModel_tags` and nothing else. The other
+    eight tag tables have sharded parents.
+  - **Keys.** Rows are keyed by serial, with only `timestamp` excluded. `BackgroundModelValue` is
+    keyed by `(model_serial, z_serial)` without `serial`, and the tag table by its primary key.
+    Those are the census's exclusions exactly (`replicated_serial_census.py`).
+  - `shard_keys` is checked against every shard's `wavenumber` rows. No sharded table is read.
+- **Repair only under the licence.**
+  - **Code.** `_plan_replicated_repair` returns early with no record. It copies only from
+    `controller_shard`, refuses any difference outside the record's unit, and refuses a row the
+    controller lacks.
+  - **What is copied.** Rows go over verbatim as full mappings read from the controller. A
+    `BackgroundModel` goes only as a whole unit.
+  - **Flags.** A flag is turned on only False → True, and only after a get.
+  - **`validated`.** It is recomputed by the factory's own `validate`, driver-side, inside a
+    savepoint. Anything that does not turn it on is rolled back. The factory writes `False` when
+    it counts short, so the savepoint is what keeps a `False` off disk.
+  - **The order.** The second comparison reads inside the open transactions. The shards commit, then
+    the record is deleted on the primary, with a rowcount check.
+  - **Grep.** Over the added lines, the only `DELETE` is the record's, and the only `UPDATE` sets
+    `True`.
+  - **Deviation 1's extra conditions are accepted.** They are the `started` timestamp, the
+    `store_id` serial, no rows under a validate, the whole unit, and free value serials. Each only
+    refuses more.
+  - **Deviation 10 is accepted.** The removed "equal but for serial" check was redundant: a split
+    always holds a row the controller lacks.
+- **Refusal otherwise.** Every refusal test goes through `refused_reopen`. It asserts the checksum
+  of every file in the store's directory, and that no actor was constructed. The split tests assert
+  both serials, the class, "Nothing was repaired" and "needs a person, or regeneration".
+- **The reopen table.** It has 19 rows, one per row of log 01's "After" table. Each disk state has
+  one outcome and a test:
+  - "same, record set" is cleared;
+  - "controller holds more" is repaired from the controller;
+  - a mismatch's split is refused;
+  - every kill-and-reopen case ends with a second reopen that repairs nothing and changes no
+    checksum.
+- **The named test.** One hunk in `test_replicated_write.py`: the method is renamed and rewritten,
+  and its fixture and siblings are untouched. It asserts the copy from the controller, the cleared
+  record and the write that succeeds.
+- **A clean store; the open time.** Test 7 checksums the primary, every shard and any journal. The
+  check costs 94 ms at 4 shards and 252 ms at 20, at production size. That is small beside starting
+  Ray actors, so it is not raised.
+- **Callers, and extraction.** `grep` finds `main.py`, the six `extract_*.py`, the two
+  `docs/source-remediation-verification/` scripts and the audit's fault probe (stand-in shards).
+  **Every extraction now runs the check at open.**
+  - A clean store opens as before.
+  - A divergent one is repaired or refused before any actor exists.
+  - No store under `var/` was opened to see which.
+- **Mutations.** (i)–(v) were replayed from `git show HEAD:<log>` with plain `git apply`. Each gave
+  exactly its logged counts and the same distinct failing tests. The tree was clean after each
+  revert.
+  - (i) `failures=4, errors=1`
+  - (ii) `failures=1, errors=16`
+  - (iii) `failures=16, errors=26`
+  - (iv) `failures=1`
+  - (v) `failures=1`
+
+  (v) is caught by one test only, the refusal after a repair. That is the only state in which
+  clearing the record early is observable.
+- **`var/`, suites, boards.**
+  - The snapshot (46 files, 10 directories) is byte-identical.
+  - Suites, serially: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore 325
+    (+38), LiouvilleGreen 148 (1 skipped), RunRegistry 199.
+  - `black --check` is clean, and `ray.is_initialized()` is false after the new module.
+  - The issue is on the store-fingerprint board's §4, with a note naming both commits.
+  - The index has 101 rows, counted: one deleted, and one added for the version-row issue.
+- **Raised with the user, not blocking.**
+  - **The version row.** `[02-the-version-row-is-written-outside-the-in-flight-record]` is a
+    state that healed before 02 and now refuses. It is reachable only from a crash while actors
+    start on a new store, or under a new `VERSION_LABEL`.
+  - **Real stores.** Log 02's observation 3: the check refuses a duplicate `BackgroundModelValue`
+    key and a `shard_keys` row naming a missing wavenumber. The census could not see either, and
+    §4.4 records no row counts. Nothing known writes either state, and after 07–09 (D4) the live
+    A3 store is unreadable by the tree anyway. So this matters only if that store is opened before
+    07.
+- **Discharged.** Log 01's observation 2, "until 02 lands, a set record refuses every replicated
+  write", is discharged: a reopen now repairs or clears the record.
+
+**Next: 03**, with its own orchestrator note carrying this review's findings. 03 changes lookups on
+the classes 02 reconciles. Prompt 10 is still the first real run; nothing in 02 has run under Ray.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
