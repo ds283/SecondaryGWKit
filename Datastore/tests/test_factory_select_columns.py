@@ -587,6 +587,7 @@ EXPECTED_COVERAGE = frozenset(
         "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_serial.row_data",
         "GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch.row",
         "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.build.row_data",
+        "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.read_batch.row_data",
         "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.row_data",
         "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_serial.row_data",
         "QuadSource.py:sqla_QuadSource_factory.build.row",
@@ -624,20 +625,11 @@ KNOWN_BLIND = {
     "BackgroundModel.py:sqla_BackgroundModelFactory.build.row_data": (
         "row comes from rows[0] of a conditionally-built query in a nested helper"
     ),
-    # Added by prompts/datastore-integrity prompt 04 (G1). OneLoopIntegral.py's read_batch is a
-    # module-level function, not a method, and build() never delegates to it: its make_object is
-    # defined but never called, and the function has no return statement at all (audit §3.12,
-    # probe_02). Inlining therefore links nothing to the query, and analyse_read_batch manufactures
-    # this one undecidable Finding for the whole function so the hole is declared rather than
-    # invisible. Out of scope for this campaign beyond that (README D3): the rest of
-    # OneLoopIntegral's factory is for when the target is actually built. The last component of the
-    # key is the manufactured Finding's row_var, "read_batch" (prompt 04b leaves this name as it
-    # was; the function component of the key is also "read_batch", so it reads
-    # "...<module-level>.read_batch.read_batch").
-    "OneLoopIntegral.py:<module-level>.read_batch.read_batch": (
-        "make_object(row_data) is defined but never called, and the function has no return "
-        "statement, so no row variable can be linked to a query"
-    ),
+    # Prompt 04 (G1)'s manufactured entry for OneLoopIntegral.py's module-level read_batch --
+    # a function with no return statement, whose make_object was defined but never called -- is
+    # gone: prompt 05b (P8) made read_batch a method of sqla_OneLoopIntegral_factory with a
+    # return, so it is now a decidable coverage entry (EXPECTED_COVERAGE, above) rather than a
+    # declared blind spot.
 }
 
 
@@ -739,23 +731,14 @@ from Datastore.SQL.schema import build_schema  # noqa: E402
 # Prompt 05a fixed and struck the two P6 entries this held (sqla_GkSourceValue_factory reading
 # table.c.z_serial where the column is z_source_serial, GkSource.py:766; and
 # sqla_QuadSourceValue_factory reading quadsource_table.c.model_id where the column is
-# model_serial, QuadSource.py:672). One entry remains, P8's, owned by prompt 05b under D3 (the
-# mechanical defects of OneLoopIntegral's factory only; the rest is logged for when the target is
-# actually built).
+# model_serial, QuadSource.py:672). Prompt 05b (P8) struck the last one: sqla_OneLoopIntegral_
+# factory.store no longer writes "validated" to OneLoopIntegral.py, whose table has no such
+# column -- D3 bounded the fix to this mechanical defect, and the rest (source_serial) is logged
+# on the board as [00-oneloop-factory-cannot-round-trip-a-row] for when the target is actually
+# built. Empty since; a future entry needs a reason recorded on the campaign board.
 ColumnProblem = Tuple[str, str, str, str, str]
 
-KNOWN_UNFIXED_COLUMNS: Set[ColumnProblem] = {
-    # P8: sqla_OneLoopIntegral_factory.store writes an insert key "validated"
-    # (OneLoopIntegral.py:222) to a table with no such column -- D3: the mechanical defects only,
-    # the rest logged for when OneLoopIntegral is actually built.
-    (
-        "OneLoopIntegral.py",
-        "sqla_OneLoopIntegral_factory",
-        "store",
-        "OneLoopIntegral [insert key]",
-        "validated",
-    ),
-}
+KNOWN_UNFIXED_COLUMNS: Set[ColumnProblem] = set()
 
 # Sites where a table variable resolves (it is the factory's own `table`, a `tables["X"]`, or an
 # alias of either) but the column name is built at runtime -- either by an f-string, or by a plain
@@ -788,8 +771,12 @@ KNOWN_BLIND_COLUMNS: Dict[str, str] = {
 # Sites where a `<base>.c.<name>` reference's `base` does not resolve to a schema table at all
 # (prompt 04b, G6, review finding 3): `_table_of` returns None, and 04's resolver silently skipped
 # these rather than declaring them. Keyed by (function site, the unparsed `base` expression), each
-# naming why that base cannot be resolved. `orchestrator/review_04_measurements.py` §C computes
-# the same 12 pairs (nine `subquery`, two `query`, one `table`).
+# naming why that base cannot be resolved. `orchestrator/review_04_measurements.py` §C computed 12
+# pairs (nine `subquery`, two `query`, one `table`) at prompt 04b; prompt 05b (P1) rewrote both
+# `read_batch`es' tag joins onto `table.c.serial`, so the two `query` pairs and the module-level
+# `OneLoopIntegral.read_batch`'s `table` pair (which existed only because that function was not a
+# method, so `cls_to_table` had no entry for its own `table` parameter -- moot once it became one)
+# are gone, leaving the nine `subquery` pairs.
 UnresolvedTableSite = Tuple[str, str]
 
 KNOWN_UNRESOLVED_TABLES: Dict[UnresolvedTableSite, str] = {
@@ -834,25 +821,6 @@ KNOWN_UNRESOLVED_TABLES: Dict[UnresolvedTableSite, str] = {
         "TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch",
         "subquery",
     ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
-    # `query` is the `sqla.select(...)` being built up, progressively reassigned by `.filter(...)`
-    # / `.join(...)`, and then read from directly as `query.c.serial` while joining a tag alias --
-    # not one of `_table_of`'s three resolvable shapes.
-    (
-        "OneLoopIntegral.py:<module-level>.read_batch",
-        "query",
-    ): "query.c.serial, read off the select statement itself while joining a tag alias",
-    (
-        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch",
-        "query",
-    ): "query.c.serial, read off the select statement itself while joining a tag alias",
-    # `table` is this module-level function's own third parameter, exactly the shape `_table_of`
-    # resolves for a *class* method (`env["table"] = own`, from `cls_to_table`) -- but
-    # `OneLoopIntegral.py`'s `read_batch` is not a method, so `cls.name` is `"<module-level>"`,
-    # which is not a key of `cls_to_table`, and `own` is `None`.
-    (
-        "OneLoopIntegral.py:<module-level>.read_batch",
-        "table",
-    ): "table is read_batch's own parameter; module-level, so cls_to_table has no entry for it",
 }
 
 # Insert calls G2 does not check because the payload is not a dict literal (prompt 04b, G6, review

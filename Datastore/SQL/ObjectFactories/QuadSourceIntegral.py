@@ -577,6 +577,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 r_wavenumber_tab.c.k_inv_Mpc.label("r_inv_Mpc"),
                 r_wavenumber_tab.c.source.label("r_is_source"),
                 r_wavenumber_tab.c.response.label("r_is_response"),
+                q_exit_tab.c.serial.label("q_exit_serial"),
                 q_exit_tab.c.stepping.label("q_stepping"),
                 q_exit_tab.c.atol_serial.label("q_atol_serial"),
                 q_exit_tab.c.rtol_serial.label("q_rtol_serial"),
@@ -584,6 +585,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 q_atol_tab.c.log10_tol.label("q_log10_atol"),
                 q_rtol_tab.c.log10_tol.label("q_log10_rtol"),
                 q_exit_tab.c.z_exit.label("q_z_exit"),
+                r_exit_tab.c.serial.label("r_exit_serial"),
                 r_exit_tab.c.stepping.label("r_stepping"),
                 r_exit_tab.c.atol_serial.label("r_atol_serial"),
                 r_exit_tab.c.rtol_serial.label("r_rtol_serial"),
@@ -676,7 +678,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             query = query.join(
                 tab,
                 and_(
-                    tab.c.parent_serial == query.c.serial,
+                    tab.c.parent_serial == table.c.serial,
                     tab.c.tag_serial == tag.store_id,
                 ),
             )
@@ -700,13 +702,13 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             )
 
             q_exit_payload = {
-                "store_id": row.q_serial,
+                "store_id": row.q_exit_serial,
                 "z_exit": row.q_z_exit,
                 "compute_time": row.q_compute_time,
                 "stepping": row.q_stepping,
             }
             r_exit_payload = {
-                "store_id": row.r_serial,
+                "store_id": row.r_exit_serial,
                 "z_exit": row.r_z_exit,
                 "compute_time": row.r_compute_time,
                 "stepping": row.r_stepping,

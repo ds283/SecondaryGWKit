@@ -1,7 +1,9 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
+**Last updated:** 2026-09-28 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
+Two of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+this board's §4 on 2026-09-28 by that campaign's prompt 05b; this board's own prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -189,41 +191,10 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 `[00-replicated-writes-can-diverge-across-shards]` on the sweep store. Prompt 03 closed
 `[00-inventory-run-prunes-unvalidated-rows-by-default]` on 2026-09-25 (§4). Prompt 05 measured
 `[00-replicated-writes-can-diverge-across-shards]` on the three original stores on 2026-09-25, and
-opened none. Seven remain.
+opened none. `prompts/datastore-integrity` prompt 05b closed two more on 2026-09-28 (§4):
+`[00-oneloop-lookup-joins-the-wrong-tag-table]` and `[00-tagged-read-batch-joins-an-unselected-alias]`.
+Five remain.
 
-- **[00-oneloop-lookup-joins-the-wrong-tag-table]** *(opened 2026-09-24 by the audit)*
-  - **The defect.** `sqla_OneLoopIntegral_factory.build` filters requested tags against
-    `tables["QuadSourceIntegral_tags"]` (`Datastore/SQL/ObjectFactories/OneLoopIntegral.py:141`),
-    while `store()` writes `OneLoopIntegral_tags` (`:243`). So a tagged `OneLoopIntegral` lookup
-    joins `QuadSourceIntegral` tag rows against `OneLoopIntegral` serials.
-  - **Impact.** The table is empty in the sweep store (0 rows in the 2026-09-24 inventories), so
-    there is no effect today. The first
-    tagged lookup would miss rows that exist, or match rows by coincidence of serials.
-  - **Next step.** A one-line fix in the factory, in whichever campaign next has
-    `OneLoopIntegral.py`'s lookup in scope. This campaign's inventory reads
-    `OneLoopIntegral_tags`, and does not fix the lookup.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 05, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.12). It
-    closes here, on this board's §4.
-- **[00-tagged-read-batch-joins-an-unselected-alias]** *(opened 2026-09-24 by the audit;
-  **suspected, not run**)*
-  - **The defect.** The tag joins in `read_batch` use `query.c.serial`
-    (`QuadSourceIntegral.py:679`; `OneLoopIntegral.py:332`). Compiled under SQLAlchemy 2.0.39, the
-    pattern gives a deprecation warning and SQL that names `anon_1.serial`, which is not in the
-    FROM clause. `extract_QuadSourceIntegral_data.py:1087-1099` passes non-empty tags.
-  - **Impact.** If the compiled SQL fails when run, tagged batch reads of `QuadSourceIntegral`
-    fail, and every extraction from a store written since the run tags existed fails with them.
-    This has not been run against a store.
-  - **Next step.** Run a tagged `read_batch` against a copy of a store, to confirm or refute. Then
-    fix it in the campaign that owns `read_batch`; `datastore-readback`'s
-    `[01-read-batch-is-outside-the-guard]` is the neighbouring record.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 05, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.1).
-    **Confirmed** by the audit's in-memory probe: every tagged call fails with `no such column:
-    anon_1.serial`, so extraction of `QuadSourceIntegral` from any run-labelled store fails. It
-    closes here, on this board's §4.
 - **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
     (`QuadSource.py:113-116`), but it holds a transfer-function store id
@@ -334,6 +305,53 @@ opened none. Seven remain.
 ---
 
 ## 4. Resolved issues
+
+- **[00-oneloop-lookup-joins-the-wrong-tag-table]** *(opened 2026-09-24 by the audit)*
+  - **The defect.** `sqla_OneLoopIntegral_factory.build` filters requested tags against
+    `tables["QuadSourceIntegral_tags"]` (`Datastore/SQL/ObjectFactories/OneLoopIntegral.py:141`),
+    while `store()` writes `OneLoopIntegral_tags` (`:243`). So a tagged `OneLoopIntegral` lookup
+    joins `QuadSourceIntegral` tag rows against `OneLoopIntegral` serials.
+  - **Impact.** The table is empty in the sweep store (0 rows in the 2026-09-24 inventories), so
+    there is no effect today. The first
+    tagged lookup would miss rows that exist, or match rows by coincidence of serials.
+  - **Next step.** A one-line fix in the factory, in whichever campaign next has
+    `OneLoopIntegral.py`'s lookup in scope. This campaign's inventory reads
+    `OneLoopIntegral_tags`, and does not fix the lookup.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.12).
+  - **Closed (2026-09-28) by `prompts/datastore-integrity` prompt 05b**, commit *"Repair the
+    integral read_batch join, exit-time serials and OneLoopIntegral"*. `build()` now joins
+    `tables["OneLoopIntegral_tags"]`, matching what `store()` writes; probe_06's coincidence case
+    (an untagged row whose serial coincides with a `QuadSourceIntegral_tags.parent_serial`) is
+    covered by `Datastore/tests/test_integral_read_batch.py`'s
+    `TestOneLoopIntegralBuildTags.test_untagged_row_coinciding_with_a_quadsourceintegral_tag_serial_is_not_matched`.
+    Log: [`../datastore-integrity/logs/05b-repair-the-integral-read-batches.md`](../datastore-integrity/logs/05b-repair-the-integral-read-batches.md).
+
+- **[00-tagged-read-batch-joins-an-unselected-alias]** *(opened 2026-09-24 by the audit;
+  **suspected, not run** at open)*
+  - **The defect.** The tag joins in `read_batch` use `query.c.serial`
+    (`QuadSourceIntegral.py:679`; `OneLoopIntegral.py:332`). Compiled under SQLAlchemy 2.0.39, the
+    pattern gives a deprecation warning and SQL that names `anon_1.serial`, which is not in the
+    FROM clause. `extract_QuadSourceIntegral_data.py:1087-1099` passes non-empty tags.
+  - **Impact.** If the compiled SQL fails when run, tagged batch reads of `QuadSourceIntegral`
+    fail, and every extraction from a store written since the run tags existed fails with them.
+    This has not been run against a store.
+  - **Next step.** Run a tagged `read_batch` against a copy of a store, to confirm or refute. Then
+    fix it in the campaign that owns `read_batch`; `datastore-readback`'s
+    `[01-read-batch-is-outside-the-guard]` is the neighbouring record.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.1).
+    **Confirmed** by the audit's in-memory probe: every tagged call fails with `no such column:
+    anon_1.serial`, so extraction of `QuadSourceIntegral` from any run-labelled store fails.
+  - **Closed (2026-09-28) by `prompts/datastore-integrity` prompt 05b**, commit *"Repair the
+    integral read_batch join, exit-time serials and OneLoopIntegral"*. Both tag joins (in
+    `QuadSourceIntegral.read_batch` and `sqla_OneLoopIntegral_factory.read_batch`) now read
+    `tab.c.parent_serial == table.c.serial`, as `probe_01b_fix_shape.py` verified in memory.
+    `Datastore/tests/test_integral_read_batch.py`'s `TestQuadSourceIntegralTaggedReadBatch` and
+    `TestOneLoopIntegralReadBatch` round-trip both `read_batch`es tagged and untagged. Log:
+    [`../datastore-integrity/logs/05b-repair-the-integral-read-batches.md`](../datastore-integrity/logs/05b-repair-the-integral-read-batches.md).
 
 - **[00-inventory-run-prunes-unvalidated-rows-by-default]** *(opened 2026-09-24 by the audit;
   **assigned to prompt 03**)*

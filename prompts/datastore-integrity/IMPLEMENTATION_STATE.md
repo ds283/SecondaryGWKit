@@ -1,11 +1,11 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, 05a), all
-reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the
-same day. 04b landed the same day it was written, from the 04 review's findings. **05 is written**
-(2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
-([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a landed 2026-09-28, and 05b is ready.
-02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
+**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 04, 04b, 05a, 05b); 01, 04, 04b
+and 05a reviewed, 05b awaiting review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
+(yes) later the same day. 04b landed the same day it was written, from the 04 review's findings.
+**05 is written** (2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
+([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a and 05b landed 2026-09-28, and 05c
+is ready. 02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -59,7 +59,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
 | 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the mechanical read-path defects: names, an argument, tags, raises"* | [`logs/05a-…`](logs/05a-repair-the-mechanical-read-defects.md) |
-| 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ after 05a | — | — |
+| 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the integral read_batch join, exit-time serials and OneLoopIntegral"* | [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md) |
 | 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ⬜ after 05b | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
@@ -314,6 +314,18 @@ findings on the log's record, and one is carried into 05c's brief. None needs th
 3. **The replay paragraph was written before the commit.** It describes the post-commit replay in
    the past tense. The review's own replay confirms what it says.
 
+**Prompt 05b landed 2026-09-28**, from `7ce8c66` (the 05a commit reviewed at `76e813b`). P1, P2 and
+P8 shipped: the tagged join in both `QuadSourceIntegral.read_batch` and
+`sqla_OneLoopIntegral_factory.read_batch` on `table.c.serial`; the exit times' own serials in
+`QuadSourceIntegral.read_batch`; `OneLoopIntegral`'s factory repaired to D3's bound (its own tag
+table, `read_batch` a method with a return, tags default `[]`, `"validated"` dropped from `store()`)
+with `source_serial` left untouched. `KNOWN_UNFIXED_COLUMNS` is empty. Every guard pin movement
+matches §2's list exactly, each forced by the failing assertion the guard gave before the pin was
+edited (log §"What shipped"). Ten new tests in `Datastore/tests/test_integral_read_batch.py`; no
+existing test changed. Log: [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md). This is
+the implementer's own record; the orchestrator's review, when it runs, is recorded separately
+below, in the form the 01/04/04b/05a reviews above are.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -341,15 +353,15 @@ what 01–04 find; what waits is their method.
 | G4 | **GUARD** | The analyser visits every function of every factory class and every module-level function, not a list of names; `validate_on_startup`'s seven bindings join coverage. | 04b | ✅ `iter_functions`; `_ROW_HELPERS` gone; `EXPECTED_COVERAGE` +13 (30→43: the 7 `validate_on_startup` bindings plus 6 that regain a sibling once the function rejoins the key) |
 | G5 | **GUARD** | `EXPECTED_COVERAGE` and `KNOWN_BLIND` keyed by function, so each helper is pinned on its own; its projection keeps all 30 of 04's entries. | 04b | ✅ `Finding.coverage_key` ("module:class.function.variable"); `Finding.key` unchanged, so `KNOWN_UNFIXED`/`KNOWN_UNFIXED_COLUMNS` keep their keying and contents exactly; projection verified by computation in the log |
 | G6 | **GUARD** | G2 walks module-level functions, reports an unknown `tables["X"]` as a problem, and pins every unresolved table base and unchecked insert with a reason. | 04b | ✅ `KNOWN_UNRESOLVED_TABLES` (12 pairs), `KNOWN_UNCHECKED_INSERTS` (13 sites), both declared with no resolution rule applied (log's deviation 1); `tables["X"]`/`inserters["X"]` naming no schema table now convicted (none in this tree today) |
-| P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05b | ⬜ |
-| P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05b | ⬜ |
+| P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05b | ✅ both joins now `tab.c.parent_serial == table.c.serial`; `probe_01b`'s verified shape |
+| P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05b | ✅ `q_exit_serial`/`r_exit_serial` selected and used as `q_exit_payload`/`r_exit_payload`'s `store_id`; rest of `make_object` checked, no other wrong-table serial found |
 | P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05c | ⬜ |
 | P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). *(Widened 2026-09-28 when 05c was written: `TkWKBValue`'s reads have the same omission, refused per `(model, k)`.)* | 05c | ⬜ |
 | P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05c | ⬜ |
 | P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05a | ✅ `WKB_criterion` in both WKB value factories' `_build_impl_serial`; `z_source_serial` in `GkSourceValue._build_impl_serial`; `model_serial` in `QuadSourceValue._build_impl_model`; `friction=row.friction` added to `TkWKBValue.read_batch`'s `make_obj`. `KNOWN_UNFIXED` and the two P6 `KNOWN_UNFIXED_COLUMNS` entries struck |
 | P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ✅ nine sites (recount below), `Optional[List[store_tag]]` → `List[store_tag]` with each; the three `raise ("…")` → `raise RuntimeError("…")`, message unchanged; sweep for any other `raise (`/`raise "` under `ObjectFactories/` found none beyond the three named |
-| P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ⬜ |
-| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | 🔶 05a's share done: `Datastore/tests/test_read_path_mechanics.py` round-trips `TkWKBValue.read_batch` tagged/untagged (its `friction` fix) and the tags-omitted/`tags=[]` equivalence at all nine P7 sites; `KNOWN_UNFIXED` is empty. 05b and 05c add the rest |
+| P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ✅ `build()` joins `OneLoopIntegral_tags`; `read_batch` is now `sqla_OneLoopIntegral_factory`'s `@staticmethod`, tags default `[]`, returns a list; `"validated": False` dropped from `store()`; `source_serial` left alone (D3) |
+| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | 🔶 05a's and 05b's shares done: `test_read_path_mechanics.py` (05a) and the new `test_integral_read_batch.py` (05b, 10 tests: tagged `QuadSourceIntegral.read_batch`, P2's exit serials, `OneLoopIntegral.build`'s tags including probe_06's coincidence case, `OneLoopIntegral.read_batch` tagged/untagged/omitted, and the deferred `source_serial` defect kept visible). `KNOWN_UNFIXED` and `KNOWN_UNFIXED_COLUMNS` are both empty. 05c adds the value reads' share |
 | S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
 | S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
@@ -381,9 +393,9 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
 | `[01-read-batch-is-outside-the-guard]` | datastore-readback | 04 (**closed** 2026-09-26, on that board's §4) |
-| `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05 |
+| `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05 |
-| `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05 |
+| `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | 08 |
@@ -402,11 +414,17 @@ None is assigned to a prompt of this campaign.
     reads stores the tree may not open.
   - **Next step.** Decide whether the fingerprint should carry replicated agreement, or say plainly
     that it does not. Not this campaign's: README §1.
-- **[00-oneloop-factory-cannot-round-trip-a-row]** *(opened 2026-09-25 by the audit)*
+- **[00-oneloop-factory-cannot-round-trip-a-row]** *(opened 2026-09-25 by the audit; **narrowed**
+  2026-09-28 by prompt 05b)*
   - **The defect.** `sqla_OneLoopIntegral_factory.build` puts no `source_serial` in the payload
     and the table has no such column, while `ComputeTargets/OneLoopIntegral.py:43` reads
-    `payload["source_serial"]`, so every hit raises `KeyError`. `store()` writes a `validated` key
-    to a table with no such column (audit §3.12, `probe_06`).
+    `payload["source_serial"]`, so every hit raises `KeyError`. **The `store()` half — a
+    `validated` key written to a table with no such column — is fixed** (prompt 05b, D3, "Repair
+    the integral read_batch join, exit-time serials and OneLoopIntegral"); only the
+    `source_serial` half of the original audit §3.12 finding remains, and
+    `Datastore/tests/test_integral_read_batch.py`'s
+    `TestOneLoopIntegralSourceSerialStaysBroken` keeps it visible (constructing the real
+    `OneLoopIntegral` from what `read_batch()` passes still raises `KeyError: 'source_serial'`).
   - **Impact.** None while nothing builds the target. The first one-loop build cannot read back a
     row it stored.
   - **Next step.** Part of how `OneLoopIntegral` is keyed, which the user put downstream beside
@@ -488,6 +506,22 @@ run alone, to avoid the known wall-clock flake under parallel load).
 | ComputeTargets | 552 OK |
 | CosmologyModels | 39 OK |
 | Datastore | **257 OK** (237 + the 20 of the new `test_read_path_mechanics.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check` is clean on every file this prompt touched.
+
+### 5.5 After prompt 05b (2026-09-28)
+
+Measured on the tree of prompt 05b's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **267 OK** (257 + the 10 of the new `test_integral_read_batch.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK |
 
