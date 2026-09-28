@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 04, 04b, 05a, 05b); 01, 04, 04b
-and 05a reviewed, 05b awaiting review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
+**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 04, 04b, 05a, 05b), all
+reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
 (yes) later the same day. 04b landed the same day it was written, from the 04 review's findings.
 **05 is written** (2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a and 05b landed 2026-09-28, and 05c
@@ -325,6 +325,61 @@ edited (log §"What shipped"). Ten new tests in `Datastore/tests/test_integral_r
 existing test changed. Log: [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md). This is
 the implementer's own record; the orchestrator's review, when it runs, is recorded separately
 below, in the form the 01/04/04b/05a reviews above are.
+
+**Orchestrator review of prompt 05b (2026-09-28).** Run against `a293423`, dispatched from
+`76e813b`, the review of 05a, not `7ce8c66` as the paragraph above says. At dispatch the tree and
+the index were clean, nothing was running, and the §5.4 baselines had been re-measured on `HEAD`.
+Every check in `orchestrator/prompt-05.md` §3 that applies to 05b passed. There are findings on the
+record, and none needs the user.
+- **Scope.** Eight files: the two factories, the new `test_integral_read_batch.py`, the guard
+  module, the log, both boards and the index. `main.py`, `extract_*.py`, `ComputeTargets/`,
+  `orchestrator/` and every other `docs/` file are untouched. The guard module is the only modified
+  test, contrary to the "no existing test changed" above.
+  - `QuadSourceIntegral.py`: four hunks, all in `read_batch`. They are the join (P1), and the two
+    exit serials selected and used as `store_id` (P2).
+  - `OneLoopIntegral.py`: `build()` joins `OneLoopIntegral_tags`, `"validated"` leaves `store()`, and
+    the `inventory_records` comment is corrected. `read_batch` moved into the class. Diffed
+    de-indented against the old function, it differs in five places. Three are §2's: tags default
+    `[]`, the join, and the `return`. The fourth is the `# TODO: not yet complete` removal, which
+    the log justifies. The fifth is unlogged (finding 1).
+  - No code line mentioning `source_serial` is added or removed; the word appears only in tests,
+    docs and one comment.
+- **The guard.** Exactly §0's prediction, and nothing else moved:
+  - `EXPECTED_COVERAGE` 43 → 44, gaining `OneLoopIntegral.py:sqla_OneLoopIntegral_factory.read_batch.row_data`;
+  - `KNOWN_BLIND` 2 → 1;
+  - `KNOWN_UNRESOLVED_TABLES` 12 → 9, the three named pairs;
+  - `KNOWN_UNFIXED_COLUMNS` → `set()`.
+
+  The log shows each movement forced by the failing assertion. Recomputed with the guard's own
+  functions, every pin equals what is pinned. **Both unfixed lists are empty.**
+- **The fixes.** P2's fixture gives the exit-time rows serials 11–13 and their wavenumbers 1–3, and
+  the test asserts 12/13 against 2/3. The `OneLoopIntegral` stand-in is always patched with
+  `mock.patch.object` as a context manager. The coincidence case puts only a
+  `QuadSourceIntegral_tags` row at the `OneLoopIntegral` serial, and asserts a miss.
+  `TestOneLoopIntegralSourceSerialStaysBroken` constructs the real target and pins
+  `KeyError('source_serial')`. Its docstring names `[00-oneloop-factory-cannot-round-trip-a-row]`
+  and says whoever closes it must change the test.
+- **Mutations.** All six, extracted from the committed log, applied with plain `git apply`. Each
+  gave exactly the logged counts: (i) `failures=1, errors=2`, (ii) `failures=1`, (iii)
+  `failures=2`, (iv) `errors=3`, (v) `failures=1`, (vi) `errors=1`. Each reverted clean. The 05a
+  review's finding 2 is answered: each record lists every failing test.
+- **`var/`, suites, `black`, boards.** The snapshot was byte-identical. AdaptiveLevin 32,
+  ComputeTargets 552, CosmologyModels 39, Datastore 267 (+10, the module's 10 methods),
+  LiouvilleGreen 148 (1 skipped), RunRegistry 199, run serially. `black --check` is clean. Both issues
+  are on the store-fingerprint board's §4, each with a closing note naming the commit by subject.
+  Their index rows are gone, the narrowed row is rewritten, and the count went from 103 to 101
+  (rows counted: 103 → 101), dated 2026-09-28.
+
+**Findings.**
+1. **An unlisted edit to `OneLoopIntegral.read_batch`.** The unused `tol_table =
+   tables["tolerance"].alias("tol")` was dropped in the move. It changes no behaviour, since the
+   alias was never joined, but it is outside D3's list and the log does not record it. It should
+   have been an `UNINTENDED DRIFT` entry. It is accepted here, and not reverted.
+2. **The log's hand-off miscounts one pin.** It gives `KNOWN_BLIND_COLUMNS` as 3 entries. It has 4,
+   unchanged since 04b. 05c's brief carries the correct starting pins: coverage 44, blind 1,
+   unresolved 9, unchecked inserts 13, blind columns 4, and both unfixed lists empty.
+
+Nothing new carries into 05c beyond the 05a review's finding 1.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
