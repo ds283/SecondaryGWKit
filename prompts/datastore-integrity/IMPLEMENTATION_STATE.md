@@ -2,8 +2,9 @@
 
 **Last updated:** 2026-09-28 · **Status: 3 of 10 prompts landed (01, 04, 04b), all reviewed.** The
 user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the same day. 04b landed the
-same day it was written, from the 04 review's findings. **05 is released to be written** (2026-09-28),
-against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists and 04b's pins. 10 waits on 01–09. `store-retirement`
+same day it was written, from the 04 review's findings. **05 is written** (2026-09-28) as three prompts,
+05a → 05b → 05c, for one orchestrator session ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a is ready.
+02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -56,7 +57,9 @@ becomes an exact match; the adjacent issues are out of scope.
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
-| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ released to be written, 2026-09-28 | — | — | — |
+| 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ ready | — | — |
+| 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ after 05a | — | — |
+| 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ⬜ after 05b | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
@@ -245,6 +248,23 @@ passed, with no findings.
 **Prompt 05 is released to be written** (2026-09-28): its charter is README §2's, and its method
 follows D2 and D3.
 
+**Prompt 05 written (2026-09-28), as 05a–05c.** P1–P9 span eight factory files, two live read
+paths and five round trips, and several round trips cannot pass until the mechanical defects are
+fixed. So the charter is split three ways: mechanical first (05a: P6, P7), then the integral
+`read_batch`es (05b: P1, P2, P8), then the value reads' parent key (05c: P3–P5, closing P9). They
+run in one session under [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md), each reviewed
+before the next is dispatched. Two findings came from writing it:
+- **`TkWKBValue`'s reads omit `z_init` too**, and refuse nothing when two parents exist for one
+  `k`. It is the same class as P4, which the audit named only for `GkWKBValue`. P4 is widened, and
+  05c covers it.
+- **05a's and 05b's pin movements were simulated** against the guard on a scratch copy of the
+  factories. 05a moves nothing but the struck entries. 05b adds one coverage entry, removes one
+  blind entry and three unresolved-table pairs, and empties `KNOWN_UNFIXED_COLUMNS`. Each prompt
+  lists exactly these, and any other movement is a stop.
+
+`GkSourceValue` and `QuadSourceValue` were checked while writing: their reads match their parents'
+keys, so neither needs a key change.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -272,15 +292,15 @@ what 01–04 find; what waits is their method.
 | G4 | **GUARD** | The analyser visits every function of every factory class and every module-level function, not a list of names; `validate_on_startup`'s seven bindings join coverage. | 04b | ✅ `iter_functions`; `_ROW_HELPERS` gone; `EXPECTED_COVERAGE` +13 (30→43: the 7 `validate_on_startup` bindings plus 6 that regain a sibling once the function rejoins the key) |
 | G5 | **GUARD** | `EXPECTED_COVERAGE` and `KNOWN_BLIND` keyed by function, so each helper is pinned on its own; its projection keeps all 30 of 04's entries. | 04b | ✅ `Finding.coverage_key` ("module:class.function.variable"); `Finding.key` unchanged, so `KNOWN_UNFIXED`/`KNOWN_UNFIXED_COLUMNS` keep their keying and contents exactly; projection verified by computation in the log |
 | G6 | **GUARD** | G2 walks module-level functions, reports an unknown `tables["X"]` as a problem, and pins every unresolved table base and unchecked insert with a reason. | 04b | ✅ `KNOWN_UNRESOLVED_TABLES` (12 pairs), `KNOWN_UNCHECKED_INSERTS` (13 sites), both declared with no resolution rule applied (log's deviation 1); `tables["X"]`/`inserters["X"]` naming no schema table now convicted (none in this tree today) |
-| P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05 | ⏸️ |
-| P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05 | ⏸️ |
-| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05 | ⏸️ |
-| P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). | 05 | ⏸️ |
-| P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05 | ⏸️ |
-| P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05 | ⏸️ |
-| P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05 | ⏸️ |
-| P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05 | ⏸️ |
-| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05 | ⏸️ |
+| P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05b | ⬜ |
+| P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05b | ⬜ |
+| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05c | ⬜ |
+| P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). *(Widened 2026-09-28 when 05c was written: `TkWKBValue`'s reads have the same omission, refused per `(model, k)`.)* | 05c | ⬜ |
+| P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05c | ⬜ |
+| P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05a | ⬜ |
+| P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ⬜ |
+| P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ⬜ |
+| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | ⬜ |
 | S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
 | S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
