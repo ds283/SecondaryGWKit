@@ -70,7 +70,16 @@ becomes an exact match; the adjacent issues are out of scope.
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26). 01 and 04 are
-dispatched one at a time, never concurrently in this checkout, in either order.
+dispatched one at a time, never concurrently in this checkout, in either order. Since then:
+[`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
+(2026-09-28, both used), and [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, ready).
+
+**Decided for 02 (2026-09-28, the user, while its note was written).**
+`test_replicated_write.py`'s `TestWriteOverASetRecord.test_a_reopened_pool_refuses` pins 01's
+behaviour: a pool reopened over a set record refuses every replicated write. That is the state 02
+repairs at open, so the test fails by design. The user chose to rewrite it to 02's rule on the
+same fixture: the reopen repairs, clears the record, and the write succeeds. The note names it
+under README §5 rule 7, as 02's only permitted edit to an existing test.
 
 **Orchestrator review of prompt 01 (2026-09-26).** All nine checks in `orchestrator/prompt-01.md`
 §3 passed on `c08a9d0`, dispatched from `65cd4b7` with the tree and the index clean.
