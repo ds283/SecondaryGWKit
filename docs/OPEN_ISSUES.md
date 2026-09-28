@@ -742,8 +742,8 @@ datastore-integrity defect be fixed before the A3 v2 store is built, the first s
 archival value. Its audit, `docs/datastore-integrity-audit.md`, re-verified the eleven open issues
 in that class on four boards, all still present, and each wider than recorded. All eleven were
 assigned to its prompts on 2026-09-26; each stays on its owning board, which carries an
-**Assigned** line, and closes there. The audit opened three `00-` issues of its own, the last
-three rows, none assigned to a prompt.
+**Assigned** line, and closes there. The audit opened three `00-` issues of its own, none assigned
+to a prompt, and prompt 05c opened one on 2026-09-28: the last four rows.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -751,13 +751,13 @@ three rows, none assigned to a prompt.
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | **→ prompt 03.** README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03a must sweep it through `_solve_horizon_exit` and never through the datastore. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | **→ prompt 03.** `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | **→ prompt 03.** `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
-| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | **→ prompt 05.** The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | **→ prompt 06.** `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | **→ prompt 07.** `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | **→ prompt 08.** `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
 | `[00-the-inventory-cannot-see-a-serial-split]` | datastore-integrity | The structured inventory compares replicated classes by key, tags, `validated` and value count, not by serial, flags or value contents, so a serial split fingerprints clean. Not this campaign's. |
 | `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | **Narrowed 2026-09-28** by prompt 05b: `store()`'s `validated` key to no column is fixed. `OneLoopIntegral.build`/`read_batch` still put no `source_serial` in the payload, which the target reads. For when `OneLoopIntegral` is built. |
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
+| `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
 
 ---
 

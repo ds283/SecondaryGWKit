@@ -1,11 +1,10 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 04, 04b, 05a, 05b), all
-reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
+**Last updated:** 2026-09-28 · **Status: 01, 04, 04b, 05a, 05b and 05c have landed; all but 05c
+are reviewed, and 05c awaits the orchestrator's review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1
 (yes) later the same day. 04b landed the same day it was written, from the 04 review's findings.
 **05 is written** (2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
-([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a and 05b landed 2026-09-28, and 05c
-is ready. 02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
+([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a, 05b and 05c landed 2026-09-28. 02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -60,7 +59,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
 | 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the mechanical read-path defects: names, an argument, tags, raises"* | [`logs/05a-…`](logs/05a-repair-the-mechanical-read-defects.md) |
 | 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the integral read_batch join, exit-time serials and OneLoopIntegral"* | [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md) |
-| 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ⬜ after 05b | — | — |
+| 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Key the value reads on their parent and refuse a second parent"* | [`logs/05c-…`](logs/05c-key-the-value-reads-on-their-parent.md) |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
@@ -381,6 +380,42 @@ record, and none needs the user.
 
 Nothing new carries into 05c beyond the 05a review's finding 1.
 
+**Prompt 05c landed 2026-09-28**, from `199be29` (the review of 05b). This is the implementer's own
+record; the orchestrator's review, when it runs, is recorded separately.
+- **What shipped.** P3, P4 and P5, and P9's close.
+  - The numeric value reads filter the parent on `break_point_kind`, and require `atol`/`rtol`.
+  - `TkNumericValue` reads one key, `z_init`.
+  - The Gk and Tk WKB value reads take an optional `z_init`, matched with the parents' own
+    expression.
+  - The three value `read_batch`es refuse with `MultipleResultsFound`, naming the parents, when
+    more than one parent contributes rows for one `z_source` (Gk), or for one `(model, k)` (Tk
+    WKB).
+  - Both `…_is_response` labels read `response`.
+  - `READ_BATCH_ROUND_TRIPS` pins every `read_batch` to its round-trip module.
+- **Guard and tests.** No guard pin moved. `main.py` is unchanged.
+- **The §6 stop.** One stop fired and was decided. `test_read_path_mechanics.py`'s
+  `TestTkWKBValueFriction.test_read_batch_untagged_returns_every_row_with_its_own_friction`
+  asserted a two-parent mixture. The user decided the fixture was wrong, not the refusal, and it
+  now reads a one-parent store. With the three payloads the 05a review named, those are the only
+  existing-test edits.
+- **Issue opened.** `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` (§3.3).
+- **Log:** [`logs/05c-…`](logs/05c-key-the-value-reads-on-their-parent.md).
+
+**Carried to 07 and 09** (log 05c, observations 1–2).
+- **For 09's K6: the refusal is decided on the rows returned.** When `z` is given, as `main.py`
+  always gives it, a second parent matching the key but with **no value row at that `z`** is not
+  seen. The read returns the other parent's value, unrefused. K6 plans to read the `GkSource`
+  parent set through these `read_batch`es. If it needs every parent matching the key, it must
+  decide that on the parent query, not on the value rows.
+- **`TkNumericValue.build`'s dispatch** (and `GkNumericValue.build`'s) decides the model path on
+  `model`, `k` and `z_init` (`z_source`) alone. A payload that has those but lacks a tolerance
+  passes the dispatch and fails with `KeyError` inside `_build_impl_model`, not with the
+  dispatch's `RuntimeError`. No caller outside the tests reaches either model path. Separately,
+  `test_read_path_mechanics.py`'s `test_tk_numeric_value_build_impl_model` keeps a stale comment
+  and an unused `z_source` key, both outside 05c's permitted edits.
+- **For 07.** The four `z_init` filters in the WKB value reads are what 07's `numeric_serial`
+  replaces. The refusal keys on `wkb_serial`, and stays valid.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -410,13 +445,13 @@ what 01–04 find; what waits is their method.
 | G6 | **GUARD** | G2 walks module-level functions, reports an unknown `tables["X"]` as a problem, and pins every unresolved table base and unchecked insert with a reason. | 04b | ✅ `KNOWN_UNRESOLVED_TABLES` (12 pairs), `KNOWN_UNCHECKED_INSERTS` (13 sites), both declared with no resolution rule applied (log's deviation 1); `tables["X"]`/`inserters["X"]` naming no schema table now convicted (none in this tree today) |
 | P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05b | ✅ both joins now `tab.c.parent_serial == table.c.serial`; `probe_01b`'s verified shape |
 | P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05b | ✅ `q_exit_serial`/`r_exit_serial` selected and used as `q_exit_payload`/`r_exit_payload`'s `store_id`; rest of `make_object` checked, no other wrong-table serial found |
-| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05c | ⬜ |
-| P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). *(Widened 2026-09-28 when 05c was written: `TkWKBValue`'s reads have the same omission, refused per `(model, k)`.)* | 05c | ⬜ |
-| P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05c | ⬜ |
+| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05c | ✅ `break_point_kind == <Target>.BREAK_POINT_KIND` in all three, from the compute target's constant; `payload["atol"]`/`["rtol"]`; a store without the column refused with `RuntimeError`; `GkNumericValue.read_batch` refuses a second parent per `z_source`; `TkNumericValue` reads `z_init` only. Issue closed on the store-fingerprint board's §4 |
+| P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). *(Widened 2026-09-28 when 05c was written: `TkWKBValue`'s reads have the same omission, refused per `(model, k)`.)* | 05c | ✅ optional `z_init` in all four reads, filtered with the parents' absolute `DEFAULT_FLOAT_PRECISION` expression; `GkWKBValue.read_batch` refuses per `z_source`, `TkWKBValue.read_batch` per `(model, k)` |
+| P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05c | ✅ `GkNumericIntegration.build`'s `z_source_is_response` and `GkNumericValue.read_batch`'s `z_response_is_response` |
 | P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05a | ✅ `WKB_criterion` in both WKB value factories' `_build_impl_serial`; `z_source_serial` in `GkSourceValue._build_impl_serial`; `model_serial` in `QuadSourceValue._build_impl_model`; `friction=row.friction` added to `TkWKBValue.read_batch`'s `make_obj`. `KNOWN_UNFIXED` and the two P6 `KNOWN_UNFIXED_COLUMNS` entries struck |
 | P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ✅ nine sites (recount below), `Optional[List[store_tag]]` → `List[store_tag]` with each; the three `raise ("…")` → `raise RuntimeError("…")`, message unchanged; sweep for any other `raise (`/`raise "` under `ObjectFactories/` found none beyond the three named |
 | P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ✅ `build()` joins `OneLoopIntegral_tags`; `read_batch` is now `sqla_OneLoopIntegral_factory`'s `@staticmethod`, tags default `[]`, returns a list; `"validated": False` dropped from `store()`; `source_serial` left alone (D3) |
-| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | 🔶 05a's and 05b's shares done: `test_read_path_mechanics.py` (05a) and the new `test_integral_read_batch.py` (05b, 10 tests: tagged `QuadSourceIntegral.read_batch`, P2's exit serials, `OneLoopIntegral.build`'s tags including probe_06's coincidence case, `OneLoopIntegral.read_batch` tagged/untagged/omitted, and the deferred `source_serial` defect kept visible). `KNOWN_UNFIXED` and `KNOWN_UNFIXED_COLUMNS` are both empty. 05c adds the value reads' share |
+| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | ✅ 05a's and 05b's shares: `test_read_path_mechanics.py` (05a) and the new `test_integral_read_batch.py` (05b, 10 tests: tagged `QuadSourceIntegral.read_batch`, P2's exit serials, `OneLoopIntegral.build`'s tags including probe_06's coincidence case, `OneLoopIntegral.read_batch` tagged/untagged/omitted, and the deferred `source_serial` defect kept visible). `KNOWN_UNFIXED` and `KNOWN_UNFIXED_COLUMNS` are both empty. ✅ **Closed by 05c** (2026-09-28): the new `test_value_reads_parent_key.py` round-trips `GkNumericValue`, `GkWKBValue` and `TkWKBValue.read_batch` (the live payload shape, the refusal, `z_init` selection), and its `READ_BATCH_ROUND_TRIPS` pins every `read_batch` under `ObjectFactories/`, found by walking the sources as the guard does, to the module that round-trips it; a new `read_batch` fails until its test exists |
 | S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
 | S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
@@ -449,7 +484,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
 | `[01-read-batch-is-outside-the-guard]` | datastore-readback | 04 (**closed** 2026-09-26, on that board's §4) |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
-| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05 |
+| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05c (**closed** 2026-09-28, on that board's §4) |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 |
@@ -491,6 +526,27 @@ None is assigned to a prompt of this campaign.
     applied.
   - **Next step.** An author's decision: remove them, or say what they are for. Not a key defect,
     so not this campaign's.
+
+### 3.3 Opened by this campaign's prompts
+
+- **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
+  - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
+    nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the
+    `comprehension` node that binds `row`. So the read is charged to an earlier binding of that
+    name, or, with none, is dropped: it is neither checked nor declared.
+  - **Where, on this tree** (an `ast` walk for comprehensions whose element reads an attribute of
+    their own target, log 05c observation 3):
+    - `redshift.py:113` and `wavenumber.py:112` (`read_table`);
+    - `BackgroundModel.py:401` (`build`, already inside `KNOWN_BLIND`'s function);
+    - the seven `invalid_serials = [nv.serial for nv in not_validated]` in `validate_on_startup`.
+  - **Impact.** Nothing is missed today. Both `read_table`s select every column they read, checked
+    by hand, and the seven `validate_on_startup` reads take `serial`, which their queries select.
+    But the guard's docstring does not declare the hole, and no pin would catch a future defect in
+    this shape. 05c wrote `TkWKBValue.read_batch`'s refusal as a `for` loop for this reason (log
+    05c, deviation 6).
+  - **Next step.** Teach the analyser to bind a comprehension's targets before walking its
+    element, and pin what that newly decides. Or declare the shape in the docstring and in a
+    pinned list. A change to the guard, which is not 05c's to make.
 
 ---
 
@@ -581,3 +637,19 @@ run alone, to avoid the known wall-clock flake under parallel load).
 | RunRegistry | 199 OK |
 
 `black --check` is clean on every file this prompt touched.
+
+### 5.6 After prompt 05c (2026-09-28)
+
+Measured on the tree of prompt 05c's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **287 OK** (267 + the 20 of the new `test_value_reads_parent_key.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check` is clean on every Python file this prompt touched. No guard pin moved.

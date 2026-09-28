@@ -1013,6 +1013,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         model_payload: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         z_source: redshift = payload["z_source"]
+        z_init: Optional[float] = payload.get("z_init", None)
 
         tags: List[store_tag] = payload.get("tags", [])
 
@@ -1038,6 +1039,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             wkb_query = wkb_query.filter(
                 wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
             )
+
+            # z_init is in the parent's key when it is given: filtered with the parent build()'s
+            # own expression, the absolute DEFAULT_FLOAT_PRECISION match (prompt 05c, P4; prompt
+            # 07 removes z_init from the key)
+            if z_init is not None:
+                wkb_query = wkb_query.filter(
+                    sqla.func.abs(wkb_table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+                )
 
             count = 0
             for tag in tags:
@@ -1124,6 +1133,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         z_response: Optional[redshift] = payload.get("z", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
+        z_init: Optional[float] = payload.get("z_init", None)
 
         wkb_table = tables["GkWKBIntegration"]
         redshift_table = tables["redshift"]
@@ -1161,6 +1171,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
         )
 
+        # z_init is in the parent's key when it is given: filtered with the parent build()'s own
+        # expression, the absolute DEFAULT_FLOAT_PRECISION match (prompt 05c, P4; prompt 07 removes
+        # z_init from the key)
+        if z_init is not None:
+            wkb_query = wkb_query.filter(
+                sqla.func.abs(wkb_table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+            )
+
         count = 0
         for tag in tags:
             tag: store_tag
@@ -1178,6 +1196,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         row_query = sqla.select(
             table.c.serial,
+            # the parent serial, selected so that a second parent for one z_source can be refused
+            # from these rows, without a second query
+            table.c.wkb_serial,
             table.c.H_ratio,
             table.c.theta_mod_2pi,
             table.c.theta_div_2pi,
@@ -1208,7 +1229,25 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
 
-        row_data = conn.execute(row_query)
+        row_data = conn.execute(row_query).all()
+
+        # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
+        # select by them, but must refuse when more than one stored parent matches, rather than
+        # return a mixture. The caller files each value under its z_source, so two parents for one
+        # z_source would silently overwrite one another (prompt 05c)
+        parents_by_z_source = {}
+        for row in row_data:
+            parents_by_z_source.setdefault(row.z_source_serial, set()).add(
+                row.wkb_serial
+            )
+        for z_source_serial, parents in parents_by_z_source.items():
+            if len(parents) > 1:
+                raise MultipleResultsFound(
+                    f"GkWKBValue.read_batch(): {len(parents)} GkWKBIntegration parents match one "
+                    f"key (k serial={k.store_id}, z_source serial={z_source_serial}): parent "
+                    f"serials {sorted(parents)}. Refusing to return values from more than one "
+                    f"parent."
+                )
 
         def make_obj(row):
             obj = GkWKBValue(

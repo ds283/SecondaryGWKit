@@ -729,12 +729,12 @@ class sqla_TkNumericValue_factory(SQLAFactoryBase):
 
         if all([has_serial, has_model]):
             print(
-                "## GkNumericValue.build(): both an integration serial number and a (model_proxy, wavenumber, z_source) set were queried. Only the serial number will be used."
+                "## TkNumericValue.build(): both an integration serial number and a (model_proxy, wavenumber, z_init) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkNumericValue.build(): at least one of an integration serial number and a (model_proxy, wavenumber, z_source) set must be supplied."
+                "TkNumericValue.build(): at least one of an integration serial number and a (model_proxy, wavenumber, z_init) set must be supplied."
             )
 
         if has_serial:
@@ -850,10 +850,14 @@ class sqla_TkNumericValue_factory(SQLAFactoryBase):
 
         model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        z_init: redshift = payload["z_source"]
+        # one key name, the parent's own: build() dispatches on "z_init", and so this reads it too
+        # (prompts/datastore-integrity, prompt 05c, P3)
+        z_init: redshift = payload["z_init"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
+        # the parent's own lookup (sqla_TkNumericIntegration_factory.build) requires the tolerance
+        # pair, so this read does too (prompt 05c, P3)
+        atol: tolerance = payload["atol"]
+        rtol: tolerance = payload["rtol"]
         tags: List[store_tag] = payload.get("tags", [])
 
         integration_table = tables["TkNumericIntegration"]
@@ -864,17 +868,13 @@ class sqla_TkNumericValue_factory(SQLAFactoryBase):
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.z_init_serial == z_init.store_id,
                 integration_table.c.validated == True,
+                integration_table.c.atol_serial == atol.store_id,
+                integration_table.c.rtol_serial == rtol.store_id,
+                # the parent's key includes its break-point policy, read from the compute target's
+                # single declaration exactly as the parent's build() reads it (prompt 05c, P3)
+                integration_table.c.break_point_kind
+                == TkNumericIntegration.BREAK_POINT_KIND,
             )
-
-            if atol is not None:
-                integration_query = integration_query.filter(
-                    integration_table.c.atol_serial == atol.store_id
-                )
-
-            if rtol is not None:
-                integration_query = integration_query.filter(
-                    integration_table.c.rtol_serial == rtol.store_id
-                )
 
             count = 0
             for tag in tags:
@@ -917,6 +917,17 @@ class sqla_TkNumericValue_factory(SQLAFactoryBase):
                 f"!! TkNumericValue.build(): multiple results found when querying for TkNumericValue"
             )
             raise e
+        except SQLAlchemyError as e:
+            # the same refusal as the parent's build(): a store without the column predates the
+            # break-point policy joining the key, and cannot say which policy its rows used
+            if "break_point_kind" in str(e):
+                raise RuntimeError(
+                    "TkNumericValue.build(): the TkNumericIntegration table has no "
+                    '"break_point_kind" column. This datastore predates the numeric break-point '
+                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
+                    "and must be regenerated; there is no migration."
+                ) from e
+            raise
 
         if row_data is None:
             # return empty object

@@ -458,14 +458,22 @@ class TestTkWKBValueFriction(unittest.TestCase):
         self.s.conn.commit()
 
     def test_read_batch_untagged_returns_every_row_with_its_own_friction(self):
+        # its own store, holding one parent: an untagged read over the class's two parents is a
+        # two-parent mixture, which prompt 05c's refusal removes under D1 (edit named by the user's
+        # decision of 2026-09-28; the two-parent case is test_value_reads_parent_key.py's)
+        s = _base_store()
+        self.addCleanup(s.close)
+        _tk_wkb_parent(s, serial=2, friction=0.77, WKB_criterion=0.2, tagged=False)
+        s.conn.commit()
+
         objs = sqla_TkWKBValue_factory.read_batch(
             {"model": MODEL, "k": K_EXIT, "tags": []},
-            self.s.conn,
-            self.s.tables["TkWKBValue"],
-            self.s.tables,
+            s.conn,
+            s.tables["TkWKBValue"],
+            s.tables,
         )
         frictions = sorted(obj.friction for obj in objs)
-        self.assertEqual([0.25, 0.77], frictions)
+        self.assertEqual([0.77], frictions)
 
     def test_read_batch_tagged_returns_only_the_tagged_row_with_its_friction(self):
         objs = sqla_TkWKBValue_factory.read_batch(
@@ -514,6 +522,8 @@ class TestTagsOmittedDefaultToEmpty(unittest.TestCase):
             "model": MODEL,
             "k": K_EXIT,
             "z_source": _z(1, 1.0e5),
+            "atol": _Ref(1),
+            "rtol": _Ref(1),
         }
         omitted = sqla_GkNumericValue_factory.build(
             payload,
@@ -535,7 +545,7 @@ class TestTagsOmittedDefaultToEmpty(unittest.TestCase):
         self.assertEqual(explicit.store_id, omitted.store_id)
 
     def test_gk_numeric_value_read_batch(self):
-        payload = {"model": MODEL, "k": K_EXIT}
+        payload = {"model": MODEL, "k": K_EXIT, "atol": _Ref(1), "rtol": _Ref(1)}
         omitted = list(
             sqla_GkNumericValue_factory.read_batch(
                 payload, self.s.conn, self.s.tables["GkNumericValue"], self.s.tables
@@ -563,6 +573,8 @@ class TestTagsOmittedDefaultToEmpty(unittest.TestCase):
             "k": K_EXIT,
             "z_init": z_source,
             "z_source": z_source,
+            "atol": _Ref(1),
+            "rtol": _Ref(1),
         }
         omitted = sqla_TkNumericValue_factory.build(
             payload,

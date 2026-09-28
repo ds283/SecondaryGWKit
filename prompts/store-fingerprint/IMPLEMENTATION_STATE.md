@@ -2,8 +2,9 @@
 
 **Last updated:** 2026-09-28 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
-Two of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
-this board's §4 on 2026-09-28 by that campaign's prompt 05b; this board's own prompts are unchanged.
+Three of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+this board's §4 on 2026-09-28, two by that campaign's prompt 05b and one by its prompt 05c; this
+board's own prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -193,7 +194,8 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 `[00-replicated-writes-can-diverge-across-shards]` on the three original stores on 2026-09-25, and
 opened none. `prompts/datastore-integrity` prompt 05b closed two more on 2026-09-28 (§4):
 `[00-oneloop-lookup-joins-the-wrong-tag-table]` and `[00-tagged-read-batch-joins-an-unselected-alias]`.
-Five remain.
+Its prompt 05c closed `[00-numeric-value-parent-lookup-omits-break-point-kind]` the same day (§4).
+Four remain.
 
 - **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
@@ -207,20 +209,6 @@ Five remain.
     prompt 06, which fixes it before the archival A3 v2 store is built
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.1). It closes
     here, on this board's §4.
-- **[00-numeric-value-parent-lookup-omits-break-point-kind]** *(opened 2026-09-24 by the audit)*
-  - **The defect.** The parent query in `TkNumericValue`'s build (`TkNumericIntegration.py:873-878`),
-    and its `GkNumeric` counterpart, filter on model, wavenumber exit, `z_init` / `z_source`,
-    validated and the tolerances. They do not filter on `break_point_kind`, which is in the
-    parent's own lookup.
-  - **Impact.** A store holding two parents that differ only in `break_point_kind` would make the
-    value read ambiguous. `one_or_none()` would then raise, or pick the wrong parent's values.
-    Every store today uses one `BREAK_POINT_KIND`.
-  - **Next step.** Add the filter, in the campaign that owns these factories' reads.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 05, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.3). The audit
-    found the live `GkNumericValue.read_batch` has the same omission, and silently returns both
-    parents' values. It closes here, on this board's §4.
 - **[00-quadsourcepolicy-rows-are-referenced-by-nothing]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `main.py:3651-3657` creates `QuadSourcePolicy` rows, but no factory table
     references the class. `QuadSourceIntegral` keys on `GkSourcePolicy`
@@ -305,6 +293,32 @@ Five remain.
 ---
 
 ## 4. Resolved issues
+
+- **[00-numeric-value-parent-lookup-omits-break-point-kind]** *(opened 2026-09-24 by the audit)*
+  - **The defect.** The parent query in `TkNumericValue`'s build (`TkNumericIntegration.py:873-878`),
+    and its `GkNumeric` counterpart, filter on model, wavenumber exit, `z_init` / `z_source`,
+    validated and the tolerances. They do not filter on `break_point_kind`, which is in the
+    parent's own lookup.
+  - **Impact.** A store holding two parents that differ only in `break_point_kind` would make the
+    value read ambiguous. `one_or_none()` would then raise, or pick the wrong parent's values.
+    Every store today uses one `BREAK_POINT_KIND`.
+  - **Next step.** Add the filter, in the campaign that owns these factories' reads.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.3). The audit
+    found the live `GkNumericValue.read_batch` has the same omission, and silently returns both
+    parents' values. It closes here, on this board's §4.
+  - **Closed (2026-09-28) by `prompts/datastore-integrity` prompt 05c**, commit *"Key the value
+    reads on their parent and refuse a second parent"*. `TkNumericValue._build_impl_model`,
+    `GkNumericValue._build_impl_model` and `GkNumericValue.read_batch` now filter the parent on
+    `break_point_kind == <Target>.BREAK_POINT_KIND`, read from the compute target's single
+    declaration as the parents' `build()` read it, and require `atol` and `rtol`; a store without
+    the column is refused with a `RuntimeError`. `GkNumericValue.read_batch`, the live read, now
+    raises `MultipleResultsFound` naming the parents when more than one contributes rows for one
+    `z_source`, instead of returning both. `TkNumericValue` reads one key, `z_init`.
+    `Datastore/tests/test_value_reads_parent_key.py`'s `TestBreakPointKindSelects` stores two
+    parents differing only in kind and shows each read serves only the target's. Log:
+    [`../datastore-integrity/logs/05c-key-the-value-reads-on-their-parent.md`](../datastore-integrity/logs/05c-key-the-value-reads-on-their-parent.md).
 
 - **[00-oneloop-lookup-joins-the-wrong-tag-table]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `sqla_OneLoopIntegral_factory.build` filters requested tags against

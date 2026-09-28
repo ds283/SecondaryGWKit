@@ -223,7 +223,7 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                 table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
                 redshift_table.c.source.label("z_source_is_source"),
-                redshift_table.c.source.label("z_source_is_response"),
+                redshift_table.c.response.label("z_source_is_response"),
                 table.c.z_samples,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
@@ -849,8 +849,10 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         k: wavenumber_exit_time = payload["k"]
         z_source: redshift = payload["z_source"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
+        # the parent's own lookup (sqla_GkNumericIntegration_factory.build) requires the tolerance
+        # pair, so this read does too (prompts/datastore-integrity, prompt 05c, P3)
+        atol: tolerance = payload["atol"]
+        rtol: tolerance = payload["rtol"]
         tags: List[store_tag] = payload.get("tags", [])
 
         integration_table = tables["GkNumericIntegration"]
@@ -865,17 +867,13 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.z_source_serial == z_source.store_id,
                 integration_table.c.validated == True,
+                integration_table.c.atol_serial == atol.store_id,
+                integration_table.c.rtol_serial == rtol.store_id,
+                # the parent's key includes its break-point policy, read from the compute target's
+                # single declaration exactly as the parent's build() reads it (prompt 05c, P3)
+                integration_table.c.break_point_kind
+                == GkNumericIntegration.BREAK_POINT_KIND,
             )
-
-            if atol is not None:
-                integration_query = integration_query.filter(
-                    integration_table.c.atol_serial == atol.store_id
-                )
-
-            if rtol is not None:
-                integration_query = integration_query.filter(
-                    integration_table.c.rtol_serial == rtol.store_id
-                )
 
             count = 0
             for tag in tags:
@@ -918,6 +916,17 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                 f"!! GkNumericValue.build(): multiple results found when querying for GkNumericValue"
             )
             raise e
+        except SQLAlchemyError as e:
+            # the same refusal as the parent's build(): a store without the column predates the
+            # break-point policy joining the key, and cannot say which policy its rows used
+            if "break_point_kind" in str(e):
+                raise RuntimeError(
+                    "GkNumericValue.build(): the GkNumericIntegration table has no "
+                    '"break_point_kind" column. This datastore predates the numeric break-point '
+                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
+                    "and must be regenerated; there is no migration."
+                ) from e
+            raise
 
         if row_data is None:
             # return empty object
@@ -948,8 +957,10 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
+        # the parent's own lookup requires the tolerance pair, so this read does too; main.py's
+        # build_missing_GkSource already passes both (prompts/datastore-integrity, prompt 05c, P3)
+        atol: tolerance = payload["atol"]
+        rtol: tolerance = payload["rtol"]
         tags: List[store_tag] = payload.get("tags", [])
 
         z_response: Optional[redshift] = payload.get("z", None)
@@ -970,6 +981,12 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                 integration_table.c.model_serial == model_proxy.store_id,
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.validated == True,
+                integration_table.c.atol_serial == atol.store_id,
+                integration_table.c.rtol_serial == rtol.store_id,
+                # the parent's key includes its break-point policy, read from the compute target's
+                # single declaration exactly as the parent's build() reads it (prompt 05c, P3)
+                integration_table.c.break_point_kind
+                == GkNumericIntegration.BREAK_POINT_KIND,
             )
             .select_from(
                 integration_table.join(
@@ -982,16 +999,6 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         if z_source is not None:
             integration_query = integration_query.filter(
                 integration_table.c.z_source_serial == z_source.store_id
-            )
-
-        if atol is not None:
-            integration_query = integration_query.filter(
-                integration_table.c.atol_serial == atol.store_id
-            )
-
-        if rtol is not None:
-            integration_query = integration_query.filter(
-                integration_table.c.rtol_serial == rtol.store_id
             )
 
         count = 0
@@ -1011,6 +1018,9 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
 
         row_query = sqla.select(
             table.c.serial,
+            # the parent serial, selected so that a second parent for one z_source can be refused
+            # from these rows, without a second query
+            table.c.integration_serial,
             table.c.G,
             table.c.Gprime,
             table.c.analytic_G_rad,
@@ -1026,7 +1036,7 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
             redshift_table.c.z.label("z_response"),
             table.c.z_serial.label("z_response_serial"),
             redshift_table.c.source.label("z_response_is_source"),
-            redshift_table.c.source.label("z_response_is_response"),
+            redshift_table.c.response.label("z_response_is_response"),
         ).select_from(
             subquery.join(table, table.c.integration_serial == subquery.c.serial).join(
                 redshift_table, redshift_table.c.serial == table.c.z_serial
@@ -1036,7 +1046,37 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
 
-        row_data = conn.execute(row_query)
+        try:
+            row_data = conn.execute(row_query).all()
+        except SQLAlchemyError as e:
+            # the same refusal as the parent's build(): a store without the column predates the
+            # break-point policy joining the key, and cannot say which policy its rows used
+            if "break_point_kind" in str(e):
+                raise RuntimeError(
+                    "GkNumericValue.read_batch(): the GkNumericIntegration table has no "
+                    '"break_point_kind" column. This datastore predates the numeric break-point '
+                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
+                    "and must be regenerated; there is no migration."
+                ) from e
+            raise
+
+        # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
+        # select by them, but must refuse when more than one stored parent matches, rather than
+        # return a mixture. The caller files each value under its z_source, so two parents for one
+        # z_source would silently overwrite one another (prompt 05c)
+        parents_by_z_source = {}
+        for row in row_data:
+            parents_by_z_source.setdefault(row.z_source_serial, set()).add(
+                row.integration_serial
+            )
+        for z_source_serial, parents in parents_by_z_source.items():
+            if len(parents) > 1:
+                raise MultipleResultsFound(
+                    f"GkNumericValue.read_batch(): {len(parents)} GkNumericIntegration parents "
+                    f"match one key (k serial={k.store_id}, z_source serial={z_source_serial}): "
+                    f"parent serials {sorted(parents)}. Refusing to return values from more "
+                    f"than one parent."
+                )
 
         def make_obj(row):
             obj = GkNumericValue(
