@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, 05a); 01, 04, 04b
-reviewed, 05a not yet.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the
+**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, 05a), all
+reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the
 same day. 04b landed the same day it was written, from the 04 review's findings. **05 is written**
 (2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a landed 2026-09-28, and 05b is ready.
@@ -265,6 +265,54 @@ before the next is dispatched. Two findings came from writing it:
 
 `GkSourceValue` and `QuadSourceValue` were checked while writing: their reads match their parents'
 keys, so neither needs a key change.
+
+**Orchestrator review of prompt 05a (2026-09-28).** Run against `7ce8c66`, dispatched from
+`fd6205e` with the tree and the index clean, nothing running, and the §5.3 baselines re-measured
+on `HEAD`. Every check in `orchestrator/prompt-05.md` §3 that applies to 05a passed. There are
+findings on the log's record, and one is carried into 05c's brief. None needs the user.
+- **Scope.** Ten files: the six named factories, the new `test_read_path_mechanics.py`, the guard
+  module, the log and this board. `main.py`, `extract_*.py`, `docs/` and `orchestrator/` are
+  untouched. The guard module is the only modified test. All 17 factory hunks are §2 changes: two
+  `WKB_criterion`s, `z_source_serial`, `model_serial`, `friction=row.friction`, nine tags defaults
+  with their annotations, and three `RuntimeError`s. Each renamed column is declared in its table,
+  and `friction` was already selected. No `raise (`, `raise "` or `get("tags", None)` is left except
+  `OneLoopIntegral.py:284`, which is 05b's.
+- **The guard.** Only the struck entries moved: `KNOWN_UNFIXED` → `{}`, and `KNOWN_UNFIXED_COLUMNS`
+  lost `z_serial` and `model_id`, keeping `OneLoopIntegral`'s `validated`. This is §0's prediction.
+  Recomputed from the new tree with the guard's own functions, every pin equals what is pinned:
+  coverage 43, blind 2, no shortfalls, one column problem, 12 unresolved-table pairs and 13
+  unchecked inserts.
+- **The fixes.** Each has a test that goes through it on the real factory code: `build()` by serial
+  returning a distinctive `WKB_criterion`, a hit and a miss by `z_source` and by model, `friction`
+  tagged and untagged, omitted tags against `tags=[]` at all nine sites (each site's loop runs
+  before any early return, so a `None` would raise), and the three raises.
+- **The tags recount.** Explained by the review, not the log. The audit's tree (`417c647`) has ten
+  `get("tags", None)` sites, the same ten as `fd6205e`. The audit's "eleven" (§3.11) is not marked
+  **[checked]**, so it is a miscount. The log's "cannot be reconciled" is superseded by this entry.
+- **Mutations.** All six, extracted from the committed log, applied with plain `git apply` and
+  reverted clean. Each failed the tests the log names.
+- **`var/`, suites, `black`.** The snapshot was byte-identical (46 files, 10 directories).
+  AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore 257 (+20, the new module's
+  20 methods), LiouvilleGreen 148 (1 skipped), RunRegistry 199, run serially. `black --check` is
+  clean.
+
+**Findings.**
+1. **Three of 05a's tests will meet 05c's required tolerances** (carried into 05c's brief).
+   `TestTagsOmittedDefaultToEmpty`'s `test_gk_numeric_value_build_impl_model`,
+   `test_gk_numeric_value_read_batch` and `test_tk_numeric_value_build_impl_model` omit `atol` and
+   `rtol`. 05c §2 makes those keys required, so the three will raise `KeyError`. Their fixtures'
+   break-point kinds are the compute targets' constants, and each has one parent, so no other 05c
+   change affects them. The orchestrator names these three tests, for this one reason, under README
+   §5 rule 7. 05c may add `atol`/`rtol` stand-ins matching the stored `atol_serial`/`rtol_serial`
+   to exactly these three payloads, with the failing assertion shown in its log. Nothing else in the
+   module changes.
+2. **The mutation record under-reports** (log not edited). (ii) also errors
+   `test_gk_source_value_build_impl_serial`, because `z_serial` raises before the `RuntimeError`.
+   (iii) also errors `TestTagsOmittedDefaultToEmpty.test_tk_wkb_value_read_batch`. (vi) also fails
+   the guard proper, `test_column_references_resolve_against_schema`. Every logged failure occurs.
+   The extra ones are what the mutations must cause.
+3. **The replay paragraph was written before the commit.** It describes the post-commit replay in
+   the past tense. The review's own replay confirms what it says.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
