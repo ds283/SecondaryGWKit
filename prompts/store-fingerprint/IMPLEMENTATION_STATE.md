@@ -2,9 +2,9 @@
 
 **Last updated:** 2026-09-28 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
-Three of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
-this board's §4 on 2026-09-28, two by that campaign's prompt 05b and one by its prompt 05c; this
-board's own prompts are unchanged.
+Four of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+this board's §4 on 2026-09-28: two by that campaign's prompt 05b, one by its prompt 05c and one by
+its prompt 02. This board's own prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -194,8 +194,9 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 `[00-replicated-writes-can-diverge-across-shards]` on the three original stores on 2026-09-25, and
 opened none. `prompts/datastore-integrity` prompt 05b closed two more on 2026-09-28 (§4):
 `[00-oneloop-lookup-joins-the-wrong-tag-table]` and `[00-tagged-read-batch-joins-an-unselected-alias]`.
-Its prompt 05c closed `[00-numeric-value-parent-lookup-omits-break-point-kind]` the same day (§4).
-Four remain.
+Its prompt 05c closed `[00-numeric-value-parent-lookup-omits-break-point-kind]` the same day (§4),
+and its prompt 02 closed `[00-replicated-writes-can-diverge-across-shards]` the same day (§4).
+Three remain.
 
 - **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
@@ -222,6 +223,27 @@ Four remain.
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.5). The user
     decided on 2026-09-25 to keep `QuadSourcePolicy` and add it to `QuadSourceIntegral`'s key. It
     closes here, on this board's §4.
+- **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
+  - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
+    `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
+    is indented inside `for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:` (`:267`), not
+    after it.
+  - **Impact.** Every exit-time lookup runs its query six times, and the first five lack some of the
+    sub-horizon columns. The last iteration's result is complete, so the answer is right today. If
+    the list were ever empty, `row_data` would be unbound and the lookup would fail with an
+    `UnboundLocalError`.
+  - **Next step.** Dedent the line by one level, in whichever campaign next has
+    `wavenumber_exit_time.build` in scope. This campaign's scope excludes every factory's `build`
+    (README §1).
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.6). It closes
+    here, on this board's §4.
+
+---
+
+## 4. Resolved issues
+
 - **[00-replicated-writes-can-diverge-across-shards]** *(opened 2026-09-24 by the audit)*
   - **The defect.** A replicated write commits on the controlling shard first, and on the other
     shards afterwards, in separate transactions (`ShardedPool.py:975-1030`, `:1158-1167`). A crash
@@ -273,26 +295,30 @@ Four remain.
     replicated write; repairing such a store by copying forward from the recorded controller, and
     refusing any other divergence (including one written before this change), is prompt 02, which
     closes this issue.
-- **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
-  - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
-    `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
-    is indented inside `for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:` (`:267`), not
-    after it.
-  - **Impact.** Every exit-time lookup runs its query six times, and the first five lack some of the
-    sub-horizon columns. The last iteration's result is complete, so the answer is right today. If
-    the list were ever empty, `row_data` would be unbound and the lookup would fail with an
-    `UnboundLocalError`.
-  - **Next step.** Dedent the line by one level, in whichever campaign next has
-    `wavenumber_exit_time.build` in scope. This campaign's scope excludes every factory's `build`
-    (README §1).
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 03, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.6). It closes
-    here, on this board's §4.
-
----
-
-## 4. Resolved issues
+  - **Closed (2026-09-28) by `prompts/datastore-integrity` prompt 02**, commit *"Repair or refuse
+    divergent replicated tables when a store opens"*, on prompt 01's commit *"Make the replicated
+    write checked, idempotent and recorded"*.
+    - **Where the check runs.** `ShardedPool._reconcile_replicated_tables` runs in the constructor,
+      after `_check_shard_files` and before the broker or any actor, with no Ray. So it runs
+      before every build, resume and extraction.
+    - **What it compares.** It rolls back hot journals, then compares every replicated table and
+      `BackgroundModel_tags` across the shards by full row: keyed by serial, `BackgroundModelValue`
+      by `(model_serial, z_serial)` without its serial, `timestamp` never compared. It also checks
+      the primary's `shard_keys`.
+    - **The repair.** With prompt 01's `replication_in_flight` record set, the check copies
+      forward, verbatim, only the rows the record's controlling shard holds and another shard
+      lacks, of the record's class, written by the recorded write. A `BackgroundModel` goes as a
+      unit. A flag is only turned on, and `validated` is recomputed by the factory's rule. A second
+      comparison follows, and the record is cleared last.
+    - **The refusal.** Any other difference refuses the open with `ReplicatedDivergence`, before
+      any actor exists and writing nothing. That covers a serial split, with or without a record;
+      a row the controller lacks; another class; and any difference with no record.
+    - **A clean store** opens writing nothing: every file's SHA-256 is unchanged.
+    - **Tests.** `Datastore/tests/test_reconcile_at_open.py` (38 tests) kills and reopens at every
+      point of log 01's commit-point table, and the log's reopen table gives each point its
+      outcome. Log: [`../datastore-integrity/logs/02-repair-or-refuse-at-open.md`](../datastore-integrity/logs/02-repair-or-refuse-at-open.md).
+    - **What remains open.** The inventory's blind spots, which this check does not change, stay
+      as `[00-the-inventory-cannot-see-a-serial-split]` on the `datastore-integrity` board.
 
 - **[00-numeric-value-parent-lookup-omits-break-point-kind]** *(opened 2026-09-24 by the audit)*
   - **The defect.** The parent query in `TkNumericValue`'s build (`TkNumericIntegration.py:873-878`),

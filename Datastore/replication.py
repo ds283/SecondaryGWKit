@@ -14,12 +14,16 @@ loud rather than silent:
   names one. That is ``ReplicationInFlight``. The store is then in the state an interrupted write
   left it, and no write may proceed over it until the store has been reconciled.
 
+When a store is opened, ``ShardedPool`` compares its replicated tables across shards (prompt 02).
+An interrupted replication is repaired from the record's controlling shard; any other difference
+refuses the open with ``ReplicatedDivergence``.
+
 This module lives at the top of the ``Datastore`` package, and imports nothing from it, so that the
 factories (which raise ``ReplicationMismatch`` inside a Datastore actor), ``ShardedPool`` (which
 raises both in the driver) and the tests can all import it without importing Ray's actor classes
 or creating an import cycle through ``Datastore.SQL``.
 
-Both exceptions pickle with their fields intact, because under Ray an exception raised inside an
+The exceptions pickle with their fields intact, because under Ray an exception raised inside an
 actor reaches the driver by pickling.
 """
 
@@ -112,6 +116,75 @@ class ReplicationInFlight(RuntimeError):
 
     def __reduce__(self):
         return (type(self), (self.primary, self.record))
+
+
+class ReplicatedDivergence(RuntimeError):
+    """
+    The replicated tables of a sharded store differ across its shards in a way that an interrupted
+    replication does not explain, so the store is not opened (prompts/datastore-integrity, prompt
+    02). Raised by ``ShardedPool._reconcile_replicated_tables`` in the constructor, before any
+    actor exists.
+
+    ``differences`` is a list of dicts, one per difference, each naming ``class_name`` (the
+    table), ``shard`` (the shard, or the shards, that deviate), ``key`` (the serial or key of the
+    row) and ``detail`` (what differs). ``record`` is the primary's ``replication_in_flight`` row
+    as a dict, or None if there is none. ``after_repair`` is True when the difference was found by
+    the comparison made after a repair was attempted, which was then rolled back.
+    """
+
+    def __init__(
+        self,
+        primary,
+        differences: list,
+        record: Optional[dict] = None,
+        after_repair: bool = False,
+    ):
+        self.primary = primary
+        self.differences = [dict(d) for d in differences]
+        self.record = dict(record) if record is not None else None
+        self.after_repair = after_repair
+        super().__init__(self._message())
+
+    def _message(self) -> str:
+        r = self.record
+        if r is None:
+            why = "there is no replication_in_flight record, so no interrupted replication explains them"
+        else:
+            why = (
+                f'the replication_in_flight record (operation="{r.get("operation")}", '
+                f'class="{r.get("class_name")}", controlling shard={r.get("controller_shard")}, '
+                f'store_id={r.get("store_id")}, started={r.get("started")}) does not explain them'
+            )
+        lines = [
+            f'Cannot open sharded datastore "{self.primary}": its replicated tables differ across '
+            f"shards, and {why}. {len(self.differences)} difference(s)"
+            + (
+                ", found by the comparison made after a repair was attempted and rolled back"
+                if self.after_repair
+                else ""
+            )
+            + ":"
+        ]
+        for d in self.differences:
+            lines.append(
+                f'  - class "{d.get("class_name")}", shard {d.get("shard")}, '
+                f'{d.get("key")}: {d.get("detail")}'
+            )
+        lines.append(
+            "Nothing was repaired: no shard and not the primary was written, and the "
+            "replication_in_flight record, if any, was left as it was. A store in this state "
+            "cannot be put right by this tree: it needs a person, or regeneration."
+        )
+        return "\n".join(lines)
+
+    def __str__(self) -> str:
+        return self._message()
+
+    def __reduce__(self):
+        return (
+            type(self),
+            (self.primary, self.differences, self.record, self.after_repair),
+        )
 
 
 def same_value(a, b) -> bool:

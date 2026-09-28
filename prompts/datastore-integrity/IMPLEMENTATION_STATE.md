@@ -1,11 +1,12 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, and 05 as
-05a–05c), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 02, 04, 04b, and 05 as
+05a–05c); all but 02 reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
-([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **Next: 02 → 03 → 06**, each with its
-own orchestrator note; 07 waits on 05 and 06. 10 waits on 01–09. `store-retirement`
+([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
+`[00-replicated-writes-can-diverge-across-shards]`; its review is pending. **Next: 03 → 06**, each
+with its own orchestrator note; 07 waits on 05 and 06. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -54,7 +55,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Make the replicated write checked, idempotent and recorded"* | [`logs/01-…`](logs/01-checked-replicated-write.md) |
-| 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
+| 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-28 | *"Repair or refuse divergent replicated tables when a store opens"* | [`logs/02-…`](logs/02-repair-or-refuse-at-open.md) |
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
@@ -523,6 +524,34 @@ although 05 has landed.
 - `main.py`'s `build_missing_GkSource` passes no `z_init`, so today it relies on the refusal alone.
   07's own change to `main.py`'s existence queries must keep test 3's live payload working.
 
+**Prompt 02 landed 2026-09-28**, from `65ee1d3` (its orchestrator note). This is the implementer's
+own record; the orchestrator's review, when it runs, is recorded separately.
+- **What shipped.** W5–W7.
+  - The check. `ShardedPool._reconcile_replicated_tables` runs in the constructor after
+    `_check_shard_files`, before the broker or any actor, with no Ray. It rolls back hot journals
+    and compares every replicated table and `BackgroundModel_tags` across the shards by full row:
+    keyed by serial, `BackgroundModelValue` by `(model_serial, z_serial)` without its serial, the
+    tag table by its composite key, `timestamp` never compared. It also checks the primary's
+    `shard_keys`.
+  - The repair. With a record set, it copies forward verbatim from the record's controller, and
+    only rows of the record's class that the recorded write inserted. A `BackgroundModel` goes as
+    a unit, a flag is only turned on, and `validated` is recomputed by the factory's rule. It then
+    compares again inside the repair's transactions, and clears the record last.
+  - The refusal. Anything else raises the new `ReplicatedDivergence`
+    (`Datastore/replication.py`), and nothing is written.
+  - A clean store opens writing nothing, checked by checksum. The added open time is about 0.1 s
+    at 4 shards and 0.25 s at 20, at production size.
+- **Tests.** The new `Datastore/tests/test_reconcile_at_open.py` has 38 tests, and the log's
+  reopen table gives each row of log 01's commit-point table one outcome. The one test the
+  orchestrator note names, `TestWriteOverASetRecord.test_a_reopened_pool_refuses`, is rewritten to
+  `…_repairs_from_the_controller_and_the_write_succeeds` on the same fixture. No other existing
+  test changed.
+- **Mutations.** (i)–(v) each fail tests.
+- **Issue closed.** `[00-replicated-writes-can-diverge-across-shards]`, on the store-fingerprint
+  board's §4.
+- **Issue opened.** `[02-the-version-row-is-written-outside-the-in-flight-record]` (§3.3).
+- **Log:** [`logs/02-…`](logs/02-repair-or-refuse-at-open.md).
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -536,9 +565,9 @@ what 01–04 find; what waits is their method.
 | W2 | **GUARD** | Every replica's answer checked against the controller's serial, scalar and vector forms; `ReplicationMismatch` names the shard, class and both serials. | 01 | ✅ `Datastore/replication.py`; get (both forms), store and validate checked before the record is cleared |
 | W3 | **REMEDY** | Replica stores of `wavenumber_exit_time` and `BackgroundModel` insert-or-verify by serial; `BackgroundModel` replicas pass each value's serial, so copies are row-identical. | 01 | ✅ |
 | W4 | **REMEDY** | One timestamp per replicated write, chosen by the driver and passed to every shard through `Datastore._insert`. | 01 | ✅ `insert_timestamp`, a per-call argument; absent on every sharded write |
-| W5 | **FACILITY** | `_reconcile_replicated_tables()` in the constructor, before any actor, no Ray: hot journals rolled back, every replicated table compared across shards by full row (timestamp exempt for old rows). | 02 | ⬜ |
-| W6 | **REMEDY** | With an in-flight record set, the missing rows of its class copied forward from its controller, `BackgroundModel` as a unit with `validated` recomputed; the record then cleared. | 02 | ⬜ |
-| W7 | **GUARD** | Any other difference refuses the open with `ReplicatedDivergence`, including a serial split and a row the controller lacks. Closes `[00-replicated-writes-can-diverge-across-shards]`. | 02 | ⬜ |
+| W5 | **FACILITY** | `_reconcile_replicated_tables()` in the constructor, before any actor, no Ray: hot journals rolled back, every replicated table compared across shards by full row (timestamp exempt for old rows). | 02 | ✅ after `_check_shard_files`, before the broker; 13 replicated tables and `BackgroundModel_tags` read through `build_schema`'s tables on plain SQLAlchemy connections, keyed by serial (`BackgroundModelValue` by `(model_serial, z_serial)` without `serial`; the tag table by its key), `timestamp` never compared, plus the primary's `shard_keys`; a clean store writes nothing (checksums); +94 ms at 4 shards, +252 ms at 20 (production size, medians) |
+| W6 | **REMEDY** | With an in-flight record set, the missing rows of its class copied forward from its controller, `BackgroundModel` as a unit with `validated` recomputed; the record then cleared. | 02 | ✅ from the record's `controller_shard` only, rows of its class only, verbatim, each carrying the record's `started`; `source`/`response` only turned on; `validated` recomputed by `sqla_BackgroundModelFactory.validate` in a savepoint, never written `False`; a second full comparison inside the repair's transactions, then the shards committed and the record cleared, last; one printed line per class and shard |
+| W7 | **GUARD** | Any other difference refuses the open with `ReplicatedDivergence`, including a serial split and a row the controller lacks. Closes `[00-replicated-writes-can-diverge-across-shards]`. | 02 | ✅ `Datastore/replication.py`; each difference named by class, shard and serial or key, a split with both serials; before any actor, nothing written, the record left as it was; sharded tables never read. Issue closed on the store-fingerprint board's §4 |
 | L1 | **REMEDY** | `wavenumber_exit_time.build` by serial equality on atol, rtol and `==` on stepping; the dead `ORDER BY` removed; the query out of the loop. Closes `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` and `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]`. | 03 | ⬜ |
 | L2 | **REMEDY** | `IntegrationSolver.build` by `stepping ==` and `one_or_none()`. Closes `[03-integrationsolver-stepping-minimum-lookup]`. | 03 | ⬜ |
 | L3 | **GUARD** | `.scalar()` → `one_or_none()` on the eight identity lookups (audit §3.8), so a duplicate raises. | 03 | ⬜ |
@@ -585,7 +614,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 
 | Issue | Owning board | Prompt |
 |---|---|---|
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | 01 (**narrowed** 2026-09-26), closed by 02 |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | 01 (**narrowed** 2026-09-26), 02 (**closed** 2026-09-28, on that board's §4) |
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | 03 |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
@@ -654,6 +683,24 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Teach the analyser to bind a comprehension's targets before walking its
     element, and pin what that newly decides. Or declare the shape in the docstring and in a
     pinned list. A change to the guard, which is not 05c's to make.
+- **[02-the-version-row-is-written-outside-the-in-flight-record]** *(opened 2026-09-28 by prompt 02)*
+  - **The defect.** The `version` table is replicated, but its row is not written through
+    `ShardedPool._replicated_write`. `ShardedPool.__init__` builds the first `Datastore` actor,
+    whose constructor inserts the version label's row, and then each later actor, whose
+    constructor inserts it under that serial (`version_serial`). Each insert is in its own actor's
+    constructor, and nothing records the sequence.
+  - **Measured** (log 02, observation 1, on stand-in shards). A store opened under label `L1`,
+    then under `L2`, with every actor after the first killed, holds `L2` on one shard only. The
+    next open under `L2` is refused by prompt 02's check: `class "version", shard [0, 1], serial 2:
+    held by shard(s) [2], missing on shard(s) [0, 1]`. At `65ee1d3` it would have healed, as the
+    later actors insert the row under its serial.
+  - **Impact.** Only an open under a label the store has never seen writes these rows.
+    `VERSION_LABEL` is a constant (`"2025.1.1"`) in `main.py` and the six extraction scripts. So
+    the window is a new store's first open, or the first open after the label changes. A crash
+    inside it now leaves a store that refuses to open and needs a person.
+  - **Next step.** Decide whether the version rows go through the recorded write, or whether the
+    check at open treats a `version` row missing under a label being opened differently. Either
+    changes `Datastore.py`'s constructor or the check's licence, which prompt 02 could not.
 
 ---
 
@@ -760,3 +807,19 @@ run alone, to avoid the known wall-clock flake under parallel load).
 | RunRegistry | 199 OK |
 
 `black --check` is clean on every Python file this prompt touched. No guard pin moved.
+
+### 5.7 After prompt 02 (2026-09-28)
+
+Measured on the tree of prompt 02's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **325 OK** (287 + the 38 of the new `test_reconcile_at_open.py`; the one rewritten test in `test_replicated_write.py` is not an addition) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check` is clean on every Python file this prompt touched.

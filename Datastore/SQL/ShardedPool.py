@@ -11,10 +11,17 @@ import ray
 import sqlalchemy as sqla
 
 from Datastore.SQL import Datastore
-from Datastore.SQL.Datastore import PathType, ReadTableConfigType
+from Datastore.SQL.Datastore import PathType, ReadTableConfigType, _factories
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
-from Datastore.replication import ReplicationInFlight, ReplicationMismatch
+from Datastore.SQL.schema import build_schema
+from Datastore.object import DatastoreObject
+from Datastore.replication import (
+    ReplicatedDivergence,
+    ReplicationInFlight,
+    ReplicationMismatch,
+    same_value,
+)
 from Datastore.shard_paths import (
     resolve_shard_path,
     is_legacy_record,
@@ -147,6 +154,10 @@ class ShardedPool:
         # true only while _replicated_write runs; replicated calls never overlap in the driver
         self._replication_active: bool = False
 
+        # what the check at open compared and repaired (_reconcile_replicated_tables); None for a
+        # store created by this constructor, which has nothing to compare
+        self.reconciliation: Optional[dict] = None
+
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
             raise RuntimeError(
@@ -179,12 +190,21 @@ class ShardedPool:
         # otherwise, if primary exists, try to read in shard configuration from it.
         # Then, all shard databases must be present
         else:
+            # a journal beside the primary is rolled back by the primary's first read-write
+            # open, which _read_shard_data makes: note it now, for the reconciliation's record
+            primary_journal = os.path.lexists(str(self._primary_file) + "-journal")
+
             self._create_engine()
             self._read_shard_data()
 
             # fail closed, before any actor exists: a Datastore actor given a missing shard file
             # creates an empty database there, and the pool would open with nothing in it
             self._check_shard_files()
+
+            # before any actor exists, and with no Ray: roll back hot journals, compare every
+            # replicated table across the shards, repair an interrupted replication from its
+            # record's controlling shard, and refuse to open on any other difference
+            self.reconciliation = self._reconcile_replicated_tables(primary_journal)
 
             # a store written before the replicated write was recorded has no in-flight table;
             # create it, empty, only once the store has been checked
@@ -584,6 +604,972 @@ class ShardedPool:
                 f'Cannot open sharded datastore "{str(self._primary_file)}": '
                 + "; ".join(problems)
             )
+
+    # THE REPLICATED TABLES, RECONCILED AT OPEN
+    #
+    # A replicated write interrupted after its controlling shard committed leaves the shards
+    # different and the primary's replication_in_flight record set (_replicated_write). Nothing
+    # in the write path deletes a replicated row, the controller commits first and the replicas
+    # copy only what it committed, and a flag is only ever turned on, so after an interrupted
+    # replication the right state is exactly "every shard holds what the controller holds"
+    # (docs/datastore-integrity-audit.md §4.5). _reconcile_replicated_tables runs in the
+    # constructor after _check_shard_files and before the broker or any actor exists, on plain
+    # SQLAlchemy connections to the shard files through tables built by build_schema, with no Ray:
+    #
+    #   1. each shard is opened read-write once, so that SQLite rolls back a hot journal;
+    #   2. every replicated table, and the tag table of every replicated class, is read from every
+    #      shard and compared by full row; the primary's shard_keys are checked against the
+    #      wavenumbers every shard holds;
+    #   3. no record and no difference: nothing is written, and the store opens as before;
+    #   4. a record, and differences its interrupted write explains: each row of the record's
+    #      class that the record's controlling shard holds and another shard lacks is copied to
+    #      that shard verbatim (a BackgroundModel as a unit: row, tags and values), a flag the
+    #      controller holds set is set, and after a validate BackgroundModel.validated is
+    #      recomputed on each shard by the factory's own rule. Every shard is then compared again,
+    #      inside the repair's transactions; only if they all agree are the shards committed, and
+    #      then the record is cleared, in its own commit, last. A record over identical shards is
+    #      simply cleared;
+    #   5. anything else raises ReplicatedDivergence, and nothing is written.
+    #
+    # This deletes no row but the record's own and sets no flag to False. Nothing in a sharded
+    # table is read, repaired or refused on: those are not replicated, and nothing here can say
+    # what they should be.
+
+    def _reconcile_replicated_tables(self, primary_journal: bool = False) -> dict:
+        """
+        Compare the replicated tables of this existing store across its shards, repair an
+        interrupted replication named by the primary's replication_in_flight record, and raise
+        ReplicatedDivergence on any other difference. Return the reconciliation record: the
+        tables compared, the files that had a hot journal, the in-flight record found (if any)
+        and its controlling shard, what was repaired, and whether the record was cleared.
+        """
+        shard_ids = sorted(self._shard_db_files.keys())
+        reconciliation = {
+            "compared": [],
+            "shards": list(shard_ids),
+            "hot_journals": [str(self._primary_file)] if primary_journal else [],
+            "record": None,
+            "controller": None,
+            "repaired": [],
+            "cleared": False,
+        }
+
+        # 1. hot journals: what any read-write open would do, done here so that the comparison
+        # reads committed state
+        for sid in shard_ids:
+            path = Path(self._shard_db_files[sid])
+            journal = Path(str(path) + "-journal")
+            had_journal = os.path.lexists(journal)
+            conn = sqlite3.connect(str(path))
+            try:
+                conn.execute("SELECT count(*) FROM sqlite_master").fetchone()
+            finally:
+                conn.close()
+            if had_journal:
+                reconciliation["hot_journals"].append(str(path))
+        for path in reconciliation["hot_journals"]:
+            print(
+                f'>> Rolled back the journal left beside "{path}" before comparing the replicated tables'
+            )
+
+        built = build_schema(sqla.MetaData(), _factories)
+        specs = self._replicated_table_specs(built)
+        reconciliation["compared"] = [spec["name"] for spec in specs]
+
+        record = self._read_in_flight_record()
+        reconciliation["record"] = record
+        if record is not None:
+            reconciliation["controller"] = record.get("controller_shard")
+
+        engines = {
+            sid: self._reconcile_engine(self._shard_db_files[sid]) for sid in shard_ids
+        }
+        conns = {}
+        try:
+            for sid in shard_ids:
+                conns[sid] = engines[sid].connect()
+
+            # 2. the comparison
+            snapshots = {
+                sid: self._read_replicated_tables(conns[sid], specs)
+                for sid in shard_ids
+            }
+            for conn in conns.values():
+                conn.rollback()
+            differences = self._replicated_differences(specs, snapshots)
+
+            # 3. no record: any difference refuses
+            if record is None:
+                if len(differences) > 0:
+                    raise ReplicatedDivergence(
+                        self._primary_file,
+                        self._describe_differences(specs, snapshots, differences),
+                        None,
+                    )
+                return reconciliation
+
+            # 4. a record: what its interrupted write explains is repaired, from its controller
+            plan, refusals = self._plan_replicated_repair(
+                record, specs, snapshots, differences, conns
+            )
+            if len(refusals) > 0:
+                raise ReplicatedDivergence(self._primary_file, refusals, record)
+
+            actions = []
+            if plan["empty"]:
+                # nothing to write: what remains is what the plan left to the second comparison
+                remaining = [d for d in differences if d["kind"] == "shard_key"]
+                if len(remaining) > 0:
+                    raise ReplicatedDivergence(
+                        self._primary_file,
+                        self._describe_differences(specs, snapshots, remaining),
+                        record,
+                    )
+            else:
+                for conn in conns.values():
+                    conn.begin()
+                try:
+                    actions, refusals = self._apply_replicated_repair(
+                        plan, record, specs, built, conns, snapshots
+                    )
+                    if len(refusals) > 0:
+                        raise ReplicatedDivergence(
+                            self._primary_file, refusals, record, after_repair=True
+                        )
+
+                    # the second comparison, of what the repair's transactions hold
+                    after = {
+                        sid: self._read_replicated_tables(conns[sid], specs)
+                        for sid in shard_ids
+                    }
+                    remaining = self._replicated_differences(specs, after)
+                    if len(remaining) > 0:
+                        raise ReplicatedDivergence(
+                            self._primary_file,
+                            self._describe_differences(specs, after, remaining),
+                            record,
+                            after_repair=True,
+                        )
+                except BaseException:
+                    for conn in conns.values():
+                        conn.rollback()
+                    raise
+
+                for sid in shard_ids:
+                    conns[sid].commit()
+
+            # 5. every shard holds what the controller holds: the record is cleared, last
+            with self._engine.begin() as conn:
+                result = conn.execute(sqla.delete(self._replication_in_flight_table))
+                if result.rowcount != 1:
+                    raise RuntimeError(
+                        f"ShardedPool: the replication_in_flight record has {result.rowcount} "
+                        "rows, expected 1"
+                    )
+
+            reconciliation["repaired"] = actions
+            reconciliation["cleared"] = True
+            self._print_reconciliation(record, actions)
+            return reconciliation
+
+        finally:
+            for conn in conns.values():
+                conn.close()
+            for engine in engines.values():
+                engine.dispose()
+
+    def _replicated_table_specs(self, built) -> List[dict]:
+        """
+        What is compared, table by table: every replicated class that has a table, in the order
+        the constructor was given them, then the tag table of every replicated class (a table
+        that is neither replicated nor sharded, whose foreign keys other than store_tag's all
+        name replicated tables: BackgroundModel_tags).
+
+        Each spec gives the table, the key its rows are compared under and the columns compared.
+        A table is keyed by its primary key, and every column but ``timestamp`` is compared
+        (every store written before prompt 01 stamps it per shard). BackgroundModelValue is keyed
+        by (model_serial, z_serial) and its ``serial`` is not compared, because a store written
+        before prompt 01 drew it per shard.
+        """
+        replicated = [n for n in self._replicated_tables if n in built.tables]
+        listed = set(self._replicated_tables) | set(self._sharded_tables.keys())
+        tag_tables = []
+        for name, table in built.tables.items():
+            if name in listed:
+                continue
+            parents = {fk.column.table.name for fk in table.foreign_keys} - {
+                "store_tag"
+            }
+            if len(parents) > 0 and parents <= set(replicated):
+                tag_tables.append(name)
+
+        specs = []
+        for name in replicated + tag_tables:
+            table = built.tables[name]
+            if name == "BackgroundModelValue":
+                key = ("model_serial", "z_serial")
+                excluded = {"serial", "timestamp"}
+            else:
+                key = tuple(c.name for c in table.primary_key.columns)
+                excluded = {"timestamp"}
+            compared = [c.name for c in table.columns if c.name not in excluded]
+            specs.append(
+                {
+                    "name": name,
+                    "table": table,
+                    "key": key,
+                    "compared": compared,
+                    "serial_keyed": key == ("serial",),
+                }
+            )
+        return specs
+
+    def _reconcile_engine(self, path):
+        """
+        An engine on one shard file for the check at open, with SQLite's own transactions: the
+        driver's implicit BEGIN is turned off and one is emitted when a transaction begins, so
+        that the repair's transactions and savepoints are real ones.
+        """
+        connect_args = {}
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
+        engine = sqla.create_engine(
+            f"sqlite:///{path}",
+            future=True,
+            connect_args=connect_args,
+            poolclass=sqla.pool.NullPool,
+        )
+
+        def on_connect(dbapi_connection, connection_record):
+            dbapi_connection.isolation_level = None
+
+        def on_begin(conn):
+            conn.exec_driver_sql("BEGIN")
+
+        sqla.event.listen(engine, "connect", on_connect)
+        sqla.event.listen(engine, "begin", on_begin)
+        return engine
+
+    def _read_in_flight_record(self) -> Optional[dict]:
+        """
+        The primary's replication_in_flight row, as a dict, or None. A store written before
+        prompt 01 has no such table, which is read as no record. More than one row is not
+        something the write path leaves, and refuses.
+        """
+        with self._engine.connect() as conn:
+            if not sqla.inspect(conn).has_table("replication_in_flight"):
+                return None
+            rows = [
+                dict(row)
+                for row in conn.execute(
+                    sqla.select(self._replication_in_flight_table)
+                ).mappings()
+            ]
+            conn.rollback()
+        if len(rows) > 1:
+            raise ReplicatedDivergence(
+                self._primary_file,
+                [
+                    {
+                        "class_name": "replication_in_flight",
+                        "shard": "primary",
+                        "key": f"{len(rows)} rows",
+                        "detail": f"the table holds at most one row, and holds {rows}",
+                    }
+                ],
+                None,
+            )
+        return rows[0] if len(rows) == 1 else None
+
+    def _read_replicated_tables(self, conn, specs) -> Dict[str, dict]:
+        """
+        One shard's replicated rows, table by table: the compared columns the shard's table has,
+        and its rows keyed as the spec says, each a tuple in the order of those columns. A table
+        the shard lacks is read as empty (an actor would create it empty).
+        """
+        out = {}
+        for spec in specs:
+            name = spec["name"]
+            present = {
+                row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{name}")')
+            }
+            if len(present) == 0:
+                out[name] = {"columns": None, "rows": {}, "duplicates": set()}
+                continue
+
+            columns = tuple(c for c in spec["compared"] if c in present)
+            if not all(k in columns for k in spec["key"]):
+                out[name] = {
+                    "columns": columns,
+                    "rows": {},
+                    "duplicates": set(),
+                    "unkeyed": True,
+                }
+                continue
+
+            key_index = [columns.index(k) for k in spec["key"]]
+            table = spec["table"]
+            rows = {}
+            duplicates = set()
+            for row in conn.execute(sqla.select(*[table.c[c] for c in columns])):
+                values = tuple(row)
+                key = tuple(values[i] for i in key_index)
+                if key in rows:
+                    duplicates.add(key)
+                else:
+                    rows[key] = values
+            out[name] = {"columns": columns, "rows": rows, "duplicates": duplicates}
+        return out
+
+    @staticmethod
+    def _same_row(a: tuple, b: tuple) -> bool:
+        """Two rows' compared values are the same: exactly, with two NaN floats the same value."""
+        if a == b:
+            return True
+        return len(a) == len(b) and all(same_value(x, y) for x, y in zip(a, b))
+
+    def _replicated_differences(self, specs, snapshots) -> List[dict]:
+        """
+        Every difference between the shards' replicated rows, as dicts by kind:
+        ``columns`` (the shards' tables have different compared columns, or no key column),
+        ``duplicate`` (a key held by more than one row on a shard), ``missing`` (a key some
+        shards hold and others lack), ``differs`` (a key whose compared values differ between
+        the shards that hold it) and ``shard_key`` (a key_serial of the primary's shard_keys that
+        is not a wavenumber serial on every shard).
+        """
+        shard_ids = sorted(snapshots.keys())
+        differences = []
+        for spec in specs:
+            name = spec["name"]
+            tables = {sid: snapshots[sid][name] for sid in shard_ids}
+
+            present = {
+                sid: t["columns"]
+                for sid, t in tables.items()
+                if t["columns"] is not None
+            }
+            if len(set(present.values())) > 1 or any(
+                t.get("unkeyed", False) for t in tables.values()
+            ):
+                differences.append(
+                    {"kind": "columns", "table": name, "columns": present}
+                )
+                continue
+
+            for sid, t in tables.items():
+                for key in sorted(t["duplicates"]):
+                    differences.append(
+                        {"kind": "duplicate", "table": name, "key": key, "shard": sid}
+                    )
+
+            rows = {sid: t["rows"] for sid, t in tables.items()}
+            reference = rows[shard_ids[0]] if len(shard_ids) > 0 else {}
+            if all(r == reference for r in rows.values()):
+                continue
+
+            keys = set()
+            for r in rows.values():
+                keys.update(r.keys())
+            for key in sorted(keys):
+                holders = [sid for sid in shard_ids if key in rows[sid]]
+                lackers = [sid for sid in shard_ids if key not in rows[sid]]
+                if len(lackers) > 0:
+                    differences.append(
+                        {
+                            "kind": "missing",
+                            "table": name,
+                            "key": key,
+                            "holders": holders,
+                            "lackers": lackers,
+                        }
+                    )
+                values = {sid: rows[sid][key] for sid in holders}
+                first = values[holders[0]]
+                if not all(self._same_row(v, first) for v in values.values()):
+                    differences.append(
+                        {"kind": "differs", "table": name, "key": key, "values": values}
+                    )
+
+        # the primary's shard keys name wavenumbers every shard holds
+        key_table = self._ShardKeyType_name
+        if len(shard_ids) > 0 and key_table in snapshots[shard_ids[0]]:
+            for key_serial, shard_id in sorted(self._shard_keys.items()):
+                lackers = [
+                    sid
+                    for sid in shard_ids
+                    if (key_serial,) not in snapshots[sid][key_table]["rows"]
+                ]
+                if len(lackers) > 0:
+                    differences.append(
+                        {
+                            "kind": "shard_key",
+                            "table": "shard_keys",
+                            "key": key_serial,
+                            "shard_id": shard_id,
+                            "lackers": lackers,
+                        }
+                    )
+
+        return differences
+
+    @staticmethod
+    def _key_text(spec: Optional[dict], key) -> str:
+        if spec is None or not isinstance(key, tuple):
+            return f"key {key}"
+        if spec["key"] == ("serial",):
+            return f"serial {key[0]}"
+        return "key (" + ", ".join(f"{k}={v}" for k, v in zip(spec["key"], key)) + ")"
+
+    def _describe_differences(
+        self,
+        specs,
+        snapshots,
+        differences,
+        why: Optional[str] = None,
+        context: Optional[List[dict]] = None,
+    ) -> List[dict]:
+        """
+        Each difference as the refusal names it: the class (table), the shard or shards that
+        deviate, the serial or key, and what differs, followed by ``why`` when it is given. Rows
+        missing under different serials whose other compared values are the same are named as
+        a serial split; ``context``, when given, is the whole list of differences those pairs are
+        looked for in.
+        """
+        by_name = {spec["name"]: spec for spec in specs}
+
+        # a serial split: the same row, but for its serial, held under different serials by
+        # different shards
+        split_of = {}
+        held = {}
+        for d in context if context is not None else differences:
+            spec = by_name.get(d["table"])
+            if d["kind"] != "missing" or spec is None or not spec["serial_keyed"]:
+                continue
+            snap = snapshots[d["holders"][0]][d["table"]]
+            content = tuple(
+                v
+                for c, v in zip(snap["columns"], snap["rows"][d["key"]])
+                if c != "serial"
+            )
+            held.setdefault((d["table"], content), []).append(d)
+        for group in held.values():
+            if len(group) < 2:
+                continue
+            for d in group:
+                others = [
+                    f"serial {o['key'][0]} on shard(s) {o['holders']}"
+                    for o in group
+                    if o is not d
+                ]
+                split_of[id(d)] = (
+                    f"a serial split: the same row is held under serial {d['key'][0]} on "
+                    f"shard(s) {d['holders']} and under " + ", ".join(others)
+                )
+
+        out = []
+        for d in differences:
+            kind = d["kind"]
+            spec = by_name.get(d["table"])
+            if kind == "columns":
+                entry = {
+                    "class_name": d["table"],
+                    "shard": sorted(d["columns"].keys()),
+                    "key": "its columns",
+                    "detail": "the shards' tables do not have the same compared columns, "
+                    "or lack their key: "
+                    + "; ".join(
+                        f"shard {sid}: {list(cols)}"
+                        for sid, cols in sorted(d["columns"].items())
+                    ),
+                }
+            elif kind == "duplicate":
+                entry = {
+                    "class_name": d["table"],
+                    "shard": d["shard"],
+                    "key": self._key_text(spec, d["key"]),
+                    "detail": "more than one row holds this key on the shard",
+                }
+            elif kind == "missing":
+                detail = f"held by shard(s) {d['holders']}, missing on shard(s) {d['lackers']}"
+                if id(d) in split_of:
+                    detail += f"; {split_of[id(d)]}"
+                entry = {
+                    "class_name": d["table"],
+                    "shard": d["lackers"],
+                    "key": self._key_text(spec, d["key"]),
+                    "detail": detail,
+                }
+            elif kind == "differs":
+                columns = snapshots[next(iter(d["values"]))][d["table"]]["columns"]
+                parts = []
+                for i, column in enumerate(columns):
+                    groups = []
+                    for sid, values in sorted(d["values"].items()):
+                        for g in groups:
+                            if same_value(g[0], values[i]):
+                                g[1].append(sid)
+                                break
+                        else:
+                            groups.append((values[i], [sid]))
+                    if len(groups) > 1:
+                        parts.append(
+                            f"{column}: "
+                            + "; ".join(f"{v!r} on shard(s) {s}" for v, s in groups)
+                        )
+                first = next(iter(d["values"].values()))
+                entry = {
+                    "class_name": d["table"],
+                    "shard": sorted(
+                        sid
+                        for sid, v in d["values"].items()
+                        if not self._same_row(v, first)
+                    )
+                    or sorted(d["values"].keys()),
+                    "key": self._key_text(spec, d["key"]),
+                    "detail": "the shards hold different values: " + " | ".join(parts),
+                }
+            else:  # shard_key
+                entry = {
+                    "class_name": "shard_keys",
+                    "shard": d["lackers"],
+                    "key": f"key_serial {d['key']}",
+                    "detail": f"the primary assigns wavenumber serial {d['key']} to shard "
+                    f"{d['shard_id']}, but it is missing on shard(s) {d['lackers']}",
+                }
+            if why is not None:
+                entry["detail"] += f"; {why}"
+            out.append(entry)
+        return out
+
+    def _plan_replicated_repair(self, record, specs, snapshots, differences, conns):
+        """
+        Decide, before anything is written, whether the record's interrupted write explains every
+        difference, and if it does what to write. Return (plan, refusals); a non-empty refusals
+        list names every difference the record does not license repairing.
+
+        The licence: only from the record's controlling shard, only the tables of the record's
+        class (a BackgroundModel's row, tags and values), only rows the controller holds and
+        another shard lacks, written by the recorded write (their timestamp is the record's
+        start; under a store_id, that serial), a BackgroundModel as a whole unit, a source or
+        response flag the controller holds set after a get, and a validated flag after a
+        validate of the record's model, which is recomputed. Anything else is refused.
+        """
+        by_name = {spec["name"]: spec for spec in specs}
+        operation = record.get("operation")
+        cls_name = record.get("class_name")
+        controller = record.get("controller_shard")
+        store_id = record.get("store_id")
+        started = record.get("started")
+        refusals = []
+
+        def refuse(d, why):
+            refusals.extend(
+                self._describe_differences(
+                    specs, snapshots, [d], why=why, context=differences
+                )
+            )
+
+        if (
+            operation not in ("get", "store", "validate")
+            or cls_name not in by_name
+            or controller not in snapshots
+        ):
+            return None, [
+                {
+                    "class_name": cls_name,
+                    "shard": controller,
+                    "key": "the replication_in_flight record",
+                    "detail": "the record does not name an operation, a replicated class and "
+                    "a shard of this store, so nothing can say which rows are right",
+                }
+            ]
+
+        unit = [cls_name]
+        if cls_name == "BackgroundModel":
+            unit = [
+                t
+                for t in (
+                    "BackgroundModel",
+                    "BackgroundModel_tags",
+                    "BackgroundModelValue",
+                )
+                if t in by_name
+            ]
+        flag_columns = {
+            "redshift": ("source", "response"),
+            "wavenumber": ("source", "response"),
+        }
+
+        copies = {}  # (table, shard) -> set of keys
+        flags = {}  # (table, shard) -> {key: [columns]}
+        recompute = False
+
+        for d in differences:
+            kind = d["kind"]
+            name = d["table"]
+            if kind == "shard_key":
+                # compared again once the repair is written: a copied wavenumber can satisfy it
+                continue
+            if kind in ("columns", "duplicate"):
+                refuse(d, "this is not something a replication writes")
+                continue
+            if name not in unit:
+                refuse(
+                    d,
+                    f'the record names "{cls_name}", and an interrupted replication of it '
+                    f'writes nothing to "{name}"',
+                )
+                continue
+
+            if kind == "missing":
+                if controller not in d["holders"]:
+                    refuse(
+                        d,
+                        f"the record's controlling shard {controller} lacks this row, and a "
+                        "shard can only lack what the controller committed",
+                    )
+                elif operation == "validate":
+                    refuse(d, "a validate writes no row")
+                else:
+                    for sid in d["lackers"]:
+                        copies.setdefault((name, sid), set()).add(d["key"])
+                continue
+
+            # differs: each shard against the controller
+            if controller not in d["values"]:
+                refuse(d, f"the record's controlling shard {controller} lacks this row")
+                continue
+            columns = snapshots[controller][name]["columns"]
+            reference = d["values"][controller]
+            for sid, values in sorted(d["values"].items()):
+                if sid == controller or self._same_row(values, reference):
+                    continue
+                differing = [
+                    c
+                    for c, a, b in zip(columns, values, reference)
+                    if not same_value(a, b)
+                ]
+                turned_on = all(
+                    reference[columns.index(c)] is True
+                    and values[columns.index(c)] is False
+                    for c in differing
+                )
+                if (
+                    name in flag_columns
+                    and set(differing) <= set(flag_columns[name])
+                    and turned_on
+                    and operation == "get"
+                    and (store_id is None or d["key"] == (store_id,))
+                ):
+                    flags.setdefault((name, sid), {})[d["key"]] = differing
+                elif (
+                    name == "BackgroundModel"
+                    and differing == ["validated"]
+                    and turned_on
+                    and operation == "validate"
+                    and d["key"] == (store_id,)
+                ):
+                    recompute = True
+                else:
+                    refuse(
+                        {**d, "values": {controller: reference, sid: values}},
+                        f"only a source or response flag after a get, or validated after a "
+                        f"validate, can be turned on from the controlling shard {controller}; "
+                        f"shard {sid} differs in {differing}",
+                    )
+
+        # the controller's full rows, verbatim, for every key to be copied
+        rows = {}
+        wanted = {}
+        for (name, sid), keys in copies.items():
+            wanted.setdefault(name, set()).update(keys)
+        for name, keys in wanted.items():
+            rows[name] = self._read_full_rows(conns[controller], by_name[name], keys)
+
+        # A copy is never checked for the same row held under another serial on the shard it
+        # goes to: a shard can hold a row the controller lacks only under a serial the
+        # controller does not hold, which the loop above has already refused
+        for (name, sid), keys in sorted(copies.items()):
+            for key in sorted(keys):
+                row = rows[name][key]
+                d = {
+                    "kind": "missing",
+                    "table": name,
+                    "key": key,
+                    "holders": [controller],
+                    "lackers": [sid],
+                }
+                # written by the recorded write: its timestamp is the record's start, and under
+                # a store_id the class's own row is that serial
+                if "timestamp" in row and row["timestamp"] != started:
+                    refuse(
+                        d,
+                        f"its timestamp {row['timestamp']} is not the recorded write's start "
+                        f"{started}, so the recorded write did not insert it",
+                    )
+                elif name == cls_name and store_id is not None and key != (store_id,):
+                    refuse(d, f"the record names serial {store_id}, not this one")
+
+        # a BackgroundModel is copied as a unit: a shard lacking the model row receives every
+        # one of its tag and value rows, and a shard holding any part of it receives nothing
+        if cls_name == "BackgroundModel":
+            for sid in sorted(snapshots.keys()):
+                models = {k[0] for k in copies.get(("BackgroundModel", sid), set())}
+                for name in unit:
+                    if name == "BackgroundModel":
+                        continue
+                    got = copies.get((name, sid), set())
+                    held = {
+                        k for k in snapshots[controller][name]["rows"] if k[0] in models
+                    }
+                    for key in sorted(got - held):
+                        refuse(
+                            {
+                                "kind": "missing",
+                                "table": name,
+                                "key": key,
+                                "holders": [controller],
+                                "lackers": [sid],
+                            },
+                            f"shard {sid} holds its model row, so this is not part of a "
+                            "BackgroundModel it lacks",
+                        )
+                    for key in sorted(held - got):
+                        refuse(
+                            {
+                                "kind": "missing",
+                                "table": "BackgroundModel",
+                                "key": (key[0],),
+                                "holders": [controller],
+                                "lackers": [sid],
+                            },
+                            f"shard {sid} already holds part of this model ({name} {key}), "
+                            "and a BackgroundModel is copied only as a unit",
+                        )
+
+            # value serials are the controller's, and must be free on the shard
+            for (name, sid), keys in sorted(copies.items()):
+                if name != "BackgroundModelValue":
+                    continue
+                table = by_name[name]["table"]
+                serials = sorted(rows[name][k]["serial"] for k in keys)
+                taken = set(
+                    conns[sid]
+                    .execute(
+                        sqla.select(table.c.serial).filter(
+                            table.c.serial.between(serials[0], serials[-1])
+                        )
+                    )
+                    .scalars()
+                    .all()
+                ) & set(serials)
+                conns[sid].rollback()
+                if len(taken) > 0:
+                    refusals.append(
+                        {
+                            "class_name": name,
+                            "shard": sid,
+                            "key": f"serials {sorted(taken)}",
+                            "detail": "these value serials of the controller's model are "
+                            "already taken on the shard",
+                        }
+                    )
+
+        plan = {
+            "copies": copies,
+            "flags": flags,
+            "recompute": recompute,
+            "rows": rows,
+            "empty": len(copies) == 0 and len(flags) == 0 and not recompute,
+        }
+        return plan, refusals
+
+    @staticmethod
+    def _read_full_rows(conn, spec, keys) -> Dict[tuple, dict]:
+        """The controller's rows under ``keys``, every column its table has, as mappings."""
+        table = spec["table"]
+        present = {
+            row[1]
+            for row in conn.exec_driver_sql(f'PRAGMA table_info("{spec["name"]}")')
+        }
+        columns = [c for c in table.columns if c.name in present]
+        first = spec["key"][0]
+        out = {}
+        for row in conn.execute(
+            sqla.select(*columns).filter(
+                table.c[first].in_(sorted({k[0] for k in keys}))
+            )
+        ).mappings():
+            key = tuple(row[k] for k in spec["key"])
+            if key in keys:
+                out[key] = dict(row)
+        conn.rollback()
+        return out
+
+    def _apply_replicated_repair(self, plan, record, specs, built, conns, snapshots):
+        """
+        Write the plan, inside each shard's open transaction: the copies (in the specs' order,
+        so that a model row precedes its tags and values), then the flags, then the recomputed
+        validated flags. Return (actions, refusals).
+        """
+        by_name = {spec["name"]: spec for spec in specs}
+        controller = record["controller_shard"]
+        actions = []
+        refusals = []
+
+        for spec in specs:
+            name = spec["name"]
+            for sid in sorted(conns.keys()):
+                keys = plan["copies"].get((name, sid))
+                if not keys:
+                    continue
+                conns[sid].execute(
+                    sqla.insert(spec["table"]),
+                    [plan["rows"][name][key] for key in sorted(keys)],
+                )
+                actions.append(
+                    {
+                        "action": "copied",
+                        "class_name": name,
+                        "shard": sid,
+                        "from": controller,
+                        "keys": sorted(keys),
+                    }
+                )
+
+        for (name, sid), per_key in sorted(plan["flags"].items()):
+            table = by_name[name]["table"]
+            for key, columns in sorted(per_key.items()):
+                conns[sid].execute(
+                    sqla.update(table)
+                    .where(table.c.serial == key[0])
+                    .values({c: True for c in columns})
+                )
+            actions.append(
+                {
+                    "action": "flags set",
+                    "class_name": name,
+                    "shard": sid,
+                    "from": controller,
+                    "keys": sorted(per_key.keys()),
+                    "columns": sorted({c for cols in per_key.values() for c in cols}),
+                }
+            )
+
+        if plan["recompute"]:
+            recomputed, refused = self._recompute_validated(
+                record, built, conns, snapshots
+            )
+            actions.extend(recomputed)
+            refusals.extend(refused)
+
+        return actions, refusals
+
+    def _recompute_validated(self, record, built, conns, snapshots):
+        """
+        After a validate of the record's BackgroundModel, recompute its ``validated`` flag on each
+        shard by the factory's own rule (sqla_BackgroundModelFactory.validate: its value-row count
+        against z_samples), from that shard's own value rows, each inside a savepoint. A result
+        that turns the flag on is kept; any other is rolled back to the savepoint, so that no flag
+        is written False. A shard holding True whose rule gives False refuses. Return (actions,
+        refusals); whether the shards then agree is for the second comparison.
+        """
+        factory = _factories["BackgroundModel"]
+        table = built.tables["BackgroundModel"]
+        serial = record["store_id"]
+
+        class _StoredModel(DatastoreObject):
+            """What the factory's validate reads of a model: its serial and its label."""
+
+            def __init__(self, store_id: int, label):
+                super().__init__(store_id)
+                self.label = label
+
+        actions = []
+        refusals = []
+        for sid in sorted(conns.keys()):
+            snap = snapshots[sid]["BackgroundModel"]
+            row = snap["rows"].get((serial,))
+            if row is None:
+                continue
+            columns = snap["columns"]
+            stored = row[columns.index("validated")] is True
+            label = row[columns.index("label")] if "label" in columns else None
+
+            savepoint = conns[sid].begin_nested()
+            result = factory.validate(
+                _StoredModel(serial, label),
+                conn=conns[sid],
+                table=table,
+                tables=built.tables,
+            )
+            if result is True and not stored:
+                savepoint.commit()
+                actions.append(
+                    {
+                        "action": "validated recomputed",
+                        "class_name": "BackgroundModel",
+                        "shard": sid,
+                        "from": sid,
+                        "keys": [(serial,)],
+                        "validated": True,
+                    }
+                )
+            else:
+                savepoint.rollback()
+                if stored and result is not True:
+                    refusals.append(
+                        {
+                            "class_name": "BackgroundModel",
+                            "shard": sid,
+                            "key": f"serial {serial}",
+                            "detail": "the shard holds validated=True, and the factory's rule "
+                            "gives False from its own value rows",
+                        }
+                    )
+        return actions, refusals
+
+    def _print_reconciliation(self, record, actions):
+        """One line for the record, one per class and shard for what was written, one for the
+        clearing, so that a resumed build's log says what was repaired."""
+
+        def keys_text(keys):
+            texts = [str(k[0]) if len(k) == 1 else str(k) for k in keys]
+            if len(texts) > 20:
+                texts = texts[:10] + [f"... ({len(texts) - 20} more) ..."] + texts[-10:]
+            return ", ".join(texts)
+
+        print(
+            f'>> Sharded datastore "{str(self._primary_file)}" was opened with a replicated '
+            f'write in flight (operation="{record.get("operation")}", '
+            f'class="{record.get("class_name")}", controlling shard='
+            f'{record.get("controller_shard")}, store_id={record.get("store_id")}, '
+            f'started={record.get("started")})'
+        )
+        if len(actions) == 0:
+            print(
+                ">>   every shard already holds what the controlling shard holds: nothing was "
+                "repaired"
+            )
+        for a in actions:
+            n = len(a["keys"])
+            if a["action"] == "copied":
+                print(
+                    f'>>   copied {n} row(s) of "{a["class_name"]}" from shard {a["from"]} to '
+                    f'shard {a["shard"]}: {keys_text(a["keys"])}'
+                )
+            elif a["action"] == "flags set":
+                print(
+                    f'>>   set {", ".join(a["columns"])} on {n} row(s) of "{a["class_name"]}" on '
+                    f'shard {a["shard"]}, as shard {a["from"]} holds them: {keys_text(a["keys"])}'
+                )
+            else:
+                print(
+                    f'>>   recomputed validated of "{a["class_name"]}" serial '
+                    f'{a["keys"][0][0]} on shard {a["shard"]} from its own value rows: '
+                    f'{a["validated"]}'
+                )
+        print(">>   the replication_in_flight record was cleared")
 
     # SHARD RECORDS: READ AND CHECK
     #

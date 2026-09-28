@@ -265,6 +265,38 @@ class StandinCluster:
         self.pool = pool
         return pool
 
+    def open_pool_output(self, primary: Path, shards: int = 3, **kwargs):
+        """
+        As ``open_pool``, but return ``(pool, printed)``: what the constructor printed, which
+        ``open_pool`` discards (prompt 02: the check at open prints what it repaired). If the
+        constructor raises, what it printed before raising is kept as ``self.last_output``.
+        """
+        from config.sharding import (
+            replicated_tables,
+            sharded_tables,
+            shard_key_type,
+            shard_key_wavenumber_store_id,
+        )
+
+        out = io.StringIO()
+        self.last_output = ""
+        try:
+            with contextlib.redirect_stdout(out):
+                pool = sp_mod.ShardedPool(
+                    version_label="standin",
+                    db_name=primary,
+                    ShardKeyType=shard_key_type,
+                    ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
+                    replicated_tables=replicated_tables,
+                    sharded_tables=sharded_tables,
+                    shards=shards,
+                    **kwargs,
+                )
+        finally:
+            self.last_output = out.getvalue()
+        self.pool = pool
+        return pool, out.getvalue()
+
     def close_pool(self, pool=None):
         pool = pool if pool is not None else self.pool
         with contextlib.redirect_stdout(io.StringIO()):
@@ -311,6 +343,23 @@ def shard_rows(pool, table: str) -> Dict[int, List[tuple]]:
 
 def shard_snapshot(pool, tables) -> Dict[str, Dict[int, List[tuple]]]:
     return {table: shard_rows(pool, table) for table in tables}
+
+
+def store_checksums(primary: Path) -> Dict[str, str]:
+    """
+    The SHA-256 of every file in the directory of the primary ``primary``, by file name: the
+    primary, its shards and any journal beside them (prompt 02: a check that writes nothing leaves
+    every one unchanged, and creates no file). A stand-in store is the only thing in its
+    directory; the caller makes sure of that.
+    """
+    import hashlib
+
+    directory = Path(primary).parent
+    return {
+        p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted(directory.iterdir())
+        if p.is_file()
+    }
 
 
 def in_flight_records(pool) -> List[dict]:

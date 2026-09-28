@@ -620,10 +620,50 @@ class TestWriteOverASetRecord(_PoolTestCase):
         self.assertRefused(lambda: self.pool.object_store(self.other_model))
         self.assertRefused(lambda: self.pool.object_validate(self.model))
 
-    def test_a_reopened_pool_refuses(self):
+    def test_a_reopened_pool_repairs_from_the_controller_and_the_write_succeeds(self):
+        """
+        Rewritten by prompts/datastore-integrity prompt 02 (the user's decision, 2026-09-28),
+        on the same fixture: the interrupted tolerance get left the controller holding a row that
+        replica 0 lacks, with the record set. Reopened, the pool copies that row forward from the
+        record's controlling shard and clears the record, and the write that prompt 01 refused
+        now succeeds.
+        """
+        (serial,) = self.serials("tolerance", "WHERE log10_tol = -6.0")[self.controller]
+        self.assertEqual(
+            [], self.serials("tolerance", "WHERE log10_tol = -6.0")[self.replicas[0]]
+        )
+
         self.cluster.close_pool()
         self.pool = self.cluster.open_pool(self.primary)
-        self.assertRefused(lambda: sp.get_tolerance(self.pool, 1.0e-4))
+
+        self.assertNoRecord()
+        self.assertTrue(self.pool.reconciliation["cleared"])
+        self.assertEqual(
+            [
+                {
+                    "action": "copied",
+                    "class_name": "tolerance",
+                    "shard": self.replicas[0],
+                    "from": self.controller,
+                    "keys": [(serial,)],
+                }
+            ],
+            self.pool.reconciliation["repaired"],
+        )
+        rows = sp.shard_rows(self.pool, "tolerance")
+        for sid in self.shard_ids:
+            self.assertEqual(rows[self.controller], rows[sid], f"shard {sid}")
+
+        # the write refused over the set record now goes through, on every shard
+        sp.get_tolerance(self.pool, 1.0e-4)
+        self.assertNoRecord()
+        rows = sp.shard_rows(self.pool, "tolerance")
+        for sid in self.shard_ids:
+            self.assertEqual(rows[self.controller], rows[sid], f"shard {sid}")
+        self.assertEqual(
+            1,
+            len(self.serials("tolerance", "WHERE log10_tol = -4.0")[self.controller]),
+        )
 
     def test_overlapping_writes_are_a_programming_error(self):
         conn = sqlite3.connect(self.primary)

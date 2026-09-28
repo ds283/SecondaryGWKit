@@ -743,11 +743,12 @@ archival value. Its audit, `docs/datastore-integrity-audit.md`, re-verified the 
 in that class on four boards, all still present, and each wider than recorded. All eleven were
 assigned to its prompts on 2026-09-26; each stays on its owning board, which carries an
 **Assigned** line, and closes there. The audit opened three `00-` issues of its own, none assigned
-to a prompt, and prompt 05c opened one on 2026-09-28: the last four rows.
+to a prompt, and prompts 05c and 02 each opened one on 2026-09-28: the last five rows. Prompt 02
+closed `[00-replicated-writes-can-diverge-across-shards]` the same day, on the store-fingerprint
+board's §4, and its row is deleted.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | **→ prompt 01, 02.** A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ; a resume can then split one key across two serials, which the inventory cannot see. All three original stores clean serial by serial (audit §4.4). **Narrowed 2026-09-26** by prompt 01: an in-flight record in the primary spans every replicated write, replica answers are checked (`ReplicationMismatch`), replica stores insert-or-verify and copies are row-identical; repair or refusal at open remains, for prompt 02. |
 | `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | **→ prompt 03.** README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03a must sweep it through `_solve_horizon_exit` and never through the datastore. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | **→ prompt 03.** `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | **→ prompt 03.** `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
@@ -758,6 +759,7 @@ to a prompt, and prompt 05c opened one on 2026-09-28: the last four rows.
 | `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | **Narrowed 2026-09-28** by prompt 05b: `store()`'s `validated` key to no column is fixed. `OneLoopIntegral.build`/`read_batch` still put no `source_serial` in the payload, which the target reads. For when `OneLoopIntegral` is built. |
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
+| `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
 
 ---
 
