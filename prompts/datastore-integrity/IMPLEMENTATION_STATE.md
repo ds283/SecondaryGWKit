@@ -1,10 +1,9 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 3 of 10 prompts landed (01, 04, 04b); 01 and 04 reviewed,
-04b awaiting review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
-the same day. 04b landed the same day it was written, from the 04 review's findings; 05 is
-written against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists once 04b has been reviewed,
-and its release is the orchestrator's. 10 waits on 01–09. `store-retirement`
+**Last updated:** 2026-09-28 · **Status: 3 of 10 prompts landed (01, 04, 04b), all reviewed.** The
+user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the same day. 04b landed the
+same day it was written, from the 04 review's findings. **05 is released to be written** (2026-09-28),
+against 04's `KNOWN_UNFIXED` / `KNOWN_UNFIXED_COLUMNS` lists and 04b's pins. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
@@ -57,7 +56,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
-| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04b's review; release is the orchestrator's | — | — | — |
+| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ released to be written, 2026-09-28 | — | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
@@ -202,6 +201,49 @@ accepted is the user's call**, and prompt 05 is released to be written once that
 figures come from [`orchestrator/review_04_measurements.py`](orchestrator/review_04_measurements.py)
 and its `.out`. Findings 4 and 5 stand as recorded here: 04b takes its mutation diffs from `git diff`, and
 05 is written to empty both unfixed lists. 05 is released once 04b has landed and been reviewed.
+
+**Orchestrator review of prompt 04b (2026-09-28).** Run against `c6432dd`, dispatched from
+`9330c49` with the tree and the index clean. All seven checks in `orchestrator/prompt-04b.md` §3
+passed, with no findings.
+- **Scope.** Three files: the named test module, the log and this board. `Datastore/SQL/`,
+  `docs/` and `orchestrator/` are untouched, and no other test is modified.
+- **Nothing weakened.** Every removed line is a coverage or blind key rewritten to its
+  function-qualified form, `_ROW_HELPERS` and its gate, docstring points 3 and 6 (point 3 extended,
+  not cut), or G2's function body, which is replaced by a superset. Computed against `6a97d8a`: all 30
+  of 04's `EXPECTED_COVERAGE` entries are projections of the new 43, and `KNOWN_UNFIXED`,
+  `KNOWN_UNFIXED_COLUMNS` and `KNOWN_BLIND_COLUMNS` are identical as objects.
+- **Reach (finding 1).** `iter_functions` yields every class method and module-level function, and
+  no name list is left. The module's own findings give 43 decidable and 2 blind, equal to its pins
+  and to `review_04_measurements.out` §D.
+- **The pin (finding 2).** Skipping each of `build`, `_build_impl_serial`, `_build_impl_model`,
+  `read_batch` and `validate_on_startup` alone fails the coverage pin, losing 20, 6, 6, 4 and 7
+  entries. This is independent of `KNOWN_UNFIXED`, so it survives prompt 05 striking the
+  `WKB_criterio` entries.
+- **G2 (finding 3).** `KNOWN_UNRESOLVED_TABLES` holds 12 pairs (44 references) and
+  `KNOWN_UNCHECKED_INSERTS` 13 sites; each equals what the code finds. No resolution rule was used,
+  so there was nothing to test for soundness. `OneLoopIntegral`'s module-level `read_batch` is
+  walked. The one `continue` left on a dict-literal insert whose target does not resolve catches
+  nothing today (measured: 0), and every `inserter` call has two arguments.
+- **Mutations.** All six, extracted from the committed log, applied with plain `git apply` and gave
+  the logged `failures=1` on the logged test: (i)/(ii) the coverage pin, (iii) the guard proper,
+  (iv) column existence, (v)/(vi) the unresolved-table pin. The tree was clean after each.
+- **`var/`, suites, board.** Snapshot byte-identical (46 files, 10 directories). AdaptiveLevin 32,
+  ComputeTargets 552, CosmologyModels 39, Datastore 237 (+2), LiouvilleGreen 148 (1 skipped),
+  RunRegistry 199, run serially; `black --check` clean. The §1 row, G4–G6 and §5.3 are present.
+
+**Carried to prompt 05's writing.**
+- 05 empties **both** unfixed lists: `KNOWN_UNFIXED` (2, P6) and `KNOWN_UNFIXED_COLUMNS` (3; P6 ×2,
+  P8). Each currency test forces the fix to strike its own entry.
+- P8 makes `OneLoopIntegral.read_batch` a method with a return value. That moves its entries: the
+  `<module-level>` `KNOWN_BLIND` entry and `KNOWN_UNRESOLVED_TABLES` pair go, and a class-method
+  binding joins `EXPECTED_COVERAGE`. 05 must make those pin edits deliberately, each with a reason in
+  its log. Afterwards, mutation (vi)'s case (skip module-level functions) has nothing left to catch.
+  That is correct, not a hole.
+- Any row read 05 adds or moves shows up as a change to a function-qualified pin. 05's log states
+  each one.
+
+**Prompt 05 is released to be written** (2026-09-28): its charter is README §2's, and its method
+follows D2 and D3.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.

@@ -8,7 +8,8 @@ decisions recorded in §6.1. **Prompts 01–04 are written.** Their tasks are fi
 written. 05 still waits on 04's list, 09 on D1, which the user has asked to have explained, and 10
 on 01–09. **The user decided D1 later on 2026-09-26 (yes), which releases 09 too.** **06–09 were
 written on 2026-09-26.** `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
-cross-campaign constraints.
+cross-campaign constraints. **04 and 04b landed and were reviewed by 2026-09-28, which releases 05
+to be written.**
 
 ## 0. Why this campaign exists
 
@@ -82,7 +83,7 @@ eleven and found the classes wider than recorded:
 | 03 | [`03-exact-identity-lookups.md`](03-exact-identity-lookups.md) | Exit time by serial equality, the query out of the loop. `IntegrationSolver` by `==`. `.scalar()` → `one_or_none()` on every identity lookup. `redshift` at `z = 0`. Closes three issues. | **written**; after 02 |
 | 04 | [`04-extend-the-read-back-guard.md`](04-extend-the-read-back-guard.md) | The guard over `read_batch` and every `_build_impl_*`, and a column-existence test. Records what it finds as known-unfixed. Closes `[01-read-batch-is-outside-the-guard]`. | **written**; independent of 01–03 |
 | 04b | [`04b-tighten-the-read-back-guard.md`](04b-tighten-the-read-back-guard.md) | Findings 1–3 of the review of 04: every function visited, not a list of names; the function in the coverage identity; G2 declares every unresolved table and unchecked insert, and walks module-level functions. Fixes no factory. *(Added 2026-09-28, by the user's decision on the review.)* | **written** 2026-09-28; after 04 |
-| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads, each refusing more than one parent per `z_source`; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on 04 (D2, D3 decided) |
+| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads, each refusing more than one parent per `z_source`; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **released** 2026-09-28, once 04 and 04b were reviewed (D2, D3 decided) |
 | 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **written** 2026-09-26; after 03 |
 | 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **written** 2026-09-26; after 05 and 06 |
 | 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **written** 2026-09-26; after 07 |
