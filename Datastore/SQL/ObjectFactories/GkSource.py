@@ -763,7 +763,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.analytic_Gprime_rad,
                 ).filter(
                     table.c.parent_serial == parent_serial,
-                    table.c.z_serial == z_source.store_id,
+                    table.c.z_source_serial == z_source.store_id,
                 )
             ).one_or_none()
         except MultipleResultsFound as e:
@@ -774,7 +774,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             if not has_numeric and not has_WKB:
-                raise (
+                raise RuntimeError(
                     "GkSourceValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
 
@@ -864,7 +864,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         k: wavenumber_exit_time = payload["k"]
         z_response: redshift = payload["z_response"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         source_table = tables["GkSource"]
 

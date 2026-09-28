@@ -1,9 +1,10 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 3 of 10 prompts landed (01, 04, 04b), all reviewed.** The
-user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the same day. 04b landed the
-same day it was written, from the 04 review's findings. **05 is written** (2026-09-28) as three prompts,
-05a → 05b → 05c, for one orchestrator session ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a is ready.
+**Last updated:** 2026-09-28 · **Status: 4 of 10 prompts landed (01, 04, 04b, 05a); 01, 04, 04b
+reviewed, 05a not yet.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later the
+same day. 04b landed the same day it was written, from the 04 review's findings. **05 is written**
+(2026-09-28) as three prompts, 05a → 05b → 05c, for one orchestrator session
+([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)); 05a landed 2026-09-28, and 05b is ready.
 02 and 03 are ready too, in a separate chain. 10 waits on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
 
@@ -57,7 +58,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
-| 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ ready | — | — |
+| 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the mechanical read-path defects: names, an argument, tags, raises"* | [`logs/05a-…`](logs/05a-repair-the-mechanical-read-defects.md) |
 | 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ⬜ after 05a | — | — |
 | 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ⬜ after 05b | — | — |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
@@ -297,10 +298,10 @@ what 01–04 find; what waits is their method.
 | P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05c | ⬜ |
 | P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). *(Widened 2026-09-28 when 05c was written: `TkWKBValue`'s reads have the same omission, refused per `(model, k)`.)* | 05c | ⬜ |
 | P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05c | ⬜ |
-| P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05a | ⬜ |
-| P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ⬜ |
+| P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05a | ✅ `WKB_criterion` in both WKB value factories' `_build_impl_serial`; `z_source_serial` in `GkSourceValue._build_impl_serial`; `model_serial` in `QuadSourceValue._build_impl_model`; `friction=row.friction` added to `TkWKBValue.read_batch`'s `make_obj`. `KNOWN_UNFIXED` and the two P6 `KNOWN_UNFIXED_COLUMNS` entries struck |
+| P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ✅ nine sites (recount below), `Optional[List[store_tag]]` → `List[store_tag]` with each; the three `raise ("…")` → `raise RuntimeError("…")`, message unchanged; sweep for any other `raise (`/`raise "` under `ObjectFactories/` found none beyond the three named |
 | P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ⬜ |
-| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | ⬜ |
+| P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | 🔶 05a's share done: `Datastore/tests/test_read_path_mechanics.py` round-trips `TkWKBValue.read_batch` tagged/untagged (its `friction` fix) and the tags-omitted/`tags=[]` equivalence at all nine P7 sites; `KNOWN_UNFIXED` is empty. 05b and 05c add the rest |
 | S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
 | S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
@@ -427,3 +428,19 @@ run alone, to avoid the known wall-clock flake under parallel load).
 | RunRegistry | 199 OK |
 
 `black --check Datastore/tests/test_factory_select_columns.py` is clean.
+
+### 5.4 After prompt 05a (2026-09-28)
+
+Measured on the tree of prompt 05a's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **257 OK** (237 + the 20 of the new `test_read_path_mechanics.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check` is clean on every file this prompt touched.

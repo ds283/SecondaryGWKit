@@ -854,7 +854,7 @@ class sqla_TkNumericValue_factory(SQLAFactoryBase):
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         integration_table = tables["TkNumericIntegration"]
 

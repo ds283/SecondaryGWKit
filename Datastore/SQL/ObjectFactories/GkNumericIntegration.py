@@ -851,7 +851,7 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         integration_table = tables["GkNumericIntegration"]
 
@@ -950,7 +950,7 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         z_response: Optional[redshift] = payload.get("z", None)
         z_source: Optional[redshift] = payload.get("z_source", None)

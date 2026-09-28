@@ -918,7 +918,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             if not has_data:
-                raise (
+                raise RuntimeError(
                     "GkWKBValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
 
@@ -944,7 +944,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
-            WKB_criterion = row_data.WKB_criterio
+            WKB_criterion = row_data.WKB_criterion
 
             G_WKB = row_data.G_WKB
 
@@ -1014,7 +1014,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         k: wavenumber_exit_time = payload["k"]
         z_source: redshift = payload["z_source"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         wkb_table = tables["GkWKBIntegration"]
 
@@ -1120,7 +1120,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         z_response: Optional[redshift] = payload.get("z", None)
         z_source: Optional[redshift] = payload.get("z_source", None)

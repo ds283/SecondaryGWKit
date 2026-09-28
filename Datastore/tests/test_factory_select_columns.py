@@ -538,16 +538,11 @@ def analyse_factories() -> List[Finding]:
 # _build_impl_model and read_batch (docs/datastore-integrity-audit.md §3.10, probe_02), and found
 # one further defect class, in both WKB value factories: `_build_impl_serial` reads
 # `row_data.WKB_criterio` (missing the trailing "n") where the column selected and the table
-# column are both `WKB_criterion`. Real -- every hit raises AttributeError -- and carried
-# deliberately rather than fixed here; prompt 05's P6 empties it.
-KNOWN_UNFIXED = {
-    "GkWKBIntegration.py:sqla_GkWKBValue_factory": [
-        "WKB_criterio"
-    ],  # P6; GkWKBIntegration.py:947
-    "TkWKBIntegration.py:sqla_TkWKBValue_factory": [
-        "WKB_criterio"
-    ],  # P6; TkWKBIntegration.py:1001
-}
+# column are both `WKB_criterion`. Real -- every hit raises AttributeError -- and was carried
+# deliberately rather than fixed there. Prompt 05a fixed both sites (GkWKBIntegration.py:947,
+# TkWKBIntegration.py:1001) and struck them here; nothing else in this tree is known-unfixed by
+# this guard today.
+KNOWN_UNFIXED = {}
 
 
 # The row-variable bindings the analyser can see and decide, as "module:class.function.variable"
@@ -740,27 +735,16 @@ from Datastore.SQL.schema import build_schema  # noqa: E402
 # ColumnProblem below reports it. Each names the board item that will fix it (prompt 05, board §2);
 # a struck entry that has not been fixed is caught by
 # test_known_unfixed_columns_are_still_present, mirroring KNOWN_UNFIXED / P6 above.
+#
+# Prompt 05a fixed and struck the two P6 entries this held (sqla_GkSourceValue_factory reading
+# table.c.z_serial where the column is z_source_serial, GkSource.py:766; and
+# sqla_QuadSourceValue_factory reading quadsource_table.c.model_id where the column is
+# model_serial, QuadSource.py:672). One entry remains, P8's, owned by prompt 05b under D3 (the
+# mechanical defects of OneLoopIntegral's factory only; the rest is logged for when the target is
+# actually built).
 ColumnProblem = Tuple[str, str, str, str, str]
 
 KNOWN_UNFIXED_COLUMNS: Set[ColumnProblem] = {
-    # P6: sqla_GkSourceValue_factory._build_impl_serial reads table.c.z_serial
-    # (GkSource.py:766); GkSourceValue has no such column.
-    (
-        "GkSource.py",
-        "sqla_GkSourceValue_factory",
-        "_build_impl_serial",
-        "GkSourceValue",
-        "z_serial",
-    ),
-    # P6: sqla_QuadSourceValue_factory._build_impl_model reads quadsource_table.c.model_id
-    # (QuadSource.py:672); QuadSource has no such column (it has model_serial).
-    (
-        "QuadSource.py",
-        "sqla_QuadSourceValue_factory",
-        "_build_impl_model",
-        "QuadSource",
-        "model_id",
-    ),
     # P8: sqla_OneLoopIntegral_factory.store writes an insert key "validated"
     # (OneLoopIntegral.py:222) to a table with no such column -- D3: the mechanical defects only,
     # the rest logged for when OneLoopIntegral is actually built.

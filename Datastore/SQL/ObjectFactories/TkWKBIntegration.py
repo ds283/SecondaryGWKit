@@ -971,7 +971,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             if not has_data:
-                raise (
+                raise RuntimeError(
                     "TkWKBValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
 
@@ -998,7 +998,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
-            WKB_criterion = row_data.WKB_criterio
+            WKB_criterion = row_data.WKB_criterion
 
             T_WKB = row_data.T_WKB
 
@@ -1076,7 +1076,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
         model_payload: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         wkb_table = tables["TkWKBIntegration"]
 
@@ -1186,7 +1186,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
         model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         z: Optional[redshift] = payload.get("z", None)
 
@@ -1266,6 +1266,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                 H_ratio=row.H_ratio,
                 theta_mod_2pi=row.theta_mod_2pi,
                 theta_div_2pi=row.theta_div_2pi,
+                friction=row.friction,
                 omega_WKB_sq=row.omega_WKB_sq,
                 WKB_criterion=row.WKB_criterion,
                 T_WKB=row.T_WKB,

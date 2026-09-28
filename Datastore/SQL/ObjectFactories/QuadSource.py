@@ -663,13 +663,13 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
 
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         quadsource_table = tables["QuadSource"]
 
         try:
             quadsource_query = sqla.select(quadsource_table.c.serial).filter(
-                quadsource_table.c.model_id == model_proxy.store_id,
+                quadsource_table.c.model_serial == model_proxy.store_id,
                 quadsource_table.c.q_wavenumber_exit_serial == q.store_id,
                 quadsource_table.c.r_wavenumber_exit_serial == r.store_id,
                 quadsource_table.c.validated == True,
