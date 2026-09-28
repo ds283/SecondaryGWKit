@@ -73,7 +73,16 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26). 01 and 04 are
 dispatched one at a time, never concurrently in this checkout, in either order. Since then:
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
-(2026-09-28, both used), and [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used).
+(2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
+[`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, ready).
+
+**Measured for 03 (2026-09-29, while its note was written).** A throwaway sketch of L1–L4, in a
+worktree outside the tree and since removed, left every existing test passing unmodified:
+Datastore 325, ComputeTargets 552 and CosmologyModels 39. That includes the read-back guard, whose
+coverage sets pin the shape of the `build()`s 03 edits. So 03 can be met without touching a
+test, and a guard failure under 03 is a reason to change the shape, not the guard. Production
+requests the exit time at the pair and stepping (0) it stores, and each `IntegrationSolver` at
+the stepping it inserts, so L1 and L2 move no production lookup.
 
 **Decided for 02 (2026-09-28, the user, while its note was written).**
 `test_replicated_write.py`'s `TestWriteOverASetRecord.test_a_reopened_pool_refuses` pins 01's
