@@ -40,8 +40,10 @@ theoretical one; three of them exist in this tree today.
 3. **Only structural shape, not semantics.** The guard (extended by
    ``prompts/datastore-integrity`` prompt 04 to ``read_batch`` and every ``_build_impl_*`` helper,
    by inlining a nested ``make_obj``/``make_object`` helper as a for-loop over the row variable the
-   comprehension that calls it iterates over) still compares column *names*, never what a column is
-   *used for*. It cannot see a ``.label(...)`` attached to the wrong source column
+   comprehension that calls it iterates over; and by prompt 04b, G4, to every function of every
+   factory class and every module-level function -- ``validate_on_startup``'s seven bindings
+   included -- rather than a hard-coded list of names) still compares column *names*, never what a
+   column is *used for*. It cannot see a ``.label(...)`` attached to the wrong source column
    (``GkNumericIntegration.py``'s two ``…_is_response`` labels, both taken from ``.source``, audit
    §3.11), a column correctly selected but never passed on to the object it builds
    (``TkWKBValue.read_batch``'s missing ``friction``, audit §3.11), or a correctly selected column
@@ -66,14 +68,22 @@ theoretical one; three of them exist in this tree today.
    moves a read out of sight, rather than letting the guard pass vacuously.
 
 6. **Column existence, only where the table is resolvable and the name is a literal.**
-   ``TestColumnExistence`` (prompt 04, G2) resolves every ``<var>.c.<name>`` / ``<var>.c["<name>"]``
-   whose ``<var>`` is the factory's own ``table``, a ``tables["X"]``, or an ``.alias(...)`` of
-   either, against the columns ``build_schema`` actually declares, and does the same for every key
-   of a dict passed to an ``inserter``/``value_inserter`` call -- catching a wrong name before any
-   query or insert ever runs. It still cannot decide ``subquery.c.<name>`` (derived from columns
-   already checked when the subquery itself was built) or a column named at runtime by an f-string,
-   such as ``wavenumber.py`` and ``QuadSourceIntegral.py``'s ``z_exit_..._e{z_offset}`` loops; both
-   are structurally skipped, and the second is declared, with the reason, in
+   ``TestColumnExistence`` (prompt 04, G2; walking module-level functions too, and declaring
+   everything it does not check, as prompt 04b, G6, adds) resolves every ``<var>.c.<name>`` /
+   ``<var>.c["<name>"]`` whose ``<var>`` is the factory's own ``table``, a ``tables["X"]``, or an
+   ``.alias(...)`` of either, against the columns ``build_schema`` actually declares, and does the
+   same for every key of a dict passed to an ``inserter``/``value_inserter`` call -- catching a
+   wrong name before any query or insert ever runs. A ``tables["X"]`` or ``inserters["X"]`` naming
+   no schema table at all is reported the same way, wherever the literal appears. It still cannot
+   decide ``subquery.c.<name>`` (derived from columns already checked when the subquery itself was
+   built), ``query.c.<name>`` (read off a select statement mid-build, before it becomes a table),
+   or a bare parameter named ``table`` in a module-level function (which has no entry in
+   ``cls_to_table``) -- each such (function, base) pair is declared, with the reason, in
+   ``KNOWN_UNRESOLVED_TABLES``, rather than silently skipped. Nor can it decide the keys of an
+   insert whose payload is not a dict literal -- a function parameter, or a value built by another
+   function -- each such call is declared, with the reason, in ``KNOWN_UNCHECKED_INSERTS``. A
+   column named at runtime by an f-string, such as ``wavenumber.py`` and
+   ``QuadSourceIntegral.py``'s ``z_exit_..._e{z_offset}`` loops, is declared, with the reason, in
    ``KNOWN_BLIND_COLUMNS``.
 """
 
@@ -182,12 +192,14 @@ class Finding:
         self,
         module: str,
         cls: str,
+        fn: str,
         row_var: str,
         lineno: int,
         spec: Optional[_QuerySpec],
     ):
         self.module = module
         self.cls = cls
+        self.fn = fn
         self.row_var = row_var
         self.lineno = lineno
         self.spec = spec
@@ -195,11 +207,27 @@ class Finding:
 
     @property
     def key(self) -> str:
+        """
+        The identity ``KNOWN_UNFIXED`` / ``KNOWN_UNFIXED_COLUMNS`` are keyed by: "module:class",
+        with no function in it. Prompt 04b (G5) leaves this exactly as it was, because those two
+        lists are prompt 05's interface (README §4) and must keep their keying and their contents;
+        the function-qualified identity a coverage pin needs is ``coverage_key`` below instead.
+        """
         return f"{self.module}:{self.cls}"
 
     @property
+    def coverage_key(self) -> str:
+        """
+        The identity ``EXPECTED_COVERAGE`` / ``KNOWN_BLIND`` are keyed by (prompt 04b, G5):
+        "module:class.function.variable". Unlike ``key``, this carries the function, so a class's
+        ``_build_impl_serial`` and ``_build_impl_model`` -- both of which bind a variable named
+        ``row_data`` -- pin as two entries, not one that collapses.
+        """
+        return f"{self.module}:{self.cls}.{self.fn}.{self.row_var}"
+
+    @property
     def site(self) -> str:
-        return f"{self.module}:{self.cls}.{self.row_var}@{self.lineno}"
+        return f"{self.module}:{self.cls}.{self.fn}.{self.row_var}@{self.lineno}"
 
     @property
     def decidable(self) -> bool:
@@ -293,7 +321,7 @@ def analyse_build(fn: ast.FunctionDef, module: str, cls: str) -> List[Finding]:
         return None
 
     def bind_row(name: str, lineno: int, spec: Optional[_QuerySpec]) -> None:
-        finding = Finding(module, cls, name, lineno, spec)
+        finding = Finding(module, cls, fn.name, name, lineno, spec)
         live[name] = finding
         findings.append(finding)
 
@@ -381,10 +409,24 @@ def analyse_build(fn: ast.FunctionDef, module: str, cls: str) -> List[Finding]:
     return [finding for finding in findings if len(finding.reads) > 0]
 
 
-# The ``build()`` helpers a lookup delegates its whole query to. ``build()`` itself dispatches to
-# one of these by shape (a stored serial, or the full set of physical values); neither is named
-# ``build``, so the original analyser never visited them (audit §3.10).
-_ROW_HELPERS = frozenset({"_build_impl_serial", "_build_impl_model"})
+def iter_functions(tree: ast.Module):
+    """
+    Every function of every module under ``ObjectFactories/``: ``(class name, FunctionDef)`` for
+    a class method, and ``("<module-level>", FunctionDef)`` for a function defined at module
+    scope, such as ``OneLoopIntegral.py``'s ``read_batch`` (audit §3.12), never wired to a class.
+
+    Prompt 04b (G4): this replaces the hard-coded name list (``build``, ``read_batch``,
+    ``_build_impl_serial``, ``_build_impl_model``) with "every function", so a helper the guard
+    has never heard of -- ``validate_on_startup``, which holds a decidable row binding in seven
+    factories and runs on every pool open -- is visited without being named here.
+    """
+    for cls in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
+        for fn in cls.body:
+            if isinstance(fn, ast.FunctionDef):
+                yield cls.name, fn
+    for fn in tree.body:
+        if isinstance(fn, ast.FunctionDef):
+            yield "<module-level>", fn
 
 
 def inline_nested_row_helper(
@@ -448,30 +490,35 @@ def analyse_read_batch(fn: ast.FunctionDef, module: str, cls: str) -> List[Findi
     findings = analyse_build(inlined, module, cls)
     if findings:
         return findings
-    blind = Finding(module, cls, "read_batch", fn.lineno, None)
+    blind = Finding(module, cls, "read_batch", "read_batch", fn.lineno, None)
     blind.reads.add("<no row binding could be resolved>")
     return [blind]
 
 
 def analyse_factories() -> List[Finding]:
     """
-    Every row-variable binding under ``ObjectFactories/`` that ``build()``, a ``_build_impl_*``
-    helper it delegates to, or ``read_batch`` reads attributes off.
+    Every row-variable binding under ``ObjectFactories/`` that any function -- of any class, or at
+    module level -- reads attributes off.
+
+    Prompt 04b (G4): every function of ``iter_functions`` is visited, not a hard-coded list of
+    names. ``read_batch`` goes through ``analyse_read_batch`` (its nested row helper needs
+    inlining first); every other function -- ``build``, ``_build_impl_serial``,
+    ``_build_impl_model``, ``validate_on_startup``, and anything not yet imagined -- goes through
+    ``inline_nested_row_helper`` and then ``analyse_build`` directly. Inlining is a no-op for a
+    function with no nested one-argument helper matching the ``make_obj``/``make_object`` shape,
+    so nothing changes for a function that never had one. A function that reads no rows off a
+    query result -- ``register``, ``add_tag``, and most of a factory's other methods -- yields no
+    Finding at all: that is not a hole, only a function this guard has nothing to say about.
     """
     findings = []
     for path in sorted(FACTORY_DIR.glob("*.py")):
         tree = ast.parse(path.read_text(), filename=str(path))
-        for cls in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-            for fn in [n for n in cls.body if isinstance(n, ast.FunctionDef)]:
-                if fn.name == "build" or fn.name in _ROW_HELPERS:
-                    findings.extend(analyse_build(fn, path.name, cls.name))
-                elif fn.name == "read_batch":
-                    findings.extend(analyse_read_batch(fn, path.name, cls.name))
-        # OneLoopIntegral.py's read_batch is a module-level function, not a method, and build()
-        # delegates nothing to it -- it is simply never wired up (audit §3.12).
-        for fn in tree.body:
-            if isinstance(fn, ast.FunctionDef) and fn.name == "read_batch":
-                findings.extend(analyse_read_batch(fn, path.name, "<module-level>"))
+        for cls, fn in iter_functions(tree):
+            if fn.name == "read_batch":
+                findings.extend(analyse_read_batch(fn, path.name, cls))
+            else:
+                inlined, _link = inline_nested_row_helper(fn)
+                findings.extend(analyse_build(inlined, path.name, cls))
     return findings
 
 
@@ -503,65 +550,83 @@ KNOWN_UNFIXED = {
 }
 
 
-# The row-variable bindings the analyser can see and decide, as "module:class.variable". Pinned
-# so that a refactor which moves a row read out of the analyser's reach fails here rather than
-# quietly reducing coverage to nothing -- a static guard that has gone blind still passes, which
-# is the failure mode that costs everything to detect. Add to it when a factory gains a checkable
-# build(); removing an entry needs a reason, recorded in the campaign board.
+# The row-variable bindings the analyser can see and decide, as "module:class.function.variable"
+# (prompt 04b, G5: the function joined the identity, so a class's _build_impl_serial and
+# _build_impl_model -- both of which bind a variable named row_data -- pin as two entries, not one
+# that collapses). Pinned so that a refactor which moves a row read out of the analyser's reach,
+# or out from under one particular helper, fails here rather than quietly reducing coverage --
+# a static guard that has gone blind still passes, which is the failure mode that costs everything
+# to detect. Add to it when a factory gains a checkable function; removing an entry needs a
+# reason, recorded in the campaign board.
+#
+# This is prompt 04's 30 entries (then "module:class.variable", with no function), each carrying
+# its function back in, plus the 13 prompt 04b adds: the 7 validate_on_startup bindings (G4;
+# previously unvisited), and 6 more of the same "16 sites, one per function" that prompt 04's log
+# explained collapsing to 10 under the old identity -- restoring the function distinguishes them
+# again, so 04's 10 _build_impl_*/read_batch keys become the 16
+# docs/datastore-integrity-audit/lookup_keys/probe_02_readback_guard_by_hand.py lists. 30 + 7 + 6
+# = 43. prompts/datastore-integrity/orchestrator/review_04_measurements.py §D computes the same
+# 43, and that every one of 04's 30 entries is the projection (drop the function) of at least one
+# entry here -- verified again in this prompt's log by the same computation, not by inspection.
 EXPECTED_COVERAGE = frozenset(
     {
-        "BackgroundModel.py:sqla_BackgroundModelFactory.row",
-        "BackgroundModel.py:sqla_BackgroundModelValue_factory.row_data",
-        "GkNumericIntegration.py:sqla_GkNumericIntegration_factory.row_data",
-        "GkNumericIntegration.py:sqla_GkNumericIntegration_factory.row",
-        "GkSource.py:sqla_GkSource_factory.row_data",
-        "GkSource.py:sqla_GkSource_factory.row",
-        "GkSourcePolicyData.py:sqla_GkSourcePolicyData_factory.row_data",
-        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.row_data",
-        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.row",
-        "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.row_data",
-        "QuadSource.py:sqla_QuadSource_factory.row_data",
-        "QuadSource.py:sqla_QuadSource_factory.row",
-        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.row_data",
-        "TkNumericIntegration.py:sqla_TkNumericIntegration_factory.row_data",
-        "TkNumericIntegration.py:sqla_TkNumericIntegration_factory.row",
-        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.row_data",
-        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.row",
-        "redshift.py:sqla_redshift_factory.row_data",
-        "wavenumber.py:sqla_wavenumber_factory.row_data",
-        "wavenumber.py:sqla_wavenumber_exit_time_factory.row_data",
-        # Added by prompts/datastore-integrity prompt 04 (G1), extending the analyser to
-        # read_batch and the _build_impl_* helpers. A binding's identity here is
-        # "module:class.variable", with no function in it -- a convention this test already used
-        # for build() (a variable rebound mid-function is still one key, e.g.
-        # BackgroundModel.py:sqla_BackgroundModelFactory.row above) -- so the 16 sites
-        # docs/datastore-integrity-audit/lookup_keys/probe_02_readback_guard_by_hand.py lists
-        # (one per function) collapse to 10 here: each class's _build_impl_serial and
-        # _build_impl_model bind the same "row_data", and read_batch's inlined loop binds "row",
-        # so a class with both contributes 2 keys, not 3. The log for prompt 04 explains this.
-        "GkNumericIntegration.py:sqla_GkNumericValue_factory.row_data",
-        "GkNumericIntegration.py:sqla_GkNumericValue_factory.row",
-        "GkSource.py:sqla_GkSourceValue_factory.row_data",
-        "GkWKBIntegration.py:sqla_GkWKBValue_factory.row_data",
-        "GkWKBIntegration.py:sqla_GkWKBValue_factory.row",
-        "QuadSource.py:sqla_QuadSourceValue_factory.row_data",
-        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.row",
-        "TkNumericIntegration.py:sqla_TkNumericValue_factory.row_data",
-        "TkWKBIntegration.py:sqla_TkWKBValue_factory.row_data",
-        "TkWKBIntegration.py:sqla_TkWKBValue_factory.row",
+        "BackgroundModel.py:sqla_BackgroundModelFactory.build.row",
+        "BackgroundModel.py:sqla_BackgroundModelFactory.validate_on_startup.model",
+        "BackgroundModel.py:sqla_BackgroundModelValue_factory.build.row_data",
+        "GkNumericIntegration.py:sqla_GkNumericIntegration_factory.build.row",
+        "GkNumericIntegration.py:sqla_GkNumericIntegration_factory.build.row_data",
+        "GkNumericIntegration.py:sqla_GkNumericIntegration_factory.validate_on_startup.integration",
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_model.row_data",
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_serial.row_data",
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory.read_batch.row",
+        "GkSource.py:sqla_GkSourceValue_factory._build_impl_model.row_data",
+        "GkSource.py:sqla_GkSourceValue_factory._build_impl_serial.row_data",
+        "GkSource.py:sqla_GkSource_factory.build.row",
+        "GkSource.py:sqla_GkSource_factory.build.row_data",
+        "GkSource.py:sqla_GkSource_factory.validate_on_startup.obj",
+        "GkSourcePolicyData.py:sqla_GkSourcePolicyData_factory.build.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row",
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.validate_on_startup.integration",
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_model.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_serial.row_data",
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch.row",
+        "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.build.row_data",
+        "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.row_data",
+        "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_serial.row_data",
+        "QuadSource.py:sqla_QuadSource_factory.build.row",
+        "QuadSource.py:sqla_QuadSource_factory.build.row_data",
+        "QuadSource.py:sqla_QuadSource_factory.validate_on_startup.calc",
+        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.build.row_data",
+        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch.row",
+        "TkNumericIntegration.py:sqla_TkNumericIntegration_factory.build.row",
+        "TkNumericIntegration.py:sqla_TkNumericIntegration_factory.build.row_data",
+        "TkNumericIntegration.py:sqla_TkNumericIntegration_factory.validate_on_startup.integration",
+        "TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_model.row_data",
+        "TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_serial.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row",
+        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.validate_on_startup.integration",
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_model.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_serial.row_data",
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch.row",
+        "redshift.py:sqla_redshift_factory.build.row_data",
+        "wavenumber.py:sqla_wavenumber_exit_time_factory.build.row_data",
+        "wavenumber.py:sqla_wavenumber_factory.build.row_data",
     }
 )
 
 # Row variables the analyser sees reads on but cannot decide, with the reason. These are holes,
 # listed so that they are visible rather than silently clean, and so that a new one has to be
-# looked at by a person instead of appearing as coverage.
+# looked at by a person instead of appearing as coverage. Keyed the same way as EXPECTED_COVERAGE
+# (prompt 04b, G5): "module:class.function.variable".
 KNOWN_BLIND = {
     # its 17 reads are off rows[0], where rows came from a nested _build_query(with_grid_identity)
     # helper whose column list is assembled conditionally. The two prompt-14 grid-identity columns
     # are present on one branch and absent on the other, and the reads of them are guarded by
     # hasattr() -- so the shortfall is genuinely branch-dependent and no column-set comparison can
     # decide it. A path-insensitive analyser must decline rather than guess.
-    "BackgroundModel.py:sqla_BackgroundModelFactory.row_data": (
+    "BackgroundModel.py:sqla_BackgroundModelFactory.build.row_data": (
         "row comes from rows[0] of a conditionally-built query in a nested helper"
     ),
     # Added by prompts/datastore-integrity prompt 04 (G1). OneLoopIntegral.py's read_batch is a
@@ -570,8 +635,11 @@ KNOWN_BLIND = {
     # probe_02). Inlining therefore links nothing to the query, and analyse_read_batch manufactures
     # this one undecidable Finding for the whole function so the hole is declared rather than
     # invisible. Out of scope for this campaign beyond that (README D3): the rest of
-    # OneLoopIntegral's factory is for when the target is actually built.
-    "OneLoopIntegral.py:<module-level>.read_batch": (
+    # OneLoopIntegral's factory is for when the target is actually built. The last component of the
+    # key is the manufactured Finding's row_var, "read_batch" (prompt 04b leaves this name as it
+    # was; the function component of the key is also "read_batch", so it reads
+    # "...<module-level>.read_batch.read_batch").
+    "OneLoopIntegral.py:<module-level>.read_batch.read_batch": (
         "make_object(row_data) is defined but never called, and the function has no return "
         "statement, so no row variable can be linked to a query"
     ),
@@ -625,9 +693,7 @@ class TestFactorySelectColumns(unittest.TestCase):
         what it sees is pinned rather than assumed.
         """
         covered = {
-            f"{finding.key}.{finding.row_var}"
-            for finding in self.findings
-            if finding.decidable
+            finding.coverage_key for finding in self.findings if finding.decidable
         }
         self.assertEqual(
             covered,
@@ -643,9 +709,7 @@ class TestFactorySelectColumns(unittest.TestCase):
         that exist are declared above with their reason; a new one is a decision for a person.
         """
         blind = {
-            f"{finding.key}.{finding.row_var}"
-            for finding in self.findings
-            if not finding.decidable
+            finding.coverage_key for finding in self.findings if not finding.decidable
         }
         self.assertEqual(
             blind,
@@ -737,6 +801,172 @@ KNOWN_BLIND_COLUMNS: Dict[str, str] = {
 }
 
 
+# Sites where a `<base>.c.<name>` reference's `base` does not resolve to a schema table at all
+# (prompt 04b, G6, review finding 3): `_table_of` returns None, and 04's resolver silently skipped
+# these rather than declaring them. Keyed by (function site, the unparsed `base` expression), each
+# naming why that base cannot be resolved. `orchestrator/review_04_measurements.py` §C computes
+# the same 12 pairs (nine `subquery`, two `query`, one `table`).
+UnresolvedTableSite = Tuple[str, str]
+
+KNOWN_UNRESOLVED_TABLES: Dict[UnresolvedTableSite, str] = {
+    # `subquery = <query>.subquery()`: `subquery` is a plain local bound to a `.subquery()` call,
+    # which `_table_of` does not follow (it is not a `tables["X"]`, a name already in `env`, or an
+    # `.alias(...)`). Every reference is `subquery.c.<name>`, so it can only enlarge what a
+    # "missing" check would find, never convict -- structurally the same shape as a dynamically
+    # named column (module docstring point 2), just for the table half instead of the name half.
+    (
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "GkNumericIntegration.py:sqla_GkNumericValue_factory.read_batch",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "GkSource.py:sqla_GkSourceValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_model",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    (
+        "TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch",
+        "subquery",
+    ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    # `query` is the `sqla.select(...)` being built up, progressively reassigned by `.filter(...)`
+    # / `.join(...)`, and then read from directly as `query.c.serial` while joining a tag alias --
+    # not one of `_table_of`'s three resolvable shapes.
+    (
+        "OneLoopIntegral.py:<module-level>.read_batch",
+        "query",
+    ): "query.c.serial, read off the select statement itself while joining a tag alias",
+    (
+        "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory.read_batch",
+        "query",
+    ): "query.c.serial, read off the select statement itself while joining a tag alias",
+    # `table` is this module-level function's own third parameter, exactly the shape `_table_of`
+    # resolves for a *class* method (`env["table"] = own`, from `cls_to_table`) -- but
+    # `OneLoopIntegral.py`'s `read_batch` is not a method, so `cls.name` is `"<module-level>"`,
+    # which is not a key of `cls_to_table`, and `own` is `None`.
+    (
+        "OneLoopIntegral.py:<module-level>.read_batch",
+        "table",
+    ): "table is read_batch's own parameter; module-level, so cls_to_table has no entry for it",
+}
+
+# Insert calls G2 does not check because the payload is not a dict literal (prompt 04b, G6, review
+# finding 3): `inserter(conn, x)` / `value_inserter(conn, x)` where `x` is a bare name, not an
+# `ast.Dict`. Keyed by (module, class-or-"<module-level>", function, the inserter parameter's own
+# name -- "inserter" or "value_inserter"), each naming what `x` is bound to and why its keys are
+# not checked here. `orchestrator/review_04_measurements.py`'s insert-call walk (this prompt's
+# log) finds the same 13 sites.
+InsertSite = Tuple[str, str, str, str]
+
+KNOWN_UNCHECKED_INSERTS: Dict[InsertSite, str] = {
+    # x is the function's own `payload` parameter, whose keys are the caller's to choose --
+    # nothing here says what they are, so there is no literal set to check.
+    (
+        "BackgroundModel.py",
+        "sqla_BackgroundModelFactory",
+        "store",
+        "inserter",
+    ): "inserter(conn, payload); payload is store's own parameter, keys unknown here",
+    (
+        "wavenumber.py",
+        "sqla_wavenumber_exit_time_factory",
+        "store",
+        "inserter",
+    ): "inserter(conn, payload); payload is store's own parameter, keys unknown here",
+    # x is built by a call to another function (value_payload(...)), not a literal here.
+    (
+        "BackgroundModel.py",
+        "sqla_BackgroundModelFactory",
+        "store",
+        "value_inserter",
+    ): "value_inserter(conn, value_data); value_data = value_payload(value, store_id), a call",
+    # x is a local first bound to a dict literal, then conditionally extended by
+    # x["serial"] = payload["serial"]; the literal keys could be checked by tracking that
+    # augmentation, but this prompt declares the site rather than adding that tracking.
+    (
+        "GkSourcePolicy.py",
+        "sqla_GkSourcePolicy_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"label": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "LambdaCDM.py",
+        "sqla_LambdaCDM_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"name": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "QCD_Cosmology.py",
+        "sqla_QCDCosmology_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"name": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "QuadSourcePolicy.py",
+        "sqla_QuadSourcePolicy_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"label": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "integration_metadata.py",
+        "sqla_IntegrationSolver_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"label": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "redshift.py",
+        "sqla_redshift_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"z": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "store_tag.py",
+        "sqla_store_tag_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"label": ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "tolerance.py",
+        "sqla_tolerance_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"log10_tol": ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "version.py",
+        "sqla_version_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"label": ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+    (
+        "wavenumber.py",
+        "sqla_wavenumber_factory",
+        "build",
+        "inserter",
+    ): 'insert_data = {"k_inv_Mpc": ..., ...}, then insert_data["serial"] = ... if present; declared, not resolved',
+}
+
+
 def _table_of(expr: ast.AST, env: Dict[str, str]) -> Optional[str]:
     """The schema table name `expr` denotes, resolved the way probe_03 does: the factory's own
     `table`, `tables["X"]`, a plain local bound to one of those, or an `.alias(...)` of either.
@@ -782,12 +1012,29 @@ def _column_ref(node: ast.AST) -> Optional[Tuple[ast.AST, str, bool]]:
     return None
 
 
-def column_existence_problems() -> Tuple[Set[ColumnProblem], Dict[str, Set[str]]]:
+def column_existence_problems() -> Tuple[
+    Set[ColumnProblem],
+    Dict[str, Set[str]],
+    Dict[UnresolvedTableSite, int],
+    Set[InsertSite],
+]:
     """
-    Every `<var>.c.<name>` / insert-payload key in the factory sources that resolves to a table but
-    not to one of its columns, as `(module, class, function, table, name)`; and, separately, every
-    site where the table resolves but the column name does not (a dynamic f-string), as
-    `{"module.py:class.function": {pattern, ...}}`.
+    Four results, over every function of every class and every module-level function (prompt 04b,
+    G6: walking module-level functions as well as class methods):
+
+    - every `<var>.c.<name>` / insert-payload key that resolves to a table but not to one of its
+      columns, as `(module, class, function, table, name)` -- including a `tables["X"]` or
+      `inserters["X"]` naming no schema table at all, reported the same way (review finding 3: 04
+      skipped this case rather than reporting it; there are none in this tree today, but the
+      mutation-breakage record shows it is caught when there is one);
+    - every site where the table resolves but the column name does not (a dynamic f-string), as
+      `{"module.py:class.function": {pattern, ...}}`;
+    - every `<base>.c.<name>` whose `base` does not resolve to a table at all, as
+      `{(function site, base): count}` -- declared in `KNOWN_UNRESOLVED_TABLES` rather than
+      silently skipped (review finding 3);
+    - every `inserter`/`value_inserter` call whose payload is not a dict literal, as a set of
+      `(module, class, function, inserter name)` -- declared in `KNOWN_UNCHECKED_INSERTS` rather
+      than silently skipped (review finding 3).
     """
     built = build_schema(sqla.MetaData(), _factories)
     columns = {name: set(t.c.keys()) for name, t in built.tables.items()}
@@ -795,81 +1042,106 @@ def column_existence_problems() -> Tuple[Set[ColumnProblem], Dict[str, Set[str]]
 
     problems: Set[ColumnProblem] = set()
     blind: Dict[str, Set[str]] = {}
+    unresolved_tables: Dict[UnresolvedTableSite, int] = {}
+    unchecked_inserts: Set[InsertSite] = set()
 
     for path in sorted(FACTORY_DIR.glob("*.py")):
         tree = ast.parse(path.read_text(), filename=str(path))
-        for cls in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-            own = cls_to_table.get(cls.name)
-            for fn in [n for n in cls.body if isinstance(n, ast.FunctionDef)]:
-                env: Dict[str, str] = {}
-                if own is not None:
-                    env["table"] = own
+        for cls, fn in iter_functions(tree):
+            own = cls_to_table.get(cls)
+            env: Dict[str, str] = {}
+            if own is not None:
+                env["table"] = own
 
-                site = f"{path.name}:{cls.name}.{fn.name}"
+            site = f"{path.name}:{cls}.{fn.name}"
 
-                for node in sorted(
-                    (n for n in ast.walk(fn) if hasattr(n, "lineno")),
-                    key=lambda n: (n.lineno, n.col_offset),
+            for node in sorted(
+                (n for n in ast.walk(fn) if hasattr(n, "lineno")),
+                key=lambda n: (n.lineno, n.col_offset),
+            ):
+                # `tables["X"]` / `inserters["X"]` naming no schema table is a problem in its own
+                # right, reported like a missing column, wherever the literal appears -- not only
+                # where it is later used with `.c.` (review finding 3).
+                if (
+                    isinstance(node, ast.Subscript)
+                    and isinstance(node.value, ast.Name)
+                    and node.value.id in ("tables", "inserters")
+                    and isinstance(node.slice, ast.Constant)
+                    and isinstance(node.slice.value, str)
+                    and node.slice.value not in columns
                 ):
-                    if isinstance(node, ast.Assign) and len(node.targets) == 1:
-                        tgt = node.targets[0]
-                        if isinstance(tgt, ast.Name):
-                            t = _table_of(node.value, env)
-                            if t is not None:
-                                env[tgt.id] = t
+                    problems.add(
+                        (
+                            path.name,
+                            cls,
+                            fn.name,
+                            f"{node.value.id}[X]",
+                            node.slice.value,
+                        )
+                    )
 
-                    ref = _column_ref(node)
-                    if ref is None:
-                        continue
-                    base, name, dynamic = ref
-                    t = _table_of(base, env)
-                    if t is None or t not in columns:
-                        continue
-                    if dynamic:
-                        blind.setdefault(site, set()).add(f"{ast.unparse(node)} ({t})")
-                    elif name not in columns[t]:
-                        problems.add((path.name, cls.name, fn.name, t, name))
+                if isinstance(node, ast.Assign) and len(node.targets) == 1:
+                    tgt = node.targets[0]
+                    if isinstance(tgt, ast.Name):
+                        t = _table_of(node.value, env)
+                        if t is not None:
+                            env[tgt.id] = t
 
-                # insert payload keys: inserter(conn, {...}) / value_inserter(conn, {...}), where
-                # value_inserter = inserters["X"] for some literal X
-                for node in ast.walk(fn):
-                    if not (
-                        isinstance(node, ast.Call)
-                        and isinstance(node.func, ast.Name)
-                        and node.func.id.endswith("inserter")
-                        and len(node.args) == 2
-                        and isinstance(node.args[1], ast.Dict)
-                    ):
-                        continue
-                    target = own
-                    if node.func.id != "inserter":
-                        for a in ast.walk(fn):
-                            if (
-                                isinstance(a, ast.Assign)
-                                and isinstance(a.targets[0], ast.Name)
-                                and a.targets[0].id == node.func.id
-                                and isinstance(a.value, ast.Subscript)
-                                and isinstance(a.value.slice, ast.Constant)
-                            ):
-                                target = a.value.slice.value
-                    if target not in columns:
-                        continue
-                    for k in node.args[1].keys:
+                ref = _column_ref(node)
+                if ref is None:
+                    continue
+                base, name, dynamic = ref
+                t = _table_of(base, env)
+                if t is None:
+                    key = (site, ast.unparse(base))
+                    unresolved_tables[key] = unresolved_tables.get(key, 0) + 1
+                    continue
+                if t not in columns:
+                    continue
+                if dynamic:
+                    blind.setdefault(site, set()).add(f"{ast.unparse(node)} ({t})")
+                elif name not in columns[t]:
+                    problems.add((path.name, cls, fn.name, t, name))
+
+            # insert payload keys: inserter(conn, {...}) / value_inserter(conn, {...}), where
+            # value_inserter = inserters["X"] for some literal X
+            for node in ast.walk(fn):
+                if not (
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Name)
+                    and node.func.id.endswith("inserter")
+                    and len(node.args) == 2
+                ):
+                    continue
+                if not isinstance(node.args[1], ast.Dict):
+                    unchecked_inserts.add((path.name, cls, fn.name, node.func.id))
+                    continue
+                target = own
+                if node.func.id != "inserter":
+                    for a in ast.walk(fn):
                         if (
-                            isinstance(k, ast.Constant)
-                            and k.value not in columns[target]
+                            isinstance(a, ast.Assign)
+                            and isinstance(a.targets[0], ast.Name)
+                            and a.targets[0].id == node.func.id
+                            and isinstance(a.value, ast.Subscript)
+                            and isinstance(a.value.slice, ast.Constant)
                         ):
-                            problems.add(
-                                (
-                                    path.name,
-                                    cls.name,
-                                    fn.name,
-                                    f"{target} [insert key]",
-                                    k.value,
-                                )
+                            target = a.value.slice.value
+                if target not in columns:
+                    continue
+                for k in node.args[1].keys:
+                    if isinstance(k, ast.Constant) and k.value not in columns[target]:
+                        problems.add(
+                            (
+                                path.name,
+                                cls,
+                                fn.name,
+                                f"{target} [insert key]",
+                                k.value,
                             )
+                        )
 
-    return problems, blind
+    return problems, blind, unresolved_tables, unchecked_inserts
 
 
 class TestColumnExistence(unittest.TestCase):
@@ -877,7 +1149,12 @@ class TestColumnExistence(unittest.TestCase):
     `build_schema` builds. Shape (b) of the module docstring's point 6."""
 
     def setUp(self):
-        self.problems, self.blind = column_existence_problems()
+        (
+            self.problems,
+            self.blind,
+            self.unresolved_tables,
+            self.unchecked_inserts,
+        ) = column_existence_problems()
 
     def test_column_references_resolve_against_schema(self):
         """
@@ -914,4 +1191,31 @@ class TestColumnExistence(unittest.TestCase):
             set(KNOWN_BLIND_COLUMNS),
             "a new site resolves its table but not a literal column name. Declare it in "
             "KNOWN_BLIND_COLUMNS with the patterns found there, or teach the resolver to decide it.",
+        )
+
+    def test_unresolved_table_sites_are_the_declared_ones(self):
+        """
+        G6 (prompt 04b, review finding 3). A `<base>.c.<name>` whose `base` cannot be resolved to
+        a table at all is neither cleared nor convicted -- previously it was silently skipped. The
+        pairs that exist are declared above with the reason; a new one is a decision for a person.
+        """
+        self.assertEqual(
+            set(self.unresolved_tables),
+            set(KNOWN_UNRESOLVED_TABLES),
+            "a new (function, base) pair cannot be resolved to a schema table. Declare it in "
+            "KNOWN_UNRESOLVED_TABLES with the reason, or teach _table_of to resolve it.",
+        )
+
+    def test_unchecked_insert_sites_are_the_declared_ones(self):
+        """
+        G6 (prompt 04b, review finding 3). An `inserter`/`value_inserter` call whose payload is
+        not a dict literal is neither cleared nor convicted -- previously it was silently skipped.
+        The sites that exist are declared above with the reason; a new one is a decision for a
+        person.
+        """
+        self.assertEqual(
+            self.unchecked_inserts,
+            set(KNOWN_UNCHECKED_INSERTS),
+            "a new insert call's payload is not a dict literal, so its keys are not checked. "
+            "Declare it in KNOWN_UNCHECKED_INSERTS with the reason, or resolve its keys.",
         )
