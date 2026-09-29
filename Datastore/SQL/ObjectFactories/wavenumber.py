@@ -175,7 +175,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         return {
             "version": True,
             "timestamp": True,
-            "stepping": "minimum",
+            "stepping": "exact",
             "columns": columns,
         }
 

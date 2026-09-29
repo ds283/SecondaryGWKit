@@ -1180,9 +1180,8 @@ def build_full_store(
 # references that the schema does not declare as foreign keys: table -> column -> target table.
 # The cosmology references are polymorphic, and are resolved through cosmology_type
 _UNDECLARED_REFERENCES = {
-    "GkSourcePolicyData": {"wavenumber_exit_serial": "wavenumber_exit_time"},
     "QuadSourceIntegral": {"source_serial": "QuadSource"},
-    "QuadSource": {"Tr_serial": "QuadSource"},
+    "QuadSource": {"Tr_serial": "TkNumericIntegration"},
 }
 _COSMOLOGY_TABLES = {_LAMBDACDM_TYPE: "LambdaCDM", _QCD_TYPE: "QCD_Cosmology"}
 

@@ -4,7 +4,8 @@
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
 Five of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
 this board's §4: two by that campaign's prompt 05b, one by its prompt 05c and one by its prompt 02
-(2026-09-28), and one by its prompt 03 (2026-09-29). This board's own prompts are unchanged.
+(2026-09-28), and one by its prompt 03 and one by its prompt 06 (2026-09-29). This board's own
+prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -196,20 +197,11 @@ opened none. `prompts/datastore-integrity` prompt 05b closed two more on 2026-09
 `[00-oneloop-lookup-joins-the-wrong-tag-table]` and `[00-tagged-read-batch-joins-an-unselected-alias]`.
 Its prompt 05c closed `[00-numeric-value-parent-lookup-omits-break-point-kind]` the same day (§4),
 and its prompt 02 closed `[00-replicated-writes-can-diverge-across-shards]` the same day (§4).
-Three remain.
+Its prompt 03 closed `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` on 2026-09-29 (§4), and
+its prompt 06 closed `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` the same day (§4).
+One remains. *(This sentence said "Three remain" after prompt 03, when §3 already listed two; the
+count is corrected here.)*
 
-- **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
-  - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
-    (`QuadSource.py:113-116`), but it holds a transfer-function store id
-    (`ComputeTargets/QuadSource.py:473`). `Tr_serial` has no foreign key.
-  - **Impact.** SQLite does not enforce foreign keys here, so nothing fails. The schema states a
-    relation that is false.
-  - **Next step.** Correct or remove the constraint in whichever campaign next touches
-    `QuadSource`'s schema. Schema changes cost nothing.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 06, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.1). It closes
-    here, on this board's §4.
 - **[00-quadsourcepolicy-rows-are-referenced-by-nothing]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `main.py:3651-3657` creates `QuadSourcePolicy` rows, but no factory table
     references the class. `QuadSourceIntegral` keys on `GkSourcePolicy`
@@ -226,6 +218,33 @@ Three remain.
 ---
 
 ## 4. Resolved issues
+
+Closed by `prompts/datastore-integrity` **prompt 06**, 2026-09-29:
+
+- **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
+  - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
+    (`QuadSource.py:113-116`), but it holds a transfer-function store id
+    (`ComputeTargets/QuadSource.py:473`). `Tr_serial` has no foreign key.
+  - **Impact.** SQLite does not enforce foreign keys here, so nothing fails. The schema states a
+    relation that is false.
+  - **Next step.** Correct or remove the constraint in whichever campaign next touches
+    `QuadSource`'s schema. Schema changes cost nothing.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 06, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.1). It closes
+    here, on this board's §4.
+
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 06**, commit *"Correct the foreign
+  > keys the schema declares, and check them"*. `QuadSource.Tq_serial` now declares
+  > `ForeignKey("TkNumericIntegration.serial")`. `Tq` is the Tk numeric row at `k = q`, and
+  > `QuadSource` shards on `q`, so it is always on the same shard (quoted in
+  > [`log 06`](../datastore-integrity/logs/06-correct-the-foreign-keys.md)). `Tr_serial` keeps no
+  > foreign key, and its comment now names `TkNumericIntegration` and the cross-shard reason. A new
+  > test, `Datastore/tests/test_foreign_key_check.py`, runs `PRAGMA foreign_key_check` on every
+  > shard of a store the real factories wrote, on a `QuadSource` row whose `Tq_serial` the old key
+  > does not satisfy by coincidence; it fails on the tree before this change and passes after. The
+  > schema change is witnessed by `Datastore/tests/data/schema_at_datastore-integrity-06.json`,
+  > with the diff from `schema_at_base.json` in the log.
 
 Closed by `prompts/datastore-integrity` **prompt 03**, 2026-09-29:
 

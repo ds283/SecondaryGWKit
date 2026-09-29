@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-29 · **Status: 6 of 10 prompts landed (01, 02, 03, 04, 04b, and 05 as
-05a–05c), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-29 · **Status: 7 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, and 06; 06 awaits its review).** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -12,7 +12,9 @@ closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`,
 `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` on the
 tolerance-convergence board. Reviewed the same day: the code passed, and L5's account of what
 the two verification scripts do after a miss was wrong (both raise; they do not finish) and is
-corrected on that board and in the index. The review opened one issue, closed the same day (§4). **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
+corrected on that board and in the index. The review opened one issue, closed the same day (§4). **06 landed 2026-09-29**, closing
+`[00-quadsource-tq-serial-has-the-wrong-foreign-key]` on the store-fingerprint board's §4 and
+setting up D5's witness procedure; awaiting review. **Next: 07**, which waits on 05 and 06, both landed. 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -69,7 +71,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the mechanical read-path defects: names, an argument, tags, raises"* | [`logs/05a-…`](logs/05a-repair-the-mechanical-read-defects.md) |
 | 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the integral read_batch join, exit-time serials and OneLoopIntegral"* | [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md) |
 | 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Key the value reads on their parent and refuse a second parent"* | [`logs/05c-…`](logs/05c-key-the-value-reads-on-their-parent.md) |
-| 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
+| 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Correct the foreign keys the schema declares, and check them"* | [`logs/06-…`](logs/06-correct-the-foreign-keys.md) |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
 | 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
@@ -815,11 +817,11 @@ what 01–04 find; what waits is their method.
 | P7 | **REMEDY** | Tags default to `[]` at every value helper and `read_batch`; the three `raise ("…")`. | 05a | ✅ nine sites (recount below), `Optional[List[store_tag]]` → `List[store_tag]` with each; the three `raise ("…")` → `raise RuntimeError("…")`, message unchanged; sweep for any other `raise (`/`raise "` under `ObjectFactories/` found none beyond the three named |
 | P8 | **REMEDY** | `OneLoopIntegral`: its own tag table, `read_batch` a method with a return value, as D3 bounds. Closes `[00-oneloop-lookup-joins-the-wrong-tag-table]`. | 05b | ✅ `build()` joins `OneLoopIntegral_tags`; `read_batch` is now `sqla_OneLoopIntegral_factory`'s `@staticmethod`, tags default `[]`, returns a list; `"validated": False` dropped from `store()`; `source_serial` left alone (D3) |
 | P9 | **GUARD** | Round-trip tests of every `read_batch`, tagged and untagged; `KNOWN_UNFIXED` empty. | 05a–05c | ✅ 05a's and 05b's shares: `test_read_path_mechanics.py` (05a) and the new `test_integral_read_batch.py` (05b, 10 tests: tagged `QuadSourceIntegral.read_batch`, P2's exit serials, `OneLoopIntegral.build`'s tags including probe_06's coincidence case, `OneLoopIntegral.read_batch` tagged/untagged/omitted, and the deferred `source_serial` defect kept visible). `KNOWN_UNFIXED` and `KNOWN_UNFIXED_COLUMNS` are both empty. ✅ **Closed by 05c** (2026-09-28): the new `test_value_reads_parent_key.py` round-trips `GkNumericValue`, `GkWKBValue` and `TkWKBValue.read_batch` (the live payload shape, the refusal, `z_init` selection), and its `READ_BATCH_ROUND_TRIPS` pins every `read_batch` under `ObjectFactories/`, found by walking the sources as the guard does, to the module that round-trips it; a new `read_batch` fails until its test exists |
-| S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
-| S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
-| S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
-| S4 | **GUARD** | A test that runs `PRAGMA foreign_key_check` over every shard of a store written by the real factories and finds no violation. | 06 | ⏸️ |
-| S5 | **RECORD** | The first deliberate schema-witness change, under D5, including the exit-time and `IntegrationSolver` `stepping_mode` flags made exact. | 06 | ⏸️ |
+| S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ✅ `Tq` shown to share `QuadSource`'s shard (quoted in the log); `Tr_serial` keeps no key, its comment now names `TkNumericIntegration` and the cross-shard reason. Issue closed on the store-fingerprint board's §4 |
+| S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ✅ `ForeignKey("wavenumber_exit_time.serial")`; `index` and `nullable` unchanged |
+| S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ✅ `Tr_serial` → `TkNumericIntegration`; the `GkSourcePolicyData` entry removed (now declared); `QuadSourceIntegral.source_serial` left undeclared. The inventory and fingerprint relabel tests do not move (`Tq_serial`/`Tr_serial` are provenance) |
+| S4 | **GUARD** | A test that runs `PRAGMA foreign_key_check` over every shard of a store written by the real factories and finds no violation. | 06 | ✅ `test_foreign_key_check.py`, 8 tests: the full store on the test's own rows (a `QuadSource` whose `Tq_serial` is a Tk serial on its shard and no `QuadSource` serial there, because the fixture's own rows satisfy the wrong key by coincidence), a stand-in-shard store, and two dangling controls. Cannot see `Tr_serial`, `QuadSourceIntegral.source_serial` or `shard_keys` |
+| S5 | **RECORD** | The first deliberate schema-witness change, under D5, including the exit-time and `IntegrationSolver` `stepping_mode` flags made exact. | 06 | ✅ `schema_at_datastore-integrity-06.json` beside `schema_at_base.json`; `WITNESS` repointed; the diff (8 hunks, 30 lines: S1, S2 and the two flags, nothing else) is in the log; the golden fingerprint did not move |
 | K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ⏸️ |
 | K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ⏸️ |
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ⏸️ |
@@ -849,7 +851,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05c (**closed** 2026-09-28, on that board's §4) |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
-| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 |
+| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 (**closed** 2026-09-29, on that board's §4) |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | 08 |
 
@@ -1079,5 +1081,21 @@ run alone, to avoid the known wall-clock flake under parallel load; it did not f
 | Datastore | **343 OK** (325 + the 18 of the new `test_exact_identity_lookups.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK |
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.9 After prompt 06 (2026-09-29)
+
+Measured on the tree of prompt 06's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load; it did not fire).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **351 OK** (343 + the 8 of the new `test_foreign_key_check.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint unchanged |
 
 `black --check` is clean on every Python file this prompt touched.

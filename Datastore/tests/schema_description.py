@@ -1,11 +1,16 @@
 """
-A deterministic description of the schema ``Datastore._build_schema`` builds, for the witness
-``Datastore/tests/data/schema_at_base.json``.
+A deterministic description of the schema ``Datastore._build_schema`` builds, for the witnesses in
+``Datastore/tests/data/``.
 
-The witness was captured from the code **before** the schema builder moved into
-``Datastore/SQL/schema.py`` (store-fingerprint prompt 01; its log records the command and the
-SHA). The tests compare this description of what the code builds now against that file. The
-file is never regenerated to make a test pass: it is the evidence that the move changed nothing.
+The first witness, ``schema_at_base.json``, was captured from the code **before** the schema
+builder moved into ``Datastore/SQL/schema.py`` (store-fingerprint prompt 01; its log records the
+command and the SHA). It witnessed a refactor that changed nothing. Each deliberate schema change
+since adds a witness beside it, ``schema_at_<campaign>-<NN>.json``, captured by this module's
+``__main__``. ``Datastore/tests/test_schema_builder.py`` compares this description of what the code
+builds now against the one file its ``WITNESS`` constant names, the witness for the current schema
+design. No witness is ever overwritten, or regenerated to make a test pass: the file is the
+evidence of what the schema was when it was captured (``prompts/datastore-integrity`` README §6.2
+D5).
 
 This module imports only the standard library and ``sqlalchemy``. It does not import ``Datastore/SQL/schema.py``
 or ``Datastore/SQL/Datastore.py`` at module scope, so that it can be run against a checkout of the

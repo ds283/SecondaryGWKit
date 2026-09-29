@@ -66,7 +66,11 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "wavenumber_exit_serial", sqla.Integer, index=True, nullable=False
+                    "wavenumber_exit_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
+                    index=True,
+                    nullable=False,
                 ),
                 sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("quality", sqla.SmallInteger, nullable=False),

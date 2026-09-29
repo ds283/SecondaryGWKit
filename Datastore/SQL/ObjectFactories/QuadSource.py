@@ -113,15 +113,15 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                     "Tq_serial",
                     sqla.Integer,
                     sqla.ForeignKey(
-                        "QuadSource.serial"
-                    ),  # Tq instances will be held on this shard, because we shard by q.
+                        "TkNumericIntegration.serial"
+                    ),  # Tq is the Tk numeric row at k = q, which is held on this shard, because we shard by q.
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    # sqla.ForeignKey("QuadSource.serial"),         # Don't impose foreign key. Tr instances may not be held on this shard. We shard by q.
+                    # sqla.ForeignKey("TkNumericIntegration.serial"),   # Don't impose foreign key. Tr is the Tk numeric row at k = r, which is held on r's shard, not necessarily this one. We shard by q.
                     # index=True,
                     nullable=False,
                 ),

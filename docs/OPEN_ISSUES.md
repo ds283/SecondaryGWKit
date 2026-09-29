@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-29 · **97 open** across seventeen campaigns.
+**Last updated:** 2026-09-29 · **96 open** across seventeen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -752,10 +752,11 @@ four rows are deleted. Prompt 03 also narrowed
 closed the same day on the tolerance-convergence board's §4, and its §1.5 row is deleted. The
 orchestrator's review of prompt 03 opened one issue on 2026-09-29, closed the same day on this
 campaign's board, and its row is deleted.
+Prompt 06 closed `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` on 2026-09-29, on the
+store-fingerprint board's §4, and its row is deleted.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | **→ prompt 06.** `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | **→ prompt 07.** `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | **→ prompt 08.** `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
 | `[00-the-inventory-cannot-see-a-serial-split]` | datastore-integrity | The structured inventory compares replicated classes by key, tags, `validated` and value count, not by serial, flags or value contents, so a serial split fingerprints clean. Not this campaign's. |

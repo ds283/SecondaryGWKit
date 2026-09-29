@@ -13,7 +13,7 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
     def register():
         return {
             "version": False,
-            "stepping": "minimum",
+            "stepping": "exact",
             "timestamp": True,
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),

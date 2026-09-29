@@ -1,12 +1,21 @@
 """
 The one schema builder, ``Datastore/SQL/schema.py`` ``build_schema`` (store-fingerprint prompt 01).
 
-- **The schema is unchanged.** Both ``build_schema`` and the actor's ``_build_schema`` reproduce
-  ``Datastore/tests/data/schema_at_base.json`` exactly. That file was captured from the code
-  before the builder moved (the prompt's log records how, and at which SHA); it is never
-  regenerated to make these tests pass. The actor's method is called without Ray and without its
-  ``__init__`` (``schema_description.actor_with_built_schema``), so the second test shows that the
-  actor delegates to the function and has not kept its own copy.
+- **The witness is the one for the current schema design, named in one constant, ``WITNESS``.**
+  Both ``build_schema`` and the actor's ``_build_schema`` reproduce that file exactly. The actor's
+  method is called without Ray and without its ``__init__``
+  (``schema_description.actor_with_built_schema``), so the second test shows that the actor
+  delegates to the function and has not kept its own copy.
+- **Witnesses are never overwritten or regenerated** (``prompts/datastore-integrity`` README
+  §6.2 D5). ``schema_at_base.json`` witnessed a refactor that changed nothing: it was captured from
+  the code before the schema builder moved (store-fingerprint prompt 01; that prompt's log records
+  how, and at which SHA), and it is kept as the record of that. Each deliberate schema change adds a
+  witness beside it, ``schema_at_<campaign>-<NN>.json``, captured with ``schema_description.py``'s
+  ``__main__``, and repoints ``WITNESS`` at it; the prompt's log carries the diff between the two
+  witnesses as the reviewable statement of what changed. No witness is ever regenerated to make a
+  test pass. The current one is ``schema_at_datastore-integrity-06.json`` (prompt 06: the
+  ``QuadSource.Tq_serial`` foreign key, ``GkSourcePolicyData.wavenumber_exit_serial``'s new one, and
+  the exit time's and ``IntegrationSolver``'s ``stepping_mode``).
 - **The fix** of ``[00-build-schema-reads-registration-before-its-none-check]``: a factory whose
   ``register()`` returns ``None`` gets a record with no table, and no ``AttributeError``.
 
@@ -28,7 +37,9 @@ from Datastore.tests.schema_description import (
     dumps,
 )
 
-WITNESS = Path(__file__).resolve().parent / "data" / "schema_at_base.json"
+WITNESS = (
+    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-06.json"
+)
 
 
 def _witness_text() -> str:
