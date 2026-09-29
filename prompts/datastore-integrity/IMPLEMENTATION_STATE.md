@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
 **Last updated:** 2026-09-29 · **Status: 7 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, and 06; 06 awaits its review).** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+05a–05c, and 06), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -14,7 +14,7 @@ tolerance-convergence board. Reviewed the same day: the code passed, and L5's ac
 the two verification scripts do after a miss was wrong (both raise; they do not finish) and is
 corrected on that board and in the index. The review opened one issue, closed the same day (§4). **06 landed 2026-09-29**, closing
 `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` on the store-fingerprint board's §4 and
-setting up D5's witness procedure; awaiting review. **Next: 07**, which waits on 05 and 06, both landed. 10 waits on 01–09.
+setting up D5's witness procedure; reviewed the same day, with two small remnants fixed in a follow-up commit. **Next: 07**, which waits on 05 and 06, both landed. 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -84,7 +84,7 @@ dispatched one at a time, never concurrently in this checkout, in either order. 
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
 (2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
 [`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used), and
-[`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, ready).
+[`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, used).
 
 **Measured for 06 (2026-09-29, while its note was written).** A throwaway sketch of S1–S3 and
 the two flags, in a worktree outside the tree and since removed, did three things:
@@ -780,6 +780,82 @@ into the `[05a-…]` narrowing and its index hook. Both are corrected in this co
 **Next: 06**, with its own orchestrator note carrying this review's findings. It corrects the two
 `"stepping": "minimum"` flags to say what 03 made true, and is the first schema change, under D5.
 Prompt 10 is still the first real run, and nothing in 03 has run under Ray.
+
+**Orchestrator review of prompt 06 (2026-09-29).** Run against `15c724b`, dispatched from
+`8ed150f` with the tree and the index clean, nothing `running`, and no other worktree. The
+baselines were re-measured on `8ed150f` first and matched §5.8. **All nine checks in
+`orchestrator/prompt-06.md` §3 passed.** The review found two small remnants, fixed in
+`f070a9d`, and three inaccuracies in the record, noted here.
+- **Scope.** Thirteen files: the four factories, one new witness, one new test module, the three
+  permitted test-file edits, the log, the two boards and the index. The forbidden paths are empty
+  apart from `docs/OPEN_ISSUES.md`. `--diff-filter=M` over `*/tests/*` gives exactly
+  `real_store_fixtures.py`, `schema_description.py` and `test_schema_builder.py`, and each hunk
+  was read: the map; the constant and the docstring; a docstring. Every factory hunk is inside
+  `register()`, on the four named columns or flags.
+- **S1, S2, S3.** `Tq_serial` targets `TkNumericIntegration.serial`. `Tr_serial` has no key, and
+  its comment names `TkNumericIntegration` and gives the cross-shard reason.
+  `wavenumber_exit_serial` targets `wavenumber_exit_time.serial`, with `index` and `nullable`
+  unchanged. The map has `"Tr_serial": "TkNumericIntegration"` and no `GkSourcePolicyData` entry,
+  and `QuadSourceIntegral.source_serial` is unchanged.
+- **S4.** `test_foreign_key_check.py`, 8 tests, runs `foreign_key_check` on every shard, `mode=ro`.
+  - Its own rows add `QuadSource` 10 on shard 0, whose `Tq_serial` 3 is a Tk serial there and not
+    a `QuadSource` serial. A test asserts that property of the data.
+  - The docstring names `Tr_serial`, `QuadSourceIntegral.source_serial` and `shard_keys`.
+  - With the parent's `QuadSource.py` checked out over it, 4 of the 8 fail, reporting
+    `('QuadSource', 10, 'QuadSource', 0)` on shard 0. After the restore the tree was clean and
+    all 8 passed.
+  - The stand-in-shard store reports one `GkSource` row by design, from its placeholder
+    `source_serial` (log deviation 3). The test pins that row and allows no other, which is sound.
+- **S5, D5.**
+  - `schema_at_base.json` has blob `4cc19dd` at both commits, and the new witness is a new file.
+  - A witness re-captured from `HEAD` into the scratchpad is byte-identical to the committed one.
+  - The orchestrator's own `diff` of the two witnesses is **8 hunks and 30 lines**, byte-identical
+    to the log's paste. Every line is S1, S2 or one of the two flags.
+  - **The note's "9 hunks" was wrong.** Its "one more hunk" for `GkSourcePolicyData`'s constraint
+    list is the second of that class's three, counted twice. The agent's account is right.
+- **The fingerprint is unmoved.** `full_store_fingerprint.json` has no diff, and
+  `test_store_fingerprint` gave 33 OK on the final tree and under each mutation.
+- **Mutations.** (i)–(iv) were extracted from `git show HEAD:<log>` and replayed with plain
+  `git apply`, each over the whole Datastore suite and `test_store_fingerprint`. Each gave exactly
+  its logged failing tests and sub-tests, and the tree was clean after each revert.
+  - (i) `failures=8`. It fails S4's `test_every_shard_passes_foreign_key_check` on the added row,
+    while `test_the_default_stores_pass_too` passes, which is the coincidence §0 measured.
+  - (ii) `failures=9`, including `test_the_default_stores_pass_too`, on the fixture's own
+    cross-shard pair.
+  - (iii) `failures=10`, the four classes plus the whole file, in each witness test.
+  - (iv) `failures=4`: `IntegrationSolver` plus the whole file, twice.
+
+  The agent reports the same results from its own post-commit replay.
+- **Boards.** The issue is on the store-fingerprint board's §4, with a closing note naming the
+  commit by subject. Counted, the index has **96** rows, down from 97, with the date. This board
+  has its §1 row, S1–S5, §3.1 and §5.9.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `f070a9d`, serially: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
+    Datastore 351 (+8), LiouvilleGreen 148 (1 skipped), RunRegistry 199.
+  - `black --check` is clean on the eight Python files.
+  - `ray.is_initialized()` is false after the new module.
+- **Remnants, fixed in `f070a9d`** (*"Tidy two remnants of datastore-integrity prompt 06"*), each
+  too small to be an issue:
+  - The store-fingerprint board's header still said **"Five"** of the audit's issues had closed on
+    its §4, while listing six. The agent's report said it had corrected this, and it had not.
+  - `test_the_default_stores_pass_too` unpacked `full_rows()` into three unused names.
+- **Inaccuracies in log 06, left as written.** The log is the record of what the agent did.
+  - The "before S1" `-v` output (§"Which stores S4 checks") drops the status of three tests. Each
+    has a docstring, so unittest prints the status on a second line, which the paste lost.
+    `test_the_added_row_is_not_satisfied_by_coincidence` passed there; the other two failed, as
+    the log's count of 4 says.
+  - "Verification performed" says "the four boards"; there are two boards and the index.
+- **Decided here: `TestSchemaIsUnchanged` keeps its name** (log observation 1). It still reads
+  truly, as "the schema is unchanged from the current witness". Log 06's mutation record cites
+  it, and so will every later witness change, so renaming it would make those records stop
+  matching.
+
+**Next: 07**, with its own orchestrator note carrying this review's findings. It is the first
+prompt to add a column and change a lookup key. It adds its witness beside 06's, by the procedure
+06 set, and each new foreign key needs S4-style rows that the wrong table cannot satisfy by
+coincidence. It is also the first whose foreign key constrains a drop, so `_drop_order` is its
+concern. Prompt 10 remains the first real run.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
