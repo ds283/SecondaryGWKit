@@ -1,10 +1,10 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
+**Last updated:** 2026-09-29 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
-Four of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
-this board's §4 on 2026-09-28: two by that campaign's prompt 05b, one by its prompt 05c and one by
-its prompt 02. This board's own prompts are unchanged.
+Five of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+this board's §4: two by that campaign's prompt 05b, one by its prompt 05c and one by its prompt 02
+(2026-09-28), and one by its prompt 03 (2026-09-29). This board's own prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -223,6 +223,12 @@ Three remain.
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.5). The user
     decided on 2026-09-25 to keep `QuadSourcePolicy` and add it to `QuadSourceIntegral`'s key. It
     closes here, on this board's §4.
+---
+
+## 4. Resolved issues
+
+Closed by `prompts/datastore-integrity` **prompt 03**, 2026-09-29:
+
 - **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
     `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
@@ -240,9 +246,15 @@ Three remain.
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.6). It closes
     here, on this board's §4.
 
----
-
-## 4. Resolved issues
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 03**, commit *"Match the exit-time
+  > and identity lookups exactly, and raise on a duplicate"*. The line is dedented out of the
+  > sub-horizon loop, so `sqla_wavenumber_exit_time_factory.build` now executes exactly one
+  > `SELECT` per call (measured with an `event.listen(engine, "before_cursor_execute", ...)`
+  > listener, `Datastore/tests/test_exact_identity_lookups.py`'s
+  > `TestExitTimeOneStatement.test_build_executes_exactly_one_select`), where it used to run once
+  > per sub-horizon column. The same commit also made the surrounding match exact (L1), which
+  > closes `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` on the tolerance-convergence
+  > board's §4.
 
 - **[00-replicated-writes-can-diverge-across-shards]** *(opened 2026-09-24 by the audit)*
   - **The defect.** A replicated write commits on the controlling shard first, and on the other

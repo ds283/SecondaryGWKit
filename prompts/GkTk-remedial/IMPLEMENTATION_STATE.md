@@ -2,7 +2,10 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opened `[10-table-8-3-measures-the-removed-wrap-theta-loop]`, now also **CLOSED** (§4): `large_x.py` generated Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so §8 was regenerated — Table 8.3 reads 0 error and ~0.3 µs per call, Table 8.1's `fixture set-up` column collapses from 50.0 s at $x=1.6\times10^8$ to 0.0 s at every row (`f961fa6`'s doing, not this fix's), every physics column is unchanged, and item 5 is rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-29 — `[03-integrationsolver-stepping-minimum-lookup]` is **CLOSED** (§4)
+by `prompts/datastore-integrity` prompt 03: `sqla_IntegrationSolver_factory.build` now matches
+`stepping ==` the request and raises `MultipleResultsFound` on a duplicate rather than serving a
+higher-order row that happened to satisfy `>=`. Previously 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opened `[10-table-8-3-measures-the-removed-wrap-theta-loop]`, now also **CLOSED** (§4): `large_x.py` generated Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so §8 was regenerated — Table 8.3 reads 0 error and ~0.3 µs per call, Table 8.1's `fixture set-up` column collapses from 50.0 s at $x=1.6\times10^8$ to 0.0 s at every row (`f961fa6`'s doing, not this fix's), every physics column is unchanged, and item 5 is rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -541,22 +544,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   1.746e-15 against README §6's 1e-13. **Next step: unchanged** -- regenerate the records in the
   exact-width parametrisation if headroom is ever needed.
 
-- **[03-integrationsolver-stepping-minimum-lookup]** *(opened by prompt 03, 2026-09-11; inert)* —
-  `sqla_IntegrationSolver_factory` registers `"stepping": "minimum"` and `build()` matches
-  `label == label AND stepping >= stepping`, returning the first such row. Every solver registered
-  before this campaign has `stepping=0`, so it never mattered; the τ table registers
-  `("cumulative-GL", 4)` with the Gauss order as the stepping. If a second order is ever registered
-  under the same label, a query for the lower order can be served by the higher order's row (the
-  returned `IntegrationSolver` object still reports the requested stepping, but `solver_serial`
-  points elsewhere). **Impact:** none while every table uses order 4 (log 02); a trap for whoever
-  changes an order. **Next step:** if a second order is registered, either fold the order into the
-  label or query with an exact stepping match.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 03, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.7). The audit
-    measured it worse than inert: with rows at stepping 8 and 4, a request for 4 is served the 8
-    row. It closes here, on this board's §4.
-
 - **[04-background-rhs-evaluations-count]** *(opened by prompt 04, 2026-09-11; inert)* —
   `compute_background` now builds three Gauss–Legendre tables, but `IntegrationData` is a fixed
   namedtuple with a single evaluation counter and prompt 03's `test_background_tau.test_payload_shape`
@@ -770,6 +757,39 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[03-integrationsolver-stepping-minimum-lookup]** *(opened by prompt 03, 2026-09-11; inert)* —
+  `sqla_IntegrationSolver_factory` registers `"stepping": "minimum"` and `build()` matches
+  `label == label AND stepping >= stepping`, returning the first such row. Every solver registered
+  before this campaign has `stepping=0`, so it never mattered; the τ table registers
+  `("cumulative-GL", 4)` with the Gauss order as the stepping. If a second order is ever registered
+  under the same label, a query for the lower order can be served by the higher order's row (the
+  returned `IntegrationSolver` object still reports the requested stepping, but `solver_serial`
+  points elsewhere). **Impact:** none while every table uses order 4 (log 02); a trap for whoever
+  changes an order. **Next step:** if a second order is registered, either fold the order into the
+  label or query with an exact stepping match.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.7). The audit
+    measured it worse than inert: with rows at stepping 8 and 4, a request for 4 is served the 8
+    row. It closes here, on this board's §4.
+
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 03**, commit *"Match the exit-time
+  > and identity lookups exactly, and raise on a duplicate"*.
+  > `sqla_IntegrationSolver_factory.build` (`Datastore/SQL/ObjectFactories/integration_metadata.py`)
+  > now filters `stepping ==` the request and takes `.scalar_one_or_none()` in place of `.scalar()`,
+  > so a lower stepping can no longer be served a higher-order row and a duplicate raises
+  > `MultipleResultsFound` rather than silently serving the first row. Re-measured on the audit's
+  > own fixture (stored `{serial 1: stepping 8, serial 2: stepping 4}`): request 4 now serves
+  > serial 2 (previously served serial 1), request 8 still serves serial 1, and request 6 still
+  > inserts a fresh row.
+  > `Datastore/tests/test_exact_identity_lookups.py`'s `TestIntegrationSolverExactMatch` covers
+  > this directly. `main.py`'s seven `IntegrationSolver` lookups (`:3621-3639`) are unchanged: each
+  > requests exactly the stepping it inserts (0 for the five `solve_ivp` labels,
+  > `BackgroundModel.TAU_GAUSS_ORDER` and `GkWKBIntegration.PHASE_SOLVER_STEPPING` for the two
+  > Gauss-order labels), so the exact match still hits every production row. The registration's
+  > `"stepping": "minimum"` flag is unchanged -- nothing reads it, and correcting it to say what
+  > this fix made true is prompt 06's, per that campaign's README §2 row.
 
 - **[03-backgroundmodelvalue-build-path]** *(opened by prompt 03, 2026-09-11; **closed
   2026-09-22** by `prompts/datastore-readback`, at the user's direction, outside any prompt of

@@ -30,13 +30,16 @@ class sqla_QuadSourcePolicy_factory(SQLAFactoryBase):
 
         label = payload.get("label", None)
 
+        # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than silently
+        # serving the first row scalar() would have returned (prompts/datastore-integrity,
+        # prompt 03, L3)
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(
                 sqla.func.abs(table.c.Levin_threshold - Levin_threshold)
                 < DEFAULT_FLOAT_PRECISION,
                 table.c.numeric_policy == numeric_policy,
             )
-        ).scalar()
+        ).scalar_one_or_none()
 
         if store_id is None:
             insert_data = {

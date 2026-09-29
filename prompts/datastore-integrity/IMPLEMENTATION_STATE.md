@@ -1,13 +1,18 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-28 · **Status: 5 of 10 prompts landed (01, 02, 04, 04b, and 05 as
+**Last updated:** 2026-09-29 · **Status: 6 of 10 prompts landed (01, 02, 03, 04, 04b, and 05 as
 05a–05c), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
-`[00-replicated-writes-can-diverge-across-shards]`; reviewed the same day. **Next: 03 → 06**, each
-with its own orchestrator note; 07 waits on 05 and 06. 10 waits on 01–09. `store-retirement`
-closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2).
+`[00-replicated-writes-can-diverge-across-shards]`; reviewed the same day. **03 landed 2026-09-29**,
+closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`,
+`[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` and
+`[03-integrationsolver-stepping-minimum-lookup]` on their owning boards' §4, and narrowing
+`[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` on the
+tolerance-convergence board. **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
+`store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
+(README §2).
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
 defect be fixed before the A3 v2 store is built, the first store meant to have archival value. The
@@ -56,7 +61,7 @@ becomes an exact match; the adjacent issues are out of scope.
 |---|---|---|---|---|---|---|---|
 | 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Make the replicated write checked, idempotent and recorded"* | [`logs/01-…`](logs/01-checked-replicated-write.md) |
 | 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-28 | *"Repair or refuse divergent replicated tables when a store opens"* | [`logs/02-…`](logs/02-repair-or-refuse-at-open.md) |
-| 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
+| 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-29 | *"Match the exit-time and identity lookups exactly, and raise on a duplicate"* | [`logs/03-…`](logs/03-exact-identity-lookups.md) |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Extend the read-back guard to read_batch and column existence"* | [`logs/04-…`](logs/04-extend-the-read-back-guard.md) |
 | 04b | [Tighten the read-back guard](04b-tighten-the-read-back-guard.md) | **G4**–**G6** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Tighten the read-back guard to every function and every declared hole"* | [`logs/04b-…`](logs/04b-tighten-the-read-back-guard.md) |
 | 05a | [Repair the mechanical read defects](05a-repair-the-mechanical-read-defects.md) | **P6**, **P7** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the mechanical read-path defects: names, an argument, tags, raises"* | [`logs/05a-…`](logs/05a-repair-the-mechanical-read-defects.md) |
@@ -676,11 +681,11 @@ what 01–04 find; what waits is their method.
 | W5 | **FACILITY** | `_reconcile_replicated_tables()` in the constructor, before any actor, no Ray: hot journals rolled back, every replicated table compared across shards by full row (timestamp exempt for old rows). | 02 | ✅ after `_check_shard_files`, before the broker; 13 replicated tables and `BackgroundModel_tags` read through `build_schema`'s tables on plain SQLAlchemy connections, keyed by serial (`BackgroundModelValue` by `(model_serial, z_serial)` without `serial`; the tag table by its key), `timestamp` never compared, plus the primary's `shard_keys`; a clean store writes nothing (checksums); +94 ms at 4 shards, +252 ms at 20 (production size, medians) |
 | W6 | **REMEDY** | With an in-flight record set, the missing rows of its class copied forward from its controller, `BackgroundModel` as a unit with `validated` recomputed; the record then cleared. | 02 | ✅ from the record's `controller_shard` only, rows of its class only, verbatim, each carrying the record's `started`; `source`/`response` only turned on; `validated` recomputed by `sqla_BackgroundModelFactory.validate` in a savepoint, never written `False`; a second full comparison inside the repair's transactions, then the shards committed and the record cleared, last; one printed line per class and shard |
 | W7 | **GUARD** | Any other difference refuses the open with `ReplicatedDivergence`, including a serial split and a row the controller lacks. Closes `[00-replicated-writes-can-diverge-across-shards]`. | 02 | ✅ `Datastore/replication.py`; each difference named by class, shard and serial or key, a split with both serials; before any actor, nothing written, the record left as it was; sharded tables never read. Issue closed on the store-fingerprint board's §4 |
-| L1 | **REMEDY** | `wavenumber_exit_time.build` by serial equality on atol, rtol and `==` on stepping; the dead `ORDER BY` removed; the query out of the loop. Closes `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` and `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]`. | 03 | ⬜ |
-| L2 | **REMEDY** | `IntegrationSolver.build` by `stepping ==` and `one_or_none()`. Closes `[03-integrationsolver-stepping-minimum-lookup]`. | 03 | ⬜ |
-| L3 | **GUARD** | `.scalar()` → `one_or_none()` on the eight identity lookups (audit §3.8), so a duplicate raises. | 03 | ⬜ |
-| L4 | **REMEDY** | `redshift.build` matches `z = 0` (audit §3.9). | 03 | ⬜ |
-| L5 | **RECORD** | `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` narrowed: after L1 the two scripts miss rather than silently reuse. | 03 | ⬜ |
+| L1 | **REMEDY** | `wavenumber_exit_time.build` by serial equality on atol, rtol and `==` on stepping; the dead `ORDER BY` removed; the query out of the loop. Closes `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` and `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]`. | 03 | ✅ joins to the tolerance table kept, feeding the returned `log10_tol` values; one `SELECT` per `build()`, pinned by `TestExitTimeOneStatement` |
+| L2 | **REMEDY** | `IntegrationSolver.build` by `stepping ==` and `one_or_none()`. Closes `[03-integrationsolver-stepping-minimum-lookup]`. | 03 | ✅ `.scalar_one_or_none()` |
+| L3 | **GUARD** | `.scalar()` → `one_or_none()` on the eight identity lookups (audit §3.8), so a duplicate raises. | 03 | ✅ `.scalar_one_or_none()` on all eight; the other 21 `.scalar()` calls in `ObjectFactories/` judged not identity lookups, listed in the log |
+| L4 | **REMEDY** | `redshift.build` matches `z = 0` (audit §3.9). | 03 | ✅ an explicit `z == 0` branch inside the one `.filter(...)` call |
+| L5 | **RECORD** | `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` narrowed: after L1 the two scripts miss rather than silently reuse. | 03 | ✅ narrowed on the tolerance-convergence board and in the index; every production caller (`main.py`, the six `extract_*.py` scripts) confirmed unchanged |
 | G1 | **GUARD** | The read-back guard visits every function of every factory, `read_batch` and `_build_impl_*` included, linking a nested helper's parameter to its row. | 04 | ✅ `analyse_read_batch` / `inline_nested_row_helper`; `EXPECTED_COVERAGE` grows by 10 (probe_02.out's 16 collapse under the module's existing "module:class.variable" key — see log) |
 | G2 | **GUARD** | A column-existence test: every `<table>.c.<name>` and every insert key resolves against the built schema. | 04 | ✅ `TestColumnExistence` / `column_existence_problems`, same module |
 | G3 | **RECORD** | `KNOWN_UNFIXED`: what G1–G2 find today, for prompt 05 to empty. Closes `[01-read-batch-is-outside-the-guard]`. | 04 | ✅ `KNOWN_UNFIXED` +2 (both `WKB_criterio`, P6), `KNOWN_UNFIXED_COLUMNS` (new) +3 (`z_serial`/`model_id`, P6; `validated` insert key, P8) — the five the probes predicted, nothing new |
@@ -723,9 +728,9 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | Issue | Owning board | Prompt |
 |---|---|---|
 | `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | 01 (**narrowed** 2026-09-26), 02 (**closed** 2026-09-28, on that board's §4) |
-| `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | 03 |
-| `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 |
-| `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 |
+| `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | 03 (**closed** 2026-09-29, on that board's §4) |
+| `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | 03 (**closed** 2026-09-29, on that board's §4) |
+| `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | 03 (**closed** 2026-09-29, on that board's §4) |
 | `[01-read-batch-is-outside-the-guard]` | datastore-readback | 04 (**closed** 2026-09-26, on that board's §4) |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05c (**closed** 2026-09-28, on that board's §4) |
@@ -927,6 +932,22 @@ run alone, to avoid the known wall-clock flake under parallel load).
 | ComputeTargets | 552 OK |
 | CosmologyModels | 39 OK |
 | Datastore | **325 OK** (287 + the 38 of the new `test_reconcile_at_open.py`; the one rewritten test in `test_replicated_write.py` is not an addition) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.8 After prompt 03 (2026-09-29)
+
+Measured on the tree of prompt 03's commit, with README §7's command, serially (ComputeTargets
+run alone, to avoid the known wall-clock flake under parallel load; it did not fire).
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 552 OK |
+| CosmologyModels | 39 OK |
+| Datastore | **343 OK** (325 + the 18 of the new `test_exact_identity_lookups.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK |
 

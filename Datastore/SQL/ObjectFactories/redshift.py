@@ -31,14 +31,21 @@ class sqla_redshift_factory(SQLAFactoryBase):
         is_source = payload["is_source"]
         is_response = payload["is_response"]
 
-        # query for this redshift in the datastore
+        # query for this redshift in the datastore. z = 0 cannot use the relative match below: it
+        # divides by z, and SQLite's 0/0 is NULL, which matches nothing, so every call at z = 0
+        # would insert a fresh row (prompts/datastore-integrity, prompt 03, L4, audit §3.9).
+        # z == 0 is matched by equality instead; every other z keeps the relative match unchanged.
+        z_filter = (
+            table.c.z == 0.0
+            if z == 0.0
+            else sqla.func.abs((table.c.z - z) / z)
+            < DEFAULT_REDSHIFT_RELATIVE_PRECISION
+        )
         query = sqla.select(
             table.c.serial,
             table.c.source,
             table.c.response,
-        ).filter(
-            sqla.func.abs((table.c.z - z) / z) < DEFAULT_REDSHIFT_RELATIVE_PRECISION
-        )
+        ).filter(z_filter)
         row_data = conn.execute(query).one_or_none()
 
         # if not present, create a new id using the provided inserter

@@ -38,6 +38,9 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
         T_CMB_Kelvin = params.T_CMB_Kelvin
         Neff = params.Neff
 
+        # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than silently
+        # serving the first row scalar() would have returned (prompts/datastore-integrity,
+        # prompt 03, L3)
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(
                 sqla.and_(
@@ -52,7 +55,7 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
                     sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
                 )
             )
-        ).scalar()
+        ).scalar_one_or_none()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:

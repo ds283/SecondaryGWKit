@@ -28,11 +28,14 @@ class sqla_tolerance_factory(SQLAFactoryBase):
                 raise KeyError("Missing expected arguments 'log10_tol' or 'tol")
             log10_tol = log10(tol)
 
+        # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than silently
+        # serving the first row scalar() would have returned (prompts/datastore-integrity,
+        # prompt 03, L3)
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(
                 sqla.func.abs(table.c.log10_tol - log10_tol) < DEFAULT_FLOAT_PRECISION
             )
-        ).scalar()
+        ).scalar_one_or_none()
 
         if store_id is None:
             insert_data = {"log10_tol": log10_tol}

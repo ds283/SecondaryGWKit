@@ -96,7 +96,12 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         )
 
         try:
-            store_id = conn.execute(query).scalar()
+            # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than
+            # silently serving the first row scalar() would have returned (prompts/
+            # datastore-integrity, prompt 03, L3). MultipleResultsFound is a SQLAlchemyError, and
+            # its message never contains "T_z_representation", so the handler below re-raises it
+            # unchanged rather than mistaking it for the missing-column case it exists to catch.
+            store_id = conn.execute(query).scalar_one_or_none()
         except SQLAlchemyError as e:
             # a datastore written before prompt 03 has no T_z_representation column, and its rows
             # record no representation at all. There is no defensible default to supply, so this

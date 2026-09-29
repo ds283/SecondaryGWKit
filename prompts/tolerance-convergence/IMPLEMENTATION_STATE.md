@@ -805,32 +805,6 @@ Opened by **prompt 02**, 2026-09-16:
   nothing. Prompt 02 measured it and stopped there, as §8 requires. Evidence:
   `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.1.
 
-- **[02-wavenumber-exit-time-tolerance-is-an-inequality-key]** *(prompt 02, 2026-09-16; candidate
-  for prompts 03 and 05)* — README §2 (g) says "every accuracy parameter is part of its object's
-  lookup key, so a new one makes every existing row of that type unreachable". True of eight of the
-  nine; **false of `wavenumber_exit_time`**. Its query
-  (`Datastore/SQL/ObjectFactories/wavenumber.py:242-254`) joins the `tolerance` table twice and
-  filters `stored.log10_tol - requested.log10_tol <= DEFAULT_FLOAT_PRECISION` on each — accept any
-  row **at least as tight as** the request — then orders by `log10_tol` **descending** and takes
-  `one_or_none()`, i.e. the **loosest** qualifying row. It does the same with
-  `stepping >= target_stepping`. **Impact:** tightening misses and recomputes, as an equality key
-  would; **loosening hits a tighter stored row and returns its `z_exit`**, and the object's own
-  `atol`/`rtol` properties (`CosmologyConcepts/wavenumber.py:729-734`) then report the *stored*
-  pair, not the requested one. A tolerance sweep run through the datastore would therefore be
-  served the same answer at several of its points and would measure nothing.
-  `MultipleResultsFound` is caught at `:260`, so two qualifying rows raise rather than choosing.
-  This is deliberate "best available" behaviour and is **not proposed for change here**.
-  **Next step:** prompt 03 sweeps this target by calling
-  `CosmologyConcepts.wavenumber._solve_horizon_exit` directly and never through `object_get`;
-  prompt 05's `ast` guard must not assume equality semantics at this site. Evidence:
-  `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.3.
-  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
-    prompt 03, which fixes it before the archival A3 v2 store is built
-    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.5). The user
-    decided on 2026-09-25 that it becomes an exact match. The audit also found that once a tighter
-    row is stored, the lookup at the original pair raises `MultipleResultsFound`. It closes here, on
-    this board's §4.
-
 - **[02-shared-atol-doubles-as-a-float-comparison-epsilon]** *(prompt 02, 2026-09-16; candidate for
   prompt 05)* — `DEFAULT_ABS_TOLERANCE` is not only the shared solver tolerance. It is also a bare
   float-comparison epsilon at **seven** sites with no connection to the Green's-function ODE:
@@ -883,6 +857,40 @@ Opened by **prompt 05a**, 2026-09-18:
   `DEFAULT_HEXIT_ABS_TOLERANCE` / `DEFAULT_HEXIT_REL_TOLERANCE`, and extends
   `ReaderToleranceAgreementTestCase`'s `EXTRACT_SCRIPTS` tuple to cover them — the cross-check is
   already written and is generic over a file list. Evidence: log 05a, observation 1.
+
+  > **Narrowed 2026-09-29 by `prompts/datastore-integrity` prompt 03** (additively; the paragraph
+  > above is left as the record of the tree it was measured on). Prompt 03 made the exit-time
+  > lookup an exact match (closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`
+  > below), so the "quiet mode" this entry names is gone: **the two scripts now miss, rather than
+  > silently reusing a tighter row.** Read, not run (they need Ray and a store under `var/`):
+  > - `analyse_greens_and_source.py:447-448` builds `atol`/`rtol` from `DEFAULT_ABS_TOLERANCE`/
+  >   `DEFAULT_REL_TOLERANCE` = `(1e-10, 1e-8)` and looks the exit time up at `:247-253` for every
+  >   response wavenumber. Stored is `(1e-10, 1e-9)`, so `rtol_serial` no longer matches and every
+  >   `k_exit` comes back an **unpopulated `wavenumber_exit_time`** (`available=False`,
+  >   `store_id` raises until set). It is still passed on as `k=k_exit` into the `GkSource` lookup
+  >   at `:277`, whose own filter is `table.c.wavenumber_exit_serial == k_exit.store_id`; SQLAlchemy
+  >   turns `== None` into `IS NULL`, which a `nullable=False` column never satisfies, so that
+  >   lookup misses too. The script already checks `if not source.available:` (`:284`) and does
+  >   exactly what it does for any other unavailable source: appends `(k_val, z_val, "GkSource not
+  >   available")` to `failures` and `continue`s to the next sampled case. It does not compute,
+  >   store or crash — every sampled case is recorded as a failure and the script finishes.
+  > - `run_quadsource_integrals.py:140-141` builds the same pair from `DEFAULT_ABS_TOLERANCE`/
+  >   `DEFAULT_REL_TOLERANCE` and looks up every source and response `k_exit` the same way
+  >   (`k_exit_of`, `:186-195`), so **every** `k_exit` object built by the script is now
+  >   unavailable, with `store_id` unset. `distinct_k = {k.store_id: k for k, _, _ in triples}`
+  >   (`:265`) and `pairs = {(q.store_id, r.store_id): (q, r) for _, q, r in triples}` (`:266`)
+  >   then key on that same absent identity for every triple, so both dicts collapse to **one**
+  >   entry apiece instead of one per distinct wavenumber — `triples` itself is unaffected, because
+  >   `closes_triangle` (`:63-69`) compares physical `k.k.k` values, not store ids. The script does
+  >   not crash: the one collapsed entry is still a valid dict key, so the `Tk_numeric_cache`/
+  >   `Tk_WKB_cache`/`Gk_cache` build loops (`:284-345`) run on it without a `KeyError`, but every
+  >   `object_get` inside them is itself built from an unavailable `k`/`q`/`r`, so its own filter is
+  >   also `IS NULL` and it too misses. So `payload_ok` (`:352-358`) is `False` for **every**
+  >   `(k, q, r)` triple, each is counted under `failures["ingredient unavailable"]` (`:361`)
+  >   and `continue`d past, `compute_QuadSource_integral.remote` (`:365`) is never called, and the
+  >   script finishes having computed and stored nothing.
+  > - Neither script is edited: both are documents of the tree they ran on (README §5 rule 6;
+  >   prompt 03's own charter, §6). Their next step is unchanged from the paragraph above.
 
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
@@ -965,6 +973,51 @@ Opened by **prompt 06a**, 2026-09-18:
 ---
 
 ## 4. Resolved issues
+
+Closed by `prompts/datastore-integrity` **prompt 03**, 2026-09-29:
+
+- **[02-wavenumber-exit-time-tolerance-is-an-inequality-key]** *(prompt 02, 2026-09-16; candidate
+  for prompts 03 and 05)* — README §2 (g) says "every accuracy parameter is part of its object's
+  lookup key, so a new one makes every existing row of that type unreachable". True of eight of the
+  nine; **false of `wavenumber_exit_time`**. Its query
+  (`Datastore/SQL/ObjectFactories/wavenumber.py:242-254`) joins the `tolerance` table twice and
+  filters `stored.log10_tol - requested.log10_tol <= DEFAULT_FLOAT_PRECISION` on each — accept any
+  row **at least as tight as** the request — then orders by `log10_tol` **descending** and takes
+  `one_or_none()`, i.e. the **loosest** qualifying row. It does the same with
+  `stepping >= target_stepping`. **Impact:** tightening misses and recomputes, as an equality key
+  would; **loosening hits a tighter stored row and returns its `z_exit`**, and the object's own
+  `atol`/`rtol` properties (`CosmologyConcepts/wavenumber.py:729-734`) then report the *stored*
+  pair, not the requested one. A tolerance sweep run through the datastore would therefore be
+  served the same answer at several of its points and would measure nothing.
+  `MultipleResultsFound` is caught at `:260`, so two qualifying rows raise rather than choosing.
+  This is deliberate "best available" behaviour and is **not proposed for change here**.
+  **Next step:** prompt 03 sweeps this target by calling
+  `CosmologyConcepts.wavenumber._solve_horizon_exit` directly and never through `object_get`;
+  prompt 05's `ast` guard must not assume equality semantics at this site. Evidence:
+  `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.3.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.5). The user
+    decided on 2026-09-25 that it becomes an exact match. The audit also found that once a tighter
+    row is stored, the lookup at the original pair raises `MultipleResultsFound`. It closes here, on
+    this board's §4.
+
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 03**, commit *"Match the exit-time
+  > and identity lookups exactly, and raise on a duplicate"*. `sqla_wavenumber_exit_time_factory.build`
+  > (`Datastore/SQL/ObjectFactories/wavenumber.py`) now filters `atol_serial ==`, `rtol_serial ==`
+  > and `stepping ==` the request -- the same serial-equality form every other keyed type uses,
+  > since `tolerance.build` has already mapped a value to one serial -- with the descending
+  > `ORDER BY` deleted (`one_or_none()` made it dead regardless of row order) and the query moved
+  > out of the sub-horizon column loop it used to re-run six times
+  > (`[02-exit-time-lookup-runs-inside-the-subhorizon-loop]`, closed on the store-fingerprint
+  > board). A stored `(1e-10, 1e-9)` now serves only that exact request; `(1e-10, 1e-8)`,
+  > `(1e-8, 1e-8)` and `(1e-12, 1e-9)` miss outright rather than being silently served the stored
+  > pair, and two rows at distinct pairs are each served their own row with nothing raised.
+  > `MultipleResultsFound` still raises, now on an exact duplicate rather than on any second
+  > qualifying row. `Datastore/tests/test_exact_identity_lookups.py` covers this directly. This
+  > closure is the reason `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]`
+  > (below) is narrowed rather than closed: the same commit turns its "quiet mode" into two scripts
+  > that now miss.
 
 Closed by **prompt 05a**, 2026-09-18:
 

@@ -27,11 +27,15 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
         if stepping < 0:
             stepping = 0
 
+        # exact match on stepping (prompts/datastore-integrity, prompt 03, L2): the requested
+        # stepping is the row's identity alongside the label, not a floor an existing row must
+        # clear -- and scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than
+        # silently serving the first row scalar() would have returned
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(
-                sqla.and_(table.c.label == label, table.c.stepping >= stepping)
+                sqla.and_(table.c.label == label, table.c.stepping == stepping)
             )
-        ).scalar()
+        ).scalar_one_or_none()
 
         if store_id is None:
             insert_data = {"label": label, "stepping": stepping}

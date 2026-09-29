@@ -218,21 +218,23 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                         table.c.wavenumber_serial == k.store_id,
                         table.c.cosmology_type == cosmology.type_id,
                         table.c.cosmology_serial == cosmology.store_id,
-                        atol_table.c.log10_tol - target_atol.log10_tol
-                        <= DEFAULT_FLOAT_PRECISION,
-                        rtol_table.c.log10_tol - target_rtol.log10_tol
-                        <= DEFAULT_FLOAT_PRECISION,
-                        table.c.stepping >= target_stepping,
+                        # exact match on the tolerance serials and the stepping (prompts/
+                        # datastore-integrity, prompt 03, L1): tolerance.build has already mapped
+                        # the requested value to one serial, so this is the same equality every
+                        # other keyed type uses, not the "at least as tight" inequality this
+                        # lookup used to apply
+                        table.c.atol_serial == target_atol.store_id,
+                        table.c.rtol_serial == target_rtol.store_id,
+                        table.c.stepping == target_stepping,
                     )
                 )
-                .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
             )
             for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
                 query = query.add_columns(table.c[f"z_exit_suph_e{z_offset}"])
             for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
                 query = query.add_columns(table.c[f"z_exit_subh_e{z_offset}"])
 
-                row_data = conn.execute(query).one_or_none()
+            row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! wavenumber_exit_time.build(): multiple results found when querying for wavenumber_exit_time"

@@ -21,9 +21,12 @@ class sqla_store_tag_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         label = payload["label"]
 
+        # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than silently
+        # serving the first row scalar() would have returned (prompts/datastore-integrity,
+        # prompt 03, L3)
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(table.c.label == label)
-        ).scalar()
+        ).scalar_one_or_none()
 
         if store_id is None:
             insert_data = {"label": label}
