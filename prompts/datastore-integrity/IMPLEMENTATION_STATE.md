@@ -84,7 +84,48 @@ dispatched one at a time, never concurrently in this checkout, in either order. 
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
 (2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
 [`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used), and
-[`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, used).
+[`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, used), and
+[`prompt-07.md`](orchestrator/prompt-07.md) (2026-09-29, ready).
+
+**Decided for 07 (2026-09-29, the user, while its note was written).** Prompt 07 was written before
+05c and 06 landed, and as written it would hit its own §5 stop or silently change a reader in four
+places. The user took the recommendation each time; the note's §0.1–§0.4 hold the detail.
+- **Existing tests that must follow the key are granted,** each limited to following it:
+  - the fixture's default WKB rows;
+  - the WKB entries of `test_store_inventory.py`'s `IDENTITY` and its missing-key-column test;
+  - the two raw-insert helpers that write Tk WKB rows;
+  - 05c's `z_init` tests, which its log handed to 07;
+  - the parentless construction in `test_tk_wkb_phase.py`;
+  - and, under D5, the two witness constants.
+- **`FINGERPRINT_FORMAT` goes from 1 to 2.** `RunRegistry/stores.py`'s own rule requires it for a
+  change to what the inventory records. Existing stores' fingerprints then compare as another
+  format, not as differing content.
+- **A Gk lookup names its parent or an explicit pure-WKB marker, never neither.** Readers use an
+  explicit labels-only mode that refuses on more than one match (D1). Otherwise
+  `extract_GkWKB_data.py`, which passes no parent, would silently see pure-WKB rows only.
+- **Moving the Gk seeded-or-pure choice ahead of the existence query is within scope.** The choice
+  is at `main.py:2182`, and it goes pure below `z_source_limit` even when a numeric row exists.
+  Moving it unchanged is part of "looking the numeric row up first", not §5's restructuring.
+
+**Measured for 07 (2026-09-29, while its note was written).** A throwaway sketch of the schema half,
+in a worktree outside the tree and since removed, added the two columns, `store()`'s write and
+`inventory_records`' new parent. It measured four things.
+- **Adding the column moves Datastore to `failures=56, errors=18`.** Giving the fixture's rows
+  parents and `Parent` a nullable form brings it to `failures=11, errors=16`, which is exactly the
+  granted list plus the witness. RunRegistry fails only the golden. ComputeTargets 552 and
+  CosmologyModels 39 were unchanged.
+- **The store inventory's `Parent` cannot resolve a NULL.** Every pure-WKB Gk row became an
+  `unresolved-parent` problem and dropped out of the records. So a nullable form is structurally
+  required, and README §1 puts `store_inventory.py` in 07's scope.
+- **Only `TkWKBIntegration` and `GkWKBIntegration` move in the fingerprint.** Their counts and
+  tag-set counts are unchanged, and no problems appear.
+- **The witness diff is 12 hunks and 86 lines**, six per class, because this is a new, indexed
+  column.
+
+Two further facts shape the tests:
+- **The fixture has the same coincidence 06 found.** Tk numeric 1 and Tk WKB 1 share shard 0, so a
+  wrong key would pass there.
+- **`_drop_order` is already right for Gk.** Only the Tk pair is reversed.
 
 **Measured for 06 (2026-09-29, while its note was written).** A throwaway sketch of S1–S3 and
 the two flags, in a worktree outside the tree and since removed, did three things:
