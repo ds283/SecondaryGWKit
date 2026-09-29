@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-29 · **Status: 7 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, and 06), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-29 · **Status: 8 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06 and 07), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -14,7 +14,10 @@ tolerance-convergence board. Reviewed the same day: the code passed, and L5's ac
 the two verification scripts do after a miss was wrong (both raise; they do not finish) and is
 corrected on that board and in the index. The review opened one issue, closed the same day (§4). **06 landed 2026-09-29**, closing
 `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` on the store-fingerprint board's §4 and
-setting up D5's witness procedure; reviewed the same day, with two small remnants fixed in a follow-up commit. **Next: 07**, which waits on 05 and 06, both landed. 10 waits on 01–09.
+setting up D5's witness procedure; reviewed the same day, with two small remnants fixed in a follow-up commit. **07 landed 2026-09-29**, closing
+`[20-wkb-rows-consume-numeric-initial-data]` on the GkTk-remedial board's §4 and opening two
+issues (§3.3); reviewed the same day, with three small remnants fixed in a follow-up commit.
+**Next: 08.** 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
