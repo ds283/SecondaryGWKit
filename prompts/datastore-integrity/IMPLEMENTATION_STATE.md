@@ -1025,8 +1025,12 @@ audit probes already stopped running when the fixes they measure landed, and non
 recorded as an issue. So the convention appears to be that a probe is evidence for the tree its
 audit read. The probe would run again with `numeric_serial=1` in its `tk_wkb_parent` insert, but
 what it prints about `z_init` would then describe a filter that no longer exists.
+**Decided by the user (2026-09-29): `probe_05` is left as it is.** Audit probes are evidence for
+the tree their audit read. A later prompt's log names any probe it stops, in its rule-11 list,
+and does not edit it.
 
-**Next: 08**, with its own orchestrator note carrying this review's findings. It adds
+**Next: 08**, with its own orchestrator note carrying this review's findings
+([`orchestrator/prompt-08.md`](orchestrator/prompt-08.md)). It adds
 `quad_policy_serial` to `QuadSourceIntegral`'s key, a witness and a golden beside 07's, and very
 likely a second format bump. `TestDropOrder` will hold its new foreign key to `_drop_order`.
 
