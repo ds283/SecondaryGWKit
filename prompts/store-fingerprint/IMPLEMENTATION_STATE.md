@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-09-29 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
-Five of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+Six of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
 this board's §4: two by that campaign's prompt 05b, one by its prompt 05c and one by its prompt 02
 (2026-09-28), and one by its prompt 03 and one by its prompt 06 (2026-09-29). This board's own
 prompts are unchanged.

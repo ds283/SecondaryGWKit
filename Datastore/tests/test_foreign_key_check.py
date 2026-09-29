@@ -156,7 +156,6 @@ class TestFullStore(_TempDirCase):
         self.assertEqual({0: [], 1: []}, all_violations(store))
 
     def test_the_default_stores_pass_too(self):
-        replicated, sharded, keys = rsf.full_rows()
         full = rsf.build_full_store(self.root, stem="default-full")
         self.assertEqual({0: [], 1: []}, all_violations(full))
         real = rsf.build_real_store(self.root, stem="default-real")
