@@ -60,7 +60,7 @@ REPO_ROOT = Path(RunRegistry.REPO_ROOT)
 GOLDEN = (
     Path(__file__).resolve().parent
     / "data"
-    / "full_store_fingerprint_datastore-integrity-07.json"
+    / "full_store_fingerprint_datastore-integrity-08.json"
 )
 DRIVERS = (
     REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py",

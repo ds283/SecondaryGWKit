@@ -37,6 +37,8 @@ sharded_tables = {
 read_table_config = {
     "wavenumber": {"tables_arg": False},
     "redshift": {"tables_arg": True},
+    # prompts/datastore-integrity, prompt 08: a reader finds a QuadSourcePolicy without inserting one
+    "QuadSourcePolicy": {"tables_arg": False},
 }
 
 

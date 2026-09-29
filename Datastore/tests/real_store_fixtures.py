@@ -495,7 +495,17 @@ FULL_REPLICATED_ROWS: RowSet = with_rows(
                 "label": "qpolicy-a",
                 "Levin_threshold": 0.1,
                 "numeric_policy": "maximize-numeric",
-            }
+            },
+            # a second policy, so that a QuadSourceIntegral's quad_policy_serial can be varied to
+            # another real parent (prompts/datastore-integrity, prompt 08): varying it to a
+            # serial that does not exist would test parent resolution, not identity
+            {
+                "serial": 2,
+                "version": 1,
+                "label": "qpolicy-b",
+                "Levin_threshold": 0.5,
+                "numeric_policy": "maximize-WKB",
+            },
         ],
         "wavenumber_exit_time": [
             {
@@ -788,6 +798,7 @@ def _full_shard0() -> RowSet:
                     "atol_serial": 1,
                     "rtol_serial": 2,
                     "policy_serial": 1,
+                    "quad_policy_serial": 1,
                     "source_serial": 1,
                     "data_serial": 1,
                     "z_response_serial": 3,
@@ -808,6 +819,7 @@ def _full_shard0() -> RowSet:
                     "atol_serial": 1,
                     "rtol_serial": 2,
                     "policy_serial": 1,
+                    "quad_policy_serial": 1,
                     "source_serial": 1,
                     "data_serial": 2,
                     "z_response_serial": 2,
@@ -985,6 +997,7 @@ def _full_shard1() -> RowSet:
                     "atol_serial": 1,
                     "rtol_serial": 2,
                     "policy_serial": 1,
+                    "quad_policy_serial": 1,
                     "source_serial": 2,
                     "data_serial": 3,
                     "z_response_serial": 3,

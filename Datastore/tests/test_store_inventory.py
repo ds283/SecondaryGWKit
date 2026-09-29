@@ -194,6 +194,7 @@ IDENTITY = {
     "QuadSourceIntegral": {
         "model": ("QuadSourceIntegral", 2, "model_serial", 2),
         "policy": ("QuadSourceIntegral", 2, "policy_serial", 2),
+        "quad_policy": ("QuadSourceIntegral", 2, "quad_policy_serial", 2),
         "k": ("QuadSourceIntegral", 2, "k_wavenumber_exit_serial", 4),
         "q": ("QuadSourceIntegral", 2, "q_wavenumber_exit_serial", 4),
         "r": ("QuadSourceIntegral", 2, "r_wavenumber_exit_serial", 3),

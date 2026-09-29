@@ -757,10 +757,11 @@ Prompt 06 closed `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` on 2026-0
 store-fingerprint board's §4, and its row is deleted.
 Prompt 07 closed `[20-wkb-rows-consume-numeric-initial-data]` on 2026-09-29, on the GkTk-remedial
 board's §4, and its row is deleted; it opened two issues on this campaign's board the same day.
+Prompt 08 closed `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` on 2026-09-29, on the
+store-fingerprint board's §4, and its row is deleted; it opened one issue on this campaign's board the same day.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | **→ prompt 08.** `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
 | `[00-the-inventory-cannot-see-a-serial-split]` | datastore-integrity | The structured inventory compares replicated classes by key, tags, `validated` and value count, not by serial, flags or value contents, so a serial split fingerprints clean. Not this campaign's. |
 | `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | **Narrowed 2026-09-28** by prompt 05b: `store()`'s `validated` key to no column is fixed. `OneLoopIntegral.build`/`read_batch` still put no `source_serial` in the payload, which the target reads. For when `OneLoopIntegral` is built. |
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
@@ -768,6 +769,7 @@ board's §4, and its row is deleted; it opened two issues on this campaign's boa
 | `[07-drop-actions-list-a-parent-table-before-its-children]` | datastore-integrity | Within each `_drop_actions` entry the parent table is dropped before its tag and value tables, so under foreign-key enforcement dropping an action that holds value rows fails on its own. Inert: production never turns enforcement on. Prompt 07 fixed only the order *between* actions. |
 | `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` | datastore-integrity | The WKB value reads name `numeric_serial` only when a parent is given, so on a store written before prompt 07 a parentless read (the GkSource stage's) still succeeds, and a keyed one raises a raw `OperationalError`, instead of the D4 refusal `build()` gives. |
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
+| `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
 
 ### 1.16 The perturbation sound-speed campaign
 

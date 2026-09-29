@@ -3,7 +3,7 @@ from typing import Optional, List
 
 import sqlalchemy as sqla
 from sqlalchemy import and_
-from sqlalchemy.exc import MultipleResultsFound
+from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
     QuadSourceIntegral,
@@ -15,7 +15,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
+from MetadataConcepts import store_tag, tolerance, GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -77,6 +77,29 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
         )
 
 
+def _refuse_a_store_that_predates_the_policy_key(reading: str, e: SQLAlchemyError):
+    """
+    A store from before prompts/datastore-integrity prompt 08 (D4): its QuadSourceIntegral table
+    has no quad_policy_serial column, and its rows record nothing of the QuadSourcePolicy they were
+    made under. This tree does not read it. Raises for that case only; any other database error is
+    left for the caller to re-raise.
+
+    Matched against the driver's own message rather than str(e), which also carries the SQL
+    statement -- and the statement names the column either way.
+    """
+    driver_message = str(getattr(e, "orig", e))
+    if "quad_policy_serial" not in driver_message:
+        return
+
+    raise RuntimeError(
+        f"QuadSourceIntegral.{reading}(): the QuadSourceIntegral table has no "
+        '"quad_policy_serial" column. This datastore predates QuadSourceIntegral rows being '
+        "keyed on the QuadSourcePolicy they were made under (prompts/datastore-integrity, "
+        "prompt 08). This tree does not read it; it remains readable at the git SHA its sidecar "
+        "records."
+    ) from e
+
+
 class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def __init__(self):
         pass
@@ -136,6 +159,18 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "policy_serial",
                     sqla.Integer,
                     sqla.ForeignKey("GkSourcePolicy.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                # The QuadSourcePolicy the integral is keyed on (prompts/datastore-integrity,
+                # prompt 08, K3; decisions 6.1.2 and D6). QuadSourcePolicy is replicated, so its
+                # row is on every shard and the foreign key is valid here. No computation reads
+                # the policy's fields: this records which policy a row was made under, and
+                # changes no number
+                sqla.Column(
+                    "quad_policy_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("QuadSourcePolicy.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -216,6 +251,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         model_proxy: ModelProxy = payload["model"]
         policy: GkSourcePolicy = payload["policy"]
+        quad_policy: QuadSourcePolicy = payload["quad_policy"]
 
         k: wavenumber_exit_time = payload["k"]
         q: wavenumber_exit_time = payload["q"]
@@ -267,6 +303,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         ).filter(
             table.c.model_serial == model_proxy.store_id,
             table.c.policy_serial == policy.store_id,
+            table.c.quad_policy_serial == quad_policy.store_id,
             table.c.k_wavenumber_exit_serial == k.store_id,
             table.c.q_wavenumber_exit_serial == q.store_id,
             table.c.r_wavenumber_exit_serial == r.store_id,
@@ -297,12 +334,16 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 f"!! QuadSourceIntegral.build(): multiple results found when querying for QuadSourceIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={k.store_id} | q={q.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id} | r={r.k.k_inv_Mpc:.5g}/Mpc, store_id={r.store_id})"
             )
             raise e
+        except SQLAlchemyError as e:
+            _refuse_a_store_that_predates_the_policy_key("build", e)
+            raise
 
         if row_data is None:
             return QuadSourceIntegral(
                 payload=None,
                 model=model_proxy,
                 policy=policy,
+                quad_policy=quad_policy,
                 z_response=z_response,
                 z_source_max=z_source_max,
                 k=k,
@@ -358,6 +399,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             },
             model=model_proxy,
             policy=policy,
+            quad_policy=quad_policy,
             z_response=z_response,
             z_source_max=z_source_max,
             k=k,
@@ -397,6 +439,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "atol_serial": obj._atol.store_id,
                     "rtol_serial": obj._rtol.store_id,
                     "policy_serial": obj._policy.store_id,
+                    "quad_policy_serial": obj._quad_policy.store_id,
                     "source_serial": obj._source_serial,
                     "data_serial": obj._data_serial,
                     "compute_time": obj.compute_time,
@@ -503,6 +546,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def read_batch(payload, conn, table, tables):
         model_proxy: ModelProxy = payload["model"]
         policy: GkSourcePolicy = payload["policy"]
+        quad_policy: QuadSourcePolicy = payload["quad_policy"]
 
         k: wavenumber_exit_time = payload["k"]
         q: Optional[wavenumber_exit_time] = payload.get("q", None)
@@ -625,6 +669,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             .filter(
                 table.c.model_serial == model_proxy.store_id,
                 table.c.policy_serial == policy.store_id,
+                table.c.quad_policy_serial == quad_policy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
@@ -683,7 +728,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
             )
 
-        row_data = conn.execute(query)
+        try:
+            row_data = conn.execute(query)
+        except SQLAlchemyError as e:
+            _refuse_a_store_that_predates_the_policy_key("read_batch", e)
+            raise
 
         def make_object(row):
             q: wavenumber = wavenumber(
@@ -785,6 +834,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 },
                 model=model_proxy,
                 policy=policy,
+                quad_policy=quad_policy,
                 z_response=redshift(
                     store_id=row.z_response_serial,
                     z=row.z_response,
@@ -814,9 +864,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
-        # build() filters on -- the model, the GkSourcePolicy (not a QuadSourcePolicy), the k, q
-        # and r wavenumber exits, z_response, z_source_max, atol and rtol -- with its tags. No
-        # validated flag and no value table. source_serial and data_serial are provenance
+        # build() filters on -- the model, the GkSourcePolicy, the QuadSourcePolicy (prompt 08),
+        # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol -- with its
+        # tags. No validated flag and no value table. source_serial and data_serial are provenance
         from Datastore.store_inventory import Parent, read_records
 
         return read_records(
@@ -827,6 +877,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "policy": Parent("policy_serial", "GkSourcePolicy"),
+                "quad_policy": Parent("quad_policy_serial", "QuadSourcePolicy"),
                 "k": Parent("k_wavenumber_exit_serial", "wavenumber_exit_time"),
                 "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
                 "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),

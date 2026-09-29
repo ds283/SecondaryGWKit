@@ -16,7 +16,7 @@ from ComputeTargets.phase_groups import build_phase_groups
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from LiouvilleGreen.three_bessel_integrals import BesselPhaseGroup
-from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
+from MetadataConcepts import store_tag, tolerance, GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from Quadrature.simple_quadrature import simple_quadrature
 from config.defaults import (
@@ -1742,6 +1742,7 @@ class QuadSourceIntegral(DatastoreObject):
         payload,
         model: ModelProxy,
         policy: GkSourcePolicy,
+        quad_policy: QuadSourcePolicy,
         z_response: redshift,
         z_source_max: redshift,
         k: wavenumber_exit_time,
@@ -1754,6 +1755,17 @@ class QuadSourceIntegral(DatastoreObject):
     ):
         self._model_proxy = model
         self._policy = policy
+
+        # The QuadSourcePolicy this integral is keyed on (prompts/datastore-integrity, prompt 08).
+        # It is named quad_policy, not policy, because `policy` is the GkSourcePolicy that the
+        # GkSourcePolicyData is checked against, and the two classes are easily confused. It is
+        # required: a row is stored under it, and nothing reads its fields, so nothing checks it
+        # at compute time
+        if quad_policy is None:
+            raise ValueError(
+                "QuadSourceIntegral: a QuadSourcePolicy (quad_policy) is required"
+            )
+        self._quad_policy = quad_policy
 
         self._k_exit = k
         self._q_exit = q
@@ -1828,6 +1840,10 @@ class QuadSourceIntegral(DatastoreObject):
     @property
     def model_proxy(self) -> ModelProxy:
         return self._model_proxy
+
+    @property
+    def quad_policy(self) -> QuadSourcePolicy:
+        return self._quad_policy
 
     @property
     def k(self) -> wavenumber:

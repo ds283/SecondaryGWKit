@@ -69,6 +69,7 @@ from config.defaults import (
     DEFAULT_HEXIT_REL_TOLERANCE,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
+    DEFAULT_QUADSOURCE_POLICY_1PT5,
     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
     DEFAULT_TK_NUMERIC_REL_TOLERANCE,
 )
@@ -3130,6 +3131,7 @@ def run_pipeline(
                     {
                         "model": model_proxy,
                         "policy": GkSource_policy_1pt5,
+                        "quad_policy": QuadSource_policy_1pt5,
                         "q": q,
                         "r": r,
                         "z_response": z_response,
@@ -3516,6 +3518,7 @@ def run_pipeline(
                         "QuadSourceIntegral",
                         model=model_proxy,
                         policy=GkSource_policy_1pt5,
+                        quad_policy=QuadSource_policy_1pt5,
                         k=k,
                         q=q,
                         r=r,
@@ -3758,12 +3761,9 @@ with ShardedPool(
     # create QuadSource policies that we will apply later
     QuadSource_policy_1pt5, QuadSource_policy_5pt0 = ray.get(
         [
-            pool.object_get(
-                "QuadSourcePolicy",
-                label='policy="maximize-WKB"-Levin-threshold="1.5"',
-                Levin_threshold=1.5,
-                numeric_policy="maximize-WKB",
-            ),
+            # the parameters are config.defaults' constant, so that the extraction script names
+            # the same row by the same values (prompts/datastore-integrity, prompt 08)
+            pool.object_get("QuadSourcePolicy", **DEFAULT_QUADSOURCE_POLICY_1PT5),
             pool.object_get(
                 "QuadSourcePolicy",
                 label='policy="maximize-WKB"-Levin-threshold="5.0"',

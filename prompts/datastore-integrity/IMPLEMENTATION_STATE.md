@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-29 · **Status: 8 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06 and 07), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-29 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06, 07 and 08); all but 08 reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -17,7 +17,9 @@ corrected on that board and in the index. The review opened one issue, closed th
 setting up D5's witness procedure; reviewed the same day, with two small remnants fixed in a follow-up commit. **07 landed 2026-09-29**, closing
 `[20-wkb-rows-consume-numeric-initial-data]` on the GkTk-remedial board's §4 and opening two
 issues (§3.3); reviewed the same day, with three small remnants fixed in a follow-up commit.
-**Next: 08.** 10 waits on 01–09.
+**08 landed 2026-09-29**, closing `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` on the
+store-fingerprint board's §4 and opening one issue (§3.3); awaiting review.
+**Next: 09.** 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -76,7 +78,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Key the value reads on their parent and refuse a second parent"* | [`logs/05c-…`](logs/05c-key-the-value-reads-on-their-parent.md) |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Correct the foreign keys the schema declares, and check them"* | [`logs/06-…`](logs/06-correct-the-foreign-keys.md) |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key each WKB row on the numeric row it starts from"* | [`logs/07-…`](logs/07-key-wkb-rows-on-their-numeric-row.md) |
-| 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
+| 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key QuadSourceIntegral on its QuadSourcePolicy"* | [`logs/08-…`](logs/08-key-quadsourceintegral-on-its-policy.md) |
 | 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
@@ -1077,7 +1079,7 @@ what 01–04 find; what waits is their method.
 | S5 | **RECORD** | The first deliberate schema-witness change, under D5, including the exit-time and `IntegrationSolver` `stepping_mode` flags made exact. | 06 | ✅ `schema_at_datastore-integrity-06.json` beside `schema_at_base.json`; `WITNESS` repointed; the diff (8 hunks, 30 lines: S1, S2 and the two flags, nothing else) is in the log; the golden fingerprint did not move |
 | K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ✅ `numeric_serial`, indexed, `ForeignKey` to its numeric table (both shard on `k`): NOT NULL on Tk, nullable on Gk with NULL = pure WKB (the only parentless branch). `build()` keys on a serial or `GkWKBIntegration.PURE_WKB` (`IS NULL`) and raises on neither; an explicit `labels_only=True` reader mode refuses two matches, naming their parents; the four value reads take an optional parent in place of 05c's `z_init`. `z_init` and the initial values are payload; `store()` refuses them unless they are the parent's stop values bit for bit (and the parent is for the same `k`, model and `z_source`). A pre-07 table is refused with the D4 message. `main.py`: the numeric lookup ahead of each existence query, every WKB lookup and construction passes the parent, the Gk choice lifted unchanged into `Gk_WKB_numeric_parent`. Inventory: `numeric` a key parent, `z_init` out, `Parent(nullable=True)`; `FINGERPRINT_FORMAT` 2. Issue closed on the GkTk-remedial board's §4 |
 | K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ✅ `tk-wkb` before `tk-numeric` (`gk-wkb` already preceded `gk-numeric`); the comment corrected; a test derives the order from every declared foreign key between drop actions. The order *within* an action is `[07-drop-actions-list-a-parent-table-before-its-children]` (§3.3) |
-| K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ⏸️ |
+| K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ✅ `quad_policy_serial`, NOT NULL, indexed, `ForeignKey("QuadSourcePolicy.serial")`, after `policy_serial`; in `build()`'s filter, written by `store()`, in `read_batch`'s filter and a key parent in `inventory_records`. The target takes `quad_policy` beside `policy`, required. `main.py`'s existence query and compute call pass `QuadSource_policy_1pt5`, which is created from `config.defaults.DEFAULT_QUADSOURCE_POLICY_1PT5`; the extraction script finds it through a new `QuadSourcePolicy.read_table` and refuses on none or several. A pre-08 table is refused (D4) in `build()` and `read_batch()`. Witness 08 (6 hunks, 43 lines, one class); fingerprint format 3, `QuadSourceIntegral` and `QuadSourcePolicy` moved |
 | K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09 | ⏸️ |
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09 | ⏸️ |
 | K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09 | ⏸️ |
@@ -1106,7 +1108,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 (**closed** 2026-09-29, on that board's §4) |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 (**closed** 2026-09-29, on that board's §4) |
-| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | 08 |
+| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | 08 (**closed** 2026-09-29, on that board's §4) |
 
 ### 3.2 Opened by the audit (2026-09-25), recorded for their owners
 
@@ -1147,6 +1149,23 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
+- **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
+  2026-09-29 by prompt 08)*
+  - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
+    with `pool.object_get("GkSourcePolicy", ...)` (`run_pipeline`, the `GkSource_policy_1pt5,
+    GkSource_policy_5pt0` pair). `object_get` on a replicated class **inserts a row when none
+    matches**. And every such call goes through `ShardedPool._replicated_write`, which commits a
+    `replication_in_flight` record on the primary *before* the controlling shard's call, so **even
+    a hit writes, and clears, a record on the primary**. `extract_GkSource_data.py` makes the same
+    pair of calls; no other script was audited for it.
+  - **Impact.** A reader that writes to the store it reads. Against a store that lacks the policy
+    it silently adds a row; a crash inside the call leaves the record set, which prompt 02's check
+    at open then acts on (repair, or refuse). Prompt 08 needed its own new lookup to refuse
+    without this, and gave it `read_table` for that reason (log 08, §0.1).
+  - **Next step.** Look the two `GkSourcePolicy` rows up with a `read_table` on that class (a
+    `read_table_config` entry and a factory method, as `QuadSourcePolicy` now has), refusing on a
+    miss, in this script and in any other reader that does the same. Prompt 08 was bounded by the
+    user's grant to the `QuadSourcePolicy` lookup and did not change the `GkSourcePolicy` one.
 - **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
     integration table first and its tag and value tables after it, e.g. `"tk-wkb":
@@ -1396,5 +1415,24 @@ Measured on the final tree of prompt 07's commit, with README §7's command, ser
 | Datastore | **397 OK** (351 + the 41 of the new `test_wkb_numeric_parent_key.py` and the 5 of the new `test_wkb_parent_foreign_key.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK; the golden fingerprint re-captured as `full_store_fingerprint_datastore-integrity-07.json`, format 2 |
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.11 After prompt 08 (2026-09-29)
+
+Measured on the final tree of prompt 08's commit, with README §7's command, serially.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | **585 OK** (566 + the 19 of the new `test_quadsource_policy_main.py`; the known wall-clock flake did not fire in the final run) |
+| CosmologyModels | 39 OK |
+| Datastore | **422 OK** (397 + the 21 of the new `test_quadsource_policy_key.py` and the 4 of the new `test_quadsource_policy_foreign_key.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint re-captured as `full_store_fingerprint_datastore-integrity-08.json`, format 3 (`QuadSourceIntegral` and `QuadSourcePolicy` moved; the other 19 classes did not) |
+
+The read-back guard's pins did not move: `EXPECTED_COVERAGE` 47, `KNOWN_UNRESOLVED_TABLES` 11,
+`KNOWN_BLIND` 1, `KNOWN_UNCHECKED_INSERTS` 13, `KNOWN_BLIND_COLUMNS` 4, `KNOWN_UNFIXED` and
+`KNOWN_UNFIXED_COLUMNS` empty. The witness is `schema_at_datastore-integrity-08.json`.
 
 `black --check` is clean on every Python file this prompt touched.

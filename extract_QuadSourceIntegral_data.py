@@ -47,6 +47,7 @@ from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_QUADRATURE_RTOL,
+    DEFAULT_QUADSOURCE_POLICY_1PT5,
 )
 from config.model_list import build_model_list
 from config.sharding import (
@@ -938,6 +939,50 @@ def plot_tensor_source(
     df.to_csv(csv_path, header=True, index=False)
 
 
+def find_QuadSource_policy(pool):
+    """
+    The QuadSourcePolicy that main.py keys every QuadSourceIntegral on (prompts/
+    datastore-integrity, prompt 08): the "1.5" policy, named by config.defaults'
+    DEFAULT_QUADSOURCE_POLICY_1PT5, which main.py creates it from.
+
+    It is looked up with read_table, never object_get. object_get on a replicated class inserts a
+    row when none matches, and commits an in-flight record on the primary before the call whether
+    or not one does, so a reader that used it could write to the store it reads. read_table reads
+    one shard and writes nothing, so this refuses without leaving a trace.
+
+    Refuses if the store holds no such policy (naming the parameters: a store main.py did not
+    build this way cannot be read) or more than one (naming their serials).
+    """
+    params = DEFAULT_QUADSOURCE_POLICY_1PT5
+    found = ray.get(
+        pool.read_table(
+            "QuadSourcePolicy",
+            Levin_threshold=params["Levin_threshold"],
+            numeric_policy=params["numeric_policy"],
+        )
+    )
+
+    if len(found) == 0:
+        raise RuntimeError(
+            f"extract_QuadSourceIntegral_data: this datastore holds no QuadSourcePolicy with "
+            f'Levin_threshold={params["Levin_threshold"]} and '
+            f'numeric_policy="{params["numeric_policy"]}", the policy main.py keys every '
+            f"QuadSourceIntegral on, so there are no QuadSourceIntegral rows for this script to "
+            f"read. It does not create one."
+        )
+
+    if len(found) > 1:
+        serials = ", ".join(str(policy.store_id) for policy in found)
+        raise RuntimeError(
+            f"extract_QuadSourceIntegral_data: this datastore holds {len(found)} QuadSourcePolicy "
+            f"rows with Levin_threshold={params['Levin_threshold']} and "
+            f'numeric_policy="{params["numeric_policy"]}" (serials {serials}), and it is not '
+            f"possible to say which one the QuadSourceIntegral rows are keyed on."
+        )
+
+    return found[0]
+
+
 def run_pipeline(model_data):
     model_label = model_data["label"]
     model_cosmology = model_data["cosmology"]
@@ -1076,6 +1121,11 @@ def run_pipeline(model_data):
         ]
     )
 
+    # a QuadSourceIntegral is keyed on its QuadSourcePolicy (prompts/datastore-integrity, prompt
+    # 08). The parameters come from config.defaults, as main.py's do, and the row is found
+    # without being created
+    QuadSource_policy_1pt5 = find_QuadSource_policy(pool)
+
     def build_plot_QuadSourceIntegral_work(item):
         k_exit, qr_pair = item
         q_exit, r_exit = qr_pair
@@ -1089,6 +1139,7 @@ def run_pipeline(model_data):
             shard_key={"k": k_exit},
             model=model_proxy,
             policy=GkSource_policy_1pt5,
+            quad_policy=QuadSource_policy_1pt5,
             k=k_exit,
             q=q_exit,
             r=r_exit,

@@ -170,3 +170,15 @@ DEFAULT_LEVIN_THRESHOLD = 1.0
 
 DEFAULT_GKSOURCE_NUMERIC_POLICY = "maximize-WKB"
 DEFAULT_QUADSOURCE_NUMERIC_POLICY = "maximize-WKB"
+
+# The QuadSourcePolicy that every QuadSourceIntegral is keyed on, for now (prompts/datastore-integrity,
+# prompt 08, decision D6): the "1.5" policy that main.py creates as QuadSource_policy_1pt5. It is
+# held once, here, because two programs need the same three values to name the same row: main.py
+# creates the row from them, and extract_QuadSourceIntegral_data.py looks it up by them, and a
+# reader must not hard-code its own copy. Nothing reads the policy's fields; the values are its
+# identity in the store, not settings of a computation.
+DEFAULT_QUADSOURCE_POLICY_1PT5 = {
+    "label": 'policy="maximize-WKB"-Levin-threshold="1.5"',
+    "Levin_threshold": 1.5,
+    "numeric_policy": "maximize-WKB",
+}

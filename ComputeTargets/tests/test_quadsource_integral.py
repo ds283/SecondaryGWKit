@@ -1128,6 +1128,7 @@ class TestComputePayload(unittest.TestCase):
             None,
             model=None,
             policy=Policy(),
+            quad_policy=Policy(),
             z_response=FakeZ(10.0),
             z_source_max=FakeZ(1e5),
             k=FakeExitTime(1.0, 1, None),
@@ -2218,6 +2219,7 @@ class TestPersistedSchema(unittest.TestCase):
         common = dict(
             model=None,
             policy=Policy(),
+            quad_policy=Policy(),
             z_response=FakeZ(10.0),
             z_source_max=FakeZ(1e5),
             k=FakeExitTime(1.0, 1, None),

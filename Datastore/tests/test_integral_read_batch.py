@@ -209,6 +209,7 @@ class TestQuadSourceIntegralTaggedReadBatch(unittest.TestCase):
                 atol_serial=1,
                 rtol_serial=2,
                 policy_serial=1,
+                quad_policy_serial=1,
                 source_serial=100 + serial,
                 data_serial=200 + serial,
                 z_response_serial=1,
@@ -233,6 +234,7 @@ class TestQuadSourceIntegralTaggedReadBatch(unittest.TestCase):
         payload = dict(
             model=_ModelProxy(),
             policy=_Ref(1),
+            quad_policy=_Ref(1),
             k=self.k_exit,
             atol=tolerance(store_id=1, log10_tol=-10.0),
             rtol=tolerance(store_id=2, log10_tol=-9.0),
@@ -290,6 +292,7 @@ class TestQuadSourceIntegralExitTimeSerials(unittest.TestCase):
             atol_serial=1,
             rtol_serial=2,
             policy_serial=1,
+            quad_policy_serial=1,
             source_serial=101,
             data_serial=201,
             z_response_serial=1,
@@ -305,6 +308,7 @@ class TestQuadSourceIntegralExitTimeSerials(unittest.TestCase):
         payload = dict(
             model=_ModelProxy(),
             policy=_Ref(1),
+            quad_policy=_Ref(1),
             k=_exit_time_obj(11, 1, 1.0e5),
             atol=tolerance(store_id=1, log10_tol=-10.0),
             rtol=tolerance(store_id=2, log10_tol=-9.0),

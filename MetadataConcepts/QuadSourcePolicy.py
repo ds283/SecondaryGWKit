@@ -11,9 +11,12 @@ class QuadSourcePolicy(DatastoreObject):
     Persisted configuration object for the quadratic source time integral, the QuadSource
     analogue of GkSourcePolicy.
 
-    **Nothing reads it.** It is created in main.py and threaded through run_pipeline, but
-    neither ComputeTargets/QuadSource.py nor ComputeTargets/QuadSourceIntegral.py consults
-    either field, and this is deliberate as of prompt 10 of prompts/source-remediation:
+    **No computation reads its fields.** It is created in main.py and threaded through
+    run_pipeline, and since prompts/datastore-integrity prompt 08 every QuadSourceIntegral is
+    keyed on one (the column `quad_policy_serial`, with a foreign key to this class's table): the
+    row records which policy it was made under. But neither ComputeTargets/QuadSource.py nor
+    ComputeTargets/QuadSourceIntegral.py consults either field, and this is deliberate as of
+    prompt 10 of prompts/source-remediation:
 
       * `numeric_policy` would choose a numeric/WKB crossover inside an overlap region, as
         GkSourcePolicy.numeric_policy does for the Green's function. The transfer function has

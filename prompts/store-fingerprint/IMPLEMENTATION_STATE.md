@@ -2,9 +2,9 @@
 
 **Last updated:** 2026-09-29 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
 user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
-Six of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
+Seven of the issues the audit opened, assigned onward to `prompts/datastore-integrity`, closed on
 this board's §4: two by that campaign's prompt 05b, one by its prompt 05c and one by its prompt 02
-(2026-09-28), and one by its prompt 03 and one by its prompt 06 (2026-09-29). This board's own
+(2026-09-28), and one each by its prompts 03, 06 and 08 (2026-09-29). This board's own
 prompts are unchanged.
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
@@ -199,8 +199,15 @@ Its prompt 05c closed `[00-numeric-value-parent-lookup-omits-break-point-kind]` 
 and its prompt 02 closed `[00-replicated-writes-can-diverge-across-shards]` the same day (§4).
 Its prompt 03 closed `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` on 2026-09-29 (§4), and
 its prompt 06 closed `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` the same day (§4).
-One remains. *(This sentence said "Three remain" after prompt 03, when §3 already listed two; the
-count is corrected here.)*
+Its prompt 08 closed `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` the same day (§4).
+None remains. *(This sentence said "Three remain" after prompt 03, when §3 already listed two, and
+"One remains" after prompt 06; the count is corrected here.)*
+
+---
+
+## 4. Resolved issues
+
+Closed by `prompts/datastore-integrity` **prompt 08**, 2026-09-29:
 
 - **[00-quadsourcepolicy-rows-are-referenced-by-nothing]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `main.py:3651-3657` creates `QuadSourcePolicy` rows, but no factory table
@@ -215,9 +222,19 @@ count is corrected here.)*
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.5). The user
     decided on 2026-09-25 to keep `QuadSourcePolicy` and add it to `QuadSourceIntegral`'s key. It
     closes here, on this board's §4.
----
 
-## 4. Resolved issues
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 08**, commit *"Key
+  > QuadSourceIntegral on its QuadSourcePolicy"*. Under the user's decisions 6.1.2 (keep
+  > `QuadSourcePolicy` and add it to `QuadSourceIntegral`'s key) and D6 (`QuadSource_policy_1pt5`
+  > only, for now), `QuadSourceIntegral` gains `quad_policy_serial`: NOT NULL, indexed, with
+  > `ForeignKey("QuadSourcePolicy.serial")`. It is in `build()`'s filter, written by `store()`,
+  > filtered on by `read_batch` and a key parent in `inventory_records`; `main.py`'s existence
+  > query and compute call pass `QuadSource_policy_1pt5`. No computation reads the policy's
+  > fields, so it changes the record and no number. The unused 5.0 policy stays, as
+  > `[00-the-5pt0-policy-pair-is-created-and-never-used]` records. The schema change is witnessed
+  > by `Datastore/tests/data/schema_at_datastore-integrity-08.json`, and the fingerprint format
+  > goes to 3 with a new golden. See
+  > [`log 08`](../datastore-integrity/logs/08-key-quadsourceintegral-on-its-policy.md).
 
 Closed by `prompts/datastore-integrity` **prompt 06**, 2026-09-29:
 

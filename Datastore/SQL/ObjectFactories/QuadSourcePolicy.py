@@ -66,6 +66,43 @@ class sqla_QuadSourcePolicy_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
+    def read_table(conn, table, Levin_threshold, numeric_policy):
+        """
+        The rows that build() would match, without build()'s insert-on-miss (prompts/
+        datastore-integrity, prompt 08). A reader that must find a QuadSourcePolicy but must not
+        create one uses this: ShardedPool.read_table reads one shard and writes nothing, where
+        object_get on a replicated class commits an in-flight record on the primary first.
+
+        The match is build()'s own -- Levin_threshold within DEFAULT_FLOAT_PRECISION and
+        numeric_policy equal -- so two readers cannot disagree about which row is "the" policy.
+        Every match is returned, in serial order, so that the caller can refuse more than one.
+        """
+        rows = conn.execute(
+            sqla.select(
+                table.c.serial,
+                table.c.label,
+                table.c.Levin_threshold,
+                table.c.numeric_policy,
+            )
+            .filter(
+                sqla.func.abs(table.c.Levin_threshold - Levin_threshold)
+                < DEFAULT_FLOAT_PRECISION,
+                table.c.numeric_policy == numeric_policy,
+            )
+            .order_by(table.c.serial)
+        )
+
+        return [
+            QuadSourcePolicy(
+                store_id=row.serial,
+                Levin_threshold=row.Levin_threshold,
+                numeric_policy=row.numeric_policy,
+                label=row.label,
+            )
+            for row in rows
+        ]
+
+    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a QuadSourcePolicy row (store-fingerprint prompt 02): the two
         # columns build() matches. The label is descriptive and is not identity
