@@ -10,7 +10,9 @@ closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`,
 `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` and
 `[03-integrationsolver-stepping-minimum-lookup]` on their owning boards' §4, and narrowing
 `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` on the
-tolerance-convergence board. **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
+tolerance-convergence board. Reviewed the same day: the code passed, and L5's account of what
+the two verification scripts do after a miss was wrong (both raise; they do not finish) and is
+corrected on that board and in the index. The review opened one issue (§3.3). **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -79,7 +81,7 @@ and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26).
 dispatched one at a time, never concurrently in this checkout, in either order. Since then:
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
 (2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
-[`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, ready).
+[`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used).
 
 **Measured for 03 (2026-09-29, while its note was written).** A throwaway sketch of L1–L4, in a
 worktree outside the tree and since removed, left every existing test passing unmodified:
@@ -665,6 +667,106 @@ code, not the log.
 **Next: 03**, with its own orchestrator note carrying this review's findings. 03 changes lookups on
 the classes 02 reconciles. Prompt 10 is still the first real run; nothing in 02 has run under Ray.
 
+**Orchestrator review of prompt 03 (2026-09-29).** Run against `f2f026f`, dispatched from
+`ae4d8f9` with the tree and the index clean, nothing `running`, and no other worktree. The
+baselines were re-measured on `ae4d8f9` first and matched §5.7. **Ten of the eleven checks in
+`orchestrator/prompt-03.md` §3 passed. Check 8 did not.** The code is right. What is wrong is
+L5's account of what the two verification scripts do after a miss, and that account was copied
+into the `[05a-…]` narrowing and its index hook. Both are corrected in this commit, additively.
+- **Scope.** Seventeen files: the ten permitted factory files, one new test module, the log, the
+  four boards and the index. The forbidden paths are empty, and `docs/` changes only in
+  `docs/OPEN_ISSUES.md`. `--diff-filter=M` over `*/tests/*` is empty.
+  - Every factory hunk was read. Each is inside its class's `build()`, and none is in a
+    `register()`, a `store()` or an `if "serial" in payload` branch.
+  - Apart from the change itself, the hunks add only comments.
+- **L1.** The filter is `atol_serial`, `rtol_serial` and `stepping` by `==`, with no `log10_tol`
+  comparison left. The `order_by` is gone. `conn.execute(query).one_or_none()` runs once, after
+  both `add_columns` loops.
+  - The joins are kept, and feed the returned `log10_tol` values. The returned `atol`/`rtol`
+    carry the stored row's serials, which now equal the requested ones.
+  - The orchestrator's sketch did not survive the session, so the shapes were not compared. The
+    shape is the one this note's §0 describes, and the guard is unmoved.
+- **L2.** `stepping == stepping` with `.scalar_one_or_none()`; the `stepping < 0` clamp is
+  unchanged.
+- **L3.** Exactly the eight sites change, with no filter.
+  - `grep` leaves the 21 other `.scalar()` calls: seven `validate()` triples, each a primary-key
+    `z_samples` read plus two `count()`s. The log's list matches them line for line.
+  - The `QCD_Cosmology` handler was read, and its test asserts `MultipleResultsFound` itself.
+- **L4.** `z_filter` is `table.c.z == 0.0` when `z == 0.0`, and otherwise the unchanged relative
+  expression, passed to one `.filter(...)`.
+- **Tests.** The 18 tests of `test_exact_identity_lookups.py` cover all five of the prompt's cases:
+  - the three misses, the two-row case, and stepping 0 against 1;
+  - the solver's 4/8/6;
+  - one duplicate for each of the eight classes, and three `z = 0` builds giving one row;
+  - test 2 counts `SELECT`s with a `before_cursor_execute` listener and asserts one.
+
+  `tearDownModule` refuses if `ray.is_initialized()` is true, and every store is `sqlite://`.
+- **The guard is unmoved.** `test_factory_select_columns.py` has the same blob hash at both
+  commits (`0d4fdea`), and passes.
+- **L5, production.** Checked here against the code, not the log.
+  - `main.py:993` and the six `extract_*.py` all request `DEFAULT_HEXIT_*` = (1e-10, 1e-9)
+    (`config/defaults.py:53,63`) with no `stepping`, which is the pair and the 0 every computed
+    exit time stores.
+  - The seven `main.py:3621-3640` solver lookups each request the stepping they insert.
+  - **So nothing in production moves.**
+- **L5, the two verification scripts: check 8 fails.** Both do miss after L1. The log's account
+  of what happens next is wrong. It says both scripts record every case as a failure and
+  finish, and that `analyse_greens_and_source.py` "does not compute, store or crash".
+  - **The fact the log missed.** `DatastoreObject.store_id` **raises**
+    `RuntimeError("Attempt to read datastore id before it has been set")` on an unpopulated
+    object (`Datastore/object.py:13-17`); it does not return `None`. The log assumed that
+    `== k_exit.store_id` becomes `IS NULL`.
+  - **`analyse_greens_and_source.py`.** Shard routing works, because
+    `shard_key_wavenumber_store_id` reads `k_exit.k.store_id`. But `sqla_GkSource_factory.build`
+    evaluates `k_exit.store_id` while it builds its filter (`GkSource.py:211`), so the first
+    sampled case's `GkSource` lookup raises inside the shard's actor. It reaches the driver
+    through `ray.get` at `:273`, and nothing between there and `main()` catches it. The script
+    stops with a traceback at its first sampled case, before `if not source.available:`.
+  - **`run_quadsource_integrals.py`.** `distinct_k = {k.store_id: k …}` at `:265` raises on the
+    driver as soon as `triples` is non-empty. No dict collapses, `payload_ok` is never reached,
+    and no failure is counted.
+  - **Measured in memory**, with no Ray and nothing under `var/`, using the new module's fixture:
+    - a stored (1e-10, 1e-9) row;
+    - a real exit-time `build()` at (1e-10, 1e-8), which returns `available=False`;
+    - the `:265` comprehension then raises that `RuntimeError`;
+    - so does a real `sqla_GkSource_factory.build(k=k_exit, …)`.
+
+    The script was `orch_03_miss_raises.py`, in the session scratchpad.
+  - **So the verdict and the charter stand, and the mechanism is corrected.** Both scripts now
+    fail loudly on first use, where they used to quietly report the stored pair. Neither computes
+    or stores anything. The `[05a-…]` entry on the tolerance-convergence board carries a dated
+    correction beneath 03's narrowing, and its index hook is rewritten to match. Log 03 is left
+    as written, as the record of what the agent concluded.
+- **Mutations.** (i)–(v) were replayed from `git show HEAD:<log>` with plain `git apply`, first on
+  the new module and then on the whole Datastore suite. Each gave exactly its logged result and
+  the same distinct failing tests, and the tree was clean after each revert.
+  - (i) `failures=1`, one sub-test, `(atol=-10.0, rtol=-8.0)`
+  - (ii) `failures=1`
+  - (iii) `failures=1, errors=1`
+  - (iv) `failures=1`
+  - (v) `failures=1`
+
+  The agent reports the same results from its own post-commit replay. The log's pointer to a
+  "Verification performed (the replay)" section dangles, because that section does not exist.
+  That is cosmetic, and the replay itself was done.
+- **Boards.** The three issues are on their owning boards' §4, each with a closing note naming
+  the commit by subject. `[05a-…]` is narrowed on its board and in the index. The campaign board
+  has its §1 row, L1–L5, §3.1 and §5.8, and the `"stepping": "minimum"` flags are handed to 06
+  (log observation 1).
+- **`var/`, suites, `black`.**
+  - The snapshot (46 files, 10 directories) is byte-identical.
+  - Suites, serially: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore 343
+    (+18), LiouvilleGreen 148 (1 skipped), RunRegistry 199.
+  - `black --check` is clean on the eleven Python files.
+- **Issue opened by this review.** `[03-exit-time-build-comment-describes-the-removed-order-by]`
+  (§3.3). The comment at `wavenumber.py:195` still says the query is ordered "so that we get the
+  best computed value we hold", which is exactly the behaviour L1 removed. The index goes to
+  **99** rows, counted.
+
+**Next: 06**, with its own orchestrator note carrying this review's findings. It corrects the two
+`"stepping": "minimum"` flags to say what 03 made true, and is the first schema change, under D5.
+Prompt 10 is still the first real run, and nothing in 03 has run under Ray.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
@@ -814,6 +916,17 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Decide whether the version rows go through the recorded write, or whether the
     check at open treats a `version` row missing under a label being opened differently. Either
     changes `Datastore.py`'s constructor or the check's licence, which prompt 02 could not.
+- **[03-exit-time-build-comment-describes-the-removed-order-by]** *(opened 2026-09-29 by the
+  orchestrator's review of prompt 03)*
+  - **The defect.** In `sqla_wavenumber_exit_time_factory.build` (`wavenumber.py:195`), the
+    comment above the tolerance aliases reads "order by descending values of abs and relative
+    tolerances, so that we get the best computed value we hold". Prompt 03 removed that
+    `order_by`, and with it the "best value we hold" behaviour: the lookup is now an exact match.
+    The comment was left in place.
+  - **Impact.** None on behaviour. But a reader is told that the lookup prefers a tighter row,
+    which is precisely the defect L1 fixed, and the comment sits in the function that says so.
+  - **Next step.** Delete or rewrite that one line, in whichever prompt next has that `build()`
+    in scope. It was not 03's to fix after its commit (one commit per prompt, no amend).
 
 ---
 

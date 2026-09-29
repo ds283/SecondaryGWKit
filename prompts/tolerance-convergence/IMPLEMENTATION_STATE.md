@@ -892,6 +892,26 @@ Opened by **prompt 05a**, 2026-09-18:
   > - Neither script is edited: both are documents of the tree they ran on (README §5 rule 6;
   >   prompt 03's own charter, §6). Their next step is unchanged from the paragraph above.
 
+  > **Corrected 2026-09-29 by the orchestrator's review of `prompts/datastore-integrity` prompt 03**
+  > (additively; the narrowing above is left as the record of what prompt 03 concluded). The
+  > narrowing's verdict stands: both scripts now miss. **Its account of what they do next is
+  > wrong.** `DatastoreObject.store_id` **raises**
+  > `RuntimeError("Attempt to read datastore id before it has been set")` on an unpopulated object
+  > (`Datastore/object.py:13-17`). It does not return `None`, so nothing becomes `IS NULL`.
+  > - `analyse_greens_and_source.py`. `sqla_GkSource_factory.build` reads `k_exit.store_id` as it
+  >   builds its filter (`GkSource.py:211`). So the first sampled case's `GkSource` lookup raises
+  >   inside the shard's actor, and `ray.get` at `:273` re-raises it on the driver. Nothing up to
+  >   `main()` catches it, and the script stops with a traceback before
+  >   `if not source.available:`. No failure is recorded, and it does not finish.
+  > - `run_quadsource_integrals.py`. `distinct_k = {k.store_id: k …}` at `:265` raises on the
+  >   driver as soon as `triples` is non-empty. No dict collapses and no failure is counted.
+  > - Measured in memory, with no Ray and nothing under `var/`, on the real factories. A stored
+  >   (1e-10, 1e-9) exit time is looked up at (1e-10, 1e-8) and comes back `available=False`. The
+  >   `:265` comprehension then raises that error, and so does
+  >   `sqla_GkSource_factory.build(k=k_exit, …)`.
+  > - So the entry's "quiet mode" is replaced by a **loud** one. Each script fails on first use and
+  >   computes or stores nothing. The next step is unchanged.
+
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
 
