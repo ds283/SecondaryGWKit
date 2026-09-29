@@ -837,80 +837,9 @@ Opened by **prompt 02**, 2026-09-16:
   > named for what it compares. It is now a tidying with no hazard attached rather than a
   > precondition for a parameter move.
 
-Opened by **prompt 05a**, 2026-09-18:
-
-- **[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]** *(prompt 05a,
-  2026-09-18; unassigned)* — `docs/source-remediation-verification/analyse_greens_and_source.py:447`
-  and `run_quadsource_integrals.py:140` build `atol` / `rtol` from `DEFAULT_ABS_TOLERANCE` and
-  `DEFAULT_REL_TOLERANCE` and use them for a `wavenumber_exit_time` lookup — the first also for
-  `GkNumericIntegration`. Prompt 05a moved `main.py` and the six `extract_*.py` readers onto
-  per-target constants; **neither of these two files is in its grant** (README §0.4 puts
-  `QuadSourceIntegral`'s neighbourhood out of bounds and the prompt's file list names the six
-  readers only). **Impact, and it is the quiet mode rather than the loud one.** The
-  `GkNumericIntegration` half is harmless: `DEFAULT_GK_NUMERIC_*` has the same value as the shared
-  pair, so the key is unchanged. The exit-time half does **not** miss, because that target's lookup
-  is an inequality (`[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`) returning the
-  loosest row at least as tight as the request: a script asking for `1e-8` is served the new
-  `1e-9` row and then reports the **stored** pair rather than the requested one. So the scripts keep
-  working and their provenance quietly changes, which is exactly the failure mode prompt 05a §5 was
-  told to distinguish. **Next step:** a prompt given those two files repoints them at
-  `DEFAULT_HEXIT_ABS_TOLERANCE` / `DEFAULT_HEXIT_REL_TOLERANCE`, and extends
-  `ReaderToleranceAgreementTestCase`'s `EXTRACT_SCRIPTS` tuple to cover them — the cross-check is
-  already written and is generic over a file list. Evidence: log 05a, observation 1.
-
-  > **Narrowed 2026-09-29 by `prompts/datastore-integrity` prompt 03** (additively; the paragraph
-  > above is left as the record of the tree it was measured on). Prompt 03 made the exit-time
-  > lookup an exact match (closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`
-  > below), so the "quiet mode" this entry names is gone: **the two scripts now miss, rather than
-  > silently reusing a tighter row.** Read, not run (they need Ray and a store under `var/`):
-  > - `analyse_greens_and_source.py:447-448` builds `atol`/`rtol` from `DEFAULT_ABS_TOLERANCE`/
-  >   `DEFAULT_REL_TOLERANCE` = `(1e-10, 1e-8)` and looks the exit time up at `:247-253` for every
-  >   response wavenumber. Stored is `(1e-10, 1e-9)`, so `rtol_serial` no longer matches and every
-  >   `k_exit` comes back an **unpopulated `wavenumber_exit_time`** (`available=False`,
-  >   `store_id` raises until set). It is still passed on as `k=k_exit` into the `GkSource` lookup
-  >   at `:277`, whose own filter is `table.c.wavenumber_exit_serial == k_exit.store_id`; SQLAlchemy
-  >   turns `== None` into `IS NULL`, which a `nullable=False` column never satisfies, so that
-  >   lookup misses too. The script already checks `if not source.available:` (`:284`) and does
-  >   exactly what it does for any other unavailable source: appends `(k_val, z_val, "GkSource not
-  >   available")` to `failures` and `continue`s to the next sampled case. It does not compute,
-  >   store or crash — every sampled case is recorded as a failure and the script finishes.
-  > - `run_quadsource_integrals.py:140-141` builds the same pair from `DEFAULT_ABS_TOLERANCE`/
-  >   `DEFAULT_REL_TOLERANCE` and looks up every source and response `k_exit` the same way
-  >   (`k_exit_of`, `:186-195`), so **every** `k_exit` object built by the script is now
-  >   unavailable, with `store_id` unset. `distinct_k = {k.store_id: k for k, _, _ in triples}`
-  >   (`:265`) and `pairs = {(q.store_id, r.store_id): (q, r) for _, q, r in triples}` (`:266`)
-  >   then key on that same absent identity for every triple, so both dicts collapse to **one**
-  >   entry apiece instead of one per distinct wavenumber — `triples` itself is unaffected, because
-  >   `closes_triangle` (`:63-69`) compares physical `k.k.k` values, not store ids. The script does
-  >   not crash: the one collapsed entry is still a valid dict key, so the `Tk_numeric_cache`/
-  >   `Tk_WKB_cache`/`Gk_cache` build loops (`:284-345`) run on it without a `KeyError`, but every
-  >   `object_get` inside them is itself built from an unavailable `k`/`q`/`r`, so its own filter is
-  >   also `IS NULL` and it too misses. So `payload_ok` (`:352-358`) is `False` for **every**
-  >   `(k, q, r)` triple, each is counted under `failures["ingredient unavailable"]` (`:361`)
-  >   and `continue`d past, `compute_QuadSource_integral.remote` (`:365`) is never called, and the
-  >   script finishes having computed and stored nothing.
-  > - Neither script is edited: both are documents of the tree they ran on (README §5 rule 6;
-  >   prompt 03's own charter, §6). Their next step is unchanged from the paragraph above.
-
-  > **Corrected 2026-09-29 by the orchestrator's review of `prompts/datastore-integrity` prompt 03**
-  > (additively; the narrowing above is left as the record of what prompt 03 concluded). The
-  > narrowing's verdict stands: both scripts now miss. **Its account of what they do next is
-  > wrong.** `DatastoreObject.store_id` **raises**
-  > `RuntimeError("Attempt to read datastore id before it has been set")` on an unpopulated object
-  > (`Datastore/object.py:13-17`). It does not return `None`, so nothing becomes `IS NULL`.
-  > - `analyse_greens_and_source.py`. `sqla_GkSource_factory.build` reads `k_exit.store_id` as it
-  >   builds its filter (`GkSource.py:211`). So the first sampled case's `GkSource` lookup raises
-  >   inside the shard's actor, and `ray.get` at `:273` re-raises it on the driver. Nothing up to
-  >   `main()` catches it, and the script stops with a traceback before
-  >   `if not source.available:`. No failure is recorded, and it does not finish.
-  > - `run_quadsource_integrals.py`. `distinct_k = {k.store_id: k …}` at `:265` raises on the
-  >   driver as soon as `triples` is non-empty. No dict collapses and no failure is counted.
-  > - Measured in memory, with no Ray and nothing under `var/`, on the real factories. A stored
-  >   (1e-10, 1e-9) exit time is looked up at (1e-10, 1e-8) and comes back `available=False`. The
-  >   `:265` comprehension then raises that error, and so does
-  >   `sqla_GkSource_factory.build(k=k_exit, …)`.
-  > - So the entry's "quiet mode" is replaced by a **loud** one. Each script fails on first use and
-  >   computes or stores nothing. The next step is unchanged.
+Opened by **prompt 05a**, 2026-09-18: none still open.
+`[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` was closed on
+2026-09-29 (§4).
 
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
@@ -993,6 +922,106 @@ Opened by **prompt 06a**, 2026-09-18:
 ---
 
 ## 4. Resolved issues
+
+Closed 2026-09-29 as housekeeping, at the user's request, outside any prompt:
+
+- **[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]** *(prompt 05a,
+  2026-09-18; unassigned)* — `docs/source-remediation-verification/analyse_greens_and_source.py:447`
+  and `run_quadsource_integrals.py:140` build `atol` / `rtol` from `DEFAULT_ABS_TOLERANCE` and
+  `DEFAULT_REL_TOLERANCE` and use them for a `wavenumber_exit_time` lookup — the first also for
+  `GkNumericIntegration`. Prompt 05a moved `main.py` and the six `extract_*.py` readers onto
+  per-target constants; **neither of these two files is in its grant** (README §0.4 puts
+  `QuadSourceIntegral`'s neighbourhood out of bounds and the prompt's file list names the six
+  readers only). **Impact, and it is the quiet mode rather than the loud one.** The
+  `GkNumericIntegration` half is harmless: `DEFAULT_GK_NUMERIC_*` has the same value as the shared
+  pair, so the key is unchanged. The exit-time half does **not** miss, because that target's lookup
+  is an inequality (`[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`) returning the
+  loosest row at least as tight as the request: a script asking for `1e-8` is served the new
+  `1e-9` row and then reports the **stored** pair rather than the requested one. So the scripts keep
+  working and their provenance quietly changes, which is exactly the failure mode prompt 05a §5 was
+  told to distinguish. **Next step:** a prompt given those two files repoints them at
+  `DEFAULT_HEXIT_ABS_TOLERANCE` / `DEFAULT_HEXIT_REL_TOLERANCE`, and extends
+  `ReaderToleranceAgreementTestCase`'s `EXTRACT_SCRIPTS` tuple to cover them — the cross-check is
+  already written and is generic over a file list. Evidence: log 05a, observation 1.
+
+  > **Narrowed 2026-09-29 by `prompts/datastore-integrity` prompt 03** (additively; the paragraph
+  > above is left as the record of the tree it was measured on). Prompt 03 made the exit-time
+  > lookup an exact match (closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`
+  > below), so the "quiet mode" this entry names is gone: **the two scripts now miss, rather than
+  > silently reusing a tighter row.** Read, not run (they need Ray and a store under `var/`):
+  > - `analyse_greens_and_source.py:447-448` builds `atol`/`rtol` from `DEFAULT_ABS_TOLERANCE`/
+  >   `DEFAULT_REL_TOLERANCE` = `(1e-10, 1e-8)` and looks the exit time up at `:247-253` for every
+  >   response wavenumber. Stored is `(1e-10, 1e-9)`, so `rtol_serial` no longer matches and every
+  >   `k_exit` comes back an **unpopulated `wavenumber_exit_time`** (`available=False`,
+  >   `store_id` raises until set). It is still passed on as `k=k_exit` into the `GkSource` lookup
+  >   at `:277`, whose own filter is `table.c.wavenumber_exit_serial == k_exit.store_id`; SQLAlchemy
+  >   turns `== None` into `IS NULL`, which a `nullable=False` column never satisfies, so that
+  >   lookup misses too. The script already checks `if not source.available:` (`:284`) and does
+  >   exactly what it does for any other unavailable source: appends `(k_val, z_val, "GkSource not
+  >   available")` to `failures` and `continue`s to the next sampled case. It does not compute,
+  >   store or crash — every sampled case is recorded as a failure and the script finishes.
+  > - `run_quadsource_integrals.py:140-141` builds the same pair from `DEFAULT_ABS_TOLERANCE`/
+  >   `DEFAULT_REL_TOLERANCE` and looks up every source and response `k_exit` the same way
+  >   (`k_exit_of`, `:186-195`), so **every** `k_exit` object built by the script is now
+  >   unavailable, with `store_id` unset. `distinct_k = {k.store_id: k for k, _, _ in triples}`
+  >   (`:265`) and `pairs = {(q.store_id, r.store_id): (q, r) for _, q, r in triples}` (`:266`)
+  >   then key on that same absent identity for every triple, so both dicts collapse to **one**
+  >   entry apiece instead of one per distinct wavenumber — `triples` itself is unaffected, because
+  >   `closes_triangle` (`:63-69`) compares physical `k.k.k` values, not store ids. The script does
+  >   not crash: the one collapsed entry is still a valid dict key, so the `Tk_numeric_cache`/
+  >   `Tk_WKB_cache`/`Gk_cache` build loops (`:284-345`) run on it without a `KeyError`, but every
+  >   `object_get` inside them is itself built from an unavailable `k`/`q`/`r`, so its own filter is
+  >   also `IS NULL` and it too misses. So `payload_ok` (`:352-358`) is `False` for **every**
+  >   `(k, q, r)` triple, each is counted under `failures["ingredient unavailable"]` (`:361`)
+  >   and `continue`d past, `compute_QuadSource_integral.remote` (`:365`) is never called, and the
+  >   script finishes having computed and stored nothing.
+  > - Neither script is edited: both are documents of the tree they ran on (README §5 rule 6;
+  >   prompt 03's own charter, §6). Their next step is unchanged from the paragraph above.
+
+  > **Corrected 2026-09-29 by the orchestrator's review of `prompts/datastore-integrity` prompt 03**
+  > (additively; the narrowing above is left as the record of what prompt 03 concluded). The
+  > narrowing's verdict stands: both scripts now miss. **Its account of what they do next is
+  > wrong.** `DatastoreObject.store_id` **raises**
+  > `RuntimeError("Attempt to read datastore id before it has been set")` on an unpopulated object
+  > (`Datastore/object.py:13-17`). It does not return `None`, so nothing becomes `IS NULL`.
+  > - `analyse_greens_and_source.py`. `sqla_GkSource_factory.build` reads `k_exit.store_id` as it
+  >   builds its filter (`GkSource.py:211`). So the first sampled case's `GkSource` lookup raises
+  >   inside the shard's actor, and `ray.get` at `:273` re-raises it on the driver. Nothing up to
+  >   `main()` catches it, and the script stops with a traceback before
+  >   `if not source.available:`. No failure is recorded, and it does not finish.
+  > - `run_quadsource_integrals.py`. `distinct_k = {k.store_id: k …}` at `:265` raises on the
+  >   driver as soon as `triples` is non-empty. No dict collapses and no failure is counted.
+  > - Measured in memory, with no Ray and nothing under `var/`, on the real factories. A stored
+  >   (1e-10, 1e-9) exit time is looked up at (1e-10, 1e-8) and comes back `available=False`. The
+  >   `:265` comprehension then raises that error, and so does
+  >   `sqla_GkSource_factory.build(k=k_exit, …)`.
+  > - So the entry's "quiet mode" is replaced by a **loud** one. Each script fails on first use and
+  >   computes or stores nothing. The next step is unchanged.
+
+  > **CLOSED 2026-09-29**, at the user's request, as housekeeping outside any campaign prompt,
+  > in the commit *"Look up the verification drivers' targets under main.py's pairs"*. Both drivers now build the tolerances their keyed lookups need
+  > from the constants main.py writes those targets with:
+  > - the exit time from `DEFAULT_HEXIT_ABS_TOLERANCE`/`DEFAULT_HEXIT_REL_TOLERANCE`, in both;
+  > - `TkNumericIntegration` from `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`/`_REL_TOLERANCE`, in
+  >   `run_quadsource_integrals.py`. This was a second mismatch the entry above did not record:
+  >   (1e-10, 1e-8) against the (1e-13, 3e-11) main.py writes, so that lookup could not match a
+  >   production row either;
+  > - `BackgroundModel`, `GkSource` and `TkWKBIntegration` now pass no tolerance. Their keys lost
+  >   `atol_serial`/`rtol_serial` in this campaign's prompt 05, so the arguments were vestigial,
+  >   and main.py passes none.
+  >
+  > **A missing exit time no longer raises.**
+  > - `analyse_greens_and_source.py` records the case as `"wavenumber_exit_time not available"`
+  >   and moves on, as it already did for an unavailable `GkSource`.
+  > - `run_quadsource_integrals.py` sets aside every triple that needs a missing exit time. It
+  >   prints how many, and counts them under `"exit time unavailable"` at every response
+  >   redshift, in its existing summary.
+  >
+  > **The guard.** The entry's own next step is taken: `ComputeTargets/tests/test_main_plumbing.py`
+  > gains `VERIFICATION_SCRIPTS`, and `ReaderToleranceAgreementTestCase` now reads both drivers
+  > beside the six `extract_*.py`. On the old scripts it fails 8 sub-tests: the three keyed
+  > mismatches above, and the five vestigial pairs. On the new ones it passes. Neither driver was
+  > run, because each needs Ray and a store under `var/`.
 
 Closed by `prompts/datastore-integrity` **prompt 03**, 2026-09-29:
 

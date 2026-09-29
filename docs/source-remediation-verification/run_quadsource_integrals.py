@@ -42,8 +42,10 @@ from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 from config.defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
+    DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_TK_NUMERIC_REL_TOLERANCE,
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_FLOAT_PRECISION,
@@ -135,10 +137,17 @@ def main():
         drop_actions=[],
         read_table_config=read_table_config,
     ) as pool:
-        atol, rtol = ray.get(
+        # each keyed target is looked up under its own pair, the one main.py writes it with
+        # (prompt 05a of prompts/tolerance-convergence). BackgroundModel, TkWKBIntegration and
+        # GkSource are keyed on no tolerance, so their lookups pass none. A lookup under another
+        # target's pair does not raise; it misses the row main.py wrote
+        # ([05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair])
+        hexit_atol, hexit_rtol, Tk_numeric_atol, Tk_numeric_rtol = ray.get(
             [
-                pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-                pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_HEXIT_REL_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_TK_NUMERIC_REL_TOLERANCE),
             ]
         )
         models = build_model_list(pool, units)
@@ -151,8 +160,6 @@ def main():
                 solver_labels=[],
                 cosmology=cosmology,
                 z_sample=None,
-                atol=atol,
-                rtol=rtol,
             )
         )
         if not background.available:
@@ -188,8 +195,8 @@ def main():
                 "wavenumber_exit_time",
                 k=k,
                 cosmology=cosmology,
-                atol=atol,
-                rtol=rtol,
+                atol=hexit_atol,
+                rtol=hexit_rtol,
             )
 
         source_k_exit = ray.get([k_exit_of(k) for k in source_k])
@@ -261,6 +268,16 @@ def main():
         ]
         print(f"** {len(triples)} triangle-closing (k,q,r) triples")
 
+        # an exit time the store does not hold at main.py's pair comes back unpopulated, with no
+        # store_id to key the caches below on. A triple that needs one is set aside and counted
+        # as a failure at every response redshift, rather than raising on that store_id
+        missing_exit = [kqr for kqr in triples if not all(x.available for x in kqr)]
+        triples = [kqr for kqr in triples if all(x.available for x in kqr)]
+        if missing_exit:
+            print(
+                f"** {len(missing_exit)} triples set aside: an exit time is not available"
+            )
+
         # ------------------------------------------------------------ ingredients
         distinct_k = {k.store_id: k for k, _, _ in triples}
         pairs = {(q.store_id, r.store_id): (q, r) for _, q, r in triples}
@@ -293,8 +310,8 @@ def main():
                     z_sample=None,
                     k=k_exit,
                     z_init=None,
-                    atol=atol,
-                    rtol=rtol,
+                    atol=Tk_numeric_atol,
+                    rtol=Tk_numeric_rtol,
                     tags=tags,
                 )
             )
@@ -306,8 +323,6 @@ def main():
                     z_sample=None,
                     k=k_exit,
                     z_init=None,
-                    atol=atol,
-                    rtol=rtol,
                     tags=tags,
                 )
             )
@@ -321,6 +336,9 @@ def main():
         # ------------------------------------------------------------ work items
         n_ok = n_fail = 0
         failures = {}
+        if missing_exit:
+            failures["exit time unavailable"] = len(missing_exit) * len(chosen)
+            n_fail = failures["exit time unavailable"]
         with open(args.out, "w") as out:
             for z_response in chosen:
                 print(f"** z_response = {z_response.z:.6g}", flush=True)
@@ -334,8 +352,6 @@ def main():
                             k=k_exit,
                             z_response=z_response,
                             z_sample=None,
-                            atol=atol,
-                            rtol=rtol,
                         )
                     )
                     Gk_cache[k_exit.store_id] = ray.get(

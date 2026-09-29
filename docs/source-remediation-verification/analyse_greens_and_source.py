@@ -35,7 +35,7 @@ from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from Units import Mpc_units
-from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import DEFAULT_HEXIT_ABS_TOLERANCE, DEFAULT_HEXIT_REL_TOLERANCE
 from config.model_list import build_model_list
 from config.sharding import (
     replicated_tables,
@@ -192,7 +192,9 @@ def tk_wkb_against_oracle(shard_glob):
 # ------------------------------------------------------------------ pool-backed sections
 
 
-def gk_continuity(pool, model_proxy, cosmology, atol, rtol, shard_glob, max_cases):
+def gk_continuity(
+    pool, model_proxy, cosmology, hexit_atol, hexit_rtol, shard_glob, max_cases
+):
     print("\n## audit section 4.1 -- continuity of G at crossover_z")
 
     # find the (k, z_response) pairs whose policy came out "mixed"
@@ -247,8 +249,8 @@ def gk_continuity(pool, model_proxy, cosmology, atol, rtol, shard_glob, max_case
                 "wavenumber_exit_time",
                 k=k,
                 cosmology=cosmology,
-                atol=atol,
-                rtol=rtol,
+                atol=hexit_atol,
+                rtol=hexit_rtol,
             )
             for k in k_objs
         ]
@@ -270,6 +272,11 @@ def gk_continuity(pool, model_proxy, cosmology, atol, rtol, shard_glob, max_case
     for k_val, z_val, crossover_z, quality in sampled:
         k_exit = k_exit_map[k_val]
         z_resp = z_map[z_val]
+        # an exit time the store does not hold at main.py's pair comes back unpopulated, and every
+        # lookup keyed on it would raise reading its store_id; record the case and move on
+        if not k_exit.available:
+            failures.append((k_val, z_val, "wavenumber_exit_time not available"))
+            continue
         source: GkSource = ray.get(
             pool.object_get(
                 "GkSource",
@@ -277,8 +284,6 @@ def gk_continuity(pool, model_proxy, cosmology, atol, rtol, shard_glob, max_case
                 k=k_exit,
                 z_response=z_resp,
                 z_sample=None,
-                atol=atol,
-                rtol=rtol,
             )
         )
         if not source.available:
@@ -442,10 +447,15 @@ def main():
         drop_actions=[],
         read_table_config=read_table_config,
     ) as pool:
-        atol, rtol = ray.get(
+        # the exit time is keyed on its own pair, the one main.py writes it with (prompt 05a of
+        # prompts/tolerance-convergence). BackgroundModel and GkSource are keyed on no tolerance,
+        # so their lookups pass none. A lookup under another target's pair does not raise; it
+        # misses the row main.py wrote ([05a-two-verification-scripts-still-query-the-exit-time-
+        # under-the-shared-pair])
+        hexit_atol, hexit_rtol = ray.get(
             [
-                pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-                pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+                pool.object_get(tolerance, tol=DEFAULT_HEXIT_REL_TOLERANCE),
             ]
         )
         models = build_model_list(pool, units)
@@ -459,8 +469,6 @@ def main():
                 solver_labels=[],
                 cosmology=cosmology,
                 z_sample=None,
-                atol=atol,
-                rtol=rtol,
             )
         )
         if not background.available:
@@ -471,8 +479,8 @@ def main():
             pool,
             model_proxy,
             cosmology,
-            atol,
-            rtol,
+            hexit_atol,
+            hexit_rtol,
             args.shards_glob,
             args.max_gk_cases,
         )

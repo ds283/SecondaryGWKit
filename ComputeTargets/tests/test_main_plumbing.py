@@ -950,6 +950,16 @@ EXTRACT_SCRIPTS = (
     "extract_QuadSourceIntegral_data.py",
 )
 
+#: the two verification drivers that open a real pool and query production rows. Both query
+#: `wavenumber_exit_time`; `run_quadsource_integrals.py` also queries `TkNumericIntegration`.
+#: They queried under the shared pair until 2026-09-29
+#: ([05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]), which after
+#: prompt 03 of prompts/datastore-integrity made them raise instead of quietly reusing a row.
+VERIFICATION_SCRIPTS = (
+    "docs/source-remediation-verification/analyse_greens_and_source.py",
+    "docs/source-remediation-verification/run_quadsource_integrals.py",
+)
+
 
 def _defaults_constant_bindings(tree):
     """`{local name: DEFAULT_* constant}` for every tolerance object built in this module.
@@ -1070,13 +1080,15 @@ def lookup_constants(path: Path):
 
 
 class ReaderToleranceAgreementTestCase(unittest.TestCase):
-    """Each `extract_*.py` queries a target under the constant main.py writes it with."""
+    """Each `extract_*.py`, and each verification driver, queries a target under the constant
+    main.py writes it with."""
 
     @classmethod
     def setUpClass(cls):
         cls.main = lookup_constants(MAIN_PY)
         cls.readers = {
-            name: lookup_constants(REPO_ROOT / name) for name in EXTRACT_SCRIPTS
+            name: lookup_constants(REPO_ROOT / name)
+            for name in EXTRACT_SCRIPTS + VERIFICATION_SCRIPTS
         }
 
     def test_main_py_uses_one_constant_pair_per_target(self):
@@ -1109,8 +1121,9 @@ class ReaderToleranceAgreementTestCase(unittest.TestCase):
         )
 
     def test_every_reader_queries_the_exit_time_target(self):
-        """All six build a `create_k_exit_work` helper; a reader that stopped doing so would
-        make the rest of this test vacuous for that file."""
+        """All six build a `create_k_exit_work` helper, and both verification drivers look the
+        exit time up too; a reader that stopped doing so would make the rest of this test
+        vacuous for that file."""
         for name, found in self.readers.items():
             with self.subTest(script=name):
                 self.assertIn("wavenumber_exit_time", found)
