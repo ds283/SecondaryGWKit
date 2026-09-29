@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-29 · **96 open** across seventeen campaigns.
+**Last updated:** 2026-09-29 · **97 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -30,7 +30,8 @@ the two disagree, the board is right.
 [`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md) ·
 [`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md) ·
 [`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md) ·
-[`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md)
+[`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md) ·
+[`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
@@ -764,6 +765,23 @@ store-fingerprint board's §4, and its row is deleted.
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
+
+### 1.16 The perturbation sound-speed campaign
+
+`prompts/perturbation-sound-speed/` was seeded on 2026-09-29 with an audit and its measurement
+script only; its README, prompts and board do not exist yet. The audit,
+[`prompts/perturbation-sound-speed/AUDIT.md`](../prompts/perturbation-sound-speed/AUDIT.md),
+found that the $c_s^2$ the transfer-function sector reads from `wPerturbations` is $p/\rho$ of
+the plasma, which is the adiabatic sound speed only while $g_*$ is constant. On `QCD_Cosmology`
+the adiabatic $dp/d\rho = 1/(3 + d\ln g_s/d\ln T)$ differs from it by up to 23 %, and the
+$3\mathcal H^2(c_s^2 - w)$ term of the scalar equation is set identically to zero. Found while
+reviewing arXiv:2609.29078; the review is
+[`docs/one-loop-planning/QCD-CROSSOVER-KERNELS-REVIEW.md`](one-loop-planning/QCD-CROSSOVER-KERNELS-REVIEW.md).
+The one row below is recorded here until the board exists.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-perturbation-sound-speed-is-p-over-rho-not-dp-drho]` | perturbation-sound-speed (audit) | `LambdaCDM_GenericEOS.wPerturbations:1182` returns `eos.w(T)`$\,\rho_r/(\rho_r+\rho_m)$ with `w` $= 4g_s/3g_\rho - 1 = p/\rho$; the adiabatic $c_s^2 = 1/(3 + d\ln g_s/d\ln T)$ dips to **0.217** where $w$ dips to **0.250**, gap **0.050** at $T = 0.143$ GeV. Sound-phase error after horizon entry **0.05–0.6 rad** across the PTA band, **17 rad** at $k = 3\times10^8$/Mpc, against a $5\times10^{-12}$ rad declared floor; the mass term is 7 % of $\omega^2$ at $k/aH = 3$ in the dip. Every stored $T_k$ on QCD is affected; radiation, ΛCDM, the tensor sector and the source term's $w_0$ are not. The fit's `T_120_MEV` join puts a 0.5 % step in $c_s^2$ and breaks any straddling finite difference. Four decisions for the user in AUDIT.md §6. |
 
 ---
 
