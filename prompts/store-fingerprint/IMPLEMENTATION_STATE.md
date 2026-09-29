@@ -132,7 +132,9 @@ before dispatch rather than the agent's:
 **The campaign was closed by the user on 2026-09-25, at 5 of 5 prompts.** Its charter is met:
 each of the three stores here has a content fingerprint in its sidecar, and the two registered
 drivers, `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, take one when their runs finish. Seven issues remain open in §3. None is assigned to a future campaign, and each stays
-in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13 for its owner.
+in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13 for its owner. *(True at the close.
+All seven were assigned to `prompts/datastore-integrity` on 2026-09-26, and all seven had closed on
+this board's §4 by 2026-09-29, the last by its prompt 08; see the header.)*
 
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13

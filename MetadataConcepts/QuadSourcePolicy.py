@@ -37,8 +37,8 @@ class QuadSourcePolicy(DatastoreObject):
         the author's decision was to accept it and improve the driver's choice of fallback in
         AdaptiveLevin/ rather than to reinstate a threshold here.
 
-    The object stays persisted and threaded so that the schema and the run signatures do not
-    churn, and so that a future policy for this stage has somewhere to live. Do not read
+    The object stays persisted and threaded so that a future policy for this stage has somewhere
+    to live, and so that each QuadSourceIntegral records the policy it was made under. Do not read
     `Levin_threshold` from a compute target without revisiting the reasoning above.
     """
 

@@ -1205,11 +1205,14 @@ None is assigned to a prompt of this campaign.
   - **Where, on this tree** (an `ast` walk for comprehensions whose element reads an attribute of
     their own target, log 05c observation 3):
     - `redshift.py:113` and `wavenumber.py:112` (`read_table`);
+    - `QuadSourcePolicy.py:102` (`read_table`, added by prompt 08; its four reads are the four
+      columns its query selects, checked by hand; log 08, observation 4). *(Added 2026-09-30, by
+      the review of 08.)*
     - `BackgroundModel.py:401` (`build`, already inside `KNOWN_BLIND`'s function);
     - the seven `invalid_serials = [nv.serial for nv in not_validated]` in `validate_on_startup`.
-  - **Impact.** Nothing is missed today. Both `read_table`s select every column they read, checked
-    by hand, and the seven `validate_on_startup` reads take `serial`, which their queries select.
-    But the guard's docstring does not declare the hole, and no pin would catch a future defect in
+  - **Impact.** Nothing is missed today. The three `read_table`s select every column they read,
+    checked by hand, and the seven `validate_on_startup` reads take `serial`, which their queries
+    select. But the guard's docstring does not declare the hole, and no pin would catch a future defect in
     this shape. 05c wrote `TkWKBValue.read_batch`'s refusal as a `for` loop for this reason (log
     05c, deviation 6).
   - **Next step.** Teach the analyser to bind a comprehension's targets before walking its
