@@ -183,6 +183,9 @@ def _tk_wkb_parent(
         label=f"tkwkb-{serial}",
         wavenumber_exit_serial=K_EXIT.store_id,
         model_serial=MODEL.store_id,
+        # the numeric parent (NOT NULL since prompts/datastore-integrity prompt 07): serial 1,
+        # which _tk_numeric_parent writes where a test has one; foreign keys are not enforced here
+        numeric_serial=1,
         rho_gauss_order=phase_residual.RHO_GAUSS_ORDER,
         phase_solver_serial=1,
         friction_solver_serial=1,

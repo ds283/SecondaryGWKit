@@ -582,6 +582,10 @@ EXPECTED_COVERAGE = frozenset(
         "GkSourcePolicyData.py:sqla_GkSourcePolicyData_factory.build.row_data",
         "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row",
         "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row_data",
+        # prompts/datastore-integrity prompt 07: store()'s consistency check reads the numeric
+        # parent's row, or for a pure-WKB row the z_source row
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory._check_numeric_parent.parent",
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory._check_numeric_parent.z_source_row",
         "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.validate_on_startup.integration",
         "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_model.row_data",
         "GkWKBIntegration.py:sqla_GkWKBValue_factory._build_impl_serial.row_data",
@@ -602,6 +606,9 @@ EXPECTED_COVERAGE = frozenset(
         "TkNumericIntegration.py:sqla_TkNumericValue_factory._build_impl_serial.row_data",
         "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row",
         "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build.row_data",
+        # prompts/datastore-integrity prompt 07: store()'s consistency check reads the numeric
+        # parent's row
+        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory._check_numeric_parent.parent",
         "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.validate_on_startup.integration",
         "TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_model.row_data",
         "TkWKBIntegration.py:sqla_TkWKBValue_factory._build_impl_serial.row_data",
@@ -821,6 +828,17 @@ KNOWN_UNRESOLVED_TABLES: Dict[UnresolvedTableSite, str] = {
         "TkWKBIntegration.py:sqla_TkWKBValue_factory.read_batch",
         "subquery",
     ): "subquery = integration_query.subquery(); _table_of does not follow .subquery()",
+    # prompts/datastore-integrity prompt 07: the labels-only reader mode selects the one column
+    # `numeric_serial` from the lookup's own query, to name the parents when more than one row
+    # matches. The same shape as the entries above, written inline
+    (
+        "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build",
+        "query.subquery()",
+    ): "query.subquery().c.numeric_serial; _table_of does not follow .subquery()",
+    (
+        "TkWKBIntegration.py:sqla_TkWKBIntegration_factory.build",
+        "query.subquery()",
+    ): "query.subquery().c.numeric_serial; _table_of does not follow .subquery()",
 }
 
 # Insert calls G2 does not check because the payload is not a dict literal (prompt 04b, G6, review

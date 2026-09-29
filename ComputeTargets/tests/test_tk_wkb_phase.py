@@ -262,6 +262,9 @@ def build_and_store(
         ),
         model=_Proxy(model, units),
         k=_KExit(k, units, z_exit_subh_e3=2.0 * z_init),
+        # a stand-in numeric parent: since prompts/datastore-integrity prompt 07 a TkWKBIntegration
+        # names the TkNumericIntegration it starts from, and this test writes no datastore row
+        numeric_serial=1,
         z_init=z_init,
         T_init=T_init,
         Tprime_init=Tprime_init,

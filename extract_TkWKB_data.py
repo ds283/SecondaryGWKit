@@ -456,7 +456,12 @@ def run_pipeline(model_data):
             rtol=Tk_numeric_rtol,
             **query_payload,
         )
-        TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
+        # this reader holds the physical labels only, not the numeric row the WKB row started
+        # from, so it asks for the labels-only mode (prompts/datastore-integrity prompt 07, D1):
+        # a single stored row is served, and more than one is refused, naming their parents
+        TkWKB_ref = pool.object_get(
+            "TkWKBIntegration", labels_only=True, **query_payload
+        )
 
         return plot_Tk.remote(model_label, TkNumeric_ref, TkWKB_ref)
 

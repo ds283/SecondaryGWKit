@@ -227,14 +227,24 @@ def _tk_numeric(s, serial, kind=TK_KIND, z_init_serial=1, tags=(), z_values=(2,)
         )
 
 
-def _gk_wkb(s, serial, z_source_serial=1, z_init=1.0e4, tags=(), z_values=(2,)):
-    """A validated GkWKBIntegration parent; each value's H_ratio is the parent serial."""
+def _gk_wkb(
+    s,
+    serial,
+    z_source_serial=1,
+    z_init=1.0e4,
+    tags=(),
+    z_values=(2,),
+    numeric_serial=None,
+):
+    """A validated GkWKBIntegration parent; each value's H_ratio is the parent serial. Pure WKB
+    (no numeric parent) unless `numeric_serial` is given."""
     s.insert(
         "GkWKBIntegration",
         serial=serial,
         label=f"gkwkb-{serial}",
         wavenumber_exit_serial=K_EXIT.store_id,
         model_serial=MODEL.store_id,
+        numeric_serial=numeric_serial,
         rho_gauss_order=phase_residual.RHO_GAUSS_ORDER,
         solver_serial=1,
         z_source_serial=z_source_serial,
@@ -261,14 +271,17 @@ def _gk_wkb(s, serial, z_source_serial=1, z_init=1.0e4, tags=(), z_values=(2,)):
         )
 
 
-def _tk_wkb(s, serial, z_init=1.0e4, tags=(), z_values=(2,)):
-    """A validated TkWKBIntegration parent; each value's friction is the parent serial."""
+def _tk_wkb(s, serial, z_init=1.0e4, tags=(), z_values=(2,), numeric_serial=1):
+    """A validated TkWKBIntegration parent; each value's friction is the parent serial. Its
+    numeric parent (NOT NULL since prompts/datastore-integrity prompt 07) is `numeric_serial`,
+    a serial only: foreign keys are not enforced here."""
     s.insert(
         "TkWKBIntegration",
         serial=serial,
         label=f"tkwkb-{serial}",
         wavenumber_exit_serial=K_EXIT.store_id,
         model_serial=MODEL.store_id,
+        numeric_serial=numeric_serial,
         rho_gauss_order=phase_residual.RHO_GAUSS_ORDER,
         phase_solver_serial=1,
         friction_solver_serial=1,
@@ -614,9 +627,9 @@ class TestSecondParentIsRefused(_StoreCase):
         objs = self._gk_wkb_read(dict(base, tags=[TAG_T, TAG_U]))
         self.assertEqual([9.0], [o.H_ratio for o in objs])
 
-    def test_gk_wkb_value_two_z_inits(self):
-        _gk_wkb(self.s, serial=7, z_init=1.0e4)
-        _gk_wkb(self.s, serial=9, z_init=2.0e4)
+    def test_gk_wkb_value_two_numeric_parents(self):
+        _gk_wkb(self.s, serial=7, numeric_serial=1)
+        _gk_wkb(self.s, serial=9, numeric_serial=2)
         self.s.conn.commit()
         for payload in self._gk_payloads({"model": MODEL, "k": K_EXIT}):
             with self.subTest(z_source="z_source" in payload):
@@ -638,9 +651,9 @@ class TestSecondParentIsRefused(_StoreCase):
         objs = self._tk_wkb_read(dict(base, tags=[TAG_T, TAG_U]))
         self.assertEqual([9.0], [o.friction for o in objs])
 
-    def test_tk_wkb_value_two_z_inits(self):
-        _tk_wkb(self.s, serial=7, z_init=1.0e4)
-        _tk_wkb(self.s, serial=9, z_init=2.0e4)
+    def test_tk_wkb_value_two_numeric_parents(self):
+        _tk_wkb(self.s, serial=7, numeric_serial=1)
+        _tk_wkb(self.s, serial=9, numeric_serial=2)
         self.s.conn.commit()
         self._assert_refuses(
             self._tk_wkb_read, {"model": MODEL, "k": K_EXIT}, "TkWKBValue", [7, 9]
@@ -663,27 +676,32 @@ class TestSecondParentIsRefused(_StoreCase):
         )
 
 
-class TestZInitSelects(_StoreCase):
+class TestNumericParentSelects(_StoreCase):
     """
-    §3 item 5. With the two-`z_init` store, giving one `z_init` serves only that parent, through
-    `read_batch` and through `_build_impl_model`, for both `GkWKBValue` and `TkWKBValue`.
+    §3 item 5, on prompts/datastore-integrity prompt 07's key. With the two-numeric-parent store,
+    giving one numeric parent serves only that WKB parent, through `read_batch` and through
+    `_build_impl_model`, for both `GkWKBValue` and `TkWKBValue`. (Written by 05c on `z_init`,
+    which prompt 07 took out of the key; each WKB parent keeps its own `z_init`, which the value
+    still reports.)
     """
+
+    PARENTS = ((7, 1, 1.0e4), (9, 2, 2.0e4))  # (WKB serial, numeric parent, z_init)
 
     def setUp(self):
         super().setUp()
-        for serial, z_init in ((7, 1.0e4), (9, 2.0e4)):
-            _gk_wkb(self.s, serial=serial, z_init=z_init)
-            _tk_wkb(self.s, serial=serial, z_init=z_init)
+        for serial, numeric_serial, z_init in self.PARENTS:
+            _gk_wkb(self.s, serial=serial, z_init=z_init, numeric_serial=numeric_serial)
+            _tk_wkb(self.s, serial=serial, z_init=z_init, numeric_serial=numeric_serial)
         self.s.conn.commit()
 
     def test_gk_wkb_value(self):
-        for serial, z_init in ((7, 1.0e4), (9, 2.0e4)):
-            with self.subTest(z_init=z_init):
+        for serial, numeric_serial, z_init in self.PARENTS:
+            with self.subTest(numeric_serial=numeric_serial):
                 objs = _read_batch(
                     self.s,
                     sqla_GkWKBValue_factory,
                     "GkWKBValue",
-                    {"model": MODEL, "k": K_EXIT, "z_init": z_init},
+                    {"model": MODEL, "k": K_EXIT, "numeric_serial": numeric_serial},
                 )
                 self.assertEqual([float(serial)], [o.H_ratio for o in objs])
                 self.assertEqual([z_init], [o.z_init for o in objs])
@@ -697,20 +715,20 @@ class TestZInitSelects(_StoreCase):
                         "model": MODEL,
                         "k": K_EXIT,
                         "z_source": _z(1, Z_SOURCES[1], is_source=True),
-                        "z_init": z_init,
+                        "numeric_serial": numeric_serial,
                     },
                 )
                 self.assertEqual(100 * serial + 2, obj.store_id)
                 self.assertEqual(z_init, obj.z_init)
 
     def test_tk_wkb_value(self):
-        for serial, z_init in ((7, 1.0e4), (9, 2.0e4)):
-            with self.subTest(z_init=z_init):
+        for serial, numeric_serial, z_init in self.PARENTS:
+            with self.subTest(numeric_serial=numeric_serial):
                 objs = _read_batch(
                     self.s,
                     sqla_TkWKBValue_factory,
                     "TkWKBValue",
-                    {"model": MODEL, "k": K_EXIT, "z_init": z_init},
+                    {"model": MODEL, "k": K_EXIT, "numeric_serial": numeric_serial},
                 )
                 self.assertEqual([float(serial)], [o.friction for o in objs])
                 self.assertEqual([z_init], [o.z_init for o in objs])
@@ -719,7 +737,12 @@ class TestZInitSelects(_StoreCase):
                     self.s,
                     sqla_TkWKBValue_factory,
                     "TkWKBValue",
-                    {"z": Z_RESPONSE, "model": MODEL, "k": K_EXIT, "z_init": z_init},
+                    {
+                        "z": Z_RESPONSE,
+                        "model": MODEL,
+                        "k": K_EXIT,
+                        "numeric_serial": numeric_serial,
+                    },
                 )
                 self.assertEqual(100 * serial + 2, obj.store_id)
                 self.assertEqual(z_init, obj.z_init)

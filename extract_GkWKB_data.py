@@ -466,7 +466,11 @@ def run_pipeline(model_data):
             rtol=Gk_numeric_rtol,
             **query_payload,
         )
-        GkW_ref = pool.object_get("GkWKBIntegration", **query_payload)
+        # this reader holds the physical labels only, and a row at this (k, z_source) may be
+        # seeded from a numeric row or be pure WKB, so it asks for the labels-only mode
+        # (prompts/datastore-integrity prompt 07, D1): a single stored row is served, and more
+        # than one is refused, naming their parents (a pure-WKB row as "pure WKB")
+        GkW_ref = pool.object_get("GkWKBIntegration", labels_only=True, **query_payload)
 
         return plot_Gk.remote(model_label, GkN_ref, GkW_ref)
 

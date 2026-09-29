@@ -28,9 +28,25 @@ WKB_phase_function's payload, and build() below *selects* the column and hands i
 constructor, so a rehydrated object reports its row. build() still *filters* on the current module
 constant -- a row computed at another order is a different row, not a miss to repair (README §7
 D10).
+
+SCHEMA NOTE (prompts/datastore-integrity, prompt 07). A TkWKBIntegration starts from its
+TkNumericIntegration's stop point: z_init = z_exit - stop_deltaz_subh, T_init = stop_T and
+Tprime_init = stop_Tprime (main.py's Tk WKB stage). The row now records which numeric row that
+was, in "numeric_serial", NOT NULL with a foreign key to TkNumericIntegration.serial (both shard
+on k, config/sharding.py, so the parent is always on this shard), and build() filters on it. The
+initial data are functions of the parent, so they left the key: they stay stored, as payload, and
+the absolute DEFAULT_FLOAT_PRECISION match on z_init (docs/datastore-integrity-audit.md §3.13) is
+gone. store() refuses a row whose initial data are not its parent's stop values bit for bit.
+
+A lookup names its parent ("numeric_serial"), or asks for the labels-only reader mode
+("labels_only": True), which D1 (prompts/datastore-integrity README §6.2) allows a reader holding
+only physical labels: it refuses when more than one stored row matches, naming the parents that
+distinguish them. A lookup that does neither raises. A store written before this change has no
+column, and build() refuses it (D4): it is readable at the SHA its sidecar records.
 """
 
 import json
+import struct
 from math import fabs
 from typing import Optional, List
 
@@ -49,6 +65,27 @@ from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+
+
+def _same_bits(a, b) -> bool:
+    """Whether two stored floats are the same float, bit for bit. None is never the same as
+    anything: an initial datum that is missing cannot have been derived from its parent.
+    """
+    if a is None or b is None:
+        return False
+    return struct.pack("<d", float(a)) == struct.pack("<d", float(b))
+
+
+def _numeric_parent_filter(column, numeric_serial):
+    """The key's parent term: a TkWKBIntegration is always seeded from a TkNumericIntegration,
+    so the parent is a serial and nothing else (there is no pure-WKB transfer function).
+    """
+    if isinstance(numeric_serial, bool) or not isinstance(numeric_serial, int):
+        raise TypeError(
+            f"TkWKBIntegration: a numeric parent is a TkNumericIntegration serial, not "
+            f"{numeric_serial!r}"
+        )
+    return column == numeric_serial
 
 
 class sqla_TkWKBTagAssociation_factory(SQLAFactoryBase):
@@ -135,6 +172,16 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # the TkNumericIntegration whose stop point this row starts from (prompts/
+                # datastore-integrity, prompt 07). Both tables shard on k, so the parent is on
+                # this shard and the foreign key can be declared. Part of the lookup key
+                sqla.Column(
+                    "numeric_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("TkNumericIntegration.serial"),
+                    index=True,
+                    nullable=False,
+                ),
                 # the Gauss-Legendre order of the phase residual table rho (module docstring
                 # above). This is the accuracy parameter of this object: an integer, not a
                 # tolerance, and the only one it has.
@@ -208,9 +255,25 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
         model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
 
+        # payload, not key: functions of the numeric parent (module docstring)
         z_init: Optional[float] = payload.get("z_init", None)
         T_init: Optional[float] = payload.get("T_init", 1.0)
         Tprime_init: Optional[float] = payload.get("Tprime_init", 0.0)
+
+        # the key's parent term, or the reader mode D1 allows; never neither, and never both
+        numeric_serial: Optional[int] = payload.get("numeric_serial", None)
+        labels_only: bool = payload.get("labels_only", False)
+        if labels_only and numeric_serial is not None:
+            raise ValueError(
+                "TkWKBIntegration.build(): both a numeric parent and labels_only were given; a "
+                "keyed lookup names its parent, and the reader mode names none"
+            )
+        if not labels_only and numeric_serial is None:
+            raise RuntimeError(
+                "TkWKBIntegration.build(): no numeric parent was given. A TkWKBIntegration is "
+                "keyed on the TkNumericIntegration it starts from (numeric_serial); a reader "
+                "holding only physical labels must ask for labels_only=True explicitly"
+            )
 
         phase_solver_table = tables["IntegrationSolver"].alias("phase_solver")
         friction_solver_table = tables["IntegrationSolver"].alias("friction_solver")
@@ -250,6 +313,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                 # (prompts/tolerance-convergence, prompt 05b)
                 table.c.rho_gauss_order,
                 table.c.label,
+                table.c.numeric_serial,
                 table.c.z_samples,
                 table.c.z_init,
                 table.c.T_init,
@@ -282,9 +346,12 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             )
         )
 
-        if z_init is not None:
+        # the numeric parent (prompt 07). z_init is not filtered on: it is a function of the
+        # parent, and the absolute DEFAULT_FLOAT_PRECISION match it used to have was bit equality
+        # at z ~ 1e9-1e12 (docs/datastore-integrity-audit.md §3.13)
+        if not labels_only:
             query = query.filter(
-                sqla.func.abs(table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+                _numeric_parent_filter(table.c.numeric_serial, numeric_serial)
             )
 
         # require that the integration we search for has the specified list of tags
@@ -302,6 +369,22 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             )
 
         try:
+            if labels_only:
+                # D1: the physical labels may select, but more than one stored row is refused,
+                # naming the parents that distinguish them, rather than one of them chosen
+                candidates = sorted(
+                    conn.execute(
+                        sqla.select(query.subquery().c.numeric_serial)
+                    ).scalars()
+                )
+                if len(candidates) > 1:
+                    raise MultipleResultsFound(
+                        f"TkWKBIntegration.build(): labels_only lookup matched "
+                        f"{len(candidates)} stored rows (model serial={model_proxy.store_id}, k "
+                        f"serial={k_exit.store_id}), with numeric_serial values {candidates}. "
+                        f"Refusing to choose one; name the numeric parent."
+                    )
+
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
@@ -311,7 +394,19 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
         except SQLAlchemyError as e:
             # matched against the driver's own message rather than str(e), which also carries the
             # SQL statement -- and the statement names the column either way
-            if "rho_gauss_order" not in str(getattr(e, "orig", e)):
+            driver_message = str(getattr(e, "orig", e))
+            if "numeric_serial" in driver_message:
+                # a store from before prompts/datastore-integrity prompt 07 (D4): its rows record
+                # nothing of the numeric row they started from, so there is no parent to key on,
+                # and this tree does not read it
+                raise RuntimeError(
+                    "TkWKBIntegration.build(): the TkWKBIntegration table has no "
+                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
+                    "the numeric integration they start from (prompts/datastore-integrity, "
+                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
+                    "its sidecar records."
+                ) from e
+            if "rho_gauss_order" not in driver_message:
                 raise
 
             # a store from before prompts/tolerance-convergence prompt 05. Its rows were keyed on
@@ -327,13 +422,16 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             ) from e
 
         if row_data is None:
-            # build and return an unpopulated object
+            # build and return an unpopulated object. A labels-only miss has no parent to give
+            # it, and says so: it can report absence to a reader and cannot be computed
             return TkWKBIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 label=label,
                 k=k_exit,
                 model=model_proxy,
+                numeric_serial=numeric_serial,
+                labels_only=labels_only,
                 z_init=z_init,
                 T_init=T_init,
                 Tprime_init=Tprime_init,
@@ -494,6 +592,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             k=k_exit,
             model=model_proxy,
             label=store_label,
+            numeric_serial=row_data.numeric_serial,
             z_init=z_init,
             T_init=T_init,
             Tprime_init=Tprime_init,
@@ -513,12 +612,16 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
         tables,
         inserters,
     ):
+        # no row is written whose initial data are not its numeric parent's stop values
+        sqla_TkWKBIntegration_factory._check_numeric_parent(obj, conn, tables)
+
         store_id = inserter(
             conn,
             {
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "model_serial": obj.model_proxy.store_id,
+                "numeric_serial": obj.numeric_serial,
                 # the order the residual table this object's phase came from was actually
                 # built at: since prompt 05b the accessor reports the object's own order --
                 # carried out of the table by WKB_phase_function on the compute path, read off
@@ -673,6 +776,82 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
+    def _check_numeric_parent(obj: TkWKBIntegration, conn, tables):
+        """
+        The store-time consistency check (prompts/datastore-integrity, prompt 07). The row's
+        initial data are payload, not key, so nothing else would notice if they were not the
+        parent's: main.py derives z_init = z_exit - stop_deltaz_subh, T_init = stop_T and
+        Tprime_init = stop_Tprime from the TkNumericIntegration it looked up, and here the parent
+        row is read on this shard -- with its exit time, which is replicated -- and the same
+        expression recomputed. Every value must agree bit for bit, and the parent must be for this
+        object's k and model. It lives in store(), which every write goes through, so no caller
+        can skip it. A mismatch raises naming both values.
+        """
+        numeric_serial = obj.numeric_serial
+        if numeric_serial is None:
+            raise RuntimeError(
+                "TkWKBIntegration.store(): the object has no numeric parent. A "
+                "TkWKBIntegration always starts from a TkNumericIntegration's stop point"
+            )
+
+        numeric_table = tables["TkNumericIntegration"]
+        exit_table = tables["wavenumber_exit_time"]
+
+        parent = conn.execute(
+            sqla.select(
+                numeric_table.c.serial,
+                numeric_table.c.wavenumber_exit_serial,
+                numeric_table.c.model_serial,
+                numeric_table.c.stop_deltaz_subh,
+                numeric_table.c.stop_T,
+                numeric_table.c.stop_Tprime,
+                exit_table.c.z_exit,
+            )
+            .select_from(
+                numeric_table.join(
+                    exit_table,
+                    exit_table.c.serial == numeric_table.c.wavenumber_exit_serial,
+                    isouter=True,
+                )
+            )
+            .filter(numeric_table.c.serial == numeric_serial)
+        ).one_or_none()
+
+        where = f"TkWKBIntegration.store() (numeric_serial={numeric_serial})"
+        if parent is None:
+            raise RuntimeError(
+                f"{where}: no TkNumericIntegration with that serial is on this shard"
+            )
+        if parent.wavenumber_exit_serial != obj._k_exit.store_id:
+            raise RuntimeError(
+                f"{where}: the parent is for wavenumber exit serial "
+                f"{parent.wavenumber_exit_serial}, this object for {obj._k_exit.store_id}"
+            )
+        if parent.model_serial != obj.model_proxy.store_id:
+            raise RuntimeError(
+                f"{where}: the parent is for model serial {parent.model_serial}, this object "
+                f"for {obj.model_proxy.store_id}"
+            )
+        if parent.z_exit is None or parent.stop_deltaz_subh is None:
+            raise RuntimeError(
+                f"{where}: the parent's stop point cannot be recomputed (z_exit="
+                f"{parent.z_exit!r}, stop_deltaz_subh={parent.stop_deltaz_subh!r})"
+            )
+
+        expected_z_init = parent.z_exit - parent.stop_deltaz_subh
+        for name, stored, expected, derivation in (
+            ("z_init", obj.z_init, expected_z_init, "z_exit - stop_deltaz_subh"),
+            ("T_init", obj.T_init, parent.stop_T, "stop_T"),
+            ("Tprime_init", obj.Tprime_init, parent.stop_Tprime, "stop_Tprime"),
+        ):
+            if not _same_bits(stored, expected):
+                raise ValueError(
+                    f"{where}: {name}={stored!r} is not the parent's {derivation}="
+                    f"{expected!r}. A WKB row must start from its numeric parent's stop values, "
+                    f"bit for bit."
+                )
+
+    @staticmethod
     def validate(
         obj: TkWKBIntegration,
         conn,
@@ -812,9 +991,11 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
     @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a TkWKBIntegration row (store-fingerprint prompt 02): what build()
-        # filters on -- the model, the wavenumber exit, rho_gauss_order and z_init (a REAL column;
-        # optional in the lookup, always in the key) -- with its tags, its validated flag and its
-        # TkWKBValue count. The solvers are not in the lookup and are not identity
+        # filters on -- the model, the wavenumber exit, rho_gauss_order and, since
+        # prompts/datastore-integrity prompt 07, the numeric parent (same shard, so a key parent)
+        # -- with its tags, its validated flag and its TkWKBValue count. z_init left the key with
+        # prompt 07: it is a function of the parent. The solvers are not in the lookup and are not
+        # identity
         from Datastore.store_inventory import Parent, read_records
 
         return read_records(
@@ -822,10 +1003,11 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             table,
             tables,
             context,
-            leaves=("rho_gauss_order", "z_init"),
+            leaves=("rho_gauss_order",),
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "numeric": Parent("numeric_serial", "TkNumericIntegration"),
             },
             tags=("TkWKB_tags", "wkb_serial"),
             values=("TkWKBValue", "wkb_serial"),
@@ -1075,7 +1257,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
 
         model_payload: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        z_init: Optional[float] = payload.get("z_init", None)
+        numeric_serial: Optional[int] = payload.get("numeric_serial", None)
 
         tags: List[store_tag] = payload.get("tags", [])
 
@@ -1101,12 +1283,12 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
             )
 
-            # z_init is in the parent's key when it is given: filtered with the parent build()'s
-            # own expression, the absolute DEFAULT_FLOAT_PRECISION match (prompt 05c, P4; prompt
-            # 07 removes z_init from the key)
-            if z_init is not None:
+            # the numeric parent is in the parent's key when it is given (prompt 07, in place of
+            # 05c's z_init). With none, the read spans every parent, and a second one is refused
+            # below
+            if numeric_serial is not None:
                 wkb_query = wkb_query.filter(
-                    sqla.func.abs(wkb_table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+                    _numeric_parent_filter(wkb_table.c.numeric_serial, numeric_serial)
                 )
 
             count = 0
@@ -1198,7 +1380,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
         tags: List[store_tag] = payload.get("tags", [])
 
         z: Optional[redshift] = payload.get("z", None)
-        z_init: Optional[float] = payload.get("z_init", None)
+        numeric_serial: Optional[int] = payload.get("numeric_serial", None)
 
         wkb_table = tables["TkWKBIntegration"]
         redshift_table = tables["redshift"]
@@ -1218,12 +1400,11 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
             wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
         )
 
-        # z_init is in the parent's key when it is given: filtered with the parent build()'s own
-        # expression, the absolute DEFAULT_FLOAT_PRECISION match (prompt 05c, P4; prompt 07 removes
-        # z_init from the key)
-        if z_init is not None:
+        # the numeric parent is in the parent's key when it is given (prompt 07, in place of 05c's
+        # z_init). With none, the read spans every parent, and a second one is refused below
+        if numeric_serial is not None:
             wkb_query = wkb_query.filter(
-                sqla.func.abs(wkb_table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+                _numeric_parent_filter(wkb_table.c.numeric_serial, numeric_serial)
             )
 
         count = 0

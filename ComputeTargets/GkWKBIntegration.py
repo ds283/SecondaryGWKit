@@ -31,7 +31,22 @@ class GkWKBIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced for a calculation of the Liouville-Green (WKB)
     phase function for the tensor Green's function
+
+    It either starts from a ``GkNumericIntegration``'s stop point, or is *pure WKB*: started at
+    ``z_source`` with ``G_init = 0``, ``Gprime_init = 1``. Since prompt 07 of
+    ``prompts/datastore-integrity`` it carries the parent's serial, ``numeric_serial``, from
+    construction to ``store()``; constructed without one it is a pure-WKB object, and
+    ``pure_WKB`` says so. The parent (NULL for pure WKB) is in the datastore key, and the factory's
+    ``store()`` checks the initial data against it bit for bit. A lookup asks for a pure-WKB row
+    explicitly, with ``numeric_serial=GkWKBIntegration.PURE_WKB``. The unpopulated object a
+    reader's ``labels_only`` lookup returns when nothing matches (``labels_only=True``) is
+    neither: it reports absence and cannot be computed.
     """
+
+    # the explicit pure-WKB marker a lookup passes as its numeric parent (prompts/
+    # datastore-integrity, prompt 07). A string, so that it survives serialization to a shard
+    # unchanged and compares by value; the factory filters it as numeric_serial IS NULL
+    PURE_WKB = "pure-WKB"
 
     # The IntegrationSolver label the phase is recorded under, exposed here so that main.py can
     # register it without a new import (the pattern of BackgroundModel.TAU_SOLVER_LABEL).
@@ -48,15 +63,30 @@ class GkWKBIntegration(DatastoreObject):
         model: ModelProxy,
         k: wavenumber_exit_time,
         z_source: Optional[redshift] = None,
+        numeric_serial: Optional[int] = None,
         z_init: Optional[float] = None,
         G_init: Optional[float] = 0.0,
         Gprime_init: Optional[float] = 1.0,
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        labels_only: bool = False,
     ):
         k_wavenumber: wavenumber = k.k
         check_units(k_wavenumber, model)
+
+        # the GkNumericIntegration this object starts from, or None for pure WKB
+        # (prompts/datastore-integrity, prompt 07). The lookup's marker is accepted here too, and
+        # means the same as None
+        if numeric_serial == GkWKBIntegration.PURE_WKB:
+            numeric_serial = None
+        if numeric_serial is not None and labels_only:
+            raise ValueError(
+                "GkWKBIntegration: labels_only is the reader's parentless miss, and was given a "
+                "numeric parent"
+            )
+        self._numeric_serial = numeric_serial
+        self._labels_only = labels_only
 
         self._solver_labels = solver_labels
         self._z_sample = z_sample
@@ -180,6 +210,18 @@ class GkWKBIntegration(DatastoreObject):
             )
 
         return self._rho_gauss_order
+
+    @property
+    def numeric_serial(self) -> Optional[int]:
+        """The serial of the GkNumericIntegration this object starts from, or None for a pure-WKB
+        object (and for a reader's labels-only miss)."""
+        return self._numeric_serial
+
+    @property
+    def pure_WKB(self) -> bool:
+        """Whether this object starts at z_source with G = 0, G' = 1 rather than from a numeric
+        parent's stop point."""
+        return self._numeric_serial is None and not self._labels_only
 
     @property
     def model_proxy(self) -> ModelProxy:
@@ -330,6 +372,12 @@ class GkWKBIntegration(DatastoreObject):
         if self._z_source is None or self._z_sample is None:
             raise RuntimeError(
                 "Object has not been configured correctly for a concrete calculation (z_source or z_sample is missing). It can only represent a query."
+            )
+
+        if self._labels_only:
+            raise RuntimeError(
+                "GkWKBIntegration: compute() called on a labels-only query object, which is "
+                "neither seeded from a numeric parent nor pure WKB"
             )
 
         # replace label if specified

@@ -421,6 +421,46 @@ def build_QuadSourceIntegral_payload(
     }
 
 
+def Gk_WKB_numeric_parent(
+    k_exit: wavenumber_exit_time, z_source: redshift, Gk: GkNumericIntegration
+) -> Optional[GkNumericIntegration]:
+    """The Gk WKB stage's choice between a row seeded from the numeric integration and a pure-WKB
+    row, for one (k_exit, z_source) and the GkNumericIntegration lookup's result `Gk` there.
+    Returns `Gk` when the WKB row is to start from its stop point, and None when the row is pure
+    WKB (starting at z_source with G = 0, G' = 1).
+
+    Moved unchanged out of `build_Gk_WKB_work` by prompts/datastore-integrity prompt 07: a
+    GkWKBIntegration is keyed on its numeric parent, or on the pure-WKB marker, so the choice has
+    to be made before the existence query says which row it means. The pure-WKB branch is taken
+    when there is no numeric row, and also when there is one but z_source is below the limit.
+
+    Query whether there is a pre-computed GkNumericIntegration for this source redshift.
+    Typically, this will be the case provided the source redshift is no more than 4 e-folds inside
+    the horizon, because that is where we cut the GkNumericIntegration work queue.
+
+    Notice that, if a GkNumericIntegration object is available, we don't get to decide where the
+    initial condition is; we just have to use the initial condition that is available. That might
+    be some time later than z_source. Then, we will not get WKB solutions for z_response between
+    z_source and the initial condition. The can lead to gaps in the WKB data when we later assemble
+    GkSource objects.
+
+    The idea is to switch to a WKB solution fairly soon after 3 e-folds inside the horizon. In
+    particular, we shouldn't keep using the GkNumericIntegration boundary condition right up to
+    the boundary where we stop computing it, because that risks the first available z_response for
+    such very late z_source bouncing around erratically in a region where we depend on having it.
+    Instead, we should use the numeric boundary condition for z_source up to some point between the
+    3 and 4 e-fold points. After that we should use a purely WKB analysis. Then we should have
+    safely overlapping WKB and numeric solutions around the 4-efold point.
+    """
+    # use numeric initial conditions up to geometric mean of 3- and 4-efold points (inside the horizon)
+    z_source_limit = sqrt(k_exit.z_exit_subh_e3 * k_exit.z_exit_subh_e4)
+
+    if z_source.z >= z_source_limit and Gk.available:
+        return Gk
+
+    return None
+
+
 def record_unresolved_osc(summary: dict, obj) -> None:
     """Record one completed numeric-integration object into `summary`, keyed by wavenumber.
 
@@ -1410,16 +1450,91 @@ def run_pipeline(
 
         # build TkWKBIntegration work items for a batch of wavenumbers
 
-        # query for existing objects in the datastore matching these k modes
-        # if they are present and validated, we assume them to be complete.
-        # We don't attempt to recompute any objects already held in the store
-        query_batch = [
+        # query for a TkNumericIntegration instance for each k mode. One should always exist.
+        # We use it to set initial conditions for the WKB part of the evolution, and a
+        # TkWKBIntegration is keyed on the numeric row it starts from (prompts/datastore-integrity,
+        # prompt 07), so this lookup comes first, over the whole batch: the existence query below
+        # has to say which numeric row it means. Serial-only: the stop values are row columns, and
+        # are returned without the sample values
+        payload_batch = [
             {
                 "solver_labels": [],
                 "model": model_proxy,
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
+                "rtol": Tk_numeric_rtol,
+                "tags": [
+                    TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in batch
+        ]
+
+        lookup_queue = RayWorkPool(
+            pool,
+            # payload_batch, not query_batch: query_batch is the TkWKBIntegration query, whereas
+            # this queue looks up the TkNumericIntegration initial condition. Since prompt 12 the
+            # two also carry different absolute tolerances, so dispatching query_batch here would
+            # query TkNumericIntegration under the Green's-function tolerance and find nothing
+            payload_batch,
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        lookup_queue.run()
+
+        # a k-mode without a numeric row has no parent, so no TkWKBIntegration row can be keyed
+        # for it, whether or not one is stored (prompt 07: this used to be checked only for the
+        # k-modes whose WKB row was missing)
+        numeric_parents = {}
+        for k_exit, Tk in zip(batch, lookup_queue.results):
+            k_exit: wavenumber_exit_time
+            Tk: TkNumericIntegration
+            assert Tk._k_exit.store_id == k_exit.store_id
+
+            if not Tk.available:
+                print(
+                    f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc without a pre-computed initial condition"
+                )
+                print(
+                    f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                )
+                raise RuntimeError(
+                    f"No initial condition for the WKB evolution is available"
+                )
+
+            numeric_parents[k_exit.store_id] = Tk
+
+        # query for existing objects in the datastore matching these k modes, each keyed on the
+        # numeric row it would start from. If they are present and validated, we assume them to
+        # be complete. We don't attempt to recompute any objects already held in the store
+        query_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "k": k_exit,
+                "numeric_serial": numeric_parents[k_exit.store_id].store_id,
+                "z_sample": None,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1461,74 +1576,11 @@ def run_pipeline(
         if len(missing) == 0:
             return []
 
-        # query for a TkNumericIntegration instance for each k mode. One should always exist.
-        # We use it to set initial conditions for the WKB part of the evolution.
-        payload_batch = [
-            {
-                "solver_labels": [],
-                "model": model_proxy,
-                "k": k_exit,
-                "z_sample": None,
-                "z_init": None,
-                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
-                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
-                # so the work item and every lookup have to agree on it
-                "atol": Tk_numeric_atol,
-                "rtol": Tk_numeric_rtol,
-                "tags": [
-                    TkProductionTag,
-                    RunLabelTag,
-                    SourceGridConstructionTag,
-                    SourceZGridSizeTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestSourceZTag,
-                    SmallestSourceZTag,
-                ],
-                "_do_not_populate": True,
-            }
-            for k_exit in missing
-        ]
-
-        lookup_queue = RayWorkPool(
-            pool,
-            # payload_batch, not query_batch: query_batch is the TkWKBIntegration query over the
-            # whole batch, whereas this queue looks up the TkNumericIntegration initial condition
-            # for the missing subset alone -- which is what the zip below expects. Since prompt 12
-            # the two also carry different absolute tolerances, so dispatching query_batch here
-            # would query TkNumericIntegration under the Green's-function tolerance and find
-            # nothing
-            payload_batch,
-            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
-            available_handler=None,
-            compute_handler=None,
-            store_handler=None,
-            persist_handler=None,
-            validation_handler=None,
-            label_builder=None,
-            title=None,
-            store_results=True,
-            create_batch_size=20,
-            process_batch_size=20,
-        )
-        lookup_queue.run()
-
         work_refs = []
 
-        for k_exit, Tk in zip(missing, lookup_queue.results):
+        for k_exit in missing:
             k_exit: wavenumber_exit_time
-            Tk: TkNumericIntegration
-            assert Tk._k_exit.store_id == k_exit.store_id
-
-            if not Tk.available:
-                print(
-                    f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc without a pre-computed initial condition"
-                )
-                print(
-                    f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
-                )
-                raise RuntimeError(
-                    f"No initial condition for the WKB evolution is available"
-                )
+            Tk: TkNumericIntegration = numeric_parents[k_exit.store_id]
 
             T_init = Tk.stop_T
             Tprime_init = Tk.stop_Tprime
@@ -1542,6 +1594,7 @@ def run_pipeline(
                     solver_labels=solvers,
                     model=model_proxy,
                     k=k_exit,
+                    numeric_serial=Tk.store_id,
                     z_init=z_init,
                     T_init=T_init,
                     Tprime_init=Tprime_init,
@@ -2019,7 +2072,93 @@ def run_pipeline(
 
         # build GKWKBIntegration work items for a batch of z_source times
 
-        # query for existing objects in the datastore matching these z_source times.
+        # Query for a GkNumericIntegration instance for each combination of model, k_exit, and z_source.
+        # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
+        # We want to do this in a vectorized way, pulling an entire batch of GkNumericIntegration instances
+        # for a range of z-source values from the same shard. This is more efficient than paying the Ray and database
+        # overhead for multiple lookups.
+        # A GkWKBIntegration is keyed on the numeric row it starts from, or on the pure-WKB marker
+        # (prompts/datastore-integrity, prompt 07), so this lookup comes first, over the whole
+        # batch: the existence query below has to say which row it means. Serial-only: only the
+        # serial and the stop_* columns are used, and they are returned without the sample values
+        payload_batch = [
+            {
+                # note we don't specify the k mode as part of the main payload
+                # instead we specify it separately to object_get_vectorized()
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "solver_labels": [],
+                        "model": model_proxy,
+                        "z_source": z_source,
+                        "z_sample": None,
+                        # GkNumericIntegration's own pair (prompt 05a of
+                        # prompts/tolerance-convergence); part of the datastore key
+                        "atol": Gk_numeric_atol,
+                        "rtol": Gk_numeric_rtol,
+                        "tags": [
+                            GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
+                            LargestSourceZTag,
+                            SmallestSourceZTag,
+                            ResponseSparsenessZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for z_source in batch
+                ],
+            }
+            for k_exit in response_k_exit_times
+        ]
+
+        lookup_queue = RayWorkPool(
+            pool,
+            payload_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkNumericIntegration", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
+        )
+        lookup_queue.run()
+
+        # the seeded-or-pure choice for every (k, z_source), made before the existence query:
+        # the numeric parent, or None for a pure-WKB row (Gk_WKB_numeric_parent)
+        numeric_parents = {}
+        for k_exit, Gk_data in zip(response_k_exit_times, lookup_queue.results):
+            k_exit: wavenumber_exit_time
+            Gk_data: List[GkNumericIntegration]
+
+            for z_source, Gk in zip(batch, Gk_data):
+                # be defensive about ensuring provenance for our data products
+                Gk: GkNumericIntegration
+                assert Gk._k_exit.store_id == k_exit.store_id
+                assert Gk._z_source.store_id == z_source.store_id
+
+                numeric_parents[(k_exit.store_id, z_source.store_id)] = (
+                    Gk_WKB_numeric_parent(k_exit, z_source, Gk)
+                )
+
+        # the key each existence query and construction passes: the parent's serial, or the
+        # explicit pure-WKB marker
+        numeric_keys = {
+            key: (parent.store_id if parent is not None else GkWKBIntegration.PURE_WKB)
+            for key, parent in numeric_parents.items()
+        }
+
+        # query for existing objects in the datastore matching these z_source times, each keyed on
+        # the numeric row it would start from, or as pure WKB.
         # if they are present (and validated) we assume them to be complete.
         # We don't attempt to recompute objects that are already in the store.
         query_batch = [
@@ -2030,6 +2169,9 @@ def run_pipeline(
                         "solver_labels": [],
                         "model": model_proxy,
                         "z_source": z_source,
+                        "numeric_serial": numeric_keys[
+                            (k_exit.store_id, z_source.store_id)
+                        ],
                         "z_sample": None,
                         "tags": [
                             GkProductionTag,
@@ -2080,62 +2222,6 @@ def run_pipeline(
             )
         }
 
-        # Query for a GkNumericIntegration instance for each combination of model, k_exit, and z_source.
-        # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
-        # We want to do this in a vectorized way, pulling an entire batch of GkNumericIntegration instances
-        # for a range of z-source values from the same shard. This is more efficient than paying the Ray and database
-        # overhead for multiple lookups
-        payload_batch = [
-            {
-                # note we don't specify the k mode as part of the main payload
-                # instead we specify it separately to object_get_vectorized()
-                "shard_key": {"k": k_exit},
-                "payload": [
-                    {
-                        "solver_labels": [],
-                        "model": model_proxy,
-                        "z_source": z_source,
-                        "z_sample": None,
-                        # GkNumericIntegration's own pair (prompt 05a of
-                        # prompts/tolerance-convergence); part of the datastore key
-                        "atol": Gk_numeric_atol,
-                        "rtol": Gk_numeric_rtol,
-                        "tags": [
-                            GkProductionTag,
-                            RunLabelTag,
-                            SourceGridConstructionTag,
-                            SourceZGridSizeTag,
-                            ResponseZGridSizeTag,
-                            LargestSourceZTag,
-                            SmallestSourceZTag,
-                            ResponseSparsenessZTag,
-                        ],
-                    }
-                    for z_source in missing[k_exit.store_id]
-                ],
-            }
-            for k_exit in response_k_exit_times
-        ]
-
-        lookup_queue = RayWorkPool(
-            pool,
-            payload_batch,
-            task_builder=lambda x: pool.object_get_vectorized(
-                "GkNumericIntegration", x["shard_key"], payload_data=x["payload"]
-            ),
-            available_handler=None,
-            compute_handler=None,
-            store_handler=None,
-            persist_handler=None,
-            validation_handler=None,
-            label_builder=None,
-            title=None,
-            store_results=True,
-            create_batch_size=20,  # may need to tweak relative to number of shards
-            process_batch_size=20,
-        )
-        lookup_queue.run()
-
         work_refs = []
 
         response_pools = {
@@ -2143,43 +2229,22 @@ def run_pipeline(
             for z_source in batch
         }
 
-        for k_exit, Gk_data in zip(response_k_exit_times, lookup_queue.results):
+        for k_exit in response_k_exit_times:
             k_exit: wavenumber_exit_time
-            Gk_data: List[GkNumericIntegration]
 
-            # use numeric initial conditions up to geometric mean of 3- and 4-efold points (inside the horizon)
-            # see long comment below
-            z_source_limit = sqrt(k_exit.z_exit_subh_e3 * k_exit.z_exit_subh_e4)
-
-            for z_source, Gk in zip(missing[k_exit.store_id], Gk_data):
-                # be defensive about ensuring provenance for our data products
-                Gk: GkNumericIntegration
-                assert Gk._k_exit.store_id == k_exit.store_id
-                assert Gk._z_source.store_id == z_source.store_id
+            for z_source in missing[k_exit.store_id]:
+                # the numeric parent chosen above, or None for pure WKB
+                Gk: Optional[GkNumericIntegration] = numeric_parents[
+                    (k_exit.store_id, z_source.store_id)
+                ]
 
                 response_sample = response_pools[z_source.store_id]
 
                 if len(response_sample) == 0:
                     continue
 
-                # query whether there is a pre-computed GkNumericIntegration for this source redshift.
-                # typically, this will be the case provided the source redshift is no more than
-                # 4 e-folds inside the horizon, because that is where we cut the GkNumericIntegration work queue.
-
-                # Notice that, if a GkNumericIntegration object is available, we don't get to decide where the
-                # initial condition is; we just have to use the initial condition that is available.
-                # That might be some time later than z_source. Then, we will not get WKB solutions for
-                # z_response between z_source and the initial condition. The can lead to gaps in the WKB data
-                # when we later assemble GkSource objects.
-
-                # The idea is to switch to a WKB solution fairly soon after 3 e-folds inside the horizon.
-                # In particular, we shouldn't keep using the GkNumericIntegration boundary condition
-                # right up to the boundary where we stop computing it, because that risks the first available z_response
-                # for such very late z_source bouncing around erratically in a region where we depend on having it.
-                # Instead, we should use the numeric boundary condition for z_source up to some point between the 3 and 4 e-fold points.
-                # After that we should use a purely WKB analysis. Then we should have safely overlapping WKB and
-                # numeric solutions around the 4-efold point.
-                if z_source.z >= z_source_limit and Gk.available:
+                # the seeded-or-pure choice is Gk_WKB_numeric_parent's; see its docstring
+                if Gk is not None:
                     # obtain initial data and initial time from the GkNumericIntegration object
                     G_init = Gk.stop_G
                     Gprime_init = Gk.stop_Gprime
@@ -2204,6 +2269,7 @@ def run_pipeline(
                                 model=model_proxy,
                                 k=k_exit,
                                 z_source=z_source,
+                                numeric_serial=Gk.store_id,
                                 z_init=z_init,
                                 G_init=G_init,
                                 Gprime_init=Gprime_init,
@@ -2252,6 +2318,7 @@ def run_pipeline(
                             model=model_proxy,
                             k=k_exit,
                             z_source=z_source,
+                            numeric_serial=GkWKBIntegration.PURE_WKB,
                             G_init=0.0,
                             Gprime_init=1.0,
                             z_sample=response_sample,
@@ -3339,13 +3406,32 @@ def run_pipeline(
         )
         Tk_numeric_lookup_queue.run()
 
+        # a TkWKBIntegration is keyed on the TkNumericIntegration it starts from
+        # (prompts/datastore-integrity, prompt 07), so the WKB lookup below names the numeric row
+        # just looked up -- the one build_QuadSourceIntegral_payload consumes beside it. A mode
+        # without a numeric row has no WKB row that can be keyed, so the stage stops here rather
+        # than later, in build_QuadSourceIntegral_payload
+        Tk_numeric_unavailable = [
+            k_exit
+            for k_exit, obj in zip(missing_Tk, Tk_numeric_lookup_queue.results)
+            if not obj.available
+        ]
+        if len(Tk_numeric_unavailable) > 0:
+            for k_exit in Tk_numeric_unavailable:
+                print(
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: TkNumericIntegration for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, so no TkWKBIntegration can be looked up for it"
+                )
+            raise RuntimeError(
+                f"QuadSourceIntegral builder: {len(Tk_numeric_unavailable)} transfer-function mode(s) have no TkNumericIntegration, so their TkWKBIntegration cannot be looked up"
+            )
+
         Tk_WKB_lookup_batch = [
             {
                 "solver_labels": [],
                 "model": model_proxy,
                 "z_sample": None,
                 "k": k_exit,
-                "z_init": None,
+                "numeric_serial": Tk_numeric.store_id,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -3356,7 +3442,7 @@ def run_pipeline(
                     SmallestSourceZTag,
                 ],
             }
-            for k_exit in missing_Tk
+            for k_exit, Tk_numeric in zip(missing_Tk, Tk_numeric_lookup_queue.results)
         ]
 
         Tk_WKB_lookup_queue = RayWorkPool(

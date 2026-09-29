@@ -721,7 +721,21 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of datastore objects is the **intended** outcome, each quantity carrying its own justified
   tolerance pair. This entry closes when that campaign settles `rtol`.
 
-- **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13)* — the WKB
+> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
+> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
+> work around, a measured cost that changes a later prompt's decision. Format:
+>
+> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
+>   affected. **Next step:** what would close it.
+>
+> Move closed entries to §4 rather than deleting them, and update `docs/OPEN_ISSUES.md`.
+
+---
+
+## 4. Resolved issues
+
+- **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13; **resolved
+  by `prompts/datastore-integrity` prompt 07**, 2026-09-29)* — the WKB
   stage takes its initial data from the numeric stop point —
   `z_init = k_exit.z_exit − Tk.stop_deltaz_subh`, `T_init = Tk.stop_T`,
   `Tprime_init = Tk.stop_Tprime` (`main.py:951-953`; the $G_k$ twin at `:1589`) — and the WKB rows
@@ -745,18 +759,26 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
     ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.3). It closes
     here, on this board's §4.
 
-> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
-> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
-> work around, a measured cost that changes a later prompt's decision. Format:
->
-> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
->   affected. **Next step:** what would close it.
->
-> Move closed entries to §4 rather than deleting them, and update `docs/OPEN_ISSUES.md`.
-
----
-
-## 4. Resolved issues
+  > **CLOSED 2026-09-29 by `prompts/datastore-integrity` prompt 07**, commit *"Key each WKB row
+  > on the numeric row it starts from"*. Both WKB tables gain `numeric_serial`, indexed, with a
+  > foreign key to their numeric table (both shard on `k`, so the parent is on the same shard):
+  > NOT NULL on `TkWKBIntegration`, and nullable on `GkWKBIntegration`, where NULL means a
+  > pure-WKB row (`G_init = 0`, `Gprime_init = 1` at `z_source`, the only parentless branch). The
+  > lookup (`build()`) now filters on the parent -- a serial, or `GkWKBIntegration.PURE_WKB` for
+  > `IS NULL` -- and a lookup that names neither raises. `z_init` and the initial values left the
+  > key and are stored as payload, so the absolute `1e-7` match on `z_init` this entry describes
+  > is gone. The factories' `store()` reads the parent row on its own shard and refuses a row
+  > whose `z_init`, `T_init`/`G_init` or derivative is not the parent's stop point
+  > (`z_exit - stop_deltaz_subh`, `stop_T`/`stop_G`, `stop_Tprime`/`stop_Gprime`) bit for bit, or
+  > whose parent is for another `k`, model or `z_source`. So the case left open above -- stop
+  > values moving while `z_init` does not -- is now a different key, and a stale row cannot be
+  > served. `main.py` looks the numeric row up before each existence query and passes it to every
+  > WKB lookup and construction. The extraction scripts use an explicit labels-only mode that
+  > refuses two stored rows for one set of labels. Tested in
+  > `Datastore/tests/test_wkb_numeric_parent_key.py`, `Datastore/tests/test_wkb_parent_foreign_key.py`
+  > and `ComputeTargets/tests/test_wkb_numeric_parent_main.py`. A store written before this change
+  > is refused by the lookup (D4) and stays readable at the SHA its sidecar records.
+  > The record is `prompts/datastore-integrity/logs/07-key-wkb-rows-on-their-numeric-row.md`.
 
 - **[03-integrationsolver-stepping-minimum-lookup]** *(opened by prompt 03, 2026-09-11; inert)* —
   `sqla_IntegrationSolver_factory` registers `"stepping": "minimum"` and `build()` matches

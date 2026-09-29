@@ -20,6 +20,7 @@ import argparse
 import itertools
 import json
 import time
+from types import SimpleNamespace
 from math import log, exp
 
 import ray
@@ -315,6 +316,14 @@ def main():
                     tags=tags,
                 )
             )
+            # a TkWKBIntegration is keyed on the TkNumericIntegration it starts from
+            # (prompts/datastore-integrity, prompt 07), so the WKB lookup names the numeric row
+            # just looked up. A mode with no numeric row has no WKB row that can be keyed: it is
+            # recorded as unavailable, as a missing WKB row always was, rather than looked up
+            Tk_numeric = Tk_numeric_cache[k_exit.store_id]
+            if not Tk_numeric.available:
+                Tk_WKB_cache[k_exit.store_id] = SimpleNamespace(available=False)
+                continue
             Tk_WKB_cache[k_exit.store_id] = ray.get(
                 pool.object_get(
                     "TkWKBIntegration",
@@ -322,7 +331,7 @@ def main():
                     model=model_proxy,
                     z_sample=None,
                     k=k_exit,
-                    z_init=None,
+                    numeric_serial=Tk_numeric.store_id,
                     tags=tags,
                 )
             )

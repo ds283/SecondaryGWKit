@@ -40,6 +40,14 @@ class TkWKBIntegration(DatastoreObject):
     ``prompts/tolerance-convergence`` removed them from the datastore lookup key as well: what
     keys this target now is ``rho_gauss_order``, the order of the phase residual table, which is
     the one accuracy parameter it has.
+
+    It starts from a ``TkNumericIntegration``'s stop point, and since prompt 07 of
+    ``prompts/datastore-integrity`` it carries that row's serial, ``numeric_serial``, from
+    construction to ``store()``: the parent is in the datastore key, and the factory's ``store()``
+    checks that ``z_init``, ``T_init`` and ``Tprime_init`` are the parent's stop values bit for bit.
+    Constructing one without a parent is an error. The one exception is the unpopulated object a
+    reader's ``labels_only`` lookup returns when nothing matches (``labels_only=True``): it reports
+    absence and cannot be computed.
     """
 
     def __init__(
@@ -48,15 +56,33 @@ class TkWKBIntegration(DatastoreObject):
         solver_labels: dict,
         model: ModelProxy,
         k: wavenumber_exit_time,
+        numeric_serial: Optional[int] = None,
         z_init: Optional[float] = None,
         T_init: Optional[float] = None,
         Tprime_init: Optional[float] = None,
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        labels_only: bool = False,
     ):
         k_wavenumber: wavenumber = k.k
         check_units(k_wavenumber, model)
+
+        # the TkNumericIntegration this object starts from (prompts/datastore-integrity, prompt
+        # 07). A transfer function's WKB part is always seeded from one, so there is no
+        # parentless form -- except a reader's labels-only miss, which is a report of absence
+        if numeric_serial is None and not labels_only:
+            raise ValueError(
+                "TkWKBIntegration: constructed without a numeric parent. A TkWKBIntegration "
+                "starts from a TkNumericIntegration's stop point, and names it (numeric_serial)"
+            )
+        if numeric_serial is not None and labels_only:
+            raise ValueError(
+                "TkWKBIntegration: labels_only is the reader's parentless miss, and was given a "
+                "numeric parent"
+            )
+        self._numeric_serial = numeric_serial
+        self._labels_only = labels_only
 
         self._solver_labels = solver_labels
         self._z_sample = z_sample
@@ -194,6 +220,12 @@ class TkWKBIntegration(DatastoreObject):
             )
 
         return self._rho_gauss_order
+
+    @property
+    def numeric_serial(self) -> Optional[int]:
+        """The serial of the TkNumericIntegration this object starts from; None only for a
+        reader's labels-only miss."""
+        return self._numeric_serial
 
     @property
     def model_proxy(self) -> ModelProxy:
@@ -346,6 +378,12 @@ class TkWKBIntegration(DatastoreObject):
 
         if self._values is not None:
             raise RuntimeError("values have already been computed")
+
+        if self._numeric_serial is None:
+            raise RuntimeError(
+                "TkWKBIntegration: compute() called on a labels-only query object, which has no "
+                "numeric parent to start from"
+            )
 
         if self._z_sample is None or self._z_init is None:
             raise RuntimeError(

@@ -145,7 +145,12 @@ _drop_actions = {
     "tk-numeric": ["TkNumericIntegration", "TkNumeric_tags", "TkNumericValue"],
     "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
 }
-# should drop tables in a defined order, so that we do not violate foreign key constrints
+# should drop tables in a defined order, so that we do not violate foreign key constraints: an
+# action whose tables declare a foreign key into another action's tables drops first. In
+# particular a WKB row references the numeric row it starts from (numeric_serial,
+# prompts/datastore-integrity prompt 07), so "gk-wkb" drops before "gk-numeric" and "tk-wkb" before
+# "tk-numeric"; and QuadSource.Tq_serial references TkNumericIntegration (prompt 06), so
+# "quad-source" drops before "tk-numeric" too
 _drop_order = [
     "1loop-integral",
     "quad-source-integral",
@@ -155,8 +160,8 @@ _drop_order = [
     "gk-wkb",
     "gk-numeric",
     "quad-source",
-    "tk-numeric",
     "tk-wkb",
+    "tk-numeric",
 ]
 
 # read table configuration should be a Dict with the mapping

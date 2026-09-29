@@ -152,9 +152,9 @@ IDENTITY = {
     },
     "TkWKBIntegration": {
         "rho_gauss_order": ("TkWKBIntegration", 2, "rho_gauss_order", 12),
-        "z_init": ("TkWKBIntegration", 2, "z_init", 300.0),
         "model": ("TkWKBIntegration", 2, "model_serial", 2),
         "k": ("TkWKBIntegration", 2, "wavenumber_exit_serial", 4),
+        "numeric": ("TkWKBIntegration", 2, "numeric_serial", 3),
     },
     "GkNumericIntegration": {
         "break_point_kind": (
@@ -171,10 +171,10 @@ IDENTITY = {
     },
     "GkWKBIntegration": {
         "rho_gauss_order": ("GkWKBIntegration", 1, "rho_gauss_order", 12),
-        "z_init": ("GkWKBIntegration", 1, "z_init", 60.0),
         "model": ("GkWKBIntegration", 1, "model_serial", 2),
         "k": ("GkWKBIntegration", 1, "wavenumber_exit_serial", 4),
         "z_source": ("GkWKBIntegration", 1, "z_source_serial", 5),
+        "numeric": ("GkWKBIntegration", 1, "numeric_serial", 1),
     },
     "GkSource": {
         "model": ("GkSource", 2, "model_serial", 2),
@@ -228,6 +228,7 @@ NON_IDENTITY = [
     ("TkNumericIntegration", 1, "z_samples", 9),
     ("TkNumericIntegration", 1, "z_min_serial", 2),
     ("TkWKBIntegration", 1, "T_init", 2.0),
+    ("TkWKBIntegration", 1, "z_init", 300.0),
     ("QuadSource", 1, "Tq_serial", 9),
     ("QuadSourceIntegral", 1, "total", 9.0),
     ("QuadSourceIntegral", 1, "source_serial", 2),
@@ -872,9 +873,23 @@ class TestOldStoresAndOrphans(_Stores):
             "incomplete",
             1,
             expected=without,
-            missing_columns={1: {"TkWKBIntegration": ["z_init"]}},
+            # SQLite cannot DROP COLUMN a column with a foreign key, as numeric_serial has since
+            # prompts/datastore-integrity prompt 07, so shard 1's table is made the one a store
+            # from before that prompt has: its CREATE TABLE as the 06 schema witness records it
+            extra_sql={
+                1: [
+                    'DROP TABLE "TkWKBIntegration"',
+                    json.loads(
+                        (
+                            Path(__file__).resolve().parent
+                            / "data"
+                            / "schema_at_datastore-integrity-06.json"
+                        ).read_text(encoding="utf-8")
+                    )["classes"]["TkWKBIntegration"]["table"]["ddl"],
+                ]
+            },
         )
-        self.assertIn("z_init", problem)
+        self.assertIn("numeric_serial", problem)
 
     def test_a_missing_column_the_key_does_not_need(self):
         inventory = self.inventory(

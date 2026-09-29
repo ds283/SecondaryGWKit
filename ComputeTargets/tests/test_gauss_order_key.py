@@ -130,6 +130,11 @@ class _Serial:
         self.store_id = store_id
 
 
+# the stand-in numeric parent every WKB lookup and stand-in names (prompts/datastore-integrity
+# prompt 07 keys a WKB row on the numeric row it starts from)
+_NUMERIC_PARENT = 18
+
+
 class _Cosmology:
     type_id = 4242
     store_id = 7
@@ -254,6 +259,9 @@ TARGETS = {
             "model": _Serial(14),
             "z_sample": None,
             "z_source": None,
+            # a stand-in numeric parent: since prompts/datastore-integrity prompt 07 a WKB lookup
+            # names the numeric row it starts from
+            "numeric_serial": _NUMERIC_PARENT,
             "tags": [],
         },
     ),
@@ -266,6 +274,8 @@ TARGETS = {
             "k": _Serial(13),
             "model": _Serial(14),
             "z_sample": None,
+            # as above
+            "numeric_serial": _NUMERIC_PARENT,
             "tags": [],
         },
     ),
@@ -411,6 +421,8 @@ class _WKBStandIn:
         self._cls = cls
         self._k_exit = _Serial(13)
         self.model_proxy = _Serial(14)
+        # the numeric parent store()'s consistency check reads (_ParentRowConnection)
+        self.numeric_serial = _NUMERIC_PARENT
         self.solver = _Serial(15)
         self.phase_solver = _Serial(15)
         self.friction_solver = _Serial(16)
@@ -470,16 +482,73 @@ def _store_payload(target: str) -> dict:
         captured.update(data)
         return 99
 
+    # the WKB store()s check the object's initial data against its numeric parent's row
+    # (prompts/datastore-integrity prompt 07), so they are given a connection that answers with
+    # that row, and the tables it is read from; the other two read neither
+    wkb = target in ("GkWKBIntegration", "TkWKBIntegration")
     factory.store(
         obj,
-        None,
+        _ParentRowConnection() if wkb else None,
         None,
         inserter,
-        None,
+        _parent_tables(sqla.MetaData()) if wkb else None,
         {tag_table: None, value_table: None},
     )
 
     return captured
+
+
+class _ParentRowConnection:
+    """
+    What the WKB store()s' consistency check reads (prompts/datastore-integrity prompt 07): the
+    numeric parent's row, consistent with `_WKBStandIn` -- the same k (13), model (14) and z_source
+    (17), a stop point z_exit - stop_deltaz_subh = 2.0 - 1.0 = z_init = 1.0, and stop values equal
+    to the stand-in's T_init, Tprime_init, G_init and Gprime_init.
+    """
+
+    def execute(self, query):
+        return self
+
+    def one_or_none(self):
+        return _namespace(
+            serial=_NUMERIC_PARENT,
+            wavenumber_exit_serial=13,
+            model_serial=14,
+            z_source_serial=17,
+            stop_deltaz_subh=1.0,
+            z_exit=2.0,
+            stop_T=_WKBStandIn.T_init,
+            stop_Tprime=_WKBStandIn.Tprime_init,
+            stop_G=_WKBStandIn.G_init,
+            stop_Gprime=_WKBStandIn.Gprime_init,
+        )
+
+
+def _parent_tables(metadata: sqla.MetaData) -> dict:
+    """the tables the consistency check names: each numeric table and the exit times"""
+    tables = {
+        name: sqla.Table(
+            name,
+            metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True),
+            sqla.Column("wavenumber_exit_serial", sqla.Integer),
+            sqla.Column("model_serial", sqla.Integer),
+            sqla.Column("z_source_serial", sqla.Integer),
+            sqla.Column("stop_deltaz_subh", sqla.Float(64)),
+            sqla.Column("stop_T", sqla.Float(64)),
+            sqla.Column("stop_Tprime", sqla.Float(64)),
+            sqla.Column("stop_G", sqla.Float(64)),
+            sqla.Column("stop_Gprime", sqla.Float(64)),
+        )
+        for name in ("TkNumericIntegration", "GkNumericIntegration")
+    }
+    tables["wavenumber_exit_time"] = sqla.Table(
+        "wavenumber_exit_time",
+        metadata,
+        sqla.Column("serial", sqla.Integer, primary_key=True),
+        sqla.Column("z_exit", sqla.Float(64)),
+    )
+    return tables
 
 
 # ---------------------------------------------------------------------------------------------
@@ -906,6 +975,7 @@ class _WKBRowConnection:
             friction_solver_label=PHASE_SOLVER_LABEL,
             friction_solver_stepping=4,
             label="stand-in row",
+            numeric_serial=_NUMERIC_PARENT,
             z_source_serial=17,
             z_source=1.0e5,
             z_source_is_source=True,
@@ -998,6 +1068,8 @@ def _rehydrate(target: str, connection):
             "model": _RowProxy(units),
             "z_sample": None,
             "z_source": None,
+            # a stand-in numeric parent (prompts/datastore-integrity prompt 07)
+            "numeric_serial": _NUMERIC_PARENT,
             "tags": [],
             # the object's own values are not what is under test here, and reading them would
             # need a second canned query
@@ -1172,8 +1244,15 @@ class TestTheRecordedOrderIsTheOrderTheTableWasBuiltAt(unittest.TestCase):
             captured.update(data)
             return 99
 
+        # the connection and tables answer store()'s consistency check with the stand-in's
+        # numeric parent (prompts/datastore-integrity prompt 07)
         sqla_GkWKBIntegration_factory.store(
-            obj, None, None, inserter, None, {"GkWKB_tags": None, "GkWKBValue": None}
+            obj,
+            _ParentRowConnection(),
+            None,
+            inserter,
+            _parent_tables(sqla.MetaData()),
+            {"GkWKB_tags": None, "GkWKBValue": None},
         )
 
         self.assertEqual(captured["rho_gauss_order"], table.order)

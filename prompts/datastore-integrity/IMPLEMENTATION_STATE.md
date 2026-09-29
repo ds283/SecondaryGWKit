@@ -72,7 +72,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 05b | [Repair the integral `read_batch`es](05b-repair-the-integral-read-batches.md) | **P1**, **P2**, **P8** | Sonnet | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Repair the integral read_batch join, exit-time serials and OneLoopIntegral"* | [`logs/05b-…`](logs/05b-repair-the-integral-read-batches.md) |
 | 05c | [Key the value reads on their parent](05c-key-the-value-reads-on-their-parent.md) | **P3**–**P5**, **P9** | Opus | ✍️ yes, 2026-09-28 | ✅ 2026-09-28 | *"Key the value reads on their parent and refuse a second parent"* | [`logs/05c-…`](logs/05c-key-the-value-reads-on-their-parent.md) |
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Correct the foreign keys the schema declares, and check them"* | [`logs/06-…`](logs/06-correct-the-foreign-keys.md) |
-| 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
+| 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key each WKB row on the numeric row it starts from"* | [`logs/07-…`](logs/07-key-wkb-rows-on-their-numeric-row.md) |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
 | 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
@@ -939,8 +939,8 @@ what 01–04 find; what waits is their method.
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ✅ `Tr_serial` → `TkNumericIntegration`; the `GkSourcePolicyData` entry removed (now declared); `QuadSourceIntegral.source_serial` left undeclared. The inventory and fingerprint relabel tests do not move (`Tq_serial`/`Tr_serial` are provenance) |
 | S4 | **GUARD** | A test that runs `PRAGMA foreign_key_check` over every shard of a store written by the real factories and finds no violation. | 06 | ✅ `test_foreign_key_check.py`, 8 tests: the full store on the test's own rows (a `QuadSource` whose `Tq_serial` is a Tk serial on its shard and no `QuadSource` serial there, because the fixture's own rows satisfy the wrong key by coincidence), a stand-in-shard store, and two dangling controls. Cannot see `Tr_serial`, `QuadSourceIntegral.source_serial` or `shard_keys` |
 | S5 | **RECORD** | The first deliberate schema-witness change, under D5, including the exit-time and `IntegrationSolver` `stepping_mode` flags made exact. | 06 | ✅ `schema_at_datastore-integrity-06.json` beside `schema_at_base.json`; `WITNESS` repointed; the diff (8 hunks, 30 lines: S1, S2 and the two flags, nothing else) is in the log; the golden fingerprint did not move |
-| K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ⏸️ |
-| K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ⏸️ |
+| K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ✅ `numeric_serial`, indexed, `ForeignKey` to its numeric table (both shard on `k`): NOT NULL on Tk, nullable on Gk with NULL = pure WKB (the only parentless branch). `build()` keys on a serial or `GkWKBIntegration.PURE_WKB` (`IS NULL`) and raises on neither; an explicit `labels_only=True` reader mode refuses two matches, naming their parents; the four value reads take an optional parent in place of 05c's `z_init`. `z_init` and the initial values are payload; `store()` refuses them unless they are the parent's stop values bit for bit (and the parent is for the same `k`, model and `z_source`). A pre-07 table is refused with the D4 message. `main.py`: the numeric lookup ahead of each existence query, every WKB lookup and construction passes the parent, the Gk choice lifted unchanged into `Gk_WKB_numeric_parent`. Inventory: `numeric` a key parent, `z_init` out, `Parent(nullable=True)`; `FINGERPRINT_FORMAT` 2. Issue closed on the GkTk-remedial board's §4 |
+| K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ✅ `tk-wkb` before `tk-numeric` (`gk-wkb` already preceded `gk-numeric`); the comment corrected; a test derives the order from every declared foreign key between drop actions. The order *within* an action is `[07-drop-actions-list-a-parent-table-before-its-children]` (§3.3) |
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ⏸️ |
 | K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09 | ⏸️ |
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09 | ⏸️ |
@@ -969,7 +969,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | 05c (**closed** 2026-09-28, on that board's §4) |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | 05b (**closed** 2026-09-28, on that board's §4) |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | 06 (**closed** 2026-09-29, on that board's §4) |
-| `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 |
+| `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | 07 (**closed** 2026-09-29, on that board's §4) |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | 08 |
 
 ### 3.2 Opened by the audit (2026-09-25), recorded for their owners
@@ -1011,6 +1011,37 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
+- **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
+  - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
+    integration table first and its tag and value tables after it, e.g. `"tk-wkb":
+    ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"]`, and `_drop_actions` drops them in that
+    order. `TkWKBValue.wkb_serial` and `TkWKB_tags.wkb_serial` declare foreign keys to
+    `TkWKBIntegration.serial`, so under `PRAGMA foreign_keys = ON` dropping the parent while value
+    rows exist fails (SQLite's `DROP TABLE` performs an implicit `DELETE`). Measured on prompt 07's
+    test store, clean under `PRAGMA foreign_key_check`, holding one Tk WKB row and its two
+    `TkWKBValue` rows: the real `_drop_actions(["tk-wkb"])`, the action alone, raised
+    `IntegrityError: FOREIGN KEY constraint failed` (log 07, observations).
+  - **Impact.** Inert: production never turns enforcement on, so every declared key is
+    documentation. It makes `_drop_order`'s comment true only between actions. Prompt 07's
+    `TestDropOrder` uses a store with no value rows for this reason.
+  - **Next step.** Order each action's list children-first (values and tags, then the parent), and
+    extend `TestDropOrder`'s schema-derived check to tables within one action. `_drop_actions` was
+    outside prompt 07's licence (`_drop_order` and its comment only).
+- **[07-wkb-value-reads-do-not-refuse-a-pre-07-store]** *(opened 2026-09-29 by prompt 07)*
+  - **The defect.** Prompt 07's D4 refusal is in the two WKB factories' `build()`. The four WKB
+    value reads (`GkWKBValue`/`TkWKBValue` `_build_impl_model` and `read_batch`) name
+    `numeric_serial` only when a parent is given. Measured on a `GkWKBIntegration` table recreated
+    from the 06 witness's DDL, holding one pure-WKB row: a parentless `GkWKBValue.read_batch`
+    returned its 2 values; a keyed one raised a raw `OperationalError` (`no such column:
+    GkWKBIntegration.numeric_serial`), not the D4 message (log 07, observations).
+  - **Impact.** `main.py`'s GkSource stage reads `GkWKBValue` with no parent, so on a pre-07 store
+    a run of that stage alone would read WKB values the tree otherwise refuses, rather than being
+    told the store predates the key. D4 says such a store is read at its own SHA; nothing here
+    reads one today (no store under `var/` is opened by this tree's pipeline).
+  - **Next step.** Decide whether the value reads should refuse a store without the column too
+    (e.g. by always selecting it, and matching the driver's message as `build()` does), or whether
+    D4's refusal is `build()`'s alone. Prompt 09 keys `GkSource` on its Gk rows and is a natural
+    owner.
 - **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
   - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
     nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the
@@ -1214,5 +1245,20 @@ run alone, to avoid the known wall-clock flake under parallel load; it did not f
 | Datastore | **351 OK** (343 + the 8 of the new `test_foreign_key_check.py`) |
 | LiouvilleGreen | 148 OK (1 skipped) |
 | RunRegistry | 199 OK; the golden fingerprint unchanged |
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.10 After prompt 07 (2026-09-29)
+
+Measured on the final tree of prompt 07's commit, with README §7's command, serially.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | **566 OK** (552 + the 14 of the new `test_wkb_numeric_parent_main.py`; the known wall-clock flake did not fire) |
+| CosmologyModels | 39 OK |
+| Datastore | **397 OK** (351 + the 41 of the new `test_wkb_numeric_parent_key.py` and the 5 of the new `test_wkb_parent_foreign_key.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint re-captured as `full_store_fingerprint_datastore-integrity-07.json`, format 2 |
 
 `black --check` is clean on every Python file this prompt touched.

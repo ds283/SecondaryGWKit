@@ -194,7 +194,7 @@ _DIGEST = re.compile(r"[0-9a-f]{64}")
 # the fingerprint's format. A fingerprint is compared only with one of the same format; a change to
 # what the inventory records, or to how a digest is formed, bumps this and regenerates the golden
 # fingerprint (`RunRegistry/tests/data/full_store_fingerprint.json`) in the same commit
-FINGERPRINT_FORMAT = 1
+FINGERPRINT_FORMAT = 2
 TAKEN_KEYS = ("when", "git_head", "git_dirty", "run_id")
 
 # both separators, on every platform, as `Datastore/shard_paths.py` treats a shard record

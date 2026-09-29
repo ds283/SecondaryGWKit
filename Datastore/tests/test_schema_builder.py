@@ -38,7 +38,7 @@ from Datastore.tests.schema_description import (
 )
 
 WITNESS = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-06.json"
+    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-07.json"
 )
 
 

@@ -226,11 +226,17 @@ class Parent:
     """A reference from a key field to a parent row, by the serial in ``column``.
 
     ``of`` names the parent class, or is ``COSMOLOGY``, in which case ``type_column`` holds the
-    ``cosmology_type`` that names it."""
+    ``cosmology_type`` that names it.
+
+    ``nullable``: whether a NULL in ``column`` is a value of the key rather than a missing parent.
+    A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a pure-WKB
+    ``GkWKBIntegration`` has no numeric parent). On a parent that is not nullable a NULL is what
+    it always was, a parent that cannot be resolved."""
 
     column: str
     of: str
     type_column: Optional[str] = None
+    nullable: bool = False
 
 
 @dataclass(frozen=True)
@@ -535,6 +541,9 @@ def read_records(
         key: Dict[str, Any] = {leaf: canonical(mapping[leaf]) for leaf in leaves}
         missing_parent = None
         for field, parent in parents.items():
+            if parent.nullable and mapping[parent.column] is None:
+                key[field] = None
+                continue
             of = parent.of
             if of == COSMOLOGY:
                 of = types.get(mapping[parent.type_column])
