@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Audit:** §0.2 A4; `QI-report.md` QI-5, QI-6 and its §1 rows R17, R20, R21;
-`docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §3.1 ("Tier 1")
+`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §3.1 ("Tier 1")
 **Depends on:** 05 (consumes `TkSourceFunctions`). Read `logs/05-tk-source-functions.md` §"State
 handed to the next prompt" for the final field names.
 **Recommended model:** Fable. This prompt realises the design in README §6; an algebra or sign

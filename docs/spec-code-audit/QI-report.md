@@ -218,7 +218,7 @@ defect.
 
 ### QI-3 (AGREES — closes reconciliation §4 item 4)
 
-**The question.** `docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §4 item 4: the
+**The question.** `docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §4 item 4: the
 code's `1/((3+2b)(2+b))` (`:871`) against spec 05 R31's `(2+b)/(3+2b)^3`. Flagged, not claimed.
 
 **Answer: consistent, and the discrepancy is exactly the $f$ normalisation.** Two independent

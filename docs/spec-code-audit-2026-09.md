@@ -54,7 +54,7 @@ numerical floor. In particular:
   $\int dz'\,\bar G\,\frac{1+z}{1+z'}\,f/H^2$ with nothing missing ($4\times10^{-16}$ quadrature,
   $8\times10^{-14}$ Levin), and `analytic_integral` reproduces spec 04 R14 (with the signed-off
   $a_0^2$) to $10^{-8}$–$10^{-6}$ relative on seven configurations.
-- **The normalisation question flagged in `docs/resonance-scaffolding/sigw-resonance-reconciliation.md`
+- **The normalisation question flagged in `docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md`
   §4 item 4 is closed in the code's favour.** The code's $1/((3+2b)(2+b))$ against R31's
   $(2+b)/(3+2b)^3$ is exactly $1/c^2$ with $c=(2+b)/(3+2b)=3(1+w)/(5+3w)=c_*$, and that factor is
   entirely the normalisation of $f$: measured $f_{\rm code}/f_{\rm R28}=1/c^2$ to 14 digits at three
@@ -290,7 +290,7 @@ the result right.
 ## 5. Consequences for the remedial-work and one-loop campaigns
 
 This section records what the audit *implies* for Steps 2 and 3 of the delivery plan; it is not a
-design. The design questions themselves are in `docs/resonance-scaffolding/sigw-resonance-reconciliation.md`
+design. The design questions themselves are in `docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md`
 §3, which this audit leaves intact and, on its §4 item 4, resolves.
 
 1. **A1 must be fixed before any GenericEOS/QCD production run**, independently of the refactor:

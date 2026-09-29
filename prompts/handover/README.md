@@ -637,7 +637,7 @@ not, but evaluating it means quadrature of (4.11), and KT §8 Table 8.2 shows pl
 failing above $x \approx 3\times10^4$ — 200 subdivisions exhausted, declared error of order
 $\lvert I\rvert$. So at the resonance, at large $x$, for $b \le 0$, **there is no instrument at
 all**. Nothing in this campaign needs one: no fixture case is near the resonance, and $b = 0$ has
-KT's eq. (22), which is finite there. But `docs/resonance-scaffolding-v1/` and `-v2/` are built
+KT's eq. (22), which is finite there. But `docs/one-loop-planning/resonance-scaffolding-v1/` and `-v2/` are built
 around that point and have no campaign of their own, so this is where it would otherwise be lost.
 The option is a Levin-type evaluation of (4.11) at large $x$. **Recorded as a decision rather than
 a §3 issue**: nothing in the tree is wrong, no board exists to host it, and the recon calls it a

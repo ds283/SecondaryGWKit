@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Audit:** §0.2 A2, A4; `QI-report.md` QI-2, QI-4, QI-5, QI-6, QI-7 and §3;
-`docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §1.5, §3.1, §4.2
+`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §1.5, §3.1, §4.2
 **Depends on:** 05, 06, 07 (hard). Read their logs' "State handed to the next prompt" first.
 **Recommended model:** Fable. This is where the region logic that decides *which* physics is
 applied *where* gets written, and where the numerical branch is validated against the analytic

@@ -1,7 +1,7 @@
 # Prompt 04 — Schedule only triangle-closing $(k,q,r)$ triples (A5)
 
 **Campaign:** [`README.md`](README.md) · **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
-**Audit:** §0.2 A5; `QI-report.md` QI-12; `docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §0.2 F3
+**Audit:** §0.2 A5; `QI-report.md` QI-12; `docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §0.2 F3
 **Depends on:** nothing. Must land **before** prompt 10 (same `main.py` stage).
 **Recommended model:** Sonnet
 **Files you may touch:** `main.py` (the QuadSourceIntegral work-item construction only), plus the

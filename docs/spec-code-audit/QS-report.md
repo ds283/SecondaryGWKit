@@ -205,7 +205,7 @@ table: `main.py:2671` uses source `k` up to `3×10⁸/Mpc` down to `z_end = 0.1`
 Levin tuning note records a "**~4.5e6-cycle deep-sub-horizon case**"
 (`ComputeTargets/QuadSourceIntegral.py:34`) — i.e. `x ~ 1.4×10⁷`, three decades below the last row.
 
-This is finding **F1** of `docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §0.2,
+This is finding **F1** of `docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §0.2,
 now measured. Downstream: every `QuadSourceIntegral` value (numeric, WKB-quadrature and Levin paths
 alike) reads `source_f.source(log_z_source, z_is_log=True)`
 (`QuadSourceIntegral.py:958, 1028, 1102`), so this spline error is the accuracy floor of the whole

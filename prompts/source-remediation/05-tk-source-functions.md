@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Audit:** §0.2 A2; `TK-report.md` §1 rows R23/R24/R26 and TK-8; `QS-report.md` QS-5;
-`docs/resonance-scaffolding/sigw-resonance-reconciliation.md` §1.1 ("Modes in amplitude–phase form"), §3.4
+`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` §1.1 ("Modes in amplitude–phase form"), §3.4
 **Depends on:** nothing hard (soft: 01, 02). Prompts 07 and 08 consume what this defines.
 **Recommended model:** Opus
 **Files you may touch:** new `ComputeTargets/TkSourceFunctions.py`, `ComputeTargets/__init__.py`
