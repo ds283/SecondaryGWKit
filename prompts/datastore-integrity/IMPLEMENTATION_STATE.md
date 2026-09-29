@@ -81,7 +81,19 @@ and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26).
 dispatched one at a time, never concurrently in this checkout, in either order. Since then:
 [`prompt-04b.md`](orchestrator/prompt-04b.md) and [`prompt-05.md`](orchestrator/prompt-05.md)
 (2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
-[`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used).
+[`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used), and
+[`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, ready).
+
+**Measured for 06 (2026-09-29, while its note was written).** A throwaway sketch of S1–S3 and
+the two flags, in a worktree outside the tree and since removed, did three things:
+- It failed only `test_schema_builder`'s two witness tests, for exactly the four classes it
+  touched. It left the golden fingerprint, ComputeTargets 552 and CosmologyModels 39 unchanged.
+- Its witness diff was 9 hunks and 30 lines, because each foreign key appears three times (the
+  column, the constraint, the DDL).
+- It showed that the fixture cannot give S4's "before S1" failure as it stands. Each fixture
+  `QuadSource`'s `Tq_serial` equals a `QuadSource` serial on its own shard, so the wrong key passes
+  `PRAGMA foreign_key_check` by coincidence, and `relabel_serials` follows whatever key is declared.
+  The test needs fixed rows of its own. Mutation (ii) fires on the fixture as it is.
 
 **Measured for 03 (2026-09-29, while its note was written).** A throwaway sketch of L1–L4, in a
 worktree outside the tree and since removed, left every existing test passing unmodified:
