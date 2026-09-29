@@ -901,6 +901,135 @@ prompt to add a column and change a lookup key. It adds its witness beside 06's,
 coincidence. It is also the first whose foreign key constrains a drop, so `_drop_order` is its
 concern. Prompt 10 remains the first real run.
 
+**Orchestrator review of prompt 07 (2026-09-29).** Run against `a171ced`, dispatched from
+`794728d` with nothing `running` and no other worktree. **All eleven checks in
+`orchestrator/prompt-07.md` §3 passed.** The review found three small remnants, fixed in
+`d1829bb`, and one script the log's rule-11 list omits.
+- **Dispatch.**
+  - `HEAD` was `794728d`, not the note's `a2a8b65`. The two commits between were another
+    session's, touching docs and one docstring and moving no code. That session's work, which
+    §1.2 required committed, was committed.
+  - So the index held **97** rows, not the note's 96, and the agent was told so.
+  - The baselines were re-measured on `794728d` and matched §5.9. `substitute_main_py()`'s five
+    literals each occurred once.
+  - While the agent worked, another session wrote `docs/derivation/` in this checkout, committed
+    as `ccb3078`. The agent staged by path only, and `a171ced` touches none of its files.
+- **The agent stopped once, correctly.** Two existing tests outside §0.1 had to change:
+  - `test_gauss_order_key.py` calls both WKB `build()`s with no parent, and `store()` with no
+    connection. Measured on a minimal patch, it gave 16 errors.
+  - `test_factory_select_columns.py`'s guard pins grow by the check's new row reads.
+
+  The note's "ComputeTargets unchanged" was measured on a sketch that did not touch `build()`.
+  **The user granted both on 2026-09-29, limited to following the key (grants A and B)**, and
+  accepted the three `main.py` behaviour changes the agent flagged (log deviations 1–3).
+- **Scope.**
+  - 29 files, all on the brief's list. The forbidden paths of §3.1 have an empty diff.
+  - `--diff-filter=M` over `*/tests/*` gives §0.1's seven files plus the two grants. Every hunk
+    was read: each follows the key and asserts nothing new or less.
+  - `test_store_inventory`'s missing-column test now recreates shard 1's table from the 06
+    witness's DDL, since SQLite cannot `DROP COLUMN` a foreign-key column (deviation 4). Its
+    assertions change only the column name. That is sound.
+  - `Datastore.py` is `_drop_order` and its comment, `store_inventory.py` is `nullable` and its
+    three-line use, and `stores.py` is the one constant.
+- **K1, schema and lookups.**
+  - The key:
+    - `numeric_serial` is indexed with its `ForeignKey`, NOT NULL on Tk and nullable on Gk;
+    - `z_init` is in no `build()` filter;
+    - `PURE_WKB` compiles to `IS NULL`;
+    - a lookup naming neither parent nor mode raises, for Tk and Gk alike, and so does a Tk
+      construction with no parent;
+    - `labels_only` refuses a second match and names the parents;
+    - the four value reads take an optional parent in place of `z_init`.
+  - **The consistency check** is in each factory's `store()`, before the insert. It reads the
+    parent joined to its exit time and compares `z_exit - stop_deltaz_subh` and the stop values
+    by `struct.pack` bit pattern, and it checks `k`, model and, for Gk, `z_source`. A pure-WKB
+    row is checked against `G = 0`, `G' = 1` and the `z_source` row's `z`.
+  - With the parent's two WKB factories checked out over `TestTheConsistencyCheck`, 11 tests gave
+    `failures=10, errors=4`. All nine one-ulp sub-tests failed. The factories were restored.
+- **`main.py`.**
+  - Every hunk is a site of §0.6's table.
+  - `Gk_WKB_numeric_parent` holds `z_source_limit = sqrt(k_exit.z_exit_subh_e3 *
+    k_exit.z_exit_subh_e4)` and `z_source.z >= z_source_limit and Gk.available` character for
+    character, and the long comment became its docstring.
+  - The Gk numeric lookup's `_do_not_populate` is sound: the seeded branch reads only
+    `stop_G`, `stop_Gprime`, `stop_deltaz_subh` and `store_id`, all row columns.
+  - `test_main_plumbing.py` is unmodified and passes.
+  - The five `substitute_main_py()` literals each occur once, now at `:3582`, `:3689`, `:3690`,
+    `:3791` and `:3803`.
+- **Readers.**
+  - Both extraction scripts pass `labels_only=True`, and `run_quadsource_integrals.py` keys on
+    the numeric row it looked up.
+  - A grep of every `"GkWKBIntegration"`/`"TkWKBIntegration"` lookup outside the tests finds none
+    that passes neither a parent nor the mode.
+  - **The rule-11 list omits one script.**
+    `docs/datastore-integrity-audit/lookup_keys/probe_05_value_lookups_and_read_batch.py` runs
+    cleanly at `a171ced~1` and now raises `IntegrityError: NOT NULL constraint failed:
+    TkWKBIntegration.numeric_serial`. It inserts a raw Tk WKB row without the column.
+  - All fourteen audit probes were run at both commits:
+    - four already fail at the parent, since the fixes they shape have landed, and 07 does not
+      change them;
+    - `replicated_divergence_probe.py` gains one correct problem line, a WKB row whose numeric
+      parent is unresolved;
+    - the rest differ only by the new column, moved line numbers and a larger count of column
+      references checked.
+  - The probe is audit evidence, and the note barred the agent from probes, so it is left as
+    written. See the user's note below.
+- **K2.** `tk-wkb` drops before `tk-numeric`, and `gk-wkb` before `gk-numeric`.
+  `TestDropOrder` runs under `PRAGMA foreign_keys = ON`, on a store it first asserts clean, and
+  derives the order from every declared foreign key between actions.
+- **D5 and the fingerprint.**
+  - `schema_at_base.json`, `schema_at_datastore-integrity-06.json` and
+    `full_store_fingerprint.json` have no diff.
+  - A witness re-captured from `HEAD` is byte-identical to the new one.
+  - The orchestrator's own diff of the 06 and 07 witnesses is **12 hunks and 86 lines**,
+    byte-identical to the log's paste, and every hunk is one of §0.6's six kinds for one of the
+    two WKB classes.
+  - An independently re-captured fingerprint of `build_full_store()` equals the new golden:
+    format 2, `problems` empty, 21 classes. Only `TkWKBIntegration` and `GkWKBIntegration` moved,
+    and their counts (3, 2) and tag-set counts ([2, 1], [1, 1]) are unchanged.
+- **Mutations.**
+  - (i)–(v) were extracted from `git show HEAD:<log>` and applied with plain `git apply` in a
+    detached worktree of `HEAD`, each over Datastore, ComputeTargets and RunRegistry.
+  - Each gave its logged counts: Datastore 12, 8, 14, 2 and `2 + 1 error`; ComputeTargets 2 under
+    (iv).
+  - Every failing test and sub-test is one the log names under that mutation, and the tree was
+    clean after each revert.
+  - Two differences were environmental:
+    - ComputeTargets under (v) failed `test_wall_time_per_object` at 0.0624 s against 0.06 s, the
+      known flake, under the review's parallel load. That module alone under (v) gave 17 OK.
+    - RunRegistry reported `skipped=1` in the worktree, the A3-manifest test, which needs a
+      gitignored file under `var/`.
+- **Boards.**
+  - The issue is on the GkTk-remedial board's §4, with a closing note naming the commit by
+    subject.
+  - Counted, the index has **98** rows: 97, less the one closed, plus the two opened on §3.3.
+  - This board has its §1 row, K1–K2, §3.1, §3.3 and §5.10.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `d1829bb`, serially: AdaptiveLevin 32, ComputeTargets 566 (+14), CosmologyModels 39,
+    Datastore 397 (+46), LiouvilleGreen 148 (1 skipped), RunRegistry 199, all OK.
+  - `black --check .` is clean.
+  - `ray.is_initialized()` is false after each of the three new modules, which run 41, 5 and 14
+    tests.
+- **Remnants, fixed in `d1829bb`** (*"Tidy three remnants of datastore-integrity prompt 07"*), each
+  too small to be an issue. The agent recorded all three and fixed none, as rule 4 asks.
+  - `test_schema_builder.py`'s docstring named the 06 witness as current.
+  - The comment above `FINGERPRINT_FORMAT` said a bump *regenerates*
+    `full_store_fingerprint.json`, which D5 forbids.
+  - This board's header said "Next: 07".
+- **Log 07 is accurate**, apart from the omitted probe. Its counts, its witness paste and its
+  mutation record were checked against the diff and the replays.
+
+**For the user.** `probe_05` is the one script 07 breaks that its log does not name. Four other
+audit probes already stopped running when the fixes they measure landed, and none of those was
+recorded as an issue. So the convention appears to be that a probe is evidence for the tree its
+audit read. The probe would run again with `numeric_serial=1` in its `tk_wkb_parent` insert, but
+what it prints about `z_init` would then describe a filter that no longer exists.
+
+**Next: 08**, with its own orchestrator note carrying this review's findings. It adds
+`quad_policy_serial` to `QuadSourceIntegral`'s key, a witness and a golden beside 07's, and very
+likely a second format bump. `TestDropOrder` will hold its new foreign key to `_drop_order`.
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
