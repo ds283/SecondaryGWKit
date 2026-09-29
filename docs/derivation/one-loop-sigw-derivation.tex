@@ -1,0 +1,964 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\setlist{nosep}
+\allowdisplaybreaks
+
+% ---------- macros ----------
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\MP}{M_{\mathrm{P}}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\vk}{\mathbf{k}}
+\newcommand{\vq}{\mathbf{q}}
+\newcommand{\vr}{\mathbf{r}}
+\newcommand{\vt}{\mathbf{t}}
+\newcommand{\vx}{\mathbf{x}}
+\newcommand{\ve}{\mathbf{e}}
+\newcommand{\vebar}{\bar{\mathbf{e}}}
+\newcommand{\Gr}{\mathrm{Gr}}
+\newcommand{\Gb}{\bar{G}}
+\newcommand{\zinit}{z_{\mathrm{init}}}
+\newcommand{\etainit}{\eta_{\mathrm{init}}}
+\newcommand{\wstar}{w^{*}}
+\newcommand{\cstar}{c_{*}}
+\newcommand{\om}{\omega_{\mathrm{eff}}}
+\newcommand{\omstar}{\omega_{\mathrm{eff}*}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\kphys}{k_{\mathrm{phys}}}
+\newcommand{\qphys}{q_{\mathrm{phys}}}
+\newcommand{\TT}{\mathrm{TT}}
+\newcommand{\spec}[1]{\textsf{#1}}
+\newcommand{\note}[1]{\textsf{#1}}
+\newcommand{\Tavg}[1]{\overline{#1}}
+
+\theoremstyle{remark}
+\newtheorem*{convention}{Convention}
+\newtheorem*{chk}{Check}
+\newtheorem*{remark}{Remark}
+
+\title{The one-loop scalar-induced gravitational-wave spectrum\\ with numerically computed Green's functions:\\ a complete derivation}
+\author{Compiled from the handwritten derivation notes of D.~Seery (2022--2025)\\ and their typed transcriptions in \texttt{docs/spec/}\footnote{Draft assembled 29 September 2026 with Claude Code (Fable~5.1). Every displayed result that is not a definition has been machine-checked; see Appendix~\ref{app:verification}.}}
+\date{29 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This document derives, from the metric to the final formula, the one-loop (``$P_{22}$'') contribution to the power spectrum of gravitational waves induced at second order by primordial scalar perturbations, in the form implemented by the \texttt{SecondaryGWKit} pipeline: the scalar transfer function and the tensor Green's function are solved numerically in redshift on an arbitrary background, the quadratic source is built from them, the source time integral is performed by quadrature and by the Levin method, and the loop integral is reduced to a two-dimensional integral over the magnitude and polar angle of the loop momentum. The constant-$w$ analytic solution is carried alongside as the closed-form cross-check. The derivation follows the author's handwritten notes; the steps are presented at the granularity needed to check them, with linking prose, and every intermediate result has been verified symbolically or numerically.
+\end{abstract}
+
+\tableofcontents
+
+\section*{How to read this document}
+\addcontentsline{toc}{section}{How to read this document}
+
+\paragraph{Sources.} The calculation lives in two folders of scanned handwritten notes, referred to below as \note{MAIN}~$nn$ (the 2022 ``Green's function formula for $P_{22}$'' series, documents 10--14) and \note{NUM}~$nn$ (the 2024--25 ``Numerical implementation'' series, documents 01--11). The spec-transcription campaign (\texttt{prompts/spec-transcription/}) transcribed these into five typed specification files \spec{01}--\spec{05} under \texttt{docs/spec/}, each signed off by the author on 2026-09-07. Result numbers of the form \spec{03~R22} refer to those files; Appendix~\ref{app:correspondence} maps every equation here to its spec result and page. Documents \note{MAIN}~01--08 (the connexion, Ricci and Einstein tensors) were not transcribed; the one result of theirs that enters, the second-order tensor source, is rederived here and verified by computer algebra (\S\ref{sec:tensor-source}). \note{MAIN}~15 and the material excluded by the campaign README are not used.
+
+\paragraph{What is derived and what is chosen.} Everything that follows from the field equations is derived. A small number of things are \emph{conventions} (sign of the Green's-function source, orientation of the redshift integral, normalisation of $a$, normalisation of the polarisation tensors, which fluid quantity is meant by $c_s^2$). These are stated in boxed \textbf{Convention} paragraphs where they arise, because several of the apparent discrepancies between the 2022 and the 2024 notes are nothing but two conventions meeting; Appendix~\ref{app:slips} lists the genuine slips found on the pages and how each was resolved.
+
+\paragraph{Structure.} Section~\ref{sec:setup} fixes the setting. Sections~\ref{sec:scalar}--\ref{sec:loop} are the physics, in the order the pipeline uses them: scalar transfer function, sourced tensor equation, tensor Green's function, source time integral, loop integral. Within each, the conformal-time constant-$w$ analysis (which gives closed forms) and the redshift general-background analysis (which the code integrates) are presented side by side. Section~\ref{sec:summary} collects the final formula and the pipeline. The appendices hold the Bessel identities, the slip log, the correspondence table and the machine verification.
+
+% =====================================================================
+\section{Setting and conventions}
+\label{sec:setup}
+
+\subsection{Background, time variables and the Hubble rates}
+
+The background is spatially flat FRW with scale factor $a$. Three time variables are used: cosmic time $t$, conformal time $\eta$ with $\dd t = a\,\dd\eta$, and redshift $z$ with
+\begin{equation}
+1+z = \frac{a_0}{a}.
+\label{eq:z-def}
+\end{equation}
+A dot is $\dd/\dd t$; in the conformal-time sections a prime on a function of time is $\dd/\dd\eta$. In the redshift sections derivatives are written out as $\dd/\dd z$, except in the Liouville--Green formulae of \S\ref{sec:Tk-LG} and \S\ref{sec:Gk-LG}, where a prime is $\dd/\dd z$ as in \note{NUM}~05--11. A prime on a time \emph{label} ($\eta'$, $z'$) marks the source time and is never a derivative.
+
+The two Hubble rates are $H = \dot a/a$ and $\cH = a'/a = aH$. The first slow-roll-type parameter is
+\begin{equation}
+\eps \equiv -\frac{\dot H}{H^2}
+= \frac{1+z}{H}\frac{\dd H}{\dd z},
+\qquad
+\cH' = a^2H^2(1-\eps),
+\qquad
+\frac{a''}{a} = a^2H^2(2-\eps).
+\label{eq:eps-def}
+\end{equation}
+The second and third relations follow from $\cH' = a\,\dd(aH)/\dd t = a^2H^2 + a^2\dot H$ and $a'' = a\,\dd(a^2H)/\dd t = 2a^3H^2 + a^3\dot H$. Note that $\eps>0$ for a decelerating universe. The conversion between $\eta$ and $z$ derivatives is
+\begin{equation}
+\dd z = -\frac{a_0}{a}\frac{\dot a}{a}\,\dd t = -(1+z)H\,\dd t = -(1+z)\,aH\,\dd\eta = -a_0H\,\dd\eta,
+\qquad
+\frac{\dd}{\dd\eta} = -a_0H\frac{\dd}{\dd z}.
+\label{eq:deta-dz}
+\end{equation}
+
+The Einstein equations are $G^\mu{}_\nu = \MP^{-2}T^\mu{}_\nu$ with $\MP$ the reduced Planck mass, so the Friedmann equation reads $3H^2\MP^2 = \rho$ and, in conformal time, $3\cH^2\MP^2 = a^2\rho$. Signature is $(-,+,+,+)$.
+
+\begin{convention}[Normalisation of $a$: absorbed, never set to one]
+$a_0$ is carried explicitly in the notes and in this document. The code works in the two $a_0$-invariant combinations
+\begin{equation}
+\kphys \equiv \frac{k}{a_0}\qquad\text{and}\qquad \tau \equiv a_0\eta,
+\end{equation}
+so that no $a_0$ appears in it. This is not the assumption $a_0 = 1$: any formula in comoving variables must be invariant under $a_0\to\lambda a_0$, comoving momenta $\to\lambda\times$, $\eta\to\eta/\lambda$, with $H(z)$ and physical momenta fixed, and this covariance test is applied below whenever a power of $a_0$ is in question (\S\ref{sec:a0-handoff}).
+\end{convention}
+
+\subsection{Equation of state and the sound speed}
+\label{sec:eos}
+
+For a fluid with constant equation of state $w = p/\rho$ one has $\rho\propto a^{-3(1+w)}$ and, from $3\cH^2\MP^2 = a^2\rho\propto a^{-(1+3w)}$, $a'\propto a^{(1-3w)/2}$, hence $\eta-\eta_c\propto a^{(1+3w)/2}$. Choosing the integration constant $\eta_c = 0$ (so that $\eta\to0$ as $z\to\infty$, the convention of \note{NUM}~04),
+\begin{equation}
+a\propto\eta^{1+b},\qquad
+b \equiv \frac{1-3w}{1+3w},\qquad
+\cH = \frac{1+b}{\eta},\qquad
+\cH' = -\frac{1+b}{\eta^2},\qquad
+\frac{a''}{a} = \frac{b(1+b)}{\eta^2}.
+\label{eq:constant-w-background}
+\end{equation}
+The identities used repeatedly are
+\begin{equation}
+\begin{gathered}
+1+3w = \frac{2}{1+b},\qquad
+w = \frac{1}{3}\frac{1-b}{1+b},\qquad
+1+w = \frac{2(2+b)}{3(1+b)},\\
+5+3w = \frac{2(3+2b)}{1+b},\qquad
+\frac{2}{3(1+w)} = \frac{1+b}{2+b}.
+\end{gathered}
+\label{eq:w-b-identities}
+\end{equation}
+Radiation is $w=\tfrac13$, $b=0$; matter is $w=0$, $b=1$.
+
+\begin{convention}[Two equations of state]
+Two distinct fluid quantities appear and must not be confused.
+\begin{itemize}
+\item $w_0 = p_0/\rho_0$ is the \emph{background} equation of state, $\Lambda$ included (code: \texttt{wBackground}). It enters the tensor source through $\rho_0+p_0$ (\S\ref{sec:tensor-source}) and is evaluated at the \emph{source} time.
+\item $c_s^2$ is the closure of the scalar perturbations, $\delta p = c_s^2\,\delta\rho$, with $\Lambda$ unperturbed (code: \texttt{wPerturbations}). The author's closure is $c_s^2 = w(z)$ of the perturbed components (radiation plus matter). For a single constant-$w$ fluid the two coincide, $c_s^2 = w = (1-b)/(3(1+b))$, and that is the value inside every Bessel argument $kc_s\eta$ below. On a background whose $w$ runs, the adiabatic sound speed is instead $\dd p/\dd\rho = w + \rho\,\dd w/\dd\rho\neq w$; whether the transfer-function sector should read that quantity on the QCD-crossover background is the subject of an audit opened on 2026-09-29 (\texttt{prompts/perturbation-sound-speed/}). Nothing below depends on the choice: $c_s^2(z)$ enters the general-background equations only as a given function, and the constant-$w$ closed forms are unaffected.
+\item $\wstar = w_0(\zinit)$ is the background equation of state at the initial time, which must lie deep inside an epoch of constant $w$ (\S\ref{sec:seed}).
+\end{itemize}
+\end{convention}
+
+For a matter--radiation--$\Lambda$ background,
+\begin{equation}
+\begin{gathered}
+w_0(z) = \frac{w_r\Omega_{r}(1+z)^4}{\Omega_m(1+z)^3+\Omega_r(1+z)^4+\Omega_\Lambda},\\
+c_s^2(z) = \frac{w_r\Omega_r(1+z)}{\Omega_m+\Omega_r(1+z)},
+\qquad
+\frac{\dd c_s^2}{\dd z} = \frac{w_r\Omega_r\Omega_m}{[\Omega_m+\Omega_r(1+z)]^2},
+\end{gathered}
+\label{eq:w-of-z}
+\end{equation}
+with $w_r=\tfrac13$, and, with $E^2(z) = \Omega_m(1+z)^3+\Omega_r(1+z)^4+\Omega_\Lambda$,
+\begin{equation}
+\frac{\dd\ln H}{\dd z} = \frac{3\Omega_m(1+z)^2+4\Omega_r(1+z)^3}{2E^2},\qquad
+\frac{\dd^2\ln H}{\dd z^2} = \frac{6\Omega_m(1+z)+12\Omega_r(1+z)^2}{2E^2} - 2\Big(\frac{\dd\ln H}{\dd z}\Big)^2,
+\label{eq:dlnH}
+\end{equation}
+so that $\eps = (1+z)\,\dd\ln H/\dd z$ and $\dd\eps/\dd z = \dd\ln H/\dd z + (1+z)\,\dd^2\ln H/\dd z^2$.
+
+\subsection{Metric and perturbations}
+\label{sec:metric}
+
+The perturbed metric is
+\begin{equation}
+\dd s^2 = a^2(\eta)\Big[-e^{2\phi}\,\dd\eta^2 + e^{-2\psi}\,\big(e^{h}\big)_{ij}\,\dd x^i\dd x^j\Big],
+\qquad h_{ii} = 0,\quad \partial_ih_{ij} = 0,
+\label{eq:metric}
+\end{equation}
+with $\phi$ the lapse (Newtonian) potential, $\psi$ the curvature potential and $h_{ij}$ the transverse-traceless tensor. Vector modes are dropped, and anisotropic stress is neglected throughout, which will force $\psi = \phi$ at first order. The exponential parametrisation matters at second order: it is what makes the quadratic scalar source take the form found in \S\ref{sec:tensor-source}, and it differs from the $(1+2\phi)$ parametrisation of some of the literature by a term $\propto \phi\,\partial_i\partial_j\phi$ that is invisible after transverse-traceless projection.
+
+\subsection{Fourier conventions, polarisation tensors and power spectra}
+\label{sec:fourier}
+
+Fourier transforms are
+\begin{equation}
+f(\vx) = \int\frac{\dd^3k}{(2\pi)^3}\,e^{i\vk\cdot\vx}f_{\vk},
+\qquad
+h_{ij}(\vx) = \int\frac{\dd^3k}{(2\pi)^3}\,e^{i\vk\cdot\vx}\sum_{s=+,\times}e^{s}_{ij}(\vk)\,h_s(\vk).
+\label{eq:fourier}
+\end{equation}
+For each $\vk$ choose an orthonormal pair $(\ve,\vebar)$ spanning the plane perpendicular to $\vk$ and set
+\begin{equation}
+e^{+}_{ij} = \frac{1}{\sqrt2}\big(e_ie_j - \bar e_i\bar e_j\big),\qquad
+e^{\times}_{ij} = \frac{1}{\sqrt2}\big(e_i\bar e_j + \bar e_ie_j\big),\qquad
+e^{s}_{ij}e^{s'}_{ij} = \delta_{ss'},\qquad e^s_{ij}k_j = 0.
+\label{eq:polarisation}
+\end{equation}
+The same pair is used for $-\vk$, so $e^s_{ij}(-\vk) = e^s_{ij}(\vk)$ (a sign flip of $\vebar$ would flip $e^\times$, which is harmless since only squares of polarisation factors survive). The transverse-traceless projector acting on a symmetric tensor $S_{ab}$ with Fourier label $\vk$ is $\mathcal{P}_{ij}{}^{ab}S_{ab} = \sum_se^s_{ij}(\vk)\,e^s_{ab}(\vk)S_{ab}$.
+
+Statistical averages of the primordial seed $\zeta$ and of $h_s$ define dimensionful spectra,
+\begin{equation}
+\big\langle\zeta_{\vk}\zeta_{\vk'}\big\rangle = (2\pi)^3\delta(\vk+\vk')\,P_\zeta(k),
+\qquad
+\big\langle h_s(\vk)\,h_{s'}(\vk')\big\rangle = (2\pi)^3\delta(\vk+\vk')\,\delta_{ss'}\,P^h_{s}(k),
+\label{eq:P-def}
+\end{equation}
+and the dimensionless spectra are $\cP(k) = k^3P(k)/(2\pi^2)$. The one-loop spectrum $P^h_{22}$ is the leading contribution to $P^h_s$, per polarisation; both polarisations carry equal power in this calculation.
+
+\subsection{The primordial seed and the transfer function}
+\label{sec:seed}
+
+At the initial redshift $\zinit$ every mode of interest ($k$, and the loop momenta $q$, $|\vk-\vq|$) is far outside the horizon and the background has constant equation of state $\wstar$. On super-horizon scales the adiabatic curvature perturbation $\zeta$ is conserved and the Newtonian potential is constant, related to it by the standard constant-$w$ result
+\begin{equation}
+\phi_{\vk}(z) = \cstar\,T_k(z)\,\zeta^{*}_{\vk},
+\qquad
+\cstar \equiv \frac{3(1+\wstar)}{5+3\wstar},
+\qquad T_k(\zinit) = 1,\quad \frac{\dd T_k}{\dd z}\Big|_{\zinit} = 0,
+\label{eq:seed}
+\end{equation}
+which \emph{defines} the transfer function $T_k$ of the potential. For radiation $\cstar = \tfrac23$. The sign convention relating $\zeta$ to $\phi$ is immaterial because only $P_\zeta$ enters the final result. The spectrum fed into the pipeline is $P_\zeta$ (equivalently $\cP_\zeta$), so that output of inflationary mode-solvers can be used directly. In the constant-$w$ analytic sections the seed is written $S^*_{\vq}$ in the 2022 notes; it is the same object, $S^*\equiv\zeta^*$, and $P_*\equiv P_\zeta$.
+
+Two requirements on $\zinit$ follow and are conditions on the initial data, not spec constants: $w$ must be constant there for long enough that $\phi$ has settled to $\cstar\zeta^*$, and all three momenta must be super-horizon there so that $T\to1$. In the pipeline $\zinit$ is set per mode as a fixed number of $e$-folds before horizon entry.
+
+% =====================================================================
+\section{Linear scalar perturbations and the transfer function}
+\label{sec:scalar}
+
+\subsection{The Einstein tensor at first order}
+
+Expanding the Einstein tensor of \eqref{eq:metric} to first order in $\phi$, $\psi$ (and zeroth in $h$) gives, with $\nabla^2 = \partial_i\partial_i$,
+\begin{align}
+a^2\,G^\eta{}_\eta &= -3\cH^2 + 6\cH\psi' + 6\cH^2\phi - 2\nabla^2\psi,
+\label{eq:G00}\\
+a^2\,G^\eta{}_i &= -2\,\partial_i\big(\psi' + \cH\phi\big),
+\label{eq:G0i}\\
+a^2\,G^i{}_j &= -\big(2\cH'+\cH^2\big)\delta^i_j
+ + \delta^i_j\Big\{2\psi'' + 2\cH\phi' + 4\cH\psi' + 2\phi\big(2\cH'+\cH^2\big) + \nabla^2(\phi-\psi)\Big\}\notag\\
+&\qquad + \partial^i\partial_j(\psi-\phi).
+\label{eq:Gij}
+\end{align}
+(These are \note{MAIN}~12 p.\,1 and \note{MAIN}~10 p.\,3--4; the $\psi=\phi$ specialisations were recomputed by computer algebra, Appendix~\ref{app:verification}.) The perfect-fluid stress tensor is $T^\mu{}_\nu = (\rho+p)u^\mu u_\nu + p\,\delta^\mu_\nu$ with $u^\mu = (\dd\eta/\dd\tau)(1,v^i)$. Normalising $u^\mu u_\mu = -1$ gives $\dd\eta/\dd\tau = a^{-1}e^{-\phi}(1+O(v^2))$, and then to first order
+\begin{equation}
+T^\eta{}_\eta = -(\rho_0+\delta\rho),\qquad
+T^\eta{}_i = (\rho_0+p_0)\,v_i,\qquad
+T^i{}_j = (p_0+\delta p)\,\delta^i_j ,
+\label{eq:Tmunu-first}
+\end{equation}
+where $v_i\equiv\delta_{ij}v^j$ and the lowering uses $u_i = g_{ij}u^j = a\,v_i$ at leading order.
+
+The off-diagonal part of \eqref{eq:Gij}, $\partial^i\partial_j(\psi-\phi)$, has no counterpart on the right of the field equations when anisotropic stress vanishes, so
+\begin{equation}
+\psi = \phi .
+\label{eq:psi-eq-phi}
+\end{equation}
+The remaining components give the background equations $3\cH^2\MP^2 = a^2\rho_0$, $-(2\cH'+\cH^2)\MP^2 = a^2p_0$ (the latter is the acceleration equation $2\dot H + 3H^2 = -p_0/\MP^2$), and the three first-order equations
+\begin{align}
+3\cH\phi' + 3\cH^2\phi - \nabla^2\phi &= -\frac{a^2}{2\MP^2}\,\delta\rho,
+\label{eq:constraint}\\
+\partial_i\big(\phi'+\cH\phi\big) &= -\frac{a^2}{2\MP^2}(\rho_0+p_0)\,v_i,
+\label{eq:momentum}\\
+\phi'' + 3\cH\phi' + \big(2\cH'+\cH^2\big)\phi &= \frac{a^2}{2\MP^2}\,\delta p .
+\label{eq:pressure}
+\end{align}
+Equation \eqref{eq:momentum} will be used in \S\ref{sec:tensor-source} to eliminate the fluid velocity:
+\begin{equation}
+v_i = -\frac{2\MP^2}{a^2(\rho_0+p_0)}\,\partial_i\big(\phi'+\cH\phi\big).
+\label{eq:velocity}
+\end{equation}
+
+\subsection{The evolution equation for \texorpdfstring{$\phi$}{phi}}
+
+Closing the system with $\delta p = c_s^2\,\delta\rho$ and forming $\eqref{eq:pressure} + c_s^2\times\eqref{eq:constraint}$ eliminates the fluid variables entirely:
+\begin{equation}
+\boxed{\;
+\phi'' + 3\cH\big(1+c_s^2\big)\phi' + \Big\{2\cH' + \cH^2\big(1+3c_s^2\big)\Big\}\phi - c_s^2\nabla^2\phi = 0 .\;}
+\label{eq:phi-eq-eta}
+\end{equation}
+This is the master equation of the scalar sector. In Fourier space $\nabla^2\to-k^2$.
+
+\subsection{Constant \texorpdfstring{$w$}{w}: the analytic transfer function}
+\label{sec:Tk-analytic}
+
+For a constant-$w$ epoch insert \eqref{eq:constant-w-background} into \eqref{eq:phi-eq-eta} with $c_s^2 = w$. The mass term vanishes identically,
+\[
+2\cH' + \cH^2(1+3w) = \frac{1}{\eta^2}\Big\{-2(1+b) + (1+b)^2\frac{2}{1+b}\Big\} = 0 ,
+\]
+and the friction coefficient is $3(1+b)(1+w) = 2(2+b)$ by \eqref{eq:w-b-identities}, so
+\begin{equation}
+\phi_{\vk}'' + \frac{2(2+b)}{\eta}\,\phi_{\vk}' + c_s^2k^2\,\phi_{\vk} = 0 .
+\label{eq:phi-eq-constant-w}
+\end{equation}
+An equation $u'' + \frac{2\nu+1}{x}u' + u = 0$ is solved by $u = x^{-\nu}Z_\nu(x)$ for any Bessel function $Z_\nu$; with $x = kc_s\eta$ and $2\nu+1 = 2(2+b)$ we have $\nu = \tfrac32+b$, hence
+\begin{equation}
+\phi_{\vk}(\eta) = (kc_s\eta)^{-\frac32-b}\Big\{\alpha\,J_{\frac32+b}(kc_s\eta) + \beta\,Y_{\frac32+b}(kc_s\eta)\Big\}.
+\label{eq:phi-general}
+\end{equation}
+(One can also reach this by removing the friction term with $\phi = \eta^{-(2+b)}\chi$, which gives $\chi'' + [c_s^2k^2 - (2+b)(1+b)/\eta^2]\chi = 0$, solved by $\sqrt\eta\,Z_{b+3/2}(kc_s\eta)$.) As $x\to0$, $x^{-\nu}J_\nu(x)\to 2^{-\nu}/\Gamma(\nu+1)$ while $x^{-\nu}Y_\nu(x)$ diverges; the inflationary initial condition ``$\phi$ constant on super-horizon scales'' therefore sets $\beta = 0$ and fixes $\alpha$. Writing $\phi_{\vk}\to\phi^*_{\vk} = \cstar\zeta^*_{\vk}$,
+\begin{equation}
+\boxed{\;
+T_k(\eta) = 2^{\frac32+b}\,\Gamma\!\big(\tfrac52+b\big)\,(kc_s\eta)^{-\frac32-b}\,J_{\frac32+b}(kc_s\eta),
+\qquad T_k\to1\ \text{as } kc_s\eta\to0 .\;}
+\label{eq:Tk-analytic}
+\end{equation}
+For later use, with $x = kc_s\eta$, $\nu = \tfrac32+b$ and $N_b\equiv2^{\nu}\Gamma(\nu+1)$, the derivative follows from the identity $Z_\nu'(x) - \tfrac{\nu}{x}Z_\nu(x) = -Z_{\nu+1}(x)$ (Appendix~\ref{app:bessel}):
+\begin{equation}
+\frac{\dd T}{\dd x} = N_b\,x^{-\nu}\Big\{J_\nu'(x) - \frac{\nu}{x}J_\nu(x)\Big\} = -N_b\,x^{-\nu}J_{\nu+1}(x)
+= -2^{\frac32+b}\Gamma\!\big(\tfrac52+b\big)\,x^{-\frac32-b}J_{\frac52+b}(x).
+\label{eq:dTdx}
+\end{equation}
+
+\begin{remark}
+The 2022 notes write $\Phi(k\eta)$ for this function with the prime on $\Phi$ meaning $\dd/\dd x$ (chain-rule factors $q$, $r$ written out explicitly in \note{MAIN}~14); \note{MAIN}~11 uses the prime for $\dd/\dd\eta$, which is the one notational anomaly among the documents. Here $T'$ always means $\dd T/\dd\eta$ and $\dd T/\dd x$ is written out.
+\end{remark}
+
+\subsection{General background: the transfer function in redshift}
+\label{sec:Tk-redshift}
+
+The pipeline integrates \eqref{eq:phi-eq-eta} in redshift on an arbitrary background. Using \eqref{eq:deta-dz} twice,
+\begin{equation}
+\phi' = -a_0H\frac{\dd\phi}{\dd z},\qquad
+\phi'' = a_0H\frac{\dd}{\dd z}\Big(a_0H\frac{\dd\phi}{\dd z}\Big) = a_0^2H^2\Big\{\frac{\dd^2\phi}{\dd z^2} + \frac{\eps}{1+z}\frac{\dd\phi}{\dd z}\Big\},
+\label{eq:second-derivative-z}
+\end{equation}
+where $\dd H/\dd z = \eps H/(1+z)$ from \eqref{eq:eps-def}. The friction term is $3\cH(1+c_s^2)\phi' = -3a_0^2H^2\frac{1+c_s^2}{1+z}\frac{\dd\phi}{\dd z}$ (using $\cH = aH = a_0H/(1+z)$), and the mass term is $\big\{2\cH'+\cH^2(1+3c_s^2)\big\}\phi = \frac{a_0^2H^2}{(1+z)^2}\big\{3(1+c_s^2)-2\eps\big\}\phi$. Dividing through by $a_0^2H^2$:
+\begin{equation}
+\boxed{\;
+\frac{\dd^2\phi}{\dd z^2} + \frac{\eps-3(1+c_s^2)}{1+z}\frac{\dd\phi}{\dd z}
++ \frac{3(1+c_s^2)-2\eps}{(1+z)^2}\,\phi + \frac{c_s^2\,k^2}{a_0^2H^2}\,\phi = 0 ,\;}
+\label{eq:Tk-redshift}
+\end{equation}
+with $c_s^2 = c_s^2(z)$ and $\eps = \eps(z)$ from \eqref{eq:w-of-z}--\eqref{eq:dlnH}. The gradient term is $c_s^2\kphys^2/H^2$ in the code's variables. $T_k$ is this equation's solution with $T_k = 1$, $\dd T_k/\dd z = 0$ at $\zinit$; the same equation with $c_s^2 = w$ constant is solved by \eqref{eq:Tk-analytic}, which is the oracle used to test the integrator. The combination that will appear in the source is
+\begin{equation}
+T_k + \frac{T_k'}{\cH} = T_k - (1+z)\frac{\dd T_k}{\dd z},
+\label{eq:T-plus-Tprime}
+\end{equation}
+since $T'/\cH = -a_0H\,(\dd T/\dd z)/(aH) = -(1+z)\,\dd T/\dd z$.
+
+\paragraph{Conformal time in redshift.} The Bessel arguments of the analytic formulae need $\eta(z)$. From \eqref{eq:deta-dz} with the convention $\eta\to0$ as $z\to\infty$,
+\begin{equation}
+a_0\,\eta(z) = \int_z^\infty\frac{\dd z'}{H(z')} ,
+\qquad\text{and in pure radiation}\qquad a_0\,\eta(z) = \frac{1+z}{H(z)} ,
+\label{eq:tau-of-z}
+\end{equation}
+the second following from $H\propto(1+z)^2$; it decays as $z\to\infty$ because $H$ grows faster than $1+z$. The pipeline seeds $\tau = a_0\eta$ at $\zinit$ with this closed form and integrates $\dd\tau/\dd z = -1/H$ from there.
+
+\subsection{Liouville--Green (WKB) representation of \texorpdfstring{$T_k$}{Tk}}
+\label{sec:Tk-LG}
+
+Deep inside the horizon $T_k$ oscillates with $kc_s\eta\gg1$ cycles and direct integration becomes expensive; the pipeline switches to a Liouville--Green representation. The construction is the same for the transfer function and for the Green's function, so it is stated once.
+
+\begin{quote}
+\textbf{Lemma (friction elimination).} For $y'' + p(z)\,y' + q(z)\,y = 0$ (primes $=\dd/\dd z$), write $y = P\vartheta$ with $2P'/P = -p$. Then $\vartheta'' + \om^2\vartheta = 0$ with
+\begin{equation}
+\om^2 = q - \frac{p'}{2} - \frac{p^2}{4},
+\qquad
+P = \exp\Big(-\tfrac12\!\int^z p\Big).
+\label{eq:LG-lemma}
+\end{equation}
+\emph{Proof.} $y'' + py' + qy = P\{\vartheta'' + (2P'/P + p)\vartheta' + (P''/P + pP'/P + q)\vartheta\}$; the middle bracket vanishes by choice of $P$, and $P''/P = (P'/P)' + (P'/P)^2 = -p'/2 + p^2/4$, so the last bracket is $-p'/2 + p^2/4 - p^2/2 + q$. $\square$
+\end{quote}
+
+For \eqref{eq:Tk-redshift}, $p = \{\eps-3(1+c_s^2)\}/(1+z)$ and $q = \{3(1+c_s^2)-2\eps\}/(1+z)^2 + c_s^2k^2/(a_0^2H^2)$. Writing $\eps = (1+z)\,\dd\ln H/\dd z$ the integrating factor is
+\begin{equation}
+P(z) = \Big(\frac{H_*}{H(z)}\Big)^{1/2}\exp\Big\{\frac32\int_{z^*}^{z}\big(1+c_s^2(z')\big)\frac{\dd z'}{1+z'}\Big\},
+\label{eq:P-Tk}
+\end{equation}
+normalised to $P(z^*)=1$ at the matching point $z^*$, and, with $p' = (\eps'-6c_sc_s')/(1+z) - p/(1+z)$,
+\begin{equation}
+\boxed{\;
+\om^2 = \frac{c_s^2k^2}{a_0^2H^2} + \frac{3c_sc_s' - \tfrac12\eps'}{1+z}
++ \frac{\tfrac32(1+\eps)(1+c_s^2) - \tfrac{\eps}{2}\big(3+\tfrac{\eps}{2}\big) - \tfrac94(1+c_s^2)^2}{(1+z)^2} .\;}
+\label{eq:omega-Tk}
+\end{equation}
+(To reach the last numerator expand $\tfrac{p}{2}(1+z) - \tfrac{p^2}{4}(1+z)^2 + q(1+z)^2$ with $A\equiv\eps-3(1+c_s^2)$: $\tfrac A2 - \tfrac{A^2}{4} + 3(1+c_s^2) - 2\eps$.) The Liouville--Green modes are
+\begin{equation}
+T_{1,2}(z) = \frac{P(z)}{\om^{1/2}(z)}\,\{\cos,\sin\}\,\Theta(z),\qquad
+\Theta(z) = \int_{z^*}^{z}\om(z')\,\dd z',
+\label{eq:LG-modes-Tk}
+\end{equation}
+valid where $|\dd\ln\om/\dd z|\ll\om$. The solution $T_k = \alpha T_1 + \beta T_2$ is fixed by matching to the numerically integrated $T^* = T_k(z^*)$, $T'^* = \dd T_k/\dd z|_{z^*}$. Since $P(z^*)=1$, $\Theta(z^*)=0$ and $\dd\ln(P\om^{-1/2})/\dd z = -\tfrac p2 - \tfrac{\om'}{2\om}$,
+\begin{equation}
+\alpha = T^*\,\omstar^{1/2},\qquad
+\beta = \frac{1}{\omstar^{1/2}}\Big\{T'^* + \frac{T^*}{2}\Big(\frac{\om'}{\om} + \frac{\eps-3(1+c_s^2)}{1+z}\Big)_{z^*}\Big\}.
+\label{eq:matching-Tk}
+\end{equation}
+The two modes can be combined into a single phase-shifted sine, $\alpha\cos\Theta+\beta\sin\Theta = \sqrt{\alpha^2+\beta^2}\,\sin(\Theta+\Delta\Theta)$ with $\tan\Delta\Theta = \alpha/\beta$, which is time-independent as it must be. The amplitude prefactor stays $\om^{-1/2}(z)$ and is \emph{not} to be frozen at $z^*$ (a starred $\om$ on \note{NUM}~11 p.\,5 is a slip; see Appendix~\ref{app:slips}).
+
+The matching needs $\om'/\om = (\om^2)'/(2\om^2)$. Differentiating \eqref{eq:omega-Tk} with $w\equiv c_s^2$ (so $3c_sc_s' = \tfrac32w'$), using $\dd(k^2/H^2)/\dd z = -2\eps k^2/((1+z)H^2)$ and collecting terms,
+\begin{multline}
+2\om\frac{\dd\om}{\dd z}
+ = \frac{w'k^2}{a_0^2H^2}
+ + \frac{1}{1+z}\Big(\frac32w'' - \frac12\eps'' - 2\eps\frac{wk^2}{a_0^2H^2}\Big)
+ + \frac{1}{(1+z)^2}\Big(\frac{\eps'}{2}\big(3w-\eps+1\big) + \frac32w'\big(\eps-3(1+w)\big)\Big)\\
+ - \frac{2}{(1+z)^3}\Big(\frac32(1+\eps)(1+w) - \frac{\eps}{2}\Big(3+\frac{\eps}{2}\Big) - \frac94(1+w)^2\Big).
+\label{eq:domega-Tk}
+\end{multline}
+The coefficient $3(1+w)$ in the $w'$ term is the corrected value; the page (\note{NUM}~09 p.\,6) has $\tfrac32(1+w)$, a slip that had propagated into the code and was fixed on 2026-09-07 (Appendix~\ref{app:slips}).
+
+\paragraph{Large phases.} Over the $10^5$--$10^7$ cycles a mode accumulates, $\Theta$ is stored as (integer $\times2\pi$, remainder) and evolved through $\Theta(z) = \Theta_i + \omega_{\mathrm{eff},i}(1+u)Q(u)$, $u = z_i - z$, where $Q$ obeys $\dd Q/\dd u = -\big(\om/\omega_{\mathrm{eff},i} + Q\big)/(1+u)$ and tends to $-1$ for constant $\om$ under the convention $\dd\Theta/\dd z = +\om$. This is bookkeeping, not physics; it is exact.
+
+% =====================================================================
+\section{The sourced tensor equation}
+\label{sec:tensor}
+
+\subsection{The tensor part of the Einstein tensor}
+\label{sec:tensor-lhs}
+
+At first order in $h_{ij}$ and zeroth order in the scalars, the mixed Einstein tensor of \eqref{eq:metric} contains
+\begin{equation}
+a^2\,G^i{}_j\supset\frac12\Big\{h_{ij}'' + 2\cH h_{ij}' - \nabla^2h_{ij}\Big\}
+\label{eq:tensor-lhs}
+\end{equation}
+(from $R_{jk}\to-\tfrac12\nabla^2h_{jk}$ plus the time derivatives; terms that vanish for a transverse-traceless $h$ are dropped). This was checked by computer algebra for a single transverse-traceless mode $h_{xy}(\eta,z)$ (Appendix~\ref{app:verification}).
+
+\subsection{The quadratic scalar source}
+\label{sec:tensor-source}
+
+Gravitational waves are induced at second order in the scalars. Two pieces of the second-order field equation survive transverse-traceless projection.
+
+\paragraph{Geometric part.} Expanding $G^i{}_j$ to second order in $\phi$ (with $\psi = \phi$) gives, for the off-diagonal components,
+\begin{equation}
+a^2\,G^i{}_j\big|_{\phi^2,\ i\neq j} = -2\,\partial_i\phi\,\partial_j\phi .
+\label{eq:geometric-source}
+\end{equation}
+There is no $\phi\,\partial_i\partial_j\phi$ term: this is the property of the exponential parametrisation noted in \S\ref{sec:metric}. (With $e^{2\phi}\to1+2\phi$ one finds instead $4\phi\partial_i\partial_j\phi + 2\partial_i\phi\partial_j\phi = 4\partial_i(\phi\partial_j\phi) - 2\partial_i\phi\partial_j\phi$, whose first term is a total gradient annihilated by the projector, so the two parametrisations agree after projection.) Terms proportional to $\delta^i_j$ and pure gradients $\partial_i\partial_j(\cdots)$ are irrelevant after projection and are not displayed. Equation~\eqref{eq:geometric-source} is the result of \note{MAIN}~07--08; it was recomputed independently by computer algebra (Appendix~\ref{app:verification}).
+
+\paragraph{Fluid part.} At second order the spatial stress contains the velocity term
+\begin{equation}
+T^i{}_j\big|_{v^2} = (\rho_0+p_0)\,u^iu_j = (\rho_0+p_0)\,v^iv_j
+= \frac{4\MP^4}{a^4(\rho_0+p_0)}\,\partial_i\big(\phi'+\cH\phi\big)\,\partial_j\big(\phi'+\cH\phi\big),
+\label{eq:fluid-source}
+\end{equation}
+using $u^i = v^i/a$, $u_j = a\,v_j$ and the velocity \eqref{eq:velocity}. The second-order pressure perturbation contributes only to the trace, and anisotropic stress is neglected.
+
+\paragraph{The tensor equation.} Projecting $G^i{}_j = \MP^{-2}T^i{}_j$ onto the transverse-traceless sector and multiplying by $2a^2$,
+\begin{equation}
+\boxed{\;
+h_{ij}'' + 2\cH h_{ij}' - \nabla^2h_{ij}
+= \mathcal{P}_{ij}{}^{ab}\Big\{4\,\partial_a\phi\,\partial_b\phi + \frac{8\MP^2}{a^2(\rho_0+p_0)}\,\partial_a\big(\phi'+\cH\phi\big)\,\partial_b\big(\phi'+\cH\phi\big)\Big\}.\;}
+\label{eq:tensor-eq-real}
+\end{equation}
+The coefficient $8\MP^2/(a^2(\rho_0+p_0))$ is $2a^2\times\MP^{-2}\times4\MP^4/(a^4(\rho_0+p_0))$. The author records that \eqref{eq:tensor-eq-real} matches Dom\`enech's review (his eq.~3.15) and Kohri--Terada's source term, and differs from Adshead et al.\ only by the projector-trivial term discussed above.
+
+\subsection{Fourier space and polarisations}
+\label{sec:tensor-fourier}
+
+Insert \eqref{eq:fourier} for $h_{ij}$ and $\phi$, and contract with $e^s_{ij}(\vk)$. A product $\partial_a\phi\,\partial_b\phi$ becomes the convolution
+\[
+\partial_a\phi\,\partial_b\phi = -\int\frac{\dd^3q\,\dd^3r}{(2\pi)^6}\,q_ar_b\,\phi_{\vq}\phi_{\vr}\,e^{i(\vq+\vr)\cdot\vx};
+\]
+the $\dd^3x$ integral sets $\vr = \vk-\vq$, and $e^s_{ab}(\vk)e^s_{ij}(\vk)\mathcal{P}_{ij}{}^{cd} = e^s_{cd}(\vk)$ by \eqref{eq:polarisation}. The transversality $e^s_{ab}k_b = 0$ then gives
+\begin{equation}
+e^s_{ab}(\vk)\,q_a(k-q)_b = -e^s_{ab}(\vk)\,q_aq_b \equiv -Q_s(\vk,\vq),
+\label{eq:Qs-def}
+\end{equation}
+which cancels the minus sign from the two factors of $i$. Hence, for each polarisation separately,
+\begin{equation}
+h_s'' + 2\cH h_s' + k^2h_s
+= 4\int\frac{\dd^3q}{(2\pi)^3}\,Q_s(\vk,\vq)\Big\{\phi_{\vq}\phi_{\vk-\vq}
++ \frac{2\MP^2}{a^2(\rho_0+p_0)}\big(\phi'+\cH\phi\big)_{\vq}\big(\phi'+\cH\phi\big)_{\vk-\vq}\Big\}.
+\label{eq:tensor-eq-fourier}
+\end{equation}
+The Friedmann equation in the form $\cH^2\MP^2/a^2 = \rho_0/3$ and $p_0 = w_0\rho_0$ turn the fluid coefficient into a pure number times $\cH^{-2}$:
+\begin{equation}
+\frac{2\MP^2}{a^2(\rho_0+p_0)} = \frac{2\MP^2\cH^2}{a^2\rho_0(1+w_0)}\frac{1}{\cH^2} = \frac{2}{3(1+w_0)}\frac{1}{\cH^2},
+\label{eq:fluid-coefficient}
+\end{equation}
+so
+\begin{equation}
+\boxed{\;
+h_s'' + 2\cH h_s' + k^2h_s
+= 4\int\frac{\dd^3q}{(2\pi)^3}\,Q_s(\vk,\vq)\Big\{\phi_{\vq}\phi_{\vk-\vq}
++ \frac{2}{3(1+w_0)}\Big(\phi+\frac{\phi'}{\cH}\Big)_{\vq}\Big(\phi+\frac{\phi'}{\cH}\Big)_{\vk-\vq}\Big\}.\;}
+\label{eq:tensor-eq-w}
+\end{equation}
+Here $w_0$ is the background equation of state at the time the source acts. Expanding the product shows the same content as the 2022 notes' form, $\tfrac{5+3w_0}{3(1+w_0)}\phi\phi + \tfrac{2}{3(1+w_0)}\big[(\phi\phi'+\phi'\phi)/\cH + \phi'\phi'/\cH^2\big]$; the $5+3w_0$ is not a new ingredient.
+
+\paragraph{Polarisation factors.} Take $\vk\parallel\hat{\mathbf z}$, $\ve = \hat{\mathbf x}$, $\vebar = \hat{\mathbf y}$, and let $(\theta,\varphi)$ be the polar angles of $\vq$ relative to $\vk$. Then $\hat\vq\cdot\ve = \sin\theta\cos\varphi$, $\hat\vq\cdot\vebar = \sin\theta\sin\varphi$, and
+\begin{equation}
+Q_+(\vk,\vq) = \frac{q^2}{\sqrt2}\sin^2\theta\,\cos2\varphi,\qquad
+Q_\times(\vk,\vq) = \frac{q^2}{\sqrt2}\sin^2\theta\,\sin2\varphi .
+\label{eq:Q-explicit}
+\end{equation}
+The $\cos2\varphi$, $\sin2\varphi$ dependence is the spin-2 character of the little group; it is what will make different polarisations decouple in the loop. Note $Q_s(-\vk,-\vq) = Q_s(\vk,\vq)$, and $Q_s(\vk,\vq+\lambda\vk) = Q_s(\vk,\vq)$ for any $\lambda$ since $e^s_{ab}k_b = 0$.
+
+\subsection{Transfer functions and the source kernel \texorpdfstring{$f$}{f}}
+\label{sec:source-kernel}
+
+Substituting the linear solution \eqref{eq:seed}, $\phi_{\vq} = \cstar T_q\zeta^*_{\vq}$, and pulling the constants out,
+\begin{equation}
+\boxed{\;
+h_s'' + 2\cH h_s' + k^2h_s
+= 4\cstar^2\int\frac{\dd^3q}{(2\pi)^3}\,Q_s(\vk,\vq)\,\zeta^*_{\vq}\zeta^*_{\vk-\vq}\,f(q,r,\eta),
+\qquad
+4\cstar^2 = 36\Big(\frac{1+\wstar}{5+3\wstar}\Big)^2 ,\;}
+\label{eq:tensor-eq-f}
+\end{equation}
+where $r\equiv|\vk-\vq|$ and the source kernel is
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+f(q,r,\eta) &\equiv T_qT_r + \frac{2}{3(1+w_0)}\Big(T_q + \frac{T_q'}{\cH}\Big)\Big(T_r + \frac{T_r'}{\cH}\Big)\\
+&= T_qT_r + \frac{2}{3(1+w_0)}\Big(T_q - (1+z)\frac{\dd T_q}{\dd z}\Big)\Big(T_r - (1+z)\frac{\dd T_r}{\dd z}\Big).
+\end{aligned}\;}
+\label{eq:f-def}
+\end{equation}
+The second form uses \eqref{eq:T-plus-Tprime} and is what the code evaluates, with $w_0 = w_0(z)$ at the source redshift. $f$ depends only on the magnitudes $q$, $r$ and is symmetric, $f(q,r,\eta) = f(r,q,\eta)$.
+
+\begin{convention}[Where the super-horizon constant sits]
+The 2022 notes (\note{MAIN}~11, 14) keep the leading factor 4 and absorb $c^2 = \cstar^2|_{\wstar=w}$ into the kernel, $f_{14} = c^2f$, so their $\langle hh\rangle$ carries $2\times4^2 = 32$ with $c^4$ inside $f_{14}^2$. The 2024 notes (\note{NUM}~03, 06) and the code use the $f$ of \eqref{eq:f-def} and put $4\cstar^2$ outside, giving $2\times(4\cstar^2)^2 = 2592\big(\tfrac{1+\wstar}{5+3\wstar}\big)^4$. The two agree exactly, $32\times81 = 2592$. On a running background only the second form is correct, because $\wstar$ (initial time) and $w_0$ (source time) then differ; the 2022 form is the fixed-$w$ restriction, stated as such on \note{MAIN}~14 p.\,2.
+\end{convention}
+
+% =====================================================================
+\section{The tensor Green's function}
+\label{sec:greens}
+
+\subsection{Removing the friction term}
+
+Let $\chi_s\equiv a\,h_s$. Then $h_s' = \chi_s'/a - \cH\chi_s/a$ and $h_s'' = \chi_s''/a - 2\cH\chi_s'/a - (a''/a)\chi_s/a + 2\cH^2\chi_s/a$, so
+\begin{equation}
+h_s'' + 2\cH h_s' = \frac{1}{a}\Big\{\chi_s'' - \frac{a''}{a}\chi_s\Big\},
+\qquad\text{i.e.}\qquad
+\chi_s'' + \Big(k^2 - \frac{a''}{a}\Big)\chi_s = a(\eta)\,S_s(\eta),
+\label{eq:chi-eq}
+\end{equation}
+where $S_s$ denotes the right-hand side of \eqref{eq:tensor-eq-f}. The homogeneous operator no longer has a first-derivative term, which is what makes the Green's function simple.
+
+\subsection{Constant \texorpdfstring{$w$}{w}: the retarded Green's function in conformal time}
+\label{sec:Gr-analytic}
+
+With $a''/a = b(1+b)/\eta^2$ from \eqref{eq:constant-w-background}, the homogeneous equation $Z'' + \big(k^2 - b(1+b)/\eta^2\big)Z = 0$ has the solutions
+\begin{equation}
+u_1(\eta) = \sqrt{\eta}\,J_{b+\frac12}(k\eta)\ \ (\text{growing}),\qquad
+u_2(\eta) = \sqrt{\eta}\,Y_{b+\frac12}(k\eta)\ \ (\text{decaying}),
+\label{eq:chi-homogeneous}
+\end{equation}
+as one checks by substituting $Z = \sqrt\eta\,y(k\eta)$ and recovering Bessel's equation of order $\nu$ with $\nu^2 - \tfrac14 = b(1+b)$, i.e.\ $\nu = b+\tfrac12$. Their Wronskian is $\eta$-independent, as it must be for an equation without first-derivative term:
+\begin{equation}
+W = u_1u_2' - u_2u_1' = \eta\,k\big(J_\nu Y_\nu' - Y_\nu J_\nu'\big)(k\eta) = \eta k\cdot\frac{2}{\pi k\eta} = \frac{2}{\pi} .
+\label{eq:wronskian}
+\end{equation}
+The retarded Green's function, defined by
+\begin{equation}
+\begin{gathered}
+\Gr_k''(\eta,\eta') + \Big(k^2 - \frac{a''}{a}\Big)\Gr_k(\eta,\eta') = \delta(\eta-\eta'),\\
+\Gr_k = 0\ \ (\eta<\eta'),\qquad \Gr_k(\eta',\eta') = 0,\qquad \partial_\eta\Gr_k\big|_{\eta=\eta'^+} = 1,
+\end{gathered}
+\label{eq:Gr-def}
+\end{equation}
+is $\Gr_k = [u_1(\eta')u_2(\eta) - u_2(\eta')u_1(\eta)]/W$ for $\eta>\eta'$ (it vanishes at $\eta=\eta'$ by construction and its derivative there is $W/W=1$), i.e.
+\begin{equation}
+\boxed{\;
+\Gr_k(\eta,\eta') = \begin{cases}
+\dfrac{\pi}{2}\sqrt{\eta\eta'}\,\Big\{J_{b+\frac12}(k\eta')\,Y_{b+\frac12}(k\eta) - Y_{b+\frac12}(k\eta')\,J_{b+\frac12}(k\eta)\Big\}, & \eta>\eta',\\[6pt]
+0, & \eta<\eta'.
+\end{cases}\;}
+\label{eq:Gr}
+\end{equation}
+The first argument is the response time, the second the source time; $\Gr_k$ depends on $\vk$ only through $k=|\vk|$. The solution of \eqref{eq:chi-eq} that vanishes before the source acts is
+\[
+\chi_s(\eta) = \int_{\eta_0}^{\eta}\dd\eta'\,\Gr_k(\eta,\eta')\,a(\eta')S_s(\eta');
+\]
+differentiating twice and using $\Gr_k(\eta,\eta)=0$ and the unit jump confirms it. Returning to $h_s$,
+\begin{equation}
+h_s(\eta) = \int_{\eta_0}^{\eta}\dd\eta'\,\frac{a(\eta')}{a(\eta)}\,\Gr_k(\eta,\eta')\,S_s(\eta'),
+\qquad
+\frac{a(\eta')}{a(\eta)} = \Big(\frac{\eta'}{\eta}\Big)^{1+b} .
+\label{eq:hs-conformal}
+\end{equation}
+The combination $\frac{a(\eta')}{a(\eta)}\Gr_k$ is the Green's function of $h_s$ itself, $G_k[h] = \frac{\pi}{2}(\eta')^{\frac32+b}\eta^{-\frac12-b}\{\cdots\}$; it equals eq.~(4.7) of the published version of Dom\`enech's review (arXiv:2109.01398v2) and gives $G[h]\to+(\eta-\eta')$ just after the source, which fixes its sign.
+
+\subsection{General background: the Green's function in redshift}
+\label{sec:Gk-redshift}
+
+Applying \eqref{eq:second-derivative-z} to $\chi_s$ and $a''/a = a^2H^2(2-\eps) = a_0^2H^2(2-\eps)/(1+z)^2$, the homogeneous operator becomes $a_0^2H^2\,L_z$ with
+\begin{equation}
+\boxed{\;
+L_z \equiv \frac{\dd^2}{\dd z^2} + \frac{\eps}{1+z}\frac{\dd}{\dd z} + \frac{k^2}{a_0^2H^2} - \frac{2-\eps}{(1+z)^2} ,\;}
+\qquad
+L_z\chi_s = \frac{a\,S_s}{a_0^2H^2} .
+\label{eq:Lz}
+\end{equation}
+(The friction coefficient is $\eps$, not $2-\eps$: the $2$ cancels between the $\cH'$ hidden in $a''/a$ and the derivative of $H$ in \eqref{eq:second-derivative-z}. \note{NUM}~02 first wrote $2-\eps$ and corrected it in red; \note{NUM}~03 obtains $\eps$ independently.)
+
+\begin{convention}[The unit-jump Green's function $\Gb_k$]
+Define $\Gb_k(z,z')$ by
+\begin{equation}
+L_z\Gb_k(z,z') = 0\ \ (z<z'),\qquad \Gb_k = 0\ \ (z>z'),\qquad \Gb_k(z',z') = 0,\qquad \frac{\partial\Gb_k}{\partial z}\Big|_{z=z'^-} = +1 .
+\label{eq:Gbar-def}
+\end{equation}
+This is the function the pipeline integrates (\texttt{GkNumericIntegration}): from $z=z'$ downward, i.e.\ forward in time, with initial data $(0,1)$. The first argument is the response redshift, the second the source redshift. Because the jump of $\partial_z\Gb_k$ across $z'$ is $0-1 = -1$, $\Gb_k$ satisfies $L_z\Gb_k = -\delta(z-z')$; the sign is chosen so that the unit jump is natural for a variable that decreases towards the future.
+\end{convention}
+
+Two consequences follow directly from the definitions.
+
+\emph{Relation to $\Gr_k$.} Since $L_\eta = a_0^2H^2L_z$ and $\delta(\eta-\eta') = a_0H(z')\,\delta(z-z')$, the function $a_0H(z')\Gr_k(\eta(z),\eta(z'))$ satisfies $L_z(\cdot) = +\delta(z-z')$ with support $z<z'$; comparing jumps,
+\begin{equation}
+\boxed{\;\Gb_k(z,z') = -\,a_0H(z')\,\Gr_k\big(\eta(z),\eta(z')\big)\;}
+\qquad\text{for any } a_0 .
+\label{eq:Gbar-Gr}
+\end{equation}
+Just after the source $\Gr_k\approx\eta-\eta'\approx(z'-z)/(a_0H(z'))>0$ while $\Gb_k\approx z-z'<0$. Since $\Gr_k\propto\sqrt{\eta\eta'}$, the right-hand side in the code's variables is $-H(z')\frac{\pi}{2}\sqrt{\tau\tau'}\{\cdots\}$ with $\tau = a_0\eta$ and no $a_0$ left over; that is the analytic oracle in \texttt{analytic\_Gk}.
+
+\emph{The solution formula.} For $z<z'$ write $\chi_s(z) = -\int_z^{\zinit}\dd z'\,\Gb_k(z,z')\,\mathcal{S}(z')$ with $\mathcal{S} = aS_s/(a_0^2H^2)$. Then $\dd\chi_s/\dd z = -\int_z^{\zinit}\partial_z\Gb_k\,\mathcal{S}$ (the boundary term vanishes because $\Gb_k(z,z)=0$) and $\dd^2\chi_s/\dd z^2 = +\mathcal{S}(z) - \int_z^{\zinit}\partial_z^2\Gb_k\,\mathcal{S}$ (the boundary term is now $\partial_z\Gb_k|_{z'=z} = 1$), so $L_z\chi_s = \mathcal{S}$. Hence
+\begin{equation}
+h_s(z) = -\frac{1}{a(z)}\int_z^{\zinit}\dd z'\,\Gb_k(z,z')\,\frac{a(z')\,S_s(z')}{a_0^2H(z')^2}
+= -\int_z^{\zinit}\dd z'\,\Gb_k(z,z')\,\frac{1+z}{1+z'}\,\frac{S_s(z')}{a_0^2H(z')^2}.
+\label{eq:hs-redshift}
+\end{equation}
+The overall minus sign is the price of the unit-jump convention; the notes and the code omit it, which is harmless because $h_s$ enters the spectrum squared. It is exactly the relative sign between the redshift-space source integral and the conformal-time one found in \S\ref{sec:a0-handoff}.
+
+\subsection{Liouville--Green representation of \texorpdfstring{$G_k$}{Gk}}
+\label{sec:Gk-LG}
+
+Applying the lemma \eqref{eq:LG-lemma} to $L_z$ with $p = \eps/(1+z)$ and $q = k^2/(a_0^2H^2) - (2-\eps)/(1+z)^2$ gives $p' = \eps'/(1+z) - \eps/(1+z)^2$ and
+\begin{equation}
+\boxed{\;
+\om^2 = \frac{k^2}{a_0^2H^2} - \frac{\eps'}{2(1+z)} + \frac{\tfrac32\eps - \tfrac14\eps^2 - 2}{(1+z)^2},\;}
+\qquad
+P(z) = \exp\Big(-\frac12\int_{z^*}^{z}\frac{\eps(z')}{1+z'}\dd z'\Big) = \Big(\frac{H_*}{H(z)}\Big)^{1/2}.
+\label{eq:omega-Gk}
+\end{equation}
+(This $\om$ is a different function from the transfer-function $\om$ of \eqref{eq:omega-Tk}, though the notes use one symbol for both.) The modes and the matching to numerically computed $(G^*,G'^*)$ at $z^*$ are, by the same steps as \eqref{eq:LG-modes-Tk}--\eqref{eq:matching-Tk},
+\begin{equation}
+\begin{gathered}
+G^{(1,2)}(z) = \frac{1}{\om^{1/2}(z)}\Big(\frac{H_*}{H(z)}\Big)^{1/2}\{\cos,\sin\}\int_{z^*}^{z}\om\,\dd z',\\
+\alpha = G^*\omstar^{1/2},\qquad
+\beta = \frac{1}{\omstar^{1/2}}\Big\{G'^* + \frac{G^*}{2}\Big(\frac{\om'}{\om} + \frac{\eps}{1+z}\Big)_{z^*}\Big\}.
+\end{gathered}
+\label{eq:matching-Gk}
+\end{equation}
+The derivative needed in $\beta$, including the $z$-dependence of $k^2/H^2$ that \note{NUM}~05 omitted and \note{NUM}~10 restored, is
+\begin{equation}
+2\om\frac{\dd\om}{\dd z}
+= \frac{1}{1+z}\Big\{-\frac{\eps''}{2} - 2\eps\frac{k^2}{a_0^2H^2}\Big\}
++ \frac{1}{(1+z)^2}\Big\{2\eps' - \frac12\eps\eps'\Big\}
+- \frac{2}{(1+z)^3}\Big\{\frac32\eps - \frac14\eps^2 - 2\Big\}.
+\label{eq:domega-Gk}
+\end{equation}
+For the source redshift $z'$ the same representation is used with the roles of the arguments understood: the matching is done once per source redshift, from the numerically integrated $\Gb_k(\cdot,z')$ at a crossover $z^*$ chosen where the WKB condition holds.
+
+% =====================================================================
+\section{The source time integral}
+\label{sec:time-integral}
+
+\subsection{The redshift-space integral and the \texorpdfstring{$a_0$}{a0} bookkeeping}
+\label{sec:a0-handoff}
+
+Inserting $S_s$ from \eqref{eq:tensor-eq-f} into \eqref{eq:hs-redshift} and interchanging the order of integration,
+\begin{equation}
+\begin{gathered}
+h_s(\vk,z) = -4\cstar^2\int\frac{\dd^3q}{(2\pi)^3}\,\zeta^*_{\vq}\zeta^*_{\vk-\vq}\;\frac{Q_s(\vk,\vq)}{a_0^2}\;\mathcal{I}_k(q,r;z),\\[4pt]
+\boxed{\;
+\mathcal{I}_k(q,r;z)\equiv\int_z^{\zinit}\dd z'\,\Gb_k(z,z')\,\frac{1+z}{1+z'}\,\frac{f(q,r,z')}{H(z')^2}.\;}
+\end{gathered}
+\label{eq:I-def}
+\end{equation}
+$\mathcal{I}_k$ is the object computed by \texttt{QuadSourceIntegral}: one number per $(k,q,r,z)$, built from the numerical $\Gb_k$, the numerical $T_q$, $T_r$ and the background $H$, $w_0$. Everything in it is written in $z$, $H(z)$ and $\kphys$, so it is $a_0$-invariant. The prefactor $Q_s/a_0^2 = e^s_{ab}(\vk)\,(q_a/a_0)(q_b/a_0)$ is the polarisation factor built from \emph{physical} momenta. The dimension check of \note{NUM}~03 p.\,6: with $[\zeta_{\vk}] = [h_{\vk}] = M^{-3}$, the right-hand side has $[\dd^3q]\,[Q_s]\,[\zeta\zeta]\,[H^{-2}] = M^{3}M^{2}M^{-6}M^{-2} = M^{-3}$.
+
+\begin{chk}[Covariance]
+Under $a_0\to\lambda a_0$ with comoving $q,r,k\to\lambda\times$ and $\eta\to\eta/\lambda$: $\mathcal{I}_k$ is invariant, $Q_s/a_0^2$ is invariant, $\dd^3q\to\lambda^3\dd^3q$ and $\zeta_{\vq}\zeta_{\vk-\vq}\to\lambda^{-6}$, so $h_s(\vk)\to\lambda^{-3}h_s(\vk)$, which is the correct scaling of a comoving Fourier amplitude.
+\end{chk}
+
+\subsection{Constant \texorpdfstring{$w$}{w}: conversion to conformal time}
+\label{sec:I-to-J}
+
+On a constant-$w$ background \eqref{eq:I-def} can be evaluated in closed form up to two one-dimensional integrals. Using $\dd z' = -a_0H(\eta')\dd\eta'$, $\Gb_k = -a_0H(\eta')\Gr_k$ and $(1+z)/(1+z') = a(\eta')/a(\eta)$,
+\begin{equation}
+\begin{gathered}
+\mathcal{I}_k(q,r;z) = \int_{\eta}^{\etainit}\big(-a_0H\,\dd\eta'\big)\big(-a_0H\,\Gr_k\big)\frac{a(\eta')}{a(\eta)}\frac{f}{H^2}
+= -\,a_0^2\,\mathcal{J}_k(q,r;\eta),\\[4pt]
+\boxed{\;\mathcal{J}_k(q,r;\eta)\equiv\int_{\etainit}^{\eta}\dd\eta'\,\frac{a(\eta')}{a(\eta)}\,\Gr_k(\eta,\eta')\,f(q,r,\eta').\;}
+\end{gathered}
+\label{eq:I-J}
+\end{equation}
+The two powers of $H(\eta')$ cancel against the $1/H^2$ of the source, the two minus signs from the Jacobian and from \eqref{eq:Gbar-Gr} cancel, and one more minus sign comes from reversing the limits. The $a_0^2$ is the one that cancels the $Q_s/a_0^2$ of \eqref{eq:I-def}, so that in conformal time $h_s = 4\cstar^2\int\frac{\dd^3q}{(2\pi)^3}\zeta\zeta\,Q_s\,\mathcal{J}_k$ with comoving $Q_s$, in agreement with \eqref{eq:hs-conformal}. (\note{NUM}~06 p.\,7 writes $a_0^1$, having absorbed one power into its Green's-function relation while keeping the other explicit in the Jacobian; the covariance test fixes the power at $a_0^2$, and the code, which works in $\kphys$ and $a_0\eta$, carries no $a_0$ at all.) The 2022 notes' time integral is $\mathcal{J}_k$ with $f_{14} = c^2f$, so
+\begin{equation}
+\mathcal{I}_k = -\frac{a_0^2}{c^2}\times\big(\text{\note{MAIN}~14 Step 6 endpoint}\big),\qquad c = \frac{2+b}{3+2b}.
+\label{eq:I-target}
+\end{equation}
+
+\subsection{The source kernel as a sum of two Bessel products}
+\label{sec:f-bessel}
+
+Let $x_q = qc_s\eta$, $x_r = rc_s\eta$, $\nu = \tfrac32+b$, $N_b = 2^\nu\Gamma(\nu+1)$. From \eqref{eq:Tk-analytic} and \eqref{eq:dTdx}, $T_q = N_bx_q^{-\nu}J_\nu(x_q)$ and $T_q' = qc_s\,\dd T/\dd x = -qc_sN_bx_q^{-\nu}J_{\nu+1}(x_q)$, so with $\cH = (1+b)/\eta$,
+\begin{equation}
+T_q + \frac{T_q'}{\cH} = N_b\,x_q^{-\nu}\Big\{J_\nu(x_q) - \frac{x_q}{1+b}J_{\nu+1}(x_q)\Big\}.
+\end{equation}
+Insert into \eqref{eq:f-def} with $\tfrac{2}{3(1+w)} = \tfrac{1+b}{2+b}$ and expand:
+\begin{multline}
+f = N_b^2(x_qx_r)^{-\nu}\Big\{\frac{3+2b}{2+b}J_\nu(x_q)J_\nu(x_r)
+ - \frac{x_q}{2+b}J_{\nu+1}(x_q)J_\nu(x_r) - \frac{x_r}{2+b}J_\nu(x_q)J_{\nu+1}(x_r)\\
+ + \frac{x_qx_r}{(2+b)(1+b)}J_{\nu+1}(x_q)J_{\nu+1}(x_r)\Big\},
+\label{eq:f-four-terms}
+\end{multline}
+since $1 + \tfrac{1+b}{2+b} = \tfrac{3+2b}{2+b}$. Complete the square on the first three terms,
+\begin{multline}
+\{\cdots\} = \frac{3+2b}{2+b}\Big\{\Big[J_\nu(x_q) - \frac{x_q}{3+2b}J_{\nu+1}(x_q)\Big]\Big[J_\nu(x_r) - \frac{x_r}{3+2b}J_{\nu+1}(x_r)\Big]\\
+ + x_qx_r\Big(\frac{1}{(3+2b)(1+b)} - \frac{1}{(3+2b)^2}\Big)J_{\nu+1}(x_q)J_{\nu+1}(x_r)\Big\},
+\end{multline}
+and note that $2\nu = 3+2b$, so the recurrence $Z_\nu(x) - \tfrac{x}{2\nu}Z_{\nu+1}(x) = \tfrac{x}{2\nu}Z_{\nu-1}(x)$ (Appendix~\ref{app:bessel}) turns each square bracket into $\tfrac{x}{3+2b}J_{\nu-1}(x)$, while $\tfrac{1}{(3+2b)(1+b)} - \tfrac{1}{(3+2b)^2} = \tfrac{2+b}{(3+2b)^2(1+b)}$. The factor $x_qx_r/(3+2b)^2$ is common to both terms and lowers the power in front:
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+f(q,r,\eta) = \frac{2^{3+2b}\,\Gamma\!\big(\tfrac52+b\big)^2}{(2+b)(3+2b)}\,(qc_s\eta)^{-\frac12-b}(rc_s\eta)^{-\frac12-b}
+\Big\{&J_{\frac12+b}(qc_s\eta)\,J_{\frac12+b}(rc_s\eta)\\
+&+ \frac{2+b}{1+b}\,J_{\frac52+b}(qc_s\eta)\,J_{\frac52+b}(rc_s\eta)\Big\}.
+\end{aligned}\;}
+\label{eq:f-bessel}
+\end{equation}
+The 2022 form is $f_{14} = c^2f$ with prefactor $\tfrac{2+b}{(3+2b)^3}2^{3+2b}\Gamma^2$; the two independent reductions (\note{MAIN}~14 Step 5 and \note{NUM}~06 Step 2) agree in every order, exponent and coefficient, and \eqref{eq:f-bessel} was verified numerically against the $w$-form \eqref{eq:f-def} (Appendix~\ref{app:verification}). The author notes agreement with eq.~(4.9) of Dom\`enech's review up to the normalisation of the seed.
+
+\subsection{The closed-form time integral}
+\label{sec:target}
+
+Now assemble $\mathcal{J}_k$ from \eqref{eq:I-J}, \eqref{eq:Gr}, $a(\eta')/a(\eta) = (\eta'/\eta)^{1+b}$ and \eqref{eq:f-bessel}. Count the powers of $\eta$ and $\eta'$: $\sqrt{\eta\eta'}\,(\eta'/\eta)^{1+b}\,(\eta')^{-1-2b} = \eta^{-\frac12-b}(\eta')^{\frac12-b}$. Everything else in $f$ is a function of $\eta'$ only, and the Green's function splits into a part with $Y_{b+1/2}(k\eta)$ outside and $J_{b+1/2}(k\eta')$ inside, minus the reverse. Hence
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+\mathcal{J}_k(q,r;\eta) = \frac{\pi}{2}\,\frac{2^{3+2b}\,\Gamma\!\big(\tfrac52+b\big)^2}{(2+b)(3+2b)}\,\big(c_s^2\,q\,r\,\eta\big)^{-\frac12-b}
+\Big\{Y_{b+\frac12}(k\eta)\,I_J - J_{b+\frac12}(k\eta)\,I_Y\Big\},
+\end{aligned}\;}
+\label{eq:J-closed}
+\end{equation}
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+I_{J/Y} = \int_{\etainit}^{\eta}\dd\eta'\,(\eta')^{\frac12-b}
+\begin{Bmatrix} J_{b+\frac12}(k\eta') \\[2pt] Y_{b+\frac12}(k\eta')\end{Bmatrix}
+\Big\{&J_{\frac12+b}(qc_s\eta')\,J_{\frac12+b}(rc_s\eta')\\
+&+ \frac{2+b}{1+b}\,J_{\frac52+b}(qc_s\eta')\,J_{\frac52+b}(rc_s\eta')\Big\}.
+\end{aligned}\;}
+\label{eq:IJIY}
+\end{equation}
+Multiplying by $c^2 = (2+b)^2/(3+2b)^2$ gives the \note{MAIN}~14 Step 6 endpoint, the campaign's build target,
+\begin{multline}
+\int_{\eta_0}^{\eta}\dd\eta'\,\frac{a(\eta')}{a(\eta)}\Gr_k(\eta,\eta')\,f_{14}(q,r,\eta')\\
+= \pi\,2^{2+2b}\,\frac{2+b}{(3+2b)^3}\,\Gamma\!\big(\tfrac52+b\big)^2\,\big(c_s^2qr\eta\big)^{-\frac12-b}\Big\{Y_{b+\frac12}(k\eta)\,I_J - J_{b+\frac12}(k\eta)\,I_Y\Big\},
+\label{eq:target}
+\end{multline}
+where $\tfrac{\pi}{2}2^{3+2b} = \pi2^{2+2b}$ fixes an over-written exponent on \note{MAIN}~14 p.\,10--11. Equation \eqref{eq:J-closed} was checked against direct quadrature of \eqref{eq:I-J} (relative difference $2\times10^{-9}$, Appendix~\ref{app:verification}); the code's \texttt{analytic\_integral} is \eqref{eq:J-closed} in the variables $\kphys$, $a_0\eta$, and the spec-code audit found it to reproduce \eqref{eq:I-J} to $10^{-7}$--$10^{-9}$ relative.
+
+\paragraph{Insensitivity to the lower limit.} As $\eta'\to0$ the Bessel bracket behaves as $(\eta')^{1+2b}$, $J_{b+1/2}(k\eta')\sim(\eta')^{b+1/2}$ and $Y_{b+1/2}(k\eta')\sim(\eta')^{-b-1/2}$, so the integrands of $I_J$ and $I_Y$ go as $(\eta')^{2+2b}$ and $(\eta')^{1}$ respectively. The dependence on $\etainit$ is therefore $O\big((k\etainit)^2\big)$ and the closed form may be read with $\etainit\to0$; the code uses the finite $\etainit = \eta(\zinit)$ in any case. This is also why the transfer-function initial condition $T=1$, $\dd T/\dd z = 0$ at finite $\zinit$ is adequate: its error scales as $(kc_s\etainit)^2$.
+
+\subsection{Liouville--Green form of the Bessel integrals for the Levin method}
+\label{sec:levin}
+
+Each of $I_J$, $I_Y$ is an integral of a slowly varying weight times a product of three oscillatory Bessel functions, one with argument $k\eta'$ and two with arguments $qc_s\eta'$, $rc_s\eta'$. Write every cylinder function in modulus--phase form,
+\begin{equation}
+\begin{gathered}
+J_\mu(x) = m_\mu(x)\sin\Theta_\mu(x),\qquad Y_\mu(x) = -m_\mu(x)\cos\Theta_\mu(x),\\
+m_\mu^2 = J_\mu^2 + Y_\mu^2,\qquad \Theta_\mu'(x) = \frac{2}{\pi x\,m_\mu^2(x)},
+\end{gathered}
+\label{eq:modulus-phase}
+\end{equation}
+the last relation being the Wronskian $J_\mu Y_\mu' - Y_\mu J_\mu' = 2/(\pi x)$ rewritten in these variables. (Equivalently $Z_\mu(x) = (2/\pi)^{1/2}(x\Theta_\mu')^{-1/2}\{\sin\Theta_\mu, -\cos\Theta_\mu\}$; \note{NUM}~06 writes $\cos\gamma$ with $\gamma = \Theta-\pi/2$.) The modulus is smooth and monotone for $x>0$ and tends to $(2/\pi x)^{1/2}$; the phase tends to $x - \tfrac{\mu\pi}{2} - \tfrac{\pi}{4}$ and is obtained in the code by integrating a Riccati/Kummer equation for $\Theta$ or from the Bessel equation in Liouville normal form $y'' + \big(1 + \tfrac{1/4-\mu^2}{x^2}\big)y = 0$ (\note{NUM}~06 Step 4). A triple product then becomes a sum of four terms with the combined phases $\Theta_1\pm\Theta_2\pm\Theta_3$:
+\begin{align}
+\sin\Theta_1\sin\Theta_2\sin\Theta_3 &= \tfrac14\Big\{-\sin(\Theta_1+\Theta_2+\Theta_3) + \sin(\Theta_1+\Theta_2-\Theta_3)\notag\\
+&\qquad\quad + \sin(\Theta_1-\Theta_2+\Theta_3) - \sin(\Theta_1-\Theta_2-\Theta_3)\Big\},\\
+\cos\Theta_1\sin\Theta_2\sin\Theta_3 &= \tfrac14\Big\{-\cos(\Theta_1+\Theta_2+\Theta_3) + \cos(\Theta_1+\Theta_2-\Theta_3)\notag\\
+&\qquad\quad + \cos(\Theta_1-\Theta_2+\Theta_3) - \cos(\Theta_1-\Theta_2-\Theta_3)\Big\},
+\end{align}
+the first for $I_J$ ($JJJ$) and the second, with an overall sign from $Y = -m\cos\Theta$, for $I_Y$ ($YJJ$). Each term is of the form $\int A(x)\,e^{\pm i\Phi(x)}\dd x$ with $A = (\eta')^{1/2-b}m_1m_2m_3$ slowly varying and $\Phi' = \Theta_1'\pm\Theta_2'\pm\Theta_3'$ known in closed form, which is the input the Levin collocation method needs. The phase $\Theta_1-\Theta_2-\Theta_3$ is nearly stationary when $k\approx qc_s+rc_s$, i.e.\ when the source's sound waves are resonant with the gravitational wave; this is the Kohri--Terada resonance, and it is the region that dominates the integral and must be handled with care.
+
+The same representation applies to the ``Fabrikant'' integrals
+\[
+\mathcal{J}^{\mu}_{\nu\sigma} = \int_0^\infty x^2j_\mu(kx)j_\nu(qx)j_\sigma(sx)\,\dd x = \Big(\frac{\pi}{2}\Big)^{3/2}(kqs)^{-1/2}\int_0^\infty x^{1/2}J_{\mu+\frac12}(kx)J_{\nu+\frac12}(qx)J_{\sigma+\frac12}(sx)\,\dd x,
+\]
+for which closed forms such as $\mathcal{J}^0_{00} = \pi/(4kqs)$ and $\mathcal{J}^1_{10} = \tfrac{\pi}{8}(k^2+q^2-s^2)/(k^2q^2s)$ are available as tests of the Levin implementation (\note{NUM}~07). \note{MAIN}~14 Step 7 rewrites $I_{J/Y}$ in that spherical-Bessel form; it is not used by the pipeline.
+
+% =====================================================================
+\section{The one-loop power spectrum}
+\label{sec:loop}
+
+\subsection{Wick contraction}
+
+Abbreviate $\mathcal{I}_s(\vk,\vq)\equiv a_0^{-2}Q_s(\vk,\vq)\,\mathcal{I}_k(q,r;z)$, so that \eqref{eq:I-def} reads $h_s(\vk) = -4\cstar^2\int\frac{\dd^3q}{(2\pi)^3}\zeta^*_{\vq}\zeta^*_{\vk-\vq}\,\mathcal{I}_s(\vk,\vq)$. The two-point function is
+\begin{equation}
+\big\langle h_s(\vk)h_{s'}(\vk')\big\rangle = 16\cstar^4\int\frac{\dd^3q}{(2\pi)^3}\frac{\dd^3t}{(2\pi)^3}\,
+\big\langle\zeta^*_{\vq}\zeta^*_{\vk-\vq}\zeta^*_{\vt}\zeta^*_{\vk'-\vt}\big\rangle\,\mathcal{I}_s(\vk,\vq)\,\mathcal{I}_{s'}(\vk',\vt).
+\end{equation}
+For Gaussian $\zeta^*$ the four-point function is a sum of three pairings. The pairing $\langle\zeta_{\vq}\zeta_{\vk-\vq}\rangle\langle\zeta_{\vt}\zeta_{\vk'-\vt}\rangle\propto\delta(\vk)\delta(\vk')$ is the disconnected piece and is dropped. The two connected pairings are
+\begin{equation}
+(2\pi)^6P_\zeta(q)P_\zeta(|\vk-\vq|)\Big\{\delta(\vq+\vt)\,\delta(\vk-\vq+\vk'-\vt) + \delta(\vq+\vk'-\vt)\,\delta(\vk-\vq+\vt)\Big\}.
+\end{equation}
+In the first the $\vt$ integral sets $\vt = -\vq$ and leaves $\delta(\vk+\vk')$; in the second it sets $\vt = \vk'+\vq$ and again leaves $\delta(\vk+\vk')$. With $\vk' = -\vk$,
+\begin{equation}
+\big\langle h_sh_{s'}\big\rangle = (2\pi)^3\delta(\vk+\vk')\,16\cstar^4\int\frac{\dd^3q}{(2\pi)^3}P_\zeta(q)P_\zeta(r)\,\mathcal{I}_s(\vk,\vq)\Big\{\mathcal{I}_{s'}(-\vk,-\vq) + \mathcal{I}_{s'}(-\vk,\vq-\vk)\Big\}.
+\end{equation}
+Both terms in the brace equal $\mathcal{I}_{s'}(\vk,\vq)$: $\mathcal{I}_k$ depends on $\vk$ only through $k$ and on $\vq$ only through the pair of magnitudes $(q,r)$, in which it is symmetric because $f$ is (\S\ref{sec:source-kernel}); and $Q_{s'}(-\vk,-\vq) = Q_{s'}(\vk,\vq)$, $Q_{s'}(-\vk,\vq-\vk) = Q_{s'}(\vk,\vq)$ by the properties noted after \eqref{eq:Q-explicit}. The two Wick terms therefore collapse to twice one of them:
+\begin{equation}
+\boxed{\;
+\big\langle h_s(\vk)h_{s'}(\vk')\big\rangle = (2\pi)^3\delta(\vk+\vk')\;32\,\cstar^4\int\frac{\dd^3q}{(2\pi)^3}\,P_\zeta(q)\,P_\zeta(r)\,\frac{Q_s(\vk,\vq)\,Q_{s'}(\vk,\vq)}{a_0^4}\,\mathcal{I}_k(q,r;z)^2 .\;}
+\label{eq:hh-3d}
+\end{equation}
+Here $32\cstar^4 = 2\times(4\cstar^2)^2 = 2592\big(\tfrac{1+\wstar}{5+3\wstar}\big)^4$. In the 2022 normalisation the same equation reads $32\int\frac{\dd^3q}{(2\pi)^3}Q_sQ_{s'}P_*P_*\,(\text{Step-6 endpoint})^2$ with the $c^4$ inside the squared time integral. (\note{NUM}~03 pp.\,7--9 carried $1024 = 32^2$ and $2048$ in blue ink, the \note{MAIN}~11 coefficient squared; the author's 2025 annotations correct these to $36^2 = 1296$ and $2592$, and the chain below follows the corrected values.)
+
+\subsection{Angular reduction and decoupling of the polarisations}
+
+Write $\dd^3q = q^2\dd q\,\sin\theta\,\dd\theta\,\dd\varphi$ in the frame of \eqref{eq:Q-explicit}. The kernel $\mathcal{I}_k(q,r;z)$ depends on $\varphi$ not at all, since $r^2 = k^2+q^2-2kq\cos\theta$, so the azimuthal integral acts only on the polarisation factors:
+\begin{equation}
+\int_0^{2\pi}\dd\varphi\,Q_sQ_{s'} = \frac{q^4}{2}\sin^4\theta\int_0^{2\pi}\dd\varphi\,\{\cos^2 2\varphi,\ \sin^2 2\varphi,\ \cos2\varphi\sin2\varphi\} = \frac{q^4}{2}\sin^4\theta\;\pi\,\delta_{ss'} .
+\label{eq:phi-integral}
+\end{equation}
+This is the origin of the $\delta_{ss'}$ in \eqref{eq:P-def}, and it shows that $P^h_{22}$ is the same for both polarisations. Converting to dimensionless spectra, $P_\zeta(q)P_\zeta(r) = 4\pi^4\cP_\zeta(q)\cP_\zeta(r)/(q^3r^3)$, and collecting the numerical factors,
+\[
+32\cstar^4\times\frac{1}{(2\pi)^3}\times\pi\times\frac12\times4\pi^4 = 8\pi^2\cstar^4 = 648\pi^2\Big(\frac{1+\wstar}{5+3\wstar}\Big)^4 ,
+\]
+while $q^2\dd q\cdot q^4\cdot q^{-3} = q^4\,\dd q/q$ and the $q^4/a_0^4$ combines into $\qphys^4$. The result is the build form of the pipeline:
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+P^h_{22}(k;z) &= 648\pi^2\Big(\frac{1+\wstar}{5+3\wstar}\Big)^4
+\int_0^\infty\frac{\dd q}{q}\int_0^\pi\dd\theta\,\sin^5\theta\;\cP_\zeta(q)\,\frac{\cP_\zeta(r)}{r^3}\,
+\Big\{\qphys^2\,\mathcal{I}_k(q,r;z)\Big\}^2,\\[4pt]
+r &= \sqrt{k^2+q^2-2kq\cos\theta},\qquad \qphys = \frac{q}{a_0},\\[4pt]
+\mathcal{I}_k(q,r;z) &= \int_z^{\zinit}\dd z'\,\Gb_k(z,z')\,\frac{1+z}{1+z'}\,\frac{f(q,r,z')}{H(z')^2},
+\end{aligned}\;}
+\label{eq:P22-final}
+\end{equation}
+with $f$ from \eqref{eq:f-def}, $\Gb_k$ from \eqref{eq:Gbar-def}, $T_k$ from \eqref{eq:Tk-redshift} and the conditions on $\zinit$ of \S\ref{sec:seed}. Any change of variables in the $(q,\theta)$ plane, for instance to $(u,v) = (q/k,r/k)$ with $\dd\theta\,\sin\theta = (r/kq)\,\dd r$, is an implementation choice.
+
+\begin{chk}[Dimensions and covariance]
+$P^h_{22}$ has dimension $M^{-3}$: $\qphys^2\mathcal{I}_k$ is dimensionless ($[\mathcal{I}_k] = M^{-2}$), and the only dimensionful factor left is $r^{-3}$. Under $a_0\to\lambda a_0$ it scales as $\lambda^{-3}$ through $r^{-3}$ alone, which is the correct scaling of a comoving spectrum defined by \eqref{eq:P-def}; the dimensionless $\cP_{h}(k) = k^3P^h_{22}/(2\pi^2)$ is invariant.
+\end{chk}
+
+\subsection{The constant-\texorpdfstring{$w$}{w} closed form as a cross-check}
+
+On a constant-$w$ background \eqref{eq:I-J} gives $\qphys^2\mathcal{I}_k = -q^2\mathcal{J}_k$ with $\mathcal{J}_k$ the closed form \eqref{eq:J-closed}, and $\wstar = w$, so
+\begin{equation}
+\begin{aligned}
+P^h_{22}(k;\eta) &= 8\pi^2c^4\int_0^\infty\frac{\dd q}{q}\int_0^\pi\dd\theta\,\sin^5\theta\;\cP_\zeta(q)\frac{\cP_\zeta(r)}{r^3}\,\big[q^2\mathcal{J}_k(q,r;\eta)\big]^2\\
+&= 8\pi^2\int_0^\infty\frac{\dd q}{q}\int_0^\pi\dd\theta\,\sin^5\theta\;\cP_\zeta(q)\frac{\cP_\zeta(r)}{r^3}\,\big[q^2\times\eqref{eq:target}\big]^2 ,
+\end{aligned}
+\label{eq:P22-analytic}
+\end{equation}
+using $c^2\mathcal{J}_k = $ the Step-6 endpoint. The second form is what one obtains by carrying the angular reduction out directly on the 2022 formula $32\int\frac{\dd^3q}{(2\pi)^3}Q_s^2P_*P_*(\cdots)^2$; that it reproduces \eqref{eq:P22-final} exactly, with $648/81 = 8$, is an independent confirmation of the coefficient chain. At $w=\tfrac13$ the source integral has also been checked against the Kohri--Terada closed form: the code's $\mathcal{I}_k$ is $-\tfrac98\kphys^{-2}$ times their kernel, the $-1$ being the orientation convention, the $\tfrac94 = 1/c^2$ the placement of the super-horizon constant, and the $\tfrac12$ their metric convention $h^{\rm KT}_{ij} = 2h_{ij}$.
+
+\subsection{From \texorpdfstring{$P^h_{22}$}{P22} to the energy density}
+\label{sec:omega}
+
+The stored deliverable is the per-polarisation $P^h_{22}(k)$. The observable is built in a separate layer, kept decoupled because models with unequal power in the two polarisations would replace only the compute layer. For completeness, in the present normalisation ($\delta g_{ij} = a^2h_{ij}$, reduced Planck mass) the energy density of sub-horizon gravitational waves is $\rho_{\rm GW} = \tfrac{\MP^2}{4}\big\langle\dot h_{ij}\dot h_{ij}\big\rangle = \tfrac{\MP^2}{4a^2}\big\langle h_{ij}'h_{ij}'\big\rangle$, time-averaged over oscillations. With \eqref{eq:fourier}, \eqref{eq:polarisation} and \eqref{eq:P-def}, $\langle h_{ij}h_{ij}\rangle = \int\dd\ln k\sum_s\cP_{h,s}(k)$, and for oscillating sub-horizon modes $\Tavg{\langle h'h'\rangle} = k^2\,\Tavg{\langle hh\rangle}$, so
+\begin{equation}
+\Omega_{\rm GW}(k) = \frac{1}{\rho_{\rm c}}\frac{\dd\rho_{\rm GW}}{\dd\ln k}
+= \frac{1}{12}\Big(\frac{k}{aH}\Big)^2\,\Tavg{\cP_{h}(k)},\qquad
+\cP_h = \sum_{s=+,\times}\cP_{h,s} = 2\times\frac{k^3}{2\pi^2}P^h_{22}(k),
+\label{eq:omega-gw}
+\end{equation}
+with $\rho_{\rm c} = 3H^2\MP^2$. This is Kohri--Terada's $\tfrac{1}{24}(k/aH)^2\Tavg{\cP_h}$ once their $h^{\rm KT} = 2h$ and their per-polarisation $\cP_h$ are accounted for.
+
+% =====================================================================
+\section{Summary: the calculation as a pipeline}
+\label{sec:summary}
+
+The final result is \eqref{eq:P22-final}. Read from the inside out, it is assembled as follows.
+
+\begin{enumerate}[label=\arabic*.,leftmargin=2em]
+\item \textbf{Background} (\S\ref{sec:setup}). $H(z)$, $\eps(z)$, $w_0(z)$, $c_s^2(z)$ and $\tau(z) = a_0\eta(z)$ from the cosmological model; \eqref{eq:eps-def}, \eqref{eq:w-of-z}--\eqref{eq:dlnH}, \eqref{eq:tau-of-z}.
+\item \textbf{Transfer function} (\S\ref{sec:scalar}). For each $q$ in the loop grid, $T_q(z)$ and $\dd T_q/\dd z$ from \eqref{eq:Tk-redshift} with $T=1$, $\dd T/\dd z=0$ at $\zinit(q)$; numerically at first, then in the Liouville--Green form \eqref{eq:LG-modes-Tk}--\eqref{eq:domega-Tk} once $|\dd\ln\om/\dd z|\ll\om$. Oracle on constant $w$: \eqref{eq:Tk-analytic}.
+\item \textbf{Green's function} (\S\ref{sec:greens}). For each $k$ and each source redshift $z'$, $\Gb_k(z,z')$ from \eqref{eq:Lz}--\eqref{eq:Gbar-def}, numerically and then in the form \eqref{eq:matching-Gk}--\eqref{eq:domega-Gk}. Oracle: $-a_0H(z')\Gr_k$ with \eqref{eq:Gr}.
+\item \textbf{Source kernel} (\S\ref{sec:tensor}). $f(q,r,z')$ from \eqref{eq:f-def} with $w_0 = w_0(z')$, for each unordered pair $(q,r)$ that closes a triangle with $k$.
+\item \textbf{Source time integral} (\S\ref{sec:time-integral}). $\mathcal{I}_k(q,r;z)$ from \eqref{eq:I-def}, by quadrature where the integrand is smooth and by the Levin method in the oscillatory region using \eqref{eq:modulus-phase}. Oracle on constant $w$: $-a_0^2\mathcal{J}_k$ with \eqref{eq:J-closed}--\eqref{eq:IJIY}.
+\item \textbf{Loop integral} (\S\ref{sec:loop}). \eqref{eq:P22-final}, per polarisation, with $\cP_\zeta$ supplied externally. Not yet implemented at the time of writing.
+\item \textbf{Observable} (\S\ref{sec:omega}). $\Omega_{\rm GW}$ from \eqref{eq:omega-gw}, in a separate layer.
+\end{enumerate}
+
+\noindent The conventions that must be held fixed across the pipeline, each of which has at some point been the source of an apparent discrepancy between documents, are: $a_0$ absorbed into $\kphys$ and $a_0\eta$; the unit-jump $\Gb_k$ with $L_z\Gb_k = -\delta$ and the orientation $\int_z^{\zinit}$, giving $\Gb_k = -a_0H(z')\Gr_k$ and an overall sign in $h_s$ that drops out of $P^h_{22}$; $4\cstar^2$ outside the kernel $f$ (so that $\wstar$ and $w_0$ can differ) rather than $c^2$ inside it; $c_s^2$ the perturbation sound speed with $\Lambda$ unperturbed, $w_0$ the background equation of state with $\Lambda$ included; the seed $\zeta^*$ with $P_* = P_\zeta$; and $e^s_{ij}e^{s'}_{ij} = \delta_{ss'}$ with $\delta g_{ij} = a^2h_{ij}$.
+
+% =====================================================================
+\appendix
+
+\section{Bessel-function identities used}
+\label{app:bessel}
+
+For any cylinder function $Z_\nu\in\{J_\nu,Y_\nu\}$ (DLMF 10.6):
+\begin{gather}
+2Z_\nu'(x) = Z_{\nu-1}(x) - Z_{\nu+1}(x),\qquad
+\frac{2\nu}{x}Z_\nu(x) = Z_{\nu-1}(x) + Z_{\nu+1}(x),\\
+\Rightarrow\quad Z_\nu'(x) - \frac{\nu}{x}Z_\nu(x) = -Z_{\nu+1}(x),\qquad
+Z_\nu(x) - \frac{x}{2\nu}Z_{\nu+1}(x) = \frac{x}{2\nu}Z_{\nu-1}(x),\\
+J_\nu(x)Y_\nu'(x) - Y_\nu(x)J_\nu'(x) = \frac{2}{\pi x},\qquad
+J_\nu(x)\to\frac{(x/2)^\nu}{\Gamma(\nu+1)},\quad Y_\nu(x)\to-\frac{\Gamma(\nu)}{\pi}\Big(\frac{2}{x}\Big)^\nu\ \ (x\to0,\ \nu>0),\\
+J_{n+\frac12}(x) = \sqrt{\frac{2x}{\pi}}\,j_n(x),\qquad
+u'' + \frac{2\nu+1}{x}u' + u = 0 \iff u = x^{-\nu}Z_\nu(x),\\
+Z'' + \Big(k^2 - \frac{\nu^2-\frac14}{\eta^2}\Big)Z = 0 \iff Z = \sqrt\eta\,Z_\nu(k\eta).
+\end{gather}
+The last two are Bessel's equation after the substitutions $y = x^{\nu}u$ and $Z = \sqrt\eta\,y(k\eta)$ respectively.
+
+\section{Slips found on the pages, and how they were resolved}
+\label{app:slips}
+
+Every item below was read against the page image and decided by the author on 2026-09-07 (\texttt{docs/spec/REVIEW-QUEUE.md}), except where marked. None affects a final formula once corrected.
+
+\begin{longtable}{p{2.6cm}p{5.4cm}p{6.8cm}}
+\toprule
+Page & What is written & Resolution \\
+\midrule
+\note{MAIN}~12 p.\,1 & The $\eta\eta$ equation rewritten with $+a^2\delta\rho/2\MP^2$. & Lost minus sign, annotated by the author in 2023; does not propagate. \eqref{eq:constraint} has the minus. \\
+\note{MAIN}~12 p.\,2 & Diagonal $ij$ equation appears to read $-\delta p/\MP^2$. & Stray stroke; positive, as p.\,1 and the next line require. \eqref{eq:pressure}. \\
+\note{MAIN}~11 pp.\,5--6 & $\Phi'$ used as $\dd/\dd\eta$ without chain-rule factors. & Notational anomaly; \note{MAIN}~14 and \note{NUM}~06 use $\dd/\dd x$ and are internally consistent. \\
+\note{MAIN}~14 pp.\,10--11 & Exponent of 2 over-written ($2+3b$ or $2+2b$). & $2+2b$, forced by $\tfrac{\pi}{2}2^{3+2b}$; independently confirmed by \note{NUM}~06. \eqref{eq:target}. \\
+\note{MAIN}~14 p.\,10 & Bessel orders written $J_{5/2}$ on one line. & Abbreviation for $J_{5/2+b}$. \\
+\note{NUM}~02 p.\,2--3 & Friction coefficient first $2-\eps$; a sign in the $\dot H$ term. & Corrected in red on the page to $\eps$; \note{NUM}~03 obtains $\eps$ independently. \eqref{eq:Lz}. \\
+\note{NUM}~02 p.\,3--4 & Source $-\frac{1}{a_0H}\delta(z-z')$, Jacobian without absolute value. & A convention paired with the orientation of $\int\dd z'$, not a slip; the code uses the unit-jump $\Gb_k$ of \eqref{eq:Gbar-def} instead. \\
+\note{NUM}~03 pp.\,7--10 & Coefficients $1024\to2048\to1024\pi\to512\pi^2$; annotations 1296, 2592, ``1292'', ``646''. & $32^2$ copied from \note{MAIN}~11 where $c^2$ sits inside $f$. Correct chain $1296\to2592\to1296\pi\to648\pi^2$; ``1292'' and ``646'' are typos. \eqref{eq:hh-3d}--\eqref{eq:P22-final}. \\
+\note{NUM}~03 pp.\,5, 7 & $f(z'|\vk,\vk-\vq)$. & Slip for $f(z'|\vq,\vk-\vq)$. \\
+\note{NUM}~03 pp.\,9--10 & $f(z|\ldots)$ inside the $\dd z'$ integral; no $\dd\theta$; unbarred $G$. & $z'$; $\int_0^\pi\dd\theta$ and $r(\theta)$ supplied by the reduction; $\Gb_k$. \eqref{eq:P22-final}. \\
+\note{NUM}~05 p.\,6 & $\dd\ln\om/\dd z$ without the $k^2/H^2$ term. & Repaired by \note{NUM}~10. \eqref{eq:domega-Gk}. \\
+\note{NUM}~06 p.\,4, 6 & $J_{5/2}$ at three places. & $J_{5/2+b}$. \\
+\note{NUM}~06 p.\,6 & Unprimed $\eta$ in Bessel arguments under $\int\dd\eta'$. & $\eta'$ (p.\,7 has it right). \\
+\note{NUM}~06 p.\,7 & Prefactor $a_0^1$. & $a_0^2$ by the covariance test; one power was absorbed in $G_{\rm me} = -H(z')G_{\rm them}$. \S\ref{sec:I-to-J}. \\
+\note{NUM}~09 p.\,6 & $\tfrac32w'(\eps-\tfrac32(1+w))$ in $\dd\om^2/\dd z$. & Genuine error: p.\,5 is right, $\tfrac32w'(\eps-3(1+w))$. Had propagated to \texttt{WKB\_Tk.py}; fixed 2026-09-07. \eqref{eq:domega-Tk}. \\
+\note{NUM}~11 p.\,5 & Every $\om$ in the phase-shifted amplitude starred. & Slip (audit finding GK-4): the amplitude carries $\om^{-1/2}(z)$; the code is right. \\
+\note{NUM}~11 pp.\,5--6 & ``$Q(u)$ close to unity'' with a fixed point at $Q=-1$. & Wording: $|Q|\to1$ under $\dd\Theta/\dd z = +\om$. \\
+\bottomrule
+\end{longtable}
+
+\section{Correspondence with the transcribed specifications}
+\label{app:correspondence}
+
+\begin{longtable}{p{2.2cm}p{5.8cm}p{6.8cm}}
+\toprule
+Equation & Content & Spec result (document, page) \\
+\midrule
+\eqref{eq:eps-def}, \eqref{eq:deta-dz} & $\eps$, $\cH'$, $a''/a$, $\dd/\dd\eta\to\dd/\dd z$ & \spec{01 R12--R15} (\note{NUM}~01 pp.\,1--3); \spec{03 R13, R17}; \spec{02 R12} \\
+\eqref{eq:constant-w-background}--\eqref{eq:w-b-identities} & constant-$w$ background, $b$ & \spec{01 R6--R7} (\note{MAIN}~12 pp.\,3--4); \spec{05 R24}; \spec{04 R7--R8} \\
+\eqref{eq:w-of-z}--\eqref{eq:dlnH} & $w(z)$, $c_s^2(z)$, $\dd\ln H/\dd z$ & \spec{01 R16, R28, R31}; \spec{02 R24, R29} \\
+\eqref{eq:seed} & $\phi = \cstar T\zeta^*$ & \spec{03 R20, \S0.4}; \spec{05 R16} \\
+\eqref{eq:G00}--\eqref{eq:Gij} & first-order Einstein tensor & \spec{01 R1--R3} (\note{MAIN}~12 pp.\,1--2); \spec{03 R6} \\
+\eqref{eq:Tmunu-first}, \eqref{eq:velocity} & fluid stress, velocity & \spec{03 R1--R5, R9--R10} (\note{MAIN}~10) \\
+\eqref{eq:phi-eq-eta} & $\phi$ equation & \spec{01 R5} (\note{MAIN}~12 p.\,2) \\
+\eqref{eq:phi-eq-constant-w}--\eqref{eq:Tk-analytic} & constant-$w$ solution, $T_k$ & \spec{01 R8--R11} (\note{MAIN}~12 pp.\,4--7); \spec{04 R4}; \spec{05 R20} \\
+\eqref{eq:dTdx} & $\dd T/\dd x$ & \spec{04 R9}; \spec{05 R26} \\
+\eqref{eq:Tk-redshift} & $T_k$ equation in $z$ & \spec{01 R14, R21} (\note{NUM}~01 p.\,3; \note{NUM}~08 p.\,1); \spec{02 R39, R42} \\
+\eqref{eq:tau-of-z} & $a_0\eta(z)$ & \spec{01 R18--R20} (\note{NUM}~04) \\
+\eqref{eq:P-Tk}--\eqref{eq:matching-Tk} & LG representation of $T_k$ & \spec{01 R22--R27} (\note{NUM}~08--09); \spec{02 R40--R46} (\note{NUM}~11 pp.\,6--10) \\
+\eqref{eq:domega-Tk} & $\dd\om^2/\dd z$ for $T_k$, corrected & \spec{01 R30} with the sign-off correction \\
+\eqref{eq:tensor-lhs} & $O(h)$ Einstein tensor & \spec{05 R1} (\note{MAIN}~11 p.\,1) \\
+\eqref{eq:geometric-source}, \eqref{eq:fluid-source} & quadratic sources & \note{MAIN}~07--08 (untranscribed; rederived here); \spec{03 R11} (\note{MAIN}~10 p.\,4) \\
+\eqref{eq:tensor-eq-real} & real-space tensor equation & \spec{05 R2} (\note{MAIN}~11 p.\,2) \\
+\eqref{eq:tensor-eq-fourier}--\eqref{eq:tensor-eq-w} & Fourier-space, per polarisation & \spec{05 R4--R6, R15}; \spec{03 R12, R15--R19} \\
+\eqref{eq:Q-explicit} & $Q_\pm$ & \spec{05 R13, R19}; \spec{03 R33} \\
+\eqref{eq:tensor-eq-f}--\eqref{eq:f-def} & $4\cstar^2$ and the kernel $f$ & \spec{03 R22, \S0.2} (\note{NUM}~03 p.\,4); \spec{04 R5--R6}; \spec{05 R17--R18} ($f_{14} = c^2f$) \\
+\eqref{eq:chi-eq} & $\chi_s = ah_s$ & \spec{05 R9, R18}; \spec{03 R14} \\
+\eqref{eq:chi-homogeneous}--\eqref{eq:Gr} & retarded $\Gr_k$ & \spec{02 R1--R10} (\note{MAIN}~13); \spec{05 R21}; \spec{04 R3} \\
+\eqref{eq:Lz}, \eqref{eq:Gbar-def}--\eqref{eq:hs-redshift} & redshift operator, $\Gb_k$, relation to $\Gr_k$ & \spec{02 R15--R18, \S0.1} (\note{NUM}~02); \spec{03 R23--R26}; \spec{04 R1--R2} \\
+\eqref{eq:omega-Gk}--\eqref{eq:domega-Gk} & LG representation of $G_k$ & \spec{02 R19--R38} (\note{NUM}~05, 10, 11) \\
+\eqref{eq:I-def} & $\mathcal{I}_k$ and $h_s$ in $z$ & \spec{03 R28--R29} (\note{NUM}~03 p.\,7); \spec{04 R1} \\
+\eqref{eq:I-J}--\eqref{eq:I-target} & conversion to $\eta$; $-a_0^2/c^2$ & \spec{04 R12--R13, \S0.1}; \texttt{cross-spec-check.md} H4 \\
+\eqref{eq:f-four-terms}--\eqref{eq:f-bessel} & Bessel form of $f$ & \spec{04 R10--R11} (\note{NUM}~06 pp.\,4--6); \spec{05 R25--R28} (\note{MAIN}~14 pp.\,7--10) \\
+\eqref{eq:J-closed}--\eqref{eq:target} & closed-form time integral; build target & \spec{04 R14} (\note{NUM}~06 p.\,7); \spec{05 R29--R31} (\note{MAIN}~14 pp.\,10--11) \\
+\eqref{eq:modulus-phase} and after & Levin form & \spec{04 R15--R29} (\note{NUM}~06 pp.\,7--11; \note{NUM}~07) \\
+\eqref{eq:hh-3d} & Wick contraction, $32\cstar^4$ & \spec{03 R30--R32} (\note{NUM}~03 pp.\,7--9); \spec{05 R11--R12, R22--R23} \\
+\eqref{eq:phi-integral}--\eqref{eq:P22-final} & angular reduction, $648\pi^2$, build form & \spec{03 R33--R35, \S0.3} (\note{NUM}~03 pp.\,9--10) \\
+\eqref{eq:P22-analytic} & fixed-$w$ cross-check & \spec{03 \S0.3} check; \spec{05 \S0.2} \\
+\eqref{eq:omega-gw} & $\Omega_{\rm GW}$ & not in the notes; derived here for the separate layer \\
+\bottomrule
+\end{longtable}
+
+\section{Machine verification}
+\label{app:verification}
+
+Two scripts under \texttt{docs/derivation/scripts/} reproduce every check quoted in the text; both run in a few seconds with the repository's \texttt{venv} (sympy 1.13, scipy 1.15).
+
+\paragraph{\texttt{einstein\_tensor.py}.} Computes the mixed Einstein tensor of the metric \eqref{eq:metric} with $\psi = \phi$ and a single transverse-traceless mode $h_{xy}(\eta,z)$, to second order in $\phi$ and first order in $h$, by direct expansion of the Christoffel symbols and Ricci tensor with polynomial truncation. It confirms the background equations, \eqref{eq:G00}--\eqref{eq:Gij} at first order, the tensor operator \eqref{eq:tensor-lhs} with coefficient exactly $\tfrac12$, and the second-order off-diagonal source \eqref{eq:geometric-source} with coefficient exactly $-2$ and no $\phi\,\partial_x\partial_y\phi$ term.
+
+\paragraph{\texttt{check\_formulas.py}.} Symbolic checks (sympy, residual exactly zero): the redshift form \eqref{eq:Tk-redshift} of \eqref{eq:phi-eq-eta}; the redshift operator \eqref{eq:Lz}; $a''/a = a^2H^2(2-\eps)$; both effective frequencies \eqref{eq:omega-Tk} and \eqref{eq:omega-Gk} from the lemma \eqref{eq:LG-lemma}; the polarisation factors \eqref{eq:Q-explicit}; the coefficient arithmetic $32\cdot\pi\cdot\tfrac12\cdot4\pi^4/(2\pi)^3 = 8\pi^2$ and $8\pi^2\times81 = 648\pi^2$; the Bessel recurrences of Appendix~\ref{app:bessel}. Numerical checks (scipy, double precision): \eqref{eq:Tk-analytic} solves \eqref{eq:phi-eq-constant-w} and tends to 1; \eqref{eq:Gr} solves the homogeneous equation, vanishes at $\eta=\eta'$ and has unit derivative there; the $w$-form \eqref{eq:f-def}, the four-term form \eqref{eq:f-four-terms} and the two-term form \eqref{eq:f-bessel} agree to $10^{-10}$, and $f_{14} = c^2 f$; the closed form \eqref{eq:J-closed} agrees with direct quadrature of \eqref{eq:I-J} to $2\times10^{-9}$ relative at $b = 0.3$.
+
+Independently of this document, the spec-code audit of September 2026 (\texttt{docs/spec-code-audit/}) verified that the code implements \eqref{eq:Tk-redshift}, \eqref{eq:Lz}, \eqref{eq:Gbar-def}, \eqref{eq:omega-Tk}, \eqref{eq:omega-Gk}, \eqref{eq:matching-Tk}, \eqref{eq:matching-Gk}, \eqref{eq:f-def}, \eqref{eq:I-def} and \eqref{eq:J-closed} exactly or to the quoted numerical precision, and that nothing beyond \eqref{eq:I-def} in the chain, i.e.\ \eqref{eq:P22-final}, exists in the code yet.
+
+\end{document}
