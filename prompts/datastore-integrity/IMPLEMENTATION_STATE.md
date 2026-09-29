@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-29 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07 and 08); all but 08 reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-30 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06, 07 and 08), all reviewed.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -18,7 +18,8 @@ setting up D5's witness procedure; reviewed the same day, with two small remnant
 `[20-wkb-rows-consume-numeric-initial-data]` on the GkTk-remedial board's §4 and opening two
 issues (§3.3); reviewed the same day, with three small remnants fixed in a follow-up commit.
 **08 landed 2026-09-29**, closing `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` on the
-store-fingerprint board's §4 and opening one issue (§3.3); awaiting review.
+store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
+remnants fixed in a follow-up commit.
 **Next: 09.** 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
@@ -1035,6 +1036,118 @@ and does not edit it.
 ([`orchestrator/prompt-08.md`](orchestrator/prompt-08.md)). It adds
 `quad_policy_serial` to `QuadSourceIntegral`'s key, a witness and a golden beside 07's, and very
 likely a second format bump. `TestDropOrder` will hold its new foreign key to `_drop_order`.
+
+**Orchestrator review of prompt 08 (2026-09-30).** Run against `b18bb0b`, dispatched from
+`479736d` with nothing `running` and no other worktree. **All twelve checks in
+`orchestrator/prompt-08.md` §3 passed.** The agent did not stop, and needed no grant beyond the
+note's. The review found three small remnants, fixed in `a9b6ff6`.
+- **Dispatch.**
+  - `HEAD` was `479736d`, the commit adding the note, as the note expected.
+  - The index held **98** rows. `substitute_main_py()`'s five literals each occurred once, at
+    `:3582`, `:3689`, `:3690`, `:3791` and `:3803`.
+  - The baselines matched §5.10. In the full ComputeTargets run `test_wall_time_per_object`
+    failed at 0.059 s against 0.05 s, under a load average of about 15. Alone it passed two of
+    three times: the known flake.
+  - No other session's change appeared in this checkout during the dispatch.
+- **Scope.**
+  - 24 files, all on the brief's list. The forbidden paths of §3.1 have an empty diff.
+  - `--diff-filter=M` over `*/tests/*` gives exactly §0.3's six files.
+    `test_factory_select_columns.py` is untouched: no pin moved, since `read_table` is a
+    comprehension (§0.1 allowed either shape).
+  - Every existing-test hunk was read. Each adds only the column, the `quad_policy` argument or
+    payload entry, the second fixture policy, the `IDENTITY` entry, or a D5 repointing with its
+    docstring sentence. None asserts anything new or less.
+  - The other hunks are as bounded: `QuadSourcePolicy`'s factory, `read_table` alone;
+    `sharding.py`, one entry; `defaults.py`, one constant; `MetadataConcepts/QuadSourcePolicy.py`,
+    docstring alone; `stores.py`, the constant and its comment.
+- **K3.**
+  - `quad_policy_serial` is NOT NULL, indexed, with `ForeignKey("QuadSourcePolicy.serial")`.
+    `policy_serial` is unchanged.
+  - `build()` and `read_batch()` both filter on it and hand the policy to every object. `store()`
+    writes it. The constructor requires it, and refuses `None`.
+  - `inventory_records` declares `Parent("quad_policy_serial", "QuadSourcePolicy")`, and its
+    comment no longer says "not a QuadSourcePolicy".
+  - The D4 refusal is one helper, called from both readers' `except SQLAlchemyError`, matching
+    the driver's message. `TestAnOldStoreIsRefused` recreates the table from the 07 witness's DDL
+    and asserts it lacks the column. Mutations (i) and (ii) each break its `build` or
+    `read_batch` test, since then no query names the missing column.
+- **`main.py`.**
+  - Both QSI sites pass `QuadSource_policy_1pt5`, and the 1.5 creation is
+    `object_get("QuadSourcePolicy", **DEFAULT_QUADSOURCE_POLICY_1PT5)`. `_5pt0` is untouched.
+  - `test_main_plumbing.py` is unmodified and passes (27 tests, with the new module's 19).
+  - The five literals each occur once, now at `:3585`, `:3692`, `:3693`, `:3791` and `:3803`.
+- **The extraction script.**
+  - `find_QuadSource_policy` reads through `read_table`, whose filter is `build()`'s own. It
+    refuses on none, naming the parameters, and on several, naming the serials.
+  - The tree's only `object_get("QuadSourcePolicy", …)` calls are `main.py`'s two.
+  - The `GkSourcePolicy` lookups are unchanged, and
+    `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` is open.
+  - A grep for every `QuadSourceIntegral` lookup and construction outside the tests finds none
+    without the policy. `main.py:3163` is the vectorised query whose payloads `:3131` builds.
+- **The refusal is safe.** `TestTheExtractionScript` runs the script's own function, compiled out
+  with `ast`, on a real `ShardedPool` over stand-in shards. In every case it asserts that the only
+  calls are `read_table` on `QuadSourcePolicy`, that no shard's rows change, and that
+  `replication_in_flight` is empty. A control test shows that `object_get` is a different call.
+- **D5 and the fingerprint.**
+  - Both new files are new. The two older witnesses, `schema_at_base.json` and both older goldens
+    have the same blob at both commits.
+  - A witness re-captured from `HEAD` is byte-identical to the new one.
+  - The orchestrator's own diff of the 07 and 08 witnesses is **6 hunks, 43 content lines**. It
+    has one hunk of each of §0.6's six kinds, all in `QuadSourceIntegral`, and a JSON
+    comparison finds no other class or top-level key differing.
+  - A re-captured fingerprint of `build_full_store()` equals the new golden: format 3,
+    `problems` empty, 21 classes. Only `QuadSourceIntegral` and `QuadSourcePolicy` differ from
+    the 07 golden.
+- **The foreign-key test** puts `quad_policy_serial` 3 on a row, and serial 3 is no
+  `GkSourcePolicy` serial.
+  - With `b18bb0b~1`'s factory checked out over it, 1 of its 4 tests fails.
+  - With the key pointed at `GkSourcePolicy.serial`, 2 fail, among them
+    `test_every_shard_passes_foreign_key_check`. That is the coincidence 06 found.
+  - Both were restored.
+- **Mutations.**
+  - (i)–(iv) were extracted from `git show HEAD:<log>` and applied with plain `git apply` in a
+    detached worktree of `HEAD`. Each was run over Datastore, ComputeTargets and RunRegistry.
+  - Each gave exactly its logged failures and sub-tests: Datastore `2 + 1 error`, 4, 0 and 5;
+    ComputeTargets 2 under (iii); RunRegistry 1 under (iv).
+  - The tree was clean after each revert. RunRegistry's `skipped=1` in the worktree is the
+    A3-manifest test, as in 07's review.
+- **Readers and probes.**
+  - All fourteen audit probes were run at `479736d` and at `b18bb0b`, from `git archive` exports.
+  - Only `probe_01_tagged_read_batch.py` newly fails (`NOT NULL constraint failed:
+    QuadSourceIntegral.quad_policy_serial`), and log 08's rule-11 list names it.
+  - `fk_sweep_probe`, `probe_02` and `probe_03` change only as the log says. The five that
+    already failed are unchanged, apart from paths.
+- **Boards.**
+  - The issue is on the store-fingerprint board's §4, with a closing note naming the commit by
+    subject and decisions 6.1.2 and D6.
+  - Counted, the index has **98** rows: one deleted, one opened. The date is 2026-09-29, the
+    commit's own.
+  - This board has its header, §1 row, K3, §3.1, the §3.3 entry and §5.11.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `b18bb0b`, serially: AdaptiveLevin 32, ComputeTargets 585 (+19), CosmologyModels
+    39, Datastore 422 (+25), LiouvilleGreen 148 (1 skipped), RunRegistry 199. All OK.
+  - `black --check` is clean on the 18 Python files.
+  - Each of the three new modules asserts `not ray.is_initialized()` in its `tearDownModule`, and
+    each passes.
+- **Remnants, fixed in `a9b6ff6`** (*"Tidy three remnants of datastore-integrity prompt 08"*). Each
+  is too small to be an issue.
+  - `QuadSourcePolicy`'s docstring still gave "so that the schema … do[es] not churn" as a reason
+    to keep the class. The note had said this sentence becomes false, and the agent kept it.
+  - The store-fingerprint board's closing paragraph said "Seven issues remain open in §3". Log 08
+    recorded this and did not fix it (observation 5).
+  - `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]`'s site list lacked the new
+    `read_table`. Log 08 recorded this (observation 4). It is now added on this board and in the
+    index hook.
+- **Log 08 is accurate** against `git show`. Two of its line citations in the site table are
+  one line off: the helper starts at `:80`, and the inventory parent is at `:880`. These are
+  left as written.
+
+**Next: 09**, with its own orchestrator note carrying this review's findings. It keys
+`QuadSource` on `Tq_serial` and `Tr_serial`, `QuadSourceIntegral` on its source, policy data and
+Tk rows, and `GkSource` on its Gk rows (K4–K7). It resolves cross-shard parents in the inventory.
+It is the natural owner of `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]`, and its record
+change is a third format bump, to 4. Prompt 10 remains the first real run.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
