@@ -12,7 +12,7 @@ closing `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`,
 `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` on the
 tolerance-convergence board. Reviewed the same day: the code passed, and L5's account of what
 the two verification scripts do after a miss was wrong (both raise; they do not finish) and is
-corrected on that board and in the index. The review opened one issue (§3.3). **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
+corrected on that board and in the index. The review opened one issue, closed the same day (§4). **Next: 06**, after 03; 07 waits on 05 and 06. 10 waits on 01–09.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -916,6 +916,11 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Decide whether the version rows go through the recorded write, or whether the
     check at open treats a `version` row missing under a label being opened differently. Either
     changes `Datastore.py`'s constructor or the check's licence, which prompt 02 could not.
+
+---
+
+## 4. Resolved issues
+
 - **[03-exit-time-build-comment-describes-the-removed-order-by]** *(opened 2026-09-29 by the
   orchestrator's review of prompt 03)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build` (`wavenumber.py:195`), the
@@ -927,12 +932,11 @@ None is assigned to a prompt of this campaign.
     which is precisely the defect L1 fixed, and the comment sits in the function that says so.
   - **Next step.** Delete or rewrite that one line, in whichever prompt next has that `build()`
     in scope. It was not 03's to fix after its commit (one commit per prompt, no amend).
-
----
-
-## 4. Resolved issues
-
-None yet.
+  - **Closed 2026-09-29**, at the user's request, in the commit *"Correct the exit-time build
+    comment the ORDER BY's removal left false"*. The line now says the tolerance table is joined
+    twice only to return each tolerance's `log10_tol`, and that the match is exact on the two
+    serials. It is a comment only: no statement changed, and the read-back guard and `black` are
+    unaffected.
 
 ---
 

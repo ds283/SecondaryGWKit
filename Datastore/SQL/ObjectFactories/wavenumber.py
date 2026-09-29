@@ -192,7 +192,8 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         # Note that if we just have .select_from(BASE_TABLE), we cannot access any columns from the joined tables (at least using SQLite)
         # see: https://stackoverflow.com/questions/68137220/getting-columns-of-the-joined-table-using-sqlalchemy-core
 
-        # order by descending values of abs and relative tolerances, so that we get the best computed value we hold
+        # the tolerance table is joined twice, as "atol" and "rtol", only to return each tolerance's log10_tol;
+        # the match itself is exact on the two serials, so no other stored tolerance can be served
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
 

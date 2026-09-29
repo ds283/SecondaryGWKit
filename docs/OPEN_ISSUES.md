@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-29 · **99 open** across seventeen campaigns.
+**Last updated:** 2026-09-29 · **98 open** across seventeen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -750,7 +750,8 @@ to a prompt, and prompts 05c and 02 each opened one on 2026-09-28. Prompt 02 clo
 `[03-integrationsolver-stepping-minimum-lookup]` on 2026-09-29, each on its owning board's §4; all
 four rows are deleted. Prompt 03 also narrowed
 `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` (§1.5 below). The
-orchestrator's review of prompt 03 opened one issue on 2026-09-29: the last row.
+orchestrator's review of prompt 03 opened one issue on 2026-09-29, closed the same day on this
+campaign's board, and its row is deleted.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -762,7 +763,6 @@ orchestrator's review of prompt 03 opened one issue on 2026-09-29: the last row.
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
-| `[03-exit-time-build-comment-describes-the-removed-order-by]` | datastore-integrity | A comment in `wavenumber_exit_time.build` (`wavenumber.py:195`) still says the query is ordered to get "the best computed value we hold", which is the behaviour prompt 03 removed. One line, for the next prompt with that `build()` in scope. |
 
 ---
 
