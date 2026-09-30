@@ -1,5 +1,15 @@
 # Prompt 09 — every derived row is keyed on the rows it was computed from
 
+> **Split 2026-09-30, by the user's decision, into 09a → 09b → 09c**, dispatched in one
+> orchestrator session ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.1). This file
+> is their charter and is not dispatched itself. Its §1, §2 and §6 bind each part where they
+> concern that part's classes; its §3 tests and mutations are distributed across them.
+> - [`09a`](09a-key-quadsource-on-its-transfer-functions.md): `QuadSource` (K4), and the
+>   inventory's cross-shard `Parent` (K7).
+> - [`09b`](09b-key-gksource-on-its-parent-set.md): `GkSource` and its parent set (K6), and the
+>   set-valued inventory parent (K7).
+> - [`09c`](09c-key-quadsourceintegral-on-its-inputs.md): `QuadSourceIntegral` (K5).
+
 **Campaign:** [`README.md`](README.md) · **Board items:** **K4**–**K7** ·
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Gate:** prompt 08 has landed; `git status` is clean. D1, D4 and D5 are decided (README §6.2).

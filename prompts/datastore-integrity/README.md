@@ -10,7 +10,9 @@ on 01–09. **The user decided D1 later on 2026-09-26 (yes), which releases 09 t
 written on 2026-09-26.** `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
 cross-campaign constraints. **04 and 04b landed and were reviewed by 2026-09-28, which releases 05
 to be written.** **05 was written on 2026-09-28 as three prompts, 05a–05c, for one orchestrator session, and landed
-the same day, all three reviewed.**
+the same day, all three reviewed.** **06, 07 and 08 landed and were reviewed by 2026-09-30.** **09 was split by the
+user on 2026-09-30 into three prompts, 09a–09c, for one orchestrator session**
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)).
 
 ## 0. Why this campaign exists
 
@@ -91,7 +93,10 @@ eleven and found the classes wider than recorded:
 | 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **written** 2026-09-26; after 03 |
 | 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **written** 2026-09-26; after 05 and 06 |
 | 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **written** 2026-09-26; after 07 |
-| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **written** 2026-09-26; after 08 |
+| 09 | **Split 2026-09-30 into 09a–09c** by the user, one session, one commit each ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). Charter unchanged, in [`09-key-derived-rows-on-their-parents.md`](09-key-derived-rows-on-their-parents.md): `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **written** 2026-09-26; split 2026-09-30 |
+| 09a | [`09a-key-quadsource-on-its-transfer-functions.md`](09a-key-quadsource-on-its-transfer-functions.md) | K4, and K7's cross-shard `Parent`: `Tq_serial` and `Tr_serial` in `QuadSource`'s key, `Tr_serial` indexed; the `QuadSource` stage and the `QuadSourceIntegral` stage's `QuadSource` lookup keyed on them. | **written** 2026-09-30; after 08 |
+| 09b | [`09b-key-gksource-on-its-parent-set.md`](09b-key-gksource-on-its-parent-set.md) | K6, and K7's set-valued parent: `GkSource_parents` and `parents_digest`; the Gk value reads hand back their parent; all six `GkSource` lookups in `main.py` keyed on the set. Closes `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]`. | **written** 2026-09-30; after 09a |
+| 09c | [`09c-key-quadsourceintegral-on-its-inputs.md`](09c-key-quadsourceintegral-on-its-inputs.md) | K5: `QuadSourceIntegral` keyed on its source, its policy data and its four Tk rows, with the relations between them asserted; its stage resolves every work item's parents before the existence query. | **written** 2026-09-30; after 09b |
 | 10 | `10-build-a-throwaway-store-end-to-end.md` | Remedial. A scoped build through the registry into a store under `var/datastores/` that is not A3 v2; then a resume; then extraction of every target from it, the fingerprint, and the census of audit §4.4. Closes the campaign. | **held** until 01–09 land |
 
 **Why 05–10 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
@@ -110,6 +115,9 @@ golden fingerprint, and 07–09 on D4. 09 exists only if D1 is taken. 10 is writ
 - 06 follows 03, whose two `stepping_mode` flags it corrects. 07 follows 05 as well as 06, because
   05 and 07 both edit the WKB factories' read paths, and 09 relies on 05's value reads refusing more
   than one parent per `z_source`. *(Added 2026-09-26, when 06–09 were written.)*
+- 09a → 09b → 09c: `QuadSource`, then `GkSource`, then `QuadSourceIntegral`, so that a row's key
+  reaches its parents before anything downstream is keyed on it. *(Added 2026-09-30, when 09 was
+  split.)*
 - 10 last.
 
 **Across campaigns (D4).** `prompts/store-retirement` is live in the same tree. Two constraints:
@@ -171,7 +179,9 @@ The internals are the implementing prompt's to design.
 - **Prompt 09** ships, as recommended (its §2 K6 allows a justified alternative), the table
   **`GkSource_parents`** and the key column **`parents_digest`** on `GkSource`; four columns on
   `QuadSourceIntegral` naming its `Tq`/`Tr` numeric and WKB rows, named by 09 and added here when it
-  lands; and a cross-shard form of the inventory's `Parent`. *(Added 2026-09-26.)*
+  lands; and a cross-shard form of the inventory's `Parent`. *(Added 2026-09-26.)* Since the split
+  (2026-09-30): 09a ships the cross-shard `Parent`; 09b the table, the column and a set-valued
+  inventory parent; 09c the four columns, named here when it lands.
 
 ## 5. The rules this campaign runs under
 

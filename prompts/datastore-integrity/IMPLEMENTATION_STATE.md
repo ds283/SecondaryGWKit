@@ -20,7 +20,8 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 **08 landed 2026-09-29**, closing `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` on the
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
-**Next: 09.** 10 waits on 01–09.
+**09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **Next: 09a.** 10 waits on 01–09c.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -80,7 +81,10 @@ becomes an exact match; the adjacent issues are out of scope.
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Correct the foreign keys the schema declares, and check them"* | [`logs/06-…`](logs/06-correct-the-foreign-keys.md) |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key each WKB row on the numeric row it starts from"* | [`logs/07-…`](logs/07-key-wkb-rows-on-their-numeric-row.md) |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key QuadSourceIntegral on its QuadSourcePolicy"* | [`logs/08-…`](logs/08-key-quadsourceintegral-on-its-policy.md) |
-| 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
+| 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | — | ✍️ yes, 2026-09-26; **split 2026-09-30** into 09a–09c, the charter | — | — | — |
+| 09a | [Key `QuadSource` on its transfer functions](09a-key-quadsource-on-its-transfer-functions.md) | **K4**, **K7** (cross-shard) | Sonnet | ✍️ yes, 2026-09-30 | ⬜ after 08 | — | — |
+| 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ⬜ after 09a | — | — |
+| 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ⬜ after 09b | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
@@ -1143,7 +1147,9 @@ note's. The review found three small remnants, fixed in `a9b6ff6`.
   one line off: the helper starts at `:80`, and the inventory parent is at `:880`. These are
   left as written.
 
-**Next: 09**, with its own orchestrator note carrying this review's findings. It keys
+**Next: 09**, with its own orchestrator note carrying this review's findings
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)), **split by the user on 2026-09-30 into
+09a → 09b → 09c** (the note's §0.1–§0.4 record that decision and three others). It keys
 `QuadSource` on `Tq_serial` and `Tr_serial`, `QuadSourceIntegral` on its source, policy data and
 Tk rows, and `GkSource` on its Gk rows (K4–K7). It resolves cross-shard parents in the inventory.
 It is the natural owner of `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]`, and its record
@@ -1193,10 +1199,10 @@ what 01–04 find; what waits is their method.
 | K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ✅ `numeric_serial`, indexed, `ForeignKey` to its numeric table (both shard on `k`): NOT NULL on Tk, nullable on Gk with NULL = pure WKB (the only parentless branch). `build()` keys on a serial or `GkWKBIntegration.PURE_WKB` (`IS NULL`) and raises on neither; an explicit `labels_only=True` reader mode refuses two matches, naming their parents; the four value reads take an optional parent in place of 05c's `z_init`. `z_init` and the initial values are payload; `store()` refuses them unless they are the parent's stop values bit for bit (and the parent is for the same `k`, model and `z_source`). A pre-07 table is refused with the D4 message. `main.py`: the numeric lookup ahead of each existence query, every WKB lookup and construction passes the parent, the Gk choice lifted unchanged into `Gk_WKB_numeric_parent`. Inventory: `numeric` a key parent, `z_init` out, `Parent(nullable=True)`; `FINGERPRINT_FORMAT` 2. Issue closed on the GkTk-remedial board's §4 |
 | K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ✅ `tk-wkb` before `tk-numeric` (`gk-wkb` already preceded `gk-numeric`); the comment corrected; a test derives the order from every declared foreign key between drop actions. The order *within* an action is `[07-drop-actions-list-a-parent-table-before-its-children]` (§3.3) |
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ✅ `quad_policy_serial`, NOT NULL, indexed, `ForeignKey("QuadSourcePolicy.serial")`, after `policy_serial`; in `build()`'s filter, written by `store()`, in `read_batch`'s filter and a key parent in `inventory_records`. The target takes `quad_policy` beside `policy`, required. `main.py`'s existence query and compute call pass `QuadSource_policy_1pt5`, which is created from `config.defaults.DEFAULT_QUADSOURCE_POLICY_1PT5`; the extraction script finds it through a new `QuadSourcePolicy.read_table` and refuses on none or several. A pre-08 table is refused (D4) in `build()` and `read_batch()`. Witness 08 (6 hunks, 43 lines, one class); fingerprint format 3, `QuadSourceIntegral` and `QuadSourcePolicy` moved |
-| K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09 | ⏸️ |
-| K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09 | ⏸️ |
-| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09 | ⏸️ |
-| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09 | ⏸️ |
+| K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09a | ⏸️ |
+| K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ⏸️ |
+| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ⏸️ |
+| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ⏸️ |
 | V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ⏸️ |
 | V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ⏸️ |
 | V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ⏸️ |
@@ -1310,6 +1316,11 @@ None is assigned to a prompt of this campaign.
     (e.g. by always selecting it, and matching the driver's message as `build()` does), or whether
     D4's refusal is `build()`'s alone. Prompt 09 keys `GkSource` on its Gk rows and is a natural
     owner.
+  - **Assigned (2026-09-30):** to prompt **09b**, by the user's decision
+    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.3). 09b already edits
+    `GkNumericValue.read_batch` and `GkWKBValue.read_batch` so that they hand back their parent,
+    and it closes all four reads here: `GkWKBValue`'s and `TkWKBValue`'s `_build_impl_model` and
+    `read_batch`.
 - **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
   - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
     nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the
