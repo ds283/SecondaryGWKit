@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
 **Last updated:** 2026-09-30 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07 and 08), all reviewed; 09a landed 2026-09-30, awaiting review.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+05a–05c, 06, 07 and 08), all reviewed; 09a landed and was reviewed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -21,7 +21,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3). **Next: 09b.** 10 waits on 01–09c.
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **Next: 09b.** 10 waits on 01–09c.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -1154,6 +1154,127 @@ note's. The review found three small remnants, fixed in `a9b6ff6`.
 Tk rows, and `GkSource` on its Gk rows (K4–K7). It resolves cross-shard parents in the inventory.
 It is the natural owner of `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]`, and its record
 change is a third format bump, to 4. Prompt 10 remains the first real run.
+
+**Orchestrator review of prompt 09a (2026-09-30).** Run against `dbf2cf2`, dispatched from
+`2252b8c` (the note's own commit, which touches no code) with nothing `running` and no other
+worktree. **All twelve checks in `orchestrator/prompt-09.md` §3 passed.** The agent did not stop,
+and needed no grant beyond the note's §0.4 and §0.5. The review found one small remnant, fixed in
+`f161b2f`, and one question for the user, on the issue 09a opened (below).
+- **Dispatch.**
+  - `HEAD` was `2252b8c`. The index held **98** rows. `substitute_main_py()`'s five literals each
+    occurred once, at `:3585`, `:3692`, `:3693`, `:3791` and `:3803`.
+  - The baselines matched §5.11. In the full ComputeTargets run `test_wall_time_per_object`
+    failed. Alone it passed one of three times (0.061–0.065 s against 0.06 s), under a load
+    average near 27: the known flake.
+  - The fourteen audit probes at `2252b8c` were identical, apart from paths and timestamps, to
+    the 08 review's outputs at `b18bb0b`.
+  - No other session's change appeared in this checkout during the dispatch.
+- **Scope.**
+  - 20 files, all on the brief's list. The diff over every older witness and golden,
+    `schema.py`, `ShardedPool.py`, `docs/handover/`, `docs/datastore-integrity-audit/` and
+    `orchestrator/` is empty.
+  - `--diff-filter=M` over `*/tests/*` gives five files: §0.5's four for 09a, and
+    `test_main_plumbing.py` under §0.4. Every hunk was read.
+    - `IDENTITY["QuadSource"]` gains `Tq` and `Tr` (both varied to Tk numeric 3), and
+      `NON_IDENTITY` loses `Tq_serial`.
+    - `TestTags` expects `QuadSource` too, with a sentence saying why.
+    - `test_quadsource.py`'s `payload=None` construction takes the two serials in place of the
+      manual assignment after it. The `:435` construction is untouched, since its payload
+      already carries both.
+    - The two D5 repointings each come with their docstring or comment sentence.
+    - `EXPECTED_SITES["TkNumericIntegration"]` goes 5 → 6, with a comment.
+
+    None of these edits asserts anything new or less. The read-back guard's pins did not move.
+- **K4.**
+  - `build()` filters on both serials, named by serial. A lookup naming neither the parents nor
+    `labels_only` raises, and so does one naming both. `Tr_serial` is indexed, with no foreign
+    key, and its comment says why.
+  - `store()` writes both, and refuses an object without them.
+  - `labels_only` reads the candidates' pairs from the lookup's own query and refuses more than
+    one, naming each pair.
+  - The target takes the serials at construction, and no longer overwrites them in `compute()`.
+    `compute()` asserts both before anything is computed, naming both sides.
+  - With `dbf2cf2~1`'s target over the new tests, 17 of `test_quadsource_parent_main`'s 25 fail.
+    With `dbf2cf2~1`'s factory, 22 of `test_quadsource_parent_key`'s 37 fail. Both were restored.
+- **K7 (cross-shard).**
+  - `Parent(cross_shard=True)` resolves against `ShardContext.all_digests`. `read_inventory`
+    fills it only after a class is built on every shard, so a parent class not yet built is
+    still the dependency-order `RuntimeError`.
+  - A serial that no shard holds is `unresolved-parent`. So is one that two shards hold with
+    different digests, rather than one of them being chosen.
+  - Same-shard resolution is unchanged, and the store is still read once.
+- **`main.py`.**
+  - All six hunks are §0.6's sites. The `QuadSource` stage resolves every distinct `k` of its
+    batch serial-only (`_do_not_populate`) before the existence query, with the same tags and
+    tolerance pair as its later full lookup. The construction passes the full rows' serials.
+  - The `QuadSourceIntegral` stage's `QuadSource` lookup now follows its Tk numeric lookup. The
+    Tk lookup's `missing_Tk` is drawn from the same missing items as `missing_source_b`, so every
+    serial the keyed lookup indexes exists.
+  - `qsi_work_batches` is untouched. The five literals each occur once, now at `:3670`, `:3777`,
+    `:3778`, `:3876` and `:3888`.
+  - All 29 of the log's site-table citations match `git show`.
+- **Readers.**
+  - The three named readers pass `labels_only=True`.
+  - A grep of every `"QuadSource"` lookup outside the tests finds none that passes neither the
+    parents nor the mode.
+  - `QuadSourceValue._build_impl_model` is a labels-only `QuadSource` lookup inside another
+    factory. The agent opened it as an issue rather than fixing it, which is correct under rule 4.
+- **D4.**
+  - The witness diff leaves `QuadSource`'s table DDL unchanged and adds only the index. So a
+    pre-09a table differs only in lacking the index, and a keyed lookup reads it.
+  - `TestAnOldStoreIsRead` builds such a table from the 08 witness's own DDL, and asserts the
+    index is absent.
+- **D5 and the fingerprint.**
+  - Both new files are new. Every older witness and golden has the same blob at both commits.
+  - A witness re-captured from `HEAD` is byte-identical to the new one.
+  - The orchestrator's own diff of the 08 and 09a witnesses is **3 hunks, 14 lines**, all in
+    `Tr_serial`'s index, exactly as §0.6 measured on the sketch.
+  - A re-captured fingerprint of `build_full_store()` equals the new golden: format 4, `problems`
+    empty, 21 classes. Against the 08 golden only `QuadSource` moved (2 → 2 records).
+- **Mutations.**
+  - (i)–(iv) were extracted from `git show HEAD:<log>` and applied with plain `git apply` in a
+    `git archive` export of `HEAD`, not a worktree, so that the checkout stayed alone. Each was
+    run over Datastore, ComputeTargets and RunRegistry.
+  - Each gave exactly its logged failing entries, sub-tests included. Excluding the flake, those
+    are: Datastore 2, 39 (15 of them sub-tests), 3 and 0; ComputeTargets 0, 0, 0 and 6;
+    RunRegistry 0, 4, 0 and 0.
+  - Four tests that need a git repository fail identically in every run of the export, and are
+    not the mutations'. They are `test_inventory_retired`'s two and one each in
+    `test_run_registry` and `test_store_sidecar`.
+  - Mutation (ii) is check 8, the inventory form broken. The export matched `HEAD` after the
+    reverts.
+- **Probes.**
+  - All fourteen were run at `2252b8c` and `dbf2cf2`, from exports. None newly fails, and the
+    same six fail at both.
+  - Three change output: `probe_02` (line numbers), `probe_03` (1254 → 1256) and
+    `replicated_divergence_probe` (two `unresolved-parent: QuadSource` lines, from its own
+    fixture). Log 09a's rule-11 list names all three.
+- **Boards.**
+  - The §1 row, K4, K7 (partial), the §3.3 entry and §5.12 are present.
+  - Counted, the index has **99** rows, with one opened. The date is 2026-09-30.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `dbf2cf2`, serially, in the checkout: AdaptiveLevin 32, ComputeTargets **610**
+    (+25), CosmologyModels 39, Datastore **459** (+37), LiouvilleGreen 148 (1 skipped),
+    RunRegistry 199. All OK; the flake did not fire.
+  - `black --check` is clean on the 15 Python files.
+  - Both new modules assert `not ray.is_initialized()` in `tearDownModule`, and pass.
+- **Remnant, fixed in `f161b2f`** (*"Correct who decided the QuadSourceIntegral stage's keyed
+  lookup"*). The `QuadSourceIntegral` stage's new comment attributed §0.2 to "the orchestrator's
+  decision". It was the user's.
+- **Not changed.** The `Tk_numeric_unavailable` message still says only that the mode's
+  `TkWKBIntegration` cannot be looked up (log 09a, observation 2). The statement is true, and the
+  comment above it now says the `QuadSource` lookup depends on the same rows.
+- **For the user.** `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` has no
+  owner. Its "next step" names "the prompt that next edits `QuadSourceValue`'s reads", and no
+  planned prompt does. It is D1's class: a labels-only lookup of a keyed row, which refuses but
+  names no parent. It is put to the user with 09b's grant.
+- **Log 09a is accurate** against `git show`. Deviation 7's heading, "Two tests of
+  `test_quadsource.py`, not one", reads the wrong way round: the prompt named two constructions,
+  and one needed the change. Its body is right, and it is left as written.
+
+**Next: 09b**, dispatched from this review's commit once the user has answered §1 step 7's sketch
+and grant, and the question above.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
