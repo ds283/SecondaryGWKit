@@ -8,6 +8,10 @@ split on 2026-09-30 into 09a → 09b → 09c ([`orchestrator/prompt-09.md`](orch
 **Gate:** 09b landed and reviewed (board §1); `git status` is clean. D1, D4, D5 and D6 are decided,
 and so are the user's four decisions of 2026-09-30 (orchestrator note §0.1–§0.4).
 **Closes:** nothing on another board. With it, D1's class (audit §2.4) is closed on this board.
+On this board it closes `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]`,
+**assigned here by the user on 2026-09-30** (orchestrator note §0.7, decision 3):
+`QuadSourceValue._build_impl_model` refuses more than one matching `QuadSource`, naming their
+`Tq_serial` and `Tr_serial`, and serves one. The issue moves to §4, and its index row is deleted.
 **Opens:** anything out of scope that you find (§6), **without fixing it**.
 **Recommended model:** **Opus**. It keys the campaign's most-used target on six parents, four of
 them on other shards. It also restructures `main.py`'s largest stage around a work list that the

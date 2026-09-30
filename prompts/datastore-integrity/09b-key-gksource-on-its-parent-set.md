@@ -10,6 +10,11 @@ so are the user's four decisions of 2026-09-30 (orchestrator note §0.1–§0.4)
 **Closes:** `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` (board §3.3), **assigned here by the
 user on 2026-09-30** (§0.3); its index row is deleted. **Opens:** anything out of scope that you find
 (§6), **without fixing it**.
+**Also, by the user's decisions on the sketch (2026-09-30, orchestrator note §0.7):**
+- `tools/inventory_report.py` renders the parent set by its physical labels;
+- `GkSourceValue._build_impl_model` refuses more than one matching `GkSource`, naming what
+  distinguishes them;
+- an empty parent set is refused by `store()`, and named as a problem by the inventory.
 **Recommended model:** **Opus**. This is the campaign's one real design. A `GkSource` has a *set* of
 parents, and `main.py` decides whether a `GkSource` exists before it reads the rows it would be
 assembled from. Six lookups in `main.py` find a `GkSource`, not the one the charter names.

@@ -1401,6 +1401,11 @@ None is assigned to a prompt of this campaign.
     reader shape without the refusal naming the parents.
   - **Next step.** Key it on `Tq_serial` and `Tr_serial`, or give it the reader mode, in the
     prompt that next edits `QuadSourceValue`'s reads. Outside 09a's list of files.
+  - **Assigned (2026-09-30):** to prompt **09c**, by the user's decision on the review of 09a
+    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.7, decision 3). 09c closes D1's
+    class on this board, so it gives this read D1's reader treatment: it refuses more than one
+    matching `QuadSource`, naming their `Tq_serial` and `Tr_serial`, and serves one. 09b does the
+    same for `GkSourceValue._build_impl_model`, which the sketch of 09b found.
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up

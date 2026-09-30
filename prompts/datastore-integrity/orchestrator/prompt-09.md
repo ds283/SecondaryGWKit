@@ -157,6 +157,27 @@ at `9e0f263`:
   - `test_quadsource_integral.py`, if the constructor changes;
   - `_UNDECLARED_REFERENCES` in `real_store_fixtures.py`.
 
+**Granted for 09b** (the user, 2026-09-30, on the sketch of §0.7). Each is limited to following the
+key: the parent set joins, and nothing else asserted changes.
+- **`Datastore/tests/real_store_fixtures.py`:** the three `GkSource` rows gain `parents_digest`, and
+  the fixture gains `GkSource_parents` rows naming real Gk numeric and WKB rows of each source's own
+  shard and exit time, at those rows' own `z_source`. *Agent's choice* of which rows, with the
+  reason.
+- **`Datastore/tests/test_store_inventory.py`:** `IDENTITY["GkSource"]` gains the parent-set field,
+  varied through a `GkSource_parents` row to another real Gk row on the same shard, so that the
+  variation tests identity, not resolution.
+- **`Datastore/tests/test_gauss_order_key.py`**, *only if* the new `GkSource` `store()` makes it
+  follow the key. It calls the real `store()` with a stand-in and names its inserters. The sketch
+  left `store()` alone, so this was not measured.
+- **The two witnesses, under D5:** `test_schema_builder.py`'s `WITNESS` and its docstring's "current
+  one" sentence; `test_store_fingerprint.py`'s `GOLDEN`.
+- **`test_main_plumbing.EXPECTED_SITES`** and the read-back guard's pins, as §0.4.
+
+Not needed on the sketch: `TestTags` (no set reaches a Gk change), `NON_IDENTITY`,
+`shard_store_fixtures.py`, `test_store_reader.py`, `test_foreign_key_check.py`'s map.
+`test_inventory_report.py` failed, and is **not** granted. The user granted `tools/inventory_report.py`
+instead (§0.7).
+
 ### 0.6 What moved under the charter, and what 09a measured
 
 **Shards** (`config/sharding.py`). This is the parent table the charter asks each log to carry.
@@ -277,6 +298,90 @@ The charter's first stop does not trigger for any of the three.
   scratchpad's top level.
 - **Audit probes are left as they are** (the user, 2026-09-29). Each log names every probe it stops
   in its rule-11 list.
+
+### 0.7 Before 09b: the 09a review, the sketch, and the user's decisions
+
+*(Added 2026-09-30, after the review of 09a, `7728518`.)*
+
+**Carried from the review of 09a** (board §1, after the 08 review). All twelve checks passed.
+- **A comment attributed a user's decision to the orchestrator.** The 09a review fixed it in
+  `f161b2f`. §0.1–§0.4 and this section's decisions are **the user's**, and code comments say so.
+- **Log 09a's site table was exact against `git show`, all 29 citations.** Keep to that.
+- **The mutation replay runs in a `git archive` export**, so the checkout stays alone. There, four
+  tests that need a git repository fail every run: `test_inventory_retired`'s two, and one each in
+  `test_run_registry` and `test_store_sidecar`. They are not a mutation's. An agent that replays in
+  a worktree of its own does not see them.
+- The 09a golden and witness are the ones to diff from: `schema_at_datastore-integrity-09a.json`,
+  `full_store_fingerprint_datastore-integrity-09a.json`, `FINGERPRINT_FORMAT` 4 → 5.
+
+**09b, sketched** in an export of `7728518`, since removed. The sketch had:
+- `GkSource_parents`, with its own `serial` and four foreign keys (to `GkSource`, `redshift`,
+  `GkNumericIntegration` and `GkWKBIntegration`), each indexed;
+- `parents_digest` (`String(64)`, NOT NULL, indexed) on `GkSource`, in `build()`'s filter, with
+  07's D4 refusal;
+- a set-valued inventory form, resolving each member to its parents' reference digests on the
+  source's shard, whose key field is a digest of the sorted resolved members;
+- the table in the `gk-source` drop action;
+- the fixture rows above.
+
+It did not touch `store()`, `main.py`, the value reads or the readers, and the agent is not given it.
+- **Existing tests.** Datastore 459, ComputeTargets 610 and RunRegistry 199 at base. On the
+  sketch, before any test edit, four failed:
+  - the two `TestSchemaIsUnchanged` tests (D5);
+  - `test_store_inventory`'s `test_the_key_fields_are_the_lookup_columns` (`cls='GkSource'`);
+  - RunRegistry's `test_the_golden_fingerprint`.
+
+  With the fixture rows in and no report edit, a fifth failed:
+  `test_inventory_report.TestTheDisplaySaysWhatTheInventoryHolds.test_no_digest_appears`. The report
+  prints a key field it does not know as a leaf, so the set's digest reached the display. With
+  §0.5's edits and the report edit, all three suites passed.
+- **The witness diff** against 09a: **9 hunks, 246 changed lines, 256 lines of output**. All are in
+  `GkSource` (its column in the record, the table and the DDL; its index in `index_ddl` and
+  `indexes`) and `GkSource_parents`: its class entry, and its name in `class_order`,
+  `metadata_tables` and `table_order`. The implementer's may differ in detail, since the sketch is
+  not theirs; a hunk outside those two classes is a stop.
+- **The fingerprint** against the 09a golden: `GkSource` (3 records) and `GkSourcePolicyData` (3,
+  through its source) moved, and the other 19 did not. `problems` was empty. With the set left out
+  of `GkSource`'s identity (mutation (iv)), it went back to the 09a fingerprint exactly.
+- **Pins and `EXPECTED_SITES`** did not move (the sketch did not touch `main.py`).
+- **Probes** against `7728518`: none newly fails. Four change:
+  - `fk_sweep_probe` gains `GkSource_parents`' block;
+  - `probe_02`'s line numbers;
+  - `probe_03`'s count, 1256 → 1258;
+  - `replicated_divergence_probe` gains two correct cascade lines: `GkSource` 3's member is
+    unresolved on shard 1, so `GkSourcePolicyData` 3 is too.
+- **Found by the sketch:**
+  - A **seventh labels-only `GkSource` lookup**: `GkSourceValue._build_impl_model`, outside
+    `main.py`, with no caller.
+  - **An empty parent set** would get the digest of `[]` and no named problem.
+  - An **09a store's inventory**, lacking `GkSource_parents`, gives `absent-table` for `GkSource`, and
+    then `unresolved-parent` for `GkSourcePolicyData`. That is D4's expected consequence, and not a
+    decision.
+  - `relabel_serials` leaves the fixture's `parents_digest` stale. That is harmless, since the
+    fingerprint never uses it.
+
+**The user decided four more things on 2026-09-30**, on the sketch. They bind 09b (and the third
+binds 09c) as §0.1–§0.4 do.
+1. **09b's existing-test grant** is §0.5's "Granted for 09b", `test_gauss_order_key.py` included
+   on its condition.
+2. **`tools/inventory_report.py` joins 09b's files**, limited to rendering the parent set by its
+   physical labels (each member's `z_source`, numeric and WKB rows, as the report already renders a
+   parent reference). `test_inventory_report.py` is **not** modified, and still forbids a digest in
+   the display. *Not taken:* putting the resolved member list in the key itself, which breaks two
+   more existing tests.
+3. **The two labels-only value model reads.**
+   - **09b** gives `GkSourceValue._build_impl_model` D1's reader treatment. It refuses more than
+     one matching `GkSource`, naming what distinguishes them, as 09b's readers do, and serves one
+     match.
+   - **09c** does the same for `QuadSourceValue._build_impl_model`, and closes
+     `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]`, assigned to it on the
+     board.
+4. **An empty parent set is refused.** `store()` refuses to write a `GkSource` with no
+   `GkSource_parents` rows, and the inventory names such a row as a problem.
+
+**Also in 09b's files**, if the new `store()` needs them for the new table: one entry each in
+`config/sharding.py` and `ClientPool`'s serial batch-size map. The sketch did not exercise a pool
+write.
 
 ## 1. Before each dispatch
 
