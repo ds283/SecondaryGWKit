@@ -16,6 +16,16 @@ from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
+def _serial_argument(where: str, name: str, value) -> int:
+    """The serial a lookup names one of its parents by: an integer, never a bool or an object."""
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise TypeError(
+            f"{where}: {name} must be the integer serial of a TkNumericIntegration row, not "
+            f"{value!r}"
+        )
+    return value
+
+
 class sqla_QuadSourceTagAssocation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
@@ -121,8 +131,12 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    # sqla.ForeignKey("TkNumericIntegration.serial"),   # Don't impose foreign key. Tr is the Tk numeric row at k = r, which is held on r's shard, not necessarily this one. We shard by q.
-                    # index=True,
+                    # No foreign key: Tr is the Tk numeric row at k = r, which is held on r's shard,
+                    # not necessarily this one (we shard by q), and a foreign key cannot cross a
+                    # shard. Serials are unique across shards, so the serial still names the row.
+                    # Indexed because it is part of the lookup key, beside Tq_serial
+                    # (prompts/datastore-integrity, prompt 09a)
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
@@ -146,6 +160,30 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
 
+        # the key's parent terms, or the reader mode D1 allows; never neither, and never both.
+        # A QuadSource is computed from exactly two rows, the TkNumericIntegrations for q and r, so
+        # a lookup names both by serial (prompts/datastore-integrity, prompt 09a). The parents are
+        # named by serial rather than by object: the serial is all the query needs, it is what the
+        # compute target carries from construction, and Tr is on another shard
+        Tq_serial: Optional[int] = payload.get("Tq_serial", None)
+        Tr_serial: Optional[int] = payload.get("Tr_serial", None)
+        labels_only: bool = payload.get("labels_only", False)
+        if labels_only and (Tq_serial is not None or Tr_serial is not None):
+            raise ValueError(
+                "QuadSource.build(): a transfer-function parent and labels_only were both given; "
+                "a keyed lookup names its parents, and the reader mode names none"
+            )
+        if not labels_only and (Tq_serial is None or Tr_serial is None):
+            raise RuntimeError(
+                "QuadSource.build(): the lookup names neither both transfer-function parents nor "
+                "the reader mode. A QuadSource is keyed on the two TkNumericIntegrations it is "
+                "computed from (Tq_serial and Tr_serial); a reader holding only physical labels "
+                "must ask for labels_only=True explicitly"
+            )
+        if not labels_only:
+            Tq_serial = _serial_argument("QuadSource.build()", "Tq_serial", Tq_serial)
+            Tr_serial = _serial_argument("QuadSource.build()", "Tr_serial", Tr_serial)
+
         tag_table = tables["QuadSource_tags"]
         redshift_table = tables["redshift"]
 
@@ -163,6 +201,14 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             table.c.r_wavenumber_exit_serial == r.store_id,
         )
 
+        # the two parents (prompt 09a). Without them a change to the Tk rows under the same tags
+        # would serve the old source as a match
+        if not labels_only:
+            query = query.filter(
+                table.c.Tq_serial == Tq_serial,
+                table.c.Tr_serial == Tr_serial,
+            )
+
         # require that the tensor source calculation we search for has the specified list of tags
         count = 0
         for tag in tags:
@@ -178,6 +224,22 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             )
 
         try:
+            if labels_only:
+                # D1: the physical labels may select, but more than one stored row is refused,
+                # naming the parents that distinguish them, rather than one of them chosen
+                candidates = sorted(
+                    (row.Tq_serial, row.Tr_serial) for row in conn.execute(query)
+                )
+                if len(candidates) > 1:
+                    named = "; ".join(
+                        f"Tq_serial={Tq}, Tr_serial={Tr}" for Tq, Tr in candidates
+                    )
+                    raise MultipleResultsFound(
+                        f"QuadSource.build(): labels_only lookup matched {len(candidates)} stored "
+                        f"rows (model serial={model_proxy.store_id}, q serial={q.store_id}, r "
+                        f"serial={r.store_id}): {named}. Refusing to choose one; name the parents."
+                    )
+
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
@@ -186,12 +248,17 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
+            # build and return an unpopulated object. A labels-only miss has no parents to give
+            # it, and says so: it can report absence to a reader and cannot be computed
             return QuadSource(
                 payload=None,
                 model=model_proxy,
                 z_sample=z_sample,
                 q=q,
                 r=r,
+                Tq_serial=Tq_serial,
+                Tr_serial=Tr_serial,
+                labels_only=labels_only,
                 label=label,
                 tags=tags,
             )
@@ -301,6 +368,12 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         tables,
         inserters,
     ):
+        if obj._Tq_serial is None or obj._Tr_serial is None:
+            raise ValueError(
+                "QuadSource.store(): the object carries no Tq_serial and Tr_serial, so it was "
+                "not keyed on the TkNumericIntegrations it would be computed from"
+            )
+
         store_id = inserter(
             conn,
             {
@@ -468,8 +541,12 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
     @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a QuadSource row (store-fingerprint prompt 02): what build()
-        # filters on -- the model and the q and r wavenumber exits -- with its tags, its validated
-        # flag and its QuadSourceValue count. Tq_serial and Tr_serial are provenance, not identity
+        # filters on -- the model, the q and r wavenumber exits, and the two TkNumericIntegrations
+        # it is computed from -- with its tags, its validated flag and its QuadSourceValue count.
+        # Tq is on this row's shard, because both are sharded by q. Tr is the Tk row at k = r, on
+        # r's shard, so it is a cross-shard parent: it resolves against the TkNumericIntegration
+        # records of every shard, to that record's own reference digest and never its serial
+        # (prompts/datastore-integrity, prompt 09a)
         from Datastore.store_inventory import Parent, read_records
 
         return read_records(
@@ -481,6 +558,8 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 "model": Parent("model_serial", "BackgroundModel"),
                 "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
                 "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "Tq": Parent("Tq_serial", "TkNumericIntegration"),
+                "Tr": Parent("Tr_serial", "TkNumericIntegration", cross_shard=True),
             },
             tags=("QuadSource_tags", "parent_serial"),
             values=("QuadSourceValue", "parent_serial"),

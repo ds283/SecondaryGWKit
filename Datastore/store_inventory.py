@@ -28,7 +28,9 @@ without changing what they are.
 its key -- the leaf columns, the parent references and the association and value tables -- and
 calls ``read_records`` here, which does the reading. The driver builds classes in dependency order
 (``INVENTORY_CLASSES``) and hands each builder, in ``context``, a map from serial to canonical key
-and to reference digest for every class already built **on that shard**.
+and to reference digest for every class already built **on that shard**, and a map from serial to
+reference digest for every class already built on **every** shard, which a ``cross_shard`` parent
+resolves against (the store is still read once, and only for reading).
 
 **Floats (decision D1).** ``canonical`` is the one function that turns a leaf into its canonical
 form. A float becomes ``float.hex`` of the value **as stored**; an integer, string, boolean or
@@ -65,7 +67,7 @@ import hashlib
 import json
 import os
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import (
@@ -231,12 +233,20 @@ class Parent:
     ``nullable``: whether a NULL in ``column`` is a value of the key rather than a missing parent.
     A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a pure-WKB
     ``GkWKBIntegration`` has no numeric parent). On a parent that is not nullable a NULL is what
-    it always was, a parent that cannot be resolved."""
+    it always was, a parent that cannot be resolved.
+
+    ``cross_shard``: the parent row may be on another shard than the child's, as a
+    ``QuadSource``'s ``Tr`` is (prompts/datastore-integrity prompt 09a). The serial is then
+    resolved against the parent class's records on **every** shard (``ShardContext.all_digests``),
+    not this shard's alone. The resolved identity is the parent's own reference digest, as for a
+    same-shard parent, never its serial. A serial that no shard holds, or that two shards hold
+    with different records, is an unresolved parent."""
 
     column: str
     of: str
     type_column: Optional[str] = None
     nullable: bool = False
+    cross_shard: bool = False
 
 
 @dataclass(frozen=True)
@@ -244,13 +254,18 @@ class ShardContext:
     """What the driver hands a factory's record builder, for one shard.
 
     ``keys[cls][serial]`` is the canonical key, and ``digests[cls][serial]`` the reference digest,
-    of every row of every class already built on this shard."""
+    of every row of every class already built on this shard. ``all_digests[cls][serial]`` is the
+    reference digest of every row of every class already built on **every** shard, for a parent
+    that may be on another one (``Parent.cross_shard``). A serial that two shards hold with
+    different digests is absent from it, so that it resolves to nothing rather than to one of
+    them."""
 
     shard: int
     absent_tables: FrozenSet[str]
     absent_columns: Mapping[str, Tuple[str, ...]]
     keys: Mapping[str, Mapping[int, Mapping[str, Any]]]
     digests: Mapping[str, Mapping[int, str]]
+    all_digests: Mapping[str, Mapping[int, str]] = field(default_factory=dict)
 
 
 @dataclass
@@ -365,7 +380,7 @@ def read_records(
 
     - ``leaves``: the key's leaf columns, each a key field of the same name, through ``canonical``;
     - ``parents``: key field -> ``Parent``, each resolved to the parent's reference digest through
-      ``context``;
+      ``context``: on this shard, or on every shard for a ``cross_shard`` parent;
     - ``tags``: ``(association table, its column naming this class's serial)``, or ``None``;
     - ``values``: ``(value table, its column naming this class's serial)``, or ``None``;
     - ``validated``: whether the class has a ``validated`` column.
@@ -383,7 +398,8 @@ def read_records(
             else (parent.of,)
         )
         for of in needed_classes:
-            if of not in context.digests:
+            built = context.all_digests if parent.cross_shard else context.digests
+            if of not in built:
                 raise RuntimeError(
                     f"read_records(): {name}.{field} references {of}, which has not been built "
                     f"on shard #{shard}; classes must be built in dependency order"
@@ -547,8 +563,10 @@ def read_records(
             of = parent.of
             if of == COSMOLOGY:
                 of = types.get(mapping[parent.type_column])
+            # a cross-shard parent resolves against every shard's records of its class
+            resolving = context.all_digests if parent.cross_shard else context.digests
             reference = (
-                context.digests.get(of, {}).get(mapping[parent.column])
+                resolving.get(of, {}).get(mapping[parent.column])
                 if of is not None
                 else None
             )
@@ -594,6 +612,21 @@ def read_records(
 # ---------------------------------------------------------------------------------------------
 # the driver
 # ---------------------------------------------------------------------------------------------
+
+
+def _merge_digests(per_shard: Sequence[Mapping[int, str]]) -> Dict[int, str]:
+    """One class's reference digests across shards, by serial. Serials are unique across shards
+    for a sharded class, and equal on every shard for a replicated one. A serial two shards hold
+    with different digests is left out: a cross-shard parent must resolve to one row or to none.
+    """
+    merged: Dict[int, str] = {}
+    ambiguous = set()
+    for digests in per_shard:
+        for serial, reference in digests.items():
+            if serial in merged and merged[serial] != reference:
+                ambiguous.add(serial)
+            merged.setdefault(serial, reference)
+    return {s: d for s, d in merged.items() if s not in ambiguous}
 
 
 def _combine(
@@ -703,6 +736,9 @@ def read_inventory(primary: PathType) -> StoreInventory:
             shard.serial: {} for shard in store.shards
         }
 
+        # every class already built, on every shard, for a parent that may be on another shard
+        all_digests: Dict[str, Dict[int, str]] = {}
+
         classes: Dict[str, ClassInventory] = {}
         for name in INVENTORY_CLASSES:
             factory = _factories[name]
@@ -714,6 +750,7 @@ def read_inventory(primary: PathType) -> StoreInventory:
                     absent_columns=shard.absent_columns,
                     keys=keys[shard.serial],
                     digests=digests[shard.serial],
+                    all_digests=all_digests,
                 )
                 read = factory.inventory_records(
                     conns[shard.serial], shard.tables[name], shard.tables, context
@@ -724,6 +761,9 @@ def read_inventory(primary: PathType) -> StoreInventory:
                     s: reference_digest(r.key, r.tags, read.tagged)
                     for s, r, _ in read.rows
                 }
+            all_digests[name] = _merge_digests(
+                [digests[shard.serial][name] for shard in store.shards]
+            )
             classes[name] = _combine(name, name in replicated, reads)
 
         return StoreInventory(

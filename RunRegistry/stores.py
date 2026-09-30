@@ -196,8 +196,9 @@ _DIGEST = re.compile(r"[0-9a-f]{64}")
 # fingerprint in the same commit, beside the old ones and never over them
 # (`RunRegistry/tests/data/full_store_fingerprint*.json`; `test_store_fingerprint.GOLDEN` names the
 # current one). Format 2: prompts/datastore-integrity prompt 07 put the WKB rows' numeric parent in
-# their key. Format 3: prompt 08 put the QuadSourcePolicy in the QuadSourceIntegral rows' key
-FINGERPRINT_FORMAT = 3
+# their key. Format 3: prompt 08 put the QuadSourcePolicy in the QuadSourceIntegral rows' key.
+# Format 4: prompt 09a put the two TkNumericIntegrations, Tq and Tr, in the QuadSource rows' key
+FINGERPRINT_FORMAT = 4
 TAKEN_KEYS = ("when", "git_head", "git_dirty", "run_id")
 
 # both separators, on every platform, as `Datastore/shard_paths.py` treats a shard record

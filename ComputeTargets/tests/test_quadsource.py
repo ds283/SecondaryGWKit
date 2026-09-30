@@ -375,9 +375,10 @@ class TestQuadSourceRegion(unittest.TestCase):
             z_sample=self.z_sample,
             q=FakeWavenumberExit(self.q_k),
             r=FakeWavenumberExit(self.r_k),
+            Tq_serial=1,
+            Tr_serial=2,
         )
         obj._compute_ref = object()
-        obj._Tq_serial, obj._Tr_serial = 1, 2
 
         fake_ray = mock.MagicMock()
         fake_ray.wait.return_value = ([obj._compute_ref], [])

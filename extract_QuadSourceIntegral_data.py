@@ -1168,12 +1168,16 @@ def run_pipeline(model_data):
             k=k_exit,
         )
 
+        # a QuadSource is keyed on the two TkNumericIntegrations it is computed from
+        # (prompts/datastore-integrity, prompt 09a); this script holds only physical labels, so it
+        # asks for the reader mode, which refuses more than one stored match
         Tsource_ref = pool.object_get(
             "QuadSource",
             model=model_proxy,
             z_sample=None,
             q=q_exit,
             r=r_exit,
+            labels_only=True,
             tags=run_selection.tags,
         )
 

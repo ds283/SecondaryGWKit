@@ -190,6 +190,11 @@ IDENTITY = {
         "model": ("QuadSource", 1, "model_serial", 2),
         "q": ("QuadSource", 1, "q_wavenumber_exit_serial", 4),
         "r": ("QuadSource", 1, "r_wavenumber_exit_serial", 3),
+        # QuadSource 1's Tq is TkNumericIntegration 1 (shard 0, the source's own shard) and its Tr
+        # is 2 (shard 1). Both vary to 3, which is real and on shard 0: so each variation changes
+        # the identity it resolves to, and does not make the parent unresolved
+        "Tq": ("QuadSource", 1, "Tq_serial", 3),
+        "Tr": ("QuadSource", 1, "Tr_serial", 3),
     },
     "QuadSourceIntegral": {
         "model": ("QuadSourceIntegral", 2, "model_serial", 2),
@@ -230,7 +235,6 @@ NON_IDENTITY = [
     ("TkNumericIntegration", 1, "z_min_serial", 2),
     ("TkWKBIntegration", 1, "T_init", 2.0),
     ("TkWKBIntegration", 1, "z_init", 300.0),
-    ("QuadSource", 1, "Tq_serial", 9),
     ("QuadSourceIntegral", 1, "total", 9.0),
     ("QuadSourceIntegral", 1, "source_serial", 2),
     ("QuadSourceIntegral", 1, "data_serial", 3),
@@ -641,9 +645,11 @@ class TestTags(_Stores):
         after = self._with(
             None, "BackgroundModel_tags", {"model_serial": 2, "tag_serial": 4}
         )
-        # model 2 is the parent of TkNumericIntegration 3 only
+        # model 2 is the parent of TkNumericIntegration 3 only. QuadSource 2's Tr is that
+        # TkNumericIntegration, and now part of its identity, so the change reaches it too
         self.assertEqual(
-            changed(self.base, after), {"BackgroundModel", "TkNumericIntegration"}
+            changed(self.base, after),
+            {"BackgroundModel", "TkNumericIntegration", "QuadSource"},
         )
 
     def test_oneloop_tags_come_from_its_own_table(self):

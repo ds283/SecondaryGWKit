@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-30 · **98 open** across eighteen campaigns.
+**Last updated:** 2026-09-30 · **99 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -771,6 +771,7 @@ the same day.
 | `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` | datastore-integrity | **→ prompt 09b.** The WKB value reads name `numeric_serial` only when a parent is given, so on a store written before prompt 07 a parentless read (the GkSource stage's) still succeeds, and a keyed one raises a raw `OperationalError`, instead of the D4 refusal `build()` gives. |
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
 | `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
+| `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` | datastore-integrity | `QuadSourceValue._build_impl_model` joins every `QuadSource` under the same labels, so once two can coexist (09a) it raises `MultipleResultsFound` naming no parent. No caller in the tree. |
 
 ### 1.16 The perturbation sound-speed campaign
 

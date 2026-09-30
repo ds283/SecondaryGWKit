@@ -368,12 +368,17 @@ def run_pipeline(model_data):
         q: wavenumber_exit_time
         r: wavenumber_exit_time
 
+        # a QuadSource is keyed on the two TkNumericIntegrations it is computed from
+        # (prompts/datastore-integrity, prompt 09a). This script holds only physical labels, so it
+        # asks for the reader mode: one stored match is served, and more than one is refused,
+        # naming the Tq_serial and Tr_serial of each
         Tsource_ref = pool.object_get(
             "QuadSource",
             model=model_proxy,
             z_sample=None,
             q=q,
             r=r,
+            labels_only=True,
             tags=run_selection.tags,
         )
 

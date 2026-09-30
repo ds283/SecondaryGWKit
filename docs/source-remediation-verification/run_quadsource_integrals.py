@@ -286,6 +286,10 @@ def main():
         print("** looking up QuadSource rows")
         source_cache = {}
         for (q_id, r_id), (q, r) in pairs.items():
+            # a QuadSource is keyed on the two TkNumericIntegrations it is computed from
+            # (prompts/datastore-integrity, prompt 09a). This lookup precedes the transfer-function
+            # lookups below and holds only physical labels, so it asks for the reader mode, which
+            # refuses more than one stored match
             obj = ray.get(
                 pool.object_get(
                     "QuadSource",
@@ -293,6 +297,7 @@ def main():
                     z_sample=None,
                     q=q,
                     r=r,
+                    labels_only=True,
                     tags=tags,
                 )
             )

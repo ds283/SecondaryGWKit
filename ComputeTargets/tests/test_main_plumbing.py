@@ -574,7 +574,9 @@ NO_TOLERANCE_TYPES = tuple(
 # place and the reason these counters survive the restructuring.
 EXPECTED_SITES = {
     "wavenumber_exit_time": 1,
-    "TkNumericIntegration": 5,
+    # 6: the QuadSource stage now resolves the two Tk rows a QuadSource is keyed on, serial-only,
+    # before its existence query (prompts/datastore-integrity, prompt 09a)
+    "TkNumericIntegration": 6,
     "GkNumericIntegration": 3,
     "QuadSourceIntegral": 2,
     "GkWKBIntegration": 3,

@@ -1666,6 +1666,75 @@ def run_pipeline(
         # freeze q labels in a defined order, so we are guaranteed to know what order they come back in
         q_keys = list(binned_batch.keys())
 
+        # a QuadSource is keyed on the two TkNumericIntegrations it is computed from
+        # (prompts/datastore-integrity, prompt 09a), so their serials are resolved before the
+        # existence query, for every (q, r) of the batch. Serial-only: the sample values are read
+        # below, for the missing items only
+        parent_k = {}
+        for q, r in batch:
+            parent_k[q.store_id] = q
+            parent_k[r.store_id] = r
+        parent_k_list = list(parent_k.values())
+
+        Tk_serial_batch = [
+            {
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k,
+                "z_init": None,
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
+                "rtol": Tk_numeric_rtol,
+                "tags": [
+                    TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k in parent_k_list
+        ]
+
+        Tk_serial_queue = RayWorkPool(
+            pool,
+            Tk_serial_batch,
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_serial_queue.run()
+
+        Tk_serials = {}
+        Tk_serial_missing = []
+        for k, obj in zip(parent_k_list, Tk_serial_queue.results):
+            if obj.available:
+                Tk_serials[k.store_id] = obj.store_id
+            else:
+                Tk_serial_missing.append(k)
+
+        if len(Tk_serial_missing) > 0:
+            for k in Tk_serial_missing:
+                print(
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericIntegration for k={k.k.k_inv_Mpc}/Mpc, so no QuadSource can be looked up for it"
+                )
+            raise RuntimeError(
+                f"QuadSource builder: {len(Tk_serial_missing)} transfer-function mode(s) have no TkNumericIntegration, so their QuadSource cannot be looked up"
+            )
+
         query_batch = [
             {
                 "shard_key": {"q": q},
@@ -1673,6 +1742,8 @@ def run_pipeline(
                     {
                         "model": model_proxy,
                         "r": r,
+                        "Tq_serial": Tk_serials[q.store_id],
+                        "Tr_serial": Tk_serials[r.store_id],
                         "z_sample": None,
                         # QuadSource has no tolerance: it names neither atol nor rtol in
                         # ComputeTargets/QuadSource.py or in its factory, and has no tolerance
@@ -1819,6 +1890,8 @@ def run_pipeline(
                         z_sample=z_source_sample,
                         q=q,
                         r=r,
+                        Tq_serial=Tq.store_id,
+                        Tr_serial=Tr.store_id,
                         tags=[
                             TkProductionTag,
                             RunLabelTag,
@@ -3305,49 +3378,6 @@ def run_pipeline(
         )
         GkSourcePolicy_lookup_queue.run()
 
-        QuadSource_lookup_batch = [
-            {
-                "shard_key": {"q": q},
-                "payload": [
-                    {
-                        "model": model_proxy,
-                        "z_sample": None,
-                        "r": r,
-                        "tags": [
-                            TkProductionTag,
-                            RunLabelTag,
-                            SourceGridConstructionTag,
-                            SourceZGridSizeTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestSourceZTag,
-                            SmallestSourceZTag,
-                        ],
-                    }
-                    for r in missing_source_b[q]
-                ],
-            }
-            for q in q_keys
-        ]
-
-        QuadSource_lookup_queue = RayWorkPool(
-            pool,
-            QuadSource_lookup_batch,
-            task_builder=lambda x: pool.object_get_vectorized(
-                "QuadSource", x["shard_key"], payload_data=x["payload"]
-            ),
-            available_handler=None,
-            compute_handler=None,
-            store_handler=None,
-            persist_handler=None,
-            validation_handler=None,
-            label_builder=None,
-            title=None,
-            store_results=True,
-            create_batch_size=20,
-            process_batch_size=20,
-        )
-        QuadSource_lookup_queue.run()
-
         # the source integral also needs the numeric and Liouville-Green (WKB) representations of
         # the transfer functions for q and r. Since prompt 08 of prompts/source-remediation the
         # part of the integration range below a transfer function's hand-over is assembled from
@@ -3412,7 +3442,8 @@ def run_pipeline(
         # (prompts/datastore-integrity, prompt 07), so the WKB lookup below names the numeric row
         # just looked up -- the one build_QuadSourceIntegral_payload consumes beside it. A mode
         # without a numeric row has no WKB row that can be keyed, so the stage stops here rather
-        # than later, in build_QuadSourceIntegral_payload
+        # than later, in build_QuadSourceIntegral_payload. The QuadSource lookup that follows is
+        # keyed on the same rows (prompt 09a), and so needs them before it
         Tk_numeric_unavailable = [
             k_exit
             for k_exit, obj in zip(missing_Tk, Tk_numeric_lookup_queue.results)
@@ -3426,6 +3457,60 @@ def run_pipeline(
             raise RuntimeError(
                 f"QuadSourceIntegral builder: {len(Tk_numeric_unavailable)} transfer-function mode(s) have no TkNumericIntegration, so their TkWKBIntegration cannot be looked up"
             )
+
+        # a QuadSource is keyed on the TkNumericIntegrations for q and r it is computed from
+        # (prompts/datastore-integrity, prompt 09a), and this stage finds it by them, not by its
+        # physical labels alone (the orchestrator's decision of 2026-09-30): a resume after a
+        # change upstream, under the same tags, then finds no source rather than the stale one
+        Tk_numeric_serials = {
+            k_exit.store_id: obj.store_id
+            for k_exit, obj in zip(missing_Tk, Tk_numeric_lookup_queue.results)
+        }
+
+        QuadSource_lookup_batch = [
+            {
+                "shard_key": {"q": q},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "z_sample": None,
+                        "r": r,
+                        "Tq_serial": Tk_numeric_serials[q.store_id],
+                        "Tr_serial": Tk_numeric_serials[r.store_id],
+                        "tags": [
+                            TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
+                            SourceZGridSizeTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestSourceZTag,
+                            SmallestSourceZTag,
+                        ],
+                    }
+                    for r in missing_source_b[q]
+                ],
+            }
+            for q in q_keys
+        ]
+
+        QuadSource_lookup_queue = RayWorkPool(
+            pool,
+            QuadSource_lookup_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "QuadSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        QuadSource_lookup_queue.run()
 
         Tk_WKB_lookup_batch = [
             {

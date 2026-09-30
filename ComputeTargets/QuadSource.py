@@ -273,6 +273,14 @@ class QuadSource(DatastoreObject):
     """
     Encapsulates the tensor source term produced in a particular cosmology,,
     with a particular set of z-sample points, labelled by two wavenumbers q and r.
+
+    A QuadSource is computed from exactly two rows, the TkNumericIntegrations for q and r, and is
+    keyed on them (prompts/datastore-integrity, prompt 09a). An object made to be computed carries
+    the serials of the two rows it is keyed under, ``Tq_serial`` and ``Tr_serial``, from its
+    construction, and ``compute()`` asserts that the rows it is handed are those.
+    ``labels_only=True`` is the reader's parentless miss, which a lookup that names no parents
+    (``labels_only`` in the factory's ``build()``) returns when nothing matches: it reports
+    absence and cannot be computed.
     """
 
     def __init__(
@@ -284,18 +292,35 @@ class QuadSource(DatastoreObject):
         r: wavenumber_exit_time,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        Tq_serial: Optional[int] = None,
+        Tr_serial: Optional[int] = None,
+        labels_only: bool = False,
     ):
         # q is not used, but needs to be accepted because it functions as the shard key;
         # there is a .q attribute, but this is derived from the Tq TkNumericIntegration object
 
         self._z_sample = z_sample
+        self._labels_only = False
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._compute_time = None
 
             self._values = None
-            self._Tq_serial = None
-            self._Tr_serial = None
+            if labels_only:
+                if Tq_serial is not None or Tr_serial is not None:
+                    raise ValueError(
+                        "QuadSource: labels_only is the reader's parentless miss, and was given a "
+                        "Tq_serial or Tr_serial"
+                    )
+                self._labels_only = True
+            elif Tq_serial is None or Tr_serial is None:
+                raise ValueError(
+                    "QuadSource: an object to be computed is keyed on the two "
+                    "TkNumericIntegrations it is computed from, and names both (Tq_serial and "
+                    f"Tr_serial); got Tq_serial={Tq_serial!r}, Tr_serial={Tr_serial!r}"
+                )
+            self._Tq_serial = Tq_serial
+            self._Tr_serial = Tr_serial
         else:
             DatastoreObject.__init__(self, payload["store_id"])
             self._compute_time = payload["compute_time"]
@@ -342,6 +367,16 @@ class QuadSource(DatastoreObject):
     @property
     def tags(self) -> List[store_tag]:
         return self._tags
+
+    @property
+    def Tq_serial(self) -> Optional[int]:
+        """The TkNumericIntegration for q this source is keyed on (None only for a labels-only miss)."""
+        return self._Tq_serial
+
+    @property
+    def Tr_serial(self) -> Optional[int]:
+        """The TkNumericIntegration for r this source is keyed on (None only for a labels-only miss)."""
+        return self._Tr_serial
 
     @property
     def z_sample(self) -> redshift_array:
@@ -444,6 +479,12 @@ class QuadSource(DatastoreObject):
                 "QuadSource: compute() called, but values have already been computed"
             )
 
+        if self._labels_only:
+            raise RuntimeError(
+                "QuadSource: compute() called on a labels-only object, which is keyed on no "
+                "TkNumericIntegrations"
+            )
+
         # replace label if specified
         if label is not None:
             self._label = label
@@ -457,6 +498,16 @@ class QuadSource(DatastoreObject):
         if not Tr.available:
             raise RuntimeError("QuadSource: Supplied Tr is not available")
 
+        # a derived row is keyed on the rows its compute() receives, so they must be the rows it
+        # was made to be keyed under (prompts/datastore-integrity, prompt 09a)
+        if Tq.store_id != self._Tq_serial or Tr.store_id != self._Tr_serial:
+            raise RuntimeError(
+                "QuadSource: compute() was handed TkNumericIntegration rows other than the ones "
+                f"this source is keyed on: Tq store_id={Tq.store_id} but Tq_serial="
+                f"{self._Tq_serial}, and Tr store_id={Tr.store_id} but Tr_serial="
+                f"{self._Tr_serial}"
+            )
+
         # ensure that data ingredients are compatible with our specification
         check_cosmology(Tq.model_proxy, self._model_proxy)
         check_cosmology(Tr.model_proxy, self._model_proxy)
@@ -469,9 +520,6 @@ class QuadSource(DatastoreObject):
             Tq,
             Tr,
         )
-
-        self._Tq_serial = Tq.store_id
-        self._Tr_serial = Tr.store_id
 
         return self._compute_ref
 
