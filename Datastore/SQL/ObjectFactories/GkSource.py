@@ -441,7 +441,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 ]
         except MultipleResultsFound as e:
             print(
-                f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
+                f"!! GkSource.build(): multiple results found when querying for GkSource"
             )
             raise e
         except SQLAlchemyError as e:
