@@ -29,6 +29,7 @@ from ComputeTargets import (
     TkWKBIntegration,
 )
 from ComputeTargets.BackgroundModel import _cosmology_break_points
+from ComputeTargets.GkSource import GkSource_parent_set_of_serials
 from ComputeTargets.phase_residual import (
     phase_residual_integrand,
     residual_node_range,
@@ -2452,6 +2453,86 @@ def run_pipeline(
     # to pre-build and cache, because we need to perform complicated table lookups with joins in order to extract the relevant
     # solution points from GkNumericValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
+    def resolve_GkSource_parents(wanted):
+        """
+        The parent set of every GkSource that ``wanted`` names, as the GkSource stage assembles it
+        (prompts/datastore-integrity, prompt 09b). ``wanted`` is a list of
+        ``(k_exit, [z_response, ...])``. The result maps ``(k_exit.store_id, z_response.store_id)``
+        to the canonical parent set: for each z_source of the grid the GkSource stage assembles
+        over, ``z_source_sample.truncate(z_response, keep="higher")``, the GkNumericIntegration and
+        GkWKBIntegration serials whose values at z_response it is assembled from.
+
+        The two value reads are made serial-only (``parents_only``), with the payload
+        build_missing_GkSource reads the values with. The GkSource stage, the GkSourcePolicyData
+        stage and the QuadSourceIntegral stage all key their GkSource lookups on what this
+        returns, so none can compute a different set (the user's decision, 2026-09-30).
+        """
+        items = [
+            (k_exit, z_response)
+            for k_exit, z_responses in wanted
+            for z_response in z_responses
+        ]
+        if len(items) == 0:
+            return {}
+
+        payload_batch = [
+            {
+                "shard_key": {"k": k_exit},
+                "object": cls_name,
+                "payload": {
+                    "model": model_proxy,
+                    "z": z_response,
+                    "parents_only": True,
+                    **(
+                        {"atol": Gk_numeric_atol, "rtol": Gk_numeric_rtol}
+                        if cls_name == "GkNumericValue"
+                        else {}
+                    ),
+                    "tags": [
+                        GkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
+                        SourceZGridSizeTag,
+                        ResponseZGridSizeTag,
+                        LargestSourceZTag,
+                        SmallestSourceZTag,
+                        ResponseSparsenessZTag,
+                    ],
+                },
+            }
+            for k_exit, z_response in items
+            for cls_name in ["GkNumericValue", "GkWKBValue"]
+        ]
+        lookup_queue = RayWorkPool(
+            pool,
+            payload_batch,
+            task_builder=lambda x: pool.object_read_batch(
+                x["object"], x["shard_key"], **x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=10,
+        )
+        lookup_queue.run()
+
+        parents = {}
+        for i, (k_exit, z_response) in enumerate(items):
+            parents[(k_exit.store_id, z_response.store_id)] = (
+                GkSource_parent_set_of_serials(
+                    z_source_sample.truncate(z_response, keep="higher"),
+                    dict(lookup_queue.results[2 * i]),
+                    dict(lookup_queue.results[2 * i + 1]),
+                )
+            )
+        return parents
+
     def build_GkSource_batch(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -2462,6 +2543,13 @@ def run_pipeline(
             z_response.store_id: z_source_sample.truncate(z_response, keep="higher")
             for z_response in batch
         }
+
+        # a GkSource is keyed on the Gk rows it is assembled from, so the parent set of every
+        # (k, z_response) in the batch is read, serial-only, before the existence query
+        # (prompts/datastore-integrity, prompt 09b)
+        GkSource_parents = resolve_GkSource_parents(
+            [(k_exit, batch) for k_exit in response_k_exit_times]
+        )
 
         # first, determine which GkSource objects are missing from the datastore. We do not rebuild (or even re-query) any that are already
         # present (although we do not attempt to validate them either). Even querying has an impact: scheduling a remote database lookup,
@@ -2474,6 +2562,9 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
+                        "parents": GkSource_parents[
+                            (k_exit.store_id, z_response.store_id)
+                        ],
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2525,11 +2616,11 @@ def run_pipeline(
             )
         }
 
-        work_refs = build_missing_GkSource(missing, z_source_pool)
+        work_refs = build_missing_GkSource(missing, z_source_pool, GkSource_parents)
 
         return work_refs
 
-    def build_missing_GkSource(missing, z_source_pool):
+    def build_missing_GkSource(missing, z_source_pool, GkSource_parents):
         # all the z-source values for a single k-mode will be held on the same database shard.
         # It's critical that we look these up efficiently. We use the object_read_batch() API
         # so that we can collect an entire set of z_source values for a given z_response value,
@@ -2660,6 +2751,11 @@ def run_pipeline(
                             k=k_exit,
                             z_response=z_response,
                             z_sample=z_source_pool[z_response.store_id],
+                            # the set the existence query was keyed on; compute() asserts that
+                            # the values it is handed are read from exactly these rows
+                            parents=GkSource_parents[
+                                (k_exit.store_id, z_response.store_id)
+                            ],
                             tags=[
                                 GkProductionTag,
                                 RunLabelTag,
@@ -2801,7 +2897,7 @@ def run_pipeline(
 
         policy_statistics["total"] = policy_statistics["total"] + 1
 
-    def build_incomplete_GkSourcePolicy(incomplete):
+    def build_incomplete_GkSourcePolicy(incomplete, GkSource_parents):
         GkSource_lookup = [
             {
                 "shard_key": {"k": k_exit},
@@ -2810,6 +2906,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
+                        # keyed on its parent set, as the GkSource stage keys it (prompt 09b)
+                        "parents": GkSource_parents[
+                            (k_exit.store_id, z_response.store_id)
+                        ],
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2899,6 +2999,13 @@ def run_pipeline(
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
+        # a GkSource is found by the Gk rows it is assembled from, resolved as the GkSource stage
+        # resolves them (prompts/datastore-integrity, prompt 09b; the user's decision,
+        # 2026-09-30). Read once here, for this lookup and the two below
+        GkSource_parents = resolve_GkSource_parents(
+            [(k_exit, batch) for k_exit in response_k_exit_times]
+        )
+
         GkSource_lookup = [
             {
                 "shard_key": {"k": k_exit},
@@ -2907,6 +3014,9 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
+                        "parents": GkSource_parents[
+                            (k_exit.store_id, z_response.store_id)
+                        ],
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3018,13 +3128,13 @@ def run_pipeline(
             )
         }
 
-        work_refs = build_missing_GkSourcePolicy(missing)
+        work_refs = build_missing_GkSourcePolicy(missing, GkSource_parents)
         if dump_incomplete:
-            build_incomplete_GkSourcePolicy(incomplete)
+            build_incomplete_GkSourcePolicy(incomplete, GkSource_parents)
 
         return work_refs
 
-    def build_missing_GkSourcePolicy(missing):
+    def build_missing_GkSourcePolicy(missing, GkSource_parents):
         GkSource_lookup = [
             {
                 "shard_key": {"k": k_exit},
@@ -3033,6 +3143,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
+                        # keyed on its parent set, as the GkSource stage keys it (prompt 09b)
+                        "parents": GkSource_parents[
+                            (k_exit.store_id, z_response.store_id)
+                        ],
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3293,6 +3407,13 @@ def run_pipeline(
         missing_source = {q: list(data) for q, data in missing_source_b.items()}
         q_keys = list(missing_source.keys())
 
+        # the GkSource is found by the Gk rows it is assembled from, resolved as the GkSource
+        # stage resolves them (prompts/datastore-integrity, prompt 09b; the user's decision,
+        # 2026-09-30)
+        GkSource_parents = resolve_GkSource_parents(
+            [(k, missing_Gk[k]) for k in k_keys]
+        )
+
         GkSource_lookup_batch = [
             {
                 "shard_key": {"k": k},
@@ -3301,6 +3422,7 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
+                        "parents": GkSource_parents[(k.store_id, z_response.store_id)],
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,

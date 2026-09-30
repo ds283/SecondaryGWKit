@@ -277,6 +277,9 @@ def gk_continuity(
         if not k_exit.available:
             failures.append((k_val, z_val, "wavenumber_exit_time not available"))
             continue
+        # a GkSource is keyed on the Gk rows it is assembled from (prompts/datastore-integrity,
+        # prompt 09b); this script holds only physical labels, so it asks for the reader mode,
+        # which refuses more than one stored match
         source: GkSource = ray.get(
             pool.object_get(
                 "GkSource",
@@ -284,6 +287,7 @@ def gk_continuity(
                 k=k_exit,
                 z_response=z_resp,
                 z_sample=None,
+                labels_only=True,
             )
         )
         if not source.available:

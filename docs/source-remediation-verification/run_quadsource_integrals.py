@@ -359,6 +359,9 @@ def main():
                 # GkSourcePolicyData for each response k at this z_response
                 Gk_cache = {}
                 for k_exit in distinct_k.values():
+                    # keyed on its Gk rows since prompts/datastore-integrity prompt 09b; this
+                    # driver holds only physical labels, so it asks for the reader mode, which
+                    # refuses more than one stored match
                     src: GkSource = ray.get(
                         pool.object_get(
                             "GkSource",
@@ -366,6 +369,7 @@ def main():
                             k=k_exit,
                             z_response=z_response,
                             z_sample=None,
+                            labels_only=True,
                         )
                     )
                     Gk_cache[k_exit.store_id] = ray.get(

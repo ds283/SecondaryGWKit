@@ -875,12 +875,16 @@ def run_pipeline(model_data):
         k_exit: wavenumber_exit_time
         z_response: redshift
 
+        # a GkSource is keyed on the Gk rows it is assembled from (prompts/datastore-integrity,
+        # prompt 09b); this script holds only physical labels, so it asks for the reader mode,
+        # which refuses more than one stored match
         GkSource_ref: ObjectRef = pool.object_get(
             "GkSource",
             model=model_proxy,
             k=k_exit,
             z_response=z_response,
             z_sample=None,
+            labels_only=True,
             tags=run_selection.tags,
         )
         GkSource = ray.get(GkSource_ref)

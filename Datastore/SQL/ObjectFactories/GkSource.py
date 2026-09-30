@@ -13,8 +13,28 @@ assembles, each of which carries its own. The user settled the drop on 2026-09-1
 
 Nothing is added, so a datastore written before this change is readable by this factory without a
 migration; it simply carries two columns nothing queries.
+
+SCHEMA NOTE (prompts/datastore-integrity, prompt 09b). A GkSource for (k, z_response) is
+assembled, for each z_source of its grid, from the value at z_response of one GkNumericIntegration,
+one GkWKBIntegration, or both (ComputeTargets/GkSource.py, assemble_GkSource_values). Those rows
+are its parents, and they are a set. They are recorded in a new table, **GkSource_parents**, on
+the GkSource's own shard (every Gk row shards on k, config/sharding.py): one row per z_source,
+(gk_source_serial, z_source_serial, numeric_serial, wkb_serial), each with its foreign key and the
+last two nullable, written in the same transaction as the GkSource row. It is the record of exactly
+what was assembled. A new key column, **parents_digest** on GkSource, is the SHA-256 of that set
+(GkSource_parents_digest, below), and build() filters on it, so a lookup says "assembled from
+exactly this set" in one comparison. store() computes the digest from the rows it writes to
+GkSource_parents, never from anything else, and refuses an empty set.
+
+A lookup names its parent set ("parents"), or asks for the reader mode ("labels_only": True) that
+D1 (prompts/datastore-integrity README §6.2) allows a reader holding only physical labels: it
+refuses when more than one stored GkSource matches, naming their digests and the z_sources at
+which their parents differ. A lookup that does neither raises. A store written before this change
+has no parents_digest column, and build() refuses it (D4): it is readable at the SHA its sidecar
+records.
 """
 
+import hashlib
 import json
 from typing import Optional, List
 
@@ -27,11 +47,141 @@ from ComputeTargets import (
     GkSource,
     GkSourceValue,
 )
+from ComputeTargets.GkSource import GkSource_parent_set, GkSource_parents_differ
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
+
+
+def GkSource_parents_digest(members) -> str:
+    """
+    The GkSource key column "parents_digest" (prompts/datastore-integrity, prompt 09b): SHA-256
+    (hex) over the sorted (z_source_serial, numeric_serial, wkb_serial) members of a parent set,
+    each serial an integer or None, as compact JSON. build() and store() both call this, and no
+    other code forms the digest.
+    """
+    canonical = [list(m) for m in GkSource_parent_set(members)]
+    return hashlib.sha256(
+        json.dumps(canonical, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def _refuse_a_store_that_predates_the_parent_set(e: SQLAlchemyError, where: str):
+    """07's D4 refusal, for a GkSource table without "parents_digest" or a store without
+    GkSource_parents: re-raises anything else unchanged."""
+    # matched against the driver's own message rather than str(e), which also carries the SQL
+    # statement -- and the statement names the column either way
+    driver_message = str(getattr(e, "orig", e))
+    if "parents_digest" in driver_message or "GkSource_parents" in driver_message:
+        raise RuntimeError(
+            f'{where}: the GkSource table has no "parents_digest" column, or the store has no '
+            "GkSource_parents table. This datastore predates GkSource rows being keyed on the "
+            "Gk numeric and WKB rows they are assembled from (prompts/datastore-integrity, "
+            "prompt 09b). This tree does not read it; it remains readable at the git SHA its "
+            "sidecar records."
+        ) from e
+    raise e
+
+
+def _read_parent_sets(conn, tables, serials) -> dict:
+    """GkSource serial -> the parent set its GkSource_parents rows record, for ``serials``."""
+    parents_table = tables["GkSource_parents"]
+    found = {serial: [] for serial in serials}
+    for member in conn.execute(
+        sqla.select(
+            parents_table.c.gk_source_serial,
+            parents_table.c.z_source_serial,
+            parents_table.c.numeric_serial,
+            parents_table.c.wkb_serial,
+        ).filter(parents_table.c.gk_source_serial.in_(list(serials)))
+    ):
+        found[member.gk_source_serial].append(
+            (member.z_source_serial, member.numeric_serial, member.wkb_serial)
+        )
+    return {
+        serial: tuple(sorted(members, key=lambda m: m[0]))
+        for serial, members in found.items()
+    }
+
+
+def _describe_matches(conn, tables, candidates) -> str:
+    """
+    What distinguishes several stored GkSources that match one set of physical labels (D1): each
+    one's parents_digest, and the z_source serials at which their parent sets differ.
+    ``candidates`` is a list of (serial, parents_digest).
+    """
+    sets = _read_parent_sets(conn, tables, [serial for serial, _ in candidates])
+    serials = sorted(sets)
+    differ = set()
+    for other in serials[1:]:
+        differ.update(GkSource_parents_differ(sets[serials[0]], sets[other]))
+    named = "; ".join(
+        f"serial={serial}, parents_digest={digest}"
+        for serial, digest in sorted(candidates)
+    )
+    return (
+        f"{named}. Their parent sets differ at {len(differ)} z_source serial(s): "
+        f"{sorted(differ)[:10]}"
+    )
+
+
+class sqla_GkSourceParents_factory(SQLAFactoryBase):
+    """
+    GkSource_parents (prompts/datastore-integrity, prompt 09b): the record of exactly which Gk
+    rows a GkSource was assembled from, one row per z_source. It has no lookup of its own: its rows
+    are written by sqla_GkSource_factory.store(), read by build()'s reader mode and by the
+    inventory, and never built as objects. The table is on the GkSource's shard, as every row it
+    names is, so each reference is a declared foreign key.
+    """
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def register():
+        return {
+            "version": False,
+            "timestamp": False,
+            "stepping": False,
+            "columns": [
+                sqla.Column(
+                    "gk_source_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("GkSource.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "z_source_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                # NULL: no numeric value was assembled at this z_source
+                sqla.Column(
+                    "numeric_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("GkNumericIntegration.serial"),
+                    index=True,
+                    nullable=True,
+                ),
+                # NULL: no WKB value was assembled at this z_source
+                sqla.Column(
+                    "wkb_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("GkWKBIntegration.serial"),
+                    index=True,
+                    nullable=True,
+                ),
+            ],
+        }
+
+    @staticmethod
+    def build(payload, conn, table, inserter, tables, inserters):
+        raise NotImplementedError
 
 
 class sqla_GkSourceTagAssociation_factory(SQLAFactoryBase):
@@ -128,6 +278,14 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # the digest of the parent set GkSource_parents records for this row (module
+                # docstring; prompts/datastore-integrity, prompt 09b). Part of the lookup key
+                sqla.Column(
+                    "parents_digest",
+                    sqla.String(64),
+                    index=True,
+                    nullable=False,
+                ),
                 sqla.Column(
                     "z_max_serial",
                     sqla.Integer,
@@ -167,6 +325,24 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         z_sample: redshift_array = payload["z_sample"]
         z_response: redshift = payload["z_response"]
 
+        # the key's parent set (module docstring), or the reader mode D1 allows; never neither,
+        # and never both
+        parents = payload.get("parents", None)
+        labels_only: bool = payload.get("labels_only", False)
+        if labels_only and parents is not None:
+            raise ValueError(
+                "GkSource.build(): both a parent set and labels_only were given; a keyed lookup "
+                "names its parents, and the reader mode names none"
+            )
+        if not labels_only and parents is None:
+            raise RuntimeError(
+                "GkSource.build(): no parent set was given. A GkSource is keyed on the Gk "
+                "numeric and WKB rows it is assembled from (parents=...); a reader holding only "
+                "physical labels must ask for labels_only=True explicitly"
+            )
+        if parents is not None:
+            parents = GkSource_parent_set(parents)
+
         tag_table = tables["GkSource_tags"]
         redshift_table = tables["redshift"]
 
@@ -190,6 +366,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 largest_WKB_z_table.c.source.label("plz_is_source"),
                 largest_WKB_z_table.c.response.label("plz_is_response"),
                 table.c.metadata,
+                table.c.parents_digest,
             )
             .select_from(
                 table.join(
@@ -218,6 +395,12 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 table.c.z_response_serial == z_response.store_id,
             )
 
+        # the parent set, through its digest (prompt 09b)
+        if not labels_only:
+            query = query.filter(
+                table.c.parents_digest == GkSource_parents_digest(parents)
+            )
+
         # require that the integration we search for has the specified list of tags
         count = 0
         for tag in tags:
@@ -233,12 +416,36 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             )
 
         try:
+            if labels_only:
+                # D1: the physical labels may select, but more than one stored row is refused,
+                # naming what distinguishes them, rather than one of them chosen
+                candidates = []
+                for candidate in conn.execute(query):
+                    candidates.append((candidate.serial, candidate.parents_digest))
+                if len(candidates) > 1:
+                    raise MultipleResultsFound(
+                        f"GkSource.build(): labels_only lookup matched {len(candidates)} stored "
+                        f"rows (model serial={model_proxy.store_id}, k serial={k_exit.store_id}, "
+                        f"z_response serial="
+                        f"{z_response.store_id if z_response is not None else None}): "
+                        f"{_describe_matches(conn, tables, candidates)}. Refusing to choose one; "
+                        f"name the parent set."
+                    )
+
             row_data = conn.execute(query).one_or_none()
+
+            # the reader mode's one match carries the parent set its row records
+            if labels_only and row_data is not None:
+                parents = _read_parent_sets(conn, tables, [row_data.serial])[
+                    row_data.serial
+                ]
         except MultipleResultsFound as e:
             print(
                 f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
             )
             raise e
+        except SQLAlchemyError as e:
+            _refuse_a_store_that_predates_the_parent_set(e, "GkSource.build()")
 
         if row_data is None:
             # build and return an unpopulated object
@@ -250,6 +457,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 z_response=z_response,
                 z_sample=z_sample,
                 tags=tags,
+                parents=parents,
+                labels_only=labels_only,
             )
 
         store_id = row_data.serial
@@ -383,6 +592,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             ),
             z_sample=imported_z_sample,
             tags=tags,
+            parents=parents,
         )
         for key, value in attributes.items():
             setattr(obj, key, value)
@@ -405,6 +615,32 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         tables,
         inserters,
     ):
+        # the record of exactly what was assembled (prompt 09b): the members compute()'s
+        # assemble_GkSource_values reports it read, never the set the lookup asked for. An object
+        # with none is refused before anything is written (the user's decision, 2026-09-30)
+        assembled = obj.assembled_parents
+        if assembled is None or len(assembled) == 0:
+            raise ValueError(
+                "GkSource.store(): refusing to write a GkSource with an empty parent set "
+                f"(k serial={obj._k_exit.store_id}, z_response serial="
+                f"{obj.z_response.store_id}); a GkSource is assembled from at least one Gk "
+                "numeric or WKB row, and records which"
+            )
+        parent_rows = [
+            {"z_source_serial": z_source, "numeric_serial": numeric, "wkb_serial": wkb}
+            for z_source, numeric, wkb in GkSource_parent_set(assembled)
+        ]
+
+        # the key column is computed from the rows written below, and from nothing else
+        parents_digest = GkSource_parents_digest(
+            (
+                member["z_source_serial"],
+                member["numeric_serial"],
+                member["wkb_serial"],
+            )
+            for member in parent_rows
+        )
+
         store_id = inserter(
             conn,
             {
@@ -412,6 +648,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "model_serial": obj.model_proxy.store_id,
                 "z_response_serial": obj.z_response.store_id,
+                "parents_digest": parents_digest,
                 "z_max_serial": obj.z_sample.max.store_id,
                 "z_samples": len(obj.values),
                 "numeric_smallest_z_serial": (
@@ -433,6 +670,19 @@ class sqla_GkSource_factory(SQLAFactoryBase):
 
         # set store_id on behalf of the GkSource instance
         obj._my_id = store_id
+
+        # the parent set, one row per z_source, in the same transaction as the GkSource row
+        parents_inserter = inserters["GkSource_parents"]
+        for member in parent_rows:
+            parents_inserter(
+                conn,
+                {
+                    "gk_source_serial": store_id,
+                    "z_source_serial": member["z_source_serial"],
+                    "numeric_serial": member["numeric_serial"],
+                    "wkb_serial": member["wkb_serial"],
+                },
+            )
 
         # add any tags that have been specified
         tag_inserter = inserters["GkSource_tags"]
@@ -521,6 +771,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         wavenumber_table = tables["wavenumber"]
         value_table = tables["GkSourceValue"]
         tags_table = tables["GkSource_tags"]
+        parents_table = tables["GkSource_parents"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -586,6 +837,13 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                         tags_table.c.parent_serial.in_(invalid_serials)
                     )
                 )
+                # a pruned GkSource's parent-set rows go with it (prompt 09b), or they would be
+                # orphans naming a row that is no longer there
+                conn.execute(
+                    sqla.delete(parents_table).where(
+                        parents_table.c.gk_source_serial.in_(invalid_serials)
+                    )
+                )
                 conn.execute(
                     sqla.delete(table).where(table.c.serial.in_(invalid_serials))
                 )
@@ -605,8 +863,12 @@ class sqla_GkSource_factory(SQLAFactoryBase):
     def inventory_records(conn, table, tables, context):
         # the physical identity of a GkSource row (store-fingerprint prompt 02): what build() filters
         # on -- the model, the wavenumber exit and z_response (optional in the lookup, always in
-        # the key) -- with its tags, its validated flag and its GkSourceValue count
-        from Datastore.store_inventory import Parent, read_records
+        # the key) and, since prompts/datastore-integrity prompt 09b, its parent set -- with its
+        # tags, its validated flag and its GkSourceValue count. The parent set is resolved
+        # through GkSource_parents to the parents' own identities: for each member its z_source
+        # and the reference digests of its numeric and WKB rows, or None. parents_digest is not
+        # read: it is formed from serials, which are never identity
+        from Datastore.store_inventory import Parent, ParentSet, read_records
 
         return read_records(
             conn,
@@ -617,6 +879,19 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "model": Parent("model_serial", "BackgroundModel"),
                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
                 "z_response": Parent("z_response_serial", "redshift"),
+            },
+            parent_sets={
+                "parents": ParentSet(
+                    table="GkSource_parents",
+                    owner="gk_source_serial",
+                    members={
+                        "z_source": Parent("z_source_serial", "redshift"),
+                        "numeric": Parent(
+                            "numeric_serial", "GkNumericIntegration", nullable=True
+                        ),
+                        "wkb": Parent("wkb_serial", "GkWKBIntegration", nullable=True),
+                    },
+                )
             },
             tags=("GkSource_tags", "parent_serial"),
             values=("GkSourceValue", "parent_serial"),
@@ -873,7 +1148,13 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             #  GkSource serial number (if we only knew what it was), so this may be about
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
-            source_query = sqla.select(source_table.c.serial).filter(
+            # a read by physical labels (D1, prompts/datastore-integrity README §6.2): its
+            # parents_digest is selected so that more than one matching GkSource can be refused,
+            # naming what distinguishes them, rather than their values joined together (the
+            # user's decision on prompt 09b, 2026-09-30)
+            source_query = sqla.select(
+                source_table.c.serial, source_table.c.parents_digest
+            ).filter(
                 source_table.c.model_serial == model_proxy.store_id,
                 source_table.c.wavenumber_exit_serial == k.store_id,
                 source_table.c.z_response_serial == z_response.store_id,
@@ -891,6 +1172,18 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                         tab.c.parent_serial == source_table.c.serial,
                         tab.c.tag_serial == tag.store_id,
                     ),
+                )
+
+            candidates = []
+            for candidate in conn.execute(source_query):
+                candidates.append((candidate.serial, candidate.parents_digest))
+            if len(candidates) > 1:
+                raise MultipleResultsFound(
+                    f"GkSourceValue.build(): {len(candidates)} stored GkSources match one set of "
+                    f"physical labels (model serial={model_proxy.store_id}, k serial="
+                    f"{k.store_id}, z_response serial={z_response.store_id}): "
+                    f"{_describe_matches(conn, tables, candidates)}. Refusing to read a value "
+                    f"from more than one of them."
                 )
 
             subquery = source_query.subquery()
@@ -928,6 +1221,8 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 f"!! GkSourceValue.build(): multiple results found when querying for GkSourceValue"
             )
             raise e
+        except SQLAlchemyError as e:
+            _refuse_a_store_that_predates_the_parent_set(e, "GkSourceValue.build()")
 
         if row_data is None:
             # return empty object

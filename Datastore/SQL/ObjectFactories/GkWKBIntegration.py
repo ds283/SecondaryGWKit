@@ -1267,6 +1267,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
+                # always selected, whether or not a parent is given, so that a store from before
+                # the column (prompt 07) is refused with the D4 message rather than read
+                # (prompts/datastore-integrity, prompt 09b)
+                wkb_table.c.numeric_serial,
             ).filter(
                 wkb_table.c.model_serial == model_payload.store_id,
                 wkb_table.c.wavenumber_exit_serial == k.store_id,
@@ -1329,6 +1333,18 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
             )
             raise e
+        except SQLAlchemyError as e:
+            # the parent's build() refusal (prompt 07, D4), matched against the driver's own
+            # message: the statement names the column either way
+            if "numeric_serial" in str(getattr(e, "orig", e)):
+                raise RuntimeError(
+                    "GkWKBValue.build(): the GkWKBIntegration table has no "
+                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
+                    "the numeric integration they start from (prompts/datastore-integrity, "
+                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
+                    "its sidecar records."
+                ) from e
+            raise
 
         if row_data is None:
             # return empty object
@@ -1372,6 +1388,11 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         z_source: Optional[redshift] = payload.get("z_source", None)
         numeric_serial = payload.get("numeric_serial", None)
 
+        # the serial-only form (prompts/datastore-integrity, prompt 09b): no values, only the
+        # (z_source serial, GkWKBIntegration serial) pairs, from which main.py forms the parent
+        # set a GkSource is keyed on before it asks whether that GkSource exists
+        parents_only: bool = payload.get("parents_only", False)
+
         wkb_table = tables["GkWKBIntegration"]
         redshift_table = tables["redshift"]
 
@@ -1381,6 +1402,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
+                # always selected, whether or not a parent is given, so that a store from before
+                # the column (prompt 07) is refused with the D4 message rather than read (prompt
+                # 09b)
+                wkb_table.c.numeric_serial,
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
                 redshift_table.c.source.label("z_source_is_source"),
@@ -1431,42 +1456,64 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         subquery = wkb_query.subquery()
 
-        row_query = sqla.select(
-            table.c.serial,
-            # the parent serial, selected so that a second parent for one z_source can be refused
-            # from these rows, without a second query
-            table.c.wkb_serial,
-            table.c.H_ratio,
-            table.c.theta_mod_2pi,
-            table.c.theta_div_2pi,
-            table.c.omega_WKB_sq,
-            table.c.WKB_criterion,
-            table.c.G_WKB,
-            table.c.analytic_G_rad,
-            table.c.analytic_Gprime_rad,
-            table.c.analytic_G_w,
-            table.c.analytic_Gprime_w,
-            subquery.c.sin_coeff,
-            subquery.c.cos_coeff,
-            subquery.c.z_init,
-            subquery.c.z_source_serial,
-            subquery.c.z_source,
-            subquery.c.z_source_is_source,
-            subquery.c.z_source_is_response,
-            redshift_table.c.z.label("z_response"),
-            table.c.z_serial.label("z_response_serial"),
-            redshift_table.c.source.label("z_response_is_source"),
-            redshift_table.c.response.label("z_response_is_response"),
-        ).select_from(
-            subquery.join(table, table.c.wkb_serial == subquery.c.serial).join(
-                redshift_table, redshift_table.c.serial == table.c.z_serial
+        if parents_only:
+            row_query = (
+                sqla.select(subquery.c.z_source_serial, table.c.wkb_serial)
+                .distinct()
+                .select_from(
+                    subquery.join(table, table.c.wkb_serial == subquery.c.serial)
+                )
             )
-        )
+        else:
+            row_query = sqla.select(
+                table.c.serial,
+                # the parent serial, selected so that a second parent for one z_source can be
+                # refused from these rows, without a second query, and handed back on each value
+                # (prompt 09b)
+                table.c.wkb_serial,
+                table.c.H_ratio,
+                table.c.theta_mod_2pi,
+                table.c.theta_div_2pi,
+                table.c.omega_WKB_sq,
+                table.c.WKB_criterion,
+                table.c.G_WKB,
+                table.c.analytic_G_rad,
+                table.c.analytic_Gprime_rad,
+                table.c.analytic_G_w,
+                table.c.analytic_Gprime_w,
+                subquery.c.sin_coeff,
+                subquery.c.cos_coeff,
+                subquery.c.z_init,
+                subquery.c.z_source_serial,
+                subquery.c.z_source,
+                subquery.c.z_source_is_source,
+                subquery.c.z_source_is_response,
+                redshift_table.c.z.label("z_response"),
+                table.c.z_serial.label("z_response_serial"),
+                redshift_table.c.source.label("z_response_is_source"),
+                redshift_table.c.response.label("z_response_is_response"),
+            ).select_from(
+                subquery.join(table, table.c.wkb_serial == subquery.c.serial).join(
+                    redshift_table, redshift_table.c.serial == table.c.z_serial
+                )
+            )
 
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
 
-        row_data = conn.execute(row_query).all()
+        try:
+            row_data = conn.execute(row_query).all()
+        except SQLAlchemyError as e:
+            # the parent's build() refusal (prompt 07, D4), with or without a parent given
+            if "numeric_serial" in str(getattr(e, "orig", e)):
+                raise RuntimeError(
+                    "GkWKBValue.read_batch(): the GkWKBIntegration table has no "
+                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
+                    "the numeric integration they start from (prompts/datastore-integrity, "
+                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
+                    "its sidecar records."
+                ) from e
+            raise
 
         # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
         # select by them, but must refuse when more than one stored parent matches, rather than
@@ -1485,6 +1532,13 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     f"serials {sorted(parents)}. Refusing to return values from more than one "
                     f"parent."
                 )
+
+        # the serial-only form hands back the pairs, and no value (prompt 09b)
+        if parents_only:
+            pairs = set()
+            for row in row_data:
+                pairs.add((row.z_source_serial, row.wkb_serial))
+            return sorted(pairs)
 
         def make_obj(row):
             obj = GkWKBValue(
@@ -1517,6 +1571,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 is_source=row.z_source_is_source,
                 is_response=row.z_source_is_response,
             )
+            # the GkWKBIntegration this value was read from, so that a caller can form the parent
+            # set of what it assembles from it (prompt 09b)
+            obj._parent_serial = row.wkb_serial
 
             return obj
 

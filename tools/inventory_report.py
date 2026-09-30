@@ -14,8 +14,11 @@ there are none). Then, category by category, each class has:
 - its tag sets, each with its labels and its record count;
 - its records, grouped under their tag set, each rendered by its **physical labels**: a float leaf
   as a number, an integer or string as itself, and a parent reference by the parent's own resolved
-  key, never by its digest. Without ``verbose`` at most five records per tag set are shown, and the
-  number not shown is given;
+  key, never by its digest. A set of parents (a ``GkSource``'s, prompts/datastore-integrity prompt
+  09b) is rendered as the list of its members, ``[{z_source=..., numeric=..., wkb=...}, ...]``, in
+  order of their physical values, each field a parent reference rendered as above or ``none``.
+  Without ``verbose`` at most five records per tag set are shown, and the number not shown is
+  given;
 - its problems, **every one, never truncated**.
 
 The ``*Value`` tables are not a category: each is reported on its parent's header. The
@@ -290,16 +293,55 @@ class _Renderer:
                 )
         return self._ref_sort[cache]
 
+    # --- sets of parents (prompts/datastore-integrity prompt 09b) ------------------------------
+
+    def _set_members(self, name: str, field: str, value: str) -> Optional[list]:
+        """The resolved members of the set whose digest is ``value``, in physical order, each as
+        (its sort key, its text); None if the inventory holds no such set."""
+        members = self.cls(name).members.get(field, {}).get(value)
+        if members is None:
+            return None
+        classes = self.cls(name).parent_sets[field]
+        out = []
+        for member in members:
+            parts = []
+            sort = []
+            for (member_field, of), reference in zip(classes.items(), member):
+                if reference is None:
+                    parts.append(f"{member_field}=none")
+                    sort.append((0,))
+                else:
+                    parts.append(f"{member_field}={self.ref_text(of, reference)}")
+                    sort.append(self.ref_sort(of, reference))
+            out.append((tuple(sort), "{" + ", ".join(parts) + "}"))
+        return sorted(out)
+
+    def set_text(self, name: str, field: str, value: str) -> str:
+        members = self._set_members(name, field, value)
+        if members is None:
+            return "<unresolved parent set>"
+        return "[" + ", ".join(text for _, text in members) + "]"
+
+    def set_sort(self, name: str, field: str, value: str) -> tuple:
+        members = self._set_members(name, field, value)
+        if members is None:
+            return (9,)
+        return (4,) + tuple(sort for sort, _ in members)
+
     # --- one field of one record -------------------------------------------------------------
 
     def value_text(self, name: str, record: Record, field: str) -> str:
         value = record.key[field]
+        if field in self.cls(name).parent_sets:
+            return self.set_text(name, field, value)
         if field in self.cls(name).parents:
             return self.ref_text(self.parent_class(name, record, field), value)
         return self.leaf_text(name, field, value)
 
     def value_sort(self, name: str, record: Record, field: str) -> tuple:
         value = record.key[field]
+        if field in self.cls(name).parent_sets:
+            return self.set_sort(name, field, value)
         if field in self.cls(name).parents:
             return self.ref_sort(self.parent_class(name, record, field), value)
         return self.leaf_sort(name, field, value)

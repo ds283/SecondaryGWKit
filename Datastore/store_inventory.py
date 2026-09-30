@@ -51,7 +51,21 @@ Nothing is repaired.
 - ``orphan-value``: ``*Value`` rows whose parent row is not on their shard;
 - ``orphan-tag``: association rows whose parent row or whose tag is not on their shard;
 - ``unresolved-parent``: rows referencing a parent row that cannot be resolved. They are not
-  records.
+  records;
+- ``empty-parent-set``: rows of a class keyed on a set of parents (``ParentSet``) that have no
+  member rows. They are not records;
+- ``orphan-member``: member rows of a ``ParentSet`` table whose owning row is not on their shard.
+
+**A set of parents** (``ParentSet``, prompts/datastore-integrity prompt 09b). A ``GkSource`` is
+assembled from one Gk numeric row, one Gk WKB row or both for each ``z_source`` of its grid, and its
+table ``GkSource_parents`` records them, one member row per ``z_source``. Such a key field's value
+is the digest of its member fields' names and the sorted list of its resolved members, each
+member the tuple, in those fields' order, of the reference digests of the rows it names (``None``
+for a nullable field that names none). Like
+every parent reference it is formed from the parents' own identities, never their serials; the
+members are kept beside the records, in ``ClassInventory.parent_sets``, so that a display can
+render the set by its physical labels. The member table is read once per shard, read-only, as the
+tag and value tables are.
 
 A shard on which a class's table, association table or value table is absent, or whose key
 columns are incomplete, is left out of that class's replicated comparison: its absence is already
@@ -250,6 +264,23 @@ class Parent:
 
 
 @dataclass(frozen=True)
+class ParentSet:
+    """A key field whose value is a **set** of parent references, one member per row of
+    ``table`` whose ``owner`` column holds the child's serial (prompts/datastore-integrity prompt
+    09b: a ``GkSource``'s rows of ``GkSource_parents``).
+
+    ``members`` maps each field of a member to a ``Parent``, resolved as a key parent is, within
+    this shard or, for a ``cross_shard`` one, on every shard. A member naming a row that cannot be
+    resolved makes the child an unresolved parent; a child with no member rows is an
+    ``empty-parent-set``; a member row whose owner is not on the shard is an ``orphan-member``.
+    """
+
+    table: str
+    owner: str
+    members: Mapping[str, Parent]
+
+
+@dataclass(frozen=True)
 class ShardContext:
     """What the driver hands a factory's record builder, for one shard.
 
@@ -279,6 +310,13 @@ class ShardRead:
     comparable: bool
     tagged: bool
     parents: Dict[str, str]
+    # key field -> member field -> the class that member field names (a ParentSet field)
+    parent_sets: Dict[str, Dict[str, str]] = field(default_factory=dict)
+    # key field -> set digest -> the resolved members that digest is formed from, each a tuple in
+    # the order of parent_sets[key field]
+    members: Dict[str, Dict[str, Tuple[Tuple[Optional[str], ...], ...]]] = field(
+        default_factory=dict
+    )
 
 
 @dataclass(frozen=True)
@@ -286,7 +324,14 @@ class ClassInventory:
     """One class of the inventory. ``parents`` maps each key field that references a parent to
     the parent class (``COSMOLOGY`` for the polymorphic cosmology reference); ``tagged`` says
     whether the class has an association table, and so whether its reference digest covers
-    tags."""
+    tags.
+
+    ``parent_sets`` maps each key field that is a set of parents (``ParentSet``) to its member
+    fields and the class each names, and ``members`` maps that field and a set's digest, which is
+    the field's value in a key, to the resolved members the digest is formed from, each a tuple of
+    reference digests (or ``None``) in the order of ``parent_sets[field]``: a tuple, not a mapping,
+    because a production store holds millions of members. Neither is in a record, so neither is in
+    a fingerprint except through the digest."""
 
     name: str
     replicated: bool
@@ -297,6 +342,10 @@ class ClassInventory:
     earliest_timestamp: Optional[datetime]
     latest_timestamp: Optional[datetime]
     problems: Tuple[str, ...]
+    parent_sets: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
+    members: Mapping[str, Mapping[str, Tuple[Tuple[Optional[str], ...], ...]]] = field(
+        default_factory=dict
+    )
 
 
 @dataclass(frozen=True)
@@ -335,6 +384,19 @@ class StoreInventory:
         out: Dict[str, Any] = {}
         types = cosmology_classes()
         for field, value in record.key.items():
+            if field in cls.parent_sets:
+                out[field] = {
+                    "set": [
+                        {
+                            member_field: self._resolve_reference(of, reference)
+                            for (member_field, of), reference in zip(
+                                cls.parent_sets[field].items(), member
+                            )
+                        }
+                        for member in cls.members.get(field, {}).get(value, ())
+                    ]
+                }
+                continue
             of = cls.parents.get(field)
             if of is None:
                 out[field] = value
@@ -352,6 +414,19 @@ class StoreInventory:
                 "tags": list(parent.tags),
             }
         return out
+
+    def _resolve_reference(self, of: str, value: Optional[str]) -> Any:
+        """One member field of a parent set, resolved as ``resolve`` resolves a key parent."""
+        if value is None:
+            return None
+        found = self.find(of, value)
+        if len(found) != 1:
+            return {"class": of, "digest": value, "unresolved": len(found)}
+        return {
+            "class": of,
+            "key": self.resolve(of, found[0]),
+            "tags": list(found[0].tags),
+        }
 
 
 def _problem(kind: str, name: str, text: str) -> str:
@@ -374,6 +449,7 @@ def read_records(
     tags: Optional[Tuple[str, str]] = None,
     values: Optional[Tuple[str, str]] = None,
     validated: bool = False,
+    parent_sets: Optional[Mapping[str, ParentSet]] = None,
 ) -> ShardRead:
     """
     Read one class's records from one shard, as its factory's ``inventory_records`` specifies.
@@ -381,6 +457,9 @@ def read_records(
     - ``leaves``: the key's leaf columns, each a key field of the same name, through ``canonical``;
     - ``parents``: key field -> ``Parent``, each resolved to the parent's reference digest through
       ``context``: on this shard, or on every shard for a ``cross_shard`` parent;
+    - ``parent_sets``: key field -> ``ParentSet``, a set of parents recorded in a member table,
+      each member resolved as a parent is, the field's value the digest of the sorted resolved
+      members;
     - ``tags``: ``(association table, its column naming this class's serial)``, or ``None``;
     - ``values``: ``(value table, its column naming this class's serial)``, or ``None``;
     - ``validated``: whether the class has a ``validated`` column.
@@ -388,10 +467,22 @@ def read_records(
     name = table.name
     shard = context.shard
     parents = dict(parents or {})
+    parent_sets = dict(parent_sets or {})
     problems: List[str] = []
     parent_classes = {f: p.of for f, p in parents.items()}
+    set_classes = {
+        f: {m: p.of for m, p in spec.members.items()} for f, spec in parent_sets.items()
+    }
+    set_members: Dict[str, Dict[str, Tuple[Tuple[Optional[str], ...], ...]]] = {
+        f: {} for f in parent_sets
+    }
 
-    for field, parent in parents.items():
+    declared = list(parents.items()) + [
+        (f"{f}.{m}", p)
+        for f, spec in parent_sets.items()
+        for m, p in spec.members.items()
+    ]
+    for field, parent in declared:
         needed_classes = (
             tuple(cosmology_classes().values())
             if parent.of == COSMOLOGY
@@ -414,6 +505,8 @@ def read_records(
             comparable=comparable,
             tagged=tags is not None,
             parents=parent_classes,
+            parent_sets=set_classes,
+            members=set_members,
         )
 
     if name in context.absent_tables:
@@ -445,6 +538,39 @@ def read_records(
             )
         )
         return _read([], False)
+
+    # a set of parents cannot be formed on a shard whose member table, or one of its columns, is
+    # absent, so none of the class's records are read from that shard: a store from before the
+    # table (prompt 09b) is such a store
+    for field, spec in parent_sets.items():
+        member_columns = [spec.owner] + [p.column for p in spec.members.values()]
+        if spec.table in context.absent_tables:
+            problems.append(
+                _problem(
+                    "absent-table",
+                    name,
+                    f"table {spec.table}, which holds the {field} of every {name} row, is absent "
+                    f"from shard #{shard}, so none of its {name} records are read from that "
+                    f"shard",
+                )
+            )
+            return _read([], False)
+        lacking = [
+            c
+            for c in member_columns
+            if c in set(context.absent_columns.get(spec.table, ()))
+        ]
+        if len(lacking) > 0:
+            problems.append(
+                _problem(
+                    "incomplete",
+                    name,
+                    f"shard #{shard} lacks the column(s) {', '.join(lacking)} of {spec.table}, "
+                    f"which holds the {field} of every {name} row, so none of its {name} "
+                    f"records are read from that shard",
+                )
+            )
+            return _read([], False)
 
     columns = [table.c.serial] + [table.c[c] for c in needed]
     has_validated = validated and "validated" not in absent
@@ -549,33 +675,105 @@ def read_records(
                     )
                 )
 
+    # the member rows of each set of parents, grouped by the row that owns them: one read of each
+    # member table, never one per row
+    grouped: Dict[str, Dict[int, List[Any]]] = {}
+    for field, spec in parent_sets.items():
+        member_table = tables[spec.table]
+        member_columns = list(
+            dict.fromkeys([spec.owner] + [p.column for p in spec.members.values()])
+        )
+        by_owner: Dict[int, List[Any]] = {}
+        orphan_members: Dict[int, int] = {}
+        for member in conn.execute(
+            sqla.select(*[member_table.c[c] for c in member_columns])
+        ):
+            owner = member._mapping[spec.owner]
+            if owner in serials:
+                by_owner.setdefault(owner, []).append(member)
+            else:
+                orphan_members[owner] = orphan_members.get(owner, 0) + 1
+        if len(orphan_members) > 0:
+            problems.append(
+                _problem(
+                    "orphan-member",
+                    name,
+                    f"{sum(orphan_members.values())} {spec.table} row(s) on shard #{shard} name "
+                    f"{len(orphan_members)} {name} row(s) that are not there; e.g. owner "
+                    f"serials {_examples(orphan_members)}",
+                )
+            )
+        grouped[field] = by_owner
+
+    def _reference(parent: Parent, mapping) -> Tuple[bool, Optional[str]]:
+        """(resolved, the reference digest) of one parent reference in ``mapping``."""
+        if parent.nullable and mapping[parent.column] is None:
+            return True, None
+        of = parent.of
+        if of == COSMOLOGY:
+            of = types.get(mapping[parent.type_column])
+        # a cross-shard parent resolves against every shard's records of its class
+        resolving = context.all_digests if parent.cross_shard else context.digests
+        reference = (
+            resolving.get(of, {}).get(mapping[parent.column])
+            if of is not None
+            else None
+        )
+        return reference is not None, reference
+
     types = cosmology_classes()
     out: List[Tuple[int, Record, Optional[datetime]]] = []
     unresolved: List[Tuple[int, str]] = []
+    empty: List[Tuple[int, str]] = []
     for row in rows:
         mapping = row._mapping
         key: Dict[str, Any] = {leaf: canonical(mapping[leaf]) for leaf in leaves}
         missing_parent = None
         for field, parent in parents.items():
-            if parent.nullable and mapping[parent.column] is None:
-                key[field] = None
-                continue
-            of = parent.of
-            if of == COSMOLOGY:
-                of = types.get(mapping[parent.type_column])
-            # a cross-shard parent resolves against every shard's records of its class
-            resolving = context.all_digests if parent.cross_shard else context.digests
-            reference = (
-                resolving.get(of, {}).get(mapping[parent.column])
-                if of is not None
-                else None
-            )
-            if reference is None:
+            resolved, reference = _reference(parent, mapping)
+            if not resolved:
                 missing_parent = field
                 break
             key[field] = reference
         if missing_parent is not None:
             unresolved.append((row.serial, missing_parent))
+            continue
+
+        empty_set = None
+        for field, spec in parent_sets.items():
+            members = grouped[field].get(row.serial, [])
+            if len(members) == 0:
+                empty_set = field
+                break
+            resolved_members = []
+            for member in members:
+                resolved_member = []
+                for parent in spec.members.values():
+                    resolved, reference = _reference(parent, member._mapping)
+                    if not resolved:
+                        missing_parent = field
+                        break
+                    resolved_member.append(reference)
+                if missing_parent is not None:
+                    break
+                resolved_members.append(tuple(resolved_member))
+            if missing_parent is not None:
+                break
+            resolved_members.sort(
+                key=lambda m: tuple("" if r is None else r for r in m)
+            )
+            key[field] = digest(
+                {
+                    "fields": list(spec.members),
+                    "members": [list(m) for m in resolved_members],
+                }
+            )
+            set_members[field][key[field]] = tuple(resolved_members)
+        if missing_parent is not None:
+            unresolved.append((row.serial, missing_parent))
+            continue
+        if empty_set is not None:
+            empty.append((row.serial, empty_set))
             continue
 
         record = Record(
@@ -603,6 +801,18 @@ def read_records(
                 f"{len(unresolved)} row(s) on shard #{shard} reference a parent that cannot be "
                 f"resolved (field(s) {', '.join(fields)}), and are not records; e.g. serials "
                 f"{_examples(s for s, _ in unresolved)}",
+            )
+        )
+
+    if len(empty) > 0:
+        fields = sorted({f for _, f in empty})
+        problems.append(
+            _problem(
+                "empty-parent-set",
+                name,
+                f"{len(empty)} row(s) on shard #{shard} have no member rows for their set of "
+                f"parents (field(s) {', '.join(fields)}), and are not records; e.g. serials "
+                f"{_examples(s for s, _ in empty)}",
             )
         )
 
@@ -696,6 +906,12 @@ def _combine(
 
     stamps = [ts for _, _, _, ts in rows if ts is not None]
     records = tuple(sorted((r for _, _, r, _ in rows), key=Record.canonical_json))
+    members: Dict[str, Dict[str, Tuple[Tuple[Optional[str], ...], ...]]] = {
+        f: {} for f in first.parent_sets
+    }
+    for s in contributing:
+        for f, sets in reads[s].members.items():
+            members.setdefault(f, {}).update(sets)
     return ClassInventory(
         name=name,
         replicated=replicated,
@@ -706,6 +922,8 @@ def _combine(
         earliest_timestamp=min(stamps) if len(stamps) > 0 else None,
         latest_timestamp=max(stamps) if len(stamps) > 0 else None,
         problems=tuple(problems),
+        parent_sets={f: dict(m) for f, m in first.parent_sets.items()},
+        members=members,
     )
 
 

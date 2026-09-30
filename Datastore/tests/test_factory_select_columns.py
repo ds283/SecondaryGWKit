@@ -579,6 +579,12 @@ EXPECTED_COVERAGE = frozenset(
         "GkSource.py:sqla_GkSource_factory.build.row",
         "GkSource.py:sqla_GkSource_factory.build.row_data",
         "GkSource.py:sqla_GkSource_factory.validate_on_startup.obj",
+        # prompts/datastore-integrity prompt 09b: the reader mode's candidates (serial and
+        # parents_digest), in GkSource.build() and in GkSourceValue's labels-only model read, and
+        # the GkSource_parents rows a refusal or a labels-only hit reads
+        "GkSource.py:sqla_GkSourceValue_factory._build_impl_model.candidate",
+        "GkSource.py:sqla_GkSource_factory.build.candidate",
+        "GkSource.py:<module-level>._read_parent_sets.member",
         "GkSourcePolicyData.py:sqla_GkSourcePolicyData_factory.build.row_data",
         "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row",
         "GkWKBIntegration.py:sqla_GkWKBIntegration_factory.build.row_data",

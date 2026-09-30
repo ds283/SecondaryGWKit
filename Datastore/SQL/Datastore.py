@@ -24,6 +24,7 @@ from Datastore.SQL.ObjectFactories.GkSource import (
     sqla_GkSourceTagAssociation_factory,
     sqla_GkSource_factory,
     sqla_GkSourceValue_factory,
+    sqla_GkSourceParents_factory,
 )
 from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
 from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
@@ -113,6 +114,8 @@ _factories = {
     "GkSource": sqla_GkSource_factory,
     "GkSource_tags": sqla_GkSourceTagAssociation_factory,
     "GkSourceValue": sqla_GkSourceValue_factory,
+    # the Gk rows each GkSource is assembled from (prompts/datastore-integrity, prompt 09b)
+    "GkSource_parents": sqla_GkSourceParents_factory,
     "QuadSourcePolicy": sqla_QuadSourcePolicy_factory,
     "QuadSource": sqla_QuadSource_factory,
     "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
@@ -138,7 +141,7 @@ _drop_actions = {
     ],
     "gk-source-policy": ["GkSourcePolicyData"],
     "gk-source-policy-records": ["GkSourcePolicy"],
-    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue", "GkSource_parents"],
     "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
     "gk-numeric": ["GkNumericIntegration", "GkNumeric_tags", "GkNumericValue"],
     "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],

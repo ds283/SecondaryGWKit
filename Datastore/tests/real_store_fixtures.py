@@ -48,6 +48,7 @@ from typing import Dict, Iterable, List, Mapping, Optional, Tuple
 import sqlalchemy as sqla
 
 from Datastore.SQL.Datastore import _factories
+from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
 from Datastore.SQL.schema import build_schema
 from Datastore.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import bare_pool
@@ -581,6 +582,42 @@ def _merge(*row_sets: RowSet) -> RowSet:
     return out
 
 
+# each GkSource's parent set (prompts/datastore-integrity, prompt 09b): GkSource_parents serial ->
+# (z_source serial, GkNumericIntegration serial or None, GkWKBIntegration serial or None). Every
+# member names real Gk rows of the source's own shard and exit time, at those rows' own z_source:
+# on shard 0 (exit 1), Gk numeric 1 at z_source 1 and the pure-WKB Gk WKB 1 at z_source 2; on
+# shard 1 (exit 2), Gk numeric 2 at z_source 1 and Gk WKB 2 at z_source 2
+_GK_SOURCE_PARENT_ROWS: Dict[
+    int, Dict[int, Tuple[int, Optional[int], Optional[int]]]
+] = {
+    1: {601: (1, 1, None), 602: (2, None, 1)},
+    2: {603: (1, 1, None), 604: (2, None, 1)},
+    3: {605: (1, 2, None), 606: (2, None, 2)},
+}
+_GK_SOURCE_PARENTS = {
+    source: tuple(members.values())
+    for source, members in _GK_SOURCE_PARENT_ROWS.items()
+}
+
+
+def _gk_source_parents(*sources: int) -> RowSet:
+    return {
+        "GkSource_parents": [
+            {
+                "serial": serial,
+                "gk_source_serial": source,
+                "z_source_serial": z_source,
+                "numeric_serial": numeric,
+                "wkb_serial": wkb,
+            }
+            for source in sources
+            for serial, (z_source, numeric, wkb) in _GK_SOURCE_PARENT_ROWS[
+                source
+            ].items()
+        ]
+    }
+
+
 def _full_shard0() -> RowSet:
     return _merge(
         SHARDED_ROWS[0],
@@ -710,6 +747,7 @@ def _full_shard0() -> RowSet:
                     "wavenumber_exit_serial": 1,
                     "model_serial": 1,
                     "z_response_serial": 3,
+                    "parents_digest": GkSource_parents_digest(_GK_SOURCE_PARENTS[1]),
                     "z_max_serial": 1,
                     "z_samples": 3,
                     "validated": True,
@@ -721,12 +759,14 @@ def _full_shard0() -> RowSet:
                     "wavenumber_exit_serial": 1,
                     "model_serial": 1,
                     "z_response_serial": 2,
+                    "parents_digest": GkSource_parents_digest(_GK_SOURCE_PARENTS[2]),
                     "z_max_serial": 1,
                     "z_samples": 2,
                     "validated": True,
                 },
             ]
         },
+        _gk_source_parents(1, 2),
         _tags("GkSource_tags", "parent_serial", 1, (1, 2)),
         _tags("GkSource_tags", "parent_serial", 2, (1,)),
         {
@@ -939,12 +979,14 @@ def _full_shard1() -> RowSet:
                     "wavenumber_exit_serial": 2,
                     "model_serial": 1,
                     "z_response_serial": 3,
+                    "parents_digest": GkSource_parents_digest(_GK_SOURCE_PARENTS[3]),
                     "z_max_serial": 1,
                     "z_samples": 1,
                     "validated": True,
                 }
             ]
         },
+        _gk_source_parents(3),
         _tags("GkSource_tags", "parent_serial", 3, (1, 2)),
         {"GkSourceValue": [{"serial": 406, "parent_serial": 3, "z_source_serial": 1}]},
         {

@@ -34,6 +34,9 @@ _default_serial_batch_size = {
     "GkSource": 200,
     "GkSource_tags": 1000,
     "GkSourceValue": 7500,
+    # one row per z_source of each GkSource, as GkSourceValue has (prompts/datastore-integrity,
+    # prompt 09b)
+    "GkSource_parents": 7500,
     "QuadSource": 200,
     "QuadSourcePolicy": 5,
     "QuadSource_tags": 1000,

@@ -1,6 +1,6 @@
 from collections import namedtuple
 from math import fabs, sqrt, cos, sin
-from typing import Optional, List
+from typing import Iterable, List, Optional, Tuple
 
 import pandas as pd
 import ray
@@ -43,6 +43,129 @@ DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
 
 
+# prompts/datastore-integrity, prompt 09b (board item K6). A GkSource for (k, z_response) is
+# assembled, for each z_source of its grid, from the value at z_response of one GkNumericIntegration,
+# one GkWKBIntegration, or both. Those integration rows are its parents, and they are a *set*: one
+# member (z_source serial, numeric serial or None, WKB serial or None) per z_source. The set is the
+# GkSource's lookup key (through a digest of it, Datastore/SQL/ObjectFactories/GkSource.py) and is
+# recorded in the GkSource_parents table. These are the only functions that form one, so that
+# main.py's stages, compute() and assemble_GkSource_values cannot form it differently.
+GkSourceParentSet = Tuple[Tuple[int, Optional[int], Optional[int]], ...]
+
+
+def _is_serial(value) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def GkSource_parent_set(members: Iterable) -> GkSourceParentSet:
+    """
+    The canonical form of a GkSource's parent set: a tuple of (z_source serial, GkNumericIntegration
+    serial or None, GkWKBIntegration serial or None), sorted by z_source serial.
+
+    Raises ValueError for a member that is not a triple of serials, for a z_source named twice, and
+    for a member with neither parent (a z_source assembled from nothing is not a member).
+    """
+    out = []
+    seen = set()
+    for member in members:
+        try:
+            z_source_serial, numeric_serial, wkb_serial = member
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"GkSource: a parent-set member is (z_source serial, numeric serial or None, WKB "
+                f"serial or None), not {member!r}"
+            )
+        if not _is_serial(z_source_serial):
+            raise ValueError(
+                f"GkSource: a parent-set member's z_source is a redshift serial, not "
+                f"{z_source_serial!r}"
+            )
+        for parent in (numeric_serial, wkb_serial):
+            if parent is not None and not _is_serial(parent):
+                raise ValueError(
+                    f"GkSource: a parent-set member names its integration rows by serial, not "
+                    f"{parent!r} (z_source serial={z_source_serial})"
+                )
+        if numeric_serial is None and wkb_serial is None:
+            raise ValueError(
+                f"GkSource: the parent-set member at z_source serial={z_source_serial} names "
+                f"neither a numeric nor a WKB row"
+            )
+        if z_source_serial in seen:
+            raise ValueError(
+                f"GkSource: the parent set names z_source serial={z_source_serial} twice"
+            )
+        seen.add(z_source_serial)
+        out.append((z_source_serial, numeric_serial, wkb_serial))
+    return tuple(sorted(out, key=lambda m: m[0]))
+
+
+def _value_parent(value, kind: str, z_source: redshift) -> int:
+    """The serial of the integration a value was read from, which GkNumericValue.read_batch and
+    GkWKBValue.read_batch attach to each value they return (prompt 09b)."""
+    serial = getattr(value, "_parent_serial", None)
+    if serial is None:
+        raise RuntimeError(
+            f"GkSource: the {kind} value at z_source={z_source.z:.5g} (store_id="
+            f"{z_source.store_id}) does not say which integration it was read from, so the "
+            f"GkSource it is assembled into could not record its parents"
+        )
+    return serial
+
+
+def GkSource_parent_set_of_values(
+    z_sample: redshift_array, numeric_data, WKB_data
+) -> GkSourceParentSet:
+    """
+    The parent set that assembling ``numeric_data`` and ``WKB_data`` (maps from z_source serial to
+    GkNumericValue / GkWKBValue) over ``z_sample`` would use: for each z_source of the sample, the
+    integrations its numeric and WKB values were read from. A z_source with neither is left out,
+    exactly as assemble_GkSource_values reads only the z_sources of its sample.
+    """
+    members = []
+    for z_source in z_sample:
+        numeric = numeric_data.get(z_source.store_id, None)
+        WKB = WKB_data.get(z_source.store_id, None)
+        if numeric is None and WKB is None:
+            continue
+        members.append(
+            (
+                z_source.store_id,
+                (
+                    _value_parent(numeric, "numeric", z_source)
+                    if numeric is not None
+                    else None
+                ),
+                _value_parent(WKB, "WKB", z_source) if WKB is not None else None,
+            )
+        )
+    return GkSource_parent_set(members)
+
+
+def GkSource_parent_set_of_serials(
+    z_sample: redshift_array, numeric_parents, WKB_parents
+) -> GkSourceParentSet:
+    """
+    As ``GkSource_parent_set_of_values``, from maps z_source serial -> integration serial, which is
+    what the serial-only form of the two value reads returns (``parents_only``, prompt 09b).
+    """
+    members = []
+    for z_source in z_sample:
+        numeric = numeric_parents.get(z_source.store_id, None)
+        WKB = WKB_parents.get(z_source.store_id, None)
+        if numeric is None and WKB is None:
+            continue
+        members.append((z_source.store_id, numeric, WKB))
+    return GkSource_parent_set(members)
+
+
+def GkSource_parents_differ(a: GkSourceParentSet, b: GkSourceParentSet) -> List[int]:
+    """The z_source serials at which two parent sets differ, sorted."""
+    left = {m[0]: m[1:] for m in a}
+    right = {m[0]: m[1:] for m in b}
+    return sorted(z for z in set(left) | set(right) if left.get(z) != right.get(z))
+
+
 @ray.remote
 def assemble_GkSource_values(
     k_exit: wavenumber_exit_time,
@@ -78,6 +201,10 @@ def assemble_GkSource_values(
 
     lowest_z = z_sample.min
 
+    # the integration rows each value below is assembled from: the record of exactly what was
+    # assembled, which store() writes to GkSource_parents (prompts/datastore-integrity, prompt 09b)
+    assembled_parents = []
+
     # recall we work from LOW to HIGH redshift, hence we iterate through the reversed list
     for z_source in reversed(list(z_sample)):
         numeric: GkNumericValue = numeric_data.get(z_source.store_id, None)
@@ -88,6 +215,18 @@ def assemble_GkSource_values(
             raise RuntimeError(
                 f"assemble_GkSource_values: no data supplied at redshift z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
+
+        assembled_parents.append(
+            (
+                z_source.store_id,
+                (
+                    _value_parent(numeric, "numeric", z_source)
+                    if numeric is not None
+                    else None
+                ),
+                _value_parent(WKB, "WKB", z_source) if WKB is not None else None,
+            )
+        )
 
         # If we have both data points, ensure that their analytic estimates match.
         if numeric is not None and WKB is not None:
@@ -405,6 +544,7 @@ def assemble_GkSource_values(
         "values": values,
         "numeric_smallest_z": numeric_smallest_z,
         "primary_WKB_largest_z": primary_WKB_largest_z,
+        "parents": GkSource_parent_set(assembled_parents),
     }
 
 
@@ -418,9 +558,34 @@ class GkSource(DatastoreObject):
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        parents: Optional[Iterable] = None,
+        labels_only: bool = False,
     ):
         k_wavenumber: wavenumber = k.k
         check_units(k_wavenumber, model)
+
+        # the parent set the object is keyed on (prompts/datastore-integrity, prompt 09b): for each
+        # z_source, the GkNumericIntegration and GkWKBIntegration rows its value is assembled from.
+        # An object to be computed names it; labels_only is the reader mode's parentless miss
+        # (D1), which names none and cannot be computed
+        if labels_only and parents is not None:
+            raise ValueError(
+                "GkSource: both a parent set and labels_only were given; an object keyed on its "
+                "parents names them, and the reader mode names none"
+            )
+        if payload is None and not labels_only and parents is None:
+            raise ValueError(
+                "GkSource: an object to be computed must name the parent set it is keyed on "
+                "(parents=...): the Gk numeric and WKB rows it is assembled from"
+            )
+        self._labels_only = labels_only
+        self._parents: Optional[GkSourceParentSet] = (
+            GkSource_parent_set(parents) if parents is not None else None
+        )
+
+        # what compute() actually assembled, recorded by store() and written by the factory to
+        # GkSource_parents
+        self._assembled_parents: Optional[GkSourceParentSet] = None
 
         self._z_sample = z_sample
 
@@ -491,6 +656,22 @@ class GkSource(DatastoreObject):
     @property
     def tags(self) -> List[store_tag]:
         return self._tags
+
+    @property
+    def parents(self) -> Optional[GkSourceParentSet]:
+        """The parent set this object is keyed on: for a stored object, the set its row records;
+        None for the reader mode's parentless miss."""
+        return self._parents
+
+    @property
+    def assembled_parents(self) -> Optional[GkSourceParentSet]:
+        """The parent set compute() assembled the values from, once store() has collected them;
+        None before."""
+        return self._assembled_parents
+
+    @property
+    def labels_only(self) -> bool:
+        return self._labels_only
 
     @property
     def numeric_smallest_z(self) -> Optional[redshift]:
@@ -618,6 +799,32 @@ class GkSource(DatastoreObject):
                 "Object has not been configured correctly for a concrete calculation (z_response or z_sample is missing). It can only represent a query."
             )
 
+        if self._labels_only or self._parents is None:
+            raise RuntimeError(
+                "GkSource: compute() called on an object that names no parent set (the reader "
+                "mode's labels_only miss). It can only represent a query."
+            )
+
+        if len(self._parents) == 0:
+            raise ValueError(
+                "GkSource: compute() called with an empty parent set; a GkSource is assembled "
+                "from at least one Gk numeric or WKB row"
+            )
+
+        # a derived row is keyed on the rows its compute() receives, so they must be the rows it
+        # was made to be keyed under (prompts/datastore-integrity, prompt 09b)
+        handed = GkSource_parent_set_of_values(
+            self._z_sample, payload["numeric"], payload["WKB"]
+        )
+        if handed != self._parents:
+            differ = GkSource_parents_differ(handed, self._parents)
+            raise RuntimeError(
+                "GkSource: compute() was handed Gk rows other than the parent set this source is "
+                f"keyed on (k store_id={self._k_exit.store_id}, z_response store_id="
+                f"{self._z_response.store_id}): they differ at {len(differ)} z_source serial(s), "
+                f"e.g. {differ[:5]}"
+            )
+
         # replace label if specified
         if label is not None:
             self._label = label
@@ -651,6 +858,9 @@ class GkSource(DatastoreObject):
         self._values = payload["values"]
         self._numeric_smallest_z = payload["numeric_smallest_z"]
         self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
+
+        # the rows the values were assembled from, as assemble_GkSource_values recorded them
+        self._assembled_parents = payload["parents"]
 
 
 class GkSourceValue(DatastoreObject):

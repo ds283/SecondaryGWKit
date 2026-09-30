@@ -288,6 +288,9 @@ TARGETS = {
             "model": _Serial(14),
             "z_sample": None,
             "z_response": None,
+            # a stand-in parent set: since prompts/datastore-integrity prompt 09b a GkSource
+            # lookup names the Gk rows it is assembled from
+            "parents": ((17, _NUMERIC_PARENT, None),),
             "tags": [],
         },
     ),
@@ -453,6 +456,11 @@ class _GkSourceStandIn:
     numeric_smallest_z = None
     primary_WKB_largest_z = None
 
+    # the parent set compute() assembled from, which store() writes (prompts/datastore-integrity
+    # prompt 09b); the same stand-in as the lookup's
+    parents = ((17, _NUMERIC_PARENT, None),)
+    assembled_parents = ((17, _NUMERIC_PARENT, None),)
+
     def __init__(self):
         self._k_exit = _Serial(13)
         self.model_proxy = _Serial(14)
@@ -486,13 +494,17 @@ def _store_payload(target: str) -> dict:
     # (prompts/datastore-integrity prompt 07), so they are given a connection that answers with
     # that row, and the tables it is read from; the other two read neither
     wkb = target in ("GkWKBIntegration", "TkWKBIntegration")
+    inserters = {tag_table: None, value_table: None}
+    if target == "GkSource":
+        # GkSource's store() also writes its parent set (prompts/datastore-integrity prompt 09b)
+        inserters["GkSource_parents"] = lambda conn, data: None
     factory.store(
         obj,
         _ParentRowConnection() if wkb else None,
         None,
         inserter,
         _parent_tables(sqla.MetaData()) if wkb else None,
-        {tag_table: None, value_table: None},
+        inserters,
     )
 
     return captured

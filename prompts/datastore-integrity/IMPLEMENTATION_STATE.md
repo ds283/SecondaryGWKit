@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
 **Last updated:** 2026-09-30 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07 and 08), all reviewed; 09a landed and was reviewed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+05a–05c, 06, 07 and 08), all reviewed; 09a landed and was reviewed 2026-09-30; 09b landed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -21,7 +21,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **Next: 09b.** 10 waits on 01–09c.
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3). **Next: 09c**, after 09b's review. 10 waits on 01–09c.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -83,7 +83,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key QuadSourceIntegral on its QuadSourcePolicy"* | [`logs/08-…`](logs/08-key-quadsourceintegral-on-its-policy.md) |
 | 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | — | ✍️ yes, 2026-09-26; **split 2026-09-30** into 09a–09c, the charter | — | — | — |
 | 09a | [Key `QuadSource` on its transfer functions](09a-key-quadsource-on-its-transfer-functions.md) | **K4**, **K7** (cross-shard) | Sonnet | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSource on the transfer functions it is computed from"* | [`logs/09a-…`](logs/09a-key-quadsource-on-its-transfer-functions.md) |
-| 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ⬜ after 09a | — | — |
+| 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ⬜ after 09b | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
@@ -1322,8 +1322,8 @@ what 01–04 find; what waits is their method.
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ✅ `quad_policy_serial`, NOT NULL, indexed, `ForeignKey("QuadSourcePolicy.serial")`, after `policy_serial`; in `build()`'s filter, written by `store()`, in `read_batch`'s filter and a key parent in `inventory_records`. The target takes `quad_policy` beside `policy`, required. `main.py`'s existence query and compute call pass `QuadSource_policy_1pt5`, which is created from `config.defaults.DEFAULT_QUADSOURCE_POLICY_1PT5`; the extraction script finds it through a new `QuadSourcePolicy.read_table` and refuses on none or several. A pre-08 table is refused (D4) in `build()` and `read_batch()`. Witness 08 (6 hunks, 43 lines, one class); fingerprint format 3, `QuadSourceIntegral` and `QuadSourcePolicy` moved |
 | K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09a | ✅ both serials in `build()`'s filter, by serial; `Tr_serial` indexed (still no foreign key); a `labels_only` reader mode refusing two matches, naming both pairs; the target carries the serials from construction and `compute()` asserts the rows it is handed, raising naming both; `inventory_records` declares `Tq` (same shard) and `Tr` (cross-shard). `main.py`'s `QuadSource` stage and the `QuadSourceIntegral` stage's `QuadSource` lookup keyed on the Tk rows; three readers use the reader mode. No column added, so no old store refused (D4). Witness 09a (3 hunks, 10 lines, `Tr_serial`'s index); fingerprint format 4, only `QuadSource` moved |
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ⏸️ |
-| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ⏸️ |
-| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ◐ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b and 09c remain |
+| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ✅ the recommended shape. `GkSource_parents` (own serial; `gk_source_serial`, `z_source_serial`, nullable `numeric_serial` and `wkb_serial`, each an indexed foreign key, all on `k`'s shard), one row per `z_source`, written by `store()` in the `GkSource`'s transaction from the set `assemble_GkSource_values` reports it assembled; `parents_digest` (`String(64)`, NOT NULL, indexed) computed from those rows, in `build()`'s filter; an empty set refused. The Gk value reads attach their parent (`_parent_serial`) and have a serial-only form (`parents_only`); they and `TkWKBValue`'s now refuse a pre-07 store. `compute()` asserts the values it is handed are read from the set it is keyed on. `main.py`: one helper, `resolve_GkSource_parents`, resolves the set serial-only; all six `GkSource` lookups are keyed on it, the GkSource stage's before its existence query. A `labels_only` reader mode (four readers, and `GkSourceValue._build_impl_model`) refuses two matches, naming their digests and where their sets differ. A pre-09b table is refused (D4). Witness 09b (9 hunks, 246 lines, `GkSource` and `GkSource_parents`); fingerprint format 5, `GkSource` and `GkSourcePolicyData` moved |
+| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ◐ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b: `ParentSet`, a key field whose value is the digest of the sorted members of a member table, each member resolved to its parents' reference digests (never `parents_digest`, never a serial); `GkSource` declares its set through `GkSource_parents`, read once per shard; an unresolvable member is `unresolved-parent`, a member row with no owner `orphan-member`, an owner with none `empty-parent-set`, an absent member table `absent-table`; the members are kept in `ClassInventory.members` and `tools/inventory_report.py` renders them by physical labels. 09c remains |
 | V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ⏸️ |
 | V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ⏸️ |
 | V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ⏸️ |
@@ -1389,6 +1389,37 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
+- **[09b-gksource-members-are-not-checked-against-their-rows]** *(opened 2026-09-30 by prompt
+  09b)*
+  - **The defect.** `sqla_GkSource_factory.store()` writes the `GkSource_parents` rows it is given
+    without reading them: nothing checks that a member's numeric and WKB rows are for the
+    source's `k` and model, that each is at the member's own `z_source`, or that a member's WKB
+    row starts from its numeric row (its `numeric_serial` is the member's numeric row, or NULL).
+    Measured on the in-memory store of `test_gksource_parent_set.py`: a source stored with
+    members `((21, 42, None), (22, 41, 52))` -- Gk numeric 42 is at `z_source` 22, 41 at 21, and
+    Gk WKB 52 at 23 -- is written as given (log 09b, observations).
+  - **Impact.** None in the pipeline: `compute()` asserts that the values it is handed were read
+    from exactly the set the object is keyed on, and that set is formed from reads filtered on
+    `k`, model, tags and `z_response`, at the `z_source`s the rows themselves report. A declared
+    foreign key checks only that a row exists, and SQLite does not enforce it. It is the relation
+    the charter's §2 asks to be asserted between related direct inputs, which 07's
+    `_check_numeric_parent` asserts for a WKB row and 09c will for `QuadSourceIntegral`.
+  - **Next step.** Decide whether `store()` reads each member's rows, as 07's check reads a WKB
+    row's parent, and refuses a mismatch; it would cost one query per `GkSource` over its members.
+- **[09b-inventory-report-renders-every-member-of-a-parent-set]** *(opened 2026-09-30 by prompt
+  09b)*
+  - **The defect.** By the user's decision on the sketch, `tools/inventory_report.py` renders a
+    `GkSource`'s parent set by its members' physical labels, and it renders **every** member, on
+    the record's line. Measured on `build_full_store`: about 200 characters per member, verbose or
+    not. A production `GkSource` has a member for each `z_source` above its `z_response`, up to
+    ~1,200 at 100 samples per decade, so one record line is up to ~240 kB; every
+    `GkSourcePolicyData` line repeats its source's set, since the set is a field that varies.
+  - **Impact.** `main.py --inventory` on a production store prints lines no one can read, and
+    with `verbose` a report of order 1 GB (5,000 sources, and as many policy rows). Nothing is
+    lost or wrong; `test_inventory_report.py` passes, and no digest is printed.
+  - **Next step.** Decide how the report summarises a set (its size, the `z_source` range, the
+    distinct numeric and WKB parents' labels), which changes what the user decided and so is the
+    user's.
 - **[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]** *(opened 2026-09-30 by
   prompt 09a)*
   - **The defect.** `QuadSourceValue._build_impl_model` finds its parent `QuadSource` by model, `q`,
@@ -1439,26 +1470,6 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Order each action's list children-first (values and tags, then the parent), and
     extend `TestDropOrder`'s schema-derived check to tables within one action. `_drop_actions` was
     outside prompt 07's licence (`_drop_order` and its comment only).
-- **[07-wkb-value-reads-do-not-refuse-a-pre-07-store]** *(opened 2026-09-29 by prompt 07)*
-  - **The defect.** Prompt 07's D4 refusal is in the two WKB factories' `build()`. The four WKB
-    value reads (`GkWKBValue`/`TkWKBValue` `_build_impl_model` and `read_batch`) name
-    `numeric_serial` only when a parent is given. Measured on a `GkWKBIntegration` table recreated
-    from the 06 witness's DDL, holding one pure-WKB row: a parentless `GkWKBValue.read_batch`
-    returned its 2 values; a keyed one raised a raw `OperationalError` (`no such column:
-    GkWKBIntegration.numeric_serial`), not the D4 message (log 07, observations).
-  - **Impact.** `main.py`'s GkSource stage reads `GkWKBValue` with no parent, so on a pre-07 store
-    a run of that stage alone would read WKB values the tree otherwise refuses, rather than being
-    told the store predates the key. D4 says such a store is read at its own SHA; nothing here
-    reads one today (no store under `var/` is opened by this tree's pipeline).
-  - **Next step.** Decide whether the value reads should refuse a store without the column too
-    (e.g. by always selecting it, and matching the driver's message as `build()` does), or whether
-    D4's refusal is `build()`'s alone. Prompt 09 keys `GkSource` on its Gk rows and is a natural
-    owner.
-  - **Assigned (2026-09-30):** to prompt **09b**, by the user's decision
-    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.3). 09b already edits
-    `GkNumericValue.read_batch` and `GkWKBValue.read_batch` so that they hand back their parent,
-    and it closes all four reads here: `GkWKBValue`'s and `TkWKBValue`'s `_build_impl_model` and
-    `read_batch`.
 - **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
   - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
     nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the
@@ -1503,6 +1514,36 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[07-wkb-value-reads-do-not-refuse-a-pre-07-store]** *(opened 2026-09-29 by prompt 07)*
+  - **The defect.** Prompt 07's D4 refusal is in the two WKB factories' `build()`. The four WKB
+    value reads (`GkWKBValue`/`TkWKBValue` `_build_impl_model` and `read_batch`) name
+    `numeric_serial` only when a parent is given. Measured on a `GkWKBIntegration` table recreated
+    from the 06 witness's DDL, holding one pure-WKB row: a parentless `GkWKBValue.read_batch`
+    returned its 2 values; a keyed one raised a raw `OperationalError` (`no such column:
+    GkWKBIntegration.numeric_serial`), not the D4 message (log 07, observations).
+  - **Impact.** `main.py`'s GkSource stage reads `GkWKBValue` with no parent, so on a pre-07 store
+    a run of that stage alone would read WKB values the tree otherwise refuses, rather than being
+    told the store predates the key. D4 says such a store is read at its own SHA; nothing here
+    reads one today (no store under `var/` is opened by this tree's pipeline).
+  - **Next step.** Decide whether the value reads should refuse a store without the column too
+    (e.g. by always selecting it, and matching the driver's message as `build()` does), or whether
+    D4's refusal is `build()`'s alone. Prompt 09 keys `GkSource` on its Gk rows and is a natural
+    owner.
+  - **Assigned (2026-09-30):** to prompt **09b**, by the user's decision
+    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.3). 09b already edits
+    `GkNumericValue.read_batch` and `GkWKBValue.read_batch` so that they hand back their parent,
+    and it closes all four reads here: `GkWKBValue`'s and `TkWKBValue`'s `_build_impl_model` and
+    `read_batch`.
+  - **Closed 2026-09-30** by prompt 09b, in the commit *"Key GkSource on the set of Gk rows it is
+    assembled from"*. All four reads, `GkWKBValue`'s and `TkWKBValue`'s `_build_impl_model` and
+    `read_batch`, now always select `numeric_serial` in their parent query, keyed or not, and
+    match the driver's message as `build()` does: on a table from the 06 witness's DDL each
+    raises 07's D4 `RuntimeError` (no `numeric_serial` column; readable at the SHA its sidecar
+    records), parentless, keyed, pure-WKB-keyed and, for `GkWKBValue.read_batch`, in its new
+    serial-only form (`test_gksource_parent_set.TestTheWKBValueReadsRefuseAPre07Store`, 11
+    sub-tests; a control reads the current tables). Mutation (v) of log 09b, which drops the
+    column from the parentless `GkWKBValue.read_batch`, is caught there. The GkSource stage's
+    parentless read of a pre-07 store is therefore refused, not served.
 - **[03-exit-time-build-comment-describes-the-removed-order-by]** *(opened 2026-09-29 by the
   orchestrator's review of prompt 03)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build` (`wavenumber.py:195`), the
@@ -1720,5 +1761,27 @@ The read-back guard's pins did not move: `EXPECTED_COVERAGE` 47, `KNOWN_UNRESOLV
 `KNOWN_UNFIXED_COLUMNS` empty. `test_main_plumbing.EXPECTED_SITES`: `TkNumericIntegration` 5 → 6,
 the `QuadSource` stage's serial-only parent lookup; every other count unchanged. The witness is
 `schema_at_datastore-integrity-09a.json`.
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.13 After prompt 09b (2026-09-30)
+
+Measured on the final staged tree of prompt 09b's commit, with README §7's command, serially.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | **635 OK** (610 + the 25 of the new `test_gksource_parent_set_main.py`; the known wall-clock flake did not fire in the final run) |
+| CosmologyModels | 39 OK |
+| Datastore | **505 OK** (459 + the 46 of the new `test_gksource_parent_set.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint re-captured as `full_store_fingerprint_datastore-integrity-09b.json`, format 5 (`GkSource` and `GkSourcePolicyData` moved; the other 19 classes did not) |
+
+The read-back guard's pins: `EXPECTED_COVERAGE` **47 → 50**, the three row-read sites 09b adds
+(`sqla_GkSource_factory.build.candidate`, `sqla_GkSourceValue_factory._build_impl_model.candidate`,
+`<module-level>._read_parent_sets.member`, all in `GkSource.py`); `KNOWN_UNRESOLVED_TABLES` 11,
+`KNOWN_BLIND` 1, `KNOWN_UNCHECKED_INSERTS` 13, `KNOWN_BLIND_COLUMNS` 4, `KNOWN_UNFIXED` and
+`KNOWN_UNFIXED_COLUMNS` empty, unchanged. `test_main_plumbing.EXPECTED_SITES` unchanged
+(`GkSource` 6; `TkNumericIntegration` 6). The witness is `schema_at_datastore-integrity-09b.json`.
 
 `black --check` is clean on every Python file this prompt touched.

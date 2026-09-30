@@ -13,9 +13,11 @@ The one schema builder, ``Datastore/SQL/schema.py`` ``build_schema`` (store-fing
   witness beside it, ``schema_at_<campaign>-<NN>.json``, captured with ``schema_description.py``'s
   ``__main__``, and repoints ``WITNESS`` at it; the prompt's log carries the diff between the two
   witnesses as the reviewable statement of what changed. No witness is ever regenerated to make a
-  test pass. The current one is ``schema_at_datastore-integrity-09a.json`` (prompt 09a: the index
-  on ``QuadSource.Tr_serial``, which has no foreign key). Before it,
-  ``schema_at_datastore-integrity-08.json`` (prompt 08: the indexed
+  test pass. The current one is ``schema_at_datastore-integrity-09b.json`` (prompt 09b: the
+  ``GkSource_parents`` table, recording the Gk numeric and WKB rows each ``GkSource`` is assembled
+  from, and the indexed ``parents_digest`` key column on ``GkSource``). Before it,
+  ``schema_at_datastore-integrity-09a.json`` (prompt 09a: the index on ``QuadSource.Tr_serial``,
+  which has no foreign key), and before that ``schema_at_datastore-integrity-08.json`` (prompt 08: the indexed
   ``quad_policy_serial`` column on ``QuadSourceIntegral``, NOT NULL, with its foreign key to
   ``QuadSourcePolicy``), and before that ``schema_at_datastore-integrity-07.json`` (prompt 07: the
   indexed ``numeric_serial`` column on both WKB tables, with its foreign key to the numeric table,
@@ -45,7 +47,7 @@ from Datastore.tests.schema_description import (
 )
 
 WITNESS = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-09a.json"
+    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-09b.json"
 )
 
 

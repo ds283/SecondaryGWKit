@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-30 · **99 open** across eighteen campaigns.
+**Last updated:** 2026-09-30 · **100 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -760,6 +760,8 @@ board's §4, and its row is deleted; it opened two issues on this campaign's boa
 Prompt 08 closed `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` on 2026-09-29, on the
 store-fingerprint board's §4, and its row is deleted; it opened one issue on this campaign's board
 the same day.
+Prompt 09b closed `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on 2026-09-30, on this
+campaign's board's §4, and its row is deleted; it opened two issues on this board the same day.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -768,10 +770,11 @@ the same day.
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber`/`QuadSourcePolicy` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
 | `[07-drop-actions-list-a-parent-table-before-its-children]` | datastore-integrity | Within each `_drop_actions` entry the parent table is dropped before its tag and value tables, so under foreign-key enforcement dropping an action that holds value rows fails on its own. Inert: production never turns enforcement on. Prompt 07 fixed only the order *between* actions. |
-| `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` | datastore-integrity | **→ prompt 09b.** The WKB value reads name `numeric_serial` only when a parent is given, so on a store written before prompt 07 a parentless read (the GkSource stage's) still succeeds, and a keyed one raises a raw `OperationalError`, instead of the D4 refusal `build()` gives. |
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
 | `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
 | `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` | datastore-integrity | **→ prompt 09c.** `QuadSourceValue._build_impl_model` joins every `QuadSource` under the same labels, so once two can coexist (09a) it raises `MultipleResultsFound` naming no parent. No caller in the tree. |
+| `[09b-gksource-members-are-not-checked-against-their-rows]` | datastore-integrity | `GkSource.store()` writes its `GkSource_parents` members unread: nothing checks each names rows for the source's `k` and model at its own `z_source`, or that its WKB row starts from its numeric row. Inert in the pipeline, where `compute()` asserts the set. |
+| `[09b-inventory-report-renders-every-member-of-a-parent-set]` | datastore-integrity | The inventory report renders all of a `GkSource`'s parent-set members on its line, ~200 characters each: up to ~240 kB a line at production size, repeated on every `GkSourcePolicyData` line. How to summarise is the user's. |
 
 ### 1.16 The perturbation sound-speed campaign
 

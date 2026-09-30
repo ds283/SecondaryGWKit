@@ -966,6 +966,11 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         z_response: Optional[redshift] = payload.get("z", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
 
+        # the serial-only form (prompts/datastore-integrity, prompt 09b): no values, only the
+        # (z_source serial, GkNumericIntegration serial) pairs, from which main.py forms the
+        # parent set a GkSource is keyed on before it asks whether that GkSource exists
+        parents_only: bool = payload.get("parents_only", False)
+
         integration_table = tables["GkNumericIntegration"]
         redshift_table = tables["redshift"]
 
@@ -1016,32 +1021,44 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
 
         subquery = integration_query.subquery()
 
-        row_query = sqla.select(
-            table.c.serial,
-            # the parent serial, selected so that a second parent for one z_source can be refused
-            # from these rows, without a second query
-            table.c.integration_serial,
-            table.c.G,
-            table.c.Gprime,
-            table.c.analytic_G_rad,
-            table.c.analytic_Gprime_rad,
-            table.c.analytic_G_w,
-            table.c.analytic_Gprime_w,
-            table.c.omega_WKB_sq,
-            table.c.WKB_criterion,
-            subquery.c.z_source_serial,
-            subquery.c.z_source,
-            subquery.c.z_source_is_source,
-            subquery.c.z_source_is_response,
-            redshift_table.c.z.label("z_response"),
-            table.c.z_serial.label("z_response_serial"),
-            redshift_table.c.source.label("z_response_is_source"),
-            redshift_table.c.response.label("z_response_is_response"),
-        ).select_from(
-            subquery.join(table, table.c.integration_serial == subquery.c.serial).join(
-                redshift_table, redshift_table.c.serial == table.c.z_serial
+        if parents_only:
+            row_query = (
+                sqla.select(subquery.c.z_source_serial, table.c.integration_serial)
+                .distinct()
+                .select_from(
+                    subquery.join(
+                        table, table.c.integration_serial == subquery.c.serial
+                    )
+                )
             )
-        )
+        else:
+            row_query = sqla.select(
+                table.c.serial,
+                # the parent serial, selected so that a second parent for one z_source can be
+                # refused from these rows, without a second query, and handed back on each value
+                # (prompt 09b)
+                table.c.integration_serial,
+                table.c.G,
+                table.c.Gprime,
+                table.c.analytic_G_rad,
+                table.c.analytic_Gprime_rad,
+                table.c.analytic_G_w,
+                table.c.analytic_Gprime_w,
+                table.c.omega_WKB_sq,
+                table.c.WKB_criterion,
+                subquery.c.z_source_serial,
+                subquery.c.z_source,
+                subquery.c.z_source_is_source,
+                subquery.c.z_source_is_response,
+                redshift_table.c.z.label("z_response"),
+                table.c.z_serial.label("z_response_serial"),
+                redshift_table.c.source.label("z_response_is_source"),
+                redshift_table.c.response.label("z_response_is_response"),
+            ).select_from(
+                subquery.join(
+                    table, table.c.integration_serial == subquery.c.serial
+                ).join(redshift_table, redshift_table.c.serial == table.c.z_serial)
+            )
 
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
@@ -1078,6 +1095,13 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                     f"than one parent."
                 )
 
+        # the serial-only form hands back the pairs, and no value (prompt 09b)
+        if parents_only:
+            pairs = set()
+            for row in row_data:
+                pairs.add((row.z_source_serial, row.integration_serial))
+            return sorted(pairs)
+
         def make_obj(row):
             obj = GkNumericValue(
                 store_id=row.serial,
@@ -1104,6 +1128,9 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                 is_source=row.z_source_is_source,
                 is_response=row.z_source_is_response,
             )
+            # the GkNumericIntegration this value was read from, so that a caller can form the
+            # parent set of what it assembles from it (prompt 09b)
+            obj._parent_serial = row.integration_serial
 
             return obj
 

@@ -180,6 +180,11 @@ IDENTITY = {
         "model": ("GkSource", 2, "model_serial", 2),
         "k": ("GkSource", 2, "wavenumber_exit_serial", 4),
         "z_response": ("GkSource", 2, "z_response_serial", 5),
+        # GkSource 2's parent set, through its GkSource_parents row 604 (z_source 2, the pure-WKB
+        # Gk WKB 1 and no numeric row): it gains Gk numeric 1, which is real and on shard 0, the
+        # source's own shard, so the variation changes the identity the set resolves to and does
+        # not make a member unresolved (prompts/datastore-integrity, prompt 09b)
+        "parents": ("GkSource_parents", 604, "numeric_serial", 1),
     },
     "GkSourcePolicyData": {
         "source": ("GkSourcePolicyData", 2, "source_serial", 1),

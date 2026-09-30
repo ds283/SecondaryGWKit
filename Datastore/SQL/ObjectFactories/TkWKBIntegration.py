@@ -1273,6 +1273,10 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
+                # always selected, whether or not a parent is given, so that a store from before
+                # the column (prompt 07) is refused with the D4 message rather than read
+                # (prompts/datastore-integrity, prompt 09b)
+                wkb_table.c.numeric_serial,
             ).filter(
                 wkb_table.c.model_serial == model_payload.store_id,
                 wkb_table.c.wavenumber_exit_serial == k.store_id,
@@ -1336,6 +1340,18 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                 f"!! TkWKBValue.build(): multiple results found when querying for TkWKBValue"
             )
             raise e
+        except SQLAlchemyError as e:
+            # the parent's build() refusal (prompt 07, D4), matched against the driver's own
+            # message: the statement names the column either way
+            if "numeric_serial" in str(getattr(e, "orig", e)):
+                raise RuntimeError(
+                    "TkWKBValue.build(): the TkWKBIntegration table has no "
+                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
+                    "the numeric integration they start from (prompts/datastore-integrity, "
+                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
+                    "its sidecar records."
+                ) from e
+            raise
 
         if row_data is None:
             # return empty object
@@ -1390,6 +1406,9 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
             wkb_table.c.sin_coeff,
             wkb_table.c.cos_coeff,
             wkb_table.c.z_init,
+            # always selected, whether or not a parent is given, so that a store from before the
+            # column (prompt 07) is refused with the D4 message rather than read (prompt 09b)
+            wkb_table.c.numeric_serial,
         ).filter(
             wkb_table.c.model_serial == model_proxy.store_id,
             wkb_table.c.wavenumber_exit_serial == k.store_id,
@@ -1454,7 +1473,19 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
         if z is not None:
             row_query = row_query.filter(table.c.z_serial == z.store_id)
 
-        row_data = conn.execute(row_query).all()
+        try:
+            row_data = conn.execute(row_query).all()
+        except SQLAlchemyError as e:
+            # the parent's build() refusal (prompt 07, D4), with or without a parent given
+            if "numeric_serial" in str(getattr(e, "orig", e)):
+                raise RuntimeError(
+                    "TkWKBValue.read_batch(): the TkWKBIntegration table has no "
+                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
+                    "the numeric integration they start from (prompts/datastore-integrity, "
+                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
+                    "its sidecar records."
+                ) from e
+            raise
 
         # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
         # select by them, but must refuse when more than one stored parent matches, rather than
