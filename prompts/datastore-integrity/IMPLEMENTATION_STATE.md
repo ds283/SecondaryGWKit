@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
 **Last updated:** 2026-09-30 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07 and 08), all reviewed; 09a landed and was reviewed 2026-09-30; 09b landed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+05a–05c, 06, 07 and 08), all reviewed; 09a and 09b landed and were reviewed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -21,7 +21,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3). **Next: 09c**, after 09b's review. 10 waits on 01–09c.
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **Next: 09c.** 10 waits on 01–09c.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -1275,6 +1275,115 @@ and needed no grant beyond the note's §0.4 and §0.5. The review found one smal
 
 **Next: 09b**, dispatched from this review's commit once the user has answered §1 step 7's sketch
 and grant, and the question above.
+
+**The user answered on 2026-09-30** (`e080895`, the note's §0.5 "Granted for 09b" and §0.7):
+- the measured grant, with `test_gauss_order_key.py` on its condition;
+- `tools/inventory_report.py` for the set's rendering;
+- `GkSourceValue`'s model read to 09b, and `QuadSourceValue`'s, with the 09a issue, to 09c;
+- an empty parent set refused.
+
+**Orchestrator review of prompt 09b (2026-09-30).** Run against `3d7b606`, dispatched from
+`e080895` with nothing `running` in this repository's registry and no other worktree. **All twelve
+checks in `orchestrator/prompt-09.md` §3 passed.** The agent did not stop. It stopped once on an API
+usage limit, and was resumed with its staged work intact. The review found one small remnant,
+fixed in `8014f1d`.
+- **Dispatch.**
+  - `HEAD` was `e080895`, which touches no code. The index held **99** rows. The five literals
+    each occurred once, at `:3670`, `:3777`, `:3778`, `:3876` and `:3888`.
+  - The baselines matched §5.12, all OK, the flake included.
+- **Scope.**
+  - 28 files, all on the brief's list. The diff over every older witness and golden, `schema.py`,
+    `ShardedPool.py`, `config/`, `test_inventory_report.py`, `docs/handover/`,
+    `docs/datastore-integrity-audit/` and `orchestrator/` is empty.
+  - `--diff-filter=M` over `*/tests/*` gives six files: §0.5's five and
+    `test_factory_select_columns.py` under §0.4. Every hunk was read.
+    - The fixture gains `parents_digest` and six `GkSource_parents` rows naming its real Gk rows.
+    - `IDENTITY["GkSource"]` gains `parents`, varied through row 604.
+    - `test_gauss_order_key.py` gains a stand-in set and a `GkSource_parents` inserter, and no
+      assertion.
+    - The two D5 repointings.
+    - `EXPECTED_COVERAGE` gains 09b's own three row-read sites, each named. It goes 47 → 50, and no
+      other pin moved.
+  - Two edits are outside the brief's function lists, and both are sound:
+    - `validate_on_startup`'s prune deletes a pruned source's members, which is structurally
+      required;
+    - `ClientPool` gets a batch size of 7500.
+  - `config/sharding.py` is untouched, and this is right. Tables written by their parent's actor,
+    such as `GkSource_tags`, are not listed there either. The broker leases serials for any table
+    on demand. At open, every registered table with a serial reports its maximum. The check at open
+    treats an unlisted table as replicated only if every foreign key names a replicated table, and
+    `GkSource_parents`' do not.
+- **K6.**
+  - `parents_digest` is in `build()`'s filter. `store()` forms it from the rows it writes, which
+    are the set `assemble_GkSource_values` records it was handed. `compute()` asserts that this
+    equals the set the object is keyed on, so a stored digest always equals the looked-up one.
+  - `store()` refuses an empty set. The value reads hand back `_parent_serial`, and have a
+    serial-only `parents_only` form that keeps 05c's refusal of a second parent per `z_source`.
+  - With `3d7b606~1`'s target or factory over the new modules, each module fails at import, since
+    the names it tests do not exist there.
+- **`main.py`.**
+  - All 17 hunks are as the log lists them, and 35 of its site-table citations match `git show`.
+  - `resolve_GkSource_parents` reads with `build_missing_GkSource`'s own payload (tags, the
+    numeric pair) over the same `z_source_sample.truncate(z_response, keep="higher")`, so the two
+    sets cannot differ.
+  - All six lookups are keyed on its result. The GkSource stage resolves before its existence
+    query.
+  - `EXPECTED_SITES` did not move, since the helper reads through `object_read_batch`. The five
+    literals each occur once, now at `:3792`, `:3899`, `:3900`, `:3998` and `:4010`.
+- **Readers.** The four named pass `labels_only=True`. `GkSourceValue._build_impl_model` refuses two
+  matches, naming their digests and where their sets differ.
+- **K7 (set-valued).**
+  - `ParentSet` reads each member table once per shard. It resolves members to reference digests,
+    never serials or `parents_digest`.
+  - It names `empty-parent-set`, `orphan-member`, an unresolvable member (`unresolved-parent`) and
+    an absent member table.
+- **D4.** `TestAnOldStoreIsRefused` (3 tests) and `TestTheWKBValueReadsRefuseAPre07Store` (4 tests
+  and a control) pass: all four WKB value reads refuse a pre-07 table, keyed or not. The 07 issue's
+  defect is gone.
+- **D5 and the fingerprint.**
+  - Both new files are new, and every older witness and golden is unchanged.
+  - A witness re-captured from `HEAD` is byte-identical to the new one. The orchestrator's own diff
+    against 09a is **9 hunks, 246 changed lines, 256 lines**, at the sketch's positions, all in
+    `GkSource` and `GkSource_parents`.
+  - A re-captured fingerprint equals the new golden: format 5, `problems` empty. Against the 09a
+    golden only `GkSource` and `GkSourcePolicyData` moved (3 → 3 records each), and 19 did not.
+- **Mutations.**
+  - (i)–(v) were extracted from `git show HEAD:<log>` and applied in a `git archive` export of
+    `HEAD`. This time the export was made into its own git repository, so no git-dependent test
+    failed there. Each mutation was run over Datastore, ComputeTargets and RunRegistry.
+  - Each gave exactly its logged failing entries. Datastore gave 1, 4, 1, 10 (2 of them sub-tests)
+    and 2 (both sub-tests); RunRegistry gave 1, under (iv).
+  - The flake fired once, under (ii). The export's tracked diff was empty after the reverts.
+- **Probes.** All fourteen were run at `7728518`'s code and at `3d7b606`. None newly fails, and the
+  exit codes are identical. `fk_sweep_probe`, `probe_02`, `probe_03` (1256 → 1268) and
+  `replicated_divergence_probe` change, as log 09b's rule-11 list says, and so does the fault
+  probe's timestamp line.
+- **Boards.**
+  - The §1 row, K6, K7 (still partial), the 07 issue on §4 and the two §3.3 entries are present.
+  - Counted, the index has **100** rows: one deleted, two opened.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `3d7b606`, serially, in the checkout: AdaptiveLevin 32, CosmologyModels 39,
+    Datastore **505** (+46), LiouvilleGreen 148 (1 skipped) and RunRegistry 199 were OK.
+    ComputeTargets ran **635** (+25) with 2 failures, under a load average of 116–150 from a job in
+    another of the user's workspaces, outside this repository.
+    - `test_background_tau.test_build_cost` (0.66 s against 0.5 s) also fails alone on the
+      pre-09b code at that load.
+    - `test_numeric_phase_cut.test_the_print_is_gated_both_ways` saw a time-triggered status
+      print, and passed alone at `HEAD` in all three runs.
+    - 09b touches neither module nor what they test. The agent's run on the staged tree, at lower
+      load, was 635 OK.
+  - `black --check` is clean on the 23 Python files.
+  - Both new modules assert `not ray.is_initialized()` in their `tearDownModule`.
+- **Remnant, fixed in `8014f1d`** (*"Name GkSource in GkSource.build()'s multiple-results
+  message"*). `GkSource.build()` printed a line naming `GkWKBIntegration` before re-raising.
+  09b's reader mode reaches that branch, and log 09b recorded it as residue.
+- **For the user, later.** `[09b-inventory-report-renders-every-member-of-a-parent-set]` asks how
+  the report should summarise a set. It changes what the user decided on the sketch, so it is
+  theirs to answer, and it does not block 09c.
+- **Log 09b is accurate** against `git show`.
+
+**Next: 09c**, from this review's commit, after §1 step 7's sketch and the user's grant.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
