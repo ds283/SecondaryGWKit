@@ -3460,8 +3460,8 @@ def run_pipeline(
 
         # a QuadSource is keyed on the TkNumericIntegrations for q and r it is computed from
         # (prompts/datastore-integrity, prompt 09a), and this stage finds it by them, not by its
-        # physical labels alone (the orchestrator's decision of 2026-09-30): a resume after a
-        # change upstream, under the same tags, then finds no source rather than the stale one
+        # physical labels alone (the user's decision of 2026-09-30): a resume after a change
+        # upstream, under the same tags, then finds no source rather than the stale one
         Tk_numeric_serials = {
             k_exit.store_id: obj.store_id
             for k_exit, obj in zip(missing_Tk, Tk_numeric_lookup_queue.results)
