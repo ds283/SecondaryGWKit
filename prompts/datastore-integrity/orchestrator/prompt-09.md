@@ -178,6 +178,41 @@ Not needed on the sketch: `TestTags` (no set reaches a Gk change), `NON_IDENTITY
 `test_inventory_report.py` failed, and is **not** granted. The user granted `tools/inventory_report.py`
 instead (§0.7).
 
+**Granted for 09c** (the user, 2026-09-30, on the sketch of §0.8). Each is limited to following the
+key: the six parents join, and nothing else asserted changes.
+- **`Datastore/tests/real_store_fixtures.py`:**
+  - the three `QuadSourceIntegral` rows gain the four Tk columns, naming real Tk rows;
+  - `_UNDECLARED_REFERENCES` gains the four cross-shard columns;
+  - a comment on the one row whose `Tr` WKB relation the fixture cannot satisfy (§0.8, decision 2).
+- **`Datastore/tests/test_store_inventory.py`:**
+  - `IDENTITY["QuadSourceIntegral"]` gains the six parents, each varied to a real, resolvable row;
+  - `NON_IDENTITY` loses `source_serial` and `data_serial`;
+  - the two `TestTags` tests a tag change now reaches through the integral's parents
+    (`test_a_tag_on_the_background_model_reaches_its_children` and
+    `test_a_tagged_parents_digest_covers_its_tags`) expect `QuadSourceIntegral` too, each with a
+    sentence saying why;
+  - `TestDuplicates.test_across_shards` also copies the duplicated integral's same-shard parent
+    chain (`GkSourcePolicyData`, `GkSource`, its `GkSource_parents` rows and their Gk rows) to the
+    other shard, so that the copy's `data` resolves there;
+  - `TestOldStoresAndOrphans.check()` gains a `cascade` allowance, and
+    `test_a_missing_key_column_makes_the_class_incomplete` uses it. The allowance names classes
+    whose only new problems are `unresolved-parent`, which it asserts, and whose records may change
+    only by losing the rows that name the broken parent.
+- **`Datastore/tests/test_integral_read_batch.py`:** both raw inserts gain the four columns.
+- **`Datastore/tests/test_quadsource_policy_key.py`** (08's): its `build()` payload names the six
+  parents, and its stored object carries them.
+- **`Datastore/tests/test_quadsource_policy_foreign_key.py`** (08's), **only if** 09c's `store()`
+  or constructor makes it follow the key. It passed on the sketch.
+- **`ComputeTargets/tests/test_quadsource_integral.py` and
+  `ComputeTargets/tests/test_quadsource_policy_main.py`**, **only if** the constructor comes to
+  require the four serials, and then only to pass them (§0.8, decision 4).
+- **The two witnesses, under D5:** `test_schema_builder.py`'s `WITNESS` and its docstring's "current
+  one" sentence; `test_store_fingerprint.py`'s `GOLDEN`.
+- **`test_main_plumbing.EXPECTED_SITES`** and the read-back guard's pins, as §0.4.
+
+Not needed on the sketch: `test_quadsource_policy_foreign_key.py`, `test_inventory_report.py`,
+`test_inventory_consumers.py`, `test_foreign_key_check.py`.
+
 ### 0.6 What moved under the charter, and what 09a measured
 
 **Shards** (`config/sharding.py`). This is the parent table the charter asks each log to carry.
@@ -382,6 +417,82 @@ binds 09c) as §0.1–§0.4 do.
 **Also in 09b's files**, if the new `store()` needs them for the new table: one entry each in
 `config/sharding.py` and `ClientPool`'s serial batch-size map. The sketch did not exercise a pool
 write.
+
+### 0.8 Before 09c: the 09b review, the sketch, and the user's decisions
+
+*(Added 2026-09-30, after the review of 09b, `766acfc`.)*
+
+**Carried from the review of 09b** (board §1, after the 09a review). All twelve checks passed.
+- **Remnant fixed in `8014f1d`:** `GkSource.build()`'s multiple-results print named the wrong
+  class. Check the prints and messages beside any branch your change makes reachable.
+- **Log 09b's 17 hunks and 35 citations were exact against `git show`.** Keep to that.
+- **The machine may be heavily loaded** by an unrelated job in another workspace (load average
+  60–290 during the 09c sketch). Beyond the known flake, two tests then fail from load:
+  `test_background_tau.test_build_cost` (a wall-clock limit) and
+  `test_numeric_phase_cut.test_the_print_is_gated_both_ways` (a time-triggered status print).
+  - Re-run such a failure alone, and on a `git archive` of the parent commit, before you call it
+    a failure or not.
+  - Never touch a process you did not start.
+- **Mutation replays** run in a `git archive` export made into its own git repository, so that the
+  tests that call `git` pass there.
+- The 09b golden and witness are the ones to diff from: `schema_at_datastore-integrity-09b.json`,
+  `full_store_fingerprint_datastore-integrity-09b.json`, `FINGERPRINT_FORMAT` 5 → 6.
+- `resolve_GkSource_parents` in `main.py` is the helper 09c's stage uses to find each `GkSource`
+  by its set (log 09b, "State handed to the next prompt").
+
+**09c, sketched** in an export of `766acfc`, since removed. The sketch had:
+- four columns `Tq_numeric_serial`, `Tr_numeric_serial`, `Tq_wkb_serial` and `Tr_wkb_serial`
+  (provisional names), each NOT NULL, indexed and without a foreign key;
+- all six parents in `build()`'s and `read_batch`'s filters;
+- `data` declared a same-shard `Parent`, and `source` and the four Tk rows cross-shard;
+- a D4 helper beside 08's;
+- the fixture's four columns.
+
+It did not touch `store()`, the constructor, `main.py` or the readers, and the agent is not given
+it.
+- **Existing tests.** At base: Datastore 505, ComputeTargets 635 and RunRegistry 199. The only
+  ComputeTargets failures were the two wall-clock tests, which failed at base too, under load.
+  - On the sketch, before test edits, Datastore gave 27 entries, all on §0.5's list or among the
+    four outside it (now granted), and RunRegistry gave the golden.
+  - Nine `test_quadsource_policy_key` errors came from the sketch's untouched `store()`, and are
+    expected to follow the key once `store()` does.
+- **The witness diff** against 09b: **5 hunks, 102 changed lines, 108 lines of output**, all in
+  `QuadSourceIntegral`: `record.columns`, `table.columns`, `ddl`, `index_ddl` and `indexes`.
+  Your column names may differ; a hunk outside `QuadSourceIntegral` is a stop.
+- **The fingerprint** against the 09b golden: only `QuadSourceIntegral` moved (3 → 3 records), and
+  `problems` was empty.
+  - Declaring `Tr_numeric` or `Tr_wkb` same-shard gives `unresolved-parent: 2`, and is caught.
+  - **Declaring `Tq_numeric` or `Tq_wkb` same-shard is not caught by the fixture**, since every
+    fixture integral's `Tq` rows are on its own shard. So your tests must vary a `Tq` parent to a
+    row on another shard, and mutation (iv) must be shown caught for a `Tq` parent as well as a
+    `Tr` one.
+- **Guard:** column names must be literal. A first draft's `table.c[name]` in `build()` failed
+  `test_dynamic_column_sites_are_the_declared_ones`. No pin moved, and `EXPECTED_SITES` did not
+  move.
+- **Probes** against `3d7b606`: none newly fails. Four change:
+  - `fk_sweep_probe` gains the four columns;
+  - `probe_02`'s line numbers;
+  - `probe_03`'s count, 1268 → 1284;
+  - `replicated_divergence_probe` gains one cascade line, for `QuadSourceIntegral`'s `source`.
+
+  `probe_01`'s output is unchanged.
+- **The fixture's relations.** Each integral's numeric rows are its source's `Tq_serial` and
+  `Tr_serial`, and every WKB row but one has the right `numeric_serial`. The fixture holds no Tk
+  WKB row whose numeric row is Tk 3, so integral 3's `Tr` WKB row cannot satisfy it.
+
+**The user decided four more things on 2026-09-30**, on the sketch. They bind 09c as §0.1–§0.4 do.
+1. **09c's existing-test grant** is §0.5's "Granted for 09c", including the four outside the
+   candidate list. `data` stays a **same-shard** `Parent`, as the prompt says; the duplicate test
+   copies the parent chain instead.
+2. **The fixture keeps its one non-conforming row**, integral 3's `Tr` WKB, with a comment saying
+   why. The inventory never checks relations, and 09c's own modules test the relations on rows of
+   their own. *Not taken:* a new Tk WKB row, which moves `TkWKBIntegration` in the fingerprint and
+   breaks three more tests.
+3. **Old stores: `read_batch` selects `quad_policy_serial` before the four new columns**, so a
+   pre-08 table is refused with 08's message and a pre-09c one with 09c's. No test edit.
+4. **The constructor.** If it comes to require the four serials, the constructions in
+   `test_quadsource_integral.py` and `test_quadsource_policy_main.py` may pass them, and nothing
+   else.
 
 ## 1. Before each dispatch
 
