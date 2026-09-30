@@ -86,6 +86,12 @@ class TestTheConstructorRequiresIt(unittest.TestCase):
             r=_Stand(),
             atol=_Stand(),
             rtol=_Stand(),
+            source_serial=1,
+            data_serial=2,
+            Tq_numeric_serial=3,
+            Tq_WKB_serial=4,
+            Tr_numeric_serial=5,
+            Tr_WKB_serial=6,
         )
         arguments.update(kwargs)
         return arguments

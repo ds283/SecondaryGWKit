@@ -1,7 +1,8 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-30 · **Status: 9 of 10 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07 and 08), all reviewed; 09a and 09b landed and were reviewed 2026-09-30.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-30 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06, 07, 08, and 09 as 09a–09c); 09a and 09b landed and were reviewed 2026-09-30, and 09c
+landed the same day, completing 09. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -21,7 +22,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **Next: 09c.** 10 waits on 01–09c.
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none). **09 is complete**: all three parts have landed. **Next: 10**, once 09c is reviewed.
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -81,10 +82,10 @@ becomes an exact match; the adjacent issues are out of scope.
 | 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Correct the foreign keys the schema declares, and check them"* | [`logs/06-…`](logs/06-correct-the-foreign-keys.md) |
 | 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key each WKB row on the numeric row it starts from"* | [`logs/07-…`](logs/07-key-wkb-rows-on-their-numeric-row.md) |
 | 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-29 | *"Key QuadSourceIntegral on its QuadSourcePolicy"* | [`logs/08-…`](logs/08-key-quadsourceintegral-on-its-policy.md) |
-| 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | — | ✍️ yes, 2026-09-26; **split 2026-09-30** into 09a–09c, the charter | — | — | — |
+| 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | — | ✍️ yes, 2026-09-26; **split 2026-09-30** into 09a–09c, the charter | ✅ 2026-09-30, as 09a–09c, all three landed | — | — |
 | 09a | [Key `QuadSource` on its transfer functions](09a-key-quadsource-on-its-transfer-functions.md) | **K4**, **K7** (cross-shard) | Sonnet | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSource on the transfer functions it is computed from"* | [`logs/09a-…`](logs/09a-key-quadsource-on-its-transfer-functions.md) |
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
-| 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ⬜ after 09b | — | — |
+| 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
@@ -1430,9 +1431,9 @@ what 01–04 find; what waits is their method.
 | K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ✅ `tk-wkb` before `tk-numeric` (`gk-wkb` already preceded `gk-numeric`); the comment corrected; a test derives the order from every declared foreign key between drop actions. The order *within* an action is `[07-drop-actions-list-a-parent-table-before-its-children]` (§3.3) |
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ✅ `quad_policy_serial`, NOT NULL, indexed, `ForeignKey("QuadSourcePolicy.serial")`, after `policy_serial`; in `build()`'s filter, written by `store()`, in `read_batch`'s filter and a key parent in `inventory_records`. The target takes `quad_policy` beside `policy`, required. `main.py`'s existence query and compute call pass `QuadSource_policy_1pt5`, which is created from `config.defaults.DEFAULT_QUADSOURCE_POLICY_1PT5`; the extraction script finds it through a new `QuadSourcePolicy.read_table` and refuses on none or several. A pre-08 table is refused (D4) in `build()` and `read_batch()`. Witness 08 (6 hunks, 43 lines, one class); fingerprint format 3, `QuadSourceIntegral` and `QuadSourcePolicy` moved |
 | K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09a | ✅ both serials in `build()`'s filter, by serial; `Tr_serial` indexed (still no foreign key); a `labels_only` reader mode refusing two matches, naming both pairs; the target carries the serials from construction and `compute()` asserts the rows it is handed, raising naming both; `inventory_records` declares `Tq` (same shard) and `Tr` (cross-shard). `main.py`'s `QuadSource` stage and the `QuadSourceIntegral` stage's `QuadSource` lookup keyed on the Tk rows; three readers use the reader mode. No column added, so no old store refused (D4). Witness 09a (3 hunks, 10 lines, `Tr_serial`'s index); fingerprint format 4, only `QuadSource` moved |
-| K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ⏸️ |
+| K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ✅ four new columns, `Tq_numeric_serial`, `Tq_WKB_serial`, `Tr_numeric_serial`, `Tr_WKB_serial` (NOT NULL, indexed, no foreign key: the Tk rows are on q's and r's shards); all six parents in `build()`'s filter (by serial, all required), written by `store()` (which refuses an object missing one), handed back on every object by `read_batch()`, which filters on any it is given; `compute()` asserts that the six rows it is handed are the six it is keyed on, that the Tq and Tr numeric rows are its source's `Tq_serial` and `Tr_serial`, and that each WKB row starts from its numeric row, raising naming both; `main.py`'s stage resolves every work item's six parents serial-only, in `resolve_QuadSourceIntegral_parents`, before its existence query; the extraction script refuses two rows at one `(k, q, r, z_response)`, naming their distinguishing parents; a pre-09c table refused with 07's form of message, a pre-08 one still with 08's |
 | K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ✅ the recommended shape. `GkSource_parents` (own serial; `gk_source_serial`, `z_source_serial`, nullable `numeric_serial` and `wkb_serial`, each an indexed foreign key, all on `k`'s shard), one row per `z_source`, written by `store()` in the `GkSource`'s transaction from the set `assemble_GkSource_values` reports it assembled; `parents_digest` (`String(64)`, NOT NULL, indexed) computed from those rows, in `build()`'s filter; an empty set refused. The Gk value reads attach their parent (`_parent_serial`) and have a serial-only form (`parents_only`); they and `TkWKBValue`'s now refuse a pre-07 store. `compute()` asserts the values it is handed are read from the set it is keyed on. `main.py`: one helper, `resolve_GkSource_parents`, resolves the set serial-only; all six `GkSource` lookups are keyed on it, the GkSource stage's before its existence query. A `labels_only` reader mode (four readers, and `GkSourceValue._build_impl_model`) refuses two matches, naming their digests and where their sets differ. A pre-09b table is refused (D4). Witness 09b (9 hunks, 246 lines, `GkSource` and `GkSource_parents`); fingerprint format 5, `GkSource` and `GkSourcePolicyData` moved |
-| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ◐ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b: `ParentSet`, a key field whose value is the digest of the sorted members of a member table, each member resolved to its parents' reference digests (never `parents_digest`, never a serial); `GkSource` declares its set through `GkSource_parents`, read once per shard; an unresolvable member is `unresolved-parent`, a member row with no owner `orphan-member`, an owner with none `empty-parent-set`, an absent member table `absent-table`; the members are kept in `ClassInventory.members` and `tools/inventory_report.py` renders them by physical labels. 09c remains |
+| K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ✅ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b: `ParentSet`, a key field whose value is the digest of the sorted members of a member table, each member resolved to its parents' reference digests (never `parents_digest`, never a serial); `GkSource` declares its set through `GkSource_parents`, read once per shard; an unresolvable member is `unresolved-parent`, a member row with no owner `orphan-member`, an owner with none `empty-parent-set`, an absent member table `absent-table`; the members are kept in `ClassInventory.members` and `tools/inventory_report.py` renders them by physical labels. **09c: complete.** `QuadSourceIntegral` declares its six parents: `data` same-shard, and `source` and the four Tk rows with 09a's cross-shard form, each resolving to its row's own identity; a `Tq` parent varied to another shard's row is resolved and is identity (a test beside the fixture, since the fixture's own `Tq` rows are all on their integral's shard). |
 | V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ⏸️ |
 | V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ⏸️ |
 | V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ⏸️ |
@@ -1529,23 +1530,6 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Decide how the report summarises a set (its size, the `z_source` range, the
     distinct numeric and WKB parents' labels), which changes what the user decided and so is the
     user's.
-- **[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]** *(opened 2026-09-30 by
-  prompt 09a)*
-  - **The defect.** `QuadSourceValue._build_impl_model` finds its parent `QuadSource` by model, `q`,
-    `r`, `validated` and tags, and joins the value table to **every** match. Before 09a a second
-    `QuadSource` under the same labels could not be stored; now two can, one per `(Tq_serial,
-    Tr_serial)`. Measured (stand-in store, two validated sources under the same labels each with
-    a value at one `z`): the read raises `MultipleResultsFound`, naming no parent.
-  - **Impact.** It refuses rather than serving a wrong value. No caller in the tree
-    (`main.py`, the extraction scripts) uses it; only `probe_05` does. It is D1's labels-only
-    reader shape without the refusal naming the parents.
-  - **Next step.** Key it on `Tq_serial` and `Tr_serial`, or give it the reader mode, in the
-    prompt that next edits `QuadSourceValue`'s reads. Outside 09a's list of files.
-  - **Assigned (2026-09-30):** to prompt **09c**, by the user's decision on the review of 09a
-    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.7, decision 3). 09c closes D1's
-    class on this board, so it gives this read D1's reader treatment: it refuses more than one
-    matching `QuadSource`, naming their `Tq_serial` and `Tr_serial`, and serves one. 09b does the
-    same for `GkSourceValue._build_impl_model`, which the sketch of 09b found.
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
@@ -1623,6 +1607,30 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]** *(opened 2026-09-30 by
+  prompt 09a)*
+  - **The defect.** `QuadSourceValue._build_impl_model` finds its parent `QuadSource` by model, `q`,
+    `r`, `validated` and tags, and joins the value table to **every** match. Before 09a a second
+    `QuadSource` under the same labels could not be stored; now two can, one per `(Tq_serial,
+    Tr_serial)`. Measured (stand-in store, two validated sources under the same labels each with
+    a value at one `z`): the read raises `MultipleResultsFound`, naming no parent.
+  - **Impact.** It refuses rather than serving a wrong value. No caller in the tree
+    (`main.py`, the extraction scripts) uses it; only `probe_05` does. It is D1's labels-only
+    reader shape without the refusal naming the parents.
+  - **Next step.** Key it on `Tq_serial` and `Tr_serial`, or give it the reader mode, in the
+    prompt that next edits `QuadSourceValue`'s reads. Outside 09a's list of files.
+  - **Assigned (2026-09-30):** to prompt **09c**, by the user's decision on the review of 09a
+    ([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §0.7, decision 3). 09c closes D1's
+    class on this board, so it gives this read D1's reader treatment: it refuses more than one
+    matching `QuadSource`, naming their `Tq_serial` and `Tr_serial`, and serves one. 09b does the
+    same for `GkSourceValue._build_impl_model`, which the sketch of 09b found.
+  - **Closed 2026-09-30** by prompt 09c, in the commit *"Key QuadSourceIntegral on the six rows it
+    is computed from"*. `QuadSourceValue._build_impl_model` now selects its candidate
+    `QuadSource`s' `serial`, `Tq_serial` and `Tr_serial`, and refuses more than one with
+    `MultipleResultsFound` naming each serial and pair (`serial=…: Tq_serial=1, Tr_serial=2; …`),
+    whether or not each holds a value at `z`; one match is served as before, and none is a miss
+    (`test_quadsource_integral_parent_key.TestTheQuadSourceValueModelRead`, 4 tests). Its candidate
+    row is the one new `EXPECTED_COVERAGE` entry of the read-back guard (50 → 51).
 - **[07-wkb-value-reads-do-not-refuse-a-pre-07-store]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Prompt 07's D4 refusal is in the two WKB factories' `build()`. The four WKB
     value reads (`GkWKBValue`/`TkWKBValue` `_build_impl_model` and `read_batch`) name
@@ -1892,5 +1900,28 @@ The read-back guard's pins: `EXPECTED_COVERAGE` **47 → 50**, the three row-rea
 `KNOWN_BLIND` 1, `KNOWN_UNCHECKED_INSERTS` 13, `KNOWN_BLIND_COLUMNS` 4, `KNOWN_UNFIXED` and
 `KNOWN_UNFIXED_COLUMNS` empty, unchanged. `test_main_plumbing.EXPECTED_SITES` unchanged
 (`GkSource` 6; `TkNumericIntegration` 6). The witness is `schema_at_datastore-integrity-09b.json`.
+
+`black --check` is clean on every Python file this prompt touched.
+
+### 5.14 After prompt 09c (2026-09-30)
+
+Measured on the final staged tree of prompt 09c's commit, with README §7's command, serially.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | **665 OK** (635 + the 30 of the new `test_quadsource_integral_parent_main.py`; the known wall-clock flake did not fire in the final run) |
+| CosmologyModels | 39 OK |
+| Datastore | **532 OK** (505 + the 27 of the new `test_quadsource_integral_parent_key.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK; the golden fingerprint re-captured as `full_store_fingerprint_datastore-integrity-09c.json`, format 6 (only `QuadSourceIntegral` moved; the other 20 classes did not) |
+
+The read-back guard's pins: `EXPECTED_COVERAGE` **50 → 51**, the one row-read site 09c adds
+(`QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.candidate`); `KNOWN_UNRESOLVED_TABLES`
+11, `KNOWN_BLIND` 1, `KNOWN_UNCHECKED_INSERTS` 13, `KNOWN_BLIND_COLUMNS` 4, `KNOWN_UNFIXED` and
+`KNOWN_UNFIXED_COLUMNS` empty, unchanged. `test_main_plumbing.EXPECTED_SITES`: five counts +1, each
+by one lookup of the new `resolve_QuadSourceIntegral_parents` (`TkNumericIntegration` 6 → 7,
+`TkWKBIntegration` 3 → 4, `QuadSource` 3 → 4, `GkSource` 6 → 7, `GkSourcePolicyData` 4 → 5); every
+other count unchanged. The witness is `schema_at_datastore-integrity-09c.json`.
 
 `black --check` is clean on every Python file this prompt touched.

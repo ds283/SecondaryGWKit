@@ -181,7 +181,9 @@ The internals are the implementing prompt's to design.
   `QuadSourceIntegral` naming its `Tq`/`Tr` numeric and WKB rows, named by 09 and added here when it
   lands; and a cross-shard form of the inventory's `Parent`. *(Added 2026-09-26.)* Since the split
   (2026-09-30): 09a ships the cross-shard `Parent`; 09b the table, the column and a set-valued
-  inventory parent; 09c the four columns, named here when it lands.
+  inventory parent; 09c the four columns, **`Tq_numeric_serial`**, **`Tq_WKB_serial`**,
+  **`Tr_numeric_serial`** and **`Tr_WKB_serial`** (NOT NULL, indexed, no foreign key; landed
+  2026-09-30).
 
 ## 5. The rules this campaign runs under
 

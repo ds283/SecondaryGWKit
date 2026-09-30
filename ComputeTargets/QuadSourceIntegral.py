@@ -1737,6 +1737,20 @@ def numeric_quad_integral(
 
 
 class QuadSourceIntegral(DatastoreObject):
+    # The six stored rows a QuadSourceIntegral is computed from, as its lookup, its constructor
+    # and its row name them by serial (prompts/datastore-integrity, prompt 09c, K5): its QuadSource
+    # and its GkSourcePolicyData, and the TkNumericIntegration and TkWKBIntegration rows for q and
+    # r. A derived row is keyed on the rows its compute() receives, and nothing further up: the
+    # parents' own keys carry the rest (charter prompt 09, section 2)
+    PARENTS = (
+        "source_serial",
+        "data_serial",
+        "Tq_numeric_serial",
+        "Tq_WKB_serial",
+        "Tr_numeric_serial",
+        "Tr_WKB_serial",
+    )
+
     def __init__(
         self,
         payload,
@@ -1752,6 +1766,12 @@ class QuadSourceIntegral(DatastoreObject):
         rtol: tolerance,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        source_serial: Optional[int] = None,
+        data_serial: Optional[int] = None,
+        Tq_numeric_serial: Optional[int] = None,
+        Tq_WKB_serial: Optional[int] = None,
+        Tr_numeric_serial: Optional[int] = None,
+        Tr_WKB_serial: Optional[int] = None,
     ):
         self._model_proxy = model
         self._policy = policy
@@ -1796,8 +1816,30 @@ class QuadSourceIntegral(DatastoreObject):
             self._compute_time = None
             self._analytic_compute_time = None
 
-            self._data_serial = None
-            self._source_serial = None
+            # an object to be computed is keyed on the six rows it will be computed from, so it
+            # names them all from construction (prompt 09c); compute() asserts that the rows it is
+            # handed are these, and store() writes them
+            parents = {
+                "source_serial": source_serial,
+                "data_serial": data_serial,
+                "Tq_numeric_serial": Tq_numeric_serial,
+                "Tq_WKB_serial": Tq_WKB_serial,
+                "Tr_numeric_serial": Tr_numeric_serial,
+                "Tr_WKB_serial": Tr_WKB_serial,
+            }
+            missing = [name for name in self.PARENTS if parents[name] is None]
+            if len(missing) > 0:
+                raise ValueError(
+                    f"QuadSourceIntegral: an object to be computed must name the six stored rows "
+                    f"it is computed from; missing {', '.join(missing)}"
+                )
+
+            self._source_serial = source_serial
+            self._data_serial = data_serial
+            self._Tq_numeric_serial = Tq_numeric_serial
+            self._Tq_WKB_serial = Tq_WKB_serial
+            self._Tr_numeric_serial = Tr_numeric_serial
+            self._Tr_WKB_serial = Tr_WKB_serial
 
             self._metadata = {}
 
@@ -1817,8 +1859,13 @@ class QuadSourceIntegral(DatastoreObject):
             self._eta_response = payload["eta_response"]
             self._analytic_rad = payload["analytic_rad"]
 
+            # a stored object takes the six parents from the row that records them (prompt 09c)
             self._source_serial = payload["source_serial"]
             self._data_serial = payload["data_serial"]
+            self._Tq_numeric_serial = payload["Tq_numeric_serial"]
+            self._Tq_WKB_serial = payload["Tq_WKB_serial"]
+            self._Tr_numeric_serial = payload["Tr_numeric_serial"]
+            self._Tr_WKB_serial = payload["Tr_WKB_serial"]
 
             self._numeric_quad_data = payload["numeric_quad_data"]
             self._WKB_Levin_data = payload["WKB_Levin_data"]
@@ -1968,6 +2015,35 @@ class QuadSourceIntegral(DatastoreObject):
         return self._source_serial
 
     @property
+    def parents(self) -> dict:
+        """The six stored rows this integral is keyed on, by serial (prompt 09c): known from
+        construction, whether or not the object has been computed or read."""
+        return {
+            "source_serial": self._source_serial,
+            "data_serial": self._data_serial,
+            "Tq_numeric_serial": self._Tq_numeric_serial,
+            "Tq_WKB_serial": self._Tq_WKB_serial,
+            "Tr_numeric_serial": self._Tr_numeric_serial,
+            "Tr_WKB_serial": self._Tr_WKB_serial,
+        }
+
+    @property
+    def Tq_numeric_serial(self) -> Optional[int]:
+        return self._Tq_numeric_serial
+
+    @property
+    def Tq_WKB_serial(self) -> Optional[int]:
+        return self._Tq_WKB_serial
+
+    @property
+    def Tr_numeric_serial(self) -> Optional[int]:
+        return self._Tr_numeric_serial
+
+    @property
+    def Tr_WKB_serial(self) -> Optional[int]:
+        return self._Tr_WKB_serial
+
+    @property
     def numeric_quad_data(self) -> Optional[IntegrationData]:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
@@ -2097,6 +2173,8 @@ class QuadSourceIntegral(DatastoreObject):
                     f"QuadSourceIntegral: supplied {key} is evaluated for a mode that does not match the required value (supplied {key} is for k={Tk.k.k_inv_Mpc:.3g}/Mpc [store_id={Tk.k.store_id}], required value is k={required.k.k_inv_Mpc:.3g}/Mpc [store_id={required.k.store_id}])"
                 )
 
+        self._check_the_rows_it_is_keyed_on(source, GkPolicy, payload)
+
         self._compute_ref = compute_QuadSource_integral.remote(
             self._model_proxy,
             self._k_exit,
@@ -2118,6 +2196,65 @@ class QuadSourceIntegral(DatastoreObject):
         )
 
         return self._compute_ref
+
+    def _check_the_rows_it_is_keyed_on(self, source, GkPolicy, payload):
+        """
+        A derived row is keyed on the rows its compute() receives, so they must be the rows it was
+        made to be keyed under; and where two of them are related, the relation must hold
+        (prompts/datastore-integrity, prompt 09c; charter prompt 09, section 2). Each mismatch
+        raises RuntimeError naming both sides, before anything is computed:
+          * the six rows handed in are the six this integral is keyed on;
+          * the Tq numeric row is its QuadSource's Tq_serial, and the Tr numeric row its
+            Tr_serial (audit section 2.4: nothing checked this before);
+          * each WKB row starts from its own numeric row (its numeric_serial, prompt 07).
+        """
+        Tq_numeric = payload["Tq_numeric"]
+        Tq_WKB = payload["Tq_WKB"]
+        Tr_numeric = payload["Tr_numeric"]
+        Tr_WKB = payload["Tr_WKB"]
+
+        handed = {
+            "source_serial": ("QuadSource", source.store_id),
+            "data_serial": ("GkSourcePolicyData", GkPolicy.store_id),
+            "Tq_numeric_serial": ("TkNumericIntegration", Tq_numeric.store_id),
+            "Tq_WKB_serial": ("TkWKBIntegration", Tq_WKB.store_id),
+            "Tr_numeric_serial": ("TkNumericIntegration", Tr_numeric.store_id),
+            "Tr_WKB_serial": ("TkWKBIntegration", Tr_WKB.store_id),
+        }
+        keyed = self.parents
+        differ = [
+            f"{name}={keyed[name]} but the {cls_name} handed in has store_id={store_id}"
+            for name, (cls_name, store_id) in handed.items()
+            if store_id != keyed[name]
+        ]
+        if len(differ) > 0:
+            raise RuntimeError(
+                "QuadSourceIntegral: compute() was handed rows other than the ones this integral "
+                f"is keyed on: {'; '.join(differ)}"
+            )
+
+        for label, numeric, source_serial in (
+            ("Tq", Tq_numeric, source.Tq_serial),
+            ("Tr", Tr_numeric, source.Tr_serial),
+        ):
+            if numeric.store_id != source_serial:
+                raise RuntimeError(
+                    f"QuadSourceIntegral: the {label} numeric row (TkNumericIntegration "
+                    f"store_id={numeric.store_id}) is not the one its QuadSource (store_id="
+                    f"{source.store_id}) is computed from ({label}_serial={source_serial})"
+                )
+
+        for label, WKB, numeric in (
+            ("Tq", Tq_WKB, Tq_numeric),
+            ("Tr", Tr_WKB, Tr_numeric),
+        ):
+            if WKB.numeric_serial != numeric.store_id:
+                raise RuntimeError(
+                    f"QuadSourceIntegral: the {label} WKB row (TkWKBIntegration store_id="
+                    f"{WKB.store_id}) starts from TkNumericIntegration numeric_serial="
+                    f"{WKB.numeric_serial}, not from the {label} numeric row (store_id="
+                    f"{numeric.store_id})"
+                )
 
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
@@ -2145,9 +2282,6 @@ class QuadSourceIntegral(DatastoreObject):
         self._eta_source_max = payload["eta_source_max"]
         self._eta_response = payload["eta_response"]
         self._analytic_rad = payload["analytic_rad"]
-
-        self._data_serial = payload["GkPolicy_serial"]
-        self._source_serial = payload["source_serial"]
 
         self._numeric_quad_data = payload["numeric_quad_data"]
         self._WKB_Levin_data = payload["WKB_Levin_data"]

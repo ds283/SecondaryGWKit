@@ -841,6 +841,12 @@ def _full_shard0() -> RowSet:
                     "quad_policy_serial": 1,
                     "source_serial": 1,
                     "data_serial": 1,
+                    # QuadSource 1's Tq and Tr, and a Tk WKB row starting from each
+                    # (prompts/datastore-integrity prompt 09c); Tr's rows are on shard 1
+                    "Tq_numeric_serial": 1,
+                    "Tq_WKB_serial": 1,
+                    "Tr_numeric_serial": 2,
+                    "Tr_WKB_serial": 3,
                     "z_response_serial": 3,
                     "z_source_max_serial": 1,
                     "b": 0.0,
@@ -862,6 +868,10 @@ def _full_shard0() -> RowSet:
                     "quad_policy_serial": 1,
                     "source_serial": 1,
                     "data_serial": 2,
+                    "Tq_numeric_serial": 1,
+                    "Tq_WKB_serial": 2,
+                    "Tr_numeric_serial": 2,
+                    "Tr_WKB_serial": 3,
                     "z_response_serial": 2,
                     "z_source_max_serial": 1,
                     "b": 0.0,
@@ -1042,6 +1052,16 @@ def _full_shard1() -> RowSet:
                     "quad_policy_serial": 1,
                     "source_serial": 2,
                     "data_serial": 3,
+                    # QuadSource 2's Tq and Tr (prompt 09c); Tr's rows are on shard 0. The fixture
+                    # holds no TkWKBIntegration that starts from TkNumericIntegration 3, so this
+                    # row's Tr WKB row, 1 (which starts from Tk numeric 1), cannot satisfy the
+                    # relation compute() asserts. The inventory never checks relations, and the
+                    # prompt's own tests check them on rows of their own; a new Tk WKB row would
+                    # move TkWKBIntegration in the fingerprint (the user's decision, 2026-09-30)
+                    "Tq_numeric_serial": 2,
+                    "Tq_WKB_serial": 3,
+                    "Tr_numeric_serial": 3,
+                    "Tr_WKB_serial": 1,
                     "z_response_serial": 3,
                     "z_source_max_serial": 1,
                     "b": 0.0,
@@ -1242,7 +1262,14 @@ def build_full_store(
 # references that the schema does not declare as foreign keys: table -> column -> target table.
 # The cosmology references are polymorphic, and are resolved through cosmology_type
 _UNDECLARED_REFERENCES = {
-    "QuadSourceIntegral": {"source_serial": "QuadSource"},
+    "QuadSourceIntegral": {
+        "source_serial": "QuadSource",
+        # the Tk rows for q and r, on their own modes' shards (prompts/datastore-integrity 09c)
+        "Tq_numeric_serial": "TkNumericIntegration",
+        "Tq_WKB_serial": "TkWKBIntegration",
+        "Tr_numeric_serial": "TkNumericIntegration",
+        "Tr_WKB_serial": "TkWKBIntegration",
+    },
     "QuadSource": {"Tr_serial": "TkNumericIntegration"},
 }
 _COSMOLOGY_TABLES = {_LAMBDACDM_TYPE: "LambdaCDM", _QCD_TYPE: "QCD_Cosmology"}

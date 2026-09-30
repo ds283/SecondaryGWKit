@@ -747,7 +747,16 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         quadsource_table = tables["QuadSource"]
 
         try:
-            quadsource_query = sqla.select(quadsource_table.c.serial).filter(
+            # a read by physical labels (D1, prompts/datastore-integrity README §6.2): since prompt
+            # 09a two QuadSources can share these labels, one per (Tq_serial, Tr_serial), so their
+            # parents are selected, and more than one matching QuadSource is refused, naming them,
+            # rather than their values joined together (the user's decision, 2026-09-30, which
+            # gave this read to prompt 09c)
+            quadsource_query = sqla.select(
+                quadsource_table.c.serial,
+                quadsource_table.c.Tq_serial,
+                quadsource_table.c.Tr_serial,
+            ).filter(
                 quadsource_table.c.model_serial == model_proxy.store_id,
                 quadsource_table.c.q_wavenumber_exit_serial == q.store_id,
                 quadsource_table.c.r_wavenumber_exit_serial == r.store_id,
@@ -765,6 +774,23 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
                         tab.c.parent_serial == quadsource_table.c.serial,
                         tab.c.tag_serial == tag.store_id,
                     ),
+                )
+
+            candidates = []
+            for candidate in conn.execute(quadsource_query):
+                candidates.append(
+                    (candidate.serial, candidate.Tq_serial, candidate.Tr_serial)
+                )
+            if len(candidates) > 1:
+                named = "; ".join(
+                    f"serial={serial}: Tq_serial={Tq}, Tr_serial={Tr}"
+                    for serial, Tq, Tr in sorted(candidates)
+                )
+                raise MultipleResultsFound(
+                    f"QuadSourceValue.build(): {len(candidates)} stored QuadSources match one set "
+                    f"of physical labels (model serial={model_proxy.store_id}, q serial="
+                    f"{q.store_id}, r serial={r.store_id}): {named}. Refusing to read a value "
+                    f"from more than one of them."
                 )
 
             subquery = quadsource_query.subquery()

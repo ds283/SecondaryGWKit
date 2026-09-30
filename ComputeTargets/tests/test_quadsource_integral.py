@@ -1136,6 +1136,12 @@ class TestComputePayload(unittest.TestCase):
             r=FakeExitTime(1.0, 3, None),
             atol=Tol(),
             rtol=Tol(),
+            source_serial=4,
+            data_serial=5,
+            Tq_numeric_serial=6,
+            Tq_WKB_serial=7,
+            Tr_numeric_serial=8,
+            Tr_WKB_serial=9,
         )
         payload = {
             "source": None,
@@ -2214,6 +2220,10 @@ class TestPersistedSchema(unittest.TestCase):
             "analytic_compute_time": 0.1,
             "source_serial": 7,
             "data_serial": 8,
+            "Tq_numeric_serial": 9,
+            "Tq_WKB_serial": 10,
+            "Tr_numeric_serial": 11,
+            "Tr_WKB_serial": 12,
             "metadata": {},
         }
         common = dict(
@@ -2227,6 +2237,12 @@ class TestPersistedSchema(unittest.TestCase):
             r=FakeExitTime(1.0, 3, None),
             atol=Tol(),
             rtol=Tol(),
+            source_serial=7,
+            data_serial=8,
+            Tq_numeric_serial=9,
+            Tq_WKB_serial=10,
+            Tr_numeric_serial=11,
+            Tr_WKB_serial=12,
         )
         obj = QuadSourceIntegral(payload, **common)
         self.assertEqual(obj.b, 0.25)

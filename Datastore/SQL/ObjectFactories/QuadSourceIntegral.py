@@ -100,6 +100,77 @@ def _refuse_a_store_that_predates_the_policy_key(reading: str, e: SQLAlchemyErro
     ) from e
 
 
+# the four columns prompts/datastore-integrity prompt 09c added, naming the transfer-function rows
+_TRANSFER_FUNCTION_COLUMNS = (
+    "Tq_numeric_serial",
+    "Tq_WKB_serial",
+    "Tr_numeric_serial",
+    "Tr_WKB_serial",
+)
+
+
+def _refuse_a_store_that_predates_the_transfer_function_key(
+    reading: str, e: SQLAlchemyError
+):
+    """
+    A store from before prompts/datastore-integrity prompt 09c (D4): its QuadSourceIntegral table
+    has none of the four columns naming the TkNumericIntegration and TkWKBIntegration rows for q
+    and r that each row was computed from. This tree does not read it. Raises for that case only;
+    any other database error is left for the caller to re-raise.
+
+    Matched against the driver's own message, as 08's helper is. A table from before prompt 08
+    lacks quad_policy_serial as well; the caller asks 08's helper first, and read_batch() selects
+    quad_policy_serial before these four (the user's decision, 2026-09-30), so such a store is
+    refused with 08's message.
+    """
+    driver_message = str(getattr(e, "orig", e))
+    if not any(column in driver_message for column in _TRANSFER_FUNCTION_COLUMNS):
+        return
+
+    raise RuntimeError(
+        f"QuadSourceIntegral.{reading}(): the QuadSourceIntegral table has no "
+        '"Tq_numeric_serial", "Tq_WKB_serial", "Tr_numeric_serial" or "Tr_WKB_serial" column. '
+        "This datastore predates QuadSourceIntegral rows being keyed on the "
+        "TkNumericIntegration and TkWKBIntegration rows for q and r they are computed from "
+        "(prompts/datastore-integrity, prompt 09c). This tree does not read it; it remains "
+        "readable at the git SHA its sidecar records."
+    ) from e
+
+
+def _parent_serials(where: str, payload, required: bool) -> dict:
+    """
+    The six stored rows a QuadSourceIntegral is computed from, by serial, as a lookup names them
+    (prompts/datastore-integrity prompt 09c): its QuadSource, its GkSourcePolicyData, and the
+    TkNumericIntegration and TkWKBIntegration rows for q and r (QuadSourceIntegral.PARENTS).
+
+    ``required``: build() decides whether to compute, so it names all six, and a missing one is a
+    RuntimeError naming it. read_batch() is a reader, which may name any of them or none; the ones
+    it names filter its rows. A serial is an integer, never a bool or an object (TypeError).
+    """
+    found = {}
+    missing = []
+    for name in QuadSourceIntegral.PARENTS:
+        value = payload.get(name, None)
+        if value is None:
+            missing.append(name)
+            continue
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise TypeError(
+                f"{where}: {name} must be the integer serial of the parent row, not {value!r}"
+            )
+        found[name] = value
+
+    if required and len(missing) > 0:
+        raise RuntimeError(
+            f"{where}: the lookup does not name {', '.join(missing)}. A QuadSourceIntegral is "
+            "keyed on the six stored rows it is computed from (its QuadSource, its "
+            "GkSourcePolicyData and the Tk numeric and WKB rows for q and r; "
+            "prompts/datastore-integrity, prompt 09c), and build() decides whether to compute, "
+            "so it names all six"
+        )
+    return found
+
+
 class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def __init__(self):
         pass
@@ -187,6 +258,36 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # The TkNumericIntegration and TkWKBIntegration rows for q and r that the integral
+                # is computed from (prompts/datastore-integrity, prompt 09c, K5). No foreign key:
+                # a Tk row is held on its own mode's shard, q's or r's, not necessarily this one
+                # (we shard by k), and a foreign key cannot cross a shard. Serials are unique
+                # across shards, so the serial still names the row. Indexed because each is part
+                # of the lookup key, beside source_serial and data_serial
+                sqla.Column(
+                    "Tq_numeric_serial",
+                    sqla.Integer,
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "Tq_WKB_serial",
+                    sqla.Integer,
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "Tr_numeric_serial",
+                    sqla.Integer,
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "Tr_WKB_serial",
+                    sqla.Integer,
+                    index=True,
+                    nullable=False,
+                ),
                 sqla.Column(
                     "z_response_serial",
                     sqla.Integer,
@@ -265,6 +366,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
 
+        # the six stored rows the integral is computed from, by serial: its QuadSource and its
+        # GkSourcePolicyData, and the Tk numeric and WKB rows for q and r
+        # (prompts/datastore-integrity, prompt 09c). build() decides whether to compute, so it
+        # names all six; a reader holding only physical labels uses read_batch() (D1)
+        parents = _parent_serials("QuadSourceIntegral.build()", payload, required=True)
+
         tag_table = tables["QuadSourceIntegral_tags"]
 
         query = sqla.select(
@@ -311,6 +418,14 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.z_source_max_serial == z_source_max.store_id,
             table.c.atol_serial == atol.store_id,
             table.c.rtol_serial == rtol.store_id,
+            # the six parents (prompt 09c). Without them a change upstream under the same tags --
+            # a Tk or Gk tolerance, a grid, a policy -- would serve the old integral as a match
+            table.c.source_serial == parents["source_serial"],
+            table.c.data_serial == parents["data_serial"],
+            table.c.Tq_numeric_serial == parents["Tq_numeric_serial"],
+            table.c.Tq_WKB_serial == parents["Tq_WKB_serial"],
+            table.c.Tr_numeric_serial == parents["Tr_numeric_serial"],
+            table.c.Tr_WKB_serial == parents["Tr_WKB_serial"],
         )
 
         # require that the queried calculation has any specified tags
@@ -336,6 +451,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             raise e
         except SQLAlchemyError as e:
             _refuse_a_store_that_predates_the_policy_key("build", e)
+            _refuse_a_store_that_predates_the_transfer_function_key("build", e)
             raise
 
         if row_data is None:
@@ -353,6 +469,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 rtol=rtol,
                 label=label,
                 tags=tags,
+                **parents,
             )
 
         obj = QuadSourceIntegral(
@@ -391,6 +508,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "analytic_compute_time": row_data.analytic_compute_time,
                 "data_serial": row_data.data_serial,
                 "source_serial": row_data.source_serial,
+                # the filter matched them exactly, so the row records these
+                "Tq_numeric_serial": parents["Tq_numeric_serial"],
+                "Tq_WKB_serial": parents["Tq_WKB_serial"],
+                "Tr_numeric_serial": parents["Tr_numeric_serial"],
+                "Tr_WKB_serial": parents["Tr_WKB_serial"],
                 "metadata": (
                     json.loads(row_data.metadata)
                     if row_data.metadata is not None
@@ -425,6 +547,15 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         numeric_quad_data = obj.numeric_quad_data
         WKB_Levin_data = obj.WKB_Levin_data
 
+        # a row is keyed on the six stored rows it is computed from (prompt 09c); an object that
+        # does not name them all cannot be stored
+        missing = [name for name, serial in obj.parents.items() if serial is None]
+        if len(missing) > 0:
+            raise ValueError(
+                f"QuadSourceIntegral.store(): the object does not name {', '.join(missing)}, so "
+                "it cannot be stored keyed on the rows it was computed from"
+            )
+
         try:
             store_id = inserter(
                 conn,
@@ -442,6 +573,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "quad_policy_serial": obj._quad_policy.store_id,
                     "source_serial": obj._source_serial,
                     "data_serial": obj._data_serial,
+                    "Tq_numeric_serial": obj._Tq_numeric_serial,
+                    "Tq_WKB_serial": obj._Tq_WKB_serial,
+                    "Tr_numeric_serial": obj._Tr_numeric_serial,
+                    "Tr_WKB_serial": obj._Tr_WKB_serial,
                     "compute_time": obj.compute_time,
                     "analytic_compute_time": obj.analytic_compute_time,
                     "b": obj._b,
@@ -560,6 +695,13 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         tags: List[store_tag] = payload.get("tags", [])
 
+        # a reader may name any of the six parents, or none (D1: it may select by physical labels
+        # alone, and the objects it returns carry the parents that distinguish them); the ones it
+        # names filter the rows (prompts/datastore-integrity, prompt 09c)
+        parents = _parent_serials(
+            "QuadSourceIntegral.read_batch()", payload, required=False
+        )
+
         z_response_tab = tables["redshift"].alias("z_resp_tab")
         z_source_max_tab = tables["redshift"].alias("z_src_max_tab")
         q_exit_tab = tables["wavenumber_exit_time"].alias("q_exit")
@@ -580,6 +722,14 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.metadata,
                 table.c.source_serial,
                 table.c.data_serial,
+                # quad_policy_serial is selected before the four columns prompt 09c added, so that
+                # a table from before prompt 08, which lacks all five, is refused with 08's
+                # message (the user's decision, 2026-09-30)
+                table.c.quad_policy_serial,
+                table.c.Tq_numeric_serial,
+                table.c.Tq_WKB_serial,
+                table.c.Tr_numeric_serial,
+                table.c.Tr_WKB_serial,
                 table.c.b,
                 table.c.total,
                 table.c.total_abserr,
@@ -715,6 +865,23 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.z_source_max_serial == z_source_max.store_id,
             )
 
+        if "source_serial" in parents:
+            query = query.filter(table.c.source_serial == parents["source_serial"])
+        if "data_serial" in parents:
+            query = query.filter(table.c.data_serial == parents["data_serial"])
+        if "Tq_numeric_serial" in parents:
+            query = query.filter(
+                table.c.Tq_numeric_serial == parents["Tq_numeric_serial"]
+            )
+        if "Tq_WKB_serial" in parents:
+            query = query.filter(table.c.Tq_WKB_serial == parents["Tq_WKB_serial"])
+        if "Tr_numeric_serial" in parents:
+            query = query.filter(
+                table.c.Tr_numeric_serial == parents["Tr_numeric_serial"]
+            )
+        if "Tr_WKB_serial" in parents:
+            query = query.filter(table.c.Tr_WKB_serial == parents["Tr_WKB_serial"])
+
         count = 0
         for tag in tags:
             tag: store_tag
@@ -732,6 +899,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             row_data = conn.execute(query)
         except SQLAlchemyError as e:
             _refuse_a_store_that_predates_the_policy_key("read_batch", e)
+            _refuse_a_store_that_predates_the_transfer_function_key("read_batch", e)
             raise
 
         def make_object(row):
@@ -828,6 +996,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "analytic_compute_time": row.analytic_compute_time,
                     "source_serial": row.source_serial,
                     "data_serial": row.data_serial,
+                    "Tq_numeric_serial": row.Tq_numeric_serial,
+                    "Tq_WKB_serial": row.Tq_WKB_serial,
+                    "Tr_numeric_serial": row.Tr_numeric_serial,
+                    "Tr_WKB_serial": row.Tr_WKB_serial,
                     "metadata": (
                         json.loads(row.metadata) if row.metadata is not None else None
                     ),
@@ -865,8 +1037,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def inventory_records(conn, table, tables, context):
         # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
         # build() filters on -- the model, the GkSourcePolicy, the QuadSourcePolicy (prompt 08),
-        # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol -- with its
-        # tags. No validated flag and no value table. source_serial and data_serial are provenance
+        # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol, and the six
+        # stored rows it is computed from (prompts/datastore-integrity prompt 09c) -- with its
+        # tags. No validated flag and no value table. Of the six, the GkSourcePolicyData is on
+        # this shard (k's); the QuadSource is on q's, and each Tk row on its own mode's, so they
+        # resolve across shards, each to its parent's own identity, never its serial
         from Datastore.store_inventory import Parent, read_records
 
         return read_records(
@@ -885,6 +1060,16 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "z_source_max": Parent("z_source_max_serial", "redshift"),
                 "atol": Parent("atol_serial", "tolerance"),
                 "rtol": Parent("rtol_serial", "tolerance"),
+                "source": Parent("source_serial", "QuadSource", cross_shard=True),
+                "data": Parent("data_serial", "GkSourcePolicyData"),
+                "Tq_numeric": Parent(
+                    "Tq_numeric_serial", "TkNumericIntegration", cross_shard=True
+                ),
+                "Tq_WKB": Parent("Tq_WKB_serial", "TkWKBIntegration", cross_shard=True),
+                "Tr_numeric": Parent(
+                    "Tr_numeric_serial", "TkNumericIntegration", cross_shard=True
+                ),
+                "Tr_WKB": Parent("Tr_WKB_serial", "TkWKBIntegration", cross_shard=True),
             },
             tags=("QuadSourceIntegral_tags", "parent_serial"),
         )

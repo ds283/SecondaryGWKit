@@ -139,6 +139,54 @@ def add_z_labels(
     add_GkSourcePolicyData_lines(ax, GkPolicy)
 
 
+def refuse_ambiguous_QuadSourceIntegrals(integral_data):
+    """
+    This script selects its QuadSourceIntegral rows by physical labels -- k, q and r, the
+    tolerances, the two policies and the run's tags -- and not by the six stored rows each one is
+    computed from (its QuadSource, its GkSourcePolicyData, and the Tk numeric and WKB rows for q
+    and r), which it does not hold. D1 (prompts/datastore-integrity README section 6.2; prompt 09c)
+    lets it do so provided it refuses when more than one stored row matches one (k, q, r,
+    z_response), naming the parents that distinguish them, rather than using one of them or all of
+    them. A store built once holds one row there, and then the rows are returned as they are.
+    """
+    by_z_response = {}
+    for obj in integral_data:
+        by_z_response.setdefault(obj.z_response.store_id, []).append(obj)
+
+    for matches in by_z_response.values():
+        if len(matches) < 2:
+            continue
+
+        first = matches[0]
+        differing = [
+            name
+            for name in QuadSourceIntegral.PARENTS
+            if len({obj.parents[name] for obj in matches}) > 1
+        ]
+        if len({obj.z_source_max.store_id for obj in matches}) > 1:
+            differing.append("z_source_max")
+
+        def describe(obj):
+            values = [
+                f"{name}={obj.z_source_max.store_id if name == 'z_source_max' else obj.parents[name]}"
+                for name in differing
+            ]
+            return f"serial={obj.store_id}: {', '.join(values)}"
+
+        raise RuntimeError(
+            f"extract_QuadSourceIntegral_data: {len(matches)} stored QuadSourceIntegral rows match "
+            f"one set of physical labels (k={first.k.k_inv_Mpc:.5g}/Mpc [store_id={first.k.store_id}], "
+            f"q={first.q.k_inv_Mpc:.5g}/Mpc [store_id={first.q.store_id}], "
+            f"r={first.r.k_inv_Mpc:.5g}/Mpc [store_id={first.r.store_id}], "
+            f"z_response={first.z_response.z:.5g} [store_id={first.z_response.store_id}]). "
+            f"They differ in {', '.join(differing) if differing else 'none of their parents'} "
+            f"({'; '.join(describe(obj) for obj in matches)}). This script holds only physical "
+            f"labels, so it refuses to choose one."
+        )
+
+    return integral_data
+
+
 @ray.remote
 def plot_QuadSourceIntegral(
     model_label: str,
@@ -148,6 +196,10 @@ def plot_QuadSourceIntegral(
     policy: GkSourcePolicyData,
     integral_data: List[QuadSourceIntegral],
 ):
+    # D1: the rows were selected by physical labels, so more than one at a z_response is refused
+    # (prompts/datastore-integrity, prompt 09c)
+    integral_data = refuse_ambiguous_QuadSourceIntegrals(integral_data)
+
     if len(integral_data) <= 1:
         return
 
@@ -1134,6 +1186,10 @@ def run_pipeline(model_data):
         q_exit: wavenumber_exit_time
         r_exit: wavenumber_exit_time
 
+        # a QuadSourceIntegral is keyed on the six stored rows it is computed from
+        # (prompts/datastore-integrity, prompt 09c). This script holds only physical labels, so it
+        # names none of them: read_batch hands back each row's parents, and
+        # plot_QuadSourceIntegral refuses more than one row at a z_response, naming them (D1)
         Integral_ref: ObjectRef = pool.object_read_batch(
             ObjectClass="QuadSourceIntegral",
             shard_key={"k": k_exit},

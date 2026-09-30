@@ -212,6 +212,19 @@ IDENTITY = {
         "z_source_max": ("QuadSourceIntegral", 2, "z_source_max_serial", 4),
         "atol": ("QuadSourceIntegral", 2, "atol_serial", 3),
         "rtol": ("QuadSourceIntegral", 2, "rtol_serial", 3),
+        # the six stored rows QuadSourceIntegral 2 (shard 0) is computed from
+        # (prompts/datastore-integrity, prompt 09c), each varied to another real row that
+        # resolves, so that the variation changes an identity and does not make the parent
+        # unresolved: its QuadSource 1 to QuadSource 2 (on shard 1: a cross-shard parent), its
+        # GkSourcePolicyData 2 to 1 (on its own shard), and its Tk rows -- Tk numeric 1 and Tk
+        # WKB 2 for q, Tk numeric 2 and Tk WKB 3 for r -- to Tk numeric 3 and Tk WKB 1, and Tk
+        # numeric 3 and Tk WKB 2 (all on shard 0)
+        "source": ("QuadSourceIntegral", 2, "source_serial", 2),
+        "data": ("QuadSourceIntegral", 2, "data_serial", 1),
+        "Tq_numeric": ("QuadSourceIntegral", 2, "Tq_numeric_serial", 3),
+        "Tq_WKB": ("QuadSourceIntegral", 2, "Tq_WKB_serial", 1),
+        "Tr_numeric": ("QuadSourceIntegral", 2, "Tr_numeric_serial", 3),
+        "Tr_WKB": ("QuadSourceIntegral", 2, "Tr_WKB_serial", 2),
     },
     "OneLoopIntegral": {
         "model": ("OneLoopIntegral", 1, "model_serial", 2),
@@ -241,8 +254,6 @@ NON_IDENTITY = [
     ("TkWKBIntegration", 1, "T_init", 2.0),
     ("TkWKBIntegration", 1, "z_init", 300.0),
     ("QuadSourceIntegral", 1, "total", 9.0),
-    ("QuadSourceIntegral", 1, "source_serial", 2),
-    ("QuadSourceIntegral", 1, "data_serial", 3),
     ("QuadSourceIntegral", 1, "metadata", "{}"),
     ("GkSourcePolicyData", 1, "crossover_z", 30.0),
     ("GkSourcePolicyData", 1, "type", 2),
@@ -636,7 +647,12 @@ class TestTags(_Stores):
         """Two GkSource rows can differ only in their tags, so a GkSourcePolicyData's reference
         to its GkSource changes when a tag is added to the GkSource."""
         after = self._with(0, "GkSource_tags", {"parent_serial": 2, "tag_serial": 4})
-        self.assertEqual(changed(self.base, after), {"GkSource", "GkSourcePolicyData"})
+        # GkSource 2's GkSourcePolicyData is 2, which is QuadSourceIntegral 2's data, and now part
+        # of its identity (prompts/datastore-integrity, prompt 09c), so the change reaches it too
+        self.assertEqual(
+            changed(self.base, after),
+            {"GkSource", "GkSourcePolicyData", "QuadSourceIntegral"},
+        )
         gone = set(self.base["GkSourcePolicyData"]) - set(after["GkSourcePolicyData"])
         new = set(after["GkSourcePolicyData"]) - set(self.base["GkSourcePolicyData"])
         self.assertEqual((len(gone), len(new)), (1, 1))
@@ -651,10 +667,17 @@ class TestTags(_Stores):
             None, "BackgroundModel_tags", {"model_serial": 2, "tag_serial": 4}
         )
         # model 2 is the parent of TkNumericIntegration 3 only. QuadSource 2's Tr is that
-        # TkNumericIntegration, and now part of its identity, so the change reaches it too
+        # TkNumericIntegration, and now part of its identity, so the change reaches it too; and
+        # QuadSourceIntegral 3 is computed from QuadSource 2 and from that TkNumericIntegration,
+        # as its Tr numeric row, both part of its identity since prompt 09c
         self.assertEqual(
             changed(self.base, after),
-            {"BackgroundModel", "TkNumericIntegration", "QuadSource"},
+            {
+                "BackgroundModel",
+                "TkNumericIntegration",
+                "QuadSource",
+                "QuadSourceIntegral",
+            },
         )
 
     def test_oneloop_tags_come_from_its_own_table(self):
@@ -816,17 +839,35 @@ class TestOldStoresAndOrphans(_Stores):
         super().setUpClass()
         cls.three = records_of(cls.inventory(shards=3))
 
-    def check(self, name, kind, shard, expected=None, **kwargs):
+    def check(self, name, kind, shard, expected=None, cascade=None, **kwargs):
+        """
+        ``cascade`` (prompts/datastore-integrity prompt 09c): class -> how many of its records name
+        a row this case takes away, through a parent on another shard. Such a class's only
+        problems are ``unresolved-parent``, and its records are the baseline's less exactly that
+        many; nothing else about it changes.
+        """
+        cascade = cascade or {}
         inventory = self.inventory(shards=3, **kwargs)
-        problems = [p for c in inventory.classes.values() for p in c.problems]
+        problems = [
+            p
+            for cls_name, c in inventory.classes.items()
+            if cls_name not in cascade
+            for p in c.problems
+        ]
         self.assertEqual(len(problems), 1, problems)
         self.assertEqual(kinds(inventory[name].problems), [kind])
         self.assertIn(f"shard #{shard}", inventory[name].problems[0])
         after = records_of(inventory)
+        for other, lost in cascade.items():
+            self.assertEqual(
+                set(kinds(inventory[other].problems)), {"unresolved-parent"}
+            )
+            self.assertLessEqual(set(after[other]), set(self.three[other]))
+            self.assertEqual(len(after[other]), len(self.three[other]) - lost)
         if expected is None:
-            self.assertEqual(after, self.three)
+            self.assertEqual(changed(self.three, after), set(cascade))
         else:
-            self.assertEqual(changed(self.three, after), {name})
+            self.assertEqual(changed(self.three, after), {name} | set(cascade))
             self.assertEqual(after[name], expected)
         return inventory[name].problems[0]
 
@@ -885,6 +926,11 @@ class TestOldStoresAndOrphans(_Stores):
             "incomplete",
             1,
             expected=without,
+            # every QuadSourceIntegral is computed from TkWKBIntegration 3, as its Tr WKB row (1
+            # and 2) or its Tq WKB row (3), which is on another shard than 1 and 2, and is now
+            # part of each one's identity (prompts/datastore-integrity prompt 09c): so all three
+            # name a parent that cannot be resolved
+            cascade={"QuadSourceIntegral": 3},
             # SQLite cannot DROP COLUMN a column with a foreign key, as numeric_serial has since
             # prompts/datastore-integrity prompt 07, so shard 1's table is made the one a store
             # from before that prompt has: its CREATE TABLE as the 06 schema witness records it
@@ -1014,8 +1060,34 @@ class TestDuplicates(_Stores):
         )
 
     def test_across_shards(self):
-        inventory = self._duplicate(
-            "QuadSourceIntegral", 1, 9, 1, "QuadSourceIntegral_tags", "parent_serial"
+        # QuadSourceIntegral 1's GkSourcePolicyData is a same-shard parent, and part of its
+        # identity (prompts/datastore-integrity prompt 09c). So a copy of the integral on shard 1
+        # is the same record only if shard 1 holds the same chain: GkSourcePolicyData 1, its
+        # GkSource 1 with its tags and GkSource_parents rows, and the Gk rows those name, with
+        # theirs. They are copied there under their own serials
+        replicated, sharded, keys = full_rows()
+        for table, column in (
+            ("GkSourcePolicyData", "serial"),
+            ("GkSource", "serial"),
+            ("GkSource_tags", "parent_serial"),
+            ("GkSource_parents", "gk_source_serial"),
+            ("GkNumericIntegration", "serial"),
+            ("GkNumeric_tags", "integration_serial"),
+            ("GkWKBIntegration", "serial"),
+            ("GkWKB_tags", "wkb_serial"),
+        ):
+            sharded[1].setdefault(table, []).extend(
+                copy.deepcopy(row) for row in sharded[0][table] if row[column] == 1
+            )
+        row = copy.deepcopy(find_row(replicated, sharded, "QuadSourceIntegral", 1))
+        row["serial"] = 9
+        sharded[1]["QuadSourceIntegral"].append(row)
+        for tag in [
+            t for t in sharded[0]["QuadSourceIntegral_tags"] if t["parent_serial"] == 1
+        ]:
+            sharded[1]["QuadSourceIntegral_tags"].append(dict(tag, parent_serial=9))
+        inventory = self.inventory(
+            replicated=replicated, sharded=sharded, shard_keys=keys
         )
         self.assertEqual(kinds(inventory["QuadSourceIntegral"].problems), ["duplicate"])
         self.assertIn("#1/9", inventory["QuadSourceIntegral"].problems[0])

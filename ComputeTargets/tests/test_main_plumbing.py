@@ -572,20 +572,24 @@ NO_TOLERANCE_TYPES = tuple(
 # How many sites main.py is expected to have, per class. A finder that silently matched nothing
 # would otherwise pass every assertion below, which is the reason prompt 12 counted in the first
 # place and the reason these counters survive the restructuring.
+# prompts/datastore-integrity prompt 09c: the QuadSourceIntegral stage resolves, serial-only and
+# before its existence query, the six stored rows an integral is keyed on, in one helper,
+# resolve_QuadSourceIntegral_parents. That adds one site each to TkNumericIntegration,
+# TkWKBIntegration, QuadSource, GkSource and GkSourcePolicyData
 EXPECTED_SITES = {
     "wavenumber_exit_time": 1,
     # 6: the QuadSource stage now resolves the two Tk rows a QuadSource is keyed on, serial-only,
-    # before its existence query (prompts/datastore-integrity, prompt 09a)
-    "TkNumericIntegration": 6,
+    # before its existence query (prompts/datastore-integrity, prompt 09a); 7: prompt 09c
+    "TkNumericIntegration": 7,
     "GkNumericIntegration": 3,
     "QuadSourceIntegral": 2,
     "GkWKBIntegration": 3,
-    "TkWKBIntegration": 3,
-    "GkSource": 6,
-    "QuadSource": 3,
+    "TkWKBIntegration": 4,
+    "GkSource": 7,
+    "QuadSource": 4,
     "BackgroundModel": 1,
     "GkSourcePolicy": 2,
-    "GkSourcePolicyData": 4,
+    "GkSourcePolicyData": 5,
     "QuadSourcePolicy": 2,
     "IntegrationSolver": 7,
     "redshift": 1,

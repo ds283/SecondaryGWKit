@@ -70,6 +70,14 @@ TAGS = {
     "A": store_tag(store_id=1, label="A"),
     "B": store_tag(store_id=2, label="B"),
 }
+PARENTS = dict(
+    source_serial=101,
+    data_serial=201,
+    Tq_numeric_serial=31,
+    Tq_WKB_serial=41,
+    Tr_numeric_serial=32,
+    Tr_WKB_serial=42,
+)
 
 
 class _Case(unittest.TestCase):
@@ -132,6 +140,9 @@ class _Case(unittest.TestCase):
             atol=ATOL,
             rtol=RTOL,
             tags=[TAGS[n] for n in tags],
+            # the six rows the integral is computed from, which it is keyed on since prompt 09c:
+            # the ones store_row's object carries
+            **PARENTS,
         )
 
     def store_row(self, quad_policy=1, tags=(), total=1.0):
@@ -157,6 +168,10 @@ class _Case(unittest.TestCase):
                 "analytic_compute_time": None,
                 "source_serial": 101,
                 "data_serial": 201,
+                "Tq_numeric_serial": 31,
+                "Tq_WKB_serial": 41,
+                "Tr_numeric_serial": 32,
+                "Tr_WKB_serial": 42,
                 "metadata": None,
             },
             model=self.model,

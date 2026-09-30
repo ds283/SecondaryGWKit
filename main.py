@@ -3292,6 +3292,319 @@ def run_pipeline(
         z_source_integral_max_z, keep="lower-strict"
     )
 
+    def resolve_QuadSourceIntegral_parents(batch, GkSource_parents):
+        """
+        The six stored rows each QuadSourceIntegral work item of ``batch`` would be computed from,
+        by serial (prompts/datastore-integrity, prompt 09c): its QuadSource, its
+        GkSourcePolicyData, and the TkNumericIntegration and TkWKBIntegration rows for q and r.
+        ``batch`` is a list of ``(z_response, k, q, r)``; ``GkSource_parents`` is what
+        resolve_GkSource_parents returned for every ``(k, z_response)`` of it.
+
+        The result maps ``(z_response.store_id, k.store_id, q.store_id, r.store_id)`` to the six
+        serials, named as QuadSourceIntegral's build() payload names them, or to None when any of
+        the six is not in the store. Nothing can then be stored keyed on them, so the item is
+        missing without an existence query, and the stage's own lookups of its parents report the
+        absent row as they always have.
+
+        Every lookup is serial-only (``_do_not_populate``), and each upstream row is found by its
+        own parents, as the stage's full lookup of the same row is (the user's decision,
+        2026-09-30): each mode's TkNumericIntegration by its tolerances and tags; its
+        TkWKBIntegration by that numeric row (prompt 07); the QuadSource by the two numeric rows
+        (prompt 09a); the GkSource by its parent set (prompt 09b); and the GkSourcePolicyData by
+        that GkSource.
+        """
+        if len(batch) == 0:
+            return {}
+
+        # the modes, the (q, r) pairs and the (k, z_response) pairs of the batch, each once, in
+        # the order they first appear, binned by the shard key of the class looked up
+        modes = {}
+        sources = {}
+        responses = {}
+        for z_response, k, q, r in batch:
+            modes.setdefault(q.store_id, q)
+            modes.setdefault(r.store_id, r)
+            sources.setdefault(q.store_id, {}).setdefault(r.store_id, (q, r))
+            responses.setdefault(k.store_id, {}).setdefault(
+                z_response.store_id, (k, z_response)
+            )
+        modes = list(modes.values())
+
+        Tk_numeric_serial_batch = [
+            {
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k_exit,
+                "z_init": None,
+                "atol": Tk_numeric_atol,
+                "rtol": Tk_numeric_rtol,
+                "tags": [
+                    TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in modes
+        ]
+        Tk_numeric_serial_queue = RayWorkPool(
+            pool,
+            Tk_numeric_serial_batch,
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_numeric_serial_queue.run()
+        Tk_numeric_serials = {
+            k_exit.store_id: obj.store_id if obj.available else None
+            for k_exit, obj in zip(modes, Tk_numeric_serial_queue.results)
+        }
+
+        # a TkWKBIntegration is keyed on the TkNumericIntegration it starts from (prompt 07), so
+        # a mode with no numeric row has none that can be found
+        WKB_modes = [
+            k_exit
+            for k_exit in modes
+            if Tk_numeric_serials[k_exit.store_id] is not None
+        ]
+        Tk_WKB_serial_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k_exit,
+                "numeric_serial": Tk_numeric_serials[k_exit.store_id],
+                "tags": [
+                    TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in WKB_modes
+        ]
+        Tk_WKB_serial_queue = RayWorkPool(
+            pool,
+            Tk_WKB_serial_batch,
+            task_builder=lambda x: pool.object_get("TkWKBIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_WKB_serial_queue.run()
+        Tk_WKB_serials = {k_exit.store_id: None for k_exit in modes}
+        Tk_WKB_serials.update(
+            {
+                k_exit.store_id: obj.store_id if obj.available else None
+                for k_exit, obj in zip(WKB_modes, Tk_WKB_serial_queue.results)
+            }
+        )
+
+        # a QuadSource is keyed on its two TkNumericIntegrations (prompt 09a), so a pair with a
+        # mode that has none has no source that can be found
+        source_pairs = [
+            [
+                (q, r)
+                for q, r in by_r.values()
+                if Tk_numeric_serials[q.store_id] is not None
+                and Tk_numeric_serials[r.store_id] is not None
+            ]
+            for by_r in sources.values()
+        ]
+        source_pairs = [pairs for pairs in source_pairs if len(pairs) > 0]
+        QuadSource_serial_batch = [
+            {
+                "shard_key": {"q": pairs[0][0]},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "z_sample": None,
+                        "r": r,
+                        "Tq_serial": Tk_numeric_serials[q.store_id],
+                        "Tr_serial": Tk_numeric_serials[r.store_id],
+                        "tags": [
+                            TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
+                            SourceZGridSizeTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestSourceZTag,
+                            SmallestSourceZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for q, r in pairs
+                ],
+            }
+            for pairs in source_pairs
+        ]
+        QuadSource_serial_queue = RayWorkPool(
+            pool,
+            QuadSource_serial_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "QuadSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        QuadSource_serial_queue.run()
+        QuadSource_serials = {
+            (q.store_id, r.store_id): obj.store_id if obj.available else None
+            for pairs, outcomes in zip(source_pairs, QuadSource_serial_queue.results)
+            for (q, r), obj in zip(pairs, outcomes)
+        }
+
+        # the GkSource, found by the parent set the caller resolved (prompt 09b), and then its
+        # GkSourcePolicyData, which is keyed on that GkSource
+        Gk_items = [list(by_z.values()) for by_z in responses.values()]
+        GkSource_serial_batch = [
+            {
+                "shard_key": {"k": items[0][0]},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "z_response": z_response,
+                        "z_sample": None,
+                        "parents": GkSource_parents[
+                            (k_exit.store_id, z_response.store_id)
+                        ],
+                        "tags": [
+                            GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
+                            LargestSourceZTag,
+                            SmallestSourceZTag,
+                            ResponseSparsenessZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for k_exit, z_response in items
+                ],
+            }
+            for items in Gk_items
+        ]
+        GkSource_serial_queue = RayWorkPool(
+            pool,
+            GkSource_serial_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        GkSource_serial_queue.run()
+
+        policy_items = [
+            [
+                ((k_exit, z_response), GkSourceProxy(obj))
+                for (k_exit, z_response), obj in zip(items, outcomes)
+                if obj.available
+            ]
+            for items, outcomes in zip(Gk_items, GkSource_serial_queue.results)
+        ]
+        policy_items = [items for items in policy_items if len(items) > 0]
+        GkSourcePolicy_serial_batch = [
+            {
+                "shard_key": {"k": items[0][0][0]},
+                "payload": [
+                    {
+                        "source": source_proxy,
+                        "policy": GkSource_policy_1pt5,
+                        "k": k_exit,
+                    }
+                    for (k_exit, z_response), source_proxy in items
+                ],
+            }
+            for items in policy_items
+        ]
+        GkSourcePolicy_serial_queue = RayWorkPool(
+            pool,
+            GkSourcePolicy_serial_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSourcePolicyData", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        GkSourcePolicy_serial_queue.run()
+        GkSourcePolicy_serials = {
+            (k_exit.store_id, z_response.store_id): (
+                obj.store_id if obj.available else None
+            )
+            for items, outcomes in zip(
+                policy_items, GkSourcePolicy_serial_queue.results
+            )
+            for ((k_exit, z_response), _), obj in zip(items, outcomes)
+        }
+
+        parents = {}
+        for z_response, k, q, r in batch:
+            serials = {
+                "source_serial": QuadSource_serials.get((q.store_id, r.store_id)),
+                "data_serial": GkSourcePolicy_serials.get(
+                    (k.store_id, z_response.store_id)
+                ),
+                "Tq_numeric_serial": Tk_numeric_serials[q.store_id],
+                "Tq_WKB_serial": Tk_WKB_serials[q.store_id],
+                "Tr_numeric_serial": Tk_numeric_serials[r.store_id],
+                "Tr_WKB_serial": Tk_WKB_serials[r.store_id],
+            }
+            parents[(z_response.store_id, k.store_id, q.store_id, r.store_id)] = (
+                serials
+                if all(serial is not None for serial in serials.values())
+                else None
+            )
+        return parents
+
     def build_QuadSourceIntegral_batch(batch):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -3309,7 +3622,35 @@ def run_pipeline(
         # freeze k labels in a defined order, so we are guaranteed to know what order they come back in
         k_keys = list(binned_batch.keys())
 
-        # find which instances are missing from the datastore
+        # a QuadSourceIntegral is keyed on the six stored rows it is computed from
+        # (prompts/datastore-integrity, prompt 09c), so they are resolved, serial-only, for every
+        # work item before the existence query asks for the integral by them. The GkSource is
+        # found by the Gk rows it is assembled from, resolved as the GkSource stage resolves them
+        # (prompt 09b; the user's decision, 2026-09-30): the set is resolved once here, for every
+        # (k, z_response) of the batch, and the full GkSource lookup below uses it too
+        GkSource_parents = resolve_GkSource_parents(
+            [
+                (k, list(set(z_response for z_response, q, r in binned_batch[k])))
+                for k in k_keys
+            ]
+        )
+        QuadSourceIntegral_parents = resolve_QuadSourceIntegral_parents(
+            batch, GkSource_parents
+        )
+
+        # find which instances are missing from the datastore. An item whose six parents are not
+        # all in the store has no row keyed on them, so it is missing without a query
+        queried = {
+            k: [
+                (z_response, q, r)
+                for z_response, q, r in binned_batch[k]
+                if QuadSourceIntegral_parents[
+                    (z_response.store_id, k.store_id, q.store_id, r.store_id)
+                ]
+                is not None
+            ]
+            for k in k_keys
+        }
 
         query_batch = [
             {
@@ -3325,6 +3666,9 @@ def run_pipeline(
                         "z_source_max": z_source_integral_max_z,
                         "atol": quad_atol,
                         "rtol": quad_rtol,
+                        **QuadSourceIntegral_parents[
+                            (z_response.store_id, k.store_id, q.store_id, r.store_id)
+                        ],
                         "tags": [
                             GkProductionTag,
                             TkProductionTag,
@@ -3337,7 +3681,7 @@ def run_pipeline(
                             ResponseSparsenessZTag,
                         ],
                     }
-                    for z_response, q, r in binned_batch[k]
+                    for z_response, q, r in queried[k]
                 ],
             }
             for k in k_keys
@@ -3371,12 +3715,20 @@ def run_pipeline(
         # Instead we should pull just one copy, which we place in the object store.
 
         # Note we have to covert everything we will iterate over into a list, so that it has
-        # a stable iteration order
+        # a stable iteration order. An item is missing if its existence query found nothing, or if
+        # it had none because its parents are not all in the store
+        found_labels = {
+            (z_response.store_id, k.store_id, q.store_id, r.store_id)
+            for k, query_outcomes in zip(k_keys, query_queue.results)
+            for obj, (z_response, q, r) in zip(query_outcomes, queried[k])
+            if obj.available
+        }
         missing_labels = [
             (z_response, k, q, r)
-            for k, query_outcomes in zip(k_keys, query_queue.results)
-            for obj, (z_response, q, r) in zip(query_outcomes, binned_batch[k])
-            if not obj.available
+            for k in k_keys
+            for z_response, q, r in binned_batch[k]
+            if (z_response.store_id, k.store_id, q.store_id, r.store_id)
+            not in found_labels
         ]
 
         # if no work to do, bail out now
@@ -3387,18 +3739,13 @@ def run_pipeline(
             k: list(
                 set(
                     z_response
-                    for obj, (z_response, q, r) in zip(query_outcomes, binned_batch[k])
-                    if not obj.available
+                    for z_response, missing_k, q, r in missing_labels
+                    if missing_k == k
                 )
             )
-            for k, query_outcomes in zip(k_keys, query_queue.results)
+            for k in k_keys
         }
-        missing_source_a = [
-            (q, r)
-            for k, query_outcomes in zip(k_keys, query_queue.results)
-            for obj, (z_response, q, r) in zip(query_outcomes, binned_batch[k])
-            if not obj.available
-        ]
+        missing_source_a = [(q, r) for z_response, k, q, r in missing_labels]
         missing_source_b = {}
         for q, r in missing_source_a:
             if q not in missing_source_b:
@@ -3407,12 +3754,9 @@ def run_pipeline(
         missing_source = {q: list(data) for q, data in missing_source_b.items()}
         q_keys = list(missing_source.keys())
 
-        # the GkSource is found by the Gk rows it is assembled from, resolved as the GkSource
-        # stage resolves them (prompts/datastore-integrity, prompt 09b; the user's decision,
-        # 2026-09-30)
-        GkSource_parents = resolve_GkSource_parents(
-            [(k, missing_Gk[k]) for k in k_keys]
-        )
+        # the GkSource is found by the Gk rows it is assembled from (prompts/datastore-integrity,
+        # prompt 09b; the user's decision, 2026-09-30): the set resolved above, for every item of
+        # the batch, before the existence query
 
         GkSource_lookup_batch = [
             {
@@ -3719,6 +4063,17 @@ def run_pipeline(
                 Bessel_2pt5_proxy,
             )
 
+            # the object to be computed is keyed on the six parents its existence query named
+            # (prompt 09c); compute() asserts that the rows in compute_payload are these. An item
+            # with a parent missing has already stopped the stage, in the call above
+            parents = QuadSourceIntegral_parents[
+                (z_response.store_id, k.store_id, q.store_id, r.store_id)
+            ]
+            if parents is None:
+                raise RuntimeError(
+                    f"QuadSourceIntegral builder: the parents of the work item k={k.k.k_inv_Mpc:.5g}/Mpc, q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g} were not all found before its existence query, but were found after it"
+                )
+
             work_refs.append(
                 {
                     "ref": pool.object_get(
@@ -3744,6 +4099,7 @@ def run_pipeline(
                             SmallestSourceZTag,
                             ResponseSparsenessZTag,
                         ],
+                        **parents,
                     ),
                     "compute_payload": compute_payload,
                 }

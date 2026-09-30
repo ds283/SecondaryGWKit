@@ -598,6 +598,9 @@ EXPECTED_COVERAGE = frozenset(
         "GkWKBIntegration.py:sqla_GkWKBValue_factory.read_batch.row",
         "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.build.row_data",
         "OneLoopIntegral.py:sqla_OneLoopIntegral_factory.read_batch.row_data",
+        # prompts/datastore-integrity prompt 09c: QuadSourceValue's labels-only model read
+        # reads its candidate QuadSources' serial, Tq_serial and Tr_serial, to refuse more than one
+        "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.candidate",
         "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_model.row_data",
         "QuadSource.py:sqla_QuadSourceValue_factory._build_impl_serial.row_data",
         "QuadSource.py:sqla_QuadSource_factory.build.row",

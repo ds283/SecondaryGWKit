@@ -199,8 +199,11 @@ _DIGEST = re.compile(r"[0-9a-f]{64}")
 # their key. Format 3: prompt 08 put the QuadSourcePolicy in the QuadSourceIntegral rows' key.
 # Format 4: prompt 09a put the two TkNumericIntegrations, Tq and Tr, in the QuadSource rows' key.
 # Format 5: prompt 09b put the set of Gk numeric and WKB rows each GkSource is assembled from in its
-# key, resolved through GkSource_parents to those rows' own identities
-FINGERPRINT_FORMAT = 5
+# key, resolved through GkSource_parents to those rows' own identities. Format 6: prompt 09c put the
+# six stored rows each QuadSourceIntegral is computed from -- its QuadSource, its
+# GkSourcePolicyData, and the Tk numeric and WKB rows for q and r -- in its key, each resolved to its
+# own identity, across shards where it is held on another
+FINGERPRINT_FORMAT = 6
 TAKEN_KEYS = ("when", "git_head", "git_dirty", "run_id")
 
 # both separators, on every platform, as `Datastore/shard_paths.py` treats a shard record
