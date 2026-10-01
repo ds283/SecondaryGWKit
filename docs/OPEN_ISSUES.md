@@ -764,6 +764,9 @@ Prompt 09b closed `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on 2026-09
 campaign's board's §4, and its row is deleted; it opened two issues on this board the same day.
 Prompt 09c closed `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on
 2026-09-30, on this campaign's board's §4, and its row is deleted; it opened none.
+Prompt 09d closed `[09b-inventory-report-renders-every-member-of-a-parent-set]` on 2026-10-01, on
+this campaign's board's §4, and its row is deleted; it opened one issue on this board the same day,
+which the user assigned to prompt 10.
 
 | Issue | Board | Hook |
 |---|---|---|
