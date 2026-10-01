@@ -1,0 +1,55 @@
+=== extract_Gk_data start 2026-10-02 00:01:05
+=== extract_Gk_data exit=1 wall=28s end 2026-10-02 00:01:33
+--- fingerprint after extract_Gk_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== extract_GkWKB_data start 2026-10-02 00:01:38
+=== extract_GkWKB_data exit=1 wall=67s end 2026-10-02 00:02:45
+--- fingerprint after extract_GkWKB_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== extract_GkSource_data start 2026-10-02 00:02:52
+=== extract_GkSource_data exit=1 wall=36s end 2026-10-02 00:03:28
+--- fingerprint after extract_GkSource_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== extract_TkWKB_data start 2026-10-02 00:03:32
+=== extract_TkWKB_data exit=1 wall=15s end 2026-10-02 00:03:47
+--- fingerprint after extract_TkWKB_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== extract_tensor_source_data start 2026-10-02 00:03:51
+=== extract_tensor_source_data exit=1 wall=18s end 2026-10-02 00:04:09
+--- fingerprint after extract_tensor_source_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== extract_QuadSourceIntegral_data start 2026-10-02 00:04:13
+=== extract_QuadSourceIntegral_data exit=1 wall=22s end 2026-10-02 00:04:35
+--- fingerprint after extract_QuadSourceIntegral_data
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+--- replication_in_flight rows: 0
+--- ray processes left: 0
+--- selection line: ** reading run "default", the only run in this datastore (no --run-label given)
+=== all done 2026-10-02 00:04:39

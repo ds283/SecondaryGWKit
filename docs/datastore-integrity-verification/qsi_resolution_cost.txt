@@ -1,0 +1,7 @@
+store var/datastores/datastore-integrity-10-reference.sqlite
+  datastore-integrity-10-reference-20261001T204320: banner 20:46:09.650000; first compute began 20:46:26.629461; banner to first compute 17.0 s; 864 row(s) stored by this launch
+store var/datastores/datastore-integrity-10-resumed.sqlite
+  datastore-integrity-10-resumed-a-20261001T210301: the stage never started
+  datastore-integrity-10-resumed-b-20261001T230813: banner 23:09:22.690000; first compute began 23:09:39.596859; banner to first compute 16.9 s; 485 row(s) stored by this launch
+  datastore-integrity-10-resumed-c-20261001T234503: banner 23:45:31.900000; first compute began 23:45:48.242397; banner to first compute 16.3 s; 379 row(s) stored by this launch
+  datastore-integrity-10-resumed-d-20261001T235455: no progress line; whole stage 6.78 s; 0 row(s) stored by this launch

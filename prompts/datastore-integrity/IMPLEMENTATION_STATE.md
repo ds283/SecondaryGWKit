@@ -1,10 +1,8 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-10-01 · **Status: 11 of 12 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07, 08, 09 as 09a–09c, and 09d), all reviewed; 09a–09c landed 2026-09-30, completing 09,
-and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed and was
-reviewed 2026-10-01. Next: 10, written 2026-10-01, its five decisions taken by the user the same
-day, and ready to dispatch.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-10-02 · **Status: 12 of 12 prompts landed. The campaign's work is done; it
+is closed by the user after the orchestrator's review of 10.** (01, 02, 03, 04, 04b, 05 as 05a–05c,
+06, 07, 08, 09 as 09a–09c, 09d and 10; all but 10 reviewed.) The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -24,7 +22,12 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **09d landed 2026-10-01** (the inventory report refers to a derived row, and to a `GkSource`'s parent set, by a label and prints each once, in its own section; closing `[09b-inventory-report-renders-every-member-of-a-parent-set]` on this board's §4 and opening one issue, §3.3); reviewed the same day, with three small remnants fixed in a follow-up commit. **Next: 10.**
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **09d landed 2026-10-01** (the inventory report refers to a derived row, and to a `GkSource`'s parent set, by a label and prints each once, in its own section; closing `[09b-inventory-report-renders-every-member-of-a-parent-set]` on this board's §4 and opening one issue, §3.3); reviewed the same day, with three small remnants fixed in a follow-up commit. **10 landed 2026-10-02** (a scoped build
+into a throwaway store, interrupted twice and resumed, then read back by everything that reads a
+store; closing `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` on this
+board's §4 and opening four issues, §3.3, one of them assigned to `handover`). After the user's
+pruned resume the resumed store's fingerprint equals the reference's; the record is
+[`docs/datastore-integrity-verification.md`](../../docs/datastore-integrity-verification.md).
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -89,7 +92,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
 | 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ✅ 2026-10-01 | *"Refer to derived parents by label in the inventory report"* | [`logs/09d-…`](logs/09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) |
-| 10 | [Build a throwaway store end to end](10-build-a-throwaway-store-end-to-end.md) | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-10.md`](orchestrator/prompt-10.md); D10-1 to D10-5 decided 2026-10-01, as recommended | ⬜ after 09d | — | — |
+| 10 | [Build a throwaway store end to end](10-build-a-throwaway-store-end-to-end.md) | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-10.md`](orchestrator/prompt-10.md); D10-1 to D10-5 decided 2026-10-01, as recommended | ✅ 2026-10-02 | *"Build a throwaway store end to end, interrupt it and read it back"* | [`logs/10-…`](logs/10-build-a-throwaway-store-end-to-end.md) |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
@@ -121,6 +124,22 @@ states five decisions with recommendations, and the user took all five.
   `var/`, test prompt 02's three refusals and its repair on real shards.
 - **D10-5, the stores afterwards.** Both stay in `var/datastores/` with their sidecars for the
   review. Retiring them is the user's, afterwards.
+
+**Decided during 10 (2026-10-01 and 2026-10-02, the user, on the agent's stops).** Log 10 records
+each, with its evidence.
+- **The interrupted launches' states.** A `SIGTERM` in `ray.wait` reaches the driver as
+  `SystemExit(1)`, so `resumed-a` is recorded `failed`/1; its evidence of a deliberate interruption
+  (the interrupter's log, Ray's `SIGTERM received` banner, no traceback, the part-stored stage)
+  stands in place of §2.1's `killed`. `resumed-b` was aborted 3 s after its `SIGTERM` and wrote no
+  state; the agent ended it `killed`, by `Run.finish`, as a person's act on the user's
+  authorisation, and killed its orphaned `gcs_server` with `SIGKILL`.
+- **The `GkSource` duplicate is `--no-prune-unvalidated`'s.** The user: "The bug here is the
+  `--no-prune-unvaiidated`. Pruning is there precisely to deal with this situation." So a fifth
+  launch, `resumed-d`, resumed with `main.py`'s default pruning, and §2–§3 ran on the store it
+  left. The issue is opened against A3 v2's launch, owned by `handover` (§3.3).
+- **The readers' exit 1.** Every `extract_*.py` script reads LambdaCDM in full and exits 1 on
+  `QCD_Cosmology`, which the store does not hold. That result, with each script's unmoved
+  fingerprint, stands in place of "each must exit 0", and the scripts are opened as a defect (§3.3).
 
 **Decided for 07 (2026-09-29, the user, while its note was written).** Prompt 07 was written before
 05c and 06 landed, and as written it would hit its own §5 stop or silently change a reader in four
@@ -1691,9 +1710,9 @@ what 01–04 find; what waits is their method.
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ✅ four new columns, `Tq_numeric_serial`, `Tq_WKB_serial`, `Tr_numeric_serial`, `Tr_WKB_serial` (NOT NULL, indexed, no foreign key: the Tk rows are on q's and r's shards); all six parents in `build()`'s filter (by serial, all required), written by `store()` (which refuses an object missing one), handed back on every object by `read_batch()`, which filters on any it is given; `compute()` asserts that the six rows it is handed are the six it is keyed on, that the Tq and Tr numeric rows are its source's `Tq_serial` and `Tr_serial`, and that each WKB row starts from its numeric row, raising naming both; `main.py`'s stage resolves every work item's six parents serial-only, in `resolve_QuadSourceIntegral_parents`, before its existence query; the extraction script refuses two rows at one `(k, q, r, z_response)`, naming their distinguishing parents; a pre-09c table refused with 07's form of message, a pre-08 one still with 08's |
 | K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ✅ the recommended shape. `GkSource_parents` (own serial; `gk_source_serial`, `z_source_serial`, nullable `numeric_serial` and `wkb_serial`, each an indexed foreign key, all on `k`'s shard), one row per `z_source`, written by `store()` in the `GkSource`'s transaction from the set `assemble_GkSource_values` reports it assembled; `parents_digest` (`String(64)`, NOT NULL, indexed) computed from those rows, in `build()`'s filter; an empty set refused. The Gk value reads attach their parent (`_parent_serial`) and have a serial-only form (`parents_only`); they and `TkWKBValue`'s now refuse a pre-07 store. `compute()` asserts the values it is handed are read from the set it is keyed on. `main.py`: one helper, `resolve_GkSource_parents`, resolves the set serial-only; all six `GkSource` lookups are keyed on it, the GkSource stage's before its existence query. A `labels_only` reader mode (four readers, and `GkSourceValue._build_impl_model`) refuses two matches, naming their digests and where their sets differ. A pre-09b table is refused (D4). Witness 09b (9 hunks, 246 lines, `GkSource` and `GkSource_parents`); fingerprint format 5, `GkSource` and `GkSourcePolicyData` moved |
 | K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ✅ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b: `ParentSet`, a key field whose value is the digest of the sorted members of a member table, each member resolved to its parents' reference digests (never `parents_digest`, never a serial); `GkSource` declares its set through `GkSource_parents`, read once per shard; an unresolvable member is `unresolved-parent`, a member row with no owner `orphan-member`, an owner with none `empty-parent-set`, an absent member table `absent-table`; the members are kept in `ClassInventory.members` and `tools/inventory_report.py` renders them by physical labels. **09c: complete.** `QuadSourceIntegral` declares its six parents: `data` same-shard, and `source` and the four Tk rows with 09a's cross-shard form, each resolving to its row's own identity; a `Tq` parent varied to another shard's row is resolved and is identity (a test beside the fixture, since the fixture's own `Tq` rows are all on their integral's shard). |
-| V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ✍️ written 2026-10-01 |
-| V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ✍️ written 2026-10-01 |
-| V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ✍️ written 2026-10-01 |
+| V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ✅ `reference` straight through; `resumed-a` killed in the `GkSource` stage, `resumed-b` in the `QuadSourceIntegral` stage, `resumed-c` and the user's pruned `resumed-d` to `done`. No stage finished before an interruption computed anything afterwards; `compare_fingerprints(reference, resumed)` empty at format 6. Under `--no-prune-unvalidated` the resume duplicated 45 `GkSource` rows (§3.3), which `resumed-d`'s pruning removed. Neither interruption recorded `killed` (§3.3) |
+| V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ✅ census `no divergence`, `integrity_check` `ok` and `foreign_key_check` empty on all ten files, no inventory problem, on both stores; `--inventory` and `--inventory-verbose` clean on both, every label defined once, no digest, the reports identical with timestamps masked; the four fault copies refused or repaired as prompt 02 designed. Every `extract_*.py` reads LambdaCDM in full and exits 1 on `QCD_Cosmology` (accepted by the user; §3.3); no reader moved the fingerprint |
+| V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ✅ the checklist in `docs/datastore-integrity-verification.md` §2.6, each item pointing to where 10 exercised it, with what 10 could not exercise and every open issue's meaning for A3 v2 |
 
 ---
 
@@ -1756,23 +1775,97 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
-- **[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]** *(opened 2026-10-01 by
-  prompt 09d)*
-  - **The defect.** Since 09d a record line of a class that another class names ends, beyond its
-    fields, in its own label `  #<n>`, which is different for every record. So
-    `test_inventory_report.test_verbose_renders_every_distinct_record_as_a_distinct_line`, which
-    compares whole lines (`len(set(section.records)) == len(set(cls.records))`), can no longer fail
-    for those seven classes whatever fields the line shows. `test_verbose_shows_every_key_field_of_every_class`
-    still checks that every key field is printed, so a dropped field is still caught, but the test
-    that states the property is vacuous for them.
-  - **Impact.** None today: 09d's `test_inventory_report_labels.py` pins the property with the label
-    taken off (`TestDistinctStaysDistinct`), and mutation (i) of log 09d shows it failing. A later
-    change to the report that relies on the old test alone would not be checked.
-  - **Next step.** Compare lines with the own label stripped (`fields_of` already stops at the first
-    double space), in whichever prompt next edits `test_inventory_report.py`. Prompt 09d could not:
-    README §5 rule 7 keeps existing tests as they are.
-  - **Assigned (2026-10-01):** to prompt **10**, by the user's decision on the review of 09d. README
-    §2's row for 10 names the test and the reason, as rule 7 requires, so that prompt may amend it.
+- **[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]** *(opened 2026-10-02 by prompt 10)*
+  - **The defect.** A3 v2's launch, `docs/handover/quadsource_atol_sweep.py --build` (`run_build`),
+    passes `--no-prune-unvalidated` to `main.py`, and so does `--build --resume`, which runs the same
+    `sys.argv`. Prompt 10's §1.3 copied the flag from there. Pruning at startup is the designed
+    recovery for a row stored but not yet validated when a build is interrupted (the user,
+    2026-10-01: "The bug here is the `--no-prune-unvaiidated`. Pruning is there precisely to deal
+    with this situation."). Under the flag such a row stays; the class's existence query serves
+    only validated rows, so the resume computes it again and stores a second row beside it.
+  - **Measured** (log 10; `docs/datastore-integrity-verification.md` §2.1.4). A `SIGTERM` in the
+    `GkSource` stage left 161 rows, 45 of them with all their values and `validated = 0`. The
+    resume under the flag computed 175 (130 missing + those 45) and stored them, so the store
+    held 336 `GkSource` rows, and the inventory reported `duplicate: GkSource: 45 key-and-tag
+    set(s) are held by more than one record (90 records, all kept)`. Each pair: the same key,
+    `parents_digest` and `z_samples`, one unvalidated and one validated. The fingerprint differed
+    from the uninterrupted reference's in `GkSource` alone. One more launch with `main.py`'s default
+    pruning removed the 45 (and their values, tags and parent-set members), computed nothing, and
+    left a store whose fingerprint equals the reference's.
+  - **Which classes can do it.** From the code, not measured: all seven classes with
+    `validate_on_startup`, which are the ones with a `validated` flag that a store can leave unset —
+    `BackgroundModel`, `TkNumericIntegration`, `TkWKBIntegration`, `GkNumericIntegration`,
+    `GkWKBIntegration`, `QuadSource` and `GkSource`. Each one's `build()` filters on
+    `validated == True`, and `BackgroundModel`'s replica store says it in a comment: "a store
+    interrupted before its validation leaves one on every shard, which a later store legitimately
+    writes beside". `QuadSourceIntegral`, `GkSourcePolicyData` and `OneLoopIntegral` have no
+    validation step. Only `GkSource` was caught between store and validate here.
+  - **Impact.** **It blocks A3 v2's resume as planned.** An interrupted A3 v2 build resumed with
+    `--build --resume` gains a duplicate for every row stored but not validated at the
+    interruption: an inventory problem, a fingerprint that differs from an uninterrupted build's,
+    and, for a reader that refuses more than one match, a failure.
+  - **Next step.** Drop `--no-prune-unvalidated` from `run_build`'s `sys.argv`, at least for
+    `--resume`, or say why it is needed and prune unvalidated rows another way. That is the sweep
+    script's, which this campaign does not edit (README §5 rule 12).
+  - **Assigned (2026-10-02):** to the **`handover`** campaign, which owns A3 v2's launch and
+    `quadsource_atol_sweep.py`, by the user's decision that the flag is the defect. Its board is not
+    edited here; the index row is under §1.1.
+- **[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]** *(opened 2026-10-02
+  by prompt 10)*
+  - **The defect.** `docs/gktk-remedial/scoped_pipeline_run.py`'s `terminal_state` docstring says
+    that once Ray is up a `SIGTERM` reaches the driver as `SystemExit(15)`, recorded `killed`. That
+    is false while the driver waits in `ray.wait`, which is where `main.py` spends a stage. There
+    the handler's `SystemExit(15)` arrives as `SystemExit(1)`, so the run is recorded `failed`/1
+    (probe: `docs/datastore-integrity-verification/sigterm_in_ray_wait_probe.py` catches
+    `builtins.SystemExit: code=1`; that Ray's Cython signal check does the conversion is inferred
+    from `_raylet.so`'s strings, the code is measured). And Ray's C++ handler, which prints `*** SIGTERM
+    received ***` and a stack, aborts the process about 3 s later (measured; absl's default alarm is
+    the inferred mechanism): a driver whose cleanup takes
+    longer dies with status 134 (SIGABRT) before `run.finish` runs, so **no terminal state is
+    written** and the run reads `stale` (probe: `sigterm_alarm_probe.py`, alive at 2.5 s, gone before
+    3.0 s). The aborted driver's `gcs_server` is left running with parent 1, hung after its own
+    `SIGTERM`, until it is killed with `SIGKILL`.
+  - **Measured** (log 10). `resumed-a`: `SIGTERM` at 21:05:25, cleanup done in 2.2 s, recorded
+    `failed`, 1. `resumed-b`: `SIGTERM` at 23:15:29.145 with 379 computes in flight, the driver
+    failed at 23:15:32.164 in the GCS log, nothing recorded; its `gcs_server` (pid 6426) survived.
+  - **Impact.** A deliberate interruption is never recorded as one. For A3 v2, whose `--build` uses
+    the same `terminal_state` and the same registration, an interrupted launch is indistinguishable
+    in the registry from a real failure, or reads as a crashed run, and may leave a `gcs_server`
+    behind. Nothing in the store is affected: both interrupted stores closed with no journal and no
+    in-flight record.
+  - **Next step.** Record the signal in the driver's own handler before Ray replaces it (or
+    re-install one after `ray.init`), so that `terminal_state` can tell a received `SIGTERM` from a
+    `SystemExit(1)`, and write the terminal state before Ray's abort; then shut Ray down. The driver
+    belongs to `GkTk-remedial`'s verification, and prompt 10 changes no driver.
+- **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10)*
+  - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
+    LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
+    locate suitable background model instance in the datastore` for a model whose background the
+    store does not hold.
+  - **Measured** (log 10). On the LambdaCDM-only resumed store each read LambdaCDM in full, wrote
+    its `LambdaCDM/` outputs, and exited 1 on `QCD_Cosmology`, in 15–67 s; none moved the
+    fingerprint.
+  - **Impact.** A3 v2's store is LambdaCDM-only, so every extraction from it exits 1 after a
+    complete LambdaCDM read. The outputs are written, but a caller that checks the exit status sees
+    a failure, and a failure in LambdaCDM's read looks the same from outside. The user accepted the
+    exit 1 for prompt 10 (2026-10-02).
+  - **Next step.** Give the scripts a model filter, as `scoped_pipeline_run.py --models` does for
+    `main.py`, or skip a model the store does not hold, saying so. The scripts are not this
+    prompt's to change.
+- **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
+  2026-10-02 by prompt 10)*
+  - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
+    to compare record lines with their own label taken off. It compares lines within a tag set, and
+    `build_full_store` holds one record per tag set of `QuadSource`, `GkNumericIntegration` and
+    `GkWKBIntegration`, so for those three it cannot fail whatever the line shows.
+  - **Measured** (log 10, the deliberate-breakage record). Under a mutation that prints a labelled
+    class's record with neither fields nor value count, the amended test fails for
+    `TkNumericIntegration`, `TkWKBIntegration`, `GkSource` and `GkSourcePolicyData` (4 sub-tests),
+    and not for the three.
+  - **Impact.** None today: 09d's `TestDistinctStaysDistinct` builds pairs of each that differ in
+    one field, and `test_verbose_shows_every_key_field_of_every_class` still sees a dropped field.
+  - **Next step.** Give the fixture a second record of each in one tag set, or compare across tag
+    sets; either edits fixtures or tests that prompt 10 may not.
 - **[09b-gksource-members-are-not-checked-against-their-rows]** *(opened 2026-09-30 by prompt
   09b)*
   - **The defect.** `sqla_GkSource_factory.store()` writes the `GkSource_parents` rows it is given
@@ -1867,6 +1960,29 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]** *(opened 2026-10-01 by
+  prompt 09d)*
+  - **The defect.** Since 09d a record line of a class that another class names ends, beyond its
+    fields, in its own label `  #<n>`, which is different for every record. So
+    `test_inventory_report.test_verbose_renders_every_distinct_record_as_a_distinct_line`, which
+    compares whole lines (`len(set(section.records)) == len(set(cls.records))`), can no longer fail
+    for those seven classes whatever fields the line shows. `test_verbose_shows_every_key_field_of_every_class`
+    still checks that every key field is printed, so a dropped field is still caught, but the test
+    that states the property is vacuous for them.
+  - **Impact.** None today: 09d's `test_inventory_report_labels.py` pins the property with the label
+    taken off (`TestDistinctStaysDistinct`), and mutation (i) of log 09d shows it failing. A later
+    change to the report that relies on the old test alone would not be checked.
+  - **Next step.** Compare lines with the own label stripped (`fields_of` already stops at the first
+    double space), in whichever prompt next edits `test_inventory_report.py`. Prompt 09d could not:
+    README §5 rule 7 keeps existing tests as they are.
+  - **Assigned (2026-10-01):** to prompt **10**, by the user's decision on the review of 09d. README
+    §2's row for 10 names the test and the reason, as rule 7 requires, so that prompt may amend it.
+  - **Closed 2026-10-02**, by prompt 10, in the commit *"Build a throwaway store end to end,
+    interrupt it and read it back"*. The test now compares `(tag set, line)` pairs with the record's
+    own label removed by 09d's `OWN_LABEL` (one import, nothing else in the test changed). A mutation
+    printing a labelled class's record without its fields or value count fails it for four classes
+    and passes the parent commit's test (log 10). On this fixture it cannot fail for three classes,
+    which is `[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]` (§3.3).
 - **[09b-inventory-report-renders-every-member-of-a-parent-set]** *(opened 2026-09-30 by prompt
   09b)*
   - **The defect.** By the user's decision on the sketch, `tools/inventory_report.py` renders a
@@ -2246,3 +2362,22 @@ No witness, golden or read-back-guard pin moved: the prompt changes one display 
 are the current ones. `test_main_plumbing.EXPECTED_SITES` is unchanged. `black --check` is clean on
 every Python file this prompt touched. `docs/OPEN_ISSUES.md` stays at 99 rows: one deleted, one
 opened.
+
+### 5.16 After prompt 10 (2026-10-02)
+
+Measured on the staged tree of prompt 10's commit, with README §7's command, serially, at a load
+average of 10–18.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 665 OK (the known wall-clock flake did not fire) |
+| CosmologyModels | 39 OK |
+| Datastore | 551 OK, unchanged in count: `test_verbose_renders_every_distinct_record_as_a_distinct_line` amended, nothing added |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+No production code, witness, golden or read-back-guard pin moved; `test_main_plumbing.EXPECTED_SITES`
+is unchanged, and `substitute_main_py()` matches all five literals once. `black --check` is clean
+on every Python file this prompt adds or changes. `docs/OPEN_ISSUES.md` goes from 99 to 102 rows:
+one deleted, four opened.

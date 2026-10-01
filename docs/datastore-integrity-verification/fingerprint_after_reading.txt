@@ -1,0 +1,10 @@
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-reference.sqlite
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+format:   6
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T21:01:40+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-resumed.sqlite
+digest:   10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+format:   6
+problems: none
+recorded: matches the fingerprint taken 2026-10-01T23:58:21+01:00 by a person, at d144d04f217dbf0ada1d7fc449383f7d4d6e8370 (dirty)

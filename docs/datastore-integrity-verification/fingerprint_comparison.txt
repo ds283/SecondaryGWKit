@@ -1,0 +1,35 @@
+reference: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-reference.sqlite
+  format 6, digest 10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+  problems none
+  against its sidecar: 0 difference(s), it matches
+resumed: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-resumed.sqlite
+  format 6, digest 10b8725f36bd2aa14f74cc8912efe3dd80961c4fc015fe31729b52aad4f61a1f
+  problems none
+  against its sidecar: 0 difference(s), it matches
+
+compare_fingerprints(reference, resumed): 0 difference(s)
+
+  class                 reference    resumed  digests
+  version                       1          1  equal
+  store_tag                    10         10  equal
+  redshift                   1159       1159  equal
+  wavenumber                    3          3  equal
+  tolerance                     6          6  equal
+  LambdaCDM                     1          1  equal
+  QCD_Cosmology                 1          1  equal
+  IntegrationSolver             7          7  equal
+  GkSourcePolicy                2          2  equal
+  QuadSourcePolicy              2          2  equal
+  wavenumber_exit_time          3          3  equal
+  BackgroundModel               1          1  equal
+  TkNumericIntegration          3          3  equal
+  TkWKBIntegration              3          3  equal
+  GkNumericIntegration       1368       1368  equal
+  GkWKBIntegration           3477       3477  equal
+  GkSource                    291        291  equal
+  GkSourcePolicyData          291        291  equal
+  QuadSource                    6          6  equal
+  QuadSourceIntegral          864        864  equal
+  OneLoopIntegral               0          0  equal
+
+verdict: equal

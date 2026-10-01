@@ -29,6 +29,7 @@ from Datastore.tests.inventory_report_parsing import (
     fields_of,
     sections,
 )
+from Datastore.tests.test_inventory_report_labels import OWN_LABEL
 from Datastore.tests.real_store_fixtures import (
     build_full_store,
     full_rows,
@@ -159,7 +160,9 @@ class TestTheDisplaySaysWhatTheInventoryHolds(_Stores):
 
     def test_verbose_renders_every_distinct_record_as_a_distinct_line(self):
         # the test that the display drops no key field: a display that left one out would make
-        # two records that differ only in it collide. Lines are compared within their tag set
+        # two records that differ only in it collide. Lines are compared within their tag set,
+        # with a record's own label `  #<n>` taken off: since prompt 09d it differs for every
+        # record of a labelled class, so whole lines would differ whatever the fields
         found = sections(self.verbose)
         for name in INVENTORY_CLASSES:
             cls = self.inventory[name]
@@ -167,7 +170,10 @@ class TestTheDisplaySaysWhatTheInventoryHolds(_Stores):
                 section = found[name]
                 self.assertEqual(len(section.records), cls.count)
                 self.assertEqual(section.more, 0)
-                self.assertEqual(len(set(section.records)), len(set(cls.records)))
+                unlabelled = {
+                    (group, OWN_LABEL.sub("", line)) for group, line in section.records
+                }
+                self.assertEqual(len(unlabelled), len(set(cls.records)))
 
     def test_verbose_shows_every_key_field_of_every_class(self):
         found = sections(self.verbose)

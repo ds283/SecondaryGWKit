@@ -1,0 +1,37 @@
+# the pruning resumed-d printed at startup (from var/runs/datastore-integrity-10-resumed-d.launch.log, ANSI codes stripped; Ray's dedup collapses shards 0 and 1)
+14:(Datastore pid=48222) !! INTEGRITY WARNING (2026-10-01T23:55:01): datastore "shard0003-store" (physical file /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-resumed-shard0003.sqlite)
+15:(Datastore pid=48222) >> GkSource objects
+16:(Datastore pid=48222)      The following unvalidated GkSource objects were detected in the datastore:
+17:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez4.9532e+10-2026-10-01T21:05:14" (store_id=15) for k=1e+05/Mpc and z_response=4.9532e+10
+18:(Datastore pid=48222)           contains 319 z-sample values | expected=319
+19:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez3.124e+10-2026-10-01T21:05:15" (store_id=34) for k=1e+05/Mpc and z_response=3.124e+10
+20:(Datastore pid=48222)           contains 343 z-sample values | expected=343
+21:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez3.6497e+07-2026-10-01T21:05:20" (store_id=42) for k=1e+05/Mpc and z_response=3.6497e+07
+22:(Datastore pid=48222)           contains 643 z-sample values | expected=643
+23:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez2.768e+07-2026-10-01T21:05:20" (store_id=43) for k=1e+05/Mpc and z_response=2.768e+07
+24:(Datastore pid=48222)           contains 655 z-sample values | expected=655
+25:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez2.0992e+07-2026-10-01T21:05:20" (store_id=44) for k=1e+05/Mpc and z_response=2.0992e+07
+26:(Datastore pid=48222)           contains 667 z-sample values | expected=667
+27:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez3.3348e+08-2026-10-01T21:05:20" (store_id=45) for k=1e+05/Mpc and z_response=3.3348e+08
+28:(Datastore pid=48222)           contains 547 z-sample values | expected=547
+29:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez2.5291e+08-2026-10-01T21:05:20" (store_id=46) for k=1e+05/Mpc and z_response=2.5291e+08
+30:(Datastore pid=48222)           contains 559 z-sample values | expected=559
+31:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez4.8124e+07-2026-10-01T21:05:20" (store_id=48) for k=1e+05/Mpc and z_response=4.8124e+07
+32:(Datastore pid=48222)           contains 631 z-sample values | expected=631
+33:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez1.4547e+08-2026-10-01T21:05:20" (store_id=49) for k=1e+05/Mpc and z_response=1.4547e+08
+34:(Datastore pid=48222)           contains 583 z-sample values | expected=583
+35:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez1.5921e+07-2026-10-01T21:05:20" (store_id=50) for k=1e+05/Mpc and z_response=1.5921e+07
+36:(Datastore pid=48222)           contains 679 z-sample values | expected=679
+37:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez6.9448e+06-2026-10-01T21:05:20" (store_id=51) for k=1e+05/Mpc and z_response=6.9448e+06
+38:(Datastore pid=48222)           contains 715 z-sample values | expected=715
+39:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez1.008e+09-2026-10-01T21:05:20" (store_id=52) for k=1e+05/Mpc and z_response=1.008e+09
+40:(Datastore pid=48222)           contains 499 z-sample values | expected=499
+41:(Datastore pid=48222)        -- "datastore-integrity-10-GkSource-k1e+05-responsez7.6448e+08-2026-10-01T21:05:20" (store_id=53) for k=1e+05/Mpc and z_response=7.6448e+08
+42:(Datastore pid=48222)           contains 511 z-sample values | expected=511
+43:(Datastore pid=48222)      ** Note: these values have been pruned from the datastore.
+137:(Datastore pid=48221) !! INTEGRITY WARNING (2026-10-01T23:55:03): datastore "shard0001-store" (physical file /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/datastore-integrity-10-resumed-shard0001.sqlite) 
+138:(Datastore pid=48221) >> GkSource objects [repeated 2x across cluster]
+139:(Datastore pid=48221)      The following unvalidated GkSource objects were detected in the datastore: [repeated 2x across cluster]
+140:(Datastore pid=48221)        -- "datastore-integrity-10-GkSource-k1e+06-responsez4.8124e+07-2026-10-01T21:05:20" (store_id=564) for k=1e+06/Mpc and z_response=4.8124e+07 [repeated 32x across cluster]
+141:(Datastore pid=48221)           contains 631 z-sample values | expected=631 [repeated 32x across cluster]
+142:(Datastore pid=48221)      ** Note: these values have been pruned from the datastore. [repeated 2x across cluster]

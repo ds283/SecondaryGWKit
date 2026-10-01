@@ -1,0 +1,14 @@
+# sigterm_in_ray_wait_probe.py (2026-10-01 21:07), output with absl's stack lines removed
+handler: <function init.<locals>.sigterm_handler ...>
+*** SIGTERM received at time=1790885253 ***
+caught builtins.SystemExit: code=1 args=(1,)
+
+# sigterm_alarm_probe.py (2026-10-01 23:20), process exit status 134
+2026-10-01 23:20:17,529	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790893221 ***
+caught SystemExit code=1; now sleeping 8 s in cleanup
+  alive at 0.5 s
+  alive at 1.0 s
+  alive at 1.5 s
+  alive at 2.0 s
+  alive at 2.5 s

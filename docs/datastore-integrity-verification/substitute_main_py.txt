@@ -1,0 +1,12 @@
+signature: (filter_cases=True)
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of '        qsi_work_batches = list(grouper(qsi_work_items, n=750, incomplete="fill"))' in main.py
+substituted source: 186366 characters
+count=1 line=[4354] 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)'
+count=1 line=[4366] 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)'
+count=1 line=[4255] 'tol=DEFAULT_QUADRATURE_ATOL'
+count=1 line=[4256] 'tol=DEFAULT_QUADRATURE_RTOL'
+count=1 line=[4148] 'qsi_work_batches = list(grouper(qsi_work_items, n=750, incomplete="fill"))'

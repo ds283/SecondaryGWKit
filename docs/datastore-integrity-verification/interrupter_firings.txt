@@ -1,0 +1,18 @@
+== var/runs/datastore-integrity-10-resumed-a-20261001T210301/interrupter.log
+2026-10-01T21:03:02+01:00 interrupter pid 1264 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/datastore-integrity-10-resumed-a-20261001T210301 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 15 s; stale after 900 s; hold 8 s
+2026-10-01T21:03:02+01:00 liveness alive; pid 1238; stage 'list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list'
+2026-10-01T21:03:17+01:00 liveness alive; pid 1238; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-01T21:04:02+01:00 liveness alive; pid 1238; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-01T21:05:17+01:00 liveness alive; pid 1238; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-01T21:05:17+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 8 s, then reading again
+2026-10-01T21:05:25+01:00 sent SIGTERM to pid 1238 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/gktk-remedial/scoped_pipeline_run.py --k-min 1e5 --k-max 1e6 --k-count 3 --cpus 6 --models LambdaCDM --register resumed-a --purpose datastore-integrity prompt 10: first launch of the resumed build (same scope as the reference), to be interrupted by SIGTERM during CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT --campaign datastore-integrity --prompt 10 -- --database var/datastores/datastore-integrity-10-resumed.sqlite --job-name datastore-integrity-10 --shards 4 --zend 250 --source-samples-log10z 100 --no-prune-unvalidated'; exiting
+
+== var/runs/datastore-integrity-10-resumed-b-20261001T230813/interrupter.log
+2026-10-01T23:08:13+01:00 interrupter pid 6395 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/datastore-integrity-10-resumed-b-20261001T230813 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS, ' at >= 100.0%; every 15 s; stale after 900 s; hold 0 s
+2026-10-01T23:08:13+01:00 liveness alive; pid 6384; stage 'list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list'
+2026-10-01T23:08:28+01:00 liveness alive; pid 6384; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-01T23:08:43+01:00 liveness alive; pid 6384; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-01T23:09:13+01:00 liveness alive; pid 6384; stage 'APPLY GKSOURCE POLICIES'
+2026-10-01T23:09:28+01:00 liveness alive; pid 6384; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-01T23:15:28+01:00 liveness alive; pid 6384; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, 100.00% (0 of 2 work items remaining)'
+2026-10-01T23:15:29+01:00 sent SIGTERM to pid 6384 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, 100.00% (0 of 2 work items remaining)' (100% >= 100%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/gktk-remedial/scoped_pipeline_run.py --k-min 1e5 --k-max 1e6 --k-count 3 --cpus 6 --models LambdaCDM --register resumed-b --purpose datastore-integrity prompt 10: second launch of the resumed build, resuming resumed-a's store, to be interrupted by SIGTERM during CALCULATE QUADRATIC SOURCE INTEGRALS --campaign datastore-integrity --prompt 10 --allow-existing -- --database var/datastores/datastore-integrity-10-resumed.sqlite --job-name datastore-integrity-10 --shards 4 --zend 250 --source-samples-log10z 100 --no-prune-unvalidated"; exiting

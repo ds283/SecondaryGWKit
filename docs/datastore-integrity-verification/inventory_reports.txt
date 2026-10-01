@@ -1,0 +1,115 @@
+== main.py --database var/datastores/datastore-integrity-10-reference.sqlite --inventory
+   exit code 0; wall time 5.45 s; 881,293 bytes, 1,782 lines
+   longest record line by class (characters, without the bullet):
+     version                    14
+     store_tag                  38
+     LambdaCDM                  92
+     QCD_Cosmology             130
+     BackgroundModel           275
+     wavenumber                 16
+     redshift                    9
+     wavenumber_exit_time        8
+     tolerance                  18
+     IntegrationSolver          34
+     GkSourcePolicy             19
+     QuadSourcePolicy           19
+     TkNumericIntegration       47
+     TkWKBIntegration           59
+     QuadSource                 91
+     GkNumericIntegration       47
+     GkWKBIntegration           96
+     GkSource                   62
+     GkSourcePolicyData         31
+     QuadSourceIntegral        220
+     OneLoopIntegral             0
+   labels: 1669 row label(s) and 5 set label(s) defined; 1658 row label(s) and 5 set label(s) named
+   defined more than once: none
+   named and not defined: none
+   64-hex digest: none
+== main.py --database var/datastores/datastore-integrity-10-reference.sqlite --inventory --inventory-verbose
+   exit code 0; wall time 5.99 s; 13,282,654 bytes, 7,843 lines
+   longest record line by class (characters, without the bullet):
+     version                    14
+     store_tag                  38
+     LambdaCDM                 105
+     QCD_Cosmology             145
+     BackgroundModel           303
+     wavenumber                 27
+     redshift                   20
+     wavenumber_exit_time       19
+     tolerance                  29
+     IntegrationSolver          34
+     GkSourcePolicy             19
+     QuadSourcePolicy           19
+     TkNumericIntegration       64
+     TkWKBIntegration           70
+     QuadSource                113
+     GkNumericIntegration       68
+     GkWKBIntegration          122
+     GkSource                   86
+     GkSourcePolicyData         46
+     QuadSourceIntegral        266
+     OneLoopIntegral             0
+   labels: 5439 row label(s) and 291 set label(s) defined; 5436 row label(s) and 291 set label(s) named
+   defined more than once: none
+   named and not defined: none
+   64-hex digest: none
+== main.py --database var/datastores/datastore-integrity-10-resumed.sqlite --inventory
+   exit code 0; wall time 5.80 s; 881,291 bytes, 1,782 lines
+   longest record line by class (characters, without the bullet):
+     version                    14
+     store_tag                  38
+     LambdaCDM                  92
+     QCD_Cosmology             130
+     BackgroundModel           275
+     wavenumber                 16
+     redshift                    9
+     wavenumber_exit_time        8
+     tolerance                  18
+     IntegrationSolver          34
+     GkSourcePolicy             19
+     QuadSourcePolicy           19
+     TkNumericIntegration       47
+     TkWKBIntegration           59
+     QuadSource                 91
+     GkNumericIntegration       47
+     GkWKBIntegration           96
+     GkSource                   62
+     GkSourcePolicyData         31
+     QuadSourceIntegral        220
+     OneLoopIntegral             0
+   labels: 1669 row label(s) and 5 set label(s) defined; 1658 row label(s) and 5 set label(s) named
+   defined more than once: none
+   named and not defined: none
+   64-hex digest: none
+== main.py --database var/datastores/datastore-integrity-10-resumed.sqlite --inventory --inventory-verbose
+   exit code 0; wall time 7.16 s; 13,282,652 bytes, 7,843 lines
+   longest record line by class (characters, without the bullet):
+     version                    14
+     store_tag                  38
+     LambdaCDM                 105
+     QCD_Cosmology             145
+     BackgroundModel           303
+     wavenumber                 27
+     redshift                   20
+     wavenumber_exit_time       19
+     tolerance                  29
+     IntegrationSolver          34
+     GkSourcePolicy             19
+     QuadSourcePolicy           19
+     TkNumericIntegration       64
+     TkWKBIntegration           70
+     QuadSource                113
+     GkNumericIntegration       68
+     GkWKBIntegration          122
+     GkSource                   86
+     GkSourcePolicyData         46
+     QuadSourceIntegral        266
+     OneLoopIntegral             0
+   labels: 5439 row label(s) and 291 set label(s) defined; 5436 row label(s) and 291 set label(s) named
+   defined more than once: none
+   named and not defined: none
+   64-hex digest: none
+== reference vs resumed, masked: identical
+== reference-verbose vs resumed-verbose, masked: identical
+verdict: clean

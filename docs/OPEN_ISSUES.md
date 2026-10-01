@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-01 · **99 open** across eighteen campaigns.
+**Last updated:** 2026-10-02 · **102 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -118,6 +118,7 @@ for.
 | `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
+| `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | **Assigned 2026-10-02 to `handover`**, which owns A3 v2's launch. `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
@@ -767,6 +768,9 @@ Prompt 09c closed `[09a-quadsourcevalue-model-read-joins-every-source-under-its-
 Prompt 09d closed `[09b-inventory-report-renders-every-member-of-a-parent-set]` on 2026-10-01, on
 this campaign's board's §4, and its row is deleted; it opened one issue on this board the same day,
 which the user assigned to prompt 10.
+Prompt 10 closed `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` on
+2026-10-02, on this campaign's board's §4, and its row is deleted; it opened four issues on this
+board the same day, three below and one assigned to `handover` (§1.1).
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -778,7 +782,9 @@ which the user assigned to prompt 10.
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
 | `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
 | `[09b-gksource-members-are-not-checked-against-their-rows]` | datastore-integrity | `GkSource.store()` writes its `GkSource_parents` members unread: nothing checks each names rows for the source's `k` and model at its own `z_source`, or that its WKB row starts from its numeric row. Inert in the pipeline, where `compute()` asserts the set. |
-| `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | datastore-integrity | **→ prompt 10.** Since 09d a labelled class's record line ends in its own label, different for every record, so `test_verbose_renders_every_distinct_record_as_a_distinct_line` compares whole lines and can no longer fail for those seven classes. 09d's own tests pin the property with the label taken off. Strip the label in the old test (`fields_of` stops at the first double space). |
+| `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | datastore-integrity | A `SIGTERM` to `scoped_pipeline_run.py` while it waits in `ray.wait` reaches Python as `SystemExit(1)`, so it is recorded `failed`/1, not `killed`; a cleanup over ~3 s is aborted (SIGABRT) and nothing is recorded, leaving a `gcs_server` behind. An interrupted A3 v2 launch looks like a real failure or a crash. |
+| `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | datastore-integrity | The six `extract_*.py` scripts read every model of `build_model_list`, with no `--models`, and exit 1 on `QCD_Cosmology` after a full LambdaCDM read of a LambdaCDM-only store, as A3 v2's is. |
+| `[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]` | datastore-integrity | The amended distinct-lines test compares within a tag set, and the fixture holds one record per tag set of `QuadSource`, `GkNumericIntegration` and `GkWKBIntegration`, so it cannot fail for them. 09d's pair tests cover them. |
 
 ### 1.16 The perturbation sound-speed campaign
 
