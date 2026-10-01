@@ -88,7 +88,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
 | 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ✅ 2026-10-01 | *"Refer to derived parents by label in the inventory report"* | [`logs/09d-…`](logs/09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) |
-| 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
+| 10 | Build a throwaway store end to end | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
@@ -1613,6 +1613,7 @@ The checks:
   the label removed, and mutation (i) shows them failing, so nothing is unchecked today. Fixing
   the old test modifies an existing test, which README §5 rule 7 reserves to a prompt that names
   it, so it is not treated as residue.
+  - **Decided (2026-10-01):** the user folded the fix into prompt 10 (§3.3).
 - **Log 09d is accurate** against `git show`.
 
 **09d is complete.** The report is bounded: no record line grows with a parent set or a chain of
@@ -1748,6 +1749,8 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Compare lines with the own label stripped (`fields_of` already stops at the first
     double space), in whichever prompt next edits `test_inventory_report.py`. Prompt 09d could not:
     README §5 rule 7 keeps existing tests as they are.
+  - **Assigned (2026-10-01):** to prompt **10**, by the user's decision on the review of 09d. README
+    §2's row for 10 names the test and the reason, as rule 7 requires, so that prompt may amend it.
 - **[09b-gksource-members-are-not-checked-against-their-rows]** *(opened 2026-09-30 by prompt
   09b)*
   - **The defect.** `sqla_GkSource_factory.store()` writes the `GkSource_parents` rows it is given
