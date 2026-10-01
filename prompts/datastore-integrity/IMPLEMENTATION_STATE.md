@@ -3,7 +3,8 @@
 **Last updated:** 2026-10-01 · **Status: 11 of 12 prompts landed (01, 02, 03, 04, 04b, 05 as
 05a–05c, 06, 07, 08, 09 as 09a–09c, and 09d), all reviewed; 09a–09c landed 2026-09-30, completing 09,
 and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed and was
-reviewed 2026-10-01. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+reviewed 2026-10-01. Next: 10, written 2026-10-01 and waiting on the user's decisions D10-1 to
+D10-5.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -88,7 +89,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
 | 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ✅ 2026-10-01 | *"Refer to derived parents by label in the inventory report"* | [`logs/09d-…`](logs/09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) |
-| 10 | Build a throwaway store end to end | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ⏸️ held until 01–09 land | — | — | — |
+| 10 | [Build a throwaway store end to end](10-build-a-throwaway-store-end-to-end.md) | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-10.md`](orchestrator/prompt-10.md); waiting on D10-1 to D10-5 | ⬜ after 09d | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
@@ -98,7 +99,12 @@ dispatched one at a time, never concurrently in this checkout, in either order. 
 (2026-09-28, both used), [`prompt-02.md`](orchestrator/prompt-02.md) (2026-09-28, used), and
 [`prompt-03.md`](orchestrator/prompt-03.md) (2026-09-29, used), and
 [`prompt-06.md`](orchestrator/prompt-06.md) (2026-09-29, used), and
-[`prompt-07.md`](orchestrator/prompt-07.md) (2026-09-29, ready).
+[`prompt-07.md`](orchestrator/prompt-07.md) (2026-09-29, used), and
+[`prompt-08.md`](orchestrator/prompt-08.md) (2026-09-29, used), and
+[`prompt-09.md`](orchestrator/prompt-09.md) (2026-09-30, used for 09a–09c), and
+[`prompt-09d.md`](orchestrator/prompt-09d.md) (2026-10-01, used), and
+[`prompt-10.md`](orchestrator/prompt-10.md) (2026-10-01, waiting on the user's decisions
+D10-1 to D10-5, which the prompt's §1.1 states with recommendations).
 
 **Decided for 07 (2026-09-29, the user, while its note was written).** Prompt 07 was written before
 05c and 06 landed, and as written it would hit its own §5 stop or silently change a reader in four
@@ -1669,9 +1675,9 @@ what 01–04 find; what waits is their method.
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09c | ✅ four new columns, `Tq_numeric_serial`, `Tq_WKB_serial`, `Tr_numeric_serial`, `Tr_WKB_serial` (NOT NULL, indexed, no foreign key: the Tk rows are on q's and r's shards); all six parents in `build()`'s filter (by serial, all required), written by `store()` (which refuses an object missing one), handed back on every object by `read_batch()`, which filters on any it is given; `compute()` asserts that the six rows it is handed are the six it is keyed on, that the Tq and Tr numeric rows are its source's `Tq_serial` and `Tr_serial`, and that each WKB row starts from its numeric row, raising naming both; `main.py`'s stage resolves every work item's six parents serial-only, in `resolve_QuadSourceIntegral_parents`, before its existence query; the extraction script refuses two rows at one `(k, q, r, z_response)`, naming their distinguishing parents; a pre-09c table refused with 07's form of message, a pre-08 one still with 08's |
 | K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09b | ✅ the recommended shape. `GkSource_parents` (own serial; `gk_source_serial`, `z_source_serial`, nullable `numeric_serial` and `wkb_serial`, each an indexed foreign key, all on `k`'s shard), one row per `z_source`, written by `store()` in the `GkSource`'s transaction from the set `assemble_GkSource_values` reports it assembled; `parents_digest` (`String(64)`, NOT NULL, indexed) computed from those rows, in `build()`'s filter; an empty set refused. The Gk value reads attach their parent (`_parent_serial`) and have a serial-only form (`parents_only`); they and `TkWKBValue`'s now refuse a pre-07 store. `compute()` asserts the values it is handed are read from the set it is keyed on. `main.py`: one helper, `resolve_GkSource_parents`, resolves the set serial-only; all six `GkSource` lookups are keyed on it, the GkSource stage's before its existence query. A `labels_only` reader mode (four readers, and `GkSourceValue._build_impl_model`) refuses two matches, naming their digests and where their sets differ. A pre-09b table is refused (D4). Witness 09b (9 hunks, 246 lines, `GkSource` and `GkSource_parents`); fingerprint format 5, `GkSource` and `GkSourcePolicyData` moved |
 | K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09a (cross-shard `Parent`), 09b (set-valued), 09c (complete) | ✅ 09a: `Parent(cross_shard=True)` resolves against every shard's records of its class (`ShardContext.all_digests`), to the parent's reference digest and never its serial; a serial two shards hold differently, or none holds, is `unresolved-parent`; one read-only pass. 09b: `ParentSet`, a key field whose value is the digest of the sorted members of a member table, each member resolved to its parents' reference digests (never `parents_digest`, never a serial); `GkSource` declares its set through `GkSource_parents`, read once per shard; an unresolvable member is `unresolved-parent`, a member row with no owner `orphan-member`, an owner with none `empty-parent-set`, an absent member table `absent-table`; the members are kept in `ClassInventory.members` and `tools/inventory_report.py` renders them by physical labels. **09c: complete.** `QuadSourceIntegral` declares its six parents: `data` same-shard, and `source` and the four Tk rows with 09a's cross-shard form, each resolving to its row's own identity; a `Tq` parent varied to another shard's row is resolved and is identity (a test beside the fixture, since the fixture's own `Tq` rows are all on their integral's shard). |
-| V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ⏸️ |
-| V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ⏸️ |
-| V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ⏸️ |
+| V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ✍️ written 2026-10-01 |
+| V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ✍️ written 2026-10-01 |
+| V3 | **RECORD** | The campaign closed; what A3 v2's launch must now pass. | 10 | ✍️ written 2026-10-01 |
 
 ---
 
