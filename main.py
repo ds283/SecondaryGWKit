@@ -386,12 +386,12 @@ def build_QuadSourceIntegral_payload(
     if not GkPolicy.available:
         missing_data = True
         print(
-            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
+            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
         )
     if not source.available:
         missing_data = True
         print(
-            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: QuadSource for for q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
+            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: QuadSource for q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
         )
     for obj_label, obj, mode_label, mode in [
         ("TkNumericIntegration", Tq_numeric, "q", q),

@@ -453,7 +453,9 @@ class TestMainPyKeysEveryGkSourceLookup(unittest.TestCase):
             with self.subTest(function=name):
                 self.assertEqual(len(_lookups(fn)), 1)
                 total += 1
-        # the six test_main_plumbing.EXPECTED_SITES counts
+        # the six stage lookups prompt 09b keyed. test_main_plumbing.EXPECTED_SITES counts seven
+        # GkSource sites since prompt 09c: the seventh is resolve_QuadSourceIntegral_parents'
+        # serial-only lookup, which is not one of these functions
         self.assertEqual(total, 6)
 
     def test_every_lookup_is_keyed_on_a_resolved_set(self):

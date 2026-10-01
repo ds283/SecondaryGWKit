@@ -1530,6 +1530,12 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Decide how the report summarises a set (its size, the `z_source` range, the
     distinct numeric and WKB parents' labels), which changes what the user decided and so is the
     user's.
+  - **Widened (2026-10-01, the review of 09c):** since prompt 09c a `QuadSourceIntegral`'s key
+    names its `GkSourcePolicyData`, and the report renders a parent reference recursively, so
+    every integral's line carries its source's whole parent set as well (log 09c, observation
+    1). Measured on `build_full_store`: about 4,300 characters an integral line, from about 450
+    before 09c. In production each of ~500,000 integrals would repeat its `GkSource`'s up to
+    ~1,200 members, so the report is not usable on such a store until the set is summarised.
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up

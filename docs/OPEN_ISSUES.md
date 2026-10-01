@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-30 · **99 open** across eighteen campaigns.
+**Last updated:** 2026-10-01 · **99 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -775,7 +775,7 @@ Prompt 09c closed `[09a-quadsourcevalue-model-read-joins-every-source-under-its-
 | `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
 | `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
 | `[09b-gksource-members-are-not-checked-against-their-rows]` | datastore-integrity | `GkSource.store()` writes its `GkSource_parents` members unread: nothing checks each names rows for the source's `k` and model at its own `z_source`, or that its WKB row starts from its numeric row. Inert in the pipeline, where `compute()` asserts the set. |
-| `[09b-inventory-report-renders-every-member-of-a-parent-set]` | datastore-integrity | The inventory report renders all of a `GkSource`'s parent-set members on its line, ~200 characters each: up to ~240 kB a line at production size, repeated on every `GkSourcePolicyData` line. How to summarise is the user's. |
+| `[09b-inventory-report-renders-every-member-of-a-parent-set]` | datastore-integrity | The inventory report renders all of a `GkSource`'s parent-set members on its line, ~200 characters each: up to ~240 kB a line at production size, repeated on every `GkSourcePolicyData` line and, since 09c, every `QuadSourceIntegral` line. How to summarise is the user's. |
 
 ### 1.16 The perturbation sound-speed campaign
 
