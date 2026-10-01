@@ -1,8 +1,8 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-30 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07, 08, and 09 as 09a–09c); 09a and 09b landed and were reviewed 2026-09-30, and 09c
-landed the same day, completing 09. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-10-01 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06, 07, 08, and 09 as 09a–09c), all reviewed; 09a–09c landed 2026-09-30, completing 09,
+and 09c was reviewed 2026-10-01. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -22,7 +22,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none). **09 is complete**: all three parts have landed. **Next: 10**, once 09c is reviewed.
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **Next: 10.**
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -1385,6 +1385,142 @@ fixed in `8014f1d`.
 - **Log 09b is accurate** against `git show`.
 
 **Next: 09c**, from this review's commit, after §1 step 7's sketch and the user's grant.
+
+**The user answered on 2026-09-30** (`9a18063`, the note's §0.5 "Granted for 09c" and §0.8):
+- the measured grant, with four edits outside the candidate list;
+- `data` kept a same-shard parent;
+- the one non-conforming fixture row kept, with a comment;
+- `read_batch` to select `quad_policy_serial` first;
+- the two constructor-bearing modules granted on their condition.
+
+**Orchestrator review of prompt 09c (2026-10-01).** Run against `014be95`, dispatched from
+`9a18063` with nothing `running` in this repository's registry and no other worktree. **All twelve
+checks in `orchestrator/prompt-09.md` §3 passed.** The agent did not stop.
+- It stopped twice on API usage limits. It was resumed once with its staged work intact, and it
+  committed before the second stop. That stop came during its second mutation replay, so it sent
+  no final report.
+- The review was therefore made from the commit, the log and the agent's replay outputs alone.
+- It found three small remnants, fixed in `b5fd484`.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `9a18063`, which touches no code. The index held **100** rows. The five literals
+    each occurred once, at `:3792`, `:3899`, `:3900`, `:3998` and `:4010`.
+  - The baselines matched §5.13. The one failure was the flake, at a load average near 35 from a
+    job outside this repository.
+- **Scope.**
+  - 24 files, all on the brief's list. The diff over every older witness and golden, `schema.py`,
+    `ShardedPool.py`, `Datastore.py`, `config/`, `docs/handover/`,
+    `docs/datastore-integrity-audit/` and `orchestrator/` is empty.
+  - `--diff-filter=M` over `*/tests/*` gives ten files, all in §0.5's 09c grant or under §0.4.
+    Every hunk was read:
+    - the fixture gains the four columns, `_UNDECLARED_REFERENCES` gains them, and the one
+      non-conforming row has its comment;
+    - `IDENTITY` gains the six parents, each varied to a real row, and `NON_IDENTITY` loses two;
+    - the two `TestTags` sets gain the class, each with its sentence;
+    - the duplicate test copies the parent chain;
+    - `check()`'s `cascade` asserts more, not less. The cascaded class's only problems are
+      `unresolved-parent`; its records are a strict subset, short by exactly the named count; and
+      with no cascade, `changed` must be empty;
+    - the raw inserts, 08's payload and stored row, and the two conditional constructor modules
+      pass only the serials;
+    - the two D5 repointings.
+  - `EXPECTED_SITES` and the pins:
+    - `TkNumericIntegration`, `TkWKBIntegration`, `QuadSource`, `GkSource` and
+      `GkSourcePolicyData` each rise by one, from the one new helper,
+      `resolve_QuadSourceIntegral_parents`, and no count fell;
+    - `EXPECTED_COVERAGE` goes 50 → 51, by 09c's own `QuadSourceValue` candidate site.
+- **K5.**
+  - The four columns are `Tq_numeric_serial`, `Tq_WKB_serial`, `Tr_numeric_serial` and
+    `Tr_WKB_serial`: NOT NULL, indexed, no foreign key.
+  - All six parents are in `build()`'s filter, required and integer. `store()` writes them and
+    refuses an object without them. `read_batch` filters on any it is given and hands all six
+    back.
+  - `inventory_records` declares `data` same-shard, and the other five cross-shard.
+  - The target requires the six at construction. `compute()` asserts that the six rows it is
+    handed are they, that each numeric row is its source's `Tq_serial`/`Tr_serial`, and that each
+    WKB row's `numeric_serial` is its numeric row, all before computing.
+  - With `014be95~1`'s target over `test_quadsource_integral_parent_main`, 23 of 30 error. With its
+    factory over `test_quadsource_integral_parent_key`, the module's 27 tests give 12 failures and
+    40 errors, counted with their sub-tests.
+- **`main.py`.**
+  - All 12 hunks are as the log lists them. 38 of its site-table citations match `git show`.
+  - The helper resolves every work item's six parents serial-only, each found by its own parents
+    as the stage's full lookups find them, before the existence query.
+  - The query runs over the resolvable items only. Its results zip against that list, and every
+    item not found, or not resolvable, is missing.
+  - The construction passes the six serials the query used.
+  - `qsi_work_items` and `qsi_work_batches` are untouched. The five literals each occur once, now at
+    `:4148`, `:4255`, `:4256`, `:4354` and `:4366`.
+- **The reader.**
+  - `extract_QuadSourceIntegral_data.py` refuses more than one row at a `z_response`, naming the
+    parents that differ, inside `plot_QuadSourceIntegral`.
+  - That task's ref is tracked by `RayWorkPool`, which `ray.get`s each completed ref, so the
+    refusal stops the script.
+  - `QuadSourceValue._build_impl_model` refuses two matching `QuadSource`s, naming their
+    `Tq_serial` and `Tr_serial`.
+- **D4.** A pre-09c table is refused by `build()` and `read_batch()`. A pre-08 one is still refused
+  with 08's message, since `quad_policy_serial` is selected first.
+- **D5 and the fingerprint.**
+  - Both new files are new, and every older witness and golden is unchanged.
+  - A witness re-captured from `HEAD` is byte-identical to the new one. The orchestrator's own diff
+    against 09b is **5 hunks, 102 changed lines, 108 lines**, at the sketch's positions, all in
+    `QuadSourceIntegral`.
+  - A re-captured fingerprint equals the new golden: format 6, `problems` empty. Against the 09b
+    golden only `QuadSourceIntegral` moved, and 20 did not.
+- **Mutations.**
+  - All six were extracted from `git show HEAD:<log>`: (i), (ii), (iii), (iv) for `Tr`, (iv) for
+    `Tq`, and (v). They were applied in a `git archive` export of `HEAD` made into its own git
+    repository, and each was run over Datastore, ComputeTargets and RunRegistry.
+  - Each gave exactly its logged failing entries, sub-test parameters included: Datastore 2, 0, 0,
+    62, 3 and 1; ComputeTargets 0, 2, 3, 0, 0 and 0; RunRegistry 0, 0, 0, 9, 0 and 0.
+  - **Mutation (iv) is caught for a `Tq` parent**, which §0.8 found the fixture alone would not
+    catch.
+  - The flake fired in four runs. The export's tracked diff was empty after the reverts.
+  - The agent's own second replay, found in its scratch directory, agrees.
+- **Probes.**
+  - All fourteen were run at `3d7b606`'s code and at `014be95`. None newly fails, and the exit
+    codes are identical.
+  - Four change, as log 09c's rule-11 list says, besides the fault probe's timestamp line:
+    - `fk_sweep_probe` (the four columns);
+    - `probe_02` (the new `candidate` row, and moved lines);
+    - `probe_03` (1268 → 1287);
+    - `replicated_divergence_probe` (one cascade line).
+- **Boards.**
+  - The §1 rows for 09c and 09, K5, K7 (complete), the 09a issue on §4, §5.14 and README §4's four
+    names are present.
+  - Counted, the index has **99** rows: one deleted, none opened.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `014be95`, serially, in the checkout, at a load average near 50 from the same outside
+    job:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped) and RunRegistry 199;
+    - Datastore **532** (+27);
+    - ComputeTargets **665** (+30), with only the flake failing.
+  - `black --check` is clean on the 18 Python files.
+  - Both new modules assert `not ray.is_initialized()` in their `tearDownModule`.
+- **The measured cost.** About 1.1 s per batch of 750 for the six parents (208 actor calls). Add
+  about 0.9 s for the Gk sets, now resolved for every `(k, z_response)` of a batch. That is of order
+  23 minutes of serial-only lookups over a production pass, recorded under rule 11 and not argued
+  against.
+- **Remnants, fixed in `b5fd484`** (*"Tidy three remnants of datastore-integrity prompt 09c"*):
+  - `[09b-inventory-report-renders-every-member-of-a-parent-set]`'s board entry and index hook
+    understated it. Every integral's report line now carries its source's whole parent set (log
+    09c, observation 1), and the entry gains a **Widened** line saying so.
+  - A comment in 09b's `test_gksource_parent_set_main` counted six `GkSource` sites where there are
+    now seven (observation 4).
+  - Two pre-existing "for for" typos in `build_QuadSourceIntegral_payload`'s warnings (observation
+    5).
+- **Not changed.** `QuadSourceIntegral.source_serial` and `.data_serial` still raise on an
+  unpopulated object, although both are now known from construction (observation 2). The
+  `parents` property does not raise. This is behaviour, not prose, so it is left as it is.
+- **Log 09c is accurate** against `git show`.
+
+**09 is complete.** K4–K7 are done, and D1's class (audit §2.4) is closed on this board: every
+derived row's key reaches the rows it was computed from, transitively, and the inventory resolves
+them across shards and as sets. **Next: 10**, the first real run, with its own orchestrator note
+carrying the 09a, 09b and 09c reviews. It is the first time any of these keys, the cross-shard and
+set-valued inventory parents, and the stages' re-resolution meet a pipeline.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
