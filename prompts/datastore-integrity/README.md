@@ -12,7 +12,7 @@ cross-campaign constraints. **04 and 04b landed and were reviewed by 2026-09-28,
 to be written.** **05 was written on 2026-09-28 as three prompts, 05a–05c, for one orchestrator session, and landed
 the same day, all three reviewed.** **06, 07 and 08 landed and were reviewed by 2026-09-30.** **09 was split by the
 user on 2026-09-30 into three prompts, 09a–09c, for one orchestrator session**
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a–09c landed and were reviewed by 2026-10-01; 09d, a small follow-up on the inventory report, was written and landed the same day.**
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a–09c landed and were reviewed by 2026-10-01; 09d, a small follow-up on the inventory report, was written, landed and reviewed the same day.**
 
 ## 0. Why this campaign exists
 
@@ -97,7 +97,7 @@ eleven and found the classes wider than recorded:
 | 09a | [`09a-key-quadsource-on-its-transfer-functions.md`](09a-key-quadsource-on-its-transfer-functions.md) | K4, and K7's cross-shard `Parent`: `Tq_serial` and `Tr_serial` in `QuadSource`'s key, `Tr_serial` indexed; the `QuadSource` stage and the `QuadSourceIntegral` stage's `QuadSource` lookup keyed on them. | **written** 2026-09-30; after 08 |
 | 09b | [`09b-key-gksource-on-its-parent-set.md`](09b-key-gksource-on-its-parent-set.md) | K6, and K7's set-valued parent: `GkSource_parents` and `parents_digest`; the Gk value reads hand back their parent; all six `GkSource` lookups in `main.py` keyed on the set. Closes `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]`. | **written** 2026-09-30; after 09a |
 | 09c | [`09c-key-quadsourceintegral-on-its-inputs.md`](09c-key-quadsourceintegral-on-its-inputs.md) | K5: `QuadSourceIntegral` keyed on its source, its policy data and its four Tk rows, with the relations between them asserted; its stage resolves every work item's parents before the existence query. | **written** 2026-09-30; after 09b |
-| 09d | [`09d-refer-to-derived-parents-by-label-in-the-inventory-report.md`](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | The inventory report refers to every derived (sharded) parent, and every `GkSource` parent set, by a label, printing each row and set once, so record lines stop growing with sets and chains of parents while distinct records stay distinct lines. Closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`. *(Added 2026-10-01, by the user's decision on the review of 09c.)* | **landed** 2026-10-01 |
+| 09d | [`09d-refer-to-derived-parents-by-label-in-the-inventory-report.md`](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | The inventory report refers to every derived (sharded) parent, and every `GkSource` parent set, by a label, printing each row and set once, so record lines stop growing with sets and chains of parents while distinct records stay distinct lines. Closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`. *(Added 2026-10-01, by the user's decision on the review of 09c.)* | **landed** 2026-10-01, reviewed |
 | 10 | `10-build-a-throwaway-store-end-to-end.md` | Remedial. A scoped build through the registry into a store under `var/datastores/` that is not A3 v2; then a resume; then extraction of every target from it, the fingerprint, and the census of audit §4.4. Closes the campaign. | **held** until 01–09 land |
 
 **Why 05–10 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.

@@ -2,8 +2,8 @@
 
 **Last updated:** 2026-10-01 · **Status: 11 of 12 prompts landed (01, 02, 03, 04, 04b, 05 as
 05a–05c, 06, 07, 08, 09 as 09a–09c, and 09d), all reviewed; 09a–09c landed 2026-09-30, completing 09,
-and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed 2026-10-01
-and awaits review. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed and was
+reviewed 2026-10-01. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -23,7 +23,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **09d landed 2026-10-01** (the inventory report refers to a derived row, and to a `GkSource`'s parent set, by a label and prints each once, in its own section; closing `[09b-inventory-report-renders-every-member-of-a-parent-set]` on this board's §4 and opening one issue, §3.3); not yet reviewed. **Next: 10.**
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **09d landed 2026-10-01** (the inventory report refers to a derived row, and to a `GkSource`'s parent set, by a label and prints each once, in its own section; closing `[09b-inventory-report-renders-every-member-of-a-parent-set]` on this board's §4 and opening one issue, §3.3); reviewed the same day, with three small remnants fixed in a follow-up commit. **Next: 10.**
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -1523,6 +1523,102 @@ derived row's key reaches the rows it was computed from, transitively, and the i
 them across shards and as sets. **Next: 10**, the first real run, with its own orchestrator note
 carrying the 09a, 09b and 09c reviews. It is the first time any of these keys, the cross-shard and
 set-valued inventory parents, and the stages' re-resolution meet a pipeline.
+
+**Orchestrator review of prompt 09d (2026-10-01).** Run against `9540314`, dispatched from
+`0dda6c8` with nothing `running` in this repository's registry and no other worktree. **All ten
+checks in `orchestrator/prompt-09d.md` §3 passed.** The agent did not stop, and sent its report.
+The review found three small remnants, fixed in `96fb98d`.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `0dda6c8`, which touches no code past `a761914`. The index held **99** rows.
+  - The baselines matched §5.14. The one failure was the flake, at a load average of 80–160 from a
+    job outside this repository; it failed alone too (0.098 s against 0.06 s).
+  - The fixture report at `0dda6c8`: 31,466 characters verbose, 31,198 not; record lines of
+    `QuadSourceIntegral` 4,316–4,462, `QuadSource` 1,109–1,200, `GkSourcePolicyData` 746–762,
+    `TkWKBIntegration` 565, `GkSource` 533–550.
+- **Scope.**
+  - Five files, all on the brief's list. `--diff-filter=M` over `*/tests/*` is empty. The diff
+    over `Datastore/store_inventory.py`, the factories, every witness and golden, `main.py` and
+    `orchestrator/` is empty; `main.py` is byte-identical to `0dda6c8`.
+- **(P1) Distinct stays distinct.**
+  - The new tests cover every pair the prompt's §3 test 1 names, each line compared with its own
+    label taken off.
+  - The orchestrator's own pairs, built on the fixture's inventory rather than the agent's
+    stand-in: a second `GkSource` identical to a fixture one but for the Gk numeric row at one
+    `z_source` (same member count and `z_source` values) prints `parents=S2` beside `parents=S1`,
+    with two distinct set lines that differ only in `GkNumericIntegration#2` / `#3`. A
+    `GkSourcePolicyData` over it, a `QuadSourceIntegral` differing only in that `data`, and one
+    differing only in `Tq_numeric`, each print as distinct lines once the own label is removed.
+- **(P2) Every label is defined.** With the orchestrator's own regex, on the fixture verbose and
+  not, and with `MAX_SHOWN` patched to 1 and 2: every `<Class>#<n>` and `S<n>` printed has exactly
+  one defining line; no label appears on any other kind of line; every `> ` row is one that some
+  printed line names; `sections()` sees at most `MAX_SHOWN` records per tag set, and `more` is
+  right in every section.
+- **(P3) Lines are bounded.**
+  - Re-rendered at `9540314`: 14,776 characters verbose; `QuadSourceIntegral` 564–565,
+    `QuadSource` 321–336, `GkSourcePolicyData` 206–210, `GkSource` 169–170, `TkWKBIntegration`
+    173. These match the log. The `QuadSourceIntegral` line's ~165 characters over its pre-09
+    ~400 are the six key fields 09c added, now ~25 characters each.
+  - On the agent's stand-in at 250 and at 1,500 members, no record line of any class changes
+    length, verbose or not. A set's line grows by about 58 characters a member. The 1,500-member
+    report renders in under a second.
+- **Nothing else changed.** The fixture reports at `0dda6c8` and `9540314`, section by section:
+  the twelve replicated classes and `OneLoopIntegral` are byte-identical. In the eight that
+  change, header, common line, tag sets and record order are identical; the only fields that
+  differ are the sharded parents, each now a label (`TkWKBIntegration.numeric`, `QuadSource.Tq`
+  and `.Tr`, `GkSource.parents`, `GkSourcePolicyData.source`, and `QuadSourceIntegral`'s
+  `source`, `data` and four Tk rows); every other field, every replicated parent included, is
+  byte-identical; and the tail beyond the fields is identical once the own label is removed.
+  `TkNumericIntegration`, `GkNumericIntegration` and `GkWKBIntegration` change only by their own
+  label.
+- **The property's own tests.** `test_inventory_report` and `test_inventory_consumers` pass
+  unmodified; `test_no_digest_appears` searches the whole report, so it covers the new lines. `HEX64`
+  finds nothing in any report rendered here.
+- **Labels are stable.** Under `relabel_serials` (offset 1,000), verbose, not, and with `MAX_SHOWN`
+  1, every label, sets included, names the same physical row, and the whole reports are
+  byte-identical.
+- **Mutations.** All five were extracted from `git show HEAD:<log>` and applied with plain `git
+  apply` in a `git archive` export of `9540314` made into its own git repository. Over the three
+  Datastore modules that import the report, each gave exactly its logged failing entries,
+  sub-test parameters included: 9, 7, 6, 8 and 8. `test_qcd_cosmology_inventory_record` passed
+  under each, as logged. The export's tracked diff was empty after every revert. The agent ran
+  these four modules rather than whole suites (its deviation 9); `git grep` confirms they and
+  `main.py` are the only importers of `tools/inventory_report.py`.
+- **Probes.** None is run: `git grep -l inventory_report -- docs/` finds three Markdown documents
+  and no script.
+- **Boards.** The §1 row, the 09b issue on §4 with its closing note, the new §3.3 entry and §5.15
+  are present. Counted, the index has **99** rows: one deleted, one opened.
+- **`var/`, suites, `black`, Ray.**
+  - The snapshot (46 files, 10 directories) is identical.
+  - Suites on `9540314`, serially, in the checkout, at a load average of 80–160 from the same
+    outside job:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped) and RunRegistry 199;
+    - Datastore **551** (+19, the new module's);
+    - ComputeTargets 665, with only the flake failing (0.080 s).
+  - `black --check` is clean on both Python files.
+  - `ray.is_initialized()` is false after the new module.
+- **Remnants, fixed in `96fb98d`** (*"Tidy three remnants of datastore-integrity prompt 09d"*):
+  - The header of a class's not-shown listing said the rows were "referred to by the records
+    above". A row is defined in its own class's section, which usually comes *before* the records
+    that name it (a `TkNumericIntegration` row named by a `QuadSourceIntegral`), so the header was
+    false. It now reads `N row(s) not shown above, and referred to elsewhere in this report:`.
+    Log 09d quotes the old text as it shipped, and is left as the record of that commit.
+  - This board's header still counted "10 of 11 prompts landed". With 09d it is 11 of 12.
+  - README §2's 09d row still read "**written** 2026-10-01; after 09c", and its header paragraph
+    did not record 09d's landing (the agent's report flagged the row; it was outside its files).
+- **Left for the user.** `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]`
+  is real: since every labelled class's line ends in its own unique label, the existing
+  distinct-lines test cannot fail for those seven classes. 09d's own tests pin the property with
+  the label removed, and mutation (i) shows them failing, so nothing is unchecked today. Fixing
+  the old test modifies an existing test, which README §5 rule 7 reserves to a prompt that names
+  it, so it is not treated as residue.
+- **Log 09d is accurate** against `git show`.
+
+**09d is complete.** The report is bounded: no record line grows with a parent set or a chain of
+derived parents, and every distinct record is still a distinct line. **Next: 10**, whose store's
+`main.py --inventory` is the first print of this report on rows written by the keyed stages, and
+may be used as its evidence.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
