@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-01 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
 05a–05c, 06, 07, 08, and 09 as 09a–09c), all reviewed; 09a–09c landed 2026-09-30, completing 09,
-and 09c was reviewed 2026-10-01. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+and 09c was reviewed 2026-10-01. Next: 09d, a small follow-up on the inventory report, then 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -86,6 +86,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09a | [Key `QuadSource` on its transfer functions](09a-key-quadsource-on-its-transfer-functions.md) | **K4**, **K7** (cross-shard) | Sonnet | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSource on the transfer functions it is computed from"* | [`logs/09a-…`](logs/09a-key-quadsource-on-its-transfer-functions.md) |
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
+| 09d | [Print each parent set once in the inventory report](09d-summarise-parent-sets-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01 | ⬜ after 09c | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
@@ -1672,6 +1673,11 @@ None is assigned to a prompt of this campaign.
     1). Measured on `build_full_store`: about 4,300 characters an integral line, from about 450
     before 09c. In production each of ~500,000 integrals would repeat its `GkSource`'s up to
     ~1,200 members, so the report is not usable on such a store until the set is summarised.
+  - **Assigned (2026-10-01):** to prompt **09d**, a small prompt of its own, by the user's
+    decision after the review of 09c. A summary in place of the members would let two distinct
+    records print as one line, which the report's tests forbid
+    (`test_verbose_renders_every_distinct_record_as_a_distinct_line`). So 09d prints each
+    distinct set once, under a label, and every record refers to it by the label.
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
