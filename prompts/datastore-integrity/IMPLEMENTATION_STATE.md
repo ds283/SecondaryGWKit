@@ -2,7 +2,8 @@
 
 **Last updated:** 2026-10-01 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
 05a–05c, 06, 07, 08, and 09 as 09a–09c), all reviewed; 09a–09c landed 2026-09-30, completing 09,
-and 09c was reviewed 2026-10-01. Next: 09d, a small follow-up on the inventory report, then 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed 2026-10-01
+and awaits review. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -22,7 +23,7 @@ issues (§3.3); reviewed the same day, with three small remnants fixed in a foll
 store-fingerprint board's §4 and opening one issue (§3.3); reviewed 2026-09-30, with three small
 remnants fixed in a follow-up commit.
 **09 was split by the user on 2026-09-30 into 09a → 09b → 09c**, for one orchestrator session
-([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **Next: 10.**
+([`orchestrator/prompt-09.md`](orchestrator/prompt-09.md)). **09a landed 2026-09-30** (`QuadSource` keyed on `Tq` and `Tr`; the inventory's cross-shard `Parent`; one issue opened, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09b landed 2026-09-30** (`GkSource` keyed on its set of Gk rows, recorded in `GkSource_parents` and digested in `parents_digest`; the inventory's set-valued parent; closing `[07-wkb-value-reads-do-not-refuse-a-pre-07-store]` on this board's §4 and opening two issues, §3.3); reviewed the same day, with one small remnant fixed in a follow-up commit. **09c landed 2026-09-30** (`QuadSourceIntegral` keyed on the six stored rows it is computed from -- its `QuadSource`, its `GkSourcePolicyData`, and the Tk numeric and WKB rows for q and r, in four new columns -- with the relations between them asserted in `compute()`; its `main.py` stage resolves every work item's parents before its existence query; closing `[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]` on this board's §4 and opening none); reviewed 2026-10-01, with three small remnants fixed in a follow-up commit. **09 is complete**: all three parts have landed and been reviewed. **09d landed 2026-10-01** (the inventory report refers to a derived row, and to a `GkSource`'s parent set, by a label and prints each once, in its own section; closing `[09b-inventory-report-renders-every-member-of-a-parent-set]` on this board's §4 and opening one issue, §3.3); not yet reviewed. **Next: 10.**
 `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints
 (README §2).
 
@@ -86,7 +87,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09a | [Key `QuadSource` on its transfer functions](09a-key-quadsource-on-its-transfer-functions.md) | **K4**, **K7** (cross-shard) | Sonnet | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSource on the transfer functions it is computed from"* | [`logs/09a-…`](logs/09a-key-quadsource-on-its-transfer-functions.md) |
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
-| 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ⬜ after 09c | — | — |
+| 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ✅ 2026-10-01 | *"Refer to derived parents by label in the inventory report"* | [`logs/09d-…`](logs/09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
@@ -1636,6 +1637,21 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
+- **[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]** *(opened 2026-10-01 by
+  prompt 09d)*
+  - **The defect.** Since 09d a record line of a class that another class names ends, beyond its
+    fields, in its own label `  #<n>`, which is different for every record. So
+    `test_inventory_report.test_verbose_renders_every_distinct_record_as_a_distinct_line`, which
+    compares whole lines (`len(set(section.records)) == len(set(cls.records))`), can no longer fail
+    for those seven classes whatever fields the line shows. `test_verbose_shows_every_key_field_of_every_class`
+    still checks that every key field is printed, so a dropped field is still caught, but the test
+    that states the property is vacuous for them.
+  - **Impact.** None today: 09d's `test_inventory_report_labels.py` pins the property with the label
+    taken off (`TestDistinctStaysDistinct`), and mutation (i) of log 09d shows it failing. A later
+    change to the report that relies on the old test alone would not be checked.
+  - **Next step.** Compare lines with the own label stripped (`fields_of` already stops at the first
+    double space), in whichever prompt next edits `test_inventory_report.py`. Prompt 09d could not:
+    README §5 rule 7 keeps existing tests as they are.
 - **[09b-gksource-members-are-not-checked-against-their-rows]** *(opened 2026-09-30 by prompt
   09b)*
   - **The defect.** `sqla_GkSource_factory.store()` writes the `GkSource_parents` rows it is given
@@ -1653,34 +1669,6 @@ None is assigned to a prompt of this campaign.
     `_check_numeric_parent` asserts for a WKB row and 09c will for `QuadSourceIntegral`.
   - **Next step.** Decide whether `store()` reads each member's rows, as 07's check reads a WKB
     row's parent, and refuses a mismatch; it would cost one query per `GkSource` over its members.
-- **[09b-inventory-report-renders-every-member-of-a-parent-set]** *(opened 2026-09-30 by prompt
-  09b)*
-  - **The defect.** By the user's decision on the sketch, `tools/inventory_report.py` renders a
-    `GkSource`'s parent set by its members' physical labels, and it renders **every** member, on
-    the record's line. Measured on `build_full_store`: about 200 characters per member, verbose or
-    not. A production `GkSource` has a member for each `z_source` above its `z_response`, up to
-    ~1,200 at 100 samples per decade, so one record line is up to ~240 kB; every
-    `GkSourcePolicyData` line repeats its source's set, since the set is a field that varies.
-  - **Impact.** `main.py --inventory` on a production store prints lines no one can read, and
-    with `verbose` a report of order 1 GB (5,000 sources, and as many policy rows). Nothing is
-    lost or wrong; `test_inventory_report.py` passes, and no digest is printed.
-  - **Next step.** Decide how the report summarises a set (its size, the `z_source` range, the
-    distinct numeric and WKB parents' labels), which changes what the user decided and so is the
-    user's.
-  - **Widened (2026-10-01, the review of 09c):** since prompt 09c a `QuadSourceIntegral`'s key
-    names its `GkSourcePolicyData`, and the report renders a parent reference recursively, so
-    every integral's line carries its source's whole parent set as well (log 09c, observation
-    1). Measured on `build_full_store`: about 4,300 characters an integral line, from about 450
-    before 09c. In production each of ~500,000 integrals would repeat its `GkSource`'s up to
-    ~1,200 members, so the report is not usable on such a store until the set is summarised.
-  - **Assigned (2026-10-01):** to prompt **09d**, a small prompt of its own, by the user's
-    decision after the review of 09c. A summary in place of the members would let two distinct
-    records print as one line, which the report's tests forbid
-    (`test_verbose_renders_every_distinct_record_as_a_distinct_line`). So 09d prints each
-    distinct set once, under a label, and every record refers to it by the label. The user widened
-    09d the same day to every reference to a derived (sharded) row: since 09c those references
-    make up ~3,500 of a `QuadSourceIntegral` line's ~4,300 characters on the fixture, beyond the
-    set, so each is rendered as a label too, with the row printed once in its own section.
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
@@ -1758,6 +1746,46 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[09b-inventory-report-renders-every-member-of-a-parent-set]** *(opened 2026-09-30 by prompt
+  09b)*
+  - **The defect.** By the user's decision on the sketch, `tools/inventory_report.py` renders a
+    `GkSource`'s parent set by its members' physical labels, and it renders **every** member, on
+    the record's line. Measured on `build_full_store`: about 200 characters per member, verbose or
+    not. A production `GkSource` has a member for each `z_source` above its `z_response`, up to
+    ~1,200 at 100 samples per decade, so one record line is up to ~240 kB; every
+    `GkSourcePolicyData` line repeats its source's set, since the set is a field that varies.
+  - **Impact.** `main.py --inventory` on a production store prints lines no one can read, and
+    with `verbose` a report of order 1 GB (5,000 sources, and as many policy rows). Nothing is
+    lost or wrong; `test_inventory_report.py` passes, and no digest is printed.
+  - **Next step.** Decide how the report summarises a set (its size, the `z_source` range, the
+    distinct numeric and WKB parents' labels), which changes what the user decided and so is the
+    user's.
+  - **Widened (2026-10-01, the review of 09c):** since prompt 09c a `QuadSourceIntegral`'s key
+    names its `GkSourcePolicyData`, and the report renders a parent reference recursively, so
+    every integral's line carries its source's whole parent set as well (log 09c, observation
+    1). Measured on `build_full_store`: about 4,300 characters an integral line, from about 450
+    before 09c. In production each of ~500,000 integrals would repeat its `GkSource`'s up to
+    ~1,200 members, so the report is not usable on such a store until the set is summarised.
+  - **Assigned (2026-10-01):** to prompt **09d**, a small prompt of its own, by the user's
+    decision after the review of 09c. A summary in place of the members would let two distinct
+    records print as one line, which the report's tests forbid
+    (`test_verbose_renders_every_distinct_record_as_a_distinct_line`). So 09d prints each
+    distinct set once, under a label, and every record refers to it by the label. The user widened
+    09d the same day to every reference to a derived (sharded) row: since 09c those references
+    make up ~3,500 of a `QuadSourceIntegral` line's ~4,300 characters on the fixture, beyond the
+    set, so each is rendered as a label too, with the row printed once in its own section.
+  - **Closed 2026-10-01**, by prompt 09d, in the commit *"Refer to derived parents by label in the
+    inventory report"*. `tools/inventory_report.py` prints a reference to a sharded row as
+    `<Class>#<n>` (its ordinal in its class's verbose listing) and a parent set as `S<n>`, each
+    defined once in its own class's section; without `verbose`, a row or set that a shown record
+    names and the report did not show is listed too. On `build_full_store`, a verbose
+    `QuadSourceIntegral` line goes from 4,316-4,462 to 564-565 characters and a `GkSource` line from
+    533-550 to 169-170; on a stand-in with a 1,703-member set, the record lines of `GkSource`,
+    `GkSourcePolicyData` and `QuadSourceIntegral` are 27, 21 and 25 characters at any set size (each
+    was about 878,000) and a set's line grows by about 56 characters a member (log 09d).
+    The report is still one string. Its tests (`test_inventory_report_labels.py`) keep the property
+    this entry named: two distinct records never print as one line, here including pairs that differ
+    only in one member of a set.
 - **[09a-quadsourcevalue-model-read-joins-every-source-under-its-labels]** *(opened 2026-09-30 by
   prompt 09a)*
   - **The defect.** `QuadSourceValue._build_impl_model` finds its parent `QuadSource` by model, `q`,
@@ -2076,3 +2104,24 @@ by one lookup of the new `resolve_QuadSourceIntegral_parents` (`TkNumericIntegra
 other count unchanged. The witness is `schema_at_datastore-integrity-09c.json`.
 
 `black --check` is clean on every Python file this prompt touched.
+
+### 5.15 After prompt 09d (2026-10-01)
+
+Measured on the staged tree of prompt 09d's commit, with README §7's command, serially. The
+Datastore suite ran twice: the first run failed `test_inventory_retired`'s grep on a helper method
+of the new module named `inventory`, which was renamed (log 09d, "Suites after this commit").
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 665 run, 1 failure: the known wall-clock flake `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (0.0804 s against 0.06 s under a load average of 50–120 from other work; the same test fails alone, 0.0805 s, in an export of `HEAD`); the count is unchanged |
+| CosmologyModels | 39 OK |
+| Datastore | **551 OK** (532 + the 19 of the new `test_inventory_report_labels.py`) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+No witness, golden or read-back-guard pin moved: the prompt changes one display module, and
+`schema_at_datastore-integrity-09c.json` and `full_store_fingerprint_datastore-integrity-09c.json`
+are the current ones. `test_main_plumbing.EXPECTED_SITES` is unchanged. `black --check` is clean on
+every Python file this prompt touched. `docs/OPEN_ISSUES.md` stays at 99 rows: one deleted, one
+opened.

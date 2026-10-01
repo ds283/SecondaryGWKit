@@ -14,12 +14,33 @@ there are none). Then, category by category, each class has:
 - its tag sets, each with its labels and its record count;
 - its records, grouped under their tag set, each rendered by its **physical labels**: a float leaf
   as a number, an integer or string as itself, and a parent reference by the parent's own resolved
-  key, never by its digest. A set of parents (a ``GkSource``'s, prompts/datastore-integrity prompt
-  09b) is rendered as the list of its members, ``[{z_source=..., numeric=..., wkb=...}, ...]``, in
-  order of their physical values, each field a parent reference rendered as above or ``none``.
-  Without ``verbose`` at most five records per tag set are shown, and the number not shown is
-  given;
+  key, never by its digest -- except a reference to a **derived row**, below. Without ``verbose`` at
+  most five records per tag set are shown, and the number not shown is given;
 - its problems, **every one, never truncated**.
+
+**Derived rows are labels** (prompts/datastore-integrity prompt 09d). A parent reference whose class
+is sharded -- the Tk and Gk numeric and WKB integrations, ``QuadSource``, ``GkSource``,
+``GkSourcePolicyData`` -- is printed as a label ``<Class>#<n>``, where ``n`` is the row's ordinal in
+its own class's verbose listing (tag set by tag set, in physical order, from 1). A row is printed
+once, in its own class's section, where its record line carries its own label after its fields
+(``  #3``, beyond the first double space, so that a parser of the fields does not read it). A
+label depends on no serial. A reference to a replicated class (a model, an exit time, a redshift, a
+tolerance, a policy) is rendered from the parent's key, as before. A set of parents (a
+``GkSource``'s, prompt 09b) is labelled ``S<n>`` the same way, by its ordinal in physical order, and
+a record prints it as ``parents=S<n>``. Each set is printed once, after the records of its class's
+section, as ``parent set S<n>: [{z_source=..., numeric=..., wkb=...}, ...]``, its members in order
+of their physical values, each field a label or ``none``.
+
+Every label printed is defined in the report. Without ``verbose`` a class shows at most five
+records per tag set, so a row that a shown record names may not be among them: each class section
+then also lists those rows, one line each, under the prefix ``>``, and the sets that the records
+shown and listed name. The listing is closed under reference, which bounds the report: it holds
+what the records shown name, and what those name. A reference that cannot be resolved is printed
+``<unresolved ... reference>`` or ``<unresolved parent set>``.
+
+Two distinct records still never render as one line: a label is distinct for each distinct row,
+and a set label for each distinct set, so no key field is dropped by naming a parent. A summary of
+a set, such as its member count and ``z_source`` range, would not keep that.
 
 The ``*Value`` tables are not a category: each is reported on its parent's header. The
 ``store_tag`` class lists every label, whatever ``verbose`` is, and marks a label that no record
@@ -37,9 +58,9 @@ one cosmology). So:
 
 - a key field whose value is the same for **every** record of the class is printed once, on the
   class's "common to every record" line, and left off its record lines;
-- a parent is rendered by the fields of its key that vary across **its own** class (and its tags,
-  if they vary there), because the others are the same for every parent it could be. If none
-  vary -- the class has one distinct key -- it is rendered by its whole key and tags. A lone
+- a replicated parent is rendered by the fields of its key that vary across **its own** class (and
+  its tags, if they vary there), because the others are the same for every parent it could be. If
+  none vary -- the class has one distinct key -- it is rendered by its whole key and tags. A lone
   field is printed bare, without its name, where the parent's key has only that field or the field
   is itself a reference: ``z_response=0.1`` for a redshift, ``k=100000`` for an exit time.
 
@@ -159,6 +180,16 @@ class _Renderer:
         self._float_fields: Dict[str, frozenset] = {}
         self._ref_text: Dict[Tuple[str, str], str] = {}
         self._ref_sort: Dict[Tuple[str, str], tuple] = {}
+        self._groups: Dict[str, List[Tuple[Tuple[str, ...], List[Record]]]] = {}
+        self._ordinals: Dict[
+            str, Tuple[Dict[int, int], Dict[str, int], List[Record]]
+        ] = {}
+        self._labelled: Optional[frozenset] = None
+        self._set_numbers: Optional[Dict[Tuple[str, str], Dict[str, int]]] = None
+        self._set_digests: Dict[Tuple[str, str], Dict[int, str]] = {}
+        self._needed: Optional[
+            Tuple[Dict[str, List[int]], Dict[Tuple[str, str], List[int]]]
+        ] = None
 
     # --- what the schema says ----------------------------------------------------------------
 
@@ -256,6 +287,9 @@ class _Renderer:
             found = self.index(of).get(reference, [])
             if len(found) == 0:
                 self._ref_text[cache] = f"<unresolved {of} reference>"
+            elif of in self.labelled():
+                # a derived row is named by its label, and printed once, in its own section
+                self._ref_text[cache] = f"{of}#{self.ordinals(of)[1][reference]}"
             else:
                 record = found[0]
                 fields, tags = self._ref_fields(of, record)
@@ -316,17 +350,177 @@ class _Renderer:
             out.append((tuple(sort), "{" + ", ".join(parts) + "}"))
         return sorted(out)
 
-    def set_text(self, name: str, field: str, value: str) -> str:
+    def members_text(self, name: str, field: str, value: str) -> str:
+        """The members of a set, in physical order, each field a label or ``none``."""
         members = self._set_members(name, field, value)
         if members is None:
             return "<unresolved parent set>"
         return "[" + ", ".join(text for _, text in members) + "]"
+
+    def set_text(self, name: str, field: str, value: str) -> str:
+        """A set, by its label ``S<n>``; the set itself is printed once, in its class's section."""
+        number = self.set_numbers().get((name, field), {}).get(value)
+        if number is None:
+            return "<unresolved parent set>"
+        return f"S{number}"
 
     def set_sort(self, name: str, field: str, value: str) -> tuple:
         members = self._set_members(name, field, value)
         if members is None:
             return (9,)
         return (4,) + tuple(sort for sort, _ in members)
+
+    # --- labels (prompts/datastore-integrity prompt 09d) ---------------------------------------
+
+    def labelled(self) -> frozenset:
+        """The sharded classes that another class's key refers to: the derived rows. A reference
+        to one is printed as a label, ``<Class>#<n>``; every other reference is printed from the
+        parent's key."""
+        if self._labelled is None:
+            targets = set()
+            for cls in self.inventory.classes.values():
+                targets.update(cls.parents.values())
+                for members in cls.parent_sets.values():
+                    targets.update(members.values())
+            self._labelled = frozenset(
+                n
+                for n in targets
+                if n in self.inventory.classes and not self.inventory[n].replicated
+            )
+        return self._labelled
+
+    def shown(self, name: str, members: List[Record]) -> List[Record]:
+        """The records of one tag set that the report lists in full."""
+        return members if (self.verbose or name == "store_tag") else members[:MAX_SHOWN]
+
+    def groups(self, name: str) -> List[Tuple[Tuple[str, ...], List[Record]]]:
+        """The tag sets of ``name`` in order, each with its records in physical order."""
+        if name not in self._groups:
+            fields, _ = self.line_fields(name)
+            grouped: Dict[Tuple[str, ...], List[Record]] = {}
+            for record in self.cls(name).records:
+                grouped.setdefault(record.tags, []).append(record)
+            self._groups[name] = [
+                (tags, sorted(members, key=lambda r: self.record_sort(name, r, fields)))
+                for tags, members in sorted(grouped.items())
+            ]
+        return self._groups[name]
+
+    def ordinals(
+        self, name: str
+    ) -> Tuple[Dict[int, int], Dict[str, int], List[Record]]:
+        """A record's ordinal in its class's verbose listing: tag set by tag set, in physical
+        order, from 1. Returns (id of record -> ordinal, reference digest -> the lowest ordinal of
+        a record it names, the records by ordinal - 1). It does not depend on a serial.
+        """
+        if name not in self._ordinals:
+            of_record: Dict[int, int] = {}
+            of_digest: Dict[str, int] = {}
+            listing: List[Record] = []
+            for _, members in self.groups(name):
+                for record in members:
+                    listing.append(record)
+                    of_record[id(record)] = len(listing)
+                    of_digest.setdefault(
+                        self.inventory.digest_of(name, record), len(listing)
+                    )
+            self._ordinals[name] = (of_record, of_digest, listing)
+        return self._ordinals[name]
+
+    def set_numbers(self) -> Dict[Tuple[str, str], Dict[str, int]]:
+        """(class, field) -> set digest -> the set's ordinal ``n`` of ``S<n>``: in physical order,
+        from 1, through every class that holds sets, so that a label is unique in the report.
+        """
+        if self._set_numbers is None:
+            out: Dict[Tuple[str, str], Dict[str, int]] = {}
+            count = 0
+            for name in sorted(self.inventory.classes):
+                for field in self.cls(name).parent_sets:
+                    digests = {
+                        r.key[field]
+                        for r in self.cls(name).records
+                        if self._set_members(name, field, r.key[field]) is not None
+                    }
+                    ordered = sorted(
+                        digests, key=lambda d: (self.set_sort(name, field, d), d)
+                    )
+                    out[(name, field)] = {
+                        d: count + i for i, d in enumerate(ordered, start=1)
+                    }
+                    self._set_digests[(name, field)] = {
+                        count + i: d for i, d in enumerate(ordered, start=1)
+                    }
+                    count += len(ordered)
+            self._set_numbers = out
+        return self._set_numbers
+
+    def needed(self) -> Tuple[Dict[str, List[int]], Dict[Tuple[str, str], List[int]]]:
+        """What the report must define beyond the records it lists: (class -> ordinals of the rows
+        that a listed record refers to and the report has not listed, and so on for those rows,
+        (class, field) -> the ordinals ``n`` of the sets it prints). Closed under reference. With
+        ``verbose`` every record is listed, so only the sets remain."""
+        if self._needed is None:
+            numbers = self.set_numbers()
+            held = {
+                (name, field)
+                for name in self.inventory.classes
+                for field in self.cls(name).parent_sets
+            }
+            sets: Dict[Tuple[str, str], set] = {key: set() for key in held}
+            extra: Dict[str, set] = {}
+            visited = set()
+            work = []
+            for name in self.inventory.classes:
+                for _, members in self.groups(name):
+                    for record in self.shown(name, members):
+                        key = (name, self.ordinals(name)[0][id(record)])
+                        visited.add(key)
+                        work.append(key)
+            listed = set(visited)
+            done = set()
+            if self.verbose:
+                # every record is listed, so only the sets remain, and all of them are printed
+                work = []
+                for key, digests in self.set_numbers().items():
+                    sets[key].update(digests.values())
+            while work:
+                name, number = work.pop()
+                cls = self.cls(name)
+                record = self.ordinals(name)[2][number - 1]
+                for field, value in record.key.items():
+                    targets = []
+                    if field in cls.parent_sets:
+                        digest = value
+                        if digest in numbers.get((name, field), {}) and (
+                            (name, field, digest) not in done
+                        ):
+                            done.add((name, field, digest))
+                            sets[(name, field)].add(numbers[(name, field)][digest])
+                            classes = cls.parent_sets[field]
+                            for member in cls.members.get(field, {}).get(digest, ()):
+                                targets.extend(zip(classes.values(), member))
+                    elif field in cls.parents:
+                        targets.append((self.parent_class(name, record, field), value))
+                    for of, reference in targets:
+                        if of not in self.labelled() or reference is None:
+                            continue
+                        found = self.ordinals(of)[1].get(reference)
+                        if found is None or (of, found) in visited:
+                            continue
+                        visited.add((of, found))
+                        if (of, found) not in listed:
+                            extra.setdefault(of, set()).add(found)
+                        work.append((of, found))
+            self._needed = (
+                {n: sorted(v) for n, v in extra.items()},
+                {key: sorted(v) for key, v in sets.items()},
+            )
+        return self._needed
+
+    def set_line(self, name: str, field: str, number: int) -> str:
+        self.set_numbers()
+        digest = self._set_digests[(name, field)][number]
+        return f"parent set S{number}: {self.members_text(name, field, digest)}"
 
     # --- one field of one record -------------------------------------------------------------
 
@@ -362,6 +556,9 @@ class _Renderer:
                 text += "  [unvalidated]"
             elif record.validated is None:
                 text += "  [validated NULL]"
+        if name in self.labelled():
+            # beyond the first double space, where a parser of the fields stops
+            text += f"  #{self.ordinals(name)[0][id(record)]}"
         if record.value_count is not None:
             text += f"  | values: {record.value_count:,}"
         return text
@@ -372,9 +569,7 @@ class _Renderer:
         )
 
 
-def _class_lines(
-    renderer: _Renderer, name: str, carried: frozenset, verbose: bool
-) -> List[str]:
+def _class_lines(renderer: _Renderer, name: str, carried: frozenset) -> List[str]:
     cls = renderer.cls(name)
     records = cls.records
     where = "replicated" if cls.replicated else "sharded"
@@ -411,11 +606,7 @@ def _class_lines(
                 )
             )
 
-        groups: Dict[Tuple[str, ...], List[Record]] = {}
-        for record in records:
-            groups.setdefault(record.tags, []).append(record)
-        ordered = sorted(groups.items())
-
+        ordered = renderer.groups(name)
         for number, (tags, members) in enumerate(ordered, start=1):
             if cls.tagged:
                 labels = ", ".join(tags) if len(tags) > 0 else "(no tags)"
@@ -423,11 +614,7 @@ def _class_lines(
                     f"{_DETAIL_INDENT}tag set {number} of {len(ordered)} "
                     f"({_plural(len(members), 'record')}): {labels}"
                 )
-            members = sorted(
-                members, key=lambda r: renderer.record_sort(name, r, fields)
-            )
-            complete = verbose or name == "store_tag"
-            shown = members if complete else members[:MAX_SHOWN]
+            shown = renderer.shown(name, members)
             for record in shown:
                 line = renderer.record_line(name, record, fields)
                 if name == "store_tag" and record.key.get("label") not in carried:
@@ -436,6 +623,28 @@ def _class_lines(
             if len(members) > len(shown):
                 lines.append(
                     f"{_RECORD_INDENT}... and {len(members) - len(shown):,} more"
+                )
+
+        # a row that a listed record refers to, and that the report has not listed, is defined
+        # here, once, under a prefix that is not a record line's; and so is every parent set
+        extra, sets = renderer.needed()
+        if len(extra.get(name, ())) > 0:
+            _, _, listing = renderer.ordinals(name)
+            lines.append(
+                f"{_DETAIL_INDENT}{_plural(len(extra[name]), 'row')} referred to by the "
+                f"records above, and not shown:"
+            )
+            for number in extra[name]:
+                record = listing[number - 1]
+                labels = ", ".join(record.tags) if len(record.tags) > 0 else "(no tags)"
+                tagged = f"  tags: {labels}" if cls.tagged else ""
+                lines.append(
+                    f"{_RECORD_INDENT}> {renderer.record_line(name, record, fields)}{tagged}"
+                )
+        for field in cls.parent_sets:
+            for number in sets.get((name, field), ()):
+                lines.append(
+                    f"{_DETAIL_INDENT}{renderer.set_line(name, field, number)}"
                 )
 
     if len(cls.problems) > 0:
@@ -487,6 +696,6 @@ def format_inventory_report(
         lines.append("")
         lines.append(f"   -- {title}")
         for name in names:
-            lines.extend(_class_lines(renderer, name, carried, verbose))
+            lines.extend(_class_lines(renderer, name, carried))
 
     return "\n".join(lines)
