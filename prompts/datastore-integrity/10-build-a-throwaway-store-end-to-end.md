@@ -3,9 +3,8 @@
 **Campaign:** [`README.md`](README.md) · **Board items:** **V1**, **V2**, **V3** ·
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Written:** 2026-10-01, after 01–09d landed and were reviewed. **Gate:** 09d landed and reviewed
-(board §1); `git status` is clean; nothing is `running` in the registry; **the user has decided
-D10-1 to D10-5** (§1), recorded in the orchestrator's dispatch brief. Where the brief's decision
-differs from the recommendation written here, the brief is right.
+(board §1); `git status` is clean; nothing is `running` in the registry. **The user decided D10-1 to
+D10-5 on 2026-10-01, all five as recommended** (§1.1; board §1).
 **Closes:** `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]`, assigned here by
 the user on 2026-10-01 (§3). Its entry moves to the board's §4, and its index row is deleted.
 **Opens:** anything out of scope that you find (§6), **without fixing it**.
@@ -69,7 +68,8 @@ for prompt 10 names, as README §5 rule 7 requires. Everything else it adds is a
 
 ### 1.1 The decisions (the user's, before dispatch)
 
-Each is stated with a recommendation and its reason. The dispatch brief says which was taken.
+Each is stated with the recommendation and its reason. **Decided (2026-10-01): the user took all
+five recommendations.** They bind this prompt as written.
 
 - **D10-1 — the scope.** *Recommended:* LambdaCDM only. Three wavenumbers log-spaced over
   $10^5$–$10^6$/Mpc. `--zend 250`, `--source-samples-log10z 100`, the default response
@@ -123,7 +123,7 @@ Each is stated with a recommendation and its reason. The dispatch brief says whi
 
 ### 1.3 How each build is launched — `CLAUDE.md` rules 1–5, with nothing relaxed
 
-The command, with D10-1's scope (substitute the brief's if it differs):
+The command, with D10-1's scope:
 
 ```bash
 nohup ./venv/bin/python -u docs/gktk-remedial/scoped_pipeline_run.py \

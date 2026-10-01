@@ -36,10 +36,10 @@ through the registry, checks once that it started, and ends its turn. You wait, 
 per launch (§2.1), and resume the agent when the run is no longer alive. Neither of you polls.
 Four launches, so four waits: `reference`, then `resumed-a`, `-b` and `-c`.
 
-**The user's decisions come first.** The prompt's §1.1 states D10-1 to D10-5, each with a
-recommendation. They are the user's to take before dispatch.
-- Commit them as a decision record on the board, as `9a18063` did for 09c, before you dispatch.
-- Give them to the agent in the brief, and say where any differs from the prompt's recommendation.
+**The user's decisions came first.** The prompt's §1.1 states D10-1 to D10-5, each with a
+recommendation. **The user took all five on 2026-10-01**, and they are recorded on the board's §1
+and in the prompt, in the commit after the one that wrote this note.
+- Give them to the agent in the brief, as decided: nothing differs from the prompt.
 - **D10-1's evidence was measured by the orchestrator on 2026-10-01, at `ec44ae0`.** The A3
   baseline's four shards were opened `mode=ro` with `sqlite3`, and their SHA-256 were unchanged
   afterwards. The query:
@@ -135,7 +135,7 @@ recommendation. They are the user's to take before dispatch.
    number. It is **99** at `a2cc9d9`.
 7. **The names are free.** `python -m RunRegistry store show` on both store paths reports no
    sidecar and no tombstone, and no file exists by either name.
-8. **The decisions** are committed (§0), and the brief carries them.
+8. **The decisions** are committed (§0: all five as recommended), and the brief carries them.
 
 ## 2. Dispatch
 

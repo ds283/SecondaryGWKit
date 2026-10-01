@@ -3,8 +3,8 @@
 **Last updated:** 2026-10-01 · **Status: 11 of 12 prompts landed (01, 02, 03, 04, 04b, 05 as
 05a–05c, 06, 07, 08, 09 as 09a–09c, and 09d), all reviewed; 09a–09c landed 2026-09-30, completing 09,
 and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed and was
-reviewed 2026-10-01. Next: 10, written 2026-10-01 and waiting on the user's decisions D10-1 to
-D10-5.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+reviewed 2026-10-01. Next: 10, written 2026-10-01, its five decisions taken by the user the same
+day, and ready to dispatch.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
@@ -89,7 +89,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 09b | [Key `GkSource` on its parent set](09b-key-gksource-on-its-parent-set.md) | **K6**, **K7** (set-valued) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key GkSource on the set of Gk rows it is assembled from"* | [`logs/09b-…`](logs/09b-key-gksource-on-its-parent-set.md) |
 | 09c | [Key `QuadSourceIntegral` on its inputs](09c-key-quadsourceintegral-on-its-inputs.md) | **K5**, **K7** (complete) | Opus | ✍️ yes, 2026-09-30 | ✅ 2026-09-30 | *"Key QuadSourceIntegral on the six rows it is computed from"* | [`logs/09c-…`](logs/09c-key-quadsourceintegral-on-its-inputs.md) |
 | 09d | [Refer to derived parents by label in the inventory report](09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) | — (closes `[09b-inventory-report-renders-every-member-of-a-parent-set]`) | Sonnet | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-09d.md`](orchestrator/prompt-09d.md) | ✅ 2026-10-01 | *"Refer to derived parents by label in the inventory report"* | [`logs/09d-…`](logs/09d-refer-to-derived-parents-by-label-in-the-inventory-report.md) |
-| 10 | [Build a throwaway store end to end](10-build-a-throwaway-store-end-to-end.md) | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-10.md`](orchestrator/prompt-10.md); waiting on D10-1 to D10-5 | ⬜ after 09d | — | — |
+| 10 | [Build a throwaway store end to end](10-build-a-throwaway-store-end-to-end.md) | **V1**–**V3**; closes `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` | Opus | ✍️ yes, 2026-10-01; orchestrator note [`orchestrator/prompt-10.md`](orchestrator/prompt-10.md); D10-1 to D10-5 decided 2026-10-01, as recommended | ⬜ after 09d | — | — |
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
@@ -103,8 +103,24 @@ dispatched one at a time, never concurrently in this checkout, in either order. 
 [`prompt-08.md`](orchestrator/prompt-08.md) (2026-09-29, used), and
 [`prompt-09.md`](orchestrator/prompt-09.md) (2026-09-30, used for 09a–09c), and
 [`prompt-09d.md`](orchestrator/prompt-09d.md) (2026-10-01, used), and
-[`prompt-10.md`](orchestrator/prompt-10.md) (2026-10-01, waiting on the user's decisions
-D10-1 to D10-5, which the prompt's §1.1 states with recommendations).
+[`prompt-10.md`](orchestrator/prompt-10.md) (2026-10-01, ready).
+
+**Decided for 10 (2026-10-01, the user, after its prompt and note were written).** The prompt's §1.1
+states five decisions with recommendations, and the user took all five.
+- **D10-1, the scope.** LambdaCDM only; three wavenumbers log-spaced over $10^5$–$10^6$/Mpc;
+  `--zend 250`, `--source-samples-log10z 100`, the default response sparseness; `--shards 4`;
+  `main.py`'s default tolerances, policies and tags; `--cpus 6`.
+  - The bound rests on the orchestrator's read-only measurement of the A3 baseline (note §0). Its
+    rows with $k$, $q$ and $r$ all at or below $1.1\times10^6$ cost 6,315 CPU-seconds in all, and
+    none lies below $z_{\rm response} = 132$.
+- **D10-2, two builds compared.** A reference build straight through, and the same scope
+  interrupted and resumed. Their fingerprints must be equal.
+- **D10-3, two interruptions,** by `SIGTERM`: one in the `GkSource` stage and one in the
+  `QuadSourceIntegral` stage, each leaving its stage partly stored.
+- **D10-4, fault copies at open.** Four tampered plain copies of the closed resumed store, outside
+  `var/`, test prompt 02's three refusals and its repair on real shards.
+- **D10-5, the stores afterwards.** Both stay in `var/datastores/` with their sidecars for the
+  review. Retiring them is the user's, afterwards.
 
 **Decided for 07 (2026-09-29, the user, while its note was written).** Prompt 07 was written before
 05c and 06 landed, and as written it would hit its own §5 stop or silently change a reader in four
