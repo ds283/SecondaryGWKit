@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-10-01 · **Status: 10 of 11 prompts landed (01, 02, 03, 04, 04b, 05 as
-05a–05c, 06, 07, 08, and 09 as 09a–09c), all reviewed; 09a–09c landed 2026-09-30, completing 09,
+**Last updated:** 2026-10-01 · **Status: 11 of 12 prompts landed (01, 02, 03, 04, 04b, 05 as
+05a–05c, 06, 07, 08, 09 as 09a–09c, and 09d), all reviewed; 09a–09c landed 2026-09-30, completing 09,
 and 09c was reviewed 2026-10-01. 09d, a small follow-up on the inventory report, landed 2026-10-01
 and awaits review. Next: 10.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed

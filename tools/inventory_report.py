@@ -626,13 +626,14 @@ def _class_lines(renderer: _Renderer, name: str, carried: frozenset) -> List[str
                 )
 
         # a row that a listed record refers to, and that the report has not listed, is defined
-        # here, once, under a prefix that is not a record line's; and so is every parent set
+        # here, once, under a prefix that is not a record line's; and so is every parent set.
+        # The record that names it is often in a later section, so the header does not say where
         extra, sets = renderer.needed()
         if len(extra.get(name, ())) > 0:
             _, _, listing = renderer.ordinals(name)
             lines.append(
-                f"{_DETAIL_INDENT}{_plural(len(extra[name]), 'row')} referred to by the "
-                f"records above, and not shown:"
+                f"{_DETAIL_INDENT}{_plural(len(extra[name]), 'row')} not shown above, and "
+                f"referred to elsewhere in this report:"
             )
             for number in extra[name]:
                 record = listing[number - 1]
