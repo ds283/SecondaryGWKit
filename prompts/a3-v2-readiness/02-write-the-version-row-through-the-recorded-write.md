@@ -62,15 +62,30 @@ as the one recorded exception.
     has `use_version`, until `set_version` has been called. No such insert can then carry a
     missing serial.
 - `ShardedPool.__init__`, once every actor exists:
-  - writes the row once, through `_get_impl_replicated_table("version", {"label": version_label})`
-    and so through `_replicated_write`;
-  - keeps the answer as `self._version`;
+  - finds the label's row **without writing anything**. After the check at open, every shard's
+    `version` table is identical (the check compares it), so a read on one shard answers for all.
+    How it reads is the *prompt's choice*. A plain `SELECT serial, label FROM version WHERE
+    label = ?` on a shard file, as the check at open and audit V2 make, is enough;
+  - **only if the label is absent**, writes the row once, through
+    `_get_impl_replicated_table("version", {"label": version_label})` and so through
+    `_replicated_write`;
+  - keeps the row as `self._version`, found or written;
   - calls `set_version` on every actor, with `ray.get` over all of them;
   - only then returns. Where this sits relative to `read_largest_store_ids` and the broker's
     notification is the *prompt's choice*; state the reason in the log. `version` takes no lease
     (`_insert`), so either order is possible.
 - Do not change `sqla_version_factory.build`'s return type (log 00, observation 2) unless W1 cannot
   work without it. If it must change, record the change as a deviation.
+- **Why the read comes first** (added 2026-10-02, with the orchestrator note). Every replicated
+  `get` commits a `replication_in_flight` record on the primary and deletes it, even on a hit
+  (audit R2). A version `get` on every open would therefore write the primary on every open,
+  including a clean one under a label the store already holds. Today such an open writes
+  nothing. The orchestrator measured this at `1c458d3`, by adding that `get` to the end of
+  `ShardedPool.__init__` in-process: **38 existing Datastore tests fail**, each because
+  `store.sqlite` changed. They are 36 in `TestKillAndReopen`,
+  `TestCleanStoreUntouched.test_opening_a_clean_store_writes_nothing` and
+  `TestNoRecordRefuses.test_a_difference_in_a_sharded_table_is_not_looked_at`. An open that adds
+  nothing writes nothing.
 
 **W2 — the check at open treats the version row like any other replicated row.**
 - With form A, an interrupted version write leaves a `get`/`version` record, and the generic `get`
@@ -128,6 +143,9 @@ rule 9). Each case below is one test or more.
    `_replicated_write`: a hook sees a `get` of `version` under a record, and sees no actor
    constructor insert it. Every versioned row stored afterwards carries that serial, on every
    shard.
+   **A clean reopen under a label the store holds writes nothing.** This test already exists and is
+   unchanged: `TestCleanStoreUntouched` and the second-reopen checks of `TestKillAndReopen` compare
+   every file's SHA-256 (added 2026-10-02; W1, "Why the read comes first").
 2. **A new label on an existing store** (audit V1 case 3):
    - a fault **after** the controlling shard's version `get` commits. The next open repairs the
      other shards from the controller and clears the record. Every shard holds the row.
@@ -147,6 +165,13 @@ rule 9). Each case below is one test or more.
      clears the record.
    - an uninterrupted prune. Every shard identical, no record left. A validated model, and every
      sharded row, untouched.
+   - **a prune that fails on one shard inside the factory.**
+     `sqla_BackgroundModelFactory.validate_on_startup` catches `SQLAlchemyError` from its deletes,
+     appends a message and returns normally (added 2026-10-02, read). A pool that takes its
+     return as success would clear the record over shards that still differ. Make one shard's
+     delete raise. The record stays set, the open raises, and the next open completes the prune.
+     How the pool knows a shard's prune worked is the *prompt's choice*: for example, re-selecting
+     the unvalidated rows afterwards. Do not edit the factory.
 6. **The two kinds of record stay apart.** A `prune` record over a difference in another replicated
    class refuses. A `get` record of `BackgroundModel` over shards that differ is repaired as today,
    not pruned.
@@ -170,14 +195,16 @@ record each in the log as a diff, exactly as applied:
 - (iii) the pool prunes without committing the `prune` record;
 - (iv) the check at open clears a `prune` record without re-running the prune;
 - (v) the actor prunes `BackgroundModel` again under `prune_unvalidated=True`;
-- (vi) `_plan_replicated_repair` accepts a `prune` record as a `get`.
+- (vi) `_plan_replicated_repair` accepts a `prune` record as a `get`;
+- (vii) the pool writes the version row through `_get_impl_replicated_table` when the label is
+  already present. `TestCleanStoreUntouched` fails (added 2026-10-02).
 
 ---
 
 ## 4. Acceptance
 
 1. W1–W3 as §2 states them, with each *prompt's choice* stated and justified in the log.
-2. The tests of §3, and the deliberate-breakage record (i)–(vi).
+2. The tests of §3, and the deliberate-breakage record (i)–(vii).
 3. `[02-the-version-row-…]` moved to the `datastore-integrity` board's §4, and
    `[00-the-prune-at-open-…]` to this board's §4. Each gets a closing note naming this commit and
    the tests that show it healed. Both index rows deleted; the count and date corrected.

@@ -63,12 +63,23 @@ recommended** (audit, closing section; README §6.2):
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
-(2026-10-02, used) and [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used).
-Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+(2026-10-02, used), [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used) and
+[`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
 T1, and a fifth record to name in §6.
+
+Writing 02's note found two things prompt 02 did not know, and the prompt was amended in the same
+commit:
+- **W1 as written would write the primary on every open.** Every replicated `get` commits and
+  deletes a record on the primary, even on a hit (audit R2). With a version `get` added in-process
+  to the end of `ShardedPool.__init__` at `1c458d3`, 38 existing Datastore tests failed, each
+  because `store.sqlite` changed on a reopen that should write nothing. W1 now reads the label's
+  row first and writes only when it is absent, and breakage (vii) pins that.
+- **The factory's prune swallows its own `SQLAlchemyError`.** It reports the error and returns
+  normally, so a pool trusting its return could clear a `prune` record over shards that differ.
+  §3 case 5 gained a case for it.
 
 **Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
 `5707851` with nothing `running` in this repository's registry, no other worktree and no Ray
