@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-02 · **102 open** across eighteen campaigns.
+**Last updated:** 2026-10-02 · **103 open** across eighteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -727,7 +727,9 @@ two stores, the user assigned the three rows that are the campaign's own code,
 `[03-the-package-docstring-…]` and the two `04-` rows, to its prompt 06, which fixed and closed all
 three on the board's §4 the same day; their rows are deleted here. The other four stay unassigned.
 **The user closed the campaign on 2026-09-26 at 6 / 6.** The four rows below stay open, each
-recorded here for its owner.
+recorded here for its owner. A fifth, in this campaign's code, was seen on 2026-10-02 when the user
+retired `datastore-integrity` prompt 10's two stores. It has **no board row**: the user will set up
+a campaign to own it, and its board takes the issue over.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -735,6 +737,7 @@ recorded here for its owner.
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 | `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
+| `[10-store-retire-reports-every-tombstone-as-a-reference]` | — (no board yet; the user will set up a campaign to own it) | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only: nothing is refused or rewritten, but the noise grows with every retirement. |
 
 ### 1.15 The datastore integrity campaign
 
