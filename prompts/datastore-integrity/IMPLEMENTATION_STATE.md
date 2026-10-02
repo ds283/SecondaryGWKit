@@ -1,7 +1,7 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-10-02 · **Status: 12 of 12 prompts landed. The campaign's work is done; it
-is closed by the user after the orchestrator's review of 10.** (01, 02, 03, 04, 04b, 05 as 05a–05c,
+**Last updated:** 2026-10-02 · **Status: COMPLETE — 12 of 12 prompts landed. Closed by the user on
+2026-10-02, after the orchestrator's review of 10.** (01, 02, 03, 04, 04b, 05 as 05a–05c,
 06, 07, 08, 09 as 09a–09c, 09d and 10; all reviewed, 10 on 2026-10-02.) The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
@@ -1817,6 +1817,7 @@ uninterrupted build holds once pruning runs. Both stores are clean replica by re
 repair at open as prompt 02 designed, and read back without moving. **The user decides** whether
 the campaign closes, and whether the two stores are retired (D10-5; `store retire` is theirs to
 run).
+  - **Decided (2026-10-02):** the user closed the campaign, and decided to retire both stores.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.

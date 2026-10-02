@@ -771,6 +771,8 @@ which the user assigned to prompt 10.
 Prompt 10 closed `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]` on
 2026-10-02, on this campaign's board's §4, and its row is deleted; it opened four issues on this
 board the same day, three below and one assigned to `handover` (§1.1).
+**The user closed the campaign on 2026-10-02 at 12 / 12.** The eleven rows below stay open, each
+recorded here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|
