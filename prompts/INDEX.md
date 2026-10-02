@@ -8,12 +8,15 @@ change its status when the board closes it. The open-issue column is a snapshot 
 [`docs/OPEN_ISSUES.md`](../docs/OPEN_ISSUES.md) on the date in the header; the section pointer
 is the durable part.
 
-**Last updated:** 2026-09-29 · 21 campaigns: 3 live, 1 seeded, 17 closed or complete.
+**Last updated:** 2026-10-02 · 22 campaigns: 3 live, 1 seeded, 18 closed or complete. Open-issue
+counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and `datastore-integrity`'s, taken
+on 2026-10-02.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
 | [`perturbation-sound-speed`](perturbation-sound-speed/AUDIT.md) | **seeded** — audit and script only, no README or board | 2026-09-29 | the $c_s^2$ the transfer-function sector reads: $dp/d\rho$, not $p/\rho$, on the QCD background | §1.16; 1 |
-| [`datastore-integrity`](datastore-integrity/IMPLEMENTATION_STATE.md) | **live** — 7 of 10 landed | 2026-09-25 → 2026-09-29 | every known datastore-integrity defect, before the A3 v2 store is built | §1.15; 5 |
+| [`a3-v2-readiness`](a3-v2-readiness/IMPLEMENTATION_STATE.md) | **live** — planned; 4 of 8 written, none landed | 2026-10-02 | the seven defects a build or a reader of the A3 v2 store would meet; `DEFAULT_QUADRATURE_RTOL = 1e-7` | §1.17; 2 |
+| [`datastore-integrity`](datastore-integrity/IMPLEMENTATION_STATE.md) | closed 12 / 12, 2026-10-02 | 2026-09-25 → 2026-10-02 | every known datastore-integrity defect, before the A3 v2 store is built | §1.15, §1.17; 12 |
 | [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 3 of 10 groupings landed; A3 baseline run stopped on cost | 2026-09-20 → 2026-09-23 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle | §1.1; 10 |
 | [`datastore-readback`](datastore-readback/IMPLEMENTATION_STATE.md) | **live** — 1 of 1 written landed, resumable A3 run is the user's | 2026-09-22 → 2026-09-26 | the read-back guard and the audit of every object factory | §1.10; 0 |
 | [`store-fingerprint`](store-fingerprint/IMPLEMENTATION_STATE.md) | complete 5 / 5, closed 2026-09-25 | 2026-09-24 → 2026-09-29 | read-only store reader, structured inventory, content fingerprint in the sidecar | §1.13; 1 |

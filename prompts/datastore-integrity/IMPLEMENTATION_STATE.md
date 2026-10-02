@@ -1973,6 +1973,9 @@ None is assigned to a prompt of this campaign.
   - **Assigned (2026-10-02):** to the **`handover`** campaign, which owns A3 v2's launch and
     `quadsource_atol_sweep.py`, by the user's decision that the flag is the defect. Its board is not
     edited here; the index row is under §1.1.
+  - **Assigned (2026-10-02, again):** reassigned from `handover` to `prompts/a3-v2-readiness` prompt
+    **05**, by the user's decision that one campaign owns every A3 v2 readiness defect (that
+    campaign's D4). Index row moved from `docs/OPEN_ISSUES.md` §1.1 to §1.17.
 - **[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]** *(opened 2026-10-02
   by prompt 10)*
   - **The defect.** `docs/gktk-remedial/scoped_pipeline_run.py`'s `terminal_state` docstring says
@@ -2000,6 +2003,11 @@ None is assigned to a prompt of this campaign.
     re-install one after `ray.init`), so that `terminal_state` can tell a received `SIGTERM` from a
     `SystemExit(1)`, and write the terminal state before Ray's abort; then shut Ray down. The driver
     belongs to `GkTk-remedial`'s verification, and prompt 10 changes no driver.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **04**, which covers
+    `quadsource_atol_sweep.py --build` as well as this driver, since both use `terminal_state`. 04 is
+    held on that campaign's audit 00, which measures whether a handler installed after `ray.init`
+    survives `ray.wait` and whether Ray's abort can be cancelled. Index row moved to
+    `docs/OPEN_ISSUES.md` §1.17.
 - **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10)*
   - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
     LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
@@ -2015,6 +2023,9 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Give the scripts a model filter, as `scoped_pipeline_run.py --models` does for
     `main.py`, or skip a model the store does not hold, saying so. The scripts are not this
     prompt's to change.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, beside `[08-…]`: both are
+    the readers' setup, and `build_model_list` is where each starts. Index row moved to
+    `docs/OPEN_ISSUES.md` §1.17.
 - **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
   2026-10-02 by prompt 10)*
   - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
@@ -2063,6 +2074,12 @@ None is assigned to a prompt of this campaign.
     `read_table_config` entry and a factory method, as `QuadSourcePolicy` now has), refusing on a
     miss, in this script and in any other reader that does the same. Prompt 08 was bounded by the
     user's grant to the `QuadSourcePolicy` lookup and did not change the `GkSourcePolicy` one.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, which opens every reader
+    on a read-only pool (that campaign's D3) rather than repairing lookups one by one. Read the same
+    day, the defect is wider than this entry: every `object_get` on a replicated class takes
+    `_replicated_write`, and the readers also look up `tolerance`, the wavenumbers, the exit times
+    and both cosmologies that way. That campaign's audit 00 measures how wide, and records it here.
+    Index row moved to `docs/OPEN_ISSUES.md` §1.17.
 - **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
     integration table first and its tag and value tables after it, e.g. `"tk-wkb":
@@ -2118,6 +2135,10 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Decide whether the version rows go through the recorded write, or whether the
     check at open treats a `version` row missing under a label being opened differently. Either
     changes `Datastore.py`'s constructor or the check's licence, which prompt 02 could not.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **02**, by the user's decision
+    that every defect a build or a reader of A3 v2 would meet is fixed before it is built (that
+    campaign's README §6.1, D4). 02 is held on that campaign's audit 00, which measures the window
+    and whether a read-only open can find the row. Index row moved to `docs/OPEN_ISSUES.md` §1.17.
 
 ---
 

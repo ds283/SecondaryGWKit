@@ -233,6 +233,13 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   and no accuracy, because the floor is not quadrature; the band where 1e-9 could still bite is
   the mid one, where 1e-7 was still moving.
 
+  **Clarified by the user, 2026-10-02** (`prompts/a3-v2-readiness` README §6.1, D1): `1e-9` meant
+  **one rung tighter than the pair a store is built at**. It was said when `1e-8` was the shipped
+  `rtol`. A3 v2 is built at `(1e-32, 1e-7)`, so its science check is `1e-8`. The same day the user
+  decided that `DEFAULT_QUADRATURE_RTOL` itself becomes `1e-7` (D2, that campaign's prompt 01), so
+  that `main.py`, `--build` and `extract_QuadSourceIntegral_data.py` share the pair. That is a change
+  to a constant this board says is not its to take; the decision is the user's, recorded there.
+
   **Next step:** regenerate the store at `(atol, rtol) = (1e-32, 1e-7)` (see that issue for the
   decision and the scope). **The remedy for the constant itself is not this campaign's to take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
   `prompts/levin-refactor` and `prompts/qsi-phase-groups` (`tolerance-convergence` README §0.4),

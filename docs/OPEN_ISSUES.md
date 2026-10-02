@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-02 · **103 open** across eighteen campaigns.
+**Last updated:** 2026-10-02 · **104 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -31,6 +31,7 @@ the two disagree, the board is right.
 [`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md) ·
 [`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md) ·
 [`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md) ·
+[`a3-v2-readiness`](../prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -118,7 +119,6 @@ for.
 | `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
-| `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | **Assigned 2026-10-02 to `handover`**, which owns A3 v2's launch. `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
@@ -728,8 +728,9 @@ two stores, the user assigned the three rows that are the campaign's own code,
 three on the board's §4 the same day; their rows are deleted here. The other four stay unassigned.
 **The user closed the campaign on 2026-09-26 at 6 / 6.** The four rows below stay open, each
 recorded here for its owner. A fifth, in this campaign's code, was seen on 2026-10-02 when the user
-retired `datastore-integrity` prompt 10's two stores. It has **no board row**: the user will set up
-a campaign to own it, and its board takes the issue over.
+retired `datastore-integrity` prompt 10's two stores. It had **no board row**: the user will set up
+a campaign to own it, and its board takes the issue over. **Taken over on 2026-10-02 by
+`prompts/a3-v2-readiness`**, whose board §3.2 now holds it; its row moved to §1.17.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -737,7 +738,6 @@ a campaign to own it, and its board takes the issue over.
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 | `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
-| `[10-store-retire-reports-every-tombstone-as-a-reference]` | — (no board yet; the user will set up a campaign to own it) | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only: nothing is refused or rewritten, but the noise grows with every retirement. |
 
 ### 1.15 The datastore integrity campaign
 
@@ -775,7 +775,9 @@ Prompt 10 closed `[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-p
 2026-10-02, on this campaign's board's §4, and its row is deleted; it opened four issues on this
 board the same day, three below and one assigned to `handover` (§1.1).
 **The user closed the campaign on 2026-10-02 at 12 / 12.** The eleven rows below stay open, each
-recorded here for its owner.
+recorded here for its owner. **Four of them were assigned to `prompts/a3-v2-readiness` on
+2026-10-02**, with the one first assigned to `handover`, and their rows moved to §1.17; seven stay
+below.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -784,11 +786,7 @@ recorded here for its owner.
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber`/`QuadSourcePolicy` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
 | `[07-drop-actions-list-a-parent-table-before-its-children]` | datastore-integrity | Within each `_drop_actions` entry the parent table is dropped before its tag and value tables, so under foreign-key enforcement dropping an action that holds value rows fails on its own. Inert: production never turns enforcement on. Prompt 07 fixed only the order *between* actions. |
-| `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label now makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. |
-| `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. |
 | `[09b-gksource-members-are-not-checked-against-their-rows]` | datastore-integrity | `GkSource.store()` writes its `GkSource_parents` members unread: nothing checks each names rows for the source's `k` and model at its own `z_source`, or that its WKB row starts from its numeric row. Inert in the pipeline, where `compute()` asserts the set. |
-| `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | datastore-integrity | A `SIGTERM` to `scoped_pipeline_run.py` while it waits in `ray.wait` reaches Python as `SystemExit(1)`, so it is recorded `failed`/1, not `killed`; a cleanup over ~3 s is aborted (SIGABRT) and nothing is recorded, leaving a `gcs_server` behind. An interrupted A3 v2 launch looks like a real failure or a crash. |
-| `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | datastore-integrity | The six `extract_*.py` scripts read every model of `build_model_list`, with no `--models`, and exit 1 on `QCD_Cosmology` after a full LambdaCDM read of a LambdaCDM-only store, as A3 v2's is. |
 | `[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]` | datastore-integrity | The amended distinct-lines test compares within a tag set, and the fixture holds one record per tag set of `QuadSource`, `GkNumericIntegration` and `GkWKBIntegration`, so it cannot fail for them. 09d's pair tests cover them. |
 
 ### 1.16 The perturbation sound-speed campaign
@@ -807,6 +805,26 @@ The one row below is recorded here until the board exists.
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-perturbation-sound-speed-is-p-over-rho-not-dp-drho]` | perturbation-sound-speed (audit) | `LambdaCDM_GenericEOS.wPerturbations:1182` returns `eos.w(T)`$\,\rho_r/(\rho_r+\rho_m)$ with `w` $= 4g_s/3g_\rho - 1 = p/\rho$; the adiabatic $c_s^2 = 1/(3 + d\ln g_s/d\ln T)$ dips to **0.217** where $w$ dips to **0.250**, gap **0.050** at $T = 0.143$ GeV. Sound-phase error after horizon entry **0.05–0.6 rad** across the PTA band, **17 rad** at $k = 3\times10^8$/Mpc, against a $5\times10^{-12}$ rad declared floor; the mass term is 7 % of $\omega^2$ at $k/aH = 3$ in the dip. Every stored $T_k$ on QCD is affected; radiation, ΛCDM, the tensor sector and the source term's $w_0$ are not. The fit's `T_120_MEV` join puts a 0.5 % step in $c_s^2$ and breaks any straddling finite difference. Four decisions for the user in AUDIT.md §6. |
+
+### 1.17 The A3 v2 readiness campaign
+
+`prompts/a3-v2-readiness` was opened on 2026-10-02, when the user asked what remained to fix before
+the A3 v2 LambdaCDM store is built, and decided that seven defects are fixed first, by one campaign.
+Five of them stay on the `datastore-integrity` board, which carries an **Assigned** line for each,
+and close there; one of the five had been assigned to `handover` the same day, and was reassigned.
+The sixth, seen when the user retired `datastore-integrity` prompt 10's stores, had no board, and is
+taken over by this campaign's. The seventh was opened by this campaign's plan. Its audit, prompt 00,
+measures the three mechanisms the held prompts rest on.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-quadsource-extraction-reads-at-the-default-rtol]` | a3-v2-readiness | `extract_QuadSourceIntegral_data.py` looks its rows up at `DEFAULT_QUADRATURE_RTOL = 1e-8`; A3 v2 is built at `1e-7` by a substitution into `main.py`, so the extractor finds none of its rows, and may insert a `1e-8` tolerance row. Prompt 01 sets the default (D2). |
+| `[10-store-retire-reports-every-tombstone-as-a-reference]` | a3-v2-readiness | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only. Prompt 06. |
+| `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. Reassigned from `handover`; prompt 05. |
+| `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | datastore-integrity | A `SIGTERM` to `scoped_pipeline_run.py` while it waits in `ray.wait` reaches Python as `SystemExit(1)`, so it is recorded `failed`/1, not `killed`; a cleanup over ~3 s is aborted (SIGABRT) and nothing is recorded, leaving a `gcs_server` behind. `--build` shares `terminal_state`. Prompt 04, held on audit 00. |
+| `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | `extract_QuadSourceIntegral_data.py` looks its `GkSourcePolicy` up with `object_get`, which inserts on a miss and, even on a hit, commits and clears an in-flight record on the primary: a reader that writes to the store it reads. Wider than recorded: every replicated `object_get` the readers make does the same. Prompt 03 (read-only pool, D3). |
+| `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | datastore-integrity | The six `extract_*.py` scripts read every model of `build_model_list`, with no `--models`, and exit 1 on `QCD_Cosmology` after a full LambdaCDM read of a LambdaCDM-only store, as A3 v2's is. Prompt 03. |
+| `[02-the-version-row-is-written-outside-the-in-flight-record]` | datastore-integrity | The replicated `version` row is written by each actor's constructor, not through the recorded write. A crash between them under a new version label makes prompt 02's check at open refuse the store, where it used to heal. Only a new store's first open, or a label change, reaches it. Prompt 02, held on audit 00. |
 
 ---
 
