@@ -211,6 +211,18 @@ Remnants, fixed in the follow-up commit that records this review:
 5. **`[01-reader-tolerance-agreement-does-not-scan-object-read-batch]`** is opened in §3.2. The
    index count is now 107.
 
+**The `atol` comment, after the review (2026-10-02).** The review offered the user a choice for
+`config/defaults.py`'s `atol` comment: rewrite its "`rtol` was confirmed not to bind" or date it.
+The user chose to rewrite it, since "`rtol` is now determinative". It is rewritten in its own
+commit, comments only (`config/defaults.py`'s AST is identical, and both constants keep their
+lines, `:173` and `:185`).
+- The `DEFAULT_QUADRATURE_RTOL` comment above it no longer says the `atol` comment is left as
+  written.
+- That closes `levin-refactor`'s `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`,
+  moved to that board's §4.
+- It narrows `tolerance-convergence`'s `[06a-…]` to README §6.2's row alone.
+- `TOLERANCE-PROVENANCE.md`'s update subsection gains a bullet. The index is now **106**.
+
 Carried forward:
 - 03 edits `extract_QuadSourceIntegral_data.py`. `test_quadrature_tolerance_pin.py`'s second class
   reads its `quad_atol`/`quad_rtol` bindings and its `object_read_batch` call, so 03's note must

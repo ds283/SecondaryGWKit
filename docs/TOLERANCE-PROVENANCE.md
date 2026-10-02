@@ -304,6 +304,13 @@ has changed since. `DEFAULT_QUADRATURE_ATOL` is **unchanged** at `1e-32`.
 - **Campaign, prompt, log, date:** `prompts/a3-v2-readiness` prompt 01
   (`logs/01-set-the-production-quadrature-rtol.md`), 2026-10-02, for the change; `prompts/handover`
   (`QUADSOURCE-TOLERANCE-SWEEP.md`) for the measurement.
+- **Later the same day: the `atol` comment is rewritten** (the user's decision, in the
+  orchestrator review of prompt 01). The comment in `config/defaults.py` under
+  `DEFAULT_QUADRATURE_ATOL` no longer says `rtol` "was confirmed not to bind". It now records
+  standing note 26's inversion: at `1e-32`, `rtol` is the binding half and log 12's bit-identity
+  does not transfer. It adds that `atol` is still not inert on production geometry. This is
+  comments only; neither value moved. `levin-refactor`'s
+  `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]` is closed by it.
 
 ### `DEFAULT_LEVIN_THRESHOLD = 1.0` (`config/defaults.py:45`)
 

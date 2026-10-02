@@ -166,17 +166,22 @@ DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13
 # and 2.1), which is what rules 1e-6 out. Low z_response is representation-limited, not
 # quadrature-limited, so a tighter rung there buys cost and no accuracy (section 0, answer 4). It
 # was 1e-8 until that prompt. The convergence check for a science output is one rung tighter than
-# the pair a store is built at, so 1e-8 for a store at 1e-7 (D1). The comment directly below,
-# which is DEFAULT_QUADRATURE_ATOL's, records log 12's "rtol was confirmed not to bind", measured
-# at atol = 1e-25; it is left as written and does not transfer to atol = 1e-32
-# (docs/TOLERANCE-PROVENANCE.md, standing note 26).
+# the pair a store is built at, so 1e-8 for a store at 1e-7 (D1). At atol = 1e-32 rtol is the
+# binding half of the pair: it, not atol, decides when the quadrature stops. The comment below
+# says why, and docs/TOLERANCE-PROVENANCE.md (standing note 26) records the change of regime that
+# made it so.
 DEFAULT_QUADRATURE_RTOL = 1e-7
 # was 1e-25; tightened per prompts/source-remediation/IMPLEMENTATION_STATE.md
 # [12-atol-too-loose-for-the-source-integral] -- at 1e-25, ~58% of production QuadSourceIntegral
 # work items had |total|/(1+z_response) below this floor, so their quadrature "converged" before
-# doing any work. rtol was confirmed not to bind (1e-8 -> 1e-11 was bit-identical on 159 items);
-# atol does. 1e-32 is the exact value the source-remediation campaign measured (log 12) as
+# doing any work. 1e-32 is the exact value the source-remediation campaign measured (log 12) as
 # halving the residual against the analytic oracle at an unconverged test point.
+# At 1e-32 the roles are reversed. atol's acceptance branch no longer binds, and rtol decides when
+# the quadrature stops: 1e-8 -> 1e-11 moves total by x274 on the offline fixture
+# (docs/tolerance-convergence/QUADSOURCE-READONLY.md section 5). Log 12's "rtol does not bind"
+# (1e-8 -> 1e-11 bit-identical on 159 items) was measured at 1e-25, where atol hid rtol, and does
+# not transfer. atol is not inert, though: relaxed to 1e-28 or looser it returns wrong answers on
+# production geometry (docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md section 0, answer 1).
 DEFAULT_QUADRATURE_ATOL = 1e-32
 
 # value of dtheta/dz where we will switch to a Levin integration strategy

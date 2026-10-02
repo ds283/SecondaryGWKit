@@ -927,6 +927,12 @@ Opened by **prompt 06a**, 2026-09-18:
   README §6.2's row, and `config/defaults.py`'s `atol` comment, which is now at `:174`–`:179` and
   which that prompt left as written.
 
+  **Narrowed again 2026-10-02** (the user's decision, in the orchestrator review of that prompt):
+  `config/defaults.py`'s `atol` comment is rewritten. It now says that at `1e-32` `rtol` decides
+  when the quadrature stops, gives the ×274 (`QUADSOURCE-READONLY.md` §5), and says log 12's
+  bit-identity was measured at `1e-25` and does not transfer. The issue stays open on **README
+  §6.2's row alone**.
+
 ---
 
 ## 4. Resolved issues

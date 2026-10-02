@@ -189,6 +189,19 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   fold them (linearly, per this campaign's established policy) into the metadata dict alongside
   `"WKB_Levin"`.
 
+> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
+> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
+> work around. Format:
+>
+> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
+>   affected. **Next step:** what would close it.
+>
+> Move closed entries to §4 rather than deleting them.
+
+---
+
+## 4. Resolved issues
+
 - **[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]** *(opened 2026-09-18 by
   `prompts/tolerance-convergence` prompt 06, board item **T11**, which measures
   `QuadSourceIntegral` read-only and may not edit it or any file under `AdaptiveLevin/` — README
@@ -225,18 +238,14 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   `config/defaults.py`'s `atol` comment ("`rtol` was confirmed not to bind") is **left as written**,
   as that prompt requires, so **this issue stays open on that one sentence**.
 
-> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
-> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
-> work around. Format:
->
-> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
->   affected. **Next step:** what would close it.
->
-> Move closed entries to §4 rather than deleting them.
-
----
-
-## 4. Resolved issues
+  **Closed 2026-10-02** (the user's decision, in the orchestrator review of `a3-v2-readiness`
+  prompt 01: "`rtol` is now determinative", so the sentence had become misleading). The last site,
+  `config/defaults.py`'s `atol` comment, is rewritten, comments only. It now says that at `1e-32`
+  `rtol` decides when the quadrature stops and `atol`'s branch no longer binds. It gives the ×274
+  (`QUADSOURCE-READONLY.md` §5), and says log 12's bit-identity was measured at `1e-25` and does
+  not transfer. It also says `atol` is not inert on production geometry: relaxed to `1e-28` or
+  looser, it returns wrong answers (`QUADSOURCE-TOLERANCE-SWEEP.md` §0 answer 1). The
+  `DEFAULT_QUADRATURE_RTOL` comment above it no longer says the `atol` comment is left as written.
 
 - **[07-write-progress-data-cc-crash]** *(opened and closed by prompt 07, 2026-09-04)* —
   `_write_progress_data()` crashed (`TypeError: 'NoneType' object is not iterable`) whenever a
