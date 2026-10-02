@@ -2021,6 +2021,8 @@ None is assigned to a prompt of this campaign.
     the `gcs_server` is left behind by any exit that skips `ray.shutdown()` (7 of 12 runs: the
     abort, and `os._exit`), not by the abort as such; 0 of 10 exits through `ray.shutdown()` left
     one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/04-record-a-sigterm-as-killed.md`, a
+    handler installed after `ray.init`, against that campaign's audit S1–S4.
 - **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10)*
   - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
     LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
@@ -2039,6 +2041,8 @@ None is assigned to a prompt of this campaign.
   - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, beside `[08-…]`: both are
     the readers' setup, and `build_model_list` is where each starts. Index row moved to
     `docs/OPEN_ISSUES.md` §1.17.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, O4:
+    `--models`, and a model with no `BackgroundModel` skipped with a message.
 - **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
   2026-10-02 by prompt 10)*
   - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
@@ -2103,6 +2107,8 @@ None is assigned to a prompt of this campaign.
     is skipped, while `LambdaCDM`, `QCD_Cosmology`, `tolerance` and `GkSourcePolicy` are inserted on
     every shard. No reader writes a sharded row. The wavenumbers, redshifts and `QuadSourcePolicy`
     are read with `read_table`, which writes nothing.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, a
+    read-only pool to the specification of that campaign's audit M1.
 - **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
     integration table first and its tag and value tables after it, e.g. `"tk-wkb":
@@ -2162,6 +2168,9 @@ None is assigned to a prompt of this campaign.
     that every defect a build or a reader of A3 v2 would meet is fixed before it is built (that
     campaign's README §6.1, D4). 02 is held on that campaign's audit 00, which measures the window
     and whether a read-only open can find the row. Index row moved to `docs/OPEN_ISSUES.md` §1.17.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/02-write-the-version-row-through-the-recorded-write.md`,
+    form A of that campaign's audit V2. Under the user's U1 it also moves the replicated prune at
+    open into the pool, under a record.
 
 ---
 

@@ -2,8 +2,9 @@
 
 **Written:** 2026-10-02 on `handover-remedial` at `424469e`, by Claude Opus 5.5, from the open-issue
 index and the user's decisions in §6. **Prompts 00, 01, 05 and 06 are written.** Their tasks are
-fixed by §6 alone. **02, 03 and 04 are held**: each waits on what audit 00 measures (§2). **07 is
-held** on 01–06.
+fixed by §6 alone. **02, 03 and 04 were held** on what audit 00 measured (§2). They were written on
+2026-10-02, after the audit's review, against its findings and the user's decisions U1 and U2
+(§6.2). **07 is held** on 01–06.
 
 ## 0. Why this campaign exists
 
@@ -81,14 +82,14 @@ listed three, asked whether there were others, and decided that all seven below 
 |---|---|---|---|
 | 00 | [`00-audit-the-readiness-defects.md`](00-audit-the-readiness-defects.md) | Read-only. **R** every write a reader makes: each `object_get` in the six scripts and `build_model_list`, which inserts on a miss, which writes an in-flight record on a hit, measured on a stand-in pool. **S** the `SIGTERM` path: does a handler re-installed after `ray.init` survive `ray.wait`; does `signal.alarm(0)` cancel Ray's abort; how long `finish(fingerprint=True)` takes on a real-sized store. **V** the version-row window, and whether a read-only open can find the row. **M** what the read-only mode needs from `store_reader.py`, prompt 02's check at open, and SQLite's `mode=ro`. Writes `docs/a3-v2-readiness-audit.md`; changes no code. | **written** |
 | 01 | [`01-set-the-production-quadrature-rtol.md`](01-set-the-production-quadrature-rtol.md) | `DEFAULT_QUADRATURE_RTOL = 1e-7`, with its provenance; the stale comments that state its value; `TOLERANCE-PROVENANCE.md`, additively. Closes `[00-quadsource-extraction-reads-at-the-default-rtol]`. | **written**; independent of 00 |
-| 02 | `02-write-the-version-row-through-the-recorded-write.md` | Actors are built without inserting the version row; the row is then written once through `_replicated_write`; the check at open sees a missing version row like any other replicated row. Closes `[02-the-version-row-…]`. | **held** on 00 (V) |
-| 03 | `03-open-readers-read-only.md` | A read-only pool (§4): every file `mode=ro`, no in-flight record, no prune, no drop, no repair; a lookup that misses refuses instead of inserting. The six scripts open it, and take `--models`, skipping with a message a model the store does not hold. Closes `[08-…]` and `[10-extraction-scripts-exit-1-…]`. | **held** on 00 (R, M), after 01 and 02 |
-| 04 | `04-record-a-sigterm-as-killed.md` | One handler, shared by both drivers, installed after `ray.init`: `killed`/143 written at once without the fingerprint, then the fingerprint best-effort, then Ray shut down, no `gcs_server` left. `terminal_state`'s docstring made true. Closes `[10-a-sigterm-…]`. | **held** on 00 (S) |
+| 02 | [`02-write-the-version-row-through-the-recorded-write.md`](02-write-the-version-row-through-the-recorded-write.md) | Actors are built without inserting the version row; the row is then written once through `_replicated_write`; the check at open sees a missing version row like any other replicated row. Under U1, the prune at open of a replicated class moves to the pool, under a `prune` record the check at open completes. Closes `[02-the-version-row-…]` and `[00-the-prune-at-open-…]`. | **written** 2026-10-02 |
+| 03 | `03-open-readers-read-only.md` | A read-only pool (§4): every file `mode=ro`, no in-flight record, no prune, no drop, no repair; a lookup that misses refuses instead of inserting. The six scripts open it, and take `--models`, skipping with a message a model the store does not hold. Closes `[08-…]` and `[10-extraction-scripts-exit-1-…]`. | **written** 2026-10-02 ([`03-open-readers-read-only.md`](03-open-readers-read-only.md)); after 01 and 02 |
+| 04 | `04-record-a-sigterm-as-killed.md` | One handler, shared by both drivers, installed after `ray.init`: `killed`/143 written at once without the fingerprint, then the fingerprint best-effort, then Ray shut down, no `gcs_server` left. `terminal_state`'s docstring made true. Closes `[10-a-sigterm-…]`. | **written** 2026-10-02 ([`04-record-a-sigterm-as-killed.md`](04-record-a-sigterm-as-killed.md)) |
 | 05 | [`05-prune-on-resume.md`](05-prune-on-resume.md) | `--no-prune-unvalidated` out of `run_build`, `run_child` and both drivers' usage lines, with a test pinning the build's argv. Closes `[10-a3-v2-launch-…]`. | **written**; independent |
 | 06 | [`06-count-only-real-references.md`](06-count-only-real-references.md) | `_find_references` stops matching a store's directory when that directory is shared with other stores, so a tombstone's `references.stores_root` no longer names every later store. The backup shape (a store alone in its own directory) is still found. Closes `[10-store-retire-…]`. | **written**; independent |
 | 07 | `07-rehearse-the-a3-v2-launch.md` | Remedial. A scoped `--build --register` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed in a sharded stage and resumed with `--build --resume`; the recorded state, the fingerprint against an uninterrupted reference, and every extraction script read-only against it. Closes the campaign. | **held** on 01–06 |
 
-**Why 02–04 and 07 are held.** Their charters above are fixed and cannot drift to fit what 00
+**Why 02–04 and 07 were held** (02–04 released 2026-10-02). Their charters above are fixed and cannot drift to fit what 00
 finds. What waits is their method: 02's form depends on whether a read-only open can find the
 version row as written today, 03's on the list of writes 00 makes, and 04's on whether the
 alarm can be cancelled at all. 07 is written against what 01–06 ship.
@@ -193,7 +194,17 @@ The project-wide ones in `CLAUDE.md`, plus:
 
 ### 6.2 Decisions this campaign expects to need
 
-None is open. Audit 00 states any it finds, each with a recommendation, before 02–04 are written.
+Audit 00 put two (its closing section). The user took both on 2026-10-02, each as recommended:
+
+- **U1 — the prune at open of a replicated row goes through a record, in 02.** Yes. The pool, not
+  the actors, prunes replicated classes, before any actor exists, under a `prune` record that the
+  check at open completes by re-running the idempotent prune.
+  `[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]` is assigned to 02.
+- **U2 — a new store's first open, interrupted before every shard file exists.** Record only; no
+  code change. `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` stays open on
+  this campaign's board. The store is empty and a person deletes it.
+
+None is open.
 
 ## 7. Baselines
 
