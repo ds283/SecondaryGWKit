@@ -50,6 +50,10 @@ opened here.
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
+**Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
+carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
+(2026-10-02, ready).
+
 ---
 
 ## 2. Items
