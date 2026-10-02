@@ -1662,6 +1662,162 @@ derived parents, and every distinct record is still a distinct line. **Next: 10*
 `main.py --inventory` is the first print of this report on rows written by the keyed stages, and
 may be used as its evidence.
 
+**Orchestrator review of prompt 10 (2026-10-02).** Run against `b1774d8`, dispatched from
+`d144d04` with nothing `running` in this repository's registry and no other worktree. **All eleven
+checks in `orchestrator/prompt-10.md` §3 passed**, on the store `resumed-d` left. The agent stopped
+four times, each time correctly, and the user decided each stop; "Decided during 10" above lists
+them. Two small remnants are fixed in `53fa6c5`.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `d144d04`, which touches no code past `813cdcb`. The index held **99** rows.
+  - The baselines matched §5.15, at a load average of 16–20.
+  - `df -h var/`: 44 GB free, 96 % used, and 36 GB by 23:08 with nothing of this campaign running.
+  - Both store names were free: `store show` gave kind `absent`, with no runs naming either.
+- **Scope.**
+  - 30 files: the one test, the record and its directory, the log, this board and the index.
+  - `--diff-filter=M` over `*/tests/*` is `test_inventory_report.py` alone. Its three hunks are
+    one import (`OWN_LABEL`, from 09d's test module) and the named test's body and comment.
+  - The diff over `ComputeTargets/`, `main.py`, `tools/`, `RunRegistry/`, `config/`, both
+    drivers, `docs/handover/`, every `extract_*.py`, `docs/datastore-integrity-audit/` and
+    `orchestrator/` is empty. `main.py` is byte-identical to `d144d04`.
+- **The runs.** Every manifest's `git_head` is `d144d04`, with `git_dirty` true. The log and the
+  record show `git status --short` as `?? docs/datastore-integrity-verification/` at every launch.
+
+  | Run | State | Exit | Results |
+  |---|---|---|---|
+  | `reference` | `done` | 0 | `…-reference.sqlite` |
+  | `resumed-a` | `failed` | 1 | `…-resumed.sqlite` |
+  | `resumed-b` | `killed` | `null` | the same, `store_id` `a71da55b…` |
+  | `resumed-c` | `done` | 0 | the same |
+  | `resumed-d` | `done` | 0 | the same |
+
+  - `resumed-a`'s `failed` and `resumed-b`'s `killed` are the user's decisions, the latter written
+    by a person through `Run.finish`. `resumed-d` alone omits `--no-prune-unvalidated`.
+  - Each interrupter log holds exactly one `sent SIGTERM`, naming pid and stage.
+  - After the review, none of the eight pids the agent started answers `kill -0` (the five
+    builds, both interrupters, and the orphaned `gcs_server` 6426). No Ray process is alive, and
+    `ray status` finds no instance.
+- **(R1) Nothing stored was recomputed.** The orchestrator parsed every `Queue summary` line of
+  the five `stdout.log`s itself, as lookup / compute / store.
+  - **Before the interruptions.** Every stage that finished before an interruption shows 0 / 0 / 0
+    on every later launch. `resumed-b`'s policy stage did 291 / 291 / 291, but `resumed-a` never
+    reached that stage.
+  - **`GkSource`.** `resumed-a` printed no summary for this stage; it stored 161 rows by its
+    fingerprint. `resumed-b` did 175. 161 + 175 = 336, and less the 45 pruned by `resumed-d`, 291,
+    the reference's.
+  - **`QuadSourceIntegral`.** `resumed-b`'s last progress line read 485 computed and 451 stored.
+    485 rows were on the store after it, so the 34 stores in flight landed. `resumed-c` did 379 /
+    379 / 379, and 485 + 379 = 864, the reference's. `resumed-d` did 0 / 0 / 0 everywhere.
+- **(R1) The fingerprints.** The orchestrator ran `fingerprint_store`, read-only, on both stores.
+  - Both are at format 6, digest `10b8725f…1a1f`, with problems `{}`. Each equals its sidecar
+    (comparison `[]`, nothing written).
+  - `compare_fingerprints(reference, resumed)` is `[]`. All 21 classes agree in count and digest.
+  - Both stores' files have the same SHA-256 before and after the review's reads.
+- **(R2) Integrity.**
+  - On all ten files, opened `mode=ro`: `integrity_check` is `ok` and `foreign_key_check` returns
+    no rows.
+  - `replicated_serial_census.py` on both primaries: every table `OK`, `=> no divergence`.
+  - Its 14 tables are `config/sharding.py`'s 13 replicated tables plus `BackgroundModel_tags`.
+    Every other table on a shard that neither list names is a sharded object's `_tags` or
+    `GkSource_parents`. So it omits nothing.
+  - `read_inventory` gives no store-level and no class problem on either store.
+  - Both primaries' `replication_in_flight` are empty, and no `*-journal` exists.
+- **(R3) The readers.**
+  - Each of the six logs under `var/datastore-integrity-10/extract/` has exactly one
+    run-selection line, `reading run "default", the only run in this datastore`. Each ends in the
+    accepted `RuntimeError` on `QCD_Cosmology`.
+  - After each, `run_extractions.out` records the fingerprint matching the sidecar, an empty
+    `replication_in_flight` and no Ray process left. The orchestrator's fingerprint above is the
+    one after the last reader.
+  - The `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` write
+    was not observable. The `GkSourcePolicy` rows it would get exist, so there was nothing to
+    insert; the fingerprint and the in-flight record did not move. Byte-level file hashes around
+    that one script were not taken.
+- **(R3) The inventory report.** The orchestrator rendered all four with its own command.
+
+  | Store | Mode | Exit | Wall | Bytes | Lines |
+  |---|---|---|---|---|---|
+  | `reference` | plain | 0 | 6 s | 881,293 | 1,782 |
+  | `reference` | verbose | 0 | 6 s | 13,282,654 | 7,843 |
+  | `resumed` | plain | 0 | 6 s | 881,291 | 1,782 |
+  | `resumed` | verbose | 0 | 7 s | 13,282,652 | 7,843 |
+
+  The two-byte difference is the store's name on the first line.
+  - **Labels.** The orchestrator's own regex treats a `- ` or `> ` line ending `  #<n>` (before any
+    `  | …`) as defining `<Class>#<n>`, and a `parent set S<n>:` line as defining `S<n>`. It
+    counts every other `<Class>#<n>` and `S<n>` as a reference.
+    - Plain: 1,674 labels defined, 1,663 named. Verbose: 5,730 defined, 5,727 named.
+    - In all four, none is defined twice, none is named without a definition, and no 64-hex
+      digest appears. The counts match the record's (1,669 + 5 and 5,439 + 291 defined).
+  - **The two stores' reports** are identical line for line, plain and verbose, once the first
+    line and every header's timestamp range are masked.
+  - **The longest record line by labelled class, verbose:** `GkWKBIntegration` 136, `QuadSource`
+    127, `GkSource` 100, `GkNumericIntegration` 82, `TkWKBIntegration` 84, `TkNumericIntegration`
+    78, `GkSourcePolicyData` 60. This is the first measurement of 09d's report on real rows.
+    Plain, a `> ` not-shown row carries its tag list, up to 334 characters (`GkWKBIntegration`).
+    Most of each report's bytes are its parent-set lines, which are not record lines.
+- **(R2) The fault copies** (`fault_cases.txt`).
+  - Cases 1–3 refuse with `ReplicatedDivergence`, verbatim, each with "Nothing was repaired". Case
+    1 names `redshift`, shard [1], serial 1182. Case 2 names `BackgroundModelValue`, shard 1, key
+    `(model_serial=1, z_serial=1)`. Case 3 names `shard_keys`, `key_serial` 1003.
+  - Case 4 prints `copied 1 row(s) of "redshift" from shard 0 to shard 2: 1182`. It opens, and its
+    census afterwards is `no divergence`.
+  - No `.sqlite` remains anywhere in the session scratchpad. The `var/` snapshot finds no new path
+    off the list.
+- **(R4) The test fix.** The orchestrator extracted the mutation from `git show HEAD:<log>` and
+  applied it with plain `git apply` in a `git archive` export of `b1774d8`, made into its own git
+  repository.
+  - The amended test gives `FAILED (failures=4)`: `TkNumericIntegration`, `TkWKBIntegration` and
+    `GkSource` at `2 != 3`, `GkSourcePolicyData` at `1 != 3`. These are exactly the logged
+    classes.
+  - With `d144d04`'s test file in place, it gives `OK`.
+  - The export's tracked diff is empty after `git apply -R`.
+  - The three classes it cannot reach on this fixture are
+    `[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]`.
+- **Records.**
+  - The §1 row, "Decided during 10", V1–V3, the 09d issue on §4 with its closing note, four §3.3
+    entries (one with its `**Assigned (2026-10-02):**` line to `handover`) and §5.16 are present.
+    The 09d issue is gone from §3.3.
+  - Counted, the index has **102** rows: one deleted, four opened, the `handover` one under §1.1.
+    §1.15 has its sentence.
+  - The record's §2.6 checklist names all twelve issues open on this board.
+  - The record's run table matches the run directories in pid, state and exit code.
+- **`var/`, suites, `black`.**
+  - All 46 files of the pre-dispatch snapshot are byte-identical. Of 39 new files and 5 new
+    directories, none is off the list.
+  - Suites on `b1774d8`, serially, in the checkout, at a load average of 15–18: AdaptiveLevin 32,
+    ComputeTargets 665, CosmologyModels 39, Datastore 551, LiouvilleGreen 148 (1 skipped) and
+    RunRegistry 199, all OK. Every count is unchanged.
+  - `black --check` is clean on all nine Python files added or changed.
+- **Probes.** None is run. The commit's diff over `Datastore/`, `ComputeTargets/` and `tools/`
+  is the one test file.
+
+- **Remnants, fixed in `53fa6c5`** (*"Tidy two remnants of datastore-integrity prompt 10"*):
+  - README §2's row for 10 read "**written** 2026-10-01, its decisions taken; after 09d", and its
+    header paragraph did not record 10's landing. That row was outside the agent's files; its
+    report flagged it.
+  - This board's header said "all but 10 reviewed".
+- **What the run found that no stand-in could.**
+  - **A3 v2's launch resumes without pruning.** It was the user's diagnosis: pruning at startup
+    is the designed recovery for a row stored and not yet validated. Under
+    `--no-prune-unvalidated`, `resumed-b` stored 45 `GkSource` rows a second time. It is
+    `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]`, assigned to `handover`. With
+    pruning (`resumed-d`), the resume equals the reference.
+  - **A `SIGTERM` to the driver is never recorded as `killed`.** It is `failed`/1 if cleanup takes
+    under ~3 s, and otherwise absl aborts the driver and nothing is written. It also leaves an
+    orphaned `gcs_server`. This is
+    `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]`.
+  - **The six readers exit 1 on a LambdaCDM-only store, A3 v2's.** This is
+    `[10-extraction-scripts-exit-1-on-a-store-without-every-model]`.
+- **Log 10 is accurate** against the run directories and `git show`.
+
+**10 is complete.** A real build, interrupted twice and resumed, holds exactly what an
+uninterrupted build holds once pruning runs. Both stores are clean replica by replica, refuse or
+repair at open as prompt 02 designed, and read back without moving. **The user decides** whether
+the campaign closes, and whether the two stores are retired (D10-5; `store retire` is theirs to
+run).
+
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
 
