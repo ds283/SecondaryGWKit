@@ -1,0 +1,635 @@
+# sigterm_probe.py S2 (a3-v2-readiness audit 00)
+ray 2.43.0, python 3.12.14, Darwin 25.5.0 arm64, 10 CPUs
+started 2026-10-02 12:53:55 BST
+Ray processes before the probe (gcs_server|raylet|ray::):
+    (none)
+
+====================================================================================================
+## variant keep-sleep: Ray's handlers kept; cleanup sleeps 8 s with no alarm(0)
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.6884765625, 8.646484375, 9.26318359375)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=34991 variant=keep-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-53-56_214801_34991
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x109cf6fc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.008s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.008s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x109cf6fc0>
+t=+0.008s cleanup: sleeping 8 s
+t=+0.258s alive, 0.25 s into cleanup
+t=+0.511s alive, 0.50 s into cleanup
+t=+0.766s alive, 0.76 s into cleanup
+t=+1.017s alive, 1.01 s into cleanup
+t=+1.272s alive, 1.26 s into cleanup
+t=+1.524s alive, 1.52 s into cleanup
+t=+1.778s alive, 1.77 s into cleanup
+t=+2.031s alive, 2.02 s into cleanup
+t=+2.282s alive, 2.27 s into cleanup
+t=+2.537s alive, 2.53 s into cleanup
+t=+2.791s alive, 2.78 s into cleanup
+--- child stderr
+2026-10-02 12:53:57,528	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790942040 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x10d13bd54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x10c550ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x10c691a98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x10c693f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x10c69531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x10c57b2d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x10c42afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x105213f48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x10520a8ec  (unknown)  PyEval_EvalCode
+    @        0x10526b350  (unknown)  run_eval_code_obj
+    @        0x1052693e8  (unknown)  run_mod
+    @        0x10526885c  (unknown)  pyrun_file
+    @        0x105267bd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x1052677c8  (unknown)  _PyRun_AnyFileObject
+    @        0x10528d478  (unknown)  pymain_run_file_obj
+    @        0x10528d1ec  (unknown)  pymain_run_file
+    @        0x10528c7c8  (unknown)  Py_RunMain
+    @        0x10528cc30  (unknown)  pymain_main
+    @        0x10528ccd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:54:00,432 E 34991 624432] logging.cc:484: *** SIGTERM received at time=1790942040 ***
+[2026-10-02 12:54:00,432 E 34991 624432] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:54:00,432 E 34991 624432] logging.cc:484:     @        0x10d13be74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c550ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c691a98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c693f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c69531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c57b2d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10c42afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x105213f48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10520a8ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10526b350  (unknown)  run_eval_code_obj
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x1052693e8  (unknown)  run_mod
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10526885c  (unknown)  pyrun_file
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x105267bd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x1052677c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10528d478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10528d1ec  (unknown)  pymain_run_file
+[2026-10-02 12:54:00,433 E 34991 624432] logging.cc:484:     @        0x10528c7c8  (unknown)  Py_RunMain
+[2026-10-02 12:54:00,434 E 34991 624432] logging.cc:484:     @        0x10528cc30  (unknown)  pymain_main
+[2026-10-02 12:54:00,434 E 34991 624432] logging.cc:484:     @        0x10528ccd4  (unknown)  Py_BytesMain
+[2026-10-02 12:54:00,434 E 34991 624432] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+--- end of child output
+
+exit status: -6 (killed by SIGABRT; shell status 134)
+exit seen by the runner 3.029 s after SENDING (child wall 8.0 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-53-56_214801_34991
+own processes (descendants of the child, new since before it started); the child 34991 was in process group 34991:
+    35006 pgid=34991 python -u <ray>/_private/ray_process_reaper.py
+    35008 pgid=34991 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    35009 pgid=34991 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs --logging-rotate-bytes=536870912 --lo
+    35013 pgid=34991 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-53-56_
+    35032 pgid=34991 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/sockets/raylet --store_socket_name=/tmp/ray/se
+    35033 pgid=34991 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991 --logs-dir=/tmp/ray/session_2026-10-02_12-53-5
+    35034 pgid=34991 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64164 --dashboard-agent-port=63950 --listen-port=52365 --node-man
+    35035 pgid=34991 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=64479 --gcs-address=127.0.0.1:64251 --cluster-
+    35036 pgid=34991 ray::slow                   
+own processes still existing at exit +0.5 s: [35008, 35009]
+own processes still existing at exit +2 s: [35008]
+own processes still existing at exit +5 s: [35008]
+own processes still existing at exit +10 s: [35008]
+survivors, with their command lines:
+    35008 pgid=34991 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogIntcInR5cGVcIjogXCJmaWxlc3lzdGVtXCIsIFwicGFyYW1zXCI6IHtcImRpcmVjdG9yeV9wYXRoXCI6IFwiL3RtcC9yYXkvc2Vzc2lvbl8yMDI2LTEwLTAyXzEyLTUzLTU2XzIxNDgwMV8zNDk5MVwifX0iLCAiaXNfZXh0ZXJuYWxfc3RvcmFnZV90eXBlX2ZzIjogdHJ1ZX0= --gcs_server_port=64251 --metrics-agent-port=63950 --node-ip-address=127.0.0.1 --session-name=session_2026-10-02_12-53-56_214801_34991 --ray-commit=ecdcdc6a6e63dc4bcd6ea16aae256ce4d32a7e2c --ray_log_filepath=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs/gcs_server.out --ray_err_log_filepath=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs/gcs_server.err
+    last lines of /tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs/gcs_server.out:
+      [2026-10-02 12:53:57,911 I 35008 624520] (gcs_server) gcs_job_manager.cc:90: Adding job, job id = 01000000, driver pid = 34991
+      [2026-10-02 12:53:57,911 I 35008 624520] (gcs_server) gcs_job_manager.cc:111: Finished adding job, job id = 01000000, driver pid = 34991
+      [2026-10-02 12:54:03,434 I 35008 624520] (gcs_server) gcs_server_main.cc:175: GCS server received SIGTERM, shutting down...
+      [2026-10-02 12:54:03,434 W 35008 624571] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:03,434 I 35008 624520] (gcs_server) gcs_server.cc:267: Stopping GCS server.
+      [2026-10-02 12:54:03,434 W 35008 624571] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:03,434 W 35008 624571] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:06,352 W 35008 624542] (gcs_server) metric_exporter.cc:105: [1] Export metrics to agent failed: RpcError: RPC Error message: failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:63950: Failed to connect to remote host: Connection refused; RPC Error details: . Thi
+[runner] sent SIGTERM to own pid 35008 (<ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs -)
+[runner] sent SIGKILL to own pid 35008 (<ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs -)
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 22.3 s
+
+====================================================================================================
+## variant keep-alarm0-sleep: Ray's handlers kept; cleanup calls signal.alarm(0), then sleeps 8 s
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.859375, 8.60791015625, 9.23291015625)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=35452 variant=keep-alarm0-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-54-18_590667_35452
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1016d2fc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.007s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.008s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1016d2fc0>
+t=+0.008s cleanup: signal.alarm(0) returned 3 (the alarm is cancelled)
+t=+0.008s [after alarm(0)] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1016d2fc0>
+t=+0.008s cleanup: sleeping 8 s
+t=+0.259s alive, 0.25 s into cleanup
+t=+0.512s alive, 0.50 s into cleanup
+t=+0.765s alive, 0.76 s into cleanup
+t=+1.019s alive, 1.01 s into cleanup
+t=+1.274s alive, 1.27 s into cleanup
+t=+1.528s alive, 1.52 s into cleanup
+t=+1.783s alive, 1.77 s into cleanup
+t=+2.036s alive, 2.03 s into cleanup
+t=+2.288s alive, 2.28 s into cleanup
+t=+2.544s alive, 2.54 s into cleanup
+t=+2.799s alive, 2.79 s into cleanup
+t=+3.053s alive, 3.04 s into cleanup
+t=+3.307s alive, 3.30 s into cleanup
+t=+3.562s alive, 3.55 s into cleanup
+t=+3.815s alive, 3.81 s into cleanup
+t=+4.069s alive, 4.06 s into cleanup
+t=+4.323s alive, 4.32 s into cleanup
+t=+4.574s alive, 4.57 s into cleanup
+t=+4.827s alive, 4.82 s into cleanup
+t=+5.082s alive, 5.07 s into cleanup
+t=+5.337s alive, 5.33 s into cleanup
+t=+5.591s alive, 5.58 s into cleanup
+t=+5.845s alive, 5.84 s into cleanup
+t=+6.099s alive, 6.09 s into cleanup
+t=+6.354s alive, 6.35 s into cleanup
+t=+6.606s alive, 6.60 s into cleanup
+t=+6.860s alive, 6.85 s into cleanup
+t=+7.115s alive, 7.11 s into cleanup
+t=+7.369s alive, 7.36 s into cleanup
+t=+7.622s alive, 7.61 s into cleanup
+t=+7.877s alive, 7.87 s into cleanup
+t=+8.129s alive, 8.12 s into cleanup
+t=+8.130s survived 8 s of cleanup
+t=+8.130s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:54:19,853	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790942062 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x10963fd54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x108a54ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x108b95a98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x108b97f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x108b9931c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x108a7f2d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x10892efdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x101917f48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x10190e8ec  (unknown)  PyEval_EvalCode
+    @        0x10196f350  (unknown)  run_eval_code_obj
+    @        0x10196d3e8  (unknown)  run_mod
+    @        0x10196c85c  (unknown)  pyrun_file
+    @        0x10196bbd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x10196b7c8  (unknown)  _PyRun_AnyFileObject
+    @        0x101991478  (unknown)  pymain_run_file_obj
+    @        0x1019911ec  (unknown)  pymain_run_file
+    @        0x1019907c8  (unknown)  Py_RunMain
+    @        0x101990c30  (unknown)  pymain_main
+    @        0x101990cd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:54:22,713 E 35452 626941] logging.cc:484: *** SIGTERM received at time=1790942062 ***
+[2026-10-02 12:54:22,713 E 35452 626941] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x10963fe74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x108a54ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:54:22,714 E 35452 626941] logging.cc:484:     @        0x108b95a98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x108b97f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x108b9931c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x108a7f2d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x10892efdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x101917f48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x10190e8ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:54:22,715 E 35452 626941] logging.cc:484:     @        0x10196f350  (unknown)  run_eval_code_obj
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x10196d3e8  (unknown)  run_mod
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x10196c85c  (unknown)  pyrun_file
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x10196bbd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x10196b7c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x101991478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x1019911ec  (unknown)  pymain_run_file
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x1019907c8  (unknown)  Py_RunMain
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x101990c30  (unknown)  pymain_main
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x101990cd4  (unknown)  Py_BytesMain
+[2026-10-02 12:54:22,716 E 35452 626941] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+[33m(raylet)[0m [2026-10-02 12:54:29,747 E 35599 627348] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-54-18_590667_35452 is over 95% full, available space: 36.0701 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.215 s after SENDING (child wall 15.1 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-54-18_590667_35452
+own processes (descendants of the child, new since before it started); the child 35452 was in process group 35452:
+    35456 pgid=35452 python -u <ray>/_private/ray_process_reaper.py
+    35457 pgid=35452 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-18_590667_35452/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    35459 pgid=35452 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-54-18_590667_35452/logs --logging-rotate-bytes=536870912 --lo
+    35460 pgid=35452 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-54-18_
+    35599 pgid=35452 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-54-18_590667_35452/sockets/raylet --store_socket_name=/tmp/ray/se
+    35600 pgid=35452 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-54-18_590667_35452 --logs-dir=/tmp/ray/session_2026-10-02_12-54-1
+    35601 pgid=35452 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=63486 --dashboard-agent-port=64330 --listen-port=52365 --node-man
+    35602 pgid=35452 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=63800 --gcs-address=127.0.0.1:64861 --cluster-
+    35603 pgid=35452 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 25.3 s
+
+====================================================================================================
+## variant keep-sleep: repeat: no alarm(0)
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.92626953125, 8.5458984375, 9.19091796875)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=36009 variant=keep-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-54-43_965950_36009
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x10500afc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.008s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.009s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x10500afc0>
+t=+0.009s cleanup: sleeping 8 s
+t=+0.260s alive, 0.25 s into cleanup
+t=+0.513s alive, 0.50 s into cleanup
+t=+0.767s alive, 0.76 s into cleanup
+t=+1.022s alive, 1.01 s into cleanup
+t=+1.279s alive, 1.27 s into cleanup
+t=+1.533s alive, 1.52 s into cleanup
+t=+1.788s alive, 1.78 s into cleanup
+t=+2.041s alive, 2.03 s into cleanup
+t=+2.296s alive, 2.29 s into cleanup
+t=+2.551s alive, 2.54 s into cleanup
+t=+2.806s alive, 2.80 s into cleanup
+--- child stderr
+2026-10-02 12:54:45,023	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790942087 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x10cf53d54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x10c368ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x10c4a9a98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x10c4abf30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x10c4ad31c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x10c3932d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x10c242fdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x1051cff48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x1051c68ec  (unknown)  PyEval_EvalCode
+    @        0x105227350  (unknown)  run_eval_code_obj
+    @        0x1052253e8  (unknown)  run_mod
+    @        0x10522485c  (unknown)  pyrun_file
+    @        0x105223bd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x1052237c8  (unknown)  _PyRun_AnyFileObject
+    @        0x105249478  (unknown)  pymain_run_file_obj
+    @        0x1052491ec  (unknown)  pymain_run_file
+    @        0x1052487c8  (unknown)  Py_RunMain
+    @        0x105248c30  (unknown)  pymain_main
+    @        0x105248cd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484: *** SIGTERM received at time=1790942087 ***
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484:     @        0x10cf53e74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:54:47,918 E 36009 630077] logging.cc:484:     @        0x10c368ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:54:47,919 E 36009 630077] logging.cc:484:     @        0x10c4a9a98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:54:47,919 E 36009 630077] logging.cc:484:     @        0x10c4abf30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:54:47,919 E 36009 630077] logging.cc:484:     @        0x10c4ad31c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:54:47,919 E 36009 630077] logging.cc:484:     @        0x10c3932d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x10c242fdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x1051cff48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x1051c68ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x105227350  (unknown)  run_eval_code_obj
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x1052253e8  (unknown)  run_mod
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x10522485c  (unknown)  pyrun_file
+[2026-10-02 12:54:47,920 E 36009 630077] logging.cc:484:     @        0x105223bd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x1052237c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x105249478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x1052491ec  (unknown)  pymain_run_file
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x1052487c8  (unknown)  Py_RunMain
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x105248c30  (unknown)  pymain_main
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x105248cd4  (unknown)  Py_BytesMain
+[2026-10-02 12:54:47,921 E 36009 630077] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+--- end of child output
+
+exit status: -6 (killed by SIGABRT; shell status 134)
+exit seen by the runner 3.055 s after SENDING (child wall 7.9 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-54-43_965950_36009
+own processes (descendants of the child, new since before it started); the child 36009 was in process group 36009:
+    36024 pgid=36009 python -u <ray>/_private/ray_process_reaper.py
+    36025 pgid=36009 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    36026 pgid=36009 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs --logging-rotate-bytes=536870912 --lo
+    36027 pgid=36009 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-54-43_
+    36047 pgid=36009 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/sockets/raylet --store_socket_name=/tmp/ray/se
+    36048 pgid=36009 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009 --logs-dir=/tmp/ray/session_2026-10-02_12-54-4
+    36049 pgid=36009 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64660 --dashboard-agent-port=64522 --listen-port=52365 --node-man
+    36050 pgid=36009 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=65503 --gcs-address=127.0.0.1:64211 --cluster-
+    36051 pgid=36009 ray::slow                   
+own processes still existing at exit +0.5 s: [36025, 36026]
+own processes still existing at exit +2 s: [36025]
+own processes still existing at exit +5 s: [36025]
+own processes still existing at exit +10 s: [36025]
+survivors, with their command lines:
+    36025 pgid=36009 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogIntcInR5cGVcIjogXCJmaWxlc3lzdGVtXCIsIFwicGFyYW1zXCI6IHtcImRpcmVjdG9yeV9wYXRoXCI6IFwiL3RtcC9yYXkvc2Vzc2lvbl8yMDI2LTEwLTAyXzEyLTU0LTQzXzk2NTk1MF8zNjAwOVwifX0iLCAiaXNfZXh0ZXJuYWxfc3RvcmFnZV90eXBlX2ZzIjogdHJ1ZX0= --gcs_server_port=64211 --metrics-agent-port=64522 --node-ip-address=127.0.0.1 --session-name=session_2026-10-02_12-54-43_965950_36009 --ray-commit=ecdcdc6a6e63dc4bcd6ea16aae256ce4d32a7e2c --ray_log_filepath=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs/gcs_server.out --ray_err_log_filepath=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs/gcs_server.err
+    last lines of /tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs/gcs_server.out:
+      [2026-10-02 12:54:50,922 W 36025 630169] (gcs_server) gcs_worker_manager.cc:59: Reporting worker exit, worker id = 01000000ffffffffffffffffffffffffffffffffffffffffffffffff, node id = accf4b1c0c68811089b7a181b407d91ea91f5a666825584ae7c69ef4, address = 127.0.0.1, exit_type = SYSTEM_ERROR, exit_detail 
+      [2026-10-02 12:54:50,923 W 36025 630169] (gcs_server) gcs_actor_manager.cc:1204: Worker 01000000ffffffffffffffffffffffffffffffffffffffffffffffff on node accf4b1c0c68811089b7a181b407d91ea91f5a666825584ae7c69ef4 exits, type=SYSTEM_ERROR, has creation_task_exception = 0 worker_id=01000000ffffffffffffff
+      [2026-10-02 12:54:50,923 I 36025 630169] (gcs_server) gcs_server_main.cc:175: GCS server received SIGTERM, shutting down...
+      [2026-10-02 12:54:50,923 I 36025 630169] (gcs_server) gcs_server.cc:267: Stopping GCS server.
+      [2026-10-02 12:54:50,925 W 36025 630219] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:50,932 W 36025 630219] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:50,932 W 36025 630219] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+      [2026-10-02 12:54:54,092 W 36025 630189] (gcs_server) metric_exporter.cc:105: [1] Export metrics to agent failed: RpcError: RPC Error message: failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:64522: Failed to connect to remote host: Connection refused; RPC Error details: . Thi
+[runner] sent SIGTERM to own pid 36025 (<ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs -)
+[runner] sent SIGKILL to own pid 36025 (<ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs -)
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 22.2 s
+
+====================================================================================================
+## variant keep-alarm0-sleep: repeat: alarm(0), then 8 s
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.66650390625, 8.474609375, 9.14794921875)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=36322 variant=keep-alarm0-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-55-06_018303_36322
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x109606fc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.008s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.009s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x109606fc0>
+t=+0.009s cleanup: signal.alarm(0) returned 3 (the alarm is cancelled)
+t=+0.009s [after alarm(0)] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x109606fc0>
+t=+0.009s cleanup: sleeping 8 s
+t=+0.264s alive, 0.26 s into cleanup
+t=+0.519s alive, 0.51 s into cleanup
+t=+0.771s alive, 0.76 s into cleanup
+t=+1.026s alive, 1.02 s into cleanup
+t=+1.281s alive, 1.27 s into cleanup
+t=+1.533s alive, 1.52 s into cleanup
+t=+1.786s alive, 1.78 s into cleanup
+t=+2.037s alive, 2.03 s into cleanup
+t=+2.290s alive, 2.28 s into cleanup
+t=+2.545s alive, 2.54 s into cleanup
+t=+2.803s alive, 2.79 s into cleanup
+t=+3.059s alive, 3.05 s into cleanup
+t=+3.313s alive, 3.30 s into cleanup
+t=+3.567s alive, 3.56 s into cleanup
+t=+3.820s alive, 3.81 s into cleanup
+t=+4.074s alive, 4.07 s into cleanup
+t=+4.329s alive, 4.32 s into cleanup
+t=+4.581s alive, 4.57 s into cleanup
+t=+4.836s alive, 4.83 s into cleanup
+t=+5.091s alive, 5.08 s into cleanup
+t=+5.346s alive, 5.34 s into cleanup
+t=+5.600s alive, 5.59 s into cleanup
+t=+5.853s alive, 5.84 s into cleanup
+t=+6.107s alive, 6.10 s into cleanup
+t=+6.359s alive, 6.35 s into cleanup
+t=+6.610s alive, 6.60 s into cleanup
+t=+6.861s alive, 6.85 s into cleanup
+t=+7.114s alive, 7.10 s into cleanup
+t=+7.368s alive, 7.36 s into cleanup
+t=+7.620s alive, 7.61 s into cleanup
+t=+7.875s alive, 7.87 s into cleanup
+t=+8.130s alive, 8.12 s into cleanup
+t=+8.130s survived 8 s of cleanup
+t=+8.130s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:55:08,133	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790942110 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x10cb2bd54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x10bf40ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x10c081a98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x10c083f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x10c08531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x10bf6b2d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x10be1afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x104baff48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x104ba68ec  (unknown)  PyEval_EvalCode
+    @        0x104c07350  (unknown)  run_eval_code_obj
+    @        0x104c053e8  (unknown)  run_mod
+    @        0x104c0485c  (unknown)  pyrun_file
+    @        0x104c03bd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x104c037c8  (unknown)  _PyRun_AnyFileObject
+    @        0x104c29478  (unknown)  pymain_run_file_obj
+    @        0x104c291ec  (unknown)  pymain_run_file
+    @        0x104c287c8  (unknown)  Py_RunMain
+    @        0x104c28c30  (unknown)  pymain_main
+    @        0x104c28cd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484: *** SIGTERM received at time=1790942110 ***
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x10cb2be74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x10bf40ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:55:10,977 E 36322 632079] logging.cc:484:     @        0x10c081a98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x10c083f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x10c08531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x10bf6b2d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x10be1afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x104baff48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:55:10,978 E 36322 632079] logging.cc:484:     @        0x104ba68ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c07350  (unknown)  run_eval_code_obj
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c053e8  (unknown)  run_mod
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c0485c  (unknown)  pyrun_file
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c03bd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c037c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c29478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c291ec  (unknown)  pymain_run_file
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c287c8  (unknown)  Py_RunMain
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c28c30  (unknown)  pymain_main
+[2026-10-02 12:55:10,979 E 36322 632079] logging.cc:484:     @        0x104c28cd4  (unknown)  Py_BytesMain
+[2026-10-02 12:55:10,980 E 36322 632079] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+[33m(raylet)[0m [2026-10-02 12:55:17,049 E 36427 632397] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-55-06_018303_36322 is over 95% full, available space: 36.0501 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.171 s after SENDING (child wall 15.8 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-55-06_018303_36322
+own processes (descendants of the child, new since before it started); the child 36322 was in process group 36322:
+    36420 pgid=36322 python -u <ray>/_private/ray_process_reaper.py
+    36421 pgid=36322 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-55-06_018303_36322/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    36424 pgid=36322 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-55-06_018303_36322/logs --logging-rotate-bytes=536870912 --lo
+    36425 pgid=36322 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-55-06_
+    36427 pgid=36322 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-55-06_018303_36322/sockets/raylet --store_socket_name=/tmp/ray/se
+    36428 pgid=36322 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-55-06_018303_36322 --logs-dir=/tmp/ray/session_2026-10-02_12-55-0
+    36447 pgid=36322 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64686 --dashboard-agent-port=64321 --listen-port=52365 --node-man
+    36448 pgid=36322 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=65232 --gcs-address=127.0.0.1:64766 --cluster-
+    36449 pgid=36322 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 26.0 s
+
+====================================================================================================
+## variant keep-sleep: repeat: no alarm(0)
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (8.20654296875, 8.5458984375, 9.154296875)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=36920 variant=keep-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-55-32_356003_36920
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x106356fc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.008s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.008s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x106356fc0>
+t=+0.008s cleanup: sleeping 8 s
+t=+0.259s alive, 0.25 s into cleanup
+t=+0.514s alive, 0.51 s into cleanup
+t=+0.765s alive, 0.76 s into cleanup
+t=+1.019s alive, 1.01 s into cleanup
+t=+1.269s alive, 1.26 s into cleanup
+t=+1.525s alive, 1.52 s into cleanup
+t=+1.777s alive, 1.77 s into cleanup
+t=+2.031s alive, 2.02 s into cleanup
+t=+2.285s alive, 2.28 s into cleanup
+t=+2.537s alive, 2.53 s into cleanup
+t=+2.791s alive, 2.78 s into cleanup
+--- child stderr
+2026-10-02 12:55:33,442	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790942136 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x1097c7d54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x108bdcce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x108d1da98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x108d1ff30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x108d2131c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x108c072d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x108ab6fdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x10182ff48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x1018268ec  (unknown)  PyEval_EvalCode
+    @        0x101887350  (unknown)  run_eval_code_obj
+    @        0x1018853e8  (unknown)  run_mod
+    @        0x10188485c  (unknown)  pyrun_file
+    @        0x101883bd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x1018837c8  (unknown)  _PyRun_AnyFileObject
+    @        0x1018a9478  (unknown)  pymain_run_file_obj
+    @        0x1018a91ec  (unknown)  pymain_run_file
+    @        0x1018a87c8  (unknown)  Py_RunMain
+    @        0x1018a8c30  (unknown)  pymain_main
+    @        0x1018a8cd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484: *** SIGTERM received at time=1790942136 ***
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484:     @        0x1097c7e74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:55:36,314 E 36920 634699] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108bdcce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108d1da98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108d1ff30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108d2131c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108c072d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x108ab6fdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x10182ff48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018268ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x101887350  (unknown)  run_eval_code_obj
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018853e8  (unknown)  run_mod
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x10188485c  (unknown)  pyrun_file
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x101883bd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018837c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018a9478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018a91ec  (unknown)  pymain_run_file
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018a87c8  (unknown)  Py_RunMain
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018a8c30  (unknown)  pymain_main
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x1018a8cd4  (unknown)  Py_BytesMain
+[2026-10-02 12:55:36,315 E 36920 634699] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+--- end of child output
+
+exit status: -6 (killed by SIGABRT; shell status 134)
+exit seen by the runner 3.033 s after SENDING (child wall 8.1 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-55-32_356003_36920
+own processes (descendants of the child, new since before it started); the child 36920 was in process group 36920:
+    36974 pgid=36920 python -u <ray>/_private/ray_process_reaper.py
+    36975 pgid=36920 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-55-32_356003_36920/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    36976 pgid=36920 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-55-32_356003_36920/logs --logging-rotate-bytes=536870912 --lo
+    36977 pgid=36920 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-55-32_
+    36978 pgid=36920 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-55-32_356003_36920/sockets/raylet --store_socket_name=/tmp/ray/se
+    36979 pgid=36920 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-55-32_356003_36920 --logs-dir=/tmp/ray/session_2026-10-02_12-55-3
+    36980 pgid=36920 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=65374 --dashboard-agent-port=63724 --listen-port=52365 --node-man
+    36981 pgid=36920 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=63766 --gcs-address=127.0.0.1:65006 --cluster-
+    36982 pgid=36920 ray::slow                   
+own processes still existing at exit +0.5 s: [36975, 36976]
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 18.2 s
+
+====================================================================================================
+## end of S2: wall time 114.1 s
+Ray processes before the probe (gcs_server|raylet|ray::):
+    (none)
+Ray processes after the probe (gcs_server|raylet|ray::):
+    (none)
+pids killed by this probe:
+    35008 SIGTERM <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs -
+    35008 SIGKILL <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-56_214801_34991/logs -
+    36025 SIGTERM <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs -
+    36025 SIGKILL <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-54-43_965950_36009/logs -

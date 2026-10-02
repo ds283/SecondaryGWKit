@@ -1,0 +1,575 @@
+# sigterm_probe.py S1 (a3-v2-readiness audit 00)
+ray 2.43.0, python 3.12.14, Darwin 25.5.0 arm64, 10 CPUs
+started 2026-10-02 12:50:21 BST
+Ray processes before the probe (gcs_server|raylet|ray::):
+    (none)
+
+====================================================================================================
+## variant keep-alarm0-sleep: Ray's handlers kept (prompt 10's sigterm_in_ray_wait_probe.py); alarm(0) in cleanup
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (12.5546875, 10.353515625, 9.9326171875)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=31419 variant=keep-alarm0-sleep ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-50-23_003253_31419
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1055cafc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- SENDING
+t=+0.010s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.011s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1055cafc0>
+t=+0.011s cleanup: signal.alarm(0) returned 3 (the alarm is cancelled)
+t=+0.011s [after alarm(0)] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: _raylet.so+0xd8ff6c = nm __ZN4absl12lts_20230802L27ImmediateAbortSignalHandlerEi | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1055cafc0>
+t=+0.011s cleanup: sleeping 8 s
+t=+0.261s alive, 0.25 s into cleanup
+t=+0.513s alive, 0.50 s into cleanup
+t=+0.765s alive, 0.75 s into cleanup
+t=+1.017s alive, 1.01 s into cleanup
+t=+1.269s alive, 1.26 s into cleanup
+t=+1.524s alive, 1.51 s into cleanup
+t=+1.779s alive, 1.77 s into cleanup
+t=+2.034s alive, 2.02 s into cleanup
+t=+2.285s alive, 2.27 s into cleanup
+t=+2.540s alive, 2.53 s into cleanup
+t=+2.791s alive, 2.78 s into cleanup
+t=+3.048s alive, 3.04 s into cleanup
+t=+3.303s alive, 3.29 s into cleanup
+t=+3.557s alive, 3.55 s into cleanup
+t=+3.812s alive, 3.80 s into cleanup
+t=+4.065s alive, 4.05 s into cleanup
+t=+4.320s alive, 4.31 s into cleanup
+t=+4.580s alive, 4.57 s into cleanup
+t=+4.833s alive, 4.82 s into cleanup
+t=+5.087s alive, 5.08 s into cleanup
+t=+5.338s alive, 5.33 s into cleanup
+t=+5.593s alive, 5.58 s into cleanup
+t=+5.847s alive, 5.84 s into cleanup
+t=+6.098s alive, 6.09 s into cleanup
+t=+6.353s alive, 6.34 s into cleanup
+t=+6.607s alive, 6.60 s into cleanup
+t=+6.862s alive, 6.85 s into cleanup
+t=+7.112s alive, 7.10 s into cleanup
+t=+7.363s alive, 7.35 s into cleanup
+t=+7.616s alive, 7.61 s into cleanup
+t=+7.869s alive, 7.86 s into cleanup
+t=+8.121s alive, 8.11 s into cleanup
+t=+8.122s survived 8 s of cleanup
+t=+8.122s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:50:24,727	INFO worker.py:1841 -- Started a local Ray instance.
+*** SIGTERM received at time=1790941827 ***
+PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+    @        0x10d52bd54  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+    @        0x18bfaf744  (unknown)  _sigtramp
+    @        0x18bfa6128  (unknown)  _pthread_cond_wait
+    @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+    @        0x10c940ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+    @        0x10ca81a98  (unknown)  ray::core::GetRequest::Wait()
+    @        0x10ca83f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+    @        0x10ca8531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+    @        0x10c96b2d0  (unknown)  ray::core::CoreWorker::Wait()
+    @        0x10c81afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+    @        0x10577bf48  (unknown)  _PyEval_EvalFrameDefault
+    @        0x1057728ec  (unknown)  PyEval_EvalCode
+    @        0x1057d3350  (unknown)  run_eval_code_obj
+    @        0x1057d13e8  (unknown)  run_mod
+    @        0x1057d085c  (unknown)  pyrun_file
+    @        0x1057cfbd0  (unknown)  _PyRun_SimpleFileObject
+    @        0x1057cf7c8  (unknown)  _PyRun_AnyFileObject
+    @        0x1057f5478  (unknown)  pymain_run_file_obj
+    @        0x1057f51ec  (unknown)  pymain_run_file
+    @        0x1057f47c8  (unknown)  Py_RunMain
+    @        0x1057f4c30  (unknown)  pymain_main
+    @        0x1057f4cd4  (unknown)  Py_BytesMain
+    @        0x18bbe7e00  (unknown)  start
+[2026-10-02 12:50:27,579 E 31419 605249] logging.cc:484: *** SIGTERM received at time=1790941827 ***
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484: PC: @        0x18bf6550c  (unknown)  __psynch_cvwait
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10d52be74  (unknown)  absl::lts_20230802::AbslFailureSignalHandler()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x18bfaf744  (unknown)  _sigtramp
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x18bfa6128  (unknown)  _pthread_cond_wait
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x18bebb8f0  (unknown)  std::__1::condition_variable::__do_timed_wait()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10c940ce8  (unknown)  std::__1::condition_variable::wait_until<>()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10ca81a98  (unknown)  ray::core::GetRequest::Wait()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10ca83f30  (unknown)  ray::core::CoreWorkerMemoryStore::GetImpl()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10ca8531c  (unknown)  ray::core::CoreWorkerMemoryStore::Wait()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10c96b2d0  (unknown)  ray::core::CoreWorker::Wait()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10c81afdc  (unknown)  __pyx_pw_3ray_7_raylet_10CoreWorker_61wait()
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x10577bf48  (unknown)  _PyEval_EvalFrameDefault
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x1057728ec  (unknown)  PyEval_EvalCode
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x1057d3350  (unknown)  run_eval_code_obj
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x1057d13e8  (unknown)  run_mod
+[2026-10-02 12:50:27,580 E 31419 605249] logging.cc:484:     @        0x1057d085c  (unknown)  pyrun_file
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057cfbd0  (unknown)  _PyRun_SimpleFileObject
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057cf7c8  (unknown)  _PyRun_AnyFileObject
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057f5478  (unknown)  pymain_run_file_obj
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057f51ec  (unknown)  pymain_run_file
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057f47c8  (unknown)  Py_RunMain
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057f4c30  (unknown)  pymain_main
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x1057f4cd4  (unknown)  Py_BytesMain
+[2026-10-02 12:50:27,581 E 31419 605249] logging.cc:484:     @        0x18bbe7e00  (unknown)  start
+[33m(raylet)[0m [2026-10-02 12:50:34,699 E 31460 605613] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-50-23_003253_31419 is over 95% full, available space: 36.1041 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.124 s after SENDING (child wall 15.6 s)
+Ray's '*** SIGTERM received' banner printed: 2 time(s)
+session: session_2026-10-02_12-50-23_003253_31419
+own processes (descendants of the child, new since before it started); the child 31419 was in process group 31419:
+    31438 pgid=31419 python -u <ray>/_private/ray_process_reaper.py
+    31439 pgid=31419 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-50-23_003253_31419/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    31440 pgid=31419 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-50-23_003253_31419/logs --logging-rotate-bytes=536870912 --lo
+    31459 pgid=31419 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-50-23_
+    31460 pgid=31419 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-50-23_003253_31419/sockets/raylet --store_socket_name=/tmp/ray/se
+    31461 pgid=31419 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-50-23_003253_31419 --logs-dir=/tmp/ray/session_2026-10-02_12-50-2
+    31462 pgid=31419 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64552 --dashboard-agent-port=63557 --listen-port=52365 --node-man
+    31463 pgid=31419 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=62846 --gcs-address=127.0.0.1:63345 --cluster-
+    31464 pgid=31419 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 25.8 s
+
+====================================================================================================
+## variant after-exit: a Python handler installed after ray.init, raising SystemExit(143)
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (12.009765625, 10.36474609375, 9.94580078125)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=31791 variant=after-exit ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-50-48_624415_31791
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x10617efc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- [after re-installing a Python handler] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10820b6a0>
+t=- SENDING
+t=+0.002s Python handler ran: signum=15 thread=MainThread frame=wait
+t=+0.003s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.003s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10820b6a0>
+t=+0.003s cleanup: signal.alarm(0) returned 0; nothing to re-arm
+t=+0.003s cleanup: sleeping 8 s
+t=+0.258s alive, 0.26 s into cleanup
+t=+0.514s alive, 0.51 s into cleanup
+t=+0.768s alive, 0.77 s into cleanup
+t=+1.023s alive, 1.02 s into cleanup
+t=+1.276s alive, 1.27 s into cleanup
+t=+1.528s alive, 1.52 s into cleanup
+t=+1.780s alive, 1.78 s into cleanup
+t=+2.035s alive, 2.03 s into cleanup
+t=+2.287s alive, 2.28 s into cleanup
+t=+2.542s alive, 2.54 s into cleanup
+t=+2.793s alive, 2.79 s into cleanup
+t=+3.048s alive, 3.04 s into cleanup
+t=+3.301s alive, 3.30 s into cleanup
+t=+3.556s alive, 3.55 s into cleanup
+t=+3.806s alive, 3.80 s into cleanup
+t=+4.060s alive, 4.06 s into cleanup
+t=+4.311s alive, 4.31 s into cleanup
+t=+4.565s alive, 4.56 s into cleanup
+t=+4.817s alive, 4.81 s into cleanup
+t=+5.076s alive, 5.07 s into cleanup
+t=+5.328s alive, 5.32 s into cleanup
+t=+5.580s alive, 5.58 s into cleanup
+t=+5.831s alive, 5.83 s into cleanup
+t=+6.085s alive, 6.08 s into cleanup
+t=+6.340s alive, 6.34 s into cleanup
+t=+6.595s alive, 6.59 s into cleanup
+t=+6.849s alive, 6.85 s into cleanup
+t=+7.103s alive, 7.10 s into cleanup
+t=+7.356s alive, 7.35 s into cleanup
+t=+7.610s alive, 7.61 s into cleanup
+t=+7.865s alive, 7.86 s into cleanup
+t=+8.120s alive, 8.12 s into cleanup
+t=+8.120s survived 8 s of cleanup
+t=+8.120s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:50:49,657	INFO worker.py:1841 -- Started a local Ray instance.
+[33m(raylet)[0m [2026-10-02 12:50:59,647 E 31825 608162] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-50-48_624415_31791 is over 95% full, available space: 36.1056 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.371 s after SENDING (child wall 15.0 s)
+Ray's '*** SIGTERM received' banner printed: 0 time(s)
+session: session_2026-10-02_12-50-48_624415_31791
+own processes (descendants of the child, new since before it started); the child 31791 was in process group 31791:
+    31821 pgid=31791 python -u <ray>/_private/ray_process_reaper.py
+    31822 pgid=31791 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-50-48_624415_31791/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    31823 pgid=31791 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-50-48_624415_31791/logs --logging-rotate-bytes=536870912 --lo
+    31824 pgid=31791 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-50-48_
+    31825 pgid=31791 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-50-48_624415_31791/sockets/raylet --store_socket_name=/tmp/ray/se
+    31826 pgid=31791 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-50-48_624415_31791 --logs-dir=/tmp/ray/session_2026-10-02_12-50-4
+    31827 pgid=31791 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64459 --dashboard-agent-port=63620 --listen-port=52365 --node-man
+    31828 pgid=31791 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=65059 --gcs-address=127.0.0.1:63254 --cluster-
+    31829 pgid=31791 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 25.2 s
+
+====================================================================================================
+## variant after-custom: a Python handler installed after ray.init, raising a BaseException subclass
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (9.31787109375, 9.8671875, 9.7783203125)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=32177 variant=after-custom ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-51-13_781633_32177
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x10a336fc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- [after re-installing a Python handler] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10c48f6a0>
+t=- SENDING
+t=+0.007s Python handler ran: signum=15 thread=MainThread frame=wait
+t=+28.116s caught builtins.SystemError: code=None args=('<cyfunction CoreWorker.wait at 0x10bb085f0> returned a result with an exception set',)
+t=+28.116s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10c48f6a0>
+t=+28.116s cleanup: signal.alarm(0) returned 0; nothing to re-arm
+t=+28.116s cleanup: sleeping 8 s
+t=+28.369s alive, 0.25 s into cleanup
+t=+28.625s alive, 0.51 s into cleanup
+t=+28.880s alive, 0.76 s into cleanup
+t=+29.131s alive, 1.01 s into cleanup
+t=+29.382s alive, 1.27 s into cleanup
+t=+29.636s alive, 1.52 s into cleanup
+t=+29.889s alive, 1.77 s into cleanup
+t=+30.141s alive, 2.02 s into cleanup
+t=+30.395s alive, 2.28 s into cleanup
+t=+30.650s alive, 2.53 s into cleanup
+t=+30.905s alive, 2.79 s into cleanup
+t=+31.157s alive, 3.04 s into cleanup
+t=+31.409s alive, 3.29 s into cleanup
+t=+31.664s alive, 3.55 s into cleanup
+t=+31.914s alive, 3.80 s into cleanup
+t=+32.165s alive, 4.05 s into cleanup
+t=+32.415s alive, 4.30 s into cleanup
+t=+32.669s alive, 4.55 s into cleanup
+t=+32.923s alive, 4.81 s into cleanup
+t=+33.178s alive, 5.06 s into cleanup
+t=+33.432s alive, 5.32 s into cleanup
+t=+33.688s alive, 5.57 s into cleanup
+t=+33.942s alive, 5.83 s into cleanup
+t=+34.195s alive, 6.08 s into cleanup
+t=+34.450s alive, 6.33 s into cleanup
+t=+34.704s alive, 6.59 s into cleanup
+t=+34.955s alive, 6.84 s into cleanup
+t=+35.211s alive, 7.09 s into cleanup
+t=+35.464s alive, 7.35 s into cleanup
+t=+35.717s alive, 7.60 s into cleanup
+t=+35.971s alive, 7.85 s into cleanup
+t=+36.225s alive, 8.11 s into cleanup
+t=+36.225s survived 8 s of cleanup
+t=+36.225s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:51:14,839	INFO worker.py:1841 -- Started a local Ray instance.
+[33m(raylet)[0m [2026-10-02 12:51:24,811 E 32203 610077] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-51-13_781633_32177 is over 95% full, available space: 36.0992 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+[33m(raylet)[0m [2026-10-02 12:51:34,836 E 32203 610077] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-51-13_781633_32177 is over 95% full, available space: 36.0979 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+[33m(raylet)[0m [2026-10-02 12:51:44,844 E 32203 610077] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-51-13_781633_32177 is over 95% full, available space: 36.1037 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 38.324 s after SENDING (child wall 43.0 s)
+Ray's '*** SIGTERM received' banner printed: 0 time(s)
+session: session_2026-10-02_12-51-13_781633_32177
+own processes (descendants of the child, new since before it started); the child 32177 was in process group 32177:
+    32199 pgid=32177 python -u <ray>/_private/ray_process_reaper.py
+    32200 pgid=32177 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-51-13_781633_32177/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    32201 pgid=32177 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-51-13_781633_32177/logs --logging-rotate-bytes=536870912 --lo
+    32202 pgid=32177 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-51-13_
+    32203 pgid=32177 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-51-13_781633_32177/sockets/raylet --store_socket_name=/tmp/ray/se
+    32204 pgid=32177 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-51-13_781633_32177 --logs-dir=/tmp/ray/session_2026-10-02_12-51-1
+    32205 pgid=32177 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=65272 --dashboard-agent-port=63894 --listen-port=52365 --node-man
+    32206 pgid=32177 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=64968 --gcs-address=127.0.0.1:64587 --cluster-
+    32207 pgid=32177 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 53.1 s
+
+====================================================================================================
+## variant after-kbint: a Python handler installed after ray.init, raising KeyboardInterrupt
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.3017578125, 9.197265625, 9.53271484375)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=33025 variant=after-kbint ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-52-06_955343_33025
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x10a29efc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- [after re-installing a Python handler] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10c3c36a0>
+t=- SENDING
+t=+0.001s Python handler ran: signum=15 thread=MainThread frame=wait
+t=+0.001s caught builtins.KeyboardInterrupt: code=None args=()
+t=+0.002s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x10c3c36a0>
+t=+0.002s cleanup: signal.alarm(0) returned 0; nothing to re-arm
+t=+0.003s cleanup: sleeping 8 s
+t=+0.255s alive, 0.25 s into cleanup
+t=+0.510s alive, 0.51 s into cleanup
+t=+0.764s alive, 0.76 s into cleanup
+t=+1.018s alive, 1.02 s into cleanup
+t=+1.272s alive, 1.27 s into cleanup
+t=+1.526s alive, 1.52 s into cleanup
+t=+1.781s alive, 1.78 s into cleanup
+t=+2.033s alive, 2.03 s into cleanup
+t=+2.288s alive, 2.29 s into cleanup
+t=+2.540s alive, 2.54 s into cleanup
+t=+2.793s alive, 2.79 s into cleanup
+t=+3.048s alive, 3.05 s into cleanup
+t=+3.303s alive, 3.30 s into cleanup
+t=+3.555s alive, 3.55 s into cleanup
+t=+3.808s alive, 3.81 s into cleanup
+t=+4.062s alive, 4.06 s into cleanup
+t=+4.315s alive, 4.31 s into cleanup
+t=+4.566s alive, 4.56 s into cleanup
+t=+4.822s alive, 4.82 s into cleanup
+t=+5.077s alive, 5.07 s into cleanup
+t=+5.328s alive, 5.33 s into cleanup
+t=+5.583s alive, 5.58 s into cleanup
+t=+5.834s alive, 5.83 s into cleanup
+t=+6.089s alive, 6.09 s into cleanup
+t=+6.344s alive, 6.34 s into cleanup
+t=+6.599s alive, 6.60 s into cleanup
+t=+6.852s alive, 6.85 s into cleanup
+t=+7.105s alive, 7.10 s into cleanup
+t=+7.360s alive, 7.36 s into cleanup
+t=+7.615s alive, 7.61 s into cleanup
+t=+7.867s alive, 7.86 s into cleanup
+t=+8.122s alive, 8.12 s into cleanup
+t=+8.122s survived 8 s of cleanup
+t=+8.122s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:52:09,078	INFO worker.py:1841 -- Started a local Ray instance.
+[33m(raylet)[0m [2026-10-02 12:52:18,017 E 33054 614231] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-52-06_955343_33025 is over 95% full, available space: 36.0984 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.267 s after SENDING (child wall 16.0 s)
+Ray's '*** SIGTERM received' banner printed: 0 time(s)
+session: session_2026-10-02_12-52-06_955343_33025
+own processes (descendants of the child, new since before it started); the child 33025 was in process group 33025:
+    33030 pgid=33025 python -u <ray>/_private/ray_process_reaper.py
+    33031 pgid=33025 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-52-06_955343_33025/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    33050 pgid=33025 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-52-06_955343_33025/logs --logging-rotate-bytes=536870912 --lo
+    33053 pgid=33025 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-52-06_
+    33054 pgid=33025 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-52-06_955343_33025/sockets/raylet --store_socket_name=/tmp/ray/se
+    33055 pgid=33025 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-52-06_955343_33025 --logs-dir=/tmp/ray/session_2026-10-02_12-52-0
+    33056 pgid=33025 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=65219 --dashboard-agent-port=64433 --listen-port=52365 --node-man
+    33057 pgid=33025 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=63192 --gcs-address=127.0.0.1:64850 --cluster-
+    33058 pgid=33025 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 26.2 s
+
+====================================================================================================
+## variant after-noraise: a Python handler installed after ray.init that records and returns
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (6.333984375, 8.83740234375, 9.3935546875)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=33489 variant=after-noraise ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-52-33_618278_33489
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x100efafc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- [after re-installing a Python handler] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x107ad36a0>
+t=- SENDING
+t=+0.002s Python handler ran: signum=15 thread=MainThread frame=wait
+t=+4.017s ray.wait returned normally: 0 ready
+t=+4.017s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x107ad36a0>
+t=+4.018s cleanup: signal.alarm(0) returned 0; nothing to re-arm
+t=+4.018s cleanup: sleeping 8 s
+t=+4.272s alive, 0.25 s into cleanup
+t=+4.525s alive, 0.51 s into cleanup
+t=+4.778s alive, 0.76 s into cleanup
+t=+5.031s alive, 1.01 s into cleanup
+t=+5.286s alive, 1.27 s into cleanup
+t=+5.538s alive, 1.52 s into cleanup
+t=+5.792s alive, 1.77 s into cleanup
+t=+6.047s alive, 2.03 s into cleanup
+t=+6.300s alive, 2.28 s into cleanup
+t=+6.554s alive, 2.54 s into cleanup
+t=+6.808s alive, 2.79 s into cleanup
+t=+7.058s alive, 3.04 s into cleanup
+t=+7.310s alive, 3.29 s into cleanup
+t=+7.564s alive, 3.55 s into cleanup
+t=+7.815s alive, 3.80 s into cleanup
+t=+8.070s alive, 4.05 s into cleanup
+t=+8.323s alive, 4.31 s into cleanup
+t=+8.577s alive, 4.56 s into cleanup
+t=+8.831s alive, 4.81 s into cleanup
+t=+9.087s alive, 5.07 s into cleanup
+t=+9.341s alive, 5.32 s into cleanup
+t=+9.596s alive, 5.58 s into cleanup
+t=+9.850s alive, 5.83 s into cleanup
+t=+10.104s alive, 6.09 s into cleanup
+t=+10.357s alive, 6.34 s into cleanup
+t=+10.611s alive, 6.59 s into cleanup
+t=+10.861s alive, 6.84 s into cleanup
+t=+11.116s alive, 7.10 s into cleanup
+t=+11.371s alive, 7.35 s into cleanup
+t=+11.626s alive, 7.61 s into cleanup
+t=+11.878s alive, 7.86 s into cleanup
+t=+12.130s alive, 8.11 s into cleanup
+t=+12.130s survived 8 s of cleanup
+t=+12.130s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:52:35,932	INFO worker.py:1841 -- Started a local Ray instance.
+[33m(raylet)[0m [2026-10-02 12:52:44,853 E 33529 617342] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-52-33_618278_33489 is over 95% full, available space: 36.0473 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 14.412 s after SENDING (child wall 20.9 s)
+Ray's '*** SIGTERM received' banner printed: 0 time(s)
+session: session_2026-10-02_12-52-33_618278_33489
+own processes (descendants of the child, new since before it started); the child 33489 was in process group 33489:
+    33505 pgid=33489 python -u <ray>/_private/ray_process_reaper.py
+    33506 pgid=33489 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-52-33_618278_33489/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    33507 pgid=33489 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-52-33_618278_33489/logs --logging-rotate-bytes=536870912 --lo
+    33508 pgid=33489 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-52-33_
+    33529 pgid=33489 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-52-33_618278_33489/sockets/raylet --store_socket_name=/tmp/ray/se
+    33530 pgid=33489 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-52-33_618278_33489 --logs-dir=/tmp/ray/session_2026-10-02_12-52-3
+    33651 pgid=33489 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64341 --dashboard-agent-port=63712 --listen-port=52365 --node-man
+    33652 pgid=33489 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=63484 --gcs-address=127.0.0.1:63614 --cluster-
+    33653 pgid=33489 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 31.1 s
+
+====================================================================================================
+## variant after-exit-get: as after-exit, but the main thread is blocked in ray.get, not ray.wait
+
+Ray processes before (gcs_server|raylet|ray::):
+    (none)
+load average before: (7.041015625, 8.7587890625, 9.34375)
+[runner] snapshot at READY: 9 own descendant(s) so far
+[runner] snapshot at SENDING: 9 own descendant(s) so far
+
+--- child stdout
+t=- child pid=34178 variant=after-exit-get ray=2.43.0
+t=- [before ray.init] C SIGTERM: SIG_DFL | C SIGALRM: SIG_DFL | Python SIGTERM: <Handlers.SIG_DFL: 0>
+t=- READY session=session_2026-10-02_12-53-04_206259_34178
+t=- [after ray.init] C SIGTERM: _raylet.so+0xd8fb38 = nm __ZN4absl12lts_20230802L24AbslFailureSignalHandlerEiP9__siginfoPv | C SIGALRM: SIG_DFL | Python SIGTERM: <function init.<locals>.sigterm_handler at 0x1012fefc0>
+t=- alarm pending after ray.init: signal.alarm(0) returned 0
+t=- [after re-installing a Python handler] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x107ee36a0>
+t=- SENDING
+t=+0.001s Python handler ran: signum=15 thread=MainThread frame=get_objects
+t=+0.001s caught builtins.SystemExit: code=1 args=(1,)
+t=+0.001s [after the signal] C SIGTERM: Python+0x1e24fc (dladdr nearest signal_handler) | C SIGALRM: SIG_DFL | Python SIGTERM: <function child.<locals>.handler at 0x107ee36a0>
+t=+0.001s cleanup: signal.alarm(0) returned 0; nothing to re-arm
+t=+0.001s cleanup: sleeping 8 s
+t=+0.256s alive, 0.25 s into cleanup
+t=+0.510s alive, 0.51 s into cleanup
+t=+0.763s alive, 0.76 s into cleanup
+t=+1.019s alive, 1.02 s into cleanup
+t=+1.272s alive, 1.27 s into cleanup
+t=+1.527s alive, 1.53 s into cleanup
+t=+1.779s alive, 1.78 s into cleanup
+t=+2.034s alive, 2.03 s into cleanup
+t=+2.288s alive, 2.29 s into cleanup
+t=+2.540s alive, 2.54 s into cleanup
+t=+2.795s alive, 2.79 s into cleanup
+t=+3.048s alive, 3.05 s into cleanup
+t=+3.302s alive, 3.30 s into cleanup
+t=+3.557s alive, 3.56 s into cleanup
+t=+3.811s alive, 3.81 s into cleanup
+t=+4.065s alive, 4.06 s into cleanup
+t=+4.321s alive, 4.32 s into cleanup
+t=+4.575s alive, 4.57 s into cleanup
+t=+4.830s alive, 4.83 s into cleanup
+t=+5.086s alive, 5.08 s into cleanup
+t=+5.339s alive, 5.34 s into cleanup
+t=+5.590s alive, 5.59 s into cleanup
+t=+5.842s alive, 5.84 s into cleanup
+t=+6.097s alive, 6.10 s into cleanup
+t=+6.351s alive, 6.35 s into cleanup
+t=+6.602s alive, 6.60 s into cleanup
+t=+6.853s alive, 6.85 s into cleanup
+t=+7.108s alive, 7.11 s into cleanup
+t=+7.360s alive, 7.36 s into cleanup
+t=+7.611s alive, 7.61 s into cleanup
+t=+7.864s alive, 7.86 s into cleanup
+t=+8.119s alive, 8.12 s into cleanup
+t=+8.119s survived 8 s of cleanup
+t=+8.119s leaving by sys.exit(1): atexit (and Ray's shutdown hook) runs
+--- child stderr
+2026-10-02 12:53:05,370	INFO worker.py:1841 -- Started a local Ray instance.
+[33m(raylet)[0m [2026-10-02 12:53:15,293 E 34184 620090] (raylet) file_system_monitor.cc:116: /tmp/ray/session_2026-10-02_12-53-04_206259_34178 is over 95% full, available space: 36.0687 GB; capacity: 926.352 GB. Object creation will fail if spilling is required.
+--- end of child output
+
+exit status: 1
+exit seen by the runner 10.292 s after SENDING (child wall 15.1 s)
+Ray's '*** SIGTERM received' banner printed: 0 time(s)
+session: session_2026-10-02_12-53-04_206259_34178
+own processes (descendants of the child, new since before it started); the child 34178 was in process group 34178:
+    34180 pgid=34178 python -u <ray>/_private/ray_process_reaper.py
+    34181 pgid=34178 <ray>/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-02_12-53-04_206259_34178/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogI
+    34182 pgid=34178 python -u <ray>/autoscaler/_private/monitor.py --logs-dir=/tmp/ray/session_2026-10-02_12-53-04_206259_34178/logs --logging-rotate-bytes=536870912 --lo
+    34183 pgid=34178 python <ray>/dashboard/dashboard.py --host=127.0.0.1 --port=8265 --port-retries=50 --temp-dir=/tmp/ray --log-dir=/tmp/ray/session_2026-10-02_12-53-04_
+    34184 pgid=34178 <ray>/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/session_2026-10-02_12-53-04_206259_34178/sockets/raylet --store_socket_name=/tmp/ray/se
+    34185 pgid=34178 python -u <ray>/_private/log_monitor.py --session-dir=/tmp/ray/session_2026-10-02_12-53-04_206259_34178 --logs-dir=/tmp/ray/session_2026-10-02_12-53-0
+    34204 pgid=34178 python -u <ray>/dashboard/agent.py --node-ip-address=127.0.0.1 --metrics-export-port=64194 --dashboard-agent-port=65427 --listen-port=52365 --node-man
+    34205 pgid=34178 python -u <ray>/_private/runtime_env/agent/main.py --node-ip-address=127.0.0.1 --runtime-env-agent-port=64854 --gcs-address=127.0.0.1:63616 --cluster-
+    34206 pgid=34178 ray::slow                   
+own processes still existing at exit +0.5 s: []
+own processes still existing at exit +2 s: []
+own processes still existing at exit +5 s: []
+own processes still existing at exit +10 s: []
+own processes remaining after the kills: []
+Ray processes after (gcs_server|raylet|ray::):
+    (none)
+new Ray processes left by this variant: []
+variant wall time: 25.2 s
+
+====================================================================================================
+## end of S1: wall time 186.6 s
+Ray processes before the probe (gcs_server|raylet|ray::):
+    (none)
+Ray processes after the probe (gcs_server|raylet|ray::):
+    (none)
+pids killed by this probe:
+    (none)

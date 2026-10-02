@@ -1,0 +1,125 @@
+# readonly_open_probe.py (a3-v2-readiness audit 00, M1 and M2)
+python 3.12.14, sqlite 3.53.4
+full store: {'run_tag': 1, 'LambdaCDM': 1, 'QCD_Cosmology': 1, 'BackgroundModel': 1, 'validated': True, 'exit_times': [1, 101, 2], 'GkSourcePolicy': (1, 6), 'QuadSourcePolicy': 1, 'GkSourcePolicyData': 1, 'tolerances': {1e-10: 1, 1e-09: 6, 1e-08: 7, 1e-13: 11, 3e-11: 12, 1e-32: 8}}
+
+## M1 - what a read-write open writes today
+- clean full store, prune_unvalidated=False (the readers'): no file changed
+- an unvalidated BackgroundModel, prune_unvalidated=False: no file changed
+- the same store, prune_unvalidated=True (main.py's default): shard0000: 1 commit(s); rows BackgroundModel -1, BackgroundModelValue -12, BackgroundModel_tags -1; bytes changed | shard0001: 1 commit(s); rows BackgroundModel -1, BackgroundModelValue -12, BackgroundModel_tags -1; bytes changed | shard0002: 1 commit(s); rows BackgroundModel -1, BackgroundModelValue -12, BackgroundModel_tags -1; bytes changed
+- drop_actions=['gk-source-policy']: shard0000: 6 commit(s); bytes changed | shard0001: 6 commit(s); bytes changed | shard0002: 6 commit(s); rows GkSourcePolicyData -1; bytes changed
+- a primary with no replication_in_flight table: primary: 1 commit(s); new tables replication_in_flight; bytes changed
+- shard 1 missing the OneLoopIntegral tables: shard0001: 10 commit(s); new tables OneLoopIntegral, OneLoopIntegral_tags; bytes changed
+- a version label the store has not seen: shard0000: 1 commit(s); rows version +1; bytes changed | shard0001: 1 commit(s); rows version +1; bytes changed | shard0002: 1 commit(s); rows version +1; bytes changed
+- a path where no store exists: shard0000: appeared | shard0001: appeared | shard0002: appeared | primary: appeared
+
+## M2a - the pool as it is, every engine mode=ro
+- the constructor returned
+- files after the open: no file changed
+- object_get tolerance (a hit) raised: sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) attempt to write a readonly database <- sqlite3.OperationalError: attempt to write a readonly database
+- read_table wavenumber returned
+- files after close: no file changed
+
+## M2b - mode=ro, replicated lookups sent to one shard's actor, no record, the reader's whole sequence
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+## M2c - a lookup that misses, on the same pool
+!! Database error in datastore build() [store=shard0000-store, physical store=/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2b/store-shard0000.sqlite]
+|  payload data = [{'tol': 1e-99}]
+|  (sqlite3.OperationalError) attempt to write a readonly database
+[SQL: INSERT INTO tolerance (serial, timestamp, log10_tol) VALUES (?, ?, ?)]
+[parameters: (13, '2026-10-02 13:05:12.260641', -99.0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+- object_get tolerance tol=1e-99 raised: sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) attempt to write a readonly database
+!! Database error in datastore build() [store=shard0000-store, physical store=/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2b/store-shard0000.sqlite]
+|  payload data = [{'label': 'probe', 'Levin_threshold': 9.0, 'numeric_policy': 'maximize-WKB'}]
+|  (sqlite3.OperationalError) attempt to write a readonly database
+[SQL: INSERT INTO "GkSourcePolicy" (serial, version, timestamp, label, "Levin_threshold", numeric_policy) VALUES (?, ?, ?, ?, ?, ?)]
+[parameters: (7, 1, '2026-10-02 13:05:12.261427', 'probe', 9.0, 'maximize-WKB')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+- object_get GkSourcePolicy (9.0) raised: sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) attempt to write a readonly database
+
+### M2b - full store, mode=ro
+
+- ShardedPool open (constructor), mode=ro: ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: no file changed
+    _replicated_write: none
+- build_model_list (L1313; config/model_list.py): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: no file changed
+    _replicated_write: none
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 0 call(s): none
+- M2b+M2c, every file, open to close: no file changed
+
+## M2d - journals
+- store_reader.open_read_only, empty journal beside shard 1: refused: builtins.RuntimeError: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-empty/store.sqlite": shard #1 "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-empty/store-shard0001.sqlite" has "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-empty/store-shard0001.sqlite-journal" beside it, so the store is open or was not closed cleanly. Nothing was read or repaired
+- the mode=ro pool, same empty journal: opened and served a lookup
+- files: no file changed
+- a child died inside a write transaction on shard 1 (exit 0): journal exists=True, size=10752, first bytes=d9d505f920a163d7
+- a mode=ro read of shard 1 (SQLAlchemy) raised: sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) attempt to write a readonly database <- sqlite3.OperationalError: attempt to write a readonly database
+- a mode=ro read of shard 1 (sqlite3) raised: OperationalError: attempt to write a readonly database (sqlite_errorcode=776, sqlite_errorname=SQLITE_READONLY_ROLLBACK)
+- store_reader.open_read_only: refused: builtins.RuntimeError: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-hot/store.sqlite": shard #1 "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-hot/store-shard0001.sqlite" has "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-hot/store-shard0001.sqlite-journal" beside it, so the store is open or was not closed cleanly. Nothing was read or repaired
+- files after the read-only attempts: no file changed
+- the M2b pool (engines mode=ro; the check at open's own connect left as it is): opened and served a lookup; hot_journals=['/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-hot-ro-pool/store-shard0001.sqlite']
+- files after it: store-shard0001.sqlite: changed, counter 191 -> 191; store-shard0001.sqlite-journal: went
+- today's read-write open: opened; reconciliation hot_journals=['/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpiifjqfnb/m2d-hot-rw-pool/store-shard0001.sqlite']
+- files after it: store-shard0001.sqlite: changed, counter 191 -> 191; store-shard0001.sqlite-journal: went
+
+## M2e - the version row, found by label mode=ro
+- store-shard0000.sqlite: label 'standin': [(1, 'standin')]
+- store-shard0000.sqlite: label '2025.1.1': []
+- store-shard0001.sqlite: label 'standin': [(1, 'standin')]
+- store-shard0001.sqlite: label '2025.1.1': []
+- store-shard0002.sqlite: label 'standin': [(1, 'standin')]
+- store-shard0002.sqlite: label '2025.1.1': []
+
+ray.is_initialized() = False
+wall time 8.9 s

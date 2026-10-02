@@ -1,0 +1,563 @@
+# reader_writes_probe.py (a3-v2-readiness audit 00, R2)
+python 3.12.14, sqlite 3.53.4
+DEFAULT_QUADRATURE_RTOL = 1e-08
+
+## The full store (3 stand-in shards): {'run_tag': 1, 'LambdaCDM': 1, 'QCD_Cosmology': 1, 'BackgroundModel': 1, 'validated': True, 'exit_times': [1, 2, 3], 'GkSourcePolicy': (1, 6), 'QuadSourcePolicy': 1, 'GkSourcePolicyData': 1, 'tolerances': {1e-10: 1, 1e-09: 6, 1e-08: 11, 1e-13: 7, 3e-11: 2, 1e-32: 8}}
+files: store-shard0000.sqlite counter=191, store-shard0001.sqlite counter=191, store-shard0002.sqlite counter=192, store.sqlite counter=81
+
+## Run 0 - the instruments count known writes (A2)
+
+### Run 0
+
+- open: ok
+    files: no file changed
+    _replicated_write: none
+- deliberate miss: object_get tolerance tol=1e-99 (inserts): ok
+    files: shard0000: 1 commit(s); rows tolerance +1; bytes changed | shard0001: 1 commit(s); rows tolerance +1; bytes changed | shard0002: 1 commit(s); rows tolerance +1; bytes changed | primary: 3 commit(s); bytes changed
+    _replicated_write: get tolerance x1 (1 inserted or updated, serial(s) [12])
+- the same get again: a hit: ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get tolerance x1
+- deliberate sharded object_store: one GkSourcePolicyData: ok
+    files: shard0002: 1 commit(s); rows GkSourcePolicyData +1; bytes changed | primary: 8 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get tolerance x2, get wavenumber_exit_time x1
+- close: ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store-shard0000.sqlite': 1, 'store-shard0001.sqlite': 1, 'store-shard0002.sqlite': 2, 'store.sqlite': 13}
+  TOTAL rows per table, summed over files: {'GkSourcePolicyData': 1, 'tolerance': 3}
+  TOTAL _replicated_write: 6 call(s): get tolerance x4 (1 inserted or updated, serial(s) [12]), get LambdaCDM x1, get wavenumber_exit_time x1
+  in-flight records left on the primary: []
+
+## Run 1 - the full store
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 1 - full store
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] other readers: GkNumericIntegration (extract_Gk_data L422, extract_GkWKB_data L463): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] other readers: GkWKBIntegration labels_only (extract_GkWKB_data L473): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] other readers: TkNumericIntegration (extract_TkWKB_data L453): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] other readers: TkWKBIntegration labels_only (extract_TkWKB_data L462): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store.sqlite': 42}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 21 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x8, get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: primary: 42 commit(s); bytes changed; _replicated_write calls in all: 21
+  in-flight records left on the primary: []
+
+## Run 2 - the full store missing one row: store_tag
+  deleted on every shard, store closed: ["DELETE FROM store_tag WHERE label = 'Run_a3v2-probe'"]
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 2 - missing store_tag
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: no file changed
+    _replicated_write: none
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store.sqlite': 40}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 20 call(s): get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x8, get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: primary: 40 commit(s); bytes changed; _replicated_write calls in all: 20
+  in-flight records left on the primary: []
+
+## Run 3 - the full store missing one row: LambdaCDM
+  deleted on every shard, store closed: ['DELETE FROM LambdaCDM']
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 3 - missing LambdaCDM
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: shard0000: 1 commit(s); rows LambdaCDM +1; bytes changed | shard0001: 1 commit(s); rows LambdaCDM +1; bytes changed | shard0002: 1 commit(s); rows LambdaCDM +1; bytes changed | primary: 5 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1 (1 inserted or updated, serial(s) [1]), get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store-shard0000.sqlite': 1, 'store-shard0001.sqlite': 1, 'store-shard0002.sqlite': 1, 'store.sqlite': 43}
+  TOTAL rows per table, summed over files: {'LambdaCDM': 3}
+  TOTAL _replicated_write: 21 call(s): get store_tag x1, get LambdaCDM x1 (1 inserted or updated, serial(s) [1]), get QCD_Cosmology x1, get tolerance x8, get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: shard0000: 1 commit(s); rows LambdaCDM +1; bytes changed | shard0001: 1 commit(s); rows LambdaCDM +1; bytes changed | shard0002: 1 commit(s); rows LambdaCDM +1; bytes changed | primary: 43 commit(s); bytes changed; _replicated_write calls in all: 21
+  in-flight records left on the primary: []
+
+## Run 4 - the full store missing one row: QCD_Cosmology
+  deleted on every shard, store closed: ['DELETE FROM QCD_Cosmology']
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 4 - missing QCD_Cosmology
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: shard0000: 1 commit(s); rows QCD_Cosmology +1; bytes changed | shard0001: 1 commit(s); rows QCD_Cosmology +1; bytes changed | shard0002: 1 commit(s); rows QCD_Cosmology +1; bytes changed | primary: 5 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1 (1 inserted or updated, serial(s) [1])
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store-shard0000.sqlite': 1, 'store-shard0001.sqlite': 1, 'store-shard0002.sqlite': 1, 'store.sqlite': 43}
+  TOTAL rows per table, summed over files: {'QCD_Cosmology': 3}
+  TOTAL _replicated_write: 21 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1 (1 inserted or updated, serial(s) [1]), get tolerance x8, get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: shard0000: 1 commit(s); rows QCD_Cosmology +1; bytes changed | shard0001: 1 commit(s); rows QCD_Cosmology +1; bytes changed | shard0002: 1 commit(s); rows QCD_Cosmology +1; bytes changed | primary: 43 commit(s); bytes changed; _replicated_write calls in all: 21
+  in-flight records left on the primary: []
+
+## Run 5 - the full store missing one row: tolerance (DEFAULT_QUADRATURE_RTOL's row)
+  deleted on every shard, store closed: ['DELETE FROM tolerance WHERE abs(log10_tol - (-8.0)) < 1e-9']
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 5 - missing tolerance (DEFAULT_QUADRATURE_RTOL's row)
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: shard0000: 1 commit(s); rows tolerance +1; bytes changed | shard0001: 1 commit(s); rows tolerance +1; bytes changed | shard0002: 1 commit(s); rows tolerance +1; bytes changed | primary: 9 commit(s); bytes changed
+    _replicated_write: get tolerance x4 (1 inserted or updated, serial(s) [9])
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store-shard0000.sqlite': 1, 'store-shard0001.sqlite': 1, 'store-shard0002.sqlite': 1, 'store.sqlite': 43}
+  TOTAL rows per table, summed over files: {'tolerance': 3}
+  TOTAL _replicated_write: 21 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x8 (1 inserted or updated, serial(s) [9]), get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: shard0000: 1 commit(s); rows tolerance +1; bytes changed | shard0001: 1 commit(s); rows tolerance +1; bytes changed | shard0002: 1 commit(s); rows tolerance +1; bytes changed | primary: 43 commit(s); bytes changed; _replicated_write calls in all: 21
+  in-flight records left on the primary: []
+
+## Run 6 - the full store missing one row: BackgroundModel (LambdaCDM's, with its values and tags)
+  deleted on every shard, store closed: ['DELETE FROM BackgroundModelValue WHERE model_serial = 1', 'DELETE FROM BackgroundModel_tags WHERE model_serial = 1', 'DELETE FROM BackgroundModel WHERE serial = 1']
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 6 - missing BackgroundModel (LambdaCDM's, with its values and tags)
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store.sqlite': 16}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 8 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x4, get BackgroundModel x1
+  WHOLE RUN, open to close, taken independently of the steps: primary: 16 commit(s); bytes changed; _replicated_write calls in all: 8
+  in-flight records left on the primary: []
+
+## Run 7 - the full store missing one row: wavenumber_exit_time (the first k's)
+  deleted on every shard, store closed: ['DELETE FROM wavenumber_exit_time WHERE serial = 1']
+  (the sequence stopped where the script would exit 1: Attempt to read datastore id before it has been set)
+
+### Run 7 - missing wavenumber_exit_time (the first k's)
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [4 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): raised RuntimeError: Attempt to read datastore id before it has been set
+    files: no file changed
+    _replicated_write: none
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store.sqlite': 32}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 16 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x4, get BackgroundModel x1, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: primary: 32 commit(s); bytes changed; _replicated_write calls in all: 16
+  in-flight records left on the primary: []
+
+## Run 8 - the full store missing one row: GkSourcePolicy (the 5.0 policy)
+  deleted on every shard, store closed: ['DELETE FROM GkSourcePolicy WHERE serial = 6']
+  (the sequence stopped where the script would exit 1: Could not locate suitable background model instance in the datastore)
+
+### Run 8 - missing GkSourcePolicy (the 5.0 policy)
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 2]
+    files: shard0000: 1 commit(s); rows GkSourcePolicy +1; bytes changed | shard0001: 1 commit(s); rows GkSourcePolicy +1; bytes changed | shard0002: 1 commit(s); rows GkSourcePolicy +1; bytes changed | primary: 5 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2 (1 inserted or updated, serial(s) [2])
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): ok
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: object_read_batch QuadSourceIntegral (L1193): ok [0 row(s)]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSource labels_only (L1212): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData (L1224), the stored row's source: ok [available=True]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: GkSourcePolicyData, a miss: ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] work item: QuadSource labels_only (L1234): ok [available=False]
+    files: no file changed
+    _replicated_write: none
+- [QCD_Cosmology] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [QCD_Cosmology] BackgroundModel (L1061-1076): raised RuntimeError: Could not locate suitable background model instance in the datastore [available=False, serial=None]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store-shard0000.sqlite': 1, 'store-shard0001.sqlite': 1, 'store-shard0002.sqlite': 1, 'store.sqlite': 43}
+  TOTAL rows per table, summed over files: {'GkSourcePolicy': 3}
+  TOTAL _replicated_write: 21 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x8, get BackgroundModel x2, get wavenumber_exit_time x6, get GkSourcePolicy x2 (1 inserted or updated, serial(s) [2])
+  WHOLE RUN, open to close, taken independently of the steps: shard0000: 1 commit(s); rows GkSourcePolicy +1; bytes changed | shard0001: 1 commit(s); rows GkSourcePolicy +1; bytes changed | shard0002: 1 commit(s); rows GkSourcePolicy +1; bytes changed | primary: 43 commit(s); bytes changed; _replicated_write calls in all: 21
+  in-flight records left on the primary: []
+
+## Run 9 - the full store missing one row: QuadSourcePolicy (the 1.5 policy, read with read_table)
+  deleted on every shard, store closed: ['DELETE FROM QuadSourcePolicy WHERE serial = 1']
+  (the sequence stopped where the script would exit 1: find_QuadSource_policy: 0 rows)
+
+### Run 9 - missing QuadSourcePolicy (the 1.5 policy, read with read_table)
+
+- ShardedPool open (constructor): ok
+    files: no file changed
+    _replicated_write: none
+- resolve_run_selection (L1308; extract_common): ok
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get store_tag x1
+- build_model_list (L1313; config/model_list.py): ok
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get LambdaCDM x1, get QCD_Cosmology x1
+- [LambdaCDM] tolerance x4 (L1051-1058): ok
+    files: primary: 8 commit(s); bytes changed
+    _replicated_write: get tolerance x4
+- [LambdaCDM] BackgroundModel (L1061-1076): ok [available=True, serial=1]
+    files: primary: 2 commit(s); bytes changed
+    _replicated_write: get BackgroundModel x1
+- [LambdaCDM] read_table wavenumber x2 (L1086-1089): ok [3 source, 3 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] wavenumber_exit_time x6 (L1091-1128): ok [6 of 6 available]
+    files: primary: 12 commit(s); bytes changed
+    _replicated_write: get wavenumber_exit_time x6
+- [LambdaCDM] read_table redshift x2 (L1139-1146): ok [12 source, 6 response]
+    files: no file changed
+    _replicated_write: none
+- [LambdaCDM] GkSourcePolicy x2 (L1159-1174): ok [serials 1, 6]
+    files: primary: 4 commit(s); bytes changed
+    _replicated_write: get GkSourcePolicy x2
+- [LambdaCDM] read_table QuadSourcePolicy (L1179, find_QuadSource_policy): raised RuntimeError: find_QuadSource_policy: 0 rows
+    files: no file changed
+    _replicated_write: none
+- ShardedPool close (__exit__): ok
+    files: no file changed
+    _replicated_write: none
+  TOTAL commits per file: {'store.sqlite': 32}
+  TOTAL rows per table, summed over files: {}
+  TOTAL _replicated_write: 16 call(s): get store_tag x1, get LambdaCDM x1, get QCD_Cosmology x1, get tolerance x4, get BackgroundModel x1, get wavenumber_exit_time x6, get GkSourcePolicy x2
+  WHOLE RUN, open to close, taken independently of the steps: primary: 32 commit(s); bytes changed; _replicated_write calls in all: 16
+  in-flight records left on the primary: []
+
+ray.is_initialized() = False
+wall time 27.3 s

@@ -1,7 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-02 · **Status: PLANNED — 0 of 8 prompts landed.** 00, 01, 05 and 06 are
-written; 02, 03 and 04 are held on audit 00; 07 is held on 01–06 (README §2).
+**Last updated:** 2026-10-02 · **Status: IN PROGRESS — 1 of 8 prompts landed.** Audit 00 has landed
+([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)); 01, 05 and 06 are written;
+02, 03 and 04 stay held until the user has read the audit and the orchestrator writes them; 07 is
+held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
 LambdaCDM store is built, and decided that all seven defects of README §0 are fixed first, by one
@@ -33,13 +35,21 @@ opened here.
 | **D3** — how readers stop writing | a read-only pool, every file `mode=ro`, not per-site lookups |
 | **D4** — the campaign | one campaign, `a3-v2-readiness`, owns all seven |
 
+**Put to the user by audit 00 (2026-10-02), not yet taken** (audit, closing section, each with its
+recommendation):
+
+| Decision | Recommended |
+|---|---|
+| **U1** — does 02 also put the prune at open of a replicated row through a record (`[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]`)? | yes, in 02: the pool prunes replicated classes under a `prune` record the check at open repairs by re-running it |
+| **U2** — what is done about `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]`? | record only; no code change |
+
 ---
 
 ## 1. Prompts
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | *"Audit what the A3 v2 readiness prompts rest on"* | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 02 | Write the version row through the recorded write | **W1**–**W2** | Opus | ⏸ held on 00 (V) | ⬜ | — | — |
 | 03 | Open readers read-only | **O1**–**O4** | Opus | ⏸ held on 00 (R, M); after 01, 02 | ⬜ | — | — |
@@ -60,17 +70,17 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 
 | Item | Prompt | What | Status |
 |---|---|---|---|
-| **R1** | 00 | Every `pool.` call the six readers and `build_model_list` make: class, replicated or not, whether it inserts on a miss | ⬜ |
-| **R2** | 00 | The writes one reader's lookup sequence makes, counted on a stand-in, on a full store and on one missing a row | ⬜ |
-| **R3** | 00 | Whether A3 v2 holds a `QCD_Cosmology` row; each reader's path on a store without a model's `BackgroundModel` | ⬜ |
-| **S1** | 00 | A handler installed after `ray.init`: does it run during `ray.wait`, and what reaches the frame | ⬜ |
-| **S2** | 00 | Ray's abort about 3 s after a `SIGTERM`: what it is, and whether `alarm(0)` stops it | ⬜ |
-| **S3** | 00 | What leaves a `gcs_server` behind | ⬜ |
-| **S4** | 00 | How long `finish(fingerprint=True)` takes on a real-sized store | ⬜ |
-| **V1** | 00 | The version row's write sequence at open, and the crash window | ⬜ |
-| **V2** | 00 | The forms 02 can take, and how a read-only open finds the row | ⬜ |
-| **M1** | 00 | Every write at open, and what `read_only=True` does with each | ⬜ |
-| **M2** | 00 | Whether every reader lookup can be served `mode=ro` | ⬜ |
+| **R1** | 00 | Every `pool.` call the six readers and `build_model_list` make: class, replicated or not, whether it inserts on a miss | ✅ audit R1: seven replicated classes `object_get`, five insert on a miss; eight sharded lookups, none writes |
+| **R2** | 00 | The writes one reader's lookup sequence makes, counted on a stand-in, on a full store and on one missing a row | ✅ audit R2: QSI's whole sequence, 21 replicated gets = 42 primary commits and no row on a full store; a missing replicated row is inserted on every shard |
+| **R3** | 00 | Whether A3 v2 holds a `QCD_Cosmology` row; each reader's path on a store without a model's `BackgroundModel` | ✅ audit R3: yes (read); each exits 1 at that model's `BackgroundModel` lookup |
+| **S1** | 00 | A handler installed after `ray.init`: does it run during `ray.wait`, and what reaches the frame | ✅ audit S1: it runs, replaces absl's, arms no alarm; `SystemExit(143)` arrives as `SystemExit(1)` |
+| **S2** | 00 | Ray's abort about 3 s after a `SIGTERM`: what it is, and whether `alarm(0)` stops it | ✅ audit S2: absl's 3 s `SIGALRM` → `SIGABRT`, 2.78–3.06 s; `alarm(0)` stops it |
+| **S3** | 00 | What leaves a `gcs_server` behind | ✅ audit S3: any exit without `ray.shutdown()` (7 of 12); none through it (0 of 10) |
+| **S4** | 00 | How long `finish(fingerprint=True)` takes on a real-sized store | ✅ audit S4: 2.48 s on the A3 baseline (333 MiB, partial), read-only, unchanged |
+| **V1** | 00 | The version row's write sequence at open, and the crash window | ✅ audit V1: measured; two sibling windows opened |
+| **V2** | 00 | The forms 02 can take, and how a read-only open finds the row | ✅ audit V2: form A recommended; found by label `mode=ro`, refuse when absent |
+| **M1** | 00 | Every write at open, and what `read_only=True` does with each | ✅ audit M1: table, no row left to decide |
+| **M2** | 00 | Whether every reader lookup can be served `mode=ro` | ✅ audit M2: yes, if replicated lookups skip `_replicated_write` |
 | **T1** | 01 | `DEFAULT_QUADRATURE_RTOL = 1e-7`, its comment, every stale statement of its value | ⬜ |
 | **T2** | 01 | The provenance subsection, the `handover` board line, a value pin | ⬜ |
 | **W1** | 02 | The version row written once through `_replicated_write` | ⏸ |
@@ -124,6 +134,38 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
     retirement, and a real reference in it is harder to see.
   - **Next step.** Prompt 06: the stores root is not a target; a store alone in a subdirectory,
     the backup's shape, keeps its directory as one.
+- **[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]** *(opened
+  2026-10-02 by audit 00, V1; does not block A3 v2)*
+  - **The defect.** With `prune_unvalidated=True` (`main.py`'s default, and A3 v2's resume once
+    prompt 05 lands), each `Datastore` actor deletes an unvalidated `BackgroundModel` — a
+    replicated class — with its values and tags from its own shard, in its own constructor
+    (`_validate_on_startup` → `sqla_BackgroundModelFactory.validate_on_startup`), outside the
+    `replication_in_flight` record. The same defect as
+    `[02-the-version-row-is-written-outside-the-in-flight-record]`, for the other replicated write
+    a constructor makes.
+  - **Measured** (`docs/a3-v2-readiness/version_window_probe.py`, case 4, stand-in shards): every
+    actor after the first killed during a pruning open left shard 2 with no `BackgroundModel` and
+    shards 0 and 1 with `[(1, 0)]`; the next open was refused by the check at open with five
+    differences (`BackgroundModel`, three `BackgroundModelValue`, one `BackgroundModel_tags`).
+  - **Impact.** A store that needs a person. Reached only when a pruning open of a store holding an
+    unvalidated `BackgroundModel` is interrupted between actors; for A3 v2, only if a launch is
+    interrupted between the background's store and its validate and the resume is then interrupted
+    in its first seconds.
+  - **Next step.** User decision U1 (audit, closing section): recommended, in prompt 02, the pool
+    prunes replicated classes itself, before any actor exists, under a `prune` record that the
+    check at open repairs by running the idempotent prune again.
+- **[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]** *(opened 2026-10-02 by
+  audit 00, V1; does not block A3 v2)*
+  - **The defect.** `ShardedPool.__init__` writes a new store's primary and its `shards` table
+    first, and each shard file is created by its actor's constructor afterwards. Interrupted in
+    between, the store's next open is refused by `_check_shard_files` for a shard that does not
+    exist.
+  - **Measured** (`version_window_probe.py`, cases 1 and 2): `shard #0 … which does not exist;
+    shard #1 … which does not exist`, and `shard #1 … which does not exist`.
+  - **Impact.** None to data: the store is empty. But a person must delete it, since `--build`
+    refuses an existing path and `--build --resume` checks the store first.
+  - **Next step.** User decision U2 (audit, closing section): recommended, record only; 07's
+    rehearsal can confirm the refusal makes the remedy clear.
 - **[00-quadsource-extraction-reads-at-the-default-rtol]** *(opened 2026-10-02 by this campaign's
   plan)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks up the tolerance rows its
@@ -152,3 +194,19 @@ None yet.
 Inherited, README §7: AdaptiveLevin 32, ComputeTargets 665, CosmologyModels 39, Datastore 551,
 LiouvilleGreen 148 (1 skipped), RunRegistry 199, at `f4f1896`. Each prompt adds a subsection here
 with the counts after its commit.
+
+### 5.1 After prompt 00 (2026-10-02)
+
+Measured 13:12–13:19 at the tree of this commit (the audit adds no test), serially, each suite's
+output written to a file and its verdict read from it (log 00, deviation 9):
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 665 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 551 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+Unchanged from README §7. Load average 10–27 during the run; no flake fired.

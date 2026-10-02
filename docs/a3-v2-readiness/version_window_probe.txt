@@ -1,0 +1,49 @@
+# version_window_probe.py (a3-v2-readiness audit 00, V1)
+
+## case 1: a new store's first open, later actors killed at start
+  open under 'L1': crashed: constructor of shard0000-store killed at start
+  files: ['store-shard0002.sqlite', 'store.sqlite']
+  store-shard0002.sqlite: version rows [(1, 'L1')]
+  next open under 'L1': raised RuntimeError: Cannot open sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case1/store.sqlite": shard #0: stored record "store-shard0000.sqlite" resolves to "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case1/store-shard0000.sqlite", which does not exist; shard #1: stored record "store-shard0001.sqlite" resolves to "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case1/store-shard0001.sqlite", which does not exist
+
+## case 2: a new store's first open, later actors killed before the version insert
+  open under 'L1': crashed: constructor of shard0000-store killed before inserting the version row
+  files: ['store-shard0000.sqlite', 'store-shard0002.sqlite', 'store.sqlite']
+  store-shard0000.sqlite: version rows []
+  store-shard0002.sqlite: version rows [(1, 'L1')]
+  next open under 'L1': raised RuntimeError: Cannot open sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case2/store.sqlite": shard #1: stored record "store-shard0001.sqlite" resolves to "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case2/store-shard0001.sqlite", which does not exist
+
+## case 3: an existing store (label L1) opened under L2, later actors killed before the version insert
+  store created and closed under L1
+  files: ['store-shard0000.sqlite', 'store-shard0001.sqlite', 'store-shard0002.sqlite', 'store.sqlite']
+  store-shard0000.sqlite: version rows [(1, 'L1')]
+  store-shard0001.sqlite: version rows [(1, 'L1')]
+  store-shard0002.sqlite: version rows [(1, 'L1')]
+  open under 'L2': crashed: constructor of shard0000-store killed before inserting the version row
+  files: ['store-shard0000.sqlite', 'store-shard0001.sqlite', 'store-shard0002.sqlite', 'store.sqlite']
+  store-shard0000.sqlite: version rows [(1, 'L1')]
+  store-shard0001.sqlite: version rows [(1, 'L1')]
+  store-shard0002.sqlite: version rows [(1, 'L1'), (2, 'L2')]
+  next open under 'L2': raised ReplicatedDivergence: Cannot open sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case3/store.sqlite": its replicated tables differ across shards, and there is no replication_in_flight record, so no interrupted replication explains them. 1 difference(s):
+  - class "version", shard [0, 1], serial 2: held by shard(s) [2], missing on shard(s) [0, 1]
+Nothing was repaired: no shard and not the primary was written, and the replication_in_flight record, if any, was left as it was. A store in this state cannot be put right by this tree: it needs a person, or regeneration.
+
+## case 4: an existing store holding an unvalidated (replicated) BackgroundModel, opened with prune_unvalidated=True, later actors killed at start
+  stored BackgroundModel serial 1, not validated; store closed
+  store-shard0000.sqlite: BackgroundModel (serial, validated) [(1, 0)]
+  store-shard0001.sqlite: BackgroundModel (serial, validated) [(1, 0)]
+  store-shard0002.sqlite: BackgroundModel (serial, validated) [(1, 0)]
+  open with prune_unvalidated=True: crashed: constructor of shard0000-store killed at start
+  store-shard0000.sqlite: BackgroundModel (serial, validated) [(1, 0)]
+  store-shard0001.sqlite: BackgroundModel (serial, validated) [(1, 0)]
+  store-shard0002.sqlite: BackgroundModel (serial, validated) []
+  next open with prune_unvalidated=True: raised ReplicatedDivergence: Cannot open sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp5b3q0tk5/case4/store.sqlite": its replicated tables differ across shards, and there is no replication_in_flight record, so no interrupted replication explains them. 5 difference(s):
+  - class "BackgroundModel", shard [2], serial 1: held by shard(s) [0, 1], missing on shard(s) [2]
+  - class "BackgroundModelValue", shard [2], key (model_serial=1, z_serial=1): held by shard(s) [0, 1], missing on shard(s) [2]
+  - class "BackgroundModelValue", shard [2], key (model_serial=1, z_serial=2): held by shard(s) [0, 1], missing on shard(s) [2]
+  - class "BackgroundModelValue", shard [2], key (model_serial=1, z_serial=3): held by shard(s) [0, 1], missing on shard(s) [2]
+  - class "BackgroundModel_tags", shard [2], key (model_serial=1, tag_serial=1): held by shard(s) [0, 1], missing on shard(s) [2]
+Nothing was repaired: no shard and not the primary was written, and the replication_in_flight record, if any, was left as it was. A store in this state cannot be put right by this tree: it needs a person, or regeneration.
+
+ray.is_initialized() = False
+wall time 1.9 s

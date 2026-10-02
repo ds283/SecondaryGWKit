@@ -1,0 +1,89 @@
+# fingerprint_time_probe.py (a3-v2-readiness audit 00, S4)
+python 3.12.14, Darwin arm64
+started 2026-10-02 13:01:23 BST, load average (5.14208984375, 7.181640625, 8.3515625)
+
+## before
+  fdbe93a541083e8f4c9a1e4aa392b565a97046d7404400af60e589e213e7376b        32,768  2026-09-20 21:03:10  var/datastores/handover-A3-baseline-lambdacdm.sqlite
+  a10f3c3ce33ad0563b6479a3443e7f1e4159e35c4dacb4134e2933de9e5a1df6    87,367,680  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0000.sqlite
+  9a5a4827a996786f84146dfeb3e454e34b90a2097e1be7decf8109d6e06f92f4    87,302,144  2026-09-23 11:11:00  var/datastores/handover-A3-baseline-lambdacdm-shard0001.sqlite
+  d196e8a34167aa3f4514c00ed51385af678b5da90de01e5aa6365d8d658ac7fe    87,711,744  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0002.sqlite
+  13398fec0071e0d3f3250f5102dd7ba56ed3dfeab1c024c24649be9bffeb2083    86,892,544  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0003.sqlite
+  3e43aee7aa17b02f2d2f7041a382a520a9ef5693553b0df40aa222ae8a3a7eb3        15,783  2026-09-26 00:06:46  var/datastores/handover-A3-baseline-lambdacdm.manifest.json
+  store size (primary + 4 shards): 349,306,880 bytes (333.1 MiB)
+  journals beside the store: []
+
+import RunRegistry.stores: 0.017 s
+FINGERPRINT_FORMAT at HEAD: 6
+
+## call 1: fingerprint_store(primary, write=False)
+load average (5.14208984375, 7.181640625, 8.3515625)
+wall time: 2.480 s
+wrote: False; sidecar kind: registry
+fingerprint_format 6, digest fa73070e0cde6b8ebca2a87e63dface13cfa01abde9883ba790033d49f3b9272, problems {'TkWKBIntegration': {'incomplete': 4}, 'GkWKBIntegration': {'incomplete': 4}, 'GkSource': {'absent-table': 4}, 'GkSourcePolicyData': {'unresolved-parent': 4}, 'QuadSourceIntegral': {'incomplete': 4}}
+classes (count):
+  version: 1
+  store_tag: 10
+  redshift: 1740
+  wavenumber: 8
+  tolerance: 12
+  LambdaCDM: 1
+  QCD_Cosmology: 1
+  IntegrationSolver: 7
+  GkSourcePolicy: 2
+  QuadSourcePolicy: 2
+  wavenumber_exit_time: 8
+  BackgroundModel: 1
+  TkNumericIntegration: 8
+  TkWKBIntegration: 0
+  GkNumericIntegration: 4549
+  GkWKBIntegration: 0
+  GkSource: 0
+  GkSourcePolicyData: 0
+  QuadSource: 36
+  QuadSourceIntegral: 0
+  OneLoopIntegral: 0
+recorded fingerprint_format: 1
+comparison with the recorded fingerprint: [{"kind": "format", "class": null, "tags": null, "recorded": 1, "current": 6, "text": "the recorded fingerprint is format 1 and this one is format 6; fingerprints of different formats are not compared. Recompute both from the stores"}]
+
+## call 2: fingerprint_store(primary, write=False)
+load average (4.97021484375, 7.11181640625, 8.31982421875)
+wall time: 0.683 s
+wrote: False; sidecar kind: registry
+fingerprint_format 6, digest fa73070e0cde6b8ebca2a87e63dface13cfa01abde9883ba790033d49f3b9272, problems {'TkWKBIntegration': {'incomplete': 4}, 'GkWKBIntegration': {'incomplete': 4}, 'GkSource': {'absent-table': 4}, 'GkSourcePolicyData': {'unresolved-parent': 4}, 'QuadSourceIntegral': {'incomplete': 4}}
+classes (count):
+  version: 1
+  store_tag: 10
+  redshift: 1740
+  wavenumber: 8
+  tolerance: 12
+  LambdaCDM: 1
+  QCD_Cosmology: 1
+  IntegrationSolver: 7
+  GkSourcePolicy: 2
+  QuadSourcePolicy: 2
+  wavenumber_exit_time: 8
+  BackgroundModel: 1
+  TkNumericIntegration: 8
+  TkWKBIntegration: 0
+  GkNumericIntegration: 4549
+  GkWKBIntegration: 0
+  GkSource: 0
+  GkSourcePolicyData: 0
+  QuadSource: 36
+  QuadSourceIntegral: 0
+  OneLoopIntegral: 0
+recorded fingerprint_format: 1
+comparison with the recorded fingerprint: [{"kind": "format", "class": null, "tags": null, "recorded": 1, "current": 6, "text": "the recorded fingerprint is format 1 and this one is format 6; fingerprints of different formats are not compared. Recompute both from the stores"}]
+
+## after
+  fdbe93a541083e8f4c9a1e4aa392b565a97046d7404400af60e589e213e7376b        32,768  2026-09-20 21:03:10  var/datastores/handover-A3-baseline-lambdacdm.sqlite  unchanged
+  a10f3c3ce33ad0563b6479a3443e7f1e4159e35c4dacb4134e2933de9e5a1df6    87,367,680  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0000.sqlite  unchanged
+  9a5a4827a996786f84146dfeb3e454e34b90a2097e1be7decf8109d6e06f92f4    87,302,144  2026-09-23 11:11:00  var/datastores/handover-A3-baseline-lambdacdm-shard0001.sqlite  unchanged
+  d196e8a34167aa3f4514c00ed51385af678b5da90de01e5aa6365d8d658ac7fe    87,711,744  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0002.sqlite  unchanged
+  13398fec0071e0d3f3250f5102dd7ba56ed3dfeab1c024c24649be9bffeb2083    86,892,544  2026-09-23 11:22:04  var/datastores/handover-A3-baseline-lambdacdm-shard0003.sqlite  unchanged
+  3e43aee7aa17b02f2d2f7041a382a520a9ef5693553b0df40aa222ae8a3a7eb3        15,783  2026-09-26 00:06:46  var/datastores/handover-A3-baseline-lambdacdm.manifest.json  unchanged
+  journals beside the store: []
+finished 2026-10-02 13:01:27 BST, load average (4.97021484375, 7.11181640625, 8.31982421875)
+real 3.93
+user 2.50
+sys 0.67

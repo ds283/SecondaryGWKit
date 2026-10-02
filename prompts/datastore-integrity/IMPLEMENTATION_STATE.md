@@ -2008,6 +2008,19 @@ None is assigned to a prompt of this campaign.
     held on that campaign's audit 00, which measures whether a handler installed after `ray.init`
     survives `ray.wait` and whether Ray's abort can be cancelled. Index row moved to
     `docs/OPEN_ISSUES.md` §1.17.
+  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` §S),
+    with Ray 2.43.0 and committed probes (`docs/a3-v2-readiness/sigterm_probe.py`). Both inferred
+    mechanisms are now measured as behaviour. Any `SystemExit` a Python `SIGTERM` handler raises
+    inside `ray.wait` or `ray.get` reaches the frame as `SystemExit(1)`; a handler raising
+    `SystemExit(143)` delivers code 1. That Ray's Cython signal check does the conversion is still
+    inferred from strings. The abort is a 3 s `SIGALRM` armed by absl's `AbslFailureSignalHandler`
+    in `_raylet.so`: after the signal `signal.alarm(0)` returns 3, and the `SIGALRM` handler is
+    `ImmediateAbortSignalHandler`. Death by `SIGABRT` came 2.78–3.06 s after the signal, in 6 runs
+    of 6, and `signal.alarm(0)` cancels it. A Python handler installed **after** `ray.init`
+    replaces absl's: it runs at once, and no banner and no alarm follow. **Wider than recorded:**
+    the `gcs_server` is left behind by any exit that skips `ray.shutdown()` (7 of 12 runs: the
+    abort, and `os._exit`), not by the abort as such; 0 of 10 exits through `ray.shutdown()` left
+    one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
 - **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10)*
   - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
     LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
@@ -2080,6 +2093,16 @@ None is assigned to a prompt of this campaign.
     `_replicated_write`, and the readers also look up `tolerance`, the wavenumbers, the exit times
     and both cosmologies that way. That campaign's audit 00 measures how wide, and records it here.
     Index row moved to `docs/OPEN_ISSUES.md` §1.17.
+  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` R1–R2).
+    Every reader `object_get`s seven replicated classes — `store_tag`, `LambdaCDM`, `QCD_Cosmology`,
+    `tolerance`, `BackgroundModel`, `wavenumber_exit_time`, `GkSourcePolicy` — and every such call
+    commits and clears an in-flight record on the primary, hit or miss. Measured on stand-in shards
+    (`docs/a3-v2-readiness/reader_writes_probe.py`) for `extract_QuadSourceIntegral_data.py`'s whole
+    sequence on a store holding every row it asks for: 21 replicated gets, 42 commits on the
+    primary, no row inserted and no commit on any shard. With one row missing, `store_tag`'s lookup
+    is skipped, while `LambdaCDM`, `QCD_Cosmology`, `tolerance` and `GkSourcePolicy` are inserted on
+    every shard. No reader writes a sharded row. The wavenumbers, redshifts and `QuadSourcePolicy`
+    are read with `read_table`, which writes nothing.
 - **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
     integration table first and its tag and value tables after it, e.g. `"tk-wkb":
