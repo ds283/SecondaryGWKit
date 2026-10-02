@@ -62,7 +62,12 @@ recommended** (audit, closing section; README §6.2):
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
-(2026-10-02, ready).
+(2026-10-02, used) and [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, ready).
+Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
+corrected in the same commit. It also gained a dated line on `levin-refactor`'s
+`[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
+T1, and a fifth record to name in §6.
 
 **Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
 `5707851` with nothing `running` in this repository's registry, no other worktree and no Ray

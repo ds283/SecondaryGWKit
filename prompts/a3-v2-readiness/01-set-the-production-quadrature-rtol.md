@@ -35,8 +35,9 @@ itself moves, so that every consumer shares one constant.
 **T1 — the constant.**
 - `config/defaults.py`: `DEFAULT_QUADRATURE_RTOL = 1e-7`. Give it a comment of its own, in the
   style of the comments around it, saying: the value; that it is the loosest rung the 2026-09-23/24
-  sweep found converged in all three response-redshift bands, worst deviation from each band's
-  tightest rung 9.97e-07 / 1.9e-06 / 2.84e-06, against 1.1e-02 for `1e-6` in the mid band; that
+  sweep found converged in all three response-redshift bands, its worst deviation from each band's
+  tightest rung being 1.9e-06 in the mid band (sweep §2), 2.84e-06 in the low band (§5) and
+  8.26e-07 in the seam band (§4), against 1.1e-02 for `1e-6` in the mid band; that
   low $z_{\rm response}$ is representation-limited, so a tighter rung there buys cost and no
   accuracy; that it was `1e-8` until this commit; the convergence check for a science output is one
   rung tighter, `1e-8` (D1); and a pointer to `QUADSOURCE-TOLERANCE-SWEEP.md`. The existing comment
@@ -56,6 +57,15 @@ itself moves, so that every consumer shares one constant.
   a dated line saying the shipped `rtol` is now `1e-7`. **It does not close that issue**: the dead
   `local_atol` branch and the depth cap it describes are unchanged; only the pair is the one the
   sweep found converged.
+- The `levin-refactor` board's `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`: a
+  dated line, with its index hook updated to match. It should say three things:
+  - `ComputeTargets/QuadSourceIntegral.py`'s comment that stated `1e-25`/`1e-8` is corrected by this
+    commit;
+  - the live run its next step asked for is the `handover` sweep this commit ships;
+  - `config/defaults.py`'s `atol` comment ("`rtol` was confirmed not to bind") is left as it is, as
+    this prompt requires, so the issue stays open on that one sentence.
+
+  **It does not close that issue.**
 - A test, in a new module under `ComputeTargets/tests/`, pinning `DEFAULT_QUADRATURE_RTOL == 1e-7`
   and `DEFAULT_QUADRATURE_ATOL == 1e-32`, whose docstring says why (the sweep, D1) and that
   changing either is a decision that also changes which rows every store's readers find. A value
@@ -81,7 +91,8 @@ itself moves, so that every consumer shares one constant.
 ## 4. Acceptance
 
 1. The constant, its comment, and every stale statement of its value, each listed in the log.
-2. The provenance subsection and the `handover` board line.
+2. The provenance subsection, the `handover` board line, and the `levin-refactor` board line with
+   its index hook.
 3. The new test, and the deliberate-breakage record (i)–(iii).
 4. `[00-quadsource-extraction-reads-at-the-default-rtol]` moved to this board's §4 with a closing
    note naming this commit; its index row deleted; the count and date corrected.
@@ -107,7 +118,9 @@ itself moves, so that every consumer shares one constant.
   the log's **Observations not acted on**, and do not fix it here.
 - It does not re-run or edit the measurement records that read the default at their own tree:
   `docs/tolerance-convergence/quadsource_readonly.py` and `QUADSOURCE-READONLY.md`,
-  `docs/tolerance-convergence/inventory.py` and `TOLERANCE-INVENTORY.md`. Name each in the log as a
+  `docs/tolerance-convergence/inventory.py` and `TOLERANCE-INVENTORY.md`, and
+  `docs/source-remediation-verification/run_quadsource_integrals.py`, whose `--rtol` defaults to
+  the constant. Name each in the log as a
   record whose re-run would now measure at `1e-7`.
 - It does not change `DEFAULT_QUADRATURE_ATOL` or `DEFAULT_LEVIN_MAX_DEPTH`.
 
