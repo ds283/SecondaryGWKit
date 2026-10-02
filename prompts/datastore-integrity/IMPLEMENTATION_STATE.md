@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-02 · **Status: 12 of 12 prompts landed. The campaign's work is done; it
 is closed by the user after the orchestrator's review of 10.** (01, 02, 03, 04, 04b, 05 as 05a–05c,
-06, 07, 08, 09 as 09a–09c, 09d and 10; all but 10 reviewed.) The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+06, 07, 08, 09 as 09a–09c, 09d and 10; all reviewed, 10 on 2026-10-02.) The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
 2026-09-28** as 05a → 05b → 05c, in one orchestrator session
 ([`orchestrator/prompt-05.md`](orchestrator/prompt-05.md)). **02 landed 2026-09-28**, and closes
