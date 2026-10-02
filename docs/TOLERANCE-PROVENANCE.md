@@ -282,7 +282,7 @@ has changed since. `DEFAULT_QUADRATURE_ATOL` is **unchanged** at `1e-32`.
   so two loose rungs agreeing is not convergence. At `atol = 1e-32` the nine phase-1 cases cost
   1060.5 s at `1e-7` against 7237.2 s at `1e-8` (§2, table; ×6.8).
 - **What it competes against.** The representation floor, which is the limit at low
-  $z_{m response}$: four rungs over three decades agree to about `1e-05` there, and `1e-7` and
+  $z_{\rm response}$: four rungs over three decades agree to about `1e-05` there, and `1e-7` and
   `1e-8` are bit-identical on one case (§0 answer 4). A tighter rung there buys cost and no
   accuracy.
 - **The qualification that ships with it.** The `(1e-32, 1e-8)` reference is itself stored

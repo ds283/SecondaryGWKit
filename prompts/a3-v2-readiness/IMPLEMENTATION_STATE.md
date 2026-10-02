@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-02 · **Status: IN PROGRESS — 2 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
-has landed (2026-10-02), pending its review. 01–06
+has landed (2026-10-02) and been reviewed. 01–06
 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
@@ -51,7 +51,7 @@ recommended** (audit, closing section; README §6.2):
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
-| 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | this commit | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
+| 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ⬜ | — | — |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
@@ -63,7 +63,7 @@ recommended** (audit, closing section; README §6.2):
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
-(2026-10-02, used) and [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, ready).
+(2026-10-02, used) and [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used).
 Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
@@ -149,6 +149,74 @@ Remnants, fixed in the follow-up commit:
 2. This board's §1 commit column gave the subject, not the SHA.
 3. README §7's suite command, `| tail -40`, can hide `AdaptiveLevin`'s verdict (log 00,
    observation 1). It now writes to a file and greps for the verdict.
+
+**Orchestrator review of prompt 01 (2026-10-02).** Run against `2a44f7e`, which was dispatched
+from `67e7e50`. At dispatch nothing was `running` in this repository's registry, and there was no
+other worktree. **All eight checks in `orchestrator/prompt-01.md` §3 passed, with one exception
+in check 5:** mutation (iii) is **not** caught by `test_main_plumbing`, though the prompt and the
+note both said it would be. The agent found this, added a test that does catch it inside the
+module the prompt allowed, and logged it as deviation 1, STRUCTURALLY REQUIRED. The review
+accepts that classification and opens the test gap as an issue (§3.2). No §5 stop condition fired.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `67e7e50`, with the tree clean. The registry listed 12 runs: 10 finished and 2
+    `unknown` (`a3-pilot`, `a3-pilot-resume`), unchanged. The index held **107** rows.
+  - The baselines matched README §7 exactly, measured 14:49–14:56 at a load average of 12–30.
+- **Scope.**
+  - 9 files, all on the note's list.
+  - The diff over `main.py`, `docs/handover/`, the existing tests and `var/` is empty.
+  - Numstat: provenance `46 0`, `handover` `6 0`, `levin-refactor` `10 0`.
+- **(B1) Only the value moved.**
+  - `config/defaults.py`: of 17 top-level statements, the only `ast.dump` difference is
+    `DEFAULT_QUADRATURE_RTOL = 1e-08` → `1e-07`.
+  - `QuadSourceIntegral.py`: AST identical.
+  - `git diff -U0` leaves the `atol` comment and line untouched.
+- **(B2) The comment.** It sits above the constant. 1.9e-06 (§2), 2.84e-06 (§5), 8.26e-07 (§4,
+  `1e-7` against `1e-8`) and 1.1e-02 (§0, §2.1) were each read against the sweep document. It
+  names the old value, D1's `1e-8` check, and the document. "Converged" is §0 answer 3.
+- **The T1 list.** The orchestrator's own run of the search gives the 12 lines of the note's
+  table plus the other-tolerance hits. All are in the log, with the 12 more the unfiltered search
+  returns. The two comments are corrected, and the history and the `atol` comment are left.
+  - The `analytic_integral` sentence's `1e4` is now stated as true of `1e-25` only, which was the
+    brief's added point.
+- **(B4) The pins.** Each of (i)–(iii), extracted from the log, applies with `git apply`. Each
+  fails exactly the test the log names, of 31 run with `test_main_plumbing`. `git apply -R`
+  leaves `git status` clean after each.
+- **`substitute_main_py`.** Four `replaced 1 occurrence` lines.
+- **(B3) The records.**
+  - The closed issue is in §4, and its index row is gone.
+  - The provenance subsection is dated, cites the sweep and D1, and sits beneath the 2026-09-18
+    entry unchanged.
+  - The `handover` line keeps its issue open. The `levin-refactor` line and its hook say the three
+    things.
+  - The log's *Observations* carry the other-pair note and the five records, plus
+    `reader_writes_probe.py`.
+- **Suites.** Run serially by the orchestrator at `2a44f7e`; §5.3 below. `black --check` is clean
+  on the three Python files.
+
+Remnants, fixed in the follow-up commit that records this review:
+1. The provenance subsection's `$z_{\rm response}$` had lost its `\r` to a literal carriage
+   return. It was the only `\r` in the commit.
+2. "This commit" in this board's §1 and §4 and in the `handover` and `levin-refactor` lines is now
+   `2a44f7e`.
+3. **The `handover` board's seam figure.** Its phase-2/3 table, and the
+   `[a3-baseline-quadrature-tolerance-…]` index hook, gave 9.97e-07 as the seam band's `1e-7`
+   deviation. That is sweep §4's `1e-6` against `1e-7`; the right figure is 8.26e-07. A dated
+   correction is added under the table, and the hook is corrected. This predates 01 (log 01,
+   observation 5).
+4. **`[06a-readme-and-config-comments-state-the-superseded-quadrature-rtol-regime]`**
+   (`tolerance-convergence`) named the `QuadSourceIntegral.py` comment 01 corrected. That entry is
+   narrowed with a dated line, and its hook too. It stays open on two sites (log 01, observation 4).
+5. **`[01-reader-tolerance-agreement-does-not-scan-object-read-batch]`** is opened in §3.2. The
+   index count is now 107.
+
+Carried forward:
+- 03 edits `extract_QuadSourceIntegral_data.py`. `test_quadrature_tolerance_pin.py`'s second class
+  reads its `quad_atol`/`quad_rtol` bindings and its `object_read_batch` call, so 03's note must
+  say so.
+- 07's rehearsal at `(1e-32, 1e-7)` can use `main.py`'s own default for `rtol`. `RTOL_SITE` still
+  matches once and is now an identity at `1e-7`.
 
 Carried into the notes for 02–04:
 - 04: `docs/handover/quadsource_atol_sweep.py` has **two** `_local_ray_init` wrappers, in
@@ -284,13 +352,34 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
   - **Next step.** Not assigned. The user did not decide it with U1, so 02 does not fix it (02 §6).
     The remedy has U1's shape: the pool drops replicated tables before any actor exists, under a
     record. Measure it first on stand-in shards, as audit V1 case 4 did for the prune.
+- **[01-reader-tolerance-agreement-does-not-scan-object-read-batch]** *(seen 2026-10-02 by prompt
+  01's deliberate breakage (iii), log 01 deviation 1 and observation 3; opened by the
+  orchestrator's review; does not block A3 v2)*
+  - **The defect.** `ComputeTargets/tests/test_main_plumbing.py`'s `ReaderToleranceAgreementTestCase`
+    takes each reader's targets from `lookup_constants`, which reads `object_get` and
+    `object_get_vectorized` calls only. A reader that reads a tolerance-keyed target with
+    `object_read_batch` is not compared with `main.py`. The module's own comment above
+    `_own_nodes` records the same blind spot for one `main.py` site. It does not record it for the
+    readers.
+  - **Measured.** With `extract_QuadSourceIntegral_data.py`'s `rtol` lookup moved to
+    `DEFAULT_GK_NUMERIC_REL_TOLERANCE`, `test_main_plumbing` still passes all 27 tests. That is log
+    01's mutation (iii), replayed by the orchestrator. Prompt 01 and its orchestrator note had both
+    said this test catches it.
+  - **Impact.** None today. Of the six readers, only the `QuadSourceIntegral` extractor reads a
+    tolerance-keyed target with `object_read_batch` (read, 2026-10-02). That read is now pinned by
+    `test_quadrature_tolerance_pin.py`'s second class. A future reader of that shape would not be
+    checked.
+  - **Next step.** Not assigned. A prompt that may edit `test_main_plumbing.py` widens
+    `lookup_constants` to `object_read_batch` calls with literal `atol`/`rtol` names. It must also
+    handle `main.py`'s loop-variable site, or keep excluding it. Prompt 03 edits the extractor, so
+    03 must keep `test_quadrature_tolerance_pin.py` passing.
 
 ---
 
 ## 4. Resolved issues
 
 - **[00-quadsource-extraction-reads-at-the-default-rtol]** *(opened 2026-10-02 by this campaign's
-  plan; **closed 2026-10-02 by prompt 01**, this commit)*
+  plan; **closed 2026-10-02 by prompt 01**, `2a44f7e`)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looked up the tolerance rows its
     `QuadSourceIntegral` reads are keyed on at `DEFAULT_QUADRATURE_RTOL`, which was `1e-8`, while
     A3 v2 is built at `1e-7` (D1) by a substitution into `main.py` that `config.defaults` never
@@ -331,7 +420,7 @@ Unchanged from README §7. Load average 10–27 during the run; no flake fired.
 
 ### 5.2 After prompt 01 (2026-10-02)
 
-Measured 15:01–15:08 at the tree of this commit, serially, each suite's output written to a file and
+Measured 15:01–15:08 at the tree of `2a44f7e`, serially, each suite's output written to a file and
 its verdict read from it. The first background pass of `ComputeTargets` stopped without a verdict
 (log 01, observation 9); it was re-run alone:
 
@@ -347,3 +436,20 @@ its verdict read from it. The first background pass of `ComputeTargets` stopped 
 `ComputeTargets` is 665 + the four tests of `test_quadrature_tolerance_pin.py`; every other count is
 unchanged from README §7. Load average 6–12 during the run, on a machine shared with unrelated work;
 no flake fired. Index: **106 open**.
+
+### 5.3 After prompt 01, re-measured by the orchestrator (2026-10-02)
+
+Measured 16:01–16:07 by the orchestrator's review at `2a44f7e`'s code (the follow-up touches only
+Markdown), serially, with README §7's command:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 669 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 551 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+These agree with §5.2. The load average was 6–8, and no flake fired. Index: **107 open**, after the
+review opened `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]`.

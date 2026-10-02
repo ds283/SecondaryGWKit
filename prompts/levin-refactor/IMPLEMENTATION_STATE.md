@@ -215,13 +215,13 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   an object count of 1,275 × 50 × (response z) per model. All of it is **offline**, on a fixture
   whose `(k, q, r, z)` range is not production's; a live run is what would price the real sector.
 
-  **Dated 2026-10-02** (`prompts/a3-v2-readiness` prompt 01, this commit). (i)
+  **Dated 2026-10-02** (`prompts/a3-v2-readiness` prompt 01, `2a44f7e`). (i)
   `ComputeTargets/QuadSourceIntegral.py`'s comment in `analytic_integral` that stated the pipeline's
   pair as `1e-25` and `1e-8` is corrected: it now names `DEFAULT_QUADRATURE_ATOL` and
   `DEFAULT_QUADRATURE_RTOL`, and says that pair was the one in force when the `1e4` was measured. (ii)
   The live run this entry's next step asked for is the `handover` sweep
   (`docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md`), which found `rtol = 1e-7` the loosest rung
-  converged in all three bands; this commit sets `DEFAULT_QUADRATURE_RTOL = 1e-7`. (iii)
+  converged in all three bands; `2a44f7e` sets `DEFAULT_QUADRATURE_RTOL = 1e-7`. (iii)
   `config/defaults.py`'s `atol` comment ("`rtol` was confirmed not to bind") is **left as written**,
   as that prompt requires, so **this issue stays open on that one sentence**.
 

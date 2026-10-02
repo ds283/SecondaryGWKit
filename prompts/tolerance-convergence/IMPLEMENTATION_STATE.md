@@ -919,6 +919,14 @@ Opened by **prompt 06a**, 2026-09-18:
   Evidence: `docs/TOLERANCE-CONVERGENCE.md` §6; `docs/TOLERANCE-PROVENANCE.md`, the
   `DEFAULT_QUADRATURE_RTOL` entry.
 
+  **Narrowed 2026-10-02** (`a3-v2-readiness` prompt 01, `2a44f7e`): the third site,
+  `ComputeTargets/QuadSourceIntegral.py`'s comment in `analytic_integral`, now names
+  `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` rather than their values. It says the
+  `1e4` was a statement about `1e-25` when log 09 was written, and states no `rtol` conclusion.
+  The same commit sets `DEFAULT_QUADRATURE_RTOL = 1e-7`. The issue stays open on two sites:
+  README §6.2's row, and `config/defaults.py`'s `atol` comment, which is now at `:174`–`:179` and
+  which that prompt left as written.
+
 ---
 
 ## 4. Resolved issues

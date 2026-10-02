@@ -210,6 +210,12 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   (Each figure is the worst relative difference over that band's cases against its own tightest
   rung, which is 1e-8 for the seam and low bands and 1e-8 for the mid band.)
 
+  **Corrected 2026-10-02** (`a3-v2-readiness`, the orchestrator's review of prompt 01): the seam
+  row's `rtol` 1e-7 cell, 9.97e-07, is not against the tightest rung. The sweep's §4 gives
+  9.97e-07 for **1e-6 against 1e-7**, and **8.26e-07** for 1e-7 against 1e-8, which is the figure
+  this column means. The conclusion is unchanged. The seam row's 1e-6 cell, 1.01e-06, is not in
+  §4, and was not re-derived.
+
   **`rtol = 1e-7` is the loosest rung converged in all three bands, and 1e-6 is ruled out by the
   mid band alone.** c5 — $(k, q, r) = (3.09\text{e}6, 1\text{e}5, 3.09\text{e}6)$ at
   $z_{\rm response} = 1589$ — is the case that decides it: there `rtol` 1e-5 and 1e-6 agree with
@@ -240,7 +246,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   that `main.py`, `--build` and `extract_QuadSourceIntegral_data.py` share the pair. That is a change
   to a constant this board says is not its to take; the decision is the user's, recorded there.
 
-  **Shipped 2026-10-02** (`prompts/a3-v2-readiness` prompt 01, this commit):
+  **Shipped 2026-10-02** (`prompts/a3-v2-readiness` prompt 01, `2a44f7e`):
   `DEFAULT_QUADRATURE_RTOL` is now `1e-7`. **This issue stays open.** The dead `local_atol` branch
   and the depth cap `DEFAULT_LEVIN_MAX_DEPTH = 20` described above are unchanged, and
   `DEFAULT_QUADRATURE_ATOL` is still `1e-32`; what changed is that the shipped pair is the one the
