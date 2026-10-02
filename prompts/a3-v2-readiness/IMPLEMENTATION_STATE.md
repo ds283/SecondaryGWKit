@@ -49,7 +49,7 @@ recommendation):
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | *"Audit what the A3 v2 readiness prompts rest on"* | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
+| 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 02 | Write the version row through the recorded write | **W1**–**W2** | Opus | ⏸ held on 00 (V) | ⬜ | — | — |
 | 03 | Open readers read-only | **O1**–**O4** | Opus | ⏸ held on 00 (R, M); after 01, 02 | ⬜ | — | — |
@@ -63,6 +63,96 @@ recommendation):
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
 (2026-10-02, ready).
+
+**Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
+`5707851` with nothing `running` in this repository's registry, no other worktree and no Ray
+process. **All nine checks in `orchestrator/prompt-00.md` §3 passed.** No §5 stop condition fired.
+Three small remnants are fixed in the follow-up commit that records this review. The agent amended
+its own commit once before reporting, to correct its message (first SHA `e5936d6`). That is inside
+one prompt, so the commit boundary still holds.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `5707851`. The registry listed 12 runs: 10 finished and 2 `unknown` (`a3-pilot`,
+    `a3-pilot-resume`), unchanged. The index held **104** rows.
+  - Ray 2.43.0, Python 3.12.14, 10 CPUs. `RAY_ADDRESS` was unset, `ray status` found no instance,
+    and `pgrep -lf 'gcs_server|raylet|ray::'` was empty.
+  - The load average was 35.5 / 16.3 / 14.7 at 12:13.
+  - The baselines matched README §7 exactly.
+  - A read-only snapshot of `var/datastores/` and `var/runs/` held 69 files and 15 directories,
+    with no `-journal`, `-wal` or `-shm` file.
+- **Scope.**
+  - 17 files, all on the note's list.
+  - The diff over `*.py` outside `docs/a3-v2-readiness/` is empty.
+  - The `datastore-integrity` board's numstat is `23 0`: lines added, none deleted.
+- **Processes and `var/`.**
+  - After the agent and after the review's own re-runs, `pgrep` was empty and `ray status` found
+    no instance.
+  - Every S output ends with its before/after lists and its kills.
+  - The re-taken snapshot was byte-identical in all 69 files (SHA-256, size and mtime), with the
+    same directories and no journal.
+- **(A1) The marks.** Every finding carries a mark, and each inferred one names its source.
+  - S2 states what it established. The abort is absl's 3 s `SIGALRM`, measured from the
+    `sigaction` handlers, from `alarm(0)` returning 3, and from exit status 134. `alarm(0)` stops it,
+    measured.
+  - Two points stay inferred, and both say so: that Ray's Cython check does the `SystemExit(1)`
+    conversion, and that absl's default option sets the 3 s.
+  - Spot-checked as read: both drivers install `terminal` before `ray.init`, and Ray's
+    `set_sigterm_handler` call in `ray.init` is unconditional.
+- **(A2) The instruments.** The orchestrator re-ran `reader_writes_probe.py` and
+  `readonly_open_probe.py`.
+  - The outputs matched the committed `.txt` row for row: 563/563 and 125/125 lines. They differ
+    only in stand-in serials, timestamps and wall time, as log observation 6 says.
+  - Run 0's known writes are counted before any zero is reported. Neither probe needs Ray.
+- **(A3) R1 is complete.** The orchestrator grepped `pool\.` itself over the six scripts,
+  `config/model_list.py` and `extract_common.py`, together with every helper the pool is passed to
+  (`resolve_run_selection`, `build_model_list`, `find_QuadSource_policy`). Every call is in R1's
+  table, and the replicated column matches `config/sharding.py` `replicated_tables`.
+- **S, re-run once.** S1, then S2, in the log's order, with `pgrep` empty before and after.
+  - S1: all six variants caught the same exception type and code as the committed output.
+  - S2: the last tick fell at 2.798–2.909 s and the runner saw the exits at 3.006–3.032 s, inside
+    the recorded 2.78–3.06 s window. The load average was 10–17.
+  - All three aborts in the re-run left a `gcs_server`, against 2 of 3 in the committed run. The
+    probe killed its own (pids 71935, 72722 and 73536). This is consistent with S3's "can leave,
+    not always".
+- **S4.** 2.480 s, cold, on the 333.1 MiB store. HEAD's fingerprint did not refuse the format-1
+  store: it reported the format mismatch (1 against 6) and its age's problems.
+  - The time is inside the window by about 0.3 s, on a store without `GkSource` or
+    `QuadSourceIntegral` rows. That A3 v2 will be slower is marked inferred.
+  - Log 05's 6.66 s is quoted as an earlier figure, outside the window.
+  - For 04: the fingerprint cannot sit inside the 3 s. With a handler installed after `ray.init`,
+    no alarm is armed at all.
+- **(A4) The closing section.** It gives facts for each of 02, 03 and 04, each pointing at a finding.
+  - M1 has no "to be decided" row.
+  - Two user decisions are put, U1 and U2, each with a recommendation. Both are recorded under
+    *Decisions* above.
+- **Records and suites.**
+  - The board has 00's row, R1–M2 and §3.2's two issues.
+  - Both `datastore-integrity` lines are dated, and their §1.17 hooks changed with them.
+  - The index count is 106 = 104 + 2, by `grep -c`.
+  - `black --check` is clean on the five probes.
+  - All six suites, run serially by the orchestrator: AdaptiveLevin 32 OK, ComputeTargets 665 OK, CosmologyModels 39 OK,
+    Datastore 551 OK, LiouvilleGreen 148 OK (1 skipped), RunRegistry 199 OK, 13:28–13:34 at a load
+    average of 9–13. Every count is unchanged.
+
+Remnants, fixed in the follow-up commit:
+1. The audit's *Issues* section called `[10-a-sigterm-…]` **narrowed** where the board, the index
+   and the log all say **widened**. It also said four classes insert on a miss where R1 says five.
+   Both now agree with R1 and the board. R2 measured four, because the run's `store_tag` lookup is
+   not reached on a miss.
+2. This board's §1 commit column gave the subject, not the SHA.
+3. README §7's suite command, `| tail -40`, can hide `AdaptiveLevin`'s verdict (log 00,
+   observation 1). It now writes to a file and greps for the verdict.
+
+Carried into the notes for 02–04:
+- 04: `docs/handover/quadsource_atol_sweep.py` has **two** `_local_ray_init` wrappers, in
+  `run_child` and `run_build`, and two `terminal` handlers, in `run_build` and `sweep`. 04 must say
+  which paths the installer reaches. The charter names `run_build`; `run_child` and `sweep` are the
+  sweep's own paths.
+- 03: the audit recommends applying `--models` before any cosmology lookup. `build_model_list`
+  (`config/model_list.py`) is outside README §1's scope list. A3 v2 holds both cosmology rows
+  (R3), so the scripts can filter after `build_model_list` returns. Whether 03 may also touch
+  `config/model_list.py` is settled when 03 is written.
 
 ---
 

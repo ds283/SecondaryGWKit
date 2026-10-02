@@ -212,9 +212,11 @@ prompt*); the two commits since touch only `docs/OPEN_ISSUES.md` and a board:
 Re-measure every suite at `HEAD`, clean, before every dispatch, with:
 
 ```bash
-PYTHONPATH=. ./venv/bin/python -m unittest discover -s <package>/tests -t . 2>&1 | tail -40
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s <package>/tests -t . > <file> 2>&1
+grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
 ```
 
-The suites print banners, so `| tail -5` will not show the verdict. Do not set
+The suites print banners, and `AdaptiveLevin`'s buffered stdout is flushed after unittest's summary, so
+no `| tail -N` reliably shows the verdict (log 00, observation 1); read it from the file. Do not set
 `THREE_BESSEL_DIAGNOSTIC_PLOTS`. `ComputeTargets`' `test_tk_wkb_phase.TestCost.test_wall_time_per_object`
 is a known wall-clock flake.

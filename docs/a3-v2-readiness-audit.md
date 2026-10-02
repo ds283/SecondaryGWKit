@@ -500,8 +500,9 @@ Opened by this audit, on [`prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md`](../
 Narrowed or widened, on the `datastore-integrity` board:
 - `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` — **widened**:
   every replicated `object_get` every reader makes writes and clears a record (21 for QSI on R2's
-  store); four classes insert on a miss; no reader writes a sharded row.
-- `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` — **narrowed**: both
+  store); five classes insert on a miss (R1), four of them measured (R2: the run's `store_tag`
+  lookup is not reached on a miss); no reader writes a sharded row.
+- `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` — **widened**: both
   inferred mechanisms are now measured as behaviour; the abort's identity is measured; the
   `gcs_server` is left by any exit without `ray.shutdown()`, not by the abort as such.
 
