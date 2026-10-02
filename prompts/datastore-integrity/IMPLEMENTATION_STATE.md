@@ -1818,6 +1818,12 @@ repair at open as prompt 02 designed, and read back without moving. **The user d
 the campaign closes, and whether the two stores are retired (D10-5; `store retire` is theirs to
 run).
   - **Decided (2026-10-02):** the user closed the campaign, and decided to retire both stores.
+  - **Retired (2026-10-02), by the user**, with `store retire` at `f4f1896`: `datastore-integrity-10-reference` at 01:19:49 and `datastore-integrity-10-resumed` at 01:19:58.
+    Each fresh fingerprint matched its recorded one, digest `10b8725f…1a1f`. Each store's primary
+    and four shards were deleted, and its sidecar is left as a tombstone in `var/datastores/`. The
+    run directories under `var/runs/datastore-integrity-10-*` and the extraction outputs under
+    `var/datastore-integrity-10/` remain, and every number is in
+    `docs/datastore-integrity-verification.md`.
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
