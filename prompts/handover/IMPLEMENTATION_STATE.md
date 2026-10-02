@@ -240,6 +240,12 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   that `main.py`, `--build` and `extract_QuadSourceIntegral_data.py` share the pair. That is a change
   to a constant this board says is not its to take; the decision is the user's, recorded there.
 
+  **Shipped 2026-10-02** (`prompts/a3-v2-readiness` prompt 01, this commit):
+  `DEFAULT_QUADRATURE_RTOL` is now `1e-7`. **This issue stays open.** The dead `local_atol` branch
+  and the depth cap `DEFAULT_LEVIN_MAX_DEPTH = 20` described above are unchanged, and
+  `DEFAULT_QUADRATURE_ATOL` is still `1e-32`; what changed is that the shipped pair is the one the
+  sweep found converged in all three bands.
+
   **Next step:** regenerate the store at `(atol, rtol) = (1e-32, 1e-7)` (see that issue for the
   decision and the scope). **The remedy for the constant itself is not this campaign's to take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
   `prompts/levin-refactor` and `prompts/qsi-phase-groups` (`tolerance-convergence` README §0.4),

@@ -121,9 +121,10 @@ HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5
 # redshifts as the same, which is what a coincident breakpoint (q = r, or a hand-over landing on
 # an end of the range) is. It is also small enough to be numerically irrelevant: the production
 # range is log(1+1e5) - log(1+0.1) = 11.4 wide, so a discarded sub-interval carries at most
-# 1e-7/11.4 ~ 1e-8 of the integral -- at the quadrature rtol, below every representation floor
-# recorded on the campaign's status board. Discarded breakpoints are recorded in
-# metadata["partition"]["skipped"] rather than dropped silently.
+# 1e-7/11.4 ~ 1e-8 of the integral -- a tenth of the quadrature rtol (DEFAULT_QUADRATURE_RTOL, 1e-7
+# since prompts/a3-v2-readiness prompt 01; it was 1e-8, the same size, when this was written), and
+# below every representation floor recorded on the campaign's status board. Discarded
+# breakpoints are recorded in metadata["partition"]["skipped"] rather than dropped silently.
 MIN_SUBINTERVAL_LOG_WIDTH = DEFAULT_FLOAT_PRECISION
 
 
@@ -1547,9 +1548,11 @@ def analytic_integral(
     # atol and rtol are the caller's -- i.e. the QuadSourceIntegral row's own atol_serial and
     # rtol_serial. They used to be dead arguments here, with 1e-21 / 1e-8 hardwired on both
     # calls, so the stored tolerance columns did not describe analytic_rad (audit B6/QI-9). The
-    # pipeline supplies DEFAULT_QUADRATURE_ATOL = 1e-25 and DEFAULT_QUADRATURE_RTOL = 1e-8, so
-    # the absolute tolerance is now 1e4 tighter than the retired literal; measured effect on
-    # analytic_rad and on runtime: prompts/source-remediation/logs/09-qsi-errors-schema-tolerances.md.
+    # pipeline supplies DEFAULT_QUADRATURE_ATOL and DEFAULT_QUADRATURE_RTOL (config/defaults.py).
+    # When that log was written they were 1e-25 and 1e-8, so the absolute tolerance was then 1e4
+    # tighter than the retired literal 1e-21; neither constant has that value now, and the 1e4 is
+    # a statement about that measurement only. Measured effect on analytic_rad and on runtime:
+    # prompts/source-remediation/logs/09-qsi-errors-schema-tolerances.md.
     data0pt5 = _three_bessel_integrals(
         k,
         q,

@@ -156,7 +156,21 @@ DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11
 # and rtol is what does (see DEFAULT_TK_NUMERIC_REL_TOLERANCE above).
 DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13
 
-DEFAULT_QUADRATURE_RTOL = 1e-8
+# Relative tolerance of the QuadSourceIntegral quadrature (the Levin bisection's rtol), and with
+# DEFAULT_QUADRATURE_ATOL the pair every QuadSourceIntegral row is keyed on. **Changed from 1e-8 to
+# 1e-7 by prompts/a3-v2-readiness prompt 01 (2026-10-02; decisions D1, D2 of that campaign).**
+# 1e-7 is the loosest rung that the 2026-09-23/24 sweep (docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md)
+# found converged in all three response-redshift bands. Its worst deviation from each band's
+# tightest rung is 1.9e-06 in the mid band (sweep section 2), 2.84e-06 in the low band (section 5)
+# and 8.26e-07 in the seam band (section 4), against 1.1e-02 for 1e-6 in the mid band (sections 0
+# and 2.1), which is what rules 1e-6 out. Low z_response is representation-limited, not
+# quadrature-limited, so a tighter rung there buys cost and no accuracy (section 0, answer 4). It
+# was 1e-8 until that prompt. The convergence check for a science output is one rung tighter than
+# the pair a store is built at, so 1e-8 for a store at 1e-7 (D1). The comment directly below,
+# which is DEFAULT_QUADRATURE_ATOL's, records log 12's "rtol was confirmed not to bind", measured
+# at atol = 1e-25; it is left as written and does not transfer to atol = 1e-32
+# (docs/TOLERANCE-PROVENANCE.md, standing note 26).
+DEFAULT_QUADRATURE_RTOL = 1e-7
 # was 1e-25; tightened per prompts/source-remediation/IMPLEMENTATION_STATE.md
 # [12-atol-too-loose-for-the-source-integral] -- at 1e-25, ~58% of production QuadSourceIntegral
 # work items had |total|/(1+z_response) below this floor, so their quadrature "converged" before

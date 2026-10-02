@@ -1,7 +1,8 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-02 · **Status: IN PROGRESS — 1 of 8 prompts landed.** Audit 00 has landed
-([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed. 01–06
+**Last updated:** 2026-10-02 · **Status: IN PROGRESS — 2 of 8 prompts landed.** Audit 00 has landed
+([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
+has landed (2026-10-02), pending its review. 01–06
 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
@@ -50,7 +51,7 @@ recommended** (audit, closing section; README §6.2):
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
-| 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | this commit | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ⬜ | — | — |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
@@ -176,8 +177,8 @@ Carried into the notes for 02–04:
 | **V2** | 00 | The forms 02 can take, and how a read-only open finds the row | ✅ audit V2: form A recommended; found by label `mode=ro`, refuse when absent |
 | **M1** | 00 | Every write at open, and what `read_only=True` does with each | ✅ audit M1: table, no row left to decide |
 | **M2** | 00 | Whether every reader lookup can be served `mode=ro` | ✅ audit M2: yes, if replicated lookups skip `_replicated_write` |
-| **T1** | 01 | `DEFAULT_QUADRATURE_RTOL = 1e-7`, its comment, every stale statement of its value | ⬜ |
-| **T2** | 01 | The provenance subsection, the `handover` board line, a value pin | ⬜ |
+| **T1** | 01 | `DEFAULT_QUADRATURE_RTOL = 1e-7`, its comment, every stale statement of its value | ✅ the constant and its 14-line comment; two stale comments in `QuadSourceIntegral.py` corrected (`MIN_SUBINTERVAL_LOG_WIDTH`'s, and `analytic_integral`'s "1e-25 and 1e-8"); every hit of the search is in log 01, 24 lines, the rest left as other tolerances or history; ASTs differ from the parents' only in the constant |
+| **T2** | 01 | The provenance subsection, the `handover` board line, a value pin | ✅ subsection added (46 lines, no deletions); a dated line on each of the `handover` and `levin-refactor` entries, both issues still open; `test_quadrature_tolerance_pin.py`, four tests, three breakages each caught (log 01; (iii) needed a test of this prompt's own, log 01 deviation 1) |
 | **W1** | 02 | The version row written once through `_replicated_write` | ⬜ |
 | **W2** | 02 | The check at open treats a missing version row like any other replicated row | ⬜ |
 | **W3** | 02 | The prune at open of a replicated class, by the pool, under a `prune` record the check at open completes (U1) | ⬜ |
@@ -283,26 +284,26 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
   - **Next step.** Not assigned. The user did not decide it with U1, so 02 does not fix it (02 §6).
     The remedy has U1's shape: the pool drops replicated tables before any actor exists, under a
     record. Measure it first on stand-in shards, as audit V1 case 4 did for the prune.
-- **[00-quadsource-extraction-reads-at-the-default-rtol]** *(opened 2026-10-02 by this campaign's
-  plan)*
-  - **The defect.** `extract_QuadSourceIntegral_data.py` looks up the tolerance rows its
-    `QuadSourceIntegral` reads are keyed on with `pool.object_get("tolerance",
-    tol=DEFAULT_QUADRATURE_RTOL)`, and `DEFAULT_QUADRATURE_RTOL` is `1e-8`. A3 v2 is built at
-    `1e-7` (D1) by `quadsource_atol_sweep.py --build`, which substitutes `tol=SWEEP_QUAD_RTOL` for
-    `tol=DEFAULT_QUADRATURE_RTOL` in `main.py`'s source; `config.defaults` never learns the pair.
-  - **Read, not run.** The rows A3 v2 holds are keyed on the `1e-7` tolerance row, so the
-    extractor matches none of them; and its `object_get` on the replicated `tolerance` class
-    inserts a `1e-8` row if the store holds none (which `[08-…]` makes a write in any case).
-    `datastore-integrity` prompt 10 could not see this: it built at `main.py`'s defaults.
-  - **Impact.** Nothing can be extracted from A3 v2's `QuadSourceIntegral` rows, which are the
-    point of the store.
-  - **Next step.** Prompt 01, under D2: the default becomes `1e-7`.
 
 ---
 
 ## 4. Resolved issues
 
-None yet.
+- **[00-quadsource-extraction-reads-at-the-default-rtol]** *(opened 2026-10-02 by this campaign's
+  plan; **closed 2026-10-02 by prompt 01**, this commit)*
+  - **The defect.** `extract_QuadSourceIntegral_data.py` looked up the tolerance rows its
+    `QuadSourceIntegral` reads are keyed on at `DEFAULT_QUADRATURE_RTOL`, which was `1e-8`, while
+    A3 v2 is built at `1e-7` (D1) by a substitution into `main.py` that `config.defaults` never
+    learned of. The extractor would have matched none of A3 v2's rows.
+  - **Closed by.** `config/defaults.py`: `DEFAULT_QUADRATURE_RTOL = 1e-7` (D2), with its comment and
+    its provenance (`docs/TOLERANCE-PROVENANCE.md`, *Update 2026-10-02*). `main.py`, the build and
+    the extractor now share the pair `(1e-32, 1e-7)`. Pinned by
+    `ComputeTargets/tests/test_quadrature_tolerance_pin.py`, which also pins that the extractor binds
+    its `quad_atol`/`quad_rtol` to the two constants. Log:
+    [`logs/01-set-the-production-quadrature-rtol.md`](logs/01-set-the-production-quadrature-rtol.md).
+  - **What it leaves.** A store built at any pair other than `(1e-32, 1e-7)` is unreadable by the
+    extractor at the default; log 01, observation 1. The extractor's `object_get` on the replicated
+    `tolerance` class still inserts a row on a miss, which is `[08-…]`'s (prompt 03).
 
 ---
 
@@ -327,3 +328,22 @@ output written to a file and its verdict read from it (log 00, deviation 9):
 | RunRegistry | 199 OK |
 
 Unchanged from README §7. Load average 10–27 during the run; no flake fired.
+
+### 5.2 After prompt 01 (2026-10-02)
+
+Measured 15:01–15:08 at the tree of this commit, serially, each suite's output written to a file and
+its verdict read from it. The first background pass of `ComputeTargets` stopped without a verdict
+(log 01, observation 9); it was re-run alone:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 669 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 551 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+`ComputeTargets` is 665 + the four tests of `test_quadrature_tolerance_pin.py`; every other count is
+unchanged from README §7. Load average 6–12 during the run, on a machine shared with unrelated work;
+no flake fired. Index: **106 open**.

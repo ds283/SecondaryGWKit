@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-02 · **107 open** across nineteen campaigns.
+**Last updated:** 2026-10-02 · **106 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -142,7 +142,7 @@ site and is indexed in §2 below.
 | `[04-roundoff-floor-can-be-infinite]` | levin-refactor | `phase_err`/`abserr_roundoff`/`total_err` can be `+inf` at an interior stationary point inside a strongly oscillatory Levin region. |
 | `[04-theta-abserr-cc-branch-proxy]` | levin-refactor | The endpoint term is exact on a Levin region but a 50/50 split of a lumped proxy on a Clenshaw–Curtis one, which has no Levin antiderivative to weight by. |
 | `[05-zero-width-span-raises]` | levin-refactor | `adaptive_levin_sincos((5.0, 5.0), …)` raises `ValueError` from `build_Levin_data()`; the early return the README describes does not exist. |
-| `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]` | levin-refactor | At `atol = 1e-32`, `atol` is inert over twenty-eight decades and `rtol` is the only lever, so log 12's "`rtol` does not bind" no longer transfers. The pair is `unchanged` anyway — the floor dominates by ×3.46e+04 to ×2.15e+11. `docs/tolerance-convergence/QUADSOURCE-READONLY.md`. |
+| `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]` | levin-refactor | At `atol = 1e-32`, `atol` is inert over twenty-eight decades and `rtol` is the only lever, so log 12's "`rtol` does not bind" no longer transfers. The pair is `unchanged` anyway — the floor dominates by ×3.46e+04 to ×2.15e+11. `docs/tolerance-convergence/QUADSOURCE-READONLY.md`. **Dated 2026-10-02:** `QuadSourceIntegral.py`'s "1e-25 and 1e-8" comment is corrected by `a3-v2-readiness` prompt 01, which also sets `DEFAULT_QUADRATURE_RTOL = 1e-7`; `config/defaults.py`'s `atol` comment ("`rtol` was confirmed not to bind") is left as written, so the issue stays open on that sentence. |
 
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
@@ -819,7 +819,6 @@ was opened when 02 was written.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-quadsource-extraction-reads-at-the-default-rtol]` | a3-v2-readiness | `extract_QuadSourceIntegral_data.py` looks its rows up at `DEFAULT_QUADRATURE_RTOL = 1e-8`; A3 v2 is built at `1e-7` by a substitution into `main.py`, so the extractor finds none of its rows, and may insert a `1e-8` tolerance row. Prompt 01 sets the default (D2). |
 | `[10-store-retire-reports-every-tombstone-as-a-reference]` | a3-v2-readiness | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only. Prompt 06. |
 | `[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]` | a3-v2-readiness | Each actor prunes an unvalidated `BackgroundModel` (replicated) from its own shard in its constructor, outside the record; a pruning open interrupted between actors leaves a store the check at open refuses (measured, stand-in). Does not block A3 v2. U1 taken: prompt 02 (W3). |
 | `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |

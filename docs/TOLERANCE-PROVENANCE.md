@@ -259,6 +259,52 @@ the entry says so rather than forcing an answer.
   `QUADSOURCE-READONLY.md` §§5, 8.1, 9, 2026-09-18, for the inversion and the confirmation that the
   value stays `unchanged` regardless. **Owned by** `prompts/levin-refactor` / `prompts/qsi-phase-groups`.
 
+#### Update 2026-10-02 — `DEFAULT_QUADRATURE_RTOL` is now `1e-07` (`config/defaults.py:173`)
+
+**Added by `prompts/a3-v2-readiness` prompt 01.** The entry above is the record of the tree as
+`tolerance-convergence` left it on 2026-09-18, and stands as written. This subsection records what
+has changed since. `DEFAULT_QUADRATURE_ATOL` is **unchanged** at `1e-32`.
+
+- **The change.** `DEFAULT_QUADRATURE_RTOL = 1e-08` → `1e-07`. Its comment, in
+  `config/defaults.py` directly above the constant, carries the figures below. The comment under
+  it, which is `DEFAULT_QUADRATURE_ATOL`'s, still says `rtol` "was confirmed not to bind"; that is
+  the `source-remediation` log 12 finding at `atol = 1e-25` and is superseded by standing note 26
+  below, and it was left as written (`levin-refactor`'s
+  `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]` stays open on that sentence).
+- **What measurement chose it.**
+  [`docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md`](handover/QUADSOURCE-TOLERANCE-SWEEP.md) (the
+  `handover` campaign's sweep, 2026-09-23/24), §0 answer 3: **`1e-7` is the loosest rung converged
+  in all three response-redshift bands**. Its worst deviation from each band's tightest rung
+  (`1e-8` in each) is **1.9e-06** in the mid band (§2, table), **2.84e-06** in the low band (§5,
+  against `1e-8`) and **8.26e-07** in the seam band (§4, `1e-7` against `1e-8`). `1e-6` is
+  **1.1e-02** wrong in the mid band (§0 answer 3, §2.1), which rules it out: on case c5 the rungs
+  `1e-5` and `1e-6` agree with each other to 3.6e-04 and are both 1.1e-02 from the converged value,
+  so two loose rungs agreeing is not convergence. At `atol = 1e-32` the nine phase-1 cases cost
+  1060.5 s at `1e-7` against 7237.2 s at `1e-8` (§2, table; ×6.8).
+- **What it competes against.** The representation floor, which is the limit at low
+  $z_{m response}$: four rungs over three decades agree to about `1e-05` there, and `1e-7` and
+  `1e-8` are bit-identical on one case (§0 answer 4). A tighter rung there buys cost and no
+  accuracy.
+- **The qualification that ships with it.** The `(1e-32, 1e-8)` reference is itself stored
+  unconverged on 5 of the 9 phase-1 cases, so "agrees to" means agrees with a number the code
+  declined to certify; the sweep has no independent oracle (§0, and the `handover` board).
+- **Decisions.** D1: A3 v2 is built at `(atol, rtol) = (1e-32, 1e-7)`, the pair recommended on
+  2026-09-24. The convergence check for a science output is **one rung tighter than the pair a
+  store is built at**, so `1e-8` for a store at `1e-7` (the user's 2026-09-23 "`1e-9`" was said
+  when `1e-8` was the shipped `rtol`). D2: the default itself is set, not a flag added, so that
+  `main.py`, `quadsource_atol_sweep.py --build` and `extract_QuadSourceIntegral_data.py` share one
+  constant. Both are recorded in `prompts/a3-v2-readiness/README.md` §6.1.
+- **What it does not change.** This is a **change of the default, not a new measurement**: nothing
+  was re-run for it. `DEFAULT_QUADRATURE_ATOL`, `DEFAULT_LEVIN_MAX_DEPTH` and the dead
+  `local_atol` branch are as they were, so
+  `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` stays open.
+- **What it does to stores.** `rtol` is part of every `QuadSourceIntegral` row's key. A store built
+  at `rtol = 1e-8` is no longer read by `extract_QuadSourceIntegral_data.py` at the default; the
+  A3 baseline holds no `QuadSourceIntegral` rows, so it loses nothing.
+- **Campaign, prompt, log, date:** `prompts/a3-v2-readiness` prompt 01
+  (`logs/01-set-the-production-quadrature-rtol.md`), 2026-10-02, for the change; `prompts/handover`
+  (`QUADSOURCE-TOLERANCE-SWEEP.md`) for the measurement.
+
 ### `DEFAULT_LEVIN_THRESHOLD = 1.0` (`config/defaults.py:45`)
 
 - **Value, and what it keys:** `1.0`. Keys `GkSourcePolicy` and `QuadSourcePolicy` **only as a
