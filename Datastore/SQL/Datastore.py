@@ -7,7 +7,7 @@ from typing import Union, Mapping, Callable, Optional, List, Iterable, Dict, Any
 import ray
 import sqlalchemy as sqla
 from ray.actor import ActorHandle
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError
 
 from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
 from Datastore.SQL.ObjectFactories.BackgroundModel import (
@@ -178,7 +178,7 @@ class Datastore:
         self,
         version_label: str,
         db_name: PathType,
-        version_serial: Optional[int] = None,
+        replicated_tables: List[str],
         timeout: Optional[int] = None,
         my_name: Optional[str] = None,
         serial_broker: Optional[ActorHandle] = None,
@@ -188,10 +188,28 @@ class Datastore:
         read_table_config: Optional[ReadTableConfigType] = None,
     ):
         """
-        Initialize an SQL datastore object
+        Initialize an SQL datastore object.
+
+        The constructor neither looks up nor inserts the version row
+        (prompts/a3-v2-readiness, prompt 02). The version row is replicated, so ShardedPool
+        finds it, or writes it once through its recorded replicated write, after every actor
+        exists, and then gives each actor its serial with ``set_version``. Until then every
+        insert into a class whose rows carry a version serial is refused (``_insert``).
+        ``version_label`` is kept only to name the label in that refusal.
+
+        ``replicated_tables`` are the classes the pool replicates. The prune at startup of a
+        replicated class is the pool's, under a record, before any actor exists
+        (``ShardedPool._prune_replicated_tables``); for those classes ``_validate_on_startup``
+        here reports only, whatever ``prune_unvalidated`` is.
         """
         self._timeout = timeout
         self._my_name = my_name
+
+        self._version_label: str = version_label
+        # the version row's serial, set by ShardedPool through set_version once the row exists
+        self._version_serial: Optional[int] = None
+
+        self._replicated_tables = frozenset(replicated_tables)
 
         self._prune_unvalidated = prune_unvalidated
 
@@ -234,19 +252,23 @@ class Datastore:
 
         self._read_table_config: Optional[ReadTableConfigType] = read_table_config
 
-        # convert version label to a version object
-        # if a serial is specified, we are probably running as a replica, and we need to ensure that the specified
-        # serial number is honoured in order to ensure integrity across multiple shards
-        version_payload = {"label": version_label}
-        if version_serial is not None:
-            version_payload["serial"] = version_serial
-
-        self._version = self.object_get("version", **version_payload)
-
-        if version_serial is not None and self._version.store_id != version_serial:
-            raise IntegrityError(
-                f"Serial number of version label (={self._version.store_id}) does not match specified value (={version_serial})"
+    def set_version(self, serial: int):
+        """
+        Set the serial of the version row, which ShardedPool has found or written on every shard
+        (prompts/a3-v2-readiness, prompt 02). Every later insert into a class with a ``version``
+        column carries it. Setting it again to the same serial is harmless; setting a different
+        one raises, since rows already inserted carry the first.
+        """
+        if isinstance(serial, bool) or not isinstance(serial, int):
+            raise TypeError(
+                f"Datastore.set_version: the version serial must be an int, not {serial!r}"
             )
+        if self._version_serial is not None and self._version_serial != serial:
+            raise RuntimeError(
+                f'Datastore "{self._my_name}": the version serial is already {self._version_serial} '
+                f'(label "{self._version_label}"), and cannot be changed to {serial}'
+            )
+        self._version_serial = serial
 
     def __enter__(self):
         return self
@@ -372,6 +394,13 @@ class Datastore:
         self._inspector = sqla.inspect(self._engine)
 
     def _validate_on_startup(self):
+        """
+        Report the unvalidated rows of every class that validates at startup, and under
+        ``prune_unvalidated`` prune those of the sharded classes. A replicated class is never
+        pruned here: its prune is the pool's, under a record, made before this actor existed
+        (prompts/a3-v2-readiness, prompt 02), and an actor that deleted a replicated row from its
+        own shard would leave the shards different with no record to say which is right.
+        """
         printed_header = False
 
         for cls_name, record in self._schema.items():
@@ -380,10 +409,12 @@ class Datastore:
 
                 tab = record["table"]
 
+                prune = (
+                    self._prune_unvalidated and cls_name not in self._replicated_tables
+                )
+
                 with self._engine.begin() as conn:
-                    msgs = factory.validate_on_startup(
-                        conn, tab, self._tables, self._prune_unvalidated
-                    )
+                    msgs = factory.validate_on_startup(conn, tab, self._tables, prune)
 
                 if len(msgs) == 0:
                     continue
@@ -619,6 +650,16 @@ class Datastore:
 
         cls_name = schema["name"]
 
+        # a row that carries a version serial cannot be written before the pool has set it
+        # (set_version). Refused here, before the serial lease below, so that a refused insert
+        # takes no serial from the broker and writes nothing
+        if uses_version and self._version_serial is None:
+            raise RuntimeError(
+                f'Datastore "{self._my_name}": cannot insert into "{cls_name}" before the version '
+                f"serial is set: ShardedPool calls set_version once the version row of label "
+                f'"{self._version_label}" exists on every shard'
+            )
+
         # remove any "serial" field from the payload, if this table does not use serial numbers
         if not uses_serial:
             if "serial" in payload:
@@ -639,7 +680,7 @@ class Datastore:
                 commit_serial = True
 
             if uses_version:
-                payload = payload | {"version": self._version.store_id}
+                payload = payload | {"version": self._version_serial}
             if uses_timestamp:
                 # a replicated write stamps every shard with the driver's one timestamp
                 # (object_get / object_store); every other insert stamps its own time

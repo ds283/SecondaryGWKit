@@ -965,8 +965,10 @@ class TestHotJournal(_ReconcileTestCase):
 
 
 class TestPruningAfterRepair(_ReconcileTestCase):
-    """prune_unvalidated (and drop_actions) run inside each actor after the check; every shard is
-    identical by then, so they act identically."""
+    """prune_unvalidated runs after the check: for a replicated class in the pool, under a prune
+    record, before any actor exists (prompts/a3-v2-readiness prompt 02), and for a sharded class
+    inside each actor; drop_actions run inside each actor. Every shard is identical by then, so
+    they act identically."""
 
     def test_an_interrupted_validate(self):
         for prune in (True, False):

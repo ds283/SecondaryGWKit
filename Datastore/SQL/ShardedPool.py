@@ -28,6 +28,7 @@ from Datastore.shard_paths import (
     shard_file_name,
     shard_file_problem,
 )
+from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
 # the files SQLite keeps beside a database while it is open or was not closed cleanly: the
@@ -158,6 +159,13 @@ class ShardedPool:
         # store created by this constructor, which has nothing to compare
         self.reconciliation: Optional[dict] = None
 
+        # what the prune at open of the replicated classes deleted, one entry per table and shard
+        # (_prune_replicated_tables); empty unless prune_unvalidated found something to prune
+        self.pruned: List[dict] = []
+
+        # the version row of version_label, found or written once every actor exists
+        self._version = None
+
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
             raise RuntimeError(
@@ -210,6 +218,13 @@ class ShardedPool:
             # create it, empty, only once the store has been checked
             self._replication_in_flight_table.create(self._engine, checkfirst=True)
 
+            # the prune at open of a replicated class is made here, by the pool, under a record:
+            # after the check at open (so that an interrupted write is repaired before anything
+            # is judged unvalidated) and before the broker or any actor exists. The actors still
+            # prune sharded classes, and only report replicated ones
+            if self._prune_unvalidated:
+                self.pruned = self._prune_replicated_tables()
+
             num_shards = len(self._shard_db_files)
             print(
                 f'>> Opened existing sharded datastore "{str(self._primary_file)}" with {num_shards} shards'
@@ -230,50 +245,27 @@ class ShardedPool:
             name="SerialPoolBroker"
         )
 
-        # create actor pool of datastores, one for each shard
-        # we read the version serial number from the first shard that we create
+        # create actor pool of datastores, one for each shard. No actor inserts the version row
+        # (it is written below, once every actor exists), so none waits on another. They are
+        # built in the order the pool has always built them, the last shard id first, because
+        # that order is self._shards' and the controlling shard's draw indexes it
         shard_ids = list(self._shard_db_files.keys())
-
-        shard0_key = shard_ids.pop()
-        shard0_file = self._shard_db_files[shard0_key]
-
-        # create the first shard datastore
-        shard0_store = Datastore.options(name=f"shard{shard0_key:04d}-store").remote(
-            version_label=version_label,
-            db_name=shard0_file,
-            timeout=self._timeout,
-            my_name=f"shard{shard0_key:04d}-store",
-            serial_broker=self._broker,
-            profile_agent=self._profile_agent,
-            prune_unvalidated=self._prune_unvalidated,
-            drop_actions=drop_actions,
-            read_table_config=read_table_config,
-        )
-        self._shards = {shard0_key: shard0_store}
-
-        # get the version label from this store
-        self._version = ray.get(
-            shard0_store.object_get.remote("version", label=version_label)
-        )
-
-        # populate the remaining pool of shard stores
-        self._shards.update(
-            {
-                key: Datastore.options(name=f"shard{key:04d}-store").remote(
-                    version_label=version_label,
-                    version_serial=self._version.store_id,
-                    db_name=self._shard_db_files[key],
-                    timeout=self._timeout,
-                    my_name=f"shard{key:04d}-store",
-                    serial_broker=self._broker,
-                    profile_agent=self._profile_agent,
-                    prune_unvalidated=self._prune_unvalidated,
-                    drop_actions=drop_actions,
-                    read_table_config=read_table_config,
-                )
-                for key in shard_ids
-            }
-        )
+        shard_ids = shard_ids[-1:] + shard_ids[:-1]
+        self._shards = {
+            key: Datastore.options(name=f"shard{key:04d}-store").remote(
+                version_label=version_label,
+                db_name=self._shard_db_files[key],
+                replicated_tables=list(self._replicated_tables),
+                timeout=self._timeout,
+                my_name=f"shard{key:04d}-store",
+                serial_broker=self._broker,
+                profile_agent=self._profile_agent,
+                prune_unvalidated=self._prune_unvalidated,
+                drop_actions=drop_actions,
+                read_table_config=read_table_config,
+            )
+            for key in shard_ids
+        }
 
         # query a list of largest serial numbers from each shard, and notify these to the broker actor
         max_serial_data = ray.get(
@@ -293,6 +285,66 @@ class ShardedPool:
                     raise RuntimeError(
                         f'It is only possible to configure a read-table method for a replicated table (class name="{class_name}")'
                     )
+
+        # THE VERSION ROW, last (prompts/a3-v2-readiness, prompt 02). It is replicated, so it is
+        # written as every other replicated row is, through _replicated_write and under its
+        # record, and never by an actor's constructor. It is first looked for without writing
+        # anything: a replicated get commits and clears a record on the primary even when it
+        # finds the row, so a get here would write the primary on every open of a store that
+        # already holds the label. Only a label no shard holds is written. Then every actor is
+        # given the serial; until then an actor refuses every insert that carries it
+        self._version = self._find_version_row(version_label)
+        if self._version is None:
+            self._version = ray.get(
+                self._get_impl_replicated_table("version", {"label": version_label})
+            )
+        ray.get(
+            [
+                shard.set_version.remote(self._version.store_id)
+                for shard in self._shards.values()
+            ]
+        )
+
+    def _find_version_row(self, version_label: str):
+        """
+        The version row of ``version_label``, read from every shard file with a plain ``mode=ro``
+        select and nothing written, as a ``store_tag`` with its serial and label; or None if no
+        shard holds it. For an existing store the check at open has compared the ``version``
+        table across the shards already, and a new store's shards are empty, so the shards agree;
+        reading every one costs a select each, and makes a disagreement raise rather than be
+        resolved by whichever shard was read. A label held twice on a shard raises, as the
+        factory's own lookup does.
+        """
+        found = {}
+        for sid, path in sorted(self._shard_db_files.items()):
+            conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
+            try:
+                rows = conn.execute(
+                    "SELECT serial, label FROM version WHERE label = ?",
+                    (version_label,),
+                ).fetchall()
+            finally:
+                conn.close()
+            if len(rows) > 1:
+                raise RuntimeError(
+                    f'Sharded datastore "{str(self._primary_file)}": shard {sid} holds the version '
+                    f'label "{version_label}" {len(rows)} times: {rows}'
+                )
+            found[sid] = tuple(rows[0]) if len(rows) == 1 else None
+
+        if len(set(found.values())) > 1:
+            raise RuntimeError(
+                f'Sharded datastore "{str(self._primary_file)}": the shards disagree on the '
+                f'version row of label "{version_label}": '
+                + "; ".join(f"shard {sid}: {row}" for sid, row in sorted(found.items()))
+            )
+
+        row = next(iter(found.values()), None)
+        if row is None:
+            return None
+        version = store_tag(store_id=row[0], label=row[1])
+        version._deserialized = True
+        return version
 
     @property
     def primary(self) -> Path:
@@ -373,10 +425,16 @@ class ShardedPool:
             sqla.Column("table", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
             sqla.Column("key_attr", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
         )
-        # at most one row, naming the replicated write in progress: committed before the
-        # controlling shard's call is submitted and deleted after the last replica's call has
-        # returned and been checked (_replicated_write). A row here means the shards may differ,
-        # and that the controlling shard's rows of this class are the right ones
+        # at most one row, naming the replicated write in progress. For a get, store or validate
+        # it is committed before the controlling shard's call is submitted and deleted after the
+        # last replica's call has returned and been checked (_replicated_write); a row here means
+        # the shards may differ, and that the controlling shard's rows of this class are the
+        # right ones. For a prune (operation "prune", prompts/a3-v2-readiness prompt 02) it is
+        # committed before the first shard is pruned and deleted after the last
+        # (_prune_replicated_tables); a prune has no controlling shard, so controller_shard is
+        # NULL. A store whose table was created before that prompt keeps controller_shard NOT
+        # NULL (create(checkfirst=True) does not alter a table), and its prune record cannot be
+        # inserted: the open then refuses before any shard is touched (_commit_prune_record)
         self._replication_in_flight_table = sqla.Table(
             "replication_in_flight",
             self._metadata,
@@ -386,7 +444,7 @@ class ShardedPool:
             sqla.Column(
                 "class_name", sqla.String(DEFAULT_STRING_LENGTH), nullable=False
             ),
-            sqla.Column("controller_shard", sqla.Integer, nullable=False),
+            sqla.Column("controller_shard", sqla.Integer, nullable=True),
             sqla.Column("store_id", sqla.Integer, nullable=True),
             sqla.Column("started", sqla.DateTime(), nullable=False),
         )
@@ -609,39 +667,53 @@ class ShardedPool:
     #
     # A replicated write interrupted after its controlling shard committed leaves the shards
     # different and the primary's replication_in_flight record set (_replicated_write). Nothing
-    # in the write path deletes a replicated row, the controller commits first and the replicas
-    # copy only what it committed, and a flag is only ever turned on, so after an interrupted
-    # replication the right state is exactly "every shard holds what the controller holds"
-    # (docs/datastore-integrity-audit.md §4.5). _reconcile_replicated_tables runs in the
+    # in the write path deletes a replicated row, with one recorded exception: the prune at open
+    # of a replicated class (_prune_replicated_tables), which runs under a record of its own,
+    # operation "prune", and is completed below by running it again. The controller commits
+    # first and the replicas copy only what it committed, and a flag is only ever turned on, so
+    # after an interrupted replication the right state is exactly "every shard holds what the
+    # controller holds" (docs/datastore-integrity-audit.md §4.5). The version row is such a
+    # replicated row: since prompts/a3-v2-readiness prompt 02 it is written only through
+    # _replicated_write, by ShardedPool.__init__, and an interrupted write of it is repaired by
+    # the generic get repair below like any other. _reconcile_replicated_tables runs in the
     # constructor after _check_shard_files and before the broker or any actor exists, on plain
     # SQLAlchemy connections to the shard files through tables built by build_schema, with no Ray:
     #
     #   1. each shard is opened read-write once, so that SQLite rolls back a hot journal;
-    #   2. every replicated table, and the tag table of every replicated class, is read from every
-    #      shard and compared by full row; the primary's shard_keys are checked against the
-    #      wavenumbers every shard holds;
-    #   3. no record and no difference: nothing is written, and the store opens as before;
-    #   4. a record, and differences its interrupted write explains: each row of the record's
-    #      class that the record's controlling shard holds and another shard lacks is copied to
-    #      that shard verbatim (a BackgroundModel as a unit: row, tags and values), a flag the
-    #      controller holds set is set, and after a validate BackgroundModel.validated is
-    #      recomputed on each shard by the factory's own rule. Every shard is then compared again,
-    #      inside the repair's transactions; only if they all agree are the shards committed, and
-    #      then the record is cleared, in its own commit, last. A record over identical shards is
-    #      simply cleared;
-    #   5. anything else raises ReplicatedDivergence, and nothing is written.
+    #   2. a "prune" record is completed and nothing else is done (_complete_interrupted_prune):
+    #      the record's class is pruned again on every shard, inside one transaction per shard,
+    #      every replicated table is then compared inside those transactions, any difference
+    #      refuses with every shard rolled back, and only if they all agree are the shards
+    #      committed and the record cleared, last. This is done whatever the open's
+    #      prune_unvalidated is: completing an interrupted write is repair, not a choice of this
+    #      open. A prune record never reaches the get/store/validate licence below;
+    #   3. otherwise every replicated table, and the tag table of every replicated class, is read
+    #      from every shard and compared by full row; the primary's shard_keys are checked against
+    #      the wavenumbers every shard holds;
+    #   4. no record and no difference: nothing is written, and the store opens as before;
+    #   5. a get, store or validate record, and differences its interrupted write explains: each
+    #      row of the record's class that the record's controlling shard holds and another shard
+    #      lacks is copied to that shard verbatim (a BackgroundModel as a unit: row, tags and
+    #      values), a flag the controller holds set is set, and after a validate
+    #      BackgroundModel.validated is recomputed on each shard by the factory's own rule. Every
+    #      shard is then compared again, inside the repair's transactions; only if they all agree
+    #      are the shards committed, and then the record is cleared, in its own commit, last. A
+    #      record over identical shards is simply cleared;
+    #   6. anything else raises ReplicatedDivergence, and nothing is written.
     #
-    # This deletes no row but the record's own and sets no flag to False. Nothing in a sharded
-    # table is read, repaired or refused on: those are not replicated, and nothing here can say
-    # what they should be.
+    # Apart from completing a recorded prune, which deletes exactly the rows the factory's own
+    # rule calls unvalidated, this deletes no row but the record's own and sets no flag to
+    # False. Nothing in a sharded table is read, repaired or refused on: those are not
+    # replicated, and nothing here can say what they should be.
 
     def _reconcile_replicated_tables(self, primary_journal: bool = False) -> dict:
         """
         Compare the replicated tables of this existing store across its shards, repair an
-        interrupted replication named by the primary's replication_in_flight record, and raise
-        ReplicatedDivergence on any other difference. Return the reconciliation record: the
-        tables compared, the files that had a hot journal, the in-flight record found (if any)
-        and its controlling shard, what was repaired, and whether the record was cleared.
+        interrupted replication named by the primary's replication_in_flight record, or
+        complete an interrupted prune named by it, and raise ReplicatedDivergence on any other
+        difference. Return the reconciliation record: the tables compared, the files that had a
+        hot journal, the in-flight record found (if any) and its controlling shard (None for a
+        prune), what was repaired or pruned, and whether the record was cleared.
         """
         shard_ids = sorted(self._shard_db_files.keys())
         reconciliation = {
@@ -681,6 +753,12 @@ class ShardedPool:
         if record is not None:
             reconciliation["controller"] = record.get("controller_shard")
 
+        # 2. an interrupted prune is completed by running it again, never by the repair below
+        if record is not None and record.get("operation") == "prune":
+            return self._complete_interrupted_prune(
+                record, reconciliation, built, specs, shard_ids
+            )
+
         engines = {
             sid: self._reconcile_engine(self._shard_db_files[sid]) for sid in shard_ids
         }
@@ -689,7 +767,7 @@ class ShardedPool:
             for sid in shard_ids:
                 conns[sid] = engines[sid].connect()
 
-            # 2. the comparison
+            # 3. the comparison
             snapshots = {
                 sid: self._read_replicated_tables(conns[sid], specs)
                 for sid in shard_ids
@@ -698,7 +776,7 @@ class ShardedPool:
                 conn.rollback()
             differences = self._replicated_differences(specs, snapshots)
 
-            # 3. no record: any difference refuses
+            # 4. no record: any difference refuses
             if record is None:
                 if len(differences) > 0:
                     raise ReplicatedDivergence(
@@ -708,7 +786,7 @@ class ShardedPool:
                     )
                 return reconciliation
 
-            # 4. a record: what its interrupted write explains is repaired, from its controller
+            # 5. a record: what its interrupted write explains is repaired, from its controller
             plan, refusals = self._plan_replicated_repair(
                 record, specs, snapshots, differences, conns
             )
@@ -758,7 +836,7 @@ class ShardedPool:
                 for sid in shard_ids:
                     conns[sid].commit()
 
-            # 5. every shard holds what the controller holds: the record is cleared, last
+            # 5, last. every shard holds what the controller holds: the record is cleared
             with self._engine.begin() as conn:
                 result = conn.execute(sqla.delete(self._replication_in_flight_table))
                 if result.rowcount != 1:
@@ -1153,6 +1231,14 @@ class ShardedPool:
         start; under a store_id, that serial), a BackgroundModel as a whole unit, a source or
         response flag the controller holds set after a get, and a validated flag after a
         validate of the record's model, which is recomputed. Anything else is refused.
+
+        Only a get, store or validate record is licensed. A prune record is completed by
+        _complete_interrupted_prune and never reaches this; were one passed here, it is refused
+        like any other operation. The version row, written since prompts/a3-v2-readiness prompt
+        02 only by the pool's recorded get, is admitted by the generic get branch unchanged: its
+        table has no timestamp column, so the timestamp test does not apply to it, and only the
+        controller's row under the record's store_id (or any, when an interruption before
+        _replicated_write's step 3 left store_id null) is copied.
         """
         by_name = {spec["name"]: spec for spec in specs}
         operation = record.get("operation")
@@ -1570,6 +1656,352 @@ class ShardedPool:
                     f'{a["validated"]}'
                 )
         print(">>   the replication_in_flight record was cleared")
+
+    # THE PRUNE AT OPEN OF A REPLICATED CLASS
+    #
+    # Under prune_unvalidated, the unvalidated rows of every replicated class whose factory
+    # validates at startup (today BackgroundModel, with its tags and values) are deleted by the
+    # pool, not by the actors (prompts/a3-v2-readiness prompt 02, the user's decision U1). An
+    # actor that pruned its own shard in its constructor did so outside any record, so an open
+    # interrupted between actors left shards that differ with nothing to say which is right
+    # (docs/a3-v2-readiness-audit.md V1, case 4). _prune_replicated_tables runs in the
+    # constructor after the check at open and after replication_in_flight exists, before the
+    # broker or any actor exists, on plain connections to the shard files, with no Ray. For each
+    # such class:
+    #
+    #   1. every shard is read, writing nothing, by the factory's own validate_on_startup with
+    #      prune=False. If no shard reports an unvalidated row, nothing is written and no record
+    #      is made, so a pruning open of a store with nothing to prune writes nothing;
+    #   2. a record, operation "prune", naming the class, with no controlling shard, is committed
+    #      on the primary in its own transaction, before the first shard is touched;
+    #   3. each shard, in ascending id, is pruned in its own transaction by the factory's
+    #      validate_on_startup with prune=True, so that the rule for "unvalidated" stays in the
+    #      factory. Before the transaction commits, the factory is asked again with prune=False
+    #      and must report nothing, and every compared table must have lost rows only, and only
+    #      the class's own and those of the tables that name it by foreign key. Otherwise the
+    #      shard is rolled back and the open raises with the record left set. The factory catches
+    #      a SQLAlchemyError from its own deletes and returns normally, so its return says
+    #      nothing about whether the prune took;
+    #   4. the record is deleted, in its own commit, last.
+    #
+    # The prune is idempotent: it deletes the class's unvalidated rows, and only those, so a
+    # shard already pruned loses nothing more. That is what lets the check at open complete an
+    # interrupted one by running it again (_complete_interrupted_prune). No other replicated
+    # write can come between: a record blocks every one, and the check at open runs first.
+
+    @staticmethod
+    def _replicated_prune_classes(replicated_tables, built) -> List[str]:
+        """The replicated classes whose factory validates, and so prunes, at startup, in the
+        order the pool was given them: read from the factories' registrations, not listed.
+        """
+        return [
+            name
+            for name in replicated_tables
+            if name in built.tables
+            and built.records[name].get("validate_on_startup", False)
+        ]
+
+    @staticmethod
+    def _prune_unit(cls_name: str, built, specs) -> List[str]:
+        """The compared tables a prune of ``cls_name`` may delete from: its own, and every
+        compared table with a foreign key to it (for BackgroundModel, its tags and values).
+        """
+        unit = [cls_name]
+        for spec in specs:
+            name = spec["name"]
+            if name == cls_name:
+                continue
+            if any(
+                fk.column.table.name == cls_name
+                for fk in built.tables[name].foreign_keys
+            ):
+                unit.append(name)
+        return unit
+
+    def _prune_needed(self, cls_name: str, built, shard_ids) -> bool:
+        """Whether any shard holds a row of ``cls_name`` that its factory calls unvalidated,
+        read by the factory's own validate_on_startup with prune=False. Writes nothing.
+        """
+        factory = _factories[cls_name]
+        table = built.tables[cls_name]
+        for sid in shard_ids:
+            engine = self._reconcile_engine(self._shard_db_files[sid])
+            try:
+                with engine.connect() as conn:
+                    try:
+                        if not sqla.inspect(conn).has_table(cls_name):
+                            continue
+                        if len(
+                            factory.validate_on_startup(
+                                conn, table, built.tables, prune=False
+                            )
+                        ):
+                            return True
+                    finally:
+                        conn.rollback()
+            finally:
+                engine.dispose()
+        return False
+
+    def _prune_shard(self, cls_name: str, sid: int, conn, built, specs):
+        """
+        Prune ``cls_name`` on shard ``sid``, inside ``conn``'s open transaction, by the factory's
+        own validate_on_startup with prune=True, and check that it took (the comment above).
+        Return (actions, the factory's messages). Raise RuntimeError if it did not take; the
+        caller rolls the transaction back. Commits nothing.
+        """
+        if not sqla.inspect(conn).has_table(cls_name):
+            # a shard without the table holds nothing to prune; an actor creates it empty
+            return [], []
+
+        factory = _factories[cls_name]
+        table = built.tables[cls_name]
+        unit = self._prune_unit(cls_name, built, specs)
+        path = self._shard_db_files[sid]
+
+        before = self._read_replicated_tables(conn, specs)
+        msgs = factory.validate_on_startup(conn, table, built.tables, prune=True)
+        left = factory.validate_on_startup(conn, table, built.tables, prune=False)
+        after = self._read_replicated_tables(conn, specs)
+
+        problems = []
+        if len(left) > 0:
+            problems.append(
+                "the factory still reports unvalidated rows after its prune: "
+                + " | ".join(line.strip() for line in left)
+            )
+        actions = []
+        for spec in specs:
+            name = spec["name"]
+            was, now = before[name]["rows"], after[name]["rows"]
+            deleted = sorted(set(was) - set(now))
+            added = sorted(set(now) - set(was))
+            changed = sorted(
+                k for k in set(was) & set(now) if not self._same_row(was[k], now[k])
+            )
+            if len(added) > 0 or len(changed) > 0:
+                problems.append(
+                    f'"{name}" gained or changed rows {added + changed}, and a prune only deletes'
+                )
+            if len(deleted) > 0 and name not in unit:
+                problems.append(
+                    f'"{name}" lost rows {deleted}, and a prune of "{cls_name}" deletes only '
+                    f"from {unit}"
+                )
+            if len(deleted) > 0:
+                actions.append(
+                    {
+                        "action": "pruned",
+                        "class_name": name,
+                        "shard": sid,
+                        "keys": deleted,
+                    }
+                )
+
+        if len(problems) > 0:
+            raise RuntimeError(
+                f'Sharded datastore "{str(self._primary_file)}": the prune of "{cls_name}" on '
+                f'shard {sid} ("{str(path)}") did not take: '
+                + "; ".join(problems)
+                + ". "
+                "That shard's transaction was rolled back, and the replication_in_flight record "
+                "of the prune is left set, so the next open of this store completes the prune "
+                "on every shard"
+            )
+        return actions, msgs
+
+    def _prune_shard_and_commit(self, cls_name: str, sid: int, built, specs):
+        """One shard's prune at open, in its own transaction, committed if it took. Return the
+        actions."""
+        engine = self._reconcile_engine(self._shard_db_files[sid])
+        try:
+            with engine.connect() as conn:
+                conn.begin()
+                try:
+                    actions, msgs = self._prune_shard(cls_name, sid, conn, built, specs)
+                except BaseException:
+                    conn.rollback()
+                    raise
+                conn.commit()
+        finally:
+            engine.dispose()
+
+        if len(msgs) > 0:
+            print(
+                f"!! INTEGRITY WARNING ({datetime.now().replace(microsecond=0).isoformat()}): "
+                f'sharded datastore "{str(self._primary_file)}", shard {sid} (physical file '
+                f'{str(self._shard_db_files[sid])}), pruned by the pool under a "prune" record'
+            )
+            for line in msgs:
+                print(line)
+        return actions
+
+    def _commit_prune_record(self, cls_name: str) -> None:
+        """Commit the "prune" record of ``cls_name`` on the primary, in its own transaction,
+        before any shard is touched. A record already there refuses."""
+        record_table = self._replication_in_flight_table
+        with self._engine.begin() as conn:
+            existing = conn.execute(sqla.select(record_table)).mappings().first()
+            if existing is not None:
+                raise ReplicationInFlight(self._primary_file, dict(existing))
+            try:
+                conn.execute(
+                    sqla.insert(record_table),
+                    {
+                        "operation": "prune",
+                        "class_name": cls_name,
+                        "controller_shard": None,
+                        "store_id": None,
+                        "started": datetime.now(),
+                    },
+                )
+            except sqla.exc.IntegrityError as e:
+                raise RuntimeError(
+                    f'Sharded datastore "{str(self._primary_file)}": cannot record the prune of '
+                    f'"{cls_name}" at open. This store\'s replication_in_flight table was created '
+                    "before a prune could be recorded, and keeps controller_shard NOT NULL, which "
+                    "a prune (with no controlling shard) cannot fill. Nothing was pruned and no "
+                    "shard was touched. Open it with prune_unvalidated=False, or at the tree that "
+                    f"wrote it ({e.orig})"
+                ) from e
+
+    def _clear_in_flight_record(self, operation: str, cls_name: str) -> None:
+        """Delete the primary's one replication_in_flight record, in its own commit."""
+        with self._engine.begin() as conn:
+            result = conn.execute(sqla.delete(self._replication_in_flight_table))
+            if result.rowcount != 1:
+                raise RuntimeError(
+                    f"ShardedPool: the replication_in_flight record of a {operation} of "
+                    f'"{cls_name}" has {result.rowcount} rows, expected 1'
+                )
+
+    def _prune_replicated_tables(self) -> List[dict]:
+        """
+        The prune at open of every replicated class whose factory prunes at startup, each under
+        its own "prune" record (the comment above). Return what was deleted, one entry per table
+        and shard. Called only under prune_unvalidated.
+        """
+        built = build_schema(sqla.MetaData(), _factories)
+        specs = self._replicated_table_specs(built)
+        shard_ids = sorted(self._shard_db_files.keys())
+
+        pruned = []
+        for cls_name in self._replicated_prune_classes(self._replicated_tables, built):
+            # 1. nothing to prune on any shard: no record, nothing written
+            if not self._prune_needed(cls_name, built, shard_ids):
+                continue
+
+            # 2. the record, before the first shard is touched
+            self._commit_prune_record(cls_name)
+
+            # 3. each shard in its own transaction
+            actions = []
+            for sid in shard_ids:
+                actions.extend(
+                    self._prune_shard_and_commit(cls_name, sid, built, specs)
+                )
+
+            # 4. the record, cleared last
+            self._clear_in_flight_record("prune", cls_name)
+            print(
+                f'>> Pruned the unvalidated rows of "{cls_name}" from every shard of '
+                f'"{str(self._primary_file)}" under a "prune" record, which was cleared'
+            )
+            pruned.extend(actions)
+        return pruned
+
+    def _complete_interrupted_prune(
+        self, record, reconciliation, built, specs, shard_ids
+    ) -> dict:
+        """
+        The check at open's completion of an interrupted prune: the record's class is pruned
+        again on every shard, each inside its own open transaction; every replicated table is
+        then compared inside those transactions; any difference, or a shard whose prune did not
+        take, rolls every shard back and raises with the record left set; otherwise every shard
+        is committed and the record cleared, last. Whatever the open's prune_unvalidated is.
+        """
+        cls_name = record.get("class_name")
+        if cls_name not in self._replicated_prune_classes(
+            self._replicated_tables, built
+        ):
+            raise ReplicatedDivergence(
+                self._primary_file,
+                [
+                    {
+                        "class_name": cls_name,
+                        "shard": None,
+                        "key": "the replication_in_flight record",
+                        "detail": "the record names a prune of a class that is not a replicated "
+                        "class whose factory prunes at startup, so nothing can say what the "
+                        "prune should delete",
+                    }
+                ],
+                record,
+            )
+
+        engines = {
+            sid: self._reconcile_engine(self._shard_db_files[sid]) for sid in shard_ids
+        }
+        conns = {}
+        try:
+            for sid in shard_ids:
+                conns[sid] = engines[sid].connect()
+            for conn in conns.values():
+                conn.begin()
+            try:
+                # 1. the prune, again, on every shard
+                actions = []
+                for sid in shard_ids:
+                    done, _ = self._prune_shard(cls_name, sid, conns[sid], built, specs)
+                    actions.extend(done)
+
+                # 2-3. the comparison, of what the prune's transactions hold; any difference
+                # refuses
+                after = {
+                    sid: self._read_replicated_tables(conns[sid], specs)
+                    for sid in shard_ids
+                }
+                remaining = self._replicated_differences(specs, after)
+                if len(remaining) > 0:
+                    raise ReplicatedDivergence(
+                        self._primary_file,
+                        self._describe_differences(specs, after, remaining),
+                        record,
+                        after_repair=True,
+                    )
+            except BaseException:
+                for conn in conns.values():
+                    conn.rollback()
+                raise
+
+            for sid in shard_ids:
+                conns[sid].commit()
+        finally:
+            for conn in conns.values():
+                conn.close()
+            for engine in engines.values():
+                engine.dispose()
+
+        # 4. the record, cleared last
+        self._clear_in_flight_record("prune", cls_name)
+
+        reconciliation["repaired"] = actions
+        reconciliation["cleared"] = True
+
+        print(
+            f'>> Sharded datastore "{str(self._primary_file)}" was opened with a prune in flight '
+            f'(class="{cls_name}", started={record.get("started")}); it was run again on every '
+            "shard"
+        )
+        for a in actions:
+            print(
+                f'>>   pruned {len(a["keys"])} row(s) of "{a["class_name"]}" on shard '
+                f'{a["shard"]}'
+            )
+        if len(actions) == 0:
+            print(">>   every shard was already pruned: nothing more was deleted")
+        print(">>   the replication_in_flight record was cleared")
+        return reconciliation
 
     # SHARD RECORDS: READ AND CHECK
     #
@@ -2189,8 +2621,12 @@ class ShardedPool:
     #
     # A replicated object is written on a controlling shard, chosen at random per call, and then
     # sent to every other shard, each in its own transaction. _replicated_write is the one path
-    # the get, store and validate of a replicated class take, and the one place that writes and
-    # clears the primary's replication_in_flight record (prompts/datastore-integrity, prompt 01):
+    # the get, store and validate of a replicated class take, the version row's included
+    # (ShardedPool.__init__ writes it here, prompts/a3-v2-readiness prompt 02), and the one place
+    # that writes and clears the primary's replication_in_flight record for them
+    # (prompts/datastore-integrity, prompt 01). The one other writer of that record is the prune
+    # at open of a replicated class, whose "prune" record _prune_replicated_tables writes and
+    # clears, with no Ray, before any actor exists:
     #
     #   1. the record is committed on the primary, in its own transaction, naming the operation,
     #      the class and the controlling shard. If one is already there, nothing is written;

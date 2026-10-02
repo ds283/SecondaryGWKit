@@ -1,6 +1,6 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-10-02 · **Status: COMPLETE — 12 of 12 prompts landed. Closed by the user on
+**Last updated:** 2026-10-03 · **Status: COMPLETE — 12 of 12 prompts landed. Closed by the user on
 2026-10-02, after the orchestrator's review of 10.** (01, 02, 03, 04, 04b, 05 as 05a–05c,
 06, 07, 08, 09 as 09a–09c, 09d and 10; all reviewed, 10 on 2026-10-02.) The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 04b landed the same day it was written, from the 04 review's findings. **05 landed
@@ -2146,7 +2146,13 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Teach the analyser to bind a comprehension's targets before walking its
     element, and pin what that newly decides. Or declare the shape in the docstring and in a
     pinned list. A change to the guard, which is not 05c's to make.
-- **[02-the-version-row-is-written-outside-the-in-flight-record]** *(opened 2026-09-28 by prompt 02)*
+
+---
+
+## 4. Resolved issues
+
+- **[02-the-version-row-is-written-outside-the-in-flight-record]** *(opened 2026-09-28 by prompt 02;
+  **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 02)*
   - **The defect.** The `version` table is replicated, but its row is not written through
     `ShardedPool._replicated_write`. `ShardedPool.__init__` builds the first `Datastore` actor,
     whose constructor inserts the version label's row, and then each later actor, whose
@@ -2171,11 +2177,19 @@ None is assigned to a prompt of this campaign.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/02-write-the-version-row-through-the-recorded-write.md`,
     form A of that campaign's audit V2. Under the user's U1 it also moves the replicated prune at
     open into the pool, under a record.
-
----
-
-## 4. Resolved issues
-
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 02, in the commit *"Write the version
+    row and the replicated prune through a record"*, form A of that campaign's audit V2.
+    `Datastore.__init__` no longer looks up or inserts the version row. `ShardedPool.__init__`,
+    once every actor exists, reads the label's row `mode=ro` from every shard. Only when no shard
+    holds it does it write the row once, through `_get_impl_replicated_table` and so
+    `_replicated_write`, under a record. It then calls `set_version` on every actor, and until then
+    `_insert` refuses any versioned insert. An interrupted version write leaves a `get`/`version`
+    record, which the check at open's generic `get` repair completes unchanged. Healed, on stand-in
+    shards, in `Datastore/tests/test_version_row_at_open.py`: `TestNewLabelInterrupted` (after the
+    controller commits, before it, and on one replica: the case measured above) and
+    `TestNewStoreInterrupted`. The audit probe's case 3 now reopens with `version serial 2` on every
+    shard. A clean reopen still writes nothing (`test_reconcile_at_open.TestCleanStoreUntouched`,
+    unchanged). Log: [`../a3-v2-readiness/logs/02-write-the-version-row-through-the-recorded-write.md`](../a3-v2-readiness/logs/02-write-the-version-row-through-the-recorded-write.md).
 - **[09d-distinct-lines-test-is-satisfied-by-the-label-it-cannot-police]** *(opened 2026-10-01 by
   prompt 09d)*
   - **The defect.** Since 09d a record line of a class that another class names ends, beyond its

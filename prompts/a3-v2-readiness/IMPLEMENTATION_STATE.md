@@ -1,8 +1,8 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-02 · **Status: IN PROGRESS — 2 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 3 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
-has landed (2026-10-02) and been reviewed. 01–06
+has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03). 01–06
 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
@@ -52,7 +52,7 @@ recommended** (audit, closing section; README §6.2):
 |---|---|---|---|---|---|---|---|
 | 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
-| 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | this commit | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ⬜ | — | — |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
@@ -270,9 +270,9 @@ Carried into the notes for 02–04:
 | **M2** | 00 | Whether every reader lookup can be served `mode=ro` | ✅ audit M2: yes, if replicated lookups skip `_replicated_write` |
 | **T1** | 01 | `DEFAULT_QUADRATURE_RTOL = 1e-7`, its comment, every stale statement of its value | ✅ the constant and its 14-line comment; two stale comments in `QuadSourceIntegral.py` corrected (`MIN_SUBINTERVAL_LOG_WIDTH`'s, and `analytic_integral`'s "1e-25 and 1e-8"); every hit of the search is in log 01, 24 lines, the rest left as other tolerances or history; ASTs differ from the parents' only in the constant |
 | **T2** | 01 | The provenance subsection, the `handover` board line, a value pin | ✅ subsection added (46 lines, no deletions); a dated line on each of the `handover` and `levin-refactor` entries, both issues still open; `test_quadrature_tolerance_pin.py`, four tests, three breakages each caught (log 01; (iii) needed a test of this prompt's own, log 01 deviation 1) |
-| **W1** | 02 | The version row written once through `_replicated_write` | ⬜ |
-| **W2** | 02 | The check at open treats a missing version row like any other replicated row | ⬜ |
-| **W3** | 02 | The prune at open of a replicated class, by the pool, under a `prune` record the check at open completes (U1) | ⬜ |
+| **W1** | 02 | The version row written once through `_replicated_write` | ✅ actors no longer touch it; `ShardedPool.__init__` reads the label `mode=ro` on every shard, writes it through `_get_impl_replicated_table` only when absent, then `set_version` on every actor; `_insert` refuses a versioned insert before it, ahead of the lease (`test_version_row_at_open`, 12 tests; breakages (i), (ii), (vii)) |
+| **W2** | 02 | The check at open treats a missing version row like any other replicated row | ✅ the generic `get` repair admits it unchanged (no `timestamp` column); interrupted after the controller, before it, on one replica, and in a new store's first open, each healed; with no record a difference still refuses (log 02, *W2*) |
+| **W3** | 02 | The prune at open of a replicated class, by the pool, under a `prune` record the check at open completes (U1) | ✅ `_prune_replicated_tables` before any actor, per-shard transactions checked by the factory's own rule, record cleared last; `_complete_interrupted_prune` re-runs it whatever `prune_unvalidated` is; actors report replicated classes only; `controller_shard` nullable (`test_prune_at_open`, 11 tests; breakages (iii)–(vi)) |
 | **O1** | 03 | `ShardedPool(read_only=True)`, every file `mode=ro`, nothing written at open | ⬜ |
 | **O2** | 03 | `ReadOnlyMiss` on a lookup that would have inserted; `ReadOnlyWrite` on any write | ⬜ |
 | **O3** | 03 | The six readers open read-only | ⬜ |
@@ -298,12 +298,10 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 
 | Issue | Owning board | Prompt |
 |---|---|---|
-| `[02-the-version-row-is-written-outside-the-in-flight-record]` | `datastore-integrity` §3.3 | 02 |
 | `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | `datastore-integrity` §3.3 | 03 |
 | `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | `datastore-integrity` §3.3 | 03 |
 | `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | `datastore-integrity` §3.3 | 04 |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
-| `[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]` | this board, §3.2 | 02 (U1) |
 
 ### 3.2 Held on this board
 
@@ -323,29 +321,6 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
     retirement, and a real reference in it is harder to see.
   - **Next step.** Prompt 06: the stores root is not a target; a store alone in a subdirectory,
     the backup's shape, keeps its directory as one.
-- **[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]** *(opened
-  2026-10-02 by audit 00, V1; does not block A3 v2)*
-  - **The defect.** With `prune_unvalidated=True` (`main.py`'s default, and A3 v2's resume once
-    prompt 05 lands), each `Datastore` actor deletes an unvalidated `BackgroundModel` — a
-    replicated class — with its values and tags from its own shard, in its own constructor
-    (`_validate_on_startup` → `sqla_BackgroundModelFactory.validate_on_startup`), outside the
-    `replication_in_flight` record. The same defect as
-    `[02-the-version-row-is-written-outside-the-in-flight-record]`, for the other replicated write
-    a constructor makes.
-  - **Measured** (`docs/a3-v2-readiness/version_window_probe.py`, case 4, stand-in shards): every
-    actor after the first killed during a pruning open left shard 2 with no `BackgroundModel` and
-    shards 0 and 1 with `[(1, 0)]`; the next open was refused by the check at open with five
-    differences (`BackgroundModel`, three `BackgroundModelValue`, one `BackgroundModel_tags`).
-  - **Impact.** A store that needs a person. Reached only when a pruning open of a store holding an
-    unvalidated `BackgroundModel` is interrupted between actors; for A3 v2, only if a launch is
-    interrupted between the background's store and its validate and the resume is then interrupted
-    in its first seconds.
-  - **Next step.** User decision U1 (audit, closing section): recommended, in prompt 02, the pool
-    prunes replicated classes itself, before any actor exists, under a `prune` record that the
-    check at open repairs by running the idempotent prune again.
-  - **Assigned (2026-10-02):** to prompt 02, as its W3. The user took U1 as recommended. The same
-    defect as the version row's, for the other replicated write a constructor makes, so it is
-    fixed in the same change to `ShardedPool.__init__` and the check at open.
 - **[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]** *(opened 2026-10-02 by
   audit 00, V1; does not block A3 v2)*
   - **The defect.** `ShardedPool.__init__` writes a new store's primary and its `shards` table
@@ -361,6 +336,9 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
   - **Decided (2026-10-02):** record only (U2); no prompt changes code for it. 02 moves the version
     row after the shard files exist, which narrows the window without closing it, and its log says
     by how much. It stays open here.
+  - **Narrowed, not closed (2026-10-03, prompt 02):** the shard files after the first no longer
+    wait on the first actor's constructor, its version insert and a `ray.get`; every constructor is
+    submitted at once, and the version row comes after the last file exists (log 02, observation 1).
 - **[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]** *(opened 2026-10-02
   by the orchestrator, writing 02; read, not measured; does not block A3 v2)*
   - **The defect.** `_drop_actions` (`Datastore/SQL/Datastore.py`) maps `gk-source-policy-records`
@@ -401,6 +379,47 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 
 ## 4. Resolved issues
 
+- **[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]** *(opened
+  2026-10-02 by audit 00, V1; does not block A3 v2; **closed 2026-10-03 by prompt 02**, this
+  commit)*
+  - **The defect.** With `prune_unvalidated=True` (`main.py`'s default, and A3 v2's resume once
+    prompt 05 lands), each `Datastore` actor deletes an unvalidated `BackgroundModel` — a
+    replicated class — with its values and tags from its own shard, in its own constructor
+    (`_validate_on_startup` → `sqla_BackgroundModelFactory.validate_on_startup`), outside the
+    `replication_in_flight` record. The same defect as
+    `[02-the-version-row-is-written-outside-the-in-flight-record]`, for the other replicated write
+    a constructor makes.
+  - **Measured** (`docs/a3-v2-readiness/version_window_probe.py`, case 4, stand-in shards): every
+    actor after the first killed during a pruning open left shard 2 with no `BackgroundModel` and
+    shards 0 and 1 with `[(1, 0)]`; the next open was refused by the check at open with five
+    differences (`BackgroundModel`, three `BackgroundModelValue`, one `BackgroundModel_tags`).
+  - **Impact.** A store that needs a person. Reached only when a pruning open of a store holding an
+    unvalidated `BackgroundModel` is interrupted between actors; for A3 v2, only if a launch is
+    interrupted between the background's store and its validate and the resume is then interrupted
+    in its first seconds.
+  - **Next step.** User decision U1 (audit, closing section): recommended, in prompt 02, the pool
+    prunes replicated classes itself, before any actor exists, under a `prune` record that the
+    check at open repairs by running the idempotent prune again.
+  - **Assigned (2026-10-02):** to prompt 02, as its W3. The user took U1 as recommended. The same
+    defect as the version row's, for the other replicated write a constructor makes, so it is
+    fixed in the same change to `ShardedPool.__init__` and the check at open.
+  - **Closed 2026-10-03 by prompt 02**, this commit. Under `prune_unvalidated`, the pool prunes
+    every replicated class whose factory prunes at startup (`BackgroundModel`, its tags and values),
+    after the check at open and before the broker or any actor exists, under a `prune` record
+    committed before the first shard and cleared last (`ShardedPool._prune_replicated_tables`).
+    Each shard's prune is its own transaction, checked by the factory's own report and by what was
+    deleted. The check at open completes an interrupted one by running it again on every shard
+    (`_complete_interrupted_prune`). Actors report replicated classes only. Healed, on stand-in
+    shards, in `Datastore/tests/test_prune_at_open.py`:
+    `TestInterruptedPrune.test_faulted_after_each_shard` (after shard 0, 1 and 2),
+    `test_faulted_before_the_first_shard`, and
+    `TestPruneFailsInTheFactory.test_the_record_stays_and_the_next_open_completes_it`; no actor
+    deletes a replicated row (`TestNoActorDeletesAReplicatedRow`). Log:
+    [`logs/02-write-the-version-row-through-the-recorded-write.md`](logs/02-write-the-version-row-through-the-recorded-write.md).
+  - **What it leaves.** A store whose `replication_in_flight` table was created before this commit
+    keeps `controller_shard NOT NULL` and refuses a pruning open that has a replicated row to prune,
+    before any shard is touched (log 02, *The record's schema*). The audit probe's case 4 no longer
+    kills anything (log 02, observation 3).
 - **[00-quadsource-extraction-reads-at-the-default-rtol]** *(opened 2026-10-02 by this campaign's
   plan; **closed 2026-10-02 by prompt 01**, `2a44f7e`)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looked up the tolerance rows its
@@ -476,3 +495,21 @@ Markdown), serially, with README §7's command:
 
 These agree with §5.2. The load average was 6–8, and no flake fired. Index: **107 open**, after the
 review opened `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]`.
+
+### 5.4 After prompt 02 (2026-10-03)
+
+Measured 00:35–00:46 at the tree of this commit, serially, with README §7's command, each suite's
+output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 669 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 574 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+Datastore is 551 + the 23 tests of `test_version_row_at_open.py` (12) and `test_prune_at_open.py`
+(11); every other count is unchanged from §5.3. Load average 10–22, on a machine shared with an
+unrelated Ray job; no flake fired. Index: **104 open**.

@@ -192,6 +192,14 @@ class _StandinRandom:
 
     def randrange(self, n):
         cluster = self._cluster
+        # added by a3-v2-readiness prompt 02: inside StandinCluster.pin_controller, the draw is
+        # resolved against the pool making the write, which may still be under construction
+        writing = getattr(cluster, "_writing_pool", None)
+        if (
+            getattr(cluster, "open_controller", None) is not None
+            and writing is not None
+        ):
+            return list(writing._shards.keys()).index(cluster.open_controller)
         if cluster.controller is None or cluster.pool is None:
             return _random.randrange(n)
         # ShardedPool swaps entry i of list(self._shards.keys()) to the end and pops it
@@ -214,6 +222,10 @@ class StandinCluster:
         # the shard id to make the controlling shard, or None for a random draw
         self.controller: Optional[int] = None
         self.pool = None
+        # added by a3-v2-readiness prompt 02 (pin_controller): the shard id pinned inside the
+        # block, and the pool whose replicated write is running
+        self.open_controller: Optional[int] = None
+        self._writing_pool = None
 
     @contextlib.contextmanager
     def active(self):
@@ -233,6 +245,34 @@ class StandinCluster:
                 mock.patch.object(sp_mod, "random", _StandinRandom(self))
             )
             yield self
+
+    @contextlib.contextmanager
+    def pin_controller(self, shard_id: int):
+        """
+        Added by a3-v2-readiness prompt 02. Inside the block, the controlling shard of every
+        replicated write is ``shard_id``, resolved against the pool making the write rather than
+        against ``self.pool``. A write made inside ``ShardedPool``'s constructor (the version
+        row, since that prompt) has no ``self.pool`` to resolve against: ``open_pool`` sets it
+        only once the constructor returns. ``controller`` and its behaviour are unchanged.
+        """
+        original = sp_mod.ShardedPool._replicated_write
+        cluster = self
+
+        def wrapped(pool, *args, **kwargs):
+            previous = getattr(cluster, "_writing_pool", None)
+            cluster._writing_pool = pool
+            try:
+                return original(pool, *args, **kwargs)
+            finally:
+                cluster._writing_pool = previous
+
+        previous_pin = getattr(self, "open_controller", None)
+        self.open_controller = shard_id
+        try:
+            with mock.patch.object(sp_mod.ShardedPool, "_replicated_write", wrapped):
+                yield self
+        finally:
+            self.open_controller = previous_pin
 
     def fault(self, shard_id: int, method: str, cls_name: str, when: str = "before"):
         if when not in ("before", "after"):
