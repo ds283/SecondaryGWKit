@@ -2177,8 +2177,8 @@ None is assigned to a prompt of this campaign.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/02-write-the-version-row-through-the-recorded-write.md`,
     form A of that campaign's audit V2. Under the user's U1 it also moves the replicated prune at
     open into the pool, under a record.
-  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 02, in the commit *"Write the version
-    row and the replicated prune through a record"*, form A of that campaign's audit V2.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 02, `b647c0b` (*"Write the
+    version row and the replicated prune through a record"*), form A of that campaign's audit V2.
     `Datastore.__init__` no longer looks up or inserts the version row. `ShardedPool.__init__`,
     once every actor exists, reads the label's row `mode=ro` from every shard. Only when no shard
     holds it does it write the row once, through `_get_impl_replicated_table` and so
