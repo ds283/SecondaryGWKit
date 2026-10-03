@@ -6,6 +6,10 @@ fixed by §6 alone. **02, 03 and 04 were held** on what audit 00 measured (§2).
 2026-10-02, after the audit's review, against its findings and the user's decisions U1 and U2
 (§6.2). **07 is held** on 01–06.
 
+**2026-10-03, after 06's review:** 07 is written, with **06a** before it (D5, §6.1). `--build`
+could not be scoped, so 06a gives it a fixed rehearsal scope, committed and tested, and 07 runs
+on a clean tree whose SHA holds the code that ran.
+
 ## 0. Why this campaign exists
 
 The A3 v2 LambdaCDM store is the first store meant to have archival value, and the comparator for
@@ -62,7 +66,8 @@ listed three, asked whether there were others, and decided that all seven below 
   read-only pool (03);
 - the six `extract_*.py` scripts: read-only, a model filter (03);
 - `docs/gktk-remedial/scoped_pipeline_run.py` and `docs/handover/quadsource_atol_sweep.py`: the
-  signal handling (04) and the build's argv (05);
+  signal handling (04) and the build's argv (05); and `--build`'s rehearsal scope (06a, under D5);
+- `docs/datastore-integrity-verification/interrupt_when.py`: the driver it names (06a);
 - `RunRegistry/stores.py`: `_find_references` (06);
 - the seven issues in §0, and the boards that own them.
 
@@ -87,7 +92,8 @@ listed three, asked whether there were others, and decided that all seven below 
 | 04 | `04-record-a-sigterm-as-killed.md` | One handler, shared by both drivers, installed after `ray.init`: `killed`/143 written at once without the fingerprint, then the fingerprint best-effort, then Ray shut down, no `gcs_server` left. `terminal_state`'s docstring made true. Closes `[10-a-sigterm-…]`. | **written** 2026-10-02 ([`04-record-a-sigterm-as-killed.md`](04-record-a-sigterm-as-killed.md)); landed 2026-10-03, `79ab21a` |
 | 05 | [`05-prune-on-resume.md`](05-prune-on-resume.md) | `--no-prune-unvalidated` out of `run_build`, `run_child` and both drivers' usage lines, with a test pinning the build's argv. Closes `[10-a3-v2-launch-…]`. | **written**; independent; landed 2026-10-03, `dd7f272` |
 | 06 | [`06-count-only-real-references.md`](06-count-only-real-references.md) | `_find_references` no longer takes the stores root as a target (compared by `realpath`), so a tombstone's `references.stores_root` no longer names every later store in the root. A store in its own subdirectory, the backup's shape, keeps its directory as a target, a shared one included. Closes `[10-store-retire-…]`. *(Corrected 2026-10-03: this row first said the directory stops matching "when that directory is shared with other stores", which the prompt never asked for and `test_a_retirement` forbids; log 06, observation 1.)* | **written**; independent; landed 2026-10-03, `938be2b` |
-| 07 | `07-rehearse-the-a3-v2-launch.md` | Remedial. A scoped `--build --register` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed in a sharded stage and resumed with `--build --resume`; the recorded state, the fingerprint against an uninterrupted reference, and every extraction script read-only against it. Closes the campaign. | **held** on 01–06; released 2026-10-03, when 06 landed; not yet written |
+| 06a | [`06a-give-the-build-a-rehearsal-scope.md`](06a-give-the-build-a-rehearsal-scope.md) | `--build --rehearsal`: `main.py`'s own unfiltered work list on 3 log-spaced k over $10^5$–$10^6$/Mpc with `--zend 250`, the scope `datastore-integrity` prompt 10 measured, in place of the production grid and `--zend 0.1`. Without the flag nothing changes. The manifest's `scope` says which ran. Also `interrupt_when.py` takes the driver's name from the run's manifest, so that it can interrupt a `--build`. Added 2026-10-03 under D5. | **written** 2026-10-03; after 06 |
+| 07 | [`07-rehearse-the-a3-v2-launch.md`](07-rehearse-the-a3-v2-launch.md) | Remedial. A scoped `--build --register` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed in a sharded stage and resumed with `--build --resume`; the recorded state, the fingerprint against an uninterrupted reference, and every extraction script read-only against it. Closes the campaign. | **held** on 01–06; released 2026-10-03, when 06 landed; **written** 2026-10-03; after 06a |
 
 **Why 02–04 and 07 were held** (02–04 released 2026-10-02). Their charters above are fixed and cannot drift to fit what 00
 finds. What waits is their method: 02's form depends on whether a read-only open can find the
@@ -98,7 +104,8 @@ alarm can be cancelled at all. 07 is written against what 01–06 ship.
 - 00 first. 01, 05 and 06 do not depend on it and may land before it or beside it, one at a time.
 - 01 → 03, and 02 → 03.
 - 04 and 05 both edit `quadsource_atol_sweep.py`'s `run_build`; never concurrently in one checkout.
-- 07 last.
+- 06a after 06: it edits `quadsource_atol_sweep.py`, which 04 and 05 also edited.
+- 07 last, after 06a.
 
 ## 3. Datastores
 
@@ -133,6 +140,11 @@ The internals are the implementing prompt's to design.
   - **`--models`** on each `extract_*.py`, with `scoped_pipeline_run.py --models`' meaning.
 - **Prompt 04** ships one function, named by 04, that both drivers call from their `ray.init`
   wrappers to install the handler.
+- **Prompt 06a** ships **`--rehearsal`** on `quadsource_atol_sweep.py`, valid with `--build` only.
+  With it, `--build` and `--build --resume` run `main.py`'s own unfiltered work list on
+  `np.logspace(5, 6, 3)` /Mpc with `--zend 250`, everything else as without it. Prompt 07 launches
+  every build with it. `interrupt_when.py` checks the pid it signals against the run's own
+  manifest `argv[0]`, so it can interrupt a `--build`.
 
 ## 5. The rules this campaign runs under
 
@@ -174,7 +186,7 @@ The project-wide ones in `CLAUDE.md`, plus:
 
 ## 6. Decisions
 
-### 6.1 Made by the user (2026-10-02), and not reopened here
+### 6.1 Made by the user (2026-10-02; D5 2026-10-03), and not reopened here
 
 - **D1 — A3 v2's pair is `(atol, rtol) = (1e-32, 1e-7)`.** This is the pair recommended on
   2026-09-24 as the loosest converged in all three response-redshift bands
@@ -191,6 +203,14 @@ The project-wide ones in `CLAUDE.md`, plus:
   of calls, and only a store opened `mode=ro` proves a reader did not write.
 - **D4 — one campaign owns all seven**, under this name, including the three issues first assigned
   to `handover` or left without a board.
+- **D5 — 07's scope comes from a precursor prompt, 06a (2026-10-03).** `--build` hard-codes the
+  production grid and `--zend 0.1`, so a scoped `--build` (07's charter) needs code. Recommended
+  and taken: a small prompt adds one fixed `--rehearsal` scope to `--build`, and the one change
+  07's interrupter needs, committed and tested before 07, so that every manifest of 07's runs names a commit holding the code that ran
+  (`CLAUDE.md`, the run registry, rule 6). Rejected: 07 making the change itself (each launch
+  would run uncommitted code); rehearsing through `scoped_pipeline_run.py` (it skips `run_build`,
+  which 04 and 05 changed); a wrapper that patches the module (the manifest would name the wrong
+  scope and the wrong script).
 
 ### 6.2 Decisions this campaign expects to need
 

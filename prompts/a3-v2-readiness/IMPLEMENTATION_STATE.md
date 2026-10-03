@@ -1,10 +1,12 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 7 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 7 of 9 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
 prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
-was held on 01–06, and is released (2026-10-03) now that all six have landed; it is not yet written (README §2).
+was held on 01–06, and is released (2026-10-03) now that all six have landed. **07 and a precursor,
+06a, were written on 2026-10-03** under the user's decision D5: `--build` could not be scoped, so 06a
+gives it a fixed rehearsal scope, and 07 runs on a clean tree (README §2, §6.1).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
 LambdaCDM store is built, and decided that all seven defects of README §0 are fixed first, by one
@@ -27,7 +29,7 @@ opened here.
 
 ### Decisions
 
-**Made by the user, 2026-10-02 (README §6.1):**
+**Made by the user, 2026-10-02, and D5 on 2026-10-03 (README §6.1):**
 
 | Decision | Decided |
 |---|---|
@@ -35,6 +37,7 @@ opened here.
 | **D2** — how the extractor gets the pair | `DEFAULT_QUADRATURE_RTOL` is set to `1e-7`; no flag |
 | **D3** — how readers stop writing | a read-only pool, every file `mode=ro`, not per-site lookups |
 | **D4** — the campaign | one campaign, `a3-v2-readiness`, owns all seven |
+| **D5** — 07's scope (2026-10-03) | a precursor prompt, 06a, adds a fixed `--rehearsal` scope to `--build`, and the interrupter change 07 needs, committed before 07; not 07 changing code itself, not the scoped driver, not a patching wrapper |
 
 **Put to the user by audit 00 (2026-10-02), and taken by the user the same day, each as
 recommended** (audit, closing section; README §6.2):
@@ -57,7 +60,8 @@ recommended** (audit, closing section; README §6.2):
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
-| 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06; released 2026-10-03, not yet written | ⬜ | — | — |
+| 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ⬜ | — | — |
+| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 the user's before dispatch | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -68,7 +72,10 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used) and
-[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used) and
+[`orchestrator/prompt-06a.md`](orchestrator/prompt-06a.md) (2026-10-03, ready) and
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-03, written early at the user's
+request; 06a's review completes its "Carried from the review of 06a" before dispatch). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -928,6 +935,9 @@ Carried into 07's note:
 | **P2** | 05 | A test that keeps it out | ✅ `RunRegistry/tests/test_prune_on_resume.py`, 18 tests, no Ray: the three lists element by element, from the script's own parsed `Namespace`; neither the flag nor an abbreviation in any list, and a parser rebuilt from `main.py`'s `add_argument` calls (read with `ast`) parses each as `prune_unvalidated` true; `main.py`'s default and its `BooleanOptionalAction` read from source; the drivers' `sys.argv` assignments and no option literal left in either; the usage lines. Breakages (i)–(v), each caught (log 05) |
 | **F1** | 06 | The stores root is not a target | ✅ `_find_references` takes the primary and every planned file as targets, and adds `os.path.realpath(primary.parent)` only when it differs from `os.path.realpath(stores_root)`: the same resolution `os.walk(stores_root)` uses on the root it searches. A store alone in a subdirectory, or outside the root, keeps its directory. Its docstring says what a directory match means. `not_searched` is unchanged, since what is walked is. No tombstone's `references` subtree is skipped (the prompt's choice, not taken; log 06). Reconstructed in a temporary stores root, the second 2026-10-02 retirement's report is 3 sidecars before and none after (log 06) |
 | **F2** | 06 | Tests: sequential retirements, a sidecar naming the root, the subdirectory shape | ✅ `RunRegistry/tests/test_store_retire_references.py`, 10 tests, no Ray: three stores directly in the root retired in turn, through a symlinked stores root, and through a primary reached by a symlink; a non-tombstone sidecar naming the root by path and by a repository-relative path, not reported, and the same sidecar reported for a field naming the primary alone; a subdirectory (shared with another store, and not), a store outside the root, a tombstone in the root not found by a subdirectory's retirement, and a copy's `copied_from`. `test_a_retirement` is unchanged and passes; no existing test changed. Breakages (i)–(iii), each caught (log 06) |
+| **B1** | 06a | `--rehearsal` on `--build`: one Ray-free function gives the k sample, `--zend` and the manifest's `scope` text; without the flag, all three unchanged | ⬜ |
+| **B2** | 06a | Tests: both scopes from the script's parser, the refusals outside `--build`, `run_build` reading its grid from the scope, `run_child` still production | ⬜ |
+| **B3** | 06a | `interrupt_when.py` checks the pid against the driver its run's manifest names (`argv[0]`), so it can interrupt a `--build`; its dummy test unchanged, and a new case | ⬜ |
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ⏸ |
 | **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ⏸ |
 | **L3** | 07 | Every reader, read-only, against the resumed store | ⏸ |
