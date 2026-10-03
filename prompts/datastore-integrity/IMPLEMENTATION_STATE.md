@@ -1976,53 +1976,6 @@ None is assigned to a prompt of this campaign.
   - **Assigned (2026-10-02, again):** reassigned from `handover` to `prompts/a3-v2-readiness` prompt
     **05**, by the user's decision that one campaign owns every A3 v2 readiness defect (that
     campaign's D4). Index row moved from `docs/OPEN_ISSUES.md` §1.1 to §1.17.
-- **[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]** *(opened 2026-10-02
-  by prompt 10)*
-  - **The defect.** `docs/gktk-remedial/scoped_pipeline_run.py`'s `terminal_state` docstring says
-    that once Ray is up a `SIGTERM` reaches the driver as `SystemExit(15)`, recorded `killed`. That
-    is false while the driver waits in `ray.wait`, which is where `main.py` spends a stage. There
-    the handler's `SystemExit(15)` arrives as `SystemExit(1)`, so the run is recorded `failed`/1
-    (probe: `docs/datastore-integrity-verification/sigterm_in_ray_wait_probe.py` catches
-    `builtins.SystemExit: code=1`; that Ray's Cython signal check does the conversion is inferred
-    from `_raylet.so`'s strings, the code is measured). And Ray's C++ handler, which prints `*** SIGTERM
-    received ***` and a stack, aborts the process about 3 s later (measured; absl's default alarm is
-    the inferred mechanism): a driver whose cleanup takes
-    longer dies with status 134 (SIGABRT) before `run.finish` runs, so **no terminal state is
-    written** and the run reads `stale` (probe: `sigterm_alarm_probe.py`, alive at 2.5 s, gone before
-    3.0 s). The aborted driver's `gcs_server` is left running with parent 1, hung after its own
-    `SIGTERM`, until it is killed with `SIGKILL`.
-  - **Measured** (log 10). `resumed-a`: `SIGTERM` at 21:05:25, cleanup done in 2.2 s, recorded
-    `failed`, 1. `resumed-b`: `SIGTERM` at 23:15:29.145 with 379 computes in flight, the driver
-    failed at 23:15:32.164 in the GCS log, nothing recorded; its `gcs_server` (pid 6426) survived.
-  - **Impact.** A deliberate interruption is never recorded as one. For A3 v2, whose `--build` uses
-    the same `terminal_state` and the same registration, an interrupted launch is indistinguishable
-    in the registry from a real failure, or reads as a crashed run, and may leave a `gcs_server`
-    behind. Nothing in the store is affected: both interrupted stores closed with no journal and no
-    in-flight record.
-  - **Next step.** Record the signal in the driver's own handler before Ray replaces it (or
-    re-install one after `ray.init`), so that `terminal_state` can tell a received `SIGTERM` from a
-    `SystemExit(1)`, and write the terminal state before Ray's abort; then shut Ray down. The driver
-    belongs to `GkTk-remedial`'s verification, and prompt 10 changes no driver.
-  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **04**, which covers
-    `quadsource_atol_sweep.py --build` as well as this driver, since both use `terminal_state`. 04 is
-    held on that campaign's audit 00, which measures whether a handler installed after `ray.init`
-    survives `ray.wait` and whether Ray's abort can be cancelled. Index row moved to
-    `docs/OPEN_ISSUES.md` §1.17.
-  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` §S),
-    with Ray 2.43.0 and committed probes (`docs/a3-v2-readiness/sigterm_probe.py`). Both inferred
-    mechanisms are now measured as behaviour. Any `SystemExit` a Python `SIGTERM` handler raises
-    inside `ray.wait` or `ray.get` reaches the frame as `SystemExit(1)`; a handler raising
-    `SystemExit(143)` delivers code 1. That Ray's Cython signal check does the conversion is still
-    inferred from strings. The abort is a 3 s `SIGALRM` armed by absl's `AbslFailureSignalHandler`
-    in `_raylet.so`: after the signal `signal.alarm(0)` returns 3, and the `SIGALRM` handler is
-    `ImmediateAbortSignalHandler`. Death by `SIGABRT` came 2.78–3.06 s after the signal, in 6 runs
-    of 6, and `signal.alarm(0)` cancels it. A Python handler installed **after** `ray.init`
-    replaces absl's: it runs at once, and no banner and no alarm follow. **Wider than recorded:**
-    the `gcs_server` is left behind by any exit that skips `ray.shutdown()` (7 of 12 runs: the
-    abort, and `os._exit`), not by the abort as such; 0 of 10 exits through `ray.shutdown()` left
-    one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
-  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/04-record-a-sigterm-as-killed.md`, a
-    handler installed after `ray.init`, against that campaign's audit S1–S4.
 - **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
   2026-10-02 by prompt 10)*
   - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
@@ -2096,6 +2049,90 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]** *(opened 2026-10-02
+  by prompt 10; **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 04)*
+  - **The defect.** `docs/gktk-remedial/scoped_pipeline_run.py`'s `terminal_state` docstring says
+    that once Ray is up a `SIGTERM` reaches the driver as `SystemExit(15)`, recorded `killed`. That
+    is false while the driver waits in `ray.wait`, which is where `main.py` spends a stage. There
+    the handler's `SystemExit(15)` arrives as `SystemExit(1)`, so the run is recorded `failed`/1
+    (probe: `docs/datastore-integrity-verification/sigterm_in_ray_wait_probe.py` catches
+    `builtins.SystemExit: code=1`; that Ray's Cython signal check does the conversion is inferred
+    from `_raylet.so`'s strings, the code is measured). And Ray's C++ handler, which prints `*** SIGTERM
+    received ***` and a stack, aborts the process about 3 s later (measured; absl's default alarm is
+    the inferred mechanism): a driver whose cleanup takes
+    longer dies with status 134 (SIGABRT) before `run.finish` runs, so **no terminal state is
+    written** and the run reads `stale` (probe: `sigterm_alarm_probe.py`, alive at 2.5 s, gone before
+    3.0 s). The aborted driver's `gcs_server` is left running with parent 1, hung after its own
+    `SIGTERM`, until it is killed with `SIGKILL`.
+  - **Measured** (log 10). `resumed-a`: `SIGTERM` at 21:05:25, cleanup done in 2.2 s, recorded
+    `failed`, 1. `resumed-b`: `SIGTERM` at 23:15:29.145 with 379 computes in flight, the driver
+    failed at 23:15:32.164 in the GCS log, nothing recorded; its `gcs_server` (pid 6426) survived.
+  - **Impact.** A deliberate interruption is never recorded as one. For A3 v2, whose `--build` uses
+    the same `terminal_state` and the same registration, an interrupted launch is indistinguishable
+    in the registry from a real failure, or reads as a crashed run, and may leave a `gcs_server`
+    behind. Nothing in the store is affected: both interrupted stores closed with no journal and no
+    in-flight record.
+  - **Next step.** Record the signal in the driver's own handler before Ray replaces it (or
+    re-install one after `ray.init`), so that `terminal_state` can tell a received `SIGTERM` from a
+    `SystemExit(1)`, and write the terminal state before Ray's abort; then shut Ray down. The driver
+    belongs to `GkTk-remedial`'s verification, and prompt 10 changes no driver.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **04**, which covers
+    `quadsource_atol_sweep.py --build` as well as this driver, since both use `terminal_state`. 04 is
+    held on that campaign's audit 00, which measures whether a handler installed after `ray.init`
+    survives `ray.wait` and whether Ray's abort can be cancelled. Index row moved to
+    `docs/OPEN_ISSUES.md` §1.17.
+  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` §S),
+    with Ray 2.43.0 and committed probes (`docs/a3-v2-readiness/sigterm_probe.py`). Both inferred
+    mechanisms are now measured as behaviour. Any `SystemExit` a Python `SIGTERM` handler raises
+    inside `ray.wait` or `ray.get` reaches the frame as `SystemExit(1)`; a handler raising
+    `SystemExit(143)` delivers code 1. That Ray's Cython signal check does the conversion is still
+    inferred from strings. The abort is a 3 s `SIGALRM` armed by absl's `AbslFailureSignalHandler`
+    in `_raylet.so`: after the signal `signal.alarm(0)` returns 3, and the `SIGALRM` handler is
+    `ImmediateAbortSignalHandler`. Death by `SIGABRT` came 2.78–3.06 s after the signal, in 6 runs
+    of 6, and `signal.alarm(0)` cancels it. A Python handler installed **after** `ray.init`
+    replaces absl's: it runs at once, and no banner and no alarm follow. **Wider than recorded:**
+    the `gcs_server` is left behind by any exit that skips `ray.shutdown()` (7 of 12 runs: the
+    abort, and `os._exit`), not by the abort as such; 0 of 10 exits through `ray.shutdown()` left
+    one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/04-record-a-sigterm-as-killed.md`, a
+    handler installed after `ray.init`, against that campaign's audit S1–S4.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 04, this commit.
+    - **The handler, after Ray.** Both drivers (`scoped_pipeline_run.main`,
+      `quadsource_atol_sweep.run_build`) start Ray with `address="local"`. Straight after it
+      returns they call `scoped_pipeline_run.install_killed_handler(run, latch)`, registered or
+      not. Its handler, for `SIGTERM` and `SIGINT`:
+      - remembers the signal in a `SignalLatch`;
+      - writes `killed`, `128 + signum`, with no fingerprint;
+      - prints one line of its own;
+      - raises `SystemExit(128 + signum)`.
+
+      It replaces absl's handler, so no banner is printed and no alarm is armed.
+    - **After the `exec`.** Each driver's one `except BaseException` calls `finish_after_exec`. When
+      the latch holds a signal, whatever exception reached the driver, it:
+      - calls `signal.alarm(0)`;
+      - writes `killed`, `128 + signum`, with the fingerprint;
+      - calls `ray.shutdown()`;
+      - exits `128 + signum`.
+
+      Otherwise it records the outcome exactly as before, then `ray.shutdown()`, and the driver
+      re-raises.
+    - **`terminal_state`**'s docstring is corrected against audit S1–S3; its mapping is
+      unchanged.
+    - **Shown without Ray** in `RunRegistry/tests/test_killed_handler.py` (26 tests):
+      - `TestTheHandler.test_its_first_call_writes_killed_143_remembers_prints_and_raises`;
+      - `TestSignalled.test_it_is_killed_143_with_the_fingerprint_whatever_reaches_the_driver`
+        (`SystemExit(1)`, `KeyboardInterrupt`, `RuntimeError` and four more: never `failed`);
+      - `TestNotSignalled.test_every_outcome_is_recorded_as_it_was`;
+      - `TestTheDrivers`.
+    - **Shown on real Ray** in `docs/a3-v2-readiness/sigterm_handler_probe.txt`: three
+      invocations, each of the plain, slow-fingerprint and second-`SIGTERM` variants run three
+      times, 27 runs in all. Every run recorded `killed`/143 with the fingerprint present, exited
+      143 with no abort and no Ray banner, and left no `gcs_server`.
+    - **What it leaves.** `killed` was first written 0.001–0.007 s after the signal in 23 runs, and
+      1.003–1.006 s in 4, because Ray checks for signals once a second inside a wait. That is
+      `a3-v2-readiness`'s `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]`, beside its
+      three other issues from prompt 04.
+    - Log: [`../a3-v2-readiness/logs/04-record-a-sigterm-as-killed.md`](../a3-v2-readiness/logs/04-record-a-sigterm-as-killed.md).
 - **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
   2026-09-29 by prompt 08; **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03)*
   - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up

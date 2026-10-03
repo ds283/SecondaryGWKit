@@ -511,16 +511,25 @@ def run_build(args):
             f"**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list"
         )
 
+    # a fresh local instance (`address="local"`), never another `ray start` cluster this machine
+    # may be running; then the driver's signal handler in place of Ray's, registered or not
+    # (`scoped_pipeline_run.install_killed_handler`, a3-v2-readiness prompt 04)
     _real_ray_init = ray.init
+    latch = scoped.SignalLatch()
 
     def _local_ray_init(*_a, **_kw):
         print(
             f"** quadsource_atol_sweep --build: bootstrapping a local Ray instance "
             f"(num_cpus={args.cpus}, include_dashboard=False)"
         )
-        return _real_ray_init(
-            num_cpus=args.cpus, include_dashboard=False, ignore_reinit_error=True
+        context = _real_ray_init(
+            address="local",
+            num_cpus=args.cpus,
+            include_dashboard=False,
+            ignore_reinit_error=True,
         )
+        scoped.install_killed_handler(run, latch)
+        return context
 
     ray.init = _local_ray_init
 
@@ -561,20 +570,14 @@ def run_build(args):
         "SWEEP_QUAD_ATOL": args.atol,
         "SWEEP_QUAD_RTOL": args.rtol,
     }
-    if run is None:
-        exec(compile(source, str(MAIN_PY), "exec"), namespace)
-        return
     try:
         exec(compile(source, str(MAIN_PY), "exec"), namespace)
-    except SystemExit as exc:
-        run.finish(
-            scoped.terminal_state(exc.code), exit_code=exc.code, fingerprint=True
-        )
+    except BaseException as exc:
+        # SystemExit(128 + signum) if a signal ended the build; otherwise the outcome is
+        # recorded and the exception re-raised as it always was
+        scoped.finish_after_exec(run, exc, latch, ray.shutdown)
         raise
-    except BaseException:
-        run.finish("failed", exit_code=1, fingerprint=True)
-        raise
-    run.finish("done", exit_code=0, fingerprint=True)
+    scoped.finish_after_exec(run, None, latch, ray.shutdown)
     for stream in (sys.stdout, sys.stderr):
         if isinstance(stream, scoped.RegisteredStream):
             stream.close_copy()

@@ -798,14 +798,20 @@ class TestFinish(_FullStoreCase):
         self.assertEqual(stores.sidecar_path(primary).read_bytes(), sidecar)
 
 
+# The drivers' signal handlers, by name: each driver's `terminal`, installed before `ray.init`,
+# and `scoped_pipeline_run.make_killed_handler`'s `killed_handler`, installed after it
+# (a3-v2-readiness prompt 04, §3 item 5).
+_HANDLERS = ("terminal", "killed_handler")
+
+
 def _finish_calls(path: Path):
-    """``[(inside a terminal handler, passes fingerprint=True)]`` for every ``run.finish(``."""
+    """``[(inside a signal handler, passes fingerprint=True)]`` for every ``run.finish(``."""
     tree = ast.parse(path.read_text())
     found = []
 
     def visit(node, inside):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            inside = inside or node.name == "terminal"
+            inside = inside or node.name in _HANDLERS
         if (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
@@ -833,8 +839,8 @@ class TestDrivers(unittest.TestCase):
 
     def test_the_finish_calls(self):
         expected = {
-            "scoped_pipeline_run.py": (3, 1),
-            "quadsource_atol_sweep.py": (6, 2),
+            "scoped_pipeline_run.py": (4, 2),
+            "quadsource_atol_sweep.py": (3, 2),
         }
         for path in DRIVERS:
             with self.subTest(driver=path.name):

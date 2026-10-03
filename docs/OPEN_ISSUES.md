@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-03 · **102 open** across nineteen campaigns.
+**Last updated:** 2026-10-03 · **105 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -814,16 +814,19 @@ and close there; one of the five had been assigned to `handover` the same day, a
 The sixth, seen when the user retired `datastore-integrity` prompt 10's stores, had no board, and is
 taken over by this campaign's. The seventh was opened by this campaign's plan. Its audit, prompt 00,
 measured the three mechanisms the held prompts rest on (2026-10-02), and opened two more; a third
-was opened when 02 was written.
+was opened when 02 was written. Prompt 04 opened four (2026-10-03).
 
 | Issue | Board | Hook |
 |---|---|---|
+| `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]` | a3-v2-readiness | The drivers' handler runs inside `ray.wait` only at Ray's next once-a-second signal check, so `killed` was written 1.003–1.006 s after the signal in 4 of 27 probe runs (0.001–0.007 s in 23), against prompt 04's "within a second". Nothing aborts meanwhile. User decision: accept the bound, or lower Ray's interval in the drivers' `ray.init`. |
+| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` | a3-v2-readiness | A handler's `finish` during a heartbeat's `write_json_atomic` shares the fixed `status.json.tmp`; the interrupted handle's partial JSON can land in `status.json`. The driver's second `finish` rewrites it, without `pid`/`stage` (read, not measured). Fix belongs in `RunRegistry`. Not assigned. |
+| `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | a3-v2-readiness | A `SIGTERM` during the ~2.3 s of `ray.init` reaches Ray's own handler, before the driver's exists, so it is recorded by `terminal_state`: `killed`/15 or `failed`/1, exit 15 or 1, not 143 (read, not measured). Not assigned. |
+| `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]` | a3-v2-readiness | `quadsource_atol_sweep.run_child`, left unchanged by prompt 04, still calls `ray.init` with no `address` (refused beside a `ray start` cluster) and installs no handler (a `SIGTERM` in a wait is `SystemExit(1)` under absl's alarm). Not A3 v2's path. Not assigned. |
 | `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]` | a3-v2-readiness | `test_main_plumbing.ReaderToleranceAgreementTestCase` reads only `object_get`/`object_get_vectorized`, so a reader's `object_read_batch` of a tolerance-keyed target is never compared with `main.py`. Today's one instance, the `QuadSourceIntegral` extractor, is pinned by `test_quadrature_tolerance_pin.py`. Test gap; does not block A3 v2. |
 | `[10-store-retire-reports-every-tombstone-as-a-reference]` | a3-v2-readiness | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only. Prompt 06. |
 | `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |
 | `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. Reassigned from `handover`; prompt 05. |
-| `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | datastore-integrity | A `SIGTERM` to `scoped_pipeline_run.py` in `ray.wait` reaches Python as `SystemExit(1)`, so it is recorded `failed`/1, not `killed`; a cleanup over ~3 s is aborted by absl's 3 s alarm (SIGABRT), which `signal.alarm(0)` cancels. **Widened 2026-10-02** by audit 00: any exit without `ray.shutdown()` can leave a `gcs_server`. `--build` shares `terminal_state`. Prompt 04. |
 
 ---
 

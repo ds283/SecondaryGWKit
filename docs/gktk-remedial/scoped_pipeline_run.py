@@ -20,7 +20,9 @@ imported (it parses sys.argv, opens a Ray connection and a ShardedPool at module
 runs the pipeline), so this driver
 
   1. patches ray.init so that main.py's own `ray.init(address=...)` bootstraps a local instance
-     with a chosen CPU count instead of attaching to a cluster that does not exist here;
+     with a chosen CPU count (`address="local"`) instead of attaching to a cluster, even one
+     that `ray start` has left running here, and installs this driver's signal handler once Ray
+     is up (see "SIGNALS" below);
   2. optionally filters config.model_list.build_model_list's return value, so that a run can be
      restricted to one cosmology;
   3. reads main.py's source, substitutes the two hardcoded 50-point wavenumber grids
@@ -63,6 +65,15 @@ inside `ray.get` prints nothing and goes stale, which is the reading we want. Th
 **not** hold: a stage that prints nothing for longer than the staleness window -- one long work
 item, or a background-model build -- is reported stale while it is legitimately working. Stale
 means "go and look", not "dead", and this sentence is in the manifest as `heartbeat_means`.
+
+SIGNALS. `ray.init` replaces any `SIGTERM` handler installed before it (`terminal`, from
+`register()`, covers only the time before Ray is up). So the `ray.init` wrapper installs
+`install_killed_handler`'s handler for `SIGTERM` and `SIGINT` straight after Ray starts, registered
+or not. A signal is then recorded `killed`, `128 + signum`, as soon as the handler runs, which in
+`ray.wait` is at Ray's next check for signals, up to about a second later
+(`docs/a3-v2-readiness/sigterm_handler_probe.txt`); after `main.py` unwinds, `finish_after_exec`
+adds the fingerprint, shuts Ray down and exits with `128 + signum`
+(`docs/a3-v2-readiness-audit.md` S1–S4, `prompts/a3-v2-readiness` prompt 04).
 """
 
 import argparse
@@ -243,25 +254,264 @@ class RegisteredStream:
 
 
 def terminal_state(code) -> str:
-    """The state to record for a `SystemExit` out of the pipeline.
+    """The state to record for a `SystemExit` out of the pipeline **that no signal caused**.
 
-    `ray.init` **replaces** this script's `SIGTERM` handler with its own, which is
+    It is not how a `SIGTERM` is recorded. This docstring used to say that once Ray is up a
+    `SIGTERM` reaches the driver as `SystemExit(15)`, after Ray's own shutdown has run. Measured,
+    that is false (`docs/a3-v2-readiness-audit.md` S1–S3):
 
-        def sigterm_handler(signum, frame):
-            sys.exit(signum)
+    - `ray.init` installs `sys.exit(signum)` as the Python-level `SIGTERM` handler at its start,
+      and absl's failure-signal handler at the C level, so a driver handler installed before it
+      never runs once Ray is up (S1);
+    - with Ray's handlers in place, a `SIGTERM` while the driver waits in `ray.wait` reaches it as
+      `SystemExit(1)`, not 15, with no shutdown run, and absl arms a 3 s `SIGALRM` that kills the
+      process by `SIGABRT` 2.78–3.06 s after the signal unless `signal.alarm(0)` cancels it (S1,
+      S2); an exit that skips `ray.shutdown()` can leave a `gcs_server` behind (S3);
+    - a `SystemExit` that any Python handler raises inside `ray.wait` or `ray.get` arrives as
+      `SystemExit(1)`, so the exit code cannot say that a signal came (S1).
 
-    (`ray/_private/worker.py:1498`, installed only on the main thread). So once Ray is up, a
-    `SIGTERM` reaches us as `SystemExit(15)` — after Ray's own shutdown has run, which is why the
-    A3 baseline's four shards passed `PRAGMA integrity_check` when it was stopped that way.
-    Recording that as `failed` would say something untrue about a run that was deliberately
-    interrupted; `killed` is what it was. The one ambiguity is a job that deliberately exits with
-    status 15, which `main.py` never does — it exits 0, or with a traceback.
+    So since `a3-v2-readiness` prompt 04 a signal is recorded by the handler that
+    `install_killed_handler` puts in place **after** `ray.init` (it writes `killed`, `128 +
+    signum` at once), and `finish_after_exec` keeps that record whatever exception then reaches
+    the driver. This function is used only when that handler did not fire.
+
+    Its mapping is kept: `SystemExit(15)` is still `killed`. Ray's own handler, `sys.exit(signum)`,
+    is installed at the start of `ray.init` and the driver's only after it returns, so a `SIGTERM`
+    that lands while `ray.init` runs can still reach the driver as `SystemExit(15)` (read, not
+    measured). The one ambiguity is a job that deliberately exits with status 15, which `main.py`
+    never does — it exits 0, or with a traceback.
     """
     if code is None:
         return "done"
     if code == int(signal.SIGTERM):
         return "killed"
     return "done" if code == 0 else "failed"
+
+
+# =================================================================================================
+# signals once Ray is up (a3-v2-readiness prompt 04). Nothing here imports `ray`: the driver hands
+# in `ray.shutdown`, and a test hands in a stand-in.
+
+# the signals the handler takes. Ray's `ray.init` installs only SIGTERM on a driver; SIGINT would
+# otherwise be Python's KeyboardInterrupt, recorded `failed`.
+KILLED_SIGNALS = (signal.SIGTERM, signal.SIGINT)
+
+
+class SignalLatch:
+    """Where the handler remembers the signal that ended the pipeline, for the driver to read.
+
+    The exit code cannot carry it: a `SystemExit(128 + signum)` raised inside `ray.wait` reaches
+    the driver as `SystemExit(1)` (audit S1). One latch serves a whole run. Installing the handler
+    again, as a second `ray.init` would (`ignore_reinit_error=True`), keeps it.
+
+    - `signum` is the first signal that reached the handler **before the pipeline's own outcome
+      reached the driver**, or `None`. It is set first, before anything else the handler does.
+    - `decided` is set by `finish_after_exec` when the pipeline's own outcome reached it first.
+      From then on a signal is noted and does not change the record (`finish_after_exec`).
+    """
+
+    def __init__(self):
+        self.signum = None
+        self.decided = False
+
+    def decide(self):
+        """Mark the pipeline's own outcome as decided, unless a signal came first.
+
+        Returns the remembered signal, or `None` when the outcome is the pipeline's. A signal
+        that lands between the test and the assignment runs the handler while `decided` is still
+        false, so the handler raises out of this call with `signum` set: the caller treats that as
+        a signal that came first."""
+        if self.signum is None:
+            self.decided = True
+        return self.signum
+
+
+def _say(stream, text):
+    """One line to `stream` (by default `sys.stderr` as it is when the line is written).
+
+    Never raises. A handler that prints while the main thread is inside a write to the same
+    buffered stream gets CPython's `RuntimeError: reentrant call`; a line lost that way must not
+    cost the handler the steps after it."""
+    try:
+        print(text, file=sys.stderr if stream is None else stream, flush=True)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _signal_name(signum):
+    try:
+        return signal.Signals(signum).name
+    except ValueError:
+        return f"signal {signum}"
+
+
+def _now():
+    return time.strftime("%Y-%m-%d %H:%M:%S %z")
+
+
+def make_killed_handler(run, latch, stream=None):
+    """The handler `install_killed_handler` installs, built but not installed (tests call it).
+
+    `run` is the registered `Run`, or `None` for an unregistered run; `latch` is the run's
+    `SignalLatch`.
+
+    **Its first call, before the pipeline's outcome is decided:**
+
+    1. remembers the signal in `latch.signum`, first, so that nothing after it can lose it;
+    2. writes `run.finish("killed", exit_code=128 + signum)` when there is a run: no fingerprint,
+       because the pool is still open, and at once, because nothing after it is guaranteed. A
+       failure to write is printed, and does not stop step 4: `finish_after_exec` writes the
+       state again;
+    3. prints one line of its own to stderr naming the signal and the time, since Ray's
+       `*** SIGTERM received` banner no longer prints once this handler is installed. A failure
+       to print never stops step 4;
+    4. raises `SystemExit(128 + signum)`, which unwinds `main.py`, its `with ShardedPool` included.
+       Raised inside `ray.wait` or `ray.get` it reaches the driver as `SystemExit(1)` (audit S1),
+       which is why step 1 exists.
+
+    Inside `ray.wait` the handler runs when Ray next checks for signals, which
+    `sigterm_handler_probe.txt` measured at the next whole second of the wait: from a few
+    milliseconds to about a second after the signal.
+
+    **Any other call** — a second signal during the cleanup, or a signal after the pipeline's own
+    outcome reached the driver (`SignalLatch.decided`) — prints one line and returns, raising
+    nothing and writing nothing. `SIGKILL` remains for a person who means it.
+    """
+
+    def killed_handler(signum, _frame):
+        name = _signal_name(signum)
+        if latch.signum is not None or latch.decided:
+            why = (
+                f"the run is already being stopped by {_signal_name(latch.signum)}"
+                if latch.signum is not None
+                else "the pipeline had already ended; its own outcome is being recorded"
+            )
+            _say(
+                stream,
+                f"** {name} at {_now()}: ignored, {why}. SIGKILL stops the process at once",
+            )
+            return
+        latch.signum = signum
+        code = 128 + signum
+        if run is not None:
+            try:
+                run.finish("killed", exit_code=code)
+            except Exception as e:  # noqa: BLE001
+                _say(stream, f"** {name}: could not record killed at once: {e!r}")
+        _say(
+            stream,
+            f"** {name} at {_now()}: "
+            + (f"recorded killed, exit code {code}; " if run is not None else "")
+            + f"stopping the pipeline; the process will exit with status {code}",
+        )
+        raise SystemExit(code)
+
+    return killed_handler
+
+
+def install_killed_handler(run, latch, stream=None):
+    """Install the handler for `SIGTERM` and `SIGINT`. Call it **after** `ray.init` returns.
+
+    The one function both drivers call from their `ray.init` wrappers (`a3-v2-readiness` README
+    §4). `ray.init` installs Ray's own `SIGTERM` handlers, `sys.exit(signum)` in Python and absl's
+    failure-signal handler in C. A Python handler installed after it replaces both at the C level,
+    runs on the main thread inside `ray.wait` and `ray.get`, prints no banner and arms no alarm
+    (audit S1); inside a wait it runs at Ray's next check for signals, up to about a second after
+    the signal (`docs/a3-v2-readiness/sigterm_handler_probe.txt`). It is installed whether or not
+    the run is registered: `run` decides only whether a record is written. Returns the handler.
+    """
+    handler = make_killed_handler(run, latch, stream=stream)
+    for signum in KILLED_SIGNALS:
+        signal.signal(signum, handler)
+    return handler
+
+
+def finish_after_exec(run, exc, latch, shutdown, *, alarm=signal.alarm, stream=None):
+    """What a driver does once `main.py`'s `exec` is over, with Ray up or not.
+
+    `run` is the `Run` or `None`; `exc` the exception that ended the `exec`, or `None` if it
+    returned; `latch` the run's `SignalLatch`; `shutdown` is `ray.shutdown` in a driver.
+
+    **If the handler fired first** (`latch.signum`), whatever `exc` is — `SystemExit(1)` out of a
+    Ray wait, or a `RuntimeError` or `KeyboardInterrupt` from elsewhere — the run was killed:
+
+    1. `alarm(0)`, which cancels absl's abort if Ray's handler saw a signal first (audit S2);
+    2. `run.finish("killed", exit_code=128 + signum, fingerprint=True)`, best-effort: the
+       handler has written the state, `main.py`'s `with ShardedPool` has unwound, so the store
+       is closed;
+    3. `shutdown()`: every exit through it left no `gcs_server` (audit S3);
+    4. raises `SystemExit(128 + signum)`.
+
+    **Otherwise** the pipeline's own outcome is recorded, exactly as before this function existed:
+    `done`/0 for a return, `terminal_state(exc.code)` for a `SystemExit`, `failed`/1 for anything
+    else, each with the fingerprint. `alarm(0)` runs first here too (it cancels nothing unless
+    Ray's own handler saw a signal inside `ray.init`), and `shutdown()` after the record. It then
+    **returns**, and the caller re-raises `exc` with a bare `raise`, so the traceback is exactly
+    the one it always was.
+
+    **A signal once the pipeline's outcome is decided** — during this function's own fingerprint,
+    for instance — is noted by the handler and changes nothing: the record is the pipeline's
+    outcome with its fingerprint, and the exit is the pipeline's. This is prompt 04's choice for
+    that window; without it `Run.finish` would catch the handler's `SystemExit` mid-fingerprint,
+    write its own state over the handler's `killed`, and re-raise.
+    """
+    try:
+        signum = latch.decide()
+    except BaseException:
+        # the handler ran between decide()'s test and its assignment, and raised
+        if latch.signum is None:
+            raise
+        signum = latch.signum
+
+    remaining = alarm(0)
+    if remaining:
+        _say(
+            stream,
+            f"** cancelled an alarm with {remaining} s left: Ray's own signal handler ran",
+        )
+
+    if signum is None:
+        if run is not None:
+            if exc is None:
+                run.finish("done", exit_code=0, fingerprint=True)
+            elif isinstance(exc, SystemExit):
+                run.finish(
+                    terminal_state(exc.code), exit_code=exc.code, fingerprint=True
+                )
+            else:
+                run.finish("failed", exit_code=1, fingerprint=True)
+        _shut_down(shutdown, stream)
+        return
+
+    code = 128 + signum
+    if exc is not None:
+        _say(
+            stream,
+            f"** {_signal_name(signum)}: the pipeline ended with "
+            f"{type(exc).__name__}{_code_text(exc)}; recording killed, exit code {code}",
+        )
+    try:
+        if run is not None:
+            try:
+                run.finish("killed", exit_code=code, fingerprint=True)
+            except Exception as e:  # noqa: BLE001
+                _say(stream, f"** could not record killed with its fingerprint: {e!r}")
+    finally:
+        _shut_down(shutdown, stream)
+    raise SystemExit(code)
+
+
+def _shut_down(shutdown, stream):
+    """`shutdown()`, once. A failure is printed and goes no further: it must not replace the
+    exception the caller re-raises, nor the exit status a signal gave."""
+    try:
+        shutdown()
+    except Exception as e:  # noqa: BLE001
+        _say(stream, f"** ray.shutdown() raised {e!r}")
+
+
+def _code_text(exc):
+    return f"({exc.code!r})" if isinstance(exc, SystemExit) else ""
 
 
 def register(args, main_args, k_sample, database):
@@ -420,19 +670,29 @@ def main():
     #     below: it changes nothing about main.py, only about this driver's own process.
     run = register(args, main_args, k_sample, db) if args.register else None
 
-    # (1) bootstrap Ray locally rather than attaching to a cluster
+    # (1) bootstrap Ray locally rather than attaching to a cluster. `address="local"` starts a
+    #     fresh instance even where `ray start` has left another cluster's address in
+    #     /tmp/ray/ray_current_cluster, which a bare call would resolve to. Once it is up, the
+    #     driver's own signal handler replaces Ray's (`install_killed_handler`), whether or not
+    #     the run is registered.
     import ray
 
     _real_ray_init = ray.init
+    latch = SignalLatch()
 
     def _local_ray_init(*_args, **_kwargs):
         print(
             f"** scoped_pipeline_run: bootstrapping a local Ray instance "
             f"(num_cpus={args.cpus}, include_dashboard=False)"
         )
-        return _real_ray_init(
-            num_cpus=args.cpus, include_dashboard=False, ignore_reinit_error=True
+        context = _real_ray_init(
+            address="local",
+            num_cpus=args.cpus,
+            include_dashboard=False,
+            ignore_reinit_error=True,
         )
+        install_killed_handler(run, latch)
+        return context
 
     ray.init = _local_ray_init
 
@@ -480,25 +740,21 @@ def main():
         "__file__": str(MAIN_PY),
         K_GRID_NAME: k_sample,
     }
-    if run is None:
-        exec(compile(source, str(MAIN_PY), "exec"), namespace)
-        return
-
-    # the same exec, with a terminal state written after it. A SIGKILL never reaches here, which
-    # is why the registry reports a run that still says `running` with a stale heartbeat rather
-    # than inferring a death it did not see.
+    # the exec, registered or not, with a terminal state written after it when there is a run,
+    # and Ray shut down either way (`finish_after_exec`). A SIGKILL never reaches here, which is
+    # why the registry reports a run that still says `running` with a stale heartbeat rather than
+    # inferring a death it did not see.
     try:
         exec(compile(source, str(MAIN_PY), "exec"), namespace)
-    except SystemExit as exc:
-        run.finish(terminal_state(exc.code), exit_code=exc.code, fingerprint=True)
+    except BaseException as exc:
+        # raises SystemExit(128 + signum) if a signal ended the pipeline; otherwise records its
+        # outcome and returns, and this re-raises with the copies still open: the traceback the
+        # interpreter is about to print is the one thing a failed run's directory most needs, and
+        # it is printed after this frame unwinds. The kernel closes the copies when the process
+        # goes.
+        finish_after_exec(run, exc, latch, ray.shutdown)
         raise
-    except BaseException:
-        run.finish("failed", exit_code=1, fingerprint=True)
-        # and re-raise, with the copies still open: the traceback the interpreter is about to
-        # print is the one thing a failed run's directory most needs, and it is printed after
-        # this frame unwinds. The kernel closes the copies when the process goes.
-        raise
-    run.finish("done", exit_code=0, fingerprint=True)
+    finish_after_exec(run, None, latch, ray.shutdown)
     for stream in (sys.stdout, sys.stderr):
         if isinstance(stream, RegisteredStream):
             stream.close_copy()

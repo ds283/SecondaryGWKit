@@ -1,9 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 4 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 5 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -54,7 +54,7 @@ recommended** (audit, closing section; README §6.2):
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
-| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ⬜ | — | — |
+| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | this commit | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
@@ -575,10 +575,10 @@ Carried into 07's note:
 | **O2** | 03 | `ReadOnlyMiss` on a lookup that would have inserted; `ReadOnlyWrite` on any write | ✅ both in `Datastore/replication.py`, importable from the pool's module; a replicated get goes to one drawn shard with no record (`_get_impl_replicated_table_read_only`); every actor inserter refuses (`Datastore._refuse_insert`): `ReadOnlyMiss` for a replicated row, `ReadOnlyWrite` for any other; store, validate, a new shard key refused; SQLite's `SQLITE_READONLY` re-raised as `ReadOnlyWrite` (`_read_only_refusal`) (`TestNothingWrittenOnAFullStore`, `TestEachMissRaisesReadOnlyMiss`, `TestOtherWritesRaiseReadOnlyWrite`; breakages (i)–(iii)) |
 | **O3** | 03 | The six readers open read-only | ✅ each constructs `ShardedPool(..., read_only=True)` and drops `prune_unvalidated=False`; no lookup changed (`test_reader_read_only.TestTheSixReaders`; breakage (vi)) |
 | **O4** | 03 | `--models` on each reader; a model the store lacks is skipped with a message | ✅ `extract_common.add_models_argument`, `select_models` (an unknown label refuses, naming the known ones), `require_background` at the old `RuntimeError`'s site, `read_models` in place of the loop (skips with one line; exits 1 if no model is read); `config/model_list.py` unchanged (`test_reader_read_only`, 17 tests; breakage (vii)) |
-| **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ⬜ |
-| **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ⬜ |
-| **K3** | 04 | `terminal_state`'s docstring made true | ⬜ |
-| **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ⬜ |
+| **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ✅ `scoped_pipeline_run.install_killed_handler(run, latch)`, called from `main`'s and `run_build`'s `_local_ray_init` after the real `ray.init`, registered or not, for `SIGTERM` and `SIGINT`. Its handler (`make_killed_handler`'s `killed_handler`) remembers the signal in a `SignalLatch` first, writes `killed`/`128+signum` with no fingerprint, prints one line (never raising), raises `SystemExit(128+signum)`; any later call, or one after the pipeline's outcome is decided, prints and returns. Each driver's `terminal` kept before Ray. `run_child`/`sweep` unchanged (`TestTheHandler`, `TestInstall`, `TestTheDrivers`; breakages (i), (ii), (v)). On real Ray `killed`/143 was written 0.001–0.007 s after the signal in 23 of 27 runs and **1.003–1.006 s in 4**: Ray checks for signals once a second inside a wait (log 04; `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]`) |
+| **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ✅ `finish_after_exec(run, exc, latch, ray.shutdown)` in each driver's one `except BaseException` and after the `try`. Signalled, whatever the exception: `alarm(0)`, `killed`/`128+signum` with the fingerprint, `ray.shutdown()`, `SystemExit(128+signum)`. Not signalled: the existing outcome exactly, with the fingerprint, then `ray.shutdown()`, then the driver's bare `raise`. A signal once the outcome is decided changes nothing (the prompt's choice). Probe: 27 of 27 runs `killed`/143, fingerprint present, exit 143, no abort, no `gcs_server` left (`TestSignalled`, `TestNotSignalled`; breakages (iii), (iv), (vii)) |
+| **K3** | 04 | `terminal_state`'s docstring made true | ✅ rewritten against audit S1–S3; mapping unchanged; `TestTerminalState` untouched, its name recording the old belief (log 04, observation 6) |
+| **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ✅ both pass `address="local"`, nothing else in the call changed; each probe child's GCS on its own port beside ChamPBH's `127.0.0.1:6379` (`TestTheDrivers`; breakage (vi)). `run_child` shares the defect, recorded and unchanged |
 | **P1** | 05 | `--no-prune-unvalidated` out of both invocations and both usage lines | ⬜ |
 | **P2** | 05 | A test that keeps it out | ⬜ |
 | **F1** | 06 | The stores root is not a target | ⬜ |
@@ -597,8 +597,11 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 
 | Issue | Owning board | Prompt |
 |---|---|---|
-| `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | `datastore-integrity` §3.3 | 04 |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
+
+**Closed by prompt 04 (2026-10-03, this commit), on its owning board's §4:**
+`[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` (`datastore-integrity`
+§4, with its closing note; log 04). Its index row is deleted.
 
 **Closed by prompt 03 (2026-10-03, `20977cb`), on their owning board's §4:**
 `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` and
@@ -679,6 +682,76 @@ with its closing note; log 03). Both index rows are deleted.
     `lookup_constants` to `object_read_batch` calls with literal `atol`/`rtol` names. It must also
     handle `main.py`'s loop-variable site, or keep excluding it. Prompt 03 edits the extractor, so
     03 must keep `test_quadrature_tolerance_pin.py` passing.
+
+- **[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]** *(opened 2026-10-03 by prompt 04;
+  does not block A3 v2)*
+  - **The defect.** A Python signal handler installed after `ray.init` runs, inside `ray.wait`,
+    only when Ray next checks for signals, which is at the next whole second of the wait. So a
+    `SIGTERM` is recorded `killed` from a few milliseconds to about a second after it arrives.
+    Prompt 04's acceptance asked for "within a second of the signal". Audit S1's "within
+    milliseconds" was measured with a timer that sent the signal 2.0 s into the wait, on that
+    boundary, so it was the early side of it, not a bound.
+  - **Measured** (`docs/a3-v2-readiness/sigterm_handler_probe.txt`, 27 runs).
+    - `killed` was written 0.001–0.007 s after the signal in 23 runs and 1.003–1.006 s in 4, in
+      both drivers' wrappers, at 1-minute loads of 4–26.
+    - The probe's `phase` section sent one `SIGTERM` at each of ten offsets into one wait. The
+      `SystemExit` reached the frame 0.900, 0.747, 0.499, 0.248, 0.101, 0.905, 0.504, 0.009,
+      0.961 and 0.511 s after the signal, for offsets 0.10, 0.25, 0.50, 0.75, 0.90, 1.10, 1.50,
+      2.00, 2.05 and 2.50 s.
+    - That the period is Ray's `get_check_signal_interval_milliseconds` is inferred: the name is in
+      `_raylet.so`'s strings, and its 1000 ms default is not read.
+  - **Impact.** Small. Nothing aborts in that second, since no alarm is armed, and every run
+    recorded `killed`/143 and exited 143. But the record can be up to ~1 s late, and the
+    criterion as written fails in about one run in seven of the probe's.
+  - **Next step.** A user decision: accept a bound of about one second plus the write, or have
+    both drivers' real `ray.init` lower Ray's signal-check interval (a `_system_config` entry or
+    the `RAY_get_check_signal_interval_milliseconds` variable). The second changes the call that K4
+    kept to `address`.
+- **[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]** *(opened 2026-10-03
+  by prompt 04, from the orchestrator's reading; read, not measured; does not block A3 v2)*
+  - **The defect.** `write_json_atomic` (`RunRegistry/__init__.py`) writes every update through
+    one fixed `status.json.tmp`. If the driver's signal handler runs while a stdout heartbeat is
+    inside that write's `with open(tmp, "w")`, before its `flush`, the handler's own `finish`:
+    - truncates and rewrites the same file;
+    - renames it to `status.json`;
+    - raises.
+
+    Unwinding then closes the interrupted handle, whose buffered partial JSON is written at
+    offset 0 of the same inode, now `status.json`.
+  - **Impact.** `finish_after_exec`'s second `finish` reads the file as `{}` and rewrites it valid,
+    but without `pid`, `stage` or `units_*`. A `SIGKILL` between the two would leave it
+    unparseable. The window is the microseconds of one `json.dump` every 30 s at most.
+  - **Next step.** In `RunRegistry`: a unique temporary name per write (for example `mkstemp` in
+    the same directory), so that a nested write never shares an inode with the one it interrupts.
+    Not prompt 04's to change (its §6). Not assigned.
+- **[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]** *(opened 2026-10-03 by prompt
+  04; read, not measured; does not block A3 v2)*
+  - **The defect.** `ray.init` installs Ray's `sys.exit(signum)` at its start (`worker.py`
+    L1498–1502), and the driver's handler is installed only after it returns: about 2.3 s on the
+    agent's machine (the orchestrator's measurement, 2026-10-03). A `SIGTERM` in that window goes
+    to Ray's handler. The latch stays empty, so `finish_after_exec` takes the not-signalled path:
+    `alarm(0)` (which cancels absl's alarm, if armed; breakage (i) of log 04 shows it doing so in
+    a wait), then `terminal_state(exc.code)`. That is `killed`/15 if the `SystemExit` arrives as
+    15, and `failed`/1 if Ray's signal check converts it to 1, with that exit status.
+  - **Impact.** A run interrupted in its first seconds may read `failed`, and exits 15 or 1, not
+    143. Which one happens is not established.
+  - **Next step.** Measure it: a probe variant of `sigterm_handler_probe.py` that signals during
+    `ray.init`. Not assigned.
+- **[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]** *(opened 2026-10-03 by
+  prompt 04; read; does not block A3 v2)*
+  - **The defect.** `quadsource_atol_sweep.py`'s `run_child`, the sweep's per-pair child, was left
+    unchanged by prompt 04 (K1, K4).
+    - Its `_local_ray_init` passes no `address`. On a machine where `ray start` has left a cluster
+      in `/tmp/ray/ray_current_cluster`, its `ray.init(num_cpus=…)` raises `ValueError` (the
+      orchestrator's measurement for the same call, 2026-10-03).
+    - It installs no handler, so Ray's governs it. A `SIGTERM` in `ray.wait` reaches it as
+      `SystemExit(1)` with absl's 3 s alarm armed, and the parent `sweep` then raises its own
+      `RuntimeError`.
+    - `sweep`'s own `terminal` works: `sweep` never calls `ray.init`.
+  - **Impact.** None on A3 v2, which is `--build`. A tolerance sweep on such a machine refuses to
+    start, and an interrupted pair dies as audit S1–S3 describe.
+  - **Next step.** Give `run_child`'s wrapper `address="local"` and `install_killed_handler(None,
+    latch)`, and end its `exec` through `finish_after_exec`. Not assigned.
 
 ---
 
@@ -879,3 +952,21 @@ of 6–80 on 10 CPUs. The load peaked during ComputeTargets.
 The counts agree with §5.6. No test failed.
 
 Index: **102 open**.
+
+### 5.8 After prompt 04 (2026-10-03)
+
+Measured 16:35–16:43 at the tree of this commit, serially, with README §7's command, each suite's
+output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 225 OK |
+
+RunRegistry is 199 + the 26 tests of `test_killed_handler.py`; `TestDrivers` changed in place (§3
+item 5) and adds none. Every other count is unchanged from §5.7. Load average 5.9–17.5 (1-minute)
+on 10 CPUs, beside another project's Ray cluster; no flake fired. Index: **105 open**.
