@@ -1598,13 +1598,33 @@ def _names_one_of(text: str, targets) -> bool:
 
 def _find_references(primary, planned, store_id, runs_root, stores_root, own) -> dict:
     """D5's report: the runs naming the store, and every sidecar under ``stores_root`` that names
-    it. Reads, and never writes anything."""
+    it. Reads, and never writes anything.
+
+    A sidecar names the store when its ``copied_from.store_id`` is the store's, or when any string
+    in it resolves to the primary, to a file in the plan, or to the store's directory.
+
+    A match by the **directory** means that a sidecar names the directory the store sits in. That
+    is how the live A3 sidecar named its backup, which sat alone in a subdirectory of the stores
+    root, and retiring the backup has to report it. It is weaker than a match by the primary: the
+    directory may hold other stores too, and a sidecar naming it names all of them, so the report
+    says only that the sidecar names where the store is.
+
+    The directory is a target **only when it is not the stores root itself** (compared by
+    ``realpath``, the resolution ``os.walk`` uses on the root it searches). The stores root is the
+    container of every store, so a field that names it names none in particular, and every
+    tombstone records ``references.stores_root``, the root its own retirement searched. Counting
+    the root as a target made each retirement of a store directly in the root report every earlier
+    tombstone there, one more with each (``[10-store-retire-reports-every-tombstone-as-a-reference]``).
+    """
     runs = [
         {"id": entry["id"], "state": entry["state"], "matched_by": entry["matched_by"]}
         for entry in runs_naming([primary], store_id, runs_root=runs_root)
     ]
 
-    targets = {os.path.realpath(p) for p in [primary, *planned, primary.parent]}
+    targets = {os.path.realpath(p) for p in [primary, *planned]}
+    directory = os.path.realpath(primary.parent)
+    if directory != os.path.realpath(stores_root):
+        targets.add(directory)
     own = os.path.realpath(own)
     # the sidecar suffix, taken from `sidecar_path`, where alone the pattern is spelled
     suffix = sidecar_path(Path("x.sqlite")).name[len("x") :]

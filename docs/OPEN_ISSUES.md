@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-03 · **103 open** across nineteen campaigns.
+**Last updated:** 2026-10-03 · **102 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -822,7 +822,6 @@ was opened when 02 was written. Prompt 04 opened four (2026-10-03); the user clo
 | `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | a3-v2-readiness | A `SIGTERM` during the ~2.3 s of `ray.init` reaches Ray's own handler, before the driver's exists, so it is recorded by `terminal_state`: `killed`/15 or `failed`/1, exit 15 or 1, not 143 (read, not measured). Not assigned. |
 | `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]` | a3-v2-readiness | `quadsource_atol_sweep.run_child`, left unchanged by prompt 04, still calls `ray.init` with no `address` (refused beside a `ray start` cluster) and installs no handler (a `SIGTERM` in a wait is `SystemExit(1)` under absl's alarm). Not A3 v2's path. Not assigned. |
 | `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]` | a3-v2-readiness | `test_main_plumbing.ReaderToleranceAgreementTestCase` reads only `object_get`/`object_get_vectorized`, so a reader's `object_read_batch` of a tolerance-keyed target is never compared with `main.py`. Today's one instance, the `QuadSourceIntegral` extractor, is pinned by `test_quadrature_tolerance_pin.py`. Test gap; does not block A3 v2. |
-| `[10-store-retire-reports-every-tombstone-as-a-reference]` | a3-v2-readiness | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only. Prompt 06. |
 | `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |
 | `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
 

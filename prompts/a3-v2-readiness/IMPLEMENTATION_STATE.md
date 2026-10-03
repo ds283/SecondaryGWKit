@@ -1,9 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 6 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 7 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -56,7 +56,7 @@ recommended** (audit, closing section; README §6.2):
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
-| 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | this commit | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
@@ -816,8 +816,8 @@ Carried into 07's note:
 | **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ✅ both pass `address="local"`, nothing else in the call changed; each probe child's GCS on its own port beside ChamPBH's `127.0.0.1:6379` (`TestTheDrivers`; breakage (vi)). `run_child` shares the defect, recorded and unchanged |
 | **P1** | 05 | `--no-prune-unvalidated` out of both invocations and both usage lines | ✅ out of `run_build`'s and `run_child`'s argument lists for `main.py`, which are now built at module scope in `quadsource_atol_sweep.py` by `build_main_argv(args, database)` and `child_main_argv(args, database)` (each over one private `_main_py_argv(database, job_name)`), and called as `sys.argv = …`. Out of the usage line in both `scoped_pipeline_run.py` module docstrings; nothing else in either file changed. Each list, less the flag, equals its pre-image element by element, shown from `HEAD`'s source (log 05). `substitute_main_py(filter_cases=False)` still matches each of its four substitutions once. `run_child` changed in its argument list and nothing else |
 | **P2** | 05 | A test that keeps it out | ✅ `RunRegistry/tests/test_prune_on_resume.py`, 18 tests, no Ray: the three lists element by element, from the script's own parsed `Namespace`; neither the flag nor an abbreviation in any list, and a parser rebuilt from `main.py`'s `add_argument` calls (read with `ast`) parses each as `prune_unvalidated` true; `main.py`'s default and its `BooleanOptionalAction` read from source; the drivers' `sys.argv` assignments and no option literal left in either; the usage lines. Breakages (i)–(v), each caught (log 05) |
-| **F1** | 06 | The stores root is not a target | ⬜ |
-| **F2** | 06 | Tests: sequential retirements, a sidecar naming the root, the subdirectory shape | ⬜ |
+| **F1** | 06 | The stores root is not a target | ✅ `_find_references` takes the primary and every planned file as targets, and adds `os.path.realpath(primary.parent)` only when it differs from `os.path.realpath(stores_root)`: the same resolution `os.walk(stores_root)` uses on the root it searches. A store alone in a subdirectory, or outside the root, keeps its directory. Its docstring says what a directory match means. `not_searched` is unchanged, since what is walked is. No tombstone's `references` subtree is skipped (the prompt's choice, not taken; log 06). Reconstructed in a temporary stores root, the second 2026-10-02 retirement's report is 3 sidecars before and none after (log 06) |
+| **F2** | 06 | Tests: sequential retirements, a sidecar naming the root, the subdirectory shape | ✅ `RunRegistry/tests/test_store_retire_references.py`, 10 tests, no Ray: three stores directly in the root retired in turn, through a symlinked stores root, and through a primary reached by a symlink; a non-tombstone sidecar naming the root by path and by a repository-relative path, not reported, and the same sidecar reported for a field naming the primary alone; a subdirectory (shared with another store, and not), a store outside the root, a tombstone in the root not found by a subdirectory's retirement, and a copy's `copied_from`. `test_a_retirement` is unchanged and passes; no existing test changed. Breakages (i)–(iii), each caught (log 06) |
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ⏸ |
 | **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ⏸ |
 | **L3** | 07 | Every reader, read-only, against the resumed store | ⏸ |
@@ -847,22 +847,6 @@ with its closing note; log 03). Both index rows are deleted.
 
 ### 3.2 Held on this board
 
-- **[10-store-retire-reports-every-tombstone-as-a-reference]** *(seen 2026-10-02, when the user
-  retired `datastore-integrity` prompt 10's two stores; indexed the same day in `424469e` with no
-  board, and taken over by this board when it was created)*
-  - **The defect.** `_find_references` (`RunRegistry/stores.py`) takes the store's directory,
-    `primary.parent`, as a target beside the primary and the planned files. Every tombstone
-    records `references.stores_root`, the directory its retirement searched. For a store directly
-    in `var/datastores/` the two are the same directory, so each `store retire` reports every
-    earlier tombstone there as a sidecar naming the store.
-  - **Measured.** Retiring `datastore-integrity-10-reference` listed two tombstones, and
-    `datastore-integrity-10-resumed` three: `handover-atol-sweep`, the backup, and
-    `datastore-integrity-10-reference`, each by `$.retired.references.stores_root` and by nothing
-    else (read 2026-10-02 from the resumed store's tombstone).
-  - **Impact.** Report only: nothing is refused or rewritten. But the list grows by one with every
-    retirement, and a real reference in it is harder to see.
-  - **Next step.** Prompt 06: the stores root is not a target; a store alone in a subdirectory,
-    the backup's shape, keeps its directory as one.
 - **[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]** *(opened 2026-10-02 by
   audit 00, V1; does not block A3 v2)*
   - **The defect.** `ShardedPool.__init__` writes a new store's primary and its `shards` table
@@ -970,6 +954,35 @@ with its closing note; log 03). Both index rows are deleted.
 
 ## 4. Resolved issues
 
+- **[10-store-retire-reports-every-tombstone-as-a-reference]** *(seen 2026-10-02, when the user
+  retired `datastore-integrity` prompt 10's two stores; indexed the same day in `424469e` with no
+  board, and taken over by this board when it was created; **closed 2026-10-03 by prompt 06**, this
+  commit)*
+  - **The defect.** `_find_references` (`RunRegistry/stores.py`) took the store's directory,
+    `primary.parent`, as a target beside the primary and the planned files. Every tombstone
+    records `references.stores_root`, the directory its retirement searched. For a store directly
+    in `var/datastores/` the two are the same directory, so each `store retire` reported every
+    earlier tombstone there as a sidecar naming the store.
+  - **Measured.** Retiring `datastore-integrity-10-reference` listed two tombstones, and
+    `datastore-integrity-10-resumed` three: `handover-atol-sweep`, the backup, and
+    `datastore-integrity-10-reference`, each by `$.retired.references.stores_root` and by nothing
+    else (read 2026-10-02 from the resumed store's tombstone).
+  - **Impact.** Report only: nothing was refused or rewritten. But the list grew by one with every
+    retirement, and a real reference in it was harder to see.
+  - **Closed by.** Prompt 06: `_find_references` adds the store's directory as a target only when
+    it is not the stores root, compared by `realpath` (`RunRegistry/stores.py`). A store in its
+    own subdirectory, the backup's shape, keeps its directory as a target, a shared one included.
+    Pinned by `RunRegistry/tests/test_store_retire_references.py` (10 tests, breakages (i)–(iii))
+    and, unchanged, by `test_store_retire.TestRetirement.test_a_retirement`. Rebuilt in a temporary
+    stores root, the second 2026-10-02 retirement's report lists 3 sidecars at `5e2d97a` and none
+    at this commit; the backup's `$.backup.path` match, the one real directory match among the
+    four tombstones under `var/datastores/`, is kept. Log:
+    [`logs/06-count-only-real-references.md`](logs/06-count-only-real-references.md).
+  - **What it leaves.** The four tombstones already under `var/datastores/` keep the references
+    they recorded: they were correct as a record of what that code found, and no tombstone is
+    rewritten. The five matches F1 would have dropped from them (two in
+    `datastore-integrity-10-reference`, three in `datastore-integrity-10-resumed`) are all by
+    `$.retired.references.stores_root`; none was a real reference.
 - **[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]** *(opened
   2026-10-02 by audit 00, V1; does not block A3 v2; **closed 2026-10-03 by prompt 02**,
   `b647c0b`)*
@@ -1269,3 +1282,21 @@ of 4–14 on 10 CPUs.
 The counts agree with §5.10. No test failed.
 
 Index: **103 open**.
+
+### 5.12 After prompt 06 (2026-10-03)
+
+Measured 21:29–21:41 at the tree of this commit's code, serially, with README §7's command, each
+suite's output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 run; 1 failure, the known wall-clock flake `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, which also failed alone in each of five re-runs (0.0653 s at a 1-minute load of ~15 and 0.0907 s at 6.9, against its 0.06 s bound); the other 685 pass |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 253 OK |
+
+RunRegistry is 243 + the 10 tests of `test_store_retire_references.py`; every other count is
+unchanged from §5.11. Load average 10–21 (1-minute) on 10 CPUs, beside another project's test
+run. Nothing under `ComputeTargets/` changed. Index: **102 open**.
