@@ -286,6 +286,51 @@ def k_sample():
     return np.logspace(np.log10(K_MIN), np.log10(K_MAX), K_COUNT).tolist()
 
 
+# `--build`'s `--zend`: the production value, which is A3 v2's.
+PRODUCTION_ZEND = "0.1"
+
+# The scope of `--build --rehearsal` (a3-v2-readiness prompt 06a, user decision D5): the one
+# `datastore-integrity` prompt 10 measured (its D10-1). It is a rehearsal of A3 v2's launch, not
+# A3 v2, and one fixed scope so that a reference build and a resumed one cannot differ in it.
+# Its k sample is `np.logspace(5, 6, 3)`, identical as floats to this log10 form.
+REHEARSAL_K_MIN, REHEARSAL_K_MAX, REHEARSAL_K_COUNT = 1e5, 1e6, 3
+REHEARSAL_ZEND = "250"
+
+# The manifest's `scope` text for each scope, as `str.format` templates over the run's own
+# `atol`, `rtol`, `cpus` and `database` (the store's file name). Without the flag it is, character
+# for character, the text `run_build` wrote before 06a.
+PRODUCTION_SCOPE_TEXT = (
+    "full build: main.py's own 9280-item QuadSourceIntegral work list at "
+    "atol={atol:g} rtol={rtol:g}, {cpus} cpus, LambdaCDM, 8 "
+    f"log-spaced k over {K_MIN:g}-{K_MAX:g} /Mpc, into {{database}}"
+)
+REHEARSAL_SCOPE_TEXT = (
+    "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list "
+    "at atol={atol:g} rtol={rtol:g}, {cpus} cpus, LambdaCDM, "
+    f"{REHEARSAL_K_COUNT} log-spaced k over {REHEARSAL_K_MIN:g}-{REHEARSAL_K_MAX:g} /Mpc, "
+    f"zend {REHEARSAL_ZEND}, into {{database}}"
+)
+
+
+def build_scope(args):
+    """The scope `--build` runs at, from the parsed arguments: `(k sample, zend, scope text)`.
+
+    The one place that decides it, so that the grid `main.py` runs on, its `--zend` and the
+    manifest's description of the run cannot come apart (`run_build` reads the grid and the text
+    from here, `build_main_argv` the `--zend`). Without `--rehearsal` it is production, A3 v2's:
+    `k_sample()`, `0.1`, and the 9280-item text. With it, the rehearsal scope: three log-spaced k
+    over 1e5-1e6 /Mpc, `250`, and a text that says so. The text is a `str.format` template over
+    `atol`, `rtol`, `cpus` and `database`, which `run_build` fills. It reads `args.rehearsal`
+    only and needs no Ray, so a test can call it.
+    """
+    if args.rehearsal:
+        k_values = np.logspace(
+            np.log10(REHEARSAL_K_MIN), np.log10(REHEARSAL_K_MAX), REHEARSAL_K_COUNT
+        ).tolist()
+        return k_values, REHEARSAL_ZEND, REHEARSAL_SCOPE_TEXT
+    return k_sample(), PRODUCTION_ZEND, PRODUCTION_SCOPE_TEXT
+
+
 def make_case_selector(cases):
     """Return the `SWEEP_SELECT_CASES` main.py's work list is filtered through.
 
@@ -363,8 +408,10 @@ def substitute_main_py(filter_cases=True):
     return source
 
 
-def _main_py_argv(database, job_name):
+def _main_py_argv(database, job_name, zend=PRODUCTION_ZEND):
     """`main.py`'s argv for either driver, `sys.argv` form (the program name first).
+
+    `zend` is `--zend`'s value: production's unless `build_main_argv` passes the rehearsal's.
 
     Pruning is not mentioned: `main.py`'s `--prune-unvalidated` defaults to true, and that is
     the designed recovery for a row stored but not validated when a build was interrupted
@@ -380,7 +427,7 @@ def _main_py_argv(database, job_name):
         "--shards",
         str(SHARDS),
         "--zend",
-        "0.1",
+        zend,
         "--source-samples-log10z",
         "100",
     ]
@@ -389,10 +436,12 @@ def _main_py_argv(database, job_name):
 def build_main_argv(args, database):
     """`main.py`'s argv for `run_build`: `database` is the resolved path, `args.job_name` the label.
 
-    It does not depend on `--resume`, which only decides the pre-check in `run_build`. Needs no
-    Ray, so a test can call it.
+    It does not depend on `--resume`, which only decides the pre-check in `run_build`. `--zend`
+    is the scope's (`build_scope`): production's `0.1`, or the rehearsal's `250` with
+    `--rehearsal`. Needs no Ray, so a test can call it.
     """
-    return _main_py_argv(database, args.job_name)
+    _, zend, _ = build_scope(args)
+    return _main_py_argv(database, args.job_name, zend)
 
 
 def child_main_argv(args, database):
@@ -472,10 +521,17 @@ def run_build(args):
     inherit whatever was in it, which for a comparator is the one thing that must not happen. To
     *continue* an interrupted build, pass `--resume`, which is a separate and deliberate act and
     which re-checks that the store names its own shards first.
+
+    `--rehearsal` selects a smaller, fixed scope in place of the production one: `main.py`'s own
+    unfiltered work list on three log-spaced k over 1e5-1e6 /Mpc with `--zend 250`, the scope
+    `datastore-integrity` prompt 10 built a store at in fifteen minutes. It is a rehearsal of A3
+    v2's launch, not A3 v2. Everything else is as without it, and the manifest's `scope` says
+    which ran. `build_scope` decides the grid, `--zend` and that text together.
     """
     import ray
 
     database = Path(args.database).resolve()
+    k_values, zend, scope_text = build_scope(args)
     present = [pth for pth in [database] + shard_paths(database) if pth.exists()]
     if present and not args.resume:
         raise RuntimeError(
@@ -504,10 +560,11 @@ def run_build(args):
             purpose=args.purpose,
             script=__file__,
             results=str(database),
-            scope=(
-                f"full build: main.py's own 9280-item QuadSourceIntegral work list at "
-                f"atol={args.atol:g} rtol={args.rtol:g}, {args.cpus} cpus, LambdaCDM, 8 "
-                f"log-spaced k over {K_MIN:g}-{K_MAX:g} /Mpc, into {database.name}"
+            scope=scope_text.format(
+                atol=args.atol,
+                rtol=args.rtol,
+                cpus=args.cpus,
+                database=database.name,
             ),
             heartbeat_means=scoped.HEARTBEAT_MEANS.format(
                 interval=scoped.BEAT_MIN_INTERVAL
@@ -576,11 +633,16 @@ def run_build(args):
     sys.argv = build_main_argv(args, database)
     print(f"** quadsource_atol_sweep --build: atol={args.atol:g} rtol={args.rtol:g}")
     print(f"** quadsource_atol_sweep --build: main.py argv = {sys.argv[1:]}")
+    if args.rehearsal:
+        print(
+            f"** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: "
+            f"k = {k_values}, zend {zend}"
+        )
 
     namespace = {
         "__name__": "__main__",
         "__file__": str(MAIN_PY),
-        K_GRID_NAME: k_sample(),
+        K_GRID_NAME: k_values,
         "SWEEP_QUAD_ATOL": args.atol,
         "SWEEP_QUAD_RTOL": args.rtol,
     }
@@ -914,6 +976,12 @@ def main():
         action="store_true",
         help="full 9280-item build at one tolerance pair into --database (not a sweep)",
     )
+    parser.add_argument(
+        "--rehearsal",
+        action="store_true",
+        help="with --build only: a rehearsal scope (3 log-spaced k over 1e5-1e6 /Mpc, --zend "
+        "250) in place of the production one. It is not A3 v2",
+    )
     parser.add_argument("--database", type=str, default=None, help="with --build")
     parser.add_argument(
         "--resume",
@@ -938,6 +1006,12 @@ def main():
     parser.add_argument("--prompt", type=str, default="-")
     args = parser.parse_args()
 
+    # before any mode runs: --prepare copies a store, and the sweep launches a build per pair
+    if args.rehearsal and not args.build:
+        parser.error(
+            "--rehearsal is valid only with --build: it selects the rehearsal scope of a "
+            "build, which is not A3 v2"
+        )
     if args.prepare:
         prepare(force=args.force)
         return

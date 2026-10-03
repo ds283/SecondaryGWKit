@@ -60,7 +60,7 @@ recommended** (audit, closing section; README §6.2):
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
-| 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ⬜ | — | — |
+| 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-03 | this commit | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
 | 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 the user's before dispatch | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
@@ -935,9 +935,9 @@ Carried into 07's note:
 | **P2** | 05 | A test that keeps it out | ✅ `RunRegistry/tests/test_prune_on_resume.py`, 18 tests, no Ray: the three lists element by element, from the script's own parsed `Namespace`; neither the flag nor an abbreviation in any list, and a parser rebuilt from `main.py`'s `add_argument` calls (read with `ast`) parses each as `prune_unvalidated` true; `main.py`'s default and its `BooleanOptionalAction` read from source; the drivers' `sys.argv` assignments and no option literal left in either; the usage lines. Breakages (i)–(v), each caught (log 05) |
 | **F1** | 06 | The stores root is not a target | ✅ `_find_references` takes the primary and every planned file as targets, and adds `os.path.realpath(primary.parent)` only when it differs from `os.path.realpath(stores_root)`: the same resolution `os.walk(stores_root)` uses on the root it searches. A store alone in a subdirectory, or outside the root, keeps its directory. Its docstring says what a directory match means. `not_searched` is unchanged, since what is walked is. No tombstone's `references` subtree is skipped (the prompt's choice, not taken; log 06). Reconstructed in a temporary stores root, the second 2026-10-02 retirement's report is 3 sidecars before and none after (log 06) |
 | **F2** | 06 | Tests: sequential retirements, a sidecar naming the root, the subdirectory shape | ✅ `RunRegistry/tests/test_store_retire_references.py`, 10 tests, no Ray: three stores directly in the root retired in turn, through a symlinked stores root, and through a primary reached by a symlink; a non-tombstone sidecar naming the root by path and by a repository-relative path, not reported, and the same sidecar reported for a field naming the primary alone; a subdirectory (shared with another store, and not), a store outside the root, a tombstone in the root not found by a subdirectory's retirement, and a copy's `copied_from`. `test_a_retirement` is unchanged and passes; no existing test changed. Breakages (i)–(iii), each caught (log 06) |
-| **B1** | 06a | `--rehearsal` on `--build`: one Ray-free function gives the k sample, `--zend` and the manifest's `scope` text; without the flag, all three unchanged | ⬜ |
-| **B2** | 06a | Tests: both scopes from the script's parser, the refusals outside `--build`, `run_build` reading its grid from the scope, `run_child` still production | ⬜ |
-| **B3** | 06a | `interrupt_when.py` checks the pid against the driver its run's manifest names (`argv[0]`), so it can interrupt a `--build`; its dummy test unchanged, and a new case | ⬜ |
+| **B1** | 06a | `--rehearsal` on `--build`: one Ray-free function gives the k sample, `--zend` and the manifest's `scope` text; without the flag, all three unchanged | ✅ `build_scope(args)` in `quadsource_atol_sweep.py` returns `(k sample, zend, scope text)`: production's `k_sample()`, `"0.1"` and today's 9280-item text, or with `--rehearsal` `np.logspace(5, 6, 3)`, `"250"` and a text that names the rehearsal, the 3-point grid and `zend 250`, and not `9280`. The text is a `str.format` template over `atol`, `rtol`, `cpus` and `database`, which `run_build` fills, so that `build_main_argv` reads only `args.rehearsal`. `run_build` takes its grid and its manifest's `scope` from it and prints one line when the flag is given; `build_main_argv` takes `--zend` from it (`_main_py_argv` gained a `zend` parameter defaulting to `"0.1"`, so `child_main_argv` is unchanged); `main()` refuses `--rehearsal` without `--build` before any mode runs. By `ast` against `3cdb52a`, only `_main_py_argv`, `build_main_argv`, `run_build` and `main` changed, plus the new function and constants (log 06a) |
+| **B2** | 06a | Tests: both scopes from the script's parser, the refusals outside `--build`, `run_build` reading its grid from the scope, `run_child` still production | ✅ `RunRegistry/tests/test_build_rehearsal_scope.py`, 28 tests, no Ray: each scope's k sample, argv list and scope text as literals; the refusals with `--child`, `--prepare`, `--report`, no mode and no mode with a registration, on a copy of the module with every mode stubbed (so a missed refusal cannot copy a store or launch a child); `run_build`'s grid and `scope` read from the scope function, with no `k_sample()` call, and `run_child` still `k_sample()`, read with `ast`. The one permitted `Namespace` in `test_prune_on_resume` gained `rehearsal=False`, nothing else in that file changed. Breakages (i)–(v), each caught (log 06a) |
+| **B3** | 06a | `interrupt_when.py` checks the pid against the driver its run's manifest names (`argv[0]`), so it can interrupt a `--build`; its dummy test unchanged, and a new case | ✅ the constant `DRIVER` is gone; `run_driver(run_dir)` returns the basename of the manifest's `argv[0]` (`None` if there is none or it is empty), read beside the slug, and `names_the_run(command, slug, driver)` requires it and `--register <slug>`; no `argv[0]` is logged and exits 2 without signalling. `interrupter_dummy_test.sh` passes unchanged. `docs/a3-v2-readiness/interrupter_build_dummy_test.sh`, output committed beside it: a `quadsource_atol_sweep.py` manifest signals a child named for it, refuses one named for `scoped_pipeline_run.py`, and refuses an empty `argv[0]`. Breakage (vi) caught by the new case (log 06a) |
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ⏸ |
 | **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ⏸ |
 | **L3** | 07 | Every reader, read-only, against the resumed store | ⏸ |
@@ -1438,3 +1438,22 @@ of 15–34 on 10 CPUs, beside another project's test run.
 The counts agree with §5.12.
 
 Index: **102 open**.
+
+### 5.14 After prompt 06a (2026-10-03)
+
+Measured serially at the tree of this commit's code, 23:10 on 2026-10-03 to 00:15 on 2026-10-04,
+with README §7's command, each suite's output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 run; 2 failures, `test_background_tau.TestBackgroundTau.test_build_cost` and `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, both load (below); the other 684 pass |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 281 OK |
+
+RunRegistry is 253 + the 28 tests of `test_build_rehearsal_scope.py`; every other count is
+unchanged from §5.13. The 1-minute load average was 440-725 on 10 CPUs, from another project's Ray
+workers. Re-run alone afterwards, `test_build_cost` passed and `test_wall_time_per_object` failed
+(0.1118 s against 0.06 s). Nothing under `ComputeTargets/` changed. Index: **102 open**.

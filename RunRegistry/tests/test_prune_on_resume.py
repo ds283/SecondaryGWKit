@@ -229,7 +229,9 @@ class TestTheListsAreWhatTheyWere(ArgvTestCase):
 
     def test_the_job_name_is_the_namespaces(self):
         module = self.module
-        namespace = argparse.Namespace(job_name="some-other-label", resume=False)
+        namespace = argparse.Namespace(
+            job_name="some-other-label", resume=False, rehearsal=False
+        )
         self.assertEqual(
             module.build_main_argv(namespace, Path(self.DATABASE))[4],
             "some-other-label",

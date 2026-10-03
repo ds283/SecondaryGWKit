@@ -19,9 +19,13 @@ Every `--interval` seconds (15) it reads the run's `status.json`, and:
   and never signals: a long work item makes the heartbeat go stale, and stale means "go and look";
 - if the run is `alive` and its `stage` matches the regex (`re.search`) with a progress reading at
   or above the percentage, it checks that the pid still answers `kill -0` and that
-  `ps -p <pid> -o command=` names `scoped_pipeline_run.py` and `--register <slug>`, the slug being
-  the run's own, read from its manifest's `argv`. Only then does it send `SIGTERM` once, log it and
-  exit. If the command line does not name the run, it logs that and exits without signalling.
+  `ps -p <pid> -o command=` names the run's own driver and `--register <slug>`. The driver is the
+  basename of the manifest's `argv[0]`, the script the registry recorded as launched
+  (`scoped_pipeline_run.py` for a scoped pipeline run, `quadsource_atol_sweep.py` for a `--build`),
+  and the slug is the one after `--register` in the same `argv`. Only then does it send `SIGTERM`
+  once, log it and exit. If the command line does not name the run, it logs that and exits without
+  signalling. A manifest with no `argv[0]`, like one with no slug, makes it log that and exit
+  without signalling.
 
 The percentage is the one `scoped_pipeline_run.StageTracker` writes into `stage`,
 `"<title>, <p>% (<n> of <m> work items remaining)"`. A stage that has printed only its banner reads
@@ -56,7 +60,6 @@ if str(REPO_ROOT) not in sys.path:
 
 import RunRegistry  # noqa: E402
 
-DRIVER = "scoped_pipeline_run.py"
 _PERCENT = re.compile(r",\s*([\d.]+)%\s*\(")
 _COMPLETE = re.compile(r",\s*all work items complete\s*$")
 
@@ -89,6 +92,19 @@ def run_slug(run_dir: Path):
     return None
 
 
+def run_driver(run_dir: Path):
+    """The basename of the run's own driver, from its manifest's `argv[0]`, or `None`.
+
+    `RunRegistry.begin` records `sys.argv` before a driver replaces it, so `argv[0]` is the script
+    that was launched: `scoped_pipeline_run.py`, or `quadsource_atol_sweep.py` for a `--build`.
+    """
+    manifest = RunRegistry.read_json(str(run_dir / "manifest.json")) or {}
+    argv = manifest.get("argv") or []
+    if not argv or not isinstance(argv[0], str):
+        return None
+    return os.path.basename(argv[0]) or None
+
+
 def progress(stage):
     """The stage's percentage: its reading, 0 for a bare banner, `None` once it is complete."""
     if stage is None:
@@ -113,20 +129,21 @@ def command_of(pid):
     return text or None
 
 
-def names_the_run(command, slug) -> bool:
-    if command is None or slug is None:
+def names_the_run(command, slug, driver) -> bool:
+    if command is None or slug is None or driver is None:
         return False
     tokens = command.split()
     named = any(
         i + 1 < len(tokens) and tokens[i] == "--register" and tokens[i + 1] == slug
         for i in range(len(tokens))
     )
-    return DRIVER in command and named
+    return driver in command and named
 
 
 def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0) -> int:
     stage_re = re.compile(pattern)
     slug = run_slug(run_dir)
+    driver = run_driver(run_dir)
     log(
         f"interrupter pid {os.getpid()} watching {run_dir} (slug {slug!r}); stage regex "
         f"{pattern!r} at >= {minimum}%; every {interval:g} s; stale after {stale_after:g} s; "
@@ -134,6 +151,9 @@ def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0)
     )
     if slug is None:
         log("the run's manifest names no --register slug; exiting without signalling")
+        return 2
+    if driver is None:
+        log("the run's manifest names no argv[0]; exiting without signalling")
         return 2
     last = None
     held = hold <= 0
@@ -173,9 +193,10 @@ def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0)
                     )
                     return 0
                 command = command_of(pid)
-                if not names_the_run(command, slug):
+                if not names_the_run(command, slug, driver):
                     log(
-                        f"pid {pid}'s command line does not name {DRIVER} and --register {slug}: "
+                        f"pid {pid}'s command line does not name {driver} (the run's own "
+                        f"driver, its manifest's argv[0]) and --register {slug}: "
                         f"{command!r}; exiting without signalling"
                     )
                     return 2
