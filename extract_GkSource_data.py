@@ -49,6 +49,10 @@ from config.sharding import (
     read_table_config,
 )
 from extract_common import (
+    add_models_argument,
+    read_models,
+    require_background,
+    select_models,
     add_run_selection_argument,
     describe_background_generation,
     resolve_run_selection,
@@ -93,6 +97,7 @@ parser.add_argument(
     "--output", default="GkSource-out", type=str, help="specify folder for output files"
 )
 add_run_selection_argument(parser)
+add_models_argument(parser)
 args = parser.parse_args()
 
 if args.database is None:
@@ -777,10 +782,8 @@ def run_pipeline(model_data):
             tags=run_selection.tags,
         )
     )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
+    # a model the store holds no background for is skipped by read_models (prompt 03)
+    require_background(model, model_label)
     print(
         f"   @@ {model_label} background model: {describe_background_generation(model)}"
     )
@@ -935,7 +938,7 @@ with ShardedPool(
     timeout=args.db_timeout,
     profile_agent=profile_agent,
     job_name="extract_GkSource_data",
-    prune_unvalidated=False,
+    read_only=True,
     read_table_config=read_table_config,
 ) as pool:
 
@@ -948,7 +951,6 @@ with ShardedPool(
 
     # get list of models we want to extract transfer functions for
     units = Mpc_units()
-    model_list = build_model_list(pool, units)
+    model_list = select_models(build_model_list(pool, units), args.models)
 
-    for model_data in model_list:
-        run_pipeline(model_data)
+    read_models(model_list, run_pipeline)

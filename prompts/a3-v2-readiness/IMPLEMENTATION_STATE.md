@@ -1,8 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 3 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 4 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
-has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed. 01–06
+has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
+prompt 03 has landed (2026-10-03). 01–06
 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
@@ -53,7 +54,7 @@ recommended** (audit, closing section; README §6.2):
 | 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
-| 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ⬜ | — | — |
+| 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | this commit | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
@@ -404,10 +405,10 @@ Carried into 03's note:
 | **W1** | 02 | The version row written once through `_replicated_write` | ✅ actors no longer touch it; `ShardedPool.__init__` reads the label `mode=ro` on every shard, writes it through `_get_impl_replicated_table` only when absent, then `set_version` on every actor; `_insert` refuses a versioned insert before it, ahead of the lease (`test_version_row_at_open`, 12 tests; breakages (i), (ii), (vii)) |
 | **W2** | 02 | The check at open treats a missing version row like any other replicated row | ✅ the generic `get` repair admits it unchanged (no `timestamp` column); interrupted after the controller, before it, on one replica, and in a new store's first open, each healed; with no record a difference still refuses (log 02, *W2*) |
 | **W3** | 02 | The prune at open of a replicated class, by the pool, under a `prune` record the check at open completes (U1) | ✅ `_prune_replicated_tables` before any actor, per-shard transactions checked by the factory's own rule, record cleared last; `_complete_interrupted_prune` re-runs it whatever `prune_unvalidated` is; actors report replicated classes only; `controller_shard` nullable (`test_prune_at_open`, 11 tests; breakages (iii)–(vi)) |
-| **O1** | 03 | `ShardedPool(read_only=True)`, every file `mode=ro`, nothing written at open | ⬜ |
-| **O2** | 03 | `ReadOnlyMiss` on a lookup that would have inserted; `ReadOnlyWrite` on any write | ⬜ |
-| **O3** | 03 | The six readers open read-only | ⬜ |
-| **O4** | 03 | `--models` on each reader; a model the store lacks is skipped with a message | ⬜ |
+| **O1** | 03 | `ShardedPool(read_only=True)`, every file `mode=ro`, nothing written at open | ✅ `ShardedPool._open_read_only` replaces the whole constructor: `drop_actions`/`prune_unvalidated=True` refused first; `store_reader.open_read_only` (function-scope import) refuses a missing primary, creating nothing, and any journal by presence; every engine `mode=ro`; `_check_replicated_tables_read_only` refuses a record of any operation by name before anything else, then compares; no DDL, no prune, no repair; the version row found by `_find_version_row` and an absent label refused; no broker; actors `read_only=True`, validating report-only and skipping a class whose table the file lacks (`test_read_only_pool.TestAtOpen`, 10 tests; breakages (iii)–(v)) |
+| **O2** | 03 | `ReadOnlyMiss` on a lookup that would have inserted; `ReadOnlyWrite` on any write | ✅ both in `Datastore/replication.py`, importable from the pool's module; a replicated get goes to one drawn shard with no record (`_get_impl_replicated_table_read_only`); every actor inserter refuses (`Datastore._refuse_insert`): `ReadOnlyMiss` for a replicated row, `ReadOnlyWrite` for any other; store, validate, a new shard key refused; SQLite's `SQLITE_READONLY` re-raised as `ReadOnlyWrite` (`_read_only_refusal`) (`TestNothingWrittenOnAFullStore`, `TestEachMissRaisesReadOnlyMiss`, `TestOtherWritesRaiseReadOnlyWrite`; breakages (i)–(iii)) |
+| **O3** | 03 | The six readers open read-only | ✅ each constructs `ShardedPool(..., read_only=True)` and drops `prune_unvalidated=False`; no lookup changed (`test_reader_read_only.TestTheSixReaders`; breakage (vi)) |
+| **O4** | 03 | `--models` on each reader; a model the store lacks is skipped with a message | ✅ `extract_common.add_models_argument`, `select_models` (an unknown label refuses, naming the known ones), `require_background` at the old `RuntimeError`'s site, `read_models` in place of the loop (skips with one line; exits 1 if no model is read); `config/model_list.py` unchanged (`test_reader_read_only`, 17 tests; breakage (vii)) |
 | **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ⬜ |
 | **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ⬜ |
 | **K3** | 04 | `terminal_state`'s docstring made true | ⬜ |
@@ -429,10 +430,13 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 
 | Issue | Owning board | Prompt |
 |---|---|---|
-| `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | `datastore-integrity` §3.3 | 03 |
-| `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | `datastore-integrity` §3.3 | 03 |
 | `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | `datastore-integrity` §3.3 | 04 |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
+
+**Closed by prompt 03 (2026-10-03, this commit), on their owning board's §4:**
+`[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` and
+`[10-extraction-scripts-exit-1-on-a-store-without-every-model]` (`datastore-integrity` §4, each
+with its closing note; log 03). Both index rows are deleted.
 
 ### 3.2 Held on this board
 
@@ -672,3 +676,21 @@ The counts agree with §5.4. The load average was 12–17.
   flake with its ~1× margin, not a regression.
 
 Index: **104 open**.
+
+### 5.6 After prompt 03 (2026-10-03)
+
+Measured 10:14–10:24 at the tree of this commit, serially, with README §7's command, each suite's
+output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+ComputeTargets is 669 + the 17 tests of `test_reader_read_only.py`; Datastore is 574 + the 24 of
+`test_read_only_pool.py`. Every other count is unchanged from §5.5. Load average 8–29 (1-minute) on
+10 CPUs, shared with an unrelated Ray cluster; no flake fired. Index: **102 open**.

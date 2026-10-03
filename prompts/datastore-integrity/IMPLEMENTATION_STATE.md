@@ -2023,26 +2023,6 @@ None is assigned to a prompt of this campaign.
     one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/04-record-a-sigterm-as-killed.md`, a
     handler installed after `ray.init`, against that campaign's audit S1–S4.
-- **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10)*
-  - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
-    LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
-    locate suitable background model instance in the datastore` for a model whose background the
-    store does not hold.
-  - **Measured** (log 10). On the LambdaCDM-only resumed store each read LambdaCDM in full, wrote
-    its `LambdaCDM/` outputs, and exited 1 on `QCD_Cosmology`, in 15–67 s; none moved the
-    fingerprint.
-  - **Impact.** A3 v2's store is LambdaCDM-only, so every extraction from it exits 1 after a
-    complete LambdaCDM read. The outputs are written, but a caller that checks the exit status sees
-    a failure, and a failure in LambdaCDM's read looks the same from outside. The user accepted the
-    exit 1 for prompt 10 (2026-10-02).
-  - **Next step.** Give the scripts a model filter, as `scoped_pipeline_run.py --models` does for
-    `main.py`, or skip a model the store does not hold, saying so. The scripts are not this
-    prompt's to change.
-  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, beside `[08-…]`: both are
-    the readers' setup, and `build_model_list` is where each starts. Index row moved to
-    `docs/OPEN_ISSUES.md` §1.17.
-  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, O4:
-    `--models`, and a model with no `BackgroundModel` skipped with a message.
 - **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
   2026-10-02 by prompt 10)*
   - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
@@ -2074,41 +2054,6 @@ None is assigned to a prompt of this campaign.
     `_check_numeric_parent` asserts for a WKB row and 09c will for `QuadSourceIntegral`.
   - **Next step.** Decide whether `store()` reads each member's rows, as 07's check reads a WKB
     row's parent, and refuses a mismatch; it would cost one query per `GkSource` over its members.
-- **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
-  2026-09-29 by prompt 08)*
-  - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
-    with `pool.object_get("GkSourcePolicy", ...)` (`run_pipeline`, the `GkSource_policy_1pt5,
-    GkSource_policy_5pt0` pair). `object_get` on a replicated class **inserts a row when none
-    matches**. And every such call goes through `ShardedPool._replicated_write`, which commits a
-    `replication_in_flight` record on the primary *before* the controlling shard's call, so **even
-    a hit writes, and clears, a record on the primary**. `extract_GkSource_data.py` makes the same
-    pair of calls; no other script was audited for it.
-  - **Impact.** A reader that writes to the store it reads. Against a store that lacks the policy
-    it silently adds a row; a crash inside the call leaves the record set, which prompt 02's check
-    at open then acts on (repair, or refuse). Prompt 08 needed its own new lookup to refuse
-    without this, and gave it `read_table` for that reason (log 08, §0.1).
-  - **Next step.** Look the two `GkSourcePolicy` rows up with a `read_table` on that class (a
-    `read_table_config` entry and a factory method, as `QuadSourcePolicy` now has), refusing on a
-    miss, in this script and in any other reader that does the same. Prompt 08 was bounded by the
-    user's grant to the `QuadSourcePolicy` lookup and did not change the `GkSourcePolicy` one.
-  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, which opens every reader
-    on a read-only pool (that campaign's D3) rather than repairing lookups one by one. Read the same
-    day, the defect is wider than this entry: every `object_get` on a replicated class takes
-    `_replicated_write`, and the readers also look up `tolerance`, the wavenumbers, the exit times
-    and both cosmologies that way. That campaign's audit 00 measures how wide, and records it here.
-    Index row moved to `docs/OPEN_ISSUES.md` §1.17.
-  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` R1–R2).
-    Every reader `object_get`s seven replicated classes — `store_tag`, `LambdaCDM`, `QCD_Cosmology`,
-    `tolerance`, `BackgroundModel`, `wavenumber_exit_time`, `GkSourcePolicy` — and every such call
-    commits and clears an in-flight record on the primary, hit or miss. Measured on stand-in shards
-    (`docs/a3-v2-readiness/reader_writes_probe.py`) for `extract_QuadSourceIntegral_data.py`'s whole
-    sequence on a store holding every row it asks for: 21 replicated gets, 42 commits on the
-    primary, no row inserted and no commit on any shard. With one row missing, `store_tag`'s lookup
-    is skipped, while `LambdaCDM`, `QCD_Cosmology`, `tolerance` and `GkSourcePolicy` are inserted on
-    every shard. No reader writes a sharded row. The wavenumbers, redshifts and `QuadSourcePolicy`
-    are read with `read_table`, which writes nothing.
-  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, a
-    read-only pool to the specification of that campaign's audit M1.
 - **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
   - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
     integration table first and its tag and value tables after it, e.g. `"tk-wkb":
@@ -2151,6 +2096,97 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]** *(opened
+  2026-09-29 by prompt 08; **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03)*
+  - **The defect.** `extract_QuadSourceIntegral_data.py` looks its two `GkSourcePolicy` rows up
+    with `pool.object_get("GkSourcePolicy", ...)` (`run_pipeline`, the `GkSource_policy_1pt5,
+    GkSource_policy_5pt0` pair). `object_get` on a replicated class **inserts a row when none
+    matches**. And every such call goes through `ShardedPool._replicated_write`, which commits a
+    `replication_in_flight` record on the primary *before* the controlling shard's call, so **even
+    a hit writes, and clears, a record on the primary**. `extract_GkSource_data.py` makes the same
+    pair of calls; no other script was audited for it.
+  - **Impact.** A reader that writes to the store it reads. Against a store that lacks the policy
+    it silently adds a row; a crash inside the call leaves the record set, which prompt 02's check
+    at open then acts on (repair, or refuse). Prompt 08 needed its own new lookup to refuse
+    without this, and gave it `read_table` for that reason (log 08, §0.1).
+  - **Next step.** Look the two `GkSourcePolicy` rows up with a `read_table` on that class (a
+    `read_table_config` entry and a factory method, as `QuadSourcePolicy` now has), refusing on a
+    miss, in this script and in any other reader that does the same. Prompt 08 was bounded by the
+    user's grant to the `QuadSourcePolicy` lookup and did not change the `GkSourcePolicy` one.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, which opens every reader
+    on a read-only pool (that campaign's D3) rather than repairing lookups one by one. Read the same
+    day, the defect is wider than this entry: every `object_get` on a replicated class takes
+    `_replicated_write`, and the readers also look up `tolerance`, the wavenumbers, the exit times
+    and both cosmologies that way. That campaign's audit 00 measures how wide, and records it here.
+    Index row moved to `docs/OPEN_ISSUES.md` §1.17.
+  - **Widened (2026-10-02):** by `a3-v2-readiness` audit 00 (`docs/a3-v2-readiness-audit.md` R1–R2).
+    Every reader `object_get`s seven replicated classes — `store_tag`, `LambdaCDM`, `QCD_Cosmology`,
+    `tolerance`, `BackgroundModel`, `wavenumber_exit_time`, `GkSourcePolicy` — and every such call
+    commits and clears an in-flight record on the primary, hit or miss. Measured on stand-in shards
+    (`docs/a3-v2-readiness/reader_writes_probe.py`) for `extract_QuadSourceIntegral_data.py`'s whole
+    sequence on a store holding every row it asks for: 21 replicated gets, 42 commits on the
+    primary, no row inserted and no commit on any shard. With one row missing, `store_tag`'s lookup
+    is skipped, while `LambdaCDM`, `QCD_Cosmology`, `tolerance` and `GkSourcePolicy` are inserted on
+    every shard. No reader writes a sharded row. The wavenumbers, redshifts and `QuadSourcePolicy`
+    are read with `read_table`, which writes nothing.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, a
+    read-only pool to the specification of that campaign's audit M1.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, this commit, by that campaign's
+    D3: a read-only pool, not per-site lookups. `ShardedPool(read_only=True)` opens every file
+    `mode=ro` (the pool's engine and every actor's, through `store_reader.read_only_url`) and
+    writes nothing at open: no store is created, journals are refused by presence through
+    `store_reader.open_read_only`, a `replication_in_flight` record of any operation is refused by
+    name, nothing is created, dropped, pruned or repaired, and the version row is found, never
+    written. A replicated `object_get` goes to one shard's actor with no record and no
+    replication, so `_replicated_write` is never entered. A lookup that would insert raises
+    `ReadOnlyMiss`, from the inserter every read-only actor hands every factory's `build`; any
+    other write raises `ReadOnlyWrite`, and a write that still reaches SQLite is re-raised as
+    `ReadOnlyWrite`. All six readers open the pool read-only. Shown on stand-in shards in
+    `Datastore/tests/test_read_only_pool.py`:
+    `TestNothingWrittenOnAFullStore.test_the_instrument_counts_a_read_write_pool_then_read_only_writes_nothing`
+    (QSI's whole sequence: on a read-write pool the primary changes and `_replicated_write` runs
+    21 times; on a read-only pool every file's SHA-256 is unchanged, `_replicated_write` never
+    runs, no engine issues a write, and every step returns what the read-write run did);
+    `TestEachMissRaisesReadOnlyMiss` (`store_tag`, `LambdaCDM`, `QCD_Cosmology`, `tolerance`,
+    `GkSourcePolicy`, each with no `INSERT` issued and no file changed);
+    `TestOtherWritesRaiseReadOnlyWrite`; `TestAtOpen`. The readers' wiring is pinned in
+    `ComputeTargets/tests/test_reader_read_only.py`
+    (`TestTheSixReaders.test_each_opens_its_pool_read_only`). Log:
+    [`../a3-v2-readiness/logs/03-open-readers-read-only.md`](../a3-v2-readiness/logs/03-open-readers-read-only.md).
+- **[10-extraction-scripts-exit-1-on-a-store-without-every-model]** *(opened 2026-10-02 by prompt 10;
+  **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03)*
+  - **The defect.** The six `extract_*.py` scripts loop over `config.model_list.build_model_list`,
+    LambdaCDM and `QCD_Cosmology`, with no `--models` option, and raise `RuntimeError: Could not
+    locate suitable background model instance in the datastore` for a model whose background the
+    store does not hold.
+  - **Measured** (log 10). On the LambdaCDM-only resumed store each read LambdaCDM in full, wrote
+    its `LambdaCDM/` outputs, and exited 1 on `QCD_Cosmology`, in 15–67 s; none moved the
+    fingerprint.
+  - **Impact.** A3 v2's store is LambdaCDM-only, so every extraction from it exits 1 after a
+    complete LambdaCDM read. The outputs are written, but a caller that checks the exit status sees
+    a failure, and a failure in LambdaCDM's read looks the same from outside. The user accepted the
+    exit 1 for prompt 10 (2026-10-02).
+  - **Next step.** Give the scripts a model filter, as `scoped_pipeline_run.py --models` does for
+    `main.py`, or skip a model the store does not hold, saying so. The scripts are not this
+    prompt's to change.
+  - **Assigned (2026-10-02):** to `prompts/a3-v2-readiness` prompt **03**, beside `[08-…]`: both are
+    the readers' setup, and `build_model_list` is where each starts. Index row moved to
+    `docs/OPEN_ISSUES.md` §1.17.
+  - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, O4:
+    `--models`, and a model with no `BackgroundModel` skipped with a message.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, this commit. Each of the six
+    readers takes `--models LABEL [LABEL …]` (`extract_common.add_models_argument`), applied to
+    `build_model_list`'s result by `extract_common.select_models`, which refuses any label
+    `build_model_list` does not return, naming those it does. A model whose `BackgroundModel` the
+    store does not hold is skipped with one line (`extract_common.require_background` at the old
+    `RuntimeError`'s site, `extract_common.read_models` in place of the model loop), whether or
+    not `--models` was given, and a reader that reads no model exits 1 saying which were skipped
+    and why. `config/model_list.py` is unchanged: every store `main.py` builds holds both
+    cosmology rows. Pinned in `ComputeTargets/tests/test_reader_read_only.py`:
+    `TestTheSixReaders` (each script, read with `ast`), `TestSelectModels`, and `TestTheSkip`
+    (`test_a_model_with_no_background_is_skipped_with_its_line`,
+    `test_all_skipped_exits_non_zero_with_the_reason`). Log:
+    [`../a3-v2-readiness/logs/03-open-readers-read-only.md`](../a3-v2-readiness/logs/03-open-readers-read-only.md).
 - **[02-the-version-row-is-written-outside-the-in-flight-record]** *(opened 2026-09-28 by prompt 02;
   **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 02)*
   - **The defect.** The `version` table is replicated, but its row is not written through

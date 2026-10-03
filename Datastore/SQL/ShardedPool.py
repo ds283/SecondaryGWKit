@@ -22,6 +22,7 @@ from Datastore.replication import (
     ReplicationMismatch,
     same_value,
 )
+from Datastore.replication import ReadOnlyMiss, ReadOnlyWrite
 from Datastore.shard_paths import (
     resolve_shard_path,
     is_legacy_record,
@@ -103,6 +104,7 @@ class ShardedPool:
         prune_unvalidated: Optional[bool] = False,
         drop_actions: Optional[List[str]] = None,
         read_table_config: Optional[ReadTableConfigType] = None,
+        read_only: bool = False,
     ) -> None:
         """
         Initialize a pool of datastore actors
@@ -110,6 +112,8 @@ class ShardedPool:
         :param sharded_tables:
         :param ShardKeyStoreIdGetter:
         :param version_label:
+        :param read_only: open an existing store read-only, writing nothing to any of its files
+            (prompts/a3-v2-readiness, prompt 03; _open_read_only)
         """
         self._job_name: Optional[str] = job_name
         self._version_label: str = version_label
@@ -165,6 +169,14 @@ class ShardedPool:
 
         # the version row of version_label, found or written once every actor exists
         self._version = None
+
+        # A READ-ONLY POOL (prompts/a3-v2-readiness, prompt 03). It opens an existing store with
+        # every file mode=ro and writes nothing to any of them; _open_read_only is the whole of its
+        # construction, and nothing below this block runs for it
+        self._read_only: bool = bool(read_only)
+        if self._read_only:
+            self._open_read_only(version_label, drop_actions, read_table_config)
+            return
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -345,6 +357,272 @@ class ShardedPool:
         version = store_tag(store_id=row[0], label=row[1])
         version._deserialized = True
         return version
+
+    # THE READ-ONLY POOL (prompts/a3-v2-readiness, prompt 03)
+    #
+    # ShardedPool(read_only=True) opens an existing store and writes nothing to any of its files.
+    # Its construction is _open_read_only, which replaces the whole of the read-write constructor
+    # after the attributes are set; the read-write path does not reach it. At open, in order (the
+    # audit's M1 table, row by row, is in the prompt's log):
+    #
+    #   1. drop_actions or prune_unvalidated=True: ReadOnlyWrite, before anything is opened;
+    #   2. store_reader.open_read_only, through a function-scope import (store_reader imports this
+    #      module): a missing primary is refused and nothing is created, not even its directory; a
+    #      journal (-journal, -wal, -shm) beside the primary or any shard is refused by its
+    #      presence, an empty one included, before any engine is made; every shard is opened
+    #      mode=ro and the tables it lacks are reported (self.absent_tables), not created;
+    #   3. the pool's own engine is mode=ro, and _read_shard_data and _check_shard_files run on it
+    #      as they do read-write;
+    #   4. the check at open in read-only form (_check_replicated_tables_read_only): a
+    #      replication_in_flight record of any operation, prune included, refuses by name before
+    #      anything is compared or completed; the replicated tables are compared on mode=ro
+    #      engines and a difference refuses as ReplicatedDivergence. No read-write sqlite3.connect
+    #      is made: journals were refused by presence in step 2, so there is none to roll back.
+    #      No replication_in_flight table is created and nothing is pruned or repaired;
+    #   5. the version row is found by _find_version_row, mode=ro, before any actor exists. A
+    #      label no shard holds refuses with ReadOnlyMiss, naming the labels the store holds. It is
+    #      never written, and set_version is not called: a read-only actor inserts nothing;
+    #   6. no broker, no read_largest_store_ids, no notification: no serial is allocated. Every
+    #      actor is built with read_only=True and serial_broker=None, and the pool waits for
+    #      every constructor through read_only_state;
+    #   7. the read_table_config check, as read-write.
+    #
+    # Afterwards a replicated object_get goes to one shard's actor, drawn as read_table draws it,
+    # with no record and no replication (_get_impl_replicated_table_read_only); object_store,
+    # object_validate and a new shard key raise ReadOnlyWrite; the actors' inserters raise
+    # ReadOnlyMiss.
+
+    def _open_read_only(self, version_label: str, drop_actions, read_table_config):
+        """The read-only constructor (the comment above). Writes nothing to any file."""
+        # 1. refused before anything is opened
+        if drop_actions is not None and len(list(drop_actions)) > 0:
+            raise ReadOnlyWrite(
+                self._primary_file,
+                f"drop_actions={sorted(drop_actions)}",
+                detail="a drop action drops tables",
+            )
+        if self._prune_unvalidated:
+            raise ReadOnlyWrite(
+                self._primary_file,
+                "prune_unvalidated=True",
+                detail="the prune at open deletes unvalidated rows",
+            )
+
+        # store_reader imports this module at module scope, so it is imported here
+        from Datastore.store_reader import open_read_only, read_only_url
+
+        # 2. store_reader's refusals, through its code: missing primary, journals by presence,
+        # the shards table read mode=ro and its files checked; and the tables each shard lacks
+        with open_read_only(self._primary_file) as store:
+            self.absent_tables: Dict[int, List[str]] = {
+                shard.serial: sorted(shard.absent_tables) for shard in store.shards
+            }
+        for sid, absent in sorted(self.absent_tables.items()):
+            if len(absent) > 0:
+                print(
+                    f'>> Read-only sharded datastore "{str(self._primary_file)}": shard {sid} '
+                    f"lacks the table(s) {absent}. Nothing was created; a lookup on one of them "
+                    "fails in SQLite"
+                )
+
+        # 3. the pool's engine, mode=ro. _create_engine builds the tables this pool reads; the
+        # engine it makes is never connected (create_engine opens nothing) and is replaced at once
+        self._create_engine()
+        self._engine.dispose()
+        connect_args = {}
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
+        self._engine = sqla.create_engine(
+            read_only_url(self._primary_file), future=True, connect_args=connect_args
+        )
+        self._read_shard_data()
+        self._check_shard_files()
+
+        # 4. the check at open, compare and refuse only
+        self.reconciliation = self._check_replicated_tables_read_only(read_only_url)
+
+        num_shards = len(self._shard_db_files)
+        if num_shards == 0:
+            raise RuntimeError("No shard records were read from the sharded datastore")
+        if num_shards != self._shards:
+            print(
+                f"!! WARNING: number of shards read from database (={num_shards}) does not match specified number of shards (={self._shards})"
+            )
+
+        # 5. the version row, found and never written
+        self._version = self._find_version_row(version_label)
+        if self._version is None:
+            present = self._version_labels_present()
+            raise ReadOnlyMiss(
+                "version",
+                {"label": version_label},
+                store=self._primary_file,
+                detail=f"the store holds the version label(s) {present}",
+            )
+
+        # 6. no broker, and no serial allocated; every actor read-only
+        self._broker = None
+        shard_ids = list(self._shard_db_files.keys())
+        shard_ids = shard_ids[-1:] + shard_ids[:-1]
+        self._shards = {
+            key: Datastore.options(name=f"shard{key:04d}-store").remote(
+                version_label=version_label,
+                db_name=self._shard_db_files[key],
+                replicated_tables=list(self._replicated_tables),
+                timeout=self._timeout,
+                my_name=f"shard{key:04d}-store",
+                serial_broker=None,
+                profile_agent=self._profile_agent,
+                prune_unvalidated=False,
+                drop_actions=None,
+                read_table_config=read_table_config,
+                read_only=True,
+            )
+            for key in shard_ids
+        }
+        states = ray.get(
+            [shard.read_only_state.remote() for shard in self._shards.values()]
+        )
+        self.actor_states: Dict[int, dict] = dict(zip(self._shards.keys(), states))
+
+        # 7. the read_table_config check
+        self._read_table_config: Optional[ReadTableConfigType] = read_table_config
+        if read_table_config is not None:
+            for class_name, config in read_table_config.items():
+                if class_name not in self._replicated_tables:
+                    raise RuntimeError(
+                        f'It is only possible to configure a read-table method for a replicated table (class name="{class_name}")'
+                    )
+
+        print(
+            f'>> Opened existing sharded datastore "{str(self._primary_file)}" read-only with '
+            f'{num_shards} shards (version label "{version_label}", serial '
+            f"{self._version.store_id})"
+        )
+
+    def _check_replicated_tables_read_only(self, read_only_url: Callable) -> dict:
+        """
+        The check at open of a read-only pool: compare, and repair nothing. Refuses with
+        ReadOnlyWrite if the primary holds a replication_in_flight record of any operation, before
+        anything is compared, so that a prune record is refused by name and never completed; and
+        with ReplicatedDivergence on any difference between the shards' replicated tables. Every
+        connection it makes is mode=ro, through ``read_only_url``. Returns the reconciliation
+        record, as _reconcile_replicated_tables does, with nothing repaired or cleared.
+        """
+        shard_ids = sorted(self._shard_db_files.keys())
+        reconciliation = {
+            "compared": [],
+            "shards": list(shard_ids),
+            "hot_journals": [],
+            "record": None,
+            "controller": None,
+            "repaired": [],
+            "cleared": False,
+            "read_only": True,
+        }
+
+        # a write in flight: completing or repairing it is a write, so it refuses, by name
+        record = self._read_in_flight_record()
+        reconciliation["record"] = record
+        if record is not None:
+            raise ReadOnlyWrite(
+                self._primary_file,
+                f'completing the write in flight (operation="{record.get("operation")}", '
+                f'class="{record.get("class_name")}", controlling shard='
+                f'{record.get("controller_shard")}, store_id={record.get("store_id")}, '
+                f'started={record.get("started")})',
+                detail="the primary holds this replication_in_flight record, so the shards may "
+                "differ; the check at open of a read-write pool completes or repairs it. The "
+                "record was not cleared",
+            )
+
+        built = build_schema(sqla.MetaData(), _factories)
+        specs = self._replicated_table_specs(built)
+        reconciliation["compared"] = [spec["name"] for spec in specs]
+
+        engines = {
+            sid: sqla.create_engine(
+                read_only_url(Path(self._shard_db_files[sid])),
+                future=True,
+                poolclass=sqla.pool.NullPool,
+            )
+            for sid in shard_ids
+        }
+        try:
+            snapshots = {}
+            for sid in shard_ids:
+                with engines[sid].connect() as conn:
+                    try:
+                        snapshots[sid] = self._read_replicated_tables(conn, specs)
+                    finally:
+                        conn.rollback()
+        finally:
+            for engine in engines.values():
+                engine.dispose()
+
+        differences = self._replicated_differences(specs, snapshots)
+        if len(differences) > 0:
+            raise ReplicatedDivergence(
+                self._primary_file,
+                self._describe_differences(specs, snapshots, differences),
+                None,
+            )
+        return reconciliation
+
+    def _version_labels_present(self) -> List[str]:
+        """Every version label the store holds, in serial order, read mode=ro from each shard
+        (the check at open has shown them equal; a shard without the table holds none).
+        """
+        labels = []
+        for sid, path in sorted(self._shard_db_files.items()):
+            conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
+            try:
+                has = conn.execute(
+                    "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'version'"
+                ).fetchone()[0]
+                rows = (
+                    conn.execute("SELECT label FROM version ORDER BY serial").fetchall()
+                    if has
+                    else []
+                )
+            finally:
+                conn.close()
+            for (label,) in rows:
+                if label not in labels:
+                    labels.append(label)
+        return labels
+
+    def _get_impl_replicated_table_read_only(self, cls_name, kwargs):
+        """
+        A replicated get on a read-only pool: one shard's actor answers, drawn as read_table
+        draws it, with no replication_in_flight record and no replication; _replicated_write is
+        never entered. A miss that would insert raises ReadOnlyMiss in the actor. A get of the
+        shard-key class keeps _assign_shard_keys, which raises ReadOnlyWrite where it would insert
+        a key. Returns the actor's ref, as the read-write get does.
+        """
+        # we only need to read the row from a single shard, so pick one at random
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
+
+        if cls_name == self._ShardKeyType_name:
+            self._assign_shard_keys(ray.get(ref))
+
+        return ref
+
+    def _refuse_write(self, operation: str, objects) -> None:
+        """Raise ReadOnlyWrite for ``operation`` on a read-only pool, naming the classes."""
+        items = objects if isinstance(objects, (list, tuple)) else [objects]
+        raise ReadOnlyWrite(
+            self._primary_file,
+            operation,
+            class_name=", ".join(sorted({type(item).__name__ for item in items})),
+        )
 
     @property
     def primary(self) -> Path:
@@ -2747,6 +3025,10 @@ class ShardedPool:
         )
 
     def _get_impl_replicated_table(self, cls_name, kwargs):
+        # a read-only pool answers from one shard, with no record and no replication (prompt 03)
+        if getattr(self, "_read_only", False):
+            return self._get_impl_replicated_table_read_only(cls_name, kwargs)
+
         # we push an initial 'get' to the controlling shard. If a new database object was created
         # (or an existing one updated) by the get, we then push a replica to all the other shards,
         # with the controller's store_id, and require each to answer with that store_id.
@@ -2910,6 +3192,10 @@ class ShardedPool:
         return self._shards[shard_id].object_read_batch.remote(cls_name, **payload)
 
     def object_store(self, objects):
+        # a read-only pool stores nothing (prompts/a3-v2-readiness, prompt 03)
+        if getattr(self, "_read_only", False):
+            self._refuse_write("object_store", objects)
+
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False
@@ -3004,6 +3290,10 @@ class ShardedPool:
         return [self._shards[shard_id].object_store.remote(item)]
 
     def object_validate(self, objects):
+        # a read-only pool validates nothing (prompts/a3-v2-readiness, prompt 03)
+        if getattr(self, "_read_only", False):
+            self._refuse_write("object_validate", objects)
+
         # we only expect to call object_store on sharded objects
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
@@ -3110,6 +3400,18 @@ class ShardedPool:
         # if no work to do, return
         if len(missing_keys) == 0:
             return
+
+        # a read-only pool assigns no shard key (prompts/a3-v2-readiness, prompt 03): the check at
+        # open compared shard_keys with the wavenumbers every shard holds, so a wavenumber with
+        # no key here is one the store's primary does not know
+        if getattr(self, "_read_only", False):
+            raise ReadOnlyWrite(
+                self._primary_file,
+                "assigning a shard key",
+                class_name=self._ShardKeyType_name,
+                detail=f"store_id(s) {sorted(seen_store_ids)} have no row in the primary's "
+                "shard_keys",
+            )
 
         # otherwise, we have to populate keys
         # try to load balance by working out which shard has the fewest keys

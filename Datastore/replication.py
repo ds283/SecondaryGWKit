@@ -18,6 +18,10 @@ When a store is opened, ``ShardedPool`` compares its replicated tables across sh
 An interrupted replication is repaired from the record's controlling shard; any other difference
 refuses the open with ``ReplicatedDivergence``.
 
+A store can also be opened read-only (``ShardedPool(read_only=True)``, prompts/a3-v2-readiness
+prompt 03). On it, a lookup that would insert raises ``ReadOnlyMiss``, and any other write raises
+``ReadOnlyWrite``, each before anything is written.
+
 This module lives at the top of the ``Datastore`` package, and imports nothing from it, so that the
 factories (which raise ``ReplicationMismatch`` inside a Datastore actor), ``ShardedPool`` (which
 raises both in the driver) and the tests can all import it without importing Ray's actor classes
@@ -184,6 +188,97 @@ class ReplicatedDivergence(RuntimeError):
         return (
             type(self),
             (self.primary, self.differences, self.record, self.after_repair),
+        )
+
+
+class ReadOnlyMiss(RuntimeError):
+    """
+    A lookup on a store opened read-only (``ShardedPool(read_only=True)``, prompts/a3-v2-readiness
+    prompt 03) matched no row, where a read-write store would have inserted one. Raised before any
+    ``INSERT`` is issued: a read-only ``Datastore`` actor hands every factory's ``build`` an
+    inserter that raises this instead of inserting, for every replicated class. Also raised by the
+    pool when the version label it is opened under is held by no shard.
+
+    ``class_name`` is the class whose row would have been inserted, ``payload`` the row as the
+    factory would have inserted it (or the lookup's key), ``store`` the actor or primary that
+    refused, and ``detail`` anything more the raiser knows (for the version row, the labels the
+    store holds).
+    """
+
+    def __init__(
+        self,
+        class_name: str,
+        payload,
+        store=None,
+        detail: Optional[str] = None,
+    ):
+        self.class_name = class_name
+        self.payload = payload
+        self.store = store
+        self.detail = detail
+        super().__init__(self._message())
+
+    def _message(self) -> str:
+        where = f' "{self.store}"' if self.store is not None else ""
+        message = (
+            f'Datastore{where} was opened read-only, and a lookup of "{self.class_name}" matched '
+            f"no row; a read-write store would have inserted one with payload {self.payload!r}"
+        )
+        if self.detail is not None:
+            message += f" ({self.detail})"
+        return message + ". Nothing was written"
+
+    def __str__(self) -> str:
+        return self._message()
+
+    def __reduce__(self):
+        return (
+            type(self),
+            (self.class_name, self.payload, self.store, self.detail),
+        )
+
+
+class ReadOnlyWrite(RuntimeError):
+    """
+    A write was attempted on a store opened read-only (``ShardedPool(read_only=True)``,
+    prompts/a3-v2-readiness prompt 03): a store, a validate, a prune, a drop, a repair, a new shard
+    key, or an insert that is not a lookup's. Raised before anything is written. It is also the
+    backstop: a write that reaches SQLite through a read-only actor is refused by the file, opened
+    ``mode=ro``, and that refusal is re-raised as this exception, chained.
+
+    ``store`` names the actor or primary that refused, ``operation`` what was attempted,
+    ``class_name`` the class it was attempted on (if one), ``detail`` why it would write.
+    """
+
+    def __init__(
+        self,
+        store,
+        operation: str,
+        class_name: Optional[str] = None,
+        detail: Optional[str] = None,
+    ):
+        self.store = store
+        self.operation = operation
+        self.class_name = class_name
+        self.detail = detail
+        super().__init__(self._message())
+
+    def _message(self) -> str:
+        what = self.operation
+        if self.class_name is not None:
+            what += f' of "{self.class_name}"'
+        message = f'Datastore "{self.store}" was opened read-only, and {what} would write to it'
+        if self.detail is not None:
+            message += f" ({self.detail})"
+        return message + ". Nothing was written"
+
+    def __str__(self) -> str:
+        return self._message()
+
+    def __reduce__(self):
+        return (
+            type(self),
+            (self.store, self.operation, self.class_name, self.detail),
         )
 
 

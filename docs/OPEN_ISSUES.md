@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-03 · **104 open** across nineteen campaigns.
+**Last updated:** 2026-10-03 · **102 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -824,8 +824,6 @@ was opened when 02 was written.
 | `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. Reassigned from `handover`; prompt 05. |
 | `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | datastore-integrity | A `SIGTERM` to `scoped_pipeline_run.py` in `ray.wait` reaches Python as `SystemExit(1)`, so it is recorded `failed`/1, not `killed`; a cleanup over ~3 s is aborted by absl's 3 s alarm (SIGABRT), which `signal.alarm(0)` cancels. **Widened 2026-10-02** by audit 00: any exit without `ray.shutdown()` can leave a `gcs_server`. `--build` shares `terminal_state`. Prompt 04. |
-| `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` | datastore-integrity | A reader that writes to the store it reads. **Widened 2026-10-02** by audit 00: every reader `object_get`s seven replicated classes, each call committing and clearing an in-flight record (21 calls, 42 commits for the QSI reader on a full stand-in store); five insert on a miss; none writes a sharded row. Prompt 03 (read-only pool, D3). |
-| `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` | datastore-integrity | The six `extract_*.py` scripts read every model of `build_model_list`, with no `--models`, and exit 1 on `QCD_Cosmology` after a full LambdaCDM read of a LambdaCDM-only store, as A3 v2's is. Prompt 03. |
 
 ---
 

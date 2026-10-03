@@ -1,4 +1,5 @@
 import functools
+import sqlite3
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
@@ -76,6 +77,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
 from Datastore.SQL.schema import build_schema
 from Datastore.replication import ReplicationMismatch
+from Datastore.replication import ReadOnlyMiss, ReadOnlyWrite
 from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
@@ -186,6 +188,7 @@ class Datastore:
         prune_unvalidated: Optional[bool] = False,
         drop_actions: Optional[List[str]] = None,
         read_table_config: Optional[ReadTableConfigType] = None,
+        read_only: bool = False,
     ):
         """
         Initialize an SQL datastore object.
@@ -201,6 +204,14 @@ class Datastore:
         replicated class is the pool's, under a record, before any actor exists
         (``ShardedPool._prune_replicated_tables``); for those classes ``_validate_on_startup``
         here reports only, whatever ``prune_unvalidated`` is.
+
+        ``read_only`` (prompts/a3-v2-readiness, prompt 03; ShardedPool passes it) opens the file
+        ``mode=ro`` and writes nothing: no file is created, no table is dropped or created, and
+        ``_validate_on_startup`` only reports (``_open_read_only``). Every factory's ``build`` is
+        handed an inserter that raises ``ReadOnlyMiss`` instead of inserting
+        (``_refuse_insert``); ``object_store`` and ``object_validate`` raise ``ReadOnlyWrite``;
+        and a write that still reaches SQLite, which the ``mode=ro`` file refuses, is re-raised as
+        ``ReadOnlyWrite`` (``_read_only_refusal``).
         """
         self._timeout = timeout
         self._my_name = my_name
@@ -232,6 +243,13 @@ class Datastore:
         self._tables: _TableMappingType = {}
         self._inserters: _InserterMappingType = {}
         self._schema = {}
+
+        # A READ-ONLY ACTOR (prompts/a3-v2-readiness, prompt 03): nothing below this block runs
+        self._read_only: bool = bool(read_only)
+        if self._read_only:
+            self._open_read_only(drop_actions)
+            self._read_table_config = read_table_config
+            return
 
         if self._db_file.is_dir():
             raise RuntimeError(
@@ -269,6 +287,186 @@ class Datastore:
                 f'(label "{self._version_label}"), and cannot be changed to {serial}'
             )
         self._version_serial = serial
+
+    # A READ-ONLY ACTOR (prompts/a3-v2-readiness, prompt 03)
+    #
+    # Built by ShardedPool(read_only=True) after the pool has refused journals, compared the
+    # replicated tables and found the version row, all on mode=ro files. The actor opens its own
+    # file mode=ro through store_reader's URL, creates nothing, drops nothing, creates no table,
+    # and validates at startup in report-only form. It never receives the version serial
+    # (set_version is not called), so even an insert that got past the refusing inserters would
+    # be refused by _insert before a serial is leased; and the mode=ro file refuses any write that
+    # reaches SQLite, which _read_only_refusal re-raises as ReadOnlyWrite.
+
+    def _open_read_only(self, drop_actions):
+        """The read-only constructor. Writes nothing; refuses before opening anything if asked
+        to drop or prune, and refuses a file that does not exist rather than create it.
+        """
+        if drop_actions is not None and len(list(drop_actions)) > 0:
+            raise ReadOnlyWrite(
+                self._my_name,
+                f"drop_actions={sorted(drop_actions)}",
+                detail="a drop action drops tables",
+            )
+        if self._prune_unvalidated:
+            raise ReadOnlyWrite(
+                self._my_name,
+                "prune_unvalidated=True",
+                detail="the prune at startup deletes unvalidated rows",
+            )
+        if self._db_file.is_dir() or not self._db_file.is_file():
+            raise RuntimeError(
+                f'Datastore "{self._my_name}" was opened read-only, and its database file '
+                f'"{str(self._db_file)}" is not an existing file. A read-only datastore creates '
+                "nothing. Nothing was written"
+            )
+
+        # store_reader imports this module at module scope, so it is imported here
+        from Datastore.store_reader import read_only_url
+
+        connect_args = {}
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
+        self._engine = sqla.create_engine(
+            read_only_url(self._db_file),
+            future=True,
+            connect_args=connect_args,
+        )
+        self._metadata = sqla.MetaData()
+        self._inspector = sqla.inspect(self._engine)
+
+        self._build_schema()
+
+        # every inserter, the actor's own and the one each schema record carries, refuses
+        self._inserters = {
+            cls_name: functools.partial(self._refuse_insert, self._schema[cls_name])
+            for cls_name in self._tables
+        }
+        for cls_name, inserter in self._inserters.items():
+            self._schema[cls_name]["insert"] = inserter
+
+        # no _ensure_tables: a table the file lacks is reported, and a lookup on it then fails in
+        # SQLite with "no such table"
+        self._absent_tables = sorted(
+            name for name in self._tables if not self._inspector.has_table(name)
+        )
+        if len(self._absent_tables) > 0:
+            print(
+                f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
+                f"read-only, lacks the table(s) {self._absent_tables}; nothing was created"
+            )
+
+        self._skipped_validation = []
+        self._validate_on_startup_read_only()
+
+    def _validate_on_startup_read_only(self):
+        """
+        ``_validate_on_startup`` in report-only form: every class that validates at startup is
+        read with ``prune=False``, on a connection that is rolled back. A class whose table this
+        file lacks is skipped and reported, as ShardedPool._prune_needed skips it, so that a shard
+        missing such a table still opens.
+        """
+        printed_header = False
+
+        for cls_name, record in self._schema.items():
+            if not record["validate_on_startup"]:
+                continue
+
+            if cls_name in self._absent_tables:
+                self._skipped_validation.append(cls_name)
+                print(
+                    f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
+                    f'read-only: "{cls_name}" was not validated at startup, because the file '
+                    "lacks its table"
+                )
+                continue
+
+            factory = self._factories[cls_name]
+            tab = record["table"]
+
+            try:
+                with self._engine.connect() as conn:
+                    try:
+                        msgs = factory.validate_on_startup(
+                            conn, tab, self._tables, False
+                        )
+                    finally:
+                        conn.rollback()
+            except SQLAlchemyError as e:
+                self._read_only_refusal(e, "validate_on_startup", cls_name)
+                raise
+
+            if len(msgs) == 0:
+                continue
+
+            if not printed_header:
+                if self._my_name is not None:
+                    print(
+                        f"!! INTEGRITY WARNING ({datetime.now().replace(microsecond=0).isoformat()}): "
+                        f'datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
+                        "read-only: reported, not pruned"
+                    )
+                    printed_header = True
+
+            for line in msgs:
+                print(line)
+
+    def _refuse_insert(
+        self,
+        schema,
+        conn,
+        payload,
+        insert_timestamp: Optional[datetime] = None,
+    ):
+        """
+        The inserter of a read-only actor, in place of ``_insert``, for every table. It raises
+        before any ``INSERT`` is issued and before a serial is leased. A row of a replicated class
+        is what a lookup inserts on a miss (``store_tag``, ``LambdaCDM``, ``QCD_Cosmology``,
+        ``tolerance``, ``GkSourcePolicy``, and ``redshift``/``wavenumber`` when created), so it is a
+        ``ReadOnlyMiss``. Any other row (a sharded value row that a vectorized get builds, a tag
+        row) is a write of computed data, so it is a ``ReadOnlyWrite``.
+        """
+        cls_name = schema["name"]
+        if cls_name in self._replicated_tables:
+            raise ReadOnlyMiss(cls_name, dict(payload), store=self._my_name)
+        raise ReadOnlyWrite(
+            self._my_name,
+            "an insert",
+            class_name=cls_name,
+            detail=f"payload {dict(payload)!r}",
+        )
+
+    def _read_only_refusal(self, e: SQLAlchemyError, operation: str, cls_name=None):
+        """
+        The backstop. On a read-only actor, if ``e`` is SQLite's refusal of a write to the
+        ``mode=ro`` file (``SQLITE_READONLY``, "attempt to write a readonly database"), raise
+        ``ReadOnlyWrite`` from it, naming this actor. Anything else, ``no such table`` and a hot
+        journal's ``SQLITE_READONLY_ROLLBACK`` included, is left for the caller to re-raise.
+        """
+        if not getattr(self, "_read_only", False):
+            return
+        orig = getattr(e, "orig", None)
+        if (
+            isinstance(orig, sqlite3.OperationalError)
+            and getattr(orig, "sqlite_errorcode", None) == sqlite3.SQLITE_READONLY
+        ):
+            raise ReadOnlyWrite(
+                self._my_name,
+                operation,
+                class_name=cls_name,
+                detail=f"SQLite refused the write to the read-only file "
+                f'"{str(self._db_file)}": {orig}',
+            ) from e
+
+    def read_only_state(self) -> dict:
+        """What a read-only actor found at startup: the tables its file lacks, and the classes it
+        did not validate for that reason. ShardedPool calls it on every actor once, which also
+        waits for every constructor."""
+        return {
+            "read_only": getattr(self, "_read_only", False),
+            "absent_tables": list(getattr(self, "_absent_tables", [])),
+            "skipped_validation": list(getattr(self, "_skipped_validation", [])),
+        }
 
     def __enter__(self):
         return self
@@ -498,6 +696,8 @@ class Datastore:
                 )
                 print(f"|  payload data = {payload_data}")
                 print(f"|  {e}")
+                # a read-only actor: SQLite's refusal of a write is a ReadOnlyWrite (prompt 03)
+                self._read_only_refusal(e, "object_get", cls_name)
                 raise e
 
         # for obj in objects:
@@ -540,6 +740,8 @@ class Datastore:
                 )
                 print(f"|  payload data = {payload}")
                 print(f"|  {e}")
+                # a read-only actor: SQLite's refusal of a write is a ReadOnlyWrite (prompt 03)
+                self._read_only_refusal(e, "object_read_batch", cls_name)
                 raise e
 
         return objects
@@ -553,6 +755,14 @@ class Datastore:
         nothing else. A replica's store() may raise ReplicationMismatch, which does not know its
         shard; it is re-raised here naming this actor.
         """
+        # a read-only actor stores nothing (prompts/a3-v2-readiness, prompt 03)
+        if getattr(self, "_read_only", False):
+            items = objects if isinstance(objects, (list, tuple)) else [objects]
+            raise ReadOnlyWrite(
+                self._my_name,
+                "object_store",
+                class_name=", ".join(sorted({type(o).__name__ for o in items})),
+            )
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False
@@ -619,6 +829,9 @@ class Datastore:
         override travels in the call's arguments and is never kept on the actor, so one call's
         timestamp cannot leak into the next.
         """
+        # a read-only actor's inserters all refuse, whatever the timestamp (prompt 03)
+        if getattr(self, "_read_only", False):
+            return self._inserters
         if insert_timestamp is None:
             return self._inserters
 
@@ -718,6 +931,14 @@ class Datastore:
             return reported_serial
 
     def object_validate(self, objects):
+        # a read-only actor validates nothing (prompts/a3-v2-readiness, prompt 03)
+        if getattr(self, "_read_only", False):
+            items = objects if isinstance(objects, (list, tuple)) else [objects]
+            raise ReadOnlyWrite(
+                self._my_name,
+                "object_validate",
+                class_name=", ".join(sorted({type(o).__name__ for o in items})),
+            )
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False

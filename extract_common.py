@@ -103,6 +103,53 @@ def add_run_selection_argument(parser) -> None:
     )
 
 
+def add_models_argument(parser) -> None:
+    """
+    Add ``--models LABEL [LABEL ...]`` (prompts/a3-v2-readiness, prompt 03), with
+    ``docs/gktk-remedial/scoped_pipeline_run.py --models``' meaning: read only the models of
+    ``config.model_list.build_model_list`` with these labels. Applied by :func:`select_models`.
+    """
+    parser.add_argument(
+        "--models",
+        type=str,
+        nargs="+",
+        default=None,
+        metavar="LABEL",
+        help=(
+            "read only the models of config.model_list.build_model_list with these labels "
+            "(e.g. --models LambdaCDM). Every label must be one build_model_list returns. If "
+            "omitted, every model is read; a model the datastore holds no background for is "
+            "skipped, saying so"
+        ),
+    )
+
+
+def select_models(model_list: Sequence[dict], requested: Optional[Sequence[str]]):
+    """
+    The models of ``model_list`` (``build_model_list``'s result) to read, in its order. Pure.
+
+    ``requested`` is ``--models``: None keeps every model. Otherwise only the models whose label
+    is requested are kept, and **every** requested label must be one ``model_list`` holds: an
+    unknown label raises ``RuntimeError`` naming the labels it does hold. That is stricter than
+    ``scoped_pipeline_run.py``, which raises only when no label matches: a reader must not drop a
+    mistyped label silently.
+    """
+    models = list(model_list)
+    if requested is None:
+        return models
+
+    known = [m["label"] for m in models]
+    unknown = [label for label in requested if label not in known]
+    if len(unknown) > 0:
+        raise RuntimeError(
+            f"extract: --models names {', '.join(unknown)}, which "
+            "config.model_list.build_model_list does not return. Models it returns: "
+            f"{', '.join(known)}."
+        )
+
+    return [m for m in models if m["label"] in requested]
+
+
 def available_run_labels(pool) -> List[str]:
     """
     The names of the runs this datastore holds, in sorted order.
@@ -230,6 +277,69 @@ def describe_background_generation(model) -> str:
 
     construction, digest = identity
     return f"source grid construction version {construction}, digest {digest}"
+
+
+# ---------------------------------------------------------------------------------------------
+# a model the datastore holds no background for (prompts/a3-v2-readiness, prompt 03)
+# ---------------------------------------------------------------------------------------------
+
+# Each script's run_pipeline looks its model's BackgroundModel up first and cannot go on without
+# it. A store built for some models only (A3 v2's holds LambdaCDM's background and not
+# QCD_Cosmology's) is not an error for the models it holds: the model it lacks is skipped, saying
+# so, and the script exits non-zero only if it read no model at all.
+
+NO_BACKGROUND_REASON = "the datastore holds no background model for it"
+
+
+class NoBackgroundModel(Exception):
+    """Raised by :func:`require_background` inside a script's ``run_pipeline``, and caught by
+    :func:`read_models`, which skips the model. Not a ``RuntimeError``: it is not a failure.
+    """
+
+    def __init__(self, model_label: str):
+        self.model_label = model_label
+        super().__init__(f"{model_label}: {NO_BACKGROUND_REASON}")
+
+
+def require_background(model, model_label: str) -> None:
+    """Called in ``run_pipeline`` just after the ``BackgroundModel`` lookup: if the store holds no
+    background for this model, stop this model's pipeline (:func:`read_models` skips it).
+    """
+    if not model.available:
+        raise NoBackgroundModel(model_label)
+
+
+def read_models(model_list: Sequence[dict], run_pipeline) -> List[str]:
+    """
+    The scripts' model loop: ``run_pipeline(model_data)`` for every model, in order. A model whose
+    ``run_pipeline`` stops at :func:`require_background` is skipped with one line naming it, and
+    the loop goes on to the next. Returns the labels read. If no model was read, raises
+    ``SystemExit`` with a message naming every model skipped and why, so the script exits 1.
+    """
+    read = []
+    skipped = []
+    for model_data in model_list:
+        label = model_data["label"]
+        try:
+            run_pipeline(model_data)
+        except NoBackgroundModel as e:
+            if e.model_label != label:
+                raise
+            print(f"\n>> SKIPPING MODEL {label}: {NO_BACKGROUND_REASON}")
+            skipped.append(label)
+            continue
+        read.append(label)
+
+    if len(read) == 0:
+        if len(skipped) > 0:
+            why = "; ".join(
+                f"{label} was skipped: {NO_BACKGROUND_REASON}" for label in skipped
+            )
+        else:
+            why = "the model list is empty"
+        raise SystemExit(f"extract: no model was read. {why}.")
+
+    return read
 
 
 TEXT_DISPLACEMENT_MULTIPLIER = 0.85
