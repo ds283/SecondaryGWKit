@@ -21,6 +21,9 @@ mode is only worth having if nothing written at open or in a lookup escapes it.
    §3.3, with their **Widened** lines.
 4. Prompt 02's log, and its result in `Datastore/SQL/ShardedPool.py` and `Datastore/SQL/Datastore.py`:
    the pool now writes the version row and the replicated prune, and actors take `set_version`.
+   Read `ShardedPool._find_version_row`, `_prune_replicated_tables` and
+   `_complete_interrupted_prune`, and `Datastore.__init__`'s `replicated_tables` argument (added
+   2026-10-03, with the orchestrator note).
 5. `Datastore/store_reader.py` in full: `read_only_url`, `_refuse_journals`, `open_read_only`.
    This prompt **reuses** its refusals rather than writing a second set.
 6. The six `extract_*.py` scripts, `extract_common.py`, and `config/model_list.build_model_list`.
@@ -57,11 +60,19 @@ actor. Under it, at open, exactly M1's table:
 - **The check at open compares, and repairs nothing.** It compares on `mode=ro` connections. A
   difference refuses as today. A record on the primary, of any operation including 02's `prune`,
   refuses, naming the record. Nothing is cleared.
+  - Since 02, `_reconcile_replicated_tables` sends a `prune` record to
+    `_complete_interrupted_prune`, which writes, **before** it compares anything. The read-only
+    refusal of a record comes before that branch, so that a `prune` record is refused by name and
+    is never met first by the `mode=ro` file's own error (added 2026-10-03).
 - **No DDL at all.** No `replication_in_flight.create`, no `_ensure_tables`. A table a shard lacks
   is reported, as `store_reader` reports it, and a lookup on it then fails in SQLite.
 - **`drop_actions` or `prune_unvalidated=True` raise `ReadOnlyWrite` at construction**, before
   anything is opened.
 - **`_validate_on_startup` runs report-only.**
+  - It queries the table of every class that validates at startup. With no `_ensure_tables`, a
+    shard that lacks one of those tables would fail the open with `no such table`. Under
+    `read_only=True` such a class is skipped and reported, as 02's `_prune_needed` skips it, so
+    that a store missing a table still opens (§3 case 5) (added 2026-10-03).
 - **The version row is found, never written.**
   - The pool selects it by label on a `mode=ro` connection: `SELECT serial, label FROM version
     WHERE label = ?`, as M2e measured.
@@ -104,6 +115,9 @@ stops a write; a reader that would have written now raises.
 - Each reader takes `--models LABEL [LABEL …]`, with `scoped_pipeline_run.py --models`' meaning.
   - It restricts the models read to these labels.
   - A label that `build_model_list` does not return is an error, naming the labels it does return.
+    This is stricter than `scoped_pipeline_run.py`, which raises only when **no** label matches
+    and drops an unknown one silently. A reader must not drop a mistyped label, so this rule
+    governs (added 2026-10-03).
   - Add the argument once, in `extract_common.py`, beside `add_run_selection_argument`, with the
     filter as a pure function there.
 - **The filter applies after `build_model_list` returns.** Do not change `config/model_list.py`.
@@ -169,7 +183,11 @@ record each in the log as a diff, exactly as applied:
 - (ii) the read-only inserter inserts instead of raising;
 - (iii) the actor's engine is opened read-write under `read_only=True`;
 - (iv) the empty-journal refusal is removed;
-- (v) the check at open's step-1 `sqlite3.connect` runs under `read_only=True`;
+- (v) the check at open's step-1 `sqlite3.connect` runs under `read_only=True`. A checksum cannot
+  catch this. Journals are refused by presence before step 1 is reached, and a read-write open of
+  a shard with no journal writes nothing. The test that catches it must observe the connection
+  itself, for example by recording what `ShardedPool`'s `sqlite3.connect` is called with (added
+  2026-10-03);
 - (vi) one script keeps `prune_unvalidated=False` and drops `read_only=True`;
 - (vii) the skip helper raises again for a model with no background.
 
