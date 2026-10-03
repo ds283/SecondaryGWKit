@@ -67,7 +67,8 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
-[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used) and
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -137,6 +138,14 @@ things the prompt had not said. The prompt was amended in the same commit (each 
 - **`resumed-d` ran before 02.** Since `b647c0b` the pool, not the actors, prunes the replicated
   classes. The 45 `GkSource` rows are sharded, which an actor still prunes, so the measurement
   stands for them. The closing note says so, and names 07's L2 as the measurement at A3 v2's tree.
+
+Writing 06's note, at `c372bee`, found nothing to amend in prompt 06, and neither stop condition
+fires. F1, applied to an export of the tree, leaves every RunRegistry test passing but two that
+need a git repository (`git_head`). Three stores retired in turn directly in a temporary stores root
+listed 0, 1 and 2 earlier tombstones before F1, and two more retired through a symlinked root
+listed 3 and 4. With F1 all five listed none. Of the four tombstones under `var/datastores/`, the five matches F1 removes are all
+`$.retired.references.stores_root`. The one real match, the live A3 sidecar's `$.backup.path`, is
+the subdirectory shape F1 keeps.
 
 **Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
 `5707851` with nothing `running` in this repository's registry, no other worktree and no Ray
