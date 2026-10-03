@@ -8,8 +8,7 @@ backup's shape, keeps its directory as a target. Neither stop condition of the p
 Nothing was written under `var/`, no `store retire` was run against the real stores root, no
 tombstone was rewritten, no Ray was started. `[10-store-retire-reports-every-tombstone-as-a-reference]`
 is closed on this board's §4, with its index row deleted (103 to 102). Nothing was opened. The
-commit is this commit, filled in by the orchestrator's review on the board's §1 row and in the
-closing note.
+commit is `938be2b`.
 
 ## What shipped
 
@@ -118,7 +117,7 @@ sidecar (directly in the root, its `backup.path` naming the backup's directory) 
 in `backup-pre-resume-20260921T091011/`; `datastore-integrity-10-reference`; and then
 `datastore-integrity-10-resumed`, whose report is the one asked for. "Before" is
 `_find_references` exactly as the base commit `5e2d97a` has it (read with `git show` and `ast`, and
-put in place of `stores._find_references`); "after" is this commit's. The script is in the scratch
+put in place of `stores._find_references`); "after" is `938be2b`'s. The script is in the scratch
 directory, not the repository, and is given in full below so that it can be re-run (from the
 repository root, in `bash`; it needs `5e2d97a` in the history for "before").
 
@@ -253,7 +252,7 @@ if __name__ == "__main__":
 
 ### Suites
 
-Measured 21:29 onward at the tree of this commit's code (the two Python files staged, the Markdown
+Measured 21:29 onward at the tree of `938be2b`'s code (the two Python files staged, the Markdown
 edits unstaged), serially, with README §7's command, each suite's output written to a file and its
 verdict grepped from it:
 
@@ -404,10 +403,10 @@ while naming one directory. Each failure lists the earlier tombstone by
 ## State handed to the next prompt
 
 - **07** (`rehearse the A3 v2 launch`) is held on 01–06, and 06 touches nothing it reads. After
-  this commit `store retire` of a store directly in `var/datastores/` reports the references to
+  `938be2b` `store retire` of a store directly in `var/datastores/` reports the references to
   that store and not a growing list of tombstones.
 - **Baselines** (board §5.12): see the suites table above.
 - **Index:** 102 open, from 103. Nothing opened.
-- **The orchestrator's residue:** this commit's SHA, in the board's §1 row for 06 and in the
+- **The orchestrator's residue:** `938be2b`, in the board's §1 row for 06 and in the
   closing note of `[10-store-retire-reports-every-tombstone-as-a-reference]` on §4; and README §2's
   row for 06 (observation 1).

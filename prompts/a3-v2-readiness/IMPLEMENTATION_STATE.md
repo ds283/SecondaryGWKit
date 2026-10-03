@@ -3,8 +3,8 @@
 **Last updated:** 2026-10-03 · **Status: IN PROGRESS — 7 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
-is held on 01–06 (README §2).
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+was held on 01–06, and is released (2026-10-03) now that all six have landed; it is not yet written (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
 LambdaCDM store is built, and decided that all seven defects of README §0 are fixed first, by one
@@ -56,8 +56,8 @@ recommended** (audit, closing section; README §6.2):
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
-| 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | this commit | [`logs/06-…`](logs/06-count-only-real-references.md) |
-| 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
+| 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
+| 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06; released 2026-10-03, not yet written | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -68,7 +68,7 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used) and
-[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -784,6 +784,116 @@ Carried into 07's note:
 - **L2's expectation.** The resumed store's inventory reports no `duplicate`, and its fingerprint
   equals the uninterrupted reference's.
 
+**Orchestrator review of prompt 06 (2026-10-03).** Run against `938be2b`, dispatched from
+`5e2d97a`, the commit that wrote this review's note. At dispatch the tree was clean, there was no
+other worktree, and nothing was `running` in this repository's registry. 06 starts no Ray. **All
+ten checks in `orchestrator/prompt-06.md` §3 passed.** No §5 stop condition fired, and the agent
+asked nothing.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `5e2d97a`. The registry listed 12 runs, 10 finished and 2 `unknown`, unchanged.
+    The index held **103** rows. `var/datastores/` held its 10 entries.
+  - The pre-images were `9f5105f` (`RunRegistry/stores.py`), `2d9afd9`
+    (`RunRegistry/tests/test_store_retire.py`) and `88cf6dd` (`RunRegistry/__main__.py`).
+  - The baselines matched §5.11 except for one failure, measured 21:08–21:20 at a 1-minute load
+    of 10–18. That was `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, alone too (0.073–0.106 s
+    against 0.06 s). Another project's session was running its own test suite beside it. It is
+    settled under *Suites* below.
+- **Scope (1).**
+  - 5 files, all on the note's list. The diff over `main.py`, `Datastore/`, `config/`, `docs/`,
+    `RunRegistry/__init__.py` and `RunRegistry/__main__.py` is `docs/OPEN_ISSUES.md` alone.
+  - Compared by `ast` with `5e2d97a`, `stores.py` has the same 88 top-level nodes, and only
+    `_find_references` differs. `test_store_retire.py` is unchanged; the tests are a new module.
+- **(E1, E3) F1, by reading (2).**
+  - The targets are the primary and the planned files. `realpath(primary.parent)` is added only
+    when it differs from `realpath(stores_root)`.
+  - The docstring says what a directory match means, and that it may be shared with other stores.
+  - The optional tombstone skip was not taken. The log says what it would hide.
+- **(E2) The subdirectory match (3).** `test_a_retirement` is byte-identical and passes.
+  `test_a_store_in_a_subdirectory_named_by_the_subdirectory` reports the sidecar by its two
+  directory fields and not by its root field.
+- **(E1) The tests (4).** `test_store_retire_references` has 10 tests. With `test_store_retire`,
+  51 tests, OK.
+  - `test_three_stores_in_the_root_retired_in_turn` retires three stores directly in the root. It
+    asserts each report is `{}`, after reading from each earlier tombstone that its
+    `references.stores_root` resolves to this root.
+  - `test_a_sidecar_that_is_not_a_tombstone_naming_the_root` names the root by absolute and
+    relative path, and is not reported.
+  - Two tests go through a symlink: one for the stores root, and one for the primary.
+- **(E5) The pins (5).** Each of (i)–(iii), extracted from the log, applies with `git apply` at
+  `938be2b`. Each was replayed in `bash` against `test_store_retire` and the new module. Every
+  failure is an `AssertionError` on the report:
+  - (i) 5 failures. Earlier tombstones are listed by `$.retired.references.stores_root`.
+  - (ii) 4 failures, `test_a_retirement` among them. Its expected set lacks
+    `datastores/D/store.manifest.json`, the backup's.
+  - (iii) 2 failures, the two symlink tests.
+
+  `git apply -R` left `git status` clean after each, and the restored tree passes the 51.
+- **§7's reconstruction (6).** The log's script, re-run from the scratchpad, gives:
+  - the second 2026-10-02 retirement, before: 3 sidecars (`datastore-integrity-10-reference`,
+    `handover-atol-sweep` and the backup's tombstone), each by
+    `$.retired.references.stores_root` alone;
+  - the same retirement, after: none;
+  - the first of the pair: 2 before and none after;
+  - the backup's retirement: the live A3 sidecar by `$.backup.path`, at both trees.
+
+  This agrees with the tombstones under `var/datastores/` and with the log.
+- **(E4) Nothing else changed (7).**
+  - `test_store_retire`, `test_store_command_line`, `test_store_amend` and `test_store_sidecar`
+    pass within the RunRegistry suite.
+  - One retirement directly in the root and one in a subdirectory were run at both trees. They
+    give identical sorted keys for the result, `retired`, `retired.references` and the result's
+    `references`. The parent's function was put back by `ast`, which is the whole difference by
+    check 1.
+- **`var/` (8).** Every entry under `var/datastores/` has the same size and modification time as
+  at dispatch.
+- **(E6) The records (9).**
+  - The issue is in this board's §4. Its closing note names `test_store_retire_references` and
+    `test_a_retirement`, and cites the four tombstones.
+  - Its §3.2 entry and index row are gone. The index is **102** = 103 − 1 by `grep -c`, and
+    matches the header.
+  - This board has the §1 row, F1–F2 and §5.12.
+  - The log's *State handed to the next prompt* says that a retirement in `var/datastores/` now
+    reports the references to that store. 07's note states it for 07's own stores (below).
+- **Suites (10).** Run serially by the orchestrator at `938be2b`, 21:54–22:07, at a 1-minute load
+  of 15–34 (§5.13 below).
+  - RunRegistry is 253 = 243 + 10. Every other count is unchanged.
+  - The one failure is `test_wall_time_per_object` again. The orchestrator settled it on an export
+    of `dd7f272`, where it passed in the 05 review. Run alternately, four times each, the export
+    gave 0.072–0.081 s and `938be2b` gave 0.081–0.092 s, both against 0.06 s. Both fail, and
+    `ComputeTargets/` is byte-identical between the two trees. So the failure is the machine's
+    load (another project's session running its own suite), not 06.
+  - `black --check` is clean on the two Python files.
+
+Remnants, fixed in the follow-up commit:
+1. "This commit" stood where the SHA belongs. It was in this board's §1 row, its §4 closing note
+   (twice) and §5.12, and in five places in log 06. All now say `938be2b`.
+2. README §2's row for 06 described a rule the prompt never asked for: a directory "shared with
+   other stores" stops matching. `test_a_retirement` forbids that rule (log 06, observation 1).
+   The row now describes the shipped rule, with a dated correction, and its status gives the
+   landing date and SHA.
+3. With 01–06 landed, 07 is released. README §2, this board's §1 row and the header now say so,
+   and that 07 is not yet written.
+4. The orchestrator notes list called `prompt-06.md` "ready" (now "used"), and the header did not
+   say 06 was reviewed.
+
+Not remnants:
+- Log 06 observation 2: a directory match is weak by design and the report does not label it.
+  The docstring says so. Not asked for.
+- Observation 3: only the stores root is excluded. No other directory holds every store.
+
+Carried into 07's note:
+- **What a retirement reports now.** Retiring 07's throwaway stores at the end of the rehearsal
+  lists only sidecars that name the store, a file of its plan, or its own subdirectory when that
+  is not the stores root. It lists no earlier tombstone because of its recorded
+  `references.stores_root`.
+- **The old tombstones keep their false matches.** The four tombstones already under
+  `var/datastores/` keep what they recorded: two matches in `datastore-integrity-10-reference`
+  and three in `datastore-integrity-10-resumed`, all by `$.retired.references.stores_root`. They
+  are correct as a record of what that code found (prompt 06 §6). A reader comparing an old report
+  with a new one will see the difference, and it is not a regression.
+
 ---
 
 ## 2. Items
@@ -956,8 +1066,8 @@ with its closing note; log 03). Both index rows are deleted.
 
 - **[10-store-retire-reports-every-tombstone-as-a-reference]** *(seen 2026-10-02, when the user
   retired `datastore-integrity` prompt 10's two stores; indexed the same day in `424469e` with no
-  board, and taken over by this board when it was created; **closed 2026-10-03 by prompt 06**, this
-  commit)*
+  board, and taken over by this board when it was created; **closed 2026-10-03 by prompt 06**,
+  `938be2b`)*
   - **The defect.** `_find_references` (`RunRegistry/stores.py`) took the store's directory,
     `primary.parent`, as a target beside the primary and the planned files. Every tombstone
     records `references.stores_root`, the directory its retirement searched. For a store directly
@@ -975,7 +1085,7 @@ with its closing note; log 03). Both index rows are deleted.
     Pinned by `RunRegistry/tests/test_store_retire_references.py` (10 tests, breakages (i)–(iii))
     and, unchanged, by `test_store_retire.TestRetirement.test_a_retirement`. Rebuilt in a temporary
     stores root, the second 2026-10-02 retirement's report lists 3 sidecars at `5e2d97a` and none
-    at this commit; the backup's `$.backup.path` match, the one real directory match among the
+    at `938be2b`; the backup's `$.backup.path` match, the one real directory match among the
     four tombstones under `var/datastores/`, is kept. Log:
     [`logs/06-count-only-real-references.md`](logs/06-count-only-real-references.md).
   - **What it leaves.** The four tombstones already under `var/datastores/` keep the references
@@ -1285,7 +1395,7 @@ Index: **103 open**.
 
 ### 5.12 After prompt 06 (2026-10-03)
 
-Measured 21:29–21:41 at the tree of this commit's code, serially, with README §7's command, each
+Measured 21:29–21:41 at the tree of `938be2b`'s code, serially, with README §7's command, each
 suite's output written to a file and its verdict read from it:
 
 | Suite | Result |
@@ -1300,3 +1410,21 @@ suite's output written to a file and its verdict read from it:
 RunRegistry is 243 + the 10 tests of `test_store_retire_references.py`; every other count is
 unchanged from §5.11. Load average 10–21 (1-minute) on 10 CPUs, beside another project's test
 run. Nothing under `ComputeTargets/` changed. Index: **102 open**.
+
+### 5.13 After prompt 06, re-measured by the orchestrator (2026-10-03)
+
+Measured 21:54–22:07 at `938be2b`, serially, with README §7's command, at a 1-minute load average
+of 15–34 on 10 CPUs, beside another project's test run.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 run; 1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (load; it fails the same way on an export of `dd7f272`, where it passed in the 05 review: the review of 06 above) |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 253 OK |
+
+The counts agree with §5.12.
+
+Index: **102 open**.
