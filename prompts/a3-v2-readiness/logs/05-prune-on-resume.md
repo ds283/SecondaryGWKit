@@ -8,8 +8,8 @@ functions that need no Ray, and a new test module keeps the flag, and its abbrev
 stop condition of the prompt's §5 fired. No build was run, no Ray was started, and nothing under
 `var/` was read or written. `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` is
 closed on the `datastore-integrity` board, with its index row deleted (104 to 103). Nothing was
-opened. The commit's SHA is not written here: it is the orchestrator's to fill in on the board's
-§1 row and in the closing note.
+opened. The commit is `dd7f272`, filled in here, on the board's §1 row and in the closing note by
+the orchestrator's review.
 
 ## What shipped
 
@@ -171,7 +171,7 @@ parser, and no build was run (§3 item 3's command was not run).
 - **The second** (an existing test pins the old argv): not fired. `grep -rn 'no-prune'` over
   every file outside `var/`, `venv/`, `.git/` and the orchestrator directory finds only
   Markdown records, one probe output text (`docs/datastore-integrity-verification/interrupter_firings.txt`)
-  and this commit's own files; no test in any `tests/` directory held either list before, and
+  and `dd7f272`'s own files; no test in any `tests/` directory held either list before, and
   all existing tests pass.
 - **A first pass of breakage (ii)** raised `AttributeError` in `test_the_job_name_is_the_namespaces`,
   whose stand-in `Namespace` had no `resume`. That was an error, not a failure, so the test was
@@ -184,7 +184,7 @@ parser, and no build was run (§3 item 3's command was not run).
 
 ### Suites
 
-Measured 17:34–17:43 at the tree of this commit's code, serially, each suite's output written to
+Measured 17:34–17:43 at the tree of `dd7f272`'s code, serially, each suite's output written to
 a file and its verdict grepped from it (README §7). The tree held the Markdown edits of this
 commit unstaged and the four code files staged:
 
@@ -337,7 +337,7 @@ That is the case the 2026-10-03 amendment is about.
 
 1. **`run_child` still calls `ray.init` with no `address` and installs no handler.** That is
    `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]`, which stays open.
-   This commit changed `run_child`'s argument list and nothing else.
+   `dd7f272` changed `run_child`'s argument list and nothing else.
 2. **The sweep store `run_child` writes into is retired**, so the pruning refusal the
    orchestrator's facts describe (a `replication_in_flight` table created before `b647c0b`
    keeps `controller_shard NOT NULL` and refuses a pruning open that has a replicated row to
@@ -371,12 +371,12 @@ That is the case the 2026-10-03 amendment is about.
   pruned resume at the tree A3 v2 will run: `resumed-d` ran on 2026-10-01 at 23:54, before
   prompt 02 (`b647c0b`) moved the prune of the replicated classes into the pool. The 45
   `GkSource` rows it removed are a sharded class, which an actor still prunes, so the measurement
-  stands for them. After this commit `--build --resume` of A3 v2 prunes unvalidated rows at
+  stands for them. After `dd7f272`, `--build --resume` of A3 v2 prunes unvalidated rows at
   startup, by `main.py`'s default.
 - **Baselines** (board §5.10): AdaptiveLevin 32, ComputeTargets 686, CosmologyModels 39,
   Datastore 598, LiouvilleGreen 148 (1 skipped), RunRegistry 243.
 - **Index:** 103 open, from 104. Nothing opened.
-- **The orchestrator's residue:** this commit's SHA in the board's §1 row for 05 and in the
+- **The orchestrator's residue:** this commit's SHA, `dd7f272`, now filled in, in the board's §1 row for 05 and in the
   closing note of
   `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` on the `datastore-integrity`
   board's §4.

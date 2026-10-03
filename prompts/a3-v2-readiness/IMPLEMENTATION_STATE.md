@@ -3,7 +3,7 @@
 **Last updated:** 2026-10-03 · **Status: IN PROGRESS — 6 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -55,7 +55,7 @@ recommended** (audit, closing section; README §6.2):
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
-| 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | *(the commit that lands this row)* | [`logs/05-…`](logs/05-prune-on-resume.md) |
+| 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
 
@@ -67,7 +67,7 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
-[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -680,6 +680,101 @@ Carried into 07's note:
   (`[04-a-sigterm-during-ray-init-…]`). The rehearsal should send its `SIGTERM` in a sharded
   stage, as L1 says.
 
+**Orchestrator review of prompt 05 (2026-10-03).** Run against `dd7f272`, dispatched from
+`633c3e9`, the commit that wrote this review's note. At dispatch the tree was clean, there was no
+other worktree, and nothing was `running` in this repository's registry. The only Ray processes
+were the user's ChamPBH cluster (seven, GCS 62525), and 05 starts no Ray. **All ten checks in
+`orchestrator/prompt-05.md` §3 passed.** No §5 stop condition fired, and the agent asked nothing.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `633c3e9`. The registry listed 12 runs, 10 finished and 2 `unknown`, unchanged.
+    The index held **104** rows.
+  - The baselines matched §5.9 exactly. They were measured 17:23–17:31 at a 1-minute load of
+    5.6–12.
+  - The pre-images were `799ea90` (`quadsource_atol_sweep.py`), `8023843`
+    (`docs/gktk-remedial/scoped_pipeline_run.py`), `8129635`
+    (`docs/source-remediation-verification/scoped_pipeline_run.py`) and `2c43521` (`main.py`).
+- **Scope (1).**
+  - 8 files, all on the note's list. The diff over `main.py`, `Datastore/`, `config/`, `var/` and
+    `docs/a3-v2-readiness/` is empty, and under `*/tests/` it adds one file and changes none.
+  - Compared by `ast` with `633c3e9`: in `quadsource_atol_sweep.py` only `run_build` and
+    `run_child` changed, and the additions are `_main_py_argv`, `build_main_argv` and
+    `child_main_argv`. In each `scoped_pipeline_run.py` everything after the docstring dumps
+    identically, and the docstring loses the one token.
+- **(E1) The flag (2).** Neither list nor usage line holds it. Both `main.py argv = …` prints
+  remain.
+- **(E2) The function (3).**
+  - The three functions are at module scope and import nothing. `run_build` and `run_child` each
+    assign `sys.argv` once from one of them.
+  - `test_killed_handler`, `test_store_fingerprint` and `test_quadsource_atol_sweep_prepare` pass
+    untouched, together with the new module: 88 tests, OK.
+- **(E4) The lists, by hand (4).**
+  - Each pre-image list was evaluated from `633c3e9`'s `ast` on the `Namespace` that `main()`'s
+    own parser gives. Each new list was built the same way. The orchestrator did this from the
+    scratchpad.
+  - For `--build`, `--build --resume` and `--child`, each new list equals its pre-image less
+    `--no-prune-unvalidated`, element by element, every element a `str`. They agree with the
+    log's lists.
+- **(E3) The tests (5).** `test_prune_on_resume` has 18 tests.
+  - It covers the build, the resumed build and the child, against literal expected lists.
+  - It rejects any token that begins `--no-p` or is a `--no` prefix of the flag. It also parses
+    each list with a parser rebuilt from `main.py`'s `add_argument` calls, read with `ast`, and
+    shows that parser reads the flag, `--no-prune` and `--no-p` as not pruning.
+  - It reads `default=True` and `BooleanOptionalAction` from `main.py`'s source.
+- **(E5) The pins (6).** Each of (i)–(v), extracted from the log, applies with `git apply` at
+  `dd7f272` and fails the new module, replayed in `bash`, with the log's counts:
+  - (i) 7;
+  - (ii) 4;
+  - (iii) 5 (a diff to `main.py`);
+  - (iv) 1;
+  - (v) 3.
+
+  `git apply -R` left `git status` clean after each.
+- **Verifications 2 and 3 (7).** `substitute_main_py(filter_cases=False)` matched each of its
+  four literals once. The log shows the list for verification 3's command line, and it matches
+  check 4.
+- **Stop conditions (8).** The log says `main.py` reads `args.prune_unvalidated` once and that
+  no test held either list. It runs no build and says so.
+- **(E6) The records (9).**
+  - `[10-a3-v2-launch-…]` is in the `datastore-integrity` board's §4, with both *Assigned* lines
+    kept. A line count of that board's diff shows a pure move plus the closing note. The note
+    cites `resumed-d` (§2.1.4), names `test_prune_on_resume`, and carries the 02 caveat.
+  - The index is **103** = 104 − 1 by `grep -c`, and matches the header.
+  - The log's *State handed to the next prompt* gives 07's L2.
+- **Suites (10).** Run serially by the orchestrator at `dd7f272`, 17:47–17:56, at a load average
+  of 4–14 (§5.11 below).
+  - RunRegistry is 243 = 225 + 18. Every other count is unchanged, and no test failed.
+  - `black --check` is clean on the four Python files.
+
+Remnants, fixed in the follow-up commit:
+1. The SHA was missing in this board's §1 row ("the commit that lands this row"), its §3.1 line,
+   §5.10, the `datastore-integrity` closing note ("in the commit that lands it"), and six places
+   in log 05. All now say `dd7f272`.
+2. README §2's status column still read "written" for 00–05, all landed. Each now gives its
+   landing date and SHA. The agent flagged the row for 05, and earlier reviews had not kept the
+   rest.
+3. The orchestrator notes list called `prompt-05.md` "ready" (now "used"), and the header did not
+   say 05 was reviewed.
+
+Not remnants:
+- Log 05 observation 4: the test's rebuilt parser keeps only literal keywords and
+  `BooleanOptionalAction`. A later option with another non-literal `action` would be built as a
+  plain `store`. That cannot hide the flag, which is a `BooleanOptionalAction`, and
+  `test_the_parser_rebuilt_from_main_py_sees_what_main_pys_does` fails if the instrument stops
+  seeing it.
+- Observation 2, the pre-`b647c0b` in-flight table's refusal of a pruning open. It cannot reach
+  A3 v2, whose store does not yet exist, or `run_child`, whose store is retired.
+
+Carried into 07's note:
+- **The resume prunes.** At startup each actor prints its unvalidated rows and `** Note: these
+  values have been pruned from the datastore.` Ray may fold the lines as
+  `[repeated Nx across cluster]` (`resumed_d_pruning.txt`).
+- **An unvalidated `BackgroundModel`** is pruned by the pool, under a `prune` record, since
+  `b647c0b`. `resumed-d` never exercised that path.
+- **L2's expectation.** The resumed store's inventory reports no `duplicate`, and its fingerprint
+  equals the uninterrupted reference's.
+
 ---
 
 ## 2. Items
@@ -727,7 +822,7 @@ Carried into 07's note:
 Each stays on its owning board, which carries an **Assigned** line, and closes there. This section's
 table held one issue after prompt 04, and it has now closed, so the table is gone.
 
-**Closed by prompt 05 (2026-10-03), on its owning board's §4:**
+**Closed by prompt 05 (2026-10-03, `dd7f272`), on its owning board's §4:**
 `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` (`datastore-integrity` §4, with its
 closing note, which cites prompt 10's `resumed-d` and says that it ran before prompt 02; log 05).
 Its index row is deleted.
@@ -1132,7 +1227,7 @@ Index: **105 open**.
 
 ### 5.10 After prompt 05 (2026-10-03)
 
-Measured 17:34–17:43 at the tree of prompt 05's code, serially, with README §7's command, each
+Measured 17:34–17:43 at the tree of `dd7f272`'s code, serially, with README §7's command, each
 suite's output written to a file and its verdict read from it:
 
 | Suite | Result |
@@ -1147,3 +1242,21 @@ suite's output written to a file and its verdict read from it:
 RunRegistry is 225 + the 18 tests of `test_prune_on_resume.py`; every other count is unchanged from
 §5.9. Load average 5.9–77 (1-minute) on 10 CPUs, beside another project's Ray cluster; no flake
 fired. Index: **103 open**.
+
+### 5.11 After prompt 05, re-measured by the orchestrator (2026-10-03)
+
+Measured 17:47–17:56 at `dd7f272`, serially, with README §7's command, at a 1-minute load average
+of 4–14 on 10 CPUs.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 243 OK |
+
+The counts agree with §5.10. No test failed.
+
+Index: **103 open**.

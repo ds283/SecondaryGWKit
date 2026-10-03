@@ -2050,7 +2050,7 @@ None is assigned to a prompt of this campaign.
   - **Assigned (2026-10-02, again):** reassigned from `handover` to `prompts/a3-v2-readiness` prompt
     **05**, by the user's decision that one campaign owns every A3 v2 readiness defect (that
     campaign's D4). Index row moved from `docs/OPEN_ISSUES.md` §1.1 to §1.17.
-  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 05, in the commit that lands it
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 05, `dd7f272`
     (log: [`../a3-v2-readiness/logs/05-prune-on-resume.md`](../a3-v2-readiness/logs/05-prune-on-resume.md)).
     - **The flag is gone.** `--no-prune-unvalidated` is out of `run_build`'s argument list for
       `main.py` and out of `run_child`'s, and out of the usage line in the module docstring of
