@@ -2096,7 +2096,7 @@ None is assigned to a prompt of this campaign.
     one. The fingerprint `finish(fingerprint=True)` takes was 2.48 s on the A3 baseline.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/04-record-a-sigterm-as-killed.md`, a
     handler installed after `ray.init`, against that campaign's audit S1–S4.
-  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 04, this commit.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 04, `79ab21a`.
     - **The handler, after Ray.** Both drivers (`scoped_pipeline_run.main`,
       `quadsource_atol_sweep.run_build`) start Ray with `address="local"`. Straight after it
       returns they call `scoped_pipeline_run.install_killed_handler(run, latch)`, registered or

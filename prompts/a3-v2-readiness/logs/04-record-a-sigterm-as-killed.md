@@ -12,7 +12,7 @@ probe measured at the next whole second of the wait; load does not explain it (s
 performed*, and `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]`). No stop condition
 of the prompt's §5 fired.
 `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` is closed on the
-`datastore-integrity` board. Four issues are opened. The commit is this commit.
+`datastore-integrity` board. Four issues are opened. The commit is `79ab21a`.
 
 The orchestrator's facts for this prompt, checked at `74270dd`, are cited below as "the
 orchestrator's" where this prompt relies on them without re-deriving them.
@@ -26,7 +26,7 @@ and after every probe invocation.
 
 ## What shipped
 
-Line counts are `git diff --cached --numstat` of this commit.
+Line counts are `git diff --cached --numstat` of `79ab21a`.
 
 - **`docs/gktk-remedial/scoped_pipeline_run.py`** (289 added, 33 deleted):
   - New, at module scope, with nothing imported from `ray`: `KILLED_SIGNALS`, `SignalLatch`
@@ -397,7 +397,7 @@ installation, in every run). The criterion is reported as failed, not loosened, 
 ### Suites
 
 README §7's command, serially, each suite's output to a file in the agent's scratch directory, the
-verdict grepped from it, at the tree of this commit:
+verdict grepped from it, at the tree of `79ab21a`:
 
 | Suite | Result |
 |---|---|
@@ -418,7 +418,7 @@ below (*State handed to the next prompt*).
 
 ## The deliberate-breakage record
 
-The diffs were made from the working tree, which is this commit's tree, with Python's `difflib`
+The diffs were made from the working tree, which is `79ab21a`'s tree, with Python's `difflib`
 and `a/`/`b/` paths. Each was applied with `git apply` and run against
 `RunRegistry.tests.test_killed_handler`, `RunRegistry.tests.test_store_fingerprint.TestDrivers`
 and `RunRegistry.tests.test_pipeline_adoption` (42 tests). It was then reverted with `git apply
@@ -426,7 +426,7 @@ and `RunRegistry.tests.test_pipeline_adoption` (42 tests). It was then reverted 
 `bash`. (i) and (iv) were also run on the probe: `--variants plain --repeat 3 --no-phase`, output
 in the agent's scratch directory, not committed.
 
-To replay one from a clean tree at this commit: save the block to `x.diff`, then `git apply
+To replay one from a clean tree at `79ab21a`: save the block to `x.diff`, then `git apply
 x.diff`.
 
 **(i) The handler installed before `ray.init` instead of after**, in both drivers. Unit test 3:

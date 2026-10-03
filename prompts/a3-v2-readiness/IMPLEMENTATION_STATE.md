@@ -3,7 +3,7 @@
 **Last updated:** 2026-10-03 · **Status: IN PROGRESS — 5 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -54,7 +54,7 @@ recommended** (audit, closing section; README §6.2):
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
-| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | this commit | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
+| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
@@ -66,7 +66,7 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 (2026-10-02, used), [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used) and
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -549,6 +549,124 @@ Carried into 07's note:
 - **The label.** The readers open under `VERSION_LABEL = "2025.1.1"`, the build's. Any other
   label refuses with `ReadOnlyMiss("version", …)`, naming the labels present.
 
+**Orchestrator review of prompt 04 (2026-10-03).** Run against `79ab21a`, dispatched from
+`8690dc6`. At dispatch the tree was clean, there was no other worktree, and nothing was `running`
+in this repository's registry. Seven Ray processes were up, all of them the user's ChamPBH cluster
+(GCS 62525 on `127.0.0.1:6379`), which the amended gate allows. **All ten checks in
+`orchestrator/prompt-04.md` §3 passed. One acceptance criterion falls short, and that is put to
+the user:** in 4 of the agent's 27 probe runs `killed` was written 1.003–1.006 s after the
+signal, against "within a second" (below). No §5 stop condition fired, and the agent asked
+nothing.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `8690dc6`. The registry listed 12 runs, 10 finished and 2 `unknown`, unchanged.
+    The index held **102** rows.
+  - The baselines matched §5.7, measured 15:37–16:00 at a 1-minute load average of 22–380 on
+    10 CPUs, from processes outside this repository. The one failure was
+    `test_wall_time_per_object`, which also failed alone, at a load of 180, on `HEAD`, the tree
+    before 04.
+  - The pre-images were `ac5fe69` (`scoped_pipeline_run.py`), `0963667`
+    (`quadsource_atol_sweep.py`), `bcbad4e` (`test_store_fingerprint.py`), `86d05ae`
+    (`test_pipeline_adoption.py`) and `ae84332` (`sigterm_probe.py`).
+- **Scope (1).**
+  - 10 files, all on the note's list. The diff over `RunRegistry/*.py`, `main.py`, `Datastore/`,
+    `config/`, `var/` and `sigterm_probe.py` is empty.
+  - An `ast` comparison against `8690dc6` changes only `run_build` in `quadsource_atol_sweep.py`,
+    and only `_finish_calls` and `TestDrivers` (plus one module-level constant, `_HANDLERS`) in
+    `test_store_fingerprint.py`. `terminal_state`'s body is identical with its docstring removed.
+- **(E7) The changed test (2).**
+  - `_finish_calls` now treats a function named `terminal` or `killed_handler` as a handler.
+  - Both assertions are unchanged. The counts go from (3, 1) to (4, 2) and from (6, 2) to (3, 2).
+  - `_finish_calls`, run by the orchestrator on both files, gives exactly those counts.
+- **(E3) By reading (3).**
+  - `killed_handler` sets `latch.signum` before anything else. It guards both its `finish` and
+    its print, then raises `SystemExit(128 + signum)`. A later call, or one after
+    `SignalLatch.decide()`, prints "ignored" and returns.
+  - `finish_after_exec` keys on the latch for any `BaseException`. Both drivers route both paths
+    through it, registered or not: one `except BaseException`, then a bare `raise`, and the same
+    call after the `try`.
+  - Nothing in the new code imports `ray`. Installing twice keeps the latch.
+- **(E1, E4) The unit tests (4).**
+  - `test_killed_handler` (26), `test_pipeline_adoption` (15) and `TestDrivers`: 42 tests, OK.
+  - `TestNotSignalled` covers all seven of today's outcomes against `terminal_state`, unregistered
+    too.
+  - The not-signalled-fingerprint choice is pinned by two tests, one on a stand-in run and one on
+    a real `Run`.
+- **(E5) K4 (5).** `address="local"` appears once in each real `ray.init` call, in `main` and in
+  `run_build`, and not in `run_child`. Breakage (vi) fails `TestTheDrivers`.
+- **(E6) The pins (6).** Each of (i)–(vii), extracted from the log, applies with `git apply` at
+  `79ab21a`. Each fails the 42 tests, replayed in `bash`, with the counts the log gives:
+  - (i) 2;
+  - (ii) 16;
+  - (iii) 9;
+  - (iv) 38;
+  - (v) 10 failures and 4 errors;
+  - (vi) 1;
+  - (vii) 10 failures and 1 error.
+
+  `git apply -R` left `git status` clean after each. The log records the probe for (i), `failed`/1
+  with the banner back, and for (iv), no `gcs_server` left, since Ray's `atexit` hook shut it down.
+- **(E1, E2) The committed output (7).**
+  - Three invocations, 27 runs. Every run recorded `killed`/143 and the fingerprint, and exited
+    143, with no banner, no abort and no survivor. Each child's own `gcs_server` was seen. The
+    probe killed nothing.
+  - In the second-`SIGTERM` runs, the second signal printed "ignored" and changed nothing.
+  - The time to `killed` was 0.001–0.007 s in 23 runs and 1.003–1.006 s in 4. Those 4 fail
+    the one-second criterion.
+- **(E1, E2) The probe, re-run by the orchestrator (8).** 16:46–16:50, at a 1-minute load of 8–19.
+  - **9 of 9 pass**: `killed`/143 0.001–0.013 s after the signal, the fingerprint present, exit
+    143, no banner, no survivor, and no pid killed.
+  - The phase section reproduced the agent's to within 0.01 s at every offset (0.902 s at 0.10,
+    0.000 s at 2.00, 0.960 s at 2.05).
+  - ChamPBH's seven processes had the same pids and start times before and after.
+- **(E8) The records (9).**
+  - `[10-a-sigterm-…]` is in the `datastore-integrity` board's §4. Its *Assigned*, *Widened* and
+    *Prompt written* lines are kept, and its closing note names the tests and the probe output.
+  - Four issues are opened in §3.2. The index is **105** = 102 − 1 + 4 by `grep -c`, and matches
+    the header.
+  - The log's *Observations* carry `run_child`/`sweep`, the `status.json.tmp` window and the
+    `ray.init` window. *State handed to the next prompt* records K4 for 07 and A3 v2.
+- **Suites (10).** Run serially by the orchestrator at `79ab21a`, 16:50–16:58, at a load average
+  of 5–10 (§5.9 below).
+  - RunRegistry is 225 = 199 + 26. Every other count is unchanged, and no test failed.
+  - `black --check` is clean on the five Python files.
+
+**The one-second criterion.** The phase section shows that the delay is set by when in the wait
+the signal lands, not by load. It equals one second minus how far into Ray's once-a-second check
+cycle the signal arrives. Audit S1's "within milliseconds" came from a timer that fired on the
+cycle's boundary. The criterion was written to keep the record ahead of absl's 3 s abort. Once
+the handler is installed no alarm is armed (S1), so that purpose is met with about 2 s to spare.
+`[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]` holds the user's decision: accept the
+~1 s bound, or set Ray's signal-check interval in both drivers' `ray.init`.
+
+Remnants, fixed in the follow-up commit:
+1. "This commit" stood where the SHA belongs: in this board's §1 row, its §3.1 closure note and
+   §5.8; in the `datastore-integrity` closing note; and in five places in log 04. All now say
+   `79ab21a`.
+2. §5.1, written by audit 00, said "the tree of this commit". It now says `cfd9791`.
+3. The orchestrator notes list called `prompt-04.md` "ready" (now "used"), and the header did not
+   say 04 was reviewed.
+
+Not remnants:
+- Log 04 observation 5, a signal between the driver's `except` and `finish_after_exec`. The record
+  is still `killed`/143, and Ray's `atexit` hook shuts Ray down. The window is a few bytecodes.
+- Observation 7, the dashboard child that `include_dashboard=False` still starts. It is Ray's
+  behaviour, and it did not stop the probe's instances starting beside ChamPBH's.
+
+Carried into 07's note:
+- **The sign of an interruption.** In `stderr.log`:
+  `** SIGTERM at <time>: recorded killed, exit code 143; stopping the pipeline; …`. Ray's
+  `*** SIGTERM received` banner no longer prints.
+- **The record.** `killed`/143, written up to ~1 s after the signal while in `ray.wait`. It gains
+  its fingerprint after the pool closes, and the driver exits 143 after `ray.shutdown()`. A second
+  `SIGTERM` during that cleanup prints "ignored". `SIGINT` gives 130.
+- **K4.** The drivers start their own instance, `address="local"`, so the rehearsal can run beside
+  another cluster.
+- **A signal in the first ~2.3 s**, while `ray.init` runs, still meets Ray's handler
+  (`[04-a-sigterm-during-ray-init-…]`). The rehearsal should send its `SIGTERM` in a sharded
+  stage, as L1 says.
+
 ---
 
 ## 2. Items
@@ -599,7 +717,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 |---|---|---|
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
 
-**Closed by prompt 04 (2026-10-03, this commit), on its owning board's §4:**
+**Closed by prompt 04 (2026-10-03, `79ab21a`), on its owning board's §4:**
 `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` (`datastore-integrity`
 §4, with its closing note; log 04). Its index row is deleted.
 
@@ -824,7 +942,7 @@ with the counts after its commit.
 
 ### 5.1 After prompt 00 (2026-10-02)
 
-Measured 13:12–13:19 at the tree of this commit (the audit adds no test), serially, each suite's
+Measured 13:12–13:19 at the tree of `cfd9791` (the audit adds no test), serially, each suite's
 output written to a file and its verdict read from it (log 00, deviation 9):
 
 | Suite | Result |
@@ -955,7 +1073,7 @@ Index: **102 open**.
 
 ### 5.8 After prompt 04 (2026-10-03)
 
-Measured 16:35–16:43 at the tree of this commit, serially, with README §7's command, each suite's
+Measured 16:35–16:43 at the tree of `79ab21a`, serially, with README §7's command, each suite's
 output written to a file and its verdict read from it:
 
 | Suite | Result |
@@ -970,3 +1088,21 @@ output written to a file and its verdict read from it:
 RunRegistry is 199 + the 26 tests of `test_killed_handler.py`; `TestDrivers` changed in place (§3
 item 5) and adds none. Every other count is unchanged from §5.7. Load average 5.9–17.5 (1-minute)
 on 10 CPUs, beside another project's Ray cluster; no flake fired. Index: **105 open**.
+
+### 5.9 After prompt 04, re-measured by the orchestrator (2026-10-03)
+
+Measured 16:50–16:58 at `79ab21a`, serially, with README §7's command, at a 1-minute load average
+of 5–10 on 10 CPUs.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 225 OK |
+
+The counts agree with §5.8. No test failed.
+
+Index: **105 open**.
