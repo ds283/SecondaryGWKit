@@ -53,6 +53,9 @@ stays removed.
 test, needing no Ray:
 - the build's argv, with and without `--resume`, and the child's, contain no
   `--no-prune-unvalidated`, and nothing else in them disables pruning;
+  *Amended 2026-10-03:* that includes an abbreviation. `main.py`'s parser is
+  `argparse.ArgumentParser()` with `allow_abbrev` at its default, so `--no-prune` resolves to
+  `--no-prune-unvalidated`. No other option of `main.py` begins `--no-p`;
 - `main.py`'s `--prune-unvalidated` defaults to true, read from `main.py`'s source with `ast` (it
   cannot be imported; `CLAUDE.md`), so that the build's silence means pruning;
 - the rest of each argv is exactly what it was before this commit, element by element, so that the
@@ -71,7 +74,8 @@ test, needing no Ray:
    - (ii) put it back only when `--resume` is given;
    - (iii) change `main.py`'s default to `False` (in the test's view of the source: a mutation of
      the file, restored afterwards);
-   - (iv) drop `--source-samples-log10z 100` from the build's list.
+   - (iv) drop `--source-samples-log10z 100` from the build's list;
+   - (v) *added 2026-10-03:* put `--no-prune` into the child's list.
 
    Each in the log as a diff, exactly as applied, with the failing tests.
 
@@ -80,10 +84,14 @@ test, needing no Ray:
 ## 4. Acceptance
 
 1. The flag gone from both invocations and both usage lines; one function building each argv.
-2. The new test module, and the deliberate-breakage record (i)–(iv).
+2. The new test module, and the deliberate-breakage record (i)–(v).
 3. `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` moved to the `datastore-integrity`
    board's §4 with a closing note naming this commit and citing prompt 10's `resumed-d` as the
-   measurement; its index row deleted; the count and date corrected.
+   measurement; its index row deleted; the count and date corrected. *Amended 2026-10-03:* the
+   note also says that `resumed-d` ran before prompt 02 (`b647c0b`), which moved the prune of the
+   replicated classes into the pool. The 45 `GkSource` rows are a sharded class, which an actor
+   still prunes, so the measurement stands for them. 07's L2 measures a pruned resume at the tree
+   A3 v2 will run.
 4. `black --check` clean. On this board: the §1 row, items P1–P2, §5. All in the same commit.
 
 ---

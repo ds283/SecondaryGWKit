@@ -66,7 +66,8 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 (2026-10-02, used), [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used) and
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -126,6 +127,16 @@ and three it had wrong. The prompt was amended in the same commit (each line dat
 It also leaves one thing to the agent: what is recorded when a signal arrives during a
 not-signalled `finish(..., fingerprint=True)`. In that case `Run.finish` writes its own state over
 `killed`. The agent records that window, and a second one in `status.json.tmp`, as observations.
+
+Writing 05's note, at `7746871`, found that neither of prompt 05's stop conditions fires, and two
+things the prompt had not said. The prompt was amended in the same commit (each line dated
+2026-10-03):
+- **An abbreviation also disables pruning.** `main.py`'s parser keeps `allow_abbrev`, so
+  `--no-prune` resolves to `--no-prune-unvalidated`. P2's "nothing else disables pruning" now says
+  so, and breakage (v) pins it.
+- **`resumed-d` ran before 02.** Since `b647c0b` the pool, not the actors, prunes the replicated
+  classes. The 45 `GkSource` rows are sharded, which an actor still prunes, so the measurement
+  stands for them. The closing note says so, and names 07's L2 as the measurement at A3 v2's tree.
 
 **Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
 `5707851` with nothing `running` in this repository's registry, no other worktree and no Ray
