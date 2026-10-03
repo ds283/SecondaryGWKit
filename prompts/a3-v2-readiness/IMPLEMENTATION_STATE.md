@@ -1,12 +1,13 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 7 of 9 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 8 of 9 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed; prompt 06a has landed (2026-10-04) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 was held on 01–06, and is released (2026-10-03) now that all six have landed. **07 and a precursor,
 06a, were written on 2026-10-03** under the user's decision D5: `--build` could not be scoped, so 06a
-gives it a fixed rehearsal scope, and 07 runs on a clean tree (README §2, §6.1).
+gives it a fixed rehearsal scope, and 07 runs on a clean tree (README §2, §6.1). With 06a landed and
+reviewed (2026-10-04), 07 is released.
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
 LambdaCDM store is built, and decided that all seven defects of README §0 are fixed first, by one
@@ -60,7 +61,7 @@ recommended** (audit, closing section; README §6.2):
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
-| 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-03 | this commit | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
+| 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
 | 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 the user's before dispatch | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
@@ -73,9 +74,9 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, used) and
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-03, used) and
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used) and
-[`orchestrator/prompt-06a.md`](orchestrator/prompt-06a.md) (2026-10-03, ready) and
+[`orchestrator/prompt-06a.md`](orchestrator/prompt-06a.md) (2026-10-03, used) and
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-03, written early at the user's
-request; 06a's review completes its "Carried from the review of 06a" before dispatch). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+request; 06a's review completed its "Carried from the review of 06a" on 2026-10-04). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -901,6 +902,134 @@ Carried into 07's note:
   are correct as a record of what that code found (prompt 06 §6). A reader comparing an old report
   with a new one will see the difference, and it is not a regression.
 
+**Orchestrator review of prompt 06a (2026-10-04).** Run against `7bd202f`, dispatched from
+`3cdb52a`, the commit that wrote this review's note and the prompt. At dispatch the tree was clean,
+there was no other worktree, and nothing was `running` in this repository's registry. 06a starts no
+Ray and launched nothing. **All ten checks in `orchestrator/prompt-06a.md` §3 passed.** No §5 stop
+condition fired, and the agent asked nothing.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `3cdb52a`. The registry listed 12 runs, 10 finished and 2 `unknown`, unchanged.
+    The index held **102** rows.
+  - The pre-images were as the note gives them: `41f7c72` (`quadsource_atol_sweep.py`), `281f432`
+    (`test_prune_on_resume.py`), `213f2a8`, `ed5bd65`, `dab75fe` (`test_killed_handler.py`,
+    `test_store_fingerprint.py`, `test_quadsource_atol_sweep_prepare.py`), `4caa9b2`
+    (`interrupt_when.py`), `4a7edcd` (`interrupter_dummy_test.sh`) and `2c43521` (`main.py`).
+  - The baselines matched §5.13 with no failure: 32, 686, 39, 598, 148 (1 skipped) and 253, measured
+    22:49–22:57 on 2026-10-03 at a 1-minute load of 6–17.
+- **Scope (1).**
+  - 8 files, all on the note's list. The diff over `main.py`, `Datastore/`, `config/`, `var/`,
+    `RunRegistry/*.py` and `docs/gktk-remedial/` holds only the two test files that pathspec also
+    matches.
+  - Compared by `ast` with `3cdb52a`, `quadsource_atol_sweep.py` changes only `_main_py_argv`,
+    `build_main_argv`, `run_build` and `main`. It adds `build_scope` and five constants
+    (`PRODUCTION_ZEND`, the three `REHEARSAL_K_*`, `REHEARSAL_ZEND`, `PRODUCTION_SCOPE_TEXT`,
+    `REHEARSAL_SCOPE_TEXT`), and removes nothing. The other 48 top-level nodes dump identically,
+    the module docstring included, and `child_main_argv` among them.
+  - `test_prune_on_resume.py` changes in the one `Namespace`, which gains `rehearsal=False` and is
+    reflowed by `black`. The other test change is the new module.
+  - In `docs/datastore-integrity-verification/`, only `interrupt_when.py` changes. By `ast`, the
+    module docstring, `names_the_run` and `watch` differ. `DRIVER` is gone and `run_driver` is new.
+    The other 20 nodes are identical.
+- **(E1) Production, by hand (2).** Parsed by the script's own parser, for `--build` and
+  `--build --resume` at `--atol 1e-32 --rtol 1e-7`:
+  - `build_main_argv` equals the parent's, loaded from `3cdb52a`, element by element (11);
+  - the k sample equals `k_sample()`, at both trees;
+  - the filled scope text equals the parent's f-string, read from `3cdb52a`'s `ast` and evaluated
+    on the same `Namespace` and database.
+- **(E2) The rehearsal, by hand (3).** For `--build --rehearsal` and `--build --rehearsal --resume`:
+  - the k sample is `[100000.0, 316227.7660168379, 1000000.0]`;
+  - the argv differs from production's only at index 8, `'0.1'` → `'250'`, the token after `--zend`;
+  - the scope text is
+    `REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into store.sqlite`,
+    with no `9280`.
+
+  `run_build` unpacks `k_values, zend, scope_text = build_scope(args)` once. It gives `K_GRID_NAME`
+  `k_values` and `RunRegistry.begin` `scope_text.format(…)`, and holds no `k_sample()` call.
+- **(E3) The refusals (4).** On a loaded copy with `run_build`, `run_child`, `prepare`, `report`
+  and `sweep` all stubbed, `--rehearsal` with `--child`, `--prepare`, `--report` and no mode each
+  exits 2, and no stub is called.
+- **(E4) The tests (5).** The new module (28), `test_prune_on_resume`, `test_killed_handler`,
+  `test_store_fingerprint` and `test_quadsource_atol_sweep_prepare`: 116 tests, OK. The new module's
+  expectations are literals: the argv lists, the k sample, and the production text in full. The
+  one exception is the prompt's own "equals `k_sample()`", which a second test pins as 8 points
+  from `1e5` to `3e8`.
+- **(E5) The pins (6).** Each of (i)–(vi), extracted from the log, applies with `git apply` at
+  `7bd202f`. They were replayed in `bash`.
+  - (i)–(v) were run against the five modules above:
+    - (i) 4 failures, `test_prune_on_resume`'s `test_the_build_list_is_what_run_build_built_less_the_flag`
+      among them;
+    - (ii) 2;
+    - (iii) 3;
+    - (iv) 1, `test_with_child_is_refused`;
+    - (v) 11 failures in the new module, and 10 errors in `test_prune_on_resume`. Each error is the
+      script's own `parser.error` at the refusal, raised by `setUp` parsing a `--child` line:
+      `SystemExit: 2` from `main`, with no `AttributeError` anywhere. So `test_prune_on_resume`
+      fails for the mutation's own reason.
+  - Every failed test is the one the log names.
+  - (vi), run against both dummy tests:
+    - B3's case A no longer signals: the interrupter exits 2, and the child sleeps its 120 s and
+      exits 0.
+    - Case B wrongly signals the `scoped_pipeline_run.py` child.
+    - `interrupter_dummy_test.sh` behaves as without the mutation.
+  - `git apply -R` left `git status` clean after each.
+- **(E6) The interrupter (7).** At `7bd202f`, into new scratchpad directories:
+  - `interrupter_dummy_test.sh`, unchanged, behaves as its record (`interrupter_dummy_test.txt`)
+    says. A and D signal (child 143), B and E exit 0 without signalling, and C refuses (exit 2,
+    child alive). C's refusal line now names the driver as the manifest's `argv[0]`.
+  - B3's case A signals the `quadsource_atol_sweep.py` child (143). Case B refuses the
+    `scoped_pipeline_run.py` child under the same manifest (exit 2, child alive). Case C, an empty
+    `argv[0]`, exits 2 without signalling.
+  - No `sleep` child of either run was left alive.
+- **`substitute_main_py` (8).** `substitute_main_py(filter_cases=False)` replaces each of its four
+  literals once, as in the log's verification 2. `child_main_argv` still gives `--zend 0.1`.
+- **The records (9).**
+  - This board has the §1 row, B1–B3 and §5.14.
+  - Log observation 1 records that `--resume` does not check the scope a store was built with.
+  - The index is **102** by `grep -c`, and 06a opened nothing.
+- **Suites (10).** Run serially by the orchestrator at `7bd202f`, 00:25–00:34 on 2026-10-04, at a
+  1-minute load of 7–17. The load had fallen from the 440–725 the agent measured under (§5.15
+  below).
+  - RunRegistry is 281 = 253 + 28. Every other count is unchanged, and **no test failed**.
+  - The agent's two ComputeTargets failures, `test_build_cost` and `test_wall_time_per_object`,
+    both pass here, as they did in the dispatch baseline at `3cdb52a`. So they were the load, as
+    the log says.
+  - `black --check` is clean on the four Python files.
+
+Remnants, fixed in the follow-up commit:
+1. "This commit" stood where the SHA belongs: in this board's §1 row and §5.14, and in five places
+   in log 06a. All now say `7bd202f`. The §1 row also said landed 2026-10-03. The commit is dated
+   2026-10-04 00:16, and the row now says so.
+2. README §2's status cell for 06a still read "written". It now gives the landing date and SHA, and
+   07's cell says 06a has landed and been reviewed.
+3. The orchestrator notes list called `prompt-06a.md` "ready" (now "used"), and the header did not
+   say 06a was reviewed or count it (now 8 of 9). Log 06a observation 4 flagged both.
+4. `orchestrator/prompt-07.md` §0's "Carried from the review of 06a" was a placeholder. It is now
+   complete (below).
+
+Not remnants:
+- Deviation 1, the scope text as a `str.format` template that `run_build` fills, is correctly
+  classified `STRUCTURALLY REQUIRED`. `build_main_argv` calls `build_scope`, and the one
+  `Namespace` the prompt lets `test_prune_on_resume` change has no `atol`, `rtol` or `cpus`. A text
+  built in the function would raise `AttributeError` there. One function still decides all three,
+  and check 2 shows the filled production text is the parent's.
+- Log observation 2: `--prepare --build --rehearsal` runs `--prepare`. That is the existing
+  dispatch order (`--prepare --build` already runs `--prepare`), and `--build` is given, so the
+  prompt's rule is met. 07 never passes `--prepare`.
+- Observation 6: `interrupter_dummy_test.txt` records the refusal wording of its day. It belongs to
+  `datastore-integrity`'s verification, and is correct for the tree it was taken on (`CLAUDE.md`
+  rule 6). Log 06a's verification 4 has the current wording.
+
+Carried into 07's note (§0, "Carried from the review of 06a"):
+- **`build_scope(args)`** returns `(k sample, zend, scope text)`. `run_build` takes the grid and
+  the text from one call, and `build_main_argv` takes `--zend`.
+- **The rehearsal's `scope` text and the line `run_build` prints**, both as printed in checks 2–3.
+- **`--resume` does not check a store's scope**, so every launch of 07, the resume included, passes
+  `--rehearsal`. Each manifest's `scope` must begin `REHEARSAL build, not A3 v2:`.
+- **The interrupter reads the driver from the manifest's `argv[0]`**, with B3's dummy output as
+  re-run here.
+
 ---
 
 ## 2. Items
@@ -1441,7 +1570,7 @@ Index: **102 open**.
 
 ### 5.14 After prompt 06a (2026-10-03)
 
-Measured serially at the tree of this commit's code, 23:10 on 2026-10-03 to 00:15 on 2026-10-04,
+Measured serially at the tree of `7bd202f`'s code, 23:10 on 2026-10-03 to 00:15 on 2026-10-04,
 with README §7's command, each suite's output written to a file and its verdict read from it:
 
 | Suite | Result |
@@ -1457,3 +1586,22 @@ RunRegistry is 253 + the 28 tests of `test_build_rehearsal_scope.py`; every othe
 unchanged from §5.13. The 1-minute load average was 440-725 on 10 CPUs, from another project's Ray
 workers. Re-run alone afterwards, `test_build_cost` passed and `test_wall_time_per_object` failed
 (0.1118 s against 0.06 s). Nothing under `ComputeTargets/` changed. Index: **102 open**.
+
+### 5.15 After prompt 06a, re-measured by the orchestrator (2026-10-04)
+
+Measured 00:25–00:34 on 2026-10-04 at `7bd202f`, serially, with README §7's command, at a 1-minute
+load average of 7–17 on 10 CPUs.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 281 OK |
+
+The counts agree with §5.14. No test failed. §5.14's two ComputeTargets failures were measured at a
+load of 440–725, and both tests pass here.
+
+Index: **102 open**.

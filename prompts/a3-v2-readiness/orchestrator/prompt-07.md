@@ -121,13 +121,62 @@ not rediscover them. Each is marked as audit 00 marks its findings.
 - **(R4) Every reader works, and none touches the store.** All six exit 0 and refuse nothing. Every
   file is byte-identical afterwards, and the QSI extractor reads every row.
 
-**Carried from the review of 06a.** *To be completed by that review (`prompt-06a.md` §4), before
-dispatch:*
-- *the scope function's name, and what it returns;*
-- *the exact `scope` text a rehearsal manifest holds;*
-- *the line `run_build` prints for the rehearsal scope;*
-- *that `--resume` does not check a store's scope, so every launch passes `--rehearsal`;*
-- *the interrupter's B3 change, and the output of its new dummy case.*
+**Carried from the review of 06a** (2026-10-04, at `7bd202f`; the board's *Orchestrator review of
+prompt 06a*).
+- **The scope function** is `build_scope(args)` in `docs/handover/quadsource_atol_sweep.py`. It
+  reads `args.rehearsal` only and returns `(k sample, zend string, scope text)`. The text is a
+  `str.format` template over `atol`, `rtol`, `cpus` and `database`, which `run_build` fills with
+  `args.atol`, `args.rtol`, `args.cpus` and the store's file name.
+  - With `--rehearsal`: `[100000.0, 316227.7660168379, 1000000.0]`, `"250"`, and the rehearsal
+    text.
+  - Without it: `k_sample()`, `"0.1"`, and the production text, unchanged.
+  - `run_build` takes the grid and `scope=` from one call. `build_main_argv` takes `--zend` from
+    it, so `main.py`'s argv differs from production at the token after `--zend` alone.
+- **The `scope` text a rehearsal manifest holds**, as the orchestrator printed it from the
+  script's own parser at `--atol 1e-32 --rtol 1e-7` and the default 6 cpus, for a store named
+  `store.sqlite`:
+  `REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into store.sqlite`.
+  The cpus and the store's name are the launch's own.
+- **The line `run_build` prints** for the rehearsal scope, after its `atol=… rtol=…` and
+  `main.py argv = …` lines:
+  `** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250`.
+  It goes through the registered stream, so it is in the run's `stdout` copy.
+- **`--resume` does not check a store's scope** (log 06a, observation 1). A store built with
+  `--rehearsal` and resumed without it would mix the two grids and both `--zend`s, and nothing
+  would refuse. **Every launch of 07 passes `--rehearsal`**, the resume included. The check is to
+  read each manifest's `scope`, which must begin `REHEARSAL build, not A3 v2:`.
+- **`--rehearsal` is refused without `--build`**, by `parser.error` (exit 2) before any mode runs.
+  `--prepare --build --rehearsal` is not refused, and `--prepare` runs, because `main()` dispatches
+  `--prepare` first. 07 never passes `--prepare`.
+- **The interrupter reads the driver from the run's manifest.** `interrupt_when.py` no longer has
+  the constant `DRIVER`. `run_driver(run_dir)` takes the basename of the manifest's `argv[0]`,
+  which is `quadsource_atol_sweep.py` for a `--build` (`RunRegistry.begin` records `sys.argv` before
+  `run_build` replaces it). Before it signals, `ps -p <pid> -o command=` must contain that name and
+  `--register <slug>`. A manifest with no `argv[0]` is logged and exits 2 without signalling.
+  `interrupter_dummy_test.sh`, unchanged, still passes all five cases. Its refusal line now reads
+  `does not name scoped_pipeline_run.py (the run's own driver, its manifest's argv[0]) and --register …`.
+- **B3's dummy case**, `docs/a3-v2-readiness/interrupter_build_dummy_test.sh`, as the orchestrator
+  re-ran it at `7bd202f` (abridged to its verdict lines):
+  ```
+  === case A: a --build manifest (argv[0] the sweep script), a child named for it: signals
+  interrupter exit=0
+  child exit=143 (143 = killed by SIGTERM)
+  … sent SIGTERM to pid 60610 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)' (45% >= 40%); command 'python docs/handover/quadsource_atol_sweep.py --build --register dummy-build-a 120'; exiting
+  === case B: the same manifest, a child named for scoped_pipeline_run.py: refuses
+  interrupter exit=2
+  child 60616 still alive (not signalled)
+  … pid 60616's command line does not name quadsource_atol_sweep.py (the run's own driver, its manifest's argv[0]) and --register dummy-build-b: 'python docs/gktk-remedial/scoped_pipeline_run.py --build --register dummy-build-b 30'; exiting without signalling
+  === case C: a manifest whose argv[0] is empty: exits without signalling
+  interrupter exit=2
+  child 60631 still alive (not signalled)
+  … the run's manifest names no argv[0]; exiting without signalling
+  ```
+  The full output is committed as `interrupter_build_dummy_test.txt`.
+- **The command line the interrupter sees.** For case A to hold for 07's real build, the Python
+  process whose pid `status.json` records must show `quadsource_atol_sweep.py` and
+  `--register <slug>` in `ps -o command=`. A launch as
+  `./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal … --register <slug> …`
+  does, and `run_build`'s replacement of `sys.argv` does not change what `ps` shows.
 
 **Carried from the reviews of 00–06.** All bind the agent, and the brief says so.
 - **Staging and reporting.**

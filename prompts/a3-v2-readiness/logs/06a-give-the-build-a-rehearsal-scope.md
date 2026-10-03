@@ -8,7 +8,7 @@ k sample, the argv list and the manifest's `scope` text are what they were. `int
 takes the driver's name from the run's manifest `argv[0]`, so it can interrupt a `--build`. None of
 the prompt's four §5 stop conditions fired. Nothing was launched, no Ray was started, nothing was
 written under `var/`. Nothing was closed or opened: `docs/OPEN_ISSUES.md` is unchanged (102). The
-commit is this commit.
+commit is `7bd202f`.
 
 ## What shipped
 
@@ -242,7 +242,7 @@ child 98937 still alive (not signalled)
 
 ### Suites
 
-Measured serially at the tree of this commit's code, between 23:10 on 2026-10-03 and 00:15 on
+Measured serially at the tree of `7bd202f`'s code, between 23:10 on 2026-10-03 and 00:15 on
 2026-10-04, with README §7's command, each suite's output written to a file and its verdict
 grepped from it:
 
@@ -271,7 +271,7 @@ session.
 
 Each diff is exactly as applied, taken with `git diff -- <the one file>` against the staged file,
 and undone with `git checkout -- <the file>` afterwards. They replay with `git apply` in `bash`
-from a clean tree at this commit. Each failure was read: those of (i)–(iv) are `AssertionError`s on
+from a clean tree at `7bd202f`. Each failure was read: those of (i)–(iv) are `AssertionError`s on
 a list, a text or an exit code. Tests are in `RunRegistry/tests/test_build_rehearsal_scope.py`
 (`B`) or `test_prune_on_resume.py` (`P`); the run was those two modules with `test_killed_handler`,
 `test_store_fingerprint` and `test_quadsource_atol_sweep_prepare` (116 tests).
@@ -436,7 +436,7 @@ index bceb3ba..4ae3a38 100644
    `scope=` it hands `RunRegistry.begin`, are seen only through `ast` and through `build_scope`'s
    result. 07 is the first run to exercise them.
 4. **The board's header ("7 of 9 prompts landed") and README §2's 06a row ("**written**") are
-   stale after this commit.** Outside this prompt's file list ("the §1 row, items B1–B3, and §5").
+   stale after `7bd202f`.** Outside this prompt's file list ("the §1 row, items B1–B3, and §5").
 5. **A refused child in a dummy case costs its whole `sleep`.** Breakage (vi) took about two
    minutes because the case-A child, correctly not signalled, sleeps 120 s and the script waits for
    it. It is how the existing test is built too.
@@ -450,7 +450,7 @@ index bceb3ba..4ae3a38 100644
 
 - **To launch 07's builds:** `PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py
   --build --rehearsal --database <store> --atol 1e-32 --rtol 1e-7 --register <slug> --purpose ...`
-  from a tree at this commit, with nothing modified. Resume with the same line and `--resume`.
+  from a tree at `7bd202f`, with nothing modified. Resume with the same line and `--resume`.
 - **The scope it runs:** `main.py`'s own unfiltered work list, LambdaCDM, `--shards 4`,
   `--source-samples-log10z 100`, `--zend 250`, k = `[1e5, 316227.7660168379, 1e6]`, the pair from
   `--atol`/`--rtol`. The manifest's `scope` begins `REHEARSAL build, not A3 v2:`.
