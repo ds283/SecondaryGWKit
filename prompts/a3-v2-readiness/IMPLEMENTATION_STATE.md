@@ -54,7 +54,7 @@ recommended** (audit, closing section; README §6.2):
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
-| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ⬜ | — | — |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
@@ -65,7 +65,8 @@ recommended** (audit, closing section; README §6.2):
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
 (2026-10-02, used), [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used) and
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
-[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used) and
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -98,6 +99,33 @@ prompt 03 assumed. The prompt was amended in the same commit (each line dated 20
 
 The note also records that `store_reader` imports both pool modules at module scope, so it can be
 reused only by a function-scope import, and that `store_reader.py` stays off 03's file list.
+
+Writing 04's note, at `74270dd`, found two things prompt 04 could not pass, each put to the user,
+and three it had wrong. The prompt was amended in the same commit (each line dated 2026-10-03):
+- **An existing test pins the drivers' post-`exec` lines**, the prompt's own fourth stop condition.
+  `test_store_fingerprint.TestDrivers` counts each driver's `run.finish(` calls by `ast`: (3, 1)
+  and (6, 2), split by whether they sit in a function named `terminal`. K2 moves `run_build`'s
+  calls into `scoped_pipeline_run.py`, so the counts cannot hold. **The user named the test** under
+  README §5 rule 7. Only its notion of a handler and its counts may change, and both assertions
+  stay (§3 item 5).
+- **A bare `ray.init` resolves to another cluster** (measured at 15:33). Another project's
+  `ray start` cluster was running, and `/tmp/ray/ray_current_cluster` named it. Both drivers'
+  `ray.init(num_cpus=…)` refused at once with `ValueError`. Without `num_cpus` they would have
+  attached to it. `address="local"` started a fresh instance beside it and left nothing after
+  `ray.shutdown()`. **The user put the fix in 04, as K4**, and let the probe run beside that cluster:
+  the gate now excludes only Ray processes from this repository.
+- **The handler remembers the signal first.** A print to stderr while the main thread is writing to
+  it raises CPython's `RuntimeError: reentrant call`, and that error would have stopped the
+  remember step and the raise.
+- **The remembered signal decides whatever the exception's type.** A `KeyboardInterrupt` or
+  `RuntimeError` after the handler fired would otherwise reach `except BaseException` and be
+  recorded `failed`.
+- **The unregistered `exec` has no `try` today.** It now goes through the same post-`exec`
+  function, for the shutdown and the exit status.
+
+It also leaves one thing to the agent: what is recorded when a signal arrives during a
+not-signalled `finish(..., fingerprint=True)`. In that case `Run.finish` writes its own state over
+`killed`. The agent records that window, and a second one in `status.json.tmp`, as observations.
 
 **Orchestrator review of prompt 00 (2026-10-02).** Run against `cfd9791`, dispatched from
 `5707851` with nothing `running` in this repository's registry, no other worktree and no Ray
@@ -550,6 +578,7 @@ Carried into 07's note:
 | **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ⬜ |
 | **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ⬜ |
 | **K3** | 04 | `terminal_state`'s docstring made true | ⬜ |
+| **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ⬜ |
 | **P1** | 05 | `--no-prune-unvalidated` out of both invocations and both usage lines | ⬜ |
 | **P2** | 05 | A test that keeps it out | ⬜ |
 | **F1** | 06 | The stores root is not a target | ⬜ |
