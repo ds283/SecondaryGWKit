@@ -1,9 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 5 of 8 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-03 · **Status: IN PROGRESS — 6 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03). 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -55,7 +55,7 @@ recommended** (audit, closing section; README §6.2):
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
 | 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K4** | Opus | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `79ab21a` | [`logs/04-…`](logs/04-record-a-sigterm-as-killed.md) |
-| 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
+| 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | *(the commit that lands this row)* | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 07 | Rehearse the A3 v2 launch | **L1**–**L3** | Opus | ⏸ held on 01–06 | ⬜ | — | — |
 
@@ -710,8 +710,8 @@ Carried into 07's note:
 | **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ✅ `finish_after_exec(run, exc, latch, ray.shutdown)` in each driver's one `except BaseException` and after the `try`. Signalled, whatever the exception: `alarm(0)`, `killed`/`128+signum` with the fingerprint, `ray.shutdown()`, `SystemExit(128+signum)`. Not signalled: the existing outcome exactly, with the fingerprint, then `ray.shutdown()`, then the driver's bare `raise`. A signal once the outcome is decided changes nothing (the prompt's choice). Probe: 27 of 27 runs `killed`/143, fingerprint present, exit 143, no abort, no `gcs_server` left (`TestSignalled`, `TestNotSignalled`; breakages (iii), (iv), (vii)) |
 | **K3** | 04 | `terminal_state`'s docstring made true | ✅ rewritten against audit S1–S3; mapping unchanged; `TestTerminalState` untouched, its name recording the old belief (log 04, observation 6) |
 | **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ✅ both pass `address="local"`, nothing else in the call changed; each probe child's GCS on its own port beside ChamPBH's `127.0.0.1:6379` (`TestTheDrivers`; breakage (vi)). `run_child` shares the defect, recorded and unchanged |
-| **P1** | 05 | `--no-prune-unvalidated` out of both invocations and both usage lines | ⬜ |
-| **P2** | 05 | A test that keeps it out | ⬜ |
+| **P1** | 05 | `--no-prune-unvalidated` out of both invocations and both usage lines | ✅ out of `run_build`'s and `run_child`'s argument lists for `main.py`, which are now built at module scope in `quadsource_atol_sweep.py` by `build_main_argv(args, database)` and `child_main_argv(args, database)` (each over one private `_main_py_argv(database, job_name)`), and called as `sys.argv = …`. Out of the usage line in both `scoped_pipeline_run.py` module docstrings; nothing else in either file changed. Each list, less the flag, equals its pre-image element by element, shown from `HEAD`'s source (log 05). `substitute_main_py(filter_cases=False)` still matches each of its four substitutions once. `run_child` changed in its argument list and nothing else |
+| **P2** | 05 | A test that keeps it out | ✅ `RunRegistry/tests/test_prune_on_resume.py`, 18 tests, no Ray: the three lists element by element, from the script's own parsed `Namespace`; neither the flag nor an abbreviation in any list, and a parser rebuilt from `main.py`'s `add_argument` calls (read with `ast`) parses each as `prune_unvalidated` true; `main.py`'s default and its `BooleanOptionalAction` read from source; the drivers' `sys.argv` assignments and no option literal left in either; the usage lines. Breakages (i)–(v), each caught (log 05) |
 | **F1** | 06 | The stores root is not a target | ⬜ |
 | **F2** | 06 | Tests: sequential retirements, a sidecar naming the root, the subdirectory shape | ⬜ |
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ⏸ |
@@ -724,11 +724,13 @@ Carried into 07's note:
 
 ### 3.1 Assigned to this campaign (2026-10-02)
 
-Each stays on its owning board, which carries an **Assigned** line, and closes there.
+Each stays on its owning board, which carries an **Assigned** line, and closes there. This section's
+table held one issue after prompt 04, and it has now closed, so the table is gone.
 
-| Issue | Owning board | Prompt |
-|---|---|---|
-| `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
+**Closed by prompt 05 (2026-10-03), on its owning board's §4:**
+`[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` (`datastore-integrity` §4, with its
+closing note, which cites prompt 10's `resumed-d` and says that it ran before prompt 02; log 05).
+Its index row is deleted.
 
 **Closed by prompt 04 (2026-10-03, `79ab21a`), on its owning board's §4:**
 `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` (`datastore-integrity`
@@ -1127,3 +1129,21 @@ of 5–10 on 10 CPUs.
 The counts agree with §5.8. No test failed.
 
 Index: **105 open**.
+
+### 5.10 After prompt 05 (2026-10-03)
+
+Measured 17:34–17:43 at the tree of prompt 05's code, serially, with README §7's command, each
+suite's output written to a file and its verdict read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 243 OK |
+
+RunRegistry is 225 + the 18 tests of `test_prune_on_resume.py`; every other count is unchanged from
+§5.9. Load average 5.9–77 (1-minute) on 10 CPUs, beside another project's Ray cluster; no flake
+fired. Index: **103 open**.

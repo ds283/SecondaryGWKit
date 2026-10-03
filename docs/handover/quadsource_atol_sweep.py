@@ -363,6 +363,46 @@ def substitute_main_py(filter_cases=True):
     return source
 
 
+def _main_py_argv(database, job_name):
+    """`main.py`'s argv for either driver, `sys.argv` form (the program name first).
+
+    Pruning is not mentioned: `main.py`'s `--prune-unvalidated` defaults to true, and that is
+    the designed recovery for a row stored but not validated when a build was interrupted
+    (`[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]`, a3-v2-readiness prompt 05).
+    `RunRegistry/tests/test_prune_on_resume.py` pins the list, element by element.
+    """
+    return [
+        "main.py",
+        "--database",
+        str(database),
+        "--job-name",
+        job_name,
+        "--shards",
+        str(SHARDS),
+        "--zend",
+        "0.1",
+        "--source-samples-log10z",
+        "100",
+    ]
+
+
+def build_main_argv(args, database):
+    """`main.py`'s argv for `run_build`: `database` is the resolved path, `args.job_name` the label.
+
+    It does not depend on `--resume`, which only decides the pre-check in `run_build`. Needs no
+    Ray, so a test can call it.
+    """
+    return _main_py_argv(database, args.job_name)
+
+
+def child_main_argv(args, database):
+    """`main.py`'s argv for `run_child`: `database` is the sweep store, the label names the pair.
+
+    Needs no Ray, so a test can call it.
+    """
+    return _main_py_argv(database, f"handover-atol-sweep-a{args.atol:g}-r{args.rtol:g}")
+
+
 def run_child(args):
     """One tolerance pair: exec main.py with the five substitutions and let it store the rows."""
     # before Ray, before main.py: this child is about to hand `--database SWEEP_STORE` to a
@@ -403,20 +443,7 @@ def run_child(args):
 
     source = substitute_main_py()
 
-    main_args = [
-        "--database",
-        str(SWEEP_STORE),
-        "--job-name",
-        f"handover-atol-sweep-a{args.atol:g}-r{args.rtol:g}",
-        "--shards",
-        str(SHARDS),
-        "--zend",
-        "0.1",
-        "--source-samples-log10z",
-        "100",
-        "--no-prune-unvalidated",
-    ]
-    sys.argv = ["main.py"] + main_args
+    sys.argv = child_main_argv(args, SWEEP_STORE)
     print(
         f"** quadsource_atol_sweep: phase={args.phase} atol={args.atol:g} rtol={args.rtol:g}"
     )
@@ -546,20 +573,7 @@ def run_build(args):
     model_list_module.build_model_list = _filtered_build
 
     source = substitute_main_py(filter_cases=False)
-    sys.argv = [
-        "main.py",
-        "--database",
-        str(database),
-        "--job-name",
-        args.job_name,
-        "--shards",
-        str(SHARDS),
-        "--zend",
-        "0.1",
-        "--source-samples-log10z",
-        "100",
-        "--no-prune-unvalidated",
-    ]
+    sys.argv = build_main_argv(args, database)
     print(f"** quadsource_atol_sweep --build: atol={args.atol:g} rtol={args.rtol:g}")
     print(f"** quadsource_atol_sweep --build: main.py argv = {sys.argv[1:]}")
 

@@ -1938,44 +1938,6 @@ None is assigned to a prompt of this campaign.
 
 ### 3.3 Opened by this campaign's prompts
 
-- **[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]** *(opened 2026-10-02 by prompt 10)*
-  - **The defect.** A3 v2's launch, `docs/handover/quadsource_atol_sweep.py --build` (`run_build`),
-    passes `--no-prune-unvalidated` to `main.py`, and so does `--build --resume`, which runs the same
-    `sys.argv`. Prompt 10's §1.3 copied the flag from there. Pruning at startup is the designed
-    recovery for a row stored but not yet validated when a build is interrupted (the user,
-    2026-10-01: "The bug here is the `--no-prune-unvaiidated`. Pruning is there precisely to deal
-    with this situation."). Under the flag such a row stays; the class's existence query serves
-    only validated rows, so the resume computes it again and stores a second row beside it.
-  - **Measured** (log 10; `docs/datastore-integrity-verification.md` §2.1.4). A `SIGTERM` in the
-    `GkSource` stage left 161 rows, 45 of them with all their values and `validated = 0`. The
-    resume under the flag computed 175 (130 missing + those 45) and stored them, so the store
-    held 336 `GkSource` rows, and the inventory reported `duplicate: GkSource: 45 key-and-tag
-    set(s) are held by more than one record (90 records, all kept)`. Each pair: the same key,
-    `parents_digest` and `z_samples`, one unvalidated and one validated. The fingerprint differed
-    from the uninterrupted reference's in `GkSource` alone. One more launch with `main.py`'s default
-    pruning removed the 45 (and their values, tags and parent-set members), computed nothing, and
-    left a store whose fingerprint equals the reference's.
-  - **Which classes can do it.** From the code, not measured: all seven classes with
-    `validate_on_startup`, which are the ones with a `validated` flag that a store can leave unset —
-    `BackgroundModel`, `TkNumericIntegration`, `TkWKBIntegration`, `GkNumericIntegration`,
-    `GkWKBIntegration`, `QuadSource` and `GkSource`. Each one's `build()` filters on
-    `validated == True`, and `BackgroundModel`'s replica store says it in a comment: "a store
-    interrupted before its validation leaves one on every shard, which a later store legitimately
-    writes beside". `QuadSourceIntegral`, `GkSourcePolicyData` and `OneLoopIntegral` have no
-    validation step. Only `GkSource` was caught between store and validate here.
-  - **Impact.** **It blocks A3 v2's resume as planned.** An interrupted A3 v2 build resumed with
-    `--build --resume` gains a duplicate for every row stored but not validated at the
-    interruption: an inventory problem, a fingerprint that differs from an uninterrupted build's,
-    and, for a reader that refuses more than one match, a failure.
-  - **Next step.** Drop `--no-prune-unvalidated` from `run_build`'s `sys.argv`, at least for
-    `--resume`, or say why it is needed and prune unvalidated rows another way. That is the sweep
-    script's, which this campaign does not edit (README §5 rule 12).
-  - **Assigned (2026-10-02):** to the **`handover`** campaign, which owns A3 v2's launch and
-    `quadsource_atol_sweep.py`, by the user's decision that the flag is the defect. Its board is not
-    edited here; the index row is under §1.1.
-  - **Assigned (2026-10-02, again):** reassigned from `handover` to `prompts/a3-v2-readiness` prompt
-    **05**, by the user's decision that one campaign owns every A3 v2 readiness defect (that
-    campaign's D4). Index row moved from `docs/OPEN_ISSUES.md` §1.1 to §1.17.
 - **[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]** *(opened
   2026-10-02 by prompt 10)*
   - **The defect.** Prompt 10 amended `test_verbose_renders_every_distinct_record_as_a_distinct_line`
@@ -2049,6 +2011,76 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]** *(opened 2026-10-02 by prompt 10; **closed 2026-10-03** by
+  `prompts/a3-v2-readiness` prompt 05)*
+  - **The defect.** A3 v2's launch, `docs/handover/quadsource_atol_sweep.py --build` (`run_build`),
+    passes `--no-prune-unvalidated` to `main.py`, and so does `--build --resume`, which runs the same
+    `sys.argv`. Prompt 10's §1.3 copied the flag from there. Pruning at startup is the designed
+    recovery for a row stored but not yet validated when a build is interrupted (the user,
+    2026-10-01: "The bug here is the `--no-prune-unvaiidated`. Pruning is there precisely to deal
+    with this situation."). Under the flag such a row stays; the class's existence query serves
+    only validated rows, so the resume computes it again and stores a second row beside it.
+  - **Measured** (log 10; `docs/datastore-integrity-verification.md` §2.1.4). A `SIGTERM` in the
+    `GkSource` stage left 161 rows, 45 of them with all their values and `validated = 0`. The
+    resume under the flag computed 175 (130 missing + those 45) and stored them, so the store
+    held 336 `GkSource` rows, and the inventory reported `duplicate: GkSource: 45 key-and-tag
+    set(s) are held by more than one record (90 records, all kept)`. Each pair: the same key,
+    `parents_digest` and `z_samples`, one unvalidated and one validated. The fingerprint differed
+    from the uninterrupted reference's in `GkSource` alone. One more launch with `main.py`'s default
+    pruning removed the 45 (and their values, tags and parent-set members), computed nothing, and
+    left a store whose fingerprint equals the reference's.
+  - **Which classes can do it.** From the code, not measured: all seven classes with
+    `validate_on_startup`, which are the ones with a `validated` flag that a store can leave unset —
+    `BackgroundModel`, `TkNumericIntegration`, `TkWKBIntegration`, `GkNumericIntegration`,
+    `GkWKBIntegration`, `QuadSource` and `GkSource`. Each one's `build()` filters on
+    `validated == True`, and `BackgroundModel`'s replica store says it in a comment: "a store
+    interrupted before its validation leaves one on every shard, which a later store legitimately
+    writes beside". `QuadSourceIntegral`, `GkSourcePolicyData` and `OneLoopIntegral` have no
+    validation step. Only `GkSource` was caught between store and validate here.
+  - **Impact.** **It blocks A3 v2's resume as planned.** An interrupted A3 v2 build resumed with
+    `--build --resume` gains a duplicate for every row stored but not validated at the
+    interruption: an inventory problem, a fingerprint that differs from an uninterrupted build's,
+    and, for a reader that refuses more than one match, a failure.
+  - **Next step.** Drop `--no-prune-unvalidated` from `run_build`'s `sys.argv`, at least for
+    `--resume`, or say why it is needed and prune unvalidated rows another way. That is the sweep
+    script's, which this campaign does not edit (README §5 rule 12).
+  - **Assigned (2026-10-02):** to the **`handover`** campaign, which owns A3 v2's launch and
+    `quadsource_atol_sweep.py`, by the user's decision that the flag is the defect. Its board is not
+    edited here; the index row is under §1.1.
+  - **Assigned (2026-10-02, again):** reassigned from `handover` to `prompts/a3-v2-readiness` prompt
+    **05**, by the user's decision that one campaign owns every A3 v2 readiness defect (that
+    campaign's D4). Index row moved from `docs/OPEN_ISSUES.md` §1.1 to §1.17.
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 05, in the commit that lands it
+    (log: [`../a3-v2-readiness/logs/05-prune-on-resume.md`](../a3-v2-readiness/logs/05-prune-on-resume.md)).
+    - **The flag is gone.** `--no-prune-unvalidated` is out of `run_build`'s argument list for
+      `main.py` and out of `run_child`'s, and out of the usage line in the module docstring of
+      `docs/gktk-remedial/scoped_pipeline_run.py` and of
+      `docs/source-remediation-verification/scoped_pipeline_run.py`. Both argument lists are now
+      built at module scope in `quadsource_atol_sweep.py` (`build_main_argv`, `child_main_argv`),
+      which need no Ray. Each list, less the flag, is what it was element by element. `main.py`'s
+      `--prune-unvalidated`, a `BooleanOptionalAction` whose default is true, now decides, so a
+      `--build --resume` prunes unvalidated rows at startup.
+    - **Kept removed** by `RunRegistry/tests/test_prune_on_resume.py` (18 tests, no Ray): the lists
+      element by element; neither the flag nor an abbreviation of it (`main.py`'s parser keeps
+      `allow_abbrev`, so `--no-prune` resolves to it) in any list, checked with a parser rebuilt
+      from `main.py`'s `add_argument` calls, read with `ast`; `main.py`'s default read from its
+      source; and the two drivers calling the two functions. Five deliberate breakages, each caught
+      (log 05).
+    - **The measurement is prompt 10's `resumed-d`**
+      (`docs/datastore-integrity-verification.md` §2.1.4). Under the flag the resume stored 45
+      `GkSource` rows twice. One further launch at `main.py`'s default pruned them, computed
+      nothing, and left a store whose fingerprint equals the uninterrupted reference's. No new run
+      was made.
+    - **Which tree it was measured at.** `resumed-d` ran on 2026-10-01 at 23:54, before prompt 02
+      of `a3-v2-readiness` (`b647c0b`), which moved the prune of the **replicated** classes
+      (`BackgroundModel` and its tags and values) from the actors into the pool, under a `prune`
+      record. The 45 `GkSource` rows are a **sharded** class, which an actor still prunes
+      (`Datastore._validate_on_startup`), so the measurement stands for them. Prompt 07's L2
+      measures a pruned resume at the tree A3 v2 will run.
+    - **What it does not touch.** `run_child`'s other defects stay open as
+      `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]`, and the six
+      extraction scripts' `prune_unvalidated=False`, which is right for a reader, is
+      `a3-v2-readiness` prompt 03's.
 - **[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]** *(opened 2026-10-02
   by prompt 10; **closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 04)*
   - **The defect.** `docs/gktk-remedial/scoped_pipeline_run.py`'s `terminal_state` docstring says

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-03 · **104 open** across nineteen campaigns.
+**Last updated:** 2026-10-03 · **103 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -825,7 +825,6 @@ was opened when 02 was written. Prompt 04 opened four (2026-10-03); the user clo
 | `[10-store-retire-reports-every-tombstone-as-a-reference]` | a3-v2-readiness | `_find_references` (`RunRegistry/stores.py`) counts the store's own directory as a target, and every tombstone records `references.stores_root` as that directory, so each `store retire` lists every earlier tombstone beside it as naming the store (2, then 3, on 2026-10-02). Report only. Prompt 06. |
 | `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |
 | `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
-| `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | datastore-integrity | `quadsource_atol_sweep.py --build` (and `--build --resume`) passes `--no-prune-unvalidated`, so a resume duplicates every row stored but not validated at the interruption: 45 `GkSource` rows twice in prompt 10's run, the fingerprint off the reference's until a pruned resume. Blocks A3 v2's resume as planned. Reassigned from `handover`; prompt 05. |
 
 ---
 

@@ -22,7 +22,7 @@ Usage (all main.py options after `--` are passed through verbatim):
     PYTHONPATH=. ./venv/bin/python docs/source-remediation-verification/scoped_pipeline_run.py \
         --k-min 1e5 --k-max 1e7 --k-count 7 --cpus 10 --models LambdaCDM \
         -- --database /path/to/fresh.sqlite --job-name label --shards 4 \
-           --zend 1e4 --source-samples-log10z 100 --no-prune-unvalidated
+           --zend 1e4 --source-samples-log10z 100
 
 The datastore path must not already exist; this script refuses to run otherwise, so that no
 existing datastore can be overwritten or migrated.
