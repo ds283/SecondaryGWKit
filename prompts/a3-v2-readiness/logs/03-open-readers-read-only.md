@@ -7,15 +7,14 @@ raises `ReadOnlyMiss`, and any other write raises `ReadOnlyWrite`. The six reade
 `--models`, and skip a model whose background the store does not hold.
 `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` and
 `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` are closed on the
-`datastore-integrity` board. No stop condition of the prompt's §5 fired. The commit is the one that
-adds this file ("this commit" below, since its SHA does not exist yet).
+`datastore-integrity` board. No stop condition of the prompt's §5 fired. The commit is `20977cb`.
 
 The orchestrator's facts for this prompt (its note, checked at `f1999b1`) are cited below as "the
 orchestrator's", where this prompt relies on them without re-deriving them.
 
 ## What shipped
 
-Line counts are `git diff --cached --numstat` of this commit.
+Line counts are `git diff --cached --numstat` of `20977cb`.
 
 - **`Datastore/replication.py`** (95 added, 0 deleted): `ReadOnlyMiss(class_name, payload, store,
   detail)` and `ReadOnlyWrite(store, operation, class_name, detail)`, beside
@@ -317,7 +316,7 @@ No `UNINTENDED DRIFT`.
 ### Suites
 
 All six, serially, with README §7's command, each suite's output to a file in the scratch
-directory and its verdict grepped from it, at the tree of this commit:
+directory and its verdict grepped from it, at the tree of `20977cb`:
 
 | Suite | Result |
 |---|---|
@@ -354,7 +353,7 @@ No test failed, so no wall-clock flake needed re-running.
 
 ## The deliberate-breakage record
 
-Each diff was made in the working tree against the staged tree of this commit, recorded with
+Each diff was made in the working tree against the staged tree of `20977cb`, recorded with
 `git diff -- <file>`, run against the named module, and restored with `git checkout -- <file>`
 from the index, after which `git diff --name-only -- '*.py'` was empty. The harness ran in `bash`.
 The record below is its second run, on the final staged tree (24 tests in `test_read_only_pool`).
@@ -520,8 +519,8 @@ index 1f248b0..dc36b61 100644
 ### Replay
 
 Before the commit, each of the seven files was checked with `git apply --check --cached <file>`
-against the staged tree, which is this commit's tree: all seven apply. (iv)'s file,
-`Datastore/store_reader.py`, is not in this commit, so it applies to `e4d6ccd`'s copy, which is the
+against the staged tree, which is `20977cb`'s tree: all seven apply. (iv)'s file,
+`Datastore/store_reader.py`, is not in `20977cb`, so it applies to `e4d6ccd`'s copy, which is the
 committed one.
 
 ## Observations not acted on
@@ -567,5 +566,5 @@ No new issue is opened. The index count is 102: 104 less the two rows this promp
   `extract_common.add_models_argument`, `select_models`, `require_background`, `read_models`.
 - **Pool attributes on a read-only pool:** `absent_tables` (shard → tables its file lacks),
   `actor_states` (shard → `read_only_state()`), `reconciliation` (with `read_only: True`).
-- **Baselines** after this commit: §5.6 of the board. ComputeTargets 686, Datastore 598.
+- **Baselines** after `20977cb`: §5.6 of the board. ComputeTargets 686, Datastore 598.
 - **Index:** 102 open.

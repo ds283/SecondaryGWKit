@@ -2131,7 +2131,7 @@ None is assigned to a prompt of this campaign.
     are read with `read_table`, which writes nothing.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, a
     read-only pool to the specification of that campaign's audit M1.
-  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, this commit, by that campaign's
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, `20977cb`, by that campaign's
     D3: a read-only pool, not per-site lookups. `ShardedPool(read_only=True)` opens every file
     `mode=ro` (the pool's engine and every actor's, through `store_reader.read_only_url`) and
     writes nothing at open: no store is created, journals are refused by presence through
@@ -2174,7 +2174,7 @@ None is assigned to a prompt of this campaign.
     `docs/OPEN_ISSUES.md` §1.17.
   - **Prompt written (2026-10-02):** `prompts/a3-v2-readiness/03-open-readers-read-only.md`, O4:
     `--models`, and a model with no `BackgroundModel` skipped with a message.
-  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, this commit. Each of the six
+  - **Closed 2026-10-03** by `prompts/a3-v2-readiness` prompt 03, `20977cb`. Each of the six
     readers takes `--models LABEL [LABEL …]` (`extract_common.add_models_argument`), applied to
     `build_model_list`'s result by `extract_common.select_models`, which refuses any label
     `build_model_list` does not return, naming those it does. A model whose `BackgroundModel` the

@@ -85,7 +85,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--database",
     default=None,
-    help="read/write work items using the specified database cache",
+    help="read work items from the specified database cache, opened read-only",
 )
 parser.add_argument(
     "--db-timeout",

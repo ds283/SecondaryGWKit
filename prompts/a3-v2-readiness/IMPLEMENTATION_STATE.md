@@ -3,8 +3,7 @@
 **Last updated:** 2026-10-03 · **Status: IN PROGRESS — 4 of 8 prompts landed.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
-prompt 03 has landed (2026-10-03). 01–06
-are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
+prompt 03 has landed (2026-10-03) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 is held on 01–06 (README §2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
@@ -54,7 +53,7 @@ recommended** (audit, closing section; README §6.2):
 | 00 | [Audit the readiness defects](00-audit-the-readiness-defects.md) | **R1**–**R3**, **S1**–**S4**, **V1**–**V2**, **M1**–**M2** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `cfd9791` | [`logs/00-…`](logs/00-audit-the-readiness-defects.md) |
 | 01 | [Set the production quadrature `rtol`](01-set-the-production-quadrature-rtol.md) | **T1**–**T2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-02 | `2a44f7e` | [`logs/01-…`](logs/01-set-the-production-quadrature-rtol.md) |
 | 02 | [Write the version row through the recorded write](02-write-the-version-row-through-the-recorded-write.md) | **W1**–**W3** | Opus | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `b647c0b` | [`logs/02-…`](logs/02-write-the-version-row-through-the-recorded-write.md) |
-| 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | this commit | [`logs/03-…`](logs/03-open-readers-read-only.md) |
+| 03 | [Open readers read-only](03-open-readers-read-only.md) | **O1**–**O4** | Opus | ✍️ yes, 2026-10-02; after 01, 02 | ✅ 2026-10-03 | `20977cb` | [`logs/03-…`](logs/03-open-readers-read-only.md) |
 | 04 | [Record a `SIGTERM` as killed](04-record-a-sigterm-as-killed.md) | **K1**–**K3** | Opus | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ⬜ | — | — |
@@ -66,7 +65,7 @@ recommended** (audit, closing section; README §6.2):
 carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrator/prompt-00.md)
 (2026-10-02, used), [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-02, used) and
 [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-02, used) and
-[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, ready). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-03, used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -383,6 +382,145 @@ Carried into 03's note:
 - **The actor's signature.** `Datastore.__init__` now requires `replicated_tables`, and has lost
   `version_serial`.
 
+**Orchestrator review of prompt 03 (2026-10-03).** Run against `20977cb`, dispatched from
+`e4d6ccd`. At dispatch the tree was clean, there was no other worktree, and nothing was `running`
+in this repository's registry. **All ten checks in `orchestrator/prompt-03.md` §3 passed.** No §5
+stop condition fired, and the agent asked nothing. The remnants are records and one help string,
+and are fixed in the follow-up commit that records this review.
+
+The checks:
+- **Dispatch.**
+  - `HEAD` was `e4d6ccd`. The registry listed 12 runs: 10 finished and 2 `unknown` (`a3-pilot`,
+    `a3-pilot-resume`), unchanged. The index held **104** rows.
+  - The baselines matched §5.5 exactly, measured 09:35–09:45 at a load average of 15–17 on 10
+    CPUs. No test failed. Part of the load was an unrelated Ray cluster in another of the user's
+    projects, left alone.
+  - The pre-images were `c1d30c4` (`ShardedPool.py`), `1604782` (`Datastore.py`), `25a88cd`
+    (`replication.py`), `61bfc09` (`store_reader.py`), `bf58805` (`standin_pool.py`) and `d03b67f`
+    (`extract_common.py`).
+- **Scope (1).**
+  - 16 files, all on the note's list.
+  - The diff over `store_reader.py`, `config/`, `main.py`, `docs/` other than the index, `var/` and
+    every factory is empty. `standin_pool.py` is not touched, and no existing test module is.
+  - Both pool files and `replication.py` have numstat deletions of 0.
+- **(D4) The read-write path, by reading (2).**
+  - An `ast` comparison of every method against `e4d6ccd` finds that, in `ShardedPool`, only
+    `__init__`, `_get_impl_replicated_table`, `object_store`, `object_validate` and
+    `_assign_shard_keys` changed. In `Datastore`, only `__init__`, `_inserters_for`, `object_get`,
+    `object_read_batch`, `object_store` and `object_validate` changed.
+  - Each change is an early return to new code under `read_only`, a guard
+    `if getattr(self, "_read_only", False):` before new code, or a call to `_read_only_refusal`,
+    which returns at once on a read-write actor. Both new keywords default to `False`.
+  - `_replicated_write`, `_plan_replicated_repair`, `_prune_replicated_tables`,
+    `_complete_interrupted_prune`, `_find_version_row` and `_reconcile_replicated_tables` are
+    unchanged.
+- **(D1) Nothing written (3).**
+  - `TestNothingWrittenOnAFullStore`'s first test runs QSI's whole sequence, imported from the
+    probe. The read-write run is first: it changes `store.sqlite` alone, with 21
+    `_replicated_write` entries.
+  - The read-only run then leaves every file's SHA-256 unchanged, logs no `_replicated_write`, and
+    issues no write statement. Every step's outcome equals the read-write run's.
+  - Run by the orchestrator: the two new modules, `test_main_plumbing` and
+    `test_quadrature_tolerance_pin`, 72 tests, OK.
+- **(D2) At open (4).**
+  - Every row of the log's M1 table names its function and its test. The table gains rows for 02's
+    `_prune_replicated_tables`, `_complete_interrupted_prune`, version write and `set_version`.
+  - A read-only pool never calls `_reconcile_replicated_tables`.
+    `_check_replicated_tables_read_only` reads the record first, through the `mode=ro` engine, and
+    raises `ReadOnlyWrite` naming it. It then compares on `mode=ro` engines, as the read-write
+    function's no-record branch does. So a `prune` record is refused by name, and the record test
+    patches both functions to fail if they are called.
+  - `Datastore._validate_on_startup_read_only` skips and reports a validating class whose table is
+    absent. `test_a_shard_lacking_a_table_is_reported_and_the_store_opens` drops `GkSource` (a
+    validating class) and `OneLoopIntegral` in turn.
+  - `_create_engine` issues no DDL, so the read-write engine it makes is never connected before it
+    is replaced.
+- **(D3) Every write stopped (5).**
+  - `TestEachMissRaisesReadOnlyMiss` covers all five classes, each with no write statement and
+    every file unchanged.
+  - The actor's inserter map is rebuilt over every table, and so is each schema record's
+    `insert`. The orchestrator checked in-process that every entry, the nested `*_tags` ones
+    included, is `_refuse_insert`. The nested inserters are reached only from `store` paths, which
+    are refused first.
+  - `TestOtherWritesRaiseReadOnlyWrite` covers store, validate, a new shard key, a vectorized
+    insert, `drop_actions` and `prune_unvalidated=True`, all before anything is opened, and the
+    backstop.
+  - The backstop matches `sqlite_errorcode == SQLITE_READONLY`, the code of "attempt to write a
+    readonly database". `test_a_lookup_on_a_missing_table_fails_in_sqlite` sees `no such table`
+    left as SQLAlchemy's `OperationalError`.
+- **(D5) The readers (6).**
+  - Each of the six has one `read_only=True`, no `prune_unvalidated`, one
+    `add_models_argument(parser)`, one `select_models(...)`, one `read_models(model_list, ...)`
+    and one `require_background(...)`. None still has the `RuntimeError` text or the
+    `for model_data in model_list:` loop.
+  - `require_background` stands at the old raise site. It raises `NoBackgroundModel`, which is not
+    a `RuntimeError`. `read_models` catches it, prints the skip line, and raises `SystemExit`
+    (status 1) when no model was read.
+  - The deviation from "one helper" to two (deviation 5) is structurally required: the absence is
+    known only inside `run_pipeline`.
+- **(D6) The pins (7).** Each of (i)–(vii), extracted from the log, applies with `git apply` at
+  `20977cb`. Each fails the test the log names, replayed in `bash`:
+  - (i): `TestNothingWrittenOnAFullStore`, 4 errors;
+  - (ii): `TestEachMissRaisesReadOnlyMiss`, 5 errors;
+  - (iii): `test_the_backstop_a_flag_update_on_a_hit`;
+  - (iv), in `store_reader._refuse_journals`: both empty-journal tests, 4 failures;
+  - (v): `test_every_connection_is_opened_read_only`, which records every `sqlite3.connect` the pool
+    module makes and every engine connection's URL, not a checksum;
+  - (vi): `test_each_opens_its_pool_read_only`;
+  - (vii): `TestTheSkip`, 3 errors.
+
+  `git apply -R` left `git status` clean after each.
+- **End to end (8).** Run in-process from the scratchpad on a store from `build_full_store`, and
+  not committed.
+  - QSI's sequence on a read-only pool left all four files unchanged. It stopped at
+    `QCD_Cosmology`'s background, which is the probe's transcription of the script before 03.
+  - With both `GkSourcePolicy` rows deleted on every shard (`delete_rows`), it raised
+    `ReadOnlyMiss` naming `GkSourcePolicy`, and all four files were unchanged.
+- **(D7) The records (9).**
+  - Both issues are in the `datastore-integrity` board's §4, each with a closing note naming the
+    tests. Both index rows are gone. `grep -c` gives **102**, which matches the header.
+  - The log's *Observations* open no issue.
+- **Suites (10).** Run serially by the orchestrator at `20977cb`, 10:33–10:44, at a load average
+  of 6–80 (§5.7 below).
+  - Datastore is 598 = 574 + 24, and ComputeTargets 686 = 669 + 17. Every other count is
+    unchanged, and no test failed.
+  - `black --check` is clean on the 12 Python files.
+
+Remnants, fixed in the follow-up commit:
+1. "This commit" stood where the SHA belongs: in this board's §1 row, the §3.1 closure note and
+   §5.6; in both `datastore-integrity` closing notes; and in seven places in log 03. All now say
+   `20977cb`.
+2. Log 03 observation 1: the six scripts' `--database` help still said "read/write work items".
+   It now says "read work items from the specified database cache, opened read-only".
+   `test_reader_read_only`, `test_main_plumbing` and `test_quadrature_tolerance_pin` pass after the
+   change.
+3. The orchestrator notes list called `prompt-03.md` "ready" (now "used"), and the header did not
+   say 03 was reviewed.
+
+Not remnants:
+- Log 03 observation 2. The test imports the probe, which the note left to the agent, and the log
+  says why.
+- Observations 3–5. They are the mode's stated limits:
+  - the exceptions subclass `RuntimeError`;
+  - journals are checked at open only;
+  - a store a build has open is refused.
+
+  07's note carries the last two.
+
+Carried into 07's note:
+- **The names and messages.** `ShardedPool(read_only=True)`; `ReadOnlyMiss` and `ReadOnlyWrite`,
+  in `Datastore/replication.py` and importable from `Datastore.SQL.ShardedPool`. Their full
+  messages are in log 03, *The new exceptions' messages*. Both end "Nothing was written".
+- **The invocation.** Each reader takes `--models LABEL [LABEL …]`. On a LambdaCDM-only store:
+  - with no `--models`, it reads LambdaCDM, prints
+    `>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it`, and exits 0;
+  - with `--models LambdaCDM`, it reads LambdaCDM alone. That is the rehearsal's invocation;
+  - an unknown label refuses before any model is read, naming `LambdaCDM, QCD_Cosmology`.
+- **Journals.** A reader on a store with a journal beside it is refused at open, so run the
+  readers only after the build has exited. Journals are not re-checked after open.
+- **The label.** The readers open under `VERSION_LABEL = "2025.1.1"`, the build's. Any other
+  label refuses with `ReadOnlyMiss("version", …)`, naming the labels present.
+
 ---
 
 ## 2. Items
@@ -433,7 +571,7 @@ Each stays on its owning board, which carries an **Assigned** line, and closes t
 | `[10-a-sigterm-to-the-scoped-driver-is-recorded-as-failed-or-not-at-all]` | `datastore-integrity` §3.3 | 04 |
 | `[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]` | `datastore-integrity` §3.3; reassigned from `handover` | 05 |
 
-**Closed by prompt 03 (2026-10-03, this commit), on their owning board's §4:**
+**Closed by prompt 03 (2026-10-03, `20977cb`), on their owning board's §4:**
 `[08-extraction-script-object-get-of-gksourcepolicy-writes-to-the-store-it-reads]` and
 `[10-extraction-scripts-exit-1-on-a-store-without-every-model]` (`datastore-integrity` §4, each
 with its closing note; log 03). Both index rows are deleted.
@@ -679,7 +817,7 @@ Index: **104 open**.
 
 ### 5.6 After prompt 03 (2026-10-03)
 
-Measured 10:14–10:24 at the tree of this commit, serially, with README §7's command, each suite's
+Measured 10:14–10:24 at the tree of `20977cb`, serially, with README §7's command, each suite's
 output written to a file and its verdict read from it:
 
 | Suite | Result |
@@ -694,3 +832,21 @@ output written to a file and its verdict read from it:
 ComputeTargets is 669 + the 17 tests of `test_reader_read_only.py`; Datastore is 574 + the 24 of
 `test_read_only_pool.py`. Every other count is unchanged from §5.5. Load average 8–29 (1-minute) on
 10 CPUs, shared with an unrelated Ray cluster; no flake fired. Index: **102 open**.
+
+### 5.7 After prompt 03, re-measured by the orchestrator (2026-10-03)
+
+Measured 10:33–10:44 at `20977cb`, serially, with README §7's command, at a 1-minute load average
+of 6–80 on 10 CPUs. The load peaked during ComputeTargets.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 199 OK |
+
+The counts agree with §5.6. No test failed.
+
+Index: **102 open**.
