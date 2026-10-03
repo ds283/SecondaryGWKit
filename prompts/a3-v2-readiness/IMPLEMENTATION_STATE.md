@@ -639,6 +639,8 @@ cycle's boundary. The criterion was written to keep the record ahead of absl's 3
 the handler is installed no alarm is armed (S1), so that purpose is met with about 2 s to spare.
 `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]` holds the user's decision: accept the
 ~1 s bound, or set Ray's signal-check interval in both drivers' `ray.init`.
+**Decided (2026-10-03, user):** the ~1 s bound is accepted, and the issue is closed to §4. The
+index is now **104**.
 
 Remnants, fixed in the follow-up commit:
 1. "This commit" stood where the SHA belongs: in this board's §1 row, its §3.1 closure note and
@@ -693,7 +695,7 @@ Carried into 07's note:
 | **O2** | 03 | `ReadOnlyMiss` on a lookup that would have inserted; `ReadOnlyWrite` on any write | ✅ both in `Datastore/replication.py`, importable from the pool's module; a replicated get goes to one drawn shard with no record (`_get_impl_replicated_table_read_only`); every actor inserter refuses (`Datastore._refuse_insert`): `ReadOnlyMiss` for a replicated row, `ReadOnlyWrite` for any other; store, validate, a new shard key refused; SQLite's `SQLITE_READONLY` re-raised as `ReadOnlyWrite` (`_read_only_refusal`) (`TestNothingWrittenOnAFullStore`, `TestEachMissRaisesReadOnlyMiss`, `TestOtherWritesRaiseReadOnlyWrite`; breakages (i)–(iii)) |
 | **O3** | 03 | The six readers open read-only | ✅ each constructs `ShardedPool(..., read_only=True)` and drops `prune_unvalidated=False`; no lookup changed (`test_reader_read_only.TestTheSixReaders`; breakage (vi)) |
 | **O4** | 03 | `--models` on each reader; a model the store lacks is skipped with a message | ✅ `extract_common.add_models_argument`, `select_models` (an unknown label refuses, naming the known ones), `require_background` at the old `RuntimeError`'s site, `read_models` in place of the loop (skips with one line; exits 1 if no model is read); `config/model_list.py` unchanged (`test_reader_read_only`, 17 tests; breakage (vii)) |
-| **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ✅ `scoped_pipeline_run.install_killed_handler(run, latch)`, called from `main`'s and `run_build`'s `_local_ray_init` after the real `ray.init`, registered or not, for `SIGTERM` and `SIGINT`. Its handler (`make_killed_handler`'s `killed_handler`) remembers the signal in a `SignalLatch` first, writes `killed`/`128+signum` with no fingerprint, prints one line (never raising), raises `SystemExit(128+signum)`; any later call, or one after the pipeline's outcome is decided, prints and returns. Each driver's `terminal` kept before Ray. `run_child`/`sweep` unchanged (`TestTheHandler`, `TestInstall`, `TestTheDrivers`; breakages (i), (ii), (v)). On real Ray `killed`/143 was written 0.001–0.007 s after the signal in 23 of 27 runs and **1.003–1.006 s in 4**: Ray checks for signals once a second inside a wait (log 04; `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]`) |
+| **K1** | 04 | One handler, installed after `ray.init` by both drivers, writing `killed` at once | ✅ `scoped_pipeline_run.install_killed_handler(run, latch)`, called from `main`'s and `run_build`'s `_local_ray_init` after the real `ray.init`, registered or not, for `SIGTERM` and `SIGINT`. Its handler (`make_killed_handler`'s `killed_handler`) remembers the signal in a `SignalLatch` first, writes `killed`/`128+signum` with no fingerprint, prints one line (never raising), raises `SystemExit(128+signum)`; any later call, or one after the pipeline's outcome is decided, prints and returns. Each driver's `terminal` kept before Ray. `run_child`/`sweep` unchanged (`TestTheHandler`, `TestInstall`, `TestTheDrivers`; breakages (i), (ii), (v)). On real Ray `killed`/143 was written 0.001–0.007 s after the signal in 23 of 27 runs and **1.003–1.006 s in 4**: Ray checks for signals once a second inside a wait (log 04; `[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]`, closed 2026-10-03: the user accepted the ~1 s bound) |
 | **K2** | 04 | The fingerprint best-effort after the state; Ray shut down; no `gcs_server` left | ✅ `finish_after_exec(run, exc, latch, ray.shutdown)` in each driver's one `except BaseException` and after the `try`. Signalled, whatever the exception: `alarm(0)`, `killed`/`128+signum` with the fingerprint, `ray.shutdown()`, `SystemExit(128+signum)`. Not signalled: the existing outcome exactly, with the fingerprint, then `ray.shutdown()`, then the driver's bare `raise`. A signal once the outcome is decided changes nothing (the prompt's choice). Probe: 27 of 27 runs `killed`/143, fingerprint present, exit 143, no abort, no `gcs_server` left (`TestSignalled`, `TestNotSignalled`; breakages (iii), (iv), (vii)) |
 | **K3** | 04 | `terminal_state`'s docstring made true | ✅ rewritten against audit S1–S3; mapping unchanged; `TestTerminalState` untouched, its name recording the old belief (log 04, observation 6) |
 | **K4** | 04 | Both drivers' real `ray.init` start a local instance (`address="local"`), not attach to another `ray start` cluster (added 2026-10-03, user) | ✅ both pass `address="local"`, nothing else in the call changed; each probe child's GCS on its own port beside ChamPBH's `127.0.0.1:6379` (`TestTheDrivers`; breakage (vi)). `run_child` shares the defect, recorded and unchanged |
@@ -801,30 +803,6 @@ with its closing note; log 03). Both index rows are deleted.
     handle `main.py`'s loop-variable site, or keep excluding it. Prompt 03 edits the extractor, so
     03 must keep `test_quadrature_tolerance_pin.py` passing.
 
-- **[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]** *(opened 2026-10-03 by prompt 04;
-  does not block A3 v2)*
-  - **The defect.** A Python signal handler installed after `ray.init` runs, inside `ray.wait`,
-    only when Ray next checks for signals, which is at the next whole second of the wait. So a
-    `SIGTERM` is recorded `killed` from a few milliseconds to about a second after it arrives.
-    Prompt 04's acceptance asked for "within a second of the signal". Audit S1's "within
-    milliseconds" was measured with a timer that sent the signal 2.0 s into the wait, on that
-    boundary, so it was the early side of it, not a bound.
-  - **Measured** (`docs/a3-v2-readiness/sigterm_handler_probe.txt`, 27 runs).
-    - `killed` was written 0.001–0.007 s after the signal in 23 runs and 1.003–1.006 s in 4, in
-      both drivers' wrappers, at 1-minute loads of 4–26.
-    - The probe's `phase` section sent one `SIGTERM` at each of ten offsets into one wait. The
-      `SystemExit` reached the frame 0.900, 0.747, 0.499, 0.248, 0.101, 0.905, 0.504, 0.009,
-      0.961 and 0.511 s after the signal, for offsets 0.10, 0.25, 0.50, 0.75, 0.90, 1.10, 1.50,
-      2.00, 2.05 and 2.50 s.
-    - That the period is Ray's `get_check_signal_interval_milliseconds` is inferred: the name is in
-      `_raylet.so`'s strings, and its 1000 ms default is not read.
-  - **Impact.** Small. Nothing aborts in that second, since no alarm is armed, and every run
-    recorded `killed`/143 and exited 143. But the record can be up to ~1 s late, and the
-    criterion as written fails in about one run in seven of the probe's.
-  - **Next step.** A user decision: accept a bound of about one second plus the write, or have
-    both drivers' real `ray.init` lower Ray's signal-check interval (a `_system_config` entry or
-    the `RAY_get_check_signal_interval_milliseconds` variable). The second changes the call that K4
-    kept to `address`.
 - **[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]** *(opened 2026-10-03
   by prompt 04, from the orchestrator's reading; read, not measured; does not block A3 v2)*
   - **The defect.** `write_json_atomic` (`RunRegistry/__init__.py`) writes every update through
@@ -931,6 +909,38 @@ with its closing note; log 03). Both index rows are deleted.
   - **What it leaves.** A store built at any pair other than `(1e-32, 1e-7)` is unreadable by the
     extractor at the default; log 01, observation 1. The extractor's `object_get` on the replicated
     `tolerance` class still inserts a row on a miss, which is `[08-…]`'s (prompt 03).
+- **[04-a-sigterm-in-ray-wait-is-handled-up-to-a-second-late]** *(opened 2026-10-03 by prompt 04;
+  **closed 2026-10-03 by the user's decision**, no code change)*
+  - **The defect.** A Python signal handler installed after `ray.init` runs, inside `ray.wait`,
+    only when Ray next checks for signals, which is at the next whole second of the wait. So a
+    `SIGTERM` is recorded `killed` from a few milliseconds to about a second after it arrives.
+    Prompt 04's acceptance asked for "within a second of the signal". Audit S1's "within
+    milliseconds" was measured with a timer that sent the signal 2.0 s into the wait, on that
+    boundary, so it was the early side of it, not a bound.
+  - **Measured** (`docs/a3-v2-readiness/sigterm_handler_probe.txt`, 27 runs).
+    - `killed` was written 0.001–0.007 s after the signal in 23 runs and 1.003–1.006 s in 4, in
+      both drivers' wrappers, at 1-minute loads of 4–26.
+    - The probe's `phase` section sent one `SIGTERM` at each of ten offsets into one wait. The
+      `SystemExit` reached the frame 0.900, 0.747, 0.499, 0.248, 0.101, 0.905, 0.504, 0.009,
+      0.961 and 0.511 s after the signal, for offsets 0.10, 0.25, 0.50, 0.75, 0.90, 1.10, 1.50,
+      2.00, 2.05 and 2.50 s.
+    - That the period is Ray's `get_check_signal_interval_milliseconds` is inferred: the name is in
+      `_raylet.so`'s strings, and its 1000 ms default is not read.
+  - **Impact.** Small. Nothing aborts in that second, since no alarm is armed, and every run
+    recorded `killed`/143 and exited 143. But the record can be up to ~1 s late, and the
+    criterion as written fails in about one run in seven of the probe's.
+  - **Next step.** A user decision: accept a bound of about one second plus the write, or have
+    both drivers' real `ray.init` lower Ray's signal-check interval (a `_system_config` entry or
+    the `RAY_get_check_signal_interval_milliseconds` variable). The second changes the call that K4
+    kept to `address`.
+  - **Closed by.** The user's decision (2026-10-03, after the orchestrator review of 04): **the
+    ~1 s bound is accepted.** Prompt 04's "within a second" stood for "ahead of absl's 3 s abort",
+    and with the driver's handler installed no alarm is armed (audit S1). So `killed` written up to
+    one second plus the write after the signal meets the purpose. Every one of the 36 probe runs,
+    the agent's 27 and the orchestrator's 9, recorded `killed`/143 and exited 143. Ray's
+    signal-check interval is not changed, and K4's `ray.init` call stays as `address` alone.
+  - **What it leaves.** 07's rehearsal and A3 v2 read `killed` up to about a second after the
+    signal. Nothing that waits on the record may assume less.
 
 ---
 
