@@ -201,7 +201,7 @@ Neither opens an issue.
 | **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured | B6 | ⬜ |
 | **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ⬜ |
 | **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ⬜ |
-| **S3** | 05 | an absent table on a read-write open, per U1; `real_store_fixtures.py`'s old-store machinery | B5 | ⬜ |
+| **S3** | 05 | an absent table on a read-write open, per U1; `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
 | **G1** | 06 | `ShardedPool` given the registry; no import of `Datastore._factories` | C1 #10 | ⬜ |
 | **G2** | 06 | `store_reader` and `store_inventory` given the registry and the replicated set | C1 #10, #14 | ⬜ |
 | **G3** | 06 | the older registries, per U2 | C1 #9–#11 | ⬜ |
@@ -248,6 +248,12 @@ Neither opens an issue.
     generation" branches (audit F0, B8, B9's comment); the eleven tests that exercised them. Left
     for 02: `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` (B7); for
     03–05: B1–B6.
+  - **Found (2026-10-04, writing 02's orchestrator note):** a site the audit missed. In
+    `TkWKBIntegration` and `GkWKBIntegration`, `_build_impl_model` and `read_batch` select
+    `numeric_serial` whether or not a parent is given, so that a store without the column fails
+    rather than being read; nothing reads the value. Deleting the selects before the reader refuses
+    a store whose columns differ would let such a store be read silently, so 02 keeps them and
+    rewords their comments, and **05 deletes them** (item S3). Confirmed by the user, 2026-10-04.
   - **Assigned (2026-10-04):** prompts 01–05.
 
 ---

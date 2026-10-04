@@ -59,7 +59,9 @@ rather than read":
 
 No code reads the selected value: `numeric_serial` appears in those functions only in the select and
 in `_numeric_parent_filter`, which is applied only when a parent is given. **The select stays; the
-comment is reworded.** Deleting it would change the outcome on a pre-07 table: a labels-only read
+comment is reworded.** The user confirmed this on 2026-10-04, on the understanding that the
+campaign removes the selects later: the board assigns them to 05 (item S3, and the fallbacks
+issue). Deleting it would change the outcome on a pre-07 table: a labels-only read
 would succeed and return values from rows whose parent is unrecorded. The docstring of the deleted
 `TestTheWKBValueReadsRefuseAPre07Store` says that is what happened before 09b. The prompt's §1
 promises the opposite: such a store "meets SQLAlchemy's own `OperationalError` naming the missing
