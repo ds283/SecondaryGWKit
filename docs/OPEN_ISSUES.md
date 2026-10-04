@@ -818,6 +818,8 @@ measured the three mechanisms the held prompts rest on (2026-10-02), and opened 
 was opened when 02 was written. Prompt 04 opened four (2026-10-03); the user closed one the same day.
 Prompt 07, the rehearsal of A3 v2's launch, opened three (2026-10-04). Prompt 07a closed one of
 them the same day, the tensor-source reader's, and opened one.
+**The user closed the campaign on 2026-10-04 at 10 / 10.** The nine rows below stay open, each
+recorded here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|

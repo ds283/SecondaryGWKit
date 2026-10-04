@@ -1,7 +1,7 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: 10 of 10 prompts landed. The campaign's work is done; it
-is closed by the user after the orchestrator's review of 07a.** 07 landed (`a6c8f39`) and was
+**Last updated:** 2026-10-04 · **Status: COMPLETE — 10 of 10 prompts landed. Closed by the user on
+2026-10-04, after the orchestrator's review of 07a.** 07 landed (`a6c8f39`) and was
 reviewed (2026-10-04) with its acceptance 4 not met; at the user's request **07a** (written
 2026-10-04) fixed the tensor-source reader, and **has landed (2026-10-04, `3b96ba1`) and been
 reviewed (2026-10-04)**: the reader pairs its k
@@ -67,6 +67,10 @@ as recommended:**
 |---|---|
 | **D7-1** — where to interrupt the resumed build | **twice**, by `SIGTERM` to the driver: once in `CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT` (`resumed-a`), once in `CALCULATE QUADRATIC SOURCE INTEGRALS` (`resumed-b`); `resumed-c` runs to `done`. Four launches |
 | **D7-2** — the stores afterwards | **both stay** in `var/datastores/`, with their sidecars, for the orchestrator's review; the user then retires them, or not. 07 never runs `store retire` |
+
+- **Decided (2026-10-04), after the orchestrator's review of 07a:** the user closed the campaign,
+  and decided to retire both of 07's stores, `a3-v2-readiness-07-reference` and
+  `a3-v2-readiness-07-resumed`. `store retire` is the user's to run.
 
 ---
 
