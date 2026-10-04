@@ -51,7 +51,7 @@ recommended:**
 |---|---|---|---|---|---|---|---|
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
-| 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | this commit | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
+| 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
@@ -64,7 +64,7 @@ recommended:**
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
-used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-04, not yet used).
+used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-04, used for 03).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the
@@ -290,6 +290,145 @@ None opens an issue.
   to keep them until the reader refuses a store whose columns differ. It must also carry the
   absent-`GkSource_parents` observation.
 
+**Orchestrator review of prompt 03 (2026-10-04).** Dispatched from `65be64f` to one Opus subagent;
+reviewed against its commit `d8d4afe`, with nothing landed after it. **Every check of the note's §3
+passed**; acceptance 1–5 are met. **One stop condition fired**, the note's own: an existing test
+outside the three deletions failed. The user decided it (below).
+
+*At dispatch.* The note's gate held: `65be64f`, after `587a9ae`, touches only this board and the
+note. The tree was clean, the only worktree was this checkout, `e53f323` is an ancestor of `HEAD`,
+and the registry held 16 runs: 14 finished, 2 `unknown`, none `running`. The only Ray processes
+were ChamPBH's, from its own venv. The baselines, serially at `65be64f`, load 14–149: AdaptiveLevin
+32, ComputeTargets 693 (1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, which
+failed alone twice at load 63–89, 0.091 s and 0.113 s against 0.06 s), CosmologyModels 39, Datastore
+600 (765 s), LiouvilleGreen 148 (1 skipped), RunRegistry 281. The index held 107.
+
+*The agent.* It stopped once, on the note's condition. With R2 alone, four existing tests in
+`test_reconcile_at_open` failed every time they ran:
+- `TestSerialSplit.test_with_the_record_set` and `test_with_no_record`;
+- `TestMismatchLeftByTheCheck.test_a_vectorized_get` and `test_a_store`.
+
+The cause is `_describe_differences`, which names a serial split by grouping rows on every compared
+column but `serial`. A real split always comes from two separate writes, so its copies always differ
+in `timestamp` too. Once `timestamp` is compared, a split is never named. Each store was still
+refused and nothing was written; only the message changed. **The user approved, on 2026-10-04, the
+agent's one-line fix**: the grouping ignores `timestamp` as well as `serial` (the log's deviation
+1, STRUCTURALLY REQUIRED), pinned by a fifth breakage, (v). The agent was resumed with
+`SendMessage` and finished in one more turn. It ran its suites in the foreground.
+
+The checks:
+1. **Scope.** 8 files, all on the note's §2 list. The diff over `Datastore.py`, `ObjectFactories/`,
+   `Datastore/store_*.py`, `real_store_fixtures.py`, `shard_store_fixtures.py`, `config/`, `main.py`,
+   `var/` and `orchestrator/` is empty; under `docs/` only `OPEN_ISSUES.md` changed. Under
+   `*/tests/`, the three modules changed and one module was added,
+   `Datastore/tests/test_one_timestamp_per_write.py`. `standin_pool.py` is untouched.
+2. **E1, `ShardedPool.py`.**
+   - **Grep.** `before prompt 01|written before|predates|created before` prints nothing.
+     `has_table("replication_in_flight")`, `IntegrityError` and `"label" in columns` are gone. The
+     one `replication_in_flight` creation left is `_write_shard_data`'s (`:730`), which builds a new
+     primary.
+   - **`ast`, against the pre-image.** The changed functions are `__init__`,
+     `_replicated_table_specs`, `_read_in_flight_record`, `_commit_prune_record`,
+     `_recompute_validated` and `_describe_differences`. The last is deviation 1. `_create_engine`
+     dumps identically; its comment lost only the three `NOT NULL` lines. The repair licence's
+     `row["timestamp"] != started` test is unchanged.
+3. **E3, the tests, by `ast`.**
+   - Exactly the note's three methods are gone, with `TestRecordTableBeforePrune`'s class body.
+   - Four methods are new in `test_reconcile_at_open`: `test_a_timestamp_difference` (R2),
+     `test_a_value_row_held_under_another_serial` (R1 a),
+     `test_a_primary_without_the_record_table_is_refused` (R3) and
+     `TestRecordDoesNotExplain.test_part_of_the_recorded_background_model` (R1 c).
+   - No surviving method changed in any of the three modules. Their module-level changes are
+     docstrings and one import (`OperationalError`).
+4. **E4, `e53f323`, by reading the log.** The log says the argument holds, for the note's reasons:
+   - a copy of key `(S,)` is planned only to a shard that holds nothing under S;
+   - the case the deleted serial-free check refused is now a `differs` on key S, which the licence
+     refuses;
+   - value serials agree across a current store's shards, so the licence is unchanged.
+
+   It names (b) as `TestKillAndReopen.test_store_of_a_background_model` and
+   `test_store_of_a_second_background_model_beside_the_first`, and adds (a) and (c). For (c), no
+   existing test reached the "holds its model row" branch with the record naming the same model:
+   `test_part_of_a_background_model`'s record names the second model, and
+   `test_a_value_count_difference` has no record. That agrees with the note's reading, and nothing
+   was changed in `e53f323`.
+5. **E2, the measurement.** `test_one_timestamp_per_write` reruns `TestKillAndReopen`,
+   `TestPruningAfterRepair`, `TestInterruptedPrune`, `TestUninterruptedPrune` and three
+   `test_version_row_at_open` classes with `sp.ds_mod.datetime` ticking from 2030. The driver's
+   clock, in `ShardedPool`, is not patched, so only a shard's own stamp can carry a 2030 tick. Each
+   inherited `assertIdentical` (full rows, `timestamp` included) also asserts that no replicated row
+   on any shard carries a tick. The prune classes reach it through `assertPruned` and
+   `assertCompleted`. The version classes compare every replicated table in `tearDown`. The clean
+   write is `TestCleanWrite.test_every_copy_is_row_identical`, which already ticked. Run by name, the
+   module and that test: 29 tests, OK (318 s at load 193).
+6. **The new refusals, run.** The four new tests in `test_reconcile_at_open`: 4 tests, OK.
+7. **E5, the pins.** The five diffs were extracted from the log and replayed with `git apply` in
+   `bash`:
+   - (i): `test_a_timestamp_difference` fails.
+   - (ii), on the measurement module and the clean write (29 tests): 2 failures, 46 errors.
+     `TestCleanWrite.test_every_copy_is_row_identical` fails; every `TestRepairAtOpen` and
+     `TestRepairThenPruneAtOpen` case errors, refused at open; so do both prune classes and a version
+     test.
+   - (iii): 8 errors, exactly the log's: four commit points of
+     `test_store_of_a_background_model`, the second-model test, both `TestPruningAfterRepair`
+     sub-cases and `TestRecordsStayApart`'s background-model test.
+   - (iv), corrected: both sub-tests of R3's test fail. **The prompt's (iv) as written** (the
+     creation alone) gives `TestNoRecordRefuses` 9 tests, **OK**, as the note expected.
+   - (v): exactly the four tests of deviation 1 fail.
+
+   Each was reverted with `git apply -R`, and the tree was clean after each.
+8. **The probe**, from the scratchpad, through `standin_pool`, at exports of `65be64f` and
+   `d8d4afe`:
+   - **A clean store, written and reopened**, opens at both, repairs nothing, and its checksums
+     are unchanged.
+   - **A `BackgroundModel` store interrupted on one replica**, reopened, is repaired identically at
+     both (the model, its tag and its three values copied from the controller), and every
+     replicated table is row-identical on every shard, `timestamp` included.
+   - **A store whose copies of one `tolerance` row differ only in `timestamp`** opens at
+     `65be64f`, read-write and read-only. At `d8d4afe` both opens are refused with
+     `ReplicatedDivergence`, naming `tolerance`, the shard and `timestamp`.
+   - **A primary with `replication_in_flight` dropped** opens at `65be64f`, which recreates the
+     table. At `d8d4afe` it is refused with `OperationalError: no such table:
+     replication_in_flight`; the primary is unchanged and the table is not created.
+9. **E6.**
+   - The fallbacks issue carries a dated "Narrowed (2026-10-04, prompt 03)" line naming 03's
+     deletions and `e53f323` as reviewed. Its index row names 03's part.
+   - The index is 107 by counting, matching the header.
+   - §1, R1–R4 and §5.4 are written.
+10. **Suites**, serially at `d8d4afe`, load 8–63:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), RunRegistry 281;
+    - Datastore 629 (600 − 3 + 4 + 28; 417 s), OK;
+    - ComputeTargets 693, with `test_quadsource_policy_main` passing (19 tests run alone) and 1
+      failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`. It failed alone 3 times of 3
+      at load 42–56 (0.081–0.108 s against 0.06 s), as it did at `65be64f`: load, not 03.
+
+    `black --check` is clean on the five Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `d8d4afe` in §1, §5.4 and the log.
+- `_describe_differences`' docstring read "whose other compared values but timestamp are the same".
+  It now reads "whose compared values other than serial and timestamp are the same". The change is
+  docstring-only: the function's `ast`, without its docstring, is unchanged.
+- This board's note list marks `orchestrator/prompt-03.md` used.
+
+*Kept as is.* The agent's observations not acted on:
+- a primary without `replication_in_flight` now surfaces as SQLAlchemy's `OperationalError`, not a
+  named refusal. That is README §4's contract for 03, and 05's question if its single refusal
+  should cover the primary's own tables;
+- the unit check's foreign-key lookup names `"BackgroundModel"` (rule 11; 07's, F1).
+
+Neither opens an issue.
+
+*Handed on.*
+- **04** is not yet written. Its note must say that 03 left `write_legacy_primary` untouched, and
+  that it builds a primary without `replication_in_flight`, which no longer opens. Its current users
+  never open it through the check at open.
+- **05**'s note must carry three things beside 02's four `numeric_serial` selects:
+  - the absent-table and absent-column tolerance in `_read_replicated_tables` (`:1224`), which 03
+    left alone;
+  - the `OperationalError` for a primary without its record table;
+  - the split grouping's exclusion of `timestamp`, which is current behaviour, not a fallback.
+
 ---
 
 ## 2. Items
@@ -461,7 +600,7 @@ Measured serially on the staged tree.
 
 The two kept tests (one moved unchanged, one rewritten) do not move the count.
 
-### 5.4 After prompt 03 (2026-10-04, this commit)
+### 5.4 After prompt 03 (2026-10-04, `d8d4afe`)
 
 Measured serially on the staged tree.
 

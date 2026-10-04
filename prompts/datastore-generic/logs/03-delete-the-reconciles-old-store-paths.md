@@ -12,11 +12,11 @@
 user decided it on 2026-10-04 (Deviations 1). Three tests deleted, 32 added (4 new in
 `test_reconcile_at_open`, 28 in a new measurement module). Closes nothing; narrows
 `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`. Opens nothing. Index 107 → 107.
-The commit is this commit.
+The commit is `d8d4afe`.
 
 ## What shipped
 
-**`Datastore/SQL/ShardedPool.py`** (line numbers in this commit):
+**`Datastore/SQL/ShardedPool.py`** (line numbers at `d8d4afe`):
 - **R2.**
   - `_replicated_table_specs` (`:1131`) compares every column, `timestamp` included:
     `compared = [c.name for c in table.columns]`.
@@ -128,7 +128,7 @@ The commit is this commit.
 
 Measured **before** `_replicated_table_specs` was changed: the new module was run on `65be64f`'s
 `ShardedPool` and `Datastore`, giving **28 tests, OK, 97 s**
-(`<scratch>/agent03/r2-measure-head.txt`). It was run again on this commit's tree, inside the
+(`<scratch>/agent03/r2-measure-head.txt`). It was run again on `d8d4afe`'s tree, inside the
 Datastore suite.
 
 | Path | Driven by | Result |
@@ -305,7 +305,7 @@ No `UNINTENDED DRIFT`.
 ## The deliberate-breakage record
 
 **How each was run.** Each diff was taken with `git diff` against the staged final tree (the tree
-this commit holds), so `git apply` replays it from a clean checkout of this commit. For each:
+`d8d4afe` holds), so `git apply` replays it from a clean checkout of `d8d4afe`. For each:
 1. `git apply -R --check` while applied;
 2. the tests run;
 3. reversed with `git apply -R`;

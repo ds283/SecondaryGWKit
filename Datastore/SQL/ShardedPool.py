@@ -1371,9 +1371,9 @@ class ShardedPool:
         """
         Each difference as the refusal names it: the class (table), the shard or shards that
         deviate, the serial or key, and what differs, followed by ``why`` when it is given. Rows
-        missing under different serials whose other compared values but timestamp are the same
-        are named as a serial split; ``context``, when given, is the whole list of differences
-        those pairs are looked for in.
+        missing under different serials whose compared values other than serial and timestamp
+        are the same are named as a serial split; ``context``, when given, is the whole list of
+        differences those pairs are looked for in.
         """
         by_name = {spec["name"]: spec for spec in specs}
 
