@@ -1143,9 +1143,7 @@ class ShardedPool:
 
         Each spec gives the table, the key its rows are compared under and the columns compared.
         A table is keyed by its primary key, and every column but ``timestamp`` is compared
-        (every store written before prompt 01 stamps it per shard). BackgroundModelValue is keyed
-        by (model_serial, z_serial) and its ``serial`` is not compared, because a store written
-        before prompt 01 drew it per shard.
+        (every store written before prompt 01 stamps it per shard).
         """
         replicated = [n for n in self._replicated_tables if n in built.tables]
         listed = set(self._replicated_tables) | set(self._sharded_tables.keys())
@@ -1162,13 +1160,8 @@ class ShardedPool:
         specs = []
         for name in replicated + tag_tables:
             table = built.tables[name]
-            if name == "BackgroundModelValue":
-                key = ("model_serial", "z_serial")
-                excluded = {"serial", "timestamp"}
-            else:
-                key = tuple(c.name for c in table.primary_key.columns)
-                excluded = {"timestamp"}
-            compared = [c.name for c in table.columns if c.name not in excluded]
+            key = tuple(c.name for c in table.primary_key.columns)
+            compared = [c.name for c in table.columns if c.name != "timestamp"]
             specs.append(
                 {
                     "name": name,
@@ -1682,10 +1675,22 @@ class ShardedPool:
                 for name in unit:
                     if name == "BackgroundModel":
                         continue
-                    got = copies.get((name, sid), set())
-                    held = {
-                        k for k in snapshots[controller][name]["rows"] if k[0] in models
+                    # a row's model is the column its foreign key to BackgroundModel names
+                    snap = snapshots[controller][name]
+                    model_column = snap["columns"].index(
+                        next(
+                            fk.parent.name
+                            for fk in by_name[name]["table"].foreign_keys
+                            if fk.column.table.name == "BackgroundModel"
+                        )
+                    )
+                    model_of = {
+                        k: row[model_column]
+                        for k, row in snap["rows"].items()
+                        if row[model_column] in models
                     }
+                    got = copies.get((name, sid), set())
+                    held = set(model_of.keys())
                     for key in sorted(got - held):
                         refuse(
                             {
@@ -1703,41 +1708,13 @@ class ShardedPool:
                             {
                                 "kind": "missing",
                                 "table": "BackgroundModel",
-                                "key": (key[0],),
+                                "key": (model_of[key],),
                                 "holders": [controller],
                                 "lackers": [sid],
                             },
                             f"shard {sid} already holds part of this model ({name} {key}), "
                             "and a BackgroundModel is copied only as a unit",
                         )
-
-            # value serials are the controller's, and must be free on the shard
-            for (name, sid), keys in sorted(copies.items()):
-                if name != "BackgroundModelValue":
-                    continue
-                table = by_name[name]["table"]
-                serials = sorted(rows[name][k]["serial"] for k in keys)
-                taken = set(
-                    conns[sid]
-                    .execute(
-                        sqla.select(table.c.serial).filter(
-                            table.c.serial.between(serials[0], serials[-1])
-                        )
-                    )
-                    .scalars()
-                    .all()
-                ) & set(serials)
-                conns[sid].rollback()
-                if len(taken) > 0:
-                    refusals.append(
-                        {
-                            "class_name": name,
-                            "shard": sid,
-                            "key": f"serials {sorted(taken)}",
-                            "detail": "these value serials of the controller's model are "
-                            "already taken on the shard",
-                        }
-                    )
 
         plan = {
             "copies": copies,
