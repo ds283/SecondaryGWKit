@@ -17,9 +17,6 @@ RESIDUAL_WKB_REGION_MARGIN is deliberately *not* a column beside it: prompt 04 s
 to 0.9 and found the residual a producer reads bit-identical throughout, so it bounds where the
 residual may be evaluated rather than how accurately, and it cannot produce two rows that differ.
 
-There is no migration and no default: a table without the column is a store from before this
-change, and build() raises naming it rather than letting a SQLAlchemy error escape.
-
 SCHEMA NOTE (prompts/tolerance-convergence, prompt 05b). No column changes here, but what fills
 "rho_gauss_order" does. Prompt 05 wrote the value of the module constant, read through an accessor
 that re-read it on every call; that reports what the module currently says rather than what the
@@ -45,9 +42,7 @@ A lookup names its parent ("numeric_serial": a serial, or GkWKBIntegration.PURE_
 pure-WKB row), or asks for the labels-only reader mode ("labels_only": True), which D1
 (prompts/datastore-integrity README §6.2) allows a reader holding only physical labels: it refuses
 when more than one stored row matches, naming the parents (a NULL as pure WKB). A lookup that does
-neither raises -- a missing parent is never read as "pure WKB" by omission. A store written before
-this change has no column, and build() refuses it (D4): it is readable at the SHA its sidecar
-records.
+neither raises -- a missing parent is never read as "pure WKB" by omission.
 """
 
 import json
@@ -401,35 +396,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
             )
             raise e
-        except SQLAlchemyError as e:
-            # matched against the driver's own message rather than str(e), which also carries the
-            # SQL statement -- and the statement names the column either way
-            driver_message = str(getattr(e, "orig", e))
-            if "numeric_serial" in driver_message:
-                # a store from before prompts/datastore-integrity prompt 07 (D4): its rows record
-                # nothing of the numeric row they started from, so there is no parent to key on,
-                # and this tree does not read it
-                raise RuntimeError(
-                    "GkWKBIntegration.build(): the GkWKBIntegration table has no "
-                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
-                    "the numeric integration they start from (prompts/datastore-integrity, "
-                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
-                    "its sidecar records."
-                ) from e
-            if "rho_gauss_order" not in driver_message:
-                raise
-
-            # a store from before prompts/tolerance-convergence prompt 05. Its rows were keyed on
-            # a tolerance pair that reached no solver -- the phase comes from Gauss-Legendre
-            # tables -- and they record no Gauss order at all, so there is nothing to infer one
-            # from and no migration to perform.
-            raise RuntimeError(
-                f"GkWKBIntegration.build(): the GkWKBIntegration table has no "
-                '"rho_gauss_order" column. This datastore predates the Gauss order replacing the '
-                "vestigial atol/rtol pair in this target's lookup key "
-                "(prompts/tolerance-convergence, prompt 05) and must be regenerated; there is no "
-                "migration."
-            ) from e
 
         if row_data is None:
             # build and return an unpopulated object: seeded from the parent, pure WKB for the
@@ -1267,9 +1233,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
-                # always selected, whether or not a parent is given, so that a store from before
-                # the column (prompt 07) is refused with the D4 message rather than read
-                # (prompts/datastore-integrity, prompt 09b)
+                # always selected, whether or not a parent is given, so that a table without the
+                # column raises rather than being read
                 wkb_table.c.numeric_serial,
             ).filter(
                 wkb_table.c.model_serial == model_payload.store_id,
@@ -1333,18 +1298,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
             )
             raise e
-        except SQLAlchemyError as e:
-            # the parent's build() refusal (prompt 07, D4), matched against the driver's own
-            # message: the statement names the column either way
-            if "numeric_serial" in str(getattr(e, "orig", e)):
-                raise RuntimeError(
-                    "GkWKBValue.build(): the GkWKBIntegration table has no "
-                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
-                    "the numeric integration they start from (prompts/datastore-integrity, "
-                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
-                    "its sidecar records."
-                ) from e
-            raise
 
         if row_data is None:
             # return empty object
@@ -1402,9 +1355,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
-                # always selected, whether or not a parent is given, so that a store from before
-                # the column (prompt 07) is refused with the D4 message rather than read (prompt
-                # 09b)
+                # always selected, whether or not a parent is given, so that a table without the
+                # column raises rather than being read
                 wkb_table.c.numeric_serial,
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
@@ -1501,19 +1453,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
 
-        try:
-            row_data = conn.execute(row_query).all()
-        except SQLAlchemyError as e:
-            # the parent's build() refusal (prompt 07, D4), with or without a parent given
-            if "numeric_serial" in str(getattr(e, "orig", e)):
-                raise RuntimeError(
-                    "GkWKBValue.read_batch(): the GkWKBIntegration table has no "
-                    '"numeric_serial" column. This datastore predates WKB rows being keyed on '
-                    "the numeric integration they start from (prompts/datastore-integrity, "
-                    "prompt 07). This tree does not read it; it remains readable at the git SHA "
-                    "its sidecar records."
-                ) from e
-            raise
+        row_data = conn.execute(row_query).all()
 
         # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
         # select by them, but must refuse when more than one stored parent matches, rather than

@@ -17,9 +17,8 @@ The prompt's §3 tests, by class:
 
 and, from the orchestrator note:
 
-  * ``TestAnOldStoreIsRefused`` -- a ``QuadSourceIntegral`` table as the 07 schema created it, which
-    has no ``quad_policy_serial``, gives the D4 message from both ``build()`` and ``read_batch()``
-    (a database error that does not name the column is not turned into it);
+  * ``TestAnotherDatabaseErrorPassesThrough`` -- a database error raised by ``build()``'s or
+    ``read_batch()``'s own statement reaches the caller unchanged;
   * ``TestReadTable`` -- the ``read_table`` the extraction script finds its policy with (§0.1): it
     matches as ``build()`` does, returns every match, and writes nothing.
 
@@ -31,14 +30,11 @@ factory code. Parents that exist only as a serial -- a model, a policy, a tag --
 carrying ``.store_id``.
 """
 
-import json
 import unittest
 from pathlib import Path
-from unittest import mock
 
 import ray
 import sqlalchemy as sqla
-from sqlalchemy.exc import OperationalError
 
 from ComputeTargets import QuadSourceIntegral
 from CosmologyConcepts import redshift
@@ -49,6 +45,7 @@ from Datastore.SQL.ObjectFactories.QuadSourcePolicy import (
     sqla_QuadSourcePolicy_factory,
 )
 from Datastore.tests import real_store_fixtures as rsf
+from Datastore.tests import test_database_errors_reach_the_caller as harness
 from Datastore.tests.test_integral_read_batch import (
     Store,
     _exit_time_obj,
@@ -57,10 +54,6 @@ from Datastore.tests.test_integral_read_batch import (
     _Ref,
 )
 from MetadataConcepts import QuadSourcePolicy, store_tag, tolerance
-
-WITNESS_07 = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-07.json"
-)
 
 ATOL = tolerance(store_id=1, log10_tol=-10.0)
 RTOL = tolerance(store_id=2, log10_tol=-9.0)
@@ -309,51 +302,39 @@ class TestReadBatchFiltersOnIt(_Case):
             )
 
 
-class TestAnOldStoreIsRefused(_Case):
-    """A ``QuadSourceIntegral`` table as the 07 schema created it (D4): no ``quad_policy_serial``.
-    Both readers say so, in the words 07 established, rather than raising a raw
-    ``OperationalError``."""
-
-    def setUp(self):
-        super().setUp()
-        ddl = json.loads(WITNESS_07.read_text(encoding="utf-8"))["classes"][
-            "QuadSourceIntegral"
-        ]["table"]["ddl"]
-        self.assertNotIn("quad_policy_serial", ddl)
-        self.s.conn.execute(sqla.text('DROP TABLE "QuadSourceIntegral"'))
-        self.s.conn.execute(sqla.text(ddl))
-        self.s.conn.commit()
-
-    def assertD4(self, function):
-        with self.assertRaises(RuntimeError) as caught:
-            function()
-        message = str(caught.exception)
-        self.assertIn('no "quad_policy_serial" column', message)
-        self.assertIn("predates", message)
-        self.assertIn("prompts/datastore-integrity, prompt 08", message)
-        self.assertIn("readable at the git SHA its sidecar records", message)
-        self.assertNotIn("regenerated", message)
-        # the original database error is kept as the cause
-        self.assertIsInstance(caught.exception.__cause__, OperationalError)
-        return message
-
-    def test_build(self):
-        self.assertIn("QuadSourceIntegral.build()", self.assertD4(self.build))
-
-    def test_read_batch_untagged_and_tagged(self):
-        message = self.assertD4(self.read_batch)
-        self.assertIn("QuadSourceIntegral.read_batch()", message)
-        self.assertD4(lambda: self.read_batch(tags=("A",)))
+class TestAnotherDatabaseErrorPassesThrough(_Case, harness._PassThroughCase):
+    """
+    A database error raised by either reader's real statement reaches the caller as itself. This
+    was ``TestAnOldStoreIsRefused.test_another_database_error_is_not_turned_into_it``, on a table
+    recreated from the 07 witness's DDL; the table is now the current one, and the error is raised
+    by ``test_database_errors_reach_the_caller``'s connection, which hands back the compiled text
+    of the query the factory issued (so the statement names ``quad_policy_serial``) rather than the
+    literal ``"SELECT 1"``.
+    """
 
     def test_another_database_error_is_not_turned_into_it(self):
-        """The branch matches the driver's message for the column, and nothing else."""
-        other = OperationalError("SELECT 1", {}, Exception("no such table: elsewhere"))
-        for function in (self.build, self.read_batch):
-            with self.subTest(function=function.__name__):
-                with mock.patch.object(self.s.conn, "execute", side_effect=other):
-                    with self.assertRaises(OperationalError) as caught:
-                        function()
-                self.assertIs(caught.exception, other)
+        for label, call in (
+            (
+                "build",
+                lambda conn: sqla_QuadSourceIntegral_factory.build(
+                    self.payload(), conn, self.table(), None, self.s.tables, None
+                ),
+            ),
+            (
+                "read_batch",
+                lambda conn: list(
+                    sqla_QuadSourceIntegral_factory.read_batch(
+                        self.payload(), conn, self.table(), self.s.tables
+                    )
+                ),
+            ),
+        ):
+            with self.subTest(function=label):
+                conn = harness._StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: call(conn), conn, ("quad_policy_serial",)
+                )
+                self.assertEqual(1, conn.executed)
 
 
 class TestTheInventoryIdentityIncludesIt(unittest.TestCase):

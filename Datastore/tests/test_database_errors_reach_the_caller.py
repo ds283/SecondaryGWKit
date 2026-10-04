@@ -24,6 +24,15 @@ For every path the prompt names, the exception that reaches the caller is **the 
 raised** (identity, not merely its type), and for ``BackgroundModel`` the connection is executed
 the number of times the path has queries, which on the read path is once: no second query.
 
+Prompt 02 of the same campaign (board item N3) deleted the same kind of handler from
+``TkWKBIntegration``, ``GkWKBIntegration``, ``GkSource`` and ``QuadSourceIntegral``, and the
+classes from ``TestTheWKBIntegrations`` down pin that those stay deleted. Their handlers matched
+the driver's own message (``e.orig``), not ``str(e)``, so they never misfired on a lock, and a
+test of pass-through alone cannot tell a faithful restoration of one from its absence. What these
+tests catch is a handler that *does* turn an error into another (``raise`` for every
+``OperationalError``, or a miss for one); each still names, in ``columns=``, the column the
+deleted handler looked for.
+
 No Ray, no datastore file, nothing under ``var/``: the schema is
 ``build_schema(MetaData(), Datastore.SQL.Datastore._factories)`` in memory, as in
 ``test_value_reads_parent_key.py``, and every call is to the real factory code.
@@ -48,6 +57,24 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericIntegration_factory,
     sqla_TkNumericValue_factory,
 )
+from Datastore.SQL.ObjectFactories.GkSource import (
+    sqla_GkSource_factory,
+    sqla_GkSourceValue_factory,
+)
+from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+    sqla_GkWKBIntegration_factory,
+    sqla_GkWKBValue_factory,
+)
+from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+    sqla_QuadSourceIntegral_factory,
+)
+from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+    sqla_TkWKBIntegration_factory,
+    sqla_TkWKBValue_factory,
+)
+from Datastore.tests import test_gksource_parent_set as gk_source_keys
+from Datastore.tests import test_quadsource_integral_parent_key as qsi_keys
+from Datastore.tests import test_wkb_numeric_parent_key as wkb_keys
 from Datastore.tests.test_value_reads_parent_key import (
     ATOL,
     K_EXIT,
@@ -71,6 +98,19 @@ T_Z_REPRESENTATION = "T_z_representation"
 GRID_IDENTITY = ("source_grid_digest", "source_grid_construction")
 GAUSS_ORDERS = ("tau_gauss_order", "cs_tau_gauss_order", "friction_F_gauss_order")
 VALUE_TABLE_COLUMNS = ("tau_lo_Mpc", "cs_tau_Mpc", "cs_tau_lo_Mpc", "friction_F")
+
+# prompt 02: the columns its deleted handlers looked for
+NUMERIC_SERIAL = "numeric_serial"
+RHO_GAUSS_ORDER = "rho_gauss_order"
+PARENTS_DIGEST = "parents_digest"
+PARENTS_TABLE = "GkSource_parents"
+QUAD_POLICY_SERIAL = "quad_policy_serial"
+TRANSFER_FUNCTION_COLUMNS = (
+    "Tq_numeric_serial",
+    "Tq_WKB_serial",
+    "Tr_numeric_serial",
+    "Tr_WKB_serial",
+)
 
 
 class _StatementRaisingConnection:
@@ -330,6 +370,262 @@ class TestBackgroundModel(_PassThroughCase):
             lambda: self._build(conn, None), conn, VALUE_TABLE_COLUMNS
         )
         self.assertEqual(2, conn.executed)
+
+
+class TestTheWKBIntegrations(_PassThroughCase):
+    """``TkWKBIntegration.build`` and ``GkWKBIntegration.build``, which looked for
+    ``numeric_serial`` and ``rho_gauss_order``."""
+
+    def setUp(self):
+        self.s = wkb_keys._base_store()
+        self.addCleanup(self.s.close)
+
+    def test_tk_wkb_integration_build(self):
+        conn = _StatementRaisingConnection()
+        self.assert_passes_through(
+            lambda: sqla_TkWKBIntegration_factory.build(
+                wkb_keys._tk_payload(numeric_serial=1),
+                conn,
+                self.s.tables["TkWKBIntegration"],
+                None,
+                self.s.tables,
+                None,
+            ),
+            conn,
+            (NUMERIC_SERIAL, RHO_GAUSS_ORDER),
+        )
+        self.assertEqual(1, conn.executed)
+
+    def test_gk_wkb_integration_build(self):
+        conn = _StatementRaisingConnection()
+        self.assert_passes_through(
+            lambda: sqla_GkWKBIntegration_factory.build(
+                wkb_keys._gk_payload(numeric_serial=1),
+                conn,
+                self.s.tables["GkWKBIntegration"],
+                None,
+                self.s.tables,
+                None,
+            ),
+            conn,
+            (NUMERIC_SERIAL, RHO_GAUSS_ORDER),
+        )
+        self.assertEqual(1, conn.executed)
+
+
+class TestTheWKBValueReads(_PassThroughCase):
+    """The four WKB value reads, which looked for ``numeric_serial``: each selects it from the
+    parent's table whether or not a parent is named, so the statement names it either way.
+    """
+
+    def setUp(self):
+        self.s = wkb_keys._base_store()
+        self.addCleanup(self.s.close)
+
+    def _payload(self, **extra):
+        payload = {
+            "model": gk_source_keys.MODEL,
+            "k": gk_source_keys.K_EXIT,
+            "z": gk_source_keys.Z_RESPONSE,
+        }
+        payload.update(extra)
+        return payload
+
+    def _build(self, factory, name, conn, payload):
+        return factory.build(
+            payload, conn, self.s.tables[name], None, self.s.tables, None
+        )
+
+    def _read_batch(self, factory, name, conn, payload):
+        return list(
+            factory.read_batch(payload, conn, self.s.tables[name], self.s.tables)
+        )
+
+    def test_tk_wkb_value_build(self):
+        for extra in ({}, {"numeric_serial": 1}):
+            with self.subTest(**extra):
+                conn = _StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: self._build(
+                        sqla_TkWKBValue_factory,
+                        "TkWKBValue",
+                        conn,
+                        self._payload(**extra),
+                    ),
+                    conn,
+                    (NUMERIC_SERIAL,),
+                )
+                self.assertEqual(1, conn.executed)
+
+    def test_gk_wkb_value_build(self):
+        for extra in ({}, {"numeric_serial": 1}, {"numeric_serial": None}):
+            with self.subTest(**{k: str(v) for k, v in extra.items()}):
+                conn = _StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: self._build(
+                        sqla_GkWKBValue_factory,
+                        "GkWKBValue",
+                        conn,
+                        self._payload(z_source=gk_source_keys.Z_SOURCES[23], **extra),
+                    ),
+                    conn,
+                    (NUMERIC_SERIAL,),
+                )
+                self.assertEqual(1, conn.executed)
+
+    def test_tk_wkb_value_read_batch(self):
+        for extra in ({}, {"numeric_serial": 1}):
+            with self.subTest(**extra):
+                conn = _StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: self._read_batch(
+                        sqla_TkWKBValue_factory,
+                        "TkWKBValue",
+                        conn,
+                        self._payload(**extra),
+                    ),
+                    conn,
+                    (NUMERIC_SERIAL,),
+                )
+                self.assertEqual(1, conn.executed)
+
+    def test_gk_wkb_value_read_batch(self):
+        for extra in ({}, {"numeric_serial": 1}, {"parents_only": True}):
+            with self.subTest(**{k: str(v) for k, v in extra.items()}):
+                conn = _StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: self._read_batch(
+                        sqla_GkWKBValue_factory,
+                        "GkWKBValue",
+                        conn,
+                        self._payload(**extra),
+                    ),
+                    conn,
+                    (NUMERIC_SERIAL,),
+                )
+                self.assertEqual(1, conn.executed)
+
+
+class TestGkSource(_PassThroughCase):
+    """``GkSource.build`` and ``GkSourceValue.build``, which looked for ``parents_digest`` and for
+    ``GkSource_parents``."""
+
+    def setUp(self):
+        self.s = gk_source_keys._gk_store()
+        self.addCleanup(self.s.close)
+
+    def _source_payload(self, **extra):
+        payload = {
+            "model": gk_source_keys.MODEL,
+            "k": gk_source_keys.K_EXIT,
+            "z_response": gk_source_keys.Z_RESPONSE,
+            "z_sample": None,
+            "tags": [],
+            "_do_not_populate": True,
+        }
+        payload.update(extra)
+        return payload
+
+    def _build_source(self, conn, **extra):
+        return sqla_GkSource_factory.build(
+            self._source_payload(**extra),
+            conn,
+            self.s.tables["GkSource"],
+            None,
+            self.s.tables,
+            None,
+        )
+
+    def test_gk_source_build(self):
+        conn = _StatementRaisingConnection()
+        self.assert_passes_through(
+            lambda: self._build_source(conn, parents=gk_source_keys.SET_A),
+            conn,
+            (PARENTS_DIGEST,),
+        )
+        self.assertEqual(1, conn.executed)
+
+    def test_gk_source_build_in_the_reader_mode(self):
+        conn = _StatementRaisingConnection()
+        self.assert_passes_through(
+            lambda: self._build_source(conn, labels_only=True),
+            conn,
+            (PARENTS_DIGEST,),
+        )
+        # the labels-only mode counts the matches before it reads the one
+        self.assertEqual(1, conn.executed)
+
+    def test_the_read_of_the_parent_set_reaches_the_caller(self):
+        """
+        The reader mode's third statement, which reads the matched row's ``GkSource_parents``
+        rows and which the deleted handler also matched, by that table's name. The first two (the
+        count of matches, then the row) succeed against a real, stored GkSource.
+        """
+        gk_source_keys.store_source(self.s, gk_source_keys.SET_A, tags=())
+        conn = _StatementRaisingConnection(inner=self.s.conn, succeed=2)
+        self.assert_passes_through(
+            lambda: self._build_source(conn, labels_only=True),
+            conn,
+            (PARENTS_TABLE,),
+        )
+        self.assertEqual(3, conn.executed)
+
+    def test_gk_source_value_build(self):
+        conn = _StatementRaisingConnection()
+        self.assert_passes_through(
+            lambda: sqla_GkSourceValue_factory.build(
+                {
+                    "model": gk_source_keys.MODEL,
+                    "k": gk_source_keys.K_EXIT,
+                    "z_response": gk_source_keys.Z_RESPONSE,
+                    "z_source": gk_source_keys.Z_SOURCES[22],
+                },
+                conn,
+                self.s.tables["GkSourceValue"],
+                None,
+                self.s.tables,
+                None,
+            ),
+            conn,
+            (PARENTS_DIGEST,),
+        )
+        self.assertEqual(1, conn.executed)
+
+
+class TestQuadSourceIntegral(qsi_keys._WithAStore, _PassThroughCase):
+    """``QuadSourceIntegral.build`` and ``read_batch``, which looked for ``quad_policy_serial`` and
+    for the four transfer-function columns. (``test_quadsource_policy_key`` also holds a test of
+    this property, the rewritten
+    ``TestAnotherDatabaseErrorPassesThrough.test_another_database_error_is_not_turned_into_it``.)
+    """
+
+    def test_quad_source_integral_build(self):
+        conn = _StatementRaisingConnection()
+        payload = self.labels()
+        payload.update(qsi_keys.PARENTS)
+        self.assert_passes_through(
+            lambda: sqla_QuadSourceIntegral_factory.build(
+                payload, conn, self.table(), None, self.s.tables, None
+            ),
+            conn,
+            (QUAD_POLICY_SERIAL,) + TRANSFER_FUNCTION_COLUMNS,
+        )
+        self.assertEqual(1, conn.executed)
+
+    def test_quad_source_integral_read_batch(self):
+        for tags in ((), ("A",)):
+            with self.subTest(tags=tags):
+                conn = _StatementRaisingConnection()
+                self.assert_passes_through(
+                    lambda: list(
+                        sqla_QuadSourceIntegral_factory.read_batch(
+                            self.labels(tags), conn, self.table(), self.s.tables
+                        )
+                    ),
+                    conn,
+                    (QUAD_POLICY_SERIAL,) + TRANSFER_FUNCTION_COLUMNS,
+                )
+                self.assertEqual(1, conn.executed)
 
 
 if __name__ == "__main__":

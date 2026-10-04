@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 1 of 9 prompts landed (01).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 2 of 9 prompts landed (01, 02).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01, 02 and 03 are written. 04 is not yet written, though its task is fixed; 05–09
 are held on the prompts before them. The user took U1–U4 as recommended on 2026-10-04 (README
 §6.2), and had the plan and `e53f323` merged into `handover-remedial` the same day.
@@ -50,7 +50,7 @@ recommended:**
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
-| 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ⬜ | — | — |
+| 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | this commit | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ⬜ | — | — |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
@@ -189,9 +189,9 @@ Neither opens an issue.
 | **M2** | 01 | `extract_common`: no "unknown generation" run; a store with no runs refused | B8 | ✅ |
 | **M3** | 01 | the tests of M1–M2's deleted paths | F0, B8 | ✅ |
 | **M4** | 01 | pass-through tests with the factories' real statement text | F0 | ✅ |
-| **N1** | 02 | the old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` | B7 | ⬜ |
-| **N2** | 02 | their tests, with the two current-behaviour tests kept | B7 | ⬜ |
-| **N3** | 02 | pass-through tests | B7 | ⬜ |
+| **N1** | 02 | the old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` | B7 | ✅ |
+| **N2** | 02 | their tests, with the two current-behaviour tests kept | B7 | ✅ |
+| **N3** | 02 | pass-through tests | B7 | ✅ |
 | **R1** | 03 | review `e53f323` (merged 2026-10-04): `BackgroundModelValue` under its serial | B2 | ⬜ |
 | **R2** | 03 | measure one timestamp on every replicated write path; compare `timestamp` | B1 | ⬜ |
 | **R3** | 03 | `replication_in_flight` assumed present | B3 | ⬜ |
@@ -248,6 +248,13 @@ Neither opens an issue.
     generation" branches (audit F0, B8, B9's comment); the eleven tests that exercised them. Left
     for 02: `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` (B7); for
     03–05: B1–B6.
+  - **Narrowed (2026-10-04, prompt 02):** deleted, with their tests: the old-store refusals in
+    `TkWKBIntegration` (`build`, `TkWKBValue.build`, `TkWKBValue.read_batch`), `GkWKBIntegration` (the
+    same three), `GkSource` (`_refuse_a_store_that_predates_the_parent_set`, in `GkSource.build` and
+    `GkSourceValue.build`; and the false "readable by this factory without a migration" sentence)
+    and `QuadSourceIntegral` (the policy-key and transfer-function-key refusals, in `build` and
+    `read_batch`) (audit B7); seventeen tests. The four WKB `numeric_serial` selects below are kept.
+    Left for 03–05: B1–B6, the four selects (05, S3).
   - **Found (2026-10-04, writing 02's orchestrator note):** a site the audit missed. In
     `TkWKBIntegration` and `GkWKBIntegration`, `_build_impl_model` and `read_batch` select
     `numeric_serial` whether or not a parent is given, so that a store without the column fails
@@ -315,3 +322,18 @@ Measured serially on the staged tree, under load (another project's Ray cluster 
 
 The one ComputeTargets failure fails alone under this load and also on an export of `6ea366e`; see
 the log.
+
+### 5.3 After prompt 02 (2026-10-04, this commit)
+
+Measured serially on the staged tree.
+
+| Suite | Before (orchestrator, `bd5ad19`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 (1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, wall clock) | 693 OK | 0 (the wall-clock test passed) |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 605 OK | 600 OK (161 s) | −17 deleted, +12 added |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 281 OK | 281 OK | 0 |
+
+The two kept tests (one moved unchanged, one rewritten) do not move the count.

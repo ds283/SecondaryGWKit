@@ -26,8 +26,6 @@ The prompt's §3 tests, by class:
      ``Tr`` are two records with different identities; a ``Tr`` on no shard is a named
      ``unresolved-parent`` problem. ``TestCrossShardParentUnit`` and ``TestMergeDigests`` test
      the facility itself.
-  7. ``TestAnOldStoreIsRead`` -- ``QuadSource`` gains no column, so a table recreated from the 08
-     schema witness's own DDL is read by a keyed lookup.
 
 Tests 4 (the compute-time assertion) and 8 (``main.py``) are in
 ``ComputeTargets/tests/test_quadsource_parent_main.py``.
@@ -36,7 +34,6 @@ No Ray, nothing under ``var/``: the schema is built in memory with the real fact
 inventory tests write stores in temporary directories with ``build_full_store``.
 """
 
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -67,10 +64,6 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
     _exit_time,
     _Ref,
     Z_EXIT,
-)
-
-WITNESS_08 = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-08.json"
 )
 
 Q_EXIT = _exit_time(serial=11, z_exit=Z_EXIT)
@@ -516,50 +509,6 @@ class TestMergeDigests(unittest.TestCase):
 
     def test_a_serial_two_shards_hold_differently_resolves_to_neither(self):
         self.assertEqual(_merge_digests([{1: "a", 2: "b"}, {1: "x"}]), {2: "b"})
-
-
-class TestAnOldStoreIsRead(unittest.TestCase):
-    """§3 test 7 (D4). ``QuadSource`` gains no column: a store written before this prompt already
-    has ``Tq_serial`` and ``Tr_serial``, which ``store()`` has always written. Its table is
-    recreated here from the 08 schema witness's own DDL, index on ``Tr_serial`` and all.
-    """
-
-    def setUp(self):
-        self.s = _base_store()
-        self.addCleanup(self.s.close)
-        witness = json.loads(WITNESS_08.read_text(encoding="utf-8"))["classes"][
-            "QuadSource"
-        ]["table"]
-        self.assertNotIn("ix_QuadSource_Tr_serial", "".join(witness["index_ddl"]))
-        self.s.conn.execute(sqla.text('DROP TABLE "QuadSource"'))
-        self.s.conn.execute(sqla.text(witness["ddl"]))
-        for ddl in witness["index_ddl"]:
-            self.s.conn.execute(sqla.text(ddl))
-        self.s.conn.commit()
-
-    def test_the_old_table_has_no_index_on_tr_and_both_serials(self):
-        columns = [
-            row[1]
-            for row in self.s.conn.exec_driver_sql('PRAGMA table_info("QuadSource")')
-        ]
-        self.assertIn("Tq_serial", columns)
-        self.assertIn("Tr_serial", columns)
-        indexes = [
-            row[1]
-            for row in self.s.conn.exec_driver_sql('PRAGMA index_list("QuadSource")')
-        ]
-        self.assertNotIn("ix_QuadSource_Tr_serial", indexes)
-
-    def test_a_keyed_lookup_finds_its_row(self):
-        stored = store_source(self.s, Tq_serial=1, Tr_serial=5)
-        found = keyed(self.s, 1, 5)
-        self.assertTrue(found.available)
-        self.assertEqual(found.store_id, stored)
-        self.assertFalse(keyed(self.s, 2, 5).available)
-
-    def test_the_reader_mode_finds_it_too(self):
-        stored = store_source(self.s, Tq_serial=1, Tr_serial=5)
-        self.assertEqual(source_lookup(self.s, labels_only=True).store_id, stored)
 
 
 def tearDownModule():

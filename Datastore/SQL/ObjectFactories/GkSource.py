@@ -11,9 +11,6 @@ its own -- its accuracy is entirely that of the GkNumericIntegration and GkWKBIn
 assembles, each of which carries its own. The user settled the drop on 2026-09-18
 (prompts/tolerance-convergence/README.md §7 D3).
 
-Nothing is added, so a datastore written before this change is readable by this factory without a
-migration; it simply carries two columns nothing queries.
-
 SCHEMA NOTE (prompts/datastore-integrity, prompt 09b). A GkSource for (k, z_response) is
 assembled, for each z_source of its grid, from the value at z_response of one GkNumericIntegration,
 one GkWKBIntegration, or both (ComputeTargets/GkSource.py, assemble_GkSource_values). Those rows
@@ -29,9 +26,7 @@ GkSource_parents, never from anything else, and refuses an empty set.
 A lookup names its parent set ("parents"), or asks for the reader mode ("labels_only": True) that
 D1 (prompts/datastore-integrity README §6.2) allows a reader holding only physical labels: it
 refuses when more than one stored GkSource matches, naming their digests and the z_sources at
-which their parents differ. A lookup that does neither raises. A store written before this change
-has no parents_digest column, and build() refuses it (D4): it is readable at the SHA its sidecar
-records.
+which their parents differ. A lookup that does neither raises.
 """
 
 import hashlib
@@ -66,23 +61,6 @@ def GkSource_parents_digest(members) -> str:
     return hashlib.sha256(
         json.dumps(canonical, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
-
-
-def _refuse_a_store_that_predates_the_parent_set(e: SQLAlchemyError, where: str):
-    """07's D4 refusal, for a GkSource table without "parents_digest" or a store without
-    GkSource_parents: re-raises anything else unchanged."""
-    # matched against the driver's own message rather than str(e), which also carries the SQL
-    # statement -- and the statement names the column either way
-    driver_message = str(getattr(e, "orig", e))
-    if "parents_digest" in driver_message or "GkSource_parents" in driver_message:
-        raise RuntimeError(
-            f'{where}: the GkSource table has no "parents_digest" column, or the store has no '
-            "GkSource_parents table. This datastore predates GkSource rows being keyed on the "
-            "Gk numeric and WKB rows they are assembled from (prompts/datastore-integrity, "
-            "prompt 09b). This tree does not read it; it remains readable at the git SHA its "
-            "sidecar records."
-        ) from e
-    raise e
 
 
 def _read_parent_sets(conn, tables, serials) -> dict:
@@ -444,8 +422,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 f"!! GkSource.build(): multiple results found when querying for GkSource"
             )
             raise e
-        except SQLAlchemyError as e:
-            _refuse_a_store_that_predates_the_parent_set(e, "GkSource.build()")
 
         if row_data is None:
             # build and return an unpopulated object
@@ -1221,8 +1197,6 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 f"!! GkSourceValue.build(): multiple results found when querying for GkSourceValue"
             )
             raise e
-        except SQLAlchemyError as e:
-            _refuse_a_store_that_predates_the_parent_set(e, "GkSourceValue.build()")
 
         if row_data is None:
             # return empty object

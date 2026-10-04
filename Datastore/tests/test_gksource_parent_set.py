@@ -24,9 +24,8 @@ The prompt's §3 tests, by class:
   5. ``TestTheInventoryResolvesTheSet`` -- two ``GkSource``s differing only in one parent are two
      records with different identities; an unresolvable member, an orphan member row and an empty
      set are named problems.
-  6. ``TestAnOldStoreIsRefused`` -- a ``GkSource`` table from the 09a witness's DDL.
-  7. ``TestTheWKBValueReadsRefuseAPre07Store`` -- ``[07-wkb-value-reads-do-not-refuse-a-pre-07-
-     store]``: the four WKB value reads, keyed or not, on WKB tables from the 06 witness's DDL.
+  7. ``TestTheWKBValueReadsOnACurrentStore`` -- the WKB value reads, on the current schema's
+     tables, find their rows.
   9. ``TestTheForeignKeys`` -- ``GkSource_parents``' four keys under ``PRAGMA
      foreign_key_check``.
 
@@ -37,7 +36,6 @@ No Ray, nothing under ``var/``: the schema is built in memory with the real fact
 inventory tests write stores in temporary directories with ``build_full_store``.
 """
 
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -57,7 +55,6 @@ from Datastore.SQL.ObjectFactories.GkSource import (
     sqla_GkSourceValue_factory,
 )
 from Datastore.SQL.ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
 from Datastore.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import (
     build_full_store,
@@ -74,10 +71,6 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
 from ComputeTargets import GkNumericIntegration, TkNumericIntegration
 import ComputeTargets.phase_residual as phase_residual
 from MetadataConcepts import tolerance
-
-DATA = Path(__file__).resolve().parent / "data"
-WITNESS_06 = DATA / "schema_at_datastore-integrity-06.json"
-WITNESS_09A = DATA / "schema_at_datastore-integrity-09a.json"
 
 K_EXIT = _exit_time(serial=11, z_exit=1.0e8)
 TAG = _Ref(1)
@@ -106,8 +99,6 @@ GK_WKB = {51: (22, 42), 52: (23, None)}
 # two parent sets differing in one z_source's row: z_source 21's numeric row
 SET_A = ((21, 41, None), (22, 42, 51), (23, None, 52))
 SET_B = ((21, 43, None), (22, 42, 51), (23, None, 52))
-
-D4 = "readable at the git SHA its sidecar records"
 
 
 def _gk_store() -> Store:
@@ -608,188 +599,13 @@ class TestTheValueModelRead(_WithAStore):
         self.assertFalse(self.read().available)
 
 
-class TestAnOldStoreIsRefused(_WithAStore):
-    """§3 test 6: a GkSource table as the 09a schema created it, with no parents_digest, and no
-    GkSource_parents table."""
-
-    def setUp(self):
-        super().setUp()
-        classes = json.loads(WITNESS_09A.read_text(encoding="utf-8"))["classes"]
-        self.assertNotIn("GkSource_parents", classes)
-        ddl = classes["GkSource"]["table"]["ddl"]
-        self.assertNotIn("parents_digest", ddl)
-        self.s.conn.execute(sqla.text('DROP TABLE "GkSource_parents"'))
-        self.s.conn.execute(sqla.text('DROP TABLE "GkSource"'))
-        self.s.conn.execute(sqla.text(ddl))
-        self.s.conn.execute(
-            sqla.text(
-                'INSERT INTO "GkSource" (serial, version, wavenumber_exit_serial, '
-                "model_serial, z_response_serial, z_max_serial, z_samples, validated) "
-                f"VALUES (1, 1, {K_EXIT.store_id}, {MODEL.store_id}, "
-                f"{Z_RESPONSE.store_id}, 21, 0, 1)"
-            )
-        )
-        self.s.conn.commit()
-
-    def assertD4(self, call):
-        with self.assertRaises(RuntimeError) as caught:
-            call()
-        message = str(caught.exception)
-        self.assertIn('no "parents_digest" column', message)
-        self.assertIn("predates", message)
-        self.assertIn(D4, message)
-        self.assertNotIn("regenerated", message)
-
-    def test_a_keyed_lookup(self):
-        self.assertD4(lambda: source_lookup(self.s, parents=SET_A, tags=()))
-
-    def test_the_reader_mode(self):
-        self.assertD4(lambda: source_lookup(self.s, labels_only=True, tags=()))
-
-    def test_the_value_model_read(self):
-        self.assertD4(
-            lambda: _call(
-                self.s,
-                sqla_GkSourceValue_factory,
-                "GkSourceValue",
-                {
-                    "model": MODEL,
-                    "k": K_EXIT,
-                    "z_response": Z_RESPONSE,
-                    "z_source": Z_SOURCES[22],
-                },
-            )
-        )
-
-
-class TestTheWKBValueReadsRefuseAPre07Store(unittest.TestCase):
+class TestTheWKBValueReadsOnACurrentStore(unittest.TestCase):
     """
-    §3 test 7, closing ``[07-wkb-value-reads-do-not-refuse-a-pre-07-store]``: each WKB table as
-    the 06 schema created it, with no ``numeric_serial``, holding one validated row with a value.
-    Before this prompt a parentless read returned the value and a keyed one raised a raw
-    ``OperationalError``; now all four reads, keyed or not, give 07's D4 message.
+    The WKB value reads on a current store: ``GkWKBValue.read_batch`` and its keyed
+    ``_build_impl_model`` read the rows the schema holds. (Moved, with its body unchanged, from
+    ``TestTheWKBValueReadsRefuseAPre07Store``, whose other tests exercised the refusal of a store
+    with no ``numeric_serial`` and went with it.)
     """
-
-    def setUp(self):
-        self.s = _gk_store()
-        self.addCleanup(self.s.close)
-        classes = json.loads(WITNESS_06.read_text(encoding="utf-8"))["classes"]
-        for name in ("GkWKBIntegration", "TkWKBIntegration"):
-            ddl = classes[name]["table"]["ddl"]
-            self.assertNotIn("numeric_serial", ddl)
-            self.s.conn.execute(sqla.text(f'DROP TABLE "{name}"'))
-            self.s.conn.execute(sqla.text(ddl))
-        order = phase_residual.RHO_GAUSS_ORDER
-        self.s.conn.execute(
-            sqla.text(
-                'INSERT INTO "GkWKBIntegration" (serial, version, wavenumber_exit_serial, '
-                "model_serial, rho_gauss_order, solver_serial, z_source_serial, z_min_serial, "
-                'z_samples, z_init, sin_coeff, cos_coeff, "G_init", "Gprime_init", validated) '
-                f"VALUES (61, 1, {K_EXIT.store_id}, {MODEL.store_id}, {order}, 1, 23, 25, 1, "
-                "1.0e4, 0.0, 1.0, 0.0, 1.0, 1)"
-            )
-        )
-        self.s.conn.execute(
-            sqla.text(
-                'INSERT INTO "TkWKBIntegration" (serial, version, wavenumber_exit_serial, '
-                "model_serial, rho_gauss_order, phase_solver_serial, friction_solver_serial, "
-                'z_min_serial, z_samples, z_init, sin_coeff, cos_coeff, "T_init", '
-                '"Tprime_init", validated) '
-                f"VALUES (62, 1, {K_EXIT.store_id}, {MODEL.store_id}, {order}, 1, 1, 25, 1, "
-                "1.0e4, 0.0, 1.0, 1.0, 0.0, 1)"
-            )
-        )
-        self.s.insert(
-            "GkWKBValue",
-            serial=161,
-            wkb_serial=61,
-            z_serial=Z_RESPONSE.store_id,
-            H_ratio=1.0,
-            theta_mod_2pi=-0.5,
-            theta_div_2pi=0,
-            omega_WKB_sq=4.0,
-            G_WKB=0.5,
-        )
-        self.s.insert(
-            "TkWKBValue",
-            serial=162,
-            wkb_serial=62,
-            z_serial=Z_RESPONSE.store_id,
-            H_ratio=1.0,
-            theta_mod_2pi=-0.5,
-            theta_div_2pi=0,
-            friction=0.0,
-            omega_WKB_sq=4.0,
-            T_WKB=0.5,
-        )
-        self.s.conn.commit()
-
-    def assertD4(self, call, table):
-        with self.assertRaises(RuntimeError) as caught:
-            call()
-        message = str(caught.exception)
-        self.assertIn(f'the {table} table has no "numeric_serial" column', message)
-        self.assertIn("predates", message)
-        self.assertIn(D4, message)
-        self.assertNotIn("regenerated", message)
-
-    def gk_read_batch(self, **extra):
-        payload = {"model": MODEL, "k": K_EXIT, "z": Z_RESPONSE}
-        payload.update(extra)
-        return sqla_GkWKBValue_factory.read_batch(
-            payload, self.s.conn, self.s.tables["GkWKBValue"], self.s.tables
-        )
-
-    def gk_model(self, **extra):
-        payload = {
-            "model": MODEL,
-            "k": K_EXIT,
-            "z": Z_RESPONSE,
-            "z_source": Z_SOURCES[23],
-        }
-        payload.update(extra)
-        return _call(self.s, sqla_GkWKBValue_factory, "GkWKBValue", payload)
-
-    def tk_read_batch(self, **extra):
-        payload = {"model": MODEL, "k": K_EXIT, "z": Z_RESPONSE}
-        payload.update(extra)
-        return sqla_TkWKBValue_factory.read_batch(
-            payload, self.s.conn, self.s.tables["TkWKBValue"], self.s.tables
-        )
-
-    def tk_model(self, **extra):
-        payload = {"model": MODEL, "k": K_EXIT, "z": Z_RESPONSE}
-        payload.update(extra)
-        return _call(self.s, sqla_TkWKBValue_factory, "TkWKBValue", payload)
-
-    def test_gk_wkb_value_read_batch(self):
-        for extra in (
-            {},
-            {"numeric_serial": 41},
-            {"numeric_serial": GkWKBIntegration.PURE_WKB},
-            {"parents_only": True},
-        ):
-            with self.subTest(**{k: str(v) for k, v in extra.items()}):
-                self.assertD4(lambda: self.gk_read_batch(**extra), "GkWKBIntegration")
-
-    def test_gk_wkb_value_build_impl_model(self):
-        for extra in (
-            {},
-            {"numeric_serial": 41},
-            {"numeric_serial": GkWKBIntegration.PURE_WKB},
-        ):
-            with self.subTest(**{k: str(v) for k, v in extra.items()}):
-                self.assertD4(lambda: self.gk_model(**extra), "GkWKBIntegration")
-
-    def test_tk_wkb_value_read_batch(self):
-        for extra in ({}, {"numeric_serial": 1}):
-            with self.subTest(**extra):
-                self.assertD4(lambda: self.tk_read_batch(**extra), "TkWKBIntegration")
-
-    def test_tk_wkb_value_build_impl_model(self):
-        for extra in ({}, {"numeric_serial": 1}):
-            with self.subTest(**extra):
-                self.assertD4(lambda: self.tk_model(**extra), "TkWKBIntegration")
 
     def test_a_current_table_is_still_read(self):
         """The control: the same four reads on the current schema's tables find their rows."""

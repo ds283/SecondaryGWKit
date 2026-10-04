@@ -3,7 +3,7 @@ from typing import Optional, List
 
 import sqlalchemy as sqla
 from sqlalchemy import and_
-from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
+from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
     QuadSourceIntegral,
@@ -75,66 +75,6 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
                 )
             )
         )
-
-
-def _refuse_a_store_that_predates_the_policy_key(reading: str, e: SQLAlchemyError):
-    """
-    A store from before prompts/datastore-integrity prompt 08 (D4): its QuadSourceIntegral table
-    has no quad_policy_serial column, and its rows record nothing of the QuadSourcePolicy they were
-    made under. This tree does not read it. Raises for that case only; any other database error is
-    left for the caller to re-raise.
-
-    Matched against the driver's own message rather than str(e), which also carries the SQL
-    statement -- and the statement names the column either way.
-    """
-    driver_message = str(getattr(e, "orig", e))
-    if "quad_policy_serial" not in driver_message:
-        return
-
-    raise RuntimeError(
-        f"QuadSourceIntegral.{reading}(): the QuadSourceIntegral table has no "
-        '"quad_policy_serial" column. This datastore predates QuadSourceIntegral rows being '
-        "keyed on the QuadSourcePolicy they were made under (prompts/datastore-integrity, "
-        "prompt 08). This tree does not read it; it remains readable at the git SHA its sidecar "
-        "records."
-    ) from e
-
-
-# the four columns prompts/datastore-integrity prompt 09c added, naming the transfer-function rows
-_TRANSFER_FUNCTION_COLUMNS = (
-    "Tq_numeric_serial",
-    "Tq_WKB_serial",
-    "Tr_numeric_serial",
-    "Tr_WKB_serial",
-)
-
-
-def _refuse_a_store_that_predates_the_transfer_function_key(
-    reading: str, e: SQLAlchemyError
-):
-    """
-    A store from before prompts/datastore-integrity prompt 09c (D4): its QuadSourceIntegral table
-    has none of the four columns naming the TkNumericIntegration and TkWKBIntegration rows for q
-    and r that each row was computed from. This tree does not read it. Raises for that case only;
-    any other database error is left for the caller to re-raise.
-
-    Matched against the driver's own message, as 08's helper is. A table from before prompt 08
-    lacks quad_policy_serial as well; the caller asks 08's helper first, and read_batch() selects
-    quad_policy_serial before these four (the user's decision, 2026-09-30), so such a store is
-    refused with 08's message.
-    """
-    driver_message = str(getattr(e, "orig", e))
-    if not any(column in driver_message for column in _TRANSFER_FUNCTION_COLUMNS):
-        return
-
-    raise RuntimeError(
-        f"QuadSourceIntegral.{reading}(): the QuadSourceIntegral table has no "
-        '"Tq_numeric_serial", "Tq_WKB_serial", "Tr_numeric_serial" or "Tr_WKB_serial" column. '
-        "This datastore predates QuadSourceIntegral rows being keyed on the "
-        "TkNumericIntegration and TkWKBIntegration rows for q and r they are computed from "
-        "(prompts/datastore-integrity, prompt 09c). This tree does not read it; it remains "
-        "readable at the git SHA its sidecar records."
-    ) from e
 
 
 def _parent_serials(where: str, payload, required: bool) -> dict:
@@ -449,10 +389,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 f"!! QuadSourceIntegral.build(): multiple results found when querying for QuadSourceIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={k.store_id} | q={q.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id} | r={r.k.k_inv_Mpc:.5g}/Mpc, store_id={r.store_id})"
             )
             raise e
-        except SQLAlchemyError as e:
-            _refuse_a_store_that_predates_the_policy_key("build", e)
-            _refuse_a_store_that_predates_the_transfer_function_key("build", e)
-            raise
 
         if row_data is None:
             return QuadSourceIntegral(
@@ -722,9 +658,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.metadata,
                 table.c.source_serial,
                 table.c.data_serial,
-                # quad_policy_serial is selected before the four columns prompt 09c added, so that
-                # a table from before prompt 08, which lacks all five, is refused with 08's
-                # message (the user's decision, 2026-09-30)
                 table.c.quad_policy_serial,
                 table.c.Tq_numeric_serial,
                 table.c.Tq_WKB_serial,
@@ -895,12 +828,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
             )
 
-        try:
-            row_data = conn.execute(query)
-        except SQLAlchemyError as e:
-            _refuse_a_store_that_predates_the_policy_key("read_batch", e)
-            _refuse_a_store_that_predates_the_transfer_function_key("read_batch", e)
-            raise
+        row_data = conn.execute(query)
 
         def make_object(row):
             q: wavenumber = wavenumber(

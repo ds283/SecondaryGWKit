@@ -25,8 +25,6 @@ The prompt's §3 tests, by class:
      and ``z_init = k_exit.z_exit - Tk.stop_deltaz_subh`` -- store cleanly.
   5. ``TestReadersRefuseAmbiguity`` -- the labels-only reader mode refuses two stored rows for the
      same physical labels, naming both ``numeric_serial`` values (a NULL as pure WKB).
-  6. ``TestAnOldStoreIsRefused`` -- a table without ``numeric_serial`` (the 06 schema witness's own
-     ``CREATE TABLE``) gives the D4 message.
   7. ``TestDropOrder`` -- under ``PRAGMA foreign_keys = ON``, dropping ``tk-numeric`` with a Tk WKB
      row present succeeds in the corrected order and not in the old one; and ``_drop_order``
      respects every declared foreign key between drop actions.
@@ -40,7 +38,6 @@ solver -- are stand-ins carrying ``.store_id``.
 """
 
 import importlib
-import json
 import tempfile
 import types
 import unittest
@@ -93,9 +90,6 @@ datastore_module = importlib.import_module("Datastore.SQL.Datastore")
 
 UNITS = Mpc_units()
 FIXED_TIMESTAMP = datetime(2026, 9, 29, 12, 0, 0)
-WITNESS_06 = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-06.json"
-)
 
 # production-sized redshifts, where one ulp of z_init is ~1e-5 and DEFAULT_FLOAT_PRECISION is
 # nowhere near it: the stop point is a subtraction that rounds
@@ -866,39 +860,6 @@ class TestReadersRefuseAmbiguity(_StoreCase):
         self.assertFalse(gk.pure_WKB)
         with self.assertRaises(RuntimeError):
             tk.compute()
-
-
-class TestAnOldStoreIsRefused(_StoreCase):
-    """§3 test 6: each WKB table as the 06 schema created it, which has no `numeric_serial`."""
-
-    def _make_old(self, name):
-        ddl = json.loads(WITNESS_06.read_text(encoding="utf-8"))["classes"][name][
-            "table"
-        ]["ddl"]
-        self.assertNotIn("numeric_serial", ddl)
-        self.s.conn.execute(sqla.text(f'DROP TABLE "{name}"'))
-        self.s.conn.execute(sqla.text(ddl))
-        self.s.conn.commit()
-
-    def assertD4(self, lookup, **extra):
-        with self.assertRaises(RuntimeError) as caught:
-            lookup(self.s, **extra)
-        message = str(caught.exception)
-        self.assertIn('no "numeric_serial" column', message)
-        self.assertIn("predates", message)
-        self.assertIn("readable at the git SHA its sidecar records", message)
-        self.assertNotIn("regenerated", message)
-
-    def test_tk(self):
-        self._make_old("TkWKBIntegration")
-        self.assertD4(tk_lookup, numeric_serial=1)
-        self.assertD4(tk_lookup, labels_only=True)
-
-    def test_gk(self):
-        self._make_old("GkWKBIntegration")
-        self.assertD4(gk_lookup, numeric_serial=1)
-        self.assertD4(gk_lookup, numeric_serial=GkWKBIntegration.PURE_WKB)
-        self.assertD4(gk_lookup, labels_only=True)
 
 
 # the order _drop_order had before prompt 07: tk-numeric ahead of tk-wkb

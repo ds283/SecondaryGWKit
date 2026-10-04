@@ -18,9 +18,6 @@ The prompt's §3 tests, by class:
      one cross-shard parent are two records with different identities, including a ``Tq`` parent
      varied to a row on another shard; a parent on no shard is a named problem; ``data`` resolves
      on the integral's own shard only.
-  6. ``TestAnOldStoreIsRefused`` -- a table from the 09b witness's DDL is refused by ``build()``
-     and ``read_batch()`` with 07's form of message; one from the 07 witness's DDL, which predates
-     prompt 08 too, is still refused with 08's (the user's decision, 2026-09-30).
 
 and, by the user's decision of 2026-09-30:
 
@@ -38,15 +35,13 @@ inventory tests write stores in temporary directories with ``build_full_store``.
 """
 
 import copy
-import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest import mock
 
 import ray
 import sqlalchemy as sqla
-from sqlalchemy.exc import MultipleResultsFound, OperationalError
+from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import QuadSourceIntegral
 from CosmologyConcepts import redshift
@@ -64,10 +59,6 @@ from Datastore.tests.test_integral_read_batch import (
     _Ref,
 )
 from MetadataConcepts import store_tag, tolerance
-
-DATA = Path(__file__).resolve().parent / "data"
-WITNESS_07 = DATA / "schema_at_datastore-integrity-07.json"
-WITNESS_09B = DATA / "schema_at_datastore-integrity-09b.json"
 
 ATOL = tolerance(store_id=1, log10_tol=-10.0)
 RTOL = tolerance(store_id=2, log10_tol=-9.0)
@@ -90,8 +81,6 @@ PARENTS = dict(
     Tr_WKB_serial=42,
 )
 OTHER = {name: serial + 1000 for name, serial in PARENTS.items()}
-
-D4 = "readable at the git SHA its sidecar records"
 
 
 class _WithAStore(unittest.TestCase):
@@ -483,71 +472,6 @@ class TestTheInventoryResolvesAllSix(unittest.TestCase):
         qsi = inv["QuadSourceIntegral"]
         self.assertEqual(qsi.count, 4)
         self.assertEqual([p.split(":")[0] for p in qsi.problems], ["duplicate"])
-
-
-class TestAnOldStoreIsRefused(_WithAStore):
-    """§3 test 6 (D4). The ``QuadSourceIntegral`` table is recreated from a schema witness's own
-    DDL."""
-
-    def recreate(self, witness):
-        ddl = json.loads(witness.read_text(encoding="utf-8"))["classes"][
-            "QuadSourceIntegral"
-        ]["table"]["ddl"]
-        self.s.conn.execute(sqla.text('DROP TABLE "QuadSourceIntegral"'))
-        self.s.conn.execute(sqla.text(ddl))
-        self.s.conn.commit()
-        return ddl
-
-    def refused(self, function):
-        with self.assertRaises(RuntimeError) as caught:
-            function()
-        # the original database error is kept as the cause
-        self.assertIsInstance(caught.exception.__cause__, OperationalError)
-        message = str(caught.exception)
-        self.assertIn("predates", message)
-        self.assertIn(D4, message)
-        self.assertNotIn("regenerated", message)
-        return message
-
-    def test_a_table_from_before_this_prompt(self):
-        ddl = self.recreate(WITNESS_09B)
-        self.assertIn("quad_policy_serial", ddl)
-        self.assertNotIn("Tq_numeric_serial", ddl)
-        for label, function in (
-            ("build", self.build),
-            ("read_batch", self.read_batch),
-            ("read_batch", lambda: self.read_batch(tags=("A",))),
-            ("read_batch", lambda: self.read_batch(**PARENTS)),
-        ):
-            with self.subTest(function=label):
-                message = self.refused(function)
-                self.assertIn(f"QuadSourceIntegral.{label}()", message)
-                self.assertIn("prompts/datastore-integrity, prompt 09c", message)
-                self.assertIn('"Tq_numeric_serial"', message)
-
-    def test_a_table_from_before_prompt_08_keeps_its_message(self):
-        """The user's decision (2026-09-30): read_batch selects quad_policy_serial before the four
-        new columns, so a table lacking all five is refused as prompt 08 refused it."""
-        ddl = self.recreate(WITNESS_07)
-        self.assertNotIn("quad_policy_serial", ddl)
-        for label, function in (
-            ("build", self.build),
-            ("read_batch", self.read_batch),
-            ("read_batch", lambda: self.read_batch(tags=("A",))),
-        ):
-            with self.subTest(function=label):
-                message = self.refused(function)
-                self.assertIn('no "quad_policy_serial" column', message)
-                self.assertIn("prompts/datastore-integrity, prompt 08", message)
-
-    def test_another_database_error_is_not_turned_into_it(self):
-        other = OperationalError("SELECT 1", {}, Exception("no such table: elsewhere"))
-        for function in (self.build, self.read_batch):
-            with self.subTest(function=function.__name__):
-                with mock.patch.object(self.s.conn, "execute", side_effect=other):
-                    with self.assertRaises(OperationalError) as caught:
-                        function()
-                self.assertIs(caught.exception, other)
 
 
 class TestTheQuadSourceValueModelRead(unittest.TestCase):
