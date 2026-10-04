@@ -48,8 +48,7 @@ from config.sharding import replicated_tables
 REPLICATED = list(replicated_tables) + ["BackgroundModel_tags"]
 
 # the key each compared table's rows are listed under in reconciliation["repaired"]
-KEYS = {"BackgroundModelValue": ("model_serial", "z_serial")}
-KEYS["BackgroundModel_tags"] = ("model_serial", "tag_serial")
+KEYS = {"BackgroundModel_tags": ("model_serial", "tag_serial")}
 
 
 def tearDownModule():
