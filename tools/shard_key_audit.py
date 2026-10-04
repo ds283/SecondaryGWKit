@@ -17,9 +17,9 @@ is structurally incapable of modifying a datastore.
 
 The shard file it attaches for the cross-file check is found exactly as
 ShardedPool finds it, by the one resolver in Datastore/shard_paths.py: the
-`shards` record's file name, in the primary's own directory. A legacy absolute
-record is never used as it stands, so auditing a copied store checks the copy's
-shard, not the original's. That module imports only the standard library and
+`shards` record's file name, in the primary's own directory. A record that is
+not a bare file name, an absolute path included, is refused, so auditing a
+copied store can never check the original's shard in place of the copy's. That module imports only the standard library and
 is outside the Datastore.SQL package, so importing it does not pull in ray or
 sqlalchemy; the repository root is put on sys.path below so that the script
 still runs standalone, from any directory, with no PYTHONPATH.
@@ -78,33 +78,53 @@ def main(argv: List[str]) -> int:
         print(f"!! Could not open {primary_path} read-only: {e}")
         return 2
 
-    if "shard_keys" not in tables or "shards" not in tables:
+    if not {"shard_keys", "shards", "shard_key_config"} <= tables:
         print(
-            f"!! {primary_path} does not look like a ShardedPool primary database "
-            f"(expected tables 'shard_keys' and 'shards'; found {sorted(tables)})"
+            f"!! {primary_path} does not look like a completely written ShardedPool "
+            f"primary database (expected tables 'shard_keys', 'shards' and "
+            f"'shard_key_config'; found {sorted(tables)})"
         )
         return 2
 
     shard_keys_columns = _table_columns(conn, "shard_keys")
 
     if "key_serial" not in shard_keys_columns:
-        if "wavenumber_serial" in shard_keys_columns:
-            print(
-                "!! This datastore uses the pre-a2bd966 schema: the shard_keys "
-                "primary key column is 'wavenumber_serial', not 'key_serial'. It "
-                "predates the shard_key_config / replicated_tables / sharded_tables "
-                "refactor and is not readable by the current ShardedPool code."
-            )
-        else:
-            print(
-                f"!! Unrecognised shard_keys schema (columns: {shard_keys_columns}). "
-                f"This does not look like a current-generation ShardedPool datastore."
-            )
+        print(
+            f"!! Unrecognised shard_keys schema (columns: {shard_keys_columns}). "
+            f"This does not look like a current-generation ShardedPool datastore."
+        )
         print(
             "!! There is no safe automated upgrade path. This datastore must be "
             "rebuilt from scratch; this tool will not attempt to audit it further."
         )
         return 2
+
+    config_row = conn.execute("SELECT key_type FROM shard_key_config").fetchone()
+    if config_row is None:
+        print(
+            f"!! The shard_key_config table of {primary_path} holds no row. This is "
+            f"not a completely written ShardedPool primary database; this tool will "
+            f"not attempt to audit it."
+        )
+        return 2
+    key_type = config_row[0]
+
+    # every shard record goes through the one resolver, which accepts a bare file name only. An
+    # unusable record is a refusal, not a verdict: the store cannot be opened by ShardedPool.
+    shard_files = list(
+        conn.execute("SELECT serial, filename FROM shards ORDER BY serial")
+    )
+    shard_paths = {}
+    for shard_serial, shard_filename in shard_files:
+        try:
+            shard_paths[shard_serial] = resolve_shard_path(primary_path, shard_filename)
+        except ValueError as e:
+            print(f"!! shard #{shard_serial} record is unusable: {e}")
+            print(
+                "!! A ShardedPool primary records each shard by its bare file name. "
+                "This tool will not attempt to audit this datastore."
+            )
+            return 2
 
     print(f">> {primary_path}: current-generation schema (key_serial present)")
 
@@ -142,25 +162,11 @@ def main(argv: List[str]) -> int:
     # Cross-file check against the actual shard-key table (e.g. "wavenumber"),
     # which lives in the replicated tables inside each shard database, not in
     # the primary file. Best-effort: attach one shard file read-only.
-    key_type = None
-    if "shard_key_config" in tables:
-        row = conn.execute("SELECT key_type FROM shard_key_config").fetchone()
-        if row is not None:
-            key_type = row[0]
-
-    shard_files = list(
-        conn.execute("SELECT serial, filename FROM shards ORDER BY serial")
-    )
-
     cross_file_done = False
     if key_type is not None and shard_files:
         shard_serial, shard_filename = shard_files[0]
-        try:
-            shard_path = resolve_shard_path(primary_path, shard_filename)
-            shard_problem = shard_file_problem(shard_path)
-        except ValueError as e:
-            shard_path = None
-            shard_problem = str(e)
+        shard_path = shard_paths[shard_serial]
+        shard_problem = shard_file_problem(shard_path)
         if shard_problem is None:
             print(
                 f">> cross-file check against shard #{shard_serial}: {shard_path} "
@@ -208,8 +214,6 @@ def main(argv: List[str]) -> int:
                     )
             except sqlite3.OperationalError as e:
                 print(f"!! could not attach shard #{shard_serial} ({shard_path}): {e}")
-        elif shard_path is None:
-            print(f"!! shard #{shard_serial} record is unusable: {shard_problem}")
         else:
             print(f"!! shard #{shard_serial} file {shard_path} {shard_problem}")
 

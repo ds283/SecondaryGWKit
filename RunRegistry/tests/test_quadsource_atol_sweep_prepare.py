@@ -30,7 +30,7 @@ from Datastore.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import (
     stored_records,
     tree_state,
-    write_legacy_primary,
+    write_hand_built_primary,
     write_new_store,
     write_placeholder,
 )
@@ -195,46 +195,55 @@ class SweepPrepareTestCase(StoreTestCase):
         write_new_store(primary, shards=self.sweep.SHARDS)
         self.sweep.assert_store_is_self_consistent(primary)  # must not raise
 
-    def test_the_check_accepts_a_legacy_store_naming_its_own_siblings(self):
-        primary = self.top / "D" / "store.sqlite"
-        shards = self.shard_paths_of(primary)
-        for path in shards:
-            write_placeholder(path)
-        write_legacy_primary(
-            primary, {i: str(p.resolve()) for i, p in enumerate(shards)}
-        )
-        self.sweep.assert_store_is_self_consistent(primary)  # must not raise
-
-    def test_the_check_accepts_the_backups_shape(self):
-        """A legacy primary whose absolute records name the same file names in another existing
-        directory: the resolver reads *this* store's own siblings, not the directory named in the
-        stored string, which is exactly the backup's shape
-        (`docs/store-retirement-audit.md` §2.7): the backup's primary holds the **live** store's
-        absolute shard paths, byte for byte, and a correct reader must still delete only the
-        backup's own four files, never the live store's."""
+    def test_the_check_refuses_an_absolute_record(self):
+        """An absolute record is refused by the resolver, and the check reports it among its
+        mismatches and raises its own ``RuntimeError``, not the resolver's ``ValueError``,
+        before it writes anything. Two shapes: the records of another populated store's shards
+        (the backup's shape, `docs/store-retirement-audit.md` §2.7, and the 2026-09-23 failure),
+        and the store's own siblings (what every store written before `b04671f` held).
+        """
         live = self.top / "X" / "store.sqlite"
-        write_new_store(live, shards=self.sweep.SHARDS)  # "another existing directory"
-
+        write_new_store(live, shards=self.sweep.SHARDS)  # another populated store
         backup = self.top / "Y" / "store.sqlite"
-        backup_shards = self.shard_paths_of(backup)
-        for path in backup_shards:
-            write_placeholder(path)
-        records = {
-            i: str((live.parent / shard_file_name(live, i)).resolve())
-            for i in range(self.sweep.SHARDS)
-        }
-        write_legacy_primary(backup, records)
+        own = self.top / "Z" / "store.sqlite"
+        for primary, shards_dir in ((backup, live), (own, own)):
+            for path in self.shard_paths_of(primary):
+                write_placeholder(path)
+            write_hand_built_primary(
+                primary,
+                {
+                    i: str(
+                        (shards_dir.parent / shard_file_name(shards_dir, i)).resolve()
+                    )
+                    for i in range(self.sweep.SHARDS)
+                },
+            )
 
-        self.sweep.assert_store_is_self_consistent(backup)  # must not raise
+        for primary in (backup, own):
+            with self.subTest(primary=str(primary)):
+                records = stored_records(primary)
+                before = tree_state(self.top)
+
+                with self.assertRaises(RuntimeError) as ctx:
+                    self.sweep.assert_store_is_self_consistent(primary)
+
+                message = str(ctx.exception)
+                for serial in range(self.sweep.SHARDS):
+                    self.assertIn(
+                        f"serial {serial}: record {records[serial]!r}", message
+                    )
+                self.assertIn("is unusable", message)
+                self.assertIn("is not a bare file name", message)
+                self.assertEqual(tree_state(self.top), before)
 
     def test_the_check_refuses_a_renamed_record(self):
         primary = self.top / "E" / "store.sqlite"
         shards = self.shard_paths_of(primary)
         for path in shards:
             write_placeholder(path)
-        records = {i: str(p.resolve()) for i, p in enumerate(shards)}
-        records[0] = str((primary.parent / "not-the-right-name.sqlite").resolve())
-        write_legacy_primary(primary, records)
+        records = {i: p.name for i, p in enumerate(shards)}
+        records[0] = "not-the-right-name.sqlite"
+        write_hand_built_primary(primary, records)
 
         with self.assertRaises(RuntimeError) as ctx:
             self.sweep.assert_store_is_self_consistent(primary)
@@ -248,9 +257,9 @@ class SweepPrepareTestCase(StoreTestCase):
         shards = self.shard_paths_of(primary)
         for path in shards:
             write_placeholder(path)
-        records = {i: str(p.resolve()) for i, p in enumerate(shards)}
+        records = {i: p.name for i, p in enumerate(shards)}
         del records[self.sweep.SHARDS - 1]
-        write_legacy_primary(primary, records)
+        write_hand_built_primary(primary, records)
 
         with self.assertRaises(RuntimeError) as ctx:
             self.sweep.assert_store_is_self_consistent(primary)
@@ -265,9 +274,9 @@ class SweepPrepareTestCase(StoreTestCase):
             write_placeholder(path)
         extra = primary.parent / shard_file_name(primary, self.sweep.SHARDS)
         write_placeholder(extra)
-        records = {i: str(p.resolve()) for i, p in enumerate(shards)}
-        records[self.sweep.SHARDS] = str(extra.resolve())
-        write_legacy_primary(primary, records)
+        records = {i: p.name for i, p in enumerate(shards)}
+        records[self.sweep.SHARDS] = extra.name
+        write_hand_built_primary(primary, records)
 
         with self.assertRaises(RuntimeError) as ctx:
             self.sweep.assert_store_is_self_consistent(primary)
@@ -282,9 +291,9 @@ class SweepPrepareTestCase(StoreTestCase):
         shards = self.shard_paths_of(primary)
         for path in shards:
             write_placeholder(path)
-        records = {i: str(p.resolve()) for i, p in enumerate(shards)}
+        records = {i: p.name for i, p in enumerate(shards)}
         records[0], records[1] = records[1], records[0]
-        write_legacy_primary(primary, records)
+        write_hand_built_primary(primary, records)
 
         with self.assertRaises(RuntimeError) as ctx:
             self.sweep.assert_store_is_self_consistent(primary)

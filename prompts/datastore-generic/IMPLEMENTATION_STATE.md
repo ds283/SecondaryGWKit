@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 3 of 9 prompts landed (01, 02, 03).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 4 of 9 prompts landed (01, 02, 03, 04).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–04 are written; 05–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -52,7 +52,7 @@ recommended:**
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
-| 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ⬜ | — | — |
+| 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | this commit | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
@@ -447,9 +447,9 @@ Neither opens an issue.
 | **R2** | 03 | measure one timestamp on every replicated write path; compare `timestamp` | B1 | ✅ |
 | **R3** | 03 | `replication_in_flight` assumed present | B3 | ✅ |
 | **R4** | 03 | the `controller_shard NOT NULL` refusal; `label` read unconditionally | B4, B9 | ✅ |
-| **L1** | 04 | absolute shard records out of `shard_paths.py` and `ShardedPool` | B6 | ⬜ |
-| **L2** | 04 | `tools/shard_key_audit.py`'s old-primary paths, and an unusable record refused; the sweep script's check and docstring | B6 | ⬜ |
-| **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured; an absolute record pinned as refused by every reader | B6 | ⬜ |
+| **L1** | 04 | absolute shard records out of `shard_paths.py` and `ShardedPool` | B6 | ✅ |
+| **L2** | 04 | `tools/shard_key_audit.py`'s old-primary paths, and an unusable record refused; the sweep script's check and docstring | B6 | ✅ |
+| **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured; an absolute record pinned as refused by every reader | B6 | ✅ |
 | **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ⬜ |
 | **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ⬜ |
 | **S3** | 05 | an absent table on a read-write open, per U1; `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
@@ -523,6 +523,15 @@ Neither opens an issue.
     `e53f323` (B2, deleted outside the campaign) **reviewed**: its argument holds, and nothing
     in it was changed. The serial-split naming now ignores `timestamp` as well as `serial` (a
     stop condition, decided by the user). Left for 04–05: B5, B6, the four selects (S3).
+  - **Narrowed (2026-10-04, prompt 04):** deleted: the reading of an absolute shard record as a
+    sibling by its final component, with `is_legacy_record` and the relocation notice
+    (`Datastore/shard_paths.py`, `ShardedPool._resolve_shard_rows`; B6), so that every reader
+    refuses an absolute record as unusable; `tools/shard_key_audit.py`'s pre-`a2bd966` branch and
+    its tolerance of a primary without `shard_key_config` (the tool now also refuses an unusable
+    record, exit 2, where it said OK); fifteen tests, and the fixture `write_legacy_primary`
+    renamed `write_hand_built_primary`. The sweep check raises its own `RuntimeError` on an
+    absolute record. Left for 05: B5, the four selects (S3). `RunRegistry/stores.py:81-82` still
+    describes a sidecar rule as "prompt 01's rule for legacy shard records"; that is U3's.
   - **Found (2026-10-04, writing 02's orchestrator note):** a site the audit missed. In
     `TkWKBIntegration` and `GkWKBIntegration`, `_build_impl_model` and `read_batch` select
     `numeric_serial` whether or not a parent is given, so that a store without the column fails
@@ -530,6 +539,23 @@ Neither opens an issue.
     a store whose columns differ would let such a store be read silently, so 02 keeps them and
     rewords their comments, and **05 deletes them** (item S3). Confirmed by the user, 2026-10-04.
   - **Assigned (2026-10-04):** prompts 01–05.
+- **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
+  - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
+    primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
+    raise
+    `Cannot delete sharded datastore "<p>": Cannot delete sharded datastore "<p>": Shard #0 of primary database "<p>" has an unusable record: shard record '../outside.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was deleted`;
+    `copy_store` and `move_store` raise
+    `Cannot copy sharded datastore "<p>" to "<d>": Cannot copy sharded datastore "<p>": Shard #0 … Nothing was written`
+    (and "Cannot move …"). In the delete case the two `<p>`s can differ, because one is the path
+    as given and the other resolved (`/var/folders/…` and `/private/var/folders/…`).
+    `store_reader.open_read_only`'s message is not doubled.
+  - **Cause.** `_read_closed_store` wraps the message of the refusal with the verb's prefix, and
+    its caller (`_plan_deletion`, `_relocate_store`) wraps it again. Current code, not 04's.
+  - **Impact.** The text is longer than it need be. Nothing is read or written wrongly. Prompt 04
+    makes this the message an absolute shard record meets in those four operations.
+  - **Next step.** The user will have it cleaned up (2026-10-04). The new
+    `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
+    its prefix, so a cleanup does not break it.
 
 ---
 
@@ -621,3 +647,18 @@ Measured serially on the staged tree.
 
 `test_one_timestamp_per_write`'s 28 are 27 existing tests rerun under a ticking clock plus one
 new; they add about 100 s to the Datastore suite.
+
+### 5.5 After prompt 04 (2026-10-04, this commit)
+
+Measured serially on the staged tree, at load 21–77. The Datastore suite was run in four groups of
+modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`), because a single Bash call
+cannot run for more than ten minutes; the four counts are 122, 132, 201 and 181.
+
+| Suite | Before (orchestrator, `2ed3469`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 (2 failures, `test_background_tau.test_build_cost` and `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, wall clock) | 693 (the same two failures, wall clock: both fail alone at load 77, 0.68 s against 0.5 s and 0.085 s against 0.05 s; `test_quadsource_policy_main` passes, 19 tests) | 0 |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 629 OK | 636 OK | −12 deleted, +12 in `test_absolute_shard_record_refused`, +7 in `test_shard_key_audit_refusals` |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 281 OK | 280 OK | −3 deleted, +1 sweep refusal, +1 retire refusal |

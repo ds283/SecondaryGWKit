@@ -2,8 +2,9 @@
 Stand-ins for a ShardedPool store on disk, for the shard-path tests. No Ray, no datastore.
 
 A primary is built **by hand** with stdlib ``sqlite3``, with the same five tables and columns as
-``ShardedPool._create_engine`` declares, so that a test can stand in for rows the *old* code wrote
-(absolute shard paths) without calling ``_write_shard_data``, which no longer writes that form.
+``ShardedPool._create_engine`` declares, so that a test can give it any ``shards`` records it needs
+(malformed ones, a name two serials share, another store's absolute paths) without calling
+``_write_shard_data``, which writes only bare names.
 
 Shard files are small placeholder files, not databases: everything these tests exercise --
 ``_read_shard_data``, the resolver and ``_check_shard_files`` -- looks only at the ``shards`` table
@@ -13,9 +14,7 @@ so a test can tell which of two same-named files a path points at.
 This module is not a test module (no ``test_`` prefix); the test modules import it.
 """
 
-import contextlib
 import hashlib
-import io
 import sqlite3
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
@@ -45,17 +44,13 @@ def bare_pool(primary: Path) -> ShardedPool:
 
 
 def read_pool(primary: Path) -> ShardedPool:
-    """What the constructor's existing-store branch does, up to (not including) the check.
-    What the read printed is kept as ``pool.read_stdout``."""
+    """What the constructor's existing-store branch does, up to (not including) the check."""
     pool = bare_pool(primary)
-    out = io.StringIO()
     pool._create_engine()
     try:
-        with contextlib.redirect_stdout(out):
-            pool._read_shard_data()
+        pool._read_shard_data()
     finally:
         pool._engine.dispose()
-        pool.read_stdout = out.getvalue()
     return pool
 
 
@@ -85,12 +80,18 @@ def marker(path: Path) -> str:
     return path.read_bytes().decode()
 
 
-def write_legacy_primary(
+def write_hand_built_primary(
     primary: Path,
     records: Dict[int, str],
     shard_keys: Iterable[Tuple[int, int]] = (),
 ) -> None:
-    """Build a primary by hand, holding exactly the given ``shards.filename`` records."""
+    """Build a primary by hand, holding exactly the given ``shards.filename`` records.
+
+    It builds no ``replication_in_flight`` table, so the ``ShardedPool`` constructor refuses what
+    it builds (since prompt 03 of the datastore-generic campaign). Its users read it through
+    ``read_pool``, the closed-store operations (``copy_store``, ``move_store``,
+    ``closed_store_files``, ``delete_store``), the audit tool or the sweep script's check, none of
+    which reads that table."""
     primary.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(primary)
     try:

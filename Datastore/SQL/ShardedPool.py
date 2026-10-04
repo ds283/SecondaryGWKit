@@ -25,7 +25,6 @@ from Datastore.replication import (
 from Datastore.replication import ReadOnlyMiss, ReadOnlyWrite
 from Datastore.shard_paths import (
     resolve_shard_path,
-    is_legacy_record,
     shard_file_name,
     shard_file_problem,
 )
@@ -2258,11 +2257,10 @@ class ShardedPool:
         ``shard_db_files`` (serial -> absolute path) and ``shard_records`` (serial -> the stored
         value), which the caller supplies and which are filled in place.
 
-        Every record goes through the one resolver (Datastore/shard_paths.py). A legacy absolute
-        record is read as the sibling of that name; the absolute path itself is never used. The
-        rows are not rewritten.
+        Every record goes through the one resolver (Datastore/shard_paths.py), which accepts a
+        bare file name only. A record that is anything else, an absolute path included, is refused
+        as unusable. The rows are not rewritten.
         """
-        relocated_legacy = []
         for serial, stored in rows:
             try:
                 filename = resolve_shard_path(primary_file, stored)
@@ -2278,18 +2276,6 @@ class ShardedPool:
 
             shard_db_files[serial] = filename
             shard_records[serial] = stored
-
-            if is_legacy_record(stored) and Path(stored) != filename:
-                relocated_legacy.append(stored)
-
-        if len(relocated_legacy) > 0:
-            legacy_dirs = ", ".join(
-                f'"{d}"'
-                for d in sorted({str(Path(s).parent) for s in relocated_legacy})
-            )
-            print(
-                f'!! Primary database "{str(primary_file)}" records {len(relocated_legacy)} shard(s) by legacy absolute path in {legacy_dirs}; reading them as siblings in "{str(primary_file.parent)}" instead (stored records not rewritten)'
-            )
 
     @staticmethod
     def _shard_file_problems(
@@ -2361,8 +2347,7 @@ class ShardedPool:
         refuses to open ("Primary database is missing, but shard ... already exists").
 
         The source is opened only mode=ro and is never written. No table other than
-        `shards.filename` of the destination primary is changed. A legacy source's absolute rows
-        become bare names at the destination, because that is the operation asked for.
+        `shards.filename` of the destination primary is changed.
         """
         return ShardedPool._relocate_store("copy", src, dst)
 
@@ -2407,9 +2392,8 @@ class ShardedPool:
         closed_store_files(primary, resume=resume).
 
         The files are named only through _read_closed_store, the one resolver's read-and-check. A
-        legacy absolute record is read as the sibling of that name in the primary's directory, and
-        the absolute path itself is never opened, so a primary whose records name another store's
-        files deletes its own siblings and never those.
+        record that is not a bare file name is refused before anything is deleted, so a primary
+        whose records name another store's files deletes nothing, and never those files.
 
         Refuses, before anything is deleted, if the primary is missing, a symbolic link or not a
         regular file; if the primary or any shard has a -journal, -wal or -shm beside it; if the

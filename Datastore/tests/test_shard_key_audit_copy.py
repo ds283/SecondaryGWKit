@@ -27,7 +27,7 @@ from pathlib import Path
 
 from Datastore.tests.shard_store_fixtures import (
     sha256,
-    write_legacy_primary,
+    write_hand_built_primary,
     write_placeholder,
 )
 
@@ -60,18 +60,18 @@ class TestAuditOfACopiedStore(unittest.TestCase):
         self._tmp = tempfile.TemporaryDirectory()
         root = Path(self._tmp.name).resolve()
 
-        # the original, A: legacy absolute records naming its own shards; shard 0 has 3 keys
+        # the original, A: bare-name records; shard 0 has 3 keys
         self.a = root / "A"
-        write_legacy_primary(
+        write_hand_built_primary(
             self.a / "store.sqlite",
-            {i: str(self.a / n) for i, n in enumerate(NAMES)},
+            dict(enumerate(NAMES)),
             shard_keys=[(1, 0), (2, 1)],
         )
         _write_key_table(self.a / NAMES[0], [1, 2, 3])
         for n in NAMES[1:]:
             write_placeholder(self.a / n)
 
-        # the copy, B: same records (still naming A), but its own shard 0 has 2 keys
+        # the copy, B: same records, but its own shard 0 has 2 keys
         self.b = root / "B"
         shutil.copytree(self.a, self.b)
         _write_key_table(self.b / NAMES[0], [1, 2])

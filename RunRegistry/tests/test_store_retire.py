@@ -4,7 +4,8 @@
 
 1. a retirement: the files go, the sidecar stays as a completed tombstone, the references are
    reported, and nothing else under the temporary directory changes;
-2. the legacy shape: a primary naming another populated store's shards by absolute path;
+2. a primary naming another populated store's shards by absolute path is refused, and neither
+   store changes;
 3. every refusal, each leaving the whole temporary tree unchanged;
 4. interruption: every point, the reading there, and its completion by a second `store retire`
    (the log's interruption table, one test per row);
@@ -323,13 +324,15 @@ class TestRetirement(RetireTestCase):
 
 
 # =================================================================================================
-# 2. the legacy shape
+# 2. a primary naming another store's shards
 
 
-class TestLegacyShape(RetireTestCase):
-    def test_a_primary_naming_another_populated_stores_shards(self):
-        """The backup's shape: B's `shards` rows are absolute paths to A's shards, which exist.
-        Retiring B deletes B's files, and A's files and sidecar are byte-identical."""
+class TestAnotherStoresShards(RetireTestCase):
+    def test_a_primary_naming_another_populated_stores_shards_is_refused(self):
+        """The backup's shape, and the 2026-09-23 failure: B's `shards` rows are absolute paths to
+        A's shards, which exist. A record that is not a bare file name is refused, so retiring B
+        deletes nothing: every file and sidecar of both stores is byte-identical afterwards. B has
+        a registry sidecar, so the refusal is the record's and not the sidecar's."""
         a = self.a_full_store("A")
         b = self.a_full_store("B", sidecar=False)
         conn = sqlite3.connect(b)
@@ -347,19 +350,24 @@ class TestLegacyShape(RetireTestCase):
         )
         self.assertTrue(all(Path(p).is_file() for p in records.values()))
         stores.create_sidecar(b, "the backup's shape")
-        fingerprint_store(b, write=True, runs_root=self.root)
-        before_b = self.sidecar(b)
 
-        a_before = tree_state(a.parent)
-        with contextlib.redirect_stdout(io.StringIO()):  # the resolver's `!!` notice
-            result = self.retire(b)
-
-        self.assertEqual(tree_state(a.parent), a_before)
-        self.assertTrue(stores.read_sidecar(a).ok)
-        retired = self.assertCompletedTombstone(b, before_b)
-        self.assertEqual(retired["files"], [_repo_path(p) for p in self.store_files(b)])
-        for path in result["deleted"]:
-            self.assertEqual(Path(path).parent, b.parent)
+        for without_fingerprint in (False, True):
+            with self.subTest(without_fingerprint=without_fingerprint):
+                before = tree_state(self.top)
+                message = self.refused_retire(
+                    b,
+                    "Shard #0",
+                    "unusable record",
+                    "is not a bare file name",
+                    records[0],
+                    without_fingerprint=without_fingerprint,
+                )
+                self.assertEqual(tree_state(self.top), before)
+                for path in self.store_files(a) + self.store_files(b):
+                    self.assertTrue(path.is_file(), str(path))
+                self.assertTrue(stores.read_sidecar(a).ok)
+                self.assertTrue(stores.read_sidecar(b).ok)
+                self.assertNotIn("retired", self.sidecar(b))
 
 
 # =================================================================================================

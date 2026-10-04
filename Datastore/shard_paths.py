@@ -3,15 +3,10 @@ Where a ShardedPool's shard files live, given what its primary's ``shards`` tabl
 
 A ShardedPool datastore is one primary SQLite file plus *N* shard files beside it
 (``foo.sqlite``, ``foo-shard0000.sqlite``, ...). The primary records each shard in its ``shards``
-table, column ``filename``. Two forms of record exist:
-
-* **relative (current)**: the shard's bare file name, e.g. ``foo-shard0000.sqlite``, meaning "the
-  file of that name in the primary's directory". ``ShardedPool._write_shard_data`` writes this
-  form. A store recorded this way can be moved, or its primary renamed, and still opens against
-  its own shards;
-* **absolute (legacy)**: the absolute path, symlinks resolved, that the store was created at.
-  Every store created before this module existed holds this form, and so does any primary
-  re-pointed by ``docs/handover/quadsource_atol_sweep.py`` ``prepare()``.
+table, column ``filename``. One form of record exists: the shard's bare file name, e.g.
+``foo-shard0000.sqlite``, meaning "the file of that name in the primary's directory".
+``ShardedPool._write_shard_data`` writes this form. A store recorded this way can be moved, or
+its primary renamed, and still opens against its own shards.
 
 This module is the **one** definition of how a record is turned into a path. ``ShardedPool`` and
 ``tools/shard_key_audit.py`` both call it; do not copy it. Two definitions of where a shard lives
@@ -21,22 +16,21 @@ It is also the one definition of what a shard is **called** (``shard_file_name``
 names a new store's shards with it, and ``ShardedPool.copy_store`` / ``move_store`` name a
 destination's shards with it. Do not write the pattern a second time.
 
-**A legacy absolute record is read as a sibling by name, and the absolute path itself is never
-used** -- not even when the sibling is missing and the absolute path exists. That fallback *is*
-the failure this module exists to remove: a copied primary still names the original's shards,
-which do exist, and a pool that used them read and wrote the original (2026-09-23, 54 rows into
-the A3 baseline store). If the sibling is missing, the caller fails closed
-(``shard_file_problem`` below; ``ShardedPool._check_shard_files``).
+**A record that is not a bare file name is refused, an absolute path included.** An absolute
+record is never read, neither as a path nor as a sibling by its final component. A copied
+primary's absolute records name the original's shards, which do exist, and a pool that used them
+read and wrote the original (2026-09-23, 54 rows into the A3 baseline store). If a record is
+refused, or its file is missing, the caller fails closed (``resolve_shard_path`` and
+``shard_file_problem`` below; ``ShardedPool._check_shard_files``).
 
-Nothing here rewrites a record. Old rows are interpreted when read; opening a store does not
-change its ``shards`` table.
+Nothing here rewrites a record.
 
 This module imports only the standard library, and lives outside the ``Datastore.SQL`` package
 on purpose: importing it must not pull in ``ray`` or ``sqlalchemy``, so that the read-only audit
 tool can use it and stay a standalone script.
 """
 
-from pathlib import Path, PurePath
+from pathlib import Path
 from typing import Optional, Union
 
 # characters that make a record something other than a bare file name. Both separators are
@@ -82,11 +76,10 @@ def resolve_shard_path(primary: Union[str, Path], stored: str) -> Path:
 
     The result is always ``primary.parent / <bare name>``: a file in the primary's own directory.
 
-    * a bare file name (the current form) resolves to that name in the primary's directory;
-    * an absolute path (the legacy form) resolves to **its final component** in the primary's
-      directory. The absolute path itself is never returned, whether or not it exists;
-    * anything else -- empty, ``.``, ``..``, a relative path with a directory part, a name with a
-      path separator in it -- raises ``ValueError``.
+    * a bare file name resolves to that name in the primary's directory;
+    * anything else -- an absolute path, empty, ``.``, ``..``, a relative path with a directory
+      part, a name with a path separator in it -- raises ``ValueError``. An absolute path is
+      never read, not even by its final component.
 
     ``primary`` must be absolute (``ShardedPool`` passes ``Path(db_name).resolve()``), and the
     result is therefore absolute too. That is required, not cosmetic: the result is handed to Ray
@@ -105,21 +98,9 @@ def resolve_shard_path(primary: Union[str, Path], stored: str) -> Path:
             f"shard record {stored!r} is not a string (type {type(stored).__name__})"
         )
 
-    if PurePath(stored).is_absolute():
-        # legacy record: keep only the file name, taken from the raw string rather than from
-        # PurePath, which would normalise '/x/A/.' to name 'A' and '/x/A/' to 'A'. The creator
-        # wrote str(Path(...)) of a file, so its last component is always a bare name; '/x/..',
-        # '/x/.', '/x/' and '/' all fail the same check a bare record does.
-        name = _require_bare_name(stored.rsplit("/", 1)[-1], stored)
-    else:
-        name = _require_bare_name(stored, stored)
+    name = _require_bare_name(stored, stored)
 
     return primary.parent / name
-
-
-def is_legacy_record(stored: str) -> bool:
-    """True if ``stored`` is an absolute (pre-relative) shard record."""
-    return isinstance(stored, str) and PurePath(stored).is_absolute()
 
 
 def shard_file_problem(path: Path) -> Optional[str]:

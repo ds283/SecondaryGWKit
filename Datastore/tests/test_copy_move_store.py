@@ -2,8 +2,8 @@
 Copying and moving a closed store through ``ShardedPool.copy_store`` / ``move_store``.
 `prompts/datastore-portability` prompt 02 §2 P6 and §3 tests 2-7.
 
-Since prompt 01 a store's ``shards`` table holds bare file names (or legacy absolute paths, read by
-their file name), so moving a store's directory or renaming its primary alone already works.
+Since prompt 01 a store's ``shards`` table holds bare file names, so moving a store's directory or
+renaming its primary alone already works.
 Renaming its shards as well needs the new names written into the table. That is what these two
 static methods do: they copy or rename the primary and its shards to a new stem and rewrite the
 destination's ``shards`` rows, in an order chosen so that a process that dies after any step leaves
@@ -34,7 +34,7 @@ from Datastore.tests.shard_store_fixtures import (
     sha256,
     stored_records,
     tree_state,
-    write_legacy_primary,
+    write_hand_built_primary,
     write_new_store,
     write_placeholder,
 )
@@ -64,32 +64,6 @@ class _StoreCase(unittest.TestCase):
         primary = self.root / directory / f"{stem}.sqlite"
         write_new_store(primary, shards=N_SHARDS)
         return primary
-
-    def legacy_source(self, directory: str = "B", stem: str = "store") -> Path:
-        """A primary in ``directory`` whose records are absolute paths into ``X``, where another
-        store of the same stem **exists and is populated**, with this store's own shards beside
-        its primary. This is prompt 01 §4.1's case and the hand-made source of prompt 02 §4.
-        """
-        x = self.root / "X"
-        names = [shard_file_name(f"{stem}.sqlite", i) for i in range(N_SHARDS)]
-        write_legacy_primary(
-            x / f"{stem}.sqlite", {i: str(x / n) for i, n in enumerate(names)}
-        )
-        for n in names:
-            write_placeholder(x / n)
-
-        primary = self.root / directory / f"{stem}.sqlite"
-        write_legacy_primary(primary, {i: str(x / n) for i, n in enumerate(names)})
-        for n in names:
-            write_placeholder(primary.parent / n)
-        return primary
-
-    def source(self, kind: str, directory: str = "B") -> Path:
-        return (
-            self.new_source(directory)
-            if kind == "new"
-            else self.legacy_source(directory)
-        )
 
     # --- expectations
 
@@ -201,42 +175,13 @@ class TestCopy(_StoreCase):
         self.assertEqual(dump(dst), dump(src))
 
 
-class TestCopyOfALegacySource(_StoreCase):
-    """Test 3: absolute records naming a populated directory X, files in B, copied to C under a
-    new stem. C reads C, its rows are bare, and X and B are unchanged. Prompt 01 §4.1's case.
-    """
-
-    def test_legacy_source_copied_to_a_new_stem_reads_its_own_files(self):
-        src = self.legacy_source("B")
-        x = self.root / "X"
-        x_state, b_state = tree_state(x), tree_state(src.parent)
-        contents = self.contents(src)
-        # the source's records name X, where files of those names exist
-        for stored in stored_records(src).values():
-            self.assertTrue(stored.startswith(str(x)))
-            self.assertTrue(Path(stored).exists())
-        dst = self.root / "C" / "copy.sqlite"
-
-        result = ShardedPool.copy_store(src, dst)
-
-        self.assertEqual(stored_records(dst), self.bare_names(dst))
-        self.assertEqual(result, self.shard_paths(dst))
-        self.assertOpensAgainst(dst, self.shard_paths(dst), contents)
-        for path in result.values():
-            self.assertIn(str(src.parent), marker(path))  # B's shards, copied; not X's
-            self.assertNotIn(str(x), marker(path))
-        self.assertEqual(tree_state(x), x_state)
-        self.assertEqual(tree_state(src.parent), b_state)
-
-
 class TestMove(_StoreCase):
-    """Test 4: move in each of the three layouts, for a new-style and a legacy source. The source
-    names are gone and the destination reads its own files."""
+    """Test 4: move in each of the three layouts. The source names are gone and the destination
+    reads its own files."""
 
-    def _move(self, kind: str, layout: str):
-        src = self.source(kind, "SRC")
+    def _move(self, layout: str):
+        src = self.new_source("SRC")
         contents = self.contents(src)
-        x_state = tree_state(self.root / "X") if kind == "legacy" else None
         directory, stem = LAYOUTS[layout]
         dst = self.root / directory / f"{stem}.sqlite"
 
@@ -251,25 +196,15 @@ class TestMove(_StoreCase):
             self.assertFalse(os.path.lexists(src))
             for path in self.shard_paths(src).values():
                 self.assertFalse(os.path.lexists(path))
-        if kind == "legacy":
-            # the populated directory the legacy records name is untouched
-            self.assertEqual(tree_state(self.root / "X"), x_state)
 
     def test_same_directory_new_stem(self):
-        self._move("new", "same directory, new stem")
+        self._move("same directory, new stem")
 
     def test_new_directory_same_stem(self):
-        self._move("new", "new directory, same stem")
+        self._move("new directory, same stem")
 
     def test_new_directory_new_stem(self):
-        self._move("new", "new directory, new stem")
-
-    def test_legacy_source_in_each_layout(self):
-        for layout in LAYOUTS:
-            with self.subTest(layout=layout):
-                self.tearDown()
-                self.setUp()
-                self._move("legacy", layout)
+        self._move("new directory, new stem")
 
 
 class TestRefusals(_StoreCase):
@@ -311,7 +246,7 @@ class TestRefusals(_StoreCase):
 
     def test_source_shard_record_unusable(self):
         src = self.root / "B" / "store.sqlite"
-        write_legacy_primary(src, {0: "../outside.sqlite"})
+        write_hand_built_primary(src, {0: "../outside.sqlite"})
         write_placeholder(self.root / "outside.sqlite")
         for mode in self.both():
             self.assertRefusal(
@@ -344,12 +279,9 @@ class TestRefusals(_StoreCase):
             self.assertRefusal(mode, src, dst, shard1, "#1", "not a regular file")
 
         shared = self.root / "S" / "store.sqlite"
-        write_legacy_primary(
+        write_hand_built_primary(
             shared,
-            {
-                0: str(self.root / "P" / "store-shard0000.sqlite"),
-                1: str(self.root / "Q" / "store-shard0000.sqlite"),
-            },
+            {0: "store-shard0000.sqlite", 1: "store-shard0000.sqlite"},
         )
         write_placeholder(shared.parent / "store-shard0000.sqlite")
         for mode in self.both():
@@ -445,9 +377,9 @@ class TestRefusals(_StoreCase):
     def test_source_with_no_shards_or_no_shard_zero(self):
         dst = self.root / "C" / "copy.sqlite"
         empty = self.root / "E" / "store.sqlite"
-        write_legacy_primary(empty, {})
+        write_hand_built_primary(empty, {})
         no_zero = self.root / "Z" / "store.sqlite"
-        write_legacy_primary(no_zero, {1: "store-shard0001.sqlite"})
+        write_hand_built_primary(no_zero, {1: "store-shard0001.sqlite"})
         write_placeholder(no_zero.parent / "store-shard0001.sqlite")
         for mode in self.both():
             self.assertRefusal(mode, empty, dst, empty, "records no shards")
@@ -476,13 +408,12 @@ class TestInterruption(_StoreCase):
     """Test 6: for every step of each operation, the step after it fails, and the state left
     behind is what the log's interruption table says. Every store a later opener could find
     either opens against the right files, is refused by the read-and-check, or is a destination
-    with shards and no primary (the constructor's guard). Each layout, for a new-style source
-    and for a legacy source whose records name a populated other directory."""
+    with shards and no primary (the constructor's guard). Each layout."""
 
-    def _run(self, mode, kind, layout, fail):
+    def _run(self, mode, layout, fail):
         """Build a source, run ``mode`` with the failure ``fail`` injected, and return
         (src, dst, contents, error)."""
-        src = self.source(kind, "SRC")
+        src = self.new_source("SRC")
         contents = self.contents(src)
         directory, stem = LAYOUTS[layout]
         dst = self.root / directory / f"{stem}.sqlite"
@@ -491,11 +422,6 @@ class TestInterruption(_StoreCase):
             with self.assertRaises(RuntimeError) as ctx:
                 operation(src, dst)
         return src, dst, contents, str(ctx.exception)
-
-    def _cases(self):
-        for kind in ("new", "legacy"):
-            for layout in LAYOUTS:
-                yield kind, layout
 
     def _fresh(self):
         self.tearDown()
@@ -548,11 +474,11 @@ class TestInterruption(_StoreCase):
                 "guard",
             ),
         ]
-        for kind, layout in self._cases():
+        for layout in LAYOUTS:
             for row, fail, expected in points:
-                with self.subTest(kind=kind, layout=layout, row=row):
+                with self.subTest(layout=layout, row=row):
                     self._fresh()
-                    src, dst, contents, error = self._run("copy", kind, layout, fail)
+                    src, dst, contents, error = self._run("copy", layout, fail)
 
                     # the source is never written: it opens against its own files
                     self.assertOpensAgainst(src, self.shard_paths(src), contents)
@@ -569,10 +495,10 @@ class TestInterruption(_StoreCase):
         """C5': the rewrite fails part-way (a trigger aborts the second UPDATE). The temporary
         primary keeps every one of the source's rows, and there is still no destination
         primary."""
-        for kind, layout in self._cases():
-            with self.subTest(kind=kind, layout=layout):
+        for layout in LAYOUTS:
+            with self.subTest(layout=layout):
                 self._fresh()
-                src = self.source(kind, "SRC")
+                src = self.new_source("SRC")
                 _abort_second_update(src)
                 src_rows = stored_records(src)
                 directory, stem = LAYOUTS[layout]
@@ -623,11 +549,11 @@ class TestInterruption(_StoreCase):
                 "old rows",
             ),
         ]
-        for kind, layout in self._cases():
+        for layout in LAYOUTS:
             for row, fail, at_src, at_dst in points:
-                with self.subTest(kind=kind, layout=layout, row=row):
+                with self.subTest(layout=layout, row=row):
                     self._fresh()
-                    src, dst, contents, error = self._run("move", kind, layout, fail)
+                    src, dst, contents, error = self._run("move", layout, fail)
 
                     if at_src == "opens":
                         self.assertOpensAgainst(src, self.shard_paths(src), contents)
@@ -653,10 +579,10 @@ class TestInterruption(_StoreCase):
     def test_move_rewrite_is_one_transaction(self):
         """M4': the rewrite fails part-way. The destination primary keeps every one of the
         source's rows, and so is in state M4."""
-        for kind, layout in self._cases():
-            with self.subTest(kind=kind, layout=layout):
+        for layout in LAYOUTS:
+            with self.subTest(layout=layout):
                 self._fresh()
-                src = self.source(kind, "SRC")
+                src = self.new_source("SRC")
                 contents = self.contents(src)
                 _abort_second_update(src)
                 src_rows = stored_records(src)

@@ -13,9 +13,9 @@ Until prompt 01, ``_write_shard_data`` recorded every shard by **absolute** path
   P0 on the unfixed tree). The pool opened, and everything in it looked uncomputed.
 
 Now shards are recorded by bare file name, every record is read through the one resolver in
-``Datastore/shard_paths.py``, a legacy absolute record is read as the sibling of that name and
-**never** as the absolute path, and ``_check_shard_files`` refuses to go on if any resolved shard
-is missing, before any actor exists.
+``Datastore/shard_paths.py``, which refuses a record that is not a bare name (an absolute record
+is pinned as refused by ``test_absolute_shard_record_refused``), and ``_check_shard_files``
+refuses to go on if any resolved shard is missing, before any actor exists.
 
 Everything here runs on an instance made with ``object.__new__(ShardedPool)`` in a temporary
 directory, through the real ``_create_engine`` / ``_write_shard_data`` / ``_read_shard_data`` /
@@ -37,7 +37,7 @@ from Datastore.tests.shard_store_fixtures import (
     read_pool,
     sha256,
     stored_records,
-    write_legacy_primary,
+    write_hand_built_primary,
     write_new_store,
     write_placeholder,
 )
@@ -54,19 +54,6 @@ class _TempDirCase(unittest.TestCase):
 
     def tearDown(self):
         self._tmp.cleanup()
-
-
-def _legacy_store(directory: Path, records_dir: Path, stem: str = "store") -> Path:
-    """A primary in ``directory`` whose records are absolute paths into ``records_dir``, as the
-    old code wrote them, with its shard placeholders in ``directory``."""
-    primary = directory / f"{stem}.sqlite"
-    names = [f"{stem}-shard{i:04d}.sqlite" for i in range(3)]
-    write_legacy_primary(
-        primary, {i: str(records_dir / n) for i, n in enumerate(names)}
-    )
-    for n in names:
-        write_placeholder(directory / n)
-    return primary
 
 
 class TestRoundTrip(_TempDirCase):
@@ -112,43 +99,6 @@ class TestRoundTrip(_TempDirCase):
         pool._check_shard_files()
 
 
-class TestLegacyRecords(_TempDirCase):
-    """Test 3: absolute records pointing into directory A, with the store actually in B, resolve
-    to B. The table is built by hand, to stand in for rows the old code wrote."""
-
-    def test_legacy_absolute_records_resolve_to_the_primarys_directory(self):
-        a = self.root / "A"  # never created: the records name a directory that is gone
-        b = self.root / "B"
-        primary = _legacy_store(b, records_dir=a)
-
-        pool = read_pool(primary)
-
-        self.assertEqual(
-            pool._shard_db_files, {i: b / n for i, n in enumerate(SHARD_NAMES)}
-        )
-        pool._check_shard_files()
-
-        # one line per store, not per shard, naming where the records pointed
-        notices = [l for l in pool.read_stdout.splitlines() if "legacy absolute" in l]
-        self.assertEqual(len(notices), 1, pool.read_stdout)
-        self.assertTrue(notices[0].startswith("!!"))
-        self.assertIn(str(a), notices[0])
-        self.assertIn(str(b), notices[0])
-
-    def test_legacy_records_that_name_their_own_directory_are_silent(self):
-        """The two real stores hold absolute records naming their own shards; reading them is
-        unchanged and prints nothing."""
-        b = self.root / "B"
-        primary = _legacy_store(b, records_dir=b)
-
-        pool = read_pool(primary)
-
-        self.assertEqual(
-            pool._shard_db_files, {i: b / n for i, n in enumerate(SHARD_NAMES)}
-        )
-        self.assertNotIn("legacy absolute", pool.read_stdout)
-
-
 class TestCopiedStore(_TempDirCase):
     """Test 4: with the original A still present and populated, the store copied to B reads B's
     shards. This is the failure that put 54 rows into the A3 baseline store, and the one that makes
@@ -156,7 +106,8 @@ class TestCopiedStore(_TempDirCase):
 
     def _original(self) -> Path:
         a = self.root / "A"
-        return _legacy_store(a, records_dir=a)
+        write_new_store(a / "store.sqlite")
+        return a / "store.sqlite"
 
     def test_copied_directory_reads_its_own_shards_not_the_originals(self):
         a_primary = self._original()
@@ -168,10 +119,10 @@ class TestCopiedStore(_TempDirCase):
         for n in SHARD_NAMES:
             write_placeholder(b / n)  # give B's copies B's own marker
 
-        # B's primary still names A's shards, which exist
-        for stored in stored_records(b / "store.sqlite").values():
-            self.assertTrue(stored.startswith(str(a)))
-            self.assertTrue(Path(stored).exists())
+        # B's primary holds bare names, so it names no directory at all
+        self.assertEqual(
+            stored_records(b / "store.sqlite"), dict(enumerate(SHARD_NAMES))
+        )
 
         pool = read_pool(b / "store.sqlite")
 
@@ -228,30 +179,11 @@ class TestFailClosed(_TempDirCase):
         self.assertNotIn("#2", message)
         self.assertFalse((a / SHARD_NAMES[1]).exists())
 
-    def test_missing_sibling_is_refused_even_when_the_absolute_record_exists(self):
-        """No fallback: B's shard 2 is missing, A's exists at the recorded absolute path, and the
-        pool must refuse rather than use A's."""
+    def test_moved_store_with_no_shards_is_refused(self):
+        """The P0 case after the fix: a store whose primary is moved without its shards."""
         a = self.root / "A"
-        _legacy_store(a, records_dir=a)
-        b = self.root / "B"
-        shutil.copytree(a, b)
-        (b / SHARD_NAMES[2]).unlink()
-        self.assertTrue((a / SHARD_NAMES[2]).exists())
-
-        pool = read_pool(b / "store.sqlite")
-        self.assertEqual(pool._shard_db_files[2], b / SHARD_NAMES[2])
-        self.assertRefusal(
-            pool,
-            "#2",
-            str(a / SHARD_NAMES[2]),
-            str(b / SHARD_NAMES[2]),
-            "does not exist",
-        )
-
-    def test_moved_store_with_legacy_records_and_no_shards_is_refused(self):
-        """The P0 case after the fix: a legacy store moved without its shards."""
-        a = self.root / "A"
-        primary = _legacy_store(a, records_dir=a)
+        primary = a / "store.sqlite"
+        write_new_store(primary)
         b = self.root / "B"
         b.mkdir()
         shutil.move(str(primary), str(b / "store.sqlite"))
@@ -273,17 +205,10 @@ class TestFailClosed(_TempDirCase):
         self.assertRefusal(pool, "#0", "symbolic link")
 
     def test_two_records_resolving_to_one_file_are_refused(self):
-        """Reading legacy records by name can collapse two distinct absolute paths onto one
-        sibling; two actors on one file must be refused."""
+        """Two serials recording one file name; two actors on one file must be refused."""
         b = self.root / "B"
         primary = b / "store.sqlite"
-        write_legacy_primary(
-            primary,
-            {
-                0: str(self.root / "X" / SHARD_NAMES[0]),
-                1: str(self.root / "Y" / SHARD_NAMES[0]),
-            },
-        )
+        write_hand_built_primary(primary, {0: SHARD_NAMES[0], 1: SHARD_NAMES[0]})
         write_placeholder(b / SHARD_NAMES[0])
 
         pool = read_pool(primary)
@@ -292,7 +217,7 @@ class TestFailClosed(_TempDirCase):
     def test_record_that_is_not_a_bare_name_is_refused_on_read(self):
         b = self.root / "B"
         primary = b / "store.sqlite"
-        write_legacy_primary(primary, {0: "../outside.sqlite"})
+        write_hand_built_primary(primary, {0: "../outside.sqlite"})
         write_placeholder(self.root / "outside.sqlite")
 
         with self.assertRaises(RuntimeError) as ctx:
@@ -302,20 +227,7 @@ class TestFailClosed(_TempDirCase):
 
 
 class TestNoSideEffect(_TempDirCase):
-    """Test 6: reading a store does not change its primary. Legacy rows are interpreted, not
-    rewritten -- the retained A3 backup must stay byte-identical when read."""
-
-    def test_reading_a_relocated_legacy_store_leaves_the_primary_unchanged(self):
-        a = self.root / "A"
-        b = self.root / "B"
-        primary = _legacy_store(b, records_dir=a)
-        before = sha256(primary)
-        records_before = stored_records(primary)
-
-        read_pool(primary)
-
-        self.assertEqual(sha256(primary), before)
-        self.assertEqual(stored_records(primary), records_before)
+    """Test 6: reading a store does not change its primary."""
 
     def test_reading_a_new_store_leaves_the_primary_unchanged(self):
         a = self.root / "A"
