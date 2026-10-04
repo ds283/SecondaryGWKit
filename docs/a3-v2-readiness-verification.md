@@ -789,6 +789,20 @@ Each item points to where this prompt exercised it.
 - `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` — none: A3 v2 passes no
   `--drop`.
 
+**Superseded in part, 2026-10-04, after prompt 07a (`3b96ba1`).** Two lines above were true for
+the tree at `a6c8f39` and are no longer:
+- The readers' item's last sentence, "`extract_tensor_source_data.py` must be fixed first". It is
+  fixed: the reader pairs its k in stored order and exited 0 three times on the resumed store, all
+  six pairs read and the store byte-identical (§2.3.4). For A3 v2 the item now reads: every reader,
+  `extract_tensor_source_data.py` included, as the rest of that item says.
+- `[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]` in the list of open
+  issues. It is closed (board §4), and no longer blocks A3 v2's read-back.
+
+07a opened one issue, which the list should be read as including:
+- `[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]` — none on a complete
+  store: the `QuadSourceIntegral` extractor asks for pairs in stored order. A row genuinely missing
+  from A3 v2 would surface there as an error that names no pair.
+
 ### 2.5 What was expected not to happen
 
 - **An unvalidated `BackgroundModel`.** Did not happen. After every launch, each shard's

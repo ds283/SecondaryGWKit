@@ -10,7 +10,7 @@ store, read-only, the reader exited 0 each time and read all six pairs, and the 
 byte-identical (E3). None of the prompt's §5 stop conditions fired. Closes
 `[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]`; opens
 `[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]` (§6 of the prompt, confirmed
-by reading). Index 108 → 108. The commit is this prompt's, parent `e923b3c`.
+by reading). Index 108 → 108. The commit is `3b96ba1`, parent `e923b3c`.
 
 ## What shipped
 

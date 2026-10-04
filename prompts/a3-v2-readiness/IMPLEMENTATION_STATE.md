@@ -3,7 +3,8 @@
 **Last updated:** 2026-10-04 · **Status: 10 of 10 prompts landed. The campaign's work is done; it
 is closed by the user after the orchestrator's review of 07a.** 07 landed (`a6c8f39`) and was
 reviewed (2026-10-04) with its acceptance 4 not met; at the user's request **07a** (written
-2026-10-04) fixed the tensor-source reader, and **has landed (2026-10-04)**: the reader pairs its k
+2026-10-04) fixed the tensor-source reader, and **has landed (2026-10-04, `3b96ba1`) and been
+reviewed (2026-10-04)**: the reader pairs its k
 in the stored order, refuses a `QuadSource` miss naming its pair, and exited 0 three times on 07's
 resumed store, reading all six pairs, the store byte-identical. It closed
 `[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]` and opened one issue
@@ -82,7 +83,7 @@ as recommended:**
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
 | 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | `a6c8f39` | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
-| 07a | [Pair the tensor-source reader in stored order](07a-pair-the-tensor-source-reader-in-stored-order.md) | **E1**–**E3** | Sonnet (run by Opus 5.5) | ✍️ yes, 2026-10-04; after 07, at the user's request | ✅ 2026-10-04 | this prompt's commit (parent `e923b3c`) | [`logs/07a-…`](logs/07a-pair-the-tensor-source-reader-in-stored-order.md) |
+| 07a | [Pair the tensor-source reader in stored order](07a-pair-the-tensor-source-reader-in-stored-order.md) | **E1**–**E3** | Sonnet (run by Opus 5.5) | ✍️ yes, 2026-10-04; after 07, at the user's request | ✅ 2026-10-04 | `3b96ba1` | [`logs/07a-…`](logs/07a-pair-the-tensor-source-reader-in-stored-order.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -96,7 +97,9 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used) and
 [`orchestrator/prompt-06a.md`](orchestrator/prompt-06a.md) (2026-10-03, used) and
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-03, written early at the user's
-request; 06a's review completed its "Carried from the review of 06a" on 2026-10-04; used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+request; 06a's review completed its "Carried from the review of 06a" on 2026-10-04; used). 07a has
+no note: the user ran its prompt directly, without an orchestrator, and it was reviewed afterwards
+against its own §3–§7 in `prompt-07.md` §3's form (below). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -1194,6 +1197,76 @@ Not remnants:
 - `[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]` is a real if small defect of a
   `datastore-integrity` tool, correctly not fixed here.
 
+**Orchestrator review of prompt 07a (2026-10-04).** Run against `3b96ba1`. **There was no dispatch
+and no orchestrator note**: the user ran the prompt directly in a session of its own, and asked for
+the review after it landed. So there was no pre-dispatch snapshot of `var/` and no independent
+baseline before the change. The review checked the prompt's §3–§7 in `orchestrator/prompt-07.md`
+§3's form, and used E3's own committed snapshots as the before-image. **Every check passed**;
+acceptance 1–5 are met, and no §5 stop condition fired.
+
+At the review (11:00–11:25), the tree was clean, `RAY_ADDRESS` unset, no process of this checkout's
+venv alive, and the registry held 16 runs, 14 finished and 2 `unknown`, none `running`.
+
+The checks:
+- **Scope.** 20 files, all on §7's list. Modified: `extract_common.py`,
+  `extract_tensor_source_data.py`, the verification record (87 lines added, none deleted), the board
+  and `docs/OPEN_ISSUES.md`. The diff over `main.py`, `ComputeTargets/*.py`, `Datastore/`,
+  `CosmologyConcepts/`, `RunRegistry/`, `config/`, the other five `extract_*.py`, README and
+  `orchestrator/` is empty.
+- **E1, read.** `quad_source_pairs` orders through `wavenumber_exit_time_array`, which sorts by `k`
+  and deduplicates by `store_id` (`CosmologyConcepts/wavenumber.py:882`), the class `main.py:1059`
+  pairs at line 1938. The `sample` draw is unchanged, and `import itertools` is gone from the reader
+  because nothing else used it.
+- **E2, read.** `require_quad_source` precedes the first read of `source.values`; its message names
+  both `k_inv_Mpc`, both `store_id`s and "no stored QuadSource".
+- **Tests.** `test_tensor_source_pairs` (12) and the four modules of "Read first" item 8 (99): 111
+  OK, none modified. `black --check` clean on the three Python files.
+- **Deliberate breakage.** The five diffs, extracted from the log and replayed with `git apply` at
+  `3b96ba1`, each fail exactly the tests the log names, with the log's counts: (i) 60 in 5 tests,
+  (ii) 61 in 3, (iii) 2, (iv) 1, (v) 2. Each restored; the tree clean afterwards.
+- **E3 and the store.** All five files of `a3-v2-readiness-07-resumed` equal E3's `final.txt` by
+  SHA-256, mtime and size; no `-journal`, `-wal` or `-shm`. The sidecar's mtime is still 07's
+  fingerprint (2026-10-04 02:09:15), so no `--write` touched it. The six csvs of runs 1, 2 and 3 are
+  identical, and byte-equal to 07's sorted-draw wrapper's
+  (`var/a3-v2-readiness-07/extract/extract_tensor_source_data-sorted-sample/`).
+- **`var/`.** No file under `var/` newer than `e923b3c` outside `var/a3-v2-readiness-07a/`.
+- **Processes.** E3's after-listing covers every `ray::` process, not only command lines naming the
+  venv (a `ray::` worker's retitled command line does not show it). All of them were ChamPBH's:
+  children of `raylet` 62574, with the pids and start times recorded at 07's dispatch.
+- **The opened issue.** Confirmed by reading `extract_QuadSourceIntegral_data.py`: the
+  `QuadSource` lookup is labels-only with `z_sample=None` (line 1237); `plot_QuadSourceIntegrand`
+  checks `GkPolicy` and `Gk` only, then reads `source.z_sample.max.z` (line 365); its own
+  `plot_tensor_source` reads `values` unchecked. Its pairs come from the sorted array (line 1136),
+  so only a row genuinely missing reaches either. The board entry and the index row agree.
+- **The records.** The §1 row, E1–E3, the issue moved to §4 with its closing note, the new §3.2
+  entry, §5.18, and the header's required wording, not saying closed. The index: 108 rows by
+  `grep` before and after, header 108, dated 2026-10-04.
+- **Suites.** Run serially by the orchestrator in the checkout at `3b96ba1`, 11:14–11:23 at a load of
+  18–37: 32, 698, 39, 598, 148 (1 skipped), 281, **no failure** (§5.19). The agent's one
+  ComputeTargets failure (§5.18) was `test_wall_time_per_object`, which also failed on the parent's
+  export; it passes here.
+- **The deviations.** Correctly classified. Deviation 4 (a second 07a row on the board) was the
+  agent's own drift, caught before staging.
+
+Remnants, fixed in the follow-up commit:
+1. "This prompt's commit (parent `e923b3c`)" stood where the SHA belongs: the board's §1 row, its §4
+   closing note, and log 07a's header. All now say `3b96ba1`. Log 07a's deviation 5, which records
+   why the agent could not, is left as written.
+2. README §2's status cell for 07a still read "written" (log 07a, observation 2). It now gives the
+   landing date, the SHA and the review.
+3. **The A3 v2 checklist was stale.** Verification §2.4 still said `extract_tensor_source_data.py`
+   "must be fixed first", listed the closed issue as blocking A3 v2, and did not name
+   `[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]`. 07a's §6 forbade the
+   agent to edit it. A dated paragraph at the end of §2.4 now supersedes those two lines and names
+   the new issue; the original text stands, as `CLAUDE.md`'s additive rule requires.
+4. The orchestrator notes list now says why 07a has no note.
+
+Not remnants:
+- `docs/a3-v2-readiness/e3/e3_run.sh` and `snapshot.sh` hard-code this checkout's absolute path.
+  They are records of what ran, not tools for reuse.
+- Log 07a's observations 3 and 4 (an export without `git init` fails four tests; the reader does
+  not print its draw) are notes, not defects.
+
 ---
 
 ## 2. Items
@@ -1438,7 +1511,7 @@ with its closing note; log 03). Both index rows are deleted.
   - **Assigned (2026-10-04):** to prompt 07a of this campaign, at the user's request after 07's
     review: the reader pairs through `wavenumber_exit_time_array` (E1), refuses a miss naming its pair
     (E2), and is re-run on 07's resumed store (E3).
-  - **Closed 2026-10-04 by prompt 07a** (this prompt's commit, parent `e923b3c`). E1:
+  - **Closed 2026-10-04 by prompt 07a** (`3b96ba1`). E1:
     `extract_common.quad_source_pairs(k_exits)` pairs any iterable of exit times through
     `wavenumber_exit_time_array`, the class `main.py`'s `--quad-source-queue` pairs come from, so the
     reader's order and the build's are one order by construction; `run_pipeline` builds
@@ -1925,3 +1998,22 @@ of 17, failed in the checkout (0.103 s) and on the export of `e923b3c` (0.080 s)
 flake, not this change.
 
 Index: **108 open** (108 − 1 closed + 1 opened), counted.
+
+### 5.19 After prompt 07a, re-measured by the orchestrator (2026-10-04)
+
+Measured 11:14–11:23 on 2026-10-04, serially, in the checkout at `3b96ba1`, clean, with README §7's
+command, each suite's output written to a file and its verdict read from it, at a 1-minute load
+average of 18–37 on 10 CPUs.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 698 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 281 OK |
+
+The counts agree with §5.18. No test failed; §5.18's `test_wall_time_per_object` failure passes here.
+
+Index: **108 open** at `3b96ba1`.
