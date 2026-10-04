@@ -7,7 +7,7 @@ a database error from any of their statements reaches the caller as itself. Seve
 deleted, two kept (one moved unchanged, one rewritten), twelve added. Neither of the prompt's §5
 stop conditions fired. Closes nothing; narrows
 `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`. Opens nothing. Index 107 → 107.
-The commit is this commit.
+The commit is `9d3a42c`.
 
 ## What shipped
 
@@ -208,8 +208,8 @@ The commit is this commit.
 
 ## The deliberate-breakage record
 
-Each diff is taken against the staged tree (the tree this commit holds), so `git apply` replays it
-from a clean tree at this commit, in `bash`. Each was `git apply --check`ed (forward from clean, and
+Each diff is taken against the staged tree (the tree `9d3a42c` holds), so `git apply` replays it
+from a clean tree at `9d3a42c`, in `bash`. Each was `git apply --check`ed (forward from clean, and
 `-R` while applied), applied, run, and reversed with `git apply -R`; the tree was clean against
 the index afterwards. None is committed.
 
@@ -291,8 +291,9 @@ still guards the read: `Datastore.tests.test_gksource_parent_set.TestTheWKBValue
 errors, with five more tests of the same read in `TestTheValueReadsHandBackTheirParent`
 (`test_each_wkb_value_carries_its_integration`, `test_the_serial_only_form_still_refuses_a_second_parent`
 (two sub-tests), `test_the_serial_only_forms_return_the_pairs_and_no_values`,
-`test_the_two_forms_agree`): `Ran 60`, `FAILED (errors=6)`. The N3 tests pass here, as they should,
-since the error is raised before any statement runs.
+`test_the_two_forms_agree`): `Ran 60`, `FAILED (errors=6)`. The N3 tests pass here, as they should:
+the harness raises at `execute` whatever the statement, and the broken statement still names
+`numeric_serial`.
 
 ```diff
 diff --git a/Datastore/SQL/ObjectFactories/GkWKBIntegration.py b/Datastore/SQL/ObjectFactories/GkWKBIntegration.py

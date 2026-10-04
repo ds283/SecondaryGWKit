@@ -50,7 +50,7 @@ recommended:**
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
-| 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | this commit | [log](logs/02-delete-the-remaining-factory-refusals.md) |
+| 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ⬜ | — | — |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
@@ -64,7 +64,7 @@ recommended:**
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
-not yet used).
+used for 02).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the
@@ -178,6 +178,117 @@ Neither opens an issue.
 - **The review's findings above.**
 - **`real_store_fixtures.py`.** Its old-store machinery is still used by the reader and inventory
   tests, and stays until 05.
+
+**Orchestrator review of prompt 02 (2026-10-04).** Dispatched from `bd5ad19` to one Sonnet
+subagent; reviewed against its commit `9d3a42c`, with nothing landed after it. **Every check of the
+note's §3 passed**; acceptance 1–4 are met, and no §5 stop condition fired.
+
+*At dispatch.* The note's gate held: `cc4c1e9` and `bd5ad19`, after `c647ee2`, touch only this board
+and the note. The tree was clean, the only worktree was this checkout, and the registry held 16
+runs: 14 finished, 2 `unknown`, none `running`. The only Ray processes were ChamPBH's, from its own
+venv. The baselines, serially at `bd5ad19`, load 14–76: AdaptiveLevin 32, ComputeTargets 693 (1
+failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`), CosmologyModels 39, Datastore 605
+(248 s), LiouvilleGreen 148 (1 skipped), RunRegistry 281. The index held 107.
+
+*The agent.* It ran to its commit in one turn: no stop, no resume. It ran its suites in the
+foreground, as the note asked after 01.
+
+The checks:
+1. **Scope.** 13 files, all on the note's §2 list. The diff over 01's factories, `QuadSource.py`,
+   `ShardedPool.py`, `Datastore/store_*.py`, `real_store_fixtures.py`, the `extract_*.py` scripts,
+   `main.py`, `config/` and `var/` is empty.
+2. **E1.**
+   - **Grep.** `grep -nE 'predate|older store|written before' Datastore/SQL/ObjectFactories/`
+     prints nothing. `_refuse_a_store_that_predates_*` and `_TRANSFER_FUNCTION_COLUMNS` appear
+     nowhere in the tree. `except SQLAlchemyError` in the four files survives only in the three
+     prunes, now at `TkWKBIntegration.py:946`, `GkWKBIntegration.py:947` and `GkSource.py:826`.
+   - **`ast`.** Against the pre-image, the changed functions are exactly the note's list: the two
+     WKB `build`s, `_build_impl_model`s and `read_batch`es; `GkSource.build` and
+     `GkSourceValue._build_impl_model`; `QuadSourceIntegral.build` and `read_batch`; and the three
+     removed helpers. **Each changed function dumps identically to its pre-image once its
+     `except SQLAlchemyError` handlers are removed and a `try` left with none is unwrapped.** So
+     no other line moved, and the four `numeric_serial` selects keep their column lists; only their
+     comments differ. `validate_on_startup` dumps identically in the three files that have one. At
+     module level only the docstrings changed, plus `QuadSourceIntegral`'s import and its
+     `_TRANSFER_FUNCTION_COLUMNS`.
+3. **E3.** With `ast`, over the six test modules:
+   - 19 method names go: the seventeen of the note's §0, plus the two kept tests under their old
+     class names.
+   - 14 appear: the two kept tests under new classes, and N3's twelve.
+   - The moved `test_a_current_table_is_still_read` dumps identically to its pre-image.
+   - No import is left unused that was not unused at `bd5ad19`.
+4. **E2.** Under `*/tests/`, only the six modules changed.
+5. **E4, read.**
+   - Four new classes in `test_database_errors_reach_the_caller.py`: `TestTheWKBIntegrations`,
+     `TestTheWKBValueReads`, `TestGkSource` and `TestQuadSourceIntegral`. Each goes through
+     `_StatementRaisingConnection`, so the statement is the one the factory compiled. Each names its
+     deleted handler's columns in `columns=`, asserts identity through `assert_passes_through`, and
+     counts `execute`. `TestGkSource.test_the_read_of_the_parent_set_reaches_the_caller` uses
+     `succeed=2` to reach the `GkSource_parents` read, the deleted handler's second match.
+   - 01's harness and nine tests dump identically.
+   - The rewritten kept test, `test_quadsource_policy_key.TestAnotherDatabaseErrorPassesThrough`,
+     uses the current table and the harness. It has no `"SELECT 1"` and no `mock.patch`.
+   - Keeping both it and N3's `QuadSourceIntegral` test is accepted (the log's deviation 5).
+6. **The kept tests, run.** Both pass (23 tests with the harness module, OK). With (iii) applied,
+   the moved test errors.
+7. **E4, the pins.** The three diffs were extracted from the log and replayed with `git apply` in
+   `bash`. Each failed exactly as the log says:
+   - (i): `TestGkSource`'s three `GkSource.build` tests error.
+   - (ii): `test_quad_source_integral_build` fails, and so does the rewritten kept test's `build`
+     sub-test.
+   - (iii): `test_a_current_table_is_still_read` errors.
+
+   **A faithful restoration** was also applied: the pre-image's helper, unchanged, with its call in
+   `GkSource.build`. `TestGkSource` then ran 4 tests, **OK**, as the note's §0 expected; it is not a
+   gap. Each diff was reverted with `git apply -R`, and the tree was clean after each.
+8. **The probe**, from the scratchpad, through the N3 harness, at `9d3a42c` and at an export of
+   `bd5ad19`:
+   - `GkSource.build` (keyed and reader mode) and `QuadSourceIntegral.read_batch` (untagged and
+     tagged), given `database is locked` with the real statement, raise the injected
+     `OperationalError` itself after one `execute`, **identically at both trees**. 02 changes no
+     current behaviour.
+   - A pre-07 `TkWKBIntegration` table, built from the 06 witness with one validated row and its
+     `TkWKBValue`, was read labels-only with `TkWKBValue.read_batch`. At `bd5ad19` that raises
+     `RuntimeError`: "… has no "numeric_serial" column. This datastore predates …". At `9d3a42c` it
+     raises SQLAlchemy's `OperationalError: no such column: TkWKBIntegration.numeric_serial`, not a
+     silent read. That is the kept select doing its job.
+9. **E5.**
+   - The fallbacks issue carries a dated "Narrowed (prompt 02)" line. The log's *Observations*
+     hand the four selects to 05.
+   - The index is 107 by counting, matching the header. Its row names 02's factories.
+   - §1, N1–N3 and §5.3 are written.
+10. **Suites**, serially at `9d3a42c` plus this review's docstring residue, load 8–13:
+    AdaptiveLevin 32, ComputeTargets 693 (all passing; the wall-clock test passed this time),
+    CosmologyModels 39, Datastore 600 (605 − 17 + 12; 165 s), LiouvilleGreen 148 (1 skipped),
+    RunRegistry 281. Every suite is OK. `black --check` is clean on the ten Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `9d3a42c` in §1, §5.3 and the log.
+- **`test_database_errors_reach_the_caller.py`'s docstring.** It said 02's classes "pin that those
+  stay deleted", which its next sentence contradicts. It now says that they pin that an error from
+  the statements reaches the caller unchanged. The change is docstring-only.
+- **The log's (iii).** It explained why N3 passes under (iii) by saying "the error is raised before
+  any statement runs". It now says that the harness raises at `execute` whatever the statement,
+  and that the broken statement still names `numeric_serial`.
+- This board's note list marks `orchestrator/prompt-02.md` used.
+
+*Kept as is.* The agent's observations not acted on:
+- the four `numeric_serial` selects, assigned to 05 (S3);
+- an absent `GkSource_parents` table now surfaces as an `OperationalError`, which is U1's case
+  (05);
+- the known prunes;
+- two imports that were already unused at `bd5ad19`: `TkNumericIntegration` in
+  `test_gksource_parent_set` and `sqla_TkWKBValue_factory` in `test_wkb_numeric_parent_key`.
+
+None opens an issue.
+
+*Handed on.*
+- **03** is independent of 01–02 and edits `ShardedPool`. Its note carries 01's and 02's
+  conventions, including foreground suites.
+- **05**'s note must carry the four `numeric_serial` selects
+  (`TkWKBIntegration`/`GkWKBIntegration`, `_build_impl_model` and `read_batch`), and the decision
+  to keep them until the reader refuses a store whose columns differ. It must also carry the
+  absent-`GkSource_parents` observation.
 
 ---
 
@@ -323,7 +434,7 @@ Measured serially on the staged tree, under load (another project's Ray cluster 
 The one ComputeTargets failure fails alone under this load and also on an export of `6ea366e`; see
 the log.
 
-### 5.3 After prompt 02 (2026-10-04, this commit)
+### 5.3 After prompt 02 (2026-10-04, `9d3a42c`)
 
 Measured serially on the staged tree.
 

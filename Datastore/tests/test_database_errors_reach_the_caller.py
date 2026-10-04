@@ -26,12 +26,12 @@ the number of times the path has queries, which on the read path is once: no sec
 
 Prompt 02 of the same campaign (board item N3) deleted the same kind of handler from
 ``TkWKBIntegration``, ``GkWKBIntegration``, ``GkSource`` and ``QuadSourceIntegral``, and the
-classes from ``TestTheWKBIntegrations`` down pin that those stay deleted. Their handlers matched
-the driver's own message (``e.orig``), not ``str(e)``, so they never misfired on a lock, and a
-test of pass-through alone cannot tell a faithful restoration of one from its absence. What these
-tests catch is a handler that *does* turn an error into another (``raise`` for every
-``OperationalError``, or a miss for one); each still names, in ``columns=``, the column the
-deleted handler looked for.
+classes from ``TestTheWKBIntegrations`` down pin that an error from their statements reaches the
+caller unchanged. Their handlers matched the driver's own message (``e.orig``), not ``str(e)``, so
+they never misfired on a lock, and a test of pass-through alone cannot tell a faithful restoration
+of one from its absence. What these tests catch is a handler that *does* turn an error into
+another (``raise`` for every ``OperationalError``, or a miss for one); each still names, in
+``columns=``, the column the deleted handler looked for.
 
 No Ray, no datastore file, nothing under ``var/``: the schema is
 ``build_schema(MetaData(), Datastore.SQL.Datastore._factories)`` in memory, as in
