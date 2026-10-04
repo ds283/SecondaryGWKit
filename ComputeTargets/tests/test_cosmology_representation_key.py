@@ -21,10 +21,10 @@ Four things are checked, in the order prompt 03 §3 states them:
    ``test_numeric_break_point_key.test_the_integrator_call_site_reads_the_class_constant``), and
    then demonstrated dynamically: re-point the single declaration and both the query's ``WHERE``
    clause and the value written by the insert follow it together.
-3. **A table without the column raises the campaign's message**, not an opaque ``OperationalError``
-   a reader cannot interpret. ``Datastore._ensure_tables()`` creates absent tables but never alters
-   an existing one, so an old datastore keeps its old table and the mismatch surfaces as SQLite's
-   "no such column" when ``build()``'s select executes.
+3. **(Removed by ``datastore-generic`` prompt 01.)** A table without the column used to raise the
+   campaign's message. No code accommodates a store written by older code now: SQLite's own
+   "no such column" reaches the caller, as every database error does
+   (``Datastore/tests/test_database_errors_reach_the_caller.py``).
 4. **``LambdaCDM`` is untouched.** It computes ``T = T_CMB (1+z)`` in closed form, has no ``T(z)``
    spline and no representation to key on, and must not acquire a column.
 
@@ -42,7 +42,6 @@ from datetime import datetime
 from pathlib import Path
 
 import sqlalchemy as sqla
-from sqlalchemy.exc import OperationalError
 
 from CosmologyModels.GenericEOS.LambdaCDM_GenericEOS import LambdaCDM_GenericEOS
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
@@ -81,16 +80,10 @@ LAMBDACDM_COLUMNS = [
 # ---------------------------------------------------------------------------------------------
 
 
-def _build_table(
-    name: str, factory, metadata: sqla.MetaData, omit: str = None
-) -> sqla.Table:
+def _build_table(name: str, factory, metadata: sqla.MetaData) -> sqla.Table:
     """
     Reproduce the table Datastore._build_schema builds for this factory, from the factory's own
     register() output -- so that the schema under test is the production schema, not a copy of it.
-
-    ``omit`` drops one column, which is how the pre-prompt-03 schema is reproduced: there is no
-    other record of it, and hand-writing the old column list would not stay in step with the
-    factory.
     """
     registration = factory.register()
 
@@ -105,8 +98,6 @@ def _build_table(
         tab.append_column(sqla.Column("stepping", sqla.Integer))
 
     for column in registration.get("columns", []):
-        if omit is not None and column.name == omit:
-            continue
         tab.append_column(column)
 
     return tab
@@ -128,7 +119,7 @@ def _inserter_for(table: sqla.Table):
 class _QueryCaptured(Exception):
     """
     raised by the stand-in connection in place of executing. Deliberately *not* a SQLAlchemyError,
-    so that it passes through the factory's missing-column handler untouched.
+    so that nothing between the factory and the test can mistake it for a database error.
     """
 
     def __init__(self, query):
@@ -139,27 +130,6 @@ class _QueryCaptured(Exception):
 class _CapturingConnection:
     def execute(self, query):
         raise _QueryCaptured(query)
-
-
-class _RaisingConnection:
-    def __init__(self, exc):
-        self._exc = exc
-
-    def execute(self, query):
-        raise self._exc
-
-
-def _missing_column_error() -> OperationalError:
-    """
-    what SQLite raises when a query names a column an existing table does not have. Only used by
-    the "an unrelated error is not disguised" companion test; the positive case below runs against
-    a genuine old-schema table and lets SQLite raise it for real.
-    """
-    return OperationalError(
-        f"SELECT QCD_Cosmology.serial ... WHERE QCD_Cosmology.{KEY_COLUMN} = ?",
-        {},
-        Exception(f"no such column: QCD_Cosmology.{KEY_COLUMN}"),
-    )
 
 
 def _payload(max_z: float = PRODUCTION_MAX_Z) -> dict:
@@ -460,76 +430,6 @@ class TestTwoRepresentationsTwoSerials(unittest.TestCase):
         ).scalar()
 
         self.assertEqual(stored, QCD_Cosmology.T_Z_REPRESENTATION_VERSION)
-
-
-class TestOldSchemaFailsLoudly(unittest.TestCase):
-    """
-    Prompt 03 §2 item 3 and §3 item 3. There is no defensible representation to assume for a row
-    that records none, so there is no migration and no silent hit.
-    """
-
-    def test_a_table_without_the_column_demands_regeneration(self):
-        metadata = sqla.MetaData()
-        # the pre-prompt-03 schema: the production registration with the new column dropped
-        table = _build_table(
-            "QCD_Cosmology", sqla_QCDCosmology_factory, metadata, omit=KEY_COLUMN
-        )
-        engine = sqla.create_engine("sqlite://", future=True)
-        table.create(engine)
-        self.addCleanup(engine.dispose)
-
-        # build() must query the column it now keys on, so the table handed to it is the
-        # production one -- exactly as Datastore._build_schema builds it from the code, while the
-        # database underneath still holds the old table. _ensure_tables() creates absent tables
-        # but never alters an existing one, which is why the two can differ.
-        current = _build_table(
-            "QCD_Cosmology", sqla_QCDCosmology_factory, sqla.MetaData()
-        )
-
-        with engine.connect() as conn:
-            with self.assertRaises(RuntimeError) as caught:
-                _build(conn, current, _inserter_for(current))
-
-        message = str(caught.exception)
-        self.assertIn(KEY_COLUMN, message)
-        self.assertIn("prompt 03", message)
-        self.assertIn("regenerated", message)
-        self.assertIn("no migration", message)
-        self.assertIn("QCD_Cosmology", message)
-
-        # and the underlying database error is preserved for anyone who wants it
-        self.assertIsInstance(caught.exception.__cause__, OperationalError)
-
-    def test_the_error_it_raises_is_not_the_opaque_one(self):
-        """the failure mode being avoided: an unhandled 'no such column' a reader cannot act on"""
-        metadata = sqla.MetaData()
-        table = _build_table(
-            "QCD_Cosmology", sqla_QCDCosmology_factory, metadata, omit=KEY_COLUMN
-        )
-        engine = sqla.create_engine("sqlite://", future=True)
-        table.create(engine)
-        self.addCleanup(engine.dispose)
-
-        current = _build_table(
-            "QCD_Cosmology", sqla_QCDCosmology_factory, sqla.MetaData()
-        )
-
-        with engine.connect() as conn:
-            with self.assertRaises(RuntimeError):
-                _build(conn, current, _inserter_for(current))
-
-    def test_an_unrelated_database_error_is_not_disguised(self):
-        unrelated = OperationalError("SELECT ...", {}, Exception("database is locked"))
-
-        metadata = sqla.MetaData()
-        table = _build_table("QCD_Cosmology", sqla_QCDCosmology_factory, metadata)
-
-        with self.assertRaises(OperationalError):
-            _build(_RaisingConnection(unrelated), table, None)
-
-        # ... and the missing-column error, arriving by the same route, still converts
-        with self.assertRaises(RuntimeError):
-            _build(_RaisingConnection(_missing_column_error()), table, None)
 
 
 class TestLambdaCDMIsUntouched(unittest.TestCase):

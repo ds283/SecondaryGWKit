@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-04 · **108 open** across twenty campaigns.
+**Last updated:** 2026-10-04 · **107 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -838,13 +838,13 @@ recorded here for its owner.
 `prompts/datastore-generic` was opened on 2026-10-04, when the user found that `ShardedPool` names
 project tables and decided that the datastore layer is made generic again and that every fallback
 for a store written by older code is deleted, through the campaign. Its audit
-(`docs/datastore-generic-audit.md`) opened three issues, one of them a defect in current code.
+(`docs/datastore-generic-audit.md`) opened three issues, one of them a defect in current code,
+`[00-old-store-refusals-misfire-on-any-database-error]`, closed by prompt 01.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-old-store-refusals-misfire-on-any-database-error]` | datastore-generic | Four factories test `"<column>" in str(e)`, which carries the statement, so any database error (a lock included) is reported as a stale store; `BackgroundModel`'s read path silently re-queries without grid identity (measured). Assigned: prompt 01. |
 | `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader, the inventory, `Datastore` and `ClientPool` hard-code fourteen facts about the project's tables (`BackgroundModel`'s copy unit, the `redshift`/`wavenumber` flags, the factory registry as a private import, …). Assigned: prompts 06–09. |
-| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline is already readable only at its own SHA). Assigned: prompts 01–05. |
+| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline is already readable only at its own SHA). Assigned: prompts 01–05; 01 deleted the `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` and `extract_common` ones (2026-10-04). |
 
 ---
 

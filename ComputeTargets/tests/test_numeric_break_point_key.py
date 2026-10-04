@@ -19,7 +19,10 @@ Four things are checked, in the order prompt 20 §3 states them:
    Re-pointing the single constant moves all three together.
 2. **A lookup under the wrong policy misses, and under the right policy hits.** The ``build()``
    query is compiled with no database behind it and its ``WHERE`` clause read back.
-3. **An old-schema datastore raises**, with a message naming this prompt.
+3. **(Removed by ``datastore-generic`` prompt 01.)** An old-schema datastore used to raise, with a
+   message naming this prompt. No code accommodates a store written by older code now: the
+   database's own error reaches the caller
+   (``Datastore/tests/test_database_errors_reach_the_caller.py``).
 4. **No computed value moves.** That is not tested here -- it is a property of the diff, which
    does not touch ``Quadrature/`` at all, and is measured in ``logs/20-key-the-break-point-policy.md``
    by running a production QCD object in both sectors on this tree and on ``HEAD~1``.
@@ -37,7 +40,6 @@ import unittest
 from pathlib import Path
 
 import sqlalchemy as sqla
-from sqlalchemy.exc import OperationalError
 
 from ComputeTargets.BackgroundModel import (
     BREAK_POINT_ALL,
@@ -75,8 +77,8 @@ class _Serial:
 class _QueryCaptured(Exception):
     """
     raised by the stand-in connection in place of executing. Deliberately *not* a
-    SQLAlchemyError, so that it passes through the factory's new missing-column handler
-    untouched.
+    SQLAlchemyError, so that nothing between the factory and the test can mistake it for a
+    database error.
     """
 
     def __init__(self, query):
@@ -87,27 +89,6 @@ class _QueryCaptured(Exception):
 class _CapturingConnection:
     def execute(self, query):
         raise _QueryCaptured(query)
-
-
-class _RaisingConnection:
-    def __init__(self, exc):
-        self._exc = exc
-
-    def execute(self, query):
-        raise self._exc
-
-
-def _missing_column_error(table: str) -> OperationalError:
-    """
-    what SQLite raises when a query names a column an existing table does not have. The message is
-    reproduced verbatim from sqlite3; the factory matches on the column name inside it, exactly as
-    the BackgroundModel factory does for prompts 03 and 04.
-    """
-    return OperationalError(
-        f"SELECT {table}.serial ... WHERE {table}.break_point_kind = ?",
-        {},
-        Exception(f"no such column: {table}.break_point_kind"),
-    )
 
 
 def _build_table(name: str, factory, metadata: sqla.MetaData) -> sqla.Table:
@@ -411,37 +392,6 @@ class TestTheKeyField(unittest.TestCase):
                 )
 
 
-class TestOldSchemaFailsLoudly(unittest.TestCase):
-    """
-    Prompt 20 §2.3 and §3 item 4. There is no defensible default for a row computed under a policy
-    nobody recorded, so there is no migration and no silent miss.
-    """
-
-    def test_a_missing_column_names_the_prompt_and_demands_regeneration(self):
-        for sector, table_name in (
-            ("Gk", "GkNumericIntegration"),
-            ("Tk", "TkNumericIntegration"),
-        ):
-            with self.subTest(sector=sector):
-                with self.assertRaises(RuntimeError) as caught:
-                    _run_build_against(sector, _missing_column_error(table_name))
-
-                message = str(caught.exception)
-                self.assertIn("break_point_kind", message)
-                self.assertIn("prompt 20", message)
-                self.assertIn("regenerated", message)
-                self.assertIn("no migration", message)
-                self.assertIn(table_name, message)
-
-    def test_an_unrelated_database_error_is_not_disguised(self):
-        unrelated = OperationalError("SELECT ...", {}, Exception("database is locked"))
-
-        for sector in ("Gk", "Tk"):
-            with self.subTest(sector=sector):
-                with self.assertRaises(OperationalError):
-                    _run_build_against(sector, unrelated)
-
-
 # ---------------------------------------------------------------------------------------------
 # store()-side stand-ins, defined after the sector table so that they can read from it
 # ---------------------------------------------------------------------------------------------
@@ -528,33 +478,6 @@ def _store_payload(sector: str) -> dict:
 def _stored_row_matches(stored: str, required: str) -> bool:
     """what SQL's equality does with a candidate row's column value"""
     return stored == required
-
-
-def _run_build_against(sector: str, exc: Exception):
-    """issue the production build() against a connection that raises ``exc``"""
-    if sector == "Gk":
-        factory = sqla_GkNumericIntegration_factory
-        redshift_key = "z_source"
-    else:
-        factory = sqla_TkNumericIntegration_factory
-        redshift_key = "z_init"
-
-    metadata = sqla.MetaData()
-    table = _build_table(f"{sector}NumericIntegration", factory, metadata)
-    tables = _support_tables(sector, metadata)
-
-    payload = {
-        "solver_labels": {},
-        "atol": _Serial(11),
-        "rtol": _Serial(12),
-        "k": _Serial(13),
-        "model": _Serial(14),
-        "z_sample": None,
-        redshift_key: None,
-        "tags": [],
-    }
-
-    return factory.build(payload, _RaisingConnection(exc), table, None, tables, None)
 
 
 if __name__ == "__main__":

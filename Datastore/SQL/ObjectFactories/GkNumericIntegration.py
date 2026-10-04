@@ -276,23 +276,6 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                 f"!! GkNumericIntegration.build(): multiple results found when querying for GkNumericIntegration"
             )
             raise e
-        except SQLAlchemyError as e:
-            # a datastore written before prompt 20 has no break_point_kind column, and its rows
-            # were computed under a policy nobody recorded. There is no defensible default to
-            # supply, so this fails loudly rather than silently missing -- the defect being
-            # repaired is precisely a stale row that looked like a hit. This is the pattern
-            # prompts 03 and 04 set at
-            # Datastore/SQL/ObjectFactories/BackgroundModel.py:300-309.
-            if "break_point_kind" in str(e):
-                raise RuntimeError(
-                    "GkNumericIntegration.build(): the GkNumericIntegration table has no "
-                    '"break_point_kind" column. This datastore predates the numeric break-point '
-                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
-                    "and must be regenerated; there is no migration. Its rows were computed "
-                    "under a policy that was never recorded, and on QCD_Cosmology the policies "
-                    "differ by up to 2.8e-4 of the envelope."
-                ) from e
-            raise
 
         if row_data is None:
             # build and return an unpopulated object
@@ -916,17 +899,6 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
                 f"!! GkNumericValue.build(): multiple results found when querying for GkNumericValue"
             )
             raise e
-        except SQLAlchemyError as e:
-            # the same refusal as the parent's build(): a store without the column predates the
-            # break-point policy joining the key, and cannot say which policy its rows used
-            if "break_point_kind" in str(e):
-                raise RuntimeError(
-                    "GkNumericValue.build(): the GkNumericIntegration table has no "
-                    '"break_point_kind" column. This datastore predates the numeric break-point '
-                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
-                    "and must be regenerated; there is no migration."
-                ) from e
-            raise
 
         if row_data is None:
             # return empty object
@@ -1063,19 +1035,7 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
         if z_response is not None:
             row_query = row_query.filter(table.c.z_serial == z_response.store_id)
 
-        try:
-            row_data = conn.execute(row_query).all()
-        except SQLAlchemyError as e:
-            # the same refusal as the parent's build(): a store without the column predates the
-            # break-point policy joining the key, and cannot say which policy its rows used
-            if "break_point_kind" in str(e):
-                raise RuntimeError(
-                    "GkNumericValue.read_batch(): the GkNumericIntegration table has no "
-                    '"break_point_kind" column. This datastore predates the numeric break-point '
-                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
-                    "and must be regenerated; there is no migration."
-                ) from e
-            raise
+        row_data = conn.execute(row_query).all()
 
         # D1 (prompts/datastore-integrity README §6.2): a read that holds only physical labels may
         # select by them, but must refuse when more than one stored parent matches, rather than

@@ -21,9 +21,8 @@ The mechanism here preserves the ergonomic property that made the tagless design
   * if no label is given and the store holds exactly one run, use it and *say which*;
   * only an ambiguous store requires the user to choose, and then the refusal names the
     candidates;
-  * a store written before prompt 14 carries no run labels at all. That is **not** an error: its
-    rows are an unknown generation, and they stay queryable and plottable, because a superseded
-    datastore keeps its archival value long after it can no longer serve as a numerical base.
+  * a store that records no runs at all is refused, saying so: main.py writes a ``Run_`` label
+    with everything it computes, so a store holding rows has at least one.
 
 **Verification** -- that everything pulled under one label really is one generation -- is not done
 here. It is done by ``Datastore/SQL/ObjectFactories/BackgroundModel.py``'s ``build()``, which is
@@ -78,15 +77,13 @@ class RunSelection(NamedTuple):
     """
     Which run an extract_*.py script is reading.
 
-    ``label`` is the run's name, or None when the datastore records no runs at all -- a store
-    written before prompt 14, whose rows are an unknown generation and are read exactly as they
-    were before. ``tags`` is what to hand every ``pool.object_get`` as ``tags=``; it is empty in
-    the unknown case, which reproduces the pre-prompt-14 query verbatim. ``description`` is one
-    line for the script to print, so that a reader of the output knows what was selected and
-    whether the script chose it or the user did.
+    ``label`` is the run's name. ``tags`` is what to hand every ``pool.object_get`` as ``tags=``;
+    :func:`choose_run_label` leaves it empty and :func:`resolve_run_selection` fills it.
+    ``description`` is one line for the script to print, so that a reader of the output knows what
+    was selected and whether the script chose it or the user did.
     """
 
-    label: Optional[str]
+    label: str
     tags: list
     description: str
 
@@ -198,9 +195,10 @@ def choose_run_label(
     """
     Decide which run to read, from the names a datastore holds and what the user asked for.
 
-    Pure: it takes the label set rather than the pool, so the four cases below can be tested
-    without a datastore. It returns a RunSelection whose ``tags`` is empty -- materialising the
-    store_tag objects needs the pool and is :func:`resolve_run_selection`'s job.
+    Pure: it takes the label set rather than the pool, so the cases below can be tested without a
+    datastore. It returns a RunSelection whose ``tags`` is empty -- materialising the store_tag
+    objects needs the pool and is :func:`resolve_run_selection`'s job. A datastore with no run
+    labels is refused: it is not read as an unnamed run.
     """
     available = list(available)
 
@@ -222,15 +220,10 @@ def choose_run_label(
         )
 
     if len(available) == 0:
-        # a datastore written before prompt 14. Not an error: it is read exactly as it was read
-        # before, and what it holds is reported as unknown rather than guessed at.
-        return RunSelection(
-            label=None,
-            tags=[],
-            description=(
-                "this datastore records no run labels: reading it as a single unnamed run of "
-                "unknown generation (it predates prompts/qcd-background-audit prompt 14)"
-            ),
+        raise RuntimeError(
+            "extract: this datastore records no runs: its store_tag table holds no label "
+            f'beginning "{RUN_LABEL_TAG_PREFIX}", which main.py writes with everything it '
+            "computes. There is nothing to read."
         )
 
     if len(available) == 1:
@@ -256,9 +249,6 @@ def resolve_run_selection(pool, requested: Optional[str]) -> RunSelection:
     """
     selection = choose_run_label(available_run_labels(pool), requested)
 
-    if selection.label is None:
-        return selection
-
     tag = ray.get(pool.object_get("store_tag", label=run_label_tag(selection.label)))
 
     return selection._replace(tags=[tag])
@@ -269,13 +259,14 @@ def describe_background_generation(model) -> str:
     Which generation of the source grid a BackgroundModel row belongs to, as a printable string.
 
     ``_source_grid_identity`` is set by Datastore/SQL/ObjectFactories/BackgroundModel.py's
-    build(). It is None for a datastore whose BackgroundModel table predates prompt 14 and
-    therefore records nothing about the grid -- which is reported as unknown rather than
-    defaulted, because there is no defensible value to assume.
+    build() to the (construction version, digest) of the row it found. It is None when build()
+    found no row, which is a model the datastore holds no background for: that has no generation
+    to report, and is said so rather than defaulted. The extract_*.py scripts call
+    :func:`require_background` first, which stops a model in that case, so they never print it.
     """
     identity = getattr(model, "_source_grid_identity", None)
     if identity is None:
-        return "grid generation unknown (this datastore predates prompt 14)"
+        return "no grid generation (the datastore holds no background model for it)"
 
     construction, digest = identity
     return f"source grid construction version {construction}, digest {digest}"

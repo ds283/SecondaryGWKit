@@ -7,21 +7,15 @@ LambdaCDM_GenericEOS.T_Z_REPRESENTATION_VERSION, which identifies how T(z) is re
 node solve's tolerance, the quantity splined, the node count, the spline order, the segmentation,
 and the break-point set -- none of which the parameter values can see.
 
-Without it, a datastore written before a representation change is served back under the same
-serial: the same cosmology row matches, every BackgroundModel keyed on that serial deserialises,
-and its tau, cs_tau and friction_F limbs are the old background's, with no exception and no column
-that differs. A datastore whose QCD_Cosmology table lacks the column predates prompt 03 and its
-QCD half must be regenerated; there is no migration, because the rows record no representation
-and there is no defensible value to assume for them. Datastore._ensure_tables() creates missing
-tables but never alters an existing one, so the mismatch surfaces when SQLite executes build()'s
-select ("no such column"); build() below catches that and raises with this message rather than
-letting a SQLAlchemy error a reader cannot interpret escape.
+Without it, a row computed under one representation is served back, under the same serial, to a
+build() that asks for another: the same cosmology row matches, every BackgroundModel keyed on that
+serial deserialises, and its tau, cs_tau and friction_F limbs are the other representation's, with
+no exception and no column that differs.
 """
 
 from math import log10
 
 import sqlalchemy as sqla
-from sqlalchemy.exc import SQLAlchemyError
 
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -95,31 +89,10 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
             )
         )
 
-        try:
-            # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than
-            # silently serving the first row scalar() would have returned (prompts/
-            # datastore-integrity, prompt 03, L3). MultipleResultsFound is a SQLAlchemyError, and
-            # its message never contains "T_z_representation", so the handler below re-raises it
-            # unchanged rather than mistaking it for the missing-column case it exists to catch.
-            store_id = conn.execute(query).scalar_one_or_none()
-        except SQLAlchemyError as e:
-            # a datastore written before prompt 03 has no T_z_representation column, and its rows
-            # record no representation at all. There is no defensible default to supply, so this
-            # fails loudly rather than silently matching -- the defect being repaired is precisely
-            # a stale row that looked like a hit. This is the pattern prompts 03 and 04 of
-            # prompts/GkTk-remedial set at
-            # Datastore/SQL/ObjectFactories/BackgroundModel.py:300-309.
-            if "T_z_representation" in str(e):
-                raise RuntimeError(
-                    "QCD_Cosmology.build(): the QCD_Cosmology table has no "
-                    '"T_z_representation" column. This datastore predates the T(z) '
-                    "representation becoming part of the cosmology lookup key "
-                    "(prompts/qcd-background-audit, prompt 03) and its QCD half must be "
-                    "regenerated; there is no migration. Its rows record no representation, so "
-                    "the BackgroundModel, Gk and Tk rows hanging from them cannot be told apart "
-                    "from rows computed against the background now in the code."
-                ) from e
-            raise
+        # scalar_one_or_none() raises MultipleResultsFound on a duplicate rather than silently
+        # serving the first row scalar() would have returned (prompts/datastore-integrity, prompt
+        # 03, L3). Any database error, that one included, reaches the caller as itself.
+        store_id = conn.execute(query).scalar_one_or_none()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:

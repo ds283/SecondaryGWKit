@@ -30,9 +30,9 @@ What is asserted here, in the order prompt 14 §3 states it:
   real in-memory SQLite database built from the factories' own ``register()``, because the point
   of the prompt is what SQL does with a candidate row;
 * a run round-trips by name; a label spanning two configurations is **refused, naming both**;
-* a store that records no run label at all still **reads**, labelled unknown, on the read path,
-  while the compute path refuses it -- two different answers to the same old datastore, which is
-  the whole of prompt 14's archival requirement;
+* a store that records no run label at all is **refused**, saying it records no runs
+  (``datastore-generic`` prompt 01: it was read as an unnamed run of unknown generation, and no
+  datastore is read that way now);
 * ``main.py`` tags what it builds and parses the new argument, and every ``extract_*.py`` selects
   a run -- both by ``ast``, since ``main.py`` cannot be imported (``CLAUDE.md``) and the extract
   scripts open a Ray connection and a ``ShardedPool`` at module scope for the same reason.
@@ -47,10 +47,10 @@ from importlib import import_module
 import unittest
 from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 from typing import List, Optional
 
 import sqlalchemy as sqla
-from sqlalchemy.exc import OperationalError
 
 import Datastore.SQL.ObjectFactories.BackgroundModel as background_model_factory_module
 from ComputeTargets.BackgroundModel import BackgroundModel, BackgroundModelValue
@@ -110,18 +110,12 @@ EXTRACT_SCRIPTS = [
 # ---------------------------------------------------------------------------------------------
 
 
-def _append_table(
-    name: str, factory, metadata: sqla.MetaData, omit: Optional[List[str]] = None
-) -> sqla.Table:
+def _append_table(name: str, factory, metadata: sqla.MetaData) -> sqla.Table:
     """
     Reproduce the table Datastore._build_schema builds for this factory, from the factory's own
     register() output -- so the schema under test is the production schema, not a copy of it.
-
-    ``omit`` drops columns, which is how the pre-prompt-14 schema is reproduced: there is no other
-    record of it, and hand-writing the old column list would not stay in step with the factory.
     """
     registration = factory.register()
-    omit = omit if omit is not None else []
 
     tab = sqla.Table(name, metadata)
     if registration.get("serial", True):
@@ -134,8 +128,6 @@ def _append_table(
         tab.append_column(sqla.Column("stepping", sqla.Integer))
 
     for column in registration.get("columns", []):
-        if column.name in omit:
-            continue
         tab.append_column(column)
 
     return tab
@@ -175,9 +167,7 @@ class _StandInCosmology:
 class _Schema:
     """One in-memory SQLite database carrying the tables build() and store() touch."""
 
-    def __init__(self, omit_grid_identity: bool = False):
-        omit = [DIGEST_COLUMN, CONSTRUCTION_COLUMN] if omit_grid_identity else []
-
+    def __init__(self):
         self.metadata = sqla.MetaData()
         self.tables = {
             "store_tag": _append_table(
@@ -188,7 +178,7 @@ class _Schema:
             ),
             "redshift": _append_table("redshift", sqla_redshift_factory, self.metadata),
             "BackgroundModel": _append_table(
-                "BackgroundModel", sqla_BackgroundModelFactory, self.metadata, omit=omit
+                "BackgroundModel", sqla_BackgroundModelFactory, self.metadata
             ),
         }
         self.tables["BackgroundModel_tags"] = _append_table(
@@ -708,147 +698,6 @@ class TestALabelSpanningTwoConfigurationsIsRefused(unittest.TestCase):
         self.assertIn(f"construction version {original + 1}", message)
 
 
-class TestAStoreWithNoGridIdentity(unittest.TestCase):
-    """
-    Prompt 14 §2 item 4 and §3 item 6: the two paths give **different** answers to the same old
-    datastore, and that is deliberate. The compute path cannot write into it, because there is no
-    defensible grid identity to assume for a row that records none; the read path must keep
-    reading it, because a superseded datastore keeps its archival value long after it can no
-    longer serve as a numerical base, and extract_*.py is how that value is realised.
-    """
-
-    def setUp(self):
-        # the pre-prompt-14 schema: the production registration with the two columns dropped
-        self.db = _Schema(omit_grid_identity=True)
-        self.addCleanup(self.db.close)
-
-        self.grid = self.db.z_sample([100.0, 10.0, 1.0])
-
-        # a row written the way a pre-prompt-14 run wrote one. store() now writes the two columns,
-        # so the row is inserted directly here -- there is no other way to produce the old shape.
-        self.serial = self.db.conn.execute(
-            sqla.insert(self.db.table),
-            [
-                {
-                    "serial": 1,
-                    "label": "archived",
-                    "cosmology_type": self.db.cosmology.type_id,
-                    "cosmology_serial": self.db.cosmology.store_id,
-                    # the accuracy half of the key as the current schema spells it: prompt 05 of
-                    # prompts/tolerance-convergence replaced the tolerance pair with the three
-                    # Gauss orders, and _Schema builds this table from the factory's own
-                    # register(), so the archival row has to carry them
-                    "tau_gauss_order": BackgroundModelModule.TAU_GAUSS_ORDER,
-                    "cs_tau_gauss_order": BackgroundModelModule.CS_TAU_GAUSS_ORDER,
-                    "friction_F_gauss_order": BackgroundModelModule.FRICTION_F_GAUSS_ORDER,
-                    "solver_serial": 1,
-                    "z_init_serial": self.grid.min.store_id,
-                    "z_samples": len(self.grid),
-                    "compute_time": 1.0,
-                    "compute_steps": 1,
-                    "RHS_evaluations": 1,
-                    "mean_RHS_time": 1.0,
-                    "max_RHS_time": 1.0,
-                    "min_RHS_time": 1.0,
-                    "validated": True,
-                    "timestamp": datetime.now(),
-                }
-            ],
-        )
-        for z in self.grid:
-            self.db.conn.execute(
-                sqla.insert(self.db.tables["BackgroundModelValue"]),
-                [
-                    {
-                        "model_serial": 1,
-                        "z_serial": z.store_id,
-                        "Hubble_GeV": 1.0,
-                        "wBackground": 1.0 / 3.0,
-                        "wPerturbations": 1.0 / 3.0,
-                        "rho_GeV": 1.0,
-                        "tau_Mpc": 1.0,
-                        "tau_lo_Mpc": 0.0,
-                        "cs_tau_Mpc": 1.0,
-                        "cs_tau_lo_Mpc": 0.0,
-                        "friction_F": 1.0,
-                        "T_photon_GeV": 1.0,
-                        "T_photon_Kelvin": 1.0,
-                        "d_lnH_dz": 1.0,
-                        "d2_lnH_dz2": 1.0,
-                        "d3_lnH_dz3": 1.0,
-                        "d_wPerturbations_dz": 1.0,
-                        "d2_wPerturbations_dz2": 1.0,
-                    }
-                ],
-            )
-
-        # what Datastore._build_schema builds from the *code*: _ensure_tables() creates absent
-        # tables but never alters an existing one, which is why the two can differ
-        self.current = _append_table(
-            "BackgroundModel", sqla_BackgroundModelFactory, sqla.MetaData()
-        )
-
-    def _read(self, z_sample):
-        payload = {
-            "solver_labels": {},
-            "cosmology": self.db.cosmology,
-            "z_sample": z_sample,
-            "tags": [],
-        }
-        return sqla_BackgroundModelFactory.build(
-            payload,
-            self.db.conn,
-            self.current,
-            self.db.inserter,
-            self.db.tables,
-            self.db.inserters,
-        )
-
-    def test_the_read_path_still_reads_it_and_labels_it_unknown(self):
-        model = self._read(None)
-
-        self.assertTrue(model.available)
-        self.assertEqual(model.label, "archived")
-        self.assertEqual(len(model.z_sample), len(self.grid))
-        self.assertIsNone(model._source_grid_identity)
-        self.assertIn("unknown", describe_background_generation(model))
-        self.assertIn("prompt 14", describe_background_generation(model))
-
-    def test_the_compute_path_demands_regeneration(self):
-        with self.assertRaises(RuntimeError) as caught:
-            self._read(self.grid)
-
-        message = str(caught.exception)
-        self.assertIn(DIGEST_COLUMN, message)
-        self.assertIn("prompt 14", message)
-        self.assertIn("regenerated", message)
-        self.assertIn("no migration", message)
-        self.assertIsInstance(caught.exception.__cause__, OperationalError)
-
-    def test_an_unrelated_database_error_is_not_disguised(self):
-        class _RaisingConnection:
-            def execute(self, query):
-                raise OperationalError(
-                    "SELECT ...", {}, Exception("database is locked")
-                )
-
-        payload = {
-            "solver_labels": {},
-            "cosmology": self.db.cosmology,
-            "z_sample": self.grid,
-            "tags": [],
-        }
-        with self.assertRaises(OperationalError):
-            sqla_BackgroundModelFactory.build(
-                payload,
-                _RaisingConnection(),
-                self.current,
-                self.db.inserter,
-                self.db.tables,
-                self.db.inserters,
-            )
-
-
 class TestChoosingARun(unittest.TestCase):
     """
     Prompt 14 §2 item 4, third and fourth bullets, and §3 items 6 and 7. The property being
@@ -863,12 +712,24 @@ class TestChoosingARun(unittest.TestCase):
         self.assertIn("march", selection.description)
         self.assertIn("only run", selection.description)
 
-    def test_a_store_with_no_runs_reads_as_unknown(self):
-        selection = choose_run_label([], None)
+    def test_a_store_with_no_runs_is_refused_saying_it_records_none(self):
+        with self.assertRaises(RuntimeError) as caught:
+            choose_run_label([], None)
 
-        self.assertIsNone(selection.label)
-        self.assertEqual(selection.tags, [])
-        self.assertIn("unknown", selection.description)
+        message = str(caught.exception)
+        self.assertIn("records no runs", message)
+        self.assertIn(RUN_LABEL_TAG_PREFIX, message)
+        # it names no older store, and offers no unnamed run to read
+        self.assertNotIn("predates", message)
+        self.assertNotIn("unknown", message)
+
+    def test_a_label_requested_of_a_store_with_no_runs_is_refused_naming_none(self):
+        with self.assertRaises(RuntimeError) as caught:
+            choose_run_label([], "march")
+
+        message = str(caught.exception)
+        self.assertIn("march", message)
+        self.assertIn("this datastore records no runs", message)
 
     def test_an_ambiguous_store_is_refused_naming_the_candidates(self):
         with self.assertRaises(RuntimeError) as caught:
@@ -900,6 +761,36 @@ class TestChoosingARun(unittest.TestCase):
             str(SOURCE_GRID_CONSTRUCTION_VERSION),
             source_grid_construction_tag(SOURCE_GRID_CONSTRUCTION_VERSION),
         )
+
+
+class TestDescribingABackgroundGeneration(unittest.TestCase):
+    """
+    ``datastore-generic`` prompt 01, M2: ``describe_background_generation`` names the generation of
+    a model that was found, and says so of one that was not, with no reference to an older store.
+    """
+
+    def test_a_found_model_is_described_by_its_construction_and_digest(self):
+        model = SimpleNamespace(_source_grid_identity=(3, "abc123"))
+
+        description = describe_background_generation(model)
+
+        self.assertIn("construction version 3", description)
+        self.assertIn("digest abc123", description)
+
+    def test_a_model_that_was_not_found_is_said_to_have_no_generation(self):
+        for model in (
+            SimpleNamespace(_source_grid_identity=None),
+            # build()'s miss: the attribute is always set, but a bare object is read the same way
+            SimpleNamespace(),
+        ):
+            with self.subTest(model=model):
+                description = describe_background_generation(model)
+
+                self.assertIn("no grid generation", description)
+                self.assertIn("holds no background model", description)
+                self.assertNotIn("predates", description)
+                self.assertNotIn("prompt 14", description)
+                self.assertNotIn("unknown", description)
 
 
 class TestMainPyNamesItsRun(unittest.TestCase):

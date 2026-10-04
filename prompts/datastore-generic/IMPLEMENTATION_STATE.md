@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: PLANNED — reviewed; 0 of 9 prompts landed.** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 1 of 9 prompts landed (01).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01, 02 and 03 are written. 04 is not yet written, though its task is fixed; 05–09
 are held on the prompts before them. The user took U1–U4 as recommended on 2026-10-04 (README
 §6.2), and had the plan and `e53f323` merged into `handover-remedial` the same day.
@@ -49,7 +49,7 @@ recommended:**
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ⬜ | — | — |
+| 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | this commit | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ⬜ | — | — |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ⬜ | — | — |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
@@ -71,10 +71,10 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 
 | Item | Prompt | What | Audit | Status |
 |---|---|---|---|---|
-| **M1** | 01 | the old-store handlers in `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` (incl. the read-path re-query) | F0, B9 | ⬜ |
-| **M2** | 01 | `extract_common`: no "unknown generation" run; a store with no runs refused | B8 | ⬜ |
-| **M3** | 01 | the tests of M1–M2's deleted paths | F0, B8 | ⬜ |
-| **M4** | 01 | pass-through tests with the factories' real statement text | F0 | ⬜ |
+| **M1** | 01 | the old-store handlers in `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` (incl. the read-path re-query) | F0, B9 | ✅ |
+| **M2** | 01 | `extract_common`: no "unknown generation" run; a store with no runs refused | B8 | ✅ |
+| **M3** | 01 | the tests of M1–M2's deleted paths | F0, B8 | ✅ |
+| **M4** | 01 | pass-through tests with the factories' real statement text | F0 | ✅ |
 | **N1** | 02 | the old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` | B7 | ⬜ |
 | **N2** | 02 | their tests, with the two current-behaviour tests kept | B7 | ⬜ |
 | **N3** | 02 | pass-through tests | B7 | ⬜ |
@@ -106,20 +106,6 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 
 ### 3.1 Opened by this campaign's audit (2026-10-04)
 
-- **[00-old-store-refusals-misfire-on-any-database-error]** *(opened 2026-10-04 by the audit, F0;
-  measured)*
-  - **The defect.** `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology` and
-    `BackgroundModel` decide that a store predates a column by testing `"<column>" in str(e)`.
-    `str(e)` carries the SQL statement, which names the column, so every database error matches.
-  - **Measured** (`docs/datastore-generic-audit/str_e_misfire_probe.py`): on a current schema, a
-    `database is locked` and an unrelated `no such table` both match all four tests.
-  - **Impact.** No stored value is wrong. A transient lock during a build is reported as a stale
-    store, with advice to regenerate it; on `BackgroundModel`'s read path the query is silently
-    re-run without grid identity, and the extraction scripts report the background as of unknown
-    generation. The tests meant to catch this build the error with the statement `"SELECT ..."`.
-  - **Next step.** Prompt 01 deletes the four refusals (D2) and adds pass-through tests with the
-    real statement text.
-  - **Assigned (2026-10-04):** prompt 01.
 - **[00-the-generic-datastore-layer-hard-codes-project-schema-facts]** *(opened 2026-10-04 by the
   audit, §C; read)*
   - **The defect.** `ShardedPool`, `store_reader`, `store_inventory`, `Datastore` and `ClientPool`
@@ -140,13 +126,46 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
   - **Impact.** Maintenance, and code the refactor of 06–08 would otherwise have to preserve; one
     group of them is also a defect (`[00-old-store-refusals-misfire-on-any-database-error]`).
   - **Next step.** Prompts 01–05 delete them, each narrowing this entry; 05 closes it.
+  - **Narrowed (2026-10-04, prompt 01):** deleted, with their tests: the old-store refusals in
+    `TkNumericIntegration` (`build`, `TkNumericValue.build`), `GkNumericIntegration` (`build`,
+    `GkNumericValue.build`, `GkNumericValue.read_batch`), `QCD_Cosmology.build` and
+    `BackgroundModel.build` (the Gauss-order refusal, the grid-identity refusal and the read-path
+    re-query, the value-table refusal), and `extract_common`'s "no run labels" and "unknown
+    generation" branches (audit F0, B8, B9's comment); the eleven tests that exercised them. Left
+    for 02: `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` (B7); for
+    03–05: B1–B6.
   - **Assigned (2026-10-04):** prompts 01–05.
 
 ---
 
 ## 4. Resolved issues
 
-None yet.
+- **[00-old-store-refusals-misfire-on-any-database-error]** *(opened 2026-10-04 by the audit, F0;
+  measured)*
+  - **The defect.** `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology` and
+    `BackgroundModel` decide that a store predates a column by testing `"<column>" in str(e)`.
+    `str(e)` carries the SQL statement, which names the column, so every database error matches.
+  - **Measured** (`docs/datastore-generic-audit/str_e_misfire_probe.py`): on a current schema, a
+    `database is locked` and an unrelated `no such table` both match all four tests.
+  - **Impact.** No stored value is wrong. A transient lock during a build is reported as a stale
+    store, with advice to regenerate it; on `BackgroundModel`'s read path the query is silently
+    re-run without grid identity, and the extraction scripts report the background as of unknown
+    generation. The tests meant to catch this build the error with the statement `"SELECT ..."`.
+  - **Next step.** Prompt 01 deletes the four refusals (D2) and adds pass-through tests with the
+    real statement text.
+  - **Closed (2026-10-04, prompt 01, this commit).** The four old-store refusals are deleted, so a
+    database error reaches the caller as itself, and `BackgroundModel` always selects its grid
+    identity and never re-queries. Pinned by
+    `Datastore/tests/test_database_errors_reach_the_caller.py` (nine tests: `TkNumericIntegration`
+    and `GkNumericIntegration` `build`, both value `build`s, `GkNumericValue.read_batch`,
+    `QCD_Cosmology.build`, and `BackgroundModel` on the read path, the compute path and the
+    value-table read), each raising the error with the compiled statement of the query the factory
+    really issued, so that `str(e)` names the columns as in the probe, and asserting that the
+    caller gets the same object and that `BackgroundModel`'s read path executes once. Deliberate
+    breakage (log): restoring `TkNumericIntegration.build`'s handler, and restoring the read-path
+    re-query, each fail them; with the statement replaced by the literal `"SELECT ..."` and the
+    column check dropped, they pass with the handler restored, which is why the statement is
+    captured.
 
 ---
 
@@ -160,3 +179,19 @@ None yet.
 | Datastore, on `e53f323` | 598 OK (769 s, under load) |
 
 The other suites: see `a3-v2-readiness`'s board §5; re-measured before 01's dispatch.
+
+### 5.2 After prompt 01 (2026-10-04, this commit)
+
+Measured serially on the staged tree, under load (another project's Ray cluster running).
+
+| Suite | Before (orchestrator, `6ea366e`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 698 (1 failure, `test_background_tau.test_build_cost`, wall clock) | 693 (1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, wall clock) | −9 deleted, +4 added |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 598 OK | 605 OK (294 s) | −2 deleted, +9 added |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 281 OK | 281 OK | 0 |
+
+The one ComputeTargets failure fails alone under this load and also on an export of `6ea366e`; see
+the log.

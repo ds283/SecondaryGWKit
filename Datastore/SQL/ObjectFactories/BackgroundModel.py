@@ -11,13 +11,6 @@ BackgroundModelValue carry them:
                                       stored without a unit conversion; a single double suffices
                                       (|F| <= 60, and it enters as exp(F - F_i))
 
-A datastore whose BackgroundModelValue table lacks any of them predates these changes and must be
-regenerated; there is no migration. Its "tau_Mpc" values would in any case be the RK45 solution
-the table replaced, not the high limb of the Gauss-Legendre table, so reading them back would
-silently restore the 1.4e-9 relative error the change removes, and it has no sound-horizon or
-friction samples at all. build() below raises with that message rather than failing on the
-missing column.
-
 SCHEMA NOTE (prompts/qcd-background-audit, prompt 14). Two further columns, "source_grid_digest"
 and "source_grid_construction", carry the identity of the source sample grid the model was
 tabulated on: a content digest of the grid's exact values (prompt 11) and the version of the
@@ -39,17 +32,12 @@ target the grid-tag change had already invalidated.
 The two columns are used differently on the two paths, and the difference is deliberate:
 
   * the **compute path** (main.py) supplies z_sample, so build() filters on both -- a model built
-    on a different grid, or by a different construction, must miss. A datastore whose
-    BackgroundModel table lacks the columns predates prompt 14 and cannot be written to: there is
-    no defensible grid identity to assume for its rows, so build() raises with that message
-    rather than letting a SQLAlchemy error escape, exactly as sqla_QCDCosmology_factory does.
+    on a different grid, or by a different construction, must miss.
 
   * the **read path** (extract_*.py) supplies z_sample=None -- it is asking the store which grid
     was used, not asserting one -- so build() cannot filter on the digest. It selects the two
     columns instead and refuses, naming every generation it found, if the tags it was given
-    match rows from more than one. A table without the columns is *not* an error there: its rows
-    are reported as an unknown generation and remain readable, because a superseded datastore
-    keeps its archival value even once it can no longer serve as a numerical base.
+    match rows from more than one.
 
 SCHEMA NOTE (prompts/tolerance-convergence, prompt 05). "atol_serial" and "rtol_serial" are gone
 and three integer columns -- "tau_gauss_order", "cs_tau_gauss_order", "friction_F_gauss_order" --
@@ -67,9 +55,6 @@ order-4 row and served it, while the joined solver_label beside it read "cumulat
 
 Three columns and not one, because the three primitives are three independent integrals -- 1/H,
 c_s/H and -(3/2)(1 + c_s^2)/(1+z) -- each with its own constant and each independently movable.
-
-There is no migration and no default: a BackgroundModel table without the columns is a store from
-before this change, and build() raises naming it rather than letting a SQLAlchemy error escape.
 
 SCHEMA NOTE (prompts/tolerance-convergence, prompt 05b). No column changes here, but what fills
 the three does. Prompt 05 wrote the value of each module constant, read through an accessor that
@@ -255,11 +240,10 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         source_grid_construction = SOURCE_GRID_CONSTRUCTION_VERSION
         source_grid_digest = z_sample.digest() if z_sample is not None else None
 
-        def _build_query(with_grid_identity: bool):
+        def _build_query():
             """
-            The lookup. ``with_grid_identity`` selects -- and, on the compute path, filters on --
-            the two prompt-14 columns; it is False only for the fallback a pre-prompt-14 table
-            forces on the read path, where their absence is archival and not an error.
+            The lookup. It selects the two grid-identity columns on both paths, and on the
+            compute path, where z_sample is given, also filters on them.
             """
             columns = [
                 table.c.serial,
@@ -280,11 +264,9 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 table.c.friction_F_gauss_order,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
+                table.c.source_grid_digest,
+                table.c.source_grid_construction,
             ]
-            if with_grid_identity:
-                columns.extend(
-                    [table.c.source_grid_digest, table.c.source_grid_construction]
-                )
 
             # notice that we query only for validated data
             q = (
@@ -309,7 +291,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 )
             )
 
-            if with_grid_identity and source_grid_digest is not None:
+            if source_grid_digest is not None:
                 # the compute path: a model tabulated on a different grid, or built by a
                 # different construction, is a different background and must miss
                 q = q.filter(
@@ -338,79 +320,16 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
 
             return q
 
-        # the generation of the row that was served, as (construction version, digest), or None
-        # if this datastore predates the columns that record it
-        grid_identity = None
-
-        try:
-            rows = list(conn.execute(_build_query(True)))
-        except SQLAlchemyError as e:
-            # matched against the driver's own message rather than str(e), which also carries
-            # the SQL statement -- and the statement names every column the query asks for,
-            # present or missing, so the three order columns appear in it either way
-            detail = str(getattr(e, "orig", e))
-            missing_orders = [
-                column
-                for column in (
-                    "tau_gauss_order",
-                    "cs_tau_gauss_order",
-                    "friction_F_gauss_order",
-                )
-                if column in detail
-            ]
-            if len(missing_orders) > 0:
-                # a store from before prompts/tolerance-convergence prompt 05. Its rows were
-                # keyed on a tolerance pair that reached no solver and record no Gauss order at
-                # all, so there is no order that may be assumed for them on either path.
-                raise RuntimeError(
-                    "BackgroundModel.build(): the BackgroundModel table has no "
-                    f'"{missing_orders[0]}" column. This datastore predates the Gauss orders '
-                    "replacing the vestigial atol/rtol pair in the background model's lookup key "
-                    "(prompts/tolerance-convergence, prompt 05) and must be regenerated; there is "
-                    "no migration. Its rows record no order, and the tolerances they were keyed "
-                    "on reached no solver, so there is nothing to infer one from."
-                ) from e
-
-            if not any(
-                column in str(e)
-                for column in ("source_grid_digest", "source_grid_construction")
-            ):
-                raise
-
-            if z_sample is not None:
-                # the compute path. There is no defensible grid identity to assume for a row that
-                # records none, so this fails loudly rather than silently matching -- the defect
-                # being repaired is precisely a stale row that looked like a hit.
-                raise RuntimeError(
-                    "BackgroundModel.build(): the BackgroundModel table has no "
-                    '"source_grid_digest" / "source_grid_construction" columns. This datastore '
-                    "predates the source grid becoming part of the background model's lookup key "
-                    "(prompts/qcd-background-audit, prompt 14) and must be regenerated; there is "
-                    "no migration. Its rows record no grid identity, so a background tabulated on "
-                    "a grid that no longer exists cannot be told apart from one tabulated on the "
-                    "grid this run builds. Read such a store with the extract_*.py scripts, which "
-                    "report it as an unknown generation rather than failing."
-                ) from e
-
-            # the read path. A superseded datastore keeps its archival value: report the rows as
-            # an unknown generation rather than making them unreadable.
-            rows = list(conn.execute(_build_query(False)))
+        rows = list(conn.execute(_build_query()))
 
         if len(rows) > 1:
             generations = sorted(
-                {
-                    (row.source_grid_construction, row.source_grid_digest)
-                    for row in rows
-                    if hasattr(row, "source_grid_digest")
-                }
+                {(row.source_grid_construction, row.source_grid_digest) for row in rows}
             )
-            if len(generations) == 0:
-                found = "an unknown generation (this datastore records none)"
-            else:
-                found = ", ".join(
-                    f"construction version {construction}, grid digest {digest}"
-                    for construction, digest in generations
-                )
+            found = ", ".join(
+                f"construction version {construction}, grid digest {digest}"
+                for construction, digest in generations
+            )
             # "spanning N generations" is the case this exists for -- one label reused across a
             # changed configuration -- but two rows of the *same* generation are no more
             # distinguishable, so both refuse and both name what was found
@@ -423,12 +342,6 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             )
 
         row_data = rows[0] if len(rows) == 1 else None
-
-        if row_data is not None and hasattr(row_data, "source_grid_digest"):
-            grid_identity = (
-                row_data.source_grid_construction,
-                row_data.source_grid_digest,
-            )
 
         if row_data is None:
             # build and return an unpopulated object
@@ -485,28 +398,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             .order_by(redshift_table.c.z.desc())
         )
 
-        try:
-            sample_rows = list(conn.execute(sample_query))
-        except SQLAlchemyError as e:
-            missing = [
-                column
-                for column in (
-                    "tau_lo_Mpc",
-                    "cs_tau_Mpc",
-                    "cs_tau_lo_Mpc",
-                    "friction_F",
-                )
-                if column in str(e)
-            ]
-            if len(missing) > 0:
-                raise RuntimeError(
-                    "BackgroundModel.build(): the BackgroundModelValue table has no "
-                    f'"{missing[0]}" column. This datastore predates the double-double '
-                    "conformal-time, sound-horizon and friction node tables "
-                    "(prompts/GkTk-remedial, prompts 03 and 04) and must be regenerated; there "
-                    "is no migration."
-                ) from e
-            raise
+        sample_rows = list(conn.execute(sample_query))
 
         z_points = []
         values = []
@@ -591,8 +483,11 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         )
         obj._deserialized = True
         # the generation this row belongs to, for the read path to report: (construction version,
-        # digest), or None for a datastore that predates prompt 14 and records neither
-        obj._source_grid_identity = grid_identity
+        # digest)
+        obj._source_grid_identity = (
+            row_data.source_grid_construction,
+            row_data.source_grid_digest,
+        )
         return obj
 
     @staticmethod

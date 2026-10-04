@@ -399,56 +399,6 @@ class TestBreakPointKindSelects(_StoreCase):
         self.assertEqual(1.0, obj.T)
 
 
-class TestStoreWithoutBreakPointKindIsRefused(_StoreCase):
-    """
-    §2 (P3): a store written before the break-point kind joined the parents' key has no such
-    column. Each numeric value read must refuse it as the parents' build() does, with a
-    RuntimeError naming the column, never a raw OperationalError.
-    """
-
-    def _drop(self, table):
-        self.s.conn.execute(
-            sqla.text(f'ALTER TABLE "{table}" DROP COLUMN break_point_kind')
-        )
-        self.s.conn.commit()
-
-    def _assert_refused(self, call):
-        with self.assertRaises(RuntimeError) as caught:
-            call()
-        self.assertIn("break_point_kind", str(caught.exception))
-        self.assertIsInstance(caught.exception.__cause__, sqla.exc.OperationalError)
-
-    def test_gk_numeric_value_reads(self):
-        self._drop("GkNumericIntegration")
-        self._assert_refused(
-            lambda: _build(
-                self.s,
-                sqla_GkNumericValue_factory,
-                "GkNumericValue",
-                _gk_numeric_model_payload(),
-            )
-        )
-        self._assert_refused(
-            lambda: _read_batch(
-                self.s,
-                sqla_GkNumericValue_factory,
-                "GkNumericValue",
-                {"model": MODEL, "k": K_EXIT, "atol": ATOL, "rtol": RTOL},
-            )
-        )
-
-    def test_tk_numeric_value_build(self):
-        self._drop("TkNumericIntegration")
-        self._assert_refused(
-            lambda: _build(
-                self.s,
-                sqla_TkNumericValue_factory,
-                "TkNumericValue",
-                _tk_numeric_model_payload(),
-            )
-        )
-
-
 class TestTolerancesRequired(_StoreCase):
     """§3 item 2. Each numeric value read, with `atol` or `rtol` omitted, raises."""
 
