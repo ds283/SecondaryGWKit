@@ -1,7 +1,9 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: 9 of 9 prompts landed. The campaign's work is done; it is
-closed by the user after the orchestrator's review of 07.** Audit 00 has landed
+**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 9 of 10 prompts landed.** 07 landed
+(`a6c8f39`) and was reviewed (2026-10-04) with its acceptance 4 not met; at the user's request
+**07a** (written 2026-10-04) fixes the tensor-source reader. The campaign is closed by the user
+after the orchestrator's review of 07a. Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
 prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed; prompt 06a has landed (2026-10-04) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
@@ -76,6 +78,7 @@ as recommended:**
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
 | 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | `a6c8f39` | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
+| 07a | [Pair the tensor-source reader in stored order](07a-pair-the-tensor-source-reader-in-stored-order.md) | **E1**–**E3** | Sonnet | ✍️ yes, 2026-10-04; after 07, at the user's request | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1227,6 +1230,9 @@ Not remnants:
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ✅ four launches of `quadsource_atol_sweep.py --build --rehearsal --register` at `dbd8a51`, clean: `reference` `done`/0; `resumed-a` `killed`/143 in the `GkSource` stage; `resumed-b` (`--resume`) `killed`/143 in the `QuadSourceIntegral` stage; `resumed-c` (`--resume`) `done`/0. Each has its fingerprint and its driver's exit status (0, 143, 143, 0) in its launch log; each handler line within the second of the signal, no traceback, no Ray banner. The guard refuses an existing store before Ray. **Finding:** after `resumed-b`, the Ray dashboard and runtime-env agents outlived the driver by about 1–2 minutes (a §5 stop; the user decided to wait; `[07-a-killed-builds-ray-agents-outlive-the-driver]`) (verification §2.1) |
 | **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ✅ `compare_fingerprints` empty, both format 6, digest `39809dca…`, all 21 classes, each equal to its sidecar. Every stage finished before an interruption computed 0 next time; `GkSource` 224 = 291 − 102 + 35 pruned; `QuadSourceIntegral` 393 + 471 = 864. The 35 unvalidated rows were pruned at the next open, by serial; no `duplicate`. One `version` row per shard; census, `integrity_check`, `foreign_key_check` and the inventory clean on both. Counts equal `datastore-integrity` 10's but `tolerance` (7 against 6: the `1e-7` rtol is a value of its own) (verification §2.2) |
 | **L3** | 07 | Every reader, read-only, against the resumed store | ❌ **not met for `extract_tensor_source_data.py`**, which exits 1: it pairs its k in random order and asks for q > r, which the store does not hold; it predates the campaign (`[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]`). A sorted-draw wrapper, not the shipped reader, reads all six `QuadSource` rows and exits 0. The other five exit 0, and without `--models` the skip line prints and the exit is 0. None refuses anything; the store is byte-identical across every run; the fingerprint afterwards matches the sidecar. The `QuadSourceIntegral` extractor reads every stored row of the triples it draws (288 of 288), but by design draws 6 triples at random, 3 of them among the store's 9, so not all 864 (verification §2.3) |
+| **E1** | 07a | The tensor-source reader pairs its k in stored order (q ≤ r), through `wavenumber_exit_time_array`, as `main.py`'s pairs are | ⬜ |
+| **E2** | 07a | A labels-only `QuadSource` miss is refused by the reader, naming q and r | ⬜ |
+| **E3** | 07a | The fixed reader, three times on 07's resumed store, read-only: exit 0, six pairs, the store byte-identical | ⬜ |
 
 ---
 
@@ -1378,6 +1384,9 @@ with its closing note; log 03). Both index rows are deleted.
   - **Next step.** Not assigned. **A fix is needed before A3 v2's read-back**: pair the k in a
     fixed order (q ≤ r), or ask for the stored orientation. Consider also making a labels-only miss
     report its labels, so a reader's failure names what it asked for.
+  - **Assigned (2026-10-04):** to prompt 07a of this campaign, at the user's request after 07's
+    review: the reader pairs through `wavenumber_exit_time_array` (E1), refuses a miss naming its pair
+    (E2), and is re-run on 07's resumed store (E3).
 - **[07-a-killed-builds-ray-agents-outlive-the-driver]** *(opened 2026-10-04 by prompt 07;
   measured; does not block A3 v2, but changes its check after a kill)*
   - **The defect.** When a killed `--build`'s driver runs `ray.shutdown()` and exits 143, Ray's
