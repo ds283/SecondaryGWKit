@@ -1,0 +1,10 @@
+--- no such table (every queried column exists)
+    str(e) first line: (sqlite3.OperationalError) no such table: absent_table
+    TkNumericIntegration / GkNumericIntegration: test matches -> True
+    QCD_Cosmology: test matches -> True
+    BackgroundModel (read path re-queries without grid identity): test matches -> True
+--- database is locked (schema is current)
+    str(e) first line: (sqlite3.OperationalError) database is locked
+    TkNumericIntegration / GkNumericIntegration: test matches -> True
+    QCD_Cosmology: test matches -> True
+    BackgroundModel (read path re-queries without grid identity): test matches -> True

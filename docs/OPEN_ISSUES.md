@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-04 · **105 open** across nineteen campaigns.
+**Last updated:** 2026-10-04 · **108 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -32,6 +32,7 @@ the two disagree, the board is right.
 [`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md) ·
 [`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md) ·
 [`a3-v2-readiness`](../prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md) ·
+[`datastore-generic`](../prompts/datastore-generic/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -828,6 +829,19 @@ Prompt 07, the rehearsal of A3 v2's launch, opened three (2026-10-04).
 | `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]` | a3-v2-readiness | `test_main_plumbing.ReaderToleranceAgreementTestCase` reads only `object_get`/`object_get_vectorized`, so a reader's `object_read_batch` of a tolerance-keyed target is never compared with `main.py`. Today's one instance, the `QuadSourceIntegral` extractor, is pinned by `test_quadrature_tolerance_pin.py`. Test gap; does not block A3 v2. |
 | `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |
 | `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
+
+### 1.18 The datastore-generic campaign
+
+`prompts/datastore-generic` was opened on 2026-10-04, when the user found that `ShardedPool` names
+project tables and decided that the datastore layer is made generic again and that every fallback
+for a store written by older code is deleted, through the campaign. Its audit
+(`docs/datastore-generic-audit.md`) opened three issues, one of them a defect in current code.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-old-store-refusals-misfire-on-any-database-error]` | datastore-generic | Four factories test `"<column>" in str(e)`, which carries the statement, so any database error (a lock included) is reported as a stale store; `BackgroundModel`'s read path silently re-queries without grid identity (measured). Assigned: prompt 01. |
+| `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader, the inventory, `Datastore` and `ClientPool` hard-code fourteen facts about the project's tables (`BackgroundModel`'s copy unit, the `redshift`/`wavenumber` flags, the factory registry as a private import, …). Assigned: prompts 06–09. |
+| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline is already readable only at its own SHA). Assigned: prompts 01–05. |
 
 ---
 
