@@ -491,6 +491,11 @@ Neither opens an issue.
   - **Impact.** Maintenance, and code the refactor of 06–08 would otherwise have to preserve; one
     group of them is also a defect (`[00-old-store-refusals-misfire-on-any-database-error]`).
   - **Next step.** Prompts 01–05 delete them, each narrowing this entry; 05 closes it.
+  - **2026-10-04, while 04 was written:** the A3 baseline was retired by the user on 2026-10-04 (completed 21:31:59) with `store retire` run at `81c0a9a`.
+    The registry at `HEAD` refused it already, because the recorded fingerprint is format 1 and
+    `HEAD` computes format 6. At `81c0a9a` a fresh fingerprint matched, digest `433b7fc3…`, and
+    exactly its five files were deleted; the sidecar is the tombstone. No store under `var/` now
+    holds an old-store shape, so 04 costs no store anything.
   - **Narrowed (2026-10-04, prompt 01):** deleted, with their tests: the old-store refusals in
     `TkNumericIntegration` (`build`, `TkNumericValue.build`), `GkNumericIntegration` (`build`,
     `GkNumericValue.build`, `GkNumericValue.read_batch`), `QCD_Cosmology.build` and

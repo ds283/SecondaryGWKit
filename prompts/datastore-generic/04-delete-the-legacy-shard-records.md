@@ -290,20 +290,10 @@ other test. Line numbers and the evidence are in the orchestrator's notes.
     or change.
 - It changes no table, column or key (README §5 rule 9). `_write_shard_data` already writes only
   bare names.
-- **What it costs: the A3 baseline**, if it still exists when 04 runs.
-  - `var/datastores/handover-A3-baseline-lambdacdm.sqlite` records its four shards by absolute path
-    (audit G4).
-  - At `HEAD` its rows are already unreadable. A fresh fingerprint reads `GkSource` as absent and
-    `QuadSourceIntegral` as incomplete, and is format 6 against the sidecar's format 1, so
-    `store retire` is already refused at `HEAD`.
-  - `store copy` and `store move` still handle its files at `HEAD`; after 04 they refuse it as
-    "unusable record".
-  - **The clean route** is the registry at `81c0a9a`, the tree that retired the A3 backup. On
-    2026-10-04, a `store retire --dry-run` there matched the recorded fingerprint and would delete
-    the store's five files and nothing else. That route does not depend on 04.
-
-  This prompt does not touch the store. If it still exists, the log records this cost, and the
-  board records it beside the narrowing.
+- **It costs no store anything.** The one store with absolute records, the A3 baseline, was
+  retired by the user on 2026-10-04 (completed 21:31:59) with `store retire` run at `81c0a9a`. `HEAD` could not retire it, because its fingerprint
+  formats differ. Its sidecar is the tombstone (board §3, the fallbacks issue). The log need not
+  mention it.
 
 ---
 

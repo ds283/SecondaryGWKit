@@ -124,6 +124,10 @@ sidecar says Keep; it is the only comparator until A3 v2 exists and is verified.
 it.** Audit 00 may read it `mode=ro` through `Datastore/store_reader.py` only, to time a fingerprint
 on a real-sized store, and records that it did.
 
+*Added 2026-10-04, after the campaign closed:* the A3 baseline was retired by the user on 2026-10-04 (completed 21:31:59) with `store retire` run at `81c0a9a`,
+from `datastore-generic`'s work on prompt 04. Its fingerprint matched; its sidecar is the tombstone.
+A3 v2 has no stored comparator of rows; the tombstone keeps the format-1 fingerprint.
+
 **Prompts 00–06 write nothing under `var/`.** Their tests build stores in temporary directories or
 in memory. **Prompt 07 is the one exception**, and it writes only new stores of its own, under names
 no other store, tombstone or run uses, and never A3 v2's. **Prompt 07a** opens 07's resumed store, read-only, and writes no store; its reader's

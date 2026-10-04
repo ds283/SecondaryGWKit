@@ -334,6 +334,16 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   that store. Record:
   [`../store-retirement/logs/05-retire-the-two-stores.md`](../store-retirement/logs/05-retire-the-two-stores.md).
 
+  **Note (2026-10-04): the A3 baseline has been retired too.** `var/datastores/handover-A3-baseline-lambdacdm`
+  was retired by the user with `store retire` on 2026-10-04 (completed `21:31:59`). The registry
+  ran at `81c0a9a`, because at `HEAD` its format-1 fingerprint could not be compared and its rows
+  could no longer be read; at `81c0a9a` a fresh fingerprint matched, digest `433b7fc3…`. Its four
+  shards and its primary are gone; its sidecar is the tombstone. The measurements in the three
+  `a3-baseline-*` entries were taken from it and stand; nothing can re-take them, and the
+  regeneration (A3 v2) is what they point to. Recorded in
+  [`../datastore-generic/IMPLEMENTATION_STATE.md`](../datastore-generic/IMPLEMENTATION_STATE.md)
+  §3, the fallbacks issue.
+
   **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
   issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
   1680 are moot, and if it does not, the 8–10 days is the honest price and is a decision for

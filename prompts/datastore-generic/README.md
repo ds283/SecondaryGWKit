@@ -83,9 +83,9 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 **Why 04 was written after 03.** Its task was fixed: the audit's G4 found the only store that
 would meet it, the A3 baseline, already unreadable at `HEAD` for other reasons. It edits
 `ShardedPool` after 03, so it was written once 03 had landed and been reviewed, against the tree 03
-left (`4ca36c4`). Writing it found that the A3 baseline cannot be retired at `HEAD` even now (its
-fingerprint formats differ). After 04 it cannot be copied or moved at `HEAD` either. It can be
-retired cleanly at `81c0a9a` (prompt 04 §6).
+left (`4ca36c4`). Writing it found that the A3 baseline could not be retired at `HEAD` (its fingerprint
+formats differ), and that after 04 it could not be copied or moved there either. The user retired
+it the same day at `81c0a9a` (§3), so 04 costs no store anything.
 
 **Why 05–09 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
 What waits is their method, and for 05–07 a decision of the user's (§6.2).
@@ -101,8 +101,10 @@ What waits is their method, and for 05–07 a decision of the user's (§6.2).
 
 **No prompt opens, writes, copies or retires a store under `var/`.** Tests build stores in temporary
 directories, with the stand-in pool (`Datastore/tests/standin_pool.py`) or the real-store fixtures.
-The A3 baseline (`var/datastores/handover-A3-baseline-lambdacdm`, Keep) is already readable only at
-the SHA that wrote it (audit G4); nothing here changes that, and nothing opens it.
+The A3 baseline (`var/datastores/handover-A3-baseline-lambdacdm`) was readable only at the SHA
+that wrote it (audit G4). It was retired by the user on 2026-10-04 (completed 21:31:59) with `store retire` run at `81c0a9a`, the tree whose fingerprint
+format matched its sidecar's. Its sidecar is the tombstone. No store under `var/` now holds an
+old-store shape.
 
 **Before touching anything,** run `python -m RunRegistry list` and report anything `running`.
 
