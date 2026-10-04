@@ -2,9 +2,10 @@
 
 **Written:** 2026-10-04 on branch `datastore-generic-plan`, from `handover-remedial` at `dbd8a51`
 (the audit's tree), committed on `a6c8f39`, which changes no file the audit cites, by Claude Opus 5.5, from the audit [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)
-and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–04 are
+and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–05 are
 written**; their tasks are fixed by §6.1 and the audit alone (04 was written on 2026-10-04, after
-03 landed and was reviewed). **05 is held** on U1; **06–09 are held** on 01–05 and on U2–U4 (§2).
+03 landed and was reviewed; 05 on 2026-10-05, after 04 landed and was reviewed). **06–09 are held**
+on 01–05 and on U2–U4 (§2).
 
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
@@ -74,7 +75,7 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 02 | [`02-delete-the-remaining-factory-refusals.md`](02-delete-the-remaining-factory-refusals.md) | Audit B7. The old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource` and `QuadSourceIntegral`, and their tests. | **written** 2026-10-04; after 01 |
 | 03 | [`03-delete-the-reconciles-old-store-paths.md`](03-delete-the-reconciles-old-store-paths.md) | Audit B1–B4, B9. Reviews and takes `e53f323` (the `BackgroundModelValue` key, D3); compares `timestamp` (D4); deletes the missing-`replication_in_flight` path and the `controller_shard NOT NULL` refusal. | **written** 2026-10-04; independent of 01–02 |
 | 04 | [`04-delete-the-legacy-shard-records.md`](04-delete-the-legacy-shard-records.md) | Audit B6. Absolute shard records in `shard_paths.py` and `ShardedPool`; `tools/shard_key_audit.py`'s pre-`a2bd966` and missing-`shard_key_config` paths, and its OK verdict on an unusable record; the sweep script's check and docstring; `write_legacy_primary` renamed for the malformed-record tests that use it; the legacy tests deleted, and an absolute record pinned as refused by every reader. | **written** 2026-10-04; after 03 |
-| 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **held** on 03–04 (U1 taken 2026-10-04) |
+| 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **written** 2026-10-05; after 04 |
 | 06 | `06-give-the-layer-its-registry.md` | Audit C1 rows 10, 14 and the `config.sharding` import. `ShardedPool`, `store_reader` and `store_inventory` are given the factory registry (and the replicated set) instead of importing `Datastore._factories` and `config.sharding`. `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/` (U2). | **held** on 01–05 (U2 taken 2026-10-04) |
 | 07 | `07-declare-the-replication-facts-in-the-factories.md` | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **held** on 06 (U4 taken 2026-10-04) |
 | 08 | `08-derive-the-inventorys-class-list.md` | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys; the polymorphic cosmology reference declared by the client. | **held** on 06 |
@@ -87,8 +88,12 @@ left (`4ca36c4`). Writing it found that the A3 baseline could not be retired at 
 formats differ), and that after 04 it could not be copied or moved there either. The user retired
 it the same day at `81c0a9a` (§3), so 04 costs no store anything.
 
-**Why 05–09 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
-What waits is their method, and for 05–07 a decision of the user's (§6.2).
+**Why 05 was written after 04.** It edits `ShardedPool` after 04, and its test plan was measured
+against the tree 04 left (`bc3e944`): a rough version of the change was made in a scratch worktree
+and every suite run, so that each test it moves is named with its fate before dispatch.
+
+**Why 06–09 are held.** Their charters above are fixed and cannot drift to fit what 01–05 find.
+What waits is their method.
 
 **Order.**
 - 01 → 02: both edit factory refusals and their test modules overlap.
@@ -120,7 +125,9 @@ internals are the implementing prompt's to design.
 - **After 04**, a `shards` record is a bare file name, or every reader refuses it as unusable;
   `Datastore.shard_paths` has no `is_legacy_record`.
 - **After 05**, a store whose tables or columns differ from the registry's is refused by name before
-  anything reads it, in one place. 05 names the exception.
+  anything reads it, in one place: `schema_differences` and `StoreSchemaMismatch(RuntimeError)`,
+  both in `Datastore/SQL/schema.py`. A read-write open still reads an absent table as empty (U1);
+  both constructors also refuse a primary that differs from `_create_engine`'s tables.
 - **06 ships** the constructor parameter by which `ShardedPool` receives the registry, and the
   parameter by which `store_reader.open_read_only` and `store_inventory.read_inventory` receive it.
   06 names them; 07–09 use them.
