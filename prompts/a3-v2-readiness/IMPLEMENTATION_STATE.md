@@ -1,13 +1,18 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 8 of 9 prompts landed.** Audit 00 has landed
+**Last updated:** 2026-10-04 · **Status: 9 of 9 prompts landed. The campaign's work is done; it is
+closed by the user after the orchestrator's review of 07.** Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
 prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed; prompt 06a has landed (2026-10-04) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
 was held on 01–06, and is released (2026-10-03) now that all six have landed. **07 and a precursor,
 06a, were written on 2026-10-03** under the user's decision D5: `--build` could not be scoped, so 06a
 gives it a fixed rehearsal scope, and 07 runs on a clean tree (README §2, §6.1). With 06a landed and
-reviewed (2026-10-04), 07 is released.
+reviewed (2026-10-04), 07 was released; **prompt 07 has landed (2026-10-04)**. It rehearsed A3 v2's
+launch on two throwaway stores: the interrupted-and-resumed store's fingerprint equals the
+reference's, and every launch ended as recorded. **Its acceptance 4 is not met**:
+`extract_tensor_source_data.py` exits 1, by a defect that predates this campaign and needs a fix
+before A3 v2's read-back. It opened three issues (§3.2).
 
 The campaign was opened on 2026-10-02, when the user asked what remained to fix before the A3 v2
 LambdaCDM store is built, and decided that all seven defects of README §0 are fixed first, by one
@@ -70,7 +75,7 @@ as recommended:**
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
-| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ⬜ | — | — |
+| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | this commit | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1075,9 +1080,9 @@ Carried into 07's note (§0, "Carried from the review of 06a"):
 | **B1** | 06a | `--rehearsal` on `--build`: one Ray-free function gives the k sample, `--zend` and the manifest's `scope` text; without the flag, all three unchanged | ✅ `build_scope(args)` in `quadsource_atol_sweep.py` returns `(k sample, zend, scope text)`: production's `k_sample()`, `"0.1"` and today's 9280-item text, or with `--rehearsal` `np.logspace(5, 6, 3)`, `"250"` and a text that names the rehearsal, the 3-point grid and `zend 250`, and not `9280`. The text is a `str.format` template over `atol`, `rtol`, `cpus` and `database`, which `run_build` fills, so that `build_main_argv` reads only `args.rehearsal`. `run_build` takes its grid and its manifest's `scope` from it and prints one line when the flag is given; `build_main_argv` takes `--zend` from it (`_main_py_argv` gained a `zend` parameter defaulting to `"0.1"`, so `child_main_argv` is unchanged); `main()` refuses `--rehearsal` without `--build` before any mode runs. By `ast` against `3cdb52a`, only `_main_py_argv`, `build_main_argv`, `run_build` and `main` changed, plus the new function and constants (log 06a) |
 | **B2** | 06a | Tests: both scopes from the script's parser, the refusals outside `--build`, `run_build` reading its grid from the scope, `run_child` still production | ✅ `RunRegistry/tests/test_build_rehearsal_scope.py`, 28 tests, no Ray: each scope's k sample, argv list and scope text as literals; the refusals with `--child`, `--prepare`, `--report`, no mode and no mode with a registration, on a copy of the module with every mode stubbed (so a missed refusal cannot copy a store or launch a child); `run_build`'s grid and `scope` read from the scope function, with no `k_sample()` call, and `run_child` still `k_sample()`, read with `ast`. The one permitted `Namespace` in `test_prune_on_resume` gained `rehearsal=False`, nothing else in that file changed. Breakages (i)–(v), each caught (log 06a) |
 | **B3** | 06a | `interrupt_when.py` checks the pid against the driver its run's manifest names (`argv[0]`), so it can interrupt a `--build`; its dummy test unchanged, and a new case | ✅ the constant `DRIVER` is gone; `run_driver(run_dir)` returns the basename of the manifest's `argv[0]` (`None` if there is none or it is empty), read beside the slug, and `names_the_run(command, slug, driver)` requires it and `--register <slug>`; no `argv[0]` is logged and exits 2 without signalling. `interrupter_dummy_test.sh` passes unchanged. `docs/a3-v2-readiness/interrupter_build_dummy_test.sh`, output committed beside it: a `quadsource_atol_sweep.py` manifest signals a child named for it, refuses one named for `scoped_pipeline_run.py`, and refuses an empty `argv[0]`. Breakage (vi) caught by the new case (log 06a) |
-| **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ⏸ |
-| **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ⏸ |
-| **L3** | 07 | Every reader, read-only, against the resumed store | ⏸ |
+| **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ✅ four launches of `quadsource_atol_sweep.py --build --rehearsal --register` at `dbd8a51`, clean: `reference` `done`/0; `resumed-a` `killed`/143 in the `GkSource` stage; `resumed-b` (`--resume`) `killed`/143 in the `QuadSourceIntegral` stage; `resumed-c` (`--resume`) `done`/0. Each has its fingerprint and its driver's exit status (0, 143, 143, 0) in its launch log; each handler line within the second of the signal, no traceback, no Ray banner. The guard refuses an existing store before Ray. **Finding:** after `resumed-b`, the Ray dashboard and runtime-env agents outlived the driver by about 1–2 minutes (a §5 stop; the user decided to wait; `[07-a-killed-builds-ray-agents-outlive-the-driver]`) (verification §2.1) |
+| **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ✅ `compare_fingerprints` empty, both format 6, digest `39809dca…`, all 21 classes, each equal to its sidecar. Every stage finished before an interruption computed 0 next time; `GkSource` 224 = 291 − 102 + 35 pruned; `QuadSourceIntegral` 393 + 471 = 864. The 35 unvalidated rows were pruned at the next open, by serial; no `duplicate`. One `version` row per shard; census, `integrity_check`, `foreign_key_check` and the inventory clean on both. Counts equal `datastore-integrity` 10's but `tolerance` (7 against 6: the `1e-7` rtol is a value of its own) (verification §2.2) |
+| **L3** | 07 | Every reader, read-only, against the resumed store | ❌ **not met for `extract_tensor_source_data.py`**, which exits 1: it pairs its k in random order and asks for q > r, which the store does not hold; it predates the campaign (`[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]`). A sorted-draw wrapper, not the shipped reader, reads all six `QuadSource` rows and exits 0. The other five exit 0, and without `--models` the skip line prints and the exit is 0. None refuses anything; the store is byte-identical across every run; the fingerprint afterwards matches the sidecar. The `QuadSourceIntegral` extractor reads every stored row of the triples it draws (288 of 288), but by design draws 6 triples at random, 3 of them among the store's 9, so not all 864 (verification §2.3) |
 
 ---
 
@@ -1206,6 +1211,57 @@ with its closing note; log 03). Both index rows are deleted.
     start, and an interrupted pair dies as audit S1–S3 describe.
   - **Next step.** Give `run_child`'s wrapper `address="local"` and `install_killed_handler(None,
     latch)`, and end its `exec` through `finish_after_exec`. Not assigned.
+
+- **[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]** *(opened
+  2026-10-04 by prompt 07; measured; predates this campaign; **blocks A3 v2's read-back of
+  `QuadSource`**)*
+  - **The defect.** `extract_tensor_source_data.py` draws its k subsample with `random.sample`
+    (line 364), which returns the k in random order. It pairs them with
+    `itertools.combinations_with_replacement` (line 390), so unless the draw is ascending some pairs
+    have q > r. A store holds `QuadSource` rows for q ≤ r only. The labels-only lookup of a q > r pair
+    matches nothing, and `QuadSource.build`'s `row_data is None` branch
+    (`Datastore/SQL/ObjectFactories/QuadSource.py`) returns an unpopulated object instead of
+    reporting absence. The remote `plot_tensor_source` then raises `RuntimeError: values has not yet
+    been populated`, which names neither q nor r.
+  - **Measured** (verification §2.3.2). On the resumed rehearsal store, read-only, it exited 1 after
+    45 s. The store's six `QuadSource` rows are the q ≤ r pairs of its three k (read `mode=ro`). A
+    wrapper that only sorts the draw (`docs/a3-v2-readiness/rehearsal/tensor_source_sorted_sample.py`,
+    **not the shipped reader**) read all six and exited 0. On 2026-10-01, at `d144d04` with a
+    read-write pool, the same script passed LambdaCDM: a 1-in-6 draw. Not prompt 03's pool: a sharded
+    miss does not raise `ReadOnlyMiss`, and the store was byte-identical across the failing run.
+  - **Impact.** With three k the reader passes 1 time in 6. With A3 v2's eight it would pass 1 time
+    in 8! = 40 320, so A3 v2's `QuadSource` read-back would almost always fail.
+  - **Next step.** Not assigned. **A fix is needed before A3 v2's read-back**: pair the k in a
+    fixed order (q ≤ r), or ask for the stored orientation. Consider also making a labels-only miss
+    report its labels, so a reader's failure names what it asked for.
+- **[07-a-killed-builds-ray-agents-outlive-the-driver]** *(opened 2026-10-04 by prompt 07;
+  measured; does not block A3 v2, but changes its check after a kill)*
+  - **The defect.** When a killed `--build`'s driver runs `ray.shutdown()` and exits 143, Ray's
+    per-node dashboard agent and runtime-env agent of its local instance do not exit with it. They
+    are re-parented to pid 1 in the driver's process group, and exit on their own later.
+  - **Measured** (verification §2.1.3). After `resumed-b` (driver gone by about 02:00:30), pids 49729
+    (`ray/dashboard/agent.py`) and 49730 (`ray/_private/runtime_env/agent/main.py`), both from this
+    checkout's venv, were alive at 02:01:09. 49730 was gone by 02:01:30. 49729 was alive at 02:02:05
+    and gone by 02:02:36. The loads were 65–123. `reference` and `resumed-a` showed none at checks
+    about 60 s and 30–40 s after exit. A §5 stop of prompt 07; the user decided to wait, and nothing
+    was killed. `pgrep -f 'gcs_server|raylet|ray::'` lists the dashboard agent only through its
+    `--raylet-name` argument, and would not list the runtime-env agent.
+  - **Impact.** "No Ray process left" is not true at the moment the driver exits. A check right
+    after a kill reports processes that are about to go. A check by `pgrep`'s pattern alone can miss
+    one. A relaunch in that window starts beside them.
+  - **Next step.** Not assigned. A3 v2's checklist (verification §2.4) waits by pid, after any
+    interruption, for every process from the build's venv. Whether `ray.shutdown()` can be made to
+    take the agents with it is unexamined.
+- **[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]** *(opened 2026-10-04 by prompt 07;
+  measured; does not block A3 v2)*
+  - **The defect.** `docs/datastore-integrity-verification/stage_counts.py`'s `main` labels each
+    column with `run.name.split("-10-", 1)[1]`, so it raises `IndexError` on any run id that is not
+    `datastore-integrity` prompt 10's.
+  - **Measured.** On prompt 07's four runs: `IndexError: list index out of range`. 07 tabulated them
+    with `docs/a3-v2-readiness/rehearsal/stage_counts_07.py`, which imports the unchanged `read`.
+  - **Impact.** None on a build. A3 v2's stage counts need the same wrapper, or a fix.
+  - **Next step.** Not assigned. Label each column by the run's manifest `slug`, or by the run id
+    less its timestamp.
 
 ---
 
@@ -1613,3 +1669,25 @@ The counts agree with §5.14. No test failed. §5.14's two ComputeTargets failur
 load of 440–725, and both tests pass here.
 
 Index: **102 open**.
+
+### 5.16 After prompt 07 (2026-10-04)
+
+Measured 02:39–02:54 on 2026-10-04, serially, on the staged tree of prompt 07 (no code changed
+from `dbd8a51`), with README §7's command, each suite's output written to a file and its verdict
+read from it:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 run; 2 failures, `test_background_tau.TestBackgroundTau.test_build_cost` and `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, both load (below); the other 684 pass |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 281 OK |
+
+The 1-minute load average was 129 at the start and 12 at the end, beside another of the user's
+sessions. Re-run alone at a load of 13, `test_build_cost` passed and `test_wall_time_per_object`
+failed (0.132 s against 0.06 s). On an export of `dbd8a51` it failed too (0.084 s), and
+`test_build_cost` passed. Every count equals §5.15's and the pre-dispatch baselines.
+
+Index: **105 open** (102 + the three 07 opened).

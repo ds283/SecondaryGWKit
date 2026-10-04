@@ -1,0 +1,369 @@
+### Pass 1: the six readers, --models LambdaCDM (02:12:54-02:20:06), by the first version of run_readers.sh.
+### Its mtime column used 'stat -f', which the GNU stat first on PATH read as 'file system status':
+### the 'stat:' errors and the free-block counts below are that, and 'STORE FILES CHANGED' is false.
+### The SHA-256 (first column) of all five files is identical before and after every reader.
+
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_Gk_data: 2026-10-04 02:12:54 +0100: ./venv/bin/python extract_Gk_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_Gk_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 0; wall 33 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27346499 27346499 1102965897 1093859960
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27343922 27343922 1102862822 1093756880
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27347355 27347355 1103000135 1093894200
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27347353 27347353 1103000055 1093894120
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27347402 27347402 1103002015 1093896080
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066620 27066620 1091772485 1082664800
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27069513 27069513 1091888198 1082780520
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066704 27066704 1091775843 1082668160
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066166 27066166 1091754325 1082646640
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27070650 27070650 1091933675 1082826000
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066620 27066620 1091772485 1082664800
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27069513 27069513 1091888198 1082780520
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066704 27066704 1091775843 1082668160
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27066166 27066166 1091754325 1082646640
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27070650 27070650 1091933675 1082826000
+processes of this repository after: 0
+6:(Datastore pid=73170) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+15:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+16:(Datastore pid=73175) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_GkWKB_data: 2026-10-04 02:13:28 +0100: ./venv/bin/python extract_GkWKB_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_GkWKB_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 0; wall 94 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27070124 27070124 1091912635 1082804960
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27067455 27067455 1091805880 1082698200
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27070903 27070903 1091943791 1082836120
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27070356 27070356 1091921913 1082814240
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27067767 27067767 1091818358 1082710680
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 26765296 26765296 1079722191 1070611840
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 26768382 26768382 1079845638 1070735280
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 26765994 26765994 1079750123 1070639760
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 26766084 26766084 1079753724 1070643360
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 26769043 26769043 1079872075 1070761720
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 26765296 26765296 1079722191 1070611840
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 26768382 26768382 1079845638 1070735280
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 26765994 26765994 1079750123 1070639760
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 26766084 26766084 1079753724 1070643360
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 26769043 26769043 1079872075 1070761720
+processes of this repository after: 1
+10:(Datastore pid=74102) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+18:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+20:(Datastore pid=74105) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_GkSource_data: 2026-10-04 02:15:05 +0100: ./venv/bin/python extract_GkSource_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_GkSource_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 0; wall 82 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 26766247 26766247 1079760254 1070649880
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 26769268 26769268 1079881088 1070770720
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 26766597 26766597 1079774253 1070663880
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 26766247 26766247 1079760255 1070649880
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 26768944 26768944 1079868127 1070757760
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27023884 27023884 1090066137 1080955360
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27022664 27022664 1090017340 1080906560
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019497 27019497 1089890666 1080779880
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019438 27019438 1089888298 1080777520
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27024245 27024245 1090080570 1080969800
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27023884 27023884 1090066137 1080955360
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27022664 27022664 1090017340 1080906560
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019497 27019497 1089890666 1080779880
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019438 27019438 1089888298 1080777520
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27024245 27024245 1090080570 1080969800
+processes of this repository after: 1
+16:(Datastore pid=75852) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+24:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+25:(Datastore pid=75852) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+33:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_TkWKB_data: 2026-10-04 02:16:34 +0100: ./venv/bin/python extract_TkWKB_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_TkWKB_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 0; wall 111 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019635 27019635 1089896181 1080785400
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27024458 27024458 1090089084 1080978320
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27023780 27023780 1090061968 1080951200
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27022883 27022883 1090026090 1080915320
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27019820 27019820 1089903581 1080792800
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013655 27013655 1089657319 1080546200
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27011065 27011065 1089553727 1080442600
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013760 27013760 1089661519 1080550400
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27012838 27012838 1089624641 1080513520
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27009856 27009856 1089505368 1080394240
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013655 27013655 1089657319 1080546200
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27011065 27011065 1089553727 1080442600
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013760 27013760 1089661519 1080550400
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27012838 27012838 1089624641 1080513520
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27009856 27009856 1089505368 1080394240
+processes of this repository after: 1
+6:(Datastore pid=77721) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+15:(Datastore pid=77721) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+23:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+25:** QUERY K_EXIT VALUES FOR LambdaCDM
+30:** GENERATING TkNumeric/TkWKB DATA PRODUCTS FOR LambdaCDM
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_tensor_source_data: 2026-10-04 02:18:28 +0100: ./venv/bin/python extract_tensor_source_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_tensor_source_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 1; wall 45 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013169 27013169 1089637879 1080526760
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013144 27013144 1089636880 1080525760
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013019 27013019 1089631881 1080520760
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013024 27013024 1089632081 1080520960
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27013024 27013024 1089632080 1080520960
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27011146 27011146 1089557205 1080445840
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010988 27010988 1089550886 1080439520
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010789 27010789 1089542926 1080431560
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010562 27010562 1089533847 1080422480
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27007606 27007606 1089415614 1080304240
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27011146 27011146 1089557205 1080445840
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010988 27010988 1089550886 1080439520
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010789 27010789 1089542926 1080431560
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010562 27010562 1089533847 1080422480
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27007606 27007606 1089415614 1080304240
+processes of this repository after: 1
+6:(Datastore pid=78927) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+15:(Datastore pid=78928) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+17:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+25:Traceback (most recent call last):
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+=== extract_QuadSourceIntegral_data: 2026-10-04 02:19:16 +0100: ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_QuadSourceIntegral_data/
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+stat: cannot read file system information for '%Sm %z %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+exit 0; wall 50 s
+STORE FILES CHANGED
+before:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010711 27010711 1089539805 1080428440
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010701 27010701 1089539405 1080428040
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27007952 27007952 1089429450 1080318080
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27006728 27006728 1089380497 1080269120
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27010157 27010157 1089517649 1080406280
+after:
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005381 27005381 1089326715 1080215240
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27003005 27003005 1089231699 1080120200
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005443 27005443 1089329214 1080217720
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005476 27005476 1089330534 1080219040
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005474 27005474 1089330454 1080218960
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005381 27005381 1089326715 1080215240
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite 10000100000001a ? 1a 4096 4096 242837545 27003005 27003005 1089231699 1080120200
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005443 27005443 1089329214 1080217720
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005476 27005476 1089330534 1080219040
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite 10000100000001a ? 1a 4096 4096 242837545 27005474 27005474 1089330454 1080218960
+processes of this repository after: 1
+6:(Datastore pid=79528) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+15:(Datastore pid=79529) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+17:   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+
+### The sorted-sample wrapper (NOT THE SHIPPED READER), by the corrected run_readers.sh
+=== extract_tensor_source_data-sorted-sample: 2026-10-04 02:32:13 +0100: PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/tensor_source_sorted_sample.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local --models LambdaCDM --output var/a3-v2-readiness-07/extract/extract_tensor_source_data-sorted-sample/
+exit 0; wall 69 s
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  2026-10-04T02:04:28 36864 var/datastores/a3-v2-readiness-07-resumed.sqlite
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  2026-10-04T02:09:10 23777280 var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  2026-10-04T02:09:10 23904256 var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  2026-10-04T01:44:50 1077248 var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  2026-10-04T02:09:10 23531520 var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 146.4/sec)
+23:** tensor_source_sorted_sample (NOT THE SHIPPED READER): random.sample drew k = [316227.7660168379, 1000000.0, 100000.0] /Mpc; returned in ascending order [100000.0, 316227.7660168379, 1000000.0] /Mpc
+27:      Queue summary: 6 lookup (avg 16.55/min)
+
+### extract_Gk_data without --models, by the corrected run_readers.sh
+=== extract_Gk_data-no-models: 2026-10-04 02:34:40 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/a3-v2-readiness-07-resumed.sqlite --ray-address local  --output var/a3-v2-readiness-07/extract/extract_Gk_data-no-models/
+exit 0; wall 84 s
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  2026-10-04T02:04:28 36864 var/datastores/a3-v2-readiness-07-resumed.sqlite
+  4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  2026-10-04T02:09:10 23777280 var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite
+  4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  2026-10-04T02:09:10 23904256 var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite
+  fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  2026-10-04T01:44:50 1077248 var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite
+  53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  2026-10-04T02:09:10 23531520 var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+27:      Queue summary: 3 lookup (avg 126.9/sec)
+32:      Queue summary: 3 lookup (avg 118.9/sec)
+37:      Queue summary: 116 lookup (avg 130.3/min)
+40:>> RUNNING PIPELINE FOR MODEL QCD_Cosmology
+42:>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it
+
+### store fingerprint (no --write) on the resumed store, afterwards
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-04T02:09:15+01:00 by run a3-v2-readiness-07-resumed-c-20261004T020421, at dbd8a511fd3c22f1c8aed8374c5c452b7b25f453

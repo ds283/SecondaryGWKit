@@ -1,0 +1,40 @@
+shard 0: 97 GkSource rows, 97 distinct keys, 0 with validated = 0
+   serial 11: absent
+   serial 12: absent
+   serial 13: absent
+   serial 14: absent
+   serial 15: absent
+   serial 22: absent
+   serial 28: absent
+   serial 29: absent
+   serial 30: absent
+   serial 31: absent
+   serial 33: absent
+   serial 34: absent
+shard 1: 97 GkSource rows, 97 distinct keys, 0 with validated = 0
+   serial 214: absent
+   serial 215: absent
+   serial 216: absent
+   serial 217: absent
+   serial 218: absent
+   serial 219: absent
+   serial 228: absent
+shard 2: 0 GkSource rows, 0 distinct keys, 0 with validated = 0
+shard 3: 97 GkSource rows, 97 distinct keys, 0 with validated = 0
+   serial 522: absent
+   serial 523: absent
+   serial 528: absent
+   serial 529: absent
+   serial 530: absent
+   serial 531: absent
+   serial 539: absent
+   serial 540: absent
+   serial 541: absent
+   serial 542: absent
+   serial 543: absent
+   serial 544: absent
+   serial 545: absent
+   serial 547: now (547, 1, '2026-10-04 01:52:33.364115', 'a3-v2-readiness-07-GkSource-k1e+05-responsez8.6449e+12-2026-10-04T01:52:27')
+   serial 548: now (548, 1, '2026-10-04 01:52:40.837165', 'a3-v2-readiness-07-GkSource-k1e+05-responsez6.5311e+10-2026-10-04T01:52:33')
+   serial 549: now (549, 1, '2026-10-04 01:52:40.900678', 'a3-v2-readiness-07-GkSource-k1e+05-responsez4.0254e+10-2026-10-04T01:52:33')
+35 serials checked

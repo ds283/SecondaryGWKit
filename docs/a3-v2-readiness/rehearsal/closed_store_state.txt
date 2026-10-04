@@ -1,0 +1,156 @@
+### after reference
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-reference.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: a3-v2-readiness-07-reference.sqlite; version rows None
+-- shard 0: a3-v2-readiness-07-reference-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: a3-v2-readiness-07-reference-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: a3-v2-readiness-07-reference-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: a3-v2-readiness-07-reference-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+### after resumed-a
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: a3-v2-readiness-07-resumed.sqlite; version rows None
+-- shard 0: a3-v2-readiness-07-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 34 row(s), 12 with validated = 0: serials [11, 12, 13, 14, 15, 22, 28, 29, 30, 31, 33, 34]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: a3-v2-readiness-07-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 30 row(s), 7 with validated = 0: serials [214, 215, 216, 217, 218, 219, 228]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: a3-v2-readiness-07-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: a3-v2-readiness-07-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 38 row(s), 16 with validated = 0: serials [522, 523, 528, 529, 530, 531, 539, 540, 541, 542, 543, 544, 545, 547, 548, 549]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+### after resumed-b
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: a3-v2-readiness-07-resumed.sqlite; version rows None
+-- shard 0: a3-v2-readiness-07-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: a3-v2-readiness-07-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: a3-v2-readiness-07-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: a3-v2-readiness-07-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+### after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: a3-v2-readiness-07-resumed.sqlite; version rows None
+-- shard 0: a3-v2-readiness-07-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: a3-v2-readiness-07-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: a3-v2-readiness-07-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: a3-v2-readiness-07-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+

@@ -1,0 +1,57 @@
+### The tensor-source reader's failure, extract_tensor_source_data.py --models LambdaCDM (pass 1), its log's tail
+** EXTRACT TENSOR SOURCE DATA
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/extract_tensor_source_data.py", line 439, in <module>
+    read_models(model_list, run_pipeline)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/extract_common.py", line 324, in read_models
+    run_pipeline(model_data)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/extract_tensor_source_data.py", line 410, in run_pipeline
+    work_queue.run()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RayTools/RayWorkPool.py", line 331, in run
+    obj = ray.get(ref)
+          ^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 21, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/_private/worker.py", line 2771, in get
+    values, debugger_breakpoint = worker.get_objects(object_refs, timeout=timeout)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/_private/worker.py", line 919, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(RuntimeError): ray::plot_tensor_source() (pid=78922, ip=127.0.0.1)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/extract_tensor_source_data.py", line 135, in plot_tensor_source
+    values: List[QuadSourceValue] = source.values
+                                    ^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py", line 428, in values
+    raise RuntimeError("values has not yet been populated")
+
+### The store's QuadSource rows, read mode=ro: shard | serial | q exit serial | r exit serial | q /Mpc | r /Mpc | validated
+0|201|101|101|316227.76601683791|316227.76601683791|1
+0|202|101|201|316227.76601683791|1000000.0|1
+1|512|201|201|1000000.0|1000000.0|1
+3|1|1|1|100000.0|100000.0|1
+3|2|1|101|100000.0|316227.76601683791|1
+3|3|1|201|100000.0|1000000.0|1
+
+### The QuadSourceIntegral extractor: stored rows per (k, q, r) exit serial, read mode=ro: shard | k | q | r | rows | distinct z_response
+0|101|1|101|96|96
+0|101|101|101|96|96
+0|101|201|201|96|96
+1|201|1|201|96|96
+1|201|101|201|96|96
+1|201|201|201|96|96
+3|1|1|1|96|96
+3|1|101|101|96|96
+3|1|201|201|96|96
+exit serials: 1 = k 1e5, 101 = k 3.1623e5, 201 = k 1e6 /Mpc
+
+### the extractor's output directories (one per sampled (k, q, r)) and its integral_data.csv rows
+k=1e+05-q=1e+05-r=3.1623e+05-k-serial=1-q-serial=1-r-serial=101: no integral_data.csv
+k=1e+05-q=1e+06-r=1e+06-k-serial=1-q-serial=201-r-serial=201: integral_data.csv 96 rows
+k=1e+05-q=3.1623e+05-r=1e+06-k-serial=1-q-serial=101-r-serial=201: no integral_data.csv
+k=3.1623e+05-q=1e+05-r=3.1623e+05-k-serial=101-q-serial=1-r-serial=101: integral_data.csv 96 rows
+k=3.1623e+05-q=1e+06-r=1e+06-k-serial=101-q-serial=201-r-serial=201: integral_data.csv 96 rows
+k=3.1623e+05-q=3.1623e+05-r=1e+06-k-serial=101-q-serial=101-r-serial=201: no integral_data.csv

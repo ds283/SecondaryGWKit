@@ -1,0 +1,136 @@
+== var/runs/a3-v2-readiness-07-reference-20261004T012909
+manifest:
+  run_id: a3-v2-readiness-07-reference-20261004T012909
+  created: 2026-10-04T01:29:09+01:00
+  git_head: dbd8a511fd3c22f1c8aed8374c5c452b7b25f453
+  git_dirty: False
+  script: docs/handover/quadsource_atol_sweep.py
+  script_sha256: 3d0e6ecdba33315a550761797e108e85ba46b0b660b4481cfa1ddbd535b12073
+  results: var/datastores/a3-v2-readiness-07-reference.sqlite
+  scope: REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into a3-v2-readiness-07-reference.sqlite
+  campaign: a3-v2-readiness
+  prompt: 07
+  purpose: a3-v2-readiness prompt 07: reference rehearsal build of a throwaway LambdaCDM store (3 k over 1e5-1e6/Mpc, zend 250) at atol 1e-32 rtol 1e-7, run straight through to done; the interrupted-and-resumed store must equal its fingerprint
+  argv: ['docs/handover/quadsource_atol_sweep.py', '--build', '--rehearsal', '--database', 'var/datastores/a3-v2-readiness-07-reference.sqlite', '--job-name', 'a3-v2-readiness-07', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'reference', '--purpose', 'a3-v2-readiness prompt 07: reference rehearsal build of a throwaway LambdaCDM store (3 k over 1e5-1e6/Mpc, zend 250) at atol 1e-32 rtol 1e-7, run straight through to done; the interrupted-and-resumed store must equal its fingerprint', '--campaign', 'a3-v2-readiness', '--prompt', '07']
+final status.json, less the fingerprint's per-class detail:
+  {
+    "exit_code": 0,
+    "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-reference.manifest.json is not a problem-free registry sidecar (there is none)",
+    "heartbeat": "2026-10-04T01:42:07+01:00",
+    "pid": 27325,
+    "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+    "state": "done",
+    "units_done": 0,
+    "units_total": null
+  }
+  fingerprint: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, problems {}, taken {'git_dirty': False, 'git_head': 'dbd8a511fd3c22f1c8aed8374c5c452b7b25f453', 'run_id': 'a3-v2-readiness-07-reference-20261004T012909', 'when': '2026-10-04T01:42:07+01:00'}
+  fingerprint counts: BackgroundModel 1, GkNumericIntegration 1368, GkSource 291, GkSourcePolicy 2, GkSourcePolicyData 291, GkWKBIntegration 3477, IntegrationSolver 7, LambdaCDM 1, OneLoopIntegral 0, QCD_Cosmology 1, QuadSource 6, QuadSourceIntegral 864, QuadSourcePolicy 2, TkNumericIntegration 3, TkWKBIntegration 3, redshift 1159, store_tag 10, tolerance 7, version 1, wavenumber 3, wavenumber_exit_time 3
+stderr.log:
+  (compute_QuadSource_integral pid=27568) /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  (compute_QuadSource_integral pid=27568)   the requested tolerance from being achieved.  The error may be 
+  (compute_QuadSource_integral pid=27568)   underestimated.
+  (compute_QuadSource_integral pid=27568)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+last line of var/runs/a3-v2-readiness-07-reference.launch.log:
+  ** driver exit status 0
+
+== var/runs/a3-v2-readiness-07-resumed-a-20261004T014440
+manifest:
+  run_id: a3-v2-readiness-07-resumed-a-20261004T014440
+  created: 2026-10-04T01:44:40+01:00
+  git_head: dbd8a511fd3c22f1c8aed8374c5c452b7b25f453
+  git_dirty: False
+  script: docs/handover/quadsource_atol_sweep.py
+  script_sha256: 3d0e6ecdba33315a550761797e108e85ba46b0b660b4481cfa1ddbd535b12073
+  results: var/datastores/a3-v2-readiness-07-resumed.sqlite
+  scope: REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into a3-v2-readiness-07-resumed.sqlite
+  campaign: a3-v2-readiness
+  prompt: 07
+  purpose: a3-v2-readiness prompt 07: first launch of the resumed rehearsal build (same scope as the reference), to be interrupted by SIGTERM during CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+  argv: ['docs/handover/quadsource_atol_sweep.py', '--build', '--rehearsal', '--database', 'var/datastores/a3-v2-readiness-07-resumed.sqlite', '--job-name', 'a3-v2-readiness-07', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'resumed-a', '--purpose', 'a3-v2-readiness prompt 07: first launch of the resumed rehearsal build (same scope as the reference), to be interrupted by SIGTERM during CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT', '--campaign', 'a3-v2-readiness', '--prompt', '07']
+final status.json, less the fingerprint's per-class detail:
+  {
+    "exit_code": 143,
+    "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.manifest.json is not a problem-free registry sidecar (there is none)",
+    "heartbeat": "2026-10-04T01:51:09+01:00",
+    "pid": 41825,
+    "stage": "CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+    "state": "killed",
+    "units_done": 0,
+    "units_total": null
+  }
+  fingerprint: format 6, digest 16b29948c171c38f7e98fe457db19ca192d97d9843511c838dcb584241234999, problems {}, taken {'git_dirty': False, 'git_head': 'dbd8a511fd3c22f1c8aed8374c5c452b7b25f453', 'run_id': 'a3-v2-readiness-07-resumed-a-20261004T014440', 'when': '2026-10-04T01:51:09+01:00'}
+  fingerprint counts: BackgroundModel 1, GkNumericIntegration 1368, GkSource 102, GkSourcePolicy 2, GkSourcePolicyData 0, GkWKBIntegration 3477, IntegrationSolver 7, LambdaCDM 1, OneLoopIntegral 0, QCD_Cosmology 1, QuadSource 6, QuadSourceIntegral 0, QuadSourcePolicy 2, TkNumericIntegration 3, TkWKBIntegration 3, redshift 1159, store_tag 10, tolerance 7, version 1, wavenumber 3, wavenumber_exit_time 3
+stderr.log:
+  ** SIGTERM at 2026-10-04 01:51:08 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+  ** SIGTERM: the pipeline ended with SystemExit(143); recording killed, exit code 143
+last line of var/runs/a3-v2-readiness-07-resumed-a.launch.log:
+  ** driver exit status 143
+
+== var/runs/a3-v2-readiness-07-resumed-b-20261004T015203
+manifest:
+  run_id: a3-v2-readiness-07-resumed-b-20261004T015203
+  created: 2026-10-04T01:52:03+01:00
+  git_head: dbd8a511fd3c22f1c8aed8374c5c452b7b25f453
+  git_dirty: False
+  script: docs/handover/quadsource_atol_sweep.py
+  script_sha256: 3d0e6ecdba33315a550761797e108e85ba46b0b660b4481cfa1ddbd535b12073
+  results: var/datastores/a3-v2-readiness-07-resumed.sqlite
+  scope: REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into a3-v2-readiness-07-resumed.sqlite
+  campaign: a3-v2-readiness
+  prompt: 07
+  purpose: a3-v2-readiness prompt 07: second launch of the resumed rehearsal build, resuming resumed-a store with --resume (pruning its unvalidated GkSource rows at open), to be interrupted by SIGTERM during CALCULATE QUADRATIC SOURCE INTEGRALS
+  argv: ['docs/handover/quadsource_atol_sweep.py', '--build', '--rehearsal', '--resume', '--database', 'var/datastores/a3-v2-readiness-07-resumed.sqlite', '--job-name', 'a3-v2-readiness-07', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'resumed-b', '--purpose', 'a3-v2-readiness prompt 07: second launch of the resumed rehearsal build, resuming resumed-a store with --resume (pruning its unvalidated GkSource rows at open), to be interrupted by SIGTERM during CALCULATE QUADRATIC SOURCE INTEGRALS', '--campaign', 'a3-v2-readiness', '--prompt', '07']
+final status.json, less the fingerprint's per-class detail:
+  {
+    "exit_code": 143,
+    "fingerprint_sidecar": "written",
+    "heartbeat": "2026-10-04T02:00:21+01:00",
+    "pid": 49456,
+    "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, 100.00% (0 of 2 work items remaining)",
+    "state": "killed",
+    "units_done": 0,
+    "units_total": null
+  }
+  fingerprint: format 6, digest 02e97d50edb63732ad9295c5105bd99c81f810e1146dfd849b50e8fe17fc6720, problems {}, taken {'git_dirty': False, 'git_head': 'dbd8a511fd3c22f1c8aed8374c5c452b7b25f453', 'run_id': 'a3-v2-readiness-07-resumed-b-20261004T015203', 'when': '2026-10-04T02:00:20+01:00'}
+  fingerprint counts: BackgroundModel 1, GkNumericIntegration 1368, GkSource 291, GkSourcePolicy 2, GkSourcePolicyData 291, GkWKBIntegration 3477, IntegrationSolver 7, LambdaCDM 1, OneLoopIntegral 0, QCD_Cosmology 1, QuadSource 6, QuadSourceIntegral 393, QuadSourcePolicy 2, TkNumericIntegration 3, TkWKBIntegration 3, redshift 1159, store_tag 10, tolerance 7, version 1, wavenumber 3, wavenumber_exit_time 3
+stderr.log:
+  ** SIGTERM at 2026-10-04 02:00:06 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+  ** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+last line of var/runs/a3-v2-readiness-07-resumed-b.launch.log:
+  ** driver exit status 143
+
+== var/runs/a3-v2-readiness-07-resumed-c-20261004T020421
+manifest:
+  run_id: a3-v2-readiness-07-resumed-c-20261004T020421
+  created: 2026-10-04T02:04:21+01:00
+  git_head: dbd8a511fd3c22f1c8aed8374c5c452b7b25f453
+  git_dirty: False
+  script: docs/handover/quadsource_atol_sweep.py
+  script_sha256: 3d0e6ecdba33315a550761797e108e85ba46b0b660b4481cfa1ddbd535b12073
+  results: var/datastores/a3-v2-readiness-07-resumed.sqlite
+  scope: REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into a3-v2-readiness-07-resumed.sqlite
+  campaign: a3-v2-readiness
+  prompt: 07
+  purpose: a3-v2-readiness prompt 07: third and last launch of the resumed rehearsal build, resuming resumed-b store with --resume, run to done; its fingerprint must then equal the reference store fingerprint
+  argv: ['docs/handover/quadsource_atol_sweep.py', '--build', '--rehearsal', '--resume', '--database', 'var/datastores/a3-v2-readiness-07-resumed.sqlite', '--job-name', 'a3-v2-readiness-07', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'resumed-c', '--purpose', 'a3-v2-readiness prompt 07: third and last launch of the resumed rehearsal build, resuming resumed-b store with --resume, run to done; its fingerprint must then equal the reference store fingerprint', '--campaign', 'a3-v2-readiness', '--prompt', '07']
+final status.json, less the fingerprint's per-class detail:
+  {
+    "exit_code": 0,
+    "fingerprint_sidecar": "written",
+    "heartbeat": "2026-10-04T02:09:15+01:00",
+    "pid": 64172,
+    "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+    "state": "done",
+    "units_done": 0,
+    "units_total": null
+  }
+  fingerprint: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, problems {}, taken {'git_dirty': False, 'git_head': 'dbd8a511fd3c22f1c8aed8374c5c452b7b25f453', 'run_id': 'a3-v2-readiness-07-resumed-c-20261004T020421', 'when': '2026-10-04T02:09:15+01:00'}
+  fingerprint counts: BackgroundModel 1, GkNumericIntegration 1368, GkSource 291, GkSourcePolicy 2, GkSourcePolicyData 291, GkWKBIntegration 3477, IntegrationSolver 7, LambdaCDM 1, OneLoopIntegral 0, QCD_Cosmology 1, QuadSource 6, QuadSourceIntegral 864, QuadSourcePolicy 2, TkNumericIntegration 3, TkWKBIntegration 3, redshift 1159, store_tag 10, tolerance 7, version 1, wavenumber 3, wavenumber_exit_time 3
+stderr.log:
+  (compute_QuadSource_integral pid=64770) /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  (compute_QuadSource_integral pid=64770)   the requested tolerance from being achieved.  The error may be 
+  (compute_QuadSource_integral pid=64770)   underestimated.
+  (compute_QuadSource_integral pid=64770)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+last line of var/runs/a3-v2-readiness-07-resumed-c.launch.log:
+  ** driver exit status 0
+

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-03 · **102 open** across nineteen campaigns.
+**Last updated:** 2026-10-04 · **105 open** across nineteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -815,9 +815,13 @@ The sixth, seen when the user retired `datastore-integrity` prompt 10's stores, 
 taken over by this campaign's. The seventh was opened by this campaign's plan. Its audit, prompt 00,
 measured the three mechanisms the held prompts rest on (2026-10-02), and opened two more; a third
 was opened when 02 was written. Prompt 04 opened four (2026-10-03); the user closed one the same day.
+Prompt 07, the rehearsal of A3 v2's launch, opened three (2026-10-04).
 
 | Issue | Board | Hook |
 |---|---|---|
+| `[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]` | a3-v2-readiness | `extract_tensor_source_data.py` pairs a `random.sample` of k with `combinations_with_replacement`, so it asks for `QuadSource` pairs with q > r, which no store holds; the labels-only miss returns an unpopulated object and the plot dies on `values has not yet been populated`. Passes 1 time in 6 with 3 k, 1 in 40 320 with A3 v2's 8. Predates the campaign. **Fix before A3 v2's read-back.** Not assigned. |
+| `[07-a-killed-builds-ray-agents-outlive-the-driver]` | a3-v2-readiness | After a killed `--build` exits 143, its Ray dashboard and runtime-env agents are orphaned to pid 1 and exit on their own 1–2 min later (measured at loads 65–123); `pgrep 'gcs_server\|raylet\|ray::'` can miss the runtime-env agent. A3 v2's post-kill check must wait for them by pid. Not assigned. |
+| `[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]` | a3-v2-readiness | `docs/datastore-integrity-verification/stage_counts.py` labels columns by splitting the run id on `-10-`, so it raises `IndexError` on any other prompt's runs; 07 wrapped its `read`. Verification tool only. Not assigned. |
 | `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` | a3-v2-readiness | A handler's `finish` during a heartbeat's `write_json_atomic` shares the fixed `status.json.tmp`; the interrupted handle's partial JSON can land in `status.json`. The driver's second `finish` rewrites it, without `pid`/`stage` (read, not measured). Fix belongs in `RunRegistry`. Not assigned. |
 | `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | a3-v2-readiness | A `SIGTERM` during the ~2.3 s of `ray.init` reaches Ray's own handler, before the driver's exists, so it is recorded by `terminal_state`: `killed`/15 or `failed`/1, exit 15 or 1, not 143 (read, not measured). Not assigned. |
 | `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]` | a3-v2-readiness | `quadsource_atol_sweep.run_child`, left unchanged by prompt 04, still calls `ray.init` with no `address` (refused beside a `ray start` cluster) and installs no handler (a `SIGTERM` in a wait is `SystemExit(1)` under absl's alarm). Not A3 v2's path. Not assigned. |

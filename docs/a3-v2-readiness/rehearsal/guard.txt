@@ -1,0 +1,28 @@
+$ ls -la var/datastores | grep a3-v2-readiness-07-resumed   # before
+-rw-r--r--  1 ds283 staff 23777280 Oct  4 02:09 a3-v2-readiness-07-resumed-shard0000.sqlite
+-rw-r--r--  1 ds283 staff 23904256 Oct  4 02:09 a3-v2-readiness-07-resumed-shard0001.sqlite
+-rw-r--r--  1 ds283 staff  1077248 Oct  4 01:44 a3-v2-readiness-07-resumed-shard0002.sqlite
+-rw-r--r--  1 ds283 staff 23531520 Oct  4 02:09 a3-v2-readiness-07-resumed-shard0003.sqlite
+-rw-r--r--  1 ds283 staff    10625 Oct  4 02:09 a3-v2-readiness-07-resumed.manifest.json
+-rw-r--r--  1 ds283 staff    36864 Oct  4 02:04 a3-v2-readiness-07-resumed.sqlite
+
+$ shasum -a 256 var/datastores/a3-v2-readiness-07-resumed*   # before
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  var/datastores/a3-v2-readiness-07-resumed-shard0000.sqlite
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  var/datastores/a3-v2-readiness-07-resumed-shard0001.sqlite
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  var/datastores/a3-v2-readiness-07-resumed-shard0002.sqlite
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  var/datastores/a3-v2-readiness-07-resumed-shard0003.sqlite
+ab9b570aa1b09bde62bf628a27274b8baf2ecb6dfbf89f0d41bc2725a99dcabd  var/datastores/a3-v2-readiness-07-resumed.manifest.json
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  var/datastores/a3-v2-readiness-07-resumed.sqlite
+
+$ PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/a3-v2-readiness-07-resumed.sqlite --job-name a3-v2-readiness-07 --atol 1e-32 --rtol 1e-7
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1046, in <module>
+    main()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1030, in main
+    run_build(args)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 537, in run_build
+    raise RuntimeError(
+RuntimeError: quadsource_atol_sweep --build: a3-v2-readiness-07-resumed.sqlite, a3-v2-readiness-07-resumed-shard0000.sqlite, a3-v2-readiness-07-resumed-shard0001.sqlite, a3-v2-readiness-07-resumed-shard0002.sqlite, a3-v2-readiness-07-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+guard exit=1
+
+afterwards: shasum -a 256 of the same files: identical (diff empty); ls var/runs: no new run directory; no process of this repository alive
