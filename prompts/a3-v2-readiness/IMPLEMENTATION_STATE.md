@@ -48,6 +48,14 @@ recommended** (audit, closing section; README §6.2):
 | **U1** — does 02 also put the prune at open of a replicated row through a record (`[00-the-prune-at-open-deletes-a-replicated-row-outside-the-in-flight-record]`)? | **yes, in 02**: the pool prunes replicated classes under a `prune` record the check at open completes by re-running it (02's W3) |
 | **U2** — what is done about `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]`? | **record only**; no code change |
 
+**Put to the user by prompt 07's §1.1, and taken by the user on 2026-10-04, before dispatch, each
+as recommended:**
+
+| Decision | Taken |
+|---|---|
+| **D7-1** — where to interrupt the resumed build | **twice**, by `SIGTERM` to the driver: once in `CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT` (`resumed-a`), once in `CALCULATE QUADRATIC SOURCE INTEGRALS` (`resumed-b`); `resumed-c` runs to `done`. Four launches |
+| **D7-2** — the stores afterwards | **both stay** in `var/datastores/`, with their sidecars, for the orchestrator's review; the user then retires them, or not. 07 never runs `store retire` |
+
 ---
 
 ## 1. Prompts
@@ -62,7 +70,7 @@ recommended** (audit, closing section; README §6.2):
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
-| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 the user's before dispatch | ⬜ | — | — |
+| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 

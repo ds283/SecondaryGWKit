@@ -4,7 +4,8 @@
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Written:** 2026-10-03, after 06 landed and was reviewed, against what 01–06 shipped and 06a's
 interface (README §4). **Gate:** 06a landed and reviewed (board §1); `git status` is clean; nothing
-is `running` in the registry. **The user decides D7-1 and D7-2 before dispatch** (§1.1).
+is `running` in the registry. **The user decided D7-1 and D7-2 on 2026-10-04, both as
+recommended** (§1.1; board §1).
 **Closes:** nothing by name. It is the campaign's last prompt. **Opens:** anything you find (§6),
 **without fixing it**.
 **Recommended model:** **Opus**. It is the first time anything that 02–06a shipped runs under Ray on
@@ -75,6 +76,10 @@ is a verification record.
 
 Each is stated with the recommendation and its reason. **The orchestrator records the user's
 decision here, dated, before dispatch.**
+
+**Decided by the user on 2026-10-04, before dispatch, both as recommended:** D7-1, twice (the
+`GkSource` stage, then the `QuadSourceIntegral` stage; four launches); D7-2, both stores stay for
+the orchestrator's review, and the user then retires them, or not.
 
 - **D7-1 — where to interrupt.** *Recommended:* twice, by `SIGTERM` to the driver, as
   `datastore-integrity` D10-3 did.
