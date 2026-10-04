@@ -32,14 +32,16 @@ identity as columns rather than as a tag; it refuses, naming every generation it
 than returning a mixture. ``describe_background_generation`` below renders what it found.
 """
 
+import itertools
 from math import fabs
-from typing import List, NamedTuple, Optional, Sequence
+from typing import Iterable, List, NamedTuple, Optional, Sequence, Tuple
 
 import ray
 
 from ComputeTargets import GkSource, GkSourcePolicyData
 from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from CosmologyConcepts import wavenumber_exit_time, redshift
+from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from Datastore.store_inventory import read_inventory
 
 # ---------------------------------------------------------------------------------------------
@@ -340,6 +342,53 @@ def read_models(model_list: Sequence[dict], run_pipeline) -> List[str]:
         raise SystemExit(f"extract: no model was read. {why}.")
 
     return read
+
+
+# ---------------------------------------------------------------------------------------------
+# the (q, r) pairs a QuadSource reader asks for (prompts/a3-v2-readiness, prompt 07a)
+# ---------------------------------------------------------------------------------------------
+
+
+def quad_source_pairs(
+    k_exits: Iterable[wavenumber_exit_time],
+) -> List[Tuple[wavenumber_exit_time, wavenumber_exit_time]]:
+    """
+    The (q, r) pairs of ``k_exits`` a reader may look a ``QuadSource`` up for, q <= r. Pure.
+
+    A store holds ``QuadSource`` rows for q <= r only: main.py's ``--quad-source-queue`` pairs its
+    k with ``itertools.combinations_with_replacement`` over a ``wavenumber_exit_time_array``, which
+    sorts its members ascending in k and drops duplicates. A reader's lookup is labels-only, so a
+    q > r pair matches no row, and the lookup returns an unpopulated object rather than the row for
+    (r, q). The pairs are therefore made through ``wavenumber_exit_time_array`` too, so that the
+    reader's order and the build's are one order by construction, whatever order ``k_exits`` is in
+    (``random.sample`` returns its draw in random order).
+    """
+    return list(
+        itertools.combinations_with_replacement(wavenumber_exit_time_array(k_exits), 2)
+    )
+
+
+def require_quad_source(source) -> None:
+    """
+    Called by a reader before it reads a ``QuadSource``'s ``values`` or ``functions``: if the
+    labels-only lookup matched no stored row, raise ``RuntimeError`` naming the (q, r) asked for.
+
+    The factory's labels-only miss is an unpopulated ``QuadSource``, whose ``values`` would raise
+    "values has not yet been populated", naming neither k. A miss is an error, not a skip: a
+    reader asks only for pairs of k the store itself holds, so a miss means the store lacks a row
+    it should have.
+    """
+    if source.available:
+        return
+
+    q_exit: wavenumber_exit_time = source._q_exit
+    r_exit: wavenumber_exit_time = source._r_exit
+    raise RuntimeError(
+        "extract: no stored QuadSource matched "
+        f"q = {q_exit.k.k_inv_Mpc} /Mpc (wavenumber_exit_time store_id {q_exit.store_id}), "
+        f"r = {r_exit.k.k_inv_Mpc} /Mpc (wavenumber_exit_time store_id {r_exit.store_id}) "
+        "under this run's tags. A store holds QuadSource rows for q <= r only."
+    )
 
 
 TEXT_DISPLACEMENT_MULTIPLIER = 0.85

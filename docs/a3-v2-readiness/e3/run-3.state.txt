@@ -1,0 +1,18 @@
+RAY_ADDRESS=<unset>
+this venv's ray processes before: 0
+## before run-3  2026-10-04T10:32:47+0100
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  1791075868 36864  a3-v2-readiness-07-resumed.sqlite
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  1791076150 23777280  a3-v2-readiness-07-resumed-shard0000.sqlite
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  1791076150 23904256  a3-v2-readiness-07-resumed-shard0001.sqlite
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  1791074690 1077248  a3-v2-readiness-07-resumed-shard0002.sqlite
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  1791076150 23531520  a3-v2-readiness-07-resumed-shard0003.sqlite
+journals: 
+run-3 exit 0, wall 26 s
+## after run-3  2026-10-04T10:33:13+0100
+6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963  1791075868 36864  a3-v2-readiness-07-resumed.sqlite
+4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684  1791076150 23777280  a3-v2-readiness-07-resumed-shard0000.sqlite
+4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e  1791076150 23904256  a3-v2-readiness-07-resumed-shard0001.sqlite
+fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06  1791074690 1077248  a3-v2-readiness-07-resumed-shard0002.sqlite
+53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6  1791076150 23531520  a3-v2-readiness-07-resumed-shard0003.sqlite
+journals: 
+this venv's ray processes after:

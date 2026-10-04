@@ -1,0 +1,33 @@
+2026-10-04 10:32:52,660	INFO worker.py:1832 -- Started a local Ray instance. View the dashboard at http://127.0.0.1:8266 
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+
+** reading run "default", the only run in this datastore (no --run-label given)
+(Datastore pid=59044) @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+(Datastore pid=59044) |  Omega_m = 0.3111
+(Datastore pid=59044) |  Omega_cc = 0.6889
+(Datastore pid=59044) |  Omega_r = 9.139e-05
+(Datastore pid=59044) |  present-day energy density = 8.6e-24 g/m^3
+(Datastore pid=59044) |  matter-radiation equality at z = 3403
+(Datastore pid=59044) |  matter-Lambda equality at z = 0.3034
+
+>> RUNNING PIPELINE FOR MODEL LambdaCDM
+   @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+
+** QUERY K_EXIT VALUES
+(Datastore pid=59040) @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+(Datastore pid=59040) |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+   -- ALL WORK ITEMS COMPLETE in time 0.0308s
+      Queue summary: 3 lookup (avg 97.53/sec)
+      (no compute items were evaluated - all assets read from datastore)
+
+** EXTRACT TENSOR SOURCE DATA
+   -- ALL WORK ITEMS COMPLETE in time 9.56s
+      Queue summary: 6 lookup (avg 37.66/min)
+      (no compute items were evaluated - all assets read from datastore)
+(Datastore pid=59040) |  Omega_m = 0.3111
+(Datastore pid=59040) |  Omega_cc = 0.6889
+(Datastore pid=59040) |  Omega_r = 9.129e-05
+(Datastore pid=59040) |  present-day energy density = 8.6e-24 g/m^3
+(Datastore pid=59040) |  matter-radiation equality at z = 3407
+(Datastore pid=59040) |  matter-Lambda equality at z = 0.3034

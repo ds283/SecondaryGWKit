@@ -1,0 +1,14 @@
+2026-10-04T10:33:32+0100
+processes naming SecondaryGWKit/venv:
+every ray process (gcs_server, raylet, ray::, ray/ in command):
+62525     1 Fri Oct  2 23:27:58 2026     /Users/ds283/Documents/Code/ChamPBH/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_
+62529     1 Fri Oct  2 23:27:59 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents
+62531     1 Fri Oct  2 23:27:59 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Co
+62573     1 Fri Oct  2 23:28:01 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents
+62574     1 Fri Oct  2 23:28:01 2026     /Users/ds283/Documents/Code/ChamPBH/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ra
+62594 62574 Fri Oct  2 23:28:02 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents
+62595 62574 Fri Oct  2 23:28:02 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents
+96937 62574 Sat Oct  3 04:16:30 2026     ray::IDLE_SpillWorker                     
+96961 62574 Sat Oct  3 04:16:31 2026     ray::IDLE_SpillWorker                     
+97272 62574 Sat Oct  3 04:16:40 2026     ray::IDLE_RestoreWorker                     
+97276 62574 Sat Oct  3 04:16:41 2026     ray::IDLE_RestoreWorker                     

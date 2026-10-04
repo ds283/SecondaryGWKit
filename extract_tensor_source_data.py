@@ -1,5 +1,4 @@
 import argparse
-import itertools
 import sys
 from datetime import datetime
 from math import fabs
@@ -48,6 +47,8 @@ from extract_common import (
     read_models,
     require_background,
     select_models,
+    quad_source_pairs,
+    require_quad_source,
     add_run_selection_argument,
     describe_background_generation,
     resolve_run_selection,
@@ -131,6 +132,9 @@ def plot_tensor_source(model_label: str, source: QuadSource):
     base_path = base_path / f"{model_label}"
 
     sns.set_theme()
+
+    # a labels-only miss is an unpopulated QuadSource: refuse it, naming q and r
+    require_quad_source(source)
 
     values: List[QuadSourceValue] = source.values
     functions: QuadSourceFunctions = source.functions
@@ -387,7 +391,9 @@ def run_pipeline(model_data):
 
         return plot_tensor_source.remote(model_label, Tsource_ref)
 
-    work_grid = list(itertools.combinations_with_replacement(k_subsample, 2))
+    # the store holds QuadSource for q <= r only, and sample() returns k_subsample in random
+    # order: pair it in the stored order (prompts/a3-v2-readiness, prompt 07a)
+    work_grid = quad_source_pairs(k_subsample)
 
     work_queue = RayWorkPool(
         pool,

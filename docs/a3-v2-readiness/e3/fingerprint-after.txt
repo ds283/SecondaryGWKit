@@ -1,0 +1,5 @@
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/a3-v2-readiness-07-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+problems: none
+recorded: matches the fingerprint taken 2026-10-04T02:09:15+01:00 by run a3-v2-readiness-07-resumed-c-20261004T020421, at dbd8a511fd3c22f1c8aed8374c5c452b7b25f453

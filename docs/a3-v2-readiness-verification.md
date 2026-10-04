@@ -611,6 +611,93 @@ the store (read `mode=ro`; `reader_rows.txt`):
   never did (on 2026-10-01 it made 24 lookups too). Not a defect of the script, which subsamples on
   purpose. Recorded, not opened (log 07, deviation 5).
 
+#### 2.3.4 `extract_tensor_source_data.py` after prompt 07a — three runs, each exit 0
+
+*Added 2026-10-04 by prompt 07a. §2.3.2 above stays as it is: it was right for the reader it ran.*
+
+Prompt 07a changed the reader in two places (log 07a): `run_pipeline` pairs its `sample` draw with
+`extract_common.quad_source_pairs`, which orders it through `wavenumber_exit_time_array`, the
+class `main.py`'s stored pairs come from, so every pair asked for has q ≤ r; and
+`plot_tensor_source` calls `extract_common.require_quad_source(source)` before it reads
+`source.values`, so a labels-only miss raises a `RuntimeError` naming q and r and the words "no
+stored QuadSource". The `sample` draw itself is unchanged.
+
+The shipped reader, on the staged tree of prompt 07a (parent `e923b3c`), ran three times, serially,
+read-only, on the same closed resumed store, each in the foreground with its own local Ray
+instance, through [`e3_run.sh`](a3-v2-readiness/e3/e3_run.sh), which hashes the store before and
+after with [`snapshot.sh`](a3-v2-readiness/e3/snapshot.sh). Each run's command:
+
+```bash
+PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py \
+    --database var/datastores/a3-v2-readiness-07-resumed.sqlite \
+    --ray-address local --models LambdaCDM \
+    --output var/a3-v2-readiness-07a/extract/run-<n>/ \
+    > var/a3-v2-readiness-07a/extract/run-<n>.log 2>&1
+```
+
+**Before the first run** (10:23–10:31): `python -m RunRegistry list` showed 16 runs, none
+`running` (14 finished, 2 `unknown`). No process whose command line names `SecondaryGWKit/venv`
+was alive; every Ray process on the machine was the user's ChamPBH cluster (`gcs_server` 62525,
+`raylet` 62574, their agents and four idle workers, the pids and start times prompt 07 recorded).
+`RAY_ADDRESS` was unset. `store show` showed the store's registry sidecar, not a tombstone. `store
+fingerprint` (no `--write`): digest `39809dca…`, format 6, problems none, "matches the fingerprint
+taken 2026-10-04T02:09:15+01:00 by run a3-v2-readiness-07-resumed-c-20261004T020421".
+
+| Run | Start | Exit | Wall | `QUERY K_EXIT VALUES` | `EXTRACT TENSOR SOURCE DATA` | csv | plots (full, parts, q-zoom, r-zoom) | `ReadOnlyMiss` / `ReadOnlyWrite` / `RuntimeError` | Store files |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 10:31:37 | 0 | 25 s | 3 lookup | 6 lookup | 6 | 6, 6, 6, 3 | none | identical |
+| 2 | 10:32:18 | 0 | 27 s | 3 lookup | 6 lookup | 6 | 6, 6, 6, 3 | none | identical |
+| 3 | 10:32:47 | 0 | 26 s | 3 lookup | 6 lookup | 6 | 6, 6, 6, 3 | none | identical |
+
+- **Each run's summary lines** ([`run-1.log`](a3-v2-readiness/e3/run-1.log),
+  [`run-2.log`](a3-v2-readiness/e3/run-2.log), [`run-3.log`](a3-v2-readiness/e3/run-3.log), ANSI
+  colour codes stripped):
+  ```
+  >> Opened existing sharded datastore ".../a3-v2-readiness-07-resumed.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+  ** reading run "default", the only run in this datastore (no --run-label given)
+  >> RUNNING PIPELINE FOR MODEL LambdaCDM
+     @@ LambdaCDM background model: source grid construction version 2, digest 7139cb9c
+  ** QUERY K_EXIT VALUES
+        Queue summary: 3 lookup
+  ** EXTRACT TENSOR SOURCE DATA
+     -- ALL WORK ITEMS COMPLETE
+        Queue summary: 6 lookup
+        (no compute items were evaluated - all assets read from datastore)
+  ```
+  No `Traceback`, `ReadOnlyMiss`, `ReadOnlyWrite` or `RuntimeError` in any log.
+- **All six pairs, each run.** The six csv files are the q ≤ r pairs of the store's three k:
+  (1e5, 1e5), (1e5, 3.1623e5), (1e5, 1e6), (3.1623e5, 3.1623e5), (3.1623e5, 1e6), (1e6, 1e6)
+  /Mpc ([`files-written.txt`](a3-v2-readiness/e3/files-written.txt)). The `r-zoom` plot is drawn
+  only when q ≠ r, so three. The three runs' csv directories are identical (`diff -r`), and equal to
+  the one 07's sorted-draw wrapper wrote (`var/a3-v2-readiness-07/extract/extract_tensor_source_data-sorted-sample/`).
+- **The store, around each run**, by `shasum -a 256` and `/usr/bin/stat -f '%m %z'`
+  ([`run-<n>.state.txt`](a3-v2-readiness/e3/run-1.state.txt), [`final.txt`](a3-v2-readiness/e3/final.txt)).
+  The same before and after every run, and no `-journal`, `-wal` or `-shm` beside any file:
+
+  | File | SHA-256 | mtime (epoch) | size |
+  |---|---|---|---|
+  | `a3-v2-readiness-07-resumed.sqlite` | `6401569db93fbff8dafdb0a8093596ccea850d2b830ac38d5aff5db59bb16963` | 1791075868 | 36864 |
+  | `-shard0000.sqlite` | `4a17ef11df1fc0c3532e740e9cbf9aecb3e11f7e11e1a60ecd820946e5b1b684` | 1791076150 | 23777280 |
+  | `-shard0001.sqlite` | `4854bd9305bde6063efc3c791b09776fa0ea443684131f104af8057c1a29667e` | 1791076150 | 23904256 |
+  | `-shard0002.sqlite` | `fd6c21f119d841d958ec33e74bd415835f2ded8bc8815be285156375cdcbba06` | 1791074690 | 1077248 |
+  | `-shard0003.sqlite` | `53c7abca1a661bfae6dae17f648482bdf12b292be026db30da0cd7ab038853f6` | 1791076150 | 23531520 |
+
+  These are the values §2.3.1 gives after `resumed-c`.
+- **Ray, after each run and after the last** ([`ray-after.txt`](a3-v2-readiness/e3/ray-after.txt),
+  10:33:32): no process whose command line names `SecondaryGWKit/venv`. Every `gcs_server`,
+  `raylet`, `ray::` or `/ray/` process listed is ChamPBH's, with the pids and start times above.
+  Nothing lingered, so nothing was waited for.
+- **`store fingerprint`** (no `--write`) afterwards: the same output as before, line for line,
+  digest `39809dca…`, matching the sidecar ([`fingerprint-after.txt`](a3-v2-readiness/e3/fingerprint-after.txt)).
+
+**What three passes show, and what they do not.** The unit tests are the proof that every order of
+the draw is paired correctly: `ComputeTargets/tests/test_tensor_source_pairs.py` runs
+`quad_source_pairs` on every permutation of three and of four k. These runs show that the shipped
+reader works on a real store. Each run of the old reader passed with probability 1/6 (§2.3.2), so
+three passes of it would have had probability 1/216. That bounds how likely these three passes
+were by luck alone; it is not a proof. The reader does not print the order `sample` drew, so which
+draws these were is not recorded.
+
 ### 2.4 What A3 v2's launch must now pass
 
 This checklist supersedes `docs/datastore-integrity-verification.md` §2.6, which stays as it is.

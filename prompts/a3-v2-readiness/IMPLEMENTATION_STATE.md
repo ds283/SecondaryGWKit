@@ -1,9 +1,13 @@
 # A3 v2 readiness campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 9 of 10 prompts landed.** 07 landed
-(`a6c8f39`) and was reviewed (2026-10-04) with its acceptance 4 not met; at the user's request
-**07a** (written 2026-10-04) fixes the tensor-source reader. The campaign is closed by the user
-after the orchestrator's review of 07a. Audit 00 has landed
+**Last updated:** 2026-10-04 · **Status: 10 of 10 prompts landed. The campaign's work is done; it
+is closed by the user after the orchestrator's review of 07a.** 07 landed (`a6c8f39`) and was
+reviewed (2026-10-04) with its acceptance 4 not met; at the user's request **07a** (written
+2026-10-04) fixed the tensor-source reader, and **has landed (2026-10-04)**: the reader pairs its k
+in the stored order, refuses a `QuadSource` miss naming its pair, and exited 0 three times on 07's
+resumed store, reading all six pairs, the store byte-identical. It closed
+`[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]` and opened one issue
+(§3.2). Audit 00 has landed
 ([`docs/a3-v2-readiness-audit.md`](../../docs/a3-v2-readiness-audit.md)) and been reviewed; prompt 01
 has landed (2026-10-02) and been reviewed; prompt 02 has landed (2026-10-03) and been reviewed;
 prompt 03 has landed (2026-10-03) and been reviewed; prompt 04 has landed (2026-10-03) and been reviewed; prompt 05 has landed (2026-10-03) and been reviewed; prompt 06 has landed (2026-10-03) and been reviewed; prompt 06a has landed (2026-10-04) and been reviewed. 01–06 are written: 02, 03 and 04 on 2026-10-02, against the audit and the user's decisions U1 and U2. 07
@@ -78,7 +82,7 @@ as recommended:**
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
 | 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | `a6c8f39` | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
-| 07a | [Pair the tensor-source reader in stored order](07a-pair-the-tensor-source-reader-in-stored-order.md) | **E1**–**E3** | Sonnet | ✍️ yes, 2026-10-04; after 07, at the user's request | ⬜ | — | — |
+| 07a | [Pair the tensor-source reader in stored order](07a-pair-the-tensor-source-reader-in-stored-order.md) | **E1**–**E3** | Sonnet (run by Opus 5.5) | ✍️ yes, 2026-10-04; after 07, at the user's request | ✅ 2026-10-04 | this prompt's commit (parent `e923b3c`) | [`logs/07a-…`](logs/07a-pair-the-tensor-source-reader-in-stored-order.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1230,9 +1234,9 @@ Not remnants:
 | **L1** | 07 | A registered `--build` at `(1e-32, 1e-7)` into a throwaway store, `SIGTERM`ed and resumed | ✅ four launches of `quadsource_atol_sweep.py --build --rehearsal --register` at `dbd8a51`, clean: `reference` `done`/0; `resumed-a` `killed`/143 in the `GkSource` stage; `resumed-b` (`--resume`) `killed`/143 in the `QuadSourceIntegral` stage; `resumed-c` (`--resume`) `done`/0. Each has its fingerprint and its driver's exit status (0, 143, 143, 0) in its launch log; each handler line within the second of the signal, no traceback, no Ray banner. The guard refuses an existing store before Ray. **Finding:** after `resumed-b`, the Ray dashboard and runtime-env agents outlived the driver by about 1–2 minutes (a §5 stop; the user decided to wait; `[07-a-killed-builds-ray-agents-outlive-the-driver]`) (verification §2.1) |
 | **L2** | 07 | The recorded states, and the fingerprint against an uninterrupted reference | ✅ `compare_fingerprints` empty, both format 6, digest `39809dca…`, all 21 classes, each equal to its sidecar. Every stage finished before an interruption computed 0 next time; `GkSource` 224 = 291 − 102 + 35 pruned; `QuadSourceIntegral` 393 + 471 = 864. The 35 unvalidated rows were pruned at the next open, by serial; no `duplicate`. One `version` row per shard; census, `integrity_check`, `foreign_key_check` and the inventory clean on both. Counts equal `datastore-integrity` 10's but `tolerance` (7 against 6: the `1e-7` rtol is a value of its own) (verification §2.2) |
 | **L3** | 07 | Every reader, read-only, against the resumed store | ❌ **not met for `extract_tensor_source_data.py`**, which exits 1: it pairs its k in random order and asks for q > r, which the store does not hold; it predates the campaign (`[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]`). A sorted-draw wrapper, not the shipped reader, reads all six `QuadSource` rows and exits 0. The other five exit 0, and without `--models` the skip line prints and the exit is 0. None refuses anything; the store is byte-identical across every run; the fingerprint afterwards matches the sidecar. The `QuadSourceIntegral` extractor reads every stored row of the triples it draws (288 of 288), but by design draws 6 triples at random, 3 of them among the store's 9, so not all 864 (verification §2.3) |
-| **E1** | 07a | The tensor-source reader pairs its k in stored order (q ≤ r), through `wavenumber_exit_time_array`, as `main.py`'s pairs are | ⬜ |
-| **E2** | 07a | A labels-only `QuadSource` miss is refused by the reader, naming q and r | ⬜ |
-| **E3** | 07a | The fixed reader, three times on 07's resumed store, read-only: exit 0, six pairs, the store byte-identical | ⬜ |
+| **E1** | 07a | The tensor-source reader pairs its k in stored order (q ≤ r), through `wavenumber_exit_time_array`, as `main.py`'s pairs are | ✅ `extract_common.quad_source_pairs(k_exits)` returns `list(combinations_with_replacement(wavenumber_exit_time_array(k_exits), 2))`, its docstring saying why; `run_pipeline` builds `work_grid = quad_source_pairs(k_subsample)`, the `sample` draw unchanged, and `itertools` is no longer imported by the reader. Run on every permutation of three and of four real `wavenumber_exit_time`s: one list, `main.py`'s, q ≤ r, n(n+1)/2 pairs, a duplicate once; read with `ast`: `work_grid` from `quad_source_pairs(k_subsample)`, no `combinations_with_replacement` in `run_pipeline` (`ComputeTargets/tests/test_tensor_source_pairs.py`; breakages (i)–(iii)) |
+| **E2** | 07a | A labels-only `QuadSource` miss is refused by the reader, naming q and r | ✅ `extract_common.require_quad_source(source)` returns if `source.available`, else raises `RuntimeError` naming q and r by `k_inv_Mpc` and `wavenumber_exit_time` `store_id`, with "no stored QuadSource"; `plot_tensor_source` calls it before its first read of `source.values` or `.functions`. Run on a labels-only miss and on a stored `QuadSource`; read with `ast` for the order of the call and the reads (breakages (iv), (v)). No factory, `ComputeTargets` class, `main.py` or other reader changed |
+| **E3** | 07a | The fixed reader, three times on 07's resumed store, read-only: exit 0, six pairs, the store byte-identical | ✅ three runs of the shipped reader, 10:31–10:33, each exit 0 in 25–27 s: run `default`, `RUNNING PIPELINE FOR MODEL LambdaCDM`, 3 exit-time lookups, `EXTRACT TENSOR SOURCE DATA` 6 lookups, a csv and plots for all six q ≤ r pairs (the three runs' csvs identical, and equal to 07's sorted-draw wrapper's); no `ReadOnlyMiss`, `ReadOnlyWrite` or `RuntimeError`; all five files byte-identical with mtimes and sizes unchanged and no journal; no Ray process of this checkout left; `store fingerprint` still equals the sidecar. Three passes of the old reader would have had probability 1/216 (verification §2.3.4) |
 
 ---
 
@@ -1362,31 +1366,20 @@ with its closing note; log 03). Both index rows are deleted.
   - **Next step.** Give `run_child`'s wrapper `address="local"` and `install_killed_handler(None,
     latch)`, and end its `exec` through `finish_after_exec`. Not assigned.
 
-- **[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]** *(opened
-  2026-10-04 by prompt 07; measured; predates this campaign; **blocks A3 v2's read-back of
-  `QuadSource`**)*
-  - **The defect.** `extract_tensor_source_data.py` draws its k subsample with `random.sample`
-    (line 364), which returns the k in random order. It pairs them with
-    `itertools.combinations_with_replacement` (line 390), so unless the draw is ascending some pairs
-    have q > r. A store holds `QuadSource` rows for q ≤ r only. The labels-only lookup of a q > r pair
-    matches nothing, and `QuadSource.build`'s `row_data is None` branch
-    (`Datastore/SQL/ObjectFactories/QuadSource.py`) returns an unpopulated object instead of
-    reporting absence. The remote `plot_tensor_source` then raises `RuntimeError: values has not yet
-    been populated`, which names neither q nor r.
-  - **Measured** (verification §2.3.2). On the resumed rehearsal store, read-only, it exited 1 after
-    45 s. The store's six `QuadSource` rows are the q ≤ r pairs of its three k (read `mode=ro`). A
-    wrapper that only sorts the draw (`docs/a3-v2-readiness/rehearsal/tensor_source_sorted_sample.py`,
-    **not the shipped reader**) read all six and exited 0. On 2026-10-01, at `d144d04` with a
-    read-write pool, the same script passed LambdaCDM: a 1-in-6 draw. Not prompt 03's pool: a sharded
-    miss does not raise `ReadOnlyMiss`, and the store was byte-identical across the failing run.
-  - **Impact.** With three k the reader passes 1 time in 6. With A3 v2's eight it would pass 1 time
-    in 8! = 40 320, so A3 v2's `QuadSource` read-back would almost always fail.
-  - **Next step.** Not assigned. **A fix is needed before A3 v2's read-back**: pair the k in a
-    fixed order (q ≤ r), or ask for the stored orientation. Consider also making a labels-only miss
-    report its labels, so a reader's failure names what it asked for.
-  - **Assigned (2026-10-04):** to prompt 07a of this campaign, at the user's request after 07's
-    review: the reader pairs through `wavenumber_exit_time_array` (E1), refuses a miss naming its pair
-    (E2), and is re-run on 07's resumed store (E3).
+- **[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]** *(opened 2026-10-04
+  by prompt 07a, from its §6; read, not measured; does not block A3 v2)*
+  - **The defect.** `extract_QuadSourceIntegral_data.py` looks `QuadSource` up labels-only
+    (`z_sample=None`) and hands the result to two remote functions, neither of which checks
+    `source.available`. `plot_QuadSourceIntegrand` checks `GkPolicy.available` and `Gk.available`,
+    then reads `source.z_sample.max.z`; on a miss `z_sample` is `None`, so it raises
+    `AttributeError: 'NoneType' object has no attribute 'max'`. That file's own
+    `plot_tensor_source` reads `source.values` at once, raising `values has not yet been populated`.
+    Neither names the pair.
+  - **Impact.** None on a store that holds every row: the extractor's pairs come from
+    `combinations_with_replacement` over the sorted `source_k_exit_times`, so it asks in stored order
+    (07a §1). A row genuinely missing from a store would surface as an error that names no pair.
+  - **Next step.** Not assigned. Call `extract_common.require_quad_source(source)` at the top of both
+    remote functions, as `extract_tensor_source_data.py` now does. Not 07a's to change (its §6).
 - **[07-a-killed-builds-ray-agents-outlive-the-driver]** *(opened 2026-10-04 by prompt 07;
   measured; does not block A3 v2, but changes its check after a kill)*
   - **The defect.** When a killed `--build`'s driver runs `ray.shutdown()` and exits 143, Ray's
@@ -1419,6 +1412,50 @@ with its closing note; log 03). Both index rows are deleted.
 ---
 
 ## 4. Resolved issues
+
+- **[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]** *(opened
+  2026-10-04 by prompt 07; measured; predates this campaign; blocked A3 v2's read-back of
+  `QuadSource`; **closed 2026-10-04 by prompt 07a**)*
+  - **The defect.** `extract_tensor_source_data.py` draws its k subsample with `random.sample`
+    (line 364), which returns the k in random order. It pairs them with
+    `itertools.combinations_with_replacement` (line 390), so unless the draw is ascending some pairs
+    have q > r. A store holds `QuadSource` rows for q ≤ r only. The labels-only lookup of a q > r pair
+    matches nothing, and `QuadSource.build`'s `row_data is None` branch
+    (`Datastore/SQL/ObjectFactories/QuadSource.py`) returns an unpopulated object instead of
+    reporting absence. The remote `plot_tensor_source` then raises `RuntimeError: values has not yet
+    been populated`, which names neither q nor r.
+  - **Measured** (verification §2.3.2). On the resumed rehearsal store, read-only, it exited 1 after
+    45 s. The store's six `QuadSource` rows are the q ≤ r pairs of its three k (read `mode=ro`). A
+    wrapper that only sorts the draw (`docs/a3-v2-readiness/rehearsal/tensor_source_sorted_sample.py`,
+    **not the shipped reader**) read all six and exited 0. On 2026-10-01, at `d144d04` with a
+    read-write pool, the same script passed LambdaCDM: a 1-in-6 draw. Not prompt 03's pool: a sharded
+    miss does not raise `ReadOnlyMiss`, and the store was byte-identical across the failing run.
+  - **Impact.** With three k the reader passes 1 time in 6. With A3 v2's eight it would pass 1 time
+    in 8! = 40 320, so A3 v2's `QuadSource` read-back would almost always fail.
+  - **Next step.** Not assigned. **A fix is needed before A3 v2's read-back**: pair the k in a
+    fixed order (q ≤ r), or ask for the stored orientation. Consider also making a labels-only miss
+    report its labels, so a reader's failure names what it asked for.
+  - **Assigned (2026-10-04):** to prompt 07a of this campaign, at the user's request after 07's
+    review: the reader pairs through `wavenumber_exit_time_array` (E1), refuses a miss naming its pair
+    (E2), and is re-run on 07's resumed store (E3).
+  - **Closed 2026-10-04 by prompt 07a** (this prompt's commit, parent `e923b3c`). E1:
+    `extract_common.quad_source_pairs(k_exits)` pairs any iterable of exit times through
+    `wavenumber_exit_time_array`, the class `main.py`'s `--quad-source-queue` pairs come from, so the
+    reader's order and the build's are one order by construction; `run_pipeline` builds
+    `work_grid = quad_source_pairs(k_subsample)`, the `sample` draw unchanged. E2:
+    `extract_common.require_quad_source(source)`, called by `plot_tensor_source` before it reads
+    `source.values`, raises `RuntimeError` on a labels-only miss naming q and r by `k_inv_Mpc` and
+    `store_id` and saying "no stored QuadSource". Pinned by
+    `ComputeTargets/tests/test_tensor_source_pairs.py` (12 tests; every permutation of three and of
+    four k; breakages (i)–(v), each caught). E3: the shipped reader ran three times on 07's resumed
+    store, read-only, each exit 0 with all six `QuadSource` pairs read, the store byte-identical by
+    SHA-256, mtime and size, no journal, and its fingerprint still the sidecar's (verification
+    §2.3.4). Log: [`logs/07a-pair-the-tensor-source-reader-in-stored-order.md`](logs/07a-pair-the-tensor-source-reader-in-stored-order.md).
+  - **What it leaves.** The factory's labels-only miss is still a silent unpopulated object, by
+    design; a reader asks with `require_quad_source`. The `QuadSourceIntegral` extractor does not
+    ask: `[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]` (§3.2). Three
+    passes bound the chance of passing by luck at 1/216 for the old reader; the proof that every
+    order works is the unit test.
 
 - **[10-store-retire-reports-every-tombstone-as-a-reference]** *(seen 2026-10-02, when the user
   retired `datastore-integrity` prompt 10's two stores; indexed the same day in `424469e` with no
@@ -1864,3 +1901,27 @@ The counts agree with §5.15 and §5.16. No test failed; §5.16's two ComputeTar
 at a load of 129, both pass here.
 
 Index: **105 open** at `a6c8f39`.
+
+### 5.18 After prompt 07a (2026-10-04)
+
+Measured 10:34–10:44 on 2026-10-04, serially, in the checkout on the staged tree of prompt 07a
+(parent `e923b3c`), with README §7's command, each suite's output written to a file and its verdict
+read from it, at a 1-minute load average of 17–25 on 10 CPUs. Before the change, the same command
+on an export of `e923b3c` (10:23–10:31, load 9–16) gave the counts in the last column.
+
+| Suite | Result | At `e923b3c` (export) |
+|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK |
+| ComputeTargets | 698 run; 1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (load, below); the other 697 pass | 686 OK (1 skipped: needs git history) |
+| CosmologyModels | 39 OK | 39 OK |
+| Datastore | 598 OK | 598 run, 2 failures, both `test_inventory_retired.TestNoReferenceRemains`, which run `git grep` (`fatal: not a git repository`) |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) |
+| RunRegistry | 281 OK | 281 run, 2 failures, `test_manifest_carries_the_provenance_triple` and `TestCreate.test_the_fields_and_one_create_entry`, each reading a 7-character `git_head` (no git repository) |
+
+ComputeTargets' 698 is 686 plus the 12 of `test_tensor_source_pairs`. Every other count equals
+§5.15–§5.17. The export's four failures are the export's: each needs a git repository, and each
+passes in the checkout. `test_wall_time_per_object` (0.077 s against 0.06 s), re-run alone at a load
+of 17, failed in the checkout (0.103 s) and on the export of `e923b3c` (0.080 s): the known load
+flake, not this change.
+
+Index: **108 open** (108 − 1 closed + 1 opened), counted.
