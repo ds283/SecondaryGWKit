@@ -11,7 +11,7 @@
 
 No stop condition fired. Closes nothing; narrows
 `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`. Opens
-`[04-closed-store-refusals-repeat-their-prefix]`. Index 107 → 108. The commit is this commit.
+`[04-closed-store-refusals-repeat-their-prefix]`. Index 107 → 108. The commit is `bbdba04`.
 
 ## What shipped
 
@@ -281,7 +281,7 @@ No `UNINTENDED DRIFT`.
 
 **How each was run.** Each mutation was applied to the working tree over the staged final tree,
 and its diff taken with `git diff -- <file>`, so `git apply` replays it from a clean checkout of
-this commit. For each: `git apply -R --check`, run, `git apply -R`, then `git apply --check`
+`bbdba04`. For each: `git apply -R --check`, run, `git apply -R`, then `git apply --check`
 (forward) on the clean tree. All passed, and the tree was clean against the index after each. None
 is committed. (i) was run on the new module, the audit and sweep tests, the retire test and
 the five Datastore modules the prompt re-fixtured; (ii) on the new module, the audit and sweep

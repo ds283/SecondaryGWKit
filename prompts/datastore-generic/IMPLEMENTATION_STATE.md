@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: IN PROGRESS — 4 of 9 prompts landed (01, 02, 03, 04).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-05 · **Status: IN PROGRESS — 4 of 9 prompts landed (01, 02, 03, 04).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–04 are written; 05–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -52,7 +52,7 @@ recommended:**
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
-| 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | this commit | [log](logs/04-delete-the-legacy-shard-records.md) |
+| 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
@@ -65,7 +65,7 @@ recommended:**
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-04, used for 03);
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, not yet used).
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, used for 04).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the
@@ -430,6 +430,145 @@ Neither opens an issue.
   - the `OperationalError` for a primary without its record table;
   - the split grouping's exclusion of `timestamp`, which is current behaviour, not a fallback.
 
+**Orchestrator review of prompt 04 (2026-10-05).** Dispatched from `2ed3469` to one Sonnet
+subagent. Reviewed against its commit `bbdba04`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–5 are met. No stop condition fired, and the agent ran its
+suites in the foreground.
+
+*At dispatch.* The note's gate held: the commits after `4ca36c4` (`ddc266d`, `52a5d39`, `d1e7a50`,
+`2ed3469`) touch only prompts, this board, the README, other boards and the index. The tree was
+clean, and the only worktree was this checkout. The registry held 16 runs (14 finished, 2
+`unknown`, none `running`). The only Ray processes were ChamPBH's. The A3 baseline's directory
+listing showed only its sidecar, with `retired.state` `retired`. The baselines, serially at
+`2ed3469`, load 25–251:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), RunRegistry 281,
+  Datastore 629 (1784 s);
+- ComputeTargets 693, with 2 failures, `test_background_tau.test_build_cost` and
+  `test_tk_wkb_phase.TestCost.test_wall_time_per_object`. Both failed alone at load 23 (0.596 s
+  against 0.5 s, and 0.109 s against 0.06 s).
+
+The index held 107.
+
+The checks:
+1. **Scope.** 17 files, all on the prompt's §6 list. The diff over `RunRegistry/*.py` (tests aside),
+   `Datastore.py`, `ObjectFactories/`, `Datastore/store_*.py`, `real_store_fixtures.py`, `config/`,
+   `main.py`, `var/` and `orchestrator/` is empty. Under `docs/` only `OPEN_ISSUES.md` and the sweep
+   script changed.
+2. **E1, by grep.** The prompt's §3.2 greps print nothing. `PurePath(stored).is_absolute()` appears
+   nowhere, and `is_legacy_record` appears nowhere outside `prompts/` and `docs/`.
+3. **E1, by `ast`, against the pre-images, docstrings stripped.**
+   - `shard_paths.py`: only `resolve_shard_path` changes (one `_require_bare_name` call), and
+     `is_legacy_record` and the `PurePath` import are gone.
+   - `ShardedPool.py`: only `_resolve_shard_rows` and the import change. `copy_store` and
+     `delete_store` dump identically.
+   - The sweep script: only `assert_store_is_self_consistent` changes. Its `ValueError` is caught
+     per serial and reported among the mismatches, so the check raises its own `RuntimeError`.
+   - The audit tool: only `main` changes.
+     - `shard_key_config` is required, and so is a row in it.
+     - The `wavenumber_serial` branch is gone.
+     - Every record is resolved before the audit (log deviation 1), and an unusable one exits 2.
+     - A missing shard file still skips the cross-file check.
+4. **E4, the tests, by `ast`.**
+   - Exactly the note's fifteen methods are gone, with `TestLegacyRecords`,
+     `TestCopyOfALegacySource`, `TestLegacyRecordsNamingAnotherStore` and `TestLegacyShape`.
+   - One method was renamed, as the prompt allows: `test_moved_store_with_no_shards_is_refused`.
+     Its body differs only in building a bare-name store.
+   - Every re-fixture differs only in the records it builds.
+     `TestCopiedStore.test_copied_directory_reads_its_own_shards_not_the_originals` now asserts
+     that B's copied records are the bare names, where it asserted that they named A's files (log
+     deviation 3). Its precondition needed absolute records, and the property (B's pool reads B's
+     files, and A is byte-identical) is unchanged.
+   - Every split loses only its legacy case. The collapsed helpers (`source(kind)` → `new_source`,
+     `_cases` → `LAYOUTS`, `store(shape)` → `new_store()`, `SHAPES`, the `other` parameter) gave
+     the surviving cases exactly as before.
+   - Every kept test differs only in the fixture's name. So does `write_hand_built_primary`'s
+     body.
+   - The new methods are the two new modules (12 + 7), the sweep refusal and the retire refusal.
+5. **E2, the new module.** It was read, then run by name with the audit, sweep and retire refusal
+   tests: 21 tests, OK. Each entry point is driven against B, and each asserts "Shard #0",
+   "unusable record", the record, and `tree_state` of the whole temporary root, both stores
+   included.
+6. **E3, by running.** `test_shard_file_name`, `test_store_reader`, `test_sharded_store_script`,
+   `test_store_copy_move` and the five kept tests: 56 tests, OK.
+7. **E5, the pins.** The five diffs were extracted from the log and replayed with `git apply` in
+   `bash`:
+   - (i): 20 failures and 1 error over the 21 tests of check 5. That is every refusal test, and
+     neither control.
+   - (ii): the same 21. Only `shard_paths.py` showed in `git status` under it, and `var/` was
+     unchanged (names, mtimes and sizes).
+   - (iii): `test_a_primary_without_shard_key_config` fails.
+   - (iv): the three unusable-record audit tests fail.
+   - (v): both sub-tests of `test_the_check_refuses_an_absolute_record` error.
+
+   The tree was clean after each `git apply -R`. (My first pass at (i) and (ii) passed the test
+   list unsplit under zsh and loaded nothing. The figures are from the rerun in `bash`.)
+8. **The probe**, from the scratchpad, at `bbdba04` and at an export of `2ed3469`, with
+   `shard_store_fixtures`:
+   - **A bare-name store**, at both trees:
+     - `read_pool` reads it;
+     - `copy_store`, `move_store` and `delete_store` leave identical trees;
+     - the audit gives identical stdout and exit code.
+
+     On the hand-built current store that is `VERDICT: OK`, exit 0. On `write_new_store`'s
+     placeholders it is a traceback, exit 1, and only the traceback's line number differs.
+   - **B**:
+     - at `2ed3469`, `read_pool`, `copy_store`, `move_store`, `closed_store_files` and
+       `delete_store` (both `resume` values) read B's own siblings, with the relocation notice;
+     - at `bbdba04`, every entry point, `open_read_only` included, refuses with "has an unusable
+       record … is not a bare file name";
+     - A is unchanged at both.
+   - **C**, whose absolute records name its own siblings: read at `2ed3469`, refused at `bbdba04`.
+   - **The audit tool:**
+     - without `shard_key_config`: exit 0 and "Cross-file check … was not possible" at
+       `2ed3469`, exit 2 at `bbdba04`;
+     - on `{0: "../outside.sqlite"}`: exit 0 and "VERDICT: OK" at `2ed3469`, exit 2 at
+       `bbdba04`.
+9. **E6.**
+   - The fallbacks issue carries "Narrowed (2026-10-04, prompt 04)", and its index row names 04's
+     part.
+   - `[04-closed-store-refusals-repeat-their-prefix]` is in §3 with the measured message, and in
+     the index.
+   - The index held 108 by counting, matching its header.
+   - §1, L1–L3 and §5.5 are written.
+10. **Suites**, serially at `bbdba04`, load 14–40:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280 (281 − 3 + 2), OK;
+    - Datastore 636 (629 − 12 + 19, 959 s), OK;
+    - ComputeTargets 693, with the same 2 failures as at `2ed3469` and
+      `test_quadsource_policy_main` passing (19 tests).
+
+    Run alone, `test_build_cost` passed and `test_wall_time_per_object` failed (0.066 s against
+    0.05 s), as it did alone before the change. That is load, not 04, which touches nothing in
+    `ComputeTargets`. `black --check` is clean on the 14 Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `bbdba04` in §1, §5.5 and the log.
+- The audit tool's module docstring had one line of 118 characters, which `black` does not
+  reflow. It is rewrapped, and the change is docstring-only.
+- This board's note list marks `orchestrator/prompt-04.md` used.
+- **Opened** `[04-the-shard-key-audit-crashes-where-it-should-refuse]` (§3, and the index, 109),
+  from the log's third observation. It was measured at `bbdba04`, and is current behaviour that
+  04 did not change.
+
+*Kept as is.* The log's other observations:
+- The verification scripts under `docs/` that read `shards.filename` directly
+  (`a3-v2-readiness/rehearsal/closed_store_state.py` reads the final component) are measurements of
+  past runs, and none goes through the resolver.
+- `RunRegistry/stores.py:81-82` is U3's.
+- `quiet` in `test_delete_store` is now a pass-through, kept to leave its call sites alone.
+
+None opens an issue.
+
+*Handed on.* **05**'s note must carry:
+- the absent-table and absent-column tolerance in `_read_replicated_tables`;
+- 02's four `numeric_serial` selects;
+- the bare `OperationalError` for a primary without `replication_in_flight` (03);
+- the split grouping's exclusion of `timestamp`, which is current behaviour (03).
+
+04's log adds that `write_hand_built_primary` builds a primary without `replication_in_flight`, so
+the constructor refuses it. 05's refusal of a store whose tables differ must not be pinned with that
+fixture through the constructor, unless the test means the absent table.
+
 ---
 
 ## 2. Items
@@ -556,6 +695,23 @@ Neither opens an issue.
   - **Next step.** The user will have it cleaned up (2026-10-04). The new
     `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
     its prefix, so a cleanup does not break it.
+- **[04-the-shard-key-audit-crashes-where-it-should-refuse]** *(opened 2026-10-05 by the
+  orchestrator's review of prompt 04, from the log's observations; measured at `bbdba04`)*
+  - **The defect.** `tools/shard_key_audit.py` ends in a Python traceback and exit code 1, with no
+    verdict, in two cases:
+    - shard 0's file exists but is not a database: `ATTACH` raises
+      `sqlite3.DatabaseError: file is not a database`, and the tool catches only
+      `OperationalError` there;
+    - `shard_key_config` exists without a `key_type` column:
+      `sqlite3.OperationalError: no such column: key_type`, from the `SELECT` that prompt 04 moved
+      ahead of the audit (the same `SELECT` raised the same error before 04, inside its
+      `if "shard_key_config" in tables`).
+  - **Impact.** Exit code 1 is also the tool's `VERDICT: INCONSISTENT` code, so a caller that
+    reads only the exit code is told "rebuild this store" where the tool has not audited it. Nothing
+    is written: the tool opens everything `mode=ro`. No current store has either shape; the first is
+    what the shard fixtures' placeholder files look like to it.
+  - **Next step.** Both should be refusals with exit 2, like the tool's other refusals. Not 04's
+    (unchanged by it, README §5 rule 4); for the user to assign.
 
 ---
 
@@ -648,7 +804,7 @@ Measured serially on the staged tree.
 `test_one_timestamp_per_write`'s 28 are 27 existing tests rerun under a ticking clock plus one
 new; they add about 100 s to the Datastore suite.
 
-### 5.5 After prompt 04 (2026-10-04, this commit)
+### 5.5 After prompt 04 (2026-10-04, `bbdba04`)
 
 Measured serially on the staged tree, at load 21–77. The Datastore suite was run in four groups of
 modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`), because a single Bash call

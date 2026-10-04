@@ -19,10 +19,11 @@ The shard file it attaches for the cross-file check is found exactly as
 ShardedPool finds it, by the one resolver in Datastore/shard_paths.py: the
 `shards` record's file name, in the primary's own directory. A record that is
 not a bare file name, an absolute path included, is refused, so auditing a
-copied store can never check the original's shard in place of the copy's. That module imports only the standard library and
-is outside the Datastore.SQL package, so importing it does not pull in ray or
-sqlalchemy; the repository root is put on sys.path below so that the script
-still runs standalone, from any directory, with no PYTHONPATH.
+copied store can never check the original's shard in place of the copy's.
+That module imports only the standard library and is outside the
+Datastore.SQL package, so importing it does not pull in ray or sqlalchemy;
+the repository root is put on sys.path below so that the script still runs
+standalone, from any directory, with no PYTHONPATH.
 
 IMPORTANT -- there is no safe automated repair. Reconstructing the correct
 map requires knowing the order in which shard-key objects were originally
