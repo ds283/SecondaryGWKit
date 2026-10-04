@@ -63,7 +63,8 @@ recommended:**
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
-(2026-10-04, used for 01).
+(2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
+not yet used).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the
