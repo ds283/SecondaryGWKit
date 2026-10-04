@@ -8,7 +8,7 @@ re-queries. `extract_common` refuses a store with no runs and names no older sto
 deleted, thirteen added. None of the prompt's §5 stop conditions fired. Closes
 `[00-old-store-refusals-misfire-on-any-database-error]`; narrows
 `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`. Opens nothing. Index 108 → 107.
-The commit is this commit.
+The commit is `8636491`.
 
 ## What shipped
 
@@ -168,8 +168,8 @@ The commit is this commit.
 
 ## The deliberate-breakage record
 
-Each diff is taken against the staged tree (the tree this commit holds) and replays with `git apply`
-from a clean tree at this commit, in `bash`. All were `git apply --check`ed, applied, run, and
+Each diff is taken against the staged tree (the tree `8636491` holds) and replays with `git apply`
+from a clean tree at `8636491`, in `bash`. All were `git apply --check`ed, applied, run, and
 reversed with `git apply -R`; the tree was clean against the index afterwards. None is committed.
 
 **(i) Restore `TkNumericIntegration.build`'s handler, with its `str(e)` test.** Fails

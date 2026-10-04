@@ -49,7 +49,7 @@ recommended:**
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | this commit | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
+| 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ⬜ | — | — |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ⬜ | — | — |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
@@ -63,7 +63,120 @@ recommended:**
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
-(2026-10-04, not yet used).
+(2026-10-04, used for 01).
+
+**Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
+subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the
+note's §3 passed**; acceptance 1–5 are met, and no §5 stop condition fired.
+
+*At dispatch.* The tree was clean, the only worktree was this checkout, and the registry held 16
+runs: 14 finished, 2 `unknown`, none `running`. The only Ray processes were ChamPBH's, from its own
+venv. **The note's gate did not hold as written.** `3b96ba1` (`a3-v2-readiness` 07a) landed after the
+note and touches `extract_common.py`. It adds `quad_source_pairs` and `require_quad_source` and two
+imports. The facts it could move were re-checked at `6ea366e` and handed to the agent as an addendum.
+`extract_common`'s line numbers moved by two, and `extract_tensor_source_data.py`'s
+`require_background` call is now at `:333`. M2's functions were unchanged. ComputeTargets is now
+**698**, which includes `test_tensor_source_pairs`' 12. The baselines, serially at load 13–64:
+AdaptiveLevin 32, ComputeTargets 698 (1 failure, `test_background_tau.test_build_cost`, which passed
+alone in 2 of 3 re-runs), CosmologyModels 39, Datastore 598 (449 s), LiouvilleGreen 148 (1 skipped),
+RunRegistry 281. The index held 108.
+
+*The agent.* It stopped twice, waiting on its own suite run, and was resumed with `SendMessage`. On
+resuming it was told three things. Remove the test helpers that only the eleven deleted tests used
+(the log's IMPLEMENTATION CHOICE). Open no issue for the six `extract_*.py` comments; the residue
+below fixes them. Its M2 choice, that `describe_background_generation` says so rather than raising,
+is accepted.
+
+The checks:
+1. **Scope.** 13 files, all on the note's §2 list. The diff over `ShardedPool.py`,
+   `Datastore/store_*.py`, the `extract_*_data.py` scripts, `main.py`, `config/`, `var/` and
+   `ComputeTargets/BackgroundModel.py` is empty. Under `*/tests/`, M3's four modules changed and one
+   module was added, `Datastore/tests/test_database_errors_reach_the_caller.py`.
+2. **E1.** `grep -n 'in str(e)'` over `ObjectFactories/` prints nothing. `except SQLAlchemyError`
+   survives only in the three prune blocks, now at `TkNumericIntegration.py:623`,
+   `GkNumericIntegration.py:621` and `BackgroundModel.py:835`. They are shifted only by the deletions
+   above them. Compared with `ast`, the only changed functions are:
+   - the two `build`s and the value factories' `_build_impl_model`, which is what
+     `TkNumericValue.build` and `GkNumericValue.build` delegate to;
+   - `GkNumericValue.read_batch`;
+   - `QCD_Cosmology.build`, whose module also lost the unused `SQLAlchemyError` import;
+   - `BackgroundModel.build` and its `_build_query`.
+
+   `validate_on_startup` is unchanged in all three.
+3. **E5.** With `ast`, the test methods of the five modules before and after differ by exactly the
+   eleven of the note's §0, and 13 new methods. Four are M2's (`TestChoosingARun` ×2,
+   `TestDescribingABackgroundGeneration` ×2). Nine are M4's.
+4. **E2, read.** `_build_query()` takes no flag and always selects `source_grid_digest` and
+   `source_grid_construction`. It filters on them iff `source_grid_digest is not None`. No `hasattr`
+   is left, `_source_grid_identity = None` on a miss is kept (`:356`), and a hit sets it from the
+   row.
+5. **E4, read.** `_StatementRaisingConnection.execute` compiles the query it is handed (SQLite
+   dialect) and raises `OperationalError(<that text>, {}, Exception("database is locked"))`. No
+   statement is a literal. Each test asserts that the error's `str()` names the old handler's
+   columns, that the caller gets the same object (`assertIs`, no `__cause__`), and how many times
+   `execute` ran: once on every path except the value-table read, where a real row is read first.
+   That precondition check makes the module stronger than the note's (iii) assumed: a literal
+   statement fails the test outright instead of letting it pass.
+6. **E3, run.**
+   - `choose_run_label([], None)` raises `RuntimeError`: "this datastore records no runs …".
+   - `choose_run_label([], "x")` raises as before.
+   - A model with no identity is described as "no grid generation (the datastore holds no
+     background model for it)".
+   - "prompt 14" survives only as the provenance of the run-label mechanism (`:2`, `:11`, `:47`),
+     never as an older store.
+7. **E4, the pins.** The five diffs were extracted from the log and replayed with `git apply` in
+   `bash`:
+   - (i): `test_tk_numeric_integration_build` errors.
+   - (ii): the read-path test fails, because the connection was executed twice.
+   - (iii) alone, and (i)+(iii): the Tk test fails on the precondition.
+   - (i)+(iii)'s variant, which also empties the column list: `Ran 9`, **OK**. A test with a
+     literal statement passes with the handler restored.
+   - (iv): `test_a_store_with_no_runs_is_refused_saying_it_records_none` fails.
+
+   Each was reverted with `git apply -R`, and the tree was clean after each.
+8. **The probe**, from the scratchpad, through the M4 harness:
+   - **At `6ea366e`** (an export, with the new module copied in): `TkNumericIntegration.build`
+     raises `RuntimeError` saying "has no "break_point_kind" column … predates". `BackgroundModel`'s
+     read path executes **twice**.
+   - **At `8636491`:** both raise the injected `OperationalError` itself, after one `execute`.
+9. **E6.**
+   - The issue is in §4, with its closing note.
+   - Its index row is gone. The index is 107 by counting, matching the header.
+   - The fallbacks issue carries a dated "Narrowed" line.
+   - §1, M1–M4 and §5.2 are written. §5.2 holds 01's after-counts, with the orchestrator's baseline
+     beside them.
+10. **Suites at `8636491`, serially, load 14–60:** AdaptiveLevin 32, ComputeTargets 693
+    (698 − 9 + 4), CosmologyModels 39, Datastore 605 (598 − 2 + 9; 283 s), LiouvilleGreen 148
+    (1 skipped), RunRegistry 281. ComputeTargets had 2 failures, both wall-clock tests:
+    - `test_background_tau.test_build_cost` passed alone 3 times of 3.
+    - `test_tk_wkb_phase.TestCost.test_wall_time_per_object` failed alone 3 times of 3 (0.072–0.110 s
+      against 0.06 s), and failed 3 times of 3 on an export of `6ea366e` (0.065–0.107 s). It is
+      load, not 01: 01 touches nothing it exercises.
+
+    `black --check` is clean on the ten Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `8636491` in §1, §4, §5.2 and the log.
+- The six `extract_*_data.py` scripts said that `resolve_run_selection` explains "why a datastore
+  that records no runs at all is read rather than refused". They now say that it is refused. The
+  change is comment-only, and each script's `ast` is unchanged.
+
+*Kept as is.* The agent's observations not acted on:
+- the "pre-prompt-11" sentence in `BackgroundModel.py`'s docstring, which is the rationale for the
+  grid-identity key;
+- the three prune blocks that swallow their own error, which are known (`datastore-integrity` 02,
+  `a3-v2-readiness` 02).
+
+Neither opens an issue.
+
+*Handed to 02.* Its note must carry three things:
+- **The harness.** `_StatementRaisingConnection` in `test_database_errors_reach_the_caller.py`, with
+  its precondition check, is the harness 02's pass-through tests reuse. It builds the schema in
+  memory from `test_value_reads_parent_key._base_store`, and its `succeed=` handles a path whose
+  first query must succeed.
+- **The review's findings above.**
+- **`real_store_fixtures.py`.** Its old-store machinery is still used by the reader and inventory
+  tests, and stays until 05.
 
 ---
 
@@ -153,7 +266,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
     generation. The tests meant to catch this build the error with the statement `"SELECT ..."`.
   - **Next step.** Prompt 01 deletes the four refusals (D2) and adds pass-through tests with the
     real statement text.
-  - **Closed (2026-10-04, prompt 01, this commit).** The four old-store refusals are deleted, so a
+  - **Closed (2026-10-04, prompt 01, `8636491`).** The four old-store refusals are deleted, so a
     database error reaches the caller as itself, and `BackgroundModel` always selects its grid
     identity and never re-queries. Pinned by
     `Datastore/tests/test_database_errors_reach_the_caller.py` (nine tests: `TkNumericIntegration`
@@ -180,7 +293,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 
 The other suites: see `a3-v2-readiness`'s board §5; re-measured before 01's dispatch.
 
-### 5.2 After prompt 01 (2026-10-04, this commit)
+### 5.2 After prompt 01 (2026-10-04, `8636491`)
 
 Measured serially on the staged tree, under load (another project's Ray cluster running).
 

@@ -517,8 +517,7 @@ with ShardedPool(
 
     # which run is being read? Every lookup below selects on it, so it is resolved once, before
     # any model is considered: extract_common.resolve_run_selection says what happens when no
-    # --run-label is given, and why a datastore that records no runs at all is read rather than
-    # refused.
+    # --run-label is given, and that a datastore which records no runs at all is refused.
     run_selection = resolve_run_selection(pool, args.run_label)
     print(f"\n** {run_selection.description}")
 
