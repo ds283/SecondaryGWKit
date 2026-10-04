@@ -85,7 +85,8 @@ final component, as a sibling of the primary, with a notice when it names anothe
   `closed_store_files` on a primary with an unusable record raises
   `Cannot delete sharded datastore "<p>": Cannot delete sharded datastore "<p>": Shard #0 …`, and
   `copy_store` likewise. The cause is `_read_closed_store` wrapping a message that its caller wraps
-  again. This is current code and not 04's. **Do not fix it.** Open
+  again. This is current code and not 04's; the user will have it cleaned up later (2026-10-04).
+  **Do not fix it.** Open
   `[04-closed-store-refusals-repeat-their-prefix]` in this board's §3, with the measured message,
   and add it to the index.
 
@@ -100,11 +101,12 @@ final component, as a sibling of the primary, with a notice when it names anothe
     It no longer ends in "VERDICT: OK". This is the one behaviour change in the tool beyond the
     deletions. It is in scope because 04 is what sends the stores that were legacy down this
     path. A missing shard *file* keeps today's behaviour: the cross-file check is skipped and
-    said to be.
+    said to be. *Confirmed by the user, 2026-10-04.*
   - The module docstring stops describing a legacy absolute record.
 - **`assert_store_is_self_consistent`:**
   - A record that `resolve_shard_path` refuses is reported among the check's mismatches, so that
     the check raises its own `RuntimeError` naming the serial, the record and the resolver's reason.
+    *Confirmed by the user, 2026-10-04.*
   - The docstring:
     - describes the one form;
     - keeps the account of 2026-09-23;
@@ -288,13 +290,20 @@ other test. Line numbers and the evidence are in the orchestrator's notes.
     or change.
 - It changes no table, column or key (README §5 rule 9). `_write_shard_data` already writes only
   bare names.
-- **What it costs: the A3 baseline.** `var/datastores/handover-A3-baseline-lambdacdm.sqlite`
-  records its four shards by absolute path (audit G4). Its rows are already unreadable at `HEAD`.
-  Until 04, though, `store retire`, `store copy` and `store move` could still handle its *files* at
-  `HEAD`, because they resolve only its `shards` table. After 04 they refuse it as "unusable
-  record". To retire or copy it, run the registry at a SHA before this commit, or delete it by
-  hand. This prompt does not touch it. The log records this, and the board records it beside the
-  narrowing.
+- **What it costs: the A3 baseline**, if it still exists when 04 runs.
+  - `var/datastores/handover-A3-baseline-lambdacdm.sqlite` records its four shards by absolute path
+    (audit G4).
+  - At `HEAD` its rows are already unreadable. A fresh fingerprint reads `GkSource` as absent and
+    `QuadSourceIntegral` as incomplete, and is format 6 against the sidecar's format 1, so
+    `store retire` is already refused at `HEAD`.
+  - `store copy` and `store move` still handle its files at `HEAD`; after 04 they refuse it as
+    "unusable record".
+  - **The clean route** is the registry at `81c0a9a`, the tree that retired the A3 backup. On
+    2026-10-04, a `store retire --dry-run` there matched the recorded fingerprint and would delete
+    the store's five files and nothing else. That route does not depend on 04.
+
+  This prompt does not touch the store. If it still exists, the log records this cost, and the
+  board records it beside the narrowing.
 
 ---
 

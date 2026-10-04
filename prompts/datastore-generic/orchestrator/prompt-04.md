@@ -87,12 +87,20 @@ files, and `copy_store` copies them. `delete_store` is still refused, by `_plan_
 directory guard, but with a different message. The new module's stores live in temporary
 directories, so the damage stays there. Replay (ii) only from the agent's commit, in `bash`.
 
-**The A3 baseline loses its registry operations at `HEAD`.** `var/datastores/handover-A3-baseline-lambdacdm.sqlite`
-records its four shards by absolute path. The orchestrator re-read it on 2026-10-04 `mode=ro` (the
-`shards` table only), and its SHA-256 prefix `fdbe93a541083e8f` was the same before and after, and
-the same as G4's. Its rows are already unreadable at `HEAD` (G4). But today `store retire`, `copy`
-and `move` resolve only its `shards` table, so they still work at `HEAD`. After 04 they refuse. The
-prompt's §6 records this, and the user was told when 04 was written. No prompt touches the store.
+**The A3 baseline, which the user may retire before 04 runs.** `var/datastores/handover-A3-baseline-lambdacdm.sqlite`
+records its four shards by absolute path. The orchestrator read it on 2026-10-04, `mode=ro` and
+through the registry's read-only paths. Its files' SHA-256 prefixes were the same before and after
+(primary `fdbe93a541083e8f`, G4's).
+- **At `HEAD`, `store retire` is already refused.** The fresh fingerprint is format 6 against the
+  sidecar's format 1. Its reader also reads `GkSource` as an absent table and `QuadSourceIntegral`
+  as incomplete, so a format-6 fingerprint would misdescribe the store. `--without-fingerprint`
+  does not apply, because the fingerprint succeeds. `store copy` and `store move` still work at
+  `HEAD`; after 04 they refuse.
+- **At `81c0a9a`** (the tree that retired the A3 backup on 2026-09-25), `store retire --dry-run`
+  matched the recorded fingerprint, digest `433b7fc3…`. It found no run and no sidecar naming the
+  store, and listed exactly its five files. That is the clean route, and it does not depend on 04.
+- **Before dispatch (§1 step 6),** check whether the store still exists. If it was retired, 04's §6
+  cost no longer applies: tell the agent, and the log says so instead.
 
 **The facts, checked by the orchestrator on 2026-10-04 at `4ca36c4`** (code unchanged since; `ddc266d`
 adds only the prompt). Pass them on.
@@ -215,7 +223,7 @@ adds only the prompt). Pass them on.
   - Each kept test differs only in the fixture's name.
 - **(E5) The pins.** (i)–(v) each fail a named test.
 - **(E6) The records.**
-  - The fallbacks issue is narrowed with a dated line naming 04's deletions and the A3 cost.
+  - The fallbacks issue is narrowed with a dated line naming 04's deletions, and the A3 cost if the store still exists.
   - `[04-closed-store-refusals-repeat-their-prefix]` is opened with the measured message.
   - The index is 108 (or more).
   - The board has the §1 row, L1–L3, §3 and §5.
@@ -263,7 +271,9 @@ adds only the prompt). Pass them on.
    (1 skipped), RunRegistry 281. Re-measure all six at `HEAD`, serially, with the load average, and
    give the agent the numbers.
 5. **The index.** 107 now; 108 after, plus any other issue 04 opens. Tell the agent both.
-6. **The pre-images**, for checks 1–4. Record `git rev-parse HEAD:<path>` for:
+6. **The A3 baseline.** `ls var/datastores/handover-A3-baseline-lambdacdm*`, and read its
+   sidecar's `retired` field. Tell the agent whether the store still exists (§0).
+7. **The pre-images**, for checks 1–4. Record `git rev-parse HEAD:<path>` for:
    - `Datastore/shard_paths.py`, `Datastore/SQL/ShardedPool.py`, `tools/shard_key_audit.py`,
      `docs/handover/quadsource_atol_sweep.py` and `Datastore/tests/shard_store_fixtures.py`;
    - the seven test modules of §0.
@@ -352,9 +362,9 @@ Tell it plainly:
        not possible"); at the agent's commit it exits 2;
      - on `{0: "../outside.sqlite"}`: at `HEAD~1` it exits 0 with "VERDICT: OK"; at the agent's
        commit it exits 2.
-   - **The A3 baseline is not opened.** The probe only states the cost, already recorded.
+   - **The A3 baseline is not opened**, whether or not it still exists.
 9. **E6, the records.**
-   - The fallbacks issue carries a dated "Narrowed (…, prompt 04)" line, with the A3 cost.
+   - The fallbacks issue carries a dated "Narrowed (…, prompt 04)" line, with the A3 cost if the store still exists.
    - `[04-closed-store-refusals-repeat-their-prefix]` is in §3 with the measured message, and its
      row is in the index.
    - The index is 108 (or more) by counting, matching the header.
@@ -376,7 +386,7 @@ Tell it plainly:
   - the audit tool's and the sweep check's new refusals;
   - the tests deleted, re-fixtured, split and added;
   - the issue opened;
-  - the A3 baseline's cost, once more;
+  - the A3 baseline's cost, if it still exists;
   - what remains of the old-store fallbacks (05).
 - **What 04 hands on.** **05**'s note must carry:
   - the absent-table and absent-column tolerance in `_read_replicated_tables`;
