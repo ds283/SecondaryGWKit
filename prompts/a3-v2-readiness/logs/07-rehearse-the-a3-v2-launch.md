@@ -21,7 +21,7 @@ landed, with **acceptance 4 not met**.
 - **The other readers.** The other five exit 0. No reader refused anything or changed any file of
   the store.
 - **Issues.** Three opened on the board's §3.2. The index goes from 102 to 105.
-- The commit is this commit.
+- The commit is `a6c8f39`.
 
 The record is [`docs/a3-v2-readiness-verification.md`](../../../docs/a3-v2-readiness-verification.md);
 its small outputs are in [`docs/a3-v2-readiness/rehearsal/`](../../../docs/a3-v2-readiness/rehearsal/).
@@ -330,4 +330,4 @@ to prompts that change code).
   - `[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]`.
   - Index: **105 open** (102 + 3).
 - **A3 v2's launch checklist** is the record's §2.4.
-- **The SHA** of this commit is the orchestrator's to fill in, here and on the board.
+- **The SHA** of this commit is `a6c8f39`, filled in by the orchestrator here and on the board.

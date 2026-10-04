@@ -75,7 +75,7 @@ as recommended:**
 | 05 | [Prune on resume](05-prune-on-resume.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-02; amended 2026-10-03 | ✅ 2026-10-03 | `dd7f272` | [`logs/05-…`](logs/05-prune-on-resume.md) |
 | 06 | [Count only real references](06-count-only-real-references.md) | **F1**–**F2** | Sonnet | ✍️ yes, 2026-10-02 | ✅ 2026-10-03 | `938be2b` | [`logs/06-…`](logs/06-count-only-real-references.md) |
 | 06a | [Give `--build` a rehearsal scope](06a-give-the-build-a-rehearsal-scope.md) | **B1**–**B3** | Sonnet | ✍️ yes, 2026-10-03, under D5; after 06 | ✅ 2026-10-04 | `7bd202f` | [`logs/06a-…`](logs/06a-give-the-build-a-rehearsal-scope.md) |
-| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | this commit | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
+| 07 | [Rehearse the A3 v2 launch](07-rehearse-the-a3-v2-launch.md) | **L1**–**L3** | Opus | ✍️ yes, 2026-10-03; after 06a; D7-1 and D7-2 decided 2026-10-04, as recommended | ✅ 2026-10-04; acceptance 4 **not met** (L3) | `a6c8f39` | [`logs/07-…`](logs/07-rehearse-the-a3-v2-launch.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -89,7 +89,7 @@ carries the previous review's findings: [`orchestrator/prompt-00.md`](orchestrat
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-03, used) and
 [`orchestrator/prompt-06a.md`](orchestrator/prompt-06a.md) (2026-10-03, used) and
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-03, written early at the user's
-request; 06a's review completed its "Carried from the review of 06a" on 2026-10-04). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
+request; 06a's review completed its "Carried from the review of 06a" on 2026-10-04; used). Writing 01's note found that prompt 01 gave the seam band's figure as 9.97e-07, which is `1e-6`
 against `1e-7`. The sweep's §4 gives 8.26e-07 for `1e-7` against `1e-8`, and the prompt was
 corrected in the same commit. It also gained a dated line on `levin-refactor`'s
 `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]`, whose stale-comment list overlaps
@@ -1043,6 +1043,150 @@ Carried into 07's note (§0, "Carried from the review of 06a"):
 - **The interrupter reads the driver from the manifest's `argv[0]`**, with B3's dummy output as
   re-run here.
 
+**Orchestrator review of prompt 07 (2026-10-04).** Run against `a6c8f39`, dispatched from
+`dbd8a51`, the commit that recorded the user's D7-1 and D7-2 (both as recommended). At dispatch the
+tree was clean, there was no other worktree, nothing was `running` in the registry (12 runs: 10
+finished, 2 `unknown`), and the only Ray processes on the machine were the user's ChamPBH cluster.
+**All eleven checks in `orchestrator/prompt-07.md` §3 passed.** Acceptance 4 is **not met**: `extract_tensor_source_data.py` exits 1 on the
+resumed store, for a reason that predates the campaign (below). The agent stopped twice under §5,
+each time correctly, and the user decided both.
+
+**After the commit, before the review.** Three commits of another of the user's sessions landed on
+this branch after `a6c8f39`: `63c03d0`, `f94cb7f` and the merge `4c1c3d6`, which brings in
+`e53f323` and changes `Datastore/SQL/ShardedPool.py`. All three are later than every launch, reader
+and suite of 07, so none of 07's measurements saw them. The review was run against `a6c8f39`: the
+suites and the one reader on an export of it, made into its own git repository.
+
+**Dispatch.**
+- Branch `handover-remedial`, `HEAD` `68b5f4b` (06a's review), then `dbd8a51` for the decisions.
+  The registry, Ray, `RAY_ADDRESS` (unset), disk (106 GB free at 89 %), load (~15 on 10 CPUs) and
+  both names (`store show`: `absent`, no runs) were as the note's §1 says.
+- ChamPBH: `gcs_server` 62525 and `raylet` 62574 (started 2026-10-02 23:27:58 and 23:28:01), dashboard
+  agent 62594 and workers 96937, 96961, 97272, 97276, all children of 62574.
+- Snapshot: 3218 files hashed (3213 under `var/`, in 108 directories, plus the root's six
+  `physics-test-n20-lambdacdm-zend0p1*.sqlite`).
+- Baselines at `68b5f4b`, 01:19–01:27 at a load of 9–16: 32, 686, 39, 598, 148 (1 skipped), 281,
+  no failure, as §5.15. Index **102**.
+- Both dummy tests passed at `68b5f4b`: all five cases of `interrupter_dummy_test.sh`, and B3's
+  three, as their records say.
+
+**The waits.** Four, one per launch, as §2.1 of the note, with one correction found on the way:
+- **The note's wait ended too early on a killed run.** It stops when `liveness` reads `finished` or
+  the pid is gone. Prompt 04's handler writes `killed`/143 *first* and the fingerprint after, so
+  for `resumed-b` the wait returned at 02:00:06 with no `fingerprint` in `status.json`, while pid
+  49456 was still closing the pool, fingerprinting and shutting Ray down. A second wait on the pid
+  alone saw it gone by ~02:00:30, with the fingerprint and `** driver exit status 143` written. For
+  `resumed-a` the same happened silently: its launch log was written at 01:51:11, two seconds after
+  its `status.json`, and the agent was resumed after both. `resumed-c`'s wait ended on the pid
+  (state `finished` at 02:09:23, pid gone at 02:09:26). **For A3 v2, a wait must end on the pid, not
+  on the state** — the same lesson as `[07-a-killed-builds-ray-agents-outlive-the-driver]`, one level
+  up. Not opened as an issue: it is the orchestrator's procedure, not code, and the issue's
+  checklist line covers the launch.
+- No wait was run twice, and nothing was checked between a launch and its end.
+
+**The two stops, both put to the user.**
+- **After `resumed-b`, Ray's dashboard agent outlived the driver.** Pid 49729 (this repository's
+  venv, ppid 1, pgid 49456) was alive at 02:02:05, 90 s after the driver; the runtime-env agent
+  49730 had gone by 02:01:30. Load 65–123. The user decided to wait; a bounded wait on the pid saw
+  it exit by 02:02:36. Nothing was killed. Opened as `[07-a-killed-builds-ray-agents-outlive-the-driver]`.
+- **`extract_tensor_source_data.py` exited 1.** Confirmed from the code: `sample()` at line 364
+  returns the k in random order, `combinations_with_replacement` then yields q > r pairs, the store
+  holds q ≤ r only, and `QuadSource.build`'s labels-only miss returns an unpopulated object rather
+  than raising, so the remote plot dies on `.values`. With 3 k it passes 1 time in 6, and the
+  2026-10-01 pass was such a draw; with A3 v2's 8 k it would pass about 1 in 8!. A sharded miss was
+  never meant to raise `ReadOnlyMiss`, so this is not prompt 03's pool. The user decided: record it,
+  and exercise the rest of the read path through a sorted-draw wrapper, labelled as not the shipped
+  reader. Opened as `[07-the-tensor-source-reader-pairs-k-in-random-order-and-crashes-on-q-gt-r]`.
+
+The checks:
+- **Scope (1).** 25 files, all on §7's list. Modified: the board and `docs/OPEN_ISSUES.md` only.
+  The diff over every factory, `ComputeTargets/`, `Datastore/`, `main.py`, `tools/`, `RunRegistry/`,
+  `config/`, both drivers, `extract_*.py`, `docs/datastore-integrity-verification/` and
+  `orchestrator/` is empty.
+- **(R1) The runs (2).** Read from every manifest, `status.json`, `stderr.log`, interrupter log and
+  launch log:
+  - `reference` `done`/0, `resumed-a` `killed`/143, `resumed-b` `killed`/143, `resumed-c` `done`/0;
+    each with a format-6 fingerprint, no problems and no `fingerprint_error`. `resumed-a`'s
+    `fingerprint_sidecar` says why not (no sidecar yet); `resumed-b`'s and `-c`'s say `written`.
+  - Launch logs end `** driver exit status` 0, 143, 143, 0.
+  - Each killed `stderr.log` holds the handler's two lines and nothing else: no traceback, no
+    `*** SIGTERM received`. `resumed-a`'s second line says `SystemExit(143)`, `resumed-b`'s
+    `SystemExit(1)` (the signal arrived inside `ray.wait`); the record is right either way.
+  - Each interrupter log has one `sent SIGTERM`, at the second the handler names (01:51:08 and
+    02:00:06), to the build's pid, after a command line naming `quadsource_atol_sweep.py` and
+    `--register resumed-a` / `resumed-b`.
+  - All four manifests: `git_head` `dbd8a51`, `git_dirty` false, `script_sha256` `3d0e6ecd…`,
+    `--build --rehearsal` with `--resume` on `-b` and `-c` only, the rehearsal `scope` of §0 naming
+    the right store, `results` the right store.
+  - No interrupter and no Ray process of this repository is alive. ChamPBH's seven processes have
+    the pids and start times recorded at dispatch.
+- **(R2) Nothing stored was recomputed (3).** Parsed from every `stdout.log` with `stage_counts.py`'s
+  `read`, equal to the log's table. Every stage finished before an interruption computes 0 next.
+  `GkSource`: 102 stored at the kill, 35 of them unvalidated and pruned, 224 computed: 291.
+  `QuadSourceIntegral`: 393 stored by `resumed-b` (343 at its last progress line, 50 stores in
+  flight completed), 471 computed by `resumed-c`: 864, with no excess.
+- **(R2) The prune (4).** Read `mode=ro`: none of the 35 serials holds an unvalidated row. 32 are
+  absent; 547–549 on shard 3 hold validated rows stamped 01:52:33–40, after `resumed-b` began.
+  `read_inventory` reports no problem, so no `duplicate`.
+- **(R2) The fingerprints (5).** `compare_stores.py`, run by the orchestrator: exit 0,
+  `compare_fingerprints` empty, both format 6, digest `39809dca…`, each equal to its sidecar, all 21
+  classes equal. The counts equal `datastore-integrity` 10's §2.1.5 table but for `tolerance`, 7
+  against 6: the store now holds `log10 = -7` as its own row beside `-8` (read on shard 0),
+  because the build's `rtol` no longer coincides with the Gk numeric tolerance. Not a defect.
+- **(R3) Integrity (6).** On all ten files, `mode=ro`: `integrity_check` `ok`,
+  `foreign_key_check` empty. One `version` row `(1, '2025.1.1')` on every shard of both stores; the
+  primaries have no `version` table, by design. `replication_in_flight` empty on both primaries,
+  no unvalidated row anywhere, no `-journal`, `-wal` or `-shm`. The census: no divergence on
+  either. `read_inventory`: no problem, 7500 records each. Every store file was byte-identical
+  after these reads.
+- **(R4) The readers (7).**
+  - Five shipped readers exit 0 with `--models LambdaCDM`, each reading run `default`; no
+    `ReadOnlyMiss` or `ReadOnlyWrite` in any log; the store's SHA-256 identical across every one,
+    the failing reader included. The first pass's "STORE FILES CHANGED" is false (GNU `stat`), as
+    the log's deviation 4 says; the hashes show it.
+  - `extract_tensor_source_data.py` exits 1 (above). The sorted-draw wrapper exits 0 and reads all
+    six `QuadSource` rows, the store byte-identical by hash, mtime and size.
+  - `extract_Gk_data.py` without `--models` prints the `SKIPPING MODEL QCD_Cosmology` line and exits 0.
+  - **The QSI extractor reads 288 rows, not 864**, and that is by its design: it samples 2 of 3
+    response k and 3 of 6 (q, r) pairs (`extract_QuadSourceIntegral_data.py:1131–1140`). Every row
+    it asked for was found, which is prompt 01's point. The prompt's "equals 864", and the
+    note's "reads every row", were wrong; deviation 5's `STRUCTURALLY REQUIRED` is right.
+  - **Run by the orchestrator** on the export of `a6c8f39`: `extract_TkWKB_data.py --ray-address
+    local --models LambdaCDM` exits 0, no refusal, the store byte-identical with mtimes unchanged,
+    no journal.
+- **A3 v2's guard (8).** It refuses with exit 1, naming the five files, before Ray; hashes
+  unchanged and no run directory written.
+- **The records (9).** The board's §1 row, L1–L3 (L3 ❌ for the one reader), §3.2 with three
+  entries, §5.16, and the header's required wording, not saying closed. The index was **105** at
+  `a6c8f39` by header and `grep`. The verification record's checklist (§2.4) names all nine §3.2
+  issues and supersedes `docs/datastore-integrity-verification.md` §2.6, which is untouched.
+- **`var/` and the tree (10).** All 3218 snapshot files byte-identical, mtimes included. 3710 new
+  paths, all on the note's list: the two stores' primaries, shards and sidecars, the four run
+  directories and launch logs, and `var/a3-v2-readiness-07/`. `main.py` and
+  `quadsource_atol_sweep.py` identical to `dbd8a51`, and unchanged since.
+- **Suites and `black` (11).** Run serially by the orchestrator on the export of `a6c8f39`, 09:51–09:58 at a load of
+  10–22: 32, 686, 39, 598, 148 (1 skipped), 281, every count unchanged and **no test failed**. The
+  export skips one test each in ComputeTargets and RunRegistry, which need git history and a file
+  under `var/` that an export lacks. The agent's two ComputeTargets failures at a load of 129
+  (§5.16) both pass here, so they were the load. `black --check` is clean on the five Python files
+  added.
+
+Remnants, fixed in the follow-up commit:
+1. "This commit" stood where the SHA belongs: the board's §1 row and log 07 (lines 24 and 333). All
+   now say `a6c8f39`.
+2. README §2's status cell for 07 still read "written". It now gives the landing date and SHA, with
+   acceptance 4 not met.
+3. The orchestrator notes list called `prompt-07.md` "written early"; it now says used.
+
+Not remnants:
+- Deviations 1 and 4 (the empty-directory interrupter, the GNU `stat`) are the agent's own drift,
+  correctly classified. The stray interrupter signalled nothing, and its log was created after
+  `resumed-b`'s manifest, so `git_dirty: false` stands.
+- Deviation 2 (`--interval 5`) is a fair choice: the reference's `GkSource` stage took 62 s, not
+  the 34 s of 2026-10-01.
+- `[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]` is a real if small defect of a
+  `datastore-integrity` tool, correctly not fixed here.
+
 ---
 
 ## 2. Items
@@ -1691,3 +1835,23 @@ failed (0.132 s against 0.06 s). On an export of `dbd8a51` it failed too (0.084 
 `test_build_cost` passed. Every count equals §5.15's and the pre-dispatch baselines.
 
 Index: **105 open** (102 + the three 07 opened).
+
+### 5.17 After prompt 07, re-measured by the orchestrator (2026-10-04)
+
+Measured 09:51–09:58 on 2026-10-04 on an export of `a6c8f39` made into its own git repository
+(three commits of another session had landed on the branch since), serially, with README §7's
+command, at a 1-minute load average of 10–22 on 10 CPUs.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 686 OK (1 skipped: `test_G_only_case_reproduces_the_pre_commit_total`, which needs git history the export lacks) |
+| CosmologyModels | 39 OK |
+| Datastore | 598 OK |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 281 OK (1 skipped: the hand-written A3 manifest is not in the export) |
+
+The counts agree with §5.15 and §5.16. No test failed; §5.16's two ComputeTargets failures, measured
+at a load of 129, both pass here.
+
+Index: **105 open** at `a6c8f39`.
