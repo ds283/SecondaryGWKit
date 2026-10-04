@@ -1,9 +1,9 @@
 # datastore-generic campaign — implementation state
 
 **Last updated:** 2026-10-04 · **Status: IN PROGRESS — 3 of 9 prompts landed (01, 02, 03).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
-written. Prompts 01, 02 and 03 are written. 04 is not yet written, though its task is fixed; 05–09
-are held on the prompts before them. The user took U1–U4 as recommended on 2026-10-04 (README
-§6.2), and had the plan and `e53f323` merged into `handover-remedial` the same day.
+written. Prompts 01–04 are written; 05–09 are held on the prompts before them. The user took U1–U4
+as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
+`handover-remedial` the same day.
 
 The campaign was opened on 2026-10-04, when the user found that `ShardedPool` names project tables
 and decided that the datastore layer is made generic again and that every fallback for a store
@@ -52,7 +52,7 @@ recommended:**
 | 01 | [Delete the old-store refusals that misfire](01-delete-the-old-store-refusals-that-misfire.md) | **M1**–**M4** | Sonnet | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `8636491` | [log](logs/01-delete-the-old-store-refusals-that-misfire.md) |
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
-| 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
+| 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ⬜ | — | — |
 | 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
@@ -447,8 +447,8 @@ Neither opens an issue.
 | **R3** | 03 | `replication_in_flight` assumed present | B3 | ✅ |
 | **R4** | 03 | the `controller_shard NOT NULL` refusal; `label` read unconditionally | B4, B9 | ✅ |
 | **L1** | 04 | absolute shard records out of `shard_paths.py` and `ShardedPool` | B6 | ⬜ |
-| **L2** | 04 | `tools/shard_key_audit.py`'s old-primary paths; the sweep script's docstring | B6 | ⬜ |
-| **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured | B6 | ⬜ |
+| **L2** | 04 | `tools/shard_key_audit.py`'s old-primary paths, and an unusable record refused; the sweep script's check and docstring | B6 | ⬜ |
+| **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured; an absolute record pinned as refused by every reader | B6 | ⬜ |
 | **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ⬜ |
 | **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ⬜ |
 | **S3** | 05 | an absent table on a read-write open, per U1; `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
