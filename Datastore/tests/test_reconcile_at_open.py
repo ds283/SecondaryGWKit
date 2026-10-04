@@ -14,10 +14,13 @@ These tests drive the real ``ShardedPool``, ``Datastore``, factories and broker 
 2. a serial split refuses, with and without a record, naming both serials, writing nothing; so
    does every other state a ``ReplicationMismatch`` leaves with the record set (a vectorized get,
    a store, a validate);
-3. with no record, a missing row, an extra row, a flag, a ``validated`` difference and a
-   value-count difference each refuse, writing nothing;
+3. with no record, a missing row, an extra row, a flag, a ``validated`` difference, a
+   value-count difference, a ``timestamp`` difference and a value row held under another serial
+   each refuse, writing nothing; so does a primary without the ``replication_in_flight`` table,
+   read-write and read-only, which is not given one;
 4. with the record set, a row the controller lacks refuses, and so do a difference in another
-   class, a row the recorded write did not insert and a partial ``BackgroundModel``;
+   class, a row the recorded write did not insert, a partial ``BackgroundModel`` and a value row
+   missing from a shard that holds the recorded model;
 5. a hot journal on one shard is rolled back, then compared, then opened; one on the primary (a
    crash inside the record's own transaction) is rolled back before the record is read;
 6. an interrupted ``BackgroundModel`` validate or store, reopened with ``prune_unvalidated`` true
@@ -39,6 +42,8 @@ from pathlib import Path
 from unittest import mock
 
 import ray
+
+from sqlalchemy.exc import OperationalError
 
 from Datastore.replication import ReplicatedDivergence, ReplicationMismatch
 from Datastore.tests import standin_pool as sp
@@ -720,16 +725,71 @@ class TestNoRecordRefuses(_ReconcileTestCase):
             ["BackgroundModelValue"], [d["class_name"] for d in e.differences]
         )
 
-    def test_a_store_written_before_the_record_existed(self):
-        """A store without the replication_in_flight table reads as no record; a difference
-        refuses, and the primary is not given the table."""
-        execute(self.primary, 'DROP TABLE "replication_in_flight"')
-        self.refuse_after("DELETE FROM tolerance WHERE log10_tol = -6.0")
-        tables = sp._read(
-            self.primary,
-            "SELECT name FROM sqlite_master WHERE name = 'replication_in_flight'",
+    def test_a_timestamp_difference(self):
+        """Copies of one row that differ only in their timestamp refuse, and the difference is
+        named: every replicated write stamps every copy with its one timestamp, so the check at
+        open compares it (prompts/datastore-generic, prompt 03, R2)."""
+        e = self.refuse_after(
+            "UPDATE tolerance SET timestamp = '2001-01-01 00:00:00.000000' "
+            "WHERE log10_tol = -6.0",
+            shard_role="r1",
         )
-        self.assertEqual([], tables)
+        self.assertEqual(["tolerance"], [d["class_name"] for d in e.differences])
+        self.assertEqual([self.replicas[1]], e.differences[0]["shard"])
+        detail = e.differences[0]["detail"]
+        self.assertIn("the shards hold different values: timestamp: ", detail)
+        self.assertNotIn(" | ", detail, "a column other than timestamp was named")
+
+    def test_a_value_row_held_under_another_serial(self):
+        """BackgroundModelValue is compared under its own serial (e53f323): a value row that r0
+        holds under another serial, its model, redshift and values the same, is a serial split,
+        named with both serials."""
+        ((serial,),) = sp._read(
+            self.files[self.replicas[0]], "SELECT max(serial) FROM BackgroundModelValue"
+        )
+        moved = serial + 1000
+        e = self.refuse_after(
+            f"UPDATE BackgroundModelValue SET serial = {moved} WHERE serial = {serial}"
+        )
+        self.assertEqual(
+            ["BackgroundModelValue", "BackgroundModelValue"],
+            [d["class_name"] for d in e.differences],
+        )
+        for d in e.differences:
+            self.assertIn("a serial split", d["detail"])
+        self.assertIn(f"serial {serial}", str(e))
+        self.assertIn(f"serial {moved}", str(e))
+
+    def test_a_primary_without_the_record_table_is_refused(self):
+        """replication_in_flight is assumed: every primary the current code writes has it
+        (_write_shard_data creates it before any shard row). A primary without it is refused at
+        open, read-write and read-only, naming the table, before any actor exists; no file of
+        the store changes, and the primary is not given the table."""
+        execute(self.primary, 'DROP TABLE "replication_in_flight"')
+        constructed = []
+        original = sp._Options.remote
+
+        def counting(options, *args, **kw):
+            constructed.append(options._name)
+            return original(options, *args, **kw)
+
+        for read_only in (False, True):
+            with self.subTest(read_only=read_only):
+                before = sp.store_checksums(self.primary)
+                with mock.patch.object(sp._Options, "remote", counting):
+                    with self.assertRaises(OperationalError) as raised:
+                        self.cluster.open_pool_output(self.primary, read_only=read_only)
+                self.assertIn("replication_in_flight", str(raised.exception))
+                self.assertEqual([], constructed, "an actor was created")
+                self.assertEqual(before, sp.store_checksums(self.primary))
+                self.assertEqual(
+                    [],
+                    sp._read(
+                        self.primary,
+                        "SELECT name FROM sqlite_master "
+                        "WHERE name = 'replication_in_flight'",
+                    ),
+                )
 
     def test_a_difference_in_a_sharded_table_is_not_looked_at(self):
         """Sharded rows live on one shard; a hand edit to one is neither repaired nor refused."""
@@ -838,6 +898,36 @@ class TestRecordDoesNotExplain(_ReconcileTestCase):
             "(SELECT min(serial) FROM BackgroundModelValue)",
         )
         self.assertRefusedWithTheRecord('class "BackgroundModelValue"')
+
+    def test_part_of_the_recorded_background_model(self):
+        """A store of a model interrupted after its last replica committed (Rn-P3): every shard
+        holds the model, and the record names it. r0 then lacks one of that model's value rows.
+        r0 holds the model row, so the value row is not part of a BackgroundModel r0 lacks, and
+        the unit check refuses to copy it: the row's model is the record's, found through the
+        row's foreign key to BackgroundModel (e53f323)."""
+        model = self.background()
+        self.interrupt(
+            [("r1", "object_store", "BackgroundModel", "after")],
+            lambda: self.pool.object_store(model),
+        )
+        (record,) = self.records()
+        self.close()
+        execute(
+            self.files[self.replicas[0]],
+            (
+                "DELETE FROM BackgroundModelValue WHERE serial = (SELECT max(serial) FROM "
+                "BackgroundModelValue WHERE model_serial = ?)",
+                (record["store_id"],),
+            ),
+        )
+        e = self.assertRefusedWithTheRecord(
+            'class "BackgroundModelValue"',
+            f"shard {self.replicas[0]} holds its model row",
+        )
+        self.assertEqual(record["store_id"], e.record["store_id"])
+        self.assertEqual(
+            ["BackgroundModelValue"], [d["class_name"] for d in e.differences]
+        )
 
     def test_a_recomputed_validated_that_disagrees(self):
         """A validate record whose controller holds validated=True over value rows that are

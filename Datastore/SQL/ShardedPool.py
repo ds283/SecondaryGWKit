@@ -226,10 +226,6 @@ class ShardedPool:
             # record's controlling shard, and refuse to open on any other difference
             self.reconciliation = self._reconcile_replicated_tables(primary_journal)
 
-            # a store written before the replicated write was recorded has no in-flight table;
-            # create it, empty, only once the store has been checked
-            self._replication_in_flight_table.create(self._engine, checkfirst=True)
-
             # the prune at open of a replicated class is made here, by the pool, under a record:
             # after the check at open (so that an interrupted write is repaired before anything
             # is judged unvalidated) and before the broker or any actor exists. The actors still
@@ -710,9 +706,7 @@ class ShardedPool:
         # right ones. For a prune (operation "prune", prompts/a3-v2-readiness prompt 02) it is
         # committed before the first shard is pruned and deleted after the last
         # (_prune_replicated_tables); a prune has no controlling shard, so controller_shard is
-        # NULL. A store whose table was created before that prompt keeps controller_shard NOT
-        # NULL (create(checkfirst=True) does not alter a table), and its prune record cannot be
-        # inserted: the open then refuses before any shard is touched (_commit_prune_record)
+        # NULL
         self._replication_in_flight_table = sqla.Table(
             "replication_in_flight",
             self._metadata,
@@ -1142,8 +1136,8 @@ class ShardedPool:
         name replicated tables: BackgroundModel_tags).
 
         Each spec gives the table, the key its rows are compared under and the columns compared.
-        A table is keyed by its primary key, and every column but ``timestamp`` is compared
-        (every store written before prompt 01 stamps it per shard).
+        A table is keyed by its primary key, and every column is compared, ``timestamp``
+        included: every replicated write stamps every shard's copy with its one timestamp.
         """
         replicated = [n for n in self._replicated_tables if n in built.tables]
         listed = set(self._replicated_tables) | set(self._sharded_tables.keys())
@@ -1161,7 +1155,7 @@ class ShardedPool:
         for name in replicated + tag_tables:
             table = built.tables[name]
             key = tuple(c.name for c in table.primary_key.columns)
-            compared = [c.name for c in table.columns if c.name != "timestamp"]
+            compared = [c.name for c in table.columns]
             specs.append(
                 {
                     "name": name,
@@ -1201,13 +1195,10 @@ class ShardedPool:
 
     def _read_in_flight_record(self) -> Optional[dict]:
         """
-        The primary's replication_in_flight row, as a dict, or None. A store written before
-        prompt 01 has no such table, which is read as no record. More than one row is not
+        The primary's replication_in_flight row, as a dict, or None. More than one row is not
         something the write path leaves, and refuses.
         """
         with self._engine.connect() as conn:
-            if not sqla.inspect(conn).has_table("replication_in_flight"):
-                return None
             rows = [
                 dict(row)
                 for row in conn.execute(
@@ -1380,14 +1371,14 @@ class ShardedPool:
         """
         Each difference as the refusal names it: the class (table), the shard or shards that
         deviate, the serial or key, and what differs, followed by ``why`` when it is given. Rows
-        missing under different serials whose other compared values are the same are named as
-        a serial split; ``context``, when given, is the whole list of differences those pairs are
-        looked for in.
+        missing under different serials whose other compared values but timestamp are the same
+        are named as a serial split; ``context``, when given, is the whole list of differences
+        those pairs are looked for in.
         """
         by_name = {spec["name"]: spec for spec in specs}
 
-        # a serial split: the same row, but for its serial, held under different serials by
-        # different shards
+        # a serial split: the same row, but for its serial and timestamp (its two copies come
+        # from two writes), held under different serials by different shards
         split_of = {}
         held = {}
         for d in context if context is not None else differences:
@@ -1398,7 +1389,7 @@ class ShardedPool:
             content = tuple(
                 v
                 for c, v in zip(snap["columns"], snap["rows"][d["key"]])
-                if c != "serial"
+                if c not in ("serial", "timestamp")
             )
             held.setdefault((d["table"], content), []).append(d)
         for group in held.values():
@@ -1835,7 +1826,7 @@ class ShardedPool:
                 continue
             columns = snap["columns"]
             stored = row[columns.index("validated")] is True
-            label = row[columns.index("label")] if "label" in columns else None
+            label = row[columns.index("label")]
 
             savepoint = conns[sid].begin_nested()
             result = factory.validate(
@@ -2099,26 +2090,16 @@ class ShardedPool:
             existing = conn.execute(sqla.select(record_table)).mappings().first()
             if existing is not None:
                 raise ReplicationInFlight(self._primary_file, dict(existing))
-            try:
-                conn.execute(
-                    sqla.insert(record_table),
-                    {
-                        "operation": "prune",
-                        "class_name": cls_name,
-                        "controller_shard": None,
-                        "store_id": None,
-                        "started": datetime.now(),
-                    },
-                )
-            except sqla.exc.IntegrityError as e:
-                raise RuntimeError(
-                    f'Sharded datastore "{str(self._primary_file)}": cannot record the prune of '
-                    f'"{cls_name}" at open. This store\'s replication_in_flight table was created '
-                    "before a prune could be recorded, and keeps controller_shard NOT NULL, which "
-                    "a prune (with no controlling shard) cannot fill. Nothing was pruned and no "
-                    "shard was touched. Open it with prune_unvalidated=False, or at the tree that "
-                    f"wrote it ({e.orig})"
-                ) from e
+            conn.execute(
+                sqla.insert(record_table),
+                {
+                    "operation": "prune",
+                    "class_name": cls_name,
+                    "controller_shard": None,
+                    "store_id": None,
+                    "started": datetime.now(),
+                },
+            )
 
     def _clear_in_flight_record(self, operation: str, cls_name: str) -> None:
         """Delete the primary's one replication_in_flight record, in its own commit."""

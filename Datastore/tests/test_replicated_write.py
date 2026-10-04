@@ -235,18 +235,6 @@ class TestCleanWrite(_PoolTestCase):
         self.assertEqual([self.controller], [c["shard"] for c in gets])
         self.assertNoRecord()
 
-    def test_an_existing_store_gains_an_empty_record_table_when_opened(self):
-        self.cluster.close_pool()
-        conn = sqlite3.connect(self.primary)
-        conn.execute('DROP TABLE "replication_in_flight"')
-        conn.commit()
-        conn.close()
-
-        self.pool = self.cluster.open_pool(self.primary)
-        self.assertNoRecord()
-        sp.get_tolerance(self.pool, 1.0e-6)
-        self.assertNoRecord()
-
 
 # ------------------------------------------------------------------------------------------------
 # 2. the record is set across the window

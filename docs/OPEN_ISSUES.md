@@ -844,7 +844,7 @@ for a store written by older code is deleted, through the campaign. Its audit
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader, the inventory, `Datastore` and `ClientPool` hard-code fourteen facts about the project's tables (`BackgroundModel`'s copy unit, the `redshift`/`wavenumber` flags, the factory registry as a private import, …). Assigned: prompts 06–09. |
-| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline is already readable only at its own SHA). Assigned: prompts 01–05; 01 deleted the `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` and `extract_common` ones; 02 the `TkWKBIntegration`, `GkWKBIntegration`, `GkSource` and `QuadSourceIntegral` ones (2026-10-04). |
+| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline is already readable only at its own SHA). Assigned: prompts 01–05; 01 deleted the `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` and `extract_common` ones; 02 the `TkWKBIntegration`, `GkWKBIntegration`, `GkSource` and `QuadSourceIntegral` ones; 03 the reconcile's (`timestamp` compared, `replication_in_flight` assumed, the `NOT NULL` prune refusal, B9's `label` test; `e53f323` reviewed) (2026-10-04). |
 
 ---
 

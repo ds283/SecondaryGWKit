@@ -23,9 +23,7 @@ shards (``Datastore.tests.standin_pool``):
    refuses; a ``get`` record of ``BackgroundModel`` over shards that differ is repaired, not
    pruned;
 5. no actor deletes a replicated row, even when the pool's prune has not run;
-6. a store whose ``replication_in_flight`` predates the ``prune`` record (``controller_shard NOT
-   NULL``) refuses a pruning open before any shard is touched;
-7. no Ray is initialised.
+6. no Ray is initialised.
 
 Every store is built in a temporary directory; nothing under ``var/`` is opened.
 """
@@ -614,36 +612,6 @@ class TestNoActorDeletesAReplicatedRow(_PruneTestCase):
         for sid in self.shard_ids:
             self.assertIn(self.model_b.store_id, [s for s, _ in self.models(sid)])
         self.assertIdentical()
-
-
-# ------------------------------------------------------------------------------------------------
-# 6. a store whose record table predates the prune record
-# ------------------------------------------------------------------------------------------------
-
-
-class TestRecordTableBeforePrune(_PruneTestCase):
-    def test_a_pruning_open_refuses_before_any_shard_is_touched(self):
-        self.build()
-        execute(
-            self.primary,
-            "DROP TABLE replication_in_flight",
-            "CREATE TABLE replication_in_flight (operation VARCHAR(256) NOT NULL, "
-            "class_name VARCHAR(256) NOT NULL, controller_shard INTEGER NOT NULL, "
-            "store_id INTEGER, started DATETIME NOT NULL)",
-        )
-        checksums = sp.store_checksums(self.primary)
-        with quiet(), self.assertRaises(RuntimeError) as raised:
-            self.open(prune_unvalidated=True)
-        self.cluster.pool = None
-        self.assertIn("cannot record the prune", str(raised.exception))
-        self.assertIn("Nothing was pruned", str(raised.exception))
-        self.assertEqual(checksums, sp.store_checksums(self.primary))
-
-        # opened without pruning, it opens, and B is kept everywhere
-        self.open(prune_unvalidated=False)
-        self.close()
-        for sid in self.shard_ids:
-            self.assertIn(self.model_b.store_id, [s for s, _ in self.models(sid)])
 
 
 if __name__ == "__main__":
