@@ -1,15 +1,15 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-04 · **Status: PLANNED — draft for the user's review; 0 of 9 prompts
-landed.** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
-written. Prompts 01, 02 and 03 are written. 04 is not yet written, though its task is fixed; 05 is
-held on U1; 06–09 are held on 01–05 and on U2–U4 (README §2, §6.2).
+**Last updated:** 2026-10-04 · **Status: PLANNED — reviewed; 0 of 9 prompts landed.** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+written. Prompts 01, 02 and 03 are written. 04 is not yet written, though its task is fixed; 05–09
+are held on the prompts before them. The user took U1–U4 as recommended on 2026-10-04 (README
+§6.2), and had the plan and `e53f323` merged into `handover-remedial` the same day.
 
 The campaign was opened on 2026-10-04, when the user found that `ShardedPool` names project tables
 and decided that the datastore layer is made generic again and that every fallback for a store
 written by older code is deleted (README §0, §6.1). One commit, `e53f323` on branch
-`drop-valuerow-key-exception`, was made before the campaign at the user's request; prompt 03 takes
-it (D3).
+`drop-valuerow-key-exception`, was made before the campaign at the user's request; prompt 03
+reviews it (D3).
 
 **Campaign:** [`README.md`](README.md) ·
 **Code:** `Datastore/` (the generic layer and `SQL/ObjectFactories/`), `extract_common.py`,
@@ -30,12 +30,13 @@ it (D3).
 |---|---|
 | **D1** — the datastore layer | generic: it names none of the project's tables; the facts it needs are declared by the factories or in `config/` |
 | **D2** — old-store fallbacks | every one deleted, **through this campaign**, not on sight; reflects the build phase, and reopens once a store backs a published paper |
-| **D3** — the `BackgroundModelValue` key exception | deleted early in `e53f323` (side branch); prompt 03 reviews it and takes it into its commit |
+| **D3** — the `BackgroundModelValue` key exception | deleted early in `e53f323` (side branch); prompt 03 reviews it. *Amended 2026-10-04:* merged into `handover-remedial` at the user's instruction, so 03 reviews it in place |
 | **D4** — the `timestamp` exception | goes, in prompt 03, after a measurement that every replicated write stamps one timestamp |
 
-**Put to the user by the audit (README §6.2), none taken:**
+**Put to the user by the audit (README §6.2), and taken by the user on 2026-10-04, each as
+recommended:**
 
-| Decision | Recommended |
+| Decision | Taken |
 |---|---|
 | **U1** — an absent table (05) | a read-write open keeps reading it as empty (crash recovery); the reader, inventory and read-only pool refuse it by name |
 | **U2** — the older registries (06) | `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/`, passed in by `main.py` |
@@ -52,9 +53,9 @@ it (D3).
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ⬜ | — | — |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ⬜ | — | — |
 | 04 | Delete the legacy shard records | **L1**–**L3** | Sonnet | not yet; task fixed; after 03 | ⬜ | — | — |
-| 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on U1; after 03–04 | ⬜ | — | — |
-| 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 and U2 | ⬜ | — | — |
-| 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 and U4 | ⬜ | — | — |
+| 05 | Refuse a store whose schema differs | **S1**–**S3** | Opus | ⏸ held on 03–04 (U1 taken) | ⬜ | — | — |
+| 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
+| 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
@@ -73,7 +74,7 @@ it (D3).
 | **N1** | 02 | the old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` | B7 | ⬜ |
 | **N2** | 02 | their tests, with the two current-behaviour tests kept | B7 | ⬜ |
 | **N3** | 02 | pass-through tests | B7 | ⬜ |
-| **R1** | 03 | review and take `e53f323`: `BackgroundModelValue` under its serial | B2 | ⬜ |
+| **R1** | 03 | review `e53f323` (merged 2026-10-04): `BackgroundModelValue` under its serial | B2 | ⬜ |
 | **R2** | 03 | measure one timestamp on every replicated write path; compare `timestamp` | B1 | ⬜ |
 | **R3** | 03 | `replication_in_flight` assumed present | B3 | ⬜ |
 | **R4** | 03 | the `controller_shard NOT NULL` refusal; `label` read unconditionally | B4, B9 | ⬜ |

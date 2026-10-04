@@ -138,6 +138,9 @@ the serial-free check is deleted (under serial keys, a row missing under serial 
 holds nothing under S). Datastore suite 598 OK, as at `dbd8a51`. **Prompt 03 reviews it and takes
 it into its commit** (README §6.1, D3).
 
+*Added 2026-10-04, after the user's review:* the branch was merged into `handover-remedial` at the
+user's instruction, so `e53f323` is on the branch before prompt 03 runs; 03 reviews it in place.
+
 ### B3. A store with no `replication_in_flight` table — SP:229-231, :1209-1217 [read]
 
 The constructor creates the table on an existing store "written before the replicated write was
@@ -326,3 +329,5 @@ that wrote it already, and remains the comparator through the fingerprint in its
 
 Collected in README §6.2: U1 (absent tables), U2 (the older registries — scope), U3 (registry
 records — scope), U4 (the `version` and tag tables — the layer's or the client's).
+
+*Added 2026-10-04:* the user took all four as recommended (README §6.2).

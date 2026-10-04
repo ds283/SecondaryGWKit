@@ -3,8 +3,8 @@
 **Campaign:** [`README.md`](README.md) · **Board items:** **R1**–**R4** ·
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Gate:** none on 01–02 (different files), but never in one checkout while another prompt's change
-to `ShardedPool.py` is uncommitted. `git status` clean. Branch `drop-valuerow-key-exception`
-present, with commit `e53f323`.
+to `ShardedPool.py` is uncommitted. `git status` clean. Commit `e53f323` an ancestor of `HEAD`
+(merged into `handover-remedial` on 2026-10-04).
 **Closes:** nothing. **Narrows:** `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`.
 **Opens:** nothing expected.
 **Recommended model:** **Opus**. It reviews a commit written outside the campaign and changes what
@@ -15,7 +15,8 @@ the check at open compares, on the path that decides whether a store opens at al
 1. [`README.md`](README.md): §0.1, §1, §5 (rules 7–9), §6.1 **D3** and **D4**.
 2. [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md): **B1**–**B4**, **B9**,
    **B10**.
-3. `git show e53f323` (branch `drop-valuerow-key-exception`), its commit message included.
+3. `git show e53f323`, its commit message included. It was written outside the campaign and merged
+   into `handover-remedial` on 2026-10-04, at the user's instruction, before this prompt ran.
 4. `Datastore/SQL/ShardedPool.py`: the comment block "THE CHECK AT OPEN" above
    `_reconcile_replicated_tables`; `_replicated_table_specs`; `_read_in_flight_record`;
    `_plan_replicated_repair`; `_read_full_rows`; `_recompute_validated`; `_commit_prune_record`; and
@@ -34,7 +35,7 @@ The check at open (`datastore-integrity` prompt 02) carries four accommodations 
 before `datastore-integrity` prompt 01 (audit B1–B4). Under D2 they go:
 
 - **R1 — `BackgroundModelValue`'s key exception (B2).** Already deleted, outside the campaign, in
-  `e53f323` (D3). This prompt **reviews that commit** and takes it into its own.
+  `e53f323` (D3), which is already on the branch. This prompt **reviews that commit**.
 - **R2 — `timestamp` is compared (B1, D4).** Every replicated insert since prompt 01 is stamped
   with the pool's one timestamp, so a current store's copies agree; the audit read this, and this
   prompt proves it before relying on it.
@@ -49,15 +50,13 @@ table`), which is loud and true.
 
 ## 2. What to change
 
-**R1 — review and take `e53f323`.**
+**R1 — review `e53f323`.**
 - Review it as the orchestrator would review a prompt's commit: read the diff against
   `_plan_replicated_repair`, `_read_full_rows` and `_describe_differences` at this prompt's `HEAD`;
   check that the copy-as-a-unit check now finds a child row's model through its foreign key to
   `BackgroundModel` for **both** child tables (`BackgroundModel_tags` and `BackgroundModelValue`);
   check the argument in its message that the deleted serial-free check cannot fire under serial keys,
   and say in the log whether it holds.
-- Take it with `git cherry-pick --no-commit e53f323` into this prompt's working tree. If it does not
-  apply cleanly, resolve it against `HEAD` and record each resolution as a deviation.
 - **Add the tests it lacks:** (a) a store whose `BackgroundModelValue` rows agree on `(model_serial,
   z_serial)` but differ in `serial` is refused at open, named as a serial split; (b) an interrupted
   store of a `BackgroundModel` whose controller holds the model and its values, and another shard
@@ -119,13 +118,12 @@ In `_recompute_validated`, read `label` unconditionally.
 
 ## 4. Acceptance
 
-1. `e53f323`'s change in this commit, reviewed, with the review in the log.
+1. `e53f323` reviewed, with the review in the log, and anything it found fixed in this commit.
 2. `_replicated_table_specs` compares every column under the primary key; no old-store path for
    `replication_in_flight`; R2's measurement of every replicated write path.
 3. The deletions listed; the new tests; the deliberate-breakage record (i)–(iv).
 4. `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` narrowed: a dated line naming
-   what 03 deleted. Branch `drop-valuerow-key-exception` is **not** deleted by this prompt; the log
-   says it may be, now that its commit is taken.
+   what 03 deleted, and naming `e53f323` as reviewed.
 5. `black --check` clean. On this board: the §1 row, items R1–R4, §5. All in the same commit.
 
 ---
@@ -133,7 +131,7 @@ In `_recompute_validated`, read `label` unconditionally.
 ## 5. Stop conditions — stop and ask the user
 
 - R2's measurement finds a replicated write that stamps per shard.
-- `e53f323` cannot be reconciled with `HEAD` without changing what the repair licenses.
+- The review of `e53f323` finds that it changed what the repair licenses for a current store.
 - Deleting R3 makes a current-code recovery path (audit B10) fail.
 
 ---
@@ -142,7 +140,6 @@ In `_recompute_validated`, read `label` unconditionally.
 
 - It does not touch the absent-table and absent-column tolerance (audit B5; 05), the legacy shard
   records (B6; 04), or any project name in `ShardedPool` (07).
-- It does not delete the branch `drop-valuerow-key-exception`.
 - It changes no table, column or key (README §5 rule 9).
 
 ---

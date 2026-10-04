@@ -7,6 +7,12 @@ written**; their tasks are fixed by §6.1 and the audit alone. **04 is not yet w
 task is fixed (the audit's G4 settled the one question it had). **05 is held** on U1; **06–09 are
 held** on 01–05 and on U2–U4 (§2).
 
+**2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
+longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
+The branches `datastore-generic-plan` and `drop-valuerow-key-exception` were merged into
+`handover-remedial` at the user's instruction, so **`e53f323` is on `handover-remedial`** before
+any prompt has run: prompt 03 reviews it there rather than cherry-picking it (§6.1 D3, amended).
+
 ## 0. Why this campaign exists
 
 On 2026-10-04 the user, auditing recent changes to `ShardedPool` and `Datastore`, found that
@@ -69,9 +75,9 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 02 | [`02-delete-the-remaining-factory-refusals.md`](02-delete-the-remaining-factory-refusals.md) | Audit B7. The old-store refusals in `TkWKBIntegration`, `GkWKBIntegration`, `GkSource` and `QuadSourceIntegral`, and their tests. | **written** 2026-10-04; after 01 |
 | 03 | [`03-delete-the-reconciles-old-store-paths.md`](03-delete-the-reconciles-old-store-paths.md) | Audit B1–B4, B9. Reviews and takes `e53f323` (the `BackgroundModelValue` key, D3); compares `timestamp` (D4); deletes the missing-`replication_in_flight` path and the `controller_shard NOT NULL` refusal. | **written** 2026-10-04; independent of 01–02 |
 | 04 | `04-delete-the-legacy-shard-records.md` | Audit B6. Absolute shard records in `shard_paths.py` and `ShardedPool`; `tools/shard_key_audit.py`'s pre-`a2bd966` and missing-`shard_key_config` paths; the sweep script's docstring; `write_legacy_primary` renamed for the malformed-record tests that use it; the legacy tests deleted. | **not yet written**; task fixed; after 03 |
-| 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. What happens to an **absent table** is U1. | **held** on U1; after 03 |
-| 06 | `06-give-the-layer-its-registry.md` | Audit C1 rows 10, 14 and the `config.sharding` import. `ShardedPool`, `store_reader` and `store_inventory` are given the factory registry (and the replicated set) instead of importing `Datastore._factories` and `config.sharding`. Whether `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/` is U2. | **held** on 01–05 and U2 |
-| 07 | `07-declare-the-replication-facts-in-the-factories.md` | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **held** on 06 and U4 |
+| 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **held** on 03–04 (U1 taken 2026-10-04) |
+| 06 | `06-give-the-layer-its-registry.md` | Audit C1 rows 10, 14 and the `config.sharding` import. `ShardedPool`, `store_reader` and `store_inventory` are given the factory registry (and the replicated set) instead of importing `Datastore._factories` and `config.sharding`. `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/` (U2). | **held** on 01–05 (U2 taken 2026-10-04) |
+| 07 | `07-declare-the-replication-facts-in-the-factories.md` | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **held** on 06 (U4 taken 2026-10-04) |
 | 08 | `08-derive-the-inventorys-class-list.md` | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys; the polymorphic cosmology reference declared by the client. | **held** on 06 |
 | 09 | `09-keep-the-layer-generic.md` | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9. Closes the campaign. | **held** on 01–08 |
 
@@ -170,13 +176,17 @@ The project-wide ones in `CLAUDE.md`, plus:
   commit `e53f323`, outside any campaign, and kept there so as not to be lost. Prompt 03 reviews that
   commit against its own acceptance tests and takes it into its commit (`git cherry-pick
   --no-commit`), so that it lands under a log like everything else.
+  *Amended 2026-10-04:* the user had the branch merged into `handover-remedial` with the plan, so
+  `e53f323` is on the branch before 03 runs. 03 reviews it in place; anything the review finds is
+  fixed in 03's commit and recorded there.
 - **D4 — the `timestamp` exception goes too**, in a controlled way: prompt 03.
 
 ### 6.2 Decisions this campaign needs
 
-Put by the audit (its §H). Each has a recommendation; none is taken.
+Put by the audit (its §H). **Taken by the user on 2026-10-04, each as recommended**; the
+recommendation below is the decision.
 
-- **U1 — an absent table** (audit B5; prompt 05). The column half of B5 is plainly old-store and
+- **U1 (taken, as recommended) — an absent table** (audit B5; prompt 05). The column half of B5 is plainly old-store and
   goes. But "a table a shard lacks reads as empty" is also how the reconcile and the prune at open
   survive two current-code interruptions: an actor that dies partway through its first
   `_ensure_tables`, and an interrupted `--drop gk-source-policy-records`. **Recommended:** a
@@ -185,15 +195,15 @@ Put by the audit (its §H). Each has a recommendation; none is taken.
   absent table by name, because they must not create it and have nothing to recover. **Rejected:**
   refusing everywhere (an interrupted first open would leave a store only a person can remove,
   `a3-v2-readiness`'s U2 again); tolerating everywhere (keeps the old-store paths).
-- **U2 — the older registries** (audit C1 rows 9–11; prompt 06). `Datastore._factories` (the
+- **U2 (taken, as recommended) — the older registries** (audit C1 rows 9–11; prompt 06). `Datastore._factories` (the
   composition root), `_drop_actions`/`_drop_order` and `ClientPool._default_serial_batch_size` date
   from 2024–2025. **Recommended:** move all three to `config/`, as the sharding configuration was
   moved, with `main.py` passing them in; derive `_drop_order` from foreign keys if 06 can do so in
   scope. **Rejected:** leaving them (the layer keeps importing every factory).
-- **U3 — the registry's legacy records** (audit B11). **Recommended:** out of scope. They are
+- **U3 (taken, as recommended) — the registry's legacy records** (audit B11). **Recommended:** out of scope. They are
   records, not stores, the registry never deletes a record, and the old run directories are listed
   today.
-- **U4 — the `version` and tag tables** (audit §C, "what is infrastructure"; prompt 07). Every row
+- **U4 (taken, as recommended) — the `version` and tag tables** (audit §C, "what is infrastructure"; prompt 07). Every row
   carries a foreign key to `version.serial` and every tagged class associates with `store_tag`.
   **Recommended:** the layer owns both as part of its contract (named once, as constants of the
   layer), and builds their objects through their factories; `ShardedPool` stops importing
