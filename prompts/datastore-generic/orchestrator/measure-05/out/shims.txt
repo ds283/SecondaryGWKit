@@ -1,0 +1,47 @@
+test_a_primary_without_the_record_table_is_refused (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_primary_without_the_record_table_is_refused)
+replication_in_flight is assumed: every primary the current code writes has it ... ok
+test_gk_wkb_value_build (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_build) ... ok
+test_gk_wkb_value_read_batch (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_read_batch) ... ok
+test_tk_wkb_value_build (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_tk_wkb_value_build) ... ok
+test_tk_wkb_value_read_batch (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_tk_wkb_value_read_batch) ... ok
+test_a_class_not_yet_built_is_an_error_not_a_silent_miss (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_class_not_yet_built_is_an_error_not_a_silent_miss) ... ok
+test_a_same_shard_parent_does_not (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_same_shard_parent_does_not) ... ok
+test_a_serial_no_shard_holds_is_unresolved (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_serial_no_shard_holds_is_unresolved) ... ok
+test_it_resolves_against_another_shards_record (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_it_resolves_against_another_shards_record) ... ok
+test_the_identity_is_the_digest_and_not_the_serial (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_the_identity_is_the_digest_and_not_the_serial) ... ok
+test_not_nullable (Datastore.tests.test_wkb_numeric_parent_key.TestNullableParent.test_not_nullable) ... ok
+test_nullable (Datastore.tests.test_wkb_numeric_parent_key.TestNullableParent.test_nullable) ... ok
+test_engines_open_mode_ro_and_never_immutable (Datastore.tests.test_store_reader.TestReaderReads.test_engines_open_mode_ro_and_never_immutable) ... ok
+test_every_engine_is_disposed_on_exit (Datastore.tests.test_store_reader.TestReaderReads.test_every_engine_is_disposed_on_exit) ... ok
+test_every_shard_with_its_serial_and_path (Datastore.tests.test_store_reader.TestReaderReads.test_every_shard_with_its_serial_and_path) ... ERROR
+test_replicated_rows_have_the_same_serials_on_every_shard (Datastore.tests.test_store_reader.TestReaderReads.test_replicated_rows_have_the_same_serials_on_every_shard) ... ok
+test_row_counts_equal_an_independent_count (Datastore.tests.test_store_reader.TestReaderReads.test_row_counts_equal_an_independent_count) ... ok
+test_a_write_through_a_reader_engine_raises (Datastore.tests.test_store_reader.TestReaderNeverWrites.test_a_write_through_a_reader_engine_raises) ... ok
+test_reading_every_table_changes_nothing (Datastore.tests.test_store_reader.TestReaderNeverWrites.test_reading_every_table_changes_nothing) ... ok
+test_reading_in_a_child_interpreter_leaves_ray_uninitialised (Datastore.tests.test_store_reader.TestNoRay.test_reading_in_a_child_interpreter_leaves_ray_uninitialised) ... ERROR
+
+======================================================================
+ERROR: test_every_shard_with_its_serial_and_path (Datastore.tests.test_store_reader.TestReaderReads.test_every_shard_with_its_serial_and_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 100, in test_every_shard_with_its_serial_and_path
+    self.assertEqual(shard.absent_tables, frozenset())
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+======================================================================
+ERROR: test_reading_in_a_child_interpreter_leaves_ray_uninitialised (Datastore.tests.test_store_reader.TestNoRay.test_reading_in_a_child_interpreter_leaves_ray_uninitialised)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 357, in test_reading_in_a_child_interpreter_leaves_ray_uninitialised
+    expected = sum(len(set(s.tables) - s.absent_tables) for s in opened.shards)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 357, in <genexpr>
+    expected = sum(len(set(s.tables) - s.absent_tables) for s in opened.shards)
+                                       ^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+----------------------------------------------------------------------
+Ran 20 tests in 8.727s
+
+FAILED (errors=2)

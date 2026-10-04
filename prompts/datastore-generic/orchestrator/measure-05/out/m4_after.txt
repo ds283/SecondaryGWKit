@@ -1,0 +1,3 @@
+after full store digest: 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759 problems: {}
+after missing-table store: <scratch>/fpstores/missing-after/fixture-store.sqlite
+after missing-table store: library raised StoreSchemaMismatch : Cannot read sharded datastore "<scratch>/fpstores/missing-after/fixture-store.sqlite": shard #1 ("<scratch>/fpstores/missing-after/fixture-store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['OneLoopIntegral_tags']. Nothing was read or repaired

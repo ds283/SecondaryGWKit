@@ -1,0 +1,175 @@
+..................................EEEEE.....................................................E..EE.............................................................EE...........................................
+======================================================================
+ERROR: test_a_class_not_yet_built_is_an_error_not_a_silent_miss (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_class_not_yet_built_is_an_error_not_a_silent_miss)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 494, in test_a_class_not_yet_built_is_an_error_not_a_silent_miss
+    self._read(
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 445, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_a_same_shard_parent_does_not (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_same_shard_parent_does_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 475, in test_a_same_shard_parent_does_not
+    read = self._read(
+           ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 445, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_a_serial_no_shard_holds_is_unresolved (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_a_serial_no_shard_holds_is_unresolved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 484, in test_a_serial_no_shard_holds_is_unresolved
+    read = self._read(
+           ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 445, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_it_resolves_against_another_shards_record (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_it_resolves_against_another_shards_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 458, in test_it_resolves_against_another_shards_record
+    read = self._read(
+           ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 445, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_the_identity_is_the_digest_and_not_the_serial (Datastore.tests.test_quadsource_parent_key.TestCrossShardParentUnit.test_the_identity_is_the_digest_and_not_the_serial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 467, in test_the_identity_is_the_digest_and_not_the_serial
+    read = self._read(
+           ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 445, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_a_lookup_on_a_missing_table_fails_in_sqlite (Datastore.tests.test_read_only_pool.TestAtOpen.test_a_lookup_on_a_missing_table_fails_in_sqlite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 855, in test_a_lookup_on_a_missing_table_fails_in_sqlite
+    pool, _ = self.open(primary, read_only=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 204, in open
+    pool = ShardedPool(
+           ^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 177, in __init__
+    self._open_read_only(version_label, drop_actions, read_table_config)
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 412, in _open_read_only
+    with open_read_only(self._primary_file) as store:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpikw07315/copy-1/store.sqlite": shard #0 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpikw07315/copy-1/store-shard0000.sqlite") does not have the schema the code declares: it lacks the table(s) ['GkSource']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_shard_lacking_a_table_is_reported_and_the_store_opens (Datastore.tests.test_read_only_pool.TestAtOpen.test_a_shard_lacking_a_table_is_reported_and_the_store_opens) (table='GkSource')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 838, in test_a_shard_lacking_a_table_is_reported_and_the_store_opens
+    pool, printed = self.open(primary, read_only=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 204, in open
+    pool = ShardedPool(
+           ^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 177, in __init__
+    self._open_read_only(version_label, drop_actions, read_table_config)
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 412, in _open_read_only
+    with open_read_only(self._primary_file) as store:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpydzgwz7w/copy-1/store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpydzgwz7w/copy-1/store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['GkSource']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_shard_lacking_a_table_is_reported_and_the_store_opens (Datastore.tests.test_read_only_pool.TestAtOpen.test_a_shard_lacking_a_table_is_reported_and_the_store_opens) (table='OneLoopIntegral')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 838, in test_a_shard_lacking_a_table_is_reported_and_the_store_opens
+    pool, printed = self.open(primary, read_only=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 204, in open
+    pool = ShardedPool(
+           ^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 177, in __init__
+    self._open_read_only(version_label, drop_actions, read_table_config)
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 412, in _open_read_only
+    with open_read_only(self._primary_file) as store:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpydzgwz7w/copy-2/store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpydzgwz7w/copy-2/store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['OneLoopIntegral']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_primary_without_the_record_table_is_refused (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_primary_without_the_record_table_is_refused) (read_only=False)
+replication_in_flight is assumed: every primary the current code writes has it
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 781, in test_a_primary_without_the_record_table_is_refused
+    self.cluster.open_pool_output(self.primary, read_only=read_only)
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 325, in open_pool_output
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 217, in __init__
+    self._check_primary_schema()
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 718, in _check_primary_schema
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot open sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmps5bzxj7e/store-1/store.sqlite": the primary ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmps5bzxj7e/store-1/store.sqlite") does not have the schema the code declares: it lacks the table(s) ['replication_in_flight']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_primary_without_the_record_table_is_refused (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_primary_without_the_record_table_is_refused) (read_only=True)
+replication_in_flight is assumed: every primary the current code writes has it
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 781, in test_a_primary_without_the_record_table_is_refused
+    self.cluster.open_pool_output(self.primary, read_only=read_only)
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 325, in open_pool_output
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 177, in __init__
+    self._open_read_only(version_label, drop_actions, read_table_config)
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 425, in _open_read_only
+    self._check_primary_schema()
+  File "<scratch>/wt/Datastore/SQL/ShardedPool.py", line 718, in _check_primary_schema
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmps5bzxj7e/store-1/store.sqlite": the primary ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmps5bzxj7e/store-1/store.sqlite") does not have the schema the code declares: it lacks the table(s) ['replication_in_flight']. Nothing was read or repaired
+
+----------------------------------------------------------------------
+Ran 201 tests in 179.339s
+
+FAILED (errors=10)
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)

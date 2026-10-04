@@ -65,7 +65,9 @@ recommended:**
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-04, used for 03);
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, used for 04).
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, used for 04);
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-05, not yet used), with the
+measurement of 05's test plan in [`orchestrator/measure-05/`](orchestrator/measure-05/).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the

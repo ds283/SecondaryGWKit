@@ -1,0 +1,73 @@
+...............E.....................................E..........E...................................................................
+======================================================================
+ERROR: test_a_store_without_the_table_is_named_absent (Datastore.tests.test_gksource_parent_set.TestTheInventoryResolvesTheSet.test_a_store_without_the_table_is_named_absent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_gksource_parent_set.py", line 903, in test_a_store_without_the_table_is_named_absent
+    inventory = self.read(missing_tables={0: ["GkSource_parents"]})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_gksource_parent_set.py", line 758, in read
+    return read_inventory(build_full_store(directory, **kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpayu4qe65/store-2/full-store.sqlite": shard #0 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpayu4qe65/store-2/full-store-shard0000.sqlite") does not have the schema the code declares: it lacks the table(s) ['GkSource_parents']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_problem_elsewhere_does_not_matter (Datastore.tests.test_inventory_consumers.TestRunLabels.test_a_problem_elsewhere_does_not_matter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_inventory_consumers.py", line 274, in test_a_problem_elsewhere_does_not_matter
+    self.assertEqual(available_run_labels(pool), ["fixture"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/extract_common.py", line 174, in available_run_labels
+    inventory = read_inventory(pool.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp0do24lvt/store-1/full-store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp0do24lvt/store-1/full-store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['QuadSourceIntegral_tags']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_every_problem_appears_in_full_when_there_are_many (Datastore.tests.test_inventory_report.TestTheDisplaySaysWhatTheInventoryHolds.test_every_problem_appears_in_full_when_there_are_many)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_inventory_report.py", line 250, in test_every_problem_appears_in_full_when_there_are_many
+    inventory = self.read(shards=7, missing_tables=missing)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_inventory_report.py", line 73, in read
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpokn117pg/store-2/full-store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpokn117pg/store-2/full-store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['TkNumeric_tags', 'TkWKB_tags', 'GkNumeric_tags', 'GkWKB_tags', 'GkSource_tags', 'QuadSource_tags', 'QuadSourceIntegral_tags']. Nothing was read or repaired
+
+----------------------------------------------------------------------
+Ran 132 tests in 127.371s
+
+FAILED (errors=3)
+!! GkSource.build(): multiple results found when querying for GkSource
+!! GkSourceValue.build(): multiple results found when querying for GkSourceValue

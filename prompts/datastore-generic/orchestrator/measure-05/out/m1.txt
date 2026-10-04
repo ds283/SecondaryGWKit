@@ -1,0 +1,7 @@
+primary tables declared: ['replicated_tables', 'replication_in_flight', 'shard_key_config', 'shard_keys', 'sharded_tables', 'shards']
+build_real_store shard 0: ([], [], {}, {}) empty
+build_real_store shard 1: ([], [], {}, {}) empty
+build_real_store primary: ([], [], {}, {}) empty
+build_full_store shard 0: ([], [], {}, {}) empty
+build_full_store shard 1: ([], [], {}, {}) empty
+build_full_store primary: ([], [], {}, {}) empty

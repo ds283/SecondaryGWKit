@@ -1,0 +1,65 @@
+.........................................................FFFFFF.............................................................
+======================================================================
+FAIL: test_gk_wkb_value_build (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_build) (<subtest>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 464, in test_gk_wkb_value_build
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT "GkWKBValue".serial, "GkWKBValue"."H_ratio", "GkWKBValue".theta_mod_2pi, "GkWKBValue".theta_div_2pi, "GkWKBValue"."omega_WKB_sq", "GkWKBValue"."WKB_criterion", "GkWKBValue"."G_WKB", "GkWKBValue"."analytic_G_rad", "GkWKBValue"."analytic_Gprime_rad", "GkWKBValue"."analytic_G_w", "GkWKBValue"."analytic_Gprime_w", anon_1.sin_coeff, anon_1.cos_coeff, anon_1.z_init \nFROM (SELECT "GkWKBIntegration".serial AS serial, "GkWKBIntegration".sin_coeff AS sin_coeff, "GkWKBIntegration".cos_coeff AS cos_coeff, "GkWKBIntegration".z_init AS z_init \nFROM "GkWKBIntegration" \nWHERE "GkWKBIntegration".model_serial = ? AND "GkWKBIntegration".wavenumber_exit_serial = ? AND "GkWKBIntegration".z_source_serial = ? AND "GkWKBIntegration".validated = 1 AND "GkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "GkWKBValue" ON "GkWKBValue".wkb_serial = anon_1.serial \nWHERE "GkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+======================================================================
+FAIL: test_gk_wkb_value_build (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_build) (numeric_serial='None')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 464, in test_gk_wkb_value_build
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT "GkWKBValue".serial, "GkWKBValue"."H_ratio", "GkWKBValue".theta_mod_2pi, "GkWKBValue".theta_div_2pi, "GkWKBValue"."omega_WKB_sq", "GkWKBValue"."WKB_criterion", "GkWKBValue"."G_WKB", "GkWKBValue"."analytic_G_rad", "GkWKBValue"."analytic_Gprime_rad", "GkWKBValue"."analytic_G_w", "GkWKBValue"."analytic_Gprime_w", anon_1.sin_coeff, anon_1.cos_coeff, anon_1.z_init \nFROM (SELECT "GkWKBIntegration".serial AS serial, "GkWKBIntegration".sin_coeff AS sin_coeff, "GkWKBIntegration".cos_coeff AS cos_coeff, "GkWKBIntegration".z_init AS z_init \nFROM "GkWKBIntegration" \nWHERE "GkWKBIntegration".model_serial = ? AND "GkWKBIntegration".wavenumber_exit_serial = ? AND "GkWKBIntegration".z_source_serial = ? AND "GkWKBIntegration".validated = 1 AND "GkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "GkWKBValue" ON "GkWKBValue".wkb_serial = anon_1.serial \nWHERE "GkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+======================================================================
+FAIL: test_gk_wkb_value_read_batch (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_read_batch) (<subtest>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 496, in test_gk_wkb_value_read_batch
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT "GkWKBValue".serial, "GkWKBValue".wkb_serial, "GkWKBValue"."H_ratio", "GkWKBValue".theta_mod_2pi, "GkWKBValue".theta_div_2pi, "GkWKBValue"."omega_WKB_sq", "GkWKBValue"."WKB_criterion", "GkWKBValue"."G_WKB", "GkWKBValue"."analytic_G_rad", "GkWKBValue"."analytic_Gprime_rad", "GkWKBValue"."analytic_G_w", "GkWKBValue"."analytic_Gprime_w", anon_1.sin_coeff, anon_1.cos_coeff, anon_1.z_init, anon_1.z_source_serial, anon_1.z_source, anon_1.z_source_is_source, anon_1.z_source_is_response, redshift.z AS z_response, "GkWKBValue".z_serial AS z_response_serial, redshift.source AS z_response_is_source, redshift.response AS z_response_is_response \nFROM (SELECT "GkWKBIntegration".serial AS serial, "GkWKBIntegration".sin_coeff AS sin_coeff, "GkWKBIntegration".cos_coeff AS cos_coeff, "GkWKBIntegration".z_init AS z_init, "GkWKBIntegration".z_source_serial AS z_source_serial, redshift.z AS z_source, redshift.source AS z_source_is_source, redshift.response AS z_source_is_response \nFROM "GkWKBIntegration" JOIN redshift ON redshift.serial = "GkWKBIntegration".z_source_serial \nWHERE "GkWKBIntegration".model_serial = ? AND "GkWKBIntegration".wavenumber_exit_serial = ? AND "GkWKBIntegration".validated = 1 AND "GkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "GkWKBValue" ON "GkWKBValue".wkb_serial = anon_1.serial JOIN redshift ON redshift.serial = "GkWKBValue".z_serial \nWHERE "GkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+======================================================================
+FAIL: test_gk_wkb_value_read_batch (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_gk_wkb_value_read_batch) (parents_only='True')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 496, in test_gk_wkb_value_read_batch
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT DISTINCT anon_1.z_source_serial, "GkWKBValue".wkb_serial \nFROM (SELECT "GkWKBIntegration".serial AS serial, "GkWKBIntegration".sin_coeff AS sin_coeff, "GkWKBIntegration".cos_coeff AS cos_coeff, "GkWKBIntegration".z_init AS z_init, "GkWKBIntegration".z_source_serial AS z_source_serial, redshift.z AS z_source, redshift.source AS z_source_is_source, redshift.response AS z_source_is_response \nFROM "GkWKBIntegration" JOIN redshift ON redshift.serial = "GkWKBIntegration".z_source_serial \nWHERE "GkWKBIntegration".model_serial = ? AND "GkWKBIntegration".wavenumber_exit_serial = ? AND "GkWKBIntegration".validated = 1 AND "GkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "GkWKBValue" ON "GkWKBValue".wkb_serial = anon_1.serial \nWHERE "GkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+======================================================================
+FAIL: test_tk_wkb_value_build (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_tk_wkb_value_build) (<subtest>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 448, in test_tk_wkb_value_build
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT "TkWKBValue".serial, "TkWKBValue"."H_ratio", "TkWKBValue".theta_mod_2pi, "TkWKBValue".theta_div_2pi, "TkWKBValue".friction, "TkWKBValue"."omega_WKB_sq", "TkWKBValue"."WKB_criterion", "TkWKBValue"."T_WKB", "TkWKBValue"."analytic_T_rad", "TkWKBValue"."analytic_Tprime_rad", "TkWKBValue"."analytic_T_w", "TkWKBValue"."analytic_Tprime_w", anon_1.sin_coeff, anon_1.cos_coeff, anon_1.z_init \nFROM (SELECT "TkWKBIntegration".serial AS serial, "TkWKBIntegration".sin_coeff AS sin_coeff, "TkWKBIntegration".cos_coeff AS cos_coeff, "TkWKBIntegration".z_init AS z_init \nFROM "TkWKBIntegration" \nWHERE "TkWKBIntegration".model_serial = ? AND "TkWKBIntegration".wavenumber_exit_serial = ? AND "TkWKBIntegration".validated = 1 AND "TkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "TkWKBValue" ON "TkWKBValue".wkb_serial = anon_1.serial \nWHERE "TkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+======================================================================
+FAIL: test_tk_wkb_value_read_batch (Datastore.tests.test_database_errors_reach_the_caller.TestTheWKBValueReads.test_tk_wkb_value_read_batch) (<subtest>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 480, in test_tk_wkb_value_read_batch
+    self.assert_passes_through(
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 185, in assert_passes_through
+    self.assertIn(column, str(conn.raised))
+AssertionError: 'numeric_serial' not found in '(builtins.Exception) database is locked\n[SQL: SELECT "TkWKBValue".serial, "TkWKBValue".wkb_serial, "TkWKBValue"."H_ratio", "TkWKBValue".theta_mod_2pi, "TkWKBValue".theta_div_2pi, "TkWKBValue".friction, "TkWKBValue"."omega_WKB_sq", "TkWKBValue"."WKB_criterion", "TkWKBValue"."T_WKB", "TkWKBValue"."analytic_T_rad", "TkWKBValue"."analytic_Tprime_rad", "TkWKBValue"."analytic_T_w", "TkWKBValue"."analytic_Tprime_w", anon_1.sin_coeff, anon_1.cos_coeff, anon_1.z_init, redshift.z AS z, "TkWKBValue".z_serial AS z_serial, redshift.source AS z_is_source, redshift.response AS z_is_response \nFROM (SELECT "TkWKBIntegration".serial AS serial, "TkWKBIntegration".sin_coeff AS sin_coeff, "TkWKBIntegration".cos_coeff AS cos_coeff, "TkWKBIntegration".z_init AS z_init \nFROM "TkWKBIntegration" \nWHERE "TkWKBIntegration".model_serial = ? AND "TkWKBIntegration".wavenumber_exit_serial = ? AND "TkWKBIntegration".validated = 1 AND "TkWKBIntegration".rho_gauss_order = ?) AS anon_1 JOIN "TkWKBValue" ON "TkWKBValue".wkb_serial = anon_1.serial JOIN redshift ON redshift.serial = "TkWKBValue".z_serial \nWHERE "TkWKBValue".z_serial = ?]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'
+
+----------------------------------------------------------------------
+Ran 122 tests in 7.873s
+
+FAILED (failures=6)

@@ -1,0 +1,2 @@
+!! Cannot read sharded datastore "<S>/fpstores/missing-before/fixture-store.sqlite": shard #1 ("<S>/fpstores/missing-before/fixture-store-shard0001.sqlite") does not have the schema the code declares: it lacks the table(s) ['OneLoopIntegral_tags']. Nothing was read or repaired
+exit=1

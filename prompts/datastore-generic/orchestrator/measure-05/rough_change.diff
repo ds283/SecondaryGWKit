@@ -1,0 +1,684 @@
+diff --git a/Datastore/SQL/Datastore.py b/Datastore/SQL/Datastore.py
+index 4cb3c24..2b4fe6a 100644
+--- a/Datastore/SQL/Datastore.py
++++ b/Datastore/SQL/Datastore.py
+@@ -345,18 +345,6 @@ class Datastore:
+         for cls_name, inserter in self._inserters.items():
+             self._schema[cls_name]["insert"] = inserter
+ 
+-        # no _ensure_tables: a table the file lacks is reported, and a lookup on it then fails in
+-        # SQLite with "no such table"
+-        self._absent_tables = sorted(
+-            name for name in self._tables if not self._inspector.has_table(name)
+-        )
+-        if len(self._absent_tables) > 0:
+-            print(
+-                f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
+-                f"read-only, lacks the table(s) {self._absent_tables}; nothing was created"
+-            )
+-
+-        self._skipped_validation = []
+         self._validate_on_startup_read_only()
+ 
+     def _validate_on_startup_read_only(self):
+@@ -372,15 +360,6 @@ class Datastore:
+             if not record["validate_on_startup"]:
+                 continue
+ 
+-            if cls_name in self._absent_tables:
+-                self._skipped_validation.append(cls_name)
+-                print(
+-                    f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
+-                    f'read-only: "{cls_name}" was not validated at startup, because the file '
+-                    "lacks its table"
+-                )
+-                continue
+-
+             factory = self._factories[cls_name]
+             tab = record["table"]
+ 
+@@ -464,8 +443,6 @@ class Datastore:
+         waits for every constructor."""
+         return {
+             "read_only": getattr(self, "_read_only", False),
+-            "absent_tables": list(getattr(self, "_absent_tables", [])),
+-            "skipped_validation": list(getattr(self, "_skipped_validation", [])),
+         }
+ 
+     def __enter__(self):
+diff --git a/Datastore/SQL/ObjectFactories/GkWKBIntegration.py b/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
+index b650cf9..b762498 100644
+--- a/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
++++ b/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
+@@ -1233,9 +1233,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
+                 wkb_table.c.sin_coeff,
+                 wkb_table.c.cos_coeff,
+                 wkb_table.c.z_init,
+-                # always selected, whether or not a parent is given, so that a table without the
+-                # column raises rather than being read
+-                wkb_table.c.numeric_serial,
+             ).filter(
+                 wkb_table.c.model_serial == model_payload.store_id,
+                 wkb_table.c.wavenumber_exit_serial == k.store_id,
+@@ -1355,9 +1352,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
+                 wkb_table.c.sin_coeff,
+                 wkb_table.c.cos_coeff,
+                 wkb_table.c.z_init,
+-                # always selected, whether or not a parent is given, so that a table without the
+-                # column raises rather than being read
+-                wkb_table.c.numeric_serial,
+                 wkb_table.c.z_source_serial,
+                 redshift_table.c.z.label("z_source"),
+                 redshift_table.c.source.label("z_source_is_source"),
+diff --git a/Datastore/SQL/ObjectFactories/TkWKBIntegration.py b/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
+index 03edfba..14fb294 100644
+--- a/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
++++ b/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
+@@ -1240,9 +1240,6 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
+                 wkb_table.c.sin_coeff,
+                 wkb_table.c.cos_coeff,
+                 wkb_table.c.z_init,
+-                # always selected, whether or not a parent is given, so that a table without the
+-                # column raises rather than being read
+-                wkb_table.c.numeric_serial,
+             ).filter(
+                 wkb_table.c.model_serial == model_payload.store_id,
+                 wkb_table.c.wavenumber_exit_serial == k.store_id,
+@@ -1360,9 +1357,6 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
+             wkb_table.c.sin_coeff,
+             wkb_table.c.cos_coeff,
+             wkb_table.c.z_init,
+-            # always selected, whether or not a parent is given, so that a table without the
+-            # column raises rather than being read
+-            wkb_table.c.numeric_serial,
+         ).filter(
+             wkb_table.c.model_serial == model_proxy.store_id,
+             wkb_table.c.wavenumber_exit_serial == k.store_id,
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 2b24682..7484e0d 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -214,6 +214,7 @@ class ShardedPool:
+             primary_journal = os.path.lexists(str(self._primary_file) + "-journal")
+ 
+             self._create_engine()
++            self._check_primary_schema()
+             self._read_shard_data()
+ 
+             # fail closed, before any actor exists: a Datastore actor given a missing shard file
+@@ -409,16 +410,7 @@ class ShardedPool:
+         # 2. store_reader's refusals, through its code: missing primary, journals by presence,
+         # the shards table read mode=ro and its files checked; and the tables each shard lacks
+         with open_read_only(self._primary_file) as store:
+-            self.absent_tables: Dict[int, List[str]] = {
+-                shard.serial: sorted(shard.absent_tables) for shard in store.shards
+-            }
+-        for sid, absent in sorted(self.absent_tables.items()):
+-            if len(absent) > 0:
+-                print(
+-                    f'>> Read-only sharded datastore "{str(self._primary_file)}": shard {sid} '
+-                    f"lacks the table(s) {absent}. Nothing was created; a lookup on one of them "
+-                    "fails in SQLite"
+-                )
++            pass
+ 
+         # 3. the pool's engine, mode=ro. _create_engine builds the tables this pool reads; the
+         # engine it makes is never connected (create_engine opens nothing) and is replaced at once
+@@ -430,6 +422,7 @@ class ShardedPool:
+         self._engine = sqla.create_engine(
+             read_only_url(self._primary_file), future=True, connect_args=connect_args
+         )
++        self._check_primary_schema()
+         self._read_shard_data()
+         self._check_shard_files()
+ 
+@@ -572,14 +565,9 @@ class ShardedPool:
+         for sid, path in sorted(self._shard_db_files.items()):
+             conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
+             try:
+-                has = conn.execute(
+-                    "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'version'"
+-                ).fetchone()[0]
+-                rows = (
+-                    conn.execute("SELECT label FROM version ORDER BY serial").fetchall()
+-                    if has
+-                    else []
+-                )
++                rows = conn.execute(
++                    "SELECT label FROM version ORDER BY serial"
++                ).fetchall()
+             finally:
+                 conn.close()
+             for (label,) in rows:
+@@ -720,6 +708,20 @@ class ShardedPool:
+             sqla.Column("started", sqla.DateTime(), nullable=False),
+         )
+ 
++    def _check_primary_schema(self):
++        from Datastore.SQL.schema import schema_differences, StoreSchemaMismatch
++
++        with self._engine.connect() as conn:
++            diffs = schema_differences(conn, dict(self._metadata.tables))
++            conn.rollback()
++        if not diffs.empty:
++            raise StoreSchemaMismatch(
++                self._primary_file,
++                f'the primary ("{str(self._primary_file)}")',
++                diffs,
++                verb="read" if getattr(self, "_read_only", False) else "open",
++            )
++
+     def _write_shard_data(self):
+         self._shard_file_table.create(self._engine)
+         self._shard_key_config_table.create(self._engine)
+@@ -1016,6 +1018,7 @@ class ShardedPool:
+             )
+ 
+         built = build_schema(sqla.MetaData(), _factories)
++        self._check_shard_schemas(built, shard_ids)
+         specs = self._replicated_table_specs(built)
+         reconciliation["compared"] = [spec["name"] for spec in specs]
+ 
+@@ -1127,6 +1130,33 @@ class ShardedPool:
+             for engine in engines.values():
+                 engine.dispose()
+ 
++    def _check_shard_schemas(self, built, shard_ids):
++        from Datastore.SQL.schema import (
++            SchemaDifferences,
++            schema_differences,
++            StoreSchemaMismatch,
++        )
++
++        for sid in shard_ids:
++            path = Path(self._shard_db_files[sid])
++            engine = sqla.create_engine(
++                f"sqlite:///{path}", future=True, poolclass=sqla.pool.NullPool
++            )
++            try:
++                with engine.connect() as conn:
++                    diffs = schema_differences(conn, built.tables)
++                    conn.rollback()
++            finally:
++                engine.dispose()
++            # an absent table is allowed on a read-write open (U1): the actors create it
++            refused = SchemaDifferences(
++                [], diffs.extra_tables, diffs.absent_columns, diffs.extra_columns
++            )
++            if not refused.empty:
++                raise StoreSchemaMismatch(
++                    self._primary_file, f'shard #{sid} ("{str(path)}")', refused
++                )
++
+     def _replicated_table_specs(self, built) -> List[dict]:
+         """
+         What is compared, table by table: every replicated class that has a table, in the order
+@@ -1233,19 +1263,14 @@ class ShardedPool:
+                 row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{name}")')
+             }
+             if len(present) == 0:
+-                out[name] = {"columns": None, "rows": {}, "duplicates": set()}
+-                continue
+-
+-            columns = tuple(c for c in spec["compared"] if c in present)
+-            if not all(k in columns for k in spec["key"]):
+                 out[name] = {
+-                    "columns": columns,
++                    "columns": tuple(spec["compared"]),
+                     "rows": {},
+                     "duplicates": set(),
+-                    "unkeyed": True,
+                 }
+                 continue
+ 
++            columns = tuple(spec["compared"])
+             key_index = [columns.index(k) for k in spec["key"]]
+             table = spec["table"]
+             rows = {}
+@@ -1282,19 +1307,6 @@ class ShardedPool:
+             name = spec["name"]
+             tables = {sid: snapshots[sid][name] for sid in shard_ids}
+ 
+-            present = {
+-                sid: t["columns"]
+-                for sid, t in tables.items()
+-                if t["columns"] is not None
+-            }
+-            if len(set(present.values())) > 1 or any(
+-                t.get("unkeyed", False) for t in tables.values()
+-            ):
+-                differences.append(
+-                    {"kind": "columns", "table": name, "columns": present}
+-                )
+-                continue
+-
+             for sid, t in tables.items():
+                 for key in sorted(t["duplicates"]):
+                     differences.append(
+@@ -1409,18 +1421,8 @@ class ShardedPool:
+         for d in differences:
+             kind = d["kind"]
+             spec = by_name.get(d["table"])
+-            if kind == "columns":
+-                entry = {
+-                    "class_name": d["table"],
+-                    "shard": sorted(d["columns"].keys()),
+-                    "key": "its columns",
+-                    "detail": "the shards' tables do not have the same compared columns, "
+-                    "or lack their key: "
+-                    + "; ".join(
+-                        f"shard {sid}: {list(cols)}"
+-                        for sid, cols in sorted(d["columns"].items())
+-                    ),
+-                }
++            if False:
++                pass
+             elif kind == "duplicate":
+                 entry = {
+                     "class_name": d["table"],
+@@ -1557,7 +1559,7 @@ class ShardedPool:
+             if kind == "shard_key":
+                 # compared again once the repair is written: a copied wavenumber can satisfy it
+                 continue
+-            if kind in ("columns", "duplicate"):
++            if kind == "duplicate":
+                 refuse(d, "this is not something a replication writes")
+                 continue
+             if name not in unit:
+@@ -1719,11 +1721,7 @@ class ShardedPool:
+     def _read_full_rows(conn, spec, keys) -> Dict[tuple, dict]:
+         """The controller's rows under ``keys``, every column its table has, as mappings."""
+         table = spec["table"]
+-        present = {
+-            row[1]
+-            for row in conn.exec_driver_sql(f'PRAGMA table_info("{spec["name"]}")')
+-        }
+-        columns = [c for c in table.columns if c.name in present]
++        columns = list(table.columns)
+         first = spec["key"][0]
+         out = {}
+         for row in conn.execute(
+diff --git a/Datastore/SQL/schema.py b/Datastore/SQL/schema.py
+index 226a947..0fefa50 100644
+--- a/Datastore/SQL/schema.py
++++ b/Datastore/SQL/schema.py
+@@ -133,3 +133,81 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
+         records[cls_name] = schema
+ 
+     return BuiltSchema(tables=tables, records=records)
++
++
++class SchemaDifferences(NamedTuple):
++    """What ``schema_differences`` finds in one SQLite file: names only."""
++
++    absent_tables: list
++    extra_tables: list
++    absent_columns: Dict[str, list]
++    extra_columns: Dict[str, list]
++
++    @property
++    def empty(self) -> bool:
++        return not (
++            self.absent_tables
++            or self.extra_tables
++            or self.absent_columns
++            or self.extra_columns
++        )
++
++
++def schema_differences(conn, tables: Mapping[str, sqla.Table]) -> SchemaDifferences:
++    """Compare one SQLite file's tables and columns, by name, with ``tables``."""
++    in_file = [
++        row[0]
++        for row in conn.exec_driver_sql(
++            "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name"
++        )
++        if not row[0].startswith("sqlite_")
++    ]
++    absent_tables = [n for n in tables if n not in in_file]
++    extra_tables = [n for n in in_file if n not in tables]
++    absent_columns: Dict[str, list] = {}
++    extra_columns: Dict[str, list] = {}
++    for name, table in tables.items():
++        if name not in in_file:
++            continue
++        quoted = name.replace('"', '""')
++        file_columns = [
++            row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{quoted}")')
++        ]
++        declared = [c.name for c in table.columns]
++        a = [c for c in declared if c not in file_columns]
++        e = [c for c in file_columns if c not in declared]
++        if a:
++            absent_columns[name] = a
++        if e:
++            extra_columns[name] = e
++    return SchemaDifferences(absent_tables, extra_tables, absent_columns, extra_columns)
++
++
++class StoreSchemaMismatch(RuntimeError):
++    """A file of a store whose tables or columns differ from what the code declares."""
++
++    def __init__(
++        self, primary, file_desc: str, differences: SchemaDifferences, verb="open"
++    ):
++        self.primary = primary
++        self.file_desc = file_desc
++        self.differences = differences
++        parts = []
++        if differences.absent_tables:
++            parts.append(f"it lacks the table(s) {differences.absent_tables}")
++        if differences.extra_tables:
++            parts.append(
++                f"it has the table(s) {differences.extra_tables}, which the code does not declare"
++            )
++        for t, cols in differences.absent_columns.items():
++            parts.append(f"its table {t} lacks the column(s) {cols}")
++        for t, cols in differences.extra_columns.items():
++            parts.append(
++                f"its table {t} has the column(s) {cols}, which the code does not declare"
++            )
++        super().__init__(
++            f'Cannot {verb} sharded datastore "{str(primary)}": {file_desc} does not have the '
++            f"schema the code declares: "
++            + "; ".join(parts)
++            + ". Nothing was read or repaired"
++        )
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index c824661..b514c86 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -43,9 +43,6 @@ Nothing is repaired.
+ 
+ **Named problems.** Each problem string starts with its name:
+ 
+-- ``absent-table``: a table is absent from a shard, and reads there as empty;
+-- ``incomplete``: a column the key needs is absent from a shard, so none of the class's records
+-  come from that shard;
+ - ``replicated-divergence``: a replicated class differs between shards;
+ - ``duplicate``: two or more records of a class share a key and a tag set. All are kept;
+ - ``orphan-value``: ``*Value`` rows whose parent row is not on their shard;
+@@ -67,10 +64,6 @@ members are kept beside the records, in ``ClassInventory.parent_sets``, so that
+ render the set by its physical labels. The member table is read once per shard, read-only, as the
+ tag and value tables are.
+ 
+-A shard on which a class's table, association table or value table is absent, or whose key
+-columns are incomplete, is left out of that class's replicated comparison: its absence is already
+-named, and a second, derived "divergence" would say nothing new.
+-
+ This module imports only the standard library and ``sqlalchemy`` at module scope, so a factory can
+ import it from inside its ``inventory_records``. The reader and the factory map are imported inside
+ ``read_inventory``.
+@@ -292,8 +285,6 @@ class ShardContext:
+     them."""
+ 
+     shard: int
+-    absent_tables: FrozenSet[str]
+-    absent_columns: Mapping[str, Tuple[str, ...]]
+     keys: Mapping[str, Mapping[int, Mapping[str, Any]]]
+     digests: Mapping[str, Mapping[int, str]]
+     all_digests: Mapping[str, Mapping[int, str]] = field(default_factory=dict)
+@@ -509,17 +500,6 @@ def read_records(
+             members=set_members,
+         )
+ 
+-    if name in context.absent_tables:
+-        problems.append(
+-            _problem(
+-                "absent-table",
+-                name,
+-                f"table {name} is absent from shard #{shard}, and reads there as empty",
+-            )
+-        )
+-        return _read([], False)
+-
+-    absent = set(context.absent_columns.get(name, ()))
+     needed = list(
+         dict.fromkeys(
+             list(leaves)
+@@ -527,56 +507,11 @@ def read_records(
+             + [p.type_column for p in parents.values() if p.type_column is not None]
+         )
+     )
+-    missing = [c for c in needed if c in absent]
+-    if len(missing) > 0:
+-        problems.append(
+-            _problem(
+-                "incomplete",
+-                name,
+-                f"shard #{shard} lacks the key column(s) {', '.join(missing)}, so none of "
+-                f"its {name} records are read from that shard",
+-            )
+-        )
+-        return _read([], False)
+-
+-    # a set of parents cannot be formed on a shard whose member table, or one of its columns, is
+-    # absent, so none of the class's records are read from that shard: a store from before the
+-    # table (prompt 09b) is such a store
+-    for field, spec in parent_sets.items():
+-        member_columns = [spec.owner] + [p.column for p in spec.members.values()]
+-        if spec.table in context.absent_tables:
+-            problems.append(
+-                _problem(
+-                    "absent-table",
+-                    name,
+-                    f"table {spec.table}, which holds the {field} of every {name} row, is absent "
+-                    f"from shard #{shard}, so none of its {name} records are read from that "
+-                    f"shard",
+-                )
+-            )
+-            return _read([], False)
+-        lacking = [
+-            c
+-            for c in member_columns
+-            if c in set(context.absent_columns.get(spec.table, ()))
+-        ]
+-        if len(lacking) > 0:
+-            problems.append(
+-                _problem(
+-                    "incomplete",
+-                    name,
+-                    f"shard #{shard} lacks the column(s) {', '.join(lacking)} of {spec.table}, "
+-                    f"which holds the {field} of every {name} row, so none of its {name} "
+-                    f"records are read from that shard",
+-                )
+-            )
+-            return _read([], False)
+-
+     columns = [table.c.serial] + [table.c[c] for c in needed]
+-    has_validated = validated and "validated" not in absent
++    has_validated = validated
+     if has_validated:
+         columns.append(table.c.validated)
+-    has_timestamp = "timestamp" in table.c and "timestamp" not in absent
++    has_timestamp = "timestamp" in table.c
+     if has_timestamp:
+         columns.append(table.c.timestamp)
+ 
+@@ -588,19 +523,7 @@ def read_records(
+     tag_sets: Dict[int, List[str]] = {}
+     if tags is not None:
+         tag_table_name, parent_column = tags
+-        if tag_table_name in context.absent_tables or parent_column in set(
+-            context.absent_columns.get(tag_table_name, ())
+-        ):
+-            problems.append(
+-                _problem(
+-                    "absent-table",
+-                    name,
+-                    f"association table {tag_table_name} is absent from shard #{shard}, and "
+-                    f"reads there as empty",
+-                )
+-            )
+-            comparable = False
+-        else:
++        if True:
+             tag_table = tables[tag_table_name]
+             labels = {
+                 serial: key["label"]
+@@ -641,19 +564,7 @@ def read_records(
+     counts: Dict[int, int] = {}
+     if values is not None:
+         value_table_name, parent_column = values
+-        if value_table_name in context.absent_tables or parent_column in set(
+-            context.absent_columns.get(value_table_name, ())
+-        ):
+-            problems.append(
+-                _problem(
+-                    "absent-table",
+-                    name,
+-                    f"value table {value_table_name} is absent from shard #{shard}, and reads "
+-                    f"there as empty",
+-                )
+-            )
+-            comparable = False
+-        else:
++        if True:
+             value_table = tables[value_table_name]
+             parent_col = value_table.c[parent_column]
+             orphans: Dict[int, int] = {}
+@@ -964,8 +875,6 @@ def read_inventory(primary: PathType) -> StoreInventory:
+             for shard in store.shards:
+                 context = ShardContext(
+                     shard=shard.serial,
+-                    absent_tables=shard.absent_tables,
+-                    absent_columns=shard.absent_columns,
+                     keys=keys[shard.serial],
+                     digests=digests[shard.serial],
+                     all_digests=all_digests,
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index 61bfc09..c79ca07 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -40,7 +40,7 @@ import sqlalchemy as sqla
+ 
+ from Datastore.SQL.Datastore import _factories
+ from Datastore.SQL.ShardedPool import ShardedPool
+-from Datastore.SQL.schema import build_schema
++from Datastore.SQL.schema import build_schema, schema_differences, StoreSchemaMismatch
+ from Datastore.shard_paths import shard_file_problem
+ 
+ PathType = Union[str, os.PathLike]
+@@ -63,10 +63,6 @@ class ReadOnlyShard:
+     path: Path
+     engine: sqla.Engine
+     tables: Mapping[str, sqla.Table]
+-    absent_tables: FrozenSet[str]
+-    absent_columns: Mapping[str, Tuple[str, ...]]
+-    extra_columns: Mapping[str, Tuple[str, ...]]
+-    extra_tables: FrozenSet[str]
+ 
+ 
+ @dataclass(frozen=True)
+@@ -110,44 +106,19 @@ def _read_only_engine(path: Path) -> sqla.Engine:
+ 
+ 
+ def _describe_shard(
++    primary: Path,
+     serial: int,
+     path: Path,
+     engine: sqla.Engine,
+     tables: Mapping[str, sqla.Table],
+ ) -> ReadOnlyShard:
+     with engine.connect() as conn:
+-        in_file = {
+-            row[0]
+-            for row in conn.exec_driver_sql(
+-                "SELECT name FROM sqlite_master WHERE type = 'table'"
+-            )
+-        }
+-
+-        absent_columns: Dict[str, Tuple[str, ...]] = {}
+-        extra_columns: Dict[str, Tuple[str, ...]] = {}
+-        for name, table in tables.items():
+-            if name not in in_file:
+-                continue
+-            quoted = name.replace('"', '""')
+-            file_columns = [
+-                row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{quoted}")')
+-            ]
+-            declared = [c.name for c in table.columns]
+-            absent_columns[name] = tuple(c for c in declared if c not in file_columns)
+-            extra_columns[name] = tuple(c for c in file_columns if c not in declared)
+-
+-    return ReadOnlyShard(
+-        serial=serial,
+-        path=path,
+-        engine=engine,
+-        tables=tables,
+-        absent_tables=frozenset(n for n in tables if n not in in_file),
+-        absent_columns=absent_columns,
+-        extra_columns=extra_columns,
+-        extra_tables=frozenset(
+-            n for n in in_file if n not in tables and not n.startswith("sqlite_")
+-        ),
+-    )
++        diffs = schema_differences(conn, tables)
++    if not diffs.empty:
++        raise StoreSchemaMismatch(
++            primary, f'shard #{serial} ("{str(path)}")', diffs, verb=_VERB
++        )
++    return ReadOnlyShard(serial=serial, path=path, engine=engine, tables=tables)
+ 
+ 
+ @contextlib.contextmanager
+@@ -187,7 +158,9 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
+         for serial, path in sorted(files.items()):
+             engine = _read_only_engine(Path(path))
+             engines.append(engine)
+-            shards.append(_describe_shard(serial, Path(path), engine, built.tables))
++            shards.append(
++                _describe_shard(primary_path, serial, Path(path), engine, built.tables)
++            )
+ 
+         yield ReadOnlyStore(
+             primary=primary_path,
+diff --git a/Datastore/tests/real_store_fixtures.py b/Datastore/tests/real_store_fixtures.py
+index e0ddea6..163e71f 100644
+--- a/Datastore/tests/real_store_fixtures.py
++++ b/Datastore/tests/real_store_fixtures.py
+@@ -22,11 +22,7 @@ explicit serials. A test (or prompt 02's inventory tests) adds rows by passing i
+ from the defaults. A ``timestamp`` column that a row leaves out is filled with ``FIXED_TIMESTAMP``,
+ as ``Datastore._insert`` fills it with the time; every other value is the row's own.
+ 
+-**Old stores.** ``build_old_store`` makes a store as if written before the code declared one table
+-and one column: shard ``OLD_MISSING_TABLE_SHARD`` lacks ``OLD_MISSING_TABLE``, and on shard
+-``OLD_MISSING_COLUMN_SHARD`` the table ``OLD_MISSING_COLUMN_TABLE`` lacks
+-``OLD_MISSING_COLUMN``. ``build_real_store`` takes ``missing_tables`` and ``missing_columns`` for
+-any other combination.
++``build_real_store`` takes ``missing_tables``, ``missing_columns`` and ``extra_sql``.
+ 
+ **The full store** (store-fingerprint prompt 02). ``build_full_store`` builds a store holding at
+ least one row of every class of the structured inventory, with tags, unvalidated rows and value
+@@ -191,12 +187,6 @@ SHARDED_ROWS: Dict[int, RowSet] = {
+ # wavenumber serial -> shard serial, written to the primary's shard_keys table
+ SHARD_KEYS: Dict[int, int] = {1: 0, 2: 1}
+ 
+-OLD_MISSING_TABLE = "OneLoopIntegral_tags"
+-OLD_MISSING_TABLE_SHARD = 1
+-OLD_MISSING_COLUMN_TABLE = "TkNumericIntegration"
+-OLD_MISSING_COLUMN = "stop_Tprime"
+-OLD_MISSING_COLUMN_SHARD = 0
+-
+ 
+ @dataclass(frozen=True)
+ class RealStore:
+@@ -357,18 +347,6 @@ def build_real_store(
+     )
+ 
+ 
+-def build_old_store(directory: Path, stem: str = "old-store") -> RealStore:
+-    """A store with one shard missing a table and one table missing a column (module docstring)."""
+-    return build_real_store(
+-        directory,
+-        stem=stem,
+-        missing_tables={OLD_MISSING_TABLE_SHARD: [OLD_MISSING_TABLE]},
+-        missing_columns={
+-            OLD_MISSING_COLUMN_SHARD: {OLD_MISSING_COLUMN_TABLE: [OLD_MISSING_COLUMN]}
+-        },
+-    )
+-
+-
+ def expected_row_counts(store: RealStore, serial: int) -> Dict[str, int]:
+     """Rows this fixture put in each table of shard ``serial`` (tables it left empty omitted)."""
+     counts: Dict[str, int] = {}

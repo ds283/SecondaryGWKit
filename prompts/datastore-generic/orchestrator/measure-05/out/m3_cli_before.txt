@@ -1,0 +1,39 @@
+store:    <S>/fpstores/missing-before/fixture-store.sqlite
+digest:   d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                   3  dae832445575
+                              3  dae832445575  []
+  redshift                    3  73be9f4aa191
+                              3  73be9f4aa191  []
+  wavenumber                  2  f854caf87980
+                              2  f854caf87980  []
+  tolerance                   2  06c995f38d3e
+                              2  06c995f38d3e  []
+  LambdaCDM                   1  6fe0caa942fa
+                              1  6fe0caa942fa  []
+  QCD_Cosmology               0  e3b0c44298fc
+  IntegrationSolver           1  d44b41138ee2
+                              1  d44b41138ee2  []
+  GkSourcePolicy              0  e3b0c44298fc
+  QuadSourcePolicy            0  e3b0c44298fc
+  wavenumber_exit_time        2  4ad1b7074ea5
+                              2  4ad1b7074ea5  []
+  BackgroundModel             1  e3726430ba36
+                              1  e3726430ba36  [Run_fixture]
+  TkNumericIntegration        2  5f6a90bf7d31
+                              2  5f6a90bf7d31  [Run_fixture, grid-A]
+  TkWKBIntegration            0  e3b0c44298fc
+  GkNumericIntegration        0  e3b0c44298fc
+  GkWKBIntegration            0  e3b0c44298fc
+  GkSource                    0  e3b0c44298fc
+  GkSourcePolicyData          0  e3b0c44298fc
+  QuadSource                  0  e3b0c44298fc
+  QuadSourceIntegral          0  e3b0c44298fc
+  OneLoopIntegral             0  e3b0c44298fc
+problems: (counts only; the store's own text is in `main.py --inventory`)
+  !! OneLoopIntegral: absent-table 1
+recorded: none recorded (the sidecar is absent)
+exit=0

@@ -1,0 +1,3 @@
+interrupted drop, sharded tables (gk-source) gone from shard 0: OPENED; every shard matches the schema afterwards: {0: True, 1: True, 2: True}; version rows {0: [('standin',)], 1: [('standin',)], 2: [('standin',)]}
+interrupted drop, replicated GkSourcePolicy gone from shard 1 (empty elsewhere): OPENED; every shard matches the schema afterwards: {0: True, 1: True, 2: True}; version rows {0: [('standin',)], 1: [('standin',)], 2: [('standin',)]}
+interrupted first open: shard 2 lacks half its tables, no version row anywhere: OPENED; every shard matches the schema afterwards: {0: True, 1: True, 2: True}; version rows {0: [('standin',)], 1: [('standin',)], 2: [('standin',)]}

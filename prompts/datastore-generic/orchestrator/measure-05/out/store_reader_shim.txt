@@ -1,0 +1,106 @@
+test_reading_in_a_child_interpreter_leaves_ray_uninitialised (Datastore.tests.test_store_reader.TestNoRay.test_reading_in_a_child_interpreter_leaves_ray_uninitialised) ... FAIL
+test_extra_columns_and_tables_are_reported (Datastore.tests.test_store_reader.TestOldStores.test_extra_columns_and_tables_are_reported) ... ERROR
+test_missing_table_and_column_are_reported_on_the_right_shard (Datastore.tests.test_store_reader.TestOldStores.test_missing_table_and_column_are_reported_on_the_right_shard) ... ERROR
+test_a_write_through_a_reader_engine_raises (Datastore.tests.test_store_reader.TestReaderNeverWrites.test_a_write_through_a_reader_engine_raises) ... ok
+test_reading_every_table_changes_nothing (Datastore.tests.test_store_reader.TestReaderNeverWrites.test_reading_every_table_changes_nothing) ... ERROR
+test_engines_open_mode_ro_and_never_immutable (Datastore.tests.test_store_reader.TestReaderReads.test_engines_open_mode_ro_and_never_immutable) ... ok
+test_every_engine_is_disposed_on_exit (Datastore.tests.test_store_reader.TestReaderReads.test_every_engine_is_disposed_on_exit) ... ERROR
+test_every_shard_with_its_serial_and_path (Datastore.tests.test_store_reader.TestReaderReads.test_every_shard_with_its_serial_and_path) ... ERROR
+test_replicated_rows_have_the_same_serials_on_every_shard (Datastore.tests.test_store_reader.TestReaderReads.test_replicated_rows_have_the_same_serials_on_every_shard) ... ok
+test_row_counts_equal_an_independent_count (Datastore.tests.test_store_reader.TestReaderReads.test_row_counts_equal_an_independent_count) ... ERROR
+test_journal_beside_a_shard (Datastore.tests.test_store_reader.TestRefusals.test_journal_beside_a_shard) ... ok
+test_journal_beside_the_primary (Datastore.tests.test_store_reader.TestRefusals.test_journal_beside_the_primary) ... ok
+test_missing_primary (Datastore.tests.test_store_reader.TestRefusals.test_missing_primary) ... ok
+test_missing_shard_is_refused_by_read_closed_store (Datastore.tests.test_store_reader.TestRefusals.test_missing_shard_is_refused_by_read_closed_store) ... ok
+test_primary_with_no_shards_table (Datastore.tests.test_store_reader.TestRefusals.test_primary_with_no_shards_table) ... ok
+
+======================================================================
+ERROR: test_extra_columns_and_tables_are_reported (Datastore.tests.test_store_reader.TestOldStores.test_extra_columns_and_tables_are_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 243, in test_extra_columns_and_tables_are_reported
+    with open_read_only(store_files.primary) as store:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp08fdr2ix/store/fixture-store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmp08fdr2ix/store/fixture-store-shard0001.sqlite") does not have the schema the code declares: it has the table(s) ['retired_table'], which the code does not declare; its table GkSource has the column(s) ['legacy_note'], which the code does not declare. Nothing was read or repaired
+
+======================================================================
+ERROR: test_missing_table_and_column_are_reported_on_the_right_shard (Datastore.tests.test_store_reader.TestOldStores.test_missing_table_and_column_are_reported_on_the_right_shard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 203, in test_missing_table_and_column_are_reported_on_the_right_shard
+    with open_read_only(old.primary) as store:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmprb5wvlea/store/old-store.sqlite": shard #0 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmprb5wvlea/store/old-store-shard0000.sqlite") does not have the schema the code declares: its table TkNumericIntegration lacks the column(s) ['stop_Tprime']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_reading_every_table_changes_nothing (Datastore.tests.test_store_reader.TestReaderNeverWrites.test_reading_every_table_changes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 171, in test_reading_every_table_changes_nothing
+    read_every_table(store)
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 67, in read_every_table
+    if name in shard.absent_tables:
+               ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+======================================================================
+ERROR: test_every_engine_is_disposed_on_exit (Datastore.tests.test_store_reader.TestReaderReads.test_every_engine_is_disposed_on_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 148, in test_every_engine_is_disposed_on_exit
+    read_every_table(store)
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 67, in read_every_table
+    if name in shard.absent_tables:
+               ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+======================================================================
+ERROR: test_every_shard_with_its_serial_and_path (Datastore.tests.test_store_reader.TestReaderReads.test_every_shard_with_its_serial_and_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 100, in test_every_shard_with_its_serial_and_path
+    self.assertEqual(shard.absent_tables, frozenset())
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+======================================================================
+ERROR: test_row_counts_equal_an_independent_count (Datastore.tests.test_store_reader.TestReaderReads.test_row_counts_equal_an_independent_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 108, in test_row_counts_equal_an_independent_count
+    counts = read_every_table(store)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 67, in read_every_table
+    if name in shard.absent_tables:
+               ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+======================================================================
+FAIL: test_reading_in_a_child_interpreter_leaves_ray_uninitialised (Datastore.tests.test_store_reader.TestNoRay.test_reading_in_a_child_interpreter_leaves_ray_uninitialised)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 353, in test_reading_in_a_child_interpreter_leaves_ray_uninitialised
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+AttributeError: 'ReadOnlyShard' object has no attribute 'absent_tables'
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 11.707s
+
+FAILED (failures=1, errors=6)

@@ -1,0 +1,221 @@
+............................................................EE...EEEEE......................E............................................EE............................
+======================================================================
+ERROR: test_a_missing_column_the_key_does_not_need (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_a_missing_column_the_key_does_not_need)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 953, in test_a_missing_column_the_key_does_not_need
+    inventory = self.inventory(
+                ^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-3/full-store.sqlite": shard #0 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-3/full-store-shard0000.sqlite") does not have the schema the code declares: its table TkNumericIntegration lacks the column(s) ['stop_Tprime']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_a_missing_key_column_makes_the_class_incomplete (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_a_missing_key_column_makes_the_class_incomplete)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 924, in test_a_missing_key_column_makes_the_class_incomplete
+    problem = self.check(
+              ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-5/full-store.sqlite": shard #1 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-5/full-store-shard0001.sqlite") does not have the schema the code declares: its table TkWKBIntegration lacks the column(s) ['numeric_serial']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_an_absent_association_table (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_an_absent_association_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 884, in test_an_absent_association_table
+    problem = self.check(
+              ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-9/full-store.sqlite": shard #2 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-9/full-store-shard0002.sqlite") does not have the schema the code declares: it lacks the table(s) ['OneLoopIntegral_tags']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_an_absent_replicated_association_table (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_an_absent_replicated_association_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 907, in test_an_absent_replicated_association_table
+    self.check(
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-10/full-store.sqlite": shard #2 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-10/full-store-shard0002.sqlite") does not have the schema the code declares: it lacks the table(s) ['BackgroundModel_tags']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_an_absent_replicated_table (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_an_absent_replicated_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 899, in test_an_absent_replicated_table
+    self.check(
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-11/full-store.sqlite": shard #2 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-11/full-store-shard0002.sqlite") does not have the schema the code declares: it lacks the table(s) ['QuadSourcePolicy']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_an_absent_table (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_an_absent_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 875, in test_an_absent_table
+    problem = self.check(
+              ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-12/full-store.sqlite": shard #2 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-12/full-store-shard0002.sqlite") does not have the schema the code declares: it lacks the table(s) ['OneLoopIntegral', 'OneLoopIntegral_tags']. Nothing was read or repaired
+
+======================================================================
+ERROR: test_an_absent_value_table (Datastore.tests.test_store_inventory.TestOldStoresAndOrphans.test_an_absent_value_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 893, in test_an_absent_value_table
+    problem = self.check(
+              ^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 850, in check
+    inventory = self.inventory(shards=3, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 326, in inventory
+    return read_inventory(cls.store(**kwargs).primary)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_inventory.py", line 856, in read_inventory
+    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/store_reader.py", line 162, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+  File "<scratch>/wt/Datastore/store_reader.py", line 118, in _describe_shard
+    raise StoreSchemaMismatch(
+Datastore.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-13/full-store.sqlite": shard #2 ("/private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpyik76h7m/store-13/full-store-shard0002.sqlite") does not have the schema the code declares: it lacks the table(s) ['TkWKBValue']. Nothing was read or repaired
+
+======================================================================
+ERROR: Datastore.tests.test_store_reader (unittest.loader._FailedTest.Datastore.tests.test_store_reader)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_store_reader
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 35, in <module>
+    from Datastore.tests.real_store_fixtures import (
+ImportError: cannot import name 'OLD_MISSING_COLUMN' from 'Datastore.tests.real_store_fixtures' (<scratch>/wt/Datastore/tests/real_store_fixtures.py)
+
+
+======================================================================
+ERROR: test_not_nullable (Datastore.tests.test_wkb_numeric_parent_key.TestNullableParent.test_not_nullable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 1011, in test_not_nullable
+    read = self._read(Parent("numeric_serial", "Parent"))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 993, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+======================================================================
+ERROR: test_nullable (Datastore.tests.test_wkb_numeric_parent_key.TestNullableParent.test_nullable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 1005, in test_nullable
+    read = self._read(Parent("numeric_serial", "Parent", nullable=True))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 993, in _read
+    context = ShardContext(
+              ^^^^^^^^^^^^^
+TypeError: ShardContext.__init__() got an unexpected keyword argument 'absent_tables'
+
+----------------------------------------------------------------------
+Ran 167 tests in 54.130s
+
+FAILED (errors=10)
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
