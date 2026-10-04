@@ -71,6 +71,16 @@ as recommended:**
 - **Decided (2026-10-04), after the orchestrator's review of 07a:** the user closed the campaign,
   and decided to retire both of 07's stores, `a3-v2-readiness-07-reference` and
   `a3-v2-readiness-07-resumed`. `store retire` is the user's to run.
+- **Retired (2026-10-04), by the user**, with `store retire` at `befccc0`:
+  `a3-v2-readiness-07-reference` at 12:03:17 and `a3-v2-readiness-07-resumed` at 12:03:37. Each
+  fresh fingerprint matched its recorded one, digest `39809dca…55d2`. Each store's primary and four
+  shards were deleted, and its sidecar is left as a tombstone in `var/datastores/`. Each report named
+  only the store's own runs (`reference`; `resumed-a`, `-b` and `-c`) and **no sidecar**: since
+  prompt 06, the four earlier tombstones no longer match every store in the root. The orchestrator
+  checked afterwards that `store show` reports both as `retired`, and that nothing else under
+  `var/datastores/` or `var/runs/` changed. The run directories under `var/runs/a3-v2-readiness-07-*`
+  and the outputs under `var/a3-v2-readiness-07/` and `var/a3-v2-readiness-07a/` remain, and every
+  number is in `docs/a3-v2-readiness-verification.md`.
 
 ---
 
