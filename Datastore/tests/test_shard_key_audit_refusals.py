@@ -13,6 +13,15 @@ shard record in "VERDICT: OK" and exit code 0, however unusable it was. Now:
 * every ``shards`` record goes through the one resolver, and one that it refuses, an absolute
   path included, is a refusal naming the record and the resolver's reason.
 
+Since `[04-the-shard-key-audit-crashes-where-it-should-refuse]` was closed (2026-10-05), three more
+shapes are refusals with exit code 2, where the tool ended in a traceback (exit 1, its INCONSISTENT
+code) or skipped its cross-file check and could still say OK:
+
+* a primary without a column the tool reads (``shard_key_config.key_type``, ``shards.serial`` or
+  ``.filename``, ``shard_keys.shard_id``);
+* a shard 0 file that exists but is not a database;
+* a shard 0 database without the shard-key table ``shard_key_config`` names.
+
 A missing shard *file* is not a refusal: the cross-file check is skipped and said to be
 (``test_shard_key_audit_copy`` pins it).
 
@@ -185,6 +194,42 @@ class TestTheAuditRefuses(unittest.TestCase):
         self.assertIn("wavenumber_serial", out)  # the columns it found, as data
         self.assertNotIn("a2bd966", out)
         self.assertNotIn("pre-", out)
+
+    # [04-the-shard-key-audit-crashes-where-it-should-refuse]: each of these ended in a traceback
+    # and exit code 1, or skipped the cross-file check and said OK
+
+    def test_a_shard_key_config_without_key_type(self):
+        primary = self.a_current_store("A")
+        _execute(
+            primary,
+            "DROP TABLE shard_key_config",
+            "CREATE TABLE shard_key_config (other VARCHAR(256))",
+            "INSERT INTO shard_key_config (other) VALUES ('wavenumber')",
+        )
+        out = self.assertRefusesWithoutAVerdict(primary)
+        self.assertIn("shard_key_config.key_type", out)
+        self.assertIn("will not attempt to audit", out)
+
+    def test_a_shards_table_without_filename(self):
+        primary = self.a_current_store("A")
+        _execute(primary, "ALTER TABLE shards DROP COLUMN filename")
+        out = self.assertRefusesWithoutAVerdict(primary)
+        self.assertIn("shards.filename", out)
+
+    def test_a_shard_0_that_is_not_a_database(self):
+        primary = self.a_current_store("A")
+        (primary.parent / NAMES[0]).unlink()
+        write_placeholder(primary.parent / NAMES[0])
+        out = self.assertRefusesWithoutAVerdict(primary)
+        self.assertIn(f"shard #0 file {primary.parent / NAMES[0]} cannot be read", out)
+        self.assertNotIn("Cross-file check", out)
+
+    def test_a_shard_0_without_the_shard_key_table(self):
+        primary = self.a_current_store("A")
+        _execute(primary.parent / NAMES[0], "DROP TABLE wavenumber")
+        out = self.assertRefusesWithoutAVerdict(primary)
+        self.assertIn("does not contain the 'wavenumber' table", out)
+        self.assertNotIn("skipping cross-file checks", out)
 
 
 if __name__ == "__main__":

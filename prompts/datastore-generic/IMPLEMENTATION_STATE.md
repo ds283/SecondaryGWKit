@@ -697,6 +697,11 @@ fixture through the constructor, unless the test means the absent table.
   - **Next step.** The user will have it cleaned up (2026-10-04). The new
     `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
     its prefix, so a cleanup does not break it.
+
+---
+
+## 4. Resolved issues
+
 - **[04-the-shard-key-audit-crashes-where-it-should-refuse]** *(opened 2026-10-05 by the
   orchestrator's review of prompt 04, from the log's observations; measured at `bbdba04`)*
   - **The defect.** `tools/shard_key_audit.py` ends in a Python traceback and exit code 1, with no
@@ -714,11 +719,24 @@ fixture through the constructor, unless the test means the absent table.
     what the shard fixtures' placeholder files look like to it.
   - **Next step.** Both should be refusals with exit 2, like the tool's other refusals. Not 04's
     (unchanged by it, README §5 rule 4); for the user to assign.
-
----
-
-## 4. Resolved issues
-
+  - **Found (2026-10-05, measuring prompt 05's test plan):** a third shape, read rather than a
+    traceback. When shard 0 exists but lacks the key-type table, the tool printed "skipping
+    cross-file checks" and could still end `VERDICT: OK`; an `OperationalError` on the `ATTACH`
+    was skipped the same way.
+  - **Closed (2026-10-05, outside the prompts, at the user's request; this commit).** Each shape
+    is now a refusal with exit code 2 and no verdict: a primary without a column the tool reads
+    (`shards.serial`/`.filename`, `shard_keys.shard_id`, `shard_key_config.key_type`); a shard 0
+    file that cannot be read as a database (any `sqlite3.DatabaseError` from the `ATTACH` or the
+    reads after it); a shard 0 without the key-type table. A missing shard 0 *file* still skips
+    the cross-file check and gives a verdict, as prompt 04 kept it. The module docstring now
+    states the three exit codes. Pinned by four new tests in
+    `Datastore/tests/test_shard_key_audit_refusals.py`
+    (`test_a_shard_key_config_without_key_type`, `test_a_shards_table_without_filename`,
+    `test_a_shard_0_that_is_not_a_database`, `test_a_shard_0_without_the_shard_key_table`), each
+    failing against the unfixed tool; the module's seven other tests and
+    `test_shard_key_audit_copy`'s three pass unchanged. Run with `ShardedPool` stubbed out of the
+    fixtures' imports, because the venv's scipy cannot be loaded on macOS 27.0.1 (its
+    `_spropack` extension is rejected by dyld); the tests use only the fixtures' stdlib parts.
 - **[00-old-store-refusals-misfire-on-any-database-error]** *(opened 2026-10-04 by the audit, F0;
   measured)*
   - **The defect.** `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology` and

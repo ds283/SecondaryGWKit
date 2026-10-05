@@ -31,6 +31,15 @@ assigned, which is not recorded anywhere. If this tool reports a problem,
 the remedy is to rebuild the datastore from scratch, not to patch it in
 place.
 
+Exit status: 0 for "VERDICT: OK", 1 for "VERDICT: INCONSISTENT", and 2 when
+the store cannot be audited at all (it is refused, and no verdict is given):
+a primary that is not a completely written current-generation ShardedPool
+primary, a shard record that is not a bare file name, or a shard 0 that
+exists but cannot be read as a shard (not a database, or without the
+shard-key table its primary names). A shard 0 file that is missing is not a
+refusal: the cross-file check is skipped and said to be, and the single-file
+checks still give a verdict.
+
 Usage:
     python tools/shard_key_audit.py /path/to/primary.sqlite
 """
@@ -97,6 +106,26 @@ def main(argv: List[str]) -> int:
         print(
             "!! There is no safe automated upgrade path. This datastore must be "
             "rebuilt from scratch; this tool will not attempt to audit it further."
+        )
+        return 2
+
+    # every other column this tool reads must be there too: a primary without one is refused,
+    # not met with a traceback, whose exit code 1 would read as INCONSISTENT
+    absent_columns = [
+        f"{table}.{column}"
+        for table, columns in (
+            ("shards", ("serial", "filename")),
+            ("shard_keys", ("shard_id",)),
+            ("shard_key_config", ("key_type",)),
+        )
+        for column in columns
+        if column not in _table_columns(conn, table)
+    ]
+    if absent_columns:
+        print(
+            f"!! {primary_path} lacks the column(s) {absent_columns}. This does not look "
+            f"like a current-generation ShardedPool primary database; this tool will not "
+            f"attempt to audit it."
         )
         return 2
 
@@ -209,12 +238,21 @@ def main(argv: List[str]) -> int:
                         )
                     cross_file_done = True
                 else:
+                    # every shard holds the shard-key table, which is replicated: a shard 0
+                    # without it is not a completely written shard, and cannot be audited
                     print(
-                        f"!! shard #{shard_serial} database does not contain a "
-                        f"'{key_type}' table; skipping cross-file checks"
+                        f"!! shard #{shard_serial} database {shard_path} does not contain "
+                        f"the '{key_type}' table that shard_key_config names. This tool "
+                        f"will not attempt to audit this datastore."
                     )
-            except sqlite3.OperationalError as e:
-                print(f"!! could not attach shard #{shard_serial} ({shard_path}): {e}")
+                    return 2
+            except sqlite3.DatabaseError as e:
+                # OperationalError included: the file is there, but is not a readable shard
+                print(
+                    f"!! shard #{shard_serial} file {shard_path} cannot be read as a shard "
+                    f"database: {e}. This tool will not attempt to audit this datastore."
+                )
+                return 2
         else:
             print(f"!! shard #{shard_serial} file {shard_path} {shard_problem}")
 
