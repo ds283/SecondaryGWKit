@@ -992,8 +992,6 @@ class TestNullableParent(unittest.TestCase):
             conn.execute(sqla.insert(table), [{"serial": 2, "numeric_serial": None}])
             context = ShardContext(
                 shard=0,
-                absent_tables=frozenset(),
-                absent_columns={},
                 keys={},
                 digests={"Parent": {7: "digest-of-7"}},
             )

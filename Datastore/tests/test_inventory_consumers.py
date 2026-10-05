@@ -269,7 +269,14 @@ class TestRunLabels(_Stores):
         self.assertIn("shard #1", message)
 
     def test_a_problem_elsewhere_does_not_matter(self):
-        store = self.store(missing_tables={1: ["QuadSourceIntegral_tags"]})
+        store = self.store(
+            extra_sql={
+                1: [
+                    'INSERT INTO "QuadSourceIntegral_tags" (parent_serial, tag_serial) '
+                    "VALUES (999, 1)"
+                ]
+            }
+        )
         pool = SimpleNamespace(primary=store.primary)
         self.assertEqual(available_run_labels(pool), ["fixture"])
 

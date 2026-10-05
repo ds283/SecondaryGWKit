@@ -43,9 +43,6 @@ Nothing is repaired.
 
 **Named problems.** Each problem string starts with its name:
 
-- ``absent-table``: a table is absent from a shard, and reads there as empty;
-- ``incomplete``: a column the key needs is absent from a shard, so none of the class's records
-  come from that shard;
 - ``replicated-divergence``: a replicated class differs between shards;
 - ``duplicate``: two or more records of a class share a key and a tag set. All are kept;
 - ``orphan-value``: ``*Value`` rows whose parent row is not on their shard;
@@ -67,10 +64,6 @@ members are kept beside the records, in ``ClassInventory.parent_sets``, so that 
 render the set by its physical labels. The member table is read once per shard, read-only, as the
 tag and value tables are.
 
-A shard on which a class's table, association table or value table is absent, or whose key
-columns are incomplete, is left out of that class's replicated comparison: its absence is already
-named, and a second, derived "divergence" would say nothing new.
-
 This module imports only the standard library and ``sqlalchemy`` at module scope, so a factory can
 import it from inside its ``inventory_records``. The reader and the factory map are imported inside
 ``read_inventory``.
@@ -87,7 +80,6 @@ from pathlib import Path
 from typing import (
     Any,
     Dict,
-    FrozenSet,
     List,
     Mapping,
     Optional,
@@ -292,8 +284,6 @@ class ShardContext:
     them."""
 
     shard: int
-    absent_tables: FrozenSet[str]
-    absent_columns: Mapping[str, Tuple[str, ...]]
     keys: Mapping[str, Mapping[int, Mapping[str, Any]]]
     digests: Mapping[str, Mapping[int, str]]
     all_digests: Mapping[str, Mapping[int, str]] = field(default_factory=dict)
@@ -307,7 +297,6 @@ class ShardRead:
     shard: int
     rows: List[Tuple[int, Record, Optional[datetime]]]
     problems: List[str]
-    comparable: bool
     tagged: bool
     parents: Dict[str, str]
     # key field -> member field -> the class that member field names (a ParentSet field)
@@ -496,30 +485,18 @@ def read_records(
                     f"on shard #{shard}; classes must be built in dependency order"
                 )
 
-    def _read(rows, comparable):
+    def _read(rows):
         return ShardRead(
             name=name,
             shard=shard,
             rows=rows,
             problems=problems,
-            comparable=comparable,
             tagged=tags is not None,
             parents=parent_classes,
             parent_sets=set_classes,
             members=set_members,
         )
 
-    if name in context.absent_tables:
-        problems.append(
-            _problem(
-                "absent-table",
-                name,
-                f"table {name} is absent from shard #{shard}, and reads there as empty",
-            )
-        )
-        return _read([], False)
-
-    absent = set(context.absent_columns.get(name, ()))
     needed = list(
         dict.fromkeys(
             list(leaves)
@@ -527,153 +504,82 @@ def read_records(
             + [p.type_column for p in parents.values() if p.type_column is not None]
         )
     )
-    missing = [c for c in needed if c in absent]
-    if len(missing) > 0:
-        problems.append(
-            _problem(
-                "incomplete",
-                name,
-                f"shard #{shard} lacks the key column(s) {', '.join(missing)}, so none of "
-                f"its {name} records are read from that shard",
-            )
-        )
-        return _read([], False)
-
-    # a set of parents cannot be formed on a shard whose member table, or one of its columns, is
-    # absent, so none of the class's records are read from that shard: a store from before the
-    # table (prompt 09b) is such a store
-    for field, spec in parent_sets.items():
-        member_columns = [spec.owner] + [p.column for p in spec.members.values()]
-        if spec.table in context.absent_tables:
-            problems.append(
-                _problem(
-                    "absent-table",
-                    name,
-                    f"table {spec.table}, which holds the {field} of every {name} row, is absent "
-                    f"from shard #{shard}, so none of its {name} records are read from that "
-                    f"shard",
-                )
-            )
-            return _read([], False)
-        lacking = [
-            c
-            for c in member_columns
-            if c in set(context.absent_columns.get(spec.table, ()))
-        ]
-        if len(lacking) > 0:
-            problems.append(
-                _problem(
-                    "incomplete",
-                    name,
-                    f"shard #{shard} lacks the column(s) {', '.join(lacking)} of {spec.table}, "
-                    f"which holds the {field} of every {name} row, so none of its {name} "
-                    f"records are read from that shard",
-                )
-            )
-            return _read([], False)
 
     columns = [table.c.serial] + [table.c[c] for c in needed]
-    has_validated = validated and "validated" not in absent
+    has_validated = validated
     if has_validated:
         columns.append(table.c.validated)
-    has_timestamp = "timestamp" in table.c and "timestamp" not in absent
+    has_timestamp = "timestamp" in table.c
     if has_timestamp:
         columns.append(table.c.timestamp)
 
     rows = conn.execute(sqla.select(*columns).order_by(table.c.serial)).all()
     serials = {row.serial for row in rows}
-    comparable = True
 
     # the full tag set of each row, from its own association table, joined inside the shard
     tag_sets: Dict[int, List[str]] = {}
     if tags is not None:
         tag_table_name, parent_column = tags
-        if tag_table_name in context.absent_tables or parent_column in set(
-            context.absent_columns.get(tag_table_name, ())
+        tag_table = tables[tag_table_name]
+        labels = {
+            serial: key["label"]
+            for serial, key in context.keys.get("store_tag", {}).items()
+        }
+        no_parent: List[int] = []
+        no_tag: List[int] = []
+        for parent_serial, tag_serial in conn.execute(
+            sqla.select(tag_table.c[parent_column], tag_table.c.tag_serial)
         ):
+            if parent_serial not in serials:
+                no_parent.append(parent_serial)
+            elif tag_serial not in labels:
+                no_tag.append(tag_serial)
+            else:
+                tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
+        if len(no_parent) > 0:
             problems.append(
                 _problem(
-                    "absent-table",
+                    "orphan-tag",
                     name,
-                    f"association table {tag_table_name} is absent from shard #{shard}, and "
-                    f"reads there as empty",
+                    f"{len(no_parent)} {tag_table_name} row(s) on shard #{shard} name a "
+                    f"{name} row that is not there; e.g. parent serials "
+                    f"{_examples(no_parent)}",
                 )
             )
-            comparable = False
-        else:
-            tag_table = tables[tag_table_name]
-            labels = {
-                serial: key["label"]
-                for serial, key in context.keys.get("store_tag", {}).items()
-            }
-            no_parent: List[int] = []
-            no_tag: List[int] = []
-            for parent_serial, tag_serial in conn.execute(
-                sqla.select(tag_table.c[parent_column], tag_table.c.tag_serial)
-            ):
-                if parent_serial not in serials:
-                    no_parent.append(parent_serial)
-                elif tag_serial not in labels:
-                    no_tag.append(tag_serial)
-                else:
-                    tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
-            if len(no_parent) > 0:
-                problems.append(
-                    _problem(
-                        "orphan-tag",
-                        name,
-                        f"{len(no_parent)} {tag_table_name} row(s) on shard #{shard} name a "
-                        f"{name} row that is not there; e.g. parent serials "
-                        f"{_examples(no_parent)}",
-                    )
+        if len(no_tag) > 0:
+            problems.append(
+                _problem(
+                    "orphan-tag",
+                    name,
+                    f"{len(no_tag)} {tag_table_name} row(s) on shard #{shard} name a "
+                    f"store_tag that is not there; e.g. tag serials {_examples(no_tag)}",
                 )
-            if len(no_tag) > 0:
-                problems.append(
-                    _problem(
-                        "orphan-tag",
-                        name,
-                        f"{len(no_tag)} {tag_table_name} row(s) on shard #{shard} name a "
-                        f"store_tag that is not there; e.g. tag serials {_examples(no_tag)}",
-                    )
-                )
+            )
 
     # the number of value rows under each parent: one GROUP BY, never a listing
     counts: Dict[int, int] = {}
     if values is not None:
         value_table_name, parent_column = values
-        if value_table_name in context.absent_tables or parent_column in set(
-            context.absent_columns.get(value_table_name, ())
+        value_table = tables[value_table_name]
+        parent_col = value_table.c[parent_column]
+        orphans: Dict[int, int] = {}
+        for parent_serial, n in conn.execute(
+            sqla.select(parent_col, sqla.func.count()).group_by(parent_col)
         ):
+            if parent_serial in serials:
+                counts[parent_serial] = n
+            else:
+                orphans[parent_serial] = n
+        if len(orphans) > 0:
             problems.append(
                 _problem(
-                    "absent-table",
+                    "orphan-value",
                     name,
-                    f"value table {value_table_name} is absent from shard #{shard}, and reads "
-                    f"there as empty",
+                    f"{sum(orphans.values())} {value_table_name} row(s) on shard #{shard} "
+                    f"name {len(orphans)} {name} row(s) that are not there; e.g. parent "
+                    f"serials {_examples(orphans)}",
                 )
             )
-            comparable = False
-        else:
-            value_table = tables[value_table_name]
-            parent_col = value_table.c[parent_column]
-            orphans: Dict[int, int] = {}
-            for parent_serial, n in conn.execute(
-                sqla.select(parent_col, sqla.func.count()).group_by(parent_col)
-            ):
-                if parent_serial in serials:
-                    counts[parent_serial] = n
-                else:
-                    orphans[parent_serial] = n
-            if len(orphans) > 0:
-                problems.append(
-                    _problem(
-                        "orphan-value",
-                        name,
-                        f"{sum(orphans.values())} {value_table_name} row(s) on shard #{shard} "
-                        f"name {len(orphans)} {name} row(s) that are not there; e.g. parent "
-                        f"serials {_examples(orphans)}",
-                    )
-                )
 
     # the member rows of each set of parents, grouped by the row that owns them: one read of each
     # member table, never one per row
@@ -816,7 +722,7 @@ def read_records(
             )
         )
 
-    return _read(out, comparable)
+    return _read(out)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -846,7 +752,7 @@ def _combine(
     first = reads[min(reads)]
 
     if replicated:
-        comparable = [s for s in sorted(reads) if reads[s].comparable]
+        comparable = sorted(reads)
         contributing = comparable[:1]
         if len(comparable) > 0:
             base = comparable[0]
@@ -964,8 +870,6 @@ def read_inventory(primary: PathType) -> StoreInventory:
             for shard in store.shards:
                 context = ShardContext(
                     shard=shard.serial,
-                    absent_tables=shard.absent_tables,
-                    absent_columns=shard.absent_columns,
                     keys=keys[shard.serial],
                     digests=digests[shard.serial],
                     all_digests=all_digests,

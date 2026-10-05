@@ -333,7 +333,6 @@ class Datastore:
             connect_args=connect_args,
         )
         self._metadata = sqla.MetaData()
-        self._inspector = sqla.inspect(self._engine)
 
         self._build_schema()
 
@@ -345,40 +344,17 @@ class Datastore:
         for cls_name, inserter in self._inserters.items():
             self._schema[cls_name]["insert"] = inserter
 
-        # no _ensure_tables: a table the file lacks is reported, and a lookup on it then fails in
-        # SQLite with "no such table"
-        self._absent_tables = sorted(
-            name for name in self._tables if not self._inspector.has_table(name)
-        )
-        if len(self._absent_tables) > 0:
-            print(
-                f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
-                f"read-only, lacks the table(s) {self._absent_tables}; nothing was created"
-            )
-
-        self._skipped_validation = []
         self._validate_on_startup_read_only()
 
     def _validate_on_startup_read_only(self):
         """
         ``_validate_on_startup`` in report-only form: every class that validates at startup is
-        read with ``prune=False``, on a connection that is rolled back. A class whose table this
-        file lacks is skipped and reported, as ShardedPool._prune_needed skips it, so that a shard
-        missing such a table still opens.
+        read with ``prune=False``, on a connection that is rolled back.
         """
         printed_header = False
 
         for cls_name, record in self._schema.items():
             if not record["validate_on_startup"]:
-                continue
-
-            if cls_name in self._absent_tables:
-                self._skipped_validation.append(cls_name)
-                print(
-                    f'>> Datastore "{self._my_name}" (physical file {str(self._db_file)}), opened '
-                    f'read-only: "{cls_name}" was not validated at startup, because the file '
-                    "lacks its table"
-                )
                 continue
 
             factory = self._factories[cls_name]
@@ -459,13 +435,13 @@ class Datastore:
             ) from e
 
     def read_only_state(self) -> dict:
-        """What a read-only actor found at startup: the tables its file lacks, and the classes it
-        did not validate for that reason. ShardedPool calls it on every actor once, which also
-        waits for every constructor."""
+        """Whether this actor is read-only. ShardedPool calls it on every actor of a read-only
+        pool once, and keeps it because the call waits for every constructor: a constructor that
+        raises surfaces there, before the pool is returned. A shard that lacks a table, or differs
+        otherwise from the declared tables, was refused by the pool before any actor was built.
+        """
         return {
             "read_only": getattr(self, "_read_only", False),
-            "absent_tables": list(getattr(self, "_absent_tables", [])),
-            "skipped_validation": list(getattr(self, "_skipped_validation", [])),
         }
 
     def __enter__(self):

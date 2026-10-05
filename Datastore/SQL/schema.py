@@ -10,11 +10,18 @@ tables are; do not copy this loop.
 Building the schema writes nothing: the tables are declared into ``metadata`` and never created
 here. Creating missing tables is ``Datastore._ensure_tables``' job, on a read-write engine.
 
+**The one comparison** of a file against the declared tables is here too
+(prompts/datastore-generic, prompt 05). ``schema_differences`` compares one SQLite file's table
+and column names with a mapping of declared tables, reading only ``sqlite_master`` and ``PRAGMA
+table_info``, and ``StoreSchemaMismatch`` is the one refusal of a file that differs, naming the
+file and each table and column by kind. The store reader, the read-write check at open and both pool
+constructors' check of the primary use them; do not write a second comparison.
+
 This module itself imports only ``sqlalchemy``. Importing it runs ``Datastore/SQL/__init__.py``,
 which imports the actor module and so ``ray``; that initialises nothing.
 """
 
-from typing import Any, Dict, Mapping, NamedTuple
+from typing import Any, Dict, Mapping, NamedTuple, Tuple
 
 import sqlalchemy as sqla
 
@@ -133,3 +140,134 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
         records[cls_name] = schema
 
     return BuiltSchema(tables=tables, records=records)
+
+
+class SchemaDifferences(NamedTuple):
+    """
+    What ``schema_differences`` found: how one SQLite file differs from the tables it was compared
+    with, by kind.
+
+    - ``absent_tables``: the declared tables the file lacks, in declaration order;
+    - ``extra_tables``: the tables the file has that are not declared, in file order;
+    - ``absent_columns``: for each declared table the file has, the declared columns it lacks, in
+      declaration order. A table that lacks none is not a key;
+    - ``extra_columns``: for each declared table the file has, the file's columns that are not
+      declared, in file order. A table with none is not a key.
+    """
+
+    absent_tables: Tuple[str, ...]
+    extra_tables: Tuple[str, ...]
+    absent_columns: Dict[str, Tuple[str, ...]]
+    extra_columns: Dict[str, Tuple[str, ...]]
+
+    @property
+    def empty(self) -> bool:
+        """True iff the file holds exactly the declared tables, each with exactly its declared
+        columns."""
+        return (
+            len(self.absent_tables) == 0
+            and len(self.extra_tables) == 0
+            and len(self.absent_columns) == 0
+            and len(self.extra_columns) == 0
+        )
+
+    def describe(self) -> str:
+        """Every difference, by kind, naming each table and column, in one clause list."""
+
+        def names(items) -> str:
+            return ", ".join(f'"{n}"' for n in items)
+
+        parts = []
+        if len(self.absent_tables) > 0:
+            parts.append(f"it lacks the table(s) {names(self.absent_tables)}")
+        if len(self.extra_tables) > 0:
+            parts.append(
+                f"it has the table(s) {names(self.extra_tables)}, which this code does not "
+                "declare"
+            )
+        for table, columns in self.absent_columns.items():
+            parts.append(f'its table "{table}" lacks the column(s) {names(columns)}')
+        for table, columns in self.extra_columns.items():
+            parts.append(
+                f'its table "{table}" has the column(s) {names(columns)}, which this code does '
+                "not declare"
+            )
+        return "; ".join(parts)
+
+
+def schema_differences(conn, tables: Mapping[str, sqla.Table]) -> SchemaDifferences:
+    """
+    Compare one SQLite file, through ``conn`` (a SQLAlchemy connection to it), with ``tables``
+    (name -> ``sqla.Table``): its table names, from ``sqlite_master`` (type ``table``, without
+    SQLite's own ``sqlite_`` tables), and the column names of each declared table it has, from
+    ``PRAGMA table_info``. Not types, nullability, keys, defaults or indexes.
+
+    It reads only ``sqlite_master`` and ``PRAGMA table_info``, and writes nothing.
+    """
+    in_file = [
+        row[0]
+        for row in conn.exec_driver_sql(
+            "SELECT name FROM sqlite_master WHERE type = 'table'"
+        )
+        if not row[0].startswith("sqlite_")
+    ]
+    present = set(in_file)
+
+    absent_columns: Dict[str, Tuple[str, ...]] = {}
+    extra_columns: Dict[str, Tuple[str, ...]] = {}
+    for name, table in tables.items():
+        if name not in present:
+            continue
+        quoted = name.replace('"', '""')
+        file_columns = [
+            row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{quoted}")')
+        ]
+        declared = [c.name for c in table.columns]
+        absent = tuple(c for c in declared if c not in file_columns)
+        extra = tuple(c for c in file_columns if c not in declared)
+        if len(absent) > 0:
+            absent_columns[name] = absent
+        if len(extra) > 0:
+            extra_columns[name] = extra
+
+    return SchemaDifferences(
+        absent_tables=tuple(n for n in tables if n not in present),
+        extra_tables=tuple(n for n in in_file if n not in tables),
+        absent_columns=absent_columns,
+        extra_columns=extra_columns,
+    )
+
+
+class StoreSchemaMismatch(RuntimeError):
+    """
+    A file of a sharded store does not hold exactly the tables and columns the code declares, so
+    the store is refused before anything reads its tables (prompts/datastore-generic, prompt 05).
+
+    ``verb`` is the operation that refused ("read" from the read-only reader, "open" from a pool's
+    constructor), ``primary`` the store's primary, ``file`` a description of the file that differs
+    (``shard #N "<path>"`` or ``the primary "<path>"``), and ``differences`` the
+    ``SchemaDifferences`` found. It is raised where it is built, and never wrapped.
+    """
+
+    def __init__(self, verb: str, primary, file: str, differences: SchemaDifferences):
+        self.verb = verb
+        self.primary = primary
+        self.file = file
+        self.differences = differences
+        super().__init__(self._message())
+
+    def _message(self) -> str:
+        return (
+            f'Cannot {self.verb} sharded datastore "{str(self.primary)}": {self.file} differs '
+            f"from the tables this code declares ({self.differences.describe()}), so nothing "
+            "was read"
+        )
+
+    def __str__(self) -> str:
+        return self._message()
+
+    def __reduce__(self):
+        return (
+            type(self),
+            (self.verb, self.primary, self.file, self.differences),
+        )

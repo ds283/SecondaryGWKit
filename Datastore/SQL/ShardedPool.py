@@ -14,7 +14,11 @@ from Datastore.SQL import Datastore
 from Datastore.SQL.Datastore import PathType, ReadTableConfigType, _factories
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
-from Datastore.SQL.schema import build_schema
+from Datastore.SQL.schema import (
+    StoreSchemaMismatch,
+    build_schema,
+    schema_differences,
+)
 from Datastore.object import DatastoreObject
 from Datastore.replication import (
     ReplicatedDivergence,
@@ -214,6 +218,12 @@ class ShardedPool:
             primary_journal = os.path.lexists(str(self._primary_file) + "-journal")
 
             self._create_engine()
+
+            # the primary holds exactly the tables _create_engine declares, or the store is
+            # refused by name before anything reads them. This is the primary's first read, so it
+            # is what rolls back a hot journal on the primary
+            self._refuse_a_primary_that_differs()
+
             self._read_shard_data()
 
             # fail closed, before any actor exists: a Datastore actor given a missing shard file
@@ -365,9 +375,11 @@ class ShardedPool:
     #      module): a missing primary is refused and nothing is created, not even its directory; a
     #      journal (-journal, -wal, -shm) beside the primary or any shard is refused by its
     #      presence, an empty one included, before any engine is made; every shard is opened
-    #      mode=ro and the tables it lacks are reported (self.absent_tables), not created;
-    #   3. the pool's own engine is mode=ro, and _read_shard_data and _check_shard_files run on it
-    #      as they do read-write;
+    #      mode=ro, and a shard whose file differs from the declared tables (a table it lacks
+    #      included) is refused with StoreSchemaMismatch, before anything reads its tables;
+    #   3. the pool's own engine is mode=ro; the primary is refused with StoreSchemaMismatch if it
+    #      differs from the tables _create_engine declares, and then _read_shard_data and
+    #      _check_shard_files run on it as they do read-write;
     #   4. the check at open in read-only form (_check_replicated_tables_read_only): a
     #      replication_in_flight record of any operation, prune included, refuses by name before
     #      anything is compared or completed; the replicated tables are compared on mode=ro
@@ -407,18 +419,10 @@ class ShardedPool:
         from Datastore.store_reader import open_read_only, read_only_url
 
         # 2. store_reader's refusals, through its code: missing primary, journals by presence,
-        # the shards table read mode=ro and its files checked; and the tables each shard lacks
-        with open_read_only(self._primary_file) as store:
-            self.absent_tables: Dict[int, List[str]] = {
-                shard.serial: sorted(shard.absent_tables) for shard in store.shards
-            }
-        for sid, absent in sorted(self.absent_tables.items()):
-            if len(absent) > 0:
-                print(
-                    f'>> Read-only sharded datastore "{str(self._primary_file)}": shard {sid} '
-                    f"lacks the table(s) {absent}. Nothing was created; a lookup on one of them "
-                    "fails in SQLite"
-                )
+        # the shards table read mode=ro and its files checked, and a shard whose file differs from
+        # the declared tables. It is entered only for these refusals: nothing it yields is kept
+        with open_read_only(self._primary_file):
+            pass
 
         # 3. the pool's engine, mode=ro. _create_engine builds the tables this pool reads; the
         # engine it makes is never connected (create_engine opens nothing) and is replaced at once
@@ -430,6 +434,7 @@ class ShardedPool:
         self._engine = sqla.create_engine(
             read_only_url(self._primary_file), future=True, connect_args=connect_args
         )
+        self._refuse_a_primary_that_differs()
         self._read_shard_data()
         self._check_shard_files()
 
@@ -566,20 +571,15 @@ class ShardedPool:
 
     def _version_labels_present(self) -> List[str]:
         """Every version label the store holds, in serial order, read mode=ro from each shard
-        (the check at open has shown them equal; a shard without the table holds none).
+        (the check at open has shown them equal).
         """
         labels = []
         for sid, path in sorted(self._shard_db_files.items()):
             conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
             try:
-                has = conn.execute(
-                    "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'version'"
-                ).fetchone()[0]
-                rows = (
-                    conn.execute("SELECT label FROM version ORDER BY serial").fetchall()
-                    if has
-                    else []
-                )
+                rows = conn.execute(
+                    "SELECT label FROM version ORDER BY serial"
+                ).fetchall()
             finally:
                 conn.close()
             for (label,) in rows:
@@ -719,6 +719,35 @@ class ShardedPool:
             sqla.Column("store_id", sqla.Integer, nullable=True),
             sqla.Column("started", sqla.DateTime(), nullable=False),
         )
+
+    def _refuse_a_primary_that_differs(self):
+        """
+        Refuse, with StoreSchemaMismatch, a primary that does not hold exactly the tables
+        _create_engine declares, each with exactly its declared columns. An existing primary is
+        written whole by _write_shard_data, so no difference is allowed. Read on the pool's own
+        engine (mode=ro for a read-only pool); writes nothing.
+        """
+        tables = {
+            table.name: table
+            for table in (
+                self._shard_file_table,
+                self._shard_key_config_table,
+                self._shard_key_table,
+                self._replicated_tables_table,
+                self._sharded_tables_table,
+                self._replication_in_flight_table,
+            )
+        }
+        with self._engine.connect() as conn:
+            differences = schema_differences(conn, tables)
+            conn.rollback()
+        if not differences.empty:
+            raise StoreSchemaMismatch(
+                "open",
+                self._primary_file,
+                f'the primary "{str(self._primary_file)}"',
+                differences,
+            )
 
     def _write_shard_data(self):
         self._shard_file_table.create(self._engine)
@@ -1016,6 +1045,12 @@ class ShardedPool:
             )
 
         built = build_schema(sqla.MetaData(), _factories)
+
+        # 1b. every shard holds the declared tables with exactly their declared columns, or the
+        # store is refused by name, before the record is read and before anything is compared or
+        # written
+        self._refuse_shards_that_differ(built, shard_ids)
+
         specs = self._replicated_table_specs(built)
         reconciliation["compared"] = [spec["name"] for spec in specs]
 
@@ -1127,6 +1162,43 @@ class ShardedPool:
             for engine in engines.values():
                 engine.dispose()
 
+    def _refuse_shards_that_differ(self, built, shard_ids) -> None:
+        """
+        The schema check of a read-write open: compare every shard file with the declared tables
+        (``built.tables``), on a mode=ro connection, and refuse with StoreSchemaMismatch the first
+        shard, in serial order, that has a table or a column the code does not declare, or that
+        lacks a declared column of a table it has. Writes nothing.
+
+        A table a shard lacks is allowed here, and only here (README U1 of
+        prompts/datastore-generic): it is what an interrupted first open leaves (each ``create``
+        of ``Datastore._ensure_tables`` commits on its own), or an interrupted drop action (an
+        actor drops a table and re-creates it). The comparison below reads such a table as empty,
+        and the actors complete the open by creating it. That is crash recovery of a store the
+        current code wrote, not the reading of an older one.
+        """
+        # store_reader imports this module at module scope, so it is imported here
+        from Datastore.store_reader import read_only_url
+
+        for sid in shard_ids:
+            path = Path(self._shard_db_files[sid])
+            engine = sqla.create_engine(
+                read_only_url(path), future=True, poolclass=sqla.pool.NullPool
+            )
+            try:
+                with engine.connect() as conn:
+                    differences = schema_differences(conn, built.tables)
+                    conn.rollback()
+            finally:
+                engine.dispose()
+            refused = differences._replace(absent_tables=())
+            if not refused.empty:
+                raise StoreSchemaMismatch(
+                    "open",
+                    self._primary_file,
+                    f'shard #{sid} "{str(path)}"',
+                    differences,
+                )
+
     def _replicated_table_specs(self, built) -> List[dict]:
         """
         What is compared, table by table: every replicated class that has a table, in the order
@@ -1222,9 +1294,12 @@ class ShardedPool:
 
     def _read_replicated_tables(self, conn, specs) -> Dict[str, dict]:
         """
-        One shard's replicated rows, table by table: the compared columns the shard's table has,
-        and its rows keyed as the spec says, each a tuple in the order of those columns. A table
-        the shard lacks is read as empty (an actor would create it empty).
+        One shard's replicated rows, table by table: the compared columns, and its rows keyed as
+        the spec says, each a tuple in the order of those columns. A table the shard lacks is
+        read as empty (an actor would create it empty: README U1 of prompts/datastore-generic).
+        The schema check at open (_refuse_shards_that_differ, or the reader for a read-only pool)
+        has already refused every other difference, so a table the shard has holds exactly the
+        compared columns.
         """
         out = {}
         for spec in specs:
@@ -1236,16 +1311,7 @@ class ShardedPool:
                 out[name] = {"columns": None, "rows": {}, "duplicates": set()}
                 continue
 
-            columns = tuple(c for c in spec["compared"] if c in present)
-            if not all(k in columns for k in spec["key"]):
-                out[name] = {
-                    "columns": columns,
-                    "rows": {},
-                    "duplicates": set(),
-                    "unkeyed": True,
-                }
-                continue
-
+            columns = tuple(spec["compared"])
             key_index = [columns.index(k) for k in spec["key"]]
             table = spec["table"]
             rows = {}
@@ -1270,7 +1336,6 @@ class ShardedPool:
     def _replicated_differences(self, specs, snapshots) -> List[dict]:
         """
         Every difference between the shards' replicated rows, as dicts by kind:
-        ``columns`` (the shards' tables have different compared columns, or no key column),
         ``duplicate`` (a key held by more than one row on a shard), ``missing`` (a key some
         shards hold and others lack), ``differs`` (a key whose compared values differ between
         the shards that hold it) and ``shard_key`` (a key_serial of the primary's shard_keys that
@@ -1281,19 +1346,6 @@ class ShardedPool:
         for spec in specs:
             name = spec["name"]
             tables = {sid: snapshots[sid][name] for sid in shard_ids}
-
-            present = {
-                sid: t["columns"]
-                for sid, t in tables.items()
-                if t["columns"] is not None
-            }
-            if len(set(present.values())) > 1 or any(
-                t.get("unkeyed", False) for t in tables.values()
-            ):
-                differences.append(
-                    {"kind": "columns", "table": name, "columns": present}
-                )
-                continue
 
             for sid, t in tables.items():
                 for key in sorted(t["duplicates"]):
@@ -1409,19 +1461,7 @@ class ShardedPool:
         for d in differences:
             kind = d["kind"]
             spec = by_name.get(d["table"])
-            if kind == "columns":
-                entry = {
-                    "class_name": d["table"],
-                    "shard": sorted(d["columns"].keys()),
-                    "key": "its columns",
-                    "detail": "the shards' tables do not have the same compared columns, "
-                    "or lack their key: "
-                    + "; ".join(
-                        f"shard {sid}: {list(cols)}"
-                        for sid, cols in sorted(d["columns"].items())
-                    ),
-                }
-            elif kind == "duplicate":
+            if kind == "duplicate":
                 entry = {
                     "class_name": d["table"],
                     "shard": d["shard"],
@@ -1557,7 +1597,7 @@ class ShardedPool:
             if kind == "shard_key":
                 # compared again once the repair is written: a copied wavenumber can satisfy it
                 continue
-            if kind in ("columns", "duplicate"):
+            if kind == "duplicate":
                 refuse(d, "this is not something a replication writes")
                 continue
             if name not in unit:
@@ -1717,17 +1757,12 @@ class ShardedPool:
 
     @staticmethod
     def _read_full_rows(conn, spec, keys) -> Dict[tuple, dict]:
-        """The controller's rows under ``keys``, every column its table has, as mappings."""
+        """The controller's rows under ``keys``, every column of the table, as mappings."""
         table = spec["table"]
-        present = {
-            row[1]
-            for row in conn.exec_driver_sql(f'PRAGMA table_info("{spec["name"]}")')
-        }
-        columns = [c for c in table.columns if c.name in present]
         first = spec["key"][0]
         out = {}
         for row in conn.execute(
-            sqla.select(*columns).filter(
+            sqla.select(*table.columns).filter(
                 table.c[first].in_(sorted({k[0] for k in keys}))
             )
         ).mappings():

@@ -43,8 +43,7 @@ from unittest import mock
 
 import ray
 
-from sqlalchemy.exc import OperationalError
-
+from Datastore.SQL.schema import StoreSchemaMismatch
 from Datastore.replication import ReplicatedDivergence, ReplicationMismatch
 from Datastore.tests import standin_pool as sp
 from config.sharding import replicated_tables
@@ -777,7 +776,7 @@ class TestNoRecordRefuses(_ReconcileTestCase):
             with self.subTest(read_only=read_only):
                 before = sp.store_checksums(self.primary)
                 with mock.patch.object(sp._Options, "remote", counting):
-                    with self.assertRaises(OperationalError) as raised:
+                    with self.assertRaises(StoreSchemaMismatch) as raised:
                         self.cluster.open_pool_output(self.primary, read_only=read_only)
                 self.assertIn("replication_in_flight", str(raised.exception))
                 self.assertEqual([], constructed, "an actor was created")

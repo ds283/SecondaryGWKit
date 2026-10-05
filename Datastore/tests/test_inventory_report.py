@@ -234,20 +234,30 @@ class TestTheDisplaySaysWhatTheInventoryHolds(_Stores):
         )
 
     def test_every_problem_appears_in_full_when_there_are_many(self):
-        absent = [
-            "TkNumeric_tags",
-            "TkWKB_tags",
-            "GkNumeric_tags",
-            "GkWKB_tags",
-            "GkSource_tags",
-            "QuadSource_tags",
-            "QuadSourceIntegral_tags",
-        ]
-        # seven shards: every shard but #0 lacks QuadSourceIntegral_tags, so that one class has
-        # more than five problems, and shard #1 lacks six more association tables besides
-        missing = {s: ["QuadSourceIntegral_tags"] for s in range(1, 7)}
-        missing[1] = absent
-        inventory = self.read(shards=7, missing_tables=missing)
+        # each tag table, with its column naming the tagged row: one orphan row in it names a
+        # row that is not there
+        tag_tables = {
+            "TkNumeric_tags": "integration_serial",
+            "TkWKB_tags": "wkb_serial",
+            "GkNumeric_tags": "integration_serial",
+            "GkWKB_tags": "wkb_serial",
+            "GkSource_tags": "parent_serial",
+            "QuadSource_tags": "parent_serial",
+            "QuadSourceIntegral_tags": "parent_serial",
+        }
+
+        def orphan(table):
+            return (
+                f'INSERT INTO "{table}" ({tag_tables[table]}, tag_serial) '
+                "VALUES (999, 1)"
+            )
+
+        # seven shards: every shard but #0 holds an orphan QuadSourceIntegral_tags row, so that
+        # one class has more than five problems, and shard #1 holds one in six more tag tables
+        # besides
+        extra = {s: [orphan("QuadSourceIntegral_tags")] for s in range(1, 7)}
+        extra[1] = [orphan(t) for t in tag_tables]
+        inventory = self.read(shards=7, extra_sql=extra)
         problems = inventory.problems
         self.assertGreater(len(problems), MAX_SHOWN)
         self.assertGreater(len(inventory["QuadSourceIntegral"].problems), MAX_SHOWN)

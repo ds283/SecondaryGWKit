@@ -7,8 +7,9 @@ prompt 01), on the real multi-shard stores of ``real_store_fixtures``.
 - it never writes: every file's SHA-256, size and ``st_mtime_ns``, and the directory listing, are
   unchanged by opening the store and reading every table on every shard, and a write attempted
   through one of its engines raises;
-- old stores: a missing table and a missing column are reported, by name, on the right shard,
-  and every other table still reads;
+- a shard whose file differs from the declared tables is refused with ``StoreSchemaMismatch``,
+  naming the shard and the table, or the table and column: a missing table, a missing column, an
+  extra column and an extra table (prompts/datastore-generic, prompt 05), writing nothing;
 - refusals, each naming the file and writing nothing: a journal beside the primary or a shard, a
   missing shard (the refusal coming from ``ShardedPool._read_closed_store``), a primary with no
   ``shards`` table;
@@ -31,14 +32,9 @@ import sqlalchemy as sqla
 from sqlalchemy.exc import OperationalError
 
 from Datastore.SQL.ShardedPool import ShardedPool
+from Datastore.SQL.schema import StoreSchemaMismatch
 from Datastore.store_reader import open_read_only
 from Datastore.tests.real_store_fixtures import (
-    OLD_MISSING_COLUMN,
-    OLD_MISSING_COLUMN_SHARD,
-    OLD_MISSING_COLUMN_TABLE,
-    OLD_MISSING_TABLE,
-    OLD_MISSING_TABLE_SHARD,
-    build_old_store,
     build_real_store,
     expected_row_counts,
     file_state,
@@ -50,25 +46,15 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 JOURNAL_SUFFIXES = ("-journal", "-wal", "-shm")
 
 
-def _readable_columns(shard, name):
-    table = shard.tables[name]
-    absent = set(shard.absent_columns.get(name, ()))
-    return [c for c in table.columns if c.name not in absent]
-
-
 def read_every_table(store):
-    """Read every row of every table present on every shard, selecting the columns the file has.
-    Returns serial -> table -> row count."""
+    """Read every row of every table on every shard, selecting every column. Returns serial ->
+    table -> row count."""
     counts = {}
     for shard in store.shards:
         counts[shard.serial] = {}
         with shard.engine.connect() as conn:
-            for name in shard.tables:
-                if name in shard.absent_tables:
-                    continue
-                rows = conn.execute(
-                    sqla.select(*_readable_columns(shard, name))
-                ).fetchall()
+            for name, table in shard.tables.items():
+                rows = conn.execute(sqla.select(*table.columns)).fetchall()
                 counts[shard.serial][name] = len(rows)
     return counts
 
@@ -96,12 +82,6 @@ class TestReaderReads(_TempStore):
                 [(s.serial, s.path) for s in store.shards],
                 sorted(self.store.shard_files.items()),
             )
-            for shard in store.shards:
-                self.assertEqual(shard.absent_tables, frozenset())
-                self.assertEqual(shard.extra_tables, frozenset())
-                self.assertTrue(all(v == () for v in shard.absent_columns.values()))
-                self.assertTrue(all(v == () for v in shard.extra_columns.values()))
-                self.assertEqual(set(shard.absent_columns), set(shard.tables))
 
     def test_row_counts_equal_an_independent_count(self):
         with open_read_only(self.store.primary) as store:
@@ -196,60 +176,91 @@ class TestReaderNeverWrites(_TempStore):
             self.assertNotIn("written", independent_row_counts(path))
 
 
-class TestOldStores(_TempStore):
-    def test_missing_table_and_column_are_reported_on_the_right_shard(self):
-        old = build_old_store(self.dir)
-        before = file_state(self.dir)
-        with open_read_only(old.primary) as store:
-            for shard in store.shards:
-                with self.subTest(shard=shard.serial):
-                    if shard.serial == OLD_MISSING_TABLE_SHARD:
-                        self.assertEqual(
-                            shard.absent_tables, frozenset({OLD_MISSING_TABLE})
-                        )
-                        self.assertNotIn(OLD_MISSING_TABLE, shard.absent_columns)
-                    else:
-                        self.assertEqual(shard.absent_tables, frozenset())
+class TestADifferingSchemaIsRefused(_TempStore):
+    """A shard whose file differs from the tables the code declares is refused before anything is
+    yielded, naming the shard, its path and each difference (prompts/datastore-generic, prompt
+    05). Each shape is built in its own directory, and no file in it changes."""
 
-                    absent = {n: c for n, c in shard.absent_columns.items() if c}
-                    if shard.serial == OLD_MISSING_COLUMN_SHARD:
-                        self.assertEqual(
-                            absent, {OLD_MISSING_COLUMN_TABLE: (OLD_MISSING_COLUMN,)}
-                        )
-                    else:
-                        self.assertEqual(absent, {})
-                    self.assertTrue(all(c == () for c in shard.extra_columns.values()))
-
-            # every other table still reads, and the table missing a column reads without it
-            counts = read_every_table(store)
-            for shard in store.shards:
-                independent = independent_row_counts(shard.path)
-                self.assertEqual(counts[shard.serial], independent)
-            self.assertEqual(
-                counts[OLD_MISSING_COLUMN_SHARD][OLD_MISSING_COLUMN_TABLE], 1
-            )
-        self.assertEqual(before, file_state(self.dir))
-
-    def test_extra_columns_and_tables_are_reported(self):
-        store_files = build_real_store(
-            self.dir,
-            extra_sql={
-                1: [
-                    'ALTER TABLE "GkSource" ADD COLUMN legacy_note VARCHAR(64)',
-                    "CREATE TABLE retired_table (x INTEGER)",
-                ]
-            },
+    def assert_refused(self, label, expected, fragments, **shape):
+        directory = self.root / label
+        directory.mkdir()
+        built = build_real_store(directory, **shape)
+        before = file_state(directory)
+        with self.assertRaises(StoreSchemaMismatch) as cm:
+            with open_read_only(built.primary):
+                self.fail("the store was opened")
+        e = cm.exception
+        self.assertIsInstance(e, RuntimeError)
+        self.assertEqual(e.verb, "read")
+        self.assertEqual(e.primary, built.primary)
+        self.assertEqual(e.differences._asdict(), expected)
+        message = str(e)
+        self.assertTrue(
+            message.startswith(f'Cannot read sharded datastore "{built.primary}": ')
         )
-        with open_read_only(store_files.primary) as store:
-            shard0, shard1 = store.shard(0), store.shard(1)
-            self.assertEqual(
-                {n: c for n, c in shard1.extra_columns.items() if c},
-                {"GkSource": ("legacy_note",)},
+        self.assertTrue(message.endswith("so nothing was read"))
+        for fragment in fragments:
+            self.assertIn(fragment, message)
+        self.assertEqual(before, file_state(directory))
+        return message
+
+    def none(self, **kinds):
+        out = {
+            "absent_tables": (),
+            "extra_tables": (),
+            "absent_columns": {},
+            "extra_columns": {},
+        }
+        out.update(kinds)
+        return out
+
+    def test_a_missing_table_or_column_is_refused_naming_the_shard(self):
+        with self.subTest(shape="a missing table"):
+            path = self.root / "missing-table" / "fixture-store-shard0001.sqlite"
+            self.assert_refused(
+                "missing-table",
+                self.none(absent_tables=("OneLoopIntegral_tags",)),
+                [f'shard #1 "{path}"', 'it lacks the table(s) "OneLoopIntegral_tags"'],
+                missing_tables={1: ["OneLoopIntegral_tags"]},
             )
-            self.assertEqual(shard1.extra_tables, frozenset({"retired_table"}))
-            self.assertEqual({n: c for n, c in shard0.extra_columns.items() if c}, {})
-            self.assertEqual(shard0.extra_tables, frozenset())
-            self.assertTrue(all(c == () for c in shard1.absent_columns.values()))
+        with self.subTest(shape="a missing column"):
+            path = self.root / "missing-column" / "fixture-store-shard0000.sqlite"
+            self.assert_refused(
+                "missing-column",
+                self.none(absent_columns={"TkNumericIntegration": ("stop_Tprime",)}),
+                [
+                    f'shard #0 "{path}"',
+                    'its table "TkNumericIntegration" lacks the column(s) "stop_Tprime"',
+                ],
+                missing_columns={0: {"TkNumericIntegration": ["stop_Tprime"]}},
+            )
+
+    def test_an_extra_column_or_table_is_refused_naming_the_shard(self):
+        with self.subTest(shape="an extra column"):
+            path = self.root / "extra-column" / "fixture-store-shard0001.sqlite"
+            self.assert_refused(
+                "extra-column",
+                self.none(extra_columns={"GkSource": ("legacy_note",)}),
+                [
+                    f'shard #1 "{path}"',
+                    'its table "GkSource" has the column(s) "legacy_note", which this code '
+                    "does not declare",
+                ],
+                extra_sql={
+                    1: ['ALTER TABLE "GkSource" ADD COLUMN legacy_note VARCHAR(64)']
+                },
+            )
+        with self.subTest(shape="an extra table"):
+            path = self.root / "extra-table" / "fixture-store-shard0001.sqlite"
+            self.assert_refused(
+                "extra-table",
+                self.none(extra_tables=("retired_table",)),
+                [
+                    f'shard #1 "{path}"',
+                    'it has the table(s) "retired_table", which this code does not declare',
+                ],
+                extra_sql={1: ["CREATE TABLE retired_table (x INTEGER)"]},
+            )
 
 
 class TestRefusals(_TempStore):
@@ -329,8 +340,6 @@ with open_read_only(Path(sys.argv[1])) as store:
     for shard in store.shards:
         with shard.engine.connect() as conn:
             for name, table in shard.tables.items():
-                if name in shard.absent_tables:
-                    continue
                 counts[f"{shard.serial}:{name}"] = len(conn.execute(sqla.select(table)).fetchall())
 print(json.dumps({"ray_initialized": ray.is_initialized(), "tables_read": len(counts)}))
 """
@@ -354,7 +363,7 @@ class TestNoRay(_TempStore):
         report = json.loads(result.stdout.strip().splitlines()[-1])
         self.assertFalse(report["ray_initialized"])
         with open_read_only(store.primary) as opened:
-            expected = sum(len(set(s.tables) - s.absent_tables) for s in opened.shards)
+            expected = sum(len(s.tables) for s in opened.shards)
         self.assertEqual(report["tables_read"], expected)
         self.assertEqual(before, file_state(self.dir))
 

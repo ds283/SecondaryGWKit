@@ -899,14 +899,6 @@ class TestTheInventoryResolvesTheSet(unittest.TestCase):
             self.kinds(inventory["GkSourcePolicyData"].problems), ["unresolved-parent"]
         )
 
-    def test_a_store_without_the_table_is_named_absent(self):
-        inventory = self.read(missing_tables={0: ["GkSource_parents"]})
-        problems = inventory["GkSource"].problems
-        self.assertEqual(self.kinds(problems), ["absent-table"])
-        self.assertIn("GkSource_parents", problems[0])
-        # shard 0's two sources are not records; shard 1's one is
-        self.assertEqual(inventory["GkSource"].count, 1)
-
     def test_parents_digest_is_not_identity(self):
         replicated, sharded, keys = full_rows()
         vary_row(replicated, sharded, "GkSource", 1, "parents_digest", "0" * 64)

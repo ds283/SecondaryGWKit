@@ -11,7 +11,7 @@ prompt 02), on the full real store of ``real_store_fixtures.build_full_store``.
 5. tags: a record's own association rows, and a tagged parent's digest covers them;
 6. value counts: per parent, from one ``GROUP BY``;
 7. replicated divergence is a named problem naming the shard;
-8. old stores and orphans are named problems, and change nothing else;
+8. orphans are named problems, and change nothing else;
 9. duplicates are a named problem, and both are kept;
 10. read-only and no Ray.
 
@@ -870,91 +870,6 @@ class TestOldStoresAndOrphans(_Stores):
             self.assertEqual(changed(self.three, after), {name} | set(cascade))
             self.assertEqual(after[name], expected)
         return inventory[name].problems[0]
-
-    def test_an_absent_table(self):
-        problem = self.check(
-            "OneLoopIntegral",
-            "absent-table",
-            2,
-            missing_tables={2: ["OneLoopIntegral", "OneLoopIntegral_tags"]},
-        )
-        self.assertIn("OneLoopIntegral", problem)
-
-    def test_an_absent_association_table(self):
-        problem = self.check(
-            "OneLoopIntegral",
-            "absent-table",
-            2,
-            missing_tables={2: ["OneLoopIntegral_tags"]},
-        )
-        self.assertIn("OneLoopIntegral_tags", problem)
-
-    def test_an_absent_value_table(self):
-        problem = self.check(
-            "TkWKBIntegration", "absent-table", 2, missing_tables={2: ["TkWKBValue"]}
-        )
-        self.assertIn("TkWKBValue", problem)
-
-    def test_an_absent_replicated_table(self):
-        self.check(
-            "QuadSourcePolicy",
-            "absent-table",
-            2,
-            missing_tables={2: ["QuadSourcePolicy"]},
-        )
-
-    def test_an_absent_replicated_association_table(self):
-        self.check(
-            "BackgroundModel",
-            "absent-table",
-            2,
-            missing_tables={2: ["BackgroundModel_tags"]},
-        )
-
-    def test_a_missing_key_column_makes_the_class_incomplete(self):
-        # TkWKBIntegration 3 is the only one on shard 1: the class is the store without it
-        replicated, sharded, keys = full_rows()
-        sharded[1]["TkWKBIntegration"] = []
-        sharded[1]["TkWKB_tags"] = []
-        sharded[1]["TkWKBValue"] = []
-        without = self.inventory(
-            shards=3, replicated=replicated, sharded=sharded, shard_keys=keys
-        )["TkWKBIntegration"].records
-        self.assertEqual(len(without), len(self.three["TkWKBIntegration"]) - 1)
-        problem = self.check(
-            "TkWKBIntegration",
-            "incomplete",
-            1,
-            expected=without,
-            # every QuadSourceIntegral is computed from TkWKBIntegration 3, as its Tr WKB row (1
-            # and 2) or its Tq WKB row (3), which is on another shard than 1 and 2, and is now
-            # part of each one's identity (prompts/datastore-integrity prompt 09c): so all three
-            # name a parent that cannot be resolved
-            cascade={"QuadSourceIntegral": 3},
-            # SQLite cannot DROP COLUMN a column with a foreign key, as numeric_serial has since
-            # prompts/datastore-integrity prompt 07, so shard 1's table is made the one a store
-            # from before that prompt has: its CREATE TABLE as the 06 schema witness records it
-            extra_sql={
-                1: [
-                    'DROP TABLE "TkWKBIntegration"',
-                    json.loads(
-                        (
-                            Path(__file__).resolve().parent
-                            / "data"
-                            / "schema_at_datastore-integrity-06.json"
-                        ).read_text(encoding="utf-8")
-                    )["classes"]["TkWKBIntegration"]["table"]["ddl"],
-                ]
-            },
-        )
-        self.assertIn("numeric_serial", problem)
-
-    def test_a_missing_column_the_key_does_not_need(self):
-        inventory = self.inventory(
-            shards=3, missing_columns={0: {"TkNumericIntegration": ["stop_Tprime"]}}
-        )
-        self.assertEqual(inventory.problems, ())
-        self.assertEqual(records_of(inventory), self.three)
 
     def test_an_orphan_value_row(self):
         problem = self.check(

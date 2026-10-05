@@ -22,25 +22,30 @@ every engine it made.
 ``ShardedPool``. Importing this module imports ``ray`` transitively, through the factory map in
 ``Datastore/SQL/Datastore.py`` and through ``ShardedPool``; that initialises nothing.
 
-**Old stores.** A store written before the code declared some table or column cannot have it
-created here. Each shard reports the tables the code declares that its file lacks
-(``absent_tables``, from ``sqlite_master``), and for each table present, the declared columns the
-file lacks (``absent_columns``) and the columns in the file that the code does not declare
-(``extra_columns``), both from ``PRAGMA table_info``. The reader reports these and does not refuse
-the store: what an old store's missing table or column means is its consumer's decision.
+**A store whose files differ from the declared tables is refused.** Every shard file is compared
+with the tables ``build_schema`` declares by ``Datastore.SQL.schema.schema_differences``, before
+anything reads its tables. A table the file lacks, a table it has that the code does not declare,
+a declared column a table lacks, or a column the code does not declare refuses the store with
+``StoreSchemaMismatch``, naming the shard, its path and each table and column by kind
+(prompts/datastore-generic, prompt 05). Nothing is created here, and the reader has nothing to
+recover: a store written by older code is regenerated, not read.
 """
 
 import contextlib
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, FrozenSet, Iterator, Mapping, Tuple, Union
+from typing import Iterator, Mapping, Tuple, Union
 
 import sqlalchemy as sqla
 
 from Datastore.SQL.Datastore import _factories
 from Datastore.SQL.ShardedPool import ShardedPool
-from Datastore.SQL.schema import build_schema
+from Datastore.SQL.schema import (
+    StoreSchemaMismatch,
+    build_schema,
+    schema_differences,
+)
 from Datastore.shard_paths import shard_file_problem
 
 PathType = Union[str, os.PathLike]
@@ -53,20 +58,14 @@ class ReadOnlyShard:
     """One shard of a store opened by ``open_read_only``.
 
     ``tables`` are the ``Table`` objects the code declares, shared by every shard of the store.
-    ``absent_tables`` names the declared tables this shard's file lacks. ``absent_columns`` and
-    ``extra_columns`` map each declared table the file holds to the declared columns the file
-    lacks, and to the file's columns the code does not declare; a table with neither maps to an
-    empty tuple. Column names are in declaration order and file order respectively.
+    The shard's file holds exactly these tables, each with exactly its declared columns: a shard
+    that differs is refused before it is yielded.
     """
 
     serial: int
     path: Path
     engine: sqla.Engine
     tables: Mapping[str, sqla.Table]
-    absent_tables: FrozenSet[str]
-    absent_columns: Mapping[str, Tuple[str, ...]]
-    extra_columns: Mapping[str, Tuple[str, ...]]
-    extra_tables: FrozenSet[str]
 
 
 @dataclass(frozen=True)
@@ -110,44 +109,25 @@ def _read_only_engine(path: Path) -> sqla.Engine:
 
 
 def _describe_shard(
+    primary: Path,
     serial: int,
     path: Path,
     engine: sqla.Engine,
     tables: Mapping[str, sqla.Table],
 ) -> ReadOnlyShard:
+    """The shard, once its file is shown to hold exactly ``tables``. Any difference, a table the
+    file lacks included, raises ``StoreSchemaMismatch`` naming the shard and each difference.
+    """
     with engine.connect() as conn:
-        in_file = {
-            row[0]
-            for row in conn.exec_driver_sql(
-                "SELECT name FROM sqlite_master WHERE type = 'table'"
-            )
-        }
+        differences = schema_differences(conn, tables)
+        conn.rollback()
 
-        absent_columns: Dict[str, Tuple[str, ...]] = {}
-        extra_columns: Dict[str, Tuple[str, ...]] = {}
-        for name, table in tables.items():
-            if name not in in_file:
-                continue
-            quoted = name.replace('"', '""')
-            file_columns = [
-                row[1] for row in conn.exec_driver_sql(f'PRAGMA table_info("{quoted}")')
-            ]
-            declared = [c.name for c in table.columns]
-            absent_columns[name] = tuple(c for c in declared if c not in file_columns)
-            extra_columns[name] = tuple(c for c in file_columns if c not in declared)
+    if not differences.empty:
+        raise StoreSchemaMismatch(
+            _VERB, primary, f'shard #{serial} "{str(path)}"', differences
+        )
 
-    return ReadOnlyShard(
-        serial=serial,
-        path=path,
-        engine=engine,
-        tables=tables,
-        absent_tables=frozenset(n for n in tables if n not in in_file),
-        absent_columns=absent_columns,
-        extra_columns=extra_columns,
-        extra_tables=frozenset(
-            n for n in in_file if n not in tables and not n.startswith("sqlite_")
-        ),
-    )
+    return ReadOnlyShard(serial=serial, path=path, engine=engine, tables=tables)
 
 
 @contextlib.contextmanager
@@ -159,6 +139,11 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
     missing, not a regular file or a symbolic link; the primary or any shard has a journal file
     beside it; the primary's ``shards`` table cannot be read, or names a shard that is unusable
     (``ShardedPool._read_closed_store``); or the primary records no shards.
+
+    Refuses with ``StoreSchemaMismatch`` (a ``RuntimeError``), naming the shard, before anything
+    reads its tables and before anything is yielded, if a shard's file differs from the tables
+    the code declares: a table it lacks, a table or column the code does not declare, or a
+    declared column it lacks (``Datastore.SQL.schema.schema_differences``).
 
     Every engine is disposed on exit, and on a refusal after any was made.
     """
@@ -187,7 +172,9 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
         for serial, path in sorted(files.items()):
             engine = _read_only_engine(Path(path))
             engines.append(engine)
-            shards.append(_describe_shard(serial, Path(path), engine, built.tables))
+            shards.append(
+                _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+            )
 
         yield ReadOnlyStore(
             primary=primary_path,

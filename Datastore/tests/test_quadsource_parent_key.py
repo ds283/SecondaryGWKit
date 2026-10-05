@@ -444,8 +444,6 @@ class TestCrossShardParentUnit(unittest.TestCase):
             conn.execute(sqla.insert(table), [{"serial": 1, "parent_serial": 7}])
             context = ShardContext(
                 shard=0,
-                absent_tables=frozenset(),
-                absent_columns={},
                 keys={},
                 digests=digests,
                 all_digests=all_digests,

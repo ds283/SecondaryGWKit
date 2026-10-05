@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-05 · **Status: IN PROGRESS — 4 of 9 prompts landed (01, 02, 03, 04).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-05 · **Status: IN PROGRESS — 5 of 9 prompts landed (01–05).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–05 are written; 06–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -53,7 +53,7 @@ recommended:**
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
-| 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ⬜ | — | — |
+| 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | this commit | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
@@ -591,9 +591,9 @@ fixture through the constructor, unless the test means the absent table.
 | **L1** | 04 | absolute shard records out of `shard_paths.py` and `ShardedPool` | B6 | ✅ |
 | **L2** | 04 | `tools/shard_key_audit.py`'s old-primary paths, and an unusable record refused; the sweep script's check and docstring | B6 | ✅ |
 | **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured; an absolute record pinned as refused by every reader | B6 | ✅ |
-| **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ⬜ |
-| **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ⬜ |
-| **S3** | 05 | an absent table on a read-write open, per U1, and every other difference refused there; the primary refused by both constructors if it differs from `_create_engine`'s tables (03's hand-on; confirmed by the user, 2026-10-05); `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
+| **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ✅ |
+| **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ✅ |
+| **S3** | 05 | an absent table on a read-write open, per U1, and every other difference refused there; the primary refused by both constructors if it differs from `_create_engine`'s tables (03's hand-on; confirmed by the user, 2026-10-05); `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ✅ |
 | **G1** | 06 | `ShardedPool` given the registry; no import of `Datastore._factories` | C1 #10 | ⬜ |
 | **G2** | 06 | `store_reader` and `store_inventory` given the registry and the replicated set | C1 #10, #14 | ⬜ |
 | **G3** | 06 | the older registries, per U2 | C1 #9–#11 | ⬜ |
@@ -623,6 +623,28 @@ fixture through the constructor, unless the test means the absent table.
     replication-time treatment is another special case in the pool. No wrong result.
   - **Next step.** Prompts 06–08, then 09's guard.
   - **Assigned (2026-10-04):** prompts 06–09.
+- **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
+  - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
+    primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
+    raise
+    `Cannot delete sharded datastore "<p>": Cannot delete sharded datastore "<p>": Shard #0 of primary database "<p>" has an unusable record: shard record '../outside.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was deleted`;
+    `copy_store` and `move_store` raise
+    `Cannot copy sharded datastore "<p>" to "<d>": Cannot copy sharded datastore "<p>": Shard #0 … Nothing was written`
+    (and "Cannot move …"). In the delete case the two `<p>`s can differ, because one is the path
+    as given and the other resolved (`/var/folders/…` and `/private/var/folders/…`).
+    `store_reader.open_read_only`'s message is not doubled.
+  - **Cause.** `_read_closed_store` wraps the message of the refusal with the verb's prefix, and
+    its caller (`_plan_deletion`, `_relocate_store`) wraps it again. Current code, not 04's.
+  - **Impact.** The text is longer than it need be. Nothing is read or written wrongly. Prompt 04
+    makes this the message an absolute shard record meets in those four operations.
+  - **Next step.** The user will have it cleaned up (2026-10-04). The new
+    `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
+    its prefix, so a cleanup does not break it.
+
+---
+
+## 4. Resolved issues
+
 - **[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]** *(opened 2026-10-04 by the
   audit, §B; read, and G4 measured)*
   - **The defect.** About thirty sites exist only to open, read, repair or refuse a store written by
@@ -680,28 +702,25 @@ fixture through the constructor, unless the test means the absent table.
     a store whose columns differ would let such a store be read silently, so 02 keeps them and
     rewords their comments, and **05 deletes them** (item S3). Confirmed by the user, 2026-10-04.
   - **Assigned (2026-10-04):** prompts 01–05.
-- **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
-  - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
-    primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
-    raise
-    `Cannot delete sharded datastore "<p>": Cannot delete sharded datastore "<p>": Shard #0 of primary database "<p>" has an unusable record: shard record '../outside.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was deleted`;
-    `copy_store` and `move_store` raise
-    `Cannot copy sharded datastore "<p>" to "<d>": Cannot copy sharded datastore "<p>": Shard #0 … Nothing was written`
-    (and "Cannot move …"). In the delete case the two `<p>`s can differ, because one is the path
-    as given and the other resolved (`/var/folders/…` and `/private/var/folders/…`).
-    `store_reader.open_read_only`'s message is not doubled.
-  - **Cause.** `_read_closed_store` wraps the message of the refusal with the verb's prefix, and
-    its caller (`_plan_deletion`, `_relocate_store`) wraps it again. Current code, not 04's.
-  - **Impact.** The text is longer than it need be. Nothing is read or written wrongly. Prompt 04
-    makes this the message an absolute shard record meets in those four operations.
-  - **Next step.** The user will have it cleaned up (2026-10-04). The new
-    `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
-    its prefix, so a cleanup does not break it.
-
----
-
-## 4. Resolved issues
-
+  - **Closed (2026-10-05, prompt 05; this commit).** Deleted (audit B5, and the selects found by
+    02's note): the reader's four fields (`absent_tables`, `absent_columns`, `extra_tables`,
+    `extra_columns`) and its reading of a shard that differs; the inventory's `absent-table` and
+    `incomplete` problems with their branches, `ShardContext.absent_tables`/`absent_columns` and
+    `ShardRead.comparable`; the read-only pool's `absent_tables` report and
+    `_version_labels_present`'s branch for a shard without `version`; the read-only actor's
+    absent-table report, `_skipped_validation`, its validation skip and `_inspector`; the
+    reconcile's column subset, `unkeyed` and the `columns` difference kind, and `_read_full_rows`'
+    column filter; the four WKB value reads' `numeric_serial` selects; `real_store_fixtures`'
+    `build_old_store` and `OLD_MISSING_*`; nine tests (log). In their place one comparison and one
+    refusal in `Datastore/SQL/schema.py`, `schema_differences` and
+    `StoreSchemaMismatch(RuntimeError)`, used by the reader (so by the inventory, the fingerprint
+    and the read-only pool), by the read-write check at open, which allows only an absent table
+    (U1: an interrupted first open or drop, which the actors complete), and by both constructors'
+    check of the primary against `_create_engine`'s six tables. A store written by older code now
+    meets `StoreSchemaMismatch`, naming the file and each table and column. Pinned by
+    `Datastore/tests/test_store_schema.py` (13 tests, the first coverage of U1) and three tests
+    converted to refusals; deliberate breakage (i)–(v) in the log. The fingerprint of
+    `build_full_store` is byte-identical before and after (digest `6576b85d…`).
 - **[04-the-shard-key-audit-crashes-where-it-should-refuse]** *(opened 2026-10-05 by the
   orchestrator's review of prompt 04, from the log's observations; measured at `bbdba04`)*
   - **The defect.** `tools/shard_key_audit.py` ends in a Python traceback and exit code 1, with no
@@ -838,3 +857,18 @@ cannot run for more than ten minutes; the four counts are 122, 132, 201 and 181.
 | Datastore | 629 OK | 636 OK | −12 deleted, +12 in `test_absolute_shard_record_refused`, +7 in `test_shard_key_audit_refusals` |
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 281 OK | 280 OK | −3 deleted, +1 sweep refusal, +1 retire refusal |
+
+### 5.6 After prompt 05 (2026-10-05, this commit)
+
+Measured serially on the staged tree, at load 11–40. The Datastore suite was run in four groups of
+modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 122, 131,
+200 and 191 (before: 122, 132, 201, 185).
+
+| Suite | Before (orchestrator, `6ba15c7`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 OK | 693 OK | 0 |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 640 OK | 644 OK | −9 deleted, +13 in `test_store_schema`; three tests converted (renamed) |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 280 OK | 280 OK | 0 |

@@ -22,11 +22,11 @@ explicit serials. A test (or prompt 02's inventory tests) adds rows by passing i
 from the defaults. A ``timestamp`` column that a row leaves out is filled with ``FIXED_TIMESTAMP``,
 as ``Datastore._insert`` fills it with the time; every other value is the row's own.
 
-**Old stores.** ``build_old_store`` makes a store as if written before the code declared one table
-and one column: shard ``OLD_MISSING_TABLE_SHARD`` lacks ``OLD_MISSING_TABLE``, and on shard
-``OLD_MISSING_COLUMN_SHARD`` the table ``OLD_MISSING_COLUMN_TABLE`` lacks
-``OLD_MISSING_COLUMN``. ``build_real_store`` takes ``missing_tables`` and ``missing_columns`` for
-any other combination.
+**A store whose schema differs.** ``build_real_store`` and ``build_full_store`` take
+``missing_tables``, ``missing_columns`` and ``extra_sql``, which build a shard that lacks a
+declared table or column, or has a table or column the code does not declare. The current code
+writes no such shard; the refusal tests use them to show that every reader refuses one by name
+(prompts/datastore-generic, prompt 05).
 
 **The full store** (store-fingerprint prompt 02). ``build_full_store`` builds a store holding at
 least one row of every class of the structured inventory, with tags, unvalidated rows and value
@@ -191,12 +191,6 @@ SHARDED_ROWS: Dict[int, RowSet] = {
 # wavenumber serial -> shard serial, written to the primary's shard_keys table
 SHARD_KEYS: Dict[int, int] = {1: 0, 2: 1}
 
-OLD_MISSING_TABLE = "OneLoopIntegral_tags"
-OLD_MISSING_TABLE_SHARD = 1
-OLD_MISSING_COLUMN_TABLE = "TkNumericIntegration"
-OLD_MISSING_COLUMN = "stop_Tprime"
-OLD_MISSING_COLUMN_SHARD = 0
-
 
 @dataclass(frozen=True)
 class RealStore:
@@ -279,7 +273,7 @@ def _write_shard(
     finally:
         engine.dispose()
 
-    # an old store's table lacks a column the code now declares. The column is dropped after the
+    # a shard whose table lacks a column the code declares. The column is dropped after the
     # rows are written, so that the rest of each row is still there (SQLite >= 3.35). Then any
     # extra statements (a column or a table the code does not declare) are run
     statements = [
@@ -354,18 +348,6 @@ def build_real_store(
         shard_files=shard_files,
         replicated=replicated,
         sharded=sharded,
-    )
-
-
-def build_old_store(directory: Path, stem: str = "old-store") -> RealStore:
-    """A store with one shard missing a table and one table missing a column (module docstring)."""
-    return build_real_store(
-        directory,
-        stem=stem,
-        missing_tables={OLD_MISSING_TABLE_SHARD: [OLD_MISSING_TABLE]},
-        missing_columns={
-            OLD_MISSING_COLUMN_SHARD: {OLD_MISSING_COLUMN_TABLE: [OLD_MISSING_COLUMN]}
-        },
     )
 
 

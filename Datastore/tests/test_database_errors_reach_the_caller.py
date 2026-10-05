@@ -414,8 +414,10 @@ class TestTheWKBIntegrations(_PassThroughCase):
 
 
 class TestTheWKBValueReads(_PassThroughCase):
-    """The four WKB value reads, which looked for ``numeric_serial``: each selects it from the
-    parent's table whether or not a parent is named, so the statement names it either way.
+    """The four WKB value reads, which looked for ``numeric_serial``. Since
+    prompts/datastore-generic prompt 05 none selects it, and a read that names no parent does not
+    filter on it, so the statement is recognised by ``rho_gauss_order``, which every one of them
+    filters on.
     """
 
     def setUp(self):
@@ -453,7 +455,7 @@ class TestTheWKBValueReads(_PassThroughCase):
                         self._payload(**extra),
                     ),
                     conn,
-                    (NUMERIC_SERIAL,),
+                    (RHO_GAUSS_ORDER,),
                 )
                 self.assertEqual(1, conn.executed)
 
@@ -469,7 +471,7 @@ class TestTheWKBValueReads(_PassThroughCase):
                         self._payload(z_source=gk_source_keys.Z_SOURCES[23], **extra),
                     ),
                     conn,
-                    (NUMERIC_SERIAL,),
+                    (RHO_GAUSS_ORDER,),
                 )
                 self.assertEqual(1, conn.executed)
 
@@ -485,7 +487,7 @@ class TestTheWKBValueReads(_PassThroughCase):
                         self._payload(**extra),
                     ),
                     conn,
-                    (NUMERIC_SERIAL,),
+                    (RHO_GAUSS_ORDER,),
                 )
                 self.assertEqual(1, conn.executed)
 
@@ -501,7 +503,7 @@ class TestTheWKBValueReads(_PassThroughCase):
                         self._payload(**extra),
                     ),
                     conn,
-                    (NUMERIC_SERIAL,),
+                    (RHO_GAUSS_ORDER,),
                 )
                 self.assertEqual(1, conn.executed)
 

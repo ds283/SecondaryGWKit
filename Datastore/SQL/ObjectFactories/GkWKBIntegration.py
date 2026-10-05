@@ -1233,9 +1233,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
-                # always selected, whether or not a parent is given, so that a table without the
-                # column raises rather than being read
-                wkb_table.c.numeric_serial,
             ).filter(
                 wkb_table.c.model_serial == model_payload.store_id,
                 wkb_table.c.wavenumber_exit_serial == k.store_id,
@@ -1355,9 +1352,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
                 wkb_table.c.z_init,
-                # always selected, whether or not a parent is given, so that a table without the
-                # column raises rather than being read
-                wkb_table.c.numeric_serial,
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
                 redshift_table.c.source.label("z_source_is_source"),

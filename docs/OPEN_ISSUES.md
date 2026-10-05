@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-05 · **108 open** across twenty campaigns.
+**Last updated:** 2026-10-05 · **107 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -844,7 +844,6 @@ for a store written by older code is deleted, through the campaign. Its audit
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader, the inventory, `Datastore` and `ClientPool` hard-code fourteen facts about the project's tables (`BackgroundModel`'s copy unit, the `redshift`/`wavenumber` flags, the factory registry as a private import, …). Assigned: prompts 06–09. |
-| `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]` | datastore-generic | About thirty sites exist only for stores written by older code; no store needs them (the A3 baseline, the last store with an old-store shape, was retired 2026-10-04). Assigned: prompts 01–05; 01 deleted the `TkNumericIntegration`, `GkNumericIntegration`, `QCD_Cosmology`, `BackgroundModel` and `extract_common` ones; 02 the `TkWKBIntegration`, `GkWKBIntegration`, `GkSource` and `QuadSourceIntegral` ones; 03 the reconcile's (`timestamp` compared, `replication_in_flight` assumed, the `NOT NULL` prune refusal, B9's `label` test; `e53f323` reviewed) (2026-10-04); 04 the absolute shard records (read as siblings, now refused by every reader) and the audit tool's pre-`a2bd966` and no-`shard_key_config` paths (2026-10-04). |
 | `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` prints its "Cannot … sharded datastore" prefix twice (`_read_closed_store` wraps a message its caller wraps again). Cosmetic. The user will have it cleaned up. |
 
 ---

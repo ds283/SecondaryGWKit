@@ -25,8 +25,9 @@ and not inferred; and the connection test records what every connection is opene
    and the backstop (a hit that writes a flag, refused by the ``mode=ro`` file).
 4. At open: a missing primary; an empty and a hot journal beside a shard; a primary holding a
    record (a ``get`` and a ``prune``); an absent version label; diverged shards; a shard lacking a
-   validating class's table, and one lacking a non-validating class's; every connection
-   ``mode=ro``.
+   validating class's table, and one lacking a non-validating class's, each refused with
+   ``StoreSchemaMismatch`` naming the table (prompts/datastore-generic, prompt 05: only a
+   read-write open recovers a table a shard lacks); every connection ``mode=ro``.
 5. No Ray is initialised.
 """
 
@@ -48,6 +49,7 @@ import ray
 import sqlalchemy as sqla
 
 from CosmologyModels.LambdaCDM import Planck2018
+from Datastore.SQL.schema import StoreSchemaMismatch
 from Datastore.tests import standin_pool as sp
 from config.defaults import DEFAULT_QUADRATURE_RTOL
 from config.sharding import (
@@ -826,39 +828,35 @@ class TestAtOpen(_ReadOnlyTestCase):
         self.assertIn('class "tolerance"', str(ctx.exception))
         self.assertEqual(sp.store_checksums(primary), before)
 
-    def test_a_shard_lacking_a_table_is_reported_and_the_store_opens(self):
-        for cls_name, validates in (("GkSource", True), ("OneLoopIntegral", False)):
-            with self.subTest(table=cls_name):
-                primary = self.copy()
-                execute(
-                    primary.with_name("store-shard0001.sqlite"),
-                    f'DROP TABLE "{cls_name}"',
-                )
-                before = sp.store_checksums(primary)
-                pool, printed = self.open(primary, read_only=True)
-                self.assertIn(cls_name, pool.absent_tables[1])
-                self.assertNotIn(cls_name, pool.absent_tables[0])
-                self.assertIn(f"shard 1 lacks the table(s)", printed)
-                self.assertEqual(
-                    cls_name in pool.actor_states[1]["skipped_validation"], validates
-                )
-                self.assertEqual(pool.actor_states[0]["skipped_validation"], [])
-                self.assertIn(cls_name, pool.actor_states[1]["absent_tables"])
-                self.close(pool)
-                self.assertEqual(sp.store_checksums(primary), before)
+    def test_a_shard_lacking_a_table_is_refused_naming_it(self):
+        """A shard that lacks a table (what an interrupted drop leaves) is refused by the reader
+        the pool opens through, naming the shard and the table, before any actor is built; no
+        file changes. Only a read-write open recovers such a store (prompts/datastore-generic,
+        README U1)."""
+        constructed = []
+        original = sp._Options.remote
 
-    def test_a_lookup_on_a_missing_table_fails_in_sqlite(self):
-        primary = self.copy()
-        for path in self.shards(primary):
-            execute(path, 'DROP TABLE "GkSource"')
-        before = sp.store_checksums(primary)
-        pool, _ = self.open(primary, read_only=True)
-        self.assertTrue(all("GkSource" in t for t in pool.absent_tables.values()))
-        with self.assertRaises(sqla.exc.OperationalError) as ctx:
-            self.run_sequence(pool, primary.parent, others=False)
-        self.assertIn("no such table: GkSource", str(ctx.exception))
-        self.close(pool)
-        self.assertEqual(sp.store_checksums(primary), before)
+        def counting(options, *args, **kw):
+            constructed.append(options._name)
+            return original(options, *args, **kw)
+
+        for cls_name, validates in (("GkSource", True), ("OneLoopIntegral", False)):
+            with self.subTest(table=cls_name, validates=validates):
+                primary = self.copy()
+                shard1 = primary.with_name("store-shard0001.sqlite")
+                execute(shard1, f'DROP TABLE "{cls_name}"')
+                before = sp.store_checksums(primary)
+                with mock.patch.object(sp._Options, "remote", counting):
+                    with self.assertRaises(StoreSchemaMismatch) as ctx:
+                        self.open(primary, read_only=True)
+                e = ctx.exception
+                self.assertEqual(e.differences.absent_tables, (cls_name,))
+                self.assertIn(f'shard #1 "{str(shard1.resolve())}"', str(e))
+                self.assertIn(f'it lacks the table(s) "{cls_name}"', str(e))
+                self.assertEqual([], constructed, "an actor was created")
+                self.assertEqual(self.cluster.calls, [])
+                self.assertEqual(sp.store_checksums(primary), before)
+                MESSAGES[f"absent table {cls_name}"] = str(e)
 
     def test_every_connection_is_opened_read_only(self):
         # A checksum cannot see a read-write open of a shard with no journal: it writes nothing.
