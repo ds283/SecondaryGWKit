@@ -18,10 +18,10 @@ takes_registry = len(inspect.signature(read_inventory).parameters) == 2
 if takes_registry:
     from config.datastore import factories
 
-    def inventory(primary):
+    def take_inventory(primary):
         return read_inventory(primary, factories)
 else:
-    def inventory(primary):
+    def take_inventory(primary):
         return read_inventory(primary)
 
 print(label, "read_inventory takes the registry:", takes_registry)
@@ -32,7 +32,7 @@ for kind, build in (("full", build_full_store), ("real", build_real_store)):
         shutil.rmtree(d)
     d.mkdir()
     store = build(d)
-    inv = inventory(store.primary)
+    inv = take_inventory(store.primary)
     fp = fingerprint_of(inv, {"when": None, "git_head": None, "git_dirty": None, "run_id": None})
     fp.pop("taken")
     (scratch / f"{kind}-fingerprint-{label}.json").write_text(json.dumps(fp, sort_keys=True, indent=1))
