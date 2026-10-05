@@ -68,7 +68,7 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
     _exit_time,
     _Ref,
 )
-from ComputeTargets import GkNumericIntegration, TkNumericIntegration
+from ComputeTargets import GkNumericIntegration
 import ComputeTargets.phase_residual as phase_residual
 from MetadataConcepts import tolerance
 

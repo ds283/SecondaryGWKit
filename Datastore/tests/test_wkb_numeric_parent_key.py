@@ -77,7 +77,6 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
 )
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
-    sqla_TkWKBValue_factory,
 )
 from Datastore.SQL.schema import build_schema
 from Datastore.store_inventory import Parent, ShardContext, read_records

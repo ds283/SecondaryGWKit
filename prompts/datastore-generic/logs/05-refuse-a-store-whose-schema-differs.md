@@ -14,7 +14,7 @@
   tables; the four WKB `numeric_serial` selects and `build_old_store` are gone.
 
 No stop condition fired. Closes `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`.
-Opens nothing. Index 108 → 107. The commit is this commit.
+Opens nothing. Index 108 → 107. The commit is `bc8bffc`.
 
 ## What shipped
 
@@ -362,8 +362,8 @@ No `UNINTENDED DRIFT`.
 ## The deliberate-breakage record
 
 **How each was run.** The code and tests were staged; each mutation was made in the working tree
-and its diff taken with `git diff -- <file>` against the index (the tree of this commit), so
-`git apply` replays it from a clean checkout of this commit. For each: `git apply -R --check`, the
+and its diff taken with `git diff -- <file>` against the index (the tree of `bc8bffc`), so
+`git apply` replays it from a clean checkout of `bc8bffc`. For each: `git apply -R --check`, the
 run, `git apply -R`, then `git apply --check` (forward) on the restored tree; all passed, and
 `git diff` was empty after each. None is committed. Each was run, in `bash`, on six modules:
 `test_store_schema`, `test_store_reader`, `test_read_only_pool`, `test_reconcile_at_open`,

@@ -53,7 +53,7 @@ recommended:**
 | 02 | [Delete the remaining factory refusals](02-delete-the-remaining-factory-refusals.md) | **N1**–**N3** | Sonnet | ✍️ yes, 2026-10-04; after 01 | ✅ 2026-10-04 | `9d3a42c` | [log](logs/02-delete-the-remaining-factory-refusals.md) |
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
-| 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | this commit | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
+| 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
@@ -66,7 +66,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 (2026-10-04, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-04,
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-04, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, used for 04);
-[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-05, not yet used), with the
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-05, used for 05), with the
 measurement of 05's test plan in [`orchestrator/measure-05/`](orchestrator/measure-05/).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
@@ -571,6 +571,159 @@ None opens an issue.
 the constructor refuses it. 05's refusal of a store whose tables differ must not be pinned with that
 fixture through the constructor, unless the test means the absent table.
 
+**Orchestrator review of prompt 05 (2026-10-05).** Dispatched from `6ba15c7` to one Opus
+subagent. Reviewed against its commit `bc8bffc`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–5 are met. No stop condition fired, and the agent ran its
+suites in the foreground.
+
+*At dispatch.* The note's gate held:
+- the commits after `bc3e944` touch code only in `b97cf06` (the audit tool and its test) and
+  `8abb3da` (`requirements.txt`), both already allowed for in the note;
+- the tree was clean, and the only worktree was this checkout;
+- the registry held 16 runs (14 finished, 2 `unknown`, none `running`), and no Ray process came
+  from this repository's venv;
+- the venv imported `scipy.sparse.linalg` (Python 3.12.15, scipy 1.16.3).
+
+The baselines, serially at `6ba15c7`, load 13–36, were the first taken under scipy 1.16.3:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), RunRegistry 280;
+- ComputeTargets 693, OK, with no wall-clock failure;
+- Datastore 640 (122 + 132 + 201 + 185).
+
+The index held 108. The pre-images of the eighteen files of the note's §1.6 were recorded, and
+`6ba15c7` was exported to the scratchpad.
+
+The checks:
+1. **Scope.** 22 files, all on the prompt's §6 list.
+   - The diff over `RunRegistry/`, `tools/`, `main.py`, `extract_*.py`, `config/`,
+     `shard_paths.py`, `replication.py`, `var/` and `orchestrator/` is empty.
+   - In `ObjectFactories/` only the two WKB files changed. Under `docs/` only `OPEN_ISSUES.md`
+     changed.
+2. **E1, by grep.** The §3.2 greps print nothing. The one exception: `build_old_store|OLD_MISSING`
+   matches `orchestrator/measure-05/scripts/`. Those are the committed shims of the measurement at
+   `bc3e944`, a record of the tree before 05. `ReadOnlyShard`'s fields are exactly `serial`,
+   `path`, `engine` and `tables`.
+3. **E1, by `ast`, against the pre-images, docstrings stripped.**
+   - `schema.py`: `build_schema` dumps identically. `SchemaDifferences`, `schema_differences` and
+     `StoreSchemaMismatch` are new, and the module still imports only `sqlalchemy`. The message
+     has one prefix ("Cannot read …" or "Cannot open …"), then the file, then each difference by
+     kind and name.
+   - `store_reader.py`: only `_describe_shard`, `open_read_only` and `ReadOnlyShard` change.
+   - `store_inventory.py`: only `read_records`, `_combine`, `read_inventory`, `ShardContext` and
+     `ShardRead` change. The tag and value branches are dedented and otherwise unchanged.
+   - `ShardedPool.py`:
+     - changed: `__init__`, `_open_read_only`, `_version_labels_present`,
+       `_reconcile_replicated_tables` (one call, after `built`), `_read_replicated_tables`,
+       `_replicated_differences`, `_describe_differences`, `_plan_replicated_repair` and
+       `_read_full_rows`;
+     - new: `_refuse_a_primary_that_differs` and `_refuse_shards_that_differ`;
+     - every other function dumps identically, including `_prune_needed`, `_prune_shard` and the
+       closed-store operations.
+   - `Datastore.py`: only `_open_read_only` (the read-only branch of the constructor),
+     `_validate_on_startup_read_only` and `read_only_state` change.
+   - The WKB factories: each of the four functions loses only the `numeric_serial` select and its
+     comment.
+4. **E4, the tests, by `ast`.**
+   - Exactly the plan's nine methods are gone.
+   - The three conversions are renamed (log), keep their store shapes and assert
+     `StoreSchemaMismatch`.
+   - The two re-fixtures change only the rows they build (orphan tag rows).
+   - Every other changed method is one the plan names: the four WKB value reads, the two
+     hand-built `ShardContext`s, `test_store_reader`'s helpers, `TestNoRay` and the reconcile
+     test's exception.
+   - The thirteen new methods are all in `test_store_schema.py`, and the log names each one's
+     purpose.
+5. **E2, by reading and running.** `test_store_schema.py` was read in full.
+   - Each refusal asserts:
+     - the exception and its `differences`;
+     - the file by name;
+     - unchanged checksums;
+     - for a pool, that no stand-in actor was constructed and that the in-flight record was not
+       read.
+   - The U1 tests assert that every shard then has no difference and holds the version row.
+   - The module, the conversions, the re-fixtures and the changed tests: 254 tests, OK.
+6. **E3, by running.** 148 tests, OK: `test_reconcile_at_open`, `test_version_row_at_open`,
+   `test_prune_at_open`, `test_replicated_write`, `test_copy_move_store`, `test_delete_store` and
+   `test_absolute_shard_record_refused`.
+7. **E5, the pins.** The five diffs were extracted from the log and replayed with `git apply` in
+   `bash`, over the log's six modules (143 tests):
+   - (i): failures=3, errors=2;
+   - (ii): errors=3, the three U1 tests and nothing else;
+   - (iii): failures=5;
+   - (iv): failures=2, errors=4;
+   - (v): failures=3.
+
+   Each named exactly the tests the log names. The tree was clean after each `git apply -R`.
+8. **The probe**, from the scratchpad, at `bc8bffc` and at the export of `6ba15c7`:
+   - **The fingerprint** of `build_full_store`, with `taken` removed, is byte-identical (`cmp`):
+     digest `6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759`, problems `{}`.
+   - **`build_real_store`**: every table of every shard read through `open_read_only`, and
+     `read_inventory`'s problems, are identical at both trees.
+   - **A missing table, a missing column, an extra column and an extra table**, each on one shard:
+     - at `6ba15c7`, all four were read. The missing table gave `absent-table`; the other three
+       gave no problem, and only the reader's fields recorded them;
+     - at `bc8bffc`, `open_read_only` and `read_inventory` refuse all four, each naming the
+       shard, its path and the table or column.
+   - **`python -m RunRegistry store fingerprint`** on the missing-table store at `bc8bffc`, with a
+     scratch `--runs-root`: exit 1, the message on stderr through `!!`, no traceback. The store's
+     checksums and listing were unchanged, and the runs root stayed empty.
+   - **The pool, on stand-in shards**, for the same four shapes on shard 1:
+     - the read-only pool refuses all four, through the reader's "Cannot read …";
+     - a read-write open refuses all but the absent table ("Cannot open …"), and opens that one;
+     - every refusal built no actor and changed no file.
+
+     The tests pin only the absent table on the read-only pool. The other three reach it through
+     the reader, and this probe measures them directly.
+   - **U1**: `measure-05/scripts/m6_u1.py`'s three cases ran unchanged against `bc8bffc`. All
+     three opened, and afterwards every shard matched the schema and held the version row.
+9. **E6.**
+   - The fallbacks issue is in §4 with a dated "Closed (2026-10-05, prompt 05)" line naming 05's
+     deletions, and its index row is gone.
+   - The index holds 107 by counting, matching its header.
+   - §1, S1–S3 and §5.6 are written.
+10. **Suites**, serially at `bc8bffc`, load 7–38:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280, OK;
+    - ComputeTargets 693, OK;
+    - Datastore 644 (640 − 9 + 13; 122 + 131 + 200 + 191), OK.
+
+    `black --check` is clean on the 19 Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `bc8bffc` in §1, §4, §5.6 and the log.
+- §4's closing line for `[04-the-shard-key-audit-crashes-where-it-should-refuse]` still said
+  "this commit" from `b97cf06`. It now names `b97cf06`.
+- `_combine` kept a local named `comparable` and an `if len(comparable) > 0` guard. The local now
+  holds every shard, and `reads` is never empty: `min(reads)` precedes the guard. The local is
+  renamed `shards`, the always-true guard goes, and a comment says why every shard is compared.
+  By `ast`, only `_combine` changes.
+- The three unused imports the log names (`TkNumericIntegration` in `test_gksource_parent_set`,
+  `sqla_TkWKBValue_factory` in `test_wkb_numeric_parent_key`, `Record` in `test_store_inventory`)
+  are removed. Each was unused before 05 too, in a module 05 edits.
+- This board's note list marks `orchestrator/prompt-05.md` used.
+
+These were verified by Datastore and RunRegistry at the follow-up (counts unchanged), and by the
+fingerprint digest again.
+
+*Kept as is.*
+- `_read_replicated_tables` keeps one `PRAGMA table_info` per table, only to detect an absent
+  table (U1).
+- `_refuse_shards_that_differ` imports `read_only_url` at function scope, because `store_reader`
+  imports `ShardedPool` at module scope.
+- Both messages end "so nothing was read", for the reason the log gives: a read-write open may
+  already have rolled back a journal.
+
+*Handed on.* **06**'s note must carry:
+- every caller of `schema_differences` (the reader's `_describe_shard`, `_refuse_shards_that_differ`)
+  takes `built.tables` from `build_schema(…, _factories)`, which `store_reader` and `ShardedPool`
+  import. That is exactly what 06 replaces with an injected registry, so every call site of the
+  check is one of 06's;
+- the primary's six tables, checked by `_refuse_a_primary_that_differs`, are `ShardedPool`'s own:
+  the layer's contract, not the registry's;
+- U1's only pins are `test_store_schema`'s three recovery tests. Under breakage (ii),
+  `TestNewStoreInterrupted`, `TestPruningAfterRepair.test_an_interrupted_store` and
+  `TestDropOrder` still pass, because none reaches an absent table;
+- the split grouping's exclusion of `timestamp` (03) remains current behaviour.
+
 ---
 
 ## 2. Items
@@ -702,7 +855,7 @@ fixture through the constructor, unless the test means the absent table.
     a store whose columns differ would let such a store be read silently, so 02 keeps them and
     rewords their comments, and **05 deletes them** (item S3). Confirmed by the user, 2026-10-04.
   - **Assigned (2026-10-04):** prompts 01–05.
-  - **Closed (2026-10-05, prompt 05; this commit).** Deleted (audit B5, and the selects found by
+  - **Closed (2026-10-05, prompt 05; `bc8bffc`).** Deleted (audit B5, and the selects found by
     02's note): the reader's four fields (`absent_tables`, `absent_columns`, `extra_tables`,
     `extra_columns`) and its reading of a shard that differs; the inventory's `absent-table` and
     `incomplete` problems with their branches, `ShardContext.absent_tables`/`absent_columns` and
@@ -742,7 +895,7 @@ fixture through the constructor, unless the test means the absent table.
     traceback. When shard 0 exists but lacks the key-type table, the tool printed "skipping
     cross-file checks" and could still end `VERDICT: OK`; an `OperationalError` on the `ATTACH`
     was skipped the same way.
-  - **Closed (2026-10-05, outside the prompts, at the user's request; this commit).** Each shape
+  - **Closed (2026-10-05, outside the prompts, at the user's request; `b97cf06`).** Each shape
     is now a refusal with exit code 2 and no verdict: a primary without a column the tool reads
     (`shards.serial`/`.filename`, `shard_keys.shard_id`, `shard_key_config.key_type`); a shard 0
     file that cannot be read as a database (any `sqlite3.DatabaseError` from the `ATTACH` or the
@@ -858,7 +1011,7 @@ cannot run for more than ten minutes; the four counts are 122, 132, 201 and 181.
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 281 OK | 280 OK | −3 deleted, +1 sweep refusal, +1 retire refusal |
 
-### 5.6 After prompt 05 (2026-10-05, this commit)
+### 5.6 After prompt 05 (2026-10-05, `bc8bffc`)
 
 Measured serially on the staged tree, at load 11–40. The Datastore suite was run in four groups of
 modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 122, 131,

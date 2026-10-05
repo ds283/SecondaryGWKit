@@ -752,36 +752,37 @@ def _combine(
     first = reads[min(reads)]
 
     if replicated:
-        comparable = sorted(reads)
-        contributing = comparable[:1]
-        if len(comparable) > 0:
-            base = comparable[0]
-            base_set = Counter(r.canonical_json() for _, r, _ in reads[base].rows)
-            base_keys = {r.canonical_json(): r for _, r, _ in reads[base].rows}
-            for other in comparable[1:]:
-                other_set = Counter(r.canonical_json() for _, r, _ in reads[other].rows)
-                other_keys = {r.canonical_json(): r for _, r, _ in reads[other].rows}
-                only_base = base_set - other_set
-                only_other = other_set - base_set
-                if len(only_base) == 0 and len(only_other) == 0:
-                    continue
-                examples = sorted(
-                    {
-                        canonical_json((base_keys.get(j) or other_keys.get(j)).key)
-                        for j in list(only_base) + list(only_other)
-                    }
-                )[:_EXAMPLES]
-                problems.append(
-                    _problem(
-                        "replicated-divergence",
-                        name,
-                        f"shard #{other} differs from shard #{base} in "
-                        f"{sum(only_base.values()) + sum(only_other.values())} record(s) "
-                        f"({sum(only_base.values())} only on shard #{base}, "
-                        f"{sum(only_other.values())} only on shard #{other}); e.g. keys "
-                        f"{'; '.join(examples)}",
-                    )
+        # every shard is compared with the first: a shard whose files differ from the declared
+        # tables was refused before anything was read
+        shards = sorted(reads)
+        contributing = shards[:1]
+        base = shards[0]
+        base_set = Counter(r.canonical_json() for _, r, _ in reads[base].rows)
+        base_keys = {r.canonical_json(): r for _, r, _ in reads[base].rows}
+        for other in shards[1:]:
+            other_set = Counter(r.canonical_json() for _, r, _ in reads[other].rows)
+            other_keys = {r.canonical_json(): r for _, r, _ in reads[other].rows}
+            only_base = base_set - other_set
+            only_other = other_set - base_set
+            if len(only_base) == 0 and len(only_other) == 0:
+                continue
+            examples = sorted(
+                {
+                    canonical_json((base_keys.get(j) or other_keys.get(j)).key)
+                    for j in list(only_base) + list(only_other)
+                }
+            )[:_EXAMPLES]
+            problems.append(
+                _problem(
+                    "replicated-divergence",
+                    name,
+                    f"shard #{other} differs from shard #{base} in "
+                    f"{sum(only_base.values()) + sum(only_other.values())} record(s) "
+                    f"({sum(only_base.values())} only on shard #{base}, "
+                    f"{sum(only_other.values())} only on shard #{other}); e.g. keys "
+                    f"{'; '.join(examples)}",
                 )
+            )
     else:
         contributing = sorted(reads)
 

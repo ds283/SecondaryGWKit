@@ -38,7 +38,6 @@ import sqlalchemy as sqla
 import Datastore.store_inventory as store_inventory
 from Datastore.store_inventory import (
     INVENTORY_CLASSES,
-    Record,
     canonical,
     canonical_json,
     read_inventory,
