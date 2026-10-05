@@ -61,9 +61,10 @@ as follows (board item S3, widened):
   purpose (04).
 
 So the reader and the fingerprint read such a primary, and the pool refuses it. That is
-intended. **If the user objects to the primary check, strike it from the prompt before dispatch**:
-it is S3's last clause, one changed test (`test_a_primary_without_the_record_table_is_refused`
-then keeps `OperationalError`), the new primary tests and breakage (iv).
+intended. **Confirmed by the user, 2026-10-05**, after the two alternatives were put: dropping the
+check (a bad primary keeps meeting a raw `OperationalError`), and extending it to the reader and
+the closed-store operations (the fixture would build complete primaries, and their tests would
+change). The prompt keeps it as written.
 
 **The test plan was measured, not read.** On 2026-10-05 at `bc3e944`, a read-only Opus subagent
 made a rough version of the change in a scratch worktree, ran Datastore, RunRegistry and
@@ -243,7 +244,6 @@ number in the prompt was re-read against the tree; these need care:
    - every test module of the prompt's test plan.
 
    Export `HEAD` to the scratchpad (`git archive HEAD | tar -x -C …`) for check 8.
-7. **The primary check.** If the user has not seen it (§0), say so in one line before dispatch.
 
 ## 2. Dispatch
 

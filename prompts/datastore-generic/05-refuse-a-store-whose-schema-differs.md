@@ -213,6 +213,7 @@ indexes. The reader compares exactly this today, and nothing in the B5 inventory
   `replication_in_flight` on purpose (prompt 04). So the reader, the inventory and the
   fingerprint read a primary without `replication_in_flight`, and the pool refuses it. That is
   intended: the fingerprint is of the shards' content.
+  *Confirmed by the user, 2026-10-05.*
 
 **S3 — the four `numeric_serial` selects.** In the value factories, each selects
 `wkb_table.c.numeric_serial` "whether or not a parent is given, so that a table without the column

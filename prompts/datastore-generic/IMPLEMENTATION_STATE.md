@@ -593,7 +593,7 @@ fixture through the constructor, unless the test means the absent table.
 | **L3** | 04 | `write_legacy_primary` renamed for the malformed-record tests; legacy tests deleted or re-fixtured; an absolute record pinned as refused by every reader | B6 | ✅ |
 | **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ⬜ |
 | **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ⬜ |
-| **S3** | 05 | an absent table on a read-write open, per U1, and every other difference refused there; the primary refused by both constructors if it differs from `_create_engine`'s tables (03's hand-on); `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
+| **S3** | 05 | an absent table on a read-write open, per U1, and every other difference refused there; the primary refused by both constructors if it differs from `_create_engine`'s tables (03's hand-on; confirmed by the user, 2026-10-05); `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ⬜ |
 | **G1** | 06 | `ShardedPool` given the registry; no import of `Datastore._factories` | C1 #10 | ⬜ |
 | **G2** | 06 | `store_reader` and `store_inventory` given the registry and the replicated set | C1 #10, #14 | ⬜ |
 | **G3** | 06 | the older registries, per U2 | C1 #9–#11 | ⬜ |
