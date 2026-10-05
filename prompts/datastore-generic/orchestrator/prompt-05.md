@@ -234,8 +234,9 @@ number in the prompt was re-read against the tree; these need care:
    the venv's `scipy/sparse/linalg/_propack/_spropack…so` ("section '__DATA/__thread_bss' has a
    zero-fill section type, but offset field is not zero"). Every module that imports
    `ComputeTargets` then fails at import, so no suite can be measured and 05 cannot be
-   dispatched. Repairing the venv (e.g. a newer scipy) is the user's decision, because it can
-   change numerical results; re-measure every baseline after it.
+   dispatched. **Repaired the same day** in `8abb3da` (requirements only): the venv was rebuilt
+   on Python 3.12.15 with scipy 1.16.3, the first release that loads; nothing else changed. Every
+   baseline above was taken under scipy 1.15.2, so re-measure all six before dispatch.
 5. **The index.** 108 now; 107 after, plus any issue 05 opens. Tell the agent both.
 6. **The pre-images**, for checks 1–4. Record `git rev-parse HEAD:<path>` for:
    - `Datastore/SQL/schema.py`, `Datastore/store_reader.py`, `Datastore/store_inventory.py`,
