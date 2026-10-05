@@ -12,14 +12,18 @@ board's review of 04 (§1). The conventions are [`prompt-04.md`](prompt-04.md)'s
 
 **The prompt:** [`05-refuse-a-store-whose-schema-differs.md`](../05-refuse-a-store-whose-schema-differs.md)
 **Board items:** S1–S3 · **Closes:** `[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]`
-· **Widens:** `[04-the-shard-key-audit-crashes-where-it-should-refuse]` (a "Found" line) ·
-**Opens:** nothing expected · **Model:** Opus, as the prompt recommends.
+· **Opens:** nothing expected · **Model:** Opus, as the prompt recommends.
 **Gate:**
 - 04 landed (`bbdba04`) and reviewed (`bc3e944`); 05 written (`f24f180`); the tree clean.
 - `HEAD` is the commit that adds this note, or a later one that touches no code. If a later commit
   touches `Datastore/`, `RunRegistry/`, `tools/` or the extraction scripts, re-check every fact
   below that it could move before dispatch, and hand the agent the corrections as an addendum.
 - One prompt at a time in this checkout.
+- **Checked, 2026-10-05:** `b97cf06`, after this note, touches `tools/shard_key_audit.py` and
+  `Datastore/tests/test_shard_key_audit_refusals.py`. 05 edits neither and cites only the tool's
+  `:178-215`, now superseded (below). It adds four Datastore tests (636 → 640) and closes
+  `[04-the-shard-key-audit-crashes-where-it-should-refuse]` (index 109 → 108). The counts below
+  are corrected for it.
 
 ## 0. What makes this prompt unusual
 
@@ -129,9 +133,10 @@ number in the prompt was re-read against the tree; these need care:
   - `test_inventory_consumers:271`, `test_inventory_report:236`;
   - `test_database_errors_reach_the_caller:416`, `:444`, `:460`, `:476`, `:492`;
   - `test_reconcile_at_open:780` and its only `OperationalError` import at `:46`.
-- **`tools/shard_key_audit.py:178-215`** [measured by the subagent]: when shard 0 lacks the
-  key-type table it skips the cross-file check and can end "VERDICT: OK". The prompt does not
-  touch it, and has the agent add it to `[04-the-shard-key-audit-crashes-where-it-should-refuse]`.
+- **`tools/shard_key_audit.py`** [measured by the subagent at `bc3e944`; fixed in `b97cf06`]: when
+  shard 0 lacked the key-type table it skipped the cross-file check and could end "VERDICT: OK".
+  Since `b97cf06` that, a shard 0 that is not a database and a primary without a column the tool
+  reads are refusals with exit code 2. The prompt does not touch the tool.
 - **Not touched, and staying:**
   - `Datastore._ensure_tables` and `_drop_actions`' `has_table` skip (B10, U1);
   - `ProfileAgent.py:122-125`;
@@ -139,10 +144,10 @@ number in the prompt was re-read against the tree; these need care:
   - `RunRegistry/` code;
   - every store under `var/`.
 - **Expected counts after 05.**
-  - **Datastore:** 636 − 9, plus the new tests. The log names each new test.
+  - **Datastore:** 640 − 9, plus the new tests. The log names each new test.
   - **RunRegistry:** 280, unchanged, with no RunRegistry test edited.
   - **ComputeTargets:** 693, and every other suite, unchanged.
-- **The index.** **109** at `bc3e944`, matching the header. 05 closes one issue, so it is **108**
+- **The index.** **108** at `b97cf06`, matching the header. 05 closes one issue, so it is **107**
   after, plus one for each issue 05 opens.
 
 **What the review exists to establish.**
@@ -172,8 +177,7 @@ number in the prompt was re-read against the tree; these need care:
 - **(E5) The pins.** (i)–(v) each fail a named test.
 - **(E6) The records.**
   - The fallbacks issue is closed into §4 with a dated line, and its index row is deleted.
-  - The shard-key-audit issue carries a "Found (prompt 05)" line, with its hook updated.
-  - The index is 108 (or more).
+  - The index is 107 (or more).
   - The board has the §1 row, S1–S3 and §5.
 
 **Conventions, carried from 01–04.** All of these bind the agent, and the brief says so.
@@ -221,10 +225,17 @@ number in the prompt was re-read against the tree; these need care:
 4. **Baselines.** Last measured at `bbdba04` (04's review, check 10):
    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
    - ComputeTargets 693 (2 wall-clock failures);
-   - Datastore 636, RunRegistry 280.
+   - Datastore 636 (640 since `b97cf06`), RunRegistry 280.
 
    Re-measure all six at `HEAD`, serially, with the load average, and give the agent the numbers.
-5. **The index.** 109 now; 108 after, plus any issue 05 opens. Tell the agent both.
+   **First check that the venv works**: `./venv/bin/python -c 'import scipy.sparse.linalg'` must
+   succeed. On 2026-10-05, after the machine was upgraded to macOS 27.0.1, it failed: dyld rejects
+   the venv's `scipy/sparse/linalg/_propack/_spropack…so` ("section '__DATA/__thread_bss' has a
+   zero-fill section type, but offset field is not zero"). Every module that imports
+   `ComputeTargets` then fails at import, so no suite can be measured and 05 cannot be
+   dispatched. Repairing the venv (e.g. a newer scipy) is the user's decision, because it can
+   change numerical results; re-measure every baseline after it.
+5. **The index.** 108 now; 107 after, plus any issue 05 opens. Tell the agent both.
 6. **The pre-images**, for checks 1–4. Record `git rev-parse HEAD:<path>` for:
    - `Datastore/SQL/schema.py`, `Datastore/store_reader.py`, `Datastore/store_inventory.py`,
      `Datastore/SQL/ShardedPool.py`, `Datastore/SQL/Datastore.py`;
@@ -319,8 +330,7 @@ Tell it plainly:
 9. **E6, the records.**
    - The fallbacks issue is in §4 with a dated "Closed (…, prompt 05)" line naming 05's
      deletions, and its index row is gone.
-   - The shard-key-audit issue has its "Found (prompt 05)" line, and its index hook is updated.
-   - The index is 108 (or more) by counting, matching the header.
+   - The index is 107 (or more) by counting, matching the header.
    - The board has the §1 row, S1–S3 and §5.
 10. **Suites.** All six, serially at `HEAD`:
     - Datastore and RunRegistry at §0's expected counts, with each new test named in the log;

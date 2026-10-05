@@ -345,7 +345,7 @@ rule 7 applies to every test not named here.
 ## 3. Verification
 
 1. **Every suite**, with counts before and after, and each difference accounted for:
-   - Datastore: 636 − 9 + the new tests;
+   - Datastore: 640 − 9 + the new tests (640 since `b97cf06` added four audit-tool tests);
    - RunRegistry: 280, unchanged;
    - ComputeTargets: 693, unchanged.
 
@@ -420,11 +420,10 @@ rule 7 applies to every test not named here.
   - the log, this board and `docs/OPEN_ISSUES.md`.
 
   Nothing else.
-- **It does not touch `tools/shard_key_audit.py`.** It reads files with `sqlite3` directly. When
-  shard 0 lacks the key-type table, it prints "skipping cross-file checks" and can still end
-  "VERDICT: OK" (`:178-215`). Record this in the log, and add it to
-  `[04-the-shard-key-audit-crashes-where-it-should-refuse]` as a dated "Found (prompt 05)" line,
-  updating the index hook.
+- **It does not touch `tools/shard_key_audit.py`.** It reads files with `sqlite3` directly and
+  never goes through the reader. Since `b97cf06` (2026-10-05) it refuses with exit code 2 a primary
+  without a column it reads, a shard 0 that is not a database, and a shard 0 without the
+  shard-key table, so it does not tolerate what 05 refuses.
 - It does not compare types, keys or indexes (§1).
 - It does not touch:
   - `copy_store`, `move_store`, `closed_store_files` or `delete_store`, which read only the
@@ -451,8 +450,6 @@ rule 7 applies to every test not named here.
 `IMPLEMENTATION_STATE.md`:
 - the §1 row for 05, and items S1–S3;
 - the fallbacks issue closed into §4;
-- the "Found (prompt 05)" line on `[04-the-shard-key-audit-crashes-where-it-should-refuse]`;
 - §5.
 
-`docs/OPEN_ISSUES.md`: the fallbacks row deleted, the shard-key-audit row's hook, the count and
-the date.
+`docs/OPEN_ISSUES.md`: the fallbacks row deleted, the count and the date.
