@@ -39,7 +39,7 @@ import sqlalchemy as sqla
 from sqlalchemy import event
 from sqlalchemy.exc import MultipleResultsFound
 
-from CosmologyConcepts import redshift, wavenumber, wavenumber_exit_time
+from CosmologyConcepts import wavenumber
 from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,

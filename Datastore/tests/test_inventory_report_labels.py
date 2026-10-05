@@ -37,7 +37,6 @@ from typing import Dict, List, Optional, Sequence, Tuple
 from unittest import mock
 
 from Datastore.store_inventory import (
-    ClassInventory,
     Record,
     StoreInventory,
     digest,

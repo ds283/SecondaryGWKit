@@ -16,7 +16,7 @@ Opus 5.5 · **Date:** 2026-10-06 · **Base:** `154d868`, clean · **Result:** la
 
 No stop condition fired. Closes `[07-drop-actions-list-a-parent-table-before-its-children]`
 (`datastore-integrity`). Narrows `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]`
-(audit C1 rows 9, 10, 11, 14). Opens nothing. Index 108 → 107. The commit is this commit.
+(audit C1 rows 9, 10, 11, 14). Opens nothing. Index 108 → 107. The commit is `19f07ee`.
 
 ## What shipped
 
@@ -269,7 +269,7 @@ grouped by package):
   modules); `ComputeTargets` 21; `CosmologyConcepts` 3; `CosmologyModels` 11; `MetadataConcepts` 6;
   `LiouvilleGreen` 7; `AdaptiveLevin` 2; `Units` 3; `config` 2 (`config`, `config.defaults`);
   `utilities` 1.
-- **At this commit:** `Datastore.SQL.ObjectFactories` 2 (the package and `base`);
+- **At `19f07ee`:** `Datastore.SQL.ObjectFactories` 2 (the package and `base`);
   `MetadataConcepts` 6 (`MetadataConcepts`, `.GkSourcePolicy`, `.QuadSourcePolicy`, `.store_tag`,
   `.tolerance`, `.version`); `config` 2 (`config`, `config.defaults`); `utilities` 1. Nothing from
   `ComputeTargets`, `CosmologyConcepts`, `CosmologyModels`, `LiouvilleGreen`, `AdaptiveLevin` or
@@ -291,7 +291,7 @@ a record naming an undeclared class (reader; read_inventory identical):
 ```
 
 The read-only pool on a primary without `replicated_tables` (scratch script, stand-in shards):
-- at this commit: `RuntimeError`, the reader's message above, at its step 2;
+- at `19f07ee`: `RuntimeError`, the reader's message above, at its step 2;
 - at `154d868`: `StoreSchemaMismatch: Cannot open sharded datastore "<dir>/store.sqlite": the
   primary "<dir>/store.sqlite" differs from the tables this code declares (it lacks the table(s)
   "replicated_tables"), so nothing was read`, at step 3.
@@ -452,8 +452,8 @@ No `UNINTENDED DRIFT`.
 ## The deliberate-breakage record
 
 **How each was run.** Code and tests were staged; each mutation was made in the working tree by a
-scratch script and its diff taken with `git diff -- <file>` against the index (the tree of this
-commit), so `git apply` replays it from a clean checkout. For each, in `bash`: `git apply -R
+scratch script and its diff taken with `git diff -- <file>` against the index (the tree of
+`19f07ee`), so `git apply` replays it from a clean checkout. For each, in `bash`: `git apply -R
 --check`, the run, `git apply -R`, then `git apply --check` (forward) on the restored tree; all
 passed and `git diff` was empty after each. None is committed. Each ran three modules:
 `test_layer_registry`, `test_wkb_numeric_parent_key` and `test_store_reader` (74 tests; OK

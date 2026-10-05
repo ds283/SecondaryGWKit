@@ -2016,7 +2016,7 @@ None is assigned to a prompt of this campaign.
     (`schema.drop_order`), within groups as well as between them. Measured while 06 was written:
     the old order violated 15 within-group foreign keys on a `build_full_store` shard under
     enforcement, and the derived order none. 06 closes it.
-  - **Closed (2026-10-06, prompt 06 of `prompts/datastore-generic`; this commit).** The drop
+  - **Closed (2026-10-06, prompt 06 of `prompts/datastore-generic`; `19f07ee`).** The drop
     groups moved to `config/datastore.py` (`drop_groups`, with the same tables), `_drop_order` was
     deleted, and the actor now drops the tables it is given in the order
     `Datastore.SQL.schema.drop_order` derives from their foreign keys: a table that references

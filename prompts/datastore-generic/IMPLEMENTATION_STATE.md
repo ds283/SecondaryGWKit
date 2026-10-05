@@ -54,7 +54,7 @@ recommended:**
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
-| 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | this commit | [log](logs/06-give-the-layer-its-registry.md) |
+| 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
@@ -68,7 +68,7 @@ used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-04, used for 04);
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-05, used for 05), with the
 measurement of 05's test plan in [`orchestrator/measure-05/`](orchestrator/measure-05/);
-[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-05, not yet used), with the
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-05, used for 06), with the
 measurement of 06's test plan in [`orchestrator/measure-06/`](orchestrator/measure-06/).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
@@ -726,6 +726,176 @@ fingerprint digest again.
   `TestDropOrder` still pass, because none reaches an absent table;
 - the split grouping's exclusion of `timestamp` (03) remains current behaviour.
 
+**Orchestrator review of prompt 06 (2026-10-06).** Dispatched from `154d868` to one Opus
+subagent. Reviewed against its commit `19f07ee`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–5 are met. No stop condition fired, and the agent ran its
+suites in the foreground.
+
+*At dispatch.* The note's gate held at `f87df17`:
+- the tree was clean, and the only worktree was this checkout;
+- the registry held 16 runs (14 finished, 2 `unknown`, none `running`), and no Ray process was up;
+- the venv imported `scipy.sparse.linalg`.
+
+The first baseline did not match 05's review. At `f87df17` the Datastore `[g-o]` group failed one
+test, `test_inventory_retired.TestNoReferenceRemains.test_the_grep_prints_nothing`. Its repo-wide
+grep for the retired inventory service's names matched `def inventory(` in
+`orchestrator/measure-06/scripts/m1_fingerprint.py`, which the note's own commit added. The local
+helper was renamed `take_inventory` in `154d868`, which touches no code, before dispatch. The agent
+would otherwise have met a failure outside its plan.
+
+The baselines, serially at `154d868`, at load 4–10, match 05's review:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+- RunRegistry 280, OK; ComputeTargets 693, OK;
+- Datastore 644 (122 + 131 + 200 + 191).
+
+The index held 108. The pre-images of the 48 files of the note's §1.6 were recorded, and `154d868`
+was exported to the scratchpad. The parent side of check 8 was measured before dispatch, on a
+`build_full_store` built there.
+
+The checks:
+1. **Scope.** 54 files, all on the prompt's §6 list.
+   - The diff over `docs/` (but `OPEN_ISSUES.md`), `ObjectFactories/`, `replication.py`,
+     `shard_paths.py`, `ProfileAgent.py`, `SerialPoolBroker.py`, `config/sharding.py`, `var/` and
+     `orchestrator/` is empty.
+   - On the `datastore-integrity` board only the closed issue moves, from §3 to §4.
+2. **E1, by grep.**
+   - Greps 1, 2 and 4 print nothing.
+   - Grep 3 prints three lines of prose in factory docstrings (`GkSource.py:18`,
+     `GkWKBIntegration.py:35`, `TkWKBIntegration.py:33`), where the pattern's `.` matches the `/`
+     of `config/sharding.py`. No layer file imports `config` beyond `config.defaults`.
+   - Grep 5 prints `main.py`'s `allowed_drop_actions`, `specified_drop_actions` and `drop_actions`,
+     which §2 keeps, and the method name `test_drop_actions_and_prune_refuse_…`, which §2 also
+     keeps. The log records this as deviation 12.
+   - `TestTheLayerImportsNoClient` passes. It is a deny-list, as the prompt specifies. It forbids
+     `config.datastore`, `config.sharding`, every `ObjectFactories` module but the package and
+     `base`, and `ComputeTargets`, `CosmologyConcepts` and `CosmologyModels`. Its comment names
+     `MetadataConcepts` and `utilities` as the two allowed, and why.
+3. **E1, E2, by `ast`, against the pre-images, docstrings stripped.**
+   - `Datastore.py`: only `__init__` and `_open_read_only` change, and `_drop_actions` becomes
+     `_drop_tables`. The factory imports, `_factories`, `_drop_actions` and `_drop_order` are gone.
+   - `ShardedPool.py`:
+     - changed: exactly the note's eight functions, each by `self._factories`, the actor
+       arguments and `drop_tables` only;
+     - new: `factories` and `_refuse_undeclared_drop_tables`;
+     - every other function dumps identically.
+   - `schema.py`: only `drop_order` is new.
+   - `store_reader.py`: `open_read_only` and `ReadOnlyStore` change, and `_read_replicated_tables`
+     is new. `store_inventory.py`: only `read_inventory` changes.
+   - `ClientPool.py`: only `SerialPoolManager.__init__` and `lease_serial` change.
+   - `config/datastore.py`, in-process against the pre-images:
+     - `factories` has the 38 keys of `_factories` in the same order, each `is` the same class;
+     - `serial_batch_sizes` equals `_default_serial_batch_size`, in order;
+     - `drop_groups` has each group's tables unchanged, and its keys in the pre-image `main.py`'s
+       `allowed_drop_actions` order;
+     - `ray.cloudpickle` round-trips `factories` (2936 bytes) to the same classes, without
+       `ray.init`.
+   - The callers change only the lines the prompt names.
+4. **E4, the tests, by `ast`.**
+   - No method is gone but the three `TestDropOrder` renames. The fourth conversion keeps its name.
+   - The ten import-only modules differ only in the import.
+   - Every other changed method is one the plan names, changed only by the registry argument,
+     `drop_tables` or the `SimpleNamespace`.
+   - The twenty new methods are all in `test_layer_registry.py`, and the log names each.
+   - Deviation 1 is right. With `drop_order` patched to the identity, `["tk-wkb", "tk-numeric"]`
+     is a valid drop on `TestDropOrder`'s store, which holds no value rows. Only the other order
+     pins that the actor sorts.
+5. **E2, by reading and running.** `test_layer_registry.py` was read in full.
+   - Each refusal asserts the exception, the names, and unchanged checksums or file state.
+   - The pool refusals also assert that no stand-in actor was constructed and no engine made.
+   - The full-store drop runs with `PRAGMA foreign_keys = ON` and asserts `foreign_key_check` is
+     empty.
+   - The module (20 tests), and the changed tests with `TestDropOrder` (25 tests): OK.
+6. **E3, by running.** 260 tests, OK: `test_store_schema`, `test_reconcile_at_open`,
+   `test_version_row_at_open`, `test_prune_at_open`, `test_replicated_write`, `test_read_only_pool`,
+   `test_store_inventory`, `test_inventory_report`, `test_inventory_consumers`, `test_store_reader`,
+   RunRegistry's `test_store_fingerprint` and ComputeTargets' `test_reader_read_only`.
+7. **E5, the pins.** The five diffs were extracted from the log and replayed with `git apply` in
+   `bash`, each against its named tests:
+   - (i): errors=3, the full-store drop on both shards and `test_the_derived_order_drops_both`;
+   - (ii): failures=1, `test_the_inventory_compares_exactly_the_recorded_classes`;
+   - (iii): failures=2, both sub-tests of the read-write refusal;
+   - (iv): failures=1, the batch-size test;
+   - (v): failures=2, the reader and inventory sub-tests.
+
+   The tree was clean after each `git apply -R`.
+8. **The probe**, from the scratchpad, at `19f07ee` and at the export of `154d868`:
+   - **The fingerprint** of `build_full_store`, with `taken` removed, is byte-identical (`cmp`):
+     digest `6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759`, problems `{}`.
+     So are the full inventory and `build_real_store`'s fingerprint and inventory.
+   - **`main.py`** on a `build_full_store` primary gives byte-identical stdout and stderr at both
+     trees:
+     - `--inventory`: 14835 bytes, exit 0;
+     - `--inventory --drop gk-source`: exit 2;
+     - `--drop nonsense`: exit 2;
+     - `--help`: the same.
+
+     The store's checksums were unchanged throughout.
+   - **`python -m RunRegistry store fingerprint`**: the same digest and exit 0 at both trees. Its
+     output is identical apart from the `taken` and git lines, and the runs root stayed empty.
+   - **A full drop on stand-in shards** (`measure-06/scripts/m3b_pool_drop.py`): `sqlite_master`,
+     the row counts and `foreign_key_check` are identical (`cmp`). `19f07ee` prints 25 drop lines
+     per shard, where `154d868` printed 10.
+   - **Imports** (`m5_imports.py`, `ShardedPool`):
+     - at `154d868`: 22 `ObjectFactories` modules, 21 `ComputeTargets`, 3 `CosmologyConcepts`,
+       11 `CosmologyModels` and 6 `MetadataConcepts`;
+     - at `19f07ee`: the package and `base`, no compute target, 6 `MetadataConcepts`, and
+       `config` with `config.defaults`.
+9. **E6.**
+   - `[07-drop-actions-list-a-parent-table-before-its-children]` is in `datastore-integrity`'s §4,
+     with a dated "Closed (2026-10-06, prompt 06 of `prompts/datastore-generic`)" line, and its
+     index row is gone.
+   - The generic-layer issue has a dated "Narrowed" line naming rows 9, 10, 11 and 14, and its
+     index hook says so.
+   - The index holds 107 by counting, matching its header.
+   - §1, G1–G3 and §5.7 are written.
+10. **Suites**, serially at `19f07ee`, load 4–6:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280, OK;
+    - ComputeTargets 693, OK;
+    - Datastore 664 (644 + 20; 122 + 151 + 200 + 191), OK.
+
+    The agent's one ComputeTargets failure was `test_wall_time_per_object`, at load ~23; it did
+    not recur here. `black --check` is clean on the 50 Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `19f07ee` in §1, §3, §5.7, the log and the `datastore-integrity` board's
+  closing line.
+- Five imports were unused before 06, in modules 06 edits, and are removed:
+  - `redshift` and `wavenumber_exit_time` in `test_exact_identity_lookups`;
+  - `ClassInventory` in `test_inventory_report_labels`;
+  - `Optional` in `test_read_path_mechanics`;
+  - `tolerance` in `main.py`.
+- This board's note list marks `orchestrator/prompt-06.md` used.
+
+These were verified at the follow-up: Datastore 664, RunRegistry 280 and ComputeTargets 693, all
+OK; `black --check` clean; and `main.py --inventory` and `--help` byte-identical to `154d868`'s
+again.
+
+*Kept as is.*
+- Grep 3's and grep 5's matches, explained above.
+- The import test is a deny-list. It does not pin that `LiouvilleGreen`, `AdaptiveLevin` and
+  `Units` are no longer loaded, though they are not (the log's lists). 09's guard generalises it.
+- Both reader refusals name the primary twice, as the reader's existing "records no shards" does.
+
+*Handed on.* **07**'s note must carry:
+- `ShardedPool._recompute_validated` still names `BackgroundModel`, through
+  `self._factories["BackgroundModel"]` (C1 row 6).
+- `ShardedPool` and `store_reader` still load `MetadataConcepts`, through `store_tag` (C1 row 1,
+  U4). `test_layer_registry`'s import test allows it only by not forbidding it; its comment names
+  it. 07 should add `MetadataConcepts` to `FORBIDDEN_PACKAGES` once the import is gone.
+- The registry now arrives through `ShardedPool(…, *, factories, serial_batch_sizes=None)`.
+  - A fact 07 declares in a factory's `register()` reaches the pool through
+    `build_schema(…, self._factories).records`.
+  - It reaches the reader and the inventory through their `factories` arguments.
+- `schema.drop_order` orders any set of tables by their foreign keys. F1's copy-as-a-unit rule can
+  derive from the same keys.
+- The `docs/` scripts of the prompt's §6 no longer run at `HEAD`. They are records, run at the SHA
+  that wrote them.
+- `read_inventory` raises `KeyError` if its registry lacks a name in `INVENTORY_CLASSES`. That list
+  is C1 row 12, prompt 08's.
+- The pool's undeclared-drop check is the only guard before a store opens. Without it, a new store
+  given an unknown drop table is created silently (log, breakage (iii)).
+
 ---
 
 ## 2. Items
@@ -778,7 +948,7 @@ fingerprint digest again.
     replication-time treatment is another special case in the pool. No wrong result.
   - **Next step.** Prompts 06–08, then 09's guard.
   - **Assigned (2026-10-04):** prompts 06–09.
-  - **Narrowed (2026-10-06, prompt 06; this commit):** audit C1 rows 9, 10, 11 and 14 are gone.
+  - **Narrowed (2026-10-06, prompt 06; `19f07ee`):** audit C1 rows 9, 10, 11 and 14 are gone.
     The layer imports no registry: `ShardedPool`, the `Datastore` actor, `open_read_only` and
     `read_inventory` are given `factories`; the pool and the actor are given `serial_batch_sizes`
     (`ClientPool` holds no table of them) and the tables to drop (`drop_tables`), which the actor
@@ -1069,7 +1239,7 @@ modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four co
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |
 
-### 5.7 After prompt 06 (2026-10-06, this commit)
+### 5.7 After prompt 06 (2026-10-06, `19f07ee`)
 
 Measured serially on the staged tree, at load 7–27. The Datastore suite was run in four groups of
 modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 122, 151,

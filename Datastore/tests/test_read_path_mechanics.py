@@ -37,7 +37,6 @@ tag -- are stand-ins carrying only the ``.store_id`` a factory reads off them, e
 
 import unittest
 from datetime import datetime
-from typing import Optional
 
 import sqlalchemy as sqla
 
