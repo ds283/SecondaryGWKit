@@ -55,6 +55,7 @@ from Datastore.tests.real_store_fixtures import (
     full_rows,
     relabel_serials,
 )
+from config.datastore import factories as _factories
 
 REPO_ROOT = Path(RunRegistry.REPO_ROOT)
 GOLDEN = (
@@ -129,7 +130,7 @@ class _FullStores(unittest.TestCase):
         cls._tmp = tempfile.TemporaryDirectory()
         cls.top = Path(cls._tmp.name).resolve()
         cls._count = 0
-        cls.baseline_inventory = read_inventory(cls.store().primary)
+        cls.baseline_inventory = read_inventory(cls.store().primary, _factories)
         cls.baseline = fingerprint_of(cls.baseline_inventory)
 
     @classmethod
@@ -145,7 +146,7 @@ class _FullStores(unittest.TestCase):
 
     @classmethod
     def fingerprint(cls, **kwargs):
-        return fingerprint_of(read_inventory(cls.store(**kwargs).primary))
+        return fingerprint_of(read_inventory(cls.store(**kwargs).primary, _factories))
 
 
 class TestPhysical(_FullStores):
@@ -224,7 +225,8 @@ class TestLocalised(_FullStores):
                         f"DELETE FROM {QSI}_tags WHERE parent_serial = 3",
                     ]
                 }
-            ).primary
+            ).primary,
+            _factories,
         )
         after = self.assertLocalised(
             QSI, inventory, expected_counts={("Run_fixture",): (2, 1)}
@@ -254,7 +256,8 @@ class TestLocalised(_FullStores):
                         f"VALUES ('2026-09-24 12:00:00.000000', 3, 3)"
                     ]
                 }
-            ).primary
+            ).primary,
+            _factories,
         )
         after = self.assertLocalised(
             QSI,
@@ -270,7 +273,8 @@ class TestLocalised(_FullStores):
         inventory = read_inventory(
             self.store(
                 extra_sql={1: ["DELETE FROM TkNumericValue WHERE serial = 24"]}
-            ).primary
+            ).primary,
+            _factories,
         )
         after = self.assertLocalised(TKN, inventory)
         self.assertEqual(
@@ -281,7 +285,8 @@ class TestLocalised(_FullStores):
         inventory = read_inventory(
             self.store(
                 extra_sql={0: [f"UPDATE {TKN} SET validated = 1 WHERE serial = 3"]}
-            ).primary
+            ).primary,
+            _factories,
         )
         self.assertLocalised(TKN, inventory)
 
@@ -311,7 +316,8 @@ class TestNotContent(_FullStores):
                             changed["solver"] += 1
         self.assertTrue(all(n > 0 for n in changed.values()), changed)
         inventory = read_inventory(
-            self.store(replicated=replicated, sharded=sharded, shard_keys=keys).primary
+            self.store(replicated=replicated, sharded=sharded, shard_keys=keys).primary,
+            _factories,
         )
         self.assertEqual(inventory[QSI].earliest_timestamp, stamp)
         after = fingerprint_of(inventory)
@@ -544,7 +550,7 @@ class _FullStoreCase(CommandLineTestCase):
         return primary
 
     def expected(self, primary):
-        return fingerprint_of(read_inventory(primary))
+        return fingerprint_of(read_inventory(primary, _factories))
 
     def store_state(self, primary):
         return file_state(primary.parent)

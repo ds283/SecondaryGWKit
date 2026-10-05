@@ -47,7 +47,7 @@ from typing import Dict, Iterable, List, Mapping, Optional, Tuple
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
 from Datastore.SQL.schema import build_schema
 from Datastore.shard_paths import shard_file_name

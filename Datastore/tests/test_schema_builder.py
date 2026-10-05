@@ -42,7 +42,7 @@ from pathlib import Path
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.schema import build_schema
 from Datastore.tests.schema_description import (
     actor_with_built_schema,

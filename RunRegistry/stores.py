@@ -1451,9 +1451,10 @@ def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) ->
        by `store_id` (read from the sidecar for this check). The one exception is ``taken_by``,
        the `Run` calling this from its finish, which is still `running` because it has not
        finished. A fingerprint of a store being written describes no instant;
-    2. import `read_inventory`, here, so that `import RunRegistry` loads neither ray nor
-       sqlalchemy;
-    3. `read_inventory(primary)`, read-only and with no Ray. A reader refusal comes through;
+    2. import `read_inventory`, and the registry `factories` from `config.datastore`, here, so
+       that `import RunRegistry` loads neither ray nor sqlalchemy;
+    3. `read_inventory(primary, factories)`, given the registry, read-only and with no Ray. A
+       reader refusal comes through;
     4. `fingerprint_of`, with `taken` from `now_iso()`, `git_provenance()` and ``taken_by``'s id;
     5. `read_sidecar`, and `compare_fingerprints` against a registry sidecar's `fingerprint`;
     6. only if ``write``: refuse unless the sidecar is a problem-free registry sidecar, then
@@ -1490,8 +1491,9 @@ def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) ->
 
     # 2, 3. the inventory, read-only
     from Datastore.store_inventory import read_inventory
+    from config.datastore import factories
 
-    inventory = read_inventory(primary)
+    inventory = read_inventory(primary, factories)
 
     # 4. the fingerprint
     provenance = git_provenance()

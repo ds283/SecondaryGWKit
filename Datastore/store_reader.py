@@ -1,11 +1,19 @@
 """
 A read-only reader over a **closed** ShardedPool store.
 
-``open_read_only(primary)`` is a context manager. It finds the store's shards through
+``open_read_only(primary, factories)`` is a context manager. It finds the store's shards through
 ``ShardedPool._read_closed_store`` (the one implementation of reading and checking a primary's
 ``shards`` table), opens every shard file read-only, and builds the tables once with the one schema
-builder, ``Datastore.SQL.schema.build_schema``. It yields a ``ReadOnlyStore``; on exit it disposes
-every engine it made.
+builder, ``Datastore.SQL.schema.build_schema``, from the registry ``factories`` it is given: the
+reader imports no registry (prompts/datastore-generic, prompt 06). It yields a ``ReadOnlyStore``;
+on exit it disposes every engine it made.
+
+**The replicated set is the store's.** Every primary records the classes its pool replicates, in
+its ``replicated_tables`` table, and a pool refuses to open a store whose record differs from what
+it is given. The reader reads that record ``mode=ro`` and yields it as
+``ReadOnlyStore.replicated_tables``, in serial order. A primary whose record cannot be read, or
+names a class ``factories`` does not declare, is refused. An empty record is what the store says,
+and is not refused.
 
 **It cannot write.** It is not "careful"; it has no write path:
 
@@ -19,8 +27,8 @@ every engine it made.
 - there is no ``create_all``, no ``Datastore._ensure_tables``, no DDL and no DML.
 
 **It needs no Ray.** It never calls ``ray.init`` and never constructs a ``Datastore`` actor or a
-``ShardedPool``. Importing this module imports ``ray`` transitively, through the factory map in
-``Datastore/SQL/Datastore.py`` and through ``ShardedPool``; that initialises nothing.
+``ShardedPool``. Importing this module imports ``ray`` transitively, through ``ShardedPool``; that
+initialises nothing.
 
 **A store whose files differ from the declared tables is refused.** Every shard file is compared
 with the tables ``build_schema`` declares by ``Datastore.SQL.schema.schema_differences``, before
@@ -33,13 +41,13 @@ recover: a store written by older code is regenerated, not read.
 
 import contextlib
 import os
+import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator, Mapping, Tuple, Union
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
 from Datastore.SQL.ShardedPool import ShardedPool
 from Datastore.SQL.schema import (
     StoreSchemaMismatch,
@@ -70,12 +78,14 @@ class ReadOnlyShard:
 
 @dataclass(frozen=True)
 class ReadOnlyStore:
-    """A closed store opened read-only: its primary, and its shards in serial order."""
+    """A closed store opened read-only: its primary, its shards in serial order, and the classes
+    its primary records as replicated, in the order of their serials."""
 
     primary: Path
     shards: Tuple[ReadOnlyShard, ...]
     tables: Mapping[str, sqla.Table]
     records: Mapping[str, Mapping]
+    replicated_tables: Tuple[str, ...]
 
     def shard(self, serial: int) -> ReadOnlyShard:
         for shard in self.shards:
@@ -130,15 +140,53 @@ def _describe_shard(
     return ReadOnlyShard(serial=serial, path=path, engine=engine, tables=tables)
 
 
+def _read_replicated_tables(primary: Path, factories: Mapping) -> Tuple[str, ...]:
+    """
+    The class names the primary's ``replicated_tables`` table records, in serial order, read
+    ``mode=ro``. Refuses (``_refuse``) a primary whose table cannot be read, naming the table and
+    the error, and one that names a class ``factories`` does not declare. An empty record is
+    returned as it is.
+    """
+    try:
+        conn = sqlite3.connect(f"{primary.as_uri()}?mode=ro", uri=True)
+        try:
+            rows = conn.execute(
+                'SELECT serial, "table" FROM replicated_tables ORDER BY serial'
+            ).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error as e:
+        raise _refuse(
+            primary,
+            f'the replicated_tables table of the primary "{str(primary)}" could not be read '
+            f"({e})",
+        ) from e
+
+    names = tuple(row[1] for row in rows)
+    undeclared = [name for name in names if name not in factories]
+    if len(undeclared) > 0:
+        raise _refuse(
+            primary,
+            f'the replicated_tables table of the primary "{str(primary)}" names the class(es) '
+            f"{undeclared}, which the registry it was given does not declare",
+        )
+    return names
+
+
 @contextlib.contextmanager
-def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
+def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlyStore]:
     """
     Open the closed store whose primary is ``primary``, read-only, and yield a ``ReadOnlyStore``.
+
+    ``factories`` is the registry of storable classes (name -> factory) the tables are built from.
+    ``ReadOnlyStore.replicated_tables`` is what the primary records, not anything ``factories``
+    says.
 
     Refuses with ``RuntimeError``, naming the file, before any shard is opened, if: the primary is
     missing, not a regular file or a symbolic link; the primary or any shard has a journal file
     beside it; the primary's ``shards`` table cannot be read, or names a shard that is unusable
-    (``ShardedPool._read_closed_store``); or the primary records no shards.
+    (``ShardedPool._read_closed_store``); the primary records no shards; or its
+    ``replicated_tables`` table cannot be read, or names a class ``factories`` does not declare.
 
     Refuses with ``StoreSchemaMismatch`` (a ``RuntimeError``), naming the shard, before anything
     reads its tables and before anything is yielded, if a shard's file differs from the tables
@@ -164,7 +212,9 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
     for serial, path in sorted(files.items()):
         _refuse_journals(primary_path, Path(path), f"shard #{serial}")
 
-    built = build_schema(sqla.MetaData(), _factories)
+    replicated = _read_replicated_tables(primary_path, factories)
+
+    built = build_schema(sqla.MetaData(), factories)
 
     engines = []
     try:
@@ -181,6 +231,7 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
             shards=tuple(shards),
             tables=built.tables,
             records=built.records,
+            replicated_tables=replicated,
         )
     finally:
         for engine in engines:

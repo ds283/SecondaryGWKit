@@ -161,10 +161,10 @@ def _plural(n: int, word: str) -> str:
 
 
 def _schema_tables() -> Mapping[str, sqla.Table]:
-    from Datastore.SQL.Datastore import _factories
     from Datastore.SQL.schema import build_schema
+    from config.datastore import factories
 
-    return build_schema(sqla.MetaData(), _factories).tables
+    return build_schema(sqla.MetaData(), factories).tables
 
 
 class _Renderer:

@@ -154,12 +154,13 @@ def available_run_labels(pool) -> List[str]:
     The names of the runs this datastore holds, in sorted order.
 
     They are read from the ``store_tag`` class of the structured inventory,
-    ``Datastore.store_inventory.read_inventory(pool.primary)``, which reads that replicated class
-    from **every** shard and compares the copies. This needs no lookup key and no knowledge of what
-    the store contains -- which is the property that makes the "exactly one run" case answerable
-    without the user saying anything. The answer is every ``Run_`` label in ``store_tag``,
-    including one that no record carries: whether a run with no products counts is a question
-    about run identity, not about the inventory.
+    ``Datastore.store_inventory.read_inventory(pool.primary, pool.factories)`` (the registry the
+    pool was given), which reads that replicated class from **every** shard and compares the
+    copies. This needs no lookup key and no knowledge of what the store contains -- which is the
+    property that makes the "exactly one run" case answerable without the user saying anything.
+    The answer is every ``Run_`` label in ``store_tag``, including one that no record carries:
+    whether a run with no products counts is a question about run identity, not about the
+    inventory.
 
     **A problem in the ``store_tag`` class is a refusal** (``RuntimeError``, naming it): if the
     copies diverge across shards, which runs the store holds is ambiguous. Problems in other
@@ -171,7 +172,7 @@ def available_run_labels(pool) -> List[str]:
     ``object_get``. The reader opens every file read-only and refuses a store with a journal file
     beside it, which still guards the case where something is writing.
     """
-    inventory = read_inventory(pool.primary)
+    inventory = read_inventory(pool.primary, pool.factories)
     store_tag = inventory["store_tag"]
 
     if len(store_tag.problems) > 0:

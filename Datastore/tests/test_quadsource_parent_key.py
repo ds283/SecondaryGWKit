@@ -65,6 +65,7 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
     _Ref,
     Z_EXIT,
 )
+from config.datastore import factories as _factories
 
 Q_EXIT = _exit_time(serial=11, z_exit=Z_EXIT)
 R_EXIT = _exit_time(serial=12, z_exit=2.0 * Z_EXIT)
@@ -336,7 +337,8 @@ def read_the_store(replicated, sharded, keys):
         return read_inventory(
             build_full_store(
                 directory, replicated=replicated, sharded=sharded, shard_keys=keys
-            ).primary
+            ).primary,
+            _factories,
         )
 
 

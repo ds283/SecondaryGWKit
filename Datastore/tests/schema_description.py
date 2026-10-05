@@ -187,7 +187,9 @@ def actor_with_built_schema():
     cls = datastore_module.Datastore.__ray_metadata__.modified_class
     actor = object.__new__(cls)
     actor._factories = {}
-    actor.register_factories(datastore_module._factories)
+    from config.datastore import factories
+
+    actor.register_factories(factories)
     actor._metadata = sqla.MetaData()
     actor._tables = {}
     actor._inserters = {}

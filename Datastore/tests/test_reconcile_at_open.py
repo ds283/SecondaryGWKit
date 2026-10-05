@@ -46,6 +46,7 @@ import ray
 from Datastore.SQL.schema import StoreSchemaMismatch
 from Datastore.replication import ReplicatedDivergence, ReplicationMismatch
 from Datastore.tests import standin_pool as sp
+from config.datastore import tables_to_drop
 from config.sharding import replicated_tables
 
 # every table the check compares: the replicated classes and BackgroundModel's tag table
@@ -1055,8 +1056,8 @@ class TestHotJournal(_ReconcileTestCase):
 class TestPruningAfterRepair(_ReconcileTestCase):
     """prune_unvalidated runs after the check: for a replicated class in the pool, under a prune
     record, before any actor exists (prompts/a3-v2-readiness prompt 02), and for a sharded class
-    inside each actor; drop_actions run inside each actor. Every shard is identical by then, so
-    they act identically."""
+    inside each actor; drop_tables are dropped inside each actor. Every shard is identical by
+    then, so they act identically."""
 
     def test_an_interrupted_validate(self):
         for prune in (True, False):
@@ -1103,7 +1104,9 @@ class TestPruningAfterRepair(_ReconcileTestCase):
                 with quiet():
                     self.reopen(
                         prune_unvalidated=prune,
-                        drop_actions=["gk-source", "gk-source-policy-records"],
+                        drop_tables=tables_to_drop(
+                            ["gk-source", "gk-source-policy-records"]
+                        ),
                     )
                 self.assertNoRecord()
                 self.assertIdentical()

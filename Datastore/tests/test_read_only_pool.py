@@ -21,7 +21,7 @@ and not inferred; and the connection test records what every connection is opene
    no file changed: ``store_tag``, ``LambdaCDM``, ``QCD_Cosmology``, ``tolerance``,
    ``GkSourcePolicy``.
 3. Each other write raises ``ReadOnlyWrite``: ``object_store``, ``object_validate``, a new shard
-   key, a vectorized get that reaches an inserter, ``drop_actions``, ``prune_unvalidated=True``,
+   key, a vectorized get that reaches an inserter, ``drop_tables``, ``prune_unvalidated=True``,
    and the backstop (a hit that writes a flag, refused by the ``mode=ro`` file).
 4. At open: a missing primary; an empty and a hot journal beside a shard; a primary holding a
    record (a ``get`` and a ``prune``); an absent version label; diverged shards; a shard lacking a
@@ -51,6 +51,7 @@ import sqlalchemy as sqla
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.schema import StoreSchemaMismatch
 from Datastore.tests import standin_pool as sp
+from config.datastore import factories
 from config.defaults import DEFAULT_QUADRATURE_RTOL
 from config.sharding import (
     read_table_config,
@@ -212,6 +213,7 @@ class _ReadOnlyTestCase(unittest.TestCase):
                 sharded_tables=sharded_tables,
                 shards=3,
                 read_table_config=read_table_config,
+                factories=factories,
                 **kwargs,
             )
         self.cluster.pool = pool
@@ -618,7 +620,7 @@ class TestOtherWritesRaiseReadOnlyWrite(_ReadOnlyTestCase):
         # primary's, so it came first; nothing was created
         missing = self.root / "nowhere" / "store.sqlite"
         for kwargs, what in (
-            ({"drop_actions": ["gk-source-policy"]}, "drop_actions"),
+            ({"drop_tables": ["GkSourcePolicyData"]}, "drop_tables"),
             ({"prune_unvalidated": True}, "prune_unvalidated=True"),
         ):
             with self.subTest(what=what):
@@ -633,7 +635,7 @@ class TestOtherWritesRaiseReadOnlyWrite(_ReadOnlyTestCase):
         primary = self.copy()
         before = sp.store_checksums(primary)
         for kwargs in (
-            {"drop_actions": ["gk-source-policy"]},
+            {"drop_tables": ["GkSourcePolicyData"]},
             {"prune_unvalidated": True},
         ):
             with self.assertRaises(ReadOnlyWrite):

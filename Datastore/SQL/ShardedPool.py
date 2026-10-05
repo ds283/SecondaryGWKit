@@ -5,13 +5,13 @@ import shutil
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List, Dict, Callable, NamedTuple, Tuple
+from typing import Optional, List, Dict, Callable, Mapping, NamedTuple, Tuple
 
 import ray
 import sqlalchemy as sqla
 
 from Datastore.SQL import Datastore
-from Datastore.SQL.Datastore import PathType, ReadTableConfigType, _factories
+from Datastore.SQL.Datastore import PathType, ReadTableConfigType
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
 from Datastore.SQL.schema import (
@@ -105,9 +105,12 @@ class ShardedPool:
         profile_agent: Optional[ProfileAgent] = None,
         job_name: Optional[str] = None,
         prune_unvalidated: Optional[bool] = False,
-        drop_actions: Optional[List[str]] = None,
+        drop_tables: Optional[List[str]] = None,
         read_table_config: Optional[ReadTableConfigType] = None,
         read_only: bool = False,
+        *,
+        factories: Mapping,
+        serial_batch_sizes: Optional[Mapping[str, int]] = None,
     ) -> None:
         """
         Initialize a pool of datastore actors
@@ -117,11 +120,31 @@ class ShardedPool:
         :param version_label:
         :param read_only: open an existing store read-only, writing nothing to any of its files
             (prompts/a3-v2-readiness, prompt 03; _open_read_only)
+        :param drop_tables: the tables every actor drops when it opens an existing store, in
+            any order: each actor drops them in the order ``schema.drop_order`` derives from their
+            foreign keys. A read-only pool refuses any (``ReadOnlyWrite``); a read-write pool
+            refuses a name ``factories`` does not declare as a table, before anything is opened
+        :param factories: the registry of storable classes, name -> factory, which the client owns
+            and gives (prompts/datastore-generic, prompt 06). The pool, its actors and the reader
+            build every table from it; the layer imports none. Required, by keyword
+        :param serial_batch_sizes: table name -> how many serials an actor leases from the broker
+            at a time, given to every actor; a table it does not name leases
+            ``SerialPoolManager``'s default
         """
         self._job_name: Optional[str] = job_name
         self._version_label: str = version_label
 
         self._prune_unvalidated: Optional[List[str]] = prune_unvalidated
+
+        ## THE CLIENT'S REGISTRY
+
+        self._factories: Mapping = dict(factories)
+        self._serial_batch_sizes: Optional[Mapping[str, int]] = (
+            dict(serial_batch_sizes) if serial_batch_sizes is not None else None
+        )
+        self._drop_tables: Optional[List[str]] = (
+            list(drop_tables) if drop_tables is not None else None
+        )
 
         ## SHARDING CONFIGURATION
 
@@ -178,8 +201,12 @@ class ShardedPool:
         # construction, and nothing below this block runs for it
         self._read_only: bool = bool(read_only)
         if self._read_only:
-            self._open_read_only(version_label, drop_actions, read_table_config)
+            self._open_read_only(version_label, drop_tables, read_table_config)
             return
+
+        # a drop table the registry does not declare is refused before the primary is created or
+        # opened
+        self._refuse_undeclared_drop_tables()
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -273,12 +300,14 @@ class ShardedPool:
                 version_label=version_label,
                 db_name=self._shard_db_files[key],
                 replicated_tables=list(self._replicated_tables),
+                factories=self._factories,
+                serial_batch_sizes=self._serial_batch_sizes,
                 timeout=self._timeout,
                 my_name=f"shard{key:04d}-store",
                 serial_broker=self._broker,
                 profile_agent=self._profile_agent,
                 prune_unvalidated=self._prune_unvalidated,
-                drop_actions=drop_actions,
+                drop_tables=self._drop_tables,
                 read_table_config=read_table_config,
             )
             for key in shard_ids
@@ -370,13 +399,17 @@ class ShardedPool:
     # after the attributes are set; the read-write path does not reach it. At open, in order (the
     # audit's M1 table, row by row, is in the prompt's log):
     #
-    #   1. drop_actions or prune_unvalidated=True: ReadOnlyWrite, before anything is opened;
+    #   1. drop_tables or prune_unvalidated=True: ReadOnlyWrite, before anything is opened;
     #   2. store_reader.open_read_only, through a function-scope import (store_reader imports this
     #      module): a missing primary is refused and nothing is created, not even its directory; a
     #      journal (-journal, -wal, -shm) beside the primary or any shard is refused by its
     #      presence, an empty one included, before any engine is made; every shard is opened
     #      mode=ro, and a shard whose file differs from the declared tables (a table it lacks
-    #      included) is refused with StoreSchemaMismatch, before anything reads its tables;
+    #      included) is refused with StoreSchemaMismatch, before anything reads its tables. The
+    #      reader also reads the primary's replicated_tables record (prompts/datastore-generic,
+    #      prompt 06), so a primary whose record cannot be read, or names a class the registry
+    #      does not declare, is refused here with the reader's RuntimeError, before step 3's check
+    #      of the primary;
     #   3. the pool's own engine is mode=ro; the primary is refused with StoreSchemaMismatch if it
     #      differs from the tables _create_engine declares, and then _read_shard_data and
     #      _check_shard_files run on it as they do read-write;
@@ -399,14 +432,14 @@ class ShardedPool:
     # object_validate and a new shard key raise ReadOnlyWrite; the actors' inserters raise
     # ReadOnlyMiss.
 
-    def _open_read_only(self, version_label: str, drop_actions, read_table_config):
+    def _open_read_only(self, version_label: str, drop_tables, read_table_config):
         """The read-only constructor (the comment above). Writes nothing to any file."""
         # 1. refused before anything is opened
-        if drop_actions is not None and len(list(drop_actions)) > 0:
+        if drop_tables is not None and len(list(drop_tables)) > 0:
             raise ReadOnlyWrite(
                 self._primary_file,
-                f"drop_actions={sorted(drop_actions)}",
-                detail="a drop action drops tables",
+                f"drop_tables={sorted(drop_tables)}",
+                detail="dropping a table is a write",
             )
         if self._prune_unvalidated:
             raise ReadOnlyWrite(
@@ -420,8 +453,9 @@ class ShardedPool:
 
         # 2. store_reader's refusals, through its code: missing primary, journals by presence,
         # the shards table read mode=ro and its files checked, and a shard whose file differs from
-        # the declared tables. It is entered only for these refusals: nothing it yields is kept
-        with open_read_only(self._primary_file):
+        # the declared tables, and the replicated_tables record read. It is entered only for these
+        # refusals: nothing it yields is kept
+        with open_read_only(self._primary_file, self._factories):
             pass
 
         # 3. the pool's engine, mode=ro. _create_engine builds the tables this pool reads; the
@@ -469,12 +503,14 @@ class ShardedPool:
                 version_label=version_label,
                 db_name=self._shard_db_files[key],
                 replicated_tables=list(self._replicated_tables),
+                factories=self._factories,
+                serial_batch_sizes=self._serial_batch_sizes,
                 timeout=self._timeout,
                 my_name=f"shard{key:04d}-store",
                 serial_broker=None,
                 profile_agent=self._profile_agent,
                 prune_unvalidated=False,
-                drop_actions=None,
+                drop_tables=None,
                 read_table_config=read_table_config,
                 read_only=True,
             )
@@ -536,7 +572,7 @@ class ShardedPool:
                 "record was not cleared",
             )
 
-        built = build_schema(sqla.MetaData(), _factories)
+        built = build_schema(sqla.MetaData(), self._factories)
         specs = self._replicated_table_specs(built)
         reconciliation["compared"] = [spec["name"] for spec in specs]
 
@@ -618,6 +654,25 @@ class ShardedPool:
             operation,
             class_name=", ".join(sorted({type(item).__name__ for item in items})),
         )
+
+    @property
+    def factories(self) -> Mapping:
+        """The registry of storable classes this pool was given (read-only: a copy)."""
+        return dict(self._factories)
+
+    def _refuse_undeclared_drop_tables(self) -> None:
+        """Refuse a drop table the registry does not declare as a table, naming it, before the
+        primary is created or opened. Read-write only: a read-only pool has already refused any
+        drop table with ``ReadOnlyWrite`` (``_open_read_only``, step 1)."""
+        if not self._drop_tables:
+            return
+        declared = build_schema(sqla.MetaData(), self._factories).tables
+        undeclared = [name for name in self._drop_tables if name not in declared]
+        if len(undeclared) > 0:
+            raise RuntimeError(
+                f'Cannot open sharded datastore "{str(self._primary_file)}": cannot drop '
+                f"{undeclared}, which the registry does not declare as tables. Nothing was opened"
+            )
 
     @property
     def primary(self) -> Path:
@@ -1044,7 +1099,7 @@ class ShardedPool:
                 f'>> Rolled back the journal left beside "{path}" before comparing the replicated tables'
             )
 
-        built = build_schema(sqla.MetaData(), _factories)
+        built = build_schema(sqla.MetaData(), self._factories)
 
         # 1b. every shard holds the declared tables with exactly their declared columns, or the
         # store is refused by name, before the record is read and before anything is compared or
@@ -1840,7 +1895,7 @@ class ShardedPool:
         is written False. A shard holding True whose rule gives False refuses. Return (actions,
         refusals); whether the shards then agree is for the second comparison.
         """
-        factory = _factories["BackgroundModel"]
+        factory = self._factories["BackgroundModel"]
         table = built.tables["BackgroundModel"]
         serial = record["store_id"]
 
@@ -2002,7 +2057,7 @@ class ShardedPool:
         """Whether any shard holds a row of ``cls_name`` that its factory calls unvalidated,
         read by the factory's own validate_on_startup with prune=False. Writes nothing.
         """
-        factory = _factories[cls_name]
+        factory = self._factories[cls_name]
         table = built.tables[cls_name]
         for sid in shard_ids:
             engine = self._reconcile_engine(self._shard_db_files[sid])
@@ -2034,7 +2089,7 @@ class ShardedPool:
             # a shard without the table holds nothing to prune; an actor creates it empty
             return [], []
 
-        factory = _factories[cls_name]
+        factory = self._factories[cls_name]
         table = built.tables[cls_name]
         unit = self._prune_unit(cls_name, built, specs)
         path = self._shard_db_files[sid]
@@ -2151,7 +2206,7 @@ class ShardedPool:
         its own "prune" record (the comment above). Return what was deleted, one entry per table
         and shard. Called only under prune_unvalidated.
         """
-        built = build_schema(sqla.MetaData(), _factories)
+        built = build_schema(sqla.MetaData(), self._factories)
         specs = self._replicated_table_specs(built)
         shard_ids = sorted(self._shard_db_files.keys())
 

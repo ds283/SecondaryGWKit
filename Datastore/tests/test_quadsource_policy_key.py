@@ -54,6 +54,7 @@ from Datastore.tests.test_integral_read_batch import (
     _Ref,
 )
 from MetadataConcepts import QuadSourcePolicy, store_tag, tolerance
+from config.datastore import factories as _factories
 
 ATOL = tolerance(store_id=1, log10_tol=-10.0)
 RTOL = tolerance(store_id=2, log10_tol=-9.0)
@@ -377,7 +378,7 @@ class TestTheInventoryIdentityIncludesIt(unittest.TestCase):
         store = rsf.build_full_store(
             directory, replicated=replicated, sharded=sharded, shard_keys=keys
         )
-        return read_inventory(store.primary)
+        return read_inventory(store.primary, _factories)
 
     def test_the_key_carries_the_policy(self):
         records = self.read_the_store(2)["QuadSourceIntegral"].records

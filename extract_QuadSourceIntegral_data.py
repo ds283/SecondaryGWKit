@@ -49,6 +49,7 @@ from config.defaults import (
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADSOURCE_POLICY_1PT5,
 )
+from config.datastore import factories
 from config.model_list import build_model_list
 from config.sharding import (
     replicated_tables,
@@ -1302,6 +1303,7 @@ with ShardedPool(
     job_name="extract_QuadSourceIntegral_data",
     read_only=True,
     read_table_config=read_table_config,
+    factories=factories,
 ) as pool:
 
     # which run is being read? Every lookup below selects on it, so it is resolved once, before

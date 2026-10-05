@@ -53,7 +53,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories import OneLoopIntegral as OLI_module
 from Datastore.SQL.ObjectFactories.OneLoopIntegral import sqla_OneLoopIntegral_factory
 from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (

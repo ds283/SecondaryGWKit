@@ -50,6 +50,7 @@ from Datastore.tests.real_store_fixtures import (
     relabel_serials,
     vary_row,
 )
+from config.datastore import factories as _factories
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FACTORIES = REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories"
@@ -322,7 +323,7 @@ class _Stores(unittest.TestCase):
 
     @classmethod
     def inventory(cls, **kwargs):
-        return read_inventory(cls.store(**kwargs).primary)
+        return read_inventory(cls.store(**kwargs).primary, _factories)
 
     def varied(self, table, serial, column, value, **kwargs):
         replicated, sharded, keys = full_rows()
@@ -502,7 +503,7 @@ class TestNonIdentityDoesNotMatter(_Stores):
 
 
 def store_inventory_tables():
-    from Datastore.SQL.Datastore import _factories
+    from config.datastore import factories as _factories
     from Datastore.SQL.schema import build_schema
 
     return build_schema(sqla.MetaData(), _factories).tables
@@ -761,7 +762,7 @@ class TestValueCounts(_Stores):
         store = self.store()
         sqla.event.listen(sqla.engine.Engine, "before_cursor_execute", capture)
         try:
-            read_inventory(store.primary)
+            read_inventory(store.primary, _factories)
         finally:
             sqla.event.remove(sqla.engine.Engine, "before_cursor_execute", capture)
 
@@ -1028,7 +1029,7 @@ class TestReadOnlyAndNoRay(_Stores):
     def test_read_inventory_writes_nothing(self):
         store = self.store()
         before = file_state(store.directory)
-        inventory = read_inventory(store.primary)
+        inventory = read_inventory(store.primary, _factories)
         self.assertGreater(inventory["QuadSourceIntegral"].count, 0)
         after = file_state(store.directory)
         self.assertEqual(before, after)
@@ -1041,7 +1042,8 @@ class TestReadOnlyAndNoRay(_Stores):
         code = (
             "import json, sys\n"
             "from Datastore.store_inventory import read_inventory\n"
-            "inventory = read_inventory(sys.argv[1])\n"
+            "from config.datastore import factories\n"
+            "inventory = read_inventory(sys.argv[1], factories)\n"
             "import ray\n"
             "print(json.dumps({'ray': ray.is_initialized(), "
             "'qsi': inventory['QuadSourceIntegral'].count}))\n"

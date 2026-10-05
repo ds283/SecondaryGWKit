@@ -59,6 +59,7 @@ from Datastore.tests.test_integral_read_batch import (
     _Ref,
 )
 from MetadataConcepts import store_tag, tolerance
+from config.datastore import factories as _factories
 
 ATOL = tolerance(store_id=1, log10_tol=-10.0)
 RTOL = tolerance(store_id=2, log10_tol=-9.0)
@@ -352,7 +353,8 @@ def read_the_store(replicated, sharded, keys):
                 replicated=replicated,
                 sharded=sharded,
                 shard_keys=keys,
-            ).primary
+            ).primary,
+            _factories,
         )
 
 

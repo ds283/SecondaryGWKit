@@ -284,6 +284,7 @@ class StandinCluster:
 
     def open_pool(self, primary: Path, shards: int = 3, **kwargs):
         """Open (or create) a pool on ``primary`` with the production table lists."""
+        from config.datastore import factories
         from config.sharding import (
             replicated_tables,
             sharded_tables,
@@ -291,6 +292,8 @@ class StandinCluster:
             shard_key_wavenumber_store_id,
         )
 
+        # the registry is the client's; a test may give a different one
+        kwargs.setdefault("factories", factories)
         with contextlib.redirect_stdout(io.StringIO()):
             pool = sp_mod.ShardedPool(
                 version_label="standin",
@@ -311,6 +314,7 @@ class StandinCluster:
         ``open_pool`` discards (prompt 02: the check at open prints what it repaired). If the
         constructor raises, what it printed before raising is kept as ``self.last_output``.
         """
+        from config.datastore import factories
         from config.sharding import (
             replicated_tables,
             sharded_tables,
@@ -318,6 +322,8 @@ class StandinCluster:
             shard_key_wavenumber_store_id,
         )
 
+        # the registry is the client's; a test may give a different one
+        kwargs.setdefault("factories", factories)
         out = io.StringIO()
         self.last_output = ""
         try:

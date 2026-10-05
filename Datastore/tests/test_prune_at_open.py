@@ -40,7 +40,7 @@ from unittest import mock
 import ray
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.replication import ReplicatedDivergence
 from Datastore.tests import standin_pool as sp
 from config.sharding import replicated_tables, sharded_tables

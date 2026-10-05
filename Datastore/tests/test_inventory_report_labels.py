@@ -51,6 +51,7 @@ from Datastore.tests.real_store_fixtures import (
     relabel_serials,
 )
 from tools.inventory_report import format_inventory_report
+from config.datastore import factories as _factories
 
 DB_NAME = "the-store.sqlite"
 
@@ -223,7 +224,7 @@ class _Fixture(unittest.TestCase):
     @staticmethod
     def read(directory: Path, kwargs) -> StoreInventory:
         directory.mkdir()
-        return read_inventory(build_full_store(directory, **kwargs).primary)
+        return read_inventory(build_full_store(directory, **kwargs).primary, _factories)
 
 
 def report(

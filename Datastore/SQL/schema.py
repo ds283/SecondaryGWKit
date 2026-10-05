@@ -17,11 +17,16 @@ table_info``, and ``StoreSchemaMismatch`` is the one refusal of a file that diff
 file and each table and column by kind. The store reader, the read-write check at open and both pool
 constructors' check of the primary use them; do not write a second comparison.
 
+**The order of a drop** is here too (prompts/datastore-generic, prompt 06). ``drop_order`` puts a
+set of tables in an order in which each can be dropped while the others are present, derived from
+their foreign keys alone; the actor drops the tables it is given in that order. No order is kept by
+hand.
+
 This module itself imports only ``sqlalchemy``. Importing it runs ``Datastore/SQL/__init__.py``,
 which imports the actor module and so ``ray``; that initialises nothing.
 """
 
-from typing import Any, Dict, Mapping, NamedTuple, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, NamedTuple, Tuple
 
 import sqlalchemy as sqla
 
@@ -140,6 +145,46 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
         records[cls_name] = schema
 
     return BuiltSchema(tables=tables, records=records)
+
+
+def drop_order(tables: Iterable[sqla.Table]) -> List[sqla.Table]:
+    """
+    The given tables in an order in which each can be dropped while the others not yet dropped are
+    present: a table that declares a foreign key into another of the given tables comes before it.
+
+    Derived from the tables' foreign keys alone. A foreign key into a table that is not given, or
+    into the table itself, does not constrain the order. Among the tables free to be dropped next,
+    the one given first comes first, so the order is fixed by the input. A cycle among the given
+    tables has no such order, and raises ``ValueError`` naming the tables on or behind it.
+    """
+    given: List[sqla.Table] = []
+    for table in tables:
+        if table not in given:
+            given.append(table)
+
+    # for each table, the other given tables that declare a foreign key into it: it can be
+    # dropped only once every one of those has been
+    referenced_by: Dict[sqla.Table, set] = {table: set() for table in given}
+    for table in given:
+        for fk in table.foreign_keys:
+            target = fk.column.table
+            if target is not table and target in referenced_by:
+                referenced_by[target].add(table)
+
+    ordered: List[sqla.Table] = []
+    remaining = list(given)
+    while len(remaining) > 0:
+        free = [t for t in remaining if referenced_by[t].isdisjoint(remaining)]
+        if len(free) == 0:
+            raise ValueError(
+                "drop_order: the foreign keys among the tables "
+                f"{[t.name for t in remaining]} form a cycle, so no order drops each while "
+                "the others are present"
+            )
+        ordered.append(free[0])
+        remaining.remove(free[0])
+
+    return ordered
 
 
 class SchemaDifferences(NamedTuple):

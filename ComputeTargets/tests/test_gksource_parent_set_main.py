@@ -37,7 +37,7 @@ from ComputeTargets.GkSource import (
     GkSource_parent_set_of_values,
 )
 from ComputeTargets.tests.test_main_plumbing import MAIN_PY
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkSource import (
     GkSource_parents_digest,
     sqla_GkSource_factory,

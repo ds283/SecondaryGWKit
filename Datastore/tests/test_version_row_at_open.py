@@ -37,7 +37,7 @@ from pathlib import Path
 import ray
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.schema import build_schema
 from Datastore.replication import ReplicatedDivergence
 from Datastore.tests import standin_pool as sp
@@ -113,6 +113,7 @@ class _VersionTestCase(unittest.TestCase):
                 replicated_tables=replicated_tables,
                 sharded_tables=sharded_tables,
                 shards=3,
+                factories=_factories,
                 **kwargs,
             )
         self.cluster.pool = pool
@@ -492,6 +493,7 @@ class TestInsertBeforeSetVersion(_VersionTestCase):
                 version_label="L1",
                 db_name=self.files[0],
                 replicated_tables=list(replicated_tables),
+                factories=_factories,
                 my_name="shard0000-store",
                 serial_broker=broker,
             )

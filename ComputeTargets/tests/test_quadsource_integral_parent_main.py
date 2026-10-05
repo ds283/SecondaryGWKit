@@ -38,7 +38,7 @@ import sqlalchemy as sqla
 
 from ComputeTargets import QuadSourceIntegral
 from ComputeTargets.tests.test_main_plumbing import MAIN_PY
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
 from Datastore.tests.test_quadsource_integral_parent_key import (
     OTHER,

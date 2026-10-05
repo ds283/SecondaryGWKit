@@ -43,7 +43,7 @@ import sqlalchemy as sqla
 
 import ComputeTargets.phase_residual as phase_residual
 from CosmologyConcepts import redshift
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericValue_factory,
 )

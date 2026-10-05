@@ -45,7 +45,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
     sqla_GkNumericValue_factory,

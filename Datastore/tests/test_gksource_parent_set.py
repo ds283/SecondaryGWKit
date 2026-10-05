@@ -71,6 +71,7 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
 from ComputeTargets import GkNumericIntegration
 import ComputeTargets.phase_residual as phase_residual
 from MetadataConcepts import tolerance
+from config.datastore import factories as _factories
 
 K_EXIT = _exit_time(serial=11, z_exit=1.0e8)
 TAG = _Ref(1)
@@ -755,7 +756,7 @@ class TestTheInventoryResolvesTheSet(unittest.TestCase):
         cls._count += 1
         directory = cls.root / f"store-{cls._count}"
         directory.mkdir()
-        return read_inventory(build_full_store(directory, **kwargs).primary)
+        return read_inventory(build_full_store(directory, **kwargs).primary, _factories)
 
     @staticmethod
     def kinds(problems):

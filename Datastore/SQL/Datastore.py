@@ -11,71 +11,9 @@ from ray.actor import ActorHandle
 from sqlalchemy.exc import SQLAlchemyError
 
 from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
-from Datastore.SQL.ObjectFactories.BackgroundModel import (
-    sqla_BackgroundModelFactory,
-    sqla_BackgroundModelTagAssociation_factory,
-    sqla_BackgroundModelValue_factory,
-)
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
-    sqla_GkNumericIntegration_factory,
-    sqla_GkNumericValue_factory,
-    sqla_GkNumericTagAssociation_factory,
-)
-from Datastore.SQL.ObjectFactories.GkSource import (
-    sqla_GkSourceTagAssociation_factory,
-    sqla_GkSource_factory,
-    sqla_GkSourceValue_factory,
-    sqla_GkSourceParents_factory,
-)
-from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
-    sqla_GkSourcePolicyData_factory,
-)
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
-    sqla_GkWKBIntegration_factory,
-    sqla_GkWKBTagAssociation_factory,
-    sqla_GkWKBValue_factory,
-)
-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
-    sqla_OneLoopIntegral_factory,
-    sqla_OneLoopIntegralTagAssociation_factory,
-)
-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
-from Datastore.SQL.ObjectFactories.QuadSource import (
-    sqla_QuadSource_factory,
-    sqla_QuadSourceTagAssocation_factory,
-    sqla_QuadSourceValue_factory,
-)
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
-    sqla_QuadSourceIntegralTagAssociation_factory,
-    sqla_QuadSourceIntegral_factory,
-)
-from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
-    sqla_TkNumericIntegration_factory,
-    sqla_TkNumericValue_factory,
-    sqla_TkNumericTagAssociation_factory,
-)
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
-    sqla_TkWKBIntegration_factory,
-    sqla_TkWKBTagAssociation_factory,
-    sqla_TkWKBValue_factory,
-)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from Datastore.SQL.ObjectFactories.integration_metadata import (
-    sqla_IntegrationSolver_factory,
-)
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
-from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
-from Datastore.SQL.ObjectFactories.version import sqla_version_factory
-from Datastore.SQL.ObjectFactories.wavenumber import (
-    sqla_wavenumber_factory,
-    sqla_wavenumber_exit_time_factory,
-)
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
-from Datastore.SQL.schema import build_schema
+from Datastore.SQL.schema import build_schema, drop_order
 from Datastore.replication import ReplicationMismatch
 from Datastore.replication import ReadOnlyMiss, ReadOnlyWrite
 from utilities import WallclockTimer
@@ -86,88 +24,9 @@ VERSION_ID_LENGTH = 64
 PathType = Union[str, PathLike]
 
 
-_factories = {
-    "version": sqla_version_factory,
-    "store_tag": sqla_store_tag_factory,
-    "redshift": sqla_redshift_factory,
-    "wavenumber": sqla_wavenumber_factory,
-    "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
-    "tolerance": sqla_tolerance_factory,
-    "LambdaCDM": sqla_LambdaCDM_factory,
-    "QCD_Cosmology": sqla_QCDCosmology_factory,
-    "IntegrationSolver": sqla_IntegrationSolver_factory,
-    "BackgroundModel": sqla_BackgroundModelFactory,
-    "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,
-    "BackgroundModelValue": sqla_BackgroundModelValue_factory,
-    "TkNumericIntegration": sqla_TkNumericIntegration_factory,
-    "TkNumeric_tags": sqla_TkNumericTagAssociation_factory,
-    "TkNumericValue": sqla_TkNumericValue_factory,
-    "TkWKBIntegration": sqla_TkWKBIntegration_factory,
-    "TkWKB_tags": sqla_TkWKBTagAssociation_factory,
-    "TkWKBValue": sqla_TkWKBValue_factory,
-    "GkNumericIntegration": sqla_GkNumericIntegration_factory,
-    "GkNumeric_tags": sqla_GkNumericTagAssociation_factory,
-    "GkNumericValue": sqla_GkNumericValue_factory,
-    "GkWKBIntegration": sqla_GkWKBIntegration_factory,
-    "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
-    "GkWKBValue": sqla_GkWKBValue_factory,
-    "GkSourcePolicy": sqla_GkSourcePolicy_factory,
-    "GkSourcePolicyData": sqla_GkSourcePolicyData_factory,
-    "GkSource": sqla_GkSource_factory,
-    "GkSource_tags": sqla_GkSourceTagAssociation_factory,
-    "GkSourceValue": sqla_GkSourceValue_factory,
-    # the Gk rows each GkSource is assembled from (prompts/datastore-integrity, prompt 09b)
-    "GkSource_parents": sqla_GkSourceParents_factory,
-    "QuadSourcePolicy": sqla_QuadSourcePolicy_factory,
-    "QuadSource": sqla_QuadSource_factory,
-    "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
-    "QuadSourceValue": sqla_QuadSourceValue_factory,
-    "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
-    "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
-    "OneLoopIntegral": sqla_OneLoopIntegral_factory,
-    "OneLoopIntegral_tags": sqla_OneLoopIntegralTagAssociation_factory,
-}
-
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
-
-_drop_actions = {
-    "1loop-integral": [
-        "OneLoopIntegral",
-        "OneLoopIntegral_tags",
-    ],
-    "quad-source-integral": [
-        "QuadSourceIntegral",
-        "QuadSourceIntegral_tags",
-    ],
-    "gk-source-policy": ["GkSourcePolicyData"],
-    "gk-source-policy-records": ["GkSourcePolicy"],
-    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue", "GkSource_parents"],
-    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
-    "gk-numeric": ["GkNumericIntegration", "GkNumeric_tags", "GkNumericValue"],
-    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
-    "tk-numeric": ["TkNumericIntegration", "TkNumeric_tags", "TkNumericValue"],
-    "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
-}
-# should drop tables in a defined order, so that we do not violate foreign key constraints: an
-# action whose tables declare a foreign key into another action's tables drops first. In
-# particular a WKB row references the numeric row it starts from (numeric_serial,
-# prompts/datastore-integrity prompt 07), so "gk-wkb" drops before "gk-numeric" and "tk-wkb" before
-# "tk-numeric"; and QuadSource.Tq_serial references TkNumericIntegration (prompt 06), so
-# "quad-source" drops before "tk-numeric" too
-_drop_order = [
-    "1loop-integral",
-    "quad-source-integral",
-    "gk-source-policy",
-    "gk-source-policy-records",
-    "gk-source",
-    "gk-wkb",
-    "gk-numeric",
-    "quad-source",
-    "tk-wkb",
-    "tk-numeric",
-]
 
 # read table configuration should be a Dict with the mapping
 # class_name -> {"tables_arg": bool}
@@ -186,12 +45,23 @@ class Datastore:
         serial_broker: Optional[ActorHandle] = None,
         profile_agent: Optional[ActorHandle] = None,
         prune_unvalidated: Optional[bool] = False,
-        drop_actions: Optional[List[str]] = None,
+        drop_tables: Optional[List[str]] = None,
         read_table_config: Optional[ReadTableConfigType] = None,
         read_only: bool = False,
+        *,
+        factories: _FactoryMappingType,
+        serial_batch_sizes: Optional[Mapping[str, int]] = None,
     ):
         """
         Initialize an SQL datastore object.
+
+        ``factories`` is the registry of storable classes, name -> factory, that the client gives
+        (prompts/datastore-generic, prompt 06): the actor registers it and builds every table from
+        it, and imports none. ``serial_batch_sizes`` maps a table to how many serials the actor
+        leases from the broker at a time; a table it does not name leases ``SerialPoolManager``'s
+        default. ``drop_tables`` names the tables to drop when an existing file is opened
+        read-write, in any order: the actor drops them in ``schema.drop_order``'s order, and refuses
+        a name its registry does not declare as a table before dropping anything (``_drop_tables``).
 
         The constructor neither looks up nor inserts the version row
         (prompts/a3-v2-readiness, prompt 02). The version row is replicated, so ShardedPool
@@ -229,14 +99,16 @@ class Datastore:
 
         self._serial_broker = serial_broker
         self._serial_manager = SerialPoolManager(
-            profiler=self._profile_batcher, broker=self._serial_broker
+            profiler=self._profile_batcher,
+            broker=self._serial_broker,
+            batch_sizes=serial_batch_sizes,
         )
 
         self._db_file = Path(db_name).resolve()
 
         # initialize set of registered storable class adapters
         self._factories: _FactoryMappingType = {}
-        self.register_factories(_factories)
+        self.register_factories(factories)
 
         # initialize empty dict of storage schema
         # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class factories
@@ -247,7 +119,7 @@ class Datastore:
         # A READ-ONLY ACTOR (prompts/a3-v2-readiness, prompt 03): nothing below this block runs
         self._read_only: bool = bool(read_only)
         if self._read_only:
-            self._open_read_only(drop_actions)
+            self._open_read_only(drop_tables)
             self._read_table_config = read_table_config
             return
 
@@ -264,7 +136,7 @@ class Datastore:
         else:
             self._create_engine()
             self._build_schema()
-            self._drop_actions(drop_actions)
+            self._drop_tables(drop_tables)
             self._ensure_tables()
             self._validate_on_startup()
 
@@ -298,15 +170,15 @@ class Datastore:
     # be refused by _insert before a serial is leased; and the mode=ro file refuses any write that
     # reaches SQLite, which _read_only_refusal re-raises as ReadOnlyWrite.
 
-    def _open_read_only(self, drop_actions):
+    def _open_read_only(self, drop_tables):
         """The read-only constructor. Writes nothing; refuses before opening anything if asked
         to drop or prune, and refuses a file that does not exist rather than create it.
         """
-        if drop_actions is not None and len(list(drop_actions)) > 0:
+        if drop_tables is not None and len(list(drop_tables)) > 0:
             raise ReadOnlyWrite(
                 self._my_name,
-                f"drop_actions={sorted(drop_actions)}",
-                detail="a drop action drops tables",
+                f"drop_tables={sorted(drop_tables)}",
+                detail="dropping a table is a write",
             )
         if self._prune_unvalidated:
             raise ReadOnlyWrite(
@@ -535,33 +407,34 @@ class Datastore:
                 f'No storable class of type "{cls_name}" has been registered'
             )
 
-    def _drop_actions(self, actions):
-        if actions is None:
+    def _drop_tables(self, tables):
+        """
+        Drop the named tables that this shard holds (prompts/datastore-generic, prompt 06).
+
+        A name the registry does not declare as a table raises ``RuntimeError``, naming it, before
+        anything is dropped. The declared tables are dropped in ``drop_order``'s order, derived
+        from their foreign keys: a table that references another of them is dropped before it. A
+        table the file lacks is skipped (an interrupted earlier drop leaves some absent).
+        """
+        if tables is None:
             return
 
-        if not isinstance(actions, Iterable):
-            raise RuntimeError("Could not interpret actions type")
+        if not isinstance(tables, Iterable) or isinstance(tables, str):
+            raise RuntimeError("Could not interpret drop_tables type")
 
-        actions = set(actions)
-        dropped = set()
-        for action in _drop_order:
-            if action in actions:
-                print(f'Datastore: dropping tables for "{action}"')
-                drop_list = _drop_actions[action]
-                for table_name in drop_list:
-                    if self._inspector.has_table(table_name):
-                        tab = self._tables.get(table_name, None)
-                        if tab is not None:
-                            tab.drop(self._engine)
-                            self._metadata.remove(tab)
-                dropped.add(action)
+        names = list(dict.fromkeys(tables))
+        undeclared = [name for name in names if name not in self._tables]
+        if len(undeclared) > 0:
+            raise RuntimeError(
+                f'Datastore "{self._my_name}": cannot drop {undeclared}, which the registry does '
+                f"not declare as tables. Nothing was dropped"
+            )
 
-        for action in dropped:
-            while action in actions:
-                actions.remove(action)
-
-        for action in actions:
-            print(f'Datastore: unknown drop action "{action}"')
+        for tab in drop_order([self._tables[name] for name in names]):
+            if self._inspector.has_table(tab.name):
+                print(f'Datastore: dropping table "{tab.name}"')
+                tab.drop(self._engine)
+                self._metadata.remove(tab)
 
         # regenerate inspector to pick up any changes that were made
         # (the inspector apparently does not automatically reflect dropped tables)

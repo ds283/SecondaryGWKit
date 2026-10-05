@@ -1969,27 +1969,6 @@ None is assigned to a prompt of this campaign.
     `_check_numeric_parent` asserts for a WKB row and 09c will for `QuadSourceIntegral`.
   - **Next step.** Decide whether `store()` reads each member's rows, as 07's check reads a WKB
     row's parent, and refuses a mismatch; it would cost one query per `GkSource` over its members.
-- **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
-  - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
-    integration table first and its tag and value tables after it, e.g. `"tk-wkb":
-    ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"]`, and `_drop_actions` drops them in that
-    order. `TkWKBValue.wkb_serial` and `TkWKB_tags.wkb_serial` declare foreign keys to
-    `TkWKBIntegration.serial`, so under `PRAGMA foreign_keys = ON` dropping the parent while value
-    rows exist fails (SQLite's `DROP TABLE` performs an implicit `DELETE`). Measured on prompt 07's
-    test store, clean under `PRAGMA foreign_key_check`, holding one Tk WKB row and its two
-    `TkWKBValue` rows: the real `_drop_actions(["tk-wkb"])`, the action alone, raised
-    `IntegrityError: FOREIGN KEY constraint failed` (log 07, observations).
-  - **Impact.** Inert: production never turns enforcement on, so every declared key is
-    documentation. It makes `_drop_order`'s comment true only between actions. Prompt 07's
-    `TestDropOrder` uses a store with no value rows for this reason.
-  - **Next step.** Order each action's list children-first (values and tags, then the parent), and
-    extend `TestDropOrder`'s schema-derived check to tables within one action. `_drop_actions` was
-    outside prompt 07's licence (`_drop_order` and its comment only).
-  - **Assigned (2026-10-05):** prompt 06 of `prompts/datastore-generic`, which moves the drop groups
-    to `config/datastore.py` and replaces `_drop_order` with an order derived from foreign keys
-    (`schema.drop_order`), within groups as well as between them. Measured while 06 was written:
-    the old order violated 15 within-group foreign keys on a `build_full_store` shard under
-    enforcement, and the derived order none. 06 closes it.
 - **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
   - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
     nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the
@@ -2016,6 +1995,43 @@ None is assigned to a prompt of this campaign.
 
 ## 4. Resolved issues
 
+- **[07-drop-actions-list-a-parent-table-before-its-children]** *(opened 2026-09-29 by prompt 07)*
+  - **The defect.** Each entry of `_drop_actions` (`Datastore/SQL/Datastore.py`) lists the
+    integration table first and its tag and value tables after it, e.g. `"tk-wkb":
+    ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"]`, and `_drop_actions` drops them in that
+    order. `TkWKBValue.wkb_serial` and `TkWKB_tags.wkb_serial` declare foreign keys to
+    `TkWKBIntegration.serial`, so under `PRAGMA foreign_keys = ON` dropping the parent while value
+    rows exist fails (SQLite's `DROP TABLE` performs an implicit `DELETE`). Measured on prompt 07's
+    test store, clean under `PRAGMA foreign_key_check`, holding one Tk WKB row and its two
+    `TkWKBValue` rows: the real `_drop_actions(["tk-wkb"])`, the action alone, raised
+    `IntegrityError: FOREIGN KEY constraint failed` (log 07, observations).
+  - **Impact.** Inert: production never turns enforcement on, so every declared key is
+    documentation. It makes `_drop_order`'s comment true only between actions. Prompt 07's
+    `TestDropOrder` uses a store with no value rows for this reason.
+  - **Next step.** Order each action's list children-first (values and tags, then the parent), and
+    extend `TestDropOrder`'s schema-derived check to tables within one action. `_drop_actions` was
+    outside prompt 07's licence (`_drop_order` and its comment only).
+  - **Assigned (2026-10-05):** prompt 06 of `prompts/datastore-generic`, which moves the drop groups
+    to `config/datastore.py` and replaces `_drop_order` with an order derived from foreign keys
+    (`schema.drop_order`), within groups as well as between them. Measured while 06 was written:
+    the old order violated 15 within-group foreign keys on a `build_full_store` shard under
+    enforcement, and the derived order none. 06 closes it.
+  - **Closed (2026-10-06, prompt 06 of `prompts/datastore-generic`; this commit).** The drop
+    groups moved to `config/datastore.py` (`drop_groups`, with the same tables), `_drop_order` was
+    deleted, and the actor now drops the tables it is given in the order
+    `Datastore.SQL.schema.drop_order` derives from their foreign keys: a table that references
+    another dropped table goes first, within a group as well as between groups. Measured under
+    `PRAGMA foreign_keys = ON` on copies of both shards of `build_full_store`: every group dropped
+    together, the old order failed at the first drop on both shards and the derived order dropped
+    all 25 tables, leaving `foreign_key_check` empty; dropped alone, `tk-wkb`, `quad-source`,
+    `quad-source-integral` and `1loop-integral` now succeed on both shards, where the old order
+    failed each on shard 0. Production never enforces, so no store changes: a read-write stand-in
+    pool dropping every group gave the same schema, row counts and `foreign_key_check` before and
+    after. Pinned by `Datastore/tests/test_layer_registry.py`
+    (`TestTheDropOnAFullStore`) and `test_wkb_numeric_parent_key.TestDropOrder`, whose
+    schema-derived check now covers the tables within each group. The six groups that still fail
+    alone under enforcement fail because rows of a group *not* dropped reference them; that is
+    `datastore-generic`'s `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`.
 - **[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]** *(opened 2026-10-02 by prompt 10; **closed 2026-10-03** by
   `prompts/a3-v2-readiness` prompt 05)*
   - **The defect.** A3 v2's launch, `docs/handover/quadsource_atol_sweep.py --build` (`run_build`),

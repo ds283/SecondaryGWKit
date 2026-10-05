@@ -125,7 +125,7 @@ class TestTheSixReaders(unittest.TestCase):
                 self.assertIsInstance(keywords["read_only"], ast.Constant)
                 self.assertIs(keywords["read_only"].value, True)
                 self.assertNotIn("prune_unvalidated", keywords)
-                self.assertNotIn("drop_actions", keywords)
+                self.assertNotIn("drop_tables", keywords)
                 # and it is the pool the with block opens
                 self.assertIs(_pool_with(tree).items[0].context_expr, calls[0])
 

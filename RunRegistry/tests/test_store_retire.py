@@ -51,6 +51,7 @@ from Datastore.tests.shard_store_fixtures import (
     tree_state,
     write_new_store,
 )
+from config.datastore import factories as _factories
 
 N_SHARDS = 4
 REASON = "disposable: every number it held is in a committed document"
@@ -702,7 +703,7 @@ class TestWithoutFingerprint(RetireTestCase):
         before = self.sidecar(primary)
         self.store_files(primary)[1].write_bytes(b"this is not a database\n" * 100)
         with self.assertRaises(Exception) as unreadable:
-            read_inventory(primary)
+            read_inventory(primary, _factories)
         self.refused_retire(
             primary, "a fresh fingerprint could not be taken", "--without-fingerprint"
         )

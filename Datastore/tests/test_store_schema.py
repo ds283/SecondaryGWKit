@@ -39,7 +39,7 @@ from unittest import mock
 import ray
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.schema import (
     SchemaDifferences,
     StoreSchemaMismatch,
@@ -242,7 +242,7 @@ class TestTheReader(_TempDir):
 
         with mock.patch.object(store_reader, "_read_only_engine", recording):
             with self.assertRaises(StoreSchemaMismatch) as cm:
-                with open_read_only(store.primary):
+                with open_read_only(store.primary, _factories):
                     self.fail("the store was opened")
         # shard 0 was opened and compared, shard 1 refused, and shard 2 never opened
         self.assertEqual(
@@ -261,7 +261,7 @@ class TestTheInventory(_TempDir):
         )
         before = file_state(store.directory)
         with self.assertRaises(StoreSchemaMismatch) as cm:
-            read_inventory(store.primary)
+            read_inventory(store.primary, _factories)
         message = str(cm.exception)
         self.assertTrue(
             message.startswith(f'Cannot read sharded datastore "{store.primary}"')

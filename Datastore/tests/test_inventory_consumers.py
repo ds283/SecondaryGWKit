@@ -38,6 +38,7 @@ from Datastore.tests.real_store_fixtures import (
     full_rows,
     with_rows,
 )
+from config.datastore import factories
 from extract_common import available_run_labels
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -252,7 +253,7 @@ class TestRunLabels(_Stores):
         store = self.store(replicated=replicated, sharded=sharded, shard_keys=keys)
         before = file_state(store.directory)
 
-        pool = SimpleNamespace(primary=store.primary)
+        pool = SimpleNamespace(primary=store.primary, factories=factories)
         # "Run_second" is carried by no record, and is still a run: the answer is unchanged
         self.assertEqual(available_run_labels(pool), ["fixture", "second"])
         self.assertEqual(file_state(store.directory), before)
@@ -261,7 +262,7 @@ class TestRunLabels(_Stores):
         store = self.store(
             extra_sql={1: ["UPDATE store_tag SET label = 'Run_other' WHERE serial = 3"]}
         )
-        pool = SimpleNamespace(primary=store.primary)
+        pool = SimpleNamespace(primary=store.primary, factories=factories)
         with self.assertRaises(RuntimeError) as raised:
             available_run_labels(pool)
         message = str(raised.exception)
@@ -277,7 +278,7 @@ class TestRunLabels(_Stores):
                 ]
             }
         )
-        pool = SimpleNamespace(primary=store.primary)
+        pool = SimpleNamespace(primary=store.primary, factories=factories)
         self.assertEqual(available_run_labels(pool), ["fixture"])
 
     def test_extract_common_does_not_call_the_pool_inventory(self):

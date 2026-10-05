@@ -42,6 +42,7 @@ from Datastore.tests.shard_store_fixtures import (
     write_new_store,
     write_placeholder,
 )
+from config.datastore import factories as _factories
 
 N_SHARDS = 3
 
@@ -163,7 +164,7 @@ class TestEveryReader(_TwoStores):
 
     def test_the_read_only_reader(self):
         def open_it():
-            with open_read_only(self.b):
+            with open_read_only(self.b, _factories):
                 self.fail("the store was opened")
 
         self.assertRefused(open_it, self.b_records[0], self.b)

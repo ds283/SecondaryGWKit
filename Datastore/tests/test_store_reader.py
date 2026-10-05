@@ -40,6 +40,7 @@ from Datastore.tests.real_store_fixtures import (
     file_state,
     independent_row_counts,
 )
+from config.datastore import factories as _factories
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -76,7 +77,7 @@ class TestReaderReads(_TempStore):
         self.store = build_real_store(self.dir)
 
     def test_every_shard_with_its_serial_and_path(self):
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             self.assertEqual(store.primary, self.store.primary)
             self.assertEqual(
                 [(s.serial, s.path) for s in store.shards],
@@ -84,7 +85,7 @@ class TestReaderReads(_TempStore):
             )
 
     def test_row_counts_equal_an_independent_count(self):
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             counts = read_every_table(store)
             for shard in store.shards:
                 with shard.engine.connect() as conn:
@@ -105,7 +106,7 @@ class TestReaderReads(_TempStore):
                     )
 
     def test_replicated_rows_have_the_same_serials_on_every_shard(self):
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             per_shard = []
             for shard in store.shards:
                 with shard.engine.connect() as conn:
@@ -124,14 +125,14 @@ class TestReaderReads(_TempStore):
                 self.assertEqual(per_shard[0], other)
 
     def test_every_engine_is_disposed_on_exit(self):
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             read_every_table(store)
             engines = [s.engine for s in store.shards]
             self.assertTrue(all(e.pool.checkedin() > 0 for e in engines))
         self.assertTrue(all(e.pool.checkedin() == 0 for e in engines))
 
     def test_engines_open_mode_ro_and_never_immutable(self):
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             for shard in store.shards:
                 url = shard.engine.url
                 self.assertEqual(url.query.get("mode"), "ro")
@@ -147,7 +148,7 @@ class TestReaderNeverWrites(_TempStore):
 
     def test_reading_every_table_changes_nothing(self):
         before = file_state(self.dir)
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             read_every_table(store)
             during = file_state(self.dir)
         after = file_state(self.dir)
@@ -157,7 +158,7 @@ class TestReaderNeverWrites(_TempStore):
 
     def test_a_write_through_a_reader_engine_raises(self):
         before = file_state(self.dir)
-        with open_read_only(self.store.primary) as store:
+        with open_read_only(self.store.primary, _factories) as store:
             for shard in store.shards:
                 with self.subTest(shard=shard.serial, what="insert"):
                     with self.assertRaises(OperationalError) as cm:
@@ -187,7 +188,7 @@ class TestADifferingSchemaIsRefused(_TempStore):
         built = build_real_store(directory, **shape)
         before = file_state(directory)
         with self.assertRaises(StoreSchemaMismatch) as cm:
-            with open_read_only(built.primary):
+            with open_read_only(built.primary, _factories):
                 self.fail("the store was opened")
         e = cm.exception
         self.assertIsInstance(e, RuntimeError)
@@ -271,7 +272,7 @@ class TestRefusals(_TempStore):
     def assert_refused_naming(self, fragment: str):
         before = file_state(self.dir)
         with self.assertRaises(RuntimeError) as cm:
-            with open_read_only(self.store.primary):
+            with open_read_only(self.store.primary, _factories):
                 self.fail("the store was opened")
         self.assertIn(fragment, str(cm.exception))
         self.assertEqual(before, file_state(self.dir))
@@ -333,10 +334,11 @@ import json, sys
 from pathlib import Path
 import sqlalchemy as sqla
 from Datastore.store_reader import open_read_only
+from config.datastore import factories
 import ray
 
 counts = {}
-with open_read_only(Path(sys.argv[1])) as store:
+with open_read_only(Path(sys.argv[1]), factories) as store:
     for shard in store.shards:
         with shard.engine.connect() as conn:
             for name, table in shard.tables.items():
@@ -362,7 +364,7 @@ class TestNoRay(_TempStore):
         self.assertEqual(result.returncode, 0, result.stderr)
         report = json.loads(result.stdout.strip().splitlines()[-1])
         self.assertFalse(report["ray_initialized"])
-        with open_read_only(store.primary) as opened:
+        with open_read_only(store.primary, _factories) as opened:
             expected = sum(len(s.tables) for s in opened.shards)
         self.assertEqual(report["tables_read"], expected)
         self.assertEqual(before, file_state(self.dir))

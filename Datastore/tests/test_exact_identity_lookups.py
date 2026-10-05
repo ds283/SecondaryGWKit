@@ -46,7 +46,7 @@ from CosmologyConcepts.wavenumber import (
 )
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import Planck2018
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory

@@ -26,8 +26,8 @@ The prompt's §3 tests, by class:
   5. ``TestReadersRefuseAmbiguity`` -- the labels-only reader mode refuses two stored rows for the
      same physical labels, naming both ``numeric_serial`` values (a NULL as pure WKB).
   7. ``TestDropOrder`` -- under ``PRAGMA foreign_keys = ON``, dropping ``tk-numeric`` with a Tk WKB
-     row present succeeds in the corrected order and not in the old one; and ``_drop_order``
-     respects every declared foreign key between drop actions.
+     row present succeeds in the order derived from the foreign keys and not unsorted; and that
+     order respects every declared foreign key between the dropped tables.
 
 and, for the inventory's nullable parent (the orchestrator note's §0.5), ``TestNullableParent``.
 
@@ -64,7 +64,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
-from Datastore.SQL.Datastore import _drop_actions, _factories
+from config.datastore import drop_groups, factories as _factories, tables_to_drop
 from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
 )
@@ -78,13 +78,13 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
 )
-from Datastore.SQL.schema import build_schema
+from Datastore.SQL.schema import build_schema, drop_order
 from Datastore.store_inventory import Parent, ShardContext, read_records
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 
 # the module itself: `import Datastore.SQL.Datastore as ...` binds the package's re-exported actor
-# class of the same name, not the module that holds _drop_order
+# class of the same name, not the module whose drop_order TestDropOrder patches
 datastore_module = importlib.import_module("Datastore.SQL.Datastore")
 
 UNITS = Mpc_units()
@@ -861,29 +861,14 @@ class TestReadersRefuseAmbiguity(_StoreCase):
             tk.compute()
 
 
-# the order _drop_order had before prompt 07: tk-numeric ahead of tk-wkb
-_OLD_DROP_ORDER = [
-    "1loop-integral",
-    "quad-source-integral",
-    "gk-source-policy",
-    "gk-source-policy-records",
-    "gk-source",
-    "gk-wkb",
-    "gk-numeric",
-    "quad-source",
-    "tk-numeric",
-    "tk-wkb",
-]
-
-
 class TestDropOrder(unittest.TestCase):
-    """§3 test 7. The real `Datastore._drop_actions`, on a file store with foreign-key enforcement
+    """§3 test 7. The real `Datastore._drop_tables`, on a file store with foreign-key enforcement
     turned on for every connection its engine opens (production never turns it on; SQLite's DROP
     TABLE performs an implicit DELETE, which enforcement checks). The store holds the Tk numeric rows
-    and one Tk WKB row naming the first, written raw with no value or tag rows (the order of the
-    tables *within* one drop action is not what this checks; see the log's observations), and is
+    and one Tk WKB row naming the first, written raw with no value or tag rows, and is
     clean under `PRAGMA foreign_key_check` before the drop: SQLite counts violations net, so a
-    row whose own references already dangled would hide the one the drop makes."""
+    row whose own references already dangled would hide the one the drop makes. The order is
+    derived from the schema's foreign keys (prompts/datastore-generic, prompt 06)."""
 
     def _drop(self, actions):
         tmp = tempfile.TemporaryDirectory()
@@ -927,49 +912,66 @@ class TestDropOrder(unittest.TestCase):
             _tables=s.tables,
             _engine=s.engine,
             _metadata=s.metadata,
+            _my_name="drop-order-test",
         )
         raw = datastore_module.Datastore.__ray_metadata__.modified_class
         with mock.patch("builtins.print"):
-            raw._drop_actions(fake, actions)
+            raw._drop_tables(fake, tables_to_drop(actions))
         with s.engine.connect() as conn:
             self.assertEqual(conn.execute(sqla.text("PRAGMA foreign_keys")).scalar(), 1)
         return sqla.inspect(s.engine)
 
-    def test_the_corrected_order_drops_both(self):
-        inspector = self._drop(["tk-numeric", "tk-wkb"])
-        self.assertFalse(inspector.has_table("TkWKBIntegration"))
-        self.assertFalse(inspector.has_table("TkNumericIntegration"))
+    def test_the_derived_order_drops_both(self):
+        for actions in (["tk-numeric", "tk-wkb"], ["tk-wkb", "tk-numeric"]):
+            with self.subTest(actions=actions):
+                inspector = self._drop(actions)
+                self.assertFalse(inspector.has_table("TkWKBIntegration"))
+                self.assertFalse(inspector.has_table("TkNumericIntegration"))
 
-    def test_the_old_order_is_refused_by_enforcement(self):
-        with mock.patch.object(datastore_module, "_drop_order", _OLD_DROP_ORDER):
+    def test_an_unsorted_order_is_refused_by_enforcement(self):
+        # pins that the actor sorts: with the actor module's drop_order the identity, the tables
+        # drop in the order named, so tk-numeric's TkNumericIntegration goes while the
+        # TkWKBIntegration row still references it. (Named the other way round, the identity
+        # happens to be a valid order here: the store holds no value or tag rows.)
+        with mock.patch.object(datastore_module, "drop_order", lambda tables: tables):
             with self.assertRaises(IntegrityError):
                 self._drop(["tk-numeric", "tk-wkb"])
 
     def test_tk_wkb_drops_before_tk_numeric_and_gk_wkb_before_gk_numeric(self):
-        order = datastore_module._drop_order
-        self.assertLess(order.index("tk-wkb"), order.index("tk-numeric"))
-        self.assertLess(order.index("gk-wkb"), order.index("gk-numeric"))
-
-    def test_every_declared_foreign_key_between_actions_is_respected(self):
-        """Derived from the schema: an action whose tables declare a foreign key into another
-        action's tables must drop first."""
         tables = build_schema(sqla.MetaData(), _factories).tables
-        order = datastore_module._drop_order
-        self.assertEqual(set(order), set(_drop_actions))
-        action_of = {t: a for a, names in _drop_actions.items() for t in names}
-        pairs = 0
-        for action, names in _drop_actions.items():
+        order = [
+            t.name
+            for t in drop_order([tables[n] for n in tables_to_drop(list(drop_groups))])
+        ]
+        self.assertLess(
+            order.index("TkWKBIntegration"), order.index("TkNumericIntegration")
+        )
+        self.assertLess(
+            order.index("GkWKBIntegration"), order.index("GkNumericIntegration")
+        )
+
+    def test_every_declared_foreign_key_between_dropped_tables_is_respected(self):
+        """Derived from the schema: a table with a foreign key into another dropped table drops
+        first, for every drop group alone and for all of them together."""
+        tables = build_schema(sqla.MetaData(), _factories).tables
+        cases = {action: [action] for action in drop_groups}
+        cases["all"] = list(drop_groups)
+        for case, actions in cases.items():
+            names = tables_to_drop(actions)
+            order = [t.name for t in drop_order([tables[n] for n in names])]
+            self.assertEqual(sorted(order), sorted(names))
+            pairs = 0
             for name in names:
                 for fk in tables[name].foreign_keys:
                     target = fk.column.table.name
-                    other = action_of.get(target)
-                    if other is None or other == action:
+                    if target == name or target not in names:
                         continue
                     pairs += 1
-                    with self.subTest(table=name, references=target):
-                        self.assertLess(order.index(action), order.index(other))
-        # the WKB->numeric pairs and QuadSource.Tq_serial at least
-        self.assertGreaterEqual(pairs, 3)
+                    with self.subTest(case=case, table=name, references=target):
+                        self.assertLess(order.index(name), order.index(target))
+            if case == "all":
+                # the WKB->numeric pairs and QuadSource.Tq_serial at least
+                self.assertGreaterEqual(pairs, 3)
 
 
 class TestNullableParent(unittest.TestCase):

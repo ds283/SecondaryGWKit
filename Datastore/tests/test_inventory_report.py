@@ -42,6 +42,7 @@ from tools.inventory_report import (
     VALUE_TABLES,
     format_inventory_report,
 )
+from config.datastore import factories as _factories
 
 DB_NAME = "the-store.sqlite"
 
@@ -53,7 +54,7 @@ class _Stores(unittest.TestCase):
         cls.root = Path(cls._tmp.name).resolve()
         cls._count = 0
         cls.full = cls.store()
-        cls.inventory = read_inventory(cls.full.primary)
+        cls.inventory = read_inventory(cls.full.primary, _factories)
         cls.report = format_inventory_report(cls.inventory, DB_NAME)
         cls.verbose = format_inventory_report(cls.inventory, DB_NAME, verbose=True)
 
@@ -70,7 +71,7 @@ class _Stores(unittest.TestCase):
 
     @classmethod
     def read(cls, **kwargs):
-        return read_inventory(cls.store(**kwargs).primary)
+        return read_inventory(cls.store(**kwargs).primary, _factories)
 
 
 class TestTheDisplaySaysWhatTheInventoryHolds(_Stores):

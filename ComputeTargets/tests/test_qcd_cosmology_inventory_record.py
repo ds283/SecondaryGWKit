@@ -38,6 +38,7 @@ from Datastore.tests.real_store_fixtures import (
     with_rows,
 )
 from tools.inventory_report import format_inventory_report
+from config.datastore import factories as _factories
 
 KEY_COLUMN = "T_z_representation"
 
@@ -67,7 +68,7 @@ class TestTheRepresentationInTheInventory(unittest.TestCase):
         store = build_full_store(
             directory, replicated=replicated, sharded=sharded, shard_keys=keys
         )
-        return read_inventory(store.primary)
+        return read_inventory(store.primary, _factories)
 
     def qcd_lines(self, inventory, verbose):
         section = sections(
@@ -106,7 +107,7 @@ class TestTheRepresentationInTheInventory(unittest.TestCase):
         store = build_full_store(
             directory, replicated=replicated, sharded=sharded, shard_keys=keys
         )
-        inventory = read_inventory(store.primary)
+        inventory = read_inventory(store.primary, _factories)
         for verbose in (False, True):
             with self.subTest(verbose=verbose):
                 _, (line,) = self.qcd_lines(inventory, verbose)

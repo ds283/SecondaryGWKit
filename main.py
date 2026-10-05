@@ -74,6 +74,12 @@ from config.defaults import (
     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
     DEFAULT_TK_NUMERIC_REL_TOLERANCE,
 )
+from config.datastore import (
+    drop_groups,
+    factories,
+    serial_batch_sizes,
+    tables_to_drop,
+)
 from config.model_list import build_model_list
 from config.sharding import (
     replicated_tables,
@@ -112,18 +118,7 @@ DEFAULT_RUN_LABEL = "default"
 
 MIN_NOTIFY_INTERVAL = 5 * 60
 
-allowed_drop_actions = [
-    "tk-numeric",
-    "tk-wkb",
-    "quad-source",
-    "gk-numeric",
-    "gk-wkb",
-    "gk-source",
-    "gk-source-policy-records",
-    "gk-source-policy",
-    "quad-source-integral",
-    "1loop-integral",
-]
+allowed_drop_actions = list(drop_groups)
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -298,7 +293,7 @@ if args.inventory:
         )
         sys.exit(2)
     try:
-        inventory = read_inventory(args.database)
+        inventory = read_inventory(args.database, factories)
     except RuntimeError as e:
         print(f"!! --inventory: {e}", file=sys.stderr)
         sys.exit(1)
@@ -316,6 +311,7 @@ VERSION_LABEL = "2025.1.1"
 
 specified_drop_actions = [x.lower() for x in args.drop]
 drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
+drop_tables = tables_to_drop(drop_actions)
 
 # instantiate a ProfileAgent to profile database operations; this is passed as an argument to ShardedPool below
 profile_agent = None
@@ -4177,8 +4173,10 @@ with ShardedPool(
     profile_agent=profile_agent,
     job_name=args.job_name,
     prune_unvalidated=args.prune_unvalidated,
-    drop_actions=drop_actions,
+    drop_tables=drop_tables,
     read_table_config=read_table_config,
+    factories=factories,
+    serial_batch_sizes=serial_batch_sizes,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units

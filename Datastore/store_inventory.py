@@ -1,10 +1,11 @@
 """
 A structured inventory of a **closed** ShardedPool store: what it holds, named by physical labels.
 
-``read_inventory(primary)`` opens the store with ``open_read_only`` (prompt 01) and returns a
-``StoreInventory``. For each class it holds ``records``, their ``count``, the earliest and latest
-``timestamp`` (for display only: no timestamp is in any record) and ``problems``, a list of named
-strings. It reads; it never writes, and it needs no Ray.
+``read_inventory(primary, factories)`` opens the store with ``open_read_only`` (prompt 01) and
+returns a ``StoreInventory``. ``factories`` is the registry of storable classes, which the caller
+gives (prompts/datastore-generic, prompt 06). For each class it holds ``records``, their
+``count``, the earliest and latest ``timestamp`` (for display only: no timestamp is in any record)
+and ``problems``, a list of named strings. It reads; it never writes, and it needs no Ray.
 
 **A record** (``Record``) is a small JSON-safe object:
 
@@ -39,7 +40,9 @@ form. A float becomes ``float.hex`` of the value **as stored**; an integer, stri
 **Shards.** A sharded class is the union of every shard's records. A replicated class is read from
 every shard and compared on key, tags, validated flag and value count; its records are the
 lowest-serial shard's, and any shard that differs is a named problem (``replicated-divergence``).
-Nothing is repaired.
+Which classes are replicated is what the store's primary records in its ``replicated_tables`` table
+(``ReadOnlyStore.replicated_tables``), not anything this module or its caller says. Nothing is
+repaired.
 
 **Named problems.** Each problem string starts with its name:
 
@@ -65,8 +68,8 @@ render the set by its physical labels. The member table is read once per shard, 
 tag and value tables are.
 
 This module imports only the standard library and ``sqlalchemy`` at module scope, so a factory can
-import it from inside its ``inventory_records``. The reader and the factory map are imported inside
-``read_inventory``.
+import it from inside its ``inventory_records``. The reader is imported inside ``read_inventory``,
+and the factory registry is given to it.
 """
 
 import contextlib
@@ -834,22 +837,20 @@ def _combine(
     )
 
 
-def read_inventory(primary: PathType) -> StoreInventory:
+def read_inventory(primary: PathType, factories: Mapping[str, Any]) -> StoreInventory:
     """
     The structured inventory of the closed store whose primary is ``primary``.
 
     Read through ``open_read_only``: every file ``mode=ro``, a journal refused, no Ray. Each class
     in ``INVENTORY_CLASSES`` is built in that order by its factory's ``inventory_records`` on every
     shard, and then combined: a sharded class as the union, a replicated class compared across
-    shards (module docstring).
+    shards (module docstring). ``factories`` is the registry of storable classes; which classes
+    are replicated is read from the store's primary.
     """
-    from Datastore.SQL.Datastore import _factories
     from Datastore.store_reader import open_read_only
-    from config.sharding import replicated_tables
 
-    replicated = set(replicated_tables)
-
-    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
+    with open_read_only(primary, factories) as store, contextlib.ExitStack() as stack:
+        replicated = set(store.replicated_tables)
         conns = {
             shard.serial: stack.enter_context(shard.engine.connect())
             for shard in store.shards
@@ -866,7 +867,7 @@ def read_inventory(primary: PathType) -> StoreInventory:
 
         classes: Dict[str, ClassInventory] = {}
         for name in INVENTORY_CLASSES:
-            factory = _factories[name]
+            factory = factories[name]
             reads: Dict[int, ShardRead] = {}
             for shard in store.shards:
                 context = ShardContext(

@@ -26,7 +26,7 @@ import unittest
 from pathlib import Path
 
 import config.sharding as sharding
-from Datastore.SQL.Datastore import _factories
+from config.datastore import factories as _factories
 from Datastore.SQL.ShardedPool import ShardedPool
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

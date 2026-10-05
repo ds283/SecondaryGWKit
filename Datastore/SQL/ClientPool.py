@@ -1,51 +1,10 @@
 import time
-from typing import Optional
+from typing import Mapping, Optional
 
 import ray
 from ray.actor import ActorHandle
 
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
-
-_default_serial_batch_size = {
-    "store_tag": 5,
-    "redshift": 200,
-    "wavenumber": 100,
-    "wavenumber_exit_time": 100,
-    "tolerance": 5,
-    "LambdaCDM": 5,
-    "QCD_Cosmology": 5,
-    "IntegrationSolver": 6,
-    "BackgroundModel": 5,
-    "BackgroundModelValue": 100,
-    "TkNumericIntegration": 200,
-    "TkNumeric_tags": 1000,
-    "TkNumericValue": 7500,
-    "TkWKBIntegration": 200,
-    "TkWKB_tags": 1000,
-    "TkWKBValue": 7500,
-    "GkNumericIntegration": 200,
-    "GkNumeric_tags": 1000,
-    "GkNumericValue": 7500,
-    "GkWKBIntegration": 200,
-    "GkWKB_tags": 1000,
-    "GkWKBValue": 7500,
-    "GkSourcePolicy": 5,
-    "GkSourcePolicyData": 50,
-    "GkSource": 200,
-    "GkSource_tags": 1000,
-    "GkSourceValue": 7500,
-    # one row per z_source of each GkSource, as GkSourceValue has (prompts/datastore-integrity,
-    # prompt 09b)
-    "GkSource_parents": 7500,
-    "QuadSource": 200,
-    "QuadSourcePolicy": 5,
-    "QuadSource_tags": 1000,
-    "QuadSourceValue": 7500,
-    "QuadSourceIntegral": 10000,
-    "QuadSourceIntegral_tags": 3000,
-    "OneLoopIntegral": 10000,
-    "OneLoopIntegral_tags": 3000,
-}
 
 
 class ClientPool:
@@ -145,8 +104,13 @@ class SerialPoolManager:
         profiler: ProfileBatcher,
         broker: Optional[ActorHandle] = None,
         default_sync_interval: int = DEFAULT_SERIAL_SYNC_INTERVAL,
+        batch_sizes: Optional[Mapping[str, int]] = None,
     ):
         self._broker = broker
+        # per-table lease batch sizes, given by the client; a table not named leases 500 at a time
+        self._batch_sizes: Mapping[str, int] = (
+            dict(batch_sizes) if batch_sizes is not None else {}
+        )
         self._profiler = profiler
 
         self._tables = {}
@@ -163,7 +127,7 @@ class SerialPoolManager:
                 table,
                 self._profiler,
                 self._broker,
-                default_batch_size=_default_serial_batch_size.get(table, 500),
+                default_batch_size=self._batch_sizes.get(table, 500),
             )
 
         serial = self._tables[table].lease_serial()
