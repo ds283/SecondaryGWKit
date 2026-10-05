@@ -1,7 +1,7 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-05 · **Status: IN PROGRESS — 5 of 9 prompts landed (01–05).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
-written. Prompts 01–05 are written; 06–09 are held on the prompts before them. The user took U1–U4
+**Last updated:** 2026-10-05 · **Status: IN PROGRESS — 5 of 9 prompts landed (01–05); 06 written.** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+written. Prompts 01–06 are written; 07–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
 
@@ -39,7 +39,7 @@ recommended:**
 | Decision | Taken |
 |---|---|
 | **U1** — an absent table (05) | a read-write open keeps reading it as empty (crash recovery); the reader, inventory and read-only pool refuse it by name |
-| **U2** — the older registries (06) | `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/`, passed in by `main.py` |
+| **U2** — the older registries (06) | `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/`, passed in by `main.py`. *2026-10-05, while 06 was written:* the layer is given the tables to drop, in an order derived from foreign keys, and the inventory reads the replicated set from the store (README §6.2) |
 | **U3** — the registry's legacy records | out of scope |
 | **U4** — the `version` and tag tables (07) | the layer owns both as part of its contract, named once, and builds their objects through their factories |
 
@@ -54,7 +54,7 @@ recommended:**
 | 03 | [Delete the reconcile's old-store paths](03-delete-the-reconciles-old-store-paths.md) | **R1**–**R4** | Opus | ✍️ yes, 2026-10-04 | ✅ 2026-10-04 | `d8d4afe` | [log](logs/03-delete-the-reconciles-old-store-paths.md) |
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
-| 06 | Give the layer its registry | **G1**–**G3** | Opus | ⏸ held on 01–05 (U2 taken) | ⬜ | — | — |
+| 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ⬜ | — | — |
 | 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
@@ -747,9 +747,9 @@ fingerprint digest again.
 | **S1** | 05 | the reader and the inventory refuse absent or extra tables and columns | B5 | ✅ |
 | **S2** | 05 | the read-only pool likewise; the reconcile's column-subset, `unkeyed` and `columns` logic deleted | B5 | ✅ |
 | **S3** | 05 | an absent table on a read-write open, per U1, and every other difference refused there; the primary refused by both constructors if it differs from `_create_engine`'s tables (03's hand-on; confirmed by the user, 2026-10-05); `real_store_fixtures.py`'s old-store machinery; the four WKB value reads' `numeric_serial` selects (found by the 02 note) | B5 | ✅ |
-| **G1** | 06 | `ShardedPool` given the registry; no import of `Datastore._factories` | C1 #10 | ⬜ |
-| **G2** | 06 | `store_reader` and `store_inventory` given the registry and the replicated set | C1 #10, #14 | ⬜ |
-| **G3** | 06 | the older registries, per U2 | C1 #9–#11 | ⬜ |
+| **G1** | 06 | `ShardedPool` and the actor given the registry and the serial batch sizes; no import of `Datastore._factories` | C1 #9, #10 | ⬜ |
+| **G2** | 06 | `store_reader` and `store_inventory` given the registry; the replicated set read from the store's primary (the user, 2026-10-05) | C1 #10, #14 | ⬜ |
+| **G3** | 06 | the older registries moved to `config/datastore.py`, per U2; the layer given the tables to drop, in an order derived from foreign keys (`_drop_order` deleted) | C1 #9–#11 | ⬜ |
 | **F1** | 07 | the copy-as-a-unit rule derived from foreign keys | C1 #2 | ⬜ |
 | **F2** | 07 | monotone flags declared by the factories | C1 #5 | ⬜ |
 | **F3** | 07 | the `validated` rule declared by the factory; `_StoredModel` gone | C1 #6 | ⬜ |
@@ -793,6 +793,34 @@ fingerprint digest again.
   - **Next step.** The user will have it cleaned up (2026-10-04). The new
     `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
     its prefix, so a cleanup does not break it.
+- **[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]** *(opened 2026-10-05 while
+  prompt 06 was written; measured at `dbc59f9`)*
+  - **The defect.** `--drop` drops exactly the tables of the groups named, and nothing that
+    references them. Six groups have tables that other groups' rows reference by foreign key:
+    `gk-source-policy`, `gk-source-policy-records`, `gk-source`, `gk-wkb`, `gk-numeric` and
+    `tk-numeric`. Production never turns enforcement on, so SQLite accepts the drop and leaves
+    those rows naming rows that are gone.
+  - **Measured** on copies of both shards of `build_full_store`, clean under `PRAGMA
+    foreign_key_check` before. Each group was dropped alone with enforcement off. The six left 1–4
+    dangling references per shard, and the other four groups none:
+    - `tk-numeric`: `TkWKBIntegration` and `QuadSource` → `TkNumericIntegration`;
+    - `gk-numeric` and `gk-wkb`: `GkSource_parents` → the dropped table;
+    - `gk-source`: `GkSourcePolicyData` → `GkSource`;
+    - `gk-source-policy`: `QuadSourceIntegral` → `GkSourcePolicyData`;
+    - `gk-source-policy-records`: `GkSourcePolicyData` and `QuadSourceIntegral` →
+      `GkSourcePolicy`.
+
+    Under enforcement the same six drops fail in any order (prompt 06's measurement, M3).
+  - **Impact [inferred, not measured].**
+    - A re-created table starts empty, and the broker leases serials from each table's largest
+      stored serial. A recomputed row can therefore take a serial that a stale row still names,
+      and the stale row then names a different, unrelated row.
+    - Whether any lookup reaches such a row has not been traced. The datastore-integrity checks on
+      parents (`_check_numeric_parent` and its kin) guard writes, not stale rows.
+  - **Next step.** A decision for the user: a drop could cascade to every table whose foreign keys
+    reach the dropped ones (derivable from the schema, as `schema.drop_order` will be), refuse a
+    drop that would leave references, or stay as it is with the hazard documented. Prompt 06
+    changes only the order within a drop (README §5 rule 9) and does not fix this.
 
 ---
 

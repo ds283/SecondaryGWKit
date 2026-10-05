@@ -2,10 +2,10 @@
 
 **Written:** 2026-10-04 on branch `datastore-generic-plan`, from `handover-remedial` at `dbd8a51`
 (the audit's tree), committed on `a6c8f39`, which changes no file the audit cites, by Claude Opus 5.5, from the audit [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)
-and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–05 are
+and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–06 are
 written**; their tasks are fixed by §6.1 and the audit alone (04 was written on 2026-10-04, after
-03 landed and was reviewed; 05 on 2026-10-05, after 04 landed and was reviewed). **06–09 are held**
-on 01–05 and on U2–U4 (§2).
+03 landed and was reviewed; 05 and 06 on 2026-10-05, each after the prompt before it landed and
+was reviewed). **07–09 are held** on the prompts before them (§2).
 
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
@@ -52,7 +52,11 @@ path silently re-queries without grid identity. Deleting those refusals removes 
   or hooks that 07 adds;
 - `extract_common.py` (01), `tools/shard_key_audit.py` (04), the docstring of
   `docs/handover/quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` (04);
-- `config/` — where the registries the layer stops owning are moved, if U2 says so (06);
+- `config/` — where the registries the layer stops owning are moved (U2; 06: `config/datastore.py`);
+- the plumbing that passes them in (06): `main.py`'s `--drop` resolution, its `ShardedPool` call and
+  `--inventory`; the six `extract_*.py` scripts' `ShardedPool` calls; `extract_common`'s run labels;
+  `RunRegistry/stores.py`'s fingerprint; `tools/inventory_report.py`'s schema. Their behaviour does
+  not change;
 - the tests of all of the above, under §5 rule 7.
 
 **Out of scope:**
@@ -61,7 +65,8 @@ path silently re-queries without grid identity. Deleting those refusals removes 
   every prompt;
 - `RunRegistry/`'s fallbacks for legacy sidecars, manifests and ledger records (audit B11), unless
   U3 says otherwise;
-- `main.py`, the drivers' behaviour, and every compute target;
+- `main.py`'s and the drivers' behaviour (06 changes only how they pass the registries in), and
+  every compute target;
 - every store under `var/` (§3);
 - `a3-v2-readiness`'s open issues, including
   `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]`, which U1 bears on
@@ -76,7 +81,7 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 03 | [`03-delete-the-reconciles-old-store-paths.md`](03-delete-the-reconciles-old-store-paths.md) | Audit B1–B4, B9. Reviews and takes `e53f323` (the `BackgroundModelValue` key, D3); compares `timestamp` (D4); deletes the missing-`replication_in_flight` path and the `controller_shard NOT NULL` refusal. | **written** 2026-10-04; independent of 01–02 |
 | 04 | [`04-delete-the-legacy-shard-records.md`](04-delete-the-legacy-shard-records.md) | Audit B6. Absolute shard records in `shard_paths.py` and `ShardedPool`; `tools/shard_key_audit.py`'s pre-`a2bd966` and missing-`shard_key_config` paths, and its OK verdict on an unusable record; the sweep script's check and docstring; `write_legacy_primary` renamed for the malformed-record tests that use it; the legacy tests deleted, and an absolute record pinned as refused by every reader. | **written** 2026-10-04; after 03 |
 | 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **written** 2026-10-05; after 04 |
-| 06 | `06-give-the-layer-its-registry.md` | Audit C1 rows 10, 14 and the `config.sharding` import. `ShardedPool`, `store_reader` and `store_inventory` are given the factory registry (and the replicated set) instead of importing `Datastore._factories` and `config.sharding`. `_factories`, `_drop_actions`/`_drop_order` and `ClientPool`'s batch sizes move to `config/` (U2). | **held** on 01–05 (U2 taken 2026-10-04) |
+| 06 | [`06-give-the-layer-its-registry.md`](06-give-the-layer-its-registry.md) | Audit C1 rows 9, 10, 11, 14 and the `config.sharding` import. `ShardedPool`, the actor, `store_reader` and `store_inventory` are given the factory registry instead of importing `Datastore._factories`; the inventory reads the replicated set from the store's primary instead of `config.sharding` (*amended 2026-10-05*, the user's decision, §6.2). `_factories`, the drop groups and `ClientPool`'s batch sizes move to `config/datastore.py` (U2); the layer is given the tables to drop, and `_drop_order` is replaced by an order derived from foreign keys. | **written** 2026-10-05; after 05 |
 | 07 | `07-declare-the-replication-facts-in-the-factories.md` | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **held** on 06 (U4 taken 2026-10-04) |
 | 08 | `08-derive-the-inventorys-class-list.md` | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys; the polymorphic cosmology reference declared by the client. | **held** on 06 |
 | 09 | `09-keep-the-layer-generic.md` | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9. Closes the campaign. | **held** on 01–08 |
@@ -92,7 +97,11 @@ it the same day at `81c0a9a` (§3), so 04 costs no store anything.
 against the tree 04 left (`bc3e944`): a rough version of the change was made in a scratch worktree
 and every suite run, so that each test it moves is named with its fate before dispatch.
 
-**Why 06–09 are held.** Their charters above are fixed and cannot drift to fit what 01–05 find.
+**Why 06 was written after 05.** It edits `ShardedPool`, the reader and the inventory after 05, and
+its test plan and facts were measured the same way, against the tree 05 left (`dbc59f9`). Writing
+it put two choices of method to the user, recorded in §6.2 under U2.
+
+**Why 07–09 are held.** Their charters above are fixed and cannot drift to fit what 01–06 find.
 What waits is their method.
 
 **Order.**
@@ -130,7 +139,14 @@ internals are the implementing prompt's to design.
   both constructors also refuse a primary that differs from `_create_engine`'s tables.
 - **06 ships** the constructor parameter by which `ShardedPool` receives the registry, and the
   parameter by which `store_reader.open_read_only` and `store_inventory.read_inventory` receive it.
-  06 names them; 07–09 use them.
+  06 names them; 07–09 use them. *Named 2026-10-05 (prompt 06):*
+  - `ShardedPool(…, *, factories, serial_batch_sizes=None)`, and `drop_tables` in place of
+    `drop_actions`; the `Datastore` actor takes the same three; `ShardedPool.factories` returns
+    the registry;
+  - `open_read_only(primary, factories)` and `read_inventory(primary, factories)`;
+    `ReadOnlyStore.replicated_tables` is the store's recorded replicated set;
+  - `Datastore.SQL.schema.drop_order(tables)`;
+  - `config/datastore.py`: `factories`, `drop_groups`, `serial_batch_sizes`, `tables_to_drop`.
 - **07 ships** the `register()` keys (or factory hooks) for the facts of audit C1 rows 5 and 6. 07
   names them; `schema.build_schema` carries them into `built.records`.
 
@@ -213,6 +229,17 @@ recommendation below is the decision.
   from 2024–2025. **Recommended:** move all three to `config/`, as the sharding configuration was
   moved, with `main.py` passing them in; derive `_drop_order` from foreign keys if 06 can do so in
   scope. **Rejected:** leaving them (the layer keeps importing every factory).
+  *Two choices of method, taken by the user on 2026-10-05 while 06 was written, each as
+  recommended:*
+  - **The layer is given the tables to drop**, not the CLI's action names: `config/` holds the
+    action → tables groups, `main.py` resolves `--drop`, and the actor drops in an order derived
+    from foreign keys, so `_drop_order` is deleted. **Rejected:** giving the layer the names and the
+    groups (it would carry the client's vocabulary); moving both registries unchanged (the
+    hand-kept order stays, and it was wrong within every group).
+  - **The inventory reads the replicated set from the store**: every primary records it, and a
+    pool already refuses a store whose record differs from what it is given. This amends §2's
+    "given … (and the replicated set)". **Rejected:** a parameter, which could disagree with the
+    store it describes.
 - **U3 (taken, as recommended) — the registry's legacy records** (audit B11). **Recommended:** out of scope. They are
   records, not stores, the registry never deletes a record, and the old run directories are listed
   today.

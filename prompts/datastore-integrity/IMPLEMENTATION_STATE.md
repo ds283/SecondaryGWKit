@@ -1985,6 +1985,11 @@ None is assigned to a prompt of this campaign.
   - **Next step.** Order each action's list children-first (values and tags, then the parent), and
     extend `TestDropOrder`'s schema-derived check to tables within one action. `_drop_actions` was
     outside prompt 07's licence (`_drop_order` and its comment only).
+  - **Assigned (2026-10-05):** prompt 06 of `prompts/datastore-generic`, which moves the drop groups
+    to `config/datastore.py` and replaces `_drop_order` with an order derived from foreign keys
+    (`schema.drop_order`), within groups as well as between them. Measured while 06 was written:
+    the old order violated 15 within-group foreign keys on a `build_full_store` shard under
+    enforcement, and the derived order none. 06 closes it.
 - **[05c-read-back-guard-cannot-see-reads-in-a-comprehension]** *(opened 2026-09-28 by prompt 05c)*
   - **The defect.** `Datastore/tests/test_factory_select_columns.py`'s `analyse_build` walks
     nodes in pre-order. For `[f(row.x) for row in rows]` it reaches the element `row.x` before the

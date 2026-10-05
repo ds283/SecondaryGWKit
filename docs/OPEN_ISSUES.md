@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-05 · **107 open** across twenty campaigns.
+**Last updated:** 2026-10-05 · **108 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -785,7 +785,6 @@ below.
 | `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | **Narrowed 2026-09-28** by prompt 05b: `store()`'s `validated` key to no column is fixed. `OneLoopIntegral.build`/`read_batch` still put no `source_serial` in the payload, which the target reads. For when `OneLoopIntegral` is built. |
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber`/`QuadSourcePolicy` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
-| `[07-drop-actions-list-a-parent-table-before-its-children]` | datastore-integrity | Within each `_drop_actions` entry the parent table is dropped before its tag and value tables, so under foreign-key enforcement dropping an action that holds value rows fails on its own. Inert: production never turns enforcement on. Prompt 07 fixed only the order *between* actions. |
 | `[09b-gksource-members-are-not-checked-against-their-rows]` | datastore-integrity | `GkSource.store()` writes its `GkSource_parents` members unread: nothing checks each names rows for the source's `k` and model at its own `z_source`, or that its WKB row starts from its numeric row. Inert in the pipeline, where `compute()` asserts the set. |
 | `[10-distinct-lines-test-cannot-fail-for-three-labelled-classes-on-the-fixture]` | datastore-integrity | The amended distinct-lines test compares within a tag set, and the fixture holds one record per tag set of `QuadSource`, `GkNumericIntegration` and `GkWKBIntegration`, so it cannot fail for them. 09d's pair tests cover them. |
 
@@ -839,12 +838,16 @@ recorded here for its owner.
 project tables and decided that the datastore layer is made generic again and that every fallback
 for a store written by older code is deleted, through the campaign. Its audit
 (`docs/datastore-generic-audit.md`) opened three issues, one of them a defect in current code,
-`[00-old-store-refusals-misfire-on-any-database-error]`, closed by prompt 01.
+`[00-old-store-refusals-misfire-on-any-database-error]`, closed by prompt 01. On 2026-10-05
+`datastore-integrity`'s `[07-drop-actions-list-a-parent-table-before-its-children]` was assigned to
+prompt 06, and stays on that board until 06 closes it there.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader, the inventory, `Datastore` and `ClientPool` hard-code fourteen facts about the project's tables (`BackgroundModel`'s copy unit, the `redshift`/`wavenumber` flags, the factory registry as a private import, …). Assigned: prompts 06–09. |
 | `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` prints its "Cannot … sharded datastore" prefix twice (`_read_closed_store` wraps a message its caller wraps again). Cosmetic. The user will have it cleaned up. |
+| `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]` | datastore-generic | `--drop` of `gk-numeric`, `gk-wkb`, `gk-source`, `gk-source-policy`, `gk-source-policy-records` or `tk-numeric` alone leaves other groups' rows naming rows it dropped (1–4 per shard on the full fixture store, enforcement off); a re-created table's serials can then be reused [inferred]. A decision for the user: cascade, refuse, or document. Not assigned. |
+| `[07-drop-actions-list-a-parent-table-before-its-children]` | datastore-integrity | Within each `_drop_actions` entry the parent table is dropped before its tag and value tables, so under foreign-key enforcement dropping an action that holds value rows fails on its own. Inert: production never turns enforcement on. Assigned (2026-10-05): datastore-generic prompt 06, which derives the drop order from foreign keys. |
 
 ---
 
