@@ -1,0 +1,56 @@
+store:    <scratch>/stores/m1/full-before/full-store.sqlite
+digest:   6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     2  dab0c5f3b627
+                              2  dab0c5f3b627  []
+  store_tag                   5  8a0b31200608
+                              5  8a0b31200608  []
+  redshift                    5  eff7bd246938
+                              5  eff7bd246938  []
+  wavenumber                  3  daf7dea30e15
+                              3  daf7dea30e15  []
+  tolerance                   3  372d328f1634
+                              3  372d328f1634  []
+  LambdaCDM                   2  6cc6ac0719e3
+                              2  6cc6ac0719e3  []
+  QCD_Cosmology               1  3e7b69512050
+                              1  3e7b69512050  []
+  IntegrationSolver           2  0fdc56aa3a6b
+                              2  0fdc56aa3a6b  []
+  GkSourcePolicy              2  15634c5ae8ce
+                              2  15634c5ae8ce  []
+  QuadSourcePolicy            2  15634c5ae8ce
+                              2  15634c5ae8ce  []
+  wavenumber_exit_time        4  3a88ec88412c
+                              4  3a88ec88412c  []
+  BackgroundModel             2  4e702ff84ebf
+                              1  8bf5b55bac06  [Run_fixture]
+                              1  1d48f77570b5  [Run_fixture, grid-A]
+  TkNumericIntegration        3  5d5f1132739f
+                              2  c7e261d2d652  [Run_fixture, grid-A]
+                              1  54368a5fced4  [Run_fixture, grid-B]
+  TkWKBIntegration            3  923ade1abcba
+                              2  ea78e11948b2  [Run_fixture]
+                              1  c1ec39e06917  [Run_fixture, grid-A]
+  GkNumericIntegration        2  e8b5ee1164b8
+                              1  3c98a6f80489  [Run_fixture]
+                              1  5f8c43f4b933  [Run_fixture, grid-A]
+  GkWKBIntegration            2  19b1567d6f07
+                              1  dabe25f1ad53  [Run_fixture]
+                              1  30c77071ace1  [Run_fixture, grid-A]
+  GkSource                    3  c256dbd77a23
+                              1  a42b3f668dc8  [Run_fixture]
+                              2  db6807fce88d  [Run_fixture, grid-A]
+  GkSourcePolicyData          3  2169607c6132
+                              3  2169607c6132  []
+  QuadSource                  2  e5f060c27009
+                              1  138f617fdb5a  [Run_fixture]
+                              1  4d4e7f2651a2  [Run_fixture, grid-A]
+  QuadSourceIntegral          3  cc4367bbf048
+                              2  99e793cb6c94  [Run_fixture]
+                              1  7a0672b255ad  [Run_fixture, grid-A]
+  OneLoopIntegral             1  69ee0c9879de
+                              1  69ee0c9879de  [Run_fixture, oneloop-tag]
+problems: none
+recorded: none recorded (the sidecar is absent)

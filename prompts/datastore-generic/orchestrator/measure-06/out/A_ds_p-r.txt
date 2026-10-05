@@ -1,0 +1,1095 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+======================================================================
+ERROR: Datastore.tests.test_prune_at_open (unittest.loader._FailedTest.Datastore.tests.test_prune_at_open)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_prune_at_open
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_prune_at_open.py", line 43, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_quadsource_integral_parent_key (unittest.loader._FailedTest.Datastore.tests.test_quadsource_integral_parent_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_quadsource_integral_parent_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_quadsource_integral_parent_key.py", line 53, in <module>
+    from Datastore.tests.real_store_fixtures import build_full_store, full_rows, with_rows
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_quadsource_parent_key (unittest.loader._FailedTest.Datastore.tests.test_quadsource_parent_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_quadsource_parent_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_quadsource_parent_key.py", line 54, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_quadsource_policy_foreign_key (unittest.loader._FailedTest.Datastore.tests.test_quadsource_policy_foreign_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_quadsource_policy_foreign_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_quadsource_policy_foreign_key.py", line 36, in <module>
+    from Datastore.tests import real_store_fixtures as rsf
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_quadsource_policy_key (unittest.loader._FailedTest.Datastore.tests.test_quadsource_policy_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_quadsource_policy_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_quadsource_policy_key.py", line 47, in <module>
+    from Datastore.tests import real_store_fixtures as rsf
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: setUpModule (Datastore.tests.test_read_only_pool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_read_only_pool.py", line 113, in setUpModule
+    _MODULE["facts"] = rw.build_full_store(full / "store.sqlite", cluster)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/docs/a3-v2-readiness/reader_writes_probe.py", line 350, in build_full_store
+    pool = cluster.open_pool(primary, read_table_config=read_table_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: Datastore.tests.test_read_path_mechanics (unittest.loader._FailedTest.Datastore.tests.test_read_path_mechanics)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_read_path_mechanics
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_read_path_mechanics.py", line 46, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: test_a_new_store_has_no_reconciliation (Datastore.tests.test_reconcile_at_open.TestCleanStoreUntouched.test_a_new_store_has_no_reconciliation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_opening_a_clean_store_writes_nothing (Datastore.tests.test_reconcile_at_open.TestCleanStoreUntouched.test_opening_a_clean_store_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_hot_journal_on_one_shard_is_rolled_back_then_compared (Datastore.tests.test_reconcile_at_open.TestHotJournal.test_a_hot_journal_on_one_shard_is_rolled_back_then_compared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_hot_journal_on_the_primary_is_rolled_back_before_the_record_is_read (Datastore.tests.test_reconcile_at_open.TestHotJournal.test_a_hot_journal_on_the_primary_is_rolled_back_before_the_record_is_read)
+A crash inside the record's own transaction (P1): the primary's journal is rolled back
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_between_the_record_cleared_and_the_shard_key (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_between_the_record_cleared_and_the_shard_key)
+P3-K: the shards agree and there is no record; the reopen writes nothing, and the next
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_get_that_inserts_nothing (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_get_that_inserts_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_scalar_get (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_scalar_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_scalar_get_of_the_shard_key (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_scalar_get_of_the_shard_key)
+A wavenumber: after the repair the new key has no shard assignment, and the next get
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_scalar_get_that_turns_a_flag_on (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_scalar_get_that_turns_a_flag_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_of_a_background_model (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_store_of_a_background_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_of_a_second_background_model_beside_the_first (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_store_of_a_second_background_model_beside_the_first)
+A second model whose row equals the first's in every column but its serial (they
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_of_an_exit_time (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_store_of_an_exit_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_validate_of_a_background_model (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_validate_of_a_background_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_validate_whose_controller_counts_short (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_validate_whose_controller_counts_short)
+The controller's outcome False is not replicated; a failure at P1-C or C-P3 leaves
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_vectorized_get (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_vectorized_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_vectorized_get_that_inserts_and_turns_a_flag_on (Datastore.tests.test_reconcile_at_open.TestKillAndReopen.test_vectorized_get_that_inserts_and_turns_a_flag_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_store (Datastore.tests.test_reconcile_at_open.TestMismatchLeftByTheCheck.test_a_store)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_validate (Datastore.tests.test_reconcile_at_open.TestMismatchLeftByTheCheck.test_a_validate)
+r0 counts short (one of its value rows removed by hand while the pool is open), so its
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_vectorized_get (Datastore.tests.test_reconcile_at_open.TestMismatchLeftByTheCheck.test_a_vectorized_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_difference_in_a_sharded_table_is_not_looked_at (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_difference_in_a_sharded_table_is_not_looked_at)
+Sharded rows live on one shard; a hand edit to one is neither repaired nor refused.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_flag (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_flag)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_missing_row (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_missing_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_primary_without_the_record_table_is_refused (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_primary_without_the_record_table_is_refused)
+replication_in_flight is assumed: every primary the current code writes has it
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_timestamp_difference (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_timestamp_difference)
+Copies of one row that differ only in their timestamp refuse, and the difference is
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_validated_difference (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_validated_difference)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_value_count_difference (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_value_count_difference)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_value_row_held_under_another_serial (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_a_value_row_held_under_another_serial)
+BackgroundModelValue is compared under its own serial (e53f323): a value row that r0
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_an_extra_row (Datastore.tests.test_reconcile_at_open.TestNoRecordRefuses.test_an_extra_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 680, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_an_interrupted_store (Datastore.tests.test_reconcile_at_open.TestPruningAfterRepair.test_an_interrupted_store)
+The copied model is unvalidated everywhere: pruned on every shard, or kept on every
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_an_interrupted_validate (Datastore.tests.test_reconcile_at_open.TestPruningAfterRepair.test_an_interrupted_validate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_flag_the_controller_lacks (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_flag_the_controller_lacks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_recomputed_validated_that_disagrees (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_recomputed_validated_that_disagrees)
+A validate record whose controller holds validated=True over value rows that are
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_record_naming_another_class (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_record_naming_another_class)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_row_the_controller_lacks (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_row_the_controller_lacks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_row_the_recorded_write_did_not_insert (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_row_the_recorded_write_did_not_insert)
+The controller holds a row of the record's class that r0 lacks, but its timestamp is
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_shard_key_the_repair_does_not_supply (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_a_shard_key_the_repair_does_not_supply)
+The repair itself is licensed, but the comparison made after it still finds the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_part_of_a_background_model (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_part_of_a_background_model)
+A store of a second model interrupted before r0: r0 lacks the whole unit, which is
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_part_of_the_recorded_background_model (Datastore.tests.test_reconcile_at_open.TestRecordDoesNotExplain.test_part_of_the_recorded_background_model)
+A store of a model interrupted after its last replica committed (Rn-P3): every shard
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_the_refusal_pickles_with_its_fields (Datastore.tests.test_reconcile_at_open.TestSerialSplit.test_the_refusal_pickles_with_its_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 581, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_with_no_record (Datastore.tests.test_reconcile_at_open.TestSerialSplit.test_with_no_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 581, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_with_the_record_set (Datastore.tests.test_reconcile_at_open.TestSerialSplit.test_with_the_record_set)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 581, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 104, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_reconcile_at_open.py", line 114, in fresh
+    self.pool = self.cluster.open_pool(self.primary, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_get_that_inserts_nothing_replicates_nothing (Datastore.tests.test_replicated_write.TestCleanWrite.test_a_get_that_inserts_nothing_replicates_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_every_copy_is_row_identical (Datastore.tests.test_replicated_write.TestCleanWrite.test_every_copy_is_row_identical)
+Every column of every copy of every replicated row is the same on every shard, including
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_background_differing_row_raises (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_background_differing_row_raises)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_background_key_under_another_serial_raises (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_background_key_under_another_serial_raises)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_background_replay_writes_nothing_and_returns_the_row (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_background_replay_writes_nothing_and_returns_the_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_background_unvalidated_row_of_the_same_key_does_not_block (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_background_unvalidated_row_of_the_same_key_does_not_block)
+A store interrupted before its validation leaves an unvalidated row on every shard, which
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_exit_time_differing_row_raises (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_exit_time_differing_row_raises)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_exit_time_key_under_another_serial_raises (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_exit_time_key_under_another_serial_raises)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_exit_time_replay_writes_nothing_and_returns_the_row (Datastore.tests.test_replicated_write.TestIdempotentReplicaStores.test_exit_time_replay_writes_nothing_and_returns_the_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_controller_that_dies_after_its_commit_leaves_the_record (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_a_controller_that_dies_after_its_commit_leaves_the_record)
+The controlling shard commits and then dies before its answer reaches the driver. The
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_scalar_get (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_scalar_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_of_a_background_model (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_store_of_a_background_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_of_an_exit_time (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_store_of_an_exit_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_the_record_is_on_disk_during_every_shards_call (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_the_record_is_on_disk_during_every_shards_call)
+While each shard's call of a replicated write runs, the primary holds the record, for
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_validate_of_a_background_model (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_validate_of_a_background_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_vectorized_get (Datastore.tests.test_replicated_write.TestRecordAcrossTheWindow.test_vectorized_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_scalar_get (Datastore.tests.test_replicated_write.TestReplicaSerialMismatch.test_scalar_get)
+The split of the audit probe's step 4, by hand: one replica holds the key under a serial
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_store_over_a_replica_holding_the_key_under_another_serial (Datastore.tests.test_replicated_write.TestReplicaSerialMismatch.test_store_over_a_replica_holding_the_key_under_another_serial)
+The same split for a stored class: the replica's store refuses, naming its shard.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_the_exception_pickles_with_its_fields (Datastore.tests.test_replicated_write.TestReplicaSerialMismatch.test_the_exception_pickles_with_its_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_vectorized_get (Datastore.tests.test_replicated_write.TestReplicaSerialMismatch.test_vectorized_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_replicated_row_does_not_take_the_shards_time (Datastore.tests.test_replicated_write.TestShardedWritesUnchanged.test_a_replicated_row_does_not_take_the_shards_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_sharded_store_stamps_its_own_time_and_writes_no_record (Datastore.tests.test_replicated_write.TestShardedWritesUnchanged.test_a_sharded_store_stamps_its_own_time_and_writes_no_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_a_reopened_pool_repairs_from_the_controller_and_the_write_succeeds (Datastore.tests.test_replicated_write.TestWriteOverASetRecord.test_a_reopened_pool_repairs_from_the_controller_and_the_write_succeeds)
+Rewritten by prompts/datastore-integrity prompt 02 (the user's decision, 2026-09-28),
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 583, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_every_path_refuses (Datastore.tests.test_replicated_write.TestWriteOverASetRecord.test_every_path_refuses)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 583, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+======================================================================
+ERROR: test_overlapping_writes_are_a_programming_error (Datastore.tests.test_replicated_write.TestWriteOverASetRecord.test_overlapping_writes_are_a_programming_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 583, in setUp
+    super().setUp()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 100, in setUp
+    self.fresh()
+  File "<scratch>/wt/Datastore/tests/test_replicated_write.py", line 107, in fresh
+    self.pool = self.cluster.open_pool(self.primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/standin_pool.py", line 295, in open_pool
+    pool = sp_mod.ShardedPool(
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: ShardedPool.__init__() missing 1 required keyword-only argument: 'factories'
+
+----------------------------------------------------------------------
+Ran 72 tests in 0.029s
+
+FAILED (errors=73)

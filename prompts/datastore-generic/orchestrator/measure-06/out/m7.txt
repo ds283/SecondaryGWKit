@@ -1,0 +1,7 @@
+before exit 0
+wt exit 0
+<scratch>/out/m7_before.stdout:digest:   6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+<scratch>/out/m7_before.stdout:classes:  (count, digest; then each tag set)
+<scratch>/out/m7_wt.stdout:digest:   6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+<scratch>/out/m7_wt.stdout:classes:  (count, digest; then each tag set)
+stdout identical apart from taken/git lines

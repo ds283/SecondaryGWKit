@@ -1,0 +1,131 @@
+E........................................EEEEEEE
+======================================================================
+ERROR: Datastore.tests.test_schema_builder (unittest.loader._FailedTest.Datastore.tests.test_schema_builder)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_schema_builder
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 45, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_store_inventory (unittest.loader._FailedTest.Datastore.tests.test_store_inventory)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_store_inventory
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_store_inventory.py", line 45, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_store_reader (unittest.loader._FailedTest.Datastore.tests.test_store_reader)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_store_reader
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_store_reader.py", line 37, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_store_schema (unittest.loader._FailedTest.Datastore.tests.test_store_schema)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_store_schema
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_store_schema.py", line 42, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_value_reads_parent_key (unittest.loader._FailedTest.Datastore.tests.test_value_reads_parent_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_value_reads_parent_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_value_reads_parent_key.py", line 48, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_version_row_at_open (unittest.loader._FailedTest.Datastore.tests.test_version_row_at_open)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_version_row_at_open
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_version_row_at_open.py", line 40, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_wkb_numeric_parent_key (unittest.loader._FailedTest.Datastore.tests.test_wkb_numeric_parent_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_wkb_numeric_parent_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 67, in <module>
+    from Datastore.SQL.Datastore import _drop_actions, _factories
+ImportError: cannot import name '_drop_actions' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_wkb_parent_foreign_key (unittest.loader._FailedTest.Datastore.tests.test_wkb_parent_foreign_key)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_wkb_parent_foreign_key
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_wkb_parent_foreign_key.py", line 36, in <module>
+    from Datastore.tests import real_store_fixtures as rsf
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+----------------------------------------------------------------------
+Ran 48 tests in 4.149s
+
+FAILED (errors=8)

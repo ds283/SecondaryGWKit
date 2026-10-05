@@ -1,0 +1,2574 @@
+diff --git a/ComputeTargets/tests/test_gksource_parent_set_main.py b/ComputeTargets/tests/test_gksource_parent_set_main.py
+index 1e4f321..66e4217 100644
+--- a/ComputeTargets/tests/test_gksource_parent_set_main.py
++++ b/ComputeTargets/tests/test_gksource_parent_set_main.py
+@@ -37,7 +37,7 @@ from ComputeTargets.GkSource import (
+     GkSource_parent_set_of_values,
+ )
+ from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkSource import (
+     GkSource_parents_digest,
+     sqla_GkSource_factory,
+diff --git a/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py b/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
+index 472459d..11fdf7d 100644
+--- a/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
++++ b/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
+@@ -38,6 +38,7 @@ from Datastore.tests.real_store_fixtures import (
+     with_rows,
+ )
+ from tools.inventory_report import format_inventory_report
++from config.datastore import factories as _factories
+ 
+ KEY_COLUMN = "T_z_representation"
+ 
+@@ -67,7 +68,7 @@ class TestTheRepresentationInTheInventory(unittest.TestCase):
+         store = build_full_store(
+             directory, replicated=replicated, sharded=sharded, shard_keys=keys
+         )
+-        return read_inventory(store.primary)
++        return read_inventory(store.primary, _factories)
+ 
+     def qcd_lines(self, inventory, verbose):
+         section = sections(
+@@ -106,7 +107,7 @@ class TestTheRepresentationInTheInventory(unittest.TestCase):
+         store = build_full_store(
+             directory, replicated=replicated, sharded=sharded, shard_keys=keys
+         )
+-        inventory = read_inventory(store.primary)
++        inventory = read_inventory(store.primary, _factories)
+         for verbose in (False, True):
+             with self.subTest(verbose=verbose):
+                 _, (line,) = self.qcd_lines(inventory, verbose)
+diff --git a/ComputeTargets/tests/test_quadsource_integral_parent_main.py b/ComputeTargets/tests/test_quadsource_integral_parent_main.py
+index 8f632fc..0edce14 100644
+--- a/ComputeTargets/tests/test_quadsource_integral_parent_main.py
++++ b/ComputeTargets/tests/test_quadsource_integral_parent_main.py
+@@ -38,7 +38,7 @@ import sqlalchemy as sqla
+ 
+ from ComputeTargets import QuadSourceIntegral
+ from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
+ from Datastore.tests.test_quadsource_integral_parent_key import (
+     OTHER,
+diff --git a/ComputeTargets/tests/test_reader_read_only.py b/ComputeTargets/tests/test_reader_read_only.py
+index 7ebbe14..d3cf1e7 100644
+--- a/ComputeTargets/tests/test_reader_read_only.py
++++ b/ComputeTargets/tests/test_reader_read_only.py
+@@ -125,7 +125,7 @@ class TestTheSixReaders(unittest.TestCase):
+                 self.assertIsInstance(keywords["read_only"], ast.Constant)
+                 self.assertIs(keywords["read_only"].value, True)
+                 self.assertNotIn("prune_unvalidated", keywords)
+-                self.assertNotIn("drop_actions", keywords)
++                self.assertNotIn("drop_tables", keywords)
+                 # and it is the pool the with block opens
+                 self.assertIs(_pool_with(tree).items[0].context_expr, calls[0])
+ 
+diff --git a/Datastore/SQL/ClientPool.py b/Datastore/SQL/ClientPool.py
+index 1981b3c..6c9e814 100644
+--- a/Datastore/SQL/ClientPool.py
++++ b/Datastore/SQL/ClientPool.py
+@@ -1,52 +1,11 @@
+ import time
+-from typing import Optional
++from typing import Mapping, Optional
+ 
+ import ray
+ from ray.actor import ActorHandle
+ 
+ from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
+ 
+-_default_serial_batch_size = {
+-    "store_tag": 5,
+-    "redshift": 200,
+-    "wavenumber": 100,
+-    "wavenumber_exit_time": 100,
+-    "tolerance": 5,
+-    "LambdaCDM": 5,
+-    "QCD_Cosmology": 5,
+-    "IntegrationSolver": 6,
+-    "BackgroundModel": 5,
+-    "BackgroundModelValue": 100,
+-    "TkNumericIntegration": 200,
+-    "TkNumeric_tags": 1000,
+-    "TkNumericValue": 7500,
+-    "TkWKBIntegration": 200,
+-    "TkWKB_tags": 1000,
+-    "TkWKBValue": 7500,
+-    "GkNumericIntegration": 200,
+-    "GkNumeric_tags": 1000,
+-    "GkNumericValue": 7500,
+-    "GkWKBIntegration": 200,
+-    "GkWKB_tags": 1000,
+-    "GkWKBValue": 7500,
+-    "GkSourcePolicy": 5,
+-    "GkSourcePolicyData": 50,
+-    "GkSource": 200,
+-    "GkSource_tags": 1000,
+-    "GkSourceValue": 7500,
+-    # one row per z_source of each GkSource, as GkSourceValue has (prompts/datastore-integrity,
+-    # prompt 09b)
+-    "GkSource_parents": 7500,
+-    "QuadSource": 200,
+-    "QuadSourcePolicy": 5,
+-    "QuadSource_tags": 1000,
+-    "QuadSourceValue": 7500,
+-    "QuadSourceIntegral": 10000,
+-    "QuadSourceIntegral_tags": 3000,
+-    "OneLoopIntegral": 10000,
+-    "OneLoopIntegral_tags": 3000,
+-}
+-
+ 
+ class ClientPool:
+     def __init__(
+@@ -145,8 +104,13 @@ class SerialPoolManager:
+         profiler: ProfileBatcher,
+         broker: Optional[ActorHandle] = None,
+         default_sync_interval: int = DEFAULT_SERIAL_SYNC_INTERVAL,
++        batch_sizes: Optional[Mapping[str, int]] = None,
+     ):
+         self._broker = broker
++        # per-table lease batch sizes, given by the client; a table not named leases 500 at a time
++        self._batch_sizes: Mapping[str, int] = (
++            dict(batch_sizes) if batch_sizes is not None else {}
++        )
+         self._profiler = profiler
+ 
+         self._tables = {}
+@@ -163,7 +127,7 @@ class SerialPoolManager:
+                 table,
+                 self._profiler,
+                 self._broker,
+-                default_batch_size=_default_serial_batch_size.get(table, 500),
++                default_batch_size=self._batch_sizes.get(table, 500),
+             )
+ 
+         serial = self._tables[table].lease_serial()
+diff --git a/Datastore/SQL/Datastore.py b/Datastore/SQL/Datastore.py
+index 32d0315..6edb79d 100644
+--- a/Datastore/SQL/Datastore.py
++++ b/Datastore/SQL/Datastore.py
+@@ -11,69 +11,7 @@ from ray.actor import ActorHandle
+ from sqlalchemy.exc import SQLAlchemyError
+ 
+ from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
+-from Datastore.SQL.ObjectFactories.BackgroundModel import (
+-    sqla_BackgroundModelFactory,
+-    sqla_BackgroundModelTagAssociation_factory,
+-    sqla_BackgroundModelValue_factory,
+-)
+-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+-    sqla_GkNumericIntegration_factory,
+-    sqla_GkNumericValue_factory,
+-    sqla_GkNumericTagAssociation_factory,
+-)
+-from Datastore.SQL.ObjectFactories.GkSource import (
+-    sqla_GkSourceTagAssociation_factory,
+-    sqla_GkSource_factory,
+-    sqla_GkSourceValue_factory,
+-    sqla_GkSourceParents_factory,
+-)
+-from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
+-from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
+-    sqla_GkSourcePolicyData_factory,
+-)
+-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+-    sqla_GkWKBIntegration_factory,
+-    sqla_GkWKBTagAssociation_factory,
+-    sqla_GkWKBValue_factory,
+-)
+-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+-from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
+-    sqla_OneLoopIntegral_factory,
+-    sqla_OneLoopIntegralTagAssociation_factory,
+-)
+-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+-from Datastore.SQL.ObjectFactories.QuadSource import (
+-    sqla_QuadSource_factory,
+-    sqla_QuadSourceTagAssocation_factory,
+-    sqla_QuadSourceValue_factory,
+-)
+-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+-    sqla_QuadSourceIntegralTagAssociation_factory,
+-    sqla_QuadSourceIntegral_factory,
+-)
+-from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
+-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+-    sqla_TkNumericIntegration_factory,
+-    sqla_TkNumericValue_factory,
+-    sqla_TkNumericTagAssociation_factory,
+-)
+-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+-    sqla_TkWKBIntegration_factory,
+-    sqla_TkWKBTagAssociation_factory,
+-    sqla_TkWKBValue_factory,
+-)
+ from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+-from Datastore.SQL.ObjectFactories.integration_metadata import (
+-    sqla_IntegrationSolver_factory,
+-)
+-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
+-from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
+-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
+-from Datastore.SQL.ObjectFactories.version import sqla_version_factory
+-from Datastore.SQL.ObjectFactories.wavenumber import (
+-    sqla_wavenumber_factory,
+-    sqla_wavenumber_exit_time_factory,
+-)
+ from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
+ from Datastore.SQL.schema import build_schema
+ from Datastore.replication import ReplicationMismatch
+@@ -86,89 +24,10 @@ VERSION_ID_LENGTH = 64
+ PathType = Union[str, PathLike]
+ 
+ 
+-_factories = {
+-    "version": sqla_version_factory,
+-    "store_tag": sqla_store_tag_factory,
+-    "redshift": sqla_redshift_factory,
+-    "wavenumber": sqla_wavenumber_factory,
+-    "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
+-    "tolerance": sqla_tolerance_factory,
+-    "LambdaCDM": sqla_LambdaCDM_factory,
+-    "QCD_Cosmology": sqla_QCDCosmology_factory,
+-    "IntegrationSolver": sqla_IntegrationSolver_factory,
+-    "BackgroundModel": sqla_BackgroundModelFactory,
+-    "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,
+-    "BackgroundModelValue": sqla_BackgroundModelValue_factory,
+-    "TkNumericIntegration": sqla_TkNumericIntegration_factory,
+-    "TkNumeric_tags": sqla_TkNumericTagAssociation_factory,
+-    "TkNumericValue": sqla_TkNumericValue_factory,
+-    "TkWKBIntegration": sqla_TkWKBIntegration_factory,
+-    "TkWKB_tags": sqla_TkWKBTagAssociation_factory,
+-    "TkWKBValue": sqla_TkWKBValue_factory,
+-    "GkNumericIntegration": sqla_GkNumericIntegration_factory,
+-    "GkNumeric_tags": sqla_GkNumericTagAssociation_factory,
+-    "GkNumericValue": sqla_GkNumericValue_factory,
+-    "GkWKBIntegration": sqla_GkWKBIntegration_factory,
+-    "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
+-    "GkWKBValue": sqla_GkWKBValue_factory,
+-    "GkSourcePolicy": sqla_GkSourcePolicy_factory,
+-    "GkSourcePolicyData": sqla_GkSourcePolicyData_factory,
+-    "GkSource": sqla_GkSource_factory,
+-    "GkSource_tags": sqla_GkSourceTagAssociation_factory,
+-    "GkSourceValue": sqla_GkSourceValue_factory,
+-    # the Gk rows each GkSource is assembled from (prompts/datastore-integrity, prompt 09b)
+-    "GkSource_parents": sqla_GkSourceParents_factory,
+-    "QuadSourcePolicy": sqla_QuadSourcePolicy_factory,
+-    "QuadSource": sqla_QuadSource_factory,
+-    "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
+-    "QuadSourceValue": sqla_QuadSourceValue_factory,
+-    "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
+-    "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
+-    "OneLoopIntegral": sqla_OneLoopIntegral_factory,
+-    "OneLoopIntegral_tags": sqla_OneLoopIntegralTagAssociation_factory,
+-}
+-
+ _FactoryMappingType = Mapping[str, SQLAFactoryBase]
+ _TableMappingType = Mapping[str, sqla.Table]
+ _InserterMappingType = Mapping[str, Callable]
+ 
+-_drop_actions = {
+-    "1loop-integral": [
+-        "OneLoopIntegral",
+-        "OneLoopIntegral_tags",
+-    ],
+-    "quad-source-integral": [
+-        "QuadSourceIntegral",
+-        "QuadSourceIntegral_tags",
+-    ],
+-    "gk-source-policy": ["GkSourcePolicyData"],
+-    "gk-source-policy-records": ["GkSourcePolicy"],
+-    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue", "GkSource_parents"],
+-    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
+-    "gk-numeric": ["GkNumericIntegration", "GkNumeric_tags", "GkNumericValue"],
+-    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
+-    "tk-numeric": ["TkNumericIntegration", "TkNumeric_tags", "TkNumericValue"],
+-    "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
+-}
+-# should drop tables in a defined order, so that we do not violate foreign key constraints: an
+-# action whose tables declare a foreign key into another action's tables drops first. In
+-# particular a WKB row references the numeric row it starts from (numeric_serial,
+-# prompts/datastore-integrity prompt 07), so "gk-wkb" drops before "gk-numeric" and "tk-wkb" before
+-# "tk-numeric"; and QuadSource.Tq_serial references TkNumericIntegration (prompt 06), so
+-# "quad-source" drops before "tk-numeric" too
+-_drop_order = [
+-    "1loop-integral",
+-    "quad-source-integral",
+-    "gk-source-policy",
+-    "gk-source-policy-records",
+-    "gk-source",
+-    "gk-wkb",
+-    "gk-numeric",
+-    "quad-source",
+-    "tk-wkb",
+-    "tk-numeric",
+-]
+-
+ # read table configuration should be a Dict with the mapping
+ # class_name -> {"tables_arg": bool}
+ ReadTableConfigType = Dict[str, Any]
+@@ -181,12 +40,14 @@ class Datastore:
+         version_label: str,
+         db_name: PathType,
+         replicated_tables: List[str],
++        factories: _FactoryMappingType,
++        serial_batch_sizes: Optional[Mapping[str, int]] = None,
+         timeout: Optional[int] = None,
+         my_name: Optional[str] = None,
+         serial_broker: Optional[ActorHandle] = None,
+         profile_agent: Optional[ActorHandle] = None,
+         prune_unvalidated: Optional[bool] = False,
+-        drop_actions: Optional[List[str]] = None,
++        drop_tables: Optional[List[str]] = None,
+         read_table_config: Optional[ReadTableConfigType] = None,
+         read_only: bool = False,
+     ):
+@@ -229,14 +90,16 @@ class Datastore:
+ 
+         self._serial_broker = serial_broker
+         self._serial_manager = SerialPoolManager(
+-            profiler=self._profile_batcher, broker=self._serial_broker
++            profiler=self._profile_batcher,
++            broker=self._serial_broker,
++            batch_sizes=serial_batch_sizes,
+         )
+ 
+         self._db_file = Path(db_name).resolve()
+ 
+         # initialize set of registered storable class adapters
+         self._factories: _FactoryMappingType = {}
+-        self.register_factories(_factories)
++        self.register_factories(factories)
+ 
+         # initialize empty dict of storage schema
+         # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class factories
+@@ -247,7 +110,7 @@ class Datastore:
+         # A READ-ONLY ACTOR (prompts/a3-v2-readiness, prompt 03): nothing below this block runs
+         self._read_only: bool = bool(read_only)
+         if self._read_only:
+-            self._open_read_only(drop_actions)
++            self._open_read_only(drop_tables)
+             self._read_table_config = read_table_config
+             return
+ 
+@@ -264,7 +127,7 @@ class Datastore:
+         else:
+             self._create_engine()
+             self._build_schema()
+-            self._drop_actions(drop_actions)
++            self._drop_tables(drop_tables)
+             self._ensure_tables()
+             self._validate_on_startup()
+ 
+@@ -298,15 +161,15 @@ class Datastore:
+     # be refused by _insert before a serial is leased; and the mode=ro file refuses any write that
+     # reaches SQLite, which _read_only_refusal re-raises as ReadOnlyWrite.
+ 
+-    def _open_read_only(self, drop_actions):
++    def _open_read_only(self, drop_tables):
+         """The read-only constructor. Writes nothing; refuses before opening anything if asked
+         to drop or prune, and refuses a file that does not exist rather than create it.
+         """
+-        if drop_actions is not None and len(list(drop_actions)) > 0:
++        if drop_tables is not None and len(list(drop_tables)) > 0:
+             raise ReadOnlyWrite(
+                 self._my_name,
+-                f"drop_actions={sorted(drop_actions)}",
+-                detail="a drop action drops tables",
++                f"drop_tables={sorted(drop_tables)}",
++                detail="dropping a table is a write",
+             )
+         if self._prune_unvalidated:
+             raise ReadOnlyWrite(
+@@ -535,33 +398,34 @@ class Datastore:
+                 f'No storable class of type "{cls_name}" has been registered'
+             )
+ 
+-    def _drop_actions(self, actions):
+-        if actions is None:
++    def _drop_tables(self, tables):
++        """
++        Drop the named tables that this shard holds, in foreign-key order derived from the schema:
++        a table that references another of the dropped tables is dropped before it. A table this
++        shard lacks is skipped (U1: an interrupted earlier drop leaves some absent). A name the
++        registry does not declare raises before anything is dropped.
++        """
++        if tables is None:
+             return
+ 
+-        if not isinstance(actions, Iterable):
+-            raise RuntimeError("Could not interpret actions type")
+-
+-        actions = set(actions)
+-        dropped = set()
+-        for action in _drop_order:
+-            if action in actions:
+-                print(f'Datastore: dropping tables for "{action}"')
+-                drop_list = _drop_actions[action]
+-                for table_name in drop_list:
+-                    if self._inspector.has_table(table_name):
+-                        tab = self._tables.get(table_name, None)
+-                        if tab is not None:
+-                            tab.drop(self._engine)
+-                            self._metadata.remove(tab)
+-                dropped.add(action)
+-
+-        for action in dropped:
+-            while action in actions:
+-                actions.remove(action)
+-
+-        for action in actions:
+-            print(f'Datastore: unknown drop action "{action}"')
++        if not isinstance(tables, Iterable) or isinstance(tables, str):
++            raise RuntimeError("Could not interpret drop_tables type")
++
++        names = list(dict.fromkeys(tables))
++        undeclared = [name for name in names if name not in self._tables]
++        if len(undeclared) > 0:
++            raise RuntimeError(
++                f'Datastore "{self._my_name}": cannot drop {undeclared}, which the registry does '
++                f"not declare as tables. Nothing was dropped"
++            )
++
++        # sort_tables puts a referenced table before the tables that reference it; drop in reverse
++        ordered = reversed(sqla.schema.sort_tables([self._tables[n] for n in names]))
++        for tab in ordered:
++            if self._inspector.has_table(tab.name):
++                print(f'Datastore: dropping table "{tab.name}"')
++                tab.drop(self._engine)
++                self._metadata.remove(tab)
+ 
+         # regenerate inspector to pick up any changes that were made
+         # (the inspector apparently does not automatically reflect dropped tables)
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 40fc1e8..1c92088 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -5,13 +5,13 @@ import shutil
+ import sqlite3
+ from datetime import datetime
+ from pathlib import Path
+-from typing import Optional, List, Dict, Callable, NamedTuple, Tuple
++from typing import Optional, List, Dict, Callable, Mapping, NamedTuple, Tuple
+ 
+ import ray
+ import sqlalchemy as sqla
+ 
+ from Datastore.SQL import Datastore
+-from Datastore.SQL.Datastore import PathType, ReadTableConfigType, _factories
++from Datastore.SQL.Datastore import PathType, ReadTableConfigType
+ from Datastore.SQL.ProfileAgent import ProfileAgent
+ from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
+ from Datastore.SQL.schema import (
+@@ -105,9 +105,12 @@ class ShardedPool:
+         profile_agent: Optional[ProfileAgent] = None,
+         job_name: Optional[str] = None,
+         prune_unvalidated: Optional[bool] = False,
+-        drop_actions: Optional[List[str]] = None,
++        drop_tables: Optional[List[str]] = None,
+         read_table_config: Optional[ReadTableConfigType] = None,
+         read_only: bool = False,
++        *,
++        factories: Mapping,
++        serial_batch_sizes: Optional[Mapping[str, int]] = None,
+     ) -> None:
+         """
+         Initialize a pool of datastore actors
+@@ -117,12 +120,27 @@ class ShardedPool:
+         :param version_label:
+         :param read_only: open an existing store read-only, writing nothing to any of its files
+             (prompts/a3-v2-readiness, prompt 03; _open_read_only)
++        :param factories: the registry of storable classes, name -> factory. The pool and its
++            actors build every table from it; the pool imports none
++        :param serial_batch_sizes: per-table serial lease batch sizes, given to every actor
++        :param drop_tables: tables each actor drops at open, in foreign-key order. A name the
++            registry does not declare is refused before anything is opened
+         """
+         self._job_name: Optional[str] = job_name
+         self._version_label: str = version_label
+ 
+         self._prune_unvalidated: Optional[List[str]] = prune_unvalidated
+ 
++        ## THE CLIENT'S REGISTRY
++
++        self._factories: Mapping = dict(factories)
++        self._serial_batch_sizes: Optional[Mapping[str, int]] = (
++            dict(serial_batch_sizes) if serial_batch_sizes is not None else None
++        )
++        self._drop_tables: Optional[List[str]] = (
++            list(drop_tables) if drop_tables is not None else None
++        )
++
+         ## SHARDING CONFIGURATION
+ 
+         # expected type of shard key
+@@ -177,8 +195,12 @@ class ShardedPool:
+         # every file mode=ro and writes nothing to any of them; _open_read_only is the whole of its
+         # construction, and nothing below this block runs for it
+         self._read_only: bool = bool(read_only)
++
++        # a drop table the registry does not declare is refused before anything is opened
++        self._refuse_undeclared_drop_tables()
++
+         if self._read_only:
+-            self._open_read_only(version_label, drop_actions, read_table_config)
++            self._open_read_only(version_label, self._drop_tables, read_table_config)
+             return
+ 
+         # if primary file is absent, all shard databases should be likewise absent
+@@ -273,12 +295,14 @@ class ShardedPool:
+                 version_label=version_label,
+                 db_name=self._shard_db_files[key],
+                 replicated_tables=list(self._replicated_tables),
++                factories=self._factories,
++                serial_batch_sizes=self._serial_batch_sizes,
+                 timeout=self._timeout,
+                 my_name=f"shard{key:04d}-store",
+                 serial_broker=self._broker,
+                 profile_agent=self._profile_agent,
+                 prune_unvalidated=self._prune_unvalidated,
+-                drop_actions=drop_actions,
++                drop_tables=self._drop_tables,
+                 read_table_config=read_table_config,
+             )
+             for key in shard_ids
+@@ -370,7 +394,7 @@ class ShardedPool:
+     # after the attributes are set; the read-write path does not reach it. At open, in order (the
+     # audit's M1 table, row by row, is in the prompt's log):
+     #
+-    #   1. drop_actions or prune_unvalidated=True: ReadOnlyWrite, before anything is opened;
++    #   1. drop_tables or prune_unvalidated=True: ReadOnlyWrite, before anything is opened;
+     #   2. store_reader.open_read_only, through a function-scope import (store_reader imports this
+     #      module): a missing primary is refused and nothing is created, not even its directory; a
+     #      journal (-journal, -wal, -shm) beside the primary or any shard is refused by its
+@@ -399,14 +423,14 @@ class ShardedPool:
+     # object_validate and a new shard key raise ReadOnlyWrite; the actors' inserters raise
+     # ReadOnlyMiss.
+ 
+-    def _open_read_only(self, version_label: str, drop_actions, read_table_config):
++    def _open_read_only(self, version_label: str, drop_tables, read_table_config):
+         """The read-only constructor (the comment above). Writes nothing to any file."""
+         # 1. refused before anything is opened
+-        if drop_actions is not None and len(list(drop_actions)) > 0:
++        if drop_tables is not None and len(list(drop_tables)) > 0:
+             raise ReadOnlyWrite(
+                 self._primary_file,
+-                f"drop_actions={sorted(drop_actions)}",
+-                detail="a drop action drops tables",
++                f"drop_tables={sorted(drop_tables)}",
++                detail="dropping a table is a write",
+             )
+         if self._prune_unvalidated:
+             raise ReadOnlyWrite(
+@@ -421,7 +445,7 @@ class ShardedPool:
+         # 2. store_reader's refusals, through its code: missing primary, journals by presence,
+         # the shards table read mode=ro and its files checked, and a shard whose file differs from
+         # the declared tables. It is entered only for these refusals: nothing it yields is kept
+-        with open_read_only(self._primary_file):
++        with open_read_only(self._primary_file, self._factories):
+             pass
+ 
+         # 3. the pool's engine, mode=ro. _create_engine builds the tables this pool reads; the
+@@ -469,12 +493,14 @@ class ShardedPool:
+                 version_label=version_label,
+                 db_name=self._shard_db_files[key],
+                 replicated_tables=list(self._replicated_tables),
++                factories=self._factories,
++                serial_batch_sizes=self._serial_batch_sizes,
+                 timeout=self._timeout,
+                 my_name=f"shard{key:04d}-store",
+                 serial_broker=None,
+                 profile_agent=self._profile_agent,
+                 prune_unvalidated=False,
+-                drop_actions=None,
++                drop_tables=None,
+                 read_table_config=read_table_config,
+                 read_only=True,
+             )
+@@ -536,7 +562,7 @@ class ShardedPool:
+                 "record was not cleared",
+             )
+ 
+-        built = build_schema(sqla.MetaData(), _factories)
++        built = build_schema(sqla.MetaData(), self._factories)
+         specs = self._replicated_table_specs(built)
+         reconciliation["compared"] = [spec["name"] for spec in specs]
+ 
+@@ -619,6 +645,23 @@ class ShardedPool:
+             class_name=", ".join(sorted({type(item).__name__ for item in items})),
+         )
+ 
++    @property
++    def factories(self) -> Mapping:
++        """The registry of storable classes this pool was given (read-only: a copy)."""
++        return dict(self._factories)
++
++    def _refuse_undeclared_drop_tables(self) -> None:
++        """Refuse, before anything is opened, a drop table the registry does not declare."""
++        if not self._drop_tables:
++            return
++        declared = build_schema(sqla.MetaData(), self._factories).tables
++        undeclared = [name for name in self._drop_tables if name not in declared]
++        if len(undeclared) > 0:
++            raise RuntimeError(
++                f'Cannot open sharded datastore "{str(self._primary_file)}": cannot drop '
++                f"{undeclared}, which the registry does not declare as tables. Nothing was opened"
++            )
++
+     @property
+     def primary(self) -> Path:
+         """
+@@ -1044,7 +1087,7 @@ class ShardedPool:
+                 f'>> Rolled back the journal left beside "{path}" before comparing the replicated tables'
+             )
+ 
+-        built = build_schema(sqla.MetaData(), _factories)
++        built = build_schema(sqla.MetaData(), self._factories)
+ 
+         # 1b. every shard holds the declared tables with exactly their declared columns, or the
+         # store is refused by name, before the record is read and before anything is compared or
+@@ -1840,7 +1883,7 @@ class ShardedPool:
+         is written False. A shard holding True whose rule gives False refuses. Return (actions,
+         refusals); whether the shards then agree is for the second comparison.
+         """
+-        factory = _factories["BackgroundModel"]
++        factory = self._factories["BackgroundModel"]
+         table = built.tables["BackgroundModel"]
+         serial = record["store_id"]
+ 
+@@ -2002,7 +2045,7 @@ class ShardedPool:
+         """Whether any shard holds a row of ``cls_name`` that its factory calls unvalidated,
+         read by the factory's own validate_on_startup with prune=False. Writes nothing.
+         """
+-        factory = _factories[cls_name]
++        factory = self._factories[cls_name]
+         table = built.tables[cls_name]
+         for sid in shard_ids:
+             engine = self._reconcile_engine(self._shard_db_files[sid])
+@@ -2034,7 +2077,7 @@ class ShardedPool:
+             # a shard without the table holds nothing to prune; an actor creates it empty
+             return [], []
+ 
+-        factory = _factories[cls_name]
++        factory = self._factories[cls_name]
+         table = built.tables[cls_name]
+         unit = self._prune_unit(cls_name, built, specs)
+         path = self._shard_db_files[sid]
+@@ -2151,7 +2194,7 @@ class ShardedPool:
+         its own "prune" record (the comment above). Return what was deleted, one entry per table
+         and shard. Called only under prune_unvalidated.
+         """
+-        built = build_schema(sqla.MetaData(), _factories)
++        built = build_schema(sqla.MetaData(), self._factories)
+         specs = self._replicated_table_specs(built)
+         shard_ids = sorted(self._shard_db_files.keys())
+ 
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index f793d39..902b1e9 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -1,7 +1,7 @@
+ """
+ A structured inventory of a **closed** ShardedPool store: what it holds, named by physical labels.
+ 
+-``read_inventory(primary)`` opens the store with ``open_read_only`` (prompt 01) and returns a
++``read_inventory(primary, factories)`` opens the store with ``open_read_only`` (prompt 01) and returns a
+ ``StoreInventory``. For each class it holds ``records``, their ``count``, the earliest and latest
+ ``timestamp`` (for display only: no timestamp is in any record) and ``problems``, a list of named
+ strings. It reads; it never writes, and it needs no Ray.
+@@ -39,7 +39,7 @@ form. A float becomes ``float.hex`` of the value **as stored**; an integer, stri
+ **Shards.** A sharded class is the union of every shard's records. A replicated class is read from
+ every shard and compared on key, tags, validated flag and value count; its records are the
+ lowest-serial shard's, and any shard that differs is a named problem (``replicated-divergence``).
+-Nothing is repaired.
++Which classes are replicated is what the store's primary records. Nothing is repaired.
+ 
+ **Named problems.** Each problem string starts with its name:
+ 
+@@ -65,8 +65,8 @@ render the set by its physical labels. The member table is read once per shard,
+ tag and value tables are.
+ 
+ This module imports only the standard library and ``sqlalchemy`` at module scope, so a factory can
+-import it from inside its ``inventory_records``. The reader and the factory map are imported inside
+-``read_inventory``.
++import it from inside its ``inventory_records``. The reader is imported inside ``read_inventory``,
++and the factory registry is given to it.
+ """
+ 
+ import contextlib
+@@ -834,22 +834,20 @@ def _combine(
+     )
+ 
+ 
+-def read_inventory(primary: PathType) -> StoreInventory:
++def read_inventory(primary: PathType, factories: Mapping[str, Any]) -> StoreInventory:
+     """
+     The structured inventory of the closed store whose primary is ``primary``.
+ 
+     Read through ``open_read_only``: every file ``mode=ro``, a journal refused, no Ray. Each class
+     in ``INVENTORY_CLASSES`` is built in that order by its factory's ``inventory_records`` on every
+     shard, and then combined: a sharded class as the union, a replicated class compared across
+-    shards (module docstring).
++    shards (module docstring). ``factories`` is the registry of storable classes; which classes
++    are replicated is read from the store's primary.
+     """
+-    from Datastore.SQL.Datastore import _factories
+     from Datastore.store_reader import open_read_only
+-    from config.sharding import replicated_tables
+ 
+-    replicated = set(replicated_tables)
+-
+-    with open_read_only(primary) as store, contextlib.ExitStack() as stack:
++    with open_read_only(primary, factories) as store, contextlib.ExitStack() as stack:
++        replicated = set(store.replicated_tables)
+         conns = {
+             shard.serial: stack.enter_context(shard.engine.connect())
+             for shard in store.shards
+@@ -866,7 +864,7 @@ def read_inventory(primary: PathType) -> StoreInventory:
+ 
+         classes: Dict[str, ClassInventory] = {}
+         for name in INVENTORY_CLASSES:
+-            factory = _factories[name]
++            factory = factories[name]
+             reads: Dict[int, ShardRead] = {}
+             for shard in store.shards:
+                 context = ShardContext(
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index 07c7310..94c260b 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -1,10 +1,11 @@
+ """
+ A read-only reader over a **closed** ShardedPool store.
+ 
+-``open_read_only(primary)`` is a context manager. It finds the store's shards through
++``open_read_only(primary, factories)`` is a context manager. It finds the store's shards through
+ ``ShardedPool._read_closed_store`` (the one implementation of reading and checking a primary's
+ ``shards`` table), opens every shard file read-only, and builds the tables once with the one schema
+-builder, ``Datastore.SQL.schema.build_schema``. It yields a ``ReadOnlyStore``; on exit it disposes
++builder, ``Datastore.SQL.schema.build_schema``, from the registry ``factories`` it is given. It
++reads the replicated set the primary records (its ``replicated_tables`` table). It yields a ``ReadOnlyStore``; on exit it disposes
+ every engine it made.
+ 
+ **It cannot write.** It is not "careful"; it has no write path:
+@@ -19,8 +20,8 @@ every engine it made.
+ - there is no ``create_all``, no ``Datastore._ensure_tables``, no DDL and no DML.
+ 
+ **It needs no Ray.** It never calls ``ray.init`` and never constructs a ``Datastore`` actor or a
+-``ShardedPool``. Importing this module imports ``ray`` transitively, through the factory map in
+-``Datastore/SQL/Datastore.py`` and through ``ShardedPool``; that initialises nothing.
++``ShardedPool``. Importing this module imports ``ray`` transitively, through ``ShardedPool``; that
++initialises nothing.
+ 
+ **A store whose files differ from the declared tables is refused.** Every shard file is compared
+ with the tables ``build_schema`` declares by ``Datastore.SQL.schema.schema_differences``, before
+@@ -33,13 +34,13 @@ recover: a store written by older code is regenerated, not read.
+ 
+ import contextlib
+ import os
++import sqlite3
+ from dataclasses import dataclass
+ from pathlib import Path
+ from typing import Iterator, Mapping, Tuple, Union
+ 
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
+ from Datastore.SQL.ShardedPool import ShardedPool
+ from Datastore.SQL.schema import (
+     StoreSchemaMismatch,
+@@ -70,12 +71,14 @@ class ReadOnlyShard:
+ 
+ @dataclass(frozen=True)
+ class ReadOnlyStore:
+-    """A closed store opened read-only: its primary, and its shards in serial order."""
++    """A closed store opened read-only: its primary, its shards in serial order, and the classes
++    its primary records as replicated, in the order of their serials."""
+ 
+     primary: Path
+     shards: Tuple[ReadOnlyShard, ...]
+     tables: Mapping[str, sqla.Table]
+     records: Mapping[str, Mapping]
++    replicated_tables: Tuple[str, ...]
+ 
+     def shard(self, serial: int) -> ReadOnlyShard:
+         for shard in self.shards:
+@@ -130,15 +133,45 @@ def _describe_shard(
+     return ReadOnlyShard(serial=serial, path=path, engine=engine, tables=tables)
+ 
+ 
++def _read_replicated_tables(primary: Path, factories: Mapping) -> Tuple[str, ...]:
++    """The classes the primary records as replicated, in serial order, read ``mode=ro``. Refuses
++    a primary whose ``replicated_tables`` cannot be read, or that names a class the registry does
++    not declare."""
++    try:
++        conn = sqlite3.connect(f"{primary.as_uri()}?mode=ro", uri=True)
++        try:
++            rows = conn.execute(
++                'SELECT serial, "table" FROM replicated_tables ORDER BY serial'
++            ).fetchall()
++        finally:
++            conn.close()
++    except sqlite3.Error as e:
++        raise _refuse(
++            primary, f"its replicated_tables table could not be read ({e})"
++        ) from e
++
++    names = tuple(row[1] for row in rows)
++    undeclared = [name for name in names if name not in factories]
++    if len(undeclared) > 0:
++        raise _refuse(
++            primary,
++            f"its replicated_tables table names {undeclared}, which the registry does not declare",
++        )
++    return names
++
++
+ @contextlib.contextmanager
+-def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
++def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlyStore]:
+     """
+     Open the closed store whose primary is ``primary``, read-only, and yield a ``ReadOnlyStore``.
+ 
++    ``factories`` is the registry of storable classes (name -> factory) the tables are built from.
++
+     Refuses with ``RuntimeError``, naming the file, before any shard is opened, if: the primary is
+     missing, not a regular file or a symbolic link; the primary or any shard has a journal file
+     beside it; the primary's ``shards`` table cannot be read, or names a shard that is unusable
+-    (``ShardedPool._read_closed_store``); or the primary records no shards.
++    (``ShardedPool._read_closed_store``); the primary records no shards; or its
++    ``replicated_tables`` table cannot be read, or names a class ``factories`` does not declare.
+ 
+     Refuses with ``StoreSchemaMismatch`` (a ``RuntimeError``), naming the shard, before anything
+     reads its tables and before anything is yielded, if a shard's file differs from the tables
+@@ -164,7 +197,9 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
+     for serial, path in sorted(files.items()):
+         _refuse_journals(primary_path, Path(path), f"shard #{serial}")
+ 
+-    built = build_schema(sqla.MetaData(), _factories)
++    replicated = _read_replicated_tables(primary_path, factories)
++
++    built = build_schema(sqla.MetaData(), factories)
+ 
+     engines = []
+     try:
+@@ -181,6 +216,7 @@ def open_read_only(primary: PathType) -> Iterator[ReadOnlyStore]:
+             shards=tuple(shards),
+             tables=built.tables,
+             records=built.records,
++            replicated_tables=replicated,
+         )
+     finally:
+         for engine in engines:
+diff --git a/Datastore/tests/real_store_fixtures.py b/Datastore/tests/real_store_fixtures.py
+index 33b9a90..0324fc4 100644
+--- a/Datastore/tests/real_store_fixtures.py
++++ b/Datastore/tests/real_store_fixtures.py
+@@ -47,7 +47,7 @@ from typing import Dict, Iterable, List, Mapping, Optional, Tuple
+ 
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
+ from Datastore.SQL.schema import build_schema
+ from Datastore.shard_paths import shard_file_name
+diff --git a/Datastore/tests/schema_description.py b/Datastore/tests/schema_description.py
+index 4e03c39..4b20b91 100644
+--- a/Datastore/tests/schema_description.py
++++ b/Datastore/tests/schema_description.py
+@@ -187,7 +187,9 @@ def actor_with_built_schema():
+     cls = datastore_module.Datastore.__ray_metadata__.modified_class
+     actor = object.__new__(cls)
+     actor._factories = {}
+-    actor.register_factories(datastore_module._factories)
++    from config.datastore import factories
++
++    actor.register_factories(factories)
+     actor._metadata = sqla.MetaData()
+     actor._tables = {}
+     actor._inserters = {}
+diff --git a/Datastore/tests/standin_pool.py b/Datastore/tests/standin_pool.py
+index bf58805..d363bba 100644
+--- a/Datastore/tests/standin_pool.py
++++ b/Datastore/tests/standin_pool.py
+@@ -291,6 +291,9 @@ class StandinCluster:
+             shard_key_wavenumber_store_id,
+         )
+ 
++        from config.datastore import factories
++
++        kwargs.setdefault("factories", factories)
+         with contextlib.redirect_stdout(io.StringIO()):
+             pool = sp_mod.ShardedPool(
+                 version_label="standin",
+@@ -318,6 +321,9 @@ class StandinCluster:
+             shard_key_wavenumber_store_id,
+         )
+ 
++        from config.datastore import factories
++
++        kwargs.setdefault("factories", factories)
+         out = io.StringIO()
+         self.last_output = ""
+         try:
+diff --git a/Datastore/tests/test_absolute_shard_record_refused.py b/Datastore/tests/test_absolute_shard_record_refused.py
+index 7da5f76..df3446d 100644
+--- a/Datastore/tests/test_absolute_shard_record_refused.py
++++ b/Datastore/tests/test_absolute_shard_record_refused.py
+@@ -42,6 +42,7 @@ from Datastore.tests.shard_store_fixtures import (
+     write_new_store,
+     write_placeholder,
+ )
++from config.datastore import factories as _factories
+ 
+ N_SHARDS = 3
+ 
+@@ -163,7 +164,7 @@ class TestEveryReader(_TwoStores):
+ 
+     def test_the_read_only_reader(self):
+         def open_it():
+-            with open_read_only(self.b):
++            with open_read_only(self.b, _factories):
+                 self.fail("the store was opened")
+ 
+         self.assertRefused(open_it, self.b_records[0], self.b)
+diff --git a/Datastore/tests/test_exact_identity_lookups.py b/Datastore/tests/test_exact_identity_lookups.py
+index 2a0eaa5..9c71c54 100644
+--- a/Datastore/tests/test_exact_identity_lookups.py
++++ b/Datastore/tests/test_exact_identity_lookups.py
+@@ -46,7 +46,7 @@ from CosmologyConcepts.wavenumber import (
+ )
+ from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
+ from CosmologyModels.LambdaCDM import Planck2018
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
+ from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+ from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+diff --git a/Datastore/tests/test_factory_select_columns.py b/Datastore/tests/test_factory_select_columns.py
+index 196e13b..6d5e8f8 100644
+--- a/Datastore/tests/test_factory_select_columns.py
++++ b/Datastore/tests/test_factory_select_columns.py
+@@ -736,7 +736,7 @@ class TestFactorySelectColumns(unittest.TestCase):
+ 
+ import sqlalchemy as sqla  # noqa: E402
+ 
+-from Datastore.SQL.Datastore import _factories  # noqa: E402
++from config.datastore import factories as _factories  # noqa: E402
+ from Datastore.SQL.schema import build_schema  # noqa: E402
+ 
+ # Column-existence defects found today, each (module, class, function, table, name) exactly as
+diff --git a/Datastore/tests/test_gksource_parent_set.py b/Datastore/tests/test_gksource_parent_set.py
+index c85ee89..ec71f9c 100644
+--- a/Datastore/tests/test_gksource_parent_set.py
++++ b/Datastore/tests/test_gksource_parent_set.py
+@@ -71,6 +71,7 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
+ from ComputeTargets import GkNumericIntegration
+ import ComputeTargets.phase_residual as phase_residual
+ from MetadataConcepts import tolerance
++from config.datastore import factories as _factories
+ 
+ K_EXIT = _exit_time(serial=11, z_exit=1.0e8)
+ TAG = _Ref(1)
+@@ -755,7 +756,7 @@ class TestTheInventoryResolvesTheSet(unittest.TestCase):
+         cls._count += 1
+         directory = cls.root / f"store-{cls._count}"
+         directory.mkdir()
+-        return read_inventory(build_full_store(directory, **kwargs).primary)
++        return read_inventory(build_full_store(directory, **kwargs).primary, _factories)
+ 
+     @staticmethod
+     def kinds(problems):
+diff --git a/Datastore/tests/test_integral_read_batch.py b/Datastore/tests/test_integral_read_batch.py
+index 88bb472..c512a37 100644
+--- a/Datastore/tests/test_integral_read_batch.py
++++ b/Datastore/tests/test_integral_read_batch.py
+@@ -53,7 +53,7 @@ from CosmologyConcepts.wavenumber import (
+     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+ )
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories import OneLoopIntegral as OLI_module
+ from Datastore.SQL.ObjectFactories.OneLoopIntegral import sqla_OneLoopIntegral_factory
+ from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+diff --git a/Datastore/tests/test_inventory_consumers.py b/Datastore/tests/test_inventory_consumers.py
+index b309b56..42c0dec 100644
+--- a/Datastore/tests/test_inventory_consumers.py
++++ b/Datastore/tests/test_inventory_consumers.py
+@@ -38,6 +38,7 @@ from Datastore.tests.real_store_fixtures import (
+     full_rows,
+     with_rows,
+ )
++from config.datastore import factories
+ from extract_common import available_run_labels
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+@@ -252,7 +253,7 @@ class TestRunLabels(_Stores):
+         store = self.store(replicated=replicated, sharded=sharded, shard_keys=keys)
+         before = file_state(store.directory)
+ 
+-        pool = SimpleNamespace(primary=store.primary)
++        pool = SimpleNamespace(primary=store.primary, factories=factories)
+         # "Run_second" is carried by no record, and is still a run: the answer is unchanged
+         self.assertEqual(available_run_labels(pool), ["fixture", "second"])
+         self.assertEqual(file_state(store.directory), before)
+@@ -261,7 +262,7 @@ class TestRunLabels(_Stores):
+         store = self.store(
+             extra_sql={1: ["UPDATE store_tag SET label = 'Run_other' WHERE serial = 3"]}
+         )
+-        pool = SimpleNamespace(primary=store.primary)
++        pool = SimpleNamespace(primary=store.primary, factories=factories)
+         with self.assertRaises(RuntimeError) as raised:
+             available_run_labels(pool)
+         message = str(raised.exception)
+@@ -277,7 +278,7 @@ class TestRunLabels(_Stores):
+                 ]
+             }
+         )
+-        pool = SimpleNamespace(primary=store.primary)
++        pool = SimpleNamespace(primary=store.primary, factories=factories)
+         self.assertEqual(available_run_labels(pool), ["fixture"])
+ 
+     def test_extract_common_does_not_call_the_pool_inventory(self):
+diff --git a/Datastore/tests/test_inventory_report.py b/Datastore/tests/test_inventory_report.py
+index 76fa532..1d89f62 100644
+--- a/Datastore/tests/test_inventory_report.py
++++ b/Datastore/tests/test_inventory_report.py
+@@ -42,6 +42,7 @@ from tools.inventory_report import (
+     VALUE_TABLES,
+     format_inventory_report,
+ )
++from config.datastore import factories as _factories
+ 
+ DB_NAME = "the-store.sqlite"
+ 
+@@ -53,7 +54,7 @@ class _Stores(unittest.TestCase):
+         cls.root = Path(cls._tmp.name).resolve()
+         cls._count = 0
+         cls.full = cls.store()
+-        cls.inventory = read_inventory(cls.full.primary)
++        cls.inventory = read_inventory(cls.full.primary, _factories)
+         cls.report = format_inventory_report(cls.inventory, DB_NAME)
+         cls.verbose = format_inventory_report(cls.inventory, DB_NAME, verbose=True)
+ 
+@@ -70,7 +71,7 @@ class _Stores(unittest.TestCase):
+ 
+     @classmethod
+     def read(cls, **kwargs):
+-        return read_inventory(cls.store(**kwargs).primary)
++        return read_inventory(cls.store(**kwargs).primary, _factories)
+ 
+ 
+ class TestTheDisplaySaysWhatTheInventoryHolds(_Stores):
+diff --git a/Datastore/tests/test_inventory_report_labels.py b/Datastore/tests/test_inventory_report_labels.py
+index 70fd52b..71c2cd2 100644
+--- a/Datastore/tests/test_inventory_report_labels.py
++++ b/Datastore/tests/test_inventory_report_labels.py
+@@ -51,6 +51,7 @@ from Datastore.tests.real_store_fixtures import (
+     relabel_serials,
+ )
+ from tools.inventory_report import format_inventory_report
++from config.datastore import factories as _factories
+ 
+ DB_NAME = "the-store.sqlite"
+ 
+@@ -223,7 +224,7 @@ class _Fixture(unittest.TestCase):
+     @staticmethod
+     def read(directory: Path, kwargs) -> StoreInventory:
+         directory.mkdir()
+-        return read_inventory(build_full_store(directory, **kwargs).primary)
++        return read_inventory(build_full_store(directory, **kwargs).primary, _factories)
+ 
+ 
+ def report(
+diff --git a/Datastore/tests/test_inventory_retired.py b/Datastore/tests/test_inventory_retired.py
+index e942df1..45a9d4d 100644
+--- a/Datastore/tests/test_inventory_retired.py
++++ b/Datastore/tests/test_inventory_retired.py
+@@ -26,7 +26,7 @@ import unittest
+ from pathlib import Path
+ 
+ import config.sharding as sharding
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ShardedPool import ShardedPool
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+diff --git a/Datastore/tests/test_layer_registry.py b/Datastore/tests/test_layer_registry.py
+new file mode 100644
+index 0000000..0c56b8f
+--- /dev/null
++++ b/Datastore/tests/test_layer_registry.py
+@@ -0,0 +1,311 @@
++"""
++SKETCH (measure-06): the datastore layer is given its registry (prompts/datastore-generic,
++prompt 06). Not a finished test module: it shows the tests the prompt should require.
++
++1. ``TestTablesToDrop`` -- ``config.datastore.tables_to_drop``.
++2. ``TestSerialBatchSizes`` -- ``SerialPoolManager`` takes its batch sizes; 500 otherwise.
++3. ``TestDropOrderOnAFullStore`` -- under ``PRAGMA foreign_keys = ON``, the real
++   ``Datastore._drop_tables`` drops every group from every shard of ``build_full_store`` (rows in
++   every dropped table), and leaves no foreign-key violation.
++4. ``TestAnUndeclaredDropTable`` -- the pool refuses it by name before anything is opened.
++5. ``TestTheRecordedReplicatedSet`` -- the reader yields the primary's recorded set, and refuses a
++   primary whose set cannot be read or names an undeclared class; the inventory uses it.
++6. ``TestThePoolUsesItsRegistry`` -- a pool given a smaller registry builds only its tables.
++7. ``TestTheLayerImportsNoClient`` -- importing the layer loads no client module.
++
++No Ray, nothing under ``var/``.
++"""
++
++import ast
++import json
++import os
++import shutil
++import sqlite3
++import subprocess
++import sys
++import tempfile
++import types
++import unittest
++from pathlib import Path
++from unittest import mock
++
++import ray
++import sqlalchemy as sqla
++
++from Datastore.SQL.ClientPool import SerialPoolManager
++from Datastore.SQL.schema import build_schema
++from Datastore.store_inventory import read_inventory
++from Datastore.store_reader import open_read_only
++from Datastore.tests import standin_pool as sp
++from Datastore.tests.real_store_fixtures import build_full_store, file_state
++from config.datastore import drop_groups, factories, tables_to_drop
++from config.sharding import replicated_tables as configured_replicated
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++class _Temp(unittest.TestCase):
++    def setUp(self):
++        tmp = tempfile.TemporaryDirectory()
++        self.addCleanup(tmp.cleanup)
++        self.root = Path(tmp.name)
++
++
++class TestTablesToDrop(unittest.TestCase):
++    def test_each_table_once_in_group_order(self):
++        self.assertEqual(
++            tables_to_drop(["tk-wkb", "tk-wkb"]),
++            ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
++        )
++        names = tables_to_drop(list(drop_groups))
++        self.assertEqual(len(names), len(set(names)))
++        self.assertEqual(set(names), {t for g in drop_groups.values() for t in g})
++
++    def test_an_unknown_action_is_named(self):
++        with self.assertRaises(ValueError) as ctx:
++            tables_to_drop(["tk-wkb", "no-such-group"])
++        self.assertIn("no-such-group", str(ctx.exception))
++
++    def test_every_drop_table_is_declared(self):
++        tables = build_schema(sqla.MetaData(), factories).tables
++        self.assertLessEqual(set(tables_to_drop(list(drop_groups))), set(tables))
++
++
++class TestSerialBatchSizes(unittest.TestCase):
++    def _batch(self, manager, table):
++        seen = {}
++
++        class Recording:
++            def __init__(self, table, profiler, broker, default_batch_size):
++                seen[table] = default_batch_size
++
++            def lease_serial(self):
++                return 1
++
++        with mock.patch("Datastore.SQL.ClientPool.ClientPool", Recording):
++            manager.lease_serial(table)
++        return seen[table]
++
++    def test_the_given_sizes_and_the_default(self):
++        given = SerialPoolManager(
++            profiler=None, broker=object(), batch_sizes={"TkNumericValue": 7}
++        )
++        self.assertEqual(self._batch(given, "TkNumericValue"), 7)
++        self.assertEqual(self._batch(given, "redshift"), 500)
++        none = SerialPoolManager(profiler=None, broker=object())
++        self.assertEqual(self._batch(none, "TkNumericValue"), 500)
++
++    def test_the_layer_holds_no_table_of_sizes(self):
++        import Datastore.SQL.ClientPool as cp
++
++        self.assertFalse(hasattr(cp, "_default_serial_batch_size"))
++
++
++class TestDropOrderOnAFullStore(_Temp):
++    def _drop_all(self, shard: Path):
++        engine = sqla.create_engine(f"sqlite:///{shard}", future=True)
++
++        @sqla.event.listens_for(engine, "connect")
++        def _enforce(dbapi_connection, connection_record):
++            dbapi_connection.execute("PRAGMA foreign_keys = ON")
++
++        metadata = sqla.MetaData()
++        tables = build_schema(metadata, factories).tables
++        fake = types.SimpleNamespace(
++            _inspector=sqla.inspect(engine),
++            _tables=tables,
++            _engine=engine,
++            _metadata=metadata,
++            _my_name="drop-test",
++        )
++        with mock.patch("builtins.print"):
++            sp.DatastoreClass._drop_tables(fake, tables_to_drop(list(drop_groups)))
++        with engine.connect() as conn:
++            self.assertEqual(conn.execute(sqla.text("PRAGMA foreign_keys")).scalar(), 1)
++            left = set(sqla.inspect(engine).get_table_names())
++            violations = conn.execute(sqla.text("PRAGMA foreign_key_check")).all()
++        engine.dispose()
++        return left, violations
++
++    def test_every_group_drops_from_a_store_holding_rows(self):
++        store = build_full_store(self.root)
++        dropped = set(tables_to_drop(list(drop_groups)))
++        for sid, path in sorted(store.shard_files.items()):
++            with self.subTest(shard=sid):
++                with sqlite3.connect(path) as c:
++                    held = {
++                        t
++                        for t in dropped
++                        if c.execute(f'SELECT count(*) FROM "{t}"').fetchone()[0]
++                    }
++                self.assertTrue(held)  # the drop is exercised against rows
++                left, violations = self._drop_all(path)
++                self.assertEqual(left & dropped, set())
++                self.assertEqual(violations, [])
++
++    def test_an_unsorted_drop_is_refused_by_enforcement(self):
++        store = build_full_store(self.root)
++        with mock.patch.object(sqla.schema, "sort_tables", lambda tables: list(tables)):
++            with self.assertRaises(sqla.exc.IntegrityError):
++                self._drop_all(store.shard_files[0])
++
++
++class TestAnUndeclaredDropTable(_Temp):
++    def test_refused_before_anything_is_opened(self):
++        cluster = sp.StandinCluster()
++        with cluster.active():
++            built = self.root / "pool" / "store.sqlite"
++            cluster.close_pool(cluster.open_pool(built))
++            before = sp.store_checksums(built)
++            missing = self.root / "nowhere" / "store.sqlite"
++            for read_only in (False, True):
++                for primary in (missing, built):
++                    with self.subTest(read_only=read_only, primary=primary.parent.name):
++                        cluster.calls.clear()
++                        with self.assertRaises(RuntimeError) as ctx:
++                            cluster.open_pool(
++                                primary,
++                                read_only=read_only,
++                                drop_tables=["GkSource", "NotATable"],
++                            )
++                        self.assertIn("NotATable", str(ctx.exception))
++                        self.assertNotIn("'GkSource'", str(ctx.exception))
++                        self.assertEqual(cluster.calls, [])
++                        self.assertFalse(missing.parent.exists())
++                        self.assertEqual(sp.store_checksums(built), before)
++
++
++class TestTheRecordedReplicatedSet(_Temp):
++    def _primary_sql(self, store, *statements):
++        with sqlite3.connect(store.primary) as c:
++            for s in statements:
++                c.execute(s)
++
++    def test_the_reader_yields_the_recorded_set_in_serial_order(self):
++        store = build_full_store(self.root)
++        # reorder the serials: the yield follows them, not config.sharding
++        self._primary_sql(
++            store,
++            "UPDATE replicated_tables SET serial = 100 - serial",
++        )
++        with open_read_only(store.primary, factories) as opened:
++            self.assertEqual(
++                opened.replicated_tables, tuple(reversed(configured_replicated))
++            )
++
++    def test_an_unreadable_set_is_refused(self):
++        store = build_full_store(self.root)
++        self._primary_sql(store, "DROP TABLE replicated_tables")
++        before = file_state(store.directory)
++        for read in (
++            lambda: open_read_only(store.primary, factories).__enter__(),
++            lambda: read_inventory(store.primary, factories),
++        ):
++            with self.assertRaises(RuntimeError) as ctx:
++                read()
++            self.assertIn("replicated_tables", str(ctx.exception))
++            self.assertTrue(
++                str(ctx.exception).startswith("Cannot read sharded datastore")
++            )
++        self.assertEqual(file_state(store.directory), before)
++
++    def test_an_undeclared_class_is_refused(self):
++        store = build_full_store(self.root)
++        self._primary_sql(
++            store,
++            "INSERT INTO replicated_tables (serial, \"table\") VALUES (99, 'NotAClass')",
++        )
++        with self.assertRaises(RuntimeError) as ctx:
++            read_inventory(store.primary, factories)
++        self.assertIn("NotAClass", str(ctx.exception))
++
++    def test_the_inventory_uses_the_recorded_set(self):
++        store = build_full_store(self.root)
++        self._primary_sql(
++            store, "DELETE FROM replicated_tables WHERE \"table\" = 'tolerance'"
++        )
++        inventory = read_inventory(store.primary, factories)
++        self.assertFalse(inventory["tolerance"].replicated)
++        self.assertTrue(inventory["redshift"].replicated)
++
++    def test_the_inventory_names_no_configuration(self):
++        tree = ast.parse((REPO_ROOT / "Datastore" / "store_inventory.py").read_text())
++        modules = {
++            n.module
++            for n in ast.walk(tree)
++            if isinstance(n, ast.ImportFrom) and n.module
++        }
++        self.assertFalse({m for m in modules if m.split(".")[0] == "config"})
++
++
++class TestThePoolUsesItsRegistry(_Temp):
++    def test_a_smaller_registry_builds_only_its_tables(self):
++        small = {
++            k: v
++            for k, v in factories.items()
++            if k not in ("OneLoopIntegral", "OneLoopIntegral_tags")
++        }
++        cluster = sp.StandinCluster()
++        with cluster.active():
++            primary = self.root / "store.sqlite"
++            pool = cluster.open_pool(primary, factories=small)
++            self.assertEqual(pool.factories, small)
++            files = dict(pool._shard_db_files)
++            cluster.close_pool(pool)
++        for path in files.values():
++            names = {
++                r[0]
++                for r in sp._read(
++                    path, "SELECT name FROM sqlite_master WHERE type='table'"
++                )
++            }
++            self.assertNotIn("OneLoopIntegral", names)
++            self.assertIn("QuadSourceIntegral", names)
++
++
++_LAYER = [
++    "Datastore.SQL.ShardedPool",
++    "Datastore.SQL.Datastore",
++    "Datastore.SQL.ClientPool",
++    "Datastore.store_reader",
++    "Datastore.store_inventory",
++]
++# what the layer may still load: config.defaults (a generic constant), the factories' base class,
++# and MetadataConcepts until prompt 07 (U4)
++_ALLOWED = {
++    "config",
++    "config.defaults",
++    "Datastore.SQL.ObjectFactories",
++    "Datastore.SQL.ObjectFactories.base",
++}
++
++
++class TestTheLayerImportsNoClient(unittest.TestCase):
++    def test_a_fresh_interpreter(self):
++        code = (
++            "import json, sys, importlib\n"
++            f"for m in {_LAYER!r}: importlib.import_module(m)\n"
++            "print(json.dumps(sorted(sys.modules)))\n"
++        )
++        result = subprocess.run(
++            [sys.executable, "-c", code],
++            cwd=str(REPO_ROOT),
++            env=dict(os.environ, PYTHONPATH=str(REPO_ROOT)),
++            capture_output=True,
++            text=True,
++            timeout=300,
++        )
++        self.assertEqual(result.returncode, 0, result.stderr)
++        loaded = json.loads(result.stdout.strip().splitlines()[-1])
++        client = [
++            m
++            for m in loaded
++            if m.split(".")[0]
++            in ("config", "ComputeTargets", "CosmologyConcepts", "CosmologyModels")
++            or m.startswith("Datastore.SQL.ObjectFactories")
++        ]
++        self.assertEqual(sorted(set(client) - _ALLOWED), [])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/Datastore/tests/test_prune_at_open.py b/Datastore/tests/test_prune_at_open.py
+index 07ff8e2..2ef544a 100644
+--- a/Datastore/tests/test_prune_at_open.py
++++ b/Datastore/tests/test_prune_at_open.py
+@@ -40,7 +40,7 @@ from unittest import mock
+ import ray
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.replication import ReplicatedDivergence
+ from Datastore.tests import standin_pool as sp
+ from config.sharding import replicated_tables, sharded_tables
+diff --git a/Datastore/tests/test_quadsource_integral_parent_key.py b/Datastore/tests/test_quadsource_integral_parent_key.py
+index 138e83c..0869daf 100644
+--- a/Datastore/tests/test_quadsource_integral_parent_key.py
++++ b/Datastore/tests/test_quadsource_integral_parent_key.py
+@@ -59,6 +59,7 @@ from Datastore.tests.test_integral_read_batch import (
+     _Ref,
+ )
+ from MetadataConcepts import store_tag, tolerance
++from config.datastore import factories as _factories
+ 
+ ATOL = tolerance(store_id=1, log10_tol=-10.0)
+ RTOL = tolerance(store_id=2, log10_tol=-9.0)
+@@ -352,7 +353,8 @@ def read_the_store(replicated, sharded, keys):
+                 replicated=replicated,
+                 sharded=sharded,
+                 shard_keys=keys,
+-            ).primary
++            ).primary,
++            _factories,
+         )
+ 
+ 
+diff --git a/Datastore/tests/test_quadsource_parent_key.py b/Datastore/tests/test_quadsource_parent_key.py
+index 15b8e4a..2451cce 100644
+--- a/Datastore/tests/test_quadsource_parent_key.py
++++ b/Datastore/tests/test_quadsource_parent_key.py
+@@ -65,6 +65,7 @@ from Datastore.tests.test_wkb_numeric_parent_key import (
+     _Ref,
+     Z_EXIT,
+ )
++from config.datastore import factories as _factories
+ 
+ Q_EXIT = _exit_time(serial=11, z_exit=Z_EXIT)
+ R_EXIT = _exit_time(serial=12, z_exit=2.0 * Z_EXIT)
+@@ -336,7 +337,8 @@ def read_the_store(replicated, sharded, keys):
+         return read_inventory(
+             build_full_store(
+                 directory, replicated=replicated, sharded=sharded, shard_keys=keys
+-            ).primary
++            ).primary,
++            _factories,
+         )
+ 
+ 
+diff --git a/Datastore/tests/test_quadsource_policy_key.py b/Datastore/tests/test_quadsource_policy_key.py
+index e45d550..08b3af0 100644
+--- a/Datastore/tests/test_quadsource_policy_key.py
++++ b/Datastore/tests/test_quadsource_policy_key.py
+@@ -54,6 +54,7 @@ from Datastore.tests.test_integral_read_batch import (
+     _Ref,
+ )
+ from MetadataConcepts import QuadSourcePolicy, store_tag, tolerance
++from config.datastore import factories as _factories
+ 
+ ATOL = tolerance(store_id=1, log10_tol=-10.0)
+ RTOL = tolerance(store_id=2, log10_tol=-9.0)
+@@ -377,7 +378,7 @@ class TestTheInventoryIdentityIncludesIt(unittest.TestCase):
+         store = rsf.build_full_store(
+             directory, replicated=replicated, sharded=sharded, shard_keys=keys
+         )
+-        return read_inventory(store.primary)
++        return read_inventory(store.primary, _factories)
+ 
+     def test_the_key_carries_the_policy(self):
+         records = self.read_the_store(2)["QuadSourceIntegral"].records
+diff --git a/Datastore/tests/test_read_only_pool.py b/Datastore/tests/test_read_only_pool.py
+index dcd3bdd..7c82770 100644
+--- a/Datastore/tests/test_read_only_pool.py
++++ b/Datastore/tests/test_read_only_pool.py
+@@ -51,6 +51,7 @@ import sqlalchemy as sqla
+ from CosmologyModels.LambdaCDM import Planck2018
+ from Datastore.SQL.schema import StoreSchemaMismatch
+ from Datastore.tests import standin_pool as sp
++from config.datastore import factories
+ from config.defaults import DEFAULT_QUADRATURE_RTOL
+ from config.sharding import (
+     read_table_config,
+@@ -212,6 +213,7 @@ class _ReadOnlyTestCase(unittest.TestCase):
+                 sharded_tables=sharded_tables,
+                 shards=3,
+                 read_table_config=read_table_config,
++                factories=factories,
+                 **kwargs,
+             )
+         self.cluster.pool = pool
+@@ -618,7 +620,7 @@ class TestOtherWritesRaiseReadOnlyWrite(_ReadOnlyTestCase):
+         # primary's, so it came first; nothing was created
+         missing = self.root / "nowhere" / "store.sqlite"
+         for kwargs, what in (
+-            ({"drop_actions": ["gk-source-policy"]}, "drop_actions"),
++            ({"drop_tables": ["GkSourcePolicyData"]}, "drop_tables"),
+             ({"prune_unvalidated": True}, "prune_unvalidated=True"),
+         ):
+             with self.subTest(what=what):
+@@ -633,7 +635,7 @@ class TestOtherWritesRaiseReadOnlyWrite(_ReadOnlyTestCase):
+         primary = self.copy()
+         before = sp.store_checksums(primary)
+         for kwargs in (
+-            {"drop_actions": ["gk-source-policy"]},
++            {"drop_tables": ["GkSourcePolicyData"]},
+             {"prune_unvalidated": True},
+         ):
+             with self.assertRaises(ReadOnlyWrite):
+diff --git a/Datastore/tests/test_read_path_mechanics.py b/Datastore/tests/test_read_path_mechanics.py
+index 65e9a59..e13f1c2 100644
+--- a/Datastore/tests/test_read_path_mechanics.py
++++ b/Datastore/tests/test_read_path_mechanics.py
+@@ -43,7 +43,7 @@ import sqlalchemy as sqla
+ 
+ import ComputeTargets.phase_residual as phase_residual
+ from CosmologyConcepts import redshift
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+     sqla_GkNumericValue_factory,
+ )
+diff --git a/Datastore/tests/test_reconcile_at_open.py b/Datastore/tests/test_reconcile_at_open.py
+index cf223a3..b2b097c 100644
+--- a/Datastore/tests/test_reconcile_at_open.py
++++ b/Datastore/tests/test_reconcile_at_open.py
+@@ -46,6 +46,7 @@ import ray
+ from Datastore.SQL.schema import StoreSchemaMismatch
+ from Datastore.replication import ReplicatedDivergence, ReplicationMismatch
+ from Datastore.tests import standin_pool as sp
++from config.datastore import tables_to_drop
+ from config.sharding import replicated_tables
+ 
+ # every table the check compares: the replicated classes and BackgroundModel's tag table
+@@ -1103,7 +1104,9 @@ class TestPruningAfterRepair(_ReconcileTestCase):
+                 with quiet():
+                     self.reopen(
+                         prune_unvalidated=prune,
+-                        drop_actions=["gk-source", "gk-source-policy-records"],
++                        drop_tables=tables_to_drop(
++                            ["gk-source", "gk-source-policy-records"]
++                        ),
+                     )
+                 self.assertNoRecord()
+                 self.assertIdentical()
+diff --git a/Datastore/tests/test_schema_builder.py b/Datastore/tests/test_schema_builder.py
+index a01b503..089b87f 100644
+--- a/Datastore/tests/test_schema_builder.py
++++ b/Datastore/tests/test_schema_builder.py
+@@ -42,7 +42,7 @@ from pathlib import Path
+ 
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.schema import build_schema
+ from Datastore.tests.schema_description import (
+     actor_with_built_schema,
+diff --git a/Datastore/tests/test_store_inventory.py b/Datastore/tests/test_store_inventory.py
+index 7161cdd..9461535 100644
+--- a/Datastore/tests/test_store_inventory.py
++++ b/Datastore/tests/test_store_inventory.py
+@@ -50,6 +50,7 @@ from Datastore.tests.real_store_fixtures import (
+     relabel_serials,
+     vary_row,
+ )
++from config.datastore import factories as _factories
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ FACTORIES = REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories"
+@@ -322,7 +323,7 @@ class _Stores(unittest.TestCase):
+ 
+     @classmethod
+     def inventory(cls, **kwargs):
+-        return read_inventory(cls.store(**kwargs).primary)
++        return read_inventory(cls.store(**kwargs).primary, _factories)
+ 
+     def varied(self, table, serial, column, value, **kwargs):
+         replicated, sharded, keys = full_rows()
+@@ -502,7 +503,7 @@ class TestNonIdentityDoesNotMatter(_Stores):
+ 
+ 
+ def store_inventory_tables():
+-    from Datastore.SQL.Datastore import _factories
++    from config.datastore import factories as _factories
+     from Datastore.SQL.schema import build_schema
+ 
+     return build_schema(sqla.MetaData(), _factories).tables
+@@ -761,7 +762,7 @@ class TestValueCounts(_Stores):
+         store = self.store()
+         sqla.event.listen(sqla.engine.Engine, "before_cursor_execute", capture)
+         try:
+-            read_inventory(store.primary)
++            read_inventory(store.primary, _factories)
+         finally:
+             sqla.event.remove(sqla.engine.Engine, "before_cursor_execute", capture)
+ 
+@@ -1028,7 +1029,7 @@ class TestReadOnlyAndNoRay(_Stores):
+     def test_read_inventory_writes_nothing(self):
+         store = self.store()
+         before = file_state(store.directory)
+-        inventory = read_inventory(store.primary)
++        inventory = read_inventory(store.primary, _factories)
+         self.assertGreater(inventory["QuadSourceIntegral"].count, 0)
+         after = file_state(store.directory)
+         self.assertEqual(before, after)
+@@ -1041,7 +1042,8 @@ class TestReadOnlyAndNoRay(_Stores):
+         code = (
+             "import json, sys\n"
+             "from Datastore.store_inventory import read_inventory\n"
+-            "inventory = read_inventory(sys.argv[1])\n"
++            "from config.datastore import factories\n"
++            "inventory = read_inventory(sys.argv[1], factories)\n"
+             "import ray\n"
+             "print(json.dumps({'ray': ray.is_initialized(), "
+             "'qsi': inventory['QuadSourceIntegral'].count}))\n"
+diff --git a/Datastore/tests/test_store_reader.py b/Datastore/tests/test_store_reader.py
+index 775e73b..e16c472 100644
+--- a/Datastore/tests/test_store_reader.py
++++ b/Datastore/tests/test_store_reader.py
+@@ -40,6 +40,7 @@ from Datastore.tests.real_store_fixtures import (
+     file_state,
+     independent_row_counts,
+ )
++from config.datastore import factories as _factories
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ 
+@@ -76,7 +77,7 @@ class TestReaderReads(_TempStore):
+         self.store = build_real_store(self.dir)
+ 
+     def test_every_shard_with_its_serial_and_path(self):
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             self.assertEqual(store.primary, self.store.primary)
+             self.assertEqual(
+                 [(s.serial, s.path) for s in store.shards],
+@@ -84,7 +85,7 @@ class TestReaderReads(_TempStore):
+             )
+ 
+     def test_row_counts_equal_an_independent_count(self):
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             counts = read_every_table(store)
+             for shard in store.shards:
+                 with shard.engine.connect() as conn:
+@@ -105,7 +106,7 @@ class TestReaderReads(_TempStore):
+                     )
+ 
+     def test_replicated_rows_have_the_same_serials_on_every_shard(self):
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             per_shard = []
+             for shard in store.shards:
+                 with shard.engine.connect() as conn:
+@@ -124,14 +125,14 @@ class TestReaderReads(_TempStore):
+                 self.assertEqual(per_shard[0], other)
+ 
+     def test_every_engine_is_disposed_on_exit(self):
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             read_every_table(store)
+             engines = [s.engine for s in store.shards]
+             self.assertTrue(all(e.pool.checkedin() > 0 for e in engines))
+         self.assertTrue(all(e.pool.checkedin() == 0 for e in engines))
+ 
+     def test_engines_open_mode_ro_and_never_immutable(self):
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             for shard in store.shards:
+                 url = shard.engine.url
+                 self.assertEqual(url.query.get("mode"), "ro")
+@@ -147,7 +148,7 @@ class TestReaderNeverWrites(_TempStore):
+ 
+     def test_reading_every_table_changes_nothing(self):
+         before = file_state(self.dir)
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             read_every_table(store)
+             during = file_state(self.dir)
+         after = file_state(self.dir)
+@@ -157,7 +158,7 @@ class TestReaderNeverWrites(_TempStore):
+ 
+     def test_a_write_through_a_reader_engine_raises(self):
+         before = file_state(self.dir)
+-        with open_read_only(self.store.primary) as store:
++        with open_read_only(self.store.primary, _factories) as store:
+             for shard in store.shards:
+                 with self.subTest(shard=shard.serial, what="insert"):
+                     with self.assertRaises(OperationalError) as cm:
+@@ -187,7 +188,7 @@ class TestADifferingSchemaIsRefused(_TempStore):
+         built = build_real_store(directory, **shape)
+         before = file_state(directory)
+         with self.assertRaises(StoreSchemaMismatch) as cm:
+-            with open_read_only(built.primary):
++            with open_read_only(built.primary, _factories):
+                 self.fail("the store was opened")
+         e = cm.exception
+         self.assertIsInstance(e, RuntimeError)
+@@ -271,7 +272,7 @@ class TestRefusals(_TempStore):
+     def assert_refused_naming(self, fragment: str):
+         before = file_state(self.dir)
+         with self.assertRaises(RuntimeError) as cm:
+-            with open_read_only(self.store.primary):
++            with open_read_only(self.store.primary, _factories):
+                 self.fail("the store was opened")
+         self.assertIn(fragment, str(cm.exception))
+         self.assertEqual(before, file_state(self.dir))
+@@ -333,10 +334,11 @@ import json, sys
+ from pathlib import Path
+ import sqlalchemy as sqla
+ from Datastore.store_reader import open_read_only
++from config.datastore import factories
+ import ray
+ 
+ counts = {}
+-with open_read_only(Path(sys.argv[1])) as store:
++with open_read_only(Path(sys.argv[1]), factories) as store:
+     for shard in store.shards:
+         with shard.engine.connect() as conn:
+             for name, table in shard.tables.items():
+@@ -362,7 +364,7 @@ class TestNoRay(_TempStore):
+         self.assertEqual(result.returncode, 0, result.stderr)
+         report = json.loads(result.stdout.strip().splitlines()[-1])
+         self.assertFalse(report["ray_initialized"])
+-        with open_read_only(store.primary) as opened:
++        with open_read_only(store.primary, _factories) as opened:
+             expected = sum(len(s.tables) for s in opened.shards)
+         self.assertEqual(report["tables_read"], expected)
+         self.assertEqual(before, file_state(self.dir))
+diff --git a/Datastore/tests/test_store_schema.py b/Datastore/tests/test_store_schema.py
+index 9ec617e..b8b07bc 100644
+--- a/Datastore/tests/test_store_schema.py
++++ b/Datastore/tests/test_store_schema.py
+@@ -39,7 +39,7 @@ from unittest import mock
+ import ray
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.schema import (
+     SchemaDifferences,
+     StoreSchemaMismatch,
+@@ -242,7 +242,7 @@ class TestTheReader(_TempDir):
+ 
+         with mock.patch.object(store_reader, "_read_only_engine", recording):
+             with self.assertRaises(StoreSchemaMismatch) as cm:
+-                with open_read_only(store.primary):
++                with open_read_only(store.primary, _factories):
+                     self.fail("the store was opened")
+         # shard 0 was opened and compared, shard 1 refused, and shard 2 never opened
+         self.assertEqual(
+@@ -261,7 +261,7 @@ class TestTheInventory(_TempDir):
+         )
+         before = file_state(store.directory)
+         with self.assertRaises(StoreSchemaMismatch) as cm:
+-            read_inventory(store.primary)
++            read_inventory(store.primary, _factories)
+         message = str(cm.exception)
+         self.assertTrue(
+             message.startswith(f'Cannot read sharded datastore "{store.primary}"')
+diff --git a/Datastore/tests/test_value_reads_parent_key.py b/Datastore/tests/test_value_reads_parent_key.py
+index 259caca..78b53c5 100644
+--- a/Datastore/tests/test_value_reads_parent_key.py
++++ b/Datastore/tests/test_value_reads_parent_key.py
+@@ -45,7 +45,7 @@ from CosmologyConcepts.wavenumber import (
+     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+ )
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+     sqla_GkNumericIntegration_factory,
+     sqla_GkNumericValue_factory,
+diff --git a/Datastore/tests/test_version_row_at_open.py b/Datastore/tests/test_version_row_at_open.py
+index 4939299..677db09 100644
+--- a/Datastore/tests/test_version_row_at_open.py
++++ b/Datastore/tests/test_version_row_at_open.py
+@@ -37,7 +37,7 @@ from pathlib import Path
+ import ray
+ import sqlalchemy as sqla
+ 
+-from Datastore.SQL.Datastore import _factories
++from config.datastore import factories as _factories
+ from Datastore.SQL.schema import build_schema
+ from Datastore.replication import ReplicatedDivergence
+ from Datastore.tests import standin_pool as sp
+@@ -113,6 +113,7 @@ class _VersionTestCase(unittest.TestCase):
+                 replicated_tables=replicated_tables,
+                 sharded_tables=sharded_tables,
+                 shards=3,
++                factories=_factories,
+                 **kwargs,
+             )
+         self.cluster.pool = pool
+@@ -492,6 +493,7 @@ class TestInsertBeforeSetVersion(_VersionTestCase):
+                 version_label="L1",
+                 db_name=self.files[0],
+                 replicated_tables=list(replicated_tables),
++                factories=_factories,
+                 my_name="shard0000-store",
+                 serial_broker=broker,
+             )
+diff --git a/Datastore/tests/test_wkb_numeric_parent_key.py b/Datastore/tests/test_wkb_numeric_parent_key.py
+index 456e3db..021bb78 100644
+--- a/Datastore/tests/test_wkb_numeric_parent_key.py
++++ b/Datastore/tests/test_wkb_numeric_parent_key.py
+@@ -26,8 +26,8 @@ The prompt's §3 tests, by class:
+   5. ``TestReadersRefuseAmbiguity`` -- the labels-only reader mode refuses two stored rows for the
+      same physical labels, naming both ``numeric_serial`` values (a NULL as pure WKB).
+   7. ``TestDropOrder`` -- under ``PRAGMA foreign_keys = ON``, dropping ``tk-numeric`` with a Tk WKB
+-     row present succeeds in the corrected order and not in the old one; and ``_drop_order``
+-     respects every declared foreign key between drop actions.
++     row present succeeds in the order derived from the foreign keys and not unsorted; and that
++     order respects every declared foreign key between the dropped tables.
+ 
+ and, for the inventory's nullable parent (the orchestrator note's §0.5), ``TestNullableParent``.
+ 
+@@ -64,7 +64,11 @@ from CosmologyConcepts.wavenumber import (
+     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+ )
+-from Datastore.SQL.Datastore import _drop_actions, _factories
++from config.datastore import (
++    drop_groups as _drop_actions,
++    factories as _factories,
++    tables_to_drop,
++)
+ from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+     sqla_GkNumericIntegration_factory,
+ )
+@@ -84,7 +88,7 @@ from MetadataConcepts import tolerance
+ from Units import Mpc_units
+ 
+ # the module itself: `import Datastore.SQL.Datastore as ...` binds the package's re-exported actor
+-# class of the same name, not the module that holds _drop_order
++# class of the same name, not the module
+ datastore_module = importlib.import_module("Datastore.SQL.Datastore")
+ 
+ UNITS = Mpc_units()
+@@ -861,29 +865,27 @@ class TestReadersRefuseAmbiguity(_StoreCase):
+             tk.compute()
+ 
+ 
+-# the order _drop_order had before prompt 07: tk-numeric ahead of tk-wkb
+-_OLD_DROP_ORDER = [
+-    "1loop-integral",
+-    "quad-source-integral",
+-    "gk-source-policy",
+-    "gk-source-policy-records",
+-    "gk-source",
+-    "gk-wkb",
+-    "gk-numeric",
+-    "quad-source",
+-    "tk-numeric",
+-    "tk-wkb",
+-]
++class _RecordingInspector:
++    """An inspector that says every table is absent, and records the order it was asked in:
++    ``_drop_tables`` asks ``has_table`` once per table, in the order it would drop them.
++    """
++
++    def __init__(self):
++        self.asked = []
++
++    def has_table(self, name):
++        self.asked.append(name)
++        return False
+ 
+ 
+ class TestDropOrder(unittest.TestCase):
+-    """§3 test 7. The real `Datastore._drop_actions`, on a file store with foreign-key enforcement
++    """§3 test 7. The real `Datastore._drop_tables`, on a file store with foreign-key enforcement
+     turned on for every connection its engine opens (production never turns it on; SQLite's DROP
+     TABLE performs an implicit DELETE, which enforcement checks). The store holds the Tk numeric rows
+-    and one Tk WKB row naming the first, written raw with no value or tag rows (the order of the
+-    tables *within* one drop action is not what this checks; see the log's observations), and is
++    and one Tk WKB row naming the first, written raw with no value or tag rows, and is
+     clean under `PRAGMA foreign_key_check` before the drop: SQLite counts violations net, so a
+-    row whose own references already dangled would hide the one the drop makes."""
++    row whose own references already dangled would hide the one the drop makes. The order is
++    derived from the schema's foreign keys (prompts/datastore-generic, prompt 06)."""
+ 
+     def _drop(self, actions):
+         tmp = tempfile.TemporaryDirectory()
+@@ -927,49 +929,76 @@ class TestDropOrder(unittest.TestCase):
+             _tables=s.tables,
+             _engine=s.engine,
+             _metadata=s.metadata,
++            _my_name="drop-order-test",
+         )
+         raw = datastore_module.Datastore.__ray_metadata__.modified_class
+         with mock.patch("builtins.print"):
+-            raw._drop_actions(fake, actions)
++            raw._drop_tables(fake, tables_to_drop(actions))
+         with s.engine.connect() as conn:
+             self.assertEqual(conn.execute(sqla.text("PRAGMA foreign_keys")).scalar(), 1)
+         return sqla.inspect(s.engine)
+ 
+-    def test_the_corrected_order_drops_both(self):
+-        inspector = self._drop(["tk-numeric", "tk-wkb"])
+-        self.assertFalse(inspector.has_table("TkWKBIntegration"))
+-        self.assertFalse(inspector.has_table("TkNumericIntegration"))
+-
+-    def test_the_old_order_is_refused_by_enforcement(self):
+-        with mock.patch.object(datastore_module, "_drop_order", _OLD_DROP_ORDER):
++    @staticmethod
++    def _order(tables):
++        """The order ``_drop_tables`` drops ``tables`` in, on a store that holds none of them."""
++        raw = datastore_module.Datastore.__ray_metadata__.modified_class
++        inspector = _RecordingInspector()
++        fake = types.SimpleNamespace(
++            _inspector=inspector,
++            _tables=build_schema(sqla.MetaData(), _factories).tables,
++            _engine=None,
++            _metadata=None,
++            _my_name="drop-order-test",
++        )
++        with mock.patch.object(sqla, "inspect", lambda engine: inspector):
++            raw._drop_tables(fake, tables)
++        return inspector.asked
++
++    def test_the_derived_order_drops_both(self):
++        for actions in (["tk-numeric", "tk-wkb"], ["tk-wkb", "tk-numeric"]):
++            with self.subTest(actions=actions):
++                inspector = self._drop(actions)
++                self.assertFalse(inspector.has_table("TkWKBIntegration"))
++                self.assertFalse(inspector.has_table("TkNumericIntegration"))
++
++    def test_an_unsorted_order_is_refused_by_enforcement(self):
++        # without the foreign-key sort, the tables drop in the reverse of the order named:
++        # tk-numeric's tables first, while a TkWKBIntegration row still references them
++        with mock.patch.object(sqla.schema, "sort_tables", lambda tables: list(tables)):
+             with self.assertRaises(IntegrityError):
+-                self._drop(["tk-numeric", "tk-wkb"])
++                self._drop(["tk-wkb", "tk-numeric"])
+ 
+     def test_tk_wkb_drops_before_tk_numeric_and_gk_wkb_before_gk_numeric(self):
+-        order = datastore_module._drop_order
+-        self.assertLess(order.index("tk-wkb"), order.index("tk-numeric"))
+-        self.assertLess(order.index("gk-wkb"), order.index("gk-numeric"))
++        order = self._order(tables_to_drop(_drop_actions))
++        self.assertLess(
++            order.index("TkWKBIntegration"), order.index("TkNumericIntegration")
++        )
++        self.assertLess(
++            order.index("GkWKBIntegration"), order.index("GkNumericIntegration")
++        )
+ 
+-    def test_every_declared_foreign_key_between_actions_is_respected(self):
+-        """Derived from the schema: an action whose tables declare a foreign key into another
+-        action's tables must drop first."""
++    def test_every_declared_foreign_key_between_dropped_tables_is_respected(self):
++        """Derived from the schema: a table with a foreign key into another dropped table drops
++        first, for every drop group alone and for all of them together."""
+         tables = build_schema(sqla.MetaData(), _factories).tables
+-        order = datastore_module._drop_order
+-        self.assertEqual(set(order), set(_drop_actions))
+-        action_of = {t: a for a, names in _drop_actions.items() for t in names}
+-        pairs = 0
+-        for action, names in _drop_actions.items():
++        cases = {action: [action] for action in _drop_actions}
++        cases["all"] = list(_drop_actions)
++        for case, actions in cases.items():
++            names = tables_to_drop(actions)
++            order = self._order(names)
++            self.assertEqual(sorted(order), sorted(names))
++            pairs = 0
+             for name in names:
+                 for fk in tables[name].foreign_keys:
+                     target = fk.column.table.name
+-                    other = action_of.get(target)
+-                    if other is None or other == action:
++                    if target == name or target not in names:
+                         continue
+                     pairs += 1
+-                    with self.subTest(table=name, references=target):
+-                        self.assertLess(order.index(action), order.index(other))
+-        # the WKB->numeric pairs and QuadSource.Tq_serial at least
+-        self.assertGreaterEqual(pairs, 3)
++                    with self.subTest(case=case, table=name, references=target):
++                        self.assertLess(order.index(name), order.index(target))
++            if case == "all":
++                # the WKB->numeric pairs and QuadSource.Tq_serial at least
++                self.assertGreaterEqual(pairs, 3)
+ 
+ 
+ class TestNullableParent(unittest.TestCase):
+diff --git a/RunRegistry/stores.py b/RunRegistry/stores.py
+index 0687bb0..d31ec71 100644
+--- a/RunRegistry/stores.py
++++ b/RunRegistry/stores.py
+@@ -1453,7 +1453,7 @@ def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) ->
+        finished. A fingerprint of a store being written describes no instant;
+     2. import `read_inventory`, here, so that `import RunRegistry` loads neither ray nor
+        sqlalchemy;
+-    3. `read_inventory(primary)`, read-only and with no Ray. A reader refusal comes through;
++    3. `read_inventory(primary, factories)`, read-only and with no Ray. A reader refusal comes through;
+     4. `fingerprint_of`, with `taken` from `now_iso()`, `git_provenance()` and ``taken_by``'s id;
+     5. `read_sidecar`, and `compare_fingerprints` against a registry sidecar's `fingerprint`;
+     6. only if ``write``: refuse unless the sidecar is a problem-free registry sidecar, then
+@@ -1490,8 +1490,9 @@ def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) ->
+ 
+     # 2, 3. the inventory, read-only
+     from Datastore.store_inventory import read_inventory
++    from config.datastore import factories
+ 
+-    inventory = read_inventory(primary)
++    inventory = read_inventory(primary, factories)
+ 
+     # 4. the fingerprint
+     provenance = git_provenance()
+diff --git a/RunRegistry/tests/test_store_fingerprint.py b/RunRegistry/tests/test_store_fingerprint.py
+index ed5bd65..671680c 100644
+--- a/RunRegistry/tests/test_store_fingerprint.py
++++ b/RunRegistry/tests/test_store_fingerprint.py
+@@ -55,6 +55,7 @@ from Datastore.tests.real_store_fixtures import (
+     full_rows,
+     relabel_serials,
+ )
++from config.datastore import factories as _factories
+ 
+ REPO_ROOT = Path(RunRegistry.REPO_ROOT)
+ GOLDEN = (
+@@ -129,7 +130,7 @@ class _FullStores(unittest.TestCase):
+         cls._tmp = tempfile.TemporaryDirectory()
+         cls.top = Path(cls._tmp.name).resolve()
+         cls._count = 0
+-        cls.baseline_inventory = read_inventory(cls.store().primary)
++        cls.baseline_inventory = read_inventory(cls.store().primary, _factories)
+         cls.baseline = fingerprint_of(cls.baseline_inventory)
+ 
+     @classmethod
+@@ -145,7 +146,7 @@ class _FullStores(unittest.TestCase):
+ 
+     @classmethod
+     def fingerprint(cls, **kwargs):
+-        return fingerprint_of(read_inventory(cls.store(**kwargs).primary))
++        return fingerprint_of(read_inventory(cls.store(**kwargs).primary, _factories))
+ 
+ 
+ class TestPhysical(_FullStores):
+@@ -224,7 +225,8 @@ class TestLocalised(_FullStores):
+                         f"DELETE FROM {QSI}_tags WHERE parent_serial = 3",
+                     ]
+                 }
+-            ).primary
++            ).primary,
++            _factories,
+         )
+         after = self.assertLocalised(
+             QSI, inventory, expected_counts={("Run_fixture",): (2, 1)}
+@@ -254,7 +256,8 @@ class TestLocalised(_FullStores):
+                         f"VALUES ('2026-09-24 12:00:00.000000', 3, 3)"
+                     ]
+                 }
+-            ).primary
++            ).primary,
++            _factories,
+         )
+         after = self.assertLocalised(
+             QSI,
+@@ -270,7 +273,8 @@ class TestLocalised(_FullStores):
+         inventory = read_inventory(
+             self.store(
+                 extra_sql={1: ["DELETE FROM TkNumericValue WHERE serial = 24"]}
+-            ).primary
++            ).primary,
++            _factories,
+         )
+         after = self.assertLocalised(TKN, inventory)
+         self.assertEqual(
+@@ -281,7 +285,8 @@ class TestLocalised(_FullStores):
+         inventory = read_inventory(
+             self.store(
+                 extra_sql={0: [f"UPDATE {TKN} SET validated = 1 WHERE serial = 3"]}
+-            ).primary
++            ).primary,
++            _factories,
+         )
+         self.assertLocalised(TKN, inventory)
+ 
+@@ -311,7 +316,8 @@ class TestNotContent(_FullStores):
+                             changed["solver"] += 1
+         self.assertTrue(all(n > 0 for n in changed.values()), changed)
+         inventory = read_inventory(
+-            self.store(replicated=replicated, sharded=sharded, shard_keys=keys).primary
++            self.store(replicated=replicated, sharded=sharded, shard_keys=keys).primary,
++            _factories,
+         )
+         self.assertEqual(inventory[QSI].earliest_timestamp, stamp)
+         after = fingerprint_of(inventory)
+@@ -544,7 +550,7 @@ class _FullStoreCase(CommandLineTestCase):
+         return primary
+ 
+     def expected(self, primary):
+-        return fingerprint_of(read_inventory(primary))
++        return fingerprint_of(read_inventory(primary, _factories))
+ 
+     def store_state(self, primary):
+         return file_state(primary.parent)
+diff --git a/RunRegistry/tests/test_store_retire.py b/RunRegistry/tests/test_store_retire.py
+index da1d34d..c1c7ada 100644
+--- a/RunRegistry/tests/test_store_retire.py
++++ b/RunRegistry/tests/test_store_retire.py
+@@ -51,6 +51,7 @@ from Datastore.tests.shard_store_fixtures import (
+     tree_state,
+     write_new_store,
+ )
++from config.datastore import factories as _factories
+ 
+ N_SHARDS = 4
+ REASON = "disposable: every number it held is in a committed document"
+@@ -702,7 +703,7 @@ class TestWithoutFingerprint(RetireTestCase):
+         before = self.sidecar(primary)
+         self.store_files(primary)[1].write_bytes(b"this is not a database\n" * 100)
+         with self.assertRaises(Exception) as unreadable:
+-            read_inventory(primary)
++            read_inventory(primary, _factories)
+         self.refused_retire(
+             primary, "a fresh fingerprint could not be taken", "--without-fingerprint"
+         )
+diff --git a/config/datastore.py b/config/datastore.py
+new file mode 100644
+index 0000000..638c3fe
+--- /dev/null
++++ b/config/datastore.py
+@@ -0,0 +1,194 @@
++"""
++The datastore's client registries: what this project stores, and the per-table facts the generic
++datastore layer (``Datastore/SQL``, ``Datastore/store_reader.py``, ``Datastore/store_inventory.py``)
++is given rather than imports.
++
++- ``factories``: the storable classes, each name mapped to its factory. ``main.py`` and the extract
++  scripts pass it to ``ShardedPool``; the reader and the inventory are given it too.
++- ``drop_groups``: the ``--drop`` actions, each mapped to the tables it drops. ``tables_to_drop``
++  turns a list of actions into the tables; the layer orders them by foreign key.
++- ``serial_batch_sizes``: how many serials a client leases from the broker at a time, per table.
++  A table not named here leases the layer's default.
++"""
++
++from typing import Iterable, List
++
++from Datastore.SQL.ObjectFactories.BackgroundModel import (
++    sqla_BackgroundModelFactory,
++    sqla_BackgroundModelTagAssociation_factory,
++    sqla_BackgroundModelValue_factory,
++)
++from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
++    sqla_GkNumericIntegration_factory,
++    sqla_GkNumericValue_factory,
++    sqla_GkNumericTagAssociation_factory,
++)
++from Datastore.SQL.ObjectFactories.GkSource import (
++    sqla_GkSourceTagAssociation_factory,
++    sqla_GkSource_factory,
++    sqla_GkSourceValue_factory,
++    sqla_GkSourceParents_factory,
++)
++from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
++from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
++    sqla_GkSourcePolicyData_factory,
++)
++from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
++    sqla_GkWKBIntegration_factory,
++    sqla_GkWKBTagAssociation_factory,
++    sqla_GkWKBValue_factory,
++)
++from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
++from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
++    sqla_OneLoopIntegral_factory,
++    sqla_OneLoopIntegralTagAssociation_factory,
++)
++from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
++from Datastore.SQL.ObjectFactories.QuadSource import (
++    sqla_QuadSource_factory,
++    sqla_QuadSourceTagAssocation_factory,
++    sqla_QuadSourceValue_factory,
++)
++from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
++    sqla_QuadSourceIntegralTagAssociation_factory,
++    sqla_QuadSourceIntegral_factory,
++)
++from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
++from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
++    sqla_TkNumericIntegration_factory,
++    sqla_TkNumericValue_factory,
++    sqla_TkNumericTagAssociation_factory,
++)
++from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
++    sqla_TkWKBIntegration_factory,
++    sqla_TkWKBTagAssociation_factory,
++    sqla_TkWKBValue_factory,
++)
++from Datastore.SQL.ObjectFactories.integration_metadata import (
++    sqla_IntegrationSolver_factory,
++)
++from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
++from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
++from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
++from Datastore.SQL.ObjectFactories.version import sqla_version_factory
++from Datastore.SQL.ObjectFactories.wavenumber import (
++    sqla_wavenumber_factory,
++    sqla_wavenumber_exit_time_factory,
++)
++
++factories = {
++    "version": sqla_version_factory,
++    "store_tag": sqla_store_tag_factory,
++    "redshift": sqla_redshift_factory,
++    "wavenumber": sqla_wavenumber_factory,
++    "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
++    "tolerance": sqla_tolerance_factory,
++    "LambdaCDM": sqla_LambdaCDM_factory,
++    "QCD_Cosmology": sqla_QCDCosmology_factory,
++    "IntegrationSolver": sqla_IntegrationSolver_factory,
++    "BackgroundModel": sqla_BackgroundModelFactory,
++    "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,
++    "BackgroundModelValue": sqla_BackgroundModelValue_factory,
++    "TkNumericIntegration": sqla_TkNumericIntegration_factory,
++    "TkNumeric_tags": sqla_TkNumericTagAssociation_factory,
++    "TkNumericValue": sqla_TkNumericValue_factory,
++    "TkWKBIntegration": sqla_TkWKBIntegration_factory,
++    "TkWKB_tags": sqla_TkWKBTagAssociation_factory,
++    "TkWKBValue": sqla_TkWKBValue_factory,
++    "GkNumericIntegration": sqla_GkNumericIntegration_factory,
++    "GkNumeric_tags": sqla_GkNumericTagAssociation_factory,
++    "GkNumericValue": sqla_GkNumericValue_factory,
++    "GkWKBIntegration": sqla_GkWKBIntegration_factory,
++    "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
++    "GkWKBValue": sqla_GkWKBValue_factory,
++    "GkSourcePolicy": sqla_GkSourcePolicy_factory,
++    "GkSourcePolicyData": sqla_GkSourcePolicyData_factory,
++    "GkSource": sqla_GkSource_factory,
++    "GkSource_tags": sqla_GkSourceTagAssociation_factory,
++    "GkSourceValue": sqla_GkSourceValue_factory,
++    # the Gk rows each GkSource is assembled from (prompts/datastore-integrity, prompt 09b)
++    "GkSource_parents": sqla_GkSourceParents_factory,
++    "QuadSourcePolicy": sqla_QuadSourcePolicy_factory,
++    "QuadSource": sqla_QuadSource_factory,
++    "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
++    "QuadSourceValue": sqla_QuadSourceValue_factory,
++    "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
++    "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
++    "OneLoopIntegral": sqla_OneLoopIntegral_factory,
++    "OneLoopIntegral_tags": sqla_OneLoopIntegralTagAssociation_factory,
++}
++
++drop_groups = {
++    "1loop-integral": [
++        "OneLoopIntegral",
++        "OneLoopIntegral_tags",
++    ],
++    "quad-source-integral": [
++        "QuadSourceIntegral",
++        "QuadSourceIntegral_tags",
++    ],
++    "gk-source-policy": ["GkSourcePolicyData"],
++    "gk-source-policy-records": ["GkSourcePolicy"],
++    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue", "GkSource_parents"],
++    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
++    "gk-numeric": ["GkNumericIntegration", "GkNumeric_tags", "GkNumericValue"],
++    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
++    "tk-numeric": ["TkNumericIntegration", "TkNumeric_tags", "TkNumericValue"],
++    "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
++}
++
++serial_batch_sizes = {
++    "store_tag": 5,
++    "redshift": 200,
++    "wavenumber": 100,
++    "wavenumber_exit_time": 100,
++    "tolerance": 5,
++    "LambdaCDM": 5,
++    "QCD_Cosmology": 5,
++    "IntegrationSolver": 6,
++    "BackgroundModel": 5,
++    "BackgroundModelValue": 100,
++    "TkNumericIntegration": 200,
++    "TkNumeric_tags": 1000,
++    "TkNumericValue": 7500,
++    "TkWKBIntegration": 200,
++    "TkWKB_tags": 1000,
++    "TkWKBValue": 7500,
++    "GkNumericIntegration": 200,
++    "GkNumeric_tags": 1000,
++    "GkNumericValue": 7500,
++    "GkWKBIntegration": 200,
++    "GkWKB_tags": 1000,
++    "GkWKBValue": 7500,
++    "GkSourcePolicy": 5,
++    "GkSourcePolicyData": 50,
++    "GkSource": 200,
++    "GkSource_tags": 1000,
++    "GkSourceValue": 7500,
++    # one row per z_source of each GkSource, as GkSourceValue has (prompts/datastore-integrity,
++    # prompt 09b)
++    "GkSource_parents": 7500,
++    "QuadSource": 200,
++    "QuadSourcePolicy": 5,
++    "QuadSource_tags": 1000,
++    "QuadSourceValue": 7500,
++    "QuadSourceIntegral": 10000,
++    "QuadSourceIntegral_tags": 3000,
++    "OneLoopIntegral": 10000,
++    "OneLoopIntegral_tags": 3000,
++}
++
++
++def tables_to_drop(actions: Iterable[str]) -> List[str]:
++    """The tables of the drop groups ``actions``, each once, in the order the groups list them.
++    An action that is not a drop group raises ``ValueError`` naming it."""
++    tables: List[str] = []
++    for action in actions:
++        if action not in drop_groups:
++            raise ValueError(
++                f'Unknown drop action "{action}"; the drop actions are {sorted(drop_groups)}'
++            )
++        for table in drop_groups[action]:
++            if table not in tables:
++                tables.append(table)
++    return tables
+diff --git a/extract_GkSource_data.py b/extract_GkSource_data.py
+index 80d409a..f83bbe4 100644
+--- a/extract_GkSource_data.py
++++ b/extract_GkSource_data.py
+@@ -40,6 +40,7 @@ from config.defaults import (
+     DEFAULT_HEXIT_ABS_TOLERANCE,
+     DEFAULT_HEXIT_REL_TOLERANCE,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -940,6 +941,7 @@ with ShardedPool(
+     job_name="extract_GkSource_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/extract_GkWKB_data.py b/extract_GkWKB_data.py
+index 8a92f32..f6741e0 100644
+--- a/extract_GkWKB_data.py
++++ b/extract_GkWKB_data.py
+@@ -40,6 +40,7 @@ from config.defaults import (
+     DEFAULT_HEXIT_ABS_TOLERANCE,
+     DEFAULT_HEXIT_REL_TOLERANCE,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -513,6 +514,7 @@ with ShardedPool(
+     job_name="extract_GkWKB_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/extract_Gk_data.py b/extract_Gk_data.py
+index 845eab0..c420b60 100644
+--- a/extract_Gk_data.py
++++ b/extract_Gk_data.py
+@@ -37,6 +37,7 @@ from config.defaults import (
+     DEFAULT_HEXIT_ABS_TOLERANCE,
+     DEFAULT_HEXIT_REL_TOLERANCE,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -461,6 +462,7 @@ with ShardedPool(
+     job_name="extract_Gk_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/extract_QuadSourceIntegral_data.py b/extract_QuadSourceIntegral_data.py
+index d72a245..66f5100 100644
+--- a/extract_QuadSourceIntegral_data.py
++++ b/extract_QuadSourceIntegral_data.py
+@@ -49,6 +49,7 @@ from config.defaults import (
+     DEFAULT_QUADRATURE_RTOL,
+     DEFAULT_QUADSOURCE_POLICY_1PT5,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -1302,6 +1303,7 @@ with ShardedPool(
+     job_name="extract_QuadSourceIntegral_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/extract_TkWKB_data.py b/extract_TkWKB_data.py
+index c7d9715..02ae0ab 100644
+--- a/extract_TkWKB_data.py
++++ b/extract_TkWKB_data.py
+@@ -35,6 +35,7 @@ from config.defaults import (
+     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
+     DEFAULT_TK_NUMERIC_REL_TOLERANCE,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -501,6 +502,7 @@ with ShardedPool(
+     job_name="extract_TkWKB_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/extract_common.py b/extract_common.py
+index 593043f..f106a74 100644
+--- a/extract_common.py
++++ b/extract_common.py
+@@ -154,7 +154,7 @@ def available_run_labels(pool) -> List[str]:
+     The names of the runs this datastore holds, in sorted order.
+ 
+     They are read from the ``store_tag`` class of the structured inventory,
+-    ``Datastore.store_inventory.read_inventory(pool.primary)``, which reads that replicated class
++    ``Datastore.store_inventory.read_inventory(pool.primary, pool.factories)``, which reads that replicated class
+     from **every** shard and compares the copies. This needs no lookup key and no knowledge of what
+     the store contains -- which is the property that makes the "exactly one run" case answerable
+     without the user saying anything. The answer is every ``Run_`` label in ``store_tag``,
+@@ -171,7 +171,7 @@ def available_run_labels(pool) -> List[str]:
+     ``object_get``. The reader opens every file read-only and refuses a store with a journal file
+     beside it, which still guards the case where something is writing.
+     """
+-    inventory = read_inventory(pool.primary)
++    inventory = read_inventory(pool.primary, pool.factories)
+     store_tag = inventory["store_tag"]
+ 
+     if len(store_tag.problems) > 0:
+diff --git a/extract_tensor_source_data.py b/extract_tensor_source_data.py
+index 2cea7bc..c201ff3 100644
+--- a/extract_tensor_source_data.py
++++ b/extract_tensor_source_data.py
+@@ -34,6 +34,7 @@ from config.defaults import (
+     DEFAULT_HEXIT_ABS_TOLERANCE,
+     DEFAULT_HEXIT_REL_TOLERANCE,
+ )
++from config.datastore import factories
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -429,6 +430,7 @@ with ShardedPool(
+     job_name="extract_tensor_source_data",
+     read_only=True,
+     read_table_config=read_table_config,
++    factories=factories,
+ ) as pool:
+ 
+     # which run is being read? Every lookup below selects on it, so it is resolved once, before
+diff --git a/main.py b/main.py
+index 2c43521..c686553 100644
+--- a/main.py
++++ b/main.py
+@@ -74,6 +74,12 @@ from config.defaults import (
+     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
+     DEFAULT_TK_NUMERIC_REL_TOLERANCE,
+ )
++from config.datastore import (
++    drop_groups,
++    factories,
++    serial_batch_sizes,
++    tables_to_drop,
++)
+ from config.model_list import build_model_list
+ from config.sharding import (
+     replicated_tables,
+@@ -112,18 +118,7 @@ DEFAULT_RUN_LABEL = "default"
+ 
+ MIN_NOTIFY_INTERVAL = 5 * 60
+ 
+-allowed_drop_actions = [
+-    "tk-numeric",
+-    "tk-wkb",
+-    "quad-source",
+-    "gk-numeric",
+-    "gk-wkb",
+-    "gk-source",
+-    "gk-source-policy-records",
+-    "gk-source-policy",
+-    "quad-source-integral",
+-    "1loop-integral",
+-]
++allowed_drop_actions = list(drop_groups)
+ 
+ parser = argparse.ArgumentParser()
+ parser.add_argument(
+@@ -298,7 +293,7 @@ if args.inventory:
+         )
+         sys.exit(2)
+     try:
+-        inventory = read_inventory(args.database)
++        inventory = read_inventory(args.database, factories)
+     except RuntimeError as e:
+         print(f"!! --inventory: {e}", file=sys.stderr)
+         sys.exit(1)
+@@ -316,6 +311,7 @@ VERSION_LABEL = "2025.1.1"
+ 
+ specified_drop_actions = [x.lower() for x in args.drop]
+ drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
++drop_tables = tables_to_drop(drop_actions)
+ 
+ # instantiate a ProfileAgent to profile database operations; this is passed as an argument to ShardedPool below
+ profile_agent = None
+@@ -4177,8 +4173,10 @@ with ShardedPool(
+     profile_agent=profile_agent,
+     job_name=args.job_name,
+     prune_unvalidated=args.prune_unvalidated,
+-    drop_actions=drop_actions,
++    drop_tables=drop_tables,
+     read_table_config=read_table_config,
++    factories=factories,
++    serial_batch_sizes=serial_batch_sizes,
+ ) as pool:
+ 
+     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
+diff --git a/tools/inventory_report.py b/tools/inventory_report.py
+index 2b95338..ab6bce9 100644
+--- a/tools/inventory_report.py
++++ b/tools/inventory_report.py
+@@ -161,10 +161,10 @@ def _plural(n: int, word: str) -> str:
+ 
+ 
+ def _schema_tables() -> Mapping[str, sqla.Table]:
+-    from Datastore.SQL.Datastore import _factories
+     from Datastore.SQL.schema import build_schema
++    from config.datastore import factories
+ 
+-    return build_schema(sqla.MetaData(), _factories).tables
++    return build_schema(sqla.MetaData(), factories).tables
+ 
+ 
+ class _Renderer:

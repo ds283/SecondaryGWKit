@@ -1,0 +1,128 @@
+== 1loop-integral: ['OneLoopIntegral', 'OneLoopIntegral_tags']
+   derived: ['OneLoopIntegral_tags', 'OneLoopIntegral']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['OneLoopIntegral_tags.parent_serial->OneLoopIntegral']
+   derived violates: []
+   old order: ['OneLoopIntegral', 'OneLoopIntegral_tags']
+   old violates: ['OneLoopIntegral_tags.parent_serial->OneLoopIntegral']
+== quad-source-integral: ['QuadSourceIntegral', 'QuadSourceIntegral_tags']
+   derived: ['QuadSourceIntegral_tags', 'QuadSourceIntegral']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['QuadSourceIntegral_tags.parent_serial->QuadSourceIntegral']
+   derived violates: []
+   old order: ['QuadSourceIntegral', 'QuadSourceIntegral_tags']
+   old violates: ['QuadSourceIntegral_tags.parent_serial->QuadSourceIntegral']
+== gk-source-policy: ['GkSourcePolicyData']
+   derived: ['GkSourcePolicyData']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): []
+   derived violates: []
+   old order: ['GkSourcePolicyData']
+   old violates: []
+== gk-source-policy-records: ['GkSourcePolicy']
+   derived: ['GkSourcePolicy']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): []
+   derived violates: []
+   old order: ['GkSourcePolicy']
+   old violates: []
+== gk-source: ['GkSource', 'GkSource_tags', 'GkSourceValue', 'GkSource_parents']
+   derived: ['GkSource_parents', 'GkSourceValue', 'GkSource_tags', 'GkSource']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['GkSource_tags.parent_serial->GkSource', 'GkSourceValue.parent_serial->GkSource', 'GkSource_parents.gk_source_serial->GkSource']
+   derived violates: []
+   old order: ['GkSource', 'GkSource_tags', 'GkSourceValue', 'GkSource_parents']
+   old violates: ['GkSource_tags.parent_serial->GkSource', 'GkSourceValue.parent_serial->GkSource', 'GkSource_parents.gk_source_serial->GkSource']
+== gk-wkb: ['GkWKBIntegration', 'GkWKB_tags', 'GkWKBValue']
+   derived: ['GkWKBValue', 'GkWKB_tags', 'GkWKBIntegration']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['GkWKB_tags.wkb_serial->GkWKBIntegration', 'GkWKBValue.wkb_serial->GkWKBIntegration']
+   derived violates: []
+   old order: ['GkWKBIntegration', 'GkWKB_tags', 'GkWKBValue']
+   old violates: ['GkWKB_tags.wkb_serial->GkWKBIntegration', 'GkWKBValue.wkb_serial->GkWKBIntegration']
+== gk-numeric: ['GkNumericIntegration', 'GkNumeric_tags', 'GkNumericValue']
+   derived: ['GkNumericValue', 'GkNumeric_tags', 'GkNumericIntegration']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['GkNumeric_tags.integration_serial->GkNumericIntegration', 'GkNumericValue.integration_serial->GkNumericIntegration']
+   derived violates: []
+   old order: ['GkNumericIntegration', 'GkNumeric_tags', 'GkNumericValue']
+   old violates: ['GkNumeric_tags.integration_serial->GkNumericIntegration', 'GkNumericValue.integration_serial->GkNumericIntegration']
+== quad-source: ['QuadSource', 'QuadSource_tags', 'QuadSourceValue']
+   derived: ['QuadSourceValue', 'QuadSource_tags', 'QuadSource']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['QuadSource_tags.parent_serial->QuadSource', 'QuadSourceValue.parent_serial->QuadSource']
+   derived violates: []
+   old order: ['QuadSource', 'QuadSource_tags', 'QuadSourceValue']
+   old violates: ['QuadSource_tags.parent_serial->QuadSource', 'QuadSourceValue.parent_serial->QuadSource']
+== tk-numeric: ['TkNumericIntegration', 'TkNumeric_tags', 'TkNumericValue']
+   derived: ['TkNumericValue', 'TkNumeric_tags', 'TkNumericIntegration']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['TkNumeric_tags.integration_serial->TkNumericIntegration', 'TkNumericValue.integration_serial->TkNumericIntegration']
+   derived violates: []
+   old order: ['TkNumericIntegration', 'TkNumeric_tags', 'TkNumericValue']
+   old violates: ['TkNumeric_tags.integration_serial->TkNumericIntegration', 'TkNumericValue.integration_serial->TkNumericIntegration']
+== tk-wkb: ['TkWKBIntegration', 'TkWKB_tags', 'TkWKBValue']
+   derived: ['TkWKBValue', 'TkWKB_tags', 'TkWKBIntegration']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['TkWKB_tags.wkb_serial->TkWKBIntegration', 'TkWKBValue.wkb_serial->TkWKBIntegration']
+   derived violates: []
+   old order: ['TkWKBIntegration', 'TkWKB_tags', 'TkWKBValue']
+   old violates: ['TkWKB_tags.wkb_serial->TkWKBIntegration', 'TkWKBValue.wkb_serial->TkWKBIntegration']
+== ALL: ['OneLoopIntegral', 'OneLoopIntegral_tags', 'QuadSourceIntegral', 'QuadSourceIntegral_tags', 'GkSourcePolicyData', 'GkSourcePolicy', 'GkSource', 'GkSource_tags', 'GkSourceValue', 'GkSource_parents', 'GkWKBIntegration', 'GkWKB_tags', 'GkWKBValue', 'GkNumericIntegration', 'GkNumeric_tags', 'GkNumericValue', 'QuadSource', 'QuadSource_tags', 'QuadSourceValue', 'TkNumericIntegration', 'TkNumeric_tags', 'TkNumericValue', 'TkWKBIntegration', 'TkWKB_tags', 'TkWKBValue']
+   derived: ['QuadSourceIntegral_tags', 'TkWKBValue', 'TkWKB_tags', 'QuadSourceValue', 'QuadSource_tags', 'GkWKBValue', 'GkWKB_tags', 'GkSource_parents', 'QuadSourceIntegral', 'TkWKBIntegration', 'TkNumericValue', 'TkNumeric_tags', 'QuadSource', 'GkNumericValue', 'GkNumeric_tags', 'GkWKBIntegration', 'GkSourceValue', 'GkSource_tags', 'GkSourcePolicyData', 'OneLoopIntegral_tags', 'TkNumericIntegration', 'GkNumericIntegration', 'GkSource', 'GkSourcePolicy', 'OneLoopIntegral']
+   sort_tables warnings: []
+   FK pairs among dropped (child.col -> parent): ['OneLoopIntegral_tags.parent_serial->OneLoopIntegral', 'QuadSourceIntegral.policy_serial->GkSourcePolicy', 'QuadSourceIntegral.data_serial->GkSourcePolicyData', 'QuadSourceIntegral_tags.parent_serial->QuadSourceIntegral', 'GkSourcePolicyData.source_serial->GkSource', 'GkSourcePolicyData.policy_serial->GkSourcePolicy', 'GkSource_tags.parent_serial->GkSource', 'GkSourceValue.parent_serial->GkSource', 'GkSource_parents.gk_source_serial->GkSource', 'GkSource_parents.numeric_serial->GkNumericIntegration', 'GkSource_parents.wkb_serial->GkWKBIntegration', 'GkWKBIntegration.numeric_serial->GkNumericIntegration', 'GkWKB_tags.wkb_serial->GkWKBIntegration', 'GkWKBValue.wkb_serial->GkWKBIntegration', 'GkNumeric_tags.integration_serial->GkNumericIntegration', 'GkNumericValue.integration_serial->GkNumericIntegration', 'QuadSource.Tq_serial->TkNumericIntegration', 'QuadSource_tags.parent_serial->QuadSource', 'QuadSourceValue.parent_serial->QuadSource', 'TkNumeric_tags.integration_serial->TkNumericIntegration', 'TkNumericValue.integration_serial->TkNumericIntegration', 'TkWKBIntegration.numeric_serial->TkNumericIntegration', 'TkWKB_tags.wkb_serial->TkWKBIntegration', 'TkWKBValue.wkb_serial->TkWKBIntegration']
+   derived violates: []
+   old order: ['OneLoopIntegral', 'OneLoopIntegral_tags', 'QuadSourceIntegral', 'QuadSourceIntegral_tags', 'GkSourcePolicyData', 'GkSourcePolicy', 'GkSource', 'GkSource_tags', 'GkSourceValue', 'GkSource_parents', 'GkWKBIntegration', 'GkWKB_tags', 'GkWKBValue', 'GkNumericIntegration', 'GkNumeric_tags', 'GkNumericValue', 'QuadSource', 'QuadSource_tags', 'QuadSourceValue', 'TkWKBIntegration', 'TkWKB_tags', 'TkWKBValue', 'TkNumericIntegration', 'TkNumeric_tags', 'TkNumericValue']
+   old violates: ['OneLoopIntegral_tags.parent_serial->OneLoopIntegral', 'QuadSourceIntegral_tags.parent_serial->QuadSourceIntegral', 'GkSource_tags.parent_serial->GkSource', 'GkSourceValue.parent_serial->GkSource', 'GkSource_parents.gk_source_serial->GkSource', 'GkWKB_tags.wkb_serial->GkWKBIntegration', 'GkWKBValue.wkb_serial->GkWKBIntegration', 'GkNumeric_tags.integration_serial->GkNumericIntegration', 'GkNumericValue.integration_serial->GkNumericIntegration', 'QuadSource_tags.parent_serial->QuadSource', 'QuadSourceValue.parent_serial->QuadSource', 'TkNumeric_tags.integration_serial->TkNumericIntegration', 'TkNumericValue.integration_serial->TkNumericIntegration', 'TkWKB_tags.wkb_serial->TkWKBIntegration', 'TkWKBValue.wkb_serial->TkWKBIntegration']
+== FKs from a table no group drops into a dropped table: []
+== shard 0 rows in dropped tables: {'OneLoopIntegral': 1, 'OneLoopIntegral_tags': 2, 'QuadSourceIntegral': 2, 'QuadSourceIntegral_tags': 3, 'GkSourcePolicyData': 2, 'GkSourcePolicy': 2, 'GkSource': 2, 'GkSource_tags': 3, 'GkSourceValue': 5, 'GkSource_parents': 4, 'GkWKBIntegration': 1, 'GkWKB_tags': 2, 'GkWKBValue': 2, 'GkNumericIntegration': 1, 'GkNumeric_tags': 2, 'GkNumericValue': 3, 'QuadSource': 1, 'QuadSource_tags': 2, 'QuadSourceValue': 3, 'TkNumericIntegration': 2, 'TkNumeric_tags': 4, 'TkNumericValue': 5, 'TkWKBIntegration': 2, 'TkWKB_tags': 3, 'TkWKBValue': 4}
+== shard 1 rows in dropped tables: {'QuadSourceIntegral': 1, 'QuadSourceIntegral_tags': 1, 'GkSourcePolicyData': 1, 'GkSourcePolicy': 2, 'GkSource': 1, 'GkSource_tags': 2, 'GkSourceValue': 1, 'GkSource_parents': 2, 'GkWKBIntegration': 1, 'GkWKB_tags': 1, 'GkWKBValue': 1, 'GkNumericIntegration': 1, 'GkNumeric_tags': 1, 'GkNumericValue': 1, 'QuadSource': 1, 'QuadSource_tags': 1, 'QuadSourceValue': 2, 'TkNumericIntegration': 1, 'TkNumeric_tags': 2, 'TkNumericValue': 4, 'TkWKBIntegration': 1, 'TkWKB_tags': 1, 'TkWKBValue': 2}
+== PRAGMA foreign_keys=ON, every group dropped:
+   derived shard 0: every drop succeeded (25 tables); foreign_key_check after: []
+   old shard 0: failed at DROP "OneLoopIntegral" after 0: IntegrityError: FOREIGN KEY constraint failed
+   group-listed-order shard 0: failed at DROP "OneLoopIntegral" after 0: IntegrityError: FOREIGN KEY constraint failed
+   derived shard 1: every drop succeeded (25 tables); foreign_key_check after: []
+   old shard 1: failed at DROP "QuadSourceIntegral" after 2: IntegrityError: FOREIGN KEY constraint failed
+   group-listed-order shard 1: failed at DROP "QuadSourceIntegral" after 2: IntegrityError: FOREIGN KEY constraint failed
+== per group, PRAGMA foreign_keys=ON:
+   1loop-integral derived shard 0: ok
+   1loop-integral old shard 0: FAILED at OneLoopIntegral: FOREIGN KEY constraint failed
+   1loop-integral derived shard 1: ok
+   1loop-integral old shard 1: ok
+   quad-source-integral derived shard 0: ok
+   quad-source-integral old shard 0: FAILED at QuadSourceIntegral: FOREIGN KEY constraint failed
+   quad-source-integral derived shard 1: ok
+   quad-source-integral old shard 1: FAILED at QuadSourceIntegral: FOREIGN KEY constraint failed
+   gk-source-policy derived shard 0: FAILED at GkSourcePolicyData: FOREIGN KEY constraint failed
+   gk-source-policy old shard 0: FAILED at GkSourcePolicyData: FOREIGN KEY constraint failed
+   gk-source-policy derived shard 1: FAILED at GkSourcePolicyData: FOREIGN KEY constraint failed
+   gk-source-policy old shard 1: FAILED at GkSourcePolicyData: FOREIGN KEY constraint failed
+   gk-source-policy-records derived shard 0: FAILED at GkSourcePolicy: FOREIGN KEY constraint failed
+   gk-source-policy-records old shard 0: FAILED at GkSourcePolicy: FOREIGN KEY constraint failed
+   gk-source-policy-records derived shard 1: FAILED at GkSourcePolicy: FOREIGN KEY constraint failed
+   gk-source-policy-records old shard 1: FAILED at GkSourcePolicy: FOREIGN KEY constraint failed
+   gk-source derived shard 0: FAILED at GkSource: FOREIGN KEY constraint failed
+   gk-source old shard 0: FAILED at GkSource: FOREIGN KEY constraint failed
+   gk-source derived shard 1: FAILED at GkSource: FOREIGN KEY constraint failed
+   gk-source old shard 1: FAILED at GkSource: FOREIGN KEY constraint failed
+   gk-wkb derived shard 0: FAILED at GkWKBIntegration: FOREIGN KEY constraint failed
+   gk-wkb old shard 0: FAILED at GkWKBIntegration: FOREIGN KEY constraint failed
+   gk-wkb derived shard 1: FAILED at GkWKBIntegration: FOREIGN KEY constraint failed
+   gk-wkb old shard 1: FAILED at GkWKBIntegration: FOREIGN KEY constraint failed
+   gk-numeric derived shard 0: FAILED at GkNumericIntegration: FOREIGN KEY constraint failed
+   gk-numeric old shard 0: FAILED at GkNumericIntegration: FOREIGN KEY constraint failed
+   gk-numeric derived shard 1: FAILED at GkNumericIntegration: FOREIGN KEY constraint failed
+   gk-numeric old shard 1: FAILED at GkNumericIntegration: FOREIGN KEY constraint failed
+   quad-source derived shard 0: ok
+   quad-source old shard 0: FAILED at QuadSource: FOREIGN KEY constraint failed
+   quad-source derived shard 1: ok
+   quad-source old shard 1: FAILED at QuadSource: FOREIGN KEY constraint failed
+   tk-numeric derived shard 0: FAILED at TkNumericIntegration: FOREIGN KEY constraint failed
+   tk-numeric old shard 0: FAILED at TkNumericIntegration: FOREIGN KEY constraint failed
+   tk-numeric derived shard 1: FAILED at TkNumericIntegration: FOREIGN KEY constraint failed
+   tk-numeric old shard 1: FAILED at TkNumericIntegration: FOREIGN KEY constraint failed
+   tk-wkb derived shard 0: ok
+   tk-wkb old shard 0: FAILED at TkWKBIntegration: FOREIGN KEY constraint failed
+   tk-wkb derived shard 1: ok
+   tk-wkb old shard 1: FAILED at TkWKBIntegration: FOREIGN KEY constraint failed

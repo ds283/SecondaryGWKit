@@ -1,0 +1,42 @@
+....................................................EE..E..........................................................................
+======================================================================
+ERROR: test_a_problem_elsewhere_does_not_matter (Datastore.tests.test_inventory_consumers.TestRunLabels.test_a_problem_elsewhere_does_not_matter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_inventory_consumers.py", line 281, in test_a_problem_elsewhere_does_not_matter
+    self.assertEqual(available_run_labels(pool), ["fixture"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/extract_common.py", line 174, in available_run_labels
+    inventory = read_inventory(pool.primary, pool.factories)
+                                             ^^^^^^^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'factories'
+
+======================================================================
+ERROR: test_a_problem_in_store_tag_is_a_refusal (Datastore.tests.test_inventory_consumers.TestRunLabels.test_a_problem_in_store_tag_is_a_refusal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_inventory_consumers.py", line 266, in test_a_problem_in_store_tag_is_a_refusal
+    available_run_labels(pool)
+  File "<scratch>/wt/extract_common.py", line 174, in available_run_labels
+    inventory = read_inventory(pool.primary, pool.factories)
+                                             ^^^^^^^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'factories'
+
+======================================================================
+ERROR: test_the_run_labels_from_the_structured_inventory (Datastore.tests.test_inventory_consumers.TestRunLabels.test_the_run_labels_from_the_structured_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_inventory_consumers.py", line 257, in test_the_run_labels_from_the_structured_inventory
+    self.assertEqual(available_run_labels(pool), ["fixture", "second"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/extract_common.py", line 174, in available_run_labels
+    inventory = read_inventory(pool.primary, pool.factories)
+                                             ^^^^^^^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'factories'
+
+----------------------------------------------------------------------
+Ran 131 tests in 71.595s
+
+FAILED (errors=3)
+!! GkSource.build(): multiple results found when querying for GkSource
+!! GkSourceValue.build(): multiple results found when querying for GkSourceValue

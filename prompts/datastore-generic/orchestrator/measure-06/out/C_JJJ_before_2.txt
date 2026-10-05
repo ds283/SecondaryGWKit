@@ -1,0 +1,35 @@
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.345s
+
+OK
+@@ (J0,J0,J0):
+   k=1.8980975644932219, q=4.9326994637608665, s=0.22137630881290965 does not satisfy the triangle inequality
+   quadrature result = 9.94084799156634e-13
+   analytic result = 0.0
+   abserr=9.9408e-13
+   reported abserr=1.3513e-07, converged=False, phase_limited=True
+@@ (J1,J1,J0):
+   k=3.6116009657256605, q=3.5602734711186406, s=1.7475555725427994 satisfies the triangle inequality
+   quadrature result = 0.030805149782643444
+   analytic result = 0.030805149782651507
+   relerr=2.6174e-13, abserr=8.063e-15
+   reported abserr=6.9888e-11, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=3.0667808210778507, q=0.8274614150684444, s=4.887981527626037 does not satisfy the triangle inequality
+   quadrature result = 1.758662659945287e-14
+   analytic result = 0.0
+   abserr=1.7587e-14
+   reported abserr=6.3201e-11, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=1.3621392773458592, q=4.4433736643782495, s=1.4518339995284868 does not satisfy the triangle inequality
+   quadrature result = 5.5076603000525637e-14
+   analytic result = 0.0
+   abserr=5.5077e-14
+   reported abserr=1.1758e-10, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=0.1879005337454208, q=1.8398810897573155, s=0.8538585366799566 does not satisfy the triangle inequality
+   quadrature result = 1.0271922201710026e-12
+   analytic result = 0.0
+   abserr=1.0272e-12
+   reported abserr=9.9025e-10, converged=False, phase_limited=True

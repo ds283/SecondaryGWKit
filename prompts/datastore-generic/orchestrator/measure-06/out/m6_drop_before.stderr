@@ -1,0 +1,1 @@
+!! --inventory is read-only and does not drop anything; it refuses --drop (gk-source). Run the drop without --inventory

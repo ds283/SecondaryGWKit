@@ -1,0 +1,91 @@
+........E...............................E..........................EEE
+======================================================================
+ERROR: test_the_read_only_reader (Datastore.tests.test_absolute_shard_record_refused.TestEveryReader.test_the_read_only_reader)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_absolute_shard_record_refused.py", line 169, in test_the_read_only_reader
+    self.assertRefused(open_it, self.b_records[0], self.b)
+  File "<scratch>/wt/Datastore/tests/test_absolute_shard_record_refused.py", line 86, in assertRefused
+    call()
+  File "<scratch>/wt/Datastore/tests/test_absolute_shard_record_refused.py", line 166, in open_it
+    with open_read_only(self.b):
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 301, in helper
+    return _GeneratorContextManager(func, args, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 105, in __init__
+    self.gen = func(*args, **kwds)
+               ^^^^^^^^^^^^^^^^^^^
+TypeError: open_read_only() missing 1 required positional argument: 'factories'
+
+======================================================================
+ERROR: Datastore.tests.test_database_errors_reach_the_caller (unittest.loader._FailedTest.Datastore.tests.test_database_errors_reach_the_caller)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_database_errors_reach_the_caller
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_database_errors_reach_the_caller.py", line 75, in <module>
+    from Datastore.tests import test_gksource_parent_set as gk_source_keys
+  File "<scratch>/wt/Datastore/tests/test_gksource_parent_set.py", line 59, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_exact_identity_lookups (unittest.loader._FailedTest.Datastore.tests.test_exact_identity_lookups)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_exact_identity_lookups
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_exact_identity_lookups.py", line 49, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_factory_select_columns (unittest.loader._FailedTest.Datastore.tests.test_factory_select_columns)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_factory_select_columns
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_factory_select_columns.py", line 739, in <module>
+    from Datastore.SQL.Datastore import _factories  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_foreign_key_check (unittest.loader._FailedTest.Datastore.tests.test_foreign_key_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_foreign_key_check
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_foreign_key_check.py", line 58, in <module>
+    from Datastore.tests import real_store_fixtures as rsf
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+----------------------------------------------------------------------
+Ran 70 tests in 2.067s
+
+FAILED (errors=5)

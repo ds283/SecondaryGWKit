@@ -1,0 +1,22 @@
+##### before
+config.sharding.replicated_tables: 13 ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+build_real_store: 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+build_full_store: 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+ShardedPool on stand-in shards (standin_pool.open_pool): 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+shard_store_fixtures.write_hand_built_primary: 2 rows ['version', 'wavenumber']
+   same set as config.sharding: False; same order: False
+   only recorded: []; only configured: ['BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'IntegrationSolver', 'LambdaCDM', 'QCD_Cosmology', 'QuadSourcePolicy', 'redshift', 'store_tag', 'tolerance', 'wavenumber_exit_time']
+##### wt
+config.sharding.replicated_tables: 13 ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+build_real_store: 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+build_full_store: 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+ShardedPool on stand-in shards (standin_pool.open_pool): 13 rows ['version', 'store_tag', 'redshift', 'wavenumber', 'wavenumber_exit_time', 'tolerance', 'LambdaCDM', 'QCD_Cosmology', 'IntegrationSolver', 'BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'QuadSourcePolicy']
+   same set as config.sharding: True; same order: True
+shard_store_fixtures.write_hand_built_primary: 2 rows ['version', 'wavenumber']
+   same set as config.sharding: False; same order: False
+   only recorded: []; only configured: ['BackgroundModel', 'BackgroundModelValue', 'GkSourcePolicy', 'IntegrationSolver', 'LambdaCDM', 'QCD_Cosmology', 'QuadSourcePolicy', 'redshift', 'store_tag', 'tolerance', 'wavenumber_exit_time']

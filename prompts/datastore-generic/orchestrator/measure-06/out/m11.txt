@@ -1,0 +1,20 @@
+shard 0 1loop-integral: 0 dangling reference(s) {}
+shard 0 quad-source-integral: 0 dangling reference(s) {}
+shard 0 gk-source-policy: 2 dangling reference(s) {'QuadSourceIntegral->GkSourcePolicyData': 2}
+shard 0 gk-source-policy-records: 4 dangling reference(s) {'GkSourcePolicyData->GkSourcePolicy': 2, 'QuadSourceIntegral->GkSourcePolicy': 2}
+shard 0 gk-source: 2 dangling reference(s) {'GkSourcePolicyData->GkSource': 2}
+shard 0 gk-wkb: 2 dangling reference(s) {'GkSource_parents->GkWKBIntegration': 2}
+shard 0 gk-numeric: 2 dangling reference(s) {'GkSource_parents->GkNumericIntegration': 2}
+shard 0 quad-source: 0 dangling reference(s) {}
+shard 0 tk-numeric: 3 dangling reference(s) {'QuadSource->TkNumericIntegration': 1, 'TkWKBIntegration->TkNumericIntegration': 2}
+shard 0 tk-wkb: 0 dangling reference(s) {}
+shard 1 1loop-integral: 0 dangling reference(s) {}
+shard 1 quad-source-integral: 0 dangling reference(s) {}
+shard 1 gk-source-policy: 1 dangling reference(s) {'QuadSourceIntegral->GkSourcePolicyData': 1}
+shard 1 gk-source-policy-records: 2 dangling reference(s) {'GkSourcePolicyData->GkSourcePolicy': 1, 'QuadSourceIntegral->GkSourcePolicy': 1}
+shard 1 gk-source: 1 dangling reference(s) {'GkSourcePolicyData->GkSource': 1}
+shard 1 gk-wkb: 1 dangling reference(s) {'GkSource_parents->GkWKBIntegration': 1}
+shard 1 gk-numeric: 1 dangling reference(s) {'GkSource_parents->GkNumericIntegration': 1}
+shard 1 quad-source: 0 dangling reference(s) {}
+shard 1 tk-numeric: 2 dangling reference(s) {'QuadSource->TkNumericIntegration': 1, 'TkWKBIntegration->TkNumericIntegration': 1}
+shard 1 tk-wkb: 0 dangling reference(s) {}

@@ -1,0 +1,57 @@
+.........................................................................................................................................................EEEE..................................
+======================================================================
+ERROR: test_every_declared_foreign_key_between_actions_is_respected (Datastore.tests.test_wkb_numeric_parent_key.TestDropOrder.test_every_declared_foreign_key_between_actions_is_respected)
+Derived from the schema: an action whose tables declare a foreign key into another
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 957, in test_every_declared_foreign_key_between_actions_is_respected
+    order = datastore_module._drop_order
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'Datastore.SQL.Datastore' has no attribute '_drop_order'
+
+======================================================================
+ERROR: test_the_corrected_order_drops_both (Datastore.tests.test_wkb_numeric_parent_key.TestDropOrder.test_the_corrected_order_drops_both)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 939, in test_the_corrected_order_drops_both
+    inspector = self._drop(["tk-numeric", "tk-wkb"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 933, in _drop
+    raw._drop_actions(fake, actions)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'Datastore' has no attribute '_drop_actions'
+
+======================================================================
+ERROR: test_the_old_order_is_refused_by_enforcement (Datastore.tests.test_wkb_numeric_parent_key.TestDropOrder.test_the_old_order_is_refused_by_enforcement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 944, in test_the_old_order_is_refused_by_enforcement
+    with mock.patch.object(datastore_module, "_drop_order", _OLD_DROP_ORDER):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'Datastore.SQL.Datastore' from '<scratch>/wt/Datastore/SQL/Datastore.py'> does not have the attribute '_drop_order'
+
+======================================================================
+ERROR: test_tk_wkb_drops_before_tk_numeric_and_gk_wkb_before_gk_numeric (Datastore.tests.test_wkb_numeric_parent_key.TestDropOrder.test_tk_wkb_drops_before_tk_numeric_and_gk_wkb_before_gk_numeric)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_wkb_numeric_parent_key.py", line 949, in test_tk_wkb_drops_before_tk_numeric_and_gk_wkb_before_gk_numeric
+    order = datastore_module._drop_order
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'Datastore.SQL.Datastore' has no attribute '_drop_order'
+
+----------------------------------------------------------------------
+Ran 191 tests in 49.477s
+
+FAILED (errors=4)
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.

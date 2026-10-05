@@ -1,0 +1,5 @@
+factories: 2936 bytes, entries 38, equal True, every value the same class object True, every class named in the blob (by reference) True
+serial_batch_sizes: 725 bytes, entries 36, equal True
+drop_groups: 651 bytes, entries 10, equal True
+dict(factories): 2936 bytes
+ray initialised: False

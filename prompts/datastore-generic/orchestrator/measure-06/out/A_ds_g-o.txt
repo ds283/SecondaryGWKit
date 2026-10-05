@@ -1,0 +1,122 @@
+EEEEEEE
+======================================================================
+ERROR: Datastore.tests.test_gksource_parent_set (unittest.loader._FailedTest.Datastore.tests.test_gksource_parent_set)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_gksource_parent_set
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_gksource_parent_set.py", line 59, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_integral_read_batch (unittest.loader._FailedTest.Datastore.tests.test_integral_read_batch)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_integral_read_batch
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_integral_read_batch.py", line 56, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_inventory_consumers (unittest.loader._FailedTest.Datastore.tests.test_inventory_consumers)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_inventory_consumers
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_inventory_consumers.py", line 35, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_inventory_report (unittest.loader._FailedTest.Datastore.tests.test_inventory_report)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_inventory_report
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_inventory_report.py", line 32, in <module>
+    from Datastore.tests.test_inventory_report_labels import OWN_LABEL
+  File "<scratch>/wt/Datastore/tests/test_inventory_report_labels.py", line 48, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_inventory_report_labels (unittest.loader._FailedTest.Datastore.tests.test_inventory_report_labels)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_inventory_report_labels
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_inventory_report_labels.py", line 48, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_inventory_retired (unittest.loader._FailedTest.Datastore.tests.test_inventory_retired)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_inventory_retired
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_inventory_retired.py", line 29, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: Datastore.tests.test_one_timestamp_per_write (unittest.loader._FailedTest.Datastore.tests.test_one_timestamp_per_write)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_one_timestamp_per_write
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/Datastore/tests/test_one_timestamp_per_write.py", line 38, in <module>
+    from Datastore.tests import test_prune_at_open as prune_at_open
+  File "<scratch>/wt/Datastore/tests/test_prune_at_open.py", line 43, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+FAILED (errors=7)

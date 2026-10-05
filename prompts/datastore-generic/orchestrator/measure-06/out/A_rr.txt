@@ -1,0 +1,59 @@
+...............................................................s...................................................................................................................EEE.................
+======================================================================
+ERROR: RunRegistry.tests.test_store_fingerprint (unittest.loader._FailedTest.RunRegistry.tests.test_store_fingerprint)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: RunRegistry.tests.test_store_fingerprint
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/RunRegistry/tests/test_store_fingerprint.py", line 50, in <module>
+    from Datastore.tests.real_store_fixtures import (
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: RunRegistry.tests.test_store_retire (unittest.loader._FailedTest.RunRegistry.tests.test_store_retire)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: RunRegistry.tests.test_store_retire
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/RunRegistry/tests/test_store_retire.py", line 48, in <module>
+    from Datastore.tests.real_store_fixtures import build_full_store
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+======================================================================
+ERROR: RunRegistry.tests.test_store_retire_references (unittest.loader._FailedTest.RunRegistry.tests.test_store_retire_references)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: RunRegistry.tests.test_store_retire_references
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt/RunRegistry/tests/test_store_retire_references.py", line 27, in <module>
+    from RunRegistry.tests import test_store_retire
+  File "<scratch>/wt/RunRegistry/tests/test_store_retire.py", line 48, in <module>
+    from Datastore.tests.real_store_fixtures import build_full_store
+  File "<scratch>/wt/Datastore/tests/real_store_fixtures.py", line 50, in <module>
+    from Datastore.SQL.Datastore import _factories
+ImportError: cannot import name '_factories' from 'Datastore.SQL.Datastore' (<scratch>/wt/Datastore/SQL/Datastore.py)
+
+
+----------------------------------------------------------------------
+Ran 199 tests in 20.549s
+
+FAILED (errors=3, skipped=1)
+** quadsource_atol_sweep: sweep store ready at <tmp>

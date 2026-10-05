@@ -1,0 +1,195 @@
+....................@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "pure radiation (test stub)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+[constant g_s: T = T_CMB (1+z) exactly]
+  accurate_T (the reference itself)              max 2.218e-16   p90 1.665e-16   median 0.000e+00
+  shipped _solve_T_z                             max 2.218e-16   p90 1.665e-16   median 0.000e+00
+  shipped T_photon (the spline)                  max 3.455e-16   p90 2.299e-16   median 0.000e+00
+
+[single segment] 2001 of 2001 probes bit-identical between prompt 05's construction and this one at the same 500 nodes, k = 3
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[H(z)] 1600 production grid nodes
+  shipped Hubble against the exact background    max 1.690e-10   p90 6.276e-15   median 2.804e-16
+
+[T(z) is a step] lowest crossing at z_c = 4.253369e+07
+  z =     4.040700e+07   F = 0.000000000000
+  z =     4.210835e+07   F = 0.000000000000
+  z =     4.249115e+07   F = 0.000000000000
+  z =     4.257622e+07   F = 0.000762292290
+  z =     4.295902e+07   F = 0.000762292290
+  z =     4.466037e+07   F = 0.000762292290
+  step in F = 7.622922900397e-04   -> relative jump in T = 7.625829e-04
+  (audit §1's linearised -(1/3) dgs/gs is 7.6140e-04; the difference is the linearisation)
+
+[T(z) vs the defining equation] 640 probes, z in [1.001, 9.54e+15]
+  shipped T_photon                               max 6.807e-11   p90 3.237e-15   median 1.765e-16
+
+[segment edge] bisected edge u = 17.565806941870026  (z = 4.253369e+07)
+  (T - T_break)/T_break at the edge     = +8.844019e-06
+  (T - T_break)/T_break one ulp below   = -7.531645e-04
+  -- the sign changes inside one ulp without passing through zero: there is no root
+  naive, full range, defaults      converged=True  u - u_bisect = +1.126e-12 (+317.0 ulp)  residual = +8.844020e-06
+  naive, full range, tight         converged=True  u - u_bisect = +1.421e-14 (+4.0 ulp)  residual = +8.844019e-06
+  naive, local bracket, defaults   converged=True  u - u_bisect = +3.304e-13 (+93.0 ulp)  residual = +8.844020e-06
+  the audit's segmented build pads by 1e-12 in u; the production grid spacing is 2.3032e-02,
+  so a misplaced edge is invisible to any grid-scale comparison
+
+[misplaced edge] lowest edge moved up by one node of its own segment (1.5473e-02 in u, 1154 nodes below the jump)
+  z_edge 4.253369e+07 -> 4.319692e+07
+  segmented, one edge one node too high          max 1.709e-05   p90 4.040e-15   median 1.771e-16
+  inside the displaced window, z = 4.269853e+07: 7.054e-04
+  inside the displaced window, z = 4.286402e+07: 5.842e-04
+  inside the displaced window, z = 4.303015e+07: 3.639e-04
+
+[conformal time] int dz/H over z in [1e+02, 1e+12], 3 interior jumps given to the integrator
+  shipped background = 1.3320002507788795e+03
+  exact   background = 1.3320002507788795e+03
+  relative error in tau = 0.0000e+00   (bit-identical: True)
+    k =     1e+05 /Mpc:   0.000e+00 rad   against a 1-ulp floor of 3.050e-07 rad
+    k =     1e+07 /Mpc:   0.000e+00 rad   against a 1-ulp floor of 3.050e-05 rad
+    k =     3e+08 /Mpc:   0.000e+00 rad   against a 1-ulp floor of 9.150e-04 rad
+
+[EOS branch joins] evaluated at T*(1 +/- 1e-9)
+  T =      1e+16 GeV:  dg/g = +1.454185e-02   dgs/gs = +1.394721e-02   -> forced dT/T = -4.649069e-03
+  T =       0.12 GeV:  dg/g = -2.075036e-04   dgs/gs = -3.743558e-04   -> forced dT/T = +1.247853e-04
+  T =      0.002 GeV:  dg/g = +1.751081e-11   dgs/gs = +1.754690e-11   -> forced dT/T = -5.848965e-12
+  T =      1e-05 GeV:  dg/g = +8.875740e-04   dgs/gs = -2.284264e-03   -> forced dT/T = +7.614213e-04
+
+[node solve] shipped _solve_T_z                             max 0.000e+00   p90 0.000e+00   median 0.000e+00
+
+[segment edges] production against T_z_reference.jump_locations
+  u = 17.565806941870026 (0x1.190d8b9472e79p+4)   z = 4.253368543e+07   reference - production = +0.0 ulp
+  u = 23.197460552819653 (0x1.7328cc6589c49p+4)   z = 1.187214281e+10   reference - production = -1.0 ulp
+  u = 27.485391822044257 (0x1.b7c42a3716d0ap+4)   z = 8.644781111e+11   reference - production = +0.0 ulp
+  T_break =      1e-05 GeV:  (T - T_break)/T_break = +8.844019e-06 at the edge, -7.531645e-04 one ulp below
+  T_break =      0.002 GeV:  (T - T_break)/T_break = +1.998401e-15 at the edge, -1.998401e-15 one ulp below
+  T_break =       0.12 GeV:  (T - T_break)/T_break = +1.010849e-04 at the edge, -6.194863e-08 one ulp below
+
+[the step] evaluated one ulp of u either side of each edge
+  z = 4.253368543e+07 (below      ): T = 1.562126613304e+33, relative error against the defining equation 0.000e+00
+  z = 4.253368543e+07 (at the edge): T = 1.563317864360e+33, relative error against the defining equation 1.844e-16
+    step in T across the edge: +7.625829e-04 (the defining equation gives +7.625829e-04)
+  z = 1.187214281e+10 (below      ): T = 3.126608076939e+35, relative error against the defining equation 0.000e+00
+  z = 1.187214281e+10 (at the edge): T = 3.126608076939e+35, relative error against the defining equation 0.000e+00
+    step in T across the edge: +3.996803e-15 (the defining equation gives +3.996803e-15)
+  z = 8.644781111e+11 (below      ): T = 1.875964729950e+37, relative error against the defining equation 1.259e-16
+  z = 8.644781111e+11 (at the edge): T = 1.876154477877e+37, relative error against the defining equation 5.034e-16
+    step in T across the edge: +1.011469e-04 (the defining equation gives +1.011469e-04)
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[segment geometry] two edges 1e-06 apart: worst |error| 2.222e-11
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+12
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "pure radiation (test stub)", max_z = 1e+06
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+  failure to bracket:
+    LambdaCDM_GenericEOS._find_rho_equality: could not bracket the redshift at which rho[matter] = rho[radiation]. Expanding multiplicatively in 1+z about the initial guess z=3403.1, clamped to z=105.05 (residual 7.9666e+111), reached z_lo=-0.24 (residual 3.0257e+105) and z_hi=105.05 (residual 7.9666e+111), which have the same sign, so no root is enclosed. The search is clamped to the tabulated range of T(z), z in [-0.24, 105.05]....................
+----------------------------------------------------------------------
+Ran 39 tests in 0.811s
+
+OK
+
+
+  equality redshifts against a bracketed brentq reference (17 digits):
+               QCD_Cosmology  matter_radiation: solve = 3406.668974249951      reference = 3406.668974249951      (+0.0 ulp)
+               QCD_Cosmology     matter_lambda: solve = 0.3034230329964074     reference = 0.3034230329964075     (-2.0 ulp)
+     pure-radiation stand-in  matter_radiation: solve = 3403.1059638279457     reference = 3403.1059638279457     (+0.0 ulp)
+     pure-radiation stand-in     matter_lambda: solve = 0.3034230329964074     reference = 0.3034230329964075     (-2.0 ulp)
+
+  the remaining closed-form sites (17 digits):
+               QCD_Cosmology  matter_radiation      LambdaCDM_GenericEOS.py guess: 3406.668974249948
+               QCD_Cosmology  matter_radiation              LambdaCDM.py property: 3406.668974249948
+               QCD_Cosmology     matter_lambda      LambdaCDM_GenericEOS.py guess: 0.3034230329964074
+               QCD_Cosmology     matter_lambda              LambdaCDM.py property: 0.3034230329964074
+     pure-radiation stand-in  matter_radiation      LambdaCDM_GenericEOS.py guess: 3403.1059638279453
+     pure-radiation stand-in  matter_radiation              LambdaCDM.py property: 3403.1059638279453
+     pure-radiation stand-in     matter_lambda      LambdaCDM_GenericEOS.py guess: 0.3034230329964074
+     pure-radiation stand-in     matter_lambda              LambdaCDM.py property: 0.3034230329964074
+       LambdaCDM(Planck2018)  matter_radiation      LambdaCDM_GenericEOS.py guess: 3403.1059638279453
+       LambdaCDM(Planck2018)  matter_radiation              LambdaCDM.py property: 3403.1059638279453
+       LambdaCDM(Planck2018)     matter_lambda      LambdaCDM_GenericEOS.py guess: 0.3034230329964074
+       LambdaCDM(Planck2018)     matter_lambda              LambdaCDM.py property: 0.3034230329964074
+@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "pure radiation (test stub)", max_z = 10000
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+[T(z) buffer] relative change over z in [0, 10000]: median 1.291e-16, max 6.280e-16; the spline's own interpolation floor is ~1.0e-15
+
+[T(z) buffer] requested [-0.2, 10000] -> tabulated [-0.24, 10500.1]  (the retired buffer gave [-0.19, 10500], narrower at the low end)
+[T(z) buffer] worst departure from T_CMB (1+z): 2.220e-16
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "pure radiation (test stub)", max_z = 10000
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO [omega_cc=0.4]"
+|  equation of state = "pure radiation (test stub)", max_z = 10000
+|  Omega_m = 0.3111
+|  Omega_cc = 0.4
+|  Omega_r = 9.139e-05
+|  present-day energy density = 6.115e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.08739
+@@ Parametrized equation-of-state LambdaCDM-like model "pure radiation (test stub) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "pure radiation (test stub)", max_z = 1e+12
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
