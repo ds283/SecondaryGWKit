@@ -633,18 +633,14 @@ class sqla_TkNumericIntegration_factory(SQLAFactoryBase):
         return msgs
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a TkNumericIntegration row (store-fingerprint prompt 02): what
         # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
         # z_init (optional in the lookup, always in the key) -- with its tags, its validated flag
         # and its TkNumericValue count. The solver is not in the lookup and is not identity
-        from Datastore.store_inventory import Parent, read_records
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             leaves=("break_point_kind",),
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),

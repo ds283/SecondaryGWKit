@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-06 · **107 open** across twenty campaigns.
+**Last updated:** 2026-10-06 · **108 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -844,9 +844,10 @@ prompt 06, which closed it there on 2026-10-06.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader and the inventory hard-code facts about the project's tables (`BackgroundModel`'s copy unit and `validated` rule, the `redshift`/`wavenumber` flags, the version and tag tables, the inventory's class list, …). Narrowed by prompt 06: the registry, drop groups, batch sizes and replicated set (rows 9–11, 14) are now given. Narrowed by prompt 07: rows 1, 2, 4–8 are declared by the factories (`owner_column`, `monotone_flags`, `validated_column`; hooks `revalidate`, `owned_serials`) or named once in `Datastore/contract.py`. Assigned: prompts 08–09. |
+| `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` | datastore-generic | `ShardedPool`, the reader and the inventory hard-code facts about the project's tables (`BackgroundModel`'s copy unit and `validated` rule, the `redshift`/`wavenumber` flags, the version and tag tables, the inventory's class list, …). Narrowed by prompt 06: the registry, drop groups, batch sizes and replicated set (rows 9–11, 14) are now given. Narrowed by prompt 07: rows 1, 2, 4–8 are declared by the factories (`owner_column`, `monotone_flags`, `validated_column`; hooks `revalidate`, `owned_serials`) or named once in `Datastore/contract.py`. Narrowed by prompt 08: rows 12 and 13 are declared (`inventory_spec` per factory, the order derived by `inventory_classes`; `Parent`'s type map), so every row of C1 is gone. Assigned: prompt 09 (the guard). |
 | `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` prints its "Cannot … sharded datastore" prefix twice (`_read_closed_store` wraps a message its caller wraps again). Cosmetic. The user will have it cleaned up. |
 | `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]` | datastore-generic | `--drop` of `gk-numeric`, `gk-wkb`, `gk-source`, `gk-source-policy`, `gk-source-policy-records` or `tk-numeric` alone leaves other groups' rows naming rows it dropped (1–4 per shard on the full fixture store, enforcement off); a re-created table's serials can then be reused [inferred]. A decision for the user: cascade, refuse, or document. Not assigned. |
+| `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]` | datastore-generic | `StoreInventory.resolve` renders a nullable key parent whose value is `None` as `{"class": …, "digest": None, "unresolved": 0}`, a parent it failed to resolve where the row has none (11 entries on `build_full_store`, all the `numeric` field of a pure-WKB `GkWKBIntegration`); a parent-set member gives `None`. Display and checking only. A decision for the user. Not assigned. |
 
 ---
 

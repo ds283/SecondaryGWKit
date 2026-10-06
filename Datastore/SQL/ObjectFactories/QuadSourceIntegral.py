@@ -962,7 +962,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         return objects
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
         # build() filters on -- the model, the GkSourcePolicy, the QuadSourcePolicy (prompt 08),
         # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol, and the six
@@ -970,13 +970,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         # tags. No validated flag and no value table. Of the six, the GkSourcePolicyData is on
         # this shard (k's); the QuadSource is on q's, and each Tk row on its own mode's, so they
         # resolve across shards, each to its parent's own identity, never its serial
-        from Datastore.store_inventory import Parent, read_records
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "policy": Parent("policy_serial", "GkSourcePolicy"),

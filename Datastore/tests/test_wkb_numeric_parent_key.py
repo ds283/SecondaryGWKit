@@ -506,15 +506,7 @@ class TestZInitIsPayload(_StoreCase):
     def test_the_inventory_key_has_no_z_init(self):
         for factory in (sqla_TkWKBIntegration_factory, sqla_GkWKBIntegration_factory):
             with self.subTest(factory=factory.__name__):
-                captured = {}
-
-                def fake_read_records(conn, table, tables, context, **kwargs):
-                    captured.update(kwargs)
-
-                with mock.patch(
-                    "Datastore.store_inventory.read_records", fake_read_records
-                ):
-                    factory.inventory_records(None, None, None, None)
+                captured = factory.inventory_spec().keywords()
                 self.assertNotIn("z_init", captured["leaves"])
                 self.assertEqual(
                     captured["parents"]["numeric"].column, "numeric_serial"

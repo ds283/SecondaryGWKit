@@ -90,15 +90,11 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a LambdaCDM row (store-fingerprint prompt 02): the six parameters
         # build() matches. The name is descriptive and is not identity
-        from Datastore.store_inventory import read_records
+        from Datastore.store_inventory import InventorySpec
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             leaves=("omega_m", "omega_cc", "h", "f_baryon", "T_CMB_Kelvin", "Neff"),
         )

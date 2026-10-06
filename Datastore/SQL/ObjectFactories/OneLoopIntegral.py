@@ -338,18 +338,14 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
         return [make_object(row) for row in row_data]
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a OneLoopIntegral row (store-fingerprint prompt 02): what build()
         # filters on -- the model, the wavenumber exit, z_response, atol and rtol -- with its tags.
         # The tags are read from OneLoopIntegral_tags, which is what store() writes and what
         # build() now joins too ([00-oneloop-lookup-joins-the-wrong-tag-table], fixed here)
-        from Datastore.store_inventory import Parent, read_records
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),

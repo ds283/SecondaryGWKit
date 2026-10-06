@@ -37,7 +37,6 @@ import sqlalchemy as sqla
 
 import Datastore.store_inventory as store_inventory
 from Datastore.store_inventory import (
-    INVENTORY_CLASSES,
     canonical,
     canonical_json,
     read_inventory,
@@ -51,6 +50,32 @@ from Datastore.tests.real_store_fixtures import (
     vary_row,
 )
 from config.datastore import factories as _factories
+
+# the classes of the inventory, in the order it reads them. The layer derives this order
+# (``inventory_classes``); this literal pins the derivation, so that it is not compared with itself
+INVENTORY_CLASSES = (
+    "version",
+    "store_tag",
+    "redshift",
+    "wavenumber",
+    "tolerance",
+    "LambdaCDM",
+    "QCD_Cosmology",
+    "IntegrationSolver",
+    "GkSourcePolicy",
+    "QuadSourcePolicy",
+    "wavenumber_exit_time",
+    "BackgroundModel",
+    "TkNumericIntegration",
+    "TkWKBIntegration",
+    "GkNumericIntegration",
+    "GkWKBIntegration",
+    "GkSource",
+    "GkSourcePolicyData",
+    "QuadSource",
+    "QuadSourceIntegral",
+    "OneLoopIntegral",
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FACTORIES = REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories"
@@ -563,7 +588,7 @@ class TestFloats(_Stores):
 
     def test_only_canonical_formats_a_float(self):
         """No code of the inventory but ``canonical`` calls ``float.hex``, ``.hex()``, ``round``,
-        ``format`` or ``repr``, and no factory's ``inventory_records`` formats anything.
+        ``format`` or ``repr``, and no factory's ``inventory_spec`` formats anything.
         """
         tree = ast.parse((REPO_ROOT / "Datastore" / "store_inventory.py").read_text())
         offenders = []
@@ -590,11 +615,11 @@ class TestFloats(_Stores):
 
         builders = 0
         for path in sorted(FACTORIES.glob("*.py")):
+            # base.py's hook declares no class: it returns None
+            if path.name == "base.py":
+                continue
             for func in ast.walk(ast.parse(path.read_text())):
-                if (
-                    isinstance(func, ast.FunctionDef)
-                    and func.name == "inventory_records"
-                ):
+                if isinstance(func, ast.FunctionDef) and func.name == "inventory_spec":
                     builders += 1
                     for node in ast.walk(func):
                         if isinstance(node, (ast.JoinedStr, ast.FormattedValue)):

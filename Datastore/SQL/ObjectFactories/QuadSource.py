@@ -539,7 +539,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         return msgs
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a QuadSource row (store-fingerprint prompt 02): what build()
         # filters on -- the model, the q and r wavenumber exits, and the two TkNumericIntegrations
         # it is computed from -- with its tags, its validated flag and its QuadSourceValue count.
@@ -547,13 +547,9 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         # r's shard, so it is a cross-shard parent: it resolves against the TkNumericIntegration
         # records of every shard, to that record's own reference digest and never its serial
         # (prompts/datastore-integrity, prompt 09a)
-        from Datastore.store_inventory import Parent, read_records
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),

@@ -23,7 +23,7 @@ import unittest
 from collections import Counter
 from pathlib import Path
 
-from Datastore.store_inventory import INVENTORY_CLASSES, read_inventory
+from Datastore.store_inventory import read_inventory
 from Datastore.tests.inventory_report_parsing import (
     HEX64,
     fields_of,
@@ -43,6 +43,32 @@ from tools.inventory_report import (
     format_inventory_report,
 )
 from config.datastore import factories as _factories
+
+# the classes of the inventory, in the order it reads them. The layer derives this order
+# (``inventory_classes``); this literal pins the derivation, so that it is not compared with itself
+INVENTORY_CLASSES = (
+    "version",
+    "store_tag",
+    "redshift",
+    "wavenumber",
+    "tolerance",
+    "LambdaCDM",
+    "QCD_Cosmology",
+    "IntegrationSolver",
+    "GkSourcePolicy",
+    "QuadSourcePolicy",
+    "wavenumber_exit_time",
+    "BackgroundModel",
+    "TkNumericIntegration",
+    "TkWKBIntegration",
+    "GkNumericIntegration",
+    "GkWKBIntegration",
+    "GkSource",
+    "GkSourcePolicyData",
+    "QuadSource",
+    "QuadSourceIntegral",
+    "OneLoopIntegral",
+)
 
 DB_NAME = "the-store.sqlite"
 

@@ -176,7 +176,7 @@ internals are the implementing prompt's to design.
   - `ShardedPool._unit_tables(cls_name, specs)`, the one unit of the repair licence and the prune;
   - `store_inventory.read_records(…, validated=<column name or None>)`, where it took a bool.
 - **08 ships** the declarations from which the inventory derives its classes and their order, and
-  the client's declaration of the polymorphic reference. *Named 2026-10-06 (prompt 08, written):*
+  the client's declaration of the polymorphic reference. *Named 2026-10-06 (prompt 08, written); shipped 2026-10-06 (prompt 08, this commit), as named, with one addition to `Parent`:*
   - `SQLAFactoryBase.inventory_spec()`, static and not abstract, returning `None` or a
     `store_inventory.InventorySpec` (`read_records`' six keywords; `keywords()`,
     `dependencies()`); `inventory_records` is gone from every factory;
@@ -187,6 +187,11 @@ internals are the implementing prompt's to design.
     `classes()` and `class_of(mapping)`; `ClassInventory.parent_types` and
     `ClassInventory.parent_class(field, key)`;
   - `Datastore/SQL/ObjectFactories/cosmology_types.py`: `COSMOLOGY_TYPES`, the client's map.
+  - `InventorySpec.dependencies()` includes the tag table for a tagged class; `inventory_classes`
+    refuses a dependency that declares no spec, a polymorphic type column that is not a leaf, a
+    self-reference and a cycle, each `ValueError` naming the classes; `ParentSet` refuses a
+    polymorphic member; `read_inventory` derives the order after `open_read_only` has checked the
+    registry against the store.
 
 ## 5. The rules this campaign runs under
 

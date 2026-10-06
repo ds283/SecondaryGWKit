@@ -71,7 +71,7 @@ class therefore never share a line within a tag set: a record line also shows ``
 
 **Order.** Records are ordered by their resolved physical values, numerically where they are
 numbers, never by digest. Fields are in the order of the class's key, as its factory's
-``inventory_records`` declares it.
+``inventory_spec`` declares it.
 """
 
 from datetime import datetime
@@ -80,11 +80,9 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 import sqlalchemy as sqla
 
 from Datastore.store_inventory import (
-    COSMOLOGY,
     ClassInventory,
     Record,
     StoreInventory,
-    cosmology_classes,
 )
 
 # categories are reported in this order, as before this prompt, less the value tables, which are
@@ -117,7 +115,7 @@ INVENTORY_CATEGORIES: List[Tuple[str, List[str]]] = [
     ),
 ]
 
-# the value table each class's value_count counts: the tables its factory's inventory_records
+# the value table each class's value_count counts: the tables its factory's inventory_spec
 # names in ``values=``. Used only to name the table on the header
 VALUE_TABLES: Dict[str, str] = {
     "BackgroundModel": "BackgroundModelValue",
@@ -174,7 +172,6 @@ class _Renderer:
         self.inventory = inventory
         self.verbose = verbose
         self.tables = _schema_tables()
-        self.types = cosmology_classes()
         self._index: Dict[str, Dict[str, List[Record]]] = {}
         self._varying: Dict[str, Tuple[Tuple[str, ...], bool]] = {}
         self._float_fields: Dict[str, frozenset] = {}
@@ -230,10 +227,7 @@ class _Renderer:
         return self._varying[name]
 
     def parent_class(self, name: str, record: Record, field: str) -> Optional[str]:
-        of = self.cls(name).parents.get(field)
-        if of == COSMOLOGY:
-            return self.types.get(record.key.get("cosmology_type"))
-        return of
+        return self.cls(name).parent_class(field, record.key)
 
     def index(self, name: str) -> Dict[str, List[Record]]:
         """reference digest -> the records of ``name`` it names."""

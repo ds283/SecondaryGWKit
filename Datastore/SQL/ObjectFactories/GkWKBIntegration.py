@@ -957,7 +957,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         return msgs
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a GkWKBIntegration row (store-fingerprint prompt 02): what build()
         # filters on -- the model, the wavenumber exit, rho_gauss_order, z_source (optional in the
         # lookup, always in the key) and, since prompts/datastore-integrity prompt 07, the numeric
@@ -965,13 +965,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         # -- with its tags, its validated flag and its GkWKBValue count. z_init left the key with
         # prompt 07: it is a function of the parent, or of z_source. The solver is not in the
         # lookup and is not identity
-        from Datastore.store_inventory import Parent, read_records
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             leaves=("rho_gauss_order",),
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),

@@ -12,7 +12,7 @@ That report is gone. The same three claims, against the service that replaces it
 1. Two rows that differ only in ``T_z_representation`` are two records of the structured
    inventory, and render differently.
 2. In the rendered record, ``T_z_representation`` sits beside ``log10_max_z``. The display follows
-   the order of the class's key as its factory's ``inventory_records`` declares it, where the
+   the order of the class's key as its factory's ``inventory_spec`` declares it, where the
    representation comes directly **after** ``log10_max_z``; the retired test required it directly
    before. Either way the two fields that say how the background was computed, and over what
    range, sit together.

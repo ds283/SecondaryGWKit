@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 7 of 9 prompts landed (01–07).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 8 of 9 prompts landed (01–08).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–08 are written; 09 is held on the prompts before it. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -62,7 +62,7 @@ the referencing `Parent`.
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
-| 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ⬜ | — | — |
+| 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | this commit | [log](logs/08-derive-the-inventorys-class-list.md) |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
@@ -1110,8 +1110,8 @@ The checks:
 | **F2** | 07 | monotone flags declared by the factories: `monotone_flags` on `redshift` and `wavenumber` | C1 #5 | ✅ |
 | **F3** | 07 | the `validated` rule declared by the factory: `validated_column` and the `revalidate` hook on `BackgroundModel`; `_StoredModel` gone; `read_records(validated=<column>)` | C1 #6 | ✅ |
 | **F4** | 07 | the version and tag tables per U4 (`Datastore/contract.py`; the version object built by the version factory; `MetadataConcepts` no longer imported); the `owned_serials` hook (`_value_serials` gone); project names out of `ShardedPool`'s code, comments and messages | C1 #1, #4, #7, #8 | ✅ |
-| **I1** | 08 | the inventory's class list and order derived, from the parents each factory declares in an `inventory_spec`, roots first (the user, 2026-10-06; foreign keys miss nine of them) | C1 #12 | ⬜ |
-| **I2** | 08 | the polymorphic cosmology reference declared by the client, in the referencing `Parent`'s type map (the user, 2026-10-06) | C1 #13 | ⬜ |
+| **I1** | 08 | the inventory's class list and order derived, from the parents each factory declares in an `inventory_spec`, roots first (the user, 2026-10-06; foreign keys miss nine of them) | C1 #12 | ✅ |
+| **I2** | 08 | the polymorphic cosmology reference declared by the client, in the referencing `Parent`'s type map (the user, 2026-10-06) | C1 #13 | ✅ |
 | **K1** | 09 | a test that the generic layer names no registry table and imports no client package | §C | ⬜ |
 | **K2** | 09 | every suite; README §5 rule 9's closing verification | — | ⬜ |
 
@@ -1130,7 +1130,7 @@ The checks:
     one project literal before `f4b2c91`.
   - **Impact.** The layer cannot be reused without editing it, and every new table that needs
     replication-time treatment is another special case in the pool. No wrong result.
-  - **Next step.** Prompts 06–08, then 09's guard.
+  - **Next step.** Prompts 06–08, then 09's guard. After 08, 09's guard only.
   - **Assigned (2026-10-04):** prompts 06–09.
   - **Narrowed (2026-10-06, prompt 06; `19f07ee`):** audit C1 rows 9, 10, 11 and 14 are gone.
     The layer imports no registry: `ShardedPool`, the `Datastore` actor, `open_read_only` and
@@ -1162,6 +1162,27 @@ The checks:
     `Datastore/tests/test_declared_facts.py`. Every repair, refusal, printed line and record of
     the check at open, and the fingerprint, are byte-identical to `f1b8d02`'s (the log). Left for
     08–09: rows 12 and 13, and the guard.
+  - **Narrowed (2026-10-06, prompt 08; this commit):** audit C1 rows 12 and 13 are gone, and with
+    them **every row of C1**. 09's guard remains. The inventory's classes and their order are
+    derived: each factory declares a static `inventory_spec()` (not abstract on
+    `SQLAFactoryBase`, default `None`) returning a `store_inventory.InventorySpec`, which is
+    `read_records`' six keywords and gives `keywords()` and `dependencies()`; `inventory_records`
+    is gone from all 21 factories. `inventory_specs(factories)` and `inventory_classes(factories)`
+    give the classes that declare a spec, roots first and then a dependency sort, each in registry
+    order, refusing (`ValueError`, by name) a dependency with no spec, a polymorphic type column
+    that is not a leaf, a self-reference and a cycle; `read_inventory` derives the order after the
+    reader has opened the store, so a registry that does not fit its store is refused by the
+    reader as before. `INVENTORY_CLASSES` and `COMPUTE_TARGETS` are deleted. The polymorphic
+    cosmology reference is a `Parent` with a type map, `Parent(column, type_column=…,
+    types={type value: class})`, declared by `wavenumber_exit_time`'s and `BackgroundModel`'s
+    factories through the one client constant `ObjectFactories/cosmology_types.COSMOLOGY_TYPES`;
+    `COSMOLOGY` and `cosmology_classes` are deleted, and `store_inventory.py` and
+    `tools/inventory_report.py` import no `CosmologyModels`. `ClassInventory.parents[field]` is
+    `None` for a polymorphic field, and `parent_types` and `parent_class(field, key)` carry and
+    use the map. `store_inventory.py` names no registry table, project package or project column
+    in code, comments or docstrings (pinned by `Datastore/tests/test_inventory_declarations.py`).
+    Both fingerprints, both whole inventories, every `resolve()`, `main.py --inventory` and every
+    refusal that exists today are byte-identical to `6ad58bb`'s (the log).
 - **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
   - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
     primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
@@ -1207,6 +1228,19 @@ The checks:
     reach the dropped ones (derivable from the schema, as `schema.drop_order` will be), refuse a
     drop that would leave references, or stay as it is with the hazard documented. Prompt 06
     changes only the order within a drop (README §5 rule 9) and does not fix this.
+- **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
+  08; measured at `5fe0ae6` and at 08's tree)*
+  - **The defect.** `StoreInventory.resolve` renders a nullable key parent whose value is `None` as
+    `{"class": …, "digest": None, "unresolved": 0}`. That is a parent it failed to resolve, where
+    the row has no such parent. On `build_full_store`, 11 entries are of this form, all the
+    `numeric` field of a pure-WKB `GkWKBIntegration` reached through `GkSource`'s parent set. By
+    contrast, `_resolve_reference`, for a parent-set member, returns `None`.
+  - **Its age.** It is the same at `5fe0ae6`; 08 keeps it, so that `resolve()` stays
+    byte-identical.
+  - **Impact.** `resolve()` is called only by tests, for display and checking. The report renders
+    through its own path.
+  - **Next step.** A decision for the user: render the absent parent as `None`, as members are.
+    Not assigned.
 
 ---
 
@@ -1467,5 +1501,20 @@ modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four co
 | ComputeTargets | 693 OK | 693 OK | 0 |
 | CosmologyModels | 39 OK | 39 OK | 0 |
 | Datastore | 664 OK | 692 OK | +28 in `test_declared_facts`; the two witness tests of `test_schema_builder` read the new witness |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 280 OK | 280 OK | 0 |
+
+### 5.9 After prompt 08 (2026-10-06, this commit)
+
+Measured serially on the staged tree. The Datastore suite was run in four groups of modules
+(`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 150, 176, 200 and
+191 (before: 150, 151, 200, 191).
+
+| Suite | Before (orchestrator, `6ad58bb`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 OK | 693 OK | 0 |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 692 OK | 717 OK | +25 in `test_inventory_declarations`; the two inventory test modules, `test_wkb_numeric_parent_key` and `test_store_fingerprint` edited at their imports and one method as the prompt says |
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |

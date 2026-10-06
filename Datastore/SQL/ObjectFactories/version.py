@@ -44,9 +44,9 @@ class sqla_version_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a version row (store-fingerprint prompt 02): its label, which is
         # what build() looks it up by
-        from Datastore.store_inventory import read_records
+        from Datastore.store_inventory import InventorySpec
 
-        return read_records(conn, table, tables, context, leaves=("label",))
+        return InventorySpec(leaves=("label",))

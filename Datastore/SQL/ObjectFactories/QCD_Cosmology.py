@@ -125,17 +125,13 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a QCD_Cosmology row (store-fingerprint prompt 02): the six
         # parameters, log10_max_z and T_z_representation, which build() matches. The name is
         # descriptive and is not identity
-        from Datastore.store_inventory import read_records
+        from Datastore.store_inventory import InventorySpec
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             leaves=(
                 "omega_m",
                 "omega_cc",

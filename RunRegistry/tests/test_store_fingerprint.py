@@ -46,7 +46,7 @@ from RunRegistry.tests.store_fixtures import (
 )
 from RunRegistry.tests.test_store_command_line import CommandLineTestCase
 
-from Datastore.store_inventory import COMPUTE_TARGETS, read_inventory
+from Datastore.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import (
     FIXED_TIMESTAMP,
     _schema_tables,
@@ -56,6 +56,19 @@ from Datastore.tests.real_store_fixtures import (
     relabel_serials,
 )
 from config.datastore import factories as _factories
+
+# the compute targets, whose labels are not identity
+COMPUTE_TARGETS = (
+    "TkNumericIntegration",
+    "TkWKBIntegration",
+    "GkNumericIntegration",
+    "GkWKBIntegration",
+    "GkSource",
+    "GkSourcePolicyData",
+    "QuadSource",
+    "QuadSourceIntegral",
+    "OneLoopIntegral",
+)
 
 REPO_ROOT = Path(RunRegistry.REPO_ROOT)
 GOLDEN = (

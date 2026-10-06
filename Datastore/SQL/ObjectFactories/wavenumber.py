@@ -123,13 +123,13 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         ]
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a wavenumber row (store-fingerprint prompt 02): k_inv_Mpc as
         # stored, which is what build() matches (absolute 1e-7). The source/response flags
         # accumulate by OR and are not identity
-        from Datastore.store_inventory import read_records
+        from Datastore.store_inventory import InventorySpec
 
-        return read_records(conn, table, tables, context, leaves=("k_inv_Mpc",))
+        return InventorySpec(leaves=("k_inv_Mpc",))
 
 
 class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
@@ -382,21 +382,22 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a wavenumber_exit_time row (store-fingerprint prompt 02): what
         # build() filters on -- the wavenumber, the cosmology (its type and the row that type
         # names; the serial has no foreign key), atol, rtol and stepping
-        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
+        from Datastore.store_inventory import InventorySpec, Parent
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             leaves=("cosmology_type", "stepping"),
             parents={
                 "k": Parent("wavenumber_serial", "wavenumber"),
-                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
+                "cosmology": Parent(
+                    "cosmology_serial",
+                    type_column="cosmology_type",
+                    types=COSMOLOGY_TYPES,
+                ),
                 "atol": Parent("atol_serial", "tolerance"),
                 "rtol": Parent("rtol_serial", "tolerance"),
             },

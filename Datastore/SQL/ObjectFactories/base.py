@@ -49,3 +49,14 @@ class SQLAFactoryBase(ABC):
         with the same; the pool compares the two after a replicated store.
         """
         return None
+
+    @staticmethod
+    def inventory_spec():
+        """
+        How the inventory reads this factory's class (prompts/datastore-generic, prompt 08): an
+        ``InventorySpec`` (``Datastore/store_inventory.py``) naming the key's leaf columns, its
+        parent references and its association and value tables, or ``None`` where the class is not
+        a class of the inventory. It holds no connection and reads nothing; the inventory derives
+        which classes it reads, and in what order, from these declarations.
+        """
+        return None

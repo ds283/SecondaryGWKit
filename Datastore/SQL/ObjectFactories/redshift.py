@@ -130,10 +130,10 @@ class sqla_redshift_factory(SQLAFactoryBase):
         ]
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a redshift row (store-fingerprint prompt 02): z as stored, which is
         # what build() matches (relative 1e-7). The source/response flags accumulate by OR and are
         # not identity
-        from Datastore.store_inventory import read_records
+        from Datastore.store_inventory import InventorySpec
 
-        return read_records(conn, table, tables, context, leaves=("z",))
+        return InventorySpec(leaves=("z",))

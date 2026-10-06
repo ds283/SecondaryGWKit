@@ -836,7 +836,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         return msgs
 
     @staticmethod
-    def inventory_records(conn, table, tables, context):
+    def inventory_spec():
         # the physical identity of a GkSource row (store-fingerprint prompt 02): what build() filters
         # on -- the model, the wavenumber exit and z_response (optional in the lookup, always in
         # the key) and, since prompts/datastore-integrity prompt 09b, its parent set -- with its
@@ -844,13 +844,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         # through GkSource_parents to the parents' own identities: for each member its z_source
         # and the reference digests of its numeric and WKB rows, or None. parents_digest is not
         # read: it is formed from serials, which are never identity
-        from Datastore.store_inventory import Parent, ParentSet, read_records
+        from Datastore.store_inventory import InventorySpec, Parent, ParentSet
 
-        return read_records(
-            conn,
-            table,
-            tables,
-            context,
+        return InventorySpec(
             parents={
                 "model": Parent("model_serial", "BackgroundModel"),
                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
