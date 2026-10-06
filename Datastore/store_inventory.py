@@ -604,15 +604,15 @@ def read_records(
         }
         no_parent: List[int] = []
         no_tag: List[int] = []
-        for parent_serial, tag_serial in conn.execute(
+        for parent, tag_serial in conn.execute(
             sqla.select(tag_table.c[parent_column], tag_table.c[TAG_SERIAL])
         ):
-            if parent_serial not in serials:
-                no_parent.append(parent_serial)
+            if parent not in serials:
+                no_parent.append(parent)
             elif tag_serial not in labels:
                 no_tag.append(tag_serial)
             else:
-                tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
+                tag_sets.setdefault(parent, []).append(labels[tag_serial])
         if len(no_parent) > 0:
             problems.append(
                 _problem(
@@ -640,13 +640,13 @@ def read_records(
         value_table = tables[value_table_name]
         parent_col = value_table.c[parent_column]
         orphans: Dict[int, int] = {}
-        for parent_serial, n in conn.execute(
+        for parent, n in conn.execute(
             sqla.select(parent_col, sqla.func.count()).group_by(parent_col)
         ):
-            if parent_serial in serials:
-                counts[parent_serial] = n
+            if parent in serials:
+                counts[parent] = n
             else:
-                orphans[parent_serial] = n
+                orphans[parent] = n
         if len(orphans) > 0:
             problems.append(
                 _problem(

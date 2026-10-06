@@ -21,20 +21,17 @@ prompt 07; README §6.2, U4 and the user's choice for 07).
 7. **The version object**, built by the registry's version factory on a read-write and a read-only
    open, with the attributes it had.
 8. **The prune refusal's text** names the unit in the specs' order.
-9. **No project name in ``ShardedPool.py``**, by ``ast`` and by its comments and docstrings.
+9. No project name in ``ShardedPool.py``: checked, with every other file of the layer, by
+   ``test_layer_is_generic``.
 
 No Ray, nothing under ``var/``.
 """
 
-import ast
 import contextlib
 import hashlib
 import io
-import re
 import shutil
-import sys
 import tempfile
-import tokenize
 import unittest
 from datetime import datetime
 from pathlib import Path
@@ -57,8 +54,6 @@ from Datastore.SQL.schema import build_schema
 from Datastore.tests import standin_pool as sp
 from Datastore.tests.test_prune_at_open import _PruneTestCase, execute, quiet
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-POOL_FILE = REPO_ROOT / "Datastore" / "SQL" / "ShardedPool.py"
 ShardedPool = sp.sp_mod.ShardedPool
 
 # the declarations of the real registry, and no others: (owner_column, monotone_flags,
@@ -670,140 +665,6 @@ class TestThePruneRefusalNamesItsUnit(_PruneTestCase):
             "['BackgroundModel', 'BackgroundModelValue', 'BackgroundModel_tags']",
             str(raised.exception),
         )
-
-
-# ------------------------------------------------------------------------------------------------
-# 9. no project name in ShardedPool.py
-# ------------------------------------------------------------------------------------------------
-
-_WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-
-# the layer's own tables and columns (Datastore.contract), the columns schema.py prepends, and
-# the layer's vocabulary: "validated" is the action record's key and the flag the check at open
-# recomputes (prompt 07 keeps both)
-_LAYER_WORDS = {
-    VERSION_TABLE,
-    VERSION_LABEL,
-    TAG_TABLE,
-    TAG_LABEL,
-    TAG_SERIAL,
-    "serial",
-    "version",
-    "timestamp",
-    "stepping",
-    "validated",
-}
-
-# the project's packages: none may be imported or named
-_PROJECT_PACKAGES = {
-    path.name
-    for path in REPO_ROOT.iterdir()
-    if (path / "__init__.py").is_file() and path.name not in ("Datastore", "config")
-}
-
-
-def _registry_names():
-    """(tables, identifier columns) of the real registry, less the layer's own. A column is an
-    identifier if it has an underscore or a capital: ``model_serial``, ``k_inv_Mpc``. A column
-    that is a plain word, such as ``source``, ``response``, ``type`` or ``value``, cannot be told
-    from English prose, and a word check would forbid the closed-store operations' "source
-    store"; ``_FLAG_PHRASES`` checks the two declared flags instead. "model" and "value rows"
-    are allowed: they are not names of any table, and the two as-unit refusals and the
-    recompute's messages keep them so that no message's text changes (prompt 07, §2)."""
-    built = build_schema(sqla.MetaData(), factories)
-    tables = set(built.tables) - _LAYER_WORDS
-    columns = {
-        c.name
-        for t in built.tables.values()
-        for c in t.columns
-        if "_" in c.name or c.name.lower() != c.name
-    } - _LAYER_WORDS
-    return tables, columns
-
-
-_FLAG_PHRASES = re.compile(
-    r"\b(source|response)\s+(or|and)\s+(source|response)\b|\b(source|response)\s+flags?\b"
-)
-
-
-def _named(text: str, forbidden) -> list:
-    return sorted({w for w in _WORD.findall(text) if w in forbidden})
-
-
-class TestNoProjectNameInThePool(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.source = POOL_FILE.read_text()
-        cls.tree = ast.parse(cls.source)
-        cls.tables, cls.columns = _registry_names()
-
-    def test_no_string_or_name_is_a_registry_table(self):
-        forbidden = self.tables | self.columns | _PROJECT_PACKAGES
-        found = []
-        for node in ast.walk(self.tree):
-            if isinstance(node, ast.Constant) and isinstance(node.value, str):
-                found += [(node.lineno, w) for w in _named(node.value, forbidden)]
-                if _FLAG_PHRASES.search(node.value):
-                    found.append((node.lineno, node.value))
-            names = []
-            if isinstance(node, ast.Name):
-                names = [node.id]
-            elif isinstance(node, ast.Attribute):
-                names = [node.attr]
-            elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
-                names = [node.name]
-            elif isinstance(node, ast.arg):
-                names = [node.arg]
-            elif isinstance(node, ast.keyword) and node.arg is not None:
-                names = [node.arg]
-            for name in names:
-                parts = {name} | set(name.split("_"))
-                found += [(node.lineno, name) for p in parts if p in forbidden]
-        self.assertEqual([], found)
-
-    def test_no_import_names_a_project_package(self):
-        # the standard library, ray, sqlalchemy, the layer's own modules (no factory but the
-        # base) and config.defaults, a generic constant
-        allowed_roots = set(sys.stdlib_module_names) | {"ray", "sqlalchemy"}
-        found = []
-        for node in ast.walk(self.tree):
-            if isinstance(node, ast.Import):
-                modules = [a.name for a in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                modules = [node.module]
-            else:
-                continue
-            for module in modules:
-                root = module.split(".")[0]
-                if root in allowed_roots or module == "config.defaults":
-                    continue
-                if root == "Datastore" and not (
-                    module.startswith("Datastore.SQL.ObjectFactories")
-                    and module != "Datastore.SQL.ObjectFactories.base"
-                ):
-                    continue
-                found.append((node.lineno, module))
-        self.assertEqual([], found)
-
-    def test_no_comment_or_docstring_names_one(self):
-        forbidden = self.tables | self.columns | _PROJECT_PACKAGES
-        found = []
-        for token in tokenize.generate_tokens(io.StringIO(self.source).readline):
-            if token.type == tokenize.COMMENT:
-                found += [(token.start[0], w) for w in _named(token.string, forbidden)]
-                if _FLAG_PHRASES.search(token.string):
-                    found.append((token.start[0], token.string))
-        for node in ast.walk(self.tree):
-            if isinstance(
-                node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)
-            ):
-                doc = ast.get_docstring(node, clean=False)
-                if doc is None:
-                    continue
-                found += [(node.__class__.__name__, w) for w in _named(doc, forbidden)]
-                if _FLAG_PHRASES.search(doc):
-                    found.append((node.__class__.__name__, doc))
-        self.assertEqual([], found)
 
 
 if __name__ == "__main__":

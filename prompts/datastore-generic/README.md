@@ -207,16 +207,23 @@ internals are the implementing prompt's to design.
     self-reference and a cycle, each `ValueError` naming the classes; `ParentSet` refuses a
     polymorphic member; `read_inventory` derives the order after `open_read_only` has checked the
     registry against the store.
-- **09 ships** the guard that keeps the layer generic. *Named 2026-10-06 (prompt 09, written):*
-  - `Datastore/tests/test_layer_is_generic.py`: `layer_files()`, the layer's modules, derived (every
-    module under `Datastore/` but its tests and the client's factories, with
-    `ObjectFactories/base.py`, and `RayTools/`); the forbidden vocabulary (the registry's tables,
-    class names and identifier columns, less the layer's own words; the project's packages; 07's
-    flag phrases and 08's cosmology names and fragments); `import_allowed`, the allow-list (the
-    standard library, `ray`, `sqlalchemy`, the layer's own modules, `config.defaults` and
-    `utilities`);
+- **09 ships** the guard that keeps the layer generic. *Named 2026-10-06 (prompt 09, written);
+  shipped 2026-10-06 (prompt 09, this commit), as named:*
+  - `Datastore/tests/test_layer_is_generic.py`, eight tests: `layer_files()`, the layer's modules,
+    derived from the filesystem (every module under `Datastore/` but its tests and the client's
+    factories, with `ObjectFactories/base.py`, and `RayTools/`; 17 today); the forbidden
+    vocabulary (the registry's tables, class names and identifier columns, less `LAYER_WORDS`, the
+    layer's own words; the project's packages; 07's flag phrases and 08's cosmology names and
+    fragments), checked in code names, strings and docstrings, and comments; `import_allowed`, the
+    allow-list (the standard library, `ray`, `sqlalchemy`, the layer's own modules, `config.defaults`
+    and `utilities`, the last two by the user's choice of 2026-10-06), with `test_the_allow_list`
+    pinning it;
   - 07's `TestNoProjectNameInThePool` and 08's two per-file name and import tests are gone, folded
-    into it.
+    into it. 08's two fresh-interpreter load tests stay in `test_inventory_declarations`, which
+    check what a module loads when run;
+  - the three sites the guard flagged are fixed in the layer: `read_records`' local
+    `parent_serial` is `parent`, and `same_value`'s and `shard_paths.py`'s docstrings are
+    reworded. No behaviour changes.
 
 ## 5. The rules this campaign runs under
 

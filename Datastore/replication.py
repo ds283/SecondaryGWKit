@@ -286,7 +286,7 @@ def same_value(a, b) -> bool:
     """
     Equality of two column values as a replica compares them: exact, except that two NaN floats
     are the same value. Copies of one row are written from one pickled object, so every float is
-    bit-identical and no tolerance belongs here.
+    bit-identical and an approximate comparison has no place here.
     """
     if isinstance(a, float) and isinstance(b, float) and a != a and b != b:
         return True

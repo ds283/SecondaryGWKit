@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 8 of 9 prompts landed (01–08).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 9 of 9 prompts landed (01–09); the campaign closes when the review's rehearsal rebuild matches (K2).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -68,7 +68,7 @@ the referencing `Parent`. For 09 (2026-10-06), four choices:
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | `6646b06` | [log](logs/08-derive-the-inventorys-class-list.md) |
-| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ⬜ | — | — |
+| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ✅ 2026-10-06 (K2: fixture half; the rebuild is the review's) | this commit | [log](logs/09-keep-the-layer-generic.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1287,8 +1287,8 @@ The checks:
 | **F4** | 07 | the version and tag tables per U4 (`Datastore/contract.py`; the version object built by the version factory; `MetadataConcepts` no longer imported); the `owned_serials` hook (`_value_serials` gone); project names out of `ShardedPool`'s code, comments and messages | C1 #1, #4, #7, #8 | ✅ |
 | **I1** | 08 | the inventory's class list and order derived, from the parents each factory declares in an `inventory_spec`, roots first (the user, 2026-10-06; foreign keys miss nine of them) | C1 #12 | ✅ |
 | **I2** | 08 | the polymorphic cosmology reference declared by the client, in the referencing `Parent`'s type map (the user, 2026-10-06) | C1 #13 | ✅ |
-| **K1** | 09 | a test that the generic layer names no registry table and imports no client package: `test_layer_is_generic`, over every file of the layer, derived; `config.defaults` and `utilities` allow-listed, and 07's and 08's per-file tests folded in (the user, 2026-10-06) | §C | ⬜ |
-| **K2** | 09 | every suite; README §5 rule 9's closing verification: fixtures in the prompt, and one rehearsal rebuild at the review compared with `dbd8a51`'s `39809dca…` (the user, 2026-10-06; README §3's exception) | — | ⬜ |
+| **K1** | 09 | a test that the generic layer names no registry table and imports no client package: `test_layer_is_generic`, over every file of the layer, derived; `config.defaults` and `utilities` allow-listed, and 07's and 08's per-file tests folded in (the user, 2026-10-06) | §C | ✅ |
+| **K2** | 09 | every suite; README §5 rule 9's closing verification: fixtures in the prompt, and one rehearsal rebuild at the review compared with `dbd8a51`'s `39809dca…` (the user, 2026-10-06; README §3's exception) | — | ✅ fixture half; the rebuild at the review |
 
 ---
 
@@ -1296,68 +1296,6 @@ The checks:
 
 ### 3.1 Opened by this campaign's audit (2026-10-04)
 
-- **[00-the-generic-datastore-layer-hard-codes-project-schema-facts]** *(opened 2026-10-04 by the
-  audit, §C; read)*
-  - **The defect.** `ShardedPool`, `store_reader`, `store_inventory`, `Datastore` and `ClientPool`
-    hard-code fourteen facts about the project's tables (audit C1): `BackgroundModel`'s copy unit and
-    `validated` rule, the `redshift`/`wavenumber` flags, the version and tag tables, the factory
-    registry imported as a private name, the inventory's class list, and more. `ShardedPool` had
-    one project literal before `f4b2c91`.
-  - **Impact.** The layer cannot be reused without editing it, and every new table that needs
-    replication-time treatment is another special case in the pool. No wrong result.
-  - **Next step.** Prompts 06–08, then 09's guard. After 08, 09's guard only.
-  - **Assigned (2026-10-04):** prompts 06–09.
-  - **Narrowed (2026-10-06, prompt 06; `19f07ee`):** audit C1 rows 9, 10, 11 and 14 are gone.
-    The layer imports no registry: `ShardedPool`, the `Datastore` actor, `open_read_only` and
-    `read_inventory` are given `factories`; the pool and the actor are given `serial_batch_sizes`
-    (`ClientPool` holds no table of them) and the tables to drop (`drop_tables`), which the actor
-    drops in the order `schema.drop_order` derives from foreign keys (`_drop_order` deleted). The
-    three registries, the drop groups and `tables_to_drop` live in `config/datastore.py`, and
-    `main.py` passes them in. The inventory compares exactly the classes the store's primary
-    records in `replicated_tables` (`ReadOnlyStore.replicated_tables`), and imports neither
-    `_factories` nor `config.sharding`. Importing the five layer modules now loads only the
-    `ObjectFactories` package and `base`, `config` and `config.defaults`, `MetadataConcepts` and
-    `utilities`, where it loaded 22 factory modules and 21 `ComputeTargets`, 3 `CosmologyConcepts`
-    and 11 `CosmologyModels` modules (`Datastore/tests/test_layer_registry.py`,
-    `TestTheLayerImportsNoClient`). Left for 07–09: rows 1, 2, 4–8, 12 and 13, and the guard.
-  - **Narrowed (2026-10-06, prompt 07; `3f51939`):** audit C1 rows 1, 2, 4, 5, 6, 7 and 8 are
-    gone. Three `register()` keys, carried by `build_schema` into every record of a class with a
-    table and refused on a misfit: `owner_column` (declared by `BackgroundModelValue`),
-    `monotone_flags` (`redshift`, `wavenumber`) and `validated_column` (`BackgroundModel`). Two
-    factory hooks on `SQLAFactoryBase`, not abstract: `revalidate(serial, conn, table, tables)`
-    and `owned_serials(obj)`, implemented by `BackgroundModel`'s factory. The pool's copy unit and
-    prune unit are one function, `ShardedPool._unit_tables`, read from foreign keys through the
-    declared owner and the tag table; `_prune_unit`, `_value_serials` and `_StoredModel` are
-    deleted. The version and tag tables and their columns are named once, in
-    `Datastore/contract.py` (U4); the pool builds the version object through the version table's
-    factory and no longer imports `MetadataConcepts`; the actor, `schema.py` and
-    `read_records`' tag and validated reads name no project table or column, only the contract
-    and the layer's own prepended `version` column. `ShardedPool.py` names no
-    registry table but the contract's, in code, comments or messages, pinned by
-    `Datastore/tests/test_declared_facts.py`. Every repair, refusal, printed line and record of
-    the check at open, and the fingerprint, are byte-identical to `f1b8d02`'s (the log). Left for
-    08–09: rows 12 and 13, and the guard.
-  - **Narrowed (2026-10-06, prompt 08; `6646b06`):** audit C1 rows 12 and 13 are gone, and with
-    them **every row of C1**. 09's guard remains. The inventory's classes and their order are
-    derived: each factory declares a static `inventory_spec()` (not abstract on
-    `SQLAFactoryBase`, default `None`) returning a `store_inventory.InventorySpec`, which is
-    `read_records`' six keywords and gives `keywords()` and `dependencies()`; `inventory_records`
-    is gone from all 21 factories. `inventory_specs(factories)` and `inventory_classes(factories)`
-    give the classes that declare a spec, roots first and then a dependency sort, each in registry
-    order, refusing (`ValueError`, by name) a dependency with no spec, a polymorphic type column
-    that is not a leaf, a self-reference and a cycle; `read_inventory` derives the order after the
-    reader has opened the store, so a registry that does not fit its store is refused by the
-    reader as before. `INVENTORY_CLASSES` and `COMPUTE_TARGETS` are deleted. The polymorphic
-    cosmology reference is a `Parent` with a type map, `Parent(column, type_column=…,
-    types={type value: class})`, declared by `wavenumber_exit_time`'s and `BackgroundModel`'s
-    factories through the one client constant `ObjectFactories/cosmology_types.COSMOLOGY_TYPES`;
-    `COSMOLOGY` and `cosmology_classes` are deleted, and `store_inventory.py` and
-    `tools/inventory_report.py` import no `CosmologyModels`. `ClassInventory.parents[field]` is
-    `None` for a polymorphic field, and `parent_types` and `parent_class(field, key)` carry and
-    use the map. `store_inventory.py` names no registry table, project package or project column
-    in code, comments or docstrings (pinned by `Datastore/tests/test_inventory_declarations.py`).
-    Both fingerprints, both whole inventories, every `resolve()`, `main.py --inventory` and every
-    refusal that exists today are byte-identical to `6ad58bb`'s (the log).
 - **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
   - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
     primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
@@ -1559,6 +1497,81 @@ The checks:
     column check dropped, they pass with the handler restored, which is why the statement is
     captured.
 
+- **[00-the-generic-datastore-layer-hard-codes-project-schema-facts]** *(opened 2026-10-04 by the
+  audit, §C; read)*
+  - **The defect.** `ShardedPool`, `store_reader`, `store_inventory`, `Datastore` and `ClientPool`
+    hard-code fourteen facts about the project's tables (audit C1): `BackgroundModel`'s copy unit and
+    `validated` rule, the `redshift`/`wavenumber` flags, the version and tag tables, the factory
+    registry imported as a private name, the inventory's class list, and more. `ShardedPool` had
+    one project literal before `f4b2c91`.
+  - **Impact.** The layer cannot be reused without editing it, and every new table that needs
+    replication-time treatment is another special case in the pool. No wrong result.
+  - **Next step.** Prompts 06–08, then 09's guard. After 08, 09's guard only.
+  - **Assigned (2026-10-04):** prompts 06–09.
+  - **Narrowed (2026-10-06, prompt 06; `19f07ee`):** audit C1 rows 9, 10, 11 and 14 are gone.
+    The layer imports no registry: `ShardedPool`, the `Datastore` actor, `open_read_only` and
+    `read_inventory` are given `factories`; the pool and the actor are given `serial_batch_sizes`
+    (`ClientPool` holds no table of them) and the tables to drop (`drop_tables`), which the actor
+    drops in the order `schema.drop_order` derives from foreign keys (`_drop_order` deleted). The
+    three registries, the drop groups and `tables_to_drop` live in `config/datastore.py`, and
+    `main.py` passes them in. The inventory compares exactly the classes the store's primary
+    records in `replicated_tables` (`ReadOnlyStore.replicated_tables`), and imports neither
+    `_factories` nor `config.sharding`. Importing the five layer modules now loads only the
+    `ObjectFactories` package and `base`, `config` and `config.defaults`, `MetadataConcepts` and
+    `utilities`, where it loaded 22 factory modules and 21 `ComputeTargets`, 3 `CosmologyConcepts`
+    and 11 `CosmologyModels` modules (`Datastore/tests/test_layer_registry.py`,
+    `TestTheLayerImportsNoClient`). Left for 07–09: rows 1, 2, 4–8, 12 and 13, and the guard.
+  - **Narrowed (2026-10-06, prompt 07; `3f51939`):** audit C1 rows 1, 2, 4, 5, 6, 7 and 8 are
+    gone. Three `register()` keys, carried by `build_schema` into every record of a class with a
+    table and refused on a misfit: `owner_column` (declared by `BackgroundModelValue`),
+    `monotone_flags` (`redshift`, `wavenumber`) and `validated_column` (`BackgroundModel`). Two
+    factory hooks on `SQLAFactoryBase`, not abstract: `revalidate(serial, conn, table, tables)`
+    and `owned_serials(obj)`, implemented by `BackgroundModel`'s factory. The pool's copy unit and
+    prune unit are one function, `ShardedPool._unit_tables`, read from foreign keys through the
+    declared owner and the tag table; `_prune_unit`, `_value_serials` and `_StoredModel` are
+    deleted. The version and tag tables and their columns are named once, in
+    `Datastore/contract.py` (U4); the pool builds the version object through the version table's
+    factory and no longer imports `MetadataConcepts`; the actor, `schema.py` and
+    `read_records`' tag and validated reads name no project table or column, only the contract
+    and the layer's own prepended `version` column. `ShardedPool.py` names no
+    registry table but the contract's, in code, comments or messages, pinned by
+    `Datastore/tests/test_declared_facts.py`. Every repair, refusal, printed line and record of
+    the check at open, and the fingerprint, are byte-identical to `f1b8d02`'s (the log). Left for
+    08–09: rows 12 and 13, and the guard.
+  - **Narrowed (2026-10-06, prompt 08; `6646b06`):** audit C1 rows 12 and 13 are gone, and with
+    them **every row of C1**. 09's guard remains. The inventory's classes and their order are
+    derived: each factory declares a static `inventory_spec()` (not abstract on
+    `SQLAFactoryBase`, default `None`) returning a `store_inventory.InventorySpec`, which is
+    `read_records`' six keywords and gives `keywords()` and `dependencies()`; `inventory_records`
+    is gone from all 21 factories. `inventory_specs(factories)` and `inventory_classes(factories)`
+    give the classes that declare a spec, roots first and then a dependency sort, each in registry
+    order, refusing (`ValueError`, by name) a dependency with no spec, a polymorphic type column
+    that is not a leaf, a self-reference and a cycle; `read_inventory` derives the order after the
+    reader has opened the store, so a registry that does not fit its store is refused by the
+    reader as before. `INVENTORY_CLASSES` and `COMPUTE_TARGETS` are deleted. The polymorphic
+    cosmology reference is a `Parent` with a type map, `Parent(column, type_column=…,
+    types={type value: class})`, declared by `wavenumber_exit_time`'s and `BackgroundModel`'s
+    factories through the one client constant `ObjectFactories/cosmology_types.COSMOLOGY_TYPES`;
+    `COSMOLOGY` and `cosmology_classes` are deleted, and `store_inventory.py` and
+    `tools/inventory_report.py` import no `CosmologyModels`. `ClassInventory.parents[field]` is
+    `None` for a polymorphic field, and `parent_types` and `parent_class(field, key)` carry and
+    use the map. `store_inventory.py` names no registry table, project package or project column
+    in code, comments or docstrings (pinned by `Datastore/tests/test_inventory_declarations.py`).
+    Both fingerprints, both whole inventories, every `resolve()`, `main.py --inventory` and every
+    refusal that exists today are byte-identical to `6ad58bb`'s (the log).
+  - **Closed (2026-10-06, prompt 09, this commit).** Every C1 row is gone (06–08), and the guard
+    keeps it so. `Datastore/tests/test_layer_is_generic.py` derives the layer's files from the
+    filesystem (`layer_files()`: 17 today), checks each one's code names, strings and docstrings,
+    and comments against the registry's tables, class names and identifier columns, the project's
+    packages, 08's cosmology names and 07's flag phrases and 08's fragments (234 words, less
+    `LAYER_WORDS`), and allows only the standard library, `ray`, `sqlalchemy`, the layer's own
+    modules (of the factories only `base`), `config.defaults` and `utilities` (`import_allowed`;
+    the user's choices, 2026-10-06). On today's layer it found ten hits at three sites, none of
+    them project knowledge (a local `parent_serial`, the word "tolerance" in one docstring and
+    the path `tools/` in another), and those three sites were fixed in this commit. Nine
+    deliberate breakages each fail a named test (the log). Rule 9 on fixtures holds, byte for
+    byte, against `dbd8a51` (the log); the rehearsal rebuild is the review's.
+
 ---
 
 ## 5. Baselines
@@ -1697,3 +1710,20 @@ Measured serially on the staged tree. The Datastore suite was run in four groups
 *Added at the orchestrator's review (2026-10-06).* The follow-up commit that records the review
 adds one test to `test_inventory_declarations` (`test_the_report_renders_both_cosmology_types`),
 and tightens one assertion. Datastore `[g-o]` then runs 177, OK, and the suite totals **718**.
+
+### 5.10 After prompt 09 (2026-10-06, this commit)
+
+Measured serially on the working tree before the commit, which holds only this commit's change. The
+Datastore suite was run in four groups of modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`,
+`[p-r]`, `[s-z]`); the four counts are 147, 183, 200 and 191 (before: 150, 177, 200, 191).
+
+| Suite | Before (orchestrator, `c96e56d`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 OK | 693 OK | 0 |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 718 OK | 721 OK | −5 deleted (`test_declared_facts.TestNoProjectNameInThePool`, three; `test_inventory_declarations.TestTheLayerKnowsNoProject`, two), +8 in `test_layer_is_generic` |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 280 OK | 280 OK | 0 |
+
+No flake appeared. K2's fixture half is in the log; the rehearsal rebuild is the review's.

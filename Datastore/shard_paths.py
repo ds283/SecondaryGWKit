@@ -9,8 +9,8 @@ table, column ``filename``. One form of record exists: the shard's bare file nam
 its primary renamed, and still opens against its own shards.
 
 This module is the **one** definition of how a record is turned into a path. ``ShardedPool`` and
-``tools/shard_key_audit.py`` both call it; do not copy it. Two definitions of where a shard lives
-is the disagreement that made copied stores write into their originals.
+every tool that reads a store's shard records call it; do not copy it. Two definitions of where a
+shard lives is the disagreement that made copied stores write into their originals.
 
 It is also the one definition of what a shard is **called** (``shard_file_name``): the creator
 names a new store's shards with it, and ``ShardedPool.copy_store`` / ``move_store`` name a

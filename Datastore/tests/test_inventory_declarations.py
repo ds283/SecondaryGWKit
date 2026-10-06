@@ -10,20 +10,19 @@ polymorphic parent through the type map its referencing factory declares. These 
 2. on hand-built registries: a cycle and a parent with no spec are refused, by name; a polymorphic
    parent's classes are built before it; a malformed ``Parent`` is refused;
 3. ``resolve()`` and the report go through the declared type map;
-4. ``store_inventory`` names no project package or table and loads none.
+4. ``store_inventory`` loads no project module when it runs (the fresh-interpreter tests of
+   section 4). That it names no project package or table is checked, with the rest of the layer,
+   by ``test_layer_is_generic``.
 
 No Ray; stores are built in temporary directories; nothing under ``var/``.
 """
 
-import ast
-import io
 import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import tokenize
 import unittest
 from pathlib import Path
 
@@ -45,7 +44,6 @@ from config.datastore import factories as _factories
 from tools.inventory_report import format_inventory_report
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-STORE_INVENTORY = REPO_ROOT / "Datastore" / "store_inventory.py"
 
 # the order the inventory was built in before prompt 08, when it was a hand-kept list
 ORDER = (
@@ -406,7 +404,7 @@ class TestResolve(unittest.TestCase):
 
 
 # ------------------------------------------------------------------------------------------------
-# 4. the layer names and loads no project package or table
+# 4. the layer loads no project package when it runs
 # ------------------------------------------------------------------------------------------------
 
 PROJECT_PACKAGES = (
@@ -433,18 +431,6 @@ def _run(code):
 
 
 class TestTheLayerKnowsNoProject(unittest.TestCase):
-    def test_it_imports_no_project_package(self):
-        tree = ast.parse(STORE_INVENTORY.read_text())
-        imported = []
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                imported += [a.name for a in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                imported.append(node.module)
-        self.assertEqual(
-            [m for m in imported if m.split(".")[0] in PROJECT_PACKAGES], []
-        )
-
     def test_reading_records_loads_no_project_module(self):
         code = (
             "import json, sys\n"
@@ -475,39 +461,6 @@ class TestTheLayerKnowsNoProject(unittest.TestCase):
             )
             added = _run(code)
         self.assertEqual([m for m in added if m.split(".")[0] in PROJECT_PACKAGES], [])
-
-    def test_no_project_name_in_its_code_or_text(self):
-        names = (
-            set(_factories)
-            | set(PROJECT_PACKAGES)
-            | {
-                "cosmology",
-                "cosmology_type",
-                "cosmology_serial",
-                "COSMOLOGY",
-                "model_ids",
-            }
-        )
-        # ``validated`` is not in the list: it is the name of the record's own field and of
-        # ``read_records``' keyword, which the layer defines, and it is not a column it assumes
-        text = STORE_INVENTORY.read_text()
-        found = []
-        for tok in tokenize.generate_tokens(io.StringIO(text).readline):
-            if tok.type == tokenize.NAME:
-                if tok.string in names:
-                    found.append((tok.start[0], tok.string))
-            elif tok.type in (tokenize.STRING, tokenize.COMMENT):
-                for name in names:
-                    if re.search(
-                        rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])",
-                        tok.string,
-                    ):
-                        found.append((tok.start[0], name))
-                # the naming conventions of the project's tables
-                for fragment in ("_tags", "*Value", "Run_<"):
-                    if fragment in tok.string:
-                        found.append((tok.start[0], fragment))
-        self.assertEqual(found, [])
 
 
 if __name__ == "__main__":
