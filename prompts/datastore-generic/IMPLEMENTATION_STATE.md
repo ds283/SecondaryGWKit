@@ -55,7 +55,7 @@ recommended:**
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
-| 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | this commit | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
+| 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
@@ -70,7 +70,7 @@ used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-
 measurement of 05's test plan in [`orchestrator/measure-05/`](orchestrator/measure-05/);
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-05, used for 06), with the
 measurement of 06's test plan in [`orchestrator/measure-06/`](orchestrator/measure-06/);
-[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-06, not yet used), with the
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-06, used for 07), with the
 measurement of 07's test plan and of the check at open in
 [`orchestrator/measure-07/`](orchestrator/measure-07/).
 
@@ -899,6 +899,178 @@ again.
 - The pool's undeclared-drop check is the only guard before a store opens. Without it, a new store
   given an unknown drop table is created silently (log, breakage (iii)).
 
+**Orchestrator review of prompt 07 (2026-10-06).** Dispatched from `f1b8d02` to one Opus
+subagent. Reviewed against its commit `3f51939`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–5 are met. No stop condition fired, and the agent ran its
+suites in the foreground.
+
+*At dispatch.* The note's gate held at `f1b8d02`:
+- the tree was clean, and the only worktree was this checkout;
+- `c6bddf8..f1b8d02` touches only `prompts/`;
+- the registry held 16 runs (14 finished, 2 `unknown`, none `running`), and no Ray process was up;
+- the venv imported `scipy.sparse.linalg`.
+
+The baselines, serially at `f1b8d02`, at load 7–35 (a transient spike from system daemons), match
+06's review:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+- RunRegistry 280, OK; ComputeTargets 693, OK;
+- Datastore 664 (122 + 151 + 200 + 191), OK. No committed measurement file tripped a grep test.
+
+The index held 107. The pre-images of the 16 files of the note's §1.6 were recorded, and
+`f1b8d02` was exported to the scratchpad. The parent side of check 8 was measured there before
+dispatch:
+- the fingerprint, digest `6576b85d…`;
+- the M2 record, 111 tests and 328 constructions, byte-identical over two runs;
+- `main.py --inventory` on a copy of the `build_full_store` primary: 14839 bytes, exit 0.
+
+The checks:
+1. **Scope.** 23 files, all on the prompt's §6 list.
+   - The diff over `docs/` (but `OPEN_ISSUES.md`), `store_reader.py`, `ClientPool.py`,
+     `replication.py`, `shard_paths.py`, `ProfileAgent.py`, `SerialPoolBroker.py`, `config/`,
+     `main.py`, `extract_*.py`, `RunRegistry/`, `tools/`, `var/` and `orchestrator/` is empty.
+   - The only change under `Datastore/tests/data/` is the new witness; the 09c witness is
+     unchanged.
+2. **E1, by grep and by running.**
+   - Greps 1 and 3 print nothing.
+   - Grep 2 prints the five lines §3.2 allows: `Datastore.py:745`, `schema.py:117` and `:121`, and
+     `store_inventory.py:116-117`.
+   - `test_layer_registry` passes with `MetadataConcepts` in `FORBIDDEN_PACKAGES`.
+   - `m6_names_left.py`, extended to the five layer files, at both trees:
+     - `ShardedPool.py` goes from 107 hits to 42, `Datastore.py` from 19 to 11 and
+       `store_inventory.py` from 58 to 57.
+     - What remains is the contract (`version`, `label`), the layer's vocabulary (`validated`),
+       generic English (a "source" store, a `config` local) and the inventory's class list
+       (08's).
+     - The log's list omitted `schema.py` (six hits: `version` and `validated`). It was added at
+       this review (below).
+3. **E1, E2, by `ast`, against the pre-images, docstrings stripped.**
+   - **`ShardedPool.py`:**
+     - changed: exactly the note's ten functions, plus `replication` and `check` nested in
+       `_store_impl_replicated_table`;
+     - gone: `_prune_unit`, `_value_serials` and `_StoredModel`;
+     - new: `_unit_tables`, `_is_tag_table_of`, `_declares_owner`, `_column_naming`, and
+       `_find_version_row`'s nested `refuse_insert`;
+     - every other function dumps identically.
+   - **The other layer files:**
+     - `Datastore.py`: only `_insert` changes; `_refuse_insert` changes in its docstring only;
+     - `schema.py`: only `build_schema` changes, and its four checking helpers are new;
+     - `store_inventory.py`: only `read_records`;
+     - `base.py`: the two hooks are new.
+
+     Every module-level change is an import.
+   - **The factories:**
+     - the six with one argument: `inventory_records` only;
+     - `redshift` and `wavenumber`: `register` only;
+     - `BackgroundModel.py`:
+       - both `register`s, `validate` and `inventory_records` change;
+       - `_validate_row`, `revalidate` and `owned_serials` are new;
+       - everything else dumps identically.
+   - **In-process, on the real registry:**
+     - exactly the four declarations are non-default;
+     - `_unit_tables` equals the old copy unit for all 14 compared tables, and `BackgroundModel`'s
+       equals `_prune_unit`'s as a set;
+     - every refusal of §2 raises on a hand-built registry, naming the class and the key. A
+       fitting declaration is accepted.
+4. **E4, the tests, by `ast`.**
+   - In `test_schema_builder` and `test_layer_registry` no function changes. The module-level
+     changes are `WITNESS`, the docstring, the comment and `FORBIDDEN_PACKAGES`.
+   - The 28 new methods are all in `test_declared_facts.py`, and the log names each.
+5. **E2, by reading and running.** `test_declared_facts.py` was read in full.
+   - Each refusal test asserts `"Member"` and the key.
+   - The `revalidate` test compares (return, flag written, printed) as one tuple, as stored and
+     with a value row deleted, in rolled-back savepoints, and the copy's checksum is unchanged.
+   - The version test records the factory's calls through a subclass, read-write and read-only:
+     one `mode=ro` build each, an inserter that raises, and `vars()` exactly `_my_id`, `_label`,
+     `_deserialized`.
+   - The module with `test_schema_builder` and `test_layer_registry`: 55 tests, OK.
+6. **E3, by running.** 232 tests, OK: the five check-at-open modules, `test_store_inventory`,
+   `test_inventory_report`, `test_store_schema`, `test_store_reader` and RunRegistry's
+   `test_store_fingerprint`.
+7. **E5, the pins.** The eight diffs ((iv) in two forms) were extracted from the log and replayed
+   with `git apply` in `bash`. Each failed exactly the tests and counts the log gives:
+   - (i): failures=6, errors=14;
+   - (ii): failures=7, errors=14;
+   - (iii): failures=1, errors=2;
+   - (iv-a): failures=3, errors=5;
+   - (iv-b): failures=3, `test_a_recomputed_validated_that_disagrees` among them;
+   - (v): failures=2, both in `test_declared_facts`; no `test_replicated_write` test;
+   - (vi): failures=1; (vii): failures=1.
+
+   The tree was clean after each `git apply -R`.
+   - On (v), the log's account is right. "its value rows have serials" appears in no test at
+     `f1b8d02`. The pool's owned-serials check was untested until 07's hook test.
+   - Deviation 9, which runs (iv) in two forms, is right: an unwritten `True` leaves the shards
+     differing, and the second comparison refuses.
+8. **The probe**, from the scratchpad, at `3f51939` and at the export of `f1b8d02`:
+   - **The fingerprint** of `build_full_store`, with `taken` removed, is byte-identical (`cmp`).
+     The digest is `6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759`, problems
+     `{}`. The full inventory, and `build_real_store`'s fingerprint (`d9328538…`) and inventory,
+     are byte-identical too. `sqlite_master`'s type, name, table and SQL are identical in all six
+     files.
+   - **The check at open** (`m2_open_behaviour.py`) is byte-identical: 111 tests (110 with a
+     construction), 328 constructions (56 raised), 982 printed lines.
+   - **The messages** (`m7_messages.py`): all 16 scenarios are byte-identical, the prune refusal
+     included.
+   - **`main.py --inventory`** on the same copied primary: byte-identical stdout (14839 bytes) and
+     stderr, exit 0. The store's checksums were unchanged.
+   - **`revalidate`** (`m9_revalidate.py`) agrees with `validate` in return, flag and warning,
+     for both models, as stored and with a value row deleted. The checksum was unchanged.
+   - **Imports** (`m5_imports.py`): at `f1b8d02`, `ShardedPool` and `store_reader` each loaded 6
+     `MetadataConcepts` modules. At `3f51939`, none of the five layer modules loads any, and none
+     initialises Ray.
+   - **The witness** (`witness_diff.py`): only the three keys are added, on all 38 classes, with
+     non-default values on exactly `redshift`, `wavenumber`, `BackgroundModel` and
+     `BackgroundModelValue`.
+9. **E6.**
+   - The generic-layer issue has a dated "Narrowed" line naming rows 1, 2, 4–8, the three keys
+     and the two hooks. Its index hook says so and assigns it to 08–09.
+   - The index holds 107 by counting, matching its header.
+   - README §4 names the keys, the hooks, `Datastore/contract.py` and `_unit_tables`.
+   - §1, F1–F4 and §5.8 are written.
+10. **Suites**, serially at `3f51939`, load 12–48:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280, OK;
+    - ComputeTargets 693, OK;
+    - Datastore 692 (664 + 28; 150 + 151 + 200 + 191), OK.
+
+    No flake appeared. `black --check` is clean on the 18 Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `3f51939` in §1, §3, §5.8, README §4 and the log.
+- The log's "Project names left in the five layer files" gains a `schema.py` entry, marked as
+  added at review. The agent's scan listed `ClientPool.py` in its place.
+- This board's note list marks `orchestrator/prompt-07.md` used.
+
+*Kept as is.*
+- Grep 2's five lines, which §3.2 allows.
+- **Index root pages.** `sqlite_master.rootpage` of the indexes differs between two builds of
+  `build_full_store` on one tree (`f1b8d02` against itself): SQLAlchemy keeps a table's indexes in
+  a set ordered by object identity. The parent-against-child comparison therefore compares the
+  schema text, not root pages. Nothing 07 changed, and nothing the fingerprint reads.
+- `_find_version_row` builds the whole schema to reach the version table, once per open of an
+  existing store (the log's observation). It writes nothing.
+- The generic-layer issue's `**Assigned (2026-10-04):** prompts 06–09` line is the original
+  assignment. The dated "Narrowed" lines record what each prompt took.
+
+*Handed on.* **08**'s note must carry:
+- What is left in `store_inventory.py` for 08: C1 rows 12 and 13, the class list and its order
+  (`INVENTORY_CLASSES`, the two contract names at `:116-117` among them), and the cosmology
+  reference.
+- `read_records` now reads the tag table through `Datastore.contract` (`TAG_TABLE`, `TAG_LABEL`,
+  `TAG_SERIAL`). It reads the validated column through the factory's `validated=<column>`
+  argument.
+- `schema.drop_order` and the foreign keys are there to derive the class order.
+  `build_schema`'s records now also carry `owner_column`, which names a table's owner.
+- `ShardedPool`'s messages keep BackgroundModel's vocabulary ("holds its model row", "part of
+  this model", "from its own value rows", "its value rows have serials"), which 09's guard must
+  allow. `test_declared_facts.TestNoProjectNameInThePool` already allows it, and says why.
+- `store_inventory.py`'s `Parent` and `ParentSet` docstrings name project classes as examples
+  (`:239`, `:265`). They are in the audit's comment list and outside `read_records`, so 09's
+  guard will meet them (the log).
+- The pool's owned-serials comparison is pinned only on a stand-in pool
+  (`test_the_pool_checks_each_answer_through_the_hook`). No test reaches it through a real
+  replicated write.
+
 ---
 
 ## 2. Items
@@ -964,7 +1136,7 @@ again.
     `utilities`, where it loaded 22 factory modules and 21 `ComputeTargets`, 3 `CosmologyConcepts`
     and 11 `CosmologyModels` modules (`Datastore/tests/test_layer_registry.py`,
     `TestTheLayerImportsNoClient`). Left for 07–09: rows 1, 2, 4–8, 12 and 13, and the guard.
-  - **Narrowed (2026-10-06, prompt 07; this commit):** audit C1 rows 1, 2, 4, 5, 6, 7 and 8 are
+  - **Narrowed (2026-10-06, prompt 07; `3f51939`):** audit C1 rows 1, 2, 4, 5, 6, 7 and 8 are
     gone. Three `register()` keys, carried by `build_schema` into every record of a class with a
     table and refused on a misfit: `owner_column` (declared by `BackgroundModelValue`),
     `monotone_flags` (`redshift`, `wavenumber`) and `validated_column` (`BackgroundModel`). Two
@@ -1274,7 +1446,7 @@ modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four co
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |
 
-### 5.8 After prompt 07 (2026-10-06, this commit)
+### 5.8 After prompt 07 (2026-10-06, `3f51939`)
 
 Measured serially on the staged tree, at load 7–30. The Datastore suite was run in four groups of
 modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 150, 151,

@@ -156,7 +156,7 @@ internals are the implementing prompt's to design.
   - `config/datastore.py`: `factories`, `drop_groups`, `serial_batch_sizes`, `tables_to_drop`.
 - **07 ships** the `register()` keys (or factory hooks) for the facts of audit C1 rows 5 and 6. 07
   names them; `schema.build_schema` carries them into `built.records`. *Named 2026-10-06 (prompt
-  07, written); shipped 2026-10-06 (prompt 07, this commit), as named:*
+  07, written); shipped 2026-10-06 (prompt 07, `3f51939`), as named:*
   - the `register()` keys `owner_column`, `monotone_flags` and `validated_column`, carried into
     every record of a class with a table and checked against it (a misfit raises `ValueError`
     naming the class and the key); declared today by `BackgroundModelValue` (`owner_column`),

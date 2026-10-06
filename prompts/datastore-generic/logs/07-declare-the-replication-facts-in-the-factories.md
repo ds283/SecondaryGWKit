@@ -17,7 +17,7 @@ Opus 5.5 · **Date:** 2026-10-06 · **Base:** `f1b8d02`, clean · **Result:** la
 
 No stop condition fired. Closes nothing. Narrows
 `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` (audit C1 rows 1, 2, 4, 5, 6, 7
-and 8). Opens nothing. The index stays at 107. The commit is this commit.
+and 8). Opens nothing. The index stays at 107. The commit is `3f51939`.
 
 ## What shipped
 
@@ -274,7 +274,7 @@ build_schema: the factory of "Member" declares validated_column='plain', a colum
 Each of the five layer modules imported alone in a fresh interpreter (scratch), project modules
 loaded, by package:
 
-| Module | At `f1b8d02` | At this commit |
+| Module | At `f1b8d02` | At `3f51939` |
 |---|---|---|
 | `Datastore.SQL.ShardedPool` | `ObjectFactories` (package, `base`); `config`, `config.defaults`; `MetadataConcepts` 6 (`MetadataConcepts`, `.GkSourcePolicy`, `.QuadSourcePolicy`, `.store_tag`, `.tolerance`, `.version`); `utilities` | `ObjectFactories` (package, `base`); `config`, `config.defaults`; `utilities`; `Datastore.contract` |
 | `Datastore.SQL.Datastore` | `ObjectFactories` (package, `base`); `config`, `config.defaults`; `utilities` | the same, and `Datastore.contract` |
@@ -310,6 +310,11 @@ identifier columns and the words `source`, `response`, `validated`, `label`, `mo
   169, 715, 733; the payload key `"version"` at 745, the prepended column) — **contract / layer's
   prepended column**; `value` (270, 873) — **generic English**; `config` (locals 863–864) —
   **generic**.
+- **`schema.py`** *(added at the orchestrator's review; the scan above did not list it)*:
+  `version` (the module and `build_schema` docstrings; the registration key `"version"` at 117
+  and the prepended column's name at 121) — **contract / layer's prepended column**; `validated`
+  (the module docstring and `_declared_validated_column`'s, naming the new key) — **layer
+  vocabulary**.
 - **`ClientPool.py`, `store_reader.py`**: none.
 - **`store_inventory.py`**: the class list and its comments (100–142: every class name,
   `CosmologyModels`, `cosmology_type`), the module docstring (line 1), and the `Parent` and
@@ -433,7 +438,7 @@ No `UNINTENDED DRIFT`.
 ## The deliberate-breakage record
 
 **How each was run.** Code and tests were staged; each mutation was made in the working tree by a
-scratch script and its diff taken with `git diff -- <file>` against the index (this commit's
+scratch script and its diff taken with `git diff -- <file>` against the index (`3f51939`'s
 tree), so `git apply` replays it from a clean checkout. For each, in `bash`: the run, `git apply -R
 --check` and `git apply -R`, then `git apply --check` (forward) on the restored tree; all passed
 and `git diff` was empty after each. None is committed. Unmutated, the modules run below pass.
@@ -578,7 +583,7 @@ Why: the pool's comparison of owned serials is a backstop no test there reaches.
 
 With `None` on both sides the comparison passes, and no test builds a replica answer whose model
 serial agrees but whose value serials differ. The same was true of `_value_serials` at `f1b8d02`:
-the detail text "its value rows have serials" appears in no test before this commit.
+the detail text "its value rows have serials" appears in no test before `3f51939`.
 `test_the_pool_checks_each_answer_through_the_hook` now pins it.
 
 ```diff
@@ -641,7 +646,7 @@ index 18b0dd6..1f324e9 100644
 
 ## Observations not acted on
 
-- **The pool's owned-serials check had no test before this commit** (breakage (v)). It is a
+- **The pool's owned-serials check had no test before `3f51939`** (breakage (v)). It is a
   second check behind the actors' own store; `test_declared_facts` now pins it on a stand-in pool.
 - **The recompute's refusal at the second comparison** catches a `revalidate` that claims `True`
   without writing (breakage (iv-a)): the shards still differ, and the open refuses. Only a
