@@ -1446,6 +1446,14 @@ They stay in §3 and in the index.
 
 *The store* `var/datastores/datastore-generic-09-rehearsal.sqlite` is throwaway, and the user
 retires it with `store retire`.
+- *Retired by the user, 2026-10-06 (completed 20:21:22), at `f58c785`.* The first attempt was
+  refused, and nothing was written or deleted. A sidecar made by `store create` records no
+  fingerprint, and the note's §4.2 named only `store create`.
+- The orchestrator then ran `store fingerprint --write`, which recorded
+  `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`.
+- The retirement's fresh read-only fingerprint matched it, and the primary and its four shards
+  were deleted. The sidecar is the tombstone.
+- A future note that has a store created for retirement should name both steps.
 
 ---
 
