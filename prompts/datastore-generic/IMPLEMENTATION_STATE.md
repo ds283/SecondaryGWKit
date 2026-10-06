@@ -1,7 +1,7 @@
 # datastore-generic campaign — implementation state
 
 **Last updated:** 2026-10-06 · **Status: IN PROGRESS — 8 of 9 prompts landed (01–08).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
-written. Prompts 01–08 are written; 09 is held on the prompts before it. The user took U1–U4
+written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
 
@@ -47,7 +47,12 @@ recommended:**
 recommended:** for 07 (2026-10-06), a table whose rows belong to another's declares the column
 naming its owner; for 08 (2026-10-06), the inventory's order is derived from a declarative
 `inventory_spec` per factory, roots first, and the polymorphic cosmology reference is declared in
-the referencing `Parent`.
+the referencing `Parent`. For 09 (2026-10-06), four choices:
+- `config.defaults` is allow-listed, where a constant of the layer's own was recommended;
+- `utilities` is allow-listed;
+- 07's and 08's per-file name tests are folded into the guard;
+- rule 9 is closed on fixtures and by one rehearsal rebuild at the review, README §3's one
+  exception.
 
 ---
 
@@ -63,7 +68,7 @@ the referencing `Parent`.
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | `6646b06` | [log](logs/08-derive-the-inventorys-class-list.md) |
-| 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
+| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1279,8 +1284,8 @@ The checks:
 | **F4** | 07 | the version and tag tables per U4 (`Datastore/contract.py`; the version object built by the version factory; `MetadataConcepts` no longer imported); the `owned_serials` hook (`_value_serials` gone); project names out of `ShardedPool`'s code, comments and messages | C1 #1, #4, #7, #8 | ✅ |
 | **I1** | 08 | the inventory's class list and order derived, from the parents each factory declares in an `inventory_spec`, roots first (the user, 2026-10-06; foreign keys miss nine of them) | C1 #12 | ✅ |
 | **I2** | 08 | the polymorphic cosmology reference declared by the client, in the referencing `Parent`'s type map (the user, 2026-10-06) | C1 #13 | ✅ |
-| **K1** | 09 | a test that the generic layer names no registry table and imports no client package | §C | ⬜ |
-| **K2** | 09 | every suite; README §5 rule 9's closing verification | — | ⬜ |
+| **K1** | 09 | a test that the generic layer names no registry table and imports no client package: `test_layer_is_generic`, over every file of the layer, derived; `config.defaults` and `utilities` allow-listed, and 07's and 08's per-file tests folded in (the user, 2026-10-06) | §C | ⬜ |
+| **K2** | 09 | every suite; README §5 rule 9's closing verification: fixtures in the prompt, and one rehearsal rebuild at the review compared with `dbd8a51`'s `39809dca…` (the user, 2026-10-06; README §3's exception) | — | ⬜ |
 
 ---
 

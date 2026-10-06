@@ -2,10 +2,10 @@
 
 **Written:** 2026-10-04 on branch `datastore-generic-plan`, from `handover-remedial` at `dbd8a51`
 (the audit's tree), committed on `a6c8f39`, which changes no file the audit cites, by Claude Opus 5.5, from the audit [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)
-and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–08 are
+and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–09 are
 written**; their tasks are fixed by §6.1 and the audit alone (04 was written on 2026-10-04, after
-03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07 and 08 on 2026-10-06, each after the
-prompt before it landed and was reviewed). **09 is held** on the prompts before it (§2).
+03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07, 08 and 09 on 2026-10-06, each after
+the prompt before it landed and was reviewed).
 
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
@@ -84,7 +84,7 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 06 | [`06-give-the-layer-its-registry.md`](06-give-the-layer-its-registry.md) | Audit C1 rows 9, 10, 11, 14 and the `config.sharding` import. `ShardedPool`, the actor, `store_reader` and `store_inventory` are given the factory registry instead of importing `Datastore._factories`; the inventory reads the replicated set from the store's primary instead of `config.sharding` (*amended 2026-10-05*, the user's decision, §6.2). `_factories`, the drop groups and `ClientPool`'s batch sizes move to `config/datastore.py` (U2); the layer is given the tables to drop, and `_drop_order` is replaced by an order derived from foreign keys. | **written** 2026-10-05; after 05 |
 | 07 | [`07-declare-the-replication-facts-in-the-factories.md`](07-declare-the-replication-facts-in-the-factories.md) | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is; *amended 2026-10-06*, the user's decision, §6.2: through the foreign key an owned table declares); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **written** 2026-10-06; after 06 |
 | 08 | [`08-derive-the-inventorys-class-list.md`](08-derive-the-inventorys-class-list.md) | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys (*amended 2026-10-06*, the user's decision, §6.2: from the parents each factory declares in an `inventory_spec`, roots first, since foreign keys miss nine of them); the polymorphic cosmology reference declared by the client (the user, 2026-10-06: in the referencing `Parent`). | **written** 2026-10-06; after 07 |
-| 09 | `09-keep-the-layer-generic.md` | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9. Closes the campaign. | **held** on 01–08 |
+| 09 | [`09-keep-the-layer-generic.md`](09-keep-the-layer-generic.md) | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9 (*2026-10-06*, the user's choices, §6.2: `config.defaults` and `utilities` allow-listed; 07's and 08's per-file name tests folded into the guard; rule 9 checked on fixtures in the prompt and by one rehearsal rebuild at the review, §3). Closes the campaign. | **written** 2026-10-06; after 08 |
 
 **Why 04 was written after 03.** Its task was fixed: the audit's G4 found the only store that
 would meet it, the A3 baseline, already unreadable at `HEAD` for other reasons. It edits
@@ -115,8 +115,11 @@ fingerprint, the whole inventory, the report and every `resolve()` at both trees
 that foreign keys cannot order the inventory, and put three choices of method to the user,
 recorded in §6.2.
 
-**Why 09 is held.** Its charter above is fixed and cannot drift to fit what 01–08 find. What
-waits is its method.
+**Why 09 was written after 08.** Its guard checks the layer 01–08 left, so what it would find
+could not be known before 08 landed. Its test plan was measured the same way, against the tree 08
+left (`3ff1c80`): the guard found ten hits at three sites, none of them project knowledge. The
+measurement also checked rule 9 on fixtures, from a store written at `dbd8a51`. Writing it put
+four choices of method to the user, recorded in §6.2. One of them adds the exception in §3.
 
 **Order.**
 - 01 → 02: both edit factory refusals and their test modules overlap.
@@ -134,6 +137,16 @@ The A3 baseline (`var/datastores/handover-A3-baseline-lambdacdm`) was readable o
 that wrote it (audit G4). It was retired by the user on 2026-10-04 (completed 21:31:59) with `store retire` run at `81c0a9a`, the tree whose fingerprint
 format matched its sidecar's. Its sidecar is the tombstone. No store under `var/` now holds an
 old-store shape.
+
+**The one exception (the user, 2026-10-06, for 09's closing verification; §6.2).** The
+orchestrator's review of 09 runs one rehearsal build:
+- the same command as a3-v2-readiness-07's reference, which ran at `dbd8a51`;
+- through the run registry, detached;
+- into a **new** store, `var/datastores/datastore-generic-09-rehearsal.sqlite`.
+
+Its fingerprint is compared with the reference's, `39809dca…`. It opens no existing store, and
+the user retires the new one afterwards (`store retire` is run by a person). Prompts open nothing
+under `var/`, as before.
 
 **Before touching anything,** run `python -m RunRegistry list` and report anything `running`.
 
@@ -194,6 +207,16 @@ internals are the implementing prompt's to design.
     self-reference and a cycle, each `ValueError` naming the classes; `ParentSet` refuses a
     polymorphic member; `read_inventory` derives the order after `open_read_only` has checked the
     registry against the store.
+- **09 ships** the guard that keeps the layer generic. *Named 2026-10-06 (prompt 09, written):*
+  - `Datastore/tests/test_layer_is_generic.py`: `layer_files()`, the layer's modules, derived (every
+    module under `Datastore/` but its tests and the client's factories, with
+    `ObjectFactories/base.py`, and `RayTools/`); the forbidden vocabulary (the registry's tables,
+    class names and identifier columns, less the layer's own words; the project's packages; 07's
+    flag phrases and 08's cosmology names and fragments); `import_allowed`, the allow-list (the
+    standard library, `ray`, `sqlalchemy`, the layer's own modules, `config.defaults` and
+    `utilities`);
+  - 07's `TestNoProjectNameInThePool` and 08's two per-file name and import tests are gone, folded
+    into it.
 
 ## 5. The rules this campaign runs under
 
@@ -344,6 +367,39 @@ rows 12 and 13):
 
   This amends §2's "derived from the registry and foreign keys": the order is derived from the
   registry and the parents its factories declare.
+
+*Four choices of method for 09, taken by the user on 2026-10-06.* Three were taken as
+recommended. The first was not, and the record says so.
+- **`config.defaults` is allow-listed** (not as recommended). `ShardedPool` and `ProfileAgent`
+  size the layer's own text columns with `DEFAULT_STRING_LENGTH` (256), imported from the client's
+  configuration. The guard allows that import and no other module of `config`.
+  - **Recommended, not taken:** a constant of the layer's own in `Datastore/contract.py`, with the
+    same value, so that the `CREATE TABLE` text is unchanged and the layer imports nothing from
+    `config/`.
+- **`utilities` is allow-listed** (as recommended). `Datastore.py`, `ProfileAgent` and
+  `RayWorkPool` import `WallclockTimer` and `format_time` from it. It is a shared helper
+  importing only the standard library, and it knows no table.
+  - **Rejected:** moving the two helpers into the layer and re-exporting them from `utilities`.
+    The layer would then import only the standard library, `ray` and `sqlalchemy`, but at the cost
+    of moving code for no behaviour.
+- **07's and 08's per-file name tests are folded into the guard and deleted** (as recommended),
+  so that what the layer may not name is defined once. Their vocabulary, the union of the two,
+  is checked in every file of the layer.
+  - **Rejected:** keeping them beside the guard, which would define the vocabulary three times,
+    free to drift apart.
+- **Rule 9's closing check is done on fixtures in the prompt, and by one rehearsal rebuild at the
+  review** (as recommended, after the user asked what the rebuild adds). The fixtures write their
+  rows with SQL, not through the factories, so they show that the schema and the read path are
+  unchanged, but not what the code writes.
+  - The prompts that touched the write path are 01–02 (handlers in factory build paths), 03 (the
+    check at open) and 07 (the replicated write's version row and owned serials). Nothing has run
+    that path end to end since `dbd8a51`.
+  - a3-v2-readiness-07's reference rehearsal ran at exactly `dbd8a51`, and its fingerprint
+    (`39809dca…`) is on record. No compute code has changed since. The same command at the final
+    tree should reproduce that fingerprint: about 13 minutes on 6 CPUs, run once and detached.
+  - This adds the one exception in §3.
+  - **Rejected:** fixtures only, which leaves the write path checked only by the stand-in pool's
+    tests.
 
 ## 7. Baselines
 
