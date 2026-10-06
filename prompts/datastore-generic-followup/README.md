@@ -152,7 +152,7 @@ change is [`measure/rough_change.diff`](measure/rough_change.diff), made in a sc
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | [`01-refuse-a-drop-that-leaves-references.md`](01-refuse-a-drop-that-leaves-references.md) | §6.1 decision 1. A read-write pool refuses `drop_tables` that leave any other table naming a dropped one, by foreign key or by a declared parent, transitively. The refusal names the dropped tables and every table that must go with them, before the primary is opened. Closes `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`. | Opus | **written** 2026-10-06 |
+| 01 | [`01-refuse-a-drop-that-leaves-references.md`](01-refuse-a-drop-that-leaves-references.md) | §6.1 decision 1. A read-write pool refuses `drop_tables` that leave any other table naming a dropped one, by foreign key or by a declared parent, transitively. The refusal names the dropped tables and every table that must go with them, before the primary is opened. Closes `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`. | Opus | **landed** 2026-10-07 (`fee1fbf`) |
 | 02 | [`02-resolve-an-absent-parent-as-none.md`](02-resolve-an-absent-parent-as-none.md) | §6.1 decision 2. `resolve()` gives `None` for a key parent whose value is `None`, as `_resolve_reference` does for a member. Closes `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`. | Sonnet | **written** 2026-10-06 |
 | 03 | [`03-state-each-closed-store-prefix-once.md`](03-state-each-closed-store-prefix-once.md) | §6.1 decision 3. `_read_closed_store` raises the bare reason, and each of its four callers states its prefix once; its `verb` parameter goes. Closes `[04-closed-store-refusals-repeat-their-prefix]`. | Sonnet | **written** 2026-10-06 |
 

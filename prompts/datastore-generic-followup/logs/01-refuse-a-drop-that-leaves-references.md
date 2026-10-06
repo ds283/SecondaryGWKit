@@ -11,7 +11,7 @@ Opus 5.5 · **Date:** 2026-10-07 · **Base:** `3e1e7f0`, clean (code as at `6de6
   `test_reconcile_at_open.TestPruningAfterRepair.test_an_interrupted_store` re-fixtured.
 
 No stop condition fired. Closes `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`
-(`datastore-generic`). Narrows nothing. Opens nothing. Index 107 → 106. The commit is this commit.
+(`datastore-generic`). Narrows nothing. Opens nothing. Index 107 → 106. The commit is `fee1fbf`.
 
 ## What shipped
 
@@ -190,7 +190,7 @@ showed nothing `running`.
 
 ## The deliberate-breakage record
 
-Each diff is exactly as applied, against this commit's tree. Each was checked in `bash` with
+Each diff is exactly as applied, against `fee1fbf`'s tree. Each was checked in `bash` with
 `git apply --check` before and `git apply -R --check` after applying, then reversed with
 `git apply -R`; `git status` afterwards showed only this prompt's changes. The tests named in the
 prompt are in bold.

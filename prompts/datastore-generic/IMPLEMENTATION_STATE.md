@@ -1578,7 +1578,7 @@ retires it with `store retire`.
     8 of the 10 groups are refused alone.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 01, which carries out
     the decision.
-  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 01; this commit).** A
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 01; `fee1fbf`).** A
     read-write `ShardedPool` refuses `drop_tables` that would leave another table naming rows of
     a dropped one, before the primary is created or opened and before any actor exists, naming the
     tables given (sorted) and every table that must go with them (registry order). The rule is
