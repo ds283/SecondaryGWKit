@@ -68,7 +68,7 @@ the referencing `Parent`. For 09 (2026-10-06), four choices:
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | `6646b06` | [log](logs/08-derive-the-inventorys-class-list.md) |
-| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ✅ 2026-10-06 (K2: fixture half; the rebuild is the review's) | this commit | [log](logs/09-keep-the-layer-generic.md) |
+| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ✅ 2026-10-06 (K2: fixture half; the rebuild is the review's) | `e980b6e` | [log](logs/09-keep-the-layer-generic.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -87,7 +87,7 @@ measurement of 07's test plan and of the check at open in
 [`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-06, used for 08), with the
 measurement of 08's test plan and of the inventory, the report and `resolve()` in
 [`orchestrator/measure-08/`](orchestrator/measure-08/);
-[`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) (2026-10-06, not yet used), with the
+[`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) (2026-10-06, used for 09), with the
 measurement of 09's test plan, of the guard on the layer and of rule 9 on fixtures from
 `dbd8a51` in [`orchestrator/measure-09/`](orchestrator/measure-09/).
 
@@ -1255,6 +1255,158 @@ The checks:
 - 08's log: a factory joins the inventory by declaring `inventory_spec()`, and a client with a
   polymorphic reference declares its own type map, as `cosmology_types.py` does.
 
+**Orchestrator review of prompt 09 (2026-10-06).** Dispatched from `c96e56d` to one Sonnet
+subagent. Reviewed against its commit `e980b6e`, with nothing landed after it. **Every check of the
+note's §3 passed but E7**, and acceptance 1–3 are met. No stop condition fired, and the agent ran
+its suites in the foreground. E7, the rehearsal rebuild of README §3's exception, runs after this
+record (note §4.2), so K2 stays at its fixture half and the campaign is not yet closed.
+
+*At dispatch.* The note's gate held at `c96e56d`:
+- the tree was clean, and the only worktree was this checkout;
+- `3ff1c80..c96e56d` touches only `prompts/`;
+- the registry held 16 runs (14 finished, 2 `unknown`, none `running`), and no Ray process was up;
+- the venv imported `scipy.sparse.linalg`.
+
+The baselines, serially at `c96e56d`, at load 6–23, match 08's review:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+- RunRegistry 280, OK; ComputeTargets 693, OK;
+- Datastore 718 (150 + 177 + 200 + 191), OK. No committed measurement file tripped a grep test.
+
+The index held 108. The pre-images of the note's §1.6 five files were recorded, and `c96e56d` and
+`dbd8a51` were exported to the scratchpad. The `dbd8a51` side of check 8 was measured before
+dispatch:
+- both fixture stores built with `dbd8a51`'s code: 6 files, 164 tables, 286 rows, kept with
+  their checksums;
+- their fingerprints read at `dbd8a51`, digests `6576b85d…` and `d9328538…`, and their whole
+  inventories; the reads left the checksums unchanged;
+- a read-write open of a copy of the full store through `dbd8a51`'s stand-in pool, under the
+  store's own label (`2025.1.1`) and a new one (`standin`). Neither raised, and each printed 15
+  lines. The own label changed no file; the new one wrote version row 3.
+
+The checks:
+1. **Scope.** 10 files, all on the prompt's §6 list. The diff over `docs/` (but `OPEN_ISSUES.md`),
+   `config/`, `utilities.py`, `main.py`, `extract_*.py`, `RunRegistry/`, `tools/`, `var/`,
+   `orchestrator/`, every factory, `RayTools/`, and every module of the layer but
+   `store_inventory.py`, `replication.py` and `shard_paths.py`, is empty.
+   - `OPEN_ISSUES.md` also gains one sentence in §1.18's introduction, saying that 09 closed the
+     issue, as 06's closing did there. It is in an allowed file.
+2. **E1, by running.**
+   - The guard passes at `e980b6e`, and `layer_files()` gives the 17 files.
+   - Copied into the export of `c96e56d`, it fails `test_no_code_name` and
+     `test_no_string_or_docstring` with exactly the 10 hits, and nothing else.
+   - The allow-list is the prompt's four groups, each with its reason. No other entry exists.
+   - **The vocabulary.** Computed from the two pre-images, the deleted tests' union is 238 words
+     (07's 232, 08's 48); the guard's 234 words all lie inside it. The four words of the union not
+     in the guard are the prompt's own exclusions:
+     - `RayTools` and `config`, the packages §2 removes (the layer, and the import check);
+     - `store_tag` and `version`, which 08's class-name list held, and which `LAYER_WORDS` removes
+       as the contract's two tables.
+
+     The 07 pre-image's `REPO_ROOT` resolves against its own file, so its package set was
+     recomputed against the repository root.
+3. **E3, by `ast` against the pre-images, docstrings stripped.**
+   - `store_inventory.py`: only `read_records` changes. With the `parent` names on the eight
+     lines renamed back, the whole module dumps identically, docstrings included.
+     - A rename-back of every `parent` does not dump identically. `read_records` already used
+       `parent` in its `for field, parent in declared` loop (`:555`); the nested `_reference`
+       takes it as a parameter (`:691`), and the loop at `:712` rebinds it.
+     - Nothing reads the `:555` binding after `:607`, so the rename shadows nothing, as the log
+       says.
+   - `replication.py` (29 units) and `shard_paths.py` (7): every function and module statement
+     dumps identically.
+4. **E2, the tests, by `ast`.**
+   - In `test_declared_facts.py`, the only things gone are:
+     - `TestNoProjectNameInThePool` (its `setUpClass` and three methods);
+     - `_named` and `_registry_names`;
+     - the module statements `REPO_ROOT`, `POOL_FILE`, `_WORD`, `_LAYER_WORDS`,
+       `_PROJECT_PACKAGES` and `_FLAG_PHRASES`;
+     - the imports `ast`, `re`, `sys` and `tokenize`.
+
+     Every other unit dumps identically.
+   - In `test_inventory_declarations.py`, the only things gone are the two methods,
+     `STORE_INVENTORY`, and the imports `ast`, `io` and `tokenize`. Every other unit, among them
+     `PROJECT_PACKAGES`, `_run` and the two load tests, dumps identically.
+   - No module-level name is left unused in either module or in the guard.
+   - All eight new methods are in `test_layer_is_generic.py`, and the log names each.
+5. **E1, by reading.** `test_layer_is_generic.py` was read in full.
+   - Each failure lists `file:line word`, for every file at once.
+   - `test_the_allow_list` asserts five acceptances and five refusals.
+   - Empty input is pinned at module level. The derived files must hold audit §C's list as a
+     literal, and the vocabulary must hold known tables, columns and packages and no `LAYER_WORDS`.
+   - The module, `test_declared_facts` and `test_inventory_declarations`: 57 tests, OK.
+6. **The deleted tests' coverage.** One mutation per deleted test, at `e980b6e`, each against the
+   guard:
+   - `BackgroundModel` in a `ShardedPool.py` `RuntimeError` message (07's string-and-name method):
+     `test_no_string_or_docstring`, `ShardedPool.py:213`;
+   - "source or response flag" in a `ShardedPool.py` comment (07's comment method):
+     `test_no_comment`, `ShardedPool.py:65`;
+   - `from MetadataConcepts import store_tag` in `ShardedPool.py` (07's import method):
+     `test_every_import_is_allowed`;
+   - `GkSource` in a `store_inventory.py` comment (08's (vii)): `test_no_comment`,
+     `store_inventory.py:236`;
+   - `import CosmologyModels` in `store_inventory.py` (08's import method):
+     `test_every_import_is_allowed` and `test_no_code_name`.
+7. **E5, the pins.** The nine diffs were extracted from the log and replayed with `git apply` in
+   `bash`, with `--check` and `-R --check` first. Each failed exactly the tests the log gives:
+   - (i), (vi): `test_no_comment`; (ii): `test_no_code_name`;
+   - (iii): `test_every_import_is_allowed` and `test_no_code_name`; (iv):
+     `test_every_import_is_allowed`;
+   - (v), (vii): `test_no_string_or_docstring`; (viii): `test_the_derived_files_hold_the_audits_list`;
+   - (ix): `test_the_allow_list` alone, with two failing subtests.
+
+   The tree was clean after each `git apply -R`, with no `Datastore/scratch_module.py` left.
+8. **E4, the probe**, from the scratchpad, at `e980b6e` against the `dbd8a51` side taken before
+   dispatch:
+   - **(a)** both fixture stores built at `e980b6e`: 6 files, 164 identical tables, 286
+     identical rows, `sqlite_master` the same, 0 differences;
+   - **(b)** the `dbd8a51`-built stores read at `e980b6e`:
+     - the fingerprints, with `taken` removed, are `cmp`-identical to those read at `dbd8a51`:
+       `6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759` (7507 bytes) and
+       `d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f` (4484 bytes);
+     - the whole inventories are `cmp`-identical (29954 and 12301 bytes);
+     - the store checksums are unchanged;
+   - **(c)** a read-write open of fresh copies through `e980b6e`'s stand-in pool, under both labels:
+     - nothing raised;
+     - the reconciliation, the prune (empty), the version object and the 15 printed lines are
+       `SAME`;
+     - under the store's own label no file changed;
+     - under the new label the files written are byte-identical to `dbd8a51`'s;
+     - only `kwargs` differs, as 06 made it.
+9. **E6.**
+   - The generic-layer issue is in §4, with a dated "Closed" line naming the guard, and gone from
+     §3 and the index.
+   - The index holds 107 by counting, matching its header.
+   - README §4 names the guard module, `layer_files()`, `import_allowed` and the allow-list.
+   - This board has the §1 row, K1 ✅, K2 "✅ fixture half; the rebuild at the review", and §5.10.
+10. **Suites**, serially at `e980b6e`, load 6–9:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280, OK; ComputeTargets 693, OK;
+    - Datastore 721 (147 + 183 + 200 + 191), OK.
+
+    No flake appeared. `black --check` is clean on the six Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `e980b6e` in §1, §4, §5.10, README §4 and the log.
+- The log did not record that mutation (vii) names `BackgroundModel` in a module constant, where
+  the prompt says the docstring. It is now an IMPLEMENTATION CHOICE in the log's deviations,
+  marked as added at review. The same test scans both.
+- This board's note list marks `orchestrator/prompt-09.md` used.
+
+*Kept as is.*
+- **The import check reads a `from` import's module, not the names it imports.** So
+  `from Datastore.SQL import ObjectFactories` and `from Datastore import tests` pass it.
+  - The deleted 07 test had the same rule, so no coverage was lost.
+  - `ObjectFactories/__init__.py` is empty, so importing the package loads no factory.
+  - Any use of a factory module through it names a registered class, which `test_no_code_name`
+    catches.
+  - The check also refuses more than it must: `from .ObjectFactories import base` is refused,
+    though `import Datastore.SQL.ObjectFactories.base` is allowed. Nothing in the layer uses the
+    first form.
+- `store_tag` and `version` are allowed anywhere in the layer, where 08's test forbade both in
+  `store_inventory.py`. That is §2's "less `LAYER_WORDS`", which defines the vocabulary once.
+
+*Handed on.* Nothing: 09 is the campaign's last prompt. E7 follows (note §4.2).
+
 ---
 
 ## 2. Items
@@ -1559,7 +1711,7 @@ The checks:
     in code, comments or docstrings (pinned by `Datastore/tests/test_inventory_declarations.py`).
     Both fingerprints, both whole inventories, every `resolve()`, `main.py --inventory` and every
     refusal that exists today are byte-identical to `6ad58bb`'s (the log).
-  - **Closed (2026-10-06, prompt 09, this commit).** Every C1 row is gone (06–08), and the guard
+  - **Closed (2026-10-06, prompt 09; `e980b6e`).** Every C1 row is gone (06–08), and the guard
     keeps it so. `Datastore/tests/test_layer_is_generic.py` derives the layer's files from the
     filesystem (`layer_files()`: 17 today), checks each one's code names, strings and docstrings,
     and comments against the registry's tables, class names and identifier columns, the project's
@@ -1568,7 +1720,7 @@ The checks:
     modules (of the factories only `base`), `config.defaults` and `utilities` (`import_allowed`;
     the user's choices, 2026-10-06). On today's layer it found ten hits at three sites, none of
     them project knowledge (a local `parent_serial`, the word "tolerance" in one docstring and
-    the path `tools/` in another), and those three sites were fixed in this commit. Nine
+    the path `tools/` in another), and those three sites were fixed in `e980b6e`. Nine
     deliberate breakages each fail a named test (the log). Rule 9 on fixtures holds, byte for
     byte, against `dbd8a51` (the log); the rehearsal rebuild is the review's.
 
@@ -1711,9 +1863,9 @@ Measured serially on the staged tree. The Datastore suite was run in four groups
 adds one test to `test_inventory_declarations` (`test_the_report_renders_both_cosmology_types`),
 and tightens one assertion. Datastore `[g-o]` then runs 177, OK, and the suite totals **718**.
 
-### 5.10 After prompt 09 (2026-10-06, this commit)
+### 5.10 After prompt 09 (2026-10-06, `e980b6e`)
 
-Measured serially on the working tree before the commit, which holds only this commit's change. The
+Measured serially on the working tree before the commit, which holds only `e980b6e`'s change. The
 Datastore suite was run in four groups of modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`,
 `[p-r]`, `[s-z]`); the four counts are 147, 183, 200 and 191 (before: 150, 177, 200, 191).
 

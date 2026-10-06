@@ -208,7 +208,7 @@ internals are the implementing prompt's to design.
     polymorphic member; `read_inventory` derives the order after `open_read_only` has checked the
     registry against the store.
 - **09 ships** the guard that keeps the layer generic. *Named 2026-10-06 (prompt 09, written);
-  shipped 2026-10-06 (prompt 09, this commit), as named:*
+  shipped 2026-10-06 (prompt 09, `e980b6e`), as named:*
   - `Datastore/tests/test_layer_is_generic.py`, eight tests: `layer_files()`, the layer's modules,
     derived from the filesystem (every module under `Datastore/` but its tests and the client's
     factories, with `ObjectFactories/base.py`, and `RayTools/`; 17 today); the forbidden

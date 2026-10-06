@@ -10,7 +10,7 @@ Claude Sonnet 5.5 · **Date:** 2026-10-06 · **Base:** `c96e56d` (code as at `3f
 - **K2:** every suite, and README §5 rule 9 on fixtures against `dbd8a51`: holds, byte for byte.
 
 No stop condition fired. Closes `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]`.
-Narrows nothing and opens nothing. The index goes from 108 to 107. The commit is this commit.
+Narrows nothing and opens nothing. The index goes from 108 to 107. The commit is `e980b6e`.
 
 ## What shipped
 
@@ -111,8 +111,8 @@ The eight tests of `test_layer_is_generic.py`, listed above. No other test is ed
   tree's six changed files added to a copy of the index, in the scratchpad), so that the diff of a
   mutation to `test_layer_is_generic.py`, which is not yet committed, shows the mutation alone. The
   real index was not touched.
-- **IMPLEMENTATION CHOICE: §3.3 ran from the checkout** as the "this commit" tree, which holds
-  this commit's code; the records edited afterwards are not code. `dbd8a51` is an export in the
+- **IMPLEMENTATION CHOICE: §3.3 ran from the checkout** as `e980b6e`'s tree, which holds
+  `e980b6e`'s code; the records edited afterwards are not code. `dbd8a51` is an export in the
   scratchpad (`git archive`, with `venv` symlinked).
 - **IMPLEMENTATION CHOICE: mutation (ix) ran the guard module only.** The prompt requires that it
   fail `test_the_allow_list` and no other test; within the guard module, 7 of 8 pass. Nothing in
@@ -122,6 +122,11 @@ The eight tests of `test_layer_is_generic.py`, listed above. No other test is ed
   `running`. It reads `var/runs/`, the registry's own listing; no store under `var/` was opened,
   written or copied.
 - No `STRUCTURALLY REQUIRED` and no `UNINTENDED DRIFT` deviation.
+- *Added at the orchestrator's review (2026-10-06).* **IMPLEMENTATION CHOICE, not recorded at
+  landing: mutation (vii) names `BackgroundModel` in a module constant** (`KIND`), where the
+  prompt's §3.6 says the new file's docstring. Both are string constants, which
+  `test_no_string_or_docstring` scans alike, so the mutation shows what the prompt asked: a module
+  nobody listed is checked.
 
 ## Verification performed
 
@@ -187,7 +192,7 @@ orchestrator's `m4_*.py` and `checksums.py`, run with the tree as cwd. Nothing o
   The whole inventories, normalised for the polymorphic field, are `cmp`-identical (29954 and
   12301 bytes: the paths here are four characters longer than the orchestrator's). The store's file
   checksums before and after the two reads are identical. At `dbd8a51` `read_inventory` took no
-  registry; at this commit it takes `config.datastore.factories`.
+  registry; at `e980b6e` it takes `config.datastore.factories`.
 - **(c) A read-write open** of a copy of the `dbd8a51` full store through each tree's stand-in
   pool, with the random seed fixed, under the store's own label (`2025.1.1`) and under a new one
   (`standin`): neither tree raised. The reconciliation (14 tables compared, nothing repaired, both
@@ -206,7 +211,7 @@ unchanged, and only a build exercises the write path that 01–03 and 07 touched
 
 ## The deliberate-breakage record
 
-Each mutation is a diff exactly as applied, generated from a clean tree at this commit; `git apply
+Each mutation is a diff exactly as applied, generated from a clean tree at `e980b6e`; `git apply
 --check` and `git apply -R --check` passed for each, in `bash`, and `git status` was clean (the
 six changed files only, before the commit) after each `git apply -R`. The module under test is
 `Datastore.tests.test_layer_is_generic`. The mutations are never committed.
