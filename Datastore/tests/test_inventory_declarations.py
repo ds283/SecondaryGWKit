@@ -9,7 +9,7 @@ polymorphic parent through the type map its referencing factory declares. These 
    not a plain dependency sort;
 2. on hand-built registries: a cycle and a parent with no spec are refused, by name; a polymorphic
    parent's classes are built before it; a malformed ``Parent`` is refused;
-3. ``resolve()`` goes through the declared type map;
+3. ``resolve()`` and the report go through the declared type map;
 4. ``store_inventory`` names no project package or table and loads none.
 
 No Ray; stores are built in temporary directories; nothing under ``var/``.
@@ -42,6 +42,7 @@ from Datastore.store_inventory import (
 )
 from Datastore.tests.real_store_fixtures import build_full_store
 from config.datastore import factories as _factories
+from tools.inventory_report import format_inventory_report
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STORE_INVENTORY = REPO_ROOT / "Datastore" / "store_inventory.py"
@@ -247,7 +248,7 @@ class TestRefusals(unittest.TestCase):
         }
         for case, kwargs in cases.items():
             with self.subTest(case=case):
-                with self.assertRaises(ValueError):
+                with self.assertRaisesRegex(ValueError, r"^Parent\('c'\): "):
                     Parent("c", **kwargs)
 
     def test_a_polymorphic_member_of_a_parent_set_is_refused(self):
@@ -364,6 +365,34 @@ class TestResolve(unittest.TestCase):
                 inventory[name].parent_types["cosmology"],
                 ("cosmology_type", expected),
             )
+
+    def test_the_report_renders_both_cosmology_types(self):
+        """The report resolves a polymorphic parent through ``ClassInventory.parent_class``, as
+        ``resolve()`` does: every cosmology field of the full store's report is the key of the class
+        its ``cosmology_type`` names. A ``QCD_Cosmology``'s key carries ``T_z_representation``, a
+        ``LambdaCDM``'s does not. Added at the review of prompt 08, whose breakage (iv) the report
+        tests did not catch.
+        """
+        from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+
+        with tempfile.TemporaryDirectory() as tmp:
+            inventory = read_inventory(build_full_store(Path(tmp)).primary, _factories)
+        report = format_inventory_report(inventory, "the-store.sqlite")
+        self.assertNotIn("<unresolved reference>", report)
+        # a type and the cosmology it names sit at one level of a rendered key
+        rendered = re.findall(
+            r"cosmology_type=(\d+), [^{}]*?cosmology=\{([^{}]*)\}", report
+        )
+        self.assertEqual(
+            {int(kind) for kind, _ in rendered},
+            {LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER},
+        )
+        for kind, key in rendered:
+            with self.subTest(cosmology_type=kind, key=key):
+                self.assertIn("omega_m=", key)
+                self.assertEqual(
+                    "T_z_representation=" in key, int(kind) == QCD_EOS_IDENTIFIER
+                )
 
     def test_both_referencing_factories_declare_the_one_map(self):
         from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES

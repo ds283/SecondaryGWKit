@@ -15,7 +15,7 @@ No stop condition fired. Closes nothing. Narrows
 `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` (audit C1 rows 12 and 13: every
 row of C1 is now gone; 09's guard remains). Opens
 `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`. The index goes from 107 to 108. The
-commit is this commit.
+commit is `6646b06`.
 
 ## What shipped
 
@@ -137,6 +137,11 @@ No factory method but `inventory_records` changes.
 - `test_the_full_store_resolves_both_cosmology_types`: on `build_full_store`, `parents["cosmology"]
   is None` and `parent_types` is as declared;
 - `test_both_referencing_factories_declare_the_one_map`: `assertIs` on `COSMOLOGY_TYPES`.
+- *Added at the orchestrator's review, in its follow-up commit:*
+  `test_the_report_renders_both_cosmology_types`, which renders `build_full_store`'s report and
+  checks that every cosmology field is the key of the class its `cosmology_type` names. It pins
+  the gap of breakage (iv) below. The same commit makes `test_a_malformed_parent_is_refused`
+  assert that each message names the column. The module then holds 26 tests.
 
 `TestTheLayerKnowsNoProject`
 - `test_it_imports_no_project_package` (`ast`);
@@ -321,7 +326,7 @@ trees, **byte-identical**:
 
 **How each was run.** The tree was the finished change, uncommitted. A scratch script made each
 mutation in `Datastore/store_inventory.py` and took its diff against the unmutated file, so that
-`git apply` replays it from a clean tree at this commit. Each was run, then the file restored with
+`git apply` replays it from a clean tree at `6646b06`. Each was run, then the file restored with
 `cp`; after all seven the file was `cmp`-identical to the unmutated one. After the commit each
 diff was checked in `bash` with `git apply --check`, and `git apply -R --check` after applying
 it; `git status` was clean after. None is committed. Unmutated, the modules run below pass (67
@@ -481,6 +486,9 @@ Ran 67, **FAILED (failures=1)**: `test_inventory_declarations.TestTheLayerKnowsN
   looks for a resolved `cosmology={` would pin it. Not added: the prompt's test list does not name
   one, and the file `test_inventory_report.py` may be edited only as stated. Not opened as an
   issue: a decision for the orchestrator.
+  *Added at review:* the orchestrator added that test to `test_inventory_declarations.py`
+  (`TestResolve.test_the_report_renders_both_cosmology_types`) in its follow-up commit. Under
+  breakage (iv) it fails too, so the module fails 7 tests where it failed 6.
 - **`tools/inventory_report.py`'s `labelled()` ignores a polymorphic parent's classes.** Harmless
   today, because both cosmology classes are replicated; unchanged from `5fe0ae6` (the prompt's §5).
 - **`INVENTORY_CATEGORIES` and `VALUE_TABLES`** in the tool name project tables. It is a client

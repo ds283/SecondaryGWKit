@@ -62,7 +62,7 @@ the referencing `Parent`.
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
-| 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | this commit | [log](logs/08-derive-the-inventorys-class-list.md) |
+| 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | `6646b06` | [log](logs/08-derive-the-inventorys-class-list.md) |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
@@ -79,7 +79,7 @@ measurement of 06's test plan in [`orchestrator/measure-06/`](orchestrator/measu
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-06, used for 07), with the
 measurement of 07's test plan and of the check at open in
 [`orchestrator/measure-07/`](orchestrator/measure-07/);
-[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-06, not yet used), with the
+[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-06, used for 08), with the
 measurement of 08's test plan and of the inventory, the report and `resolve()` in
 [`orchestrator/measure-08/`](orchestrator/measure-08/).
 
@@ -1080,6 +1080,173 @@ The checks:
   (`test_the_pool_checks_each_answer_through_the_hook`). No test reaches it through a real
   replicated write.
 
+**Orchestrator review of prompt 08 (2026-10-06).** Dispatched from `6ad58bb` to one Sonnet
+subagent. Reviewed against its commit `6646b06`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–6 are met. No stop condition fired, and the agent ran its
+suites in the foreground.
+
+*At dispatch.* The note's gate held at `6ad58bb`:
+- the tree was clean, and the only worktree was this checkout;
+- `5fe0ae6..6ad58bb` touches only `prompts/`;
+- the registry held 16 runs (14 finished, 2 `unknown`, none `running`), and no Ray process was up;
+- the venv imported `scipy.sparse.linalg`.
+
+The baselines, serially at `6ad58bb`, at load 7–24 (a transient spike from system daemons), match
+07's review:
+- AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+- RunRegistry 280, OK; ComputeTargets 693, OK;
+- Datastore 692 (150 + 151 + 200 + 191), OK. No committed measurement file tripped a grep test.
+
+The index held 107. The pre-images of the 29 files of the note's §1.6 were recorded, and `6ad58bb`
+was exported to the scratchpad. The parent side of check 8 was measured there before dispatch:
+- the fingerprints, digests `6576b85d…` and `d9328538…`, the whole inventories, and `resolve()` of
+  all 55 + 18 records (11 entries `"unresolved"`);
+- `main.py --inventory` on a copy of one `build_full_store` primary: 14837 and 14949 bytes (plain,
+  verbose), exit 0, checksums unchanged;
+- the four "has not been built" messages and the three reduced registries' refusals;
+- each factory's `read_records` keywords, recorded by patching `read_records` and calling
+  `inventory_records(None, "T", {}, None)`, normalised so that a `Parent` compares across trees.
+
+The checks:
+1. **Scope.** 35 files, all on the prompt's §6 list. The diff over `docs/` (but `OPEN_ISSUES.md`),
+   `ShardedPool.py`, `Datastore.py`, `schema.py`, `ClientPool.py`, `store_reader.py`,
+   `replication.py`, `shard_paths.py`, `config/`, `main.py`, `extract_*.py`, `RunRegistry/` (but
+   `test_store_fingerprint.py`), `var/` and `orchestrator/` is empty.
+2. **E1, by grep and by running.**
+   - The first §3.2 grep, outside `orchestrator/`, prints the two test literals and their uses and
+     `test_store_fingerprint.py`'s literal and its use, nothing more. The second prints nothing.
+   - `main.py:1207`'s comment is not printed: this `git grep -E` does not honour `\b`. The log
+     says so. The orchestrator's own `measure-08/scripts/` name the removed names, as measurements
+     of the old tree.
+   - `m6_names_left.py` on `store_inventory.py`: 23 hits, from 105. All are the record's
+     `validated` (17), SQLAlchemy's `.label()` and the word "label" in the docstring (2), and the
+     local `tag_serial` (4), as the log classifies them.
+   - `m5_imports.py`: importing `store_inventory` loads `Datastore.contract` alone, as before.
+     `read_inventory` now also loads `ObjectFactories.cosmology_types`, the client's module,
+     through the two factories' hooks. `m5b_read_records_alone.py`: `read_records` alone loaded
+     `CosmologyModels`, `.base` and `.model_ids` at `6ad58bb`, and loads nothing at `6646b06`.
+3. **E2, by `ast` against the pre-images, docstrings stripped.**
+   - **The 21 factories:** in each, `inventory_records` is gone, `inventory_spec` is new, and
+     every other function and module-level statement dumps identically. `base.py` gains only
+     `inventory_spec`.
+   - **`store_inventory.py`:**
+     - gone: `cosmology_classes`, and the module-level `COMPUTE_TARGETS`, `INVENTORY_CLASSES` and
+       `COSMOLOGY`;
+     - new: `InventorySpec` (`keywords`, `dependencies`), `inventory_specs`, `inventory_classes`,
+       `Parent.__post_init__`, `classes` and `class_of`, `ParentSet.__post_init__` and
+       `ClassInventory.parent_class`;
+     - changed: the fields of `Parent`, `ShardRead` and `ClassInventory`, `StoreInventory.resolve`,
+       `read_records`, `_combine` and `read_inventory`;
+     - every other function dumps identically.
+   - **`tools/inventory_report.py`:** only `_Renderer.__init__`, `_Renderer.parent_class`, the
+     import and the two comments.
+   - **In-process, on the real registry:**
+     - the 21 specs' `keywords()` equal, normalised, the keywords the pre-images passed to
+       `read_records` (`cmp`);
+     - `inventory_classes(factories)` equals today's 21 names in order, and the classes are
+       exactly the 21 of the 38 with a spec;
+     - no factory has `inventory_records`, and `COSMOLOGY_TYPES` `is` both factories' map;
+     - each refusal of the prompt's §2 raises `ValueError` with the names: `Parent`'s five
+       malformed forms, a polymorphic `ParentSet` member, a parent or tag table with no spec, a
+       class absent from the registry, a type column that is not a leaf, a self-reference and a
+       cycle. `Parent` stays hashable.
+4. **E4, the tests, by `ast`.** In the six edited files no test method is gone or new. Only
+   `test_only_canonical_formats_a_float` and `test_the_inventory_key_has_no_z_init` change, and
+   the module-level lines are the two `INVENTORY_CLASSES` literals and the `COMPUTE_TARGETS`
+   literal, with their imports. The comment and docstring edits are text only. The 25 new methods
+   are all in `test_inventory_declarations.py`, and the log names each.
+5. **E2, by reading and running.** `test_inventory_declarations.py` was read in full.
+   - The order test pins a literal. The refusal-order test builds a real `build_full_store`
+     primary and asserts the reader's `RuntimeError`, naming `replicated_tables` and
+     `BackgroundModel`.
+   - Each refusal test asserts the exception and the names, but one:
+     `test_a_malformed_parent_is_refused` asserted only `ValueError`. It was tightened at this
+     review (below).
+6. **E3, by running.** The new module, the eight inventory modules the note names, RunRegistry's
+   `test_store_fingerprint` and `test_store_retire`, and `test_qcd_cosmology_inventory_record`:
+   327 tests, OK.
+7. **E5, the pins.** The seven diffs were extracted from the log and replayed with `git apply` in
+   `bash`, `--check` and `-R --check` first. Each failed exactly the tests the log gives:
+   - (i): failures=4, `test_every_class_has_a_record` among them;
+   - (ii): failures=1; (iii): failures=3; (iv): failures=6, all in `TestResolve`;
+   - (v): errors=1, an `IndexError`, in 1.9 s, so the run ends; (vi): errors=1; (vii): failures=1.
+
+   The tree was clean after each `git apply -R`. On (iv) the log is right: `test_inventory_report`
+   and `test_inventory_report_labels` pass while the report prints `<unresolved reference>` for
+   every cosmology field. A pin was added at this review (below).
+8. **The probe**, from the scratchpad, at `6646b06` and at the export of `6ad58bb`:
+   - **the fingerprints**, with `taken` removed, are byte-identical (`cmp`): `build_full_store`'s
+     digest `6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759` (7507 bytes) and
+     `build_real_store`'s `d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f` (4484
+     bytes);
+   - **the whole inventories**, with `parents` normalised for the polymorphic field, are
+     byte-identical (29950 and 12297 bytes). The raw `parents["cosmology"]` is `null` where it was
+     `"cosmology"`, as intended;
+   - **`resolve()`** of all 55 + 18 records is byte-identical (209794 and 7442 bytes);
+   - **`main.py --inventory`** on the kept primary, plain and verbose: stdout (14837, 14949 bytes),
+     stderr (empty) and exit (0) byte-identical, and the store's checksums unchanged. The log's
+     sizes (14844, 14956) are of its own primary, whose path is seven characters longer;
+   - **the refusals**: the four "has not been built" messages and the three reduced registries'
+     exceptions are byte-identical. A registry lacking `BackgroundModel` or `store_tag` still meets
+     the reader's `RuntimeError` first.
+9. **E6.**
+   - The generic-layer issue has a dated "Narrowed" line naming rows 12 and 13, the hook,
+     `InventorySpec`, `inventory_classes` and `Parent`'s type map. It says every C1 row is gone and
+     09's guard remains, and its index hook says so.
+   - `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]` is on §3.1, with its measurement,
+     and in the index.
+   - The index holds 108 by counting, matching its header.
+   - README §4 names `InventorySpec`, `inventory_spec`, `inventory_classes`, `Parent`'s type map
+     and `COSMOLOGY_TYPES`. §1, I1–I2 and §5.9 are written.
+10. **Suites**, serially at `6646b06`, load 7–18:
+    - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped);
+    - RunRegistry 280, OK; ComputeTargets 693, OK;
+    - Datastore 717 (692 + 25; 150 + 176 + 200 + 191), OK.
+
+    No flake appeared. `black --check` is clean on the 31 Python files.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `6646b06` in §1, §3, §5.9, README §4 and the log.
+- README §4's line "with one addition to `Parent`" named an addition the bullet under it does not
+  describe. It now says the last bullet gives the refusals and where the order is derived.
+- **The report's rendering of the polymorphic reference is pinned.** New:
+  `TestResolve.test_the_report_renders_both_cosmology_types`, which renders `build_full_store`'s
+  report and checks that every cosmology field is the key its `cosmology_type` names: a
+  `T_z_representation` for a `QCD_Cosmology`, none for a `LambdaCDM`, and no
+  `<unresolved reference>`. Under breakage (iv) the module now fails 7 tests where it failed 6.
+- `test_a_malformed_parent_is_refused` asserts that each message names the column
+  (`^Parent\('c'\): `).
+- The log notes both additions, marked as made at review. §5.9 records the new count.
+- This board's note list marks `orchestrator/prompt-08.md` used.
+
+*Kept as is.*
+- An absent dependency is named once, by the first class in registry order that references it
+  (`BackgroundModel references redshift`). The class it lacks is named, which is what a reader of
+  the refusal needs.
+- `read_inventory` loading `cosmology_types` through the hooks. It is the client's module, loaded
+  by the client's factories; the layer imports nothing of the project.
+- The orchestrator's `measure-08/scripts/` keep the removed names. They measure the old tree.
+
+*Handed on.* **09**'s note must carry:
+- Every C1 row is gone. What remains for the guard is the comments of the audit's list outside
+  `ShardedPool.py` and `store_inventory.py`: `Datastore.py`, `ClientPool.py:37-38`,
+  `replication.py:200, 204` and `shard_paths.py:14`, at the audit's lines. 09 must re-measure them.
+- The vocabulary the guard must allow:
+  - `ShardedPool`'s "model row", "value rows" and "part of this model" (07);
+  - the record's `validated`, and the generic word "label";
+  - the contract's names through `Datastore.contract`.
+- The two existing name tests, `test_declared_facts.TestNoProjectNameInThePool` and
+  `test_inventory_declarations.TestTheLayerKnowsNoProject.test_no_project_name_in_its_code_or_text`,
+  which 09's guard generalises.
+- `tools/inventory_report.py` is a client tool that names project tables
+  (`INVENTORY_CATEGORIES`, `VALUE_TABLES`), and is outside the guard.
+- A guard written as `git grep -E` must not rely on `\b`, which git 2.56 does not match there
+  (`-P` does). A token scan in Python, as both existing name tests use, does not have the
+  problem. A repository-wide scan must exclude `prompts/`, whose measurement scripts name the
+  removed names.
+- 08's log: a factory joins the inventory by declaring `inventory_spec()`, and a client with a
+  polymorphic reference declares its own type map, as `cosmology_types.py` does.
+
 ---
 
 ## 2. Items
@@ -1162,7 +1329,7 @@ The checks:
     `Datastore/tests/test_declared_facts.py`. Every repair, refusal, printed line and record of
     the check at open, and the fingerprint, are byte-identical to `f1b8d02`'s (the log). Left for
     08–09: rows 12 and 13, and the guard.
-  - **Narrowed (2026-10-06, prompt 08; this commit):** audit C1 rows 12 and 13 are gone, and with
+  - **Narrowed (2026-10-06, prompt 08; `6646b06`):** audit C1 rows 12 and 13 are gone, and with
     them **every row of C1**. 09's guard remains. The inventory's classes and their order are
     derived: each factory declares a static `inventory_spec()` (not abstract on
     `SQLAFactoryBase`, default `None`) returning a `store_inventory.InventorySpec`, which is
@@ -1504,7 +1671,7 @@ modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four co
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |
 
-### 5.9 After prompt 08 (2026-10-06, this commit)
+### 5.9 After prompt 08 (2026-10-06, `6646b06`)
 
 Measured serially on the staged tree. The Datastore suite was run in four groups of modules
 (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 150, 176, 200 and
@@ -1518,3 +1685,7 @@ Measured serially on the staged tree. The Datastore suite was run in four groups
 | Datastore | 692 OK | 717 OK | +25 in `test_inventory_declarations`; the two inventory test modules, `test_wkb_numeric_parent_key` and `test_store_fingerprint` edited at their imports and one method as the prompt says |
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |
+
+*Added at the orchestrator's review (2026-10-06).* The follow-up commit that records the review
+adds one test to `test_inventory_declarations` (`test_the_report_renders_both_cosmology_types`),
+and tightens one assertion. Datastore `[g-o]` then runs 177, OK, and the suite totals **718**.
