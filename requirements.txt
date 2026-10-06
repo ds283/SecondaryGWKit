@@ -71,13 +71,13 @@ pyparsing==3.2.1
 python-dateutil==2.9.0.post0
 pytz==2025.1
 PyYAML==6.0.2
-ray==2.43.0
+ray==2.45.0
 referencing==0.36.2
 requests==2.32.3
 rich==13.9.4
 rpds-py==0.23.1
 rsa==4.9
-scipy==1.15.2
+scipy==1.16.3
 seaborn==0.13.2
 setuptools==76.1.0
 six==1.17.0
