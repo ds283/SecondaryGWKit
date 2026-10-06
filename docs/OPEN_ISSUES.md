@@ -33,6 +33,7 @@ the two disagree, the board is right.
 [`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md) ·
 [`a3-v2-readiness`](../prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md) ·
 [`datastore-generic`](../prompts/datastore-generic/IMPLEMENTATION_STATE.md) ·
+[`datastore-generic-followup`](../prompts/datastore-generic-followup/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -844,11 +845,23 @@ prompt 06, which closed it there on 2026-10-06. Prompt 09 closed
 `[00-the-generic-datastore-layer-hard-codes-project-schema-facts]` on 2026-10-06, with the guard
 that keeps the layer generic.
 
+The campaign **closed on 2026-10-06 at 9 / 9**, when its closing rehearsal rebuild reproduced
+`dbd8a51`'s fingerprint. Its three remaining issues were decided by the user the same day and
+**assigned to `prompts/datastore-generic-followup`**, and their rows moved to §1.19. They stay on
+this campaign's board, and close there.
+
+### 1.19 The datastore-generic follow-up campaign
+
+`prompts/datastore-generic-followup` was opened on 2026-10-06 to carry out the user's decisions on
+the three issues `datastore-generic` left open (§1.18). Each prompt closes one, on
+`datastore-generic`'s board. Writing it found that the drop issue undercounted: foreign keys miss
+the references `QuadSourceIntegral` and `GkSource` declare without one (its README §0.2).
+
 | Issue | Board | Hook |
 |---|---|---|
-| `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` prints its "Cannot … sharded datastore" prefix twice (`_read_closed_store` wraps a message its caller wraps again). Cosmetic. The user will have it cleaned up. |
-| `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]` | datastore-generic | `--drop` of `gk-numeric`, `gk-wkb`, `gk-source`, `gk-source-policy`, `gk-source-policy-records` or `tk-numeric` alone leaves other groups' rows naming rows it dropped (1–4 per shard on the full fixture store, enforcement off); a re-created table's serials can then be reused [inferred]. A decision for the user: cascade, refuse, or document. Not assigned. |
-| `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]` | datastore-generic | `StoreInventory.resolve` renders a nullable key parent whose value is `None` as `{"class": …, "digest": None, "unresolved": 0}`, a parent it failed to resolve where the row has none (11 entries on `build_full_store`, all the `numeric` field of a pure-WKB `GkWKBIntegration`); a parent-set member gives `None`. Display and checking only. A decision for the user. Not assigned. |
+| `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]` | datastore-generic | `--drop` of one group leaves other tables' rows naming rows it dropped (enforcement off); a re-created table's serials can then be reused [inferred]. Undercounted by foreign keys: by declared parents too, `tk-wkb` and `quad-source` alone also leave `QuadSourceIntegral` rows naming dropped rows. **Decided 2026-10-06:** refuse, counting foreign keys and declared `inventory_spec` parents transitively (8 of 10 groups refused alone). Assigned: follow-up prompt 01. |
+| `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]` | datastore-generic | `StoreInventory.resolve` renders a nullable key parent whose value is `None` as an unresolved reference (11 entries on `build_full_store`); a parent-set member gives `None`. Display and checking only. **Decided 2026-10-06:** render it as `None`. Assigned: follow-up prompt 02. |
+| `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` states its "Cannot … sharded datastore" prefix twice. Cosmetic. **Decided 2026-10-06:** remove it in `_read_closed_store`; the reader, a fourth caller, then wraps the message itself. Assigned: follow-up prompt 03. |
 
 ---
 

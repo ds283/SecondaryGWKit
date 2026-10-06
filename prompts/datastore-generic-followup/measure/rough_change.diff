@@ -1,0 +1,195 @@
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 3d87a67..5336330 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -20,6 +20,7 @@ from Datastore.SQL.schema import (
+     schema_differences,
+ )
+ from Datastore.contract import TAG_TABLE, VERSION_LABEL, VERSION_TABLE
++from Datastore.store_inventory import inventory_specs
+ from Datastore.replication import (
+     ReplicatedDivergence,
+     ReplicationInFlight,
+@@ -206,6 +207,7 @@ class ShardedPool:
+         # a drop table the registry does not declare is refused before the primary is created or
+         # opened
+         self._refuse_undeclared_drop_tables()
++        self._refuse_drop_that_leaves_references()
+ 
+         # if primary file is absent, all shard databases should be likewise absent
+         if self._primary_file.is_dir():
+@@ -709,6 +711,39 @@ class ShardedPool:
+                 f"{undeclared}, which the registry does not declare as tables. Nothing was opened"
+             )
+ 
++    def _refuse_drop_that_leaves_references(self) -> None:
++        """ROUGH: refuse drop tables that another table still names, by foreign key or by a parent
++        its factory's inventory_spec declares, naming the tables and every table that must also
++        go, before the primary is created or opened."""
++        if not self._drop_tables:
++            return
++        dropped = set(self._drop_tables)
++        needed = ShardedPool._tables_naming(dropped, self._factories)
++        if len(needed) > 0:
++            raise RuntimeError(
++                f'Cannot open sharded datastore "{str(self._primary_file)}": dropping '
++                f"{sorted(dropped)} would leave rows of {sorted(needed)} naming rows that are "
++                f"gone; drop those tables too. Nothing was opened"
++            )
++
++    @staticmethod
++    def _tables_naming(dropped, factories):
++        tables = build_schema(sqla.MetaData(), factories).tables
++        names = {
++            name: {fk.column.table.name for fk in t.foreign_keys} - {name}
++            for name, t in tables.items()
++        }
++        for cls, spec in inventory_specs(factories).items():
++            names.setdefault(cls, set()).update(set(spec.dependencies()) - {cls})
++        gone = set(dropped)
++        needed = set()
++        while True:
++            more = {n for n, refs in names.items() if n not in gone and refs & gone}
++            if not more:
++                return needed
++            needed |= more
++            gone |= more
++
+     @property
+     def primary(self) -> Path:
+         """
+@@ -2619,7 +2654,7 @@ class ShardedPool:
+ 
+     @staticmethod
+     def _read_closed_store(
+-        primary: Path, verb: str, *, missing_ok: bool = False
++        primary: Path, *, missing_ok: bool = False
+     ) -> Tuple[Dict[int, Path], Dict[int, str]]:
+         """
+         Read the `shards` rows of the closed store ``primary`` (opened mode=ro) and check the files
+@@ -2634,7 +2669,7 @@ class ShardedPool:
+                 conn.close()
+         except sqlite3.Error as e:
+             raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": its shards table could not be read ({e})'
++                f'its shards table could not be read ({e})'
+             ) from e
+ 
+         files: Dict[int, Path] = {}
+@@ -2642,9 +2677,7 @@ class ShardedPool:
+         try:
+             ShardedPool._resolve_shard_rows(primary, rows, files, records)
+         except RuntimeError as e:
+-            raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": {e}'
+-            ) from e
++            raise RuntimeError(str(e)) from e
+ 
+         # missing_ok is for delete_store(resume=True) only: a shard file that is not there is not
+         # refused. Every serial is still returned, present or not
+@@ -2652,10 +2685,7 @@ class ShardedPool:
+             files, records, missing_ok=missing_ok
+         )
+         if len(problems) > 0:
+-            raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": '
+-                + "; ".join(problems)
+-            )
++            raise RuntimeError("; ".join(problems))
+ 
+         return files, records
+ 
+@@ -2690,7 +2720,7 @@ class ShardedPool:
+ 
+         # the source's shard records, read and checked exactly as the constructor reads them
+         try:
+-            src_files, src_records = ShardedPool._read_closed_store(src_primary, mode)
++            src_files, src_records = ShardedPool._read_closed_store(src_primary)
+         except RuntimeError as e:
+             raise refuse(str(e)) from e
+ 
+@@ -2800,7 +2830,7 @@ class ShardedPool:
+         """Read ``primary``'s records back through the constructor's read-and-check, and require
+         them to be exactly the destination's bare names, resolving to the destination's files.
+         """
+-        files, records = ShardedPool._read_closed_store(primary, plan.mode)
++        files, records = ShardedPool._read_closed_store(primary)
+         if records != plan.dst_records or files != plan.dst_files:
+             raise RuntimeError(
+                 f'"{str(primary)}" reads back records {records} resolving to {({s: str(p) for s, p in files.items()})}, expected {plan.dst_records}'
+@@ -2942,7 +2972,7 @@ class ShardedPool:
+         # missing shard is not refused, and nothing else is relaxed
+         try:
+             recorded, _records = ShardedPool._read_closed_store(
+-                primary_file, "delete", missing_ok=resume
++                primary_file, missing_ok=resume
+             )
+         except RuntimeError as e:
+             raise refuse(str(e)) from e
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index 22087d6..7be0ab1 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -465,6 +465,9 @@ class StoreInventory:
+             if field not in cls.parents:
+                 out[field] = value
+                 continue
++            if value is None:
++                out[field] = None
++                continue
+             of = cls.parent_class(field, record.key)
+             found = self.find(of, value) if of is not None else []
+             if len(found) != 1:
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index dd7e4a1..6258b9e 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -203,7 +203,10 @@ def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlySt
+ 
+     _refuse_journals(primary_path, primary_path, "the primary")
+ 
+-    files, _records = ShardedPool._read_closed_store(primary_path, _VERB)
++    try:
++        files, _records = ShardedPool._read_closed_store(primary_path)
++    except RuntimeError as e:
++        raise _refuse(primary_path, str(e)) from e
+     if len(files) == 0:
+         raise _refuse(
+             primary_path, f'the primary "{str(primary_path)}" records no shards'
+diff --git a/Datastore/tests/test_reconcile_at_open.py b/Datastore/tests/test_reconcile_at_open.py
+index 6454607..ffa828c 100644
+--- a/Datastore/tests/test_reconcile_at_open.py
++++ b/Datastore/tests/test_reconcile_at_open.py
+@@ -1105,7 +1105,12 @@ class TestPruningAfterRepair(_ReconcileTestCase):
+                     self.reopen(
+                         prune_unvalidated=prune,
+                         drop_tables=tables_to_drop(
+-                            ["gk-source", "gk-source-policy-records"]
++                            [
++                                "gk-source",
++                                "gk-source-policy-records",
++                                "gk-source-policy",
++                                "quad-source-integral",
++                            ]
+                         ),
+                     )
+                 self.assertNoRecord()
+diff --git a/Datastore/tests/test_store_reader.py b/Datastore/tests/test_store_reader.py
+index e16c472..95b9400 100644
+--- a/Datastore/tests/test_store_reader.py
++++ b/Datastore/tests/test_store_reader.py
+@@ -306,10 +306,11 @@ class TestRefusals(_TempStore):
+         missing.unlink()
+         message = self.assert_refused_naming(str(missing))
+         self.assertIn("does not exist", message)
+-        # the refusal is _read_closed_store's own, not a copy of it
++        # the refusal is _read_closed_store's own, under the reader's one prefix
+         with self.assertRaises(RuntimeError) as cm:
+-            ShardedPool._read_closed_store(self.store.primary, "read")
+-        self.assertEqual(message, str(cm.exception))
++            ShardedPool._read_closed_store(self.store.primary)
++        self.assertIn(str(cm.exception), message)
++        self.assertEqual(message.count("Cannot read sharded datastore"), 1)
+ 
+     def test_primary_with_no_shards_table(self):
+         self.store.primary.unlink()

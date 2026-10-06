@@ -1513,6 +1513,11 @@ retires it with `store retire`.
   - **Next step.** The user will have it cleaned up (2026-10-04). The new
     `Datastore/tests/test_absolute_shard_record_refused.py` asserts fragments of the message, not
     its prefix, so a cleanup does not break it.
+  - **Decided (2026-10-06):** the user chose to remove the prefix in `_read_closed_store`, so that
+    each caller states its own once.
+  - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 03, which carries out
+    the decision. Its measurement found a fourth caller, `store_reader.open_read_only`, which
+    relies on the inner prefix and so must wrap the message itself (that campaign's README §0.2).
 - **[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]** *(opened 2026-10-05 while
   prompt 06 was written; measured at `dbc59f9`)*
   - **The defect.** `--drop` drops exactly the tables of the groups named, and nothing that
@@ -1541,6 +1546,15 @@ retires it with `store retire`.
     reach the dropped ones (derivable from the schema, as `schema.drop_order` will be), refuse a
     drop that would leave references, or stay as it is with the hazard documented. Prompt 06
     changes only the order within a drop (README §5 rule 9) and does not fix this.
+  - **Decided (2026-10-06):** the user chose to refuse such a drop. Measuring for that campaign
+    found that `PRAGMA foreign_key_check` undercounts. `QuadSourceIntegral` names
+    `TkWKBIntegration` and `QuadSource` rows, and `GkSource` names `GkNumericIntegration` and
+    `GkWKBIntegration` rows, through parents its factory's `inventory_spec` declares, with no
+    foreign key. So `--drop tk-wkb` and `--drop quad-source` alone have the same hazard. The user
+    then chose that a reference is a foreign key **or** a declared parent, followed transitively:
+    8 of the 10 groups are refused alone.
+  - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 01, which carries out
+    the decision.
 - **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
   08; measured at `5fe0ae6` and at 08's tree)*
   - **The defect.** `StoreInventory.resolve` renders a nullable key parent whose value is `None` as
@@ -1554,6 +1568,11 @@ retires it with `store retire`.
     through its own path.
   - **Next step.** A decision for the user: render the absent parent as `None`, as members are.
     Not assigned.
+  - **Decided (2026-10-06):** the user chose to render it as `None`.
+  - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 02, which carries out
+    the decision. Measured for it, the 11 entries are 2 direct `GkWKBIntegration` records and 9
+    reached through `GkSource`, `GkSourcePolicyData` and `QuadSourceIntegral`, 3 each. The hook
+    above says all 11 come through `GkSource`'s parent set; prompt 02's closing line corrects it.
 
 ---
 

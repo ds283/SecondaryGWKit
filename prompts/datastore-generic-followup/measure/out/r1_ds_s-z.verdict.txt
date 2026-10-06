@@ -1,0 +1,3 @@
+ERROR: test_missing_shard_is_refused_by_read_closed_store (Datastore.tests.test_store_reader.TestRefusals.test_missing_shard_is_refused_by_read_closed_store)
+Ran 191 tests in 49.314s
+FAILED (errors=1)

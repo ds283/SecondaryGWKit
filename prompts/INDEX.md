@@ -8,14 +8,16 @@ change its status when the board closes it. The open-issue column is a snapshot 
 [`docs/OPEN_ISSUES.md`](../docs/OPEN_ISSUES.md) on the date in the header; the section pointer
 is the durable part.
 
-**Last updated:** 2026-10-04 · 23 campaigns: 3 live, 1 planned, 1 seeded, 18 closed or complete.
+**Last updated:** 2026-10-06 · 24 campaigns: 3 live, 1 written, 1 seeded, 19 closed or complete.
 Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
-`datastore-integrity`'s, taken on 2026-10-02, and `datastore-generic`'s, taken on 2026-10-04.
+`datastore-integrity`'s, taken on 2026-10-02, and `datastore-generic`'s and
+`datastore-generic-followup`'s, taken on 2026-10-06.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
 | [`perturbation-sound-speed`](perturbation-sound-speed/AUDIT.md) | **seeded** — audit and script only, no README or board | 2026-09-29 | the $c_s^2$ the transfer-function sector reads: $dp/d\rho$, not $p/\rho$, on the QCD background | §1.16; 1 |
-| [`datastore-generic`](datastore-generic/IMPLEMENTATION_STATE.md) | **planned** — reviewed, U1–U4 taken; 3 of 9 written, none landed | 2026-10-04 | the datastore layer made generic again (no project table named in `ShardedPool`, the reader or the inventory); every old-store fallback deleted | §1.18; 3 |
+| [`datastore-generic-followup`](datastore-generic-followup/IMPLEMENTATION_STATE.md) | **written** — 3 of 3 written, none landed | 2026-10-06 | the user's decisions on `datastore-generic`'s three open issues: a `--drop` that leaves references refused; `resolve()`'s absent parent as `None`; the closed-store prefix stated once | §1.19; 3 (on `datastore-generic`'s board) |
+| [`datastore-generic`](datastore-generic/IMPLEMENTATION_STATE.md) | closed 9 / 9, 2026-10-06 | 2026-10-04 → 2026-10-06 | the datastore layer made generic again (no project table named in the layer, guarded by `test_layer_is_generic`); every old-store fallback deleted | §1.18, §1.19; 3 |
 | [`a3-v2-readiness`](a3-v2-readiness/IMPLEMENTATION_STATE.md) | **live** — planned; 4 of 8 written, none landed | 2026-10-02 | the seven defects a build or a reader of the A3 v2 store would meet; `DEFAULT_QUADRATURE_RTOL = 1e-7` | §1.17; 2 |
 | [`datastore-integrity`](datastore-integrity/IMPLEMENTATION_STATE.md) | closed 12 / 12, 2026-10-02 | 2026-09-25 → 2026-10-02 | every known datastore-integrity defect, before the A3 v2 store is built | §1.15, §1.17; 12 |
 | [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 3 of 10 groupings landed; A3 baseline run stopped on cost | 2026-09-20 → 2026-09-23 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle | §1.1; 10 |
