@@ -2,10 +2,10 @@
 
 **Written:** 2026-10-04 on branch `datastore-generic-plan`, from `handover-remedial` at `dbd8a51`
 (the audit's tree), committed on `a6c8f39`, which changes no file the audit cites, by Claude Opus 5.5, from the audit [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)
-and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–07 are
+and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–08 are
 written**; their tasks are fixed by §6.1 and the audit alone (04 was written on 2026-10-04, after
-03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07 on 2026-10-06, each after the prompt
-before it landed and was reviewed). **08–09 are held** on the prompts before them (§2).
+03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07 and 08 on 2026-10-06, each after the
+prompt before it landed and was reviewed). **09 is held** on the prompts before it (§2).
 
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
@@ -83,7 +83,7 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **written** 2026-10-05; after 04 |
 | 06 | [`06-give-the-layer-its-registry.md`](06-give-the-layer-its-registry.md) | Audit C1 rows 9, 10, 11, 14 and the `config.sharding` import. `ShardedPool`, the actor, `store_reader` and `store_inventory` are given the factory registry instead of importing `Datastore._factories`; the inventory reads the replicated set from the store's primary instead of `config.sharding` (*amended 2026-10-05*, the user's decision, §6.2). `_factories`, the drop groups and `ClientPool`'s batch sizes move to `config/datastore.py` (U2); the layer is given the tables to drop, and `_drop_order` is replaced by an order derived from foreign keys. | **written** 2026-10-05; after 05 |
 | 07 | [`07-declare-the-replication-facts-in-the-factories.md`](07-declare-the-replication-facts-in-the-factories.md) | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is; *amended 2026-10-06*, the user's decision, §6.2: through the foreign key an owned table declares); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **written** 2026-10-06; after 06 |
-| 08 | `08-derive-the-inventorys-class-list.md` | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys; the polymorphic cosmology reference declared by the client. | **held** on 06 |
+| 08 | [`08-derive-the-inventorys-class-list.md`](08-derive-the-inventorys-class-list.md) | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys (*amended 2026-10-06*, the user's decision, §6.2: from the parents each factory declares in an `inventory_spec`, roots first, since foreign keys miss nine of them); the polymorphic cosmology reference declared by the client (the user, 2026-10-06: in the referencing `Parent`). | **written** 2026-10-06; after 07 |
 | 09 | `09-keep-the-layer-generic.md` | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9. Closes the campaign. | **held** on 01–08 |
 
 **Why 04 was written after 03.** Its task was fixed: the audit's G4 found the only store that
@@ -108,15 +108,23 @@ measurement also recorded every repair, refusal and printed line of the check at
 prompt could require them unchanged. Writing it put one choice of method to the user, recorded in
 §6.2.
 
-**Why 08–09 are held.** Their charters above are fixed and cannot drift to fit what 01–07 find.
-What waits is their method.
+**Why 08 was written after 07.** It rewrites `store_inventory.py` after 07 had changed its tag
+and validated reads, and declares facts in the factories as 07 did. Its test plan and facts were
+measured the same way, against the tree 07 left (`5fe0ae6`); the measurement also compared the
+fingerprint, the whole inventory, the report and every `resolve()` at both trees. Writing it found
+that foreign keys cannot order the inventory, and put three choices of method to the user,
+recorded in §6.2.
+
+**Why 09 is held.** Its charter above is fixed and cannot drift to fit what 01–08 find. What
+waits is its method.
 
 **Order.**
 - 01 → 02: both edit factory refusals and their test modules overlap.
 - 03 is independent of 01–02, but never in one checkout concurrently with another prompt that
   edits `ShardedPool.py`.
 - 03 → 04 → 05: each edits `ShardedPool.py`.
-- 06 after 01–05; 07 and 08 after 06; 09 last.
+- 06 after 01–05; 07 after 06; 08 after 07 (both edit `store_inventory.py` and the factories);
+  09 last.
 
 ## 3. Datastores
 
@@ -167,6 +175,18 @@ internals are the implementing prompt's to design.
     `TAG_SERIAL`, the tables and columns the layer owns (U4);
   - `ShardedPool._unit_tables(cls_name, specs)`, the one unit of the repair licence and the prune;
   - `store_inventory.read_records(…, validated=<column name or None>)`, where it took a bool.
+- **08 ships** the declarations from which the inventory derives its classes and their order, and
+  the client's declaration of the polymorphic reference. *Named 2026-10-06 (prompt 08, written):*
+  - `SQLAFactoryBase.inventory_spec()`, static and not abstract, returning `None` or a
+    `store_inventory.InventorySpec` (`read_records`' six keywords; `keywords()`,
+    `dependencies()`); `inventory_records` is gone from every factory;
+  - `store_inventory.inventory_specs(factories)` and `inventory_classes(factories)`, the classes
+    of the inventory in their derived order; `INVENTORY_CLASSES`, `COMPUTE_TARGETS`, `COSMOLOGY`
+    and `cosmology_classes` are gone;
+  - `Parent(column, type_column=…, types={type value: class})`, a polymorphic reference, with
+    `classes()` and `class_of(mapping)`; `ClassInventory.parent_types` and
+    `ClassInventory.parent_class(field, key)`;
+  - `Datastore/SQL/ObjectFactories/cosmology_types.py`: `COSMOLOGY_TYPES`, the client's map.
 
 ## 5. The rules this campaign runs under
 
@@ -287,6 +307,36 @@ recommendation below is the decision.
 
   This amends §2's "derived from foreign keys (as `_prune_unit` is)": the unit is still read from
   foreign keys, through the one the owning table names.
+
+*Three choices of method for 08, taken by the user on 2026-10-06, each as recommended* (audit C1
+rows 12 and 13):
+- **The inventory's dependencies are the parents each factory declares, in a declarative spec.**
+  Each factory's `inventory_records`, today one `read_records` call, becomes a static
+  `inventory_spec()` returning the keywords it passes; the layer calls `read_records` itself. The
+  classes are those whose factory declares a spec, and the order is a dependency sort over the
+  parents the specs declare.
+  - **Why not foreign keys.** Measured on 2026-10-06 at `5fe0ae6`: nine of the parents the
+    inventory reads have no foreign key (the polymorphic cosmology reference of
+    `wavenumber_exit_time` and `BackgroundModel`, `GkSource`'s parent-set members, and
+    `QuadSourceIntegral`'s cross-shard references), and the reversed foreign-key order violates
+    all nine.
+  - **Rejected:** declaring the parents a second time beside `inventory_records` (two statements
+    of one fact, which could disagree until a read failed); foreign keys plus the nine edges
+    declared separately (the same, and a new non-key parent would be misordered silently); the
+    list moved to `config/` (a hand-kept order, which U2 rejected for the drop order).
+- **Roots first.** The classes that reference no parent come first, in registry order, then a
+  dependency sort in registry order. Measured: this reproduces today's order exactly, so the
+  report, the fingerprint's class order and the tests that pin the order do not move.
+  **Rejected:** a plain dependency sort, which moves `wavenumber_exit_time`, `GkSourcePolicy` and
+  `QuadSourcePolicy` (the fingerprint's digest would not change).
+- **The polymorphic reference is declared in the referencing `Parent`**, through one client
+  constant that both referencing factories use. **Rejected:** each cosmology factory declaring the
+  type value it answers to (one more declaration mechanism, for the same fact); the map in
+  `config/`, passed to `read_inventory` (another parameter, which could disagree with what the
+  factories read).
+
+  This amends §2's "derived from the registry and foreign keys": the order is derived from the
+  registry and the parents its factories declare.
 
 ## 7. Baselines
 
