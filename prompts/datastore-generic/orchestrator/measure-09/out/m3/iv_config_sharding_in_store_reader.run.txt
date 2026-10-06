@@ -1,0 +1,23 @@
+...F...
+======================================================================
+FAIL: test_every_import_is_allowed (Datastore.tests.test_layer_is_generic.TestTheLayerImportsNoProjectPackage.test_every_import_is_allowed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 325, in test_every_import_is_allowed
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ['Datastore/store_reader.py:58 config.sharding']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'Datastore/store_reader.py:58 config.sharding'
+
+- []
++ ['Datastore/store_reader.py:58 config.sharding'] : 
+Datastore/store_reader.py:58 config.sharding
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.313s
+
+FAILED (failures=1)

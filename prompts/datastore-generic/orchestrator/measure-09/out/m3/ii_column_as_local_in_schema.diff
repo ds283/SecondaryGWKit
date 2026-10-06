@@ -1,0 +1,12 @@
+diff --git a/Datastore/SQL/schema.py b/Datastore/SQL/schema.py
+index 18b0dd6..d373484 100644
+--- a/Datastore/SQL/schema.py
++++ b/Datastore/SQL/schema.py
+@@ -287,6 +287,7 @@ def drop_order(tables: Iterable[sqla.Table]) -> List[sqla.Table]:
+     tables has no such order, and raises ``ValueError`` naming the tables on or behind it.
+     """
+     given: List[sqla.Table] = []
++    model_serial = None
+     for table in tables:
+         if table not in given:
+             given.append(table)

@@ -1,0 +1,10 @@
+........................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 200 tests in 99.349s
+
+OK
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)

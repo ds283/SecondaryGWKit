@@ -1,0 +1,39 @@
+{
+ "k": [
+  100000.0,
+  316227.7660168379,
+  1000000.0
+ ],
+ "zend": "250",
+ "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into datastore-generic-09-rehearsal.sqlite",
+ "main_argv": [
+  "--database",
+  "<scratch>/stores/m5-placeholder/datastore-generic-09-rehearsal.sqlite",
+  "--job-name",
+  "datastore-generic-09",
+  "--shards",
+  "4",
+  "--zend",
+  "250",
+  "--source-samples-log10z",
+  "100"
+ ],
+ "substitutions": [
+  "** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py",
+  "** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py",
+  "** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py",
+  "** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py"
+ ],
+ "substituted_main_sha256": "31265e7d60256eb00619c157a6044ef7e7d20d4a9a2cbe45fe6514f719ecc7f6",
+ "script_sha256": "3d0e6ecdba33315a550761797e108e85ba46b0b660b4481cfa1ddbd535b12073",
+ "scoped_driver_has": [
+  "RegisteredStream",
+  "StageTracker",
+  "HEARTBEAT_MEANS",
+  "BEAT_MIN_INTERVAL",
+  "SignalLatch",
+  "install_killed_handler"
+ ],
+ "build_model_list": true,
+ "ray_initialized": false
+}

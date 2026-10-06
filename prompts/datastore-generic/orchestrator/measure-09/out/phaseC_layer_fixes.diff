@@ -1,0 +1,70 @@
+diff --git a/Datastore/replication.py b/Datastore/replication.py
+index 443a641..12fc83c 100644
+--- a/Datastore/replication.py
++++ b/Datastore/replication.py
+@@ -286,7 +286,7 @@ def same_value(a, b) -> bool:
+     """
+     Equality of two column values as a replica compares them: exact, except that two NaN floats
+     are the same value. Copies of one row are written from one pickled object, so every float is
+-    bit-identical and no tolerance belongs here.
++    bit-identical and an approximate comparison has no place here.
+     """
+     if isinstance(a, float) and isinstance(b, float) and a != a and b != b:
+         return True
+diff --git a/Datastore/shard_paths.py b/Datastore/shard_paths.py
+index 4642219..4217d6d 100644
+--- a/Datastore/shard_paths.py
++++ b/Datastore/shard_paths.py
+@@ -9,8 +9,8 @@ table, column ``filename``. One form of record exists: the shard's bare file nam
+ its primary renamed, and still opens against its own shards.
+ 
+ This module is the **one** definition of how a record is turned into a path. ``ShardedPool`` and
+-``tools/shard_key_audit.py`` both call it; do not copy it. Two definitions of where a shard lives
+-is the disagreement that made copied stores write into their originals.
++the shard-key audit script (``shard_key_audit.py``) both call it; do not copy it. Two definitions
++of where a shard lives is the disagreement that made copied stores write into their originals.
+ 
+ It is also the one definition of what a shard is **called** (``shard_file_name``): the creator
+ names a new store's shards with it, and ``ShardedPool.copy_store`` / ``move_store`` name a
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index 8144071..22087d6 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -604,15 +604,15 @@ def read_records(
+         }
+         no_parent: List[int] = []
+         no_tag: List[int] = []
+-        for parent_serial, tag_serial in conn.execute(
++        for parent, tag_serial in conn.execute(
+             sqla.select(tag_table.c[parent_column], tag_table.c[TAG_SERIAL])
+         ):
+-            if parent_serial not in serials:
+-                no_parent.append(parent_serial)
++            if parent not in serials:
++                no_parent.append(parent)
+             elif tag_serial not in labels:
+                 no_tag.append(tag_serial)
+             else:
+-                tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
++                tag_sets.setdefault(parent, []).append(labels[tag_serial])
+         if len(no_parent) > 0:
+             problems.append(
+                 _problem(
+@@ -640,13 +640,13 @@ def read_records(
+         value_table = tables[value_table_name]
+         parent_col = value_table.c[parent_column]
+         orphans: Dict[int, int] = {}
+-        for parent_serial, n in conn.execute(
++        for parent, n in conn.execute(
+             sqla.select(parent_col, sqla.func.count()).group_by(parent_col)
+         ):
+-            if parent_serial in serials:
+-                counts[parent_serial] = n
++            if parent in serials:
++                counts[parent] = n
+             else:
+-                orphans[parent_serial] = n
++                orphans[parent] = n
+         if len(orphans) > 0:
+             problems.append(
+                 _problem(

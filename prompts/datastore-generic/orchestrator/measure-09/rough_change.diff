@@ -1,0 +1,685 @@
+diff --git a/Datastore/replication.py b/Datastore/replication.py
+index 443a641..12fc83c 100644
+--- a/Datastore/replication.py
++++ b/Datastore/replication.py
+@@ -286,7 +286,7 @@ def same_value(a, b) -> bool:
+     """
+     Equality of two column values as a replica compares them: exact, except that two NaN floats
+     are the same value. Copies of one row are written from one pickled object, so every float is
+-    bit-identical and no tolerance belongs here.
++    bit-identical and an approximate comparison has no place here.
+     """
+     if isinstance(a, float) and isinstance(b, float) and a != a and b != b:
+         return True
+diff --git a/Datastore/shard_paths.py b/Datastore/shard_paths.py
+index 4642219..4217d6d 100644
+--- a/Datastore/shard_paths.py
++++ b/Datastore/shard_paths.py
+@@ -9,8 +9,8 @@ table, column ``filename``. One form of record exists: the shard's bare file nam
+ its primary renamed, and still opens against its own shards.
+ 
+ This module is the **one** definition of how a record is turned into a path. ``ShardedPool`` and
+-``tools/shard_key_audit.py`` both call it; do not copy it. Two definitions of where a shard lives
+-is the disagreement that made copied stores write into their originals.
++the shard-key audit script (``shard_key_audit.py``) both call it; do not copy it. Two definitions
++of where a shard lives is the disagreement that made copied stores write into their originals.
+ 
+ It is also the one definition of what a shard is **called** (``shard_file_name``): the creator
+ names a new store's shards with it, and ``ShardedPool.copy_store`` / ``move_store`` name a
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index 8144071..22087d6 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -604,15 +604,15 @@ def read_records(
+         }
+         no_parent: List[int] = []
+         no_tag: List[int] = []
+-        for parent_serial, tag_serial in conn.execute(
++        for parent, tag_serial in conn.execute(
+             sqla.select(tag_table.c[parent_column], tag_table.c[TAG_SERIAL])
+         ):
+-            if parent_serial not in serials:
+-                no_parent.append(parent_serial)
++            if parent not in serials:
++                no_parent.append(parent)
+             elif tag_serial not in labels:
+                 no_tag.append(tag_serial)
+             else:
+-                tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
++                tag_sets.setdefault(parent, []).append(labels[tag_serial])
+         if len(no_parent) > 0:
+             problems.append(
+                 _problem(
+@@ -640,13 +640,13 @@ def read_records(
+         value_table = tables[value_table_name]
+         parent_col = value_table.c[parent_column]
+         orphans: Dict[int, int] = {}
+-        for parent_serial, n in conn.execute(
++        for parent, n in conn.execute(
+             sqla.select(parent_col, sqla.func.count()).group_by(parent_col)
+         ):
+-            if parent_serial in serials:
+-                counts[parent_serial] = n
++            if parent in serials:
++                counts[parent] = n
+             else:
+-                orphans[parent_serial] = n
++                orphans[parent] = n
+         if len(orphans) > 0:
+             problems.append(
+                 _problem(
+diff --git a/Datastore/tests/test_declared_facts.py b/Datastore/tests/test_declared_facts.py
+index fcdb3d4..2980da1 100644
+--- a/Datastore/tests/test_declared_facts.py
++++ b/Datastore/tests/test_declared_facts.py
+@@ -21,20 +21,18 @@ prompt 07; README §6.2, U4 and the user's choice for 07).
+ 7. **The version object**, built by the registry's version factory on a read-write and a read-only
+    open, with the attributes it had.
+ 8. **The prune refusal's text** names the unit in the specs' order.
+-9. **No project name in ``ShardedPool.py``**, by ``ast`` and by its comments and docstrings.
++
++That the pool names no project table is ``test_layer_is_generic``'s, for the whole layer (prompt
++09).
+ 
+ No Ray, nothing under ``var/``.
+ """
+ 
+-import ast
+ import contextlib
+ import hashlib
+ import io
+-import re
+ import shutil
+-import sys
+ import tempfile
+-import tokenize
+ import unittest
+ from datetime import datetime
+ from pathlib import Path
+@@ -57,8 +55,6 @@ from Datastore.SQL.schema import build_schema
+ from Datastore.tests import standin_pool as sp
+ from Datastore.tests.test_prune_at_open import _PruneTestCase, execute, quiet
+ 
+-REPO_ROOT = Path(__file__).resolve().parents[2]
+-POOL_FILE = REPO_ROOT / "Datastore" / "SQL" / "ShardedPool.py"
+ ShardedPool = sp.sp_mod.ShardedPool
+ 
+ # the declarations of the real registry, and no others: (owner_column, monotone_flags,
+@@ -672,139 +668,5 @@ class TestThePruneRefusalNamesItsUnit(_PruneTestCase):
+         )
+ 
+ 
+-# ------------------------------------------------------------------------------------------------
+-# 9. no project name in ShardedPool.py
+-# ------------------------------------------------------------------------------------------------
+-
+-_WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+-
+-# the layer's own tables and columns (Datastore.contract), the columns schema.py prepends, and
+-# the layer's vocabulary: "validated" is the action record's key and the flag the check at open
+-# recomputes (prompt 07 keeps both)
+-_LAYER_WORDS = {
+-    VERSION_TABLE,
+-    VERSION_LABEL,
+-    TAG_TABLE,
+-    TAG_LABEL,
+-    TAG_SERIAL,
+-    "serial",
+-    "version",
+-    "timestamp",
+-    "stepping",
+-    "validated",
+-}
+-
+-# the project's packages: none may be imported or named
+-_PROJECT_PACKAGES = {
+-    path.name
+-    for path in REPO_ROOT.iterdir()
+-    if (path / "__init__.py").is_file() and path.name not in ("Datastore", "config")
+-}
+-
+-
+-def _registry_names():
+-    """(tables, identifier columns) of the real registry, less the layer's own. A column is an
+-    identifier if it has an underscore or a capital: ``model_serial``, ``k_inv_Mpc``. A column
+-    that is a plain word, such as ``source``, ``response``, ``type`` or ``value``, cannot be told
+-    from English prose, and a word check would forbid the closed-store operations' "source
+-    store"; ``_FLAG_PHRASES`` checks the two declared flags instead. "model" and "value rows"
+-    are allowed: they are not names of any table, and the two as-unit refusals and the
+-    recompute's messages keep them so that no message's text changes (prompt 07, §2)."""
+-    built = build_schema(sqla.MetaData(), factories)
+-    tables = set(built.tables) - _LAYER_WORDS
+-    columns = {
+-        c.name
+-        for t in built.tables.values()
+-        for c in t.columns
+-        if "_" in c.name or c.name.lower() != c.name
+-    } - _LAYER_WORDS
+-    return tables, columns
+-
+-
+-_FLAG_PHRASES = re.compile(
+-    r"\b(source|response)\s+(or|and)\s+(source|response)\b|\b(source|response)\s+flags?\b"
+-)
+-
+-
+-def _named(text: str, forbidden) -> list:
+-    return sorted({w for w in _WORD.findall(text) if w in forbidden})
+-
+-
+-class TestNoProjectNameInThePool(unittest.TestCase):
+-    @classmethod
+-    def setUpClass(cls):
+-        cls.source = POOL_FILE.read_text()
+-        cls.tree = ast.parse(cls.source)
+-        cls.tables, cls.columns = _registry_names()
+-
+-    def test_no_string_or_name_is_a_registry_table(self):
+-        forbidden = self.tables | self.columns | _PROJECT_PACKAGES
+-        found = []
+-        for node in ast.walk(self.tree):
+-            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+-                found += [(node.lineno, w) for w in _named(node.value, forbidden)]
+-                if _FLAG_PHRASES.search(node.value):
+-                    found.append((node.lineno, node.value))
+-            names = []
+-            if isinstance(node, ast.Name):
+-                names = [node.id]
+-            elif isinstance(node, ast.Attribute):
+-                names = [node.attr]
+-            elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+-                names = [node.name]
+-            elif isinstance(node, ast.arg):
+-                names = [node.arg]
+-            elif isinstance(node, ast.keyword) and node.arg is not None:
+-                names = [node.arg]
+-            for name in names:
+-                parts = {name} | set(name.split("_"))
+-                found += [(node.lineno, name) for p in parts if p in forbidden]
+-        self.assertEqual([], found)
+-
+-    def test_no_import_names_a_project_package(self):
+-        # the standard library, ray, sqlalchemy, the layer's own modules (no factory but the
+-        # base) and config.defaults, a generic constant
+-        allowed_roots = set(sys.stdlib_module_names) | {"ray", "sqlalchemy"}
+-        found = []
+-        for node in ast.walk(self.tree):
+-            if isinstance(node, ast.Import):
+-                modules = [a.name for a in node.names]
+-            elif isinstance(node, ast.ImportFrom):
+-                modules = [node.module]
+-            else:
+-                continue
+-            for module in modules:
+-                root = module.split(".")[0]
+-                if root in allowed_roots or module == "config.defaults":
+-                    continue
+-                if root == "Datastore" and not (
+-                    module.startswith("Datastore.SQL.ObjectFactories")
+-                    and module != "Datastore.SQL.ObjectFactories.base"
+-                ):
+-                    continue
+-                found.append((node.lineno, module))
+-        self.assertEqual([], found)
+-
+-    def test_no_comment_or_docstring_names_one(self):
+-        forbidden = self.tables | self.columns | _PROJECT_PACKAGES
+-        found = []
+-        for token in tokenize.generate_tokens(io.StringIO(self.source).readline):
+-            if token.type == tokenize.COMMENT:
+-                found += [(token.start[0], w) for w in _named(token.string, forbidden)]
+-                if _FLAG_PHRASES.search(token.string):
+-                    found.append((token.start[0], token.string))
+-        for node in ast.walk(self.tree):
+-            if isinstance(
+-                node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)
+-            ):
+-                doc = ast.get_docstring(node, clean=False)
+-                if doc is None:
+-                    continue
+-                found += [(node.__class__.__name__, w) for w in _named(doc, forbidden)]
+-                if _FLAG_PHRASES.search(doc):
+-                    found.append((node.__class__.__name__, doc))
+-        self.assertEqual([], found)
+-
+-
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/Datastore/tests/test_inventory_declarations.py b/Datastore/tests/test_inventory_declarations.py
+index 90f1e59..a20eacb 100644
+--- a/Datastore/tests/test_inventory_declarations.py
++++ b/Datastore/tests/test_inventory_declarations.py
+@@ -10,20 +10,18 @@ polymorphic parent through the type map its referencing factory declares. These
+ 2. on hand-built registries: a cycle and a parent with no spec are refused, by name; a polymorphic
+    parent's classes are built before it; a malformed ``Parent`` is refused;
+ 3. ``resolve()`` and the report go through the declared type map;
+-4. ``store_inventory`` names no project package or table and loads none.
++4. ``store_inventory`` loads no project package. That it names none, and no table, is
++   ``test_layer_is_generic``'s, for the whole layer (prompt 09).
+ 
+ No Ray; stores are built in temporary directories; nothing under ``var/``.
+ """
+ 
+-import ast
+-import io
+ import json
+ import os
+ import re
+ import subprocess
+ import sys
+ import tempfile
+-import tokenize
+ import unittest
+ from pathlib import Path
+ 
+@@ -45,7 +43,6 @@ from config.datastore import factories as _factories
+ from tools.inventory_report import format_inventory_report
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+-STORE_INVENTORY = REPO_ROOT / "Datastore" / "store_inventory.py"
+ 
+ # the order the inventory was built in before prompt 08, when it was a hand-kept list
+ ORDER = (
+@@ -406,7 +403,7 @@ class TestResolve(unittest.TestCase):
+ 
+ 
+ # ------------------------------------------------------------------------------------------------
+-# 4. the layer names and loads no project package or table
++# 4. the layer loads no project package
+ # ------------------------------------------------------------------------------------------------
+ 
+ PROJECT_PACKAGES = (
+@@ -433,18 +430,6 @@ def _run(code):
+ 
+ 
+ class TestTheLayerKnowsNoProject(unittest.TestCase):
+-    def test_it_imports_no_project_package(self):
+-        tree = ast.parse(STORE_INVENTORY.read_text())
+-        imported = []
+-        for node in ast.walk(tree):
+-            if isinstance(node, ast.Import):
+-                imported += [a.name for a in node.names]
+-            elif isinstance(node, ast.ImportFrom):
+-                imported.append(node.module)
+-        self.assertEqual(
+-            [m for m in imported if m.split(".")[0] in PROJECT_PACKAGES], []
+-        )
+-
+     def test_reading_records_loads_no_project_module(self):
+         code = (
+             "import json, sys\n"
+@@ -476,39 +461,6 @@ class TestTheLayerKnowsNoProject(unittest.TestCase):
+             added = _run(code)
+         self.assertEqual([m for m in added if m.split(".")[0] in PROJECT_PACKAGES], [])
+ 
+-    def test_no_project_name_in_its_code_or_text(self):
+-        names = (
+-            set(_factories)
+-            | set(PROJECT_PACKAGES)
+-            | {
+-                "cosmology",
+-                "cosmology_type",
+-                "cosmology_serial",
+-                "COSMOLOGY",
+-                "model_ids",
+-            }
+-        )
+-        # ``validated`` is not in the list: it is the name of the record's own field and of
+-        # ``read_records``' keyword, which the layer defines, and it is not a column it assumes
+-        text = STORE_INVENTORY.read_text()
+-        found = []
+-        for tok in tokenize.generate_tokens(io.StringIO(text).readline):
+-            if tok.type == tokenize.NAME:
+-                if tok.string in names:
+-                    found.append((tok.start[0], tok.string))
+-            elif tok.type in (tokenize.STRING, tokenize.COMMENT):
+-                for name in names:
+-                    if re.search(
+-                        rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])",
+-                        tok.string,
+-                    ):
+-                        found.append((tok.start[0], name))
+-                # the naming conventions of the project's tables
+-                for fragment in ("_tags", "*Value", "Run_<"):
+-                    if fragment in tok.string:
+-                        found.append((tok.start[0], fragment))
+-        self.assertEqual(found, [])
+-
+ 
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/Datastore/tests/test_layer_is_generic.py b/Datastore/tests/test_layer_is_generic.py
+new file mode 100644
+index 0000000..ad1b160
+--- /dev/null
++++ b/Datastore/tests/test_layer_is_generic.py
+@@ -0,0 +1,329 @@
++"""
++The generic layer names nothing of the project (prompts/datastore-generic, prompt 09; README §5
++rule 11; audit §C).
++
++The layer is every module under ``Datastore/`` but its tests and the client's factories (less
++``ObjectFactories/base.py``, the factory contract the layer imports), and ``RayTools/``. Its files
++are derived, not listed, so that a module added to the layer is checked without anyone adding it
++here; one test pins that the derived set still holds the audit's list.
++
++For each file, by ``ast`` and ``tokenize``, these tests check:
++
++1. **code names** (names, attributes, definitions, arguments, keywords and imported names, whole
++   and split at underscores) against the registry's tables and identifier columns and the project's
++   packages;
++2. **strings**, docstrings included, and **comments**, against the same words, the two declared
++   flags' phrases, and the project's naming conventions;
++3. **imports**, against an allow-list, each entry with its reason.
++
++Each failure names ``file:line word``. No Ray, no store, nothing under ``var/``.
++"""
++
++import ast
++import io
++import re
++import sys
++import tokenize
++import unittest
++from pathlib import Path
++
++import sqlalchemy as sqla
++
++from config.datastore import factories
++from Datastore import contract
++from Datastore.SQL.schema import build_schema
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++# the client's factories live inside the layer's package; ``base.py`` is the contract the layer
++# imports and is the layer's
++_FACTORIES_DIR = ("Datastore", "SQL", "ObjectFactories")
++_FACTORY_CONTRACT = "base.py"
++
++
++def layer_files() -> list:
++    """The layer's modules, relative to the repository root, sorted."""
++    found = set()
++    for path in (REPO_ROOT / "Datastore").rglob("*.py"):
++        rel = path.relative_to(REPO_ROOT)
++        if rel.parts[:2] == ("Datastore", "tests"):
++            continue
++        if rel.parts[:3] == _FACTORIES_DIR and rel.name != _FACTORY_CONTRACT:
++            continue
++        found.add(rel.as_posix())
++    for path in (REPO_ROOT / "RayTools").glob("*.py"):
++        found.add(path.relative_to(REPO_ROOT).as_posix())
++    return sorted(found)
++
++
++# audit §C's list, and the module prompt 07 added for the layer's contract
++AUDIT_LIST = {
++    "Datastore/SQL/ShardedPool.py",
++    "Datastore/SQL/Datastore.py",
++    "Datastore/SQL/ClientPool.py",
++    "Datastore/store_inventory.py",
++    "Datastore/store_reader.py",
++    "Datastore/SQL/schema.py",
++    "Datastore/SQL/SerialPoolBroker.py",
++    "Datastore/SQL/ProfileAgent.py",
++    "Datastore/object.py",
++    "Datastore/replication.py",
++    "Datastore/shard_paths.py",
++    "RayTools/RayWorkPool.py",
++    "Datastore/contract.py",
++}
++
++# ------------------------------------------------------------------------------------------------
++# the vocabulary the layer may not use
++# ------------------------------------------------------------------------------------------------
++
++# the layer's own tables and columns (Datastore.contract), the columns schema.py prepends, and the
++# record's ``validated``, the action record's key and the flag the check at open recomputes
++LAYER_WORDS = {
++    contract.VERSION_TABLE,
++    contract.VERSION_LABEL,
++    contract.TAG_TABLE,
++    contract.TAG_LABEL,
++    contract.TAG_SERIAL,
++    "serial",
++    "version",
++    "timestamp",
++    "stepping",
++    "validated",
++}
++
++# packages that are part of the layer, and ``config``, which the import check handles: the layer
++# imports ``config.defaults`` and nothing else of it, and "config" is an English word
++_NOT_PROJECT_PACKAGES = {"Datastore", "RayTools", "config"}
++
++# names prompt 08 removed from the inventory, which are not tables or identifier columns
++EXTRA_NAMES = {
++    "cosmology",
++    "cosmology_type",
++    "cosmology_serial",
++    "COSMOLOGY",
++    "model_ids",
++}
++
++# the project's naming conventions: a tag table, a value table, a run label
++FRAGMENTS = ("_tags", "*Value", "Run_<")
++
++# the two declared monotone flags, which are plain words and so not in the column list
++FLAG_PHRASES = re.compile(
++    r"\b(source|response)\s+(or|and)\s+(source|response)\b|\b(source|response)\s+flags?\b"
++)
++
++_WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
++
++
++def project_packages() -> set:
++    return {
++        path.name
++        for path in REPO_ROOT.iterdir()
++        if (path / "__init__.py").is_file() and path.name not in _NOT_PROJECT_PACKAGES
++    }
++
++
++def registry_words() -> tuple:
++    """(tables and registered class names, identifier columns) of the real registry, less the
++    layer's own. A column is an identifier if it has an underscore or a capital: ``model_serial``,
++    ``k_inv_Mpc``. A plain-word column, such as ``source`` or ``value``, cannot be told from
++    English; ``FLAG_PHRASES`` checks the two declared flags instead."""
++    built = build_schema(sqla.MetaData(), factories)
++    tables = (set(built.tables) | set(factories)) - LAYER_WORDS
++    columns = {
++        c.name
++        for t in built.tables.values()
++        for c in t.columns
++        if "_" in c.name or c.name.lower() != c.name
++    } - LAYER_WORDS
++    return tables, columns
++
++
++def forbidden_words() -> set:
++    tables, columns = registry_words()
++    return tables | columns | project_packages() | EXTRA_NAMES
++
++
++# ------------------------------------------------------------------------------------------------
++# the imports the layer may make
++# ------------------------------------------------------------------------------------------------
++
++# the standard library, and the two third-party packages the layer is built on
++_ALLOWED_ROOTS = set(sys.stdlib_module_names) | {"ray", "sqlalchemy"}
++
++_ALLOWED_MODULES = {
++    # DEFAULT_STRING_LENGTH, a generic constant (ShardedPool, ProfileAgent): the user, 2026-10-06
++    "config.defaults",
++    # WallclockTimer and format_time, generic helpers (Datastore, ProfileAgent, RayWorkPool): the
++    # user, 2026-10-06
++    "utilities",
++}
++
++
++def import_allowed(module: str) -> bool:
++    root = module.split(".")[0]
++    if root in _ALLOWED_ROOTS or module in _ALLOWED_MODULES:
++        return True
++    if root == "RayTools":
++        return True
++    if root == "Datastore":
++        # the layer's own modules, and of the client's factories only the contract
++        factories_pkg = ".".join(_FACTORIES_DIR)
++        return not (
++            module.startswith(factories_pkg)
++            and module != factories_pkg + "." + _FACTORY_CONTRACT[: -len(".py")]
++        )
++    return False
++
++
++# ------------------------------------------------------------------------------------------------
++# the scans
++# ------------------------------------------------------------------------------------------------
++
++
++def _text_hits(text: str, forbidden: set) -> list:
++    """(line offset in ``text``, word) of every forbidden word, flag phrase and fragment."""
++    hits = [
++        (m.start(), m.group(0)) for m in _WORD.finditer(text) if m.group(0) in forbidden
++    ]
++    hits += [(m.start(), repr(m.group(0))) for m in FLAG_PHRASES.finditer(text)]
++    hits += [
++        (m.start(), repr(f)) for f in FRAGMENTS for m in re.finditer(re.escape(f), text)
++    ]
++    return [(text.count("\n", 0, at), w) for at, w in hits]
++
++
++def _code_names(node) -> list:
++    if isinstance(node, ast.Name):
++        return [node.id]
++    if isinstance(node, ast.Attribute):
++        return [node.attr]
++    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
++        return [node.name]
++    if isinstance(node, ast.arg):
++        return [node.arg]
++    if isinstance(node, ast.keyword) and node.arg is not None:
++        return [node.arg]
++    if isinstance(node, ast.alias):
++        return [n for n in (node.name.split(".")[-1], node.asname) if n]
++    return []
++
++
++def scan_code_names(rel: str, tree, forbidden: set) -> list:
++    found = set()
++    for node in ast.walk(tree):
++        for name in _code_names(node):
++            if {name, *name.split("_")} & forbidden:
++                found.add((node.lineno, name))
++    return [f"{rel}:{line} {name}" for line, name in sorted(found)]
++
++
++def scan_strings(rel: str, tree, forbidden: set) -> list:
++    found = []
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Constant) and isinstance(node.value, str):
++            # the line within a multi-line string is exact for a docstring, approximate for a
++            # string with escaped or joined lines
++            found += [
++                (node.lineno + off, w) for off, w in _text_hits(node.value, forbidden)
++            ]
++    return [f"{rel}:{line} {w}" for line, w in sorted(set(found))]
++
++
++def scan_comments(rel: str, source: str, forbidden: set) -> list:
++    found = []
++    for token in tokenize.generate_tokens(io.StringIO(source).readline):
++        if token.type == tokenize.COMMENT:
++            found += [
++                (token.start[0], w) for _, w in _text_hits(token.string, forbidden)
++            ]
++    return [f"{rel}:{line} {w}" for line, w in sorted(set(found))]
++
++
++def _absolute(rel: str, node: ast.ImportFrom) -> str:
++    """The module a ``from`` import names, with a relative import resolved against ``rel``."""
++    if not node.level:
++        return node.module
++    package = Path(rel).parent.parts
++    base = package[: len(package) - (node.level - 1)]
++    return ".".join(base + ((node.module,) if node.module else ()))
++
++
++def scan_imports(rel: str, tree) -> list:
++    found = []
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Import):
++            modules = [a.name for a in node.names]
++        elif isinstance(node, ast.ImportFrom):
++            modules = [_absolute(rel, node)]
++        else:
++            continue
++        found += [f"{rel}:{node.lineno} {m}" for m in modules if not import_allowed(m)]
++    return found
++
++
++class _LayerTestCase(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.files = layer_files()
++        cls.forbidden = forbidden_words()
++        cls.sources = {rel: (REPO_ROOT / rel).read_text() for rel in cls.files}
++        cls.trees = {rel: ast.parse(src) for rel, src in cls.sources.items()}
++
++    def assertNoHits(self, found):
++        self.assertEqual([], found, "\n" + "\n".join(found))
++
++
++class TestTheLayer(_LayerTestCase):
++    def test_the_derived_files_hold_the_audits_list(self):
++        self.assertLessEqual(AUDIT_LIST, set(self.files))
++
++    def test_no_test_and_no_client_factory_is_in_it(self):
++        self.assertIn("Datastore/SQL/ObjectFactories/base.py", self.files)
++        for rel in self.files:
++            self.assertFalse(rel.startswith("Datastore/tests/"), rel)
++            if rel.startswith("Datastore/SQL/ObjectFactories/"):
++                self.assertEqual("Datastore/SQL/ObjectFactories/base.py", rel)
++
++    def test_the_vocabulary_holds_the_registry_and_the_packages(self):
++        # a vocabulary that came out empty would pass every scan below
++        tables, columns = registry_words()
++        self.assertLessEqual({"BackgroundModel", "redshift", "tolerance"}, tables)
++        self.assertLessEqual({"model_serial", "parent_serial"}, columns)
++        self.assertLessEqual(
++            {"CosmologyModels", "MetadataConcepts", "tools"}, project_packages()
++        )
++        self.assertFalse(LAYER_WORDS & self.forbidden)
++
++
++class TestTheLayerNamesNoProjectWord(_LayerTestCase):
++    def test_no_code_name(self):
++        found = []
++        for rel in self.files:
++            found += scan_code_names(rel, self.trees[rel], self.forbidden)
++        self.assertNoHits(found)
++
++    def test_no_string_or_docstring(self):
++        found = []
++        for rel in self.files:
++            found += scan_strings(rel, self.trees[rel], self.forbidden)
++        self.assertNoHits(found)
++
++    def test_no_comment(self):
++        found = []
++        for rel in self.files:
++            found += scan_comments(rel, self.sources[rel], self.forbidden)
++        self.assertNoHits(found)
++
++
++class TestTheLayerImportsNoProjectPackage(_LayerTestCase):
++    def test_every_import_is_allowed(self):
++        found = []
++        for rel in self.files:
++            found += scan_imports(rel, self.trees[rel])
++        self.assertNoHits(found)
++
++
++if __name__ == "__main__":
++    unittest.main()

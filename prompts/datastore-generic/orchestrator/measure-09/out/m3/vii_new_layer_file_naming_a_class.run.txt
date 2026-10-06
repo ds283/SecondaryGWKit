@@ -1,0 +1,23 @@
+......F
+======================================================================
+FAIL: test_no_string_or_docstring (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_string_or_docstring)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 311, in test_no_string_or_docstring
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ['Datastore/scratch_module.py:3 BackgroundModel']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'Datastore/scratch_module.py:3 BackgroundModel'
+
+- []
++ ['Datastore/scratch_module.py:3 BackgroundModel'] : 
+Datastore/scratch_module.py:3 BackgroundModel
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.300s
+
+FAILED (failures=1)

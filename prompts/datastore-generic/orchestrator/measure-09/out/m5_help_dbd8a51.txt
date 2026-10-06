@@ -1,0 +1,34 @@
+usage: quadsource_atol_sweep.py [-h] [--prepare] [--force] [--report]
+                                [--build] [--rehearsal] [--database DATABASE]
+                                [--resume] [--job-name JOB_NAME] [--atol ATOL]
+                                [--rtol RTOL] [--cpus CPUS]
+                                [--phase {low-z,low-z-check,main,seam}]
+                                [--register SLUG] [--purpose PURPOSE]
+                                [--campaign CAMPAIGN] [--prompt PROMPT]
+
+Does ``DEFAULT_QUADRATURE_ATOL = 1e-32`` cost two hundred times what it buys?
+
+options:
+  -h, --help            show this help message and exit
+  --prepare             copy the baseline store
+  --force               with --prepare: refused. A sweep store is no longer
+                        replaced; see the error
+  --report              read the sweep store back
+  --build               full 9280-item build at one tolerance pair into
+                        --database (not a sweep)
+  --rehearsal           with --build only: a rehearsal scope (3 log-spaced k
+                        over 1e5-1e6 /Mpc, --zend 250) in place of the
+                        production one. It is not A3 v2
+  --database DATABASE   with --build
+  --resume              with --build: continue into an existing store at the
+                        SAME tolerance pair
+  --job-name JOB_NAME
+  --atol ATOL           with --build: absolute tolerance
+  --rtol RTOL           with --build: relative tolerance
+  --cpus CPUS
+  --phase {low-z,low-z-check,main,seam}
+                        which case set to run
+  --register SLUG
+  --purpose PURPOSE
+  --campaign CAMPAIGN
+  --prompt PROMPT

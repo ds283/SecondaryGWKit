@@ -1,0 +1,56 @@
+....F.F
+======================================================================
+FAIL: test_no_code_name (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_code_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 305, in test_no_code_name
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ['Datastore/store_inventory.py:607 parent_[353 chars]ial']
+
+Second list contains 8 additional elements.
+First extra element 0:
+'Datastore/store_inventory.py:607 parent_serial'
+
+- []
++ ['Datastore/store_inventory.py:607 parent_serial',
++  'Datastore/store_inventory.py:610 parent_serial',
++  'Datastore/store_inventory.py:611 parent_serial',
++  'Datastore/store_inventory.py:615 parent_serial',
++  'Datastore/store_inventory.py:643 parent_serial',
++  'Datastore/store_inventory.py:646 parent_serial',
++  'Datastore/store_inventory.py:647 parent_serial',
++  'Datastore/store_inventory.py:649 parent_serial'] : 
+Datastore/store_inventory.py:607 parent_serial
+Datastore/store_inventory.py:610 parent_serial
+Datastore/store_inventory.py:611 parent_serial
+Datastore/store_inventory.py:615 parent_serial
+Datastore/store_inventory.py:643 parent_serial
+Datastore/store_inventory.py:646 parent_serial
+Datastore/store_inventory.py:647 parent_serial
+Datastore/store_inventory.py:649 parent_serial
+
+======================================================================
+FAIL: test_no_string_or_docstring (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_string_or_docstring)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 311, in test_no_string_or_docstring
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ['Datastore/replication.py:289 tolerance', 'Datastore/shard_paths.py:12 tools']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'Datastore/replication.py:289 tolerance'
+
+- []
++ ['Datastore/replication.py:289 tolerance', 'Datastore/shard_paths.py:12 tools'] : 
+Datastore/replication.py:289 tolerance
+Datastore/shard_paths.py:12 tools
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.314s
+
+FAILED (failures=2)

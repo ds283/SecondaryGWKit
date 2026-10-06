@@ -1,0 +1,13 @@
+.F.....
+======================================================================
+FAIL: test_the_derived_files_hold_the_audits_list (Datastore.tests.test_layer_is_generic.TestTheLayer.test_the_derived_files_hold_the_audits_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 278, in test_the_derived_files_hold_the_audits_list
+    self.assertLessEqual(AUDIT_LIST, set(self.files))
+AssertionError: {'Datastore/shard_paths.py', 'Datastore/SQL/schema.py', 'Datastore/replication.py', 'RayTools/RayWorkPool.py', 'Datastore/store_inventory.py', 'Datastore/SQL/ClientPool.py', 'Datastore/contract.py', 'Datastore/SQL/ProfileAgent.py', 'Datastore/SQL/Datastore.py', 'Datastore/SQL/ShardedPool.py', 'Datastore/object.py', 'Datastore/SQL/SerialPoolBroker.py', 'Datastore/store_reader.py'} not less than or equal to {'Datastore/SQL/schema.py', 'Datastore/SQL/ClientPool.py', 'Datastore/SQL/ProfileAgent.py', 'Datastore/SQL/Datastore.py', 'Datastore/SQL/ShardedPool.py', 'Datastore/SQL/__init__.py', 'Datastore/SQL/SerialPoolBroker.py', 'Datastore/SQL/ObjectFactories/base.py'}
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.246s
+
+FAILED (failures=1)

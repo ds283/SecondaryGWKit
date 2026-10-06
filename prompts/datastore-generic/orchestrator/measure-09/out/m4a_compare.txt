@@ -1,0 +1,9 @@
+files 6 6 same names: True
+identical tables 164 identical rows 286 differences 0
+full/full-store-shard0000.sqlite {'index': 138, 'table': 38} rows 102
+full/full-store-shard0001.sqlite {'index': 138, 'table': 38} rows 71
+full/full-store.sqlite {'index': 2, 'table': 6} rows 34
+real/fixture-store-shard0000.sqlite {'index': 138, 'table': 38} rows 23
+real/fixture-store-shard0001.sqlite {'index': 138, 'table': 38} rows 23
+real/fixture-store.sqlite {'index': 2, 'table': 6} rows 33
+master entries 720

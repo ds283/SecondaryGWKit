@@ -1,0 +1,71 @@
+diff --git a/docs/handover/quadsource_atol_sweep.py b/docs/handover/quadsource_atol_sweep.py
+index 820d215..4a2b4ba 100644
+--- a/docs/handover/quadsource_atol_sweep.py
++++ b/docs/handover/quadsource_atol_sweep.py
+@@ -672,23 +672,21 @@ def assert_store_is_self_consistent(primary):
+     This is not a formality. Since `datastore-portability` prompt 01, `ShardedPool` reads every
+     shard record through `Datastore.shard_paths.resolve_shard_path`
+     (`Datastore/SQL/ShardedPool.py:_read_shard_data` / `_resolve_shard_rows`): a bare name resolves
+-    to that file beside the primary, and a legacy absolute record resolves to **its final
+-    component** beside the primary -- the absolute path itself is never used, whether or not it
+-    exists. So a `shards` table copied along with its primary is read as naming the *copy's own*
+-    siblings, which is not always what a stale copy of the rows actually holds. On 2026-09-23 it
+-    was not: the first run of this sweep put 54 rows into the A3 baseline store it was written to
+-    leave alone, because the copied primary's absolute records, read as absolute paths by the code
+-    of that day, still pointed at the baseline's own files. The rows were at six non-production
+-    tolerance pairs and the production population was untouched, so nothing was lost; but the
+-    guarantee in this module's docstring was false for one run. Hence this check, called from
+-    `run_child()` before the sweep writes, from `prepare()` after the copy, and from
++    to that file beside the primary, and anything else is refused, an absolute path included. On
++    2026-09-23 the first run of this sweep put 54 rows into the A3 baseline store it was written
++    to leave alone, because the copied primary's absolute records, read as absolute paths by the
++    code of that day, still pointed at the baseline's own files. The rows were at six
++    non-production tolerance pairs and the production population was untouched, so nothing was
++    lost; but the guarantee in this module's docstring was false for one run. Hence this check,
++    called from `run_child()` before the sweep writes, from `prepare()` after the copy, and from
+     `run_build()`'s `--resume` branch before a build continues into an existing store.
+ 
+     Compares the `shards` table serial by serial: each stored record, resolved through
+     `resolve_shard_path(primary, stored)`, must equal the expected sibling
+     `shard_paths(primary)[serial]`, and the table must name exactly the serials `0 .. SHARDS-1`,
+-    no more and no fewer. A bare-name store and a legacy store whose absolute records name its own
+-    siblings are accepted alike, since the resolver treats them the same way.
++    no more and no fewer. A record that the resolver refuses, which an absolute path now is, is
++    reported among the mismatches with the resolver's reason, and the check raises its own
++    `RuntimeError`.
+     """
+     import sqlite3
+ 
+@@ -705,9 +703,18 @@ def assert_store_is_self_consistent(primary):
+     extra = sorted(set(found) - set(expected))
+     mismatched = []
+     for serial in sorted(set(expected) & set(found)):
+-        resolved = resolve_shard_path(primary, found[serial])
++        try:
++            resolved = resolve_shard_path(primary, found[serial])
++        except ValueError as e:
++            mismatched.append(
++                f"  serial {serial}: record {found[serial]!r} is unusable: {e}"
++            )
++            continue
+         if resolved != expected[serial]:
+-            mismatched.append((serial, found[serial], resolved, expected[serial]))
++            mismatched.append(
++                f"  serial {serial}: record {found[serial]!r} resolves to {resolved}, "
++                f"expected {expected[serial]}"
++            )
+ 
+     if missing or extra or mismatched:
+         lines = [
+@@ -718,10 +725,7 @@ def assert_store_is_self_consistent(primary):
+             lines.append(f"  missing serial(s): {missing}")
+         if extra:
+             lines.append(f"  extra serial(s), not among 0..{SHARDS - 1}: {extra}")
+-        for serial, stored, resolved, exp in mismatched:
+-            lines.append(
+-                f"  serial {serial}: record {stored!r} resolves to {resolved}, expected {exp}"
+-            )
++        lines.extend(mismatched)
+         lines.append(
+             "Not safe to use until this is corrected. If this is the sweep store, make a fresh "
+             "one with --prepare, at a name that has never held a store: this script never "

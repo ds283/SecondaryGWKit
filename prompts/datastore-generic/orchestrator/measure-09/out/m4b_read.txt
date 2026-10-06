@@ -1,0 +1,11 @@
+dbd8a51 store_inventory: <scratch>/dbd8a51/Datastore/store_inventory.py
+dbd8a51 full digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759 classes 21 problems 0 records 55
+dbd8a51 real digest d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f classes 21 problems 0 records 18
+rough store_inventory: <scratch>/wt09/Datastore/store_inventory.py
+rough full digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759 classes 21 problems 0 records 55
+rough real digest d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f classes 21 problems 0 records 18
+CHECKSUMS UNCHANGED
+full fingerprint identical 7507 bytes sha256 27beb9a13f07ae25
+full inventory identical 29954 bytes sha256 3ea5d83f792c2436
+real fingerprint identical 4484 bytes sha256 b8d5c8f37e597a44
+real inventory identical 12301 bytes sha256 ec1e3ca25ec70d11

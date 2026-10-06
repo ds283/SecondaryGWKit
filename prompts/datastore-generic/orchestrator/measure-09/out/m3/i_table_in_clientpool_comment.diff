@@ -1,0 +1,12 @@
+diff --git a/Datastore/SQL/ClientPool.py b/Datastore/SQL/ClientPool.py
+index 6c9e814..a81d131 100644
+--- a/Datastore/SQL/ClientPool.py
++++ b/Datastore/SQL/ClientPool.py
+@@ -21,6 +21,7 @@ class ClientPool:
+         self._batch_size = default_batch_size
+ 
+         self._pool = set()
++        # serials leased for GkSourceValue rows
+         self._leased = set()
+         self._committed = set()
+ 

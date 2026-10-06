@@ -1,0 +1,23 @@
+....F..
+======================================================================
+FAIL: test_no_code_name (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_code_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 305, in test_no_code_name
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ['Datastore/SQL/schema.py:290 model_serial']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'Datastore/SQL/schema.py:290 model_serial'
+
+- []
++ ['Datastore/SQL/schema.py:290 model_serial'] : 
+Datastore/SQL/schema.py:290 model_serial
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.317s
+
+FAILED (failures=1)

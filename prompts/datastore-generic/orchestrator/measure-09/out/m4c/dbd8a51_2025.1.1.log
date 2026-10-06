@@ -1,0 +1,56 @@
+{
+ "changed_files": [],
+ "kwargs": [],
+ "label": "2025.1.1",
+ "printed": [
+  ">> Opened existing sharded datastore \"<scratch>/stores/c_dbd8a51_2025.1.1/full-store.sqlite\" with 2 shards",
+  "!! INTEGRITY WARNING (2026-10-06T13:50:42): datastore \"shard0001-store\" (physical file <scratch>/stores/c_dbd8a51_2025.1.1/full-store-shard0001.sqlite)",
+  ">> Background models",
+  "     The following unvalidated models were detected in the datastore:",
+  "       -- \"fixture-background-qcd\" (store_id=2, N_tau=6, N_cs_tau=6, N_F=6)",
+  "          contains 2 z-sample values | expected=2",
+  "!! INTEGRITY WARNING (2026-10-06T13:50:42): datastore \"shard0000-store\" (physical file <scratch>/stores/c_dbd8a51_2025.1.1/full-store-shard0000.sqlite)",
+  ">> Background models",
+  "     The following unvalidated models were detected in the datastore:",
+  "       -- \"fixture-background-qcd\" (store_id=2, N_tau=6, N_cs_tau=6, N_F=6)",
+  "          contains 2 z-sample values | expected=2",
+  ">> Matter transfer function",
+  "     The following unvalidated integrations were detected in the datastore:",
+  "       -- \"fixture-tk-3\" (store_id=3) for k=0.1/Mpc and z_init=1e+05 (log10_atol=-5.0, log10_rtol=-5.0)",
+  "          contains 2 z-sample values | expected=2"
+ ],
+ "pruned": [],
+ "reconciliation": {
+  "cleared": false,
+  "compared": [
+   "version",
+   "store_tag",
+   "redshift",
+   "wavenumber",
+   "wavenumber_exit_time",
+   "tolerance",
+   "LambdaCDM",
+   "QCD_Cosmology",
+   "IntegrationSolver",
+   "BackgroundModel",
+   "BackgroundModelValue",
+   "GkSourcePolicy",
+   "QuadSourcePolicy",
+   "BackgroundModel_tags"
+  ],
+  "controller": null,
+  "hot_journals": [],
+  "record": null,
+  "repaired": [],
+  "shards": [
+   0,
+   1
+  ]
+ },
+ "tree": "<scratch>/dbd8a51",
+ "version": {
+  "label": "2025.1.1",
+  "store_id": 1,
+  "type": "store_tag"
+ }
+}

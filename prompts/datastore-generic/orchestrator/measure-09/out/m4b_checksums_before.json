@@ -1,0 +1,8 @@
+{
+ "full/full-store-shard0000.sqlite": "c8d27f5f2ed8e419e2d5ec336cd65f3b1eea1a4e071a94e85b10dae8ee194b9f",
+ "full/full-store-shard0001.sqlite": "a0780982f11a35edcde31f3f00fa1f02292ba9c61f0fd916c8ed86c6359523ec",
+ "full/full-store.sqlite": "378a2564aaa25aaa04d9eb001a0e79a50730be4b5229199661436df93a9a8c23",
+ "real/fixture-store-shard0000.sqlite": "dae7444f3fd45d3b0c7896dc627805ae1c3e3894b8d300091585ab345bca8abb",
+ "real/fixture-store-shard0001.sqlite": "e6c6bf7fcbc1d82dda7459e8bcc560719bb8aaed3822503a88607941d20d43b0",
+ "real/fixture-store.sqlite": "8572229f78308c1737ff09fc622be5981861044b3d61fd4b982b3e60496eaa29"
+}

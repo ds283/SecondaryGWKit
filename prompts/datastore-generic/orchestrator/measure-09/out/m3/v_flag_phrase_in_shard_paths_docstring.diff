@@ -1,0 +1,11 @@
+diff --git a/Datastore/shard_paths.py b/Datastore/shard_paths.py
+index 4217d6d..41d4801 100644
+--- a/Datastore/shard_paths.py
++++ b/Datastore/shard_paths.py
+@@ -1,5 +1,6 @@
+ """
+ Where a ShardedPool's shard files live, given what its primary's ``shards`` table says.
++Nothing here reads the source and response columns.
+ 
+ A ShardedPool datastore is one primary SQLite file plus *N* shard files beside it
+ (``foo.sqlite``, ``foo-shard0000.sqlite``, ...). The primary records each shard in its ``shards``

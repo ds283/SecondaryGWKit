@@ -1,0 +1,23 @@
+.....F.
+======================================================================
+FAIL: test_no_comment (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_comment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 317, in test_no_comment
+    self.assertNoHits(found)
+  File "<scratch>/wt09/Datastore/tests/test_layer_is_generic.py", line 275, in assertNoHits
+    self.assertEqual([], found, "\n" + "\n".join(found))
+AssertionError: Lists differ: [] != ["Datastore/store_reader.py:114 '_tags'"]
+
+Second list contains 1 additional elements.
+First extra element 0:
+"Datastore/store_reader.py:114 '_tags'"
+
+- []
++ ["Datastore/store_reader.py:114 '_tags'"] : 
+Datastore/store_reader.py:114 '_tags'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.319s
+
+FAILED (failures=1)

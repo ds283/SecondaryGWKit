@@ -1,0 +1,12 @@
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index dd7e4a1..7ffaea9 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -55,6 +55,7 @@ from Datastore.SQL.schema import (
+     schema_differences,
+ )
+ from Datastore.shard_paths import shard_file_problem
++from config.sharding import replicated_tables
+ 
+ PathType = Union[str, os.PathLike]
+ 

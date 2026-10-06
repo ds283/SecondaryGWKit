@@ -1,0 +1,66 @@
+=== i_table_in_clientpool_comment
+apply -R --check ok
+FAIL: test_no_comment (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_comment)
+AssertionError: Lists differ: [] != ['Datastore/SQL/ClientPool.py:24 GkSourceValue']
+Datastore/SQL/ClientPool.py:24 GkSourceValue
+Ran 7 tests in 0.303s
+FAILED (failures=1)
+tree clean after revert
+=== ii_column_as_local_in_schema
+apply -R --check ok
+FAIL: test_no_code_name (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_code_name)
+AssertionError: Lists differ: [] != ['Datastore/SQL/schema.py:290 model_serial']
+Datastore/SQL/schema.py:290 model_serial
+Ran 7 tests in 0.317s
+FAILED (failures=1)
+tree clean after revert
+=== iii_project_import_in_replication
+apply -R --check ok
+FAIL: test_every_import_is_allowed (Datastore.tests.test_layer_is_generic.TestTheLayerImportsNoProjectPackage.test_every_import_is_allowed)
+AssertionError: Lists differ: [] != ['Datastore/replication.py:291 CosmologyModels']
+Datastore/replication.py:291 CosmologyModels
+FAIL: test_no_code_name (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_code_name)
+AssertionError: Lists differ: [] != ['Datastore/replication.py:291 model_ids']
+Datastore/replication.py:291 model_ids
+Ran 7 tests in 0.293s
+FAILED (failures=2)
+tree clean after revert
+=== iv_config_sharding_in_store_reader
+apply -R --check ok
+FAIL: test_every_import_is_allowed (Datastore.tests.test_layer_is_generic.TestTheLayerImportsNoProjectPackage.test_every_import_is_allowed)
+AssertionError: Lists differ: [] != ['Datastore/store_reader.py:58 config.sharding']
+Datastore/store_reader.py:58 config.sharding
+Ran 7 tests in 0.313s
+FAILED (failures=1)
+tree clean after revert
+=== v_flag_phrase_in_shard_paths_docstring
+apply -R --check ok
+FAIL: test_no_string_or_docstring (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_string_or_docstring)
+AssertionError: Lists differ: [] != ["Datastore/shard_paths.py:3 'source and response'"]
+Datastore/shard_paths.py:3 'source and response'
+Ran 7 tests in 0.306s
+FAILED (failures=1)
+tree clean after revert
+=== vi_tags_fragment_in_store_reader_comment
+apply -R --check ok
+FAIL: test_no_comment (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_comment)
+AssertionError: Lists differ: [] != ["Datastore/store_reader.py:114 '_tags'"]
+Datastore/store_reader.py:114 '_tags'
+Ran 7 tests in 0.319s
+FAILED (failures=1)
+tree clean after revert
+=== vii_new_layer_file_naming_a_class
+apply -R --check ok
+FAIL: test_no_string_or_docstring (Datastore.tests.test_layer_is_generic.TestTheLayerNamesNoProjectWord.test_no_string_or_docstring)
+AssertionError: Lists differ: [] != ['Datastore/scratch_module.py:3 BackgroundModel']
+Datastore/scratch_module.py:3 BackgroundModel
+Ran 7 tests in 0.300s
+FAILED (failures=1)
+tree clean after revert
+=== viii_glob_narrowed_to_SQL
+apply -R --check ok
+FAIL: test_the_derived_files_hold_the_audits_list (Datastore.tests.test_layer_is_generic.TestTheLayer.test_the_derived_files_hold_the_audits_list)
+AssertionError: {'Datastore/shard_paths.py', 'Datastore/SQL/schema.py', 'Datastore/replication.py', 'RayTools/RayWorkPool.py', 'Datastore/store_inventory.py', 'Datastore/SQL/ClientPool.py', 'Datastore/contract.py', 'Datastore/SQL/ProfileAgent.py', 'Datastore/SQL/Datastore.py', 'Datastore/SQL/ShardedPool.py', 'Datastore/object.py', 'Datastore/SQL/SerialPoolBroker.py', 'Datastore/store_reader.py'} not less than or equal to {'Datastore/SQL/schema.py', 'Datastore/SQL/ClientPool.py', 'Datastore/SQL/ProfileAgent.py', 'Datastore/SQL/Datastore.py', 'Datastore/SQL/ShardedPool.py', 'Datastore/SQL/__init__.py', 'Datastore/SQL/SerialPoolBroker.py', 'Datastore/SQL/ObjectFactories/base.py'}
+Ran 7 tests in 0.246s
+FAILED (failures=1)
+tree clean after revert

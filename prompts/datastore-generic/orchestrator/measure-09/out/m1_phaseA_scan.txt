@@ -1,0 +1,36 @@
+FILES 17
+   Datastore/SQL/ClientPool.py
+   Datastore/SQL/Datastore.py
+   Datastore/SQL/ObjectFactories/base.py
+   Datastore/SQL/ProfileAgent.py
+   Datastore/SQL/SerialPoolBroker.py
+   Datastore/SQL/ShardedPool.py
+   Datastore/SQL/__init__.py
+   Datastore/SQL/schema.py
+   Datastore/__init__.py
+   Datastore/contract.py
+   Datastore/object.py
+   Datastore/replication.py
+   Datastore/shard_paths.py
+   Datastore/store_inventory.py
+   Datastore/store_reader.py
+   RayTools/RayWorkPool.py
+   RayTools/__init__.py
+MISSING_FROM_AUDIT_LIST []
+EXTRA_BEYOND_AUDIT_LIST ['Datastore/SQL/ObjectFactories/base.py', 'Datastore/SQL/__init__.py', 'Datastore/__init__.py', 'RayTools/__init__.py']
+VOCAB tables+classes 36 columns 184 packages ['AdaptiveLevin', 'ComputeTargets', 'CosmologyConcepts', 'CosmologyModels', 'LiouvilleGreen', 'MetadataConcepts', 'Quadrature', 'RunRegistry', 'Units', 'thirdparty', 'tools'] total 234
+CODE 8
+   Datastore/store_inventory.py:607 parent_serial
+   Datastore/store_inventory.py:610 parent_serial
+   Datastore/store_inventory.py:611 parent_serial
+   Datastore/store_inventory.py:615 parent_serial
+   Datastore/store_inventory.py:643 parent_serial
+   Datastore/store_inventory.py:646 parent_serial
+   Datastore/store_inventory.py:647 parent_serial
+   Datastore/store_inventory.py:649 parent_serial
+STRING 2
+   Datastore/replication.py:289 tolerance
+   Datastore/shard_paths.py:12 tools
+COMMENT 0
+IMPORT 0
+elapsed 0.26s

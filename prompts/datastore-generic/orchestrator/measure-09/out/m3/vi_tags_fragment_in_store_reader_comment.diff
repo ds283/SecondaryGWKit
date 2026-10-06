@@ -1,0 +1,12 @@
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index dd7e4a1..2c41329 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -111,6 +111,7 @@ def _refuse_journals(primary: Path, path: Path, what: str) -> None:
+ 
+ def read_only_url(path: Path) -> str:
+     """The SQLAlchemy URL of ``path`` opened read-only: ``mode=ro``, never ``immutable=1``."""
++    # the *_tags tables open read-only like any other
+     return f"sqlite:///file:{path}?mode=ro&uri=true"
+ 
+ 

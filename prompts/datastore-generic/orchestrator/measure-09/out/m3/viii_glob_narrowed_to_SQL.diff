@@ -1,0 +1,21 @@
+diff --git a/Datastore/tests/test_layer_is_generic.py b/Datastore/tests/test_layer_is_generic.py
+index ad1b160..80f46ed 100644
+--- a/Datastore/tests/test_layer_is_generic.py
++++ b/Datastore/tests/test_layer_is_generic.py
+@@ -44,15 +44,13 @@ _FACTORY_CONTRACT = "base.py"
+ def layer_files() -> list:
+     """The layer's modules, relative to the repository root, sorted."""
+     found = set()
+-    for path in (REPO_ROOT / "Datastore").rglob("*.py"):
++    for path in (REPO_ROOT / "Datastore" / "SQL").rglob("*.py"):
+         rel = path.relative_to(REPO_ROOT)
+         if rel.parts[:2] == ("Datastore", "tests"):
+             continue
+         if rel.parts[:3] == _FACTORIES_DIR and rel.name != _FACTORY_CONTRACT:
+             continue
+         found.add(rel.as_posix())
+-    for path in (REPO_ROOT / "RayTools").glob("*.py"):
+-        found.add(path.relative_to(REPO_ROOT).as_posix())
+     return sorted(found)
+ 
+ 

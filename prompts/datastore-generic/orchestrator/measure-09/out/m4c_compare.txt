@@ -1,0 +1,22 @@
+== label 2025.1.1
+changed_files SAME
+checksums_after SAME
+checksums_before SAME
+kwargs DIFFERS
+label SAME
+printed SAME
+pruned SAME
+reconciliation SAME
+version SAME
+== label standin
+changed_files SAME
+checksums_after SAME
+checksums_before SAME
+kwargs DIFFERS
+label SAME
+printed SAME
+pruned SAME
+reconciliation SAME
+version SAME
+2025.1.1 before {'full-store-shard0000.sqlite': 'c8d27f5f2ed8', 'full-store-shard0001.sqlite': 'a0780982f11a', 'full-store.sqlite': '378a2564aaa2'} after {'full-store-shard0000.sqlite': 'c8d27f5f2ed8', 'full-store-shard0001.sqlite': 'a0780982f11a', 'full-store.sqlite': '378a2564aaa2'}
+standin before {'full-store-shard0000.sqlite': 'c8d27f5f2ed8', 'full-store-shard0001.sqlite': 'a0780982f11a', 'full-store.sqlite': '378a2564aaa2'} after {'full-store-shard0000.sqlite': '86241bda9fc2', 'full-store-shard0001.sqlite': '94d723eddc03', 'full-store.sqlite': 'f19b7542637d'}

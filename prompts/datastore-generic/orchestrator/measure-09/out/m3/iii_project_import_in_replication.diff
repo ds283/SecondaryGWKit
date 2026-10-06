@@ -1,0 +1,13 @@
+diff --git a/Datastore/replication.py b/Datastore/replication.py
+index 12fc83c..9b3dba7 100644
+--- a/Datastore/replication.py
++++ b/Datastore/replication.py
+@@ -288,6 +288,8 @@ def same_value(a, b) -> bool:
+     are the same value. Copies of one row are written from one pickled object, so every float is
+     bit-identical and an approximate comparison has no place here.
+     """
++    from CosmologyModels import model_ids
++
+     if isinstance(a, float) and isinstance(b, float) and a != a and b != b:
+         return True
+     return a == b
