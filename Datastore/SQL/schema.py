@@ -22,13 +22,25 @@ set of tables in an order in which each can be dropped while the others are pres
 their foreign keys alone; the actor drops the tables it is given in that order. No order is kept by
 hand.
 
-This module itself imports only ``sqlalchemy``. Importing it runs ``Datastore/SQL/__init__.py``,
-which imports the actor module and so ``ray``; that initialises nothing.
+**The replication facts a factory declares** are carried here too (prompts/datastore-generic,
+prompt 07). Three keys of ``register()``, each checked against the class's own table and copied
+into the record of every class with a table: ``owner_column`` (the column whose one foreign key
+names the row this table's rows belong to), ``monotone_flags`` (the Boolean columns a get may turn
+on and nothing turns off) and ``validated_column`` (the Boolean column of the class's validated
+flag, which the factory's ``revalidate`` recomputes from stored rows). A declaration that does not
+fit its table raises ``ValueError``.
+
+This module itself imports only ``sqlalchemy`` and ``Datastore.contract``, which names the version
+table every prepended ``version`` column references. Importing it runs
+``Datastore/SQL/__init__.py``, which imports the actor module and so ``ray``; that initialises
+nothing.
 """
 
-from typing import Any, Dict, Iterable, List, Mapping, NamedTuple, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, NamedTuple, Optional, Tuple
 
 import sqlalchemy as sqla
+
+from Datastore.contract import VERSION_TABLE
 
 
 class BuiltSchema(NamedTuple):
@@ -50,6 +62,13 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
     columns and the table. The prepended columns come first, in the order ``serial``, ``version``,
     ``timestamp``, ``stepping``, then the factory's columns in the order it gives them. A class
     whose ``register()`` returns ``None`` has ``"table": None`` and no table.
+
+    A record of a class with a table also holds the three replication facts its factory declares,
+    each checked against the table (the module docstring): ``owner_column`` (``None`` when not
+    declared), ``monotone_flags`` (a tuple, ``()`` when not declared) and ``validated_column``
+    (``None`` when not declared). A declaration that does not fit raises ``ValueError`` naming the
+    class, the key and what is wrong. A record of a class with no table does not hold them, so a
+    reader uses ``.get``.
 
     The records hold no inserter: the actor adds its own.
     """
@@ -101,7 +120,7 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
             version_col = sqla.Column(
                 "version",
                 sqla.Integer,
-                sqla.ForeignKey("version.serial"),
+                sqla.ForeignKey(f"{VERSION_TABLE}.serial"),
                 index=True,
             )
             tab.append_column(version_col)
@@ -138,6 +157,18 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
             tab.append_column(col)
         schema["columns"] = sqla_columns
 
+        # the replication facts the factory declares (prompts/datastore-generic, prompt 07), each
+        # checked against the table's own columns
+        schema["owner_column"] = _declared_owner_column(
+            cls_name, tab, registration_data
+        )
+        schema["monotone_flags"] = _declared_monotone_flags(
+            cls_name, tab, registration_data
+        )
+        schema["validated_column"] = _declared_validated_column(
+            cls_name, tab, registration_data
+        )
+
         # store in table cache
         schema["table"] = tab
 
@@ -145,6 +176,104 @@ def build_schema(metadata: sqla.MetaData, factories: Mapping[str, Any]) -> Built
         records[cls_name] = schema
 
     return BuiltSchema(tables=tables, records=records)
+
+
+def _refuse_declaration(cls_name: str, key: str, value, tab: sqla.Table, why: str):
+    """The ``ValueError`` of a declaration that does not fit its table: the class, the key, the
+    value declared and what is wrong, with the table's columns."""
+    return ValueError(
+        f'build_schema: the factory of "{cls_name}" declares {key}={value!r}, {why}; the columns '
+        f"of its table are {[c.name for c in tab.columns]}"
+    )
+
+
+def _declared_owner_column(
+    cls_name: str, tab: sqla.Table, registration_data: Mapping[str, Any]
+) -> Optional[str]:
+    """``owner_column``: a column of the table with exactly one foreign key, which names the row
+    this table's rows belong to; ``None`` when it is not declared."""
+    owner = registration_data.get("owner_column", None)
+    if owner is None:
+        return None
+    if not isinstance(owner, str) or owner not in tab.c:
+        raise _refuse_declaration(
+            cls_name, "owner_column", owner, tab, "which is not a column of its table"
+        )
+    n = len(tab.c[owner].foreign_keys)
+    if n != 1:
+        raise _refuse_declaration(
+            cls_name,
+            "owner_column",
+            owner,
+            tab,
+            f"a column with {n} foreign keys, where the column naming a row's owner has exactly "
+            "one",
+        )
+    return owner
+
+
+def _declared_monotone_flags(
+    cls_name: str, tab: sqla.Table, registration_data: Mapping[str, Any]
+) -> Tuple[str, ...]:
+    """``monotone_flags``: Boolean columns of the table that a get may turn on and nothing turns
+    off, as a tuple; ``()`` when it is not declared."""
+    declared = registration_data.get("monotone_flags", ())
+    if isinstance(declared, str):
+        raise _refuse_declaration(
+            cls_name,
+            "monotone_flags",
+            declared,
+            tab,
+            "a string, where a sequence of column names is expected",
+        )
+    flags = tuple(declared)
+    absent = [f for f in flags if not isinstance(f, str) or f not in tab.c]
+    if len(absent) > 0:
+        raise _refuse_declaration(
+            cls_name,
+            "monotone_flags",
+            flags,
+            tab,
+            f"and {absent} are not columns of its table",
+        )
+    not_boolean = [f for f in flags if not isinstance(tab.c[f].type, sqla.Boolean)]
+    if len(not_boolean) > 0:
+        raise _refuse_declaration(
+            cls_name,
+            "monotone_flags",
+            flags,
+            tab,
+            f"and {not_boolean} are not Boolean columns",
+        )
+    return flags
+
+
+def _declared_validated_column(
+    cls_name: str, tab: sqla.Table, registration_data: Mapping[str, Any]
+) -> Optional[str]:
+    """``validated_column``: the Boolean column of the class's validated flag, which its
+    factory's ``revalidate`` recomputes from stored rows; ``None`` when it is not declared.
+    """
+    column = registration_data.get("validated_column", None)
+    if column is None:
+        return None
+    if not isinstance(column, str) or column not in tab.c:
+        raise _refuse_declaration(
+            cls_name,
+            "validated_column",
+            column,
+            tab,
+            "which is not a column of its table",
+        )
+    if not isinstance(tab.c[column].type, sqla.Boolean):
+        raise _refuse_declaration(
+            cls_name,
+            "validated_column",
+            column,
+            tab,
+            f"a column of type {tab.c[column].type!r}, which is not Boolean",
+        )
+    return column
 
 
 def drop_order(tables: Iterable[sqla.Table]) -> List[sqla.Table]:

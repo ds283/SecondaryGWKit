@@ -93,6 +93,8 @@ from typing import (
 
 import sqlalchemy as sqla
 
+from Datastore.contract import TAG_LABEL, TAG_SERIAL, TAG_TABLE
+
 PathType = Union[str, os.PathLike]
 
 # the classes of the inventory, in dependency order: the leaves, then wavenumber_exit_time and
@@ -440,7 +442,7 @@ def read_records(
     parents: Optional[Mapping[str, Parent]] = None,
     tags: Optional[Tuple[str, str]] = None,
     values: Optional[Tuple[str, str]] = None,
-    validated: bool = False,
+    validated: Optional[str] = None,
     parent_sets: Optional[Mapping[str, ParentSet]] = None,
 ) -> ShardRead:
     """
@@ -454,7 +456,8 @@ def read_records(
       members;
     - ``tags``: ``(association table, its column naming this class's serial)``, or ``None``;
     - ``values``: ``(value table, its column naming this class's serial)``, or ``None``;
-    - ``validated``: whether the class has a ``validated`` column.
+    - ``validated``: the name of the class's validated-flag column, or ``None`` where it has
+      none. It is read into the record's ``validated``.
     """
     name = table.name
     shard = context.shard
@@ -509,9 +512,9 @@ def read_records(
     )
 
     columns = [table.c.serial] + [table.c[c] for c in needed]
-    has_validated = validated
+    has_validated = validated is not None
     if has_validated:
-        columns.append(table.c.validated)
+        columns.append(table.c[validated].label("validated"))
     has_timestamp = "timestamp" in table.c
     if has_timestamp:
         columns.append(table.c.timestamp)
@@ -525,13 +528,13 @@ def read_records(
         tag_table_name, parent_column = tags
         tag_table = tables[tag_table_name]
         labels = {
-            serial: key["label"]
-            for serial, key in context.keys.get("store_tag", {}).items()
+            serial: key[TAG_LABEL]
+            for serial, key in context.keys.get(TAG_TABLE, {}).items()
         }
         no_parent: List[int] = []
         no_tag: List[int] = []
         for parent_serial, tag_serial in conn.execute(
-            sqla.select(tag_table.c[parent_column], tag_table.c.tag_serial)
+            sqla.select(tag_table.c[parent_column], tag_table.c[TAG_SERIAL])
         ):
             if parent_serial not in serials:
                 no_parent.append(parent_serial)
@@ -555,7 +558,7 @@ def read_records(
                     "orphan-tag",
                     name,
                     f"{len(no_tag)} {tag_table_name} row(s) on shard #{shard} name a "
-                    f"store_tag that is not there; e.g. tag serials {_examples(no_tag)}",
+                    f"{TAG_TABLE} that is not there; e.g. tag serials {_examples(no_tag)}",
                 )
             )
 

@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 6 of 9 prompts landed (01–06).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 7 of 9 prompts landed (01–07).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–07 are written; 08–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -55,7 +55,7 @@ recommended:**
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
-| 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ⬜ | — | — |
+| 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | this commit | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
@@ -925,10 +925,10 @@ again.
 | **G1** | 06 | `ShardedPool` and the actor given the registry and the serial batch sizes; no import of `Datastore._factories` | C1 #9, #10 | ✅ |
 | **G2** | 06 | `store_reader` and `store_inventory` given the registry; the replicated set read from the store's primary (the user, 2026-10-05) | C1 #10, #14 | ✅ |
 | **G3** | 06 | the older registries moved to `config/datastore.py`, per U2; the layer given the tables to drop, in an order derived from foreign keys (`_drop_order` deleted) | C1 #9–#11 | ✅ |
-| **F1** | 07 | the copy-as-a-unit rule derived from foreign keys, through the owner an owned table declares (the user, 2026-10-06) | C1 #2 | ⬜ |
-| **F2** | 07 | monotone flags declared by the factories | C1 #5 | ⬜ |
-| **F3** | 07 | the `validated` rule declared by the factory; `_StoredModel` gone | C1 #6 | ⬜ |
-| **F4** | 07 | the version and tag tables per U4; project names out of `ShardedPool`'s comments and messages | C1 #1, #7, #8 | ⬜ |
+| **F1** | 07 | the copy-as-a-unit rule derived from foreign keys, through the owner an owned table declares (the user, 2026-10-06): `owner_column` on `BackgroundModelValue`; `ShardedPool._unit_tables` replaces the hard-coded unit and `_prune_unit` | C1 #2 | ✅ |
+| **F2** | 07 | monotone flags declared by the factories: `monotone_flags` on `redshift` and `wavenumber` | C1 #5 | ✅ |
+| **F3** | 07 | the `validated` rule declared by the factory: `validated_column` and the `revalidate` hook on `BackgroundModel`; `_StoredModel` gone; `read_records(validated=<column>)` | C1 #6 | ✅ |
+| **F4** | 07 | the version and tag tables per U4 (`Datastore/contract.py`; the version object built by the version factory; `MetadataConcepts` no longer imported); the `owned_serials` hook (`_value_serials` gone); project names out of `ShardedPool`'s code, comments and messages | C1 #1, #4, #7, #8 | ✅ |
 | **I1** | 08 | the inventory's class list and order derived | C1 #12 | ⬜ |
 | **I2** | 08 | the polymorphic cosmology reference declared by the client | C1 #13 | ⬜ |
 | **K1** | 09 | a test that the generic layer names no registry table and imports no client package | §C | ⬜ |
@@ -964,6 +964,23 @@ again.
     `utilities`, where it loaded 22 factory modules and 21 `ComputeTargets`, 3 `CosmologyConcepts`
     and 11 `CosmologyModels` modules (`Datastore/tests/test_layer_registry.py`,
     `TestTheLayerImportsNoClient`). Left for 07–09: rows 1, 2, 4–8, 12 and 13, and the guard.
+  - **Narrowed (2026-10-06, prompt 07; this commit):** audit C1 rows 1, 2, 4, 5, 6, 7 and 8 are
+    gone. Three `register()` keys, carried by `build_schema` into every record of a class with a
+    table and refused on a misfit: `owner_column` (declared by `BackgroundModelValue`),
+    `monotone_flags` (`redshift`, `wavenumber`) and `validated_column` (`BackgroundModel`). Two
+    factory hooks on `SQLAFactoryBase`, not abstract: `revalidate(serial, conn, table, tables)`
+    and `owned_serials(obj)`, implemented by `BackgroundModel`'s factory. The pool's copy unit and
+    prune unit are one function, `ShardedPool._unit_tables`, read from foreign keys through the
+    declared owner and the tag table; `_prune_unit`, `_value_serials` and `_StoredModel` are
+    deleted. The version and tag tables and their columns are named once, in
+    `Datastore/contract.py` (U4); the pool builds the version object through the version table's
+    factory and no longer imports `MetadataConcepts`; the actor, `schema.py` and
+    `read_records`' tag and validated reads name no project table or column, only the contract
+    and the layer's own prepended `version` column. `ShardedPool.py` names no
+    registry table but the contract's, in code, comments or messages, pinned by
+    `Datastore/tests/test_declared_facts.py`. Every repair, refusal, printed line and record of
+    the check at open, and the fingerprint, are byte-identical to `f1b8d02`'s (the log). Left for
+    08–09: rows 12 and 13, and the guard.
 - **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
   - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
     primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
@@ -1254,5 +1271,20 @@ modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four co
 | ComputeTargets | 693 OK | 693 (1 failure, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, wall clock: it failed alone 3 times of 3 at load ~23 and passed alone a fourth time, and failed alone 2 times of 3 on an export of `154d868`) | 0 |
 | CosmologyModels | 39 OK | 39 OK | 0 |
 | Datastore | 644 OK | 664 OK | +20 in `test_layer_registry`; four `TestDropOrder` methods converted (three renamed) |
+| LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
+| RunRegistry | 280 OK | 280 OK | 0 |
+
+### 5.8 After prompt 07 (2026-10-06, this commit)
+
+Measured serially on the staged tree, at load 7–30. The Datastore suite was run in four groups of
+modules (`discover -p 'test_[a-f]*.py'`, `[g-o]`, `[p-r]`, `[s-z]`); the four counts are 150, 151,
+200 and 191 (before: 122, 151, 200, 191).
+
+| Suite | Before (orchestrator, `f1b8d02`) | After | Difference |
+|---|---|---|---|
+| AdaptiveLevin | 32 OK | 32 OK | 0 |
+| ComputeTargets | 693 OK | 693 OK | 0 |
+| CosmologyModels | 39 OK | 39 OK | 0 |
+| Datastore | 664 OK | 692 OK | +28 in `test_declared_facts`; the two witness tests of `test_schema_builder` read the new witness |
 | LiouvilleGreen | 148 OK (1 skipped) | 148 OK (1 skipped) | 0 |
 | RunRegistry | 280 OK | 280 OK | 0 |

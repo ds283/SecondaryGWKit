@@ -19,7 +19,7 @@ from Datastore.SQL.schema import (
     build_schema,
     schema_differences,
 )
-from Datastore.object import DatastoreObject
+from Datastore.contract import TAG_TABLE, VERSION_LABEL, VERSION_TABLE
 from Datastore.replication import (
     ReplicatedDivergence,
     ReplicationInFlight,
@@ -32,7 +32,6 @@ from Datastore.shard_paths import (
     shard_file_name,
     shard_file_problem,
 )
-from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
 # the files SQLite keeps beside a database while it is open or was not closed cleanly: the
@@ -342,7 +341,9 @@ class ShardedPool:
         self._version = self._find_version_row(version_label)
         if self._version is None:
             self._version = ray.get(
-                self._get_impl_replicated_table("version", {"label": version_label})
+                self._get_impl_replicated_table(
+                    VERSION_TABLE, {VERSION_LABEL: version_label}
+                )
             )
         ray.get(
             [
@@ -354,19 +355,24 @@ class ShardedPool:
     def _find_version_row(self, version_label: str):
         """
         The version row of ``version_label``, read from every shard file with a plain ``mode=ro``
-        select and nothing written, as a ``store_tag`` with its serial and label; or None if no
-        shard holds it. For an existing store the check at open has compared the ``version``
-        table across the shards already, and a new store's shards are empty, so the shards agree;
-        reading every one costs a select each, and makes a disagreement raise rather than be
-        resolved by whichever shard was read. A label held twice on a shard raises, as the
-        factory's own lookup does.
+        select and nothing written; or None if no shard holds it. For an existing store the check
+        at open has compared the version table across the shards already, and a new store's
+        shards are empty, so the shards agree; reading every one costs a select each, and makes a
+        disagreement raise rather than be resolved by whichever shard was read. A label held twice
+        on a shard raises, as the factory's own lookup does.
+
+        The object returned is built by the version table's factory, as an actor's get builds it
+        (README §6.2 U4 of prompts/datastore-generic): on a ``mode=ro`` connection to the
+        lowest-serial shard that holds the row, with an inserter that raises, which is never
+        reached because the row exists, so the factory finds it and inserts nothing.
         """
         found = {}
         for sid, path in sorted(self._shard_db_files.items()):
             conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
             try:
                 rows = conn.execute(
-                    "SELECT serial, label FROM version WHERE label = ?",
+                    f'SELECT serial, "{VERSION_LABEL}" FROM "{VERSION_TABLE}" '
+                    f'WHERE "{VERSION_LABEL}" = ?',
                     (version_label,),
                 ).fetchall()
             finally:
@@ -388,9 +394,38 @@ class ShardedPool:
         row = next(iter(found.values()), None)
         if row is None:
             return None
-        version = store_tag(store_id=row[0], label=row[1])
-        version._deserialized = True
-        return version
+
+        # store_reader imports this module at module scope, so it is imported here
+        from Datastore.store_reader import read_only_url
+
+        def refuse_insert(conn, payload):
+            raise RuntimeError(
+                f'Sharded datastore "{str(self._primary_file)}": building the version row of '
+                f'label "{version_label}" would insert {payload!r}, though every shard holds it'
+            )
+
+        built = build_schema(sqla.MetaData(), self._factories)
+        sid = min(s for s, r in found.items() if r is not None)
+        engine = sqla.create_engine(
+            read_only_url(Path(self._shard_db_files[sid])),
+            future=True,
+            poolclass=sqla.pool.NullPool,
+        )
+        try:
+            with engine.connect() as conn:
+                try:
+                    return self._factories[VERSION_TABLE].build(
+                        payload={VERSION_LABEL: version_label},
+                        conn=conn,
+                        table=built.tables[VERSION_TABLE],
+                        inserter=refuse_insert,
+                        tables=built.tables,
+                        inserters={},
+                    )
+                finally:
+                    conn.rollback()
+        finally:
+            engine.dispose()
 
     # THE READ-ONLY POOL (prompts/a3-v2-readiness, prompt 03)
     #
@@ -488,8 +523,8 @@ class ShardedPool:
         if self._version is None:
             present = self._version_labels_present()
             raise ReadOnlyMiss(
-                "version",
-                {"label": version_label},
+                VERSION_TABLE,
+                {VERSION_LABEL: version_label},
                 store=self._primary_file,
                 detail=f"the store holds the version label(s) {present}",
             )
@@ -614,7 +649,7 @@ class ShardedPool:
             conn = sqlite3.connect(f"{Path(path).as_uri()}?mode=ro", uri=True)
             try:
                 rows = conn.execute(
-                    "SELECT label FROM version ORDER BY serial"
+                    f'SELECT "{VERSION_LABEL}" FROM "{VERSION_TABLE}" ORDER BY serial'
                 ).fetchall()
             finally:
                 conn.close()
@@ -1044,16 +1079,18 @@ class ShardedPool:
     #      open. A prune record never reaches the get/store/validate licence below;
     #   3. otherwise every replicated table, and the tag table of every replicated class, is read
     #      from every shard and compared by full row; the primary's shard_keys are checked against
-    #      the wavenumbers every shard holds;
+    #      the rows of the shard-key class every shard holds;
     #   4. no record and no difference: nothing is written, and the store opens as before;
     #   5. a get, store or validate record, and differences its interrupted write explains: each
     #      row of the record's class that the record's controlling shard holds and another shard
-    #      lacks is copied to that shard verbatim (a BackgroundModel as a unit: row, tags and
-    #      values), a flag the controller holds set is set, and after a validate
-    #      BackgroundModel.validated is recomputed on each shard by the factory's own rule. Every
-    #      shard is then compared again, inside the repair's transactions; only if they all agree
-    #      are the shards committed, and then the record is cleared, in its own commit, last. A
-    #      record over identical shards is simply cleared;
+    #      lacks is copied to that shard verbatim (a class whose unit has more than one table as
+    #      a unit: its row, its tag rows and the rows that declare it their owner, _unit_tables),
+    #      a monotone flag its factory declares and the controller holds set is set, and after a
+    #      validate the class's declared validated column is recomputed on each shard by its
+    #      factory's revalidate, the factory's own rule. Every shard is then compared again,
+    #      inside the repair's transactions; only if they all agree are the shards committed, and
+    #      then the record is cleared, in its own commit, last. A record over identical shards is
+    #      simply cleared;
     #   6. anything else raises ReplicatedDivergence, and nothing is written.
     #
     # Apart from completing a recorded prune, which deletes exactly the rows the factory's own
@@ -1258,12 +1295,14 @@ class ShardedPool:
         """
         What is compared, table by table: every replicated class that has a table, in the order
         the constructor was given them, then the tag table of every replicated class (a table
-        that is neither replicated nor sharded, whose foreign keys other than store_tag's all
-        name replicated tables: BackgroundModel_tags).
+        that is neither replicated nor sharded, whose foreign keys other than the tag table's all
+        name replicated tables).
 
         Each spec gives the table, the key its rows are compared under and the columns compared.
         A table is keyed by its primary key, and every column is compared, ``timestamp``
-        included: every replicated write stamps every shard's copy with its one timestamp.
+        included: every replicated write stamps every shard's copy with its one timestamp. Each
+        spec also carries what the table's factory declares (``build_schema``'s record):
+        ``owner_column``, ``monotone_flags`` and ``validated_column``.
         """
         replicated = [n for n in self._replicated_tables if n in built.tables]
         listed = set(self._replicated_tables) | set(self._sharded_tables.keys())
@@ -1271,15 +1310,14 @@ class ShardedPool:
         for name, table in built.tables.items():
             if name in listed:
                 continue
-            parents = {fk.column.table.name for fk in table.foreign_keys} - {
-                "store_tag"
-            }
+            parents = {fk.column.table.name for fk in table.foreign_keys} - {TAG_TABLE}
             if len(parents) > 0 and parents <= set(replicated):
                 tag_tables.append(name)
 
         specs = []
         for name in replicated + tag_tables:
             table = built.tables[name]
+            record = built.records[name]
             key = tuple(c.name for c in table.primary_key.columns)
             compared = [c.name for c in table.columns]
             specs.append(
@@ -1289,6 +1327,9 @@ class ShardedPool:
                     "key": key,
                     "compared": compared,
                     "serial_keyed": key == ("serial",),
+                    "owner_column": record.get("owner_column"),
+                    "monotone_flags": tuple(record.get("monotone_flags", ())),
+                    "validated_column": record.get("validated_column"),
                 }
             )
         return specs
@@ -1394,7 +1435,7 @@ class ShardedPool:
         ``duplicate`` (a key held by more than one row on a shard), ``missing`` (a key some
         shards hold and others lack), ``differs`` (a key whose compared values differ between
         the shards that hold it) and ``shard_key`` (a key_serial of the primary's shard_keys that
-        is not a wavenumber serial on every shard).
+        is not a serial of the shard-key class on every shard).
         """
         shard_ids = sorted(snapshots.keys())
         differences = []
@@ -1436,7 +1477,7 @@ class ShardedPool:
                         {"kind": "differs", "table": name, "key": key, "values": values}
                     )
 
-        # the primary's shard keys name wavenumbers every shard holds
+        # the primary's shard keys name rows of the shard-key class that every shard holds
         key_table = self._ShardKeyType_name
         if len(shard_ids) > 0 and key_table in snapshots[shard_ids[0]]:
             for key_serial, shard_id in sorted(self._shard_keys.items()):
@@ -1567,8 +1608,9 @@ class ShardedPool:
                     "class_name": "shard_keys",
                     "shard": d["lackers"],
                     "key": f"key_serial {d['key']}",
-                    "detail": f"the primary assigns wavenumber serial {d['key']} to shard "
-                    f"{d['shard_id']}, but it is missing on shard(s) {d['lackers']}",
+                    "detail": f"the primary assigns {self._ShardKeyType_name} serial "
+                    f"{d['key']} to shard {d['shard_id']}, but it is missing on shard(s) "
+                    f"{d['lackers']}",
                 }
             if why is not None:
                 entry["detail"] += f"; {why}"
@@ -1582,11 +1624,12 @@ class ShardedPool:
         list names every difference the record does not license repairing.
 
         The licence: only from the record's controlling shard, only the tables of the record's
-        class (a BackgroundModel's row, tags and values), only rows the controller holds and
-        another shard lacks, written by the recorded write (their timestamp is the record's
-        start; under a store_id, that serial), a BackgroundModel as a whole unit, a source or
-        response flag the controller holds set after a get, and a validated flag after a
-        validate of the record's model, which is recomputed. Anything else is refused.
+        class's unit (``_unit_tables``: its own, its tag tables, and the tables that declare it
+        their owner), only rows the controller holds and another shard lacks, written by the
+        recorded write (their timestamp is the record's start; under a store_id, that serial), a
+        unit of more than one table as a whole, a monotone flag a factory declares that the
+        controller holds set after a get, and the class's declared validated column after a
+        validate of the record's row, which is recomputed. Anything else is refused.
 
         Only a get, store or validate record is licensed. A prune record is completed by
         _complete_interrupted_prune and never reaches this; were one passed here, it is refused
@@ -1626,21 +1669,29 @@ class ShardedPool:
                 }
             ]
 
-        unit = [cls_name]
-        if cls_name == "BackgroundModel":
-            unit = [
-                t
-                for t in (
-                    "BackgroundModel",
-                    "BackgroundModel_tags",
-                    "BackgroundModelValue",
-                )
-                if t in by_name
-            ]
+        unit = self._unit_tables(cls_name, specs)
+        # the flags a get may turn on, and the validated column a validate recomputes, as the
+        # factories declare them
         flag_columns = {
-            "redshift": ("source", "response"),
-            "wavenumber": ("source", "response"),
+            spec["name"]: spec["monotone_flags"]
+            for spec in specs
+            if len(spec["monotone_flags"]) > 0
         }
+        validated_column = by_name[cls_name]["validated_column"]
+        flag_names = list(
+            dict.fromkeys(f for spec in specs for f in spec["monotone_flags"])
+        )
+        validated_names = list(
+            dict.fromkeys(
+                spec["validated_column"]
+                for spec in specs
+                if spec["validated_column"] is not None
+            )
+        )
+        turned_on_text = (
+            f"only a {' or '.join(flag_names)} flag after a get, or "
+            f"{' or '.join(validated_names)} after a validate"
+        )
 
         copies = {}  # (table, shard) -> set of keys
         flags = {}  # (table, shard) -> {key: [columns]}
@@ -1650,7 +1701,8 @@ class ShardedPool:
             kind = d["kind"]
             name = d["table"]
             if kind == "shard_key":
-                # compared again once the repair is written: a copied wavenumber can satisfy it
+                # compared again once the repair is written: a copied row of the shard-key class
+                # can satisfy it
                 continue
             if kind == "duplicate":
                 refuse(d, "this is not something a replication writes")
@@ -1705,8 +1757,9 @@ class ShardedPool:
                 ):
                     flags.setdefault((name, sid), {})[d["key"]] = differing
                 elif (
-                    name == "BackgroundModel"
-                    and differing == ["validated"]
+                    name == cls_name
+                    and validated_column is not None
+                    and differing == [validated_column]
                     and turned_on
                     and operation == "validate"
                     and d["key"] == (store_id,)
@@ -1715,9 +1768,8 @@ class ShardedPool:
                 else:
                     refuse(
                         {**d, "values": {controller: reference, sid: values}},
-                        f"only a source or response flag after a get, or validated after a "
-                        f"validate, can be turned on from the controlling shard {controller}; "
-                        f"shard {sid} differs in {differing}",
+                        f"{turned_on_text}, can be turned on from the controlling shard "
+                        f"{controller}; shard {sid} differs in {differing}",
                     )
 
         # the controller's full rows, verbatim, for every key to be copied
@@ -1752,30 +1804,28 @@ class ShardedPool:
                 elif name == cls_name and store_id is not None and key != (store_id,):
                     refuse(d, f"the record names serial {store_id}, not this one")
 
-        # a BackgroundModel is copied as a unit: a shard lacking the model row receives every
-        # one of its tag and value rows, and a shard holding any part of it receives nothing
-        if cls_name == "BackgroundModel":
+        # a unit of more than one table is copied as a unit: a shard lacking the class's row
+        # receives every one of its unit's rows that name it, and a shard holding any part of it
+        # receives nothing. The two refusals keep the words "model row" and "part of this model",
+        # which name no table, so that their text is what it has always been
+        if len(unit) > 1:
             for sid in sorted(snapshots.keys()):
-                models = {k[0] for k in copies.get(("BackgroundModel", sid), set())}
+                owners = {k[0] for k in copies.get((cls_name, sid), set())}
                 for name in unit:
-                    if name == "BackgroundModel":
+                    if name == cls_name:
                         continue
-                    # a row's model is the column its foreign key to BackgroundModel names
+                    # a member row's owner is in the column naming the class's row
                     snap = snapshots[controller][name]
-                    model_column = snap["columns"].index(
-                        next(
-                            fk.parent.name
-                            for fk in by_name[name]["table"].foreign_keys
-                            if fk.column.table.name == "BackgroundModel"
-                        )
+                    owner_index = snap["columns"].index(
+                        self._column_naming(by_name[name], cls_name)
                     )
-                    model_of = {
-                        k: row[model_column]
+                    owner_of = {
+                        k: row[owner_index]
                         for k, row in snap["rows"].items()
-                        if row[model_column] in models
+                        if row[owner_index] in owners
                     }
                     got = copies.get((name, sid), set())
-                    held = set(model_of.keys())
+                    held = set(owner_of.keys())
                     for key in sorted(got - held):
                         refuse(
                             {
@@ -1786,19 +1836,19 @@ class ShardedPool:
                                 "lackers": [sid],
                             },
                             f"shard {sid} holds its model row, so this is not part of a "
-                            "BackgroundModel it lacks",
+                            f"{cls_name} it lacks",
                         )
                     for key in sorted(held - got):
                         refuse(
                             {
                                 "kind": "missing",
-                                "table": "BackgroundModel",
-                                "key": (model_of[key],),
+                                "table": cls_name,
+                                "key": (owner_of[key],),
                                 "holders": [controller],
                                 "lackers": [sid],
                             },
                             f"shard {sid} already holds part of this model ({name} {key}), "
-                            "and a BackgroundModel is copied only as a unit",
+                            f"and a {cls_name} is copied only as a unit",
                         )
 
         plan = {
@@ -1830,8 +1880,8 @@ class ShardedPool:
     def _apply_replicated_repair(self, plan, record, specs, built, conns, snapshots):
         """
         Write the plan, inside each shard's open transaction: the copies (in the specs' order,
-        so that a model row precedes its tags and values), then the flags, then the recomputed
-        validated flags. Return (actions, refusals).
+        so that a class's row precedes its tag and owned rows), then the flags, then the
+        recomputed validated flags. Return (actions, refusals).
         """
         by_name = {spec["name"]: spec for spec in specs}
         controller = record["controller_shard"]
@@ -1888,48 +1938,37 @@ class ShardedPool:
 
     def _recompute_validated(self, record, built, conns, snapshots):
         """
-        After a validate of the record's BackgroundModel, recompute its ``validated`` flag on each
-        shard by the factory's own rule (sqla_BackgroundModelFactory.validate: its value-row count
-        against z_samples), from that shard's own value rows, each inside a savepoint. A result
-        that turns the flag on is kept; any other is rolled back to the savepoint, so that no flag
-        is written False. A shard holding True whose rule gives False refuses. Return (actions,
-        refusals); whether the shards then agree is for the second comparison.
+        After a validate of the record's row, recompute the validated column its class's factory
+        declares on each shard by the factory's ``revalidate`` (the rule its ``validate`` applies),
+        from that shard's own stored rows, each inside a savepoint. A result that turns the flag
+        on is kept; any other is rolled back to the savepoint, so that no flag is written False. A
+        shard holding True whose rule gives False refuses. Return (actions, refusals); whether the
+        shards then agree is for the second comparison.
         """
-        factory = self._factories["BackgroundModel"]
-        table = built.tables["BackgroundModel"]
+        cls_name = record["class_name"]
+        factory = self._factories[cls_name]
+        table = built.tables[cls_name]
+        column = built.records[cls_name]["validated_column"]
         serial = record["store_id"]
-
-        class _StoredModel(DatastoreObject):
-            """What the factory's validate reads of a model: its serial and its label."""
-
-            def __init__(self, store_id: int, label):
-                super().__init__(store_id)
-                self.label = label
 
         actions = []
         refusals = []
         for sid in sorted(conns.keys()):
-            snap = snapshots[sid]["BackgroundModel"]
+            snap = snapshots[sid][cls_name]
             row = snap["rows"].get((serial,))
             if row is None:
                 continue
             columns = snap["columns"]
-            stored = row[columns.index("validated")] is True
-            label = row[columns.index("label")]
+            stored = row[columns.index(column)] is True
 
             savepoint = conns[sid].begin_nested()
-            result = factory.validate(
-                _StoredModel(serial, label),
-                conn=conns[sid],
-                table=table,
-                tables=built.tables,
-            )
+            result = factory.revalidate(serial, conns[sid], table, built.tables)
             if result is True and not stored:
                 savepoint.commit()
                 actions.append(
                     {
                         "action": "validated recomputed",
-                        "class_name": "BackgroundModel",
+                        "class_name": cls_name,
                         "shard": sid,
                         "from": sid,
                         "keys": [(serial,)],
@@ -1941,10 +1980,10 @@ class ShardedPool:
                 if stored and result is not True:
                     refusals.append(
                         {
-                            "class_name": "BackgroundModel",
+                            "class_name": cls_name,
                             "shard": sid,
                             "key": f"serial {serial}",
-                            "detail": "the shard holds validated=True, and the factory's rule "
+                            "detail": f"the shard holds {column}=True, and the factory's rule "
                             "gives False from its own value rows",
                         }
                     )
@@ -1995,8 +2034,8 @@ class ShardedPool:
     # THE PRUNE AT OPEN OF A REPLICATED CLASS
     #
     # Under prune_unvalidated, the unvalidated rows of every replicated class whose factory
-    # validates at startup (today BackgroundModel, with its tags and values) are deleted by the
-    # pool, not by the actors (prompts/a3-v2-readiness prompt 02, the user's decision U1). An
+    # validates at startup (with the rows of its unit, _unit_tables) are deleted by the pool, not
+    # by the actors (prompts/a3-v2-readiness prompt 02, the user's decision U1). An
     # actor that pruned its own shard in its constructor did so outside any record, so an open
     # interrupted between actors left shards that differ with nothing to say which is right
     # (docs/a3-v2-readiness-audit.md V1, case 4). _prune_replicated_tables runs in the
@@ -2013,10 +2052,10 @@ class ShardedPool:
     #      validate_on_startup with prune=True, so that the rule for "unvalidated" stays in the
     #      factory. Before the transaction commits, the factory is asked again with prune=False
     #      and must report nothing, and every compared table must have lost rows only, and only
-    #      the class's own and those of the tables that name it by foreign key. Otherwise the
-    #      shard is rolled back and the open raises with the record left set. The factory catches
-    #      a SQLAlchemyError from its own deletes and returns normally, so its return says
-    #      nothing about whether the prune took;
+    #      the class's own and those of the other tables of its unit. Otherwise the shard is
+    #      rolled back and the open raises with the record left set. The factory catches a
+    #      SQLAlchemyError from its own deletes and returns normally, so its return says nothing
+    #      about whether the prune took;
     #   4. the record is deleted, in its own commit, last.
     #
     # The prune is idempotent: it deletes the class's unvalidated rows, and only those, so a
@@ -2037,21 +2076,59 @@ class ShardedPool:
         ]
 
     @staticmethod
-    def _prune_unit(cls_name: str, built, specs) -> List[str]:
-        """The compared tables a prune of ``cls_name`` may delete from: its own, and every
-        compared table with a foreign key to it (for BackgroundModel, its tags and values).
+    def _is_tag_table_of(spec: dict, cls_name: str) -> bool:
+        """Whether the compared table of ``spec`` is a tag table of ``cls_name``: it has a foreign
+        key to the tag table, and every other foreign key it has references ``cls_name``.
+        """
+        targets = [fk.column.table.name for fk in spec["table"].foreign_keys]
+        others = [t for t in targets if t != TAG_TABLE]
+        return TAG_TABLE in targets and len(others) > 0 and set(others) == {cls_name}
+
+    @staticmethod
+    def _declares_owner(spec: dict, cls_name: str) -> bool:
+        """Whether the compared table of ``spec`` declares an ``owner_column`` whose foreign key
+        references ``cls_name``."""
+        owner = spec["owner_column"]
+        if owner is None:
+            return False
+        return any(
+            fk.column.table.name == cls_name
+            for fk in spec["table"].c[owner].foreign_keys
+        )
+
+    @staticmethod
+    def _unit_tables(cls_name: str, specs) -> List[str]:
+        """
+        The compared tables of ``cls_name``'s unit, read from foreign keys: the class's own
+        table, then the compared tables that are its tag tables, then the compared tables whose
+        declared ``owner_column`` references it, each group in the specs' order. It is the unit
+        the check at open copies as a whole (``_plan_replicated_repair``) and the tables a prune of
+        the class may delete from (``_prune_shard``). A table with a foreign key to the class that
+        is not its tag table and does not declare it its owner is not in it (prompts/datastore-
+        generic README §6.2, the user's choice for prompt 07).
         """
         unit = [cls_name]
         for spec in specs:
-            name = spec["name"]
-            if name == cls_name:
-                continue
-            if any(
-                fk.column.table.name == cls_name
-                for fk in built.tables[name].foreign_keys
+            if spec["name"] != cls_name and ShardedPool._is_tag_table_of(
+                spec, cls_name
             ):
-                unit.append(name)
+                unit.append(spec["name"])
+        for spec in specs:
+            if spec["name"] != cls_name and ShardedPool._declares_owner(spec, cls_name):
+                unit.append(spec["name"])
         return unit
+
+    @staticmethod
+    def _column_naming(spec: dict, cls_name: str) -> str:
+        """The column of a member of ``cls_name``'s unit that names the class's row: its declared
+        ``owner_column``, or a tag table's foreign key to the class."""
+        if ShardedPool._declares_owner(spec, cls_name):
+            return spec["owner_column"]
+        return next(
+            fk.parent.name
+            for fk in spec["table"].foreign_keys
+            if fk.column.table.name == cls_name
+        )
 
     def _prune_needed(self, cls_name: str, built, shard_ids) -> bool:
         """Whether any shard holds a row of ``cls_name`` that its factory calls unvalidated,
@@ -2091,7 +2168,14 @@ class ShardedPool:
 
         factory = self._factories[cls_name]
         table = built.tables[cls_name]
-        unit = self._prune_unit(cls_name, built, specs)
+        unit = self._unit_tables(cls_name, specs)
+        # the refusal below names the unit as it always has: the class, then the rest of its unit
+        # in the specs' order, which is not _unit_tables' order
+        unit_named = [cls_name] + [
+            spec["name"]
+            for spec in specs
+            if spec["name"] != cls_name and spec["name"] in unit
+        ]
         path = self._shard_db_files[sid]
 
         before = self._read_replicated_tables(conn, specs)
@@ -2121,7 +2205,7 @@ class ShardedPool:
             if len(deleted) > 0 and name not in unit:
                 problems.append(
                     f'"{name}" lost rows {deleted}, and a prune of "{cls_name}" deletes only '
-                    f"from {unit}"
+                    f"from {unit_named}"
                 )
             if len(deleted) > 0:
                 actions.append(
@@ -3256,18 +3340,11 @@ class ShardedPool:
 
         return work_refs
 
-    @staticmethod
-    def _value_serials(obj) -> Optional[List[Optional[int]]]:
-        """The serials of an object's value rows, if it carries any (BackgroundModel), else None."""
-        values = getattr(obj, "_values", None)
-        if values is None:
-            return None
-        return [getattr(value, "_my_id", None) for value in values]
-
     def _store_impl_replicated_table(self, cls_name, item):
         # we push an initial 'store' to the controlling shard, and then push the object, complete
-        # with its new store_id (and its value rows' serials), to all the other shards, each of
-        # which inserts it under those serials or verifies that it already holds it
+        # with its new store_id (and the serials of the rows it owns, which its factory's
+        # owned_serials gives), to all the other shards, each of which inserts it under those
+        # serials or verifies that it already holds it
         def submit_controller(handle, timestamp):
             return handle.object_store.remote(item, insert_timestamp=timestamp)
 
@@ -3278,7 +3355,8 @@ class ShardedPool:
                 )
 
             serial = obj._my_id
-            value_serials = ShardedPool._value_serials(obj)
+            factory = self._factories[cls_name]
+            value_serials = factory.owned_serials(obj)
 
             def submit(handle, timestamp):
                 return handle.object_store.remote(obj, insert_timestamp=timestamp)
@@ -3287,7 +3365,7 @@ class ShardedPool:
                 got = getattr(answer, "_my_id", None)
                 if got != serial:
                     raise ReplicationMismatch(shard_id, cls_name, serial, got)
-                got_values = ShardedPool._value_serials(answer)
+                got_values = factory.owned_serials(answer)
                 if got_values != value_serials:
                     raise ReplicationMismatch(
                         shard_id,
@@ -3434,8 +3512,8 @@ class ShardedPool:
             return
 
         # a read-only pool assigns no shard key (prompts/a3-v2-readiness, prompt 03): the check at
-        # open compared shard_keys with the wavenumbers every shard holds, so a wavenumber with
-        # no key here is one the store's primary does not know
+        # open compared shard_keys with the rows of the shard-key class every shard holds, so a
+        # row with no key here is one the store's primary does not know
         if getattr(self, "_read_only", False):
             raise ReadOnlyWrite(
                 self._primary_file,

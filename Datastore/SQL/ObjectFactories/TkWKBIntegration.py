@@ -978,7 +978,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             },
             tags=("TkWKB_tags", "wkb_serial"),
             values=("TkWKBValue", "wkb_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

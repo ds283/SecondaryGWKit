@@ -23,6 +23,8 @@ class sqla_redshift_factory(SQLAFactoryBase):
                 sqla.Column("source", sqla.Boolean, default=False),
                 sqla.Column("response", sqla.Boolean, default=False),
             ],
+            # the pool's check at open may set these from the controlling shard after a get
+            "monotone_flags": ("source", "response"),
         }
 
     @staticmethod

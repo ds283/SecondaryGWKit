@@ -156,14 +156,17 @@ internals are the implementing prompt's to design.
   - `config/datastore.py`: `factories`, `drop_groups`, `serial_batch_sizes`, `tables_to_drop`.
 - **07 ships** the `register()` keys (or factory hooks) for the facts of audit C1 rows 5 and 6. 07
   names them; `schema.build_schema` carries them into `built.records`. *Named 2026-10-06 (prompt
-  07, written):*
+  07, written); shipped 2026-10-06 (prompt 07, this commit), as named:*
   - the `register()` keys `owner_column`, `monotone_flags` and `validated_column`, carried into
-    every record of a class with a table and checked against it;
+    every record of a class with a table and checked against it (a misfit raises `ValueError`
+    naming the class and the key); declared today by `BackgroundModelValue` (`owner_column`),
+    `redshift` and `wavenumber` (`monotone_flags`) and `BackgroundModel` (`validated_column`);
   - the factory hooks `revalidate(serial, conn, table, tables)` and `owned_serials(obj)`, on
-    `SQLAFactoryBase` and not abstract;
+    `SQLAFactoryBase` and not abstract, implemented by `BackgroundModel`'s factory;
   - `Datastore/contract.py`: `VERSION_TABLE`, `VERSION_LABEL`, `TAG_TABLE`, `TAG_LABEL` and
     `TAG_SERIAL`, the tables and columns the layer owns (U4);
-  - `ShardedPool._unit_tables(cls_name, specs)`, the one unit of the repair licence and the prune.
+  - `ShardedPool._unit_tables(cls_name, specs)`, the one unit of the repair licence and the prune;
+  - `store_inventory.read_records(…, validated=<column name or None>)`, where it took a bool.
 
 ## 5. The rules this campaign runs under
 

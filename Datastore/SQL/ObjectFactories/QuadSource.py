@@ -563,7 +563,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             },
             tags=("QuadSource_tags", "parent_serial"),
             values=("QuadSourceValue", "parent_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

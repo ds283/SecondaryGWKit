@@ -655,7 +655,7 @@ class sqla_TkNumericIntegration_factory(SQLAFactoryBase):
             },
             tags=("TkNumeric_tags", "integration_serial"),
             values=("TkNumericValue", "integration_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

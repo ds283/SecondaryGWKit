@@ -983,7 +983,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             },
             tags=("GkWKB_tags", "wkb_serial"),
             values=("GkWKBValue", "wkb_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

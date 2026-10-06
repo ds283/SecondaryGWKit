@@ -602,11 +602,17 @@ LAYER_FILES = [
     "Datastore/store_reader.py",
     "Datastore/store_inventory.py",
 ]
-# MetadataConcepts and utilities are still loaded: ShardedPool imports MetadataConcepts.store_tag,
-# which is prompt 07's (README §6.2, U4), and the actor imports utilities.WallclockTimer, a generic
-# helper. Prompt 09's guard generalises this test; this one pins only what prompt 06 removed.
+# utilities is the one project package still allowed: the actor imports utilities.WallclockTimer,
+# a generic helper. MetadataConcepts is no longer loaded: since prompt 07 the pool builds the
+# version object through the version table's factory, and imports no store_tag (README §6.2,
+# U4). Prompt 09's guard generalises this test; this one pins only what prompts 06 and 07 removed.
 FORBIDDEN_MODULES = {"config.datastore", "config.sharding"}
-FORBIDDEN_PACKAGES = ("ComputeTargets", "CosmologyConcepts", "CosmologyModels")
+FORBIDDEN_PACKAGES = (
+    "ComputeTargets",
+    "CosmologyConcepts",
+    "CosmologyModels",
+    "MetadataConcepts",
+)
 ALLOWED_FACTORY_MODULES = {
     "Datastore.SQL.ObjectFactories",
     "Datastore.SQL.ObjectFactories.base",

@@ -162,6 +162,8 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             "stepping": False,
             "timestamp": True,
             "validate_on_startup": True,
+            # after an interrupted validate, the pool's check at open recomputes it by revalidate()
+            "validated_column": "validated",
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH), nullable=True),
                 sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
@@ -726,6 +728,39 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         return obj
 
     @staticmethod
+    def _validate_row(serial: int, label: Optional[str], conn, table, tables) -> bool:
+        """
+        The validation rule, shared by validate() and revalidate(): the stored row ``serial`` is
+        validated when its BackgroundModelValue rows number its z_samples. Writes the flag and
+        returns it; ``label`` names the model in the warning printed when it does not validate.
+        """
+        expected_samples = conn.execute(
+            sqla.select(table.c.z_samples).filter(table.c.serial == serial)
+        ).scalar()
+
+        value_table = tables["BackgroundModelValue"]
+        num_samples = conn.execute(
+            sqla.select(sqla.func.count(value_table.c.serial)).filter(
+                value_table.c.model_serial == serial
+            )
+        ).scalar()
+
+        # check if we counted as many rows as we expected
+        validated: bool = num_samples == expected_samples
+        if not validated:
+            print(
+                f'!! WARNING: Background model "{label}" did not validate after serialization (expected samples={expected_samples}, number stored={num_samples})'
+            )
+
+        conn.execute(
+            sqla.update(table)
+            .where(table.c.serial == serial)
+            .values(validated=validated)
+        )
+
+        return validated
+
+    @staticmethod
     def validate(
         obj: BackgroundModel,
         conn,
@@ -738,31 +773,29 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 "Attempt to validate a datastore object that has not yet been serialized"
             )
 
-        expected_samples = conn.execute(
-            sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
-        ).scalar()
-
-        value_table = tables["BackgroundModelValue"]
-        num_samples = conn.execute(
-            sqla.select(sqla.func.count(value_table.c.serial)).filter(
-                value_table.c.model_serial == obj.store_id
-            )
-        ).scalar()
-
-        # check if we counted as many rows as we expected
-        validated: bool = num_samples == expected_samples
-        if not validated:
-            print(
-                f'!! WARNING: Background model "{obj.label}" did not validate after serialization (expected samples={expected_samples}, number stored={num_samples})'
-            )
-
-        conn.execute(
-            sqla.update(table)
-            .where(table.c.serial == obj.store_id)
-            .values(validated=validated)
+        return sqla_BackgroundModelFactory._validate_row(
+            obj.store_id, obj.label, conn, table, tables
         )
 
-        return validated
+    @staticmethod
+    def revalidate(serial, conn, table, tables) -> bool:
+        # validate()'s rule for a stored row, with no object: the label the warning names is read
+        # from the row (prompts/datastore-generic, prompt 07)
+        label = conn.execute(
+            sqla.select(table.c.label).filter(table.c.serial == serial)
+        ).scalar_one()
+        return sqla_BackgroundModelFactory._validate_row(
+            serial, label, conn, table, tables
+        )
+
+    @staticmethod
+    def owned_serials(obj) -> Optional[List[Optional[int]]]:
+        # the serials of the model's BackgroundModelValue rows, which a replicated store's
+        # controlling shard assigns; None for an object that carries no value rows
+        values = getattr(obj, "_values", None)
+        if values is None:
+            return None
+        return [getattr(value, "_my_id", None) for value in values]
 
     @staticmethod
     def validate_on_startup(conn, table, tables, prune=False):
@@ -872,7 +905,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             },
             tags=("BackgroundModel_tags", "model_serial"),
             values=("BackgroundModelValue", "model_serial"),
-            validated=True,
+            validated="validated",
         )
 
 
@@ -886,6 +919,8 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             "version": False,
             "timestamp": False,
             "stepping": False,
+            # the pool copies and prunes a value row with the model this column names, as a unit
+            "owner_column": "model_serial",
             "columns": [
                 sqla.Column(
                     "model_serial",

@@ -653,7 +653,7 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
             },
             tags=("GkNumeric_tags", "integration_serial"),
             values=("GkNumericValue", "integration_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

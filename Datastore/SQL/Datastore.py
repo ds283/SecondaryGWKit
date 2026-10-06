@@ -14,6 +14,7 @@ from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
 from Datastore.SQL.schema import build_schema, drop_order
+from Datastore.contract import VERSION_TABLE
 from Datastore.replication import ReplicationMismatch
 from Datastore.replication import ReadOnlyMiss, ReadOnlyWrite
 from utilities import WallclockTimer
@@ -269,10 +270,9 @@ class Datastore:
         """
         The inserter of a read-only actor, in place of ``_insert``, for every table. It raises
         before any ``INSERT`` is issued and before a serial is leased. A row of a replicated class
-        is what a lookup inserts on a miss (``store_tag``, ``LambdaCDM``, ``QCD_Cosmology``,
-        ``tolerance``, ``GkSourcePolicy``, and ``redshift``/``wavenumber`` when created), so it is a
-        ``ReadOnlyMiss``. Any other row (a sharded value row that a vectorized get builds, a tag
-        row) is a write of computed data, so it is a ``ReadOnlyWrite``.
+        is what a lookup inserts on a miss, so it is a ``ReadOnlyMiss``. Any other row (a sharded
+        value row that a vectorized get builds, a tag row) is a write of computed data, so it is a
+        ``ReadOnlyWrite``.
         """
         cls_name = schema["name"]
         if cls_name in self._replicated_tables:
@@ -730,11 +730,11 @@ class Datastore:
         # if a serial number has already been provided, then assume we are running as a replica/shard and
         # have been provided with a correct serial number. Otherwise, obtain one from the broker, if one is in use.
         # Otherwise, assume the database engine will assign the next available serial
-        # We shouldn't do this with the "version", however, which has to be treated specially
+        # We shouldn't do this with the version table, however, which has to be treated specially
         with SerialLeaseManager(
             self._serial_manager,
             cls_name,
-            uses_serial and ("serial" not in payload) and (cls_name != "version"),
+            uses_serial and ("serial" not in payload) and (cls_name != VERSION_TABLE),
         ) as mgr:
             commit_serial = False
             if mgr.serial is not None:

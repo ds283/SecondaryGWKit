@@ -871,7 +871,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             },
             tags=("GkSource_tags", "parent_serial"),
             values=("GkSourceValue", "parent_serial"),
-            validated=True,
+            validated="validated",
         )
 
 

@@ -13,10 +13,14 @@ The one schema builder, ``Datastore/SQL/schema.py`` ``build_schema`` (store-fing
   witness beside it, ``schema_at_<campaign>-<NN>.json``, captured with ``schema_description.py``'s
   ``__main__``, and repoints ``WITNESS`` at it; the prompt's log carries the diff between the two
   witnesses as the reviewable statement of what changed. No witness is ever regenerated to make a
-  test pass. The current one is ``schema_at_datastore-integrity-09c.json`` (prompt 09c: the four
-  indexed columns on ``QuadSourceIntegral`` naming the Tk numeric and WKB rows for q and r,
+  test pass. The current one is ``schema_at_datastore-generic-07.json`` (``prompts/datastore-generic``
+  prompt 07: no table changes; every record of a class with a table carries three more keys,
+  ``owner_column``, ``monotone_flags`` and ``validated_column``, the replication facts its factory
+  declares, non-default on ``redshift``, ``wavenumber``, ``BackgroundModel`` and
+  ``BackgroundModelValue``). Before it, ``schema_at_datastore-integrity-09c.json`` (prompt 09c: the
+  four indexed columns on ``QuadSourceIntegral`` naming the Tk numeric and WKB rows for q and r,
   ``Tq_numeric_serial``, ``Tq_WKB_serial``, ``Tr_numeric_serial`` and ``Tr_WKB_serial``, NOT NULL
-  and with no foreign key, since those rows are on other shards). Before it,
+  and with no foreign key, since those rows are on other shards), and before that
   ``schema_at_datastore-integrity-09b.json`` (prompt 09b: the
   ``GkSource_parents`` table, recording the Gk numeric and WKB rows each ``GkSource`` is assembled
   from, and the indexed ``parents_digest`` key column on ``GkSource``), and before that
@@ -51,7 +55,7 @@ from Datastore.tests.schema_description import (
 )
 
 WITNESS = (
-    Path(__file__).resolve().parent / "data" / "schema_at_datastore-integrity-09c.json"
+    Path(__file__).resolve().parent / "data" / "schema_at_datastore-generic-07.json"
 )
 
 
