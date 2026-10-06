@@ -1,7 +1,7 @@
 # datastore-generic campaign — implementation state
 
 **Last updated:** 2026-10-06 · **Status: IN PROGRESS — 6 of 9 prompts landed (01–06).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
-written. Prompts 01–06 are written; 07–09 are held on the prompts before them. The user took U1–U4
+written. Prompts 01–07 are written; 08–09 are held on the prompts before them. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
 
@@ -55,7 +55,7 @@ recommended:**
 | 04 | [Delete the legacy shard records](04-delete-the-legacy-shard-records.md) | **L1**–**L3** | Sonnet | ✍️ yes, 2026-10-04; after 03 | ✅ 2026-10-04 | `bbdba04` | [log](logs/04-delete-the-legacy-shard-records.md) |
 | 05 | [Refuse a store whose schema differs](05-refuse-a-store-whose-schema-differs.md) | **S1**–**S3** | Opus | ✍️ yes, 2026-10-05; after 04 | ✅ 2026-10-05 | `bc8bffc` | [log](logs/05-refuse-a-store-whose-schema-differs.md) |
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
-| 07 | Declare the replication facts in the factories | **F1**–**F4** | Opus | ⏸ held on 06 (U4 taken) | ⬜ | — | — |
+| 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ⬜ | — | — |
 | 08 | Derive the inventory's class list | **I1**–**I2** | Sonnet | ⏸ held on 06 | ⬜ | — | — |
 | 09 | Keep the layer generic | **K1**–**K2** | Sonnet | ⏸ held on 01–08 | ⬜ | — | — |
 
@@ -922,7 +922,7 @@ again.
 | **G1** | 06 | `ShardedPool` and the actor given the registry and the serial batch sizes; no import of `Datastore._factories` | C1 #9, #10 | ✅ |
 | **G2** | 06 | `store_reader` and `store_inventory` given the registry; the replicated set read from the store's primary (the user, 2026-10-05) | C1 #10, #14 | ✅ |
 | **G3** | 06 | the older registries moved to `config/datastore.py`, per U2; the layer given the tables to drop, in an order derived from foreign keys (`_drop_order` deleted) | C1 #9–#11 | ✅ |
-| **F1** | 07 | the copy-as-a-unit rule derived from foreign keys | C1 #2 | ⬜ |
+| **F1** | 07 | the copy-as-a-unit rule derived from foreign keys, through the owner an owned table declares (the user, 2026-10-06) | C1 #2 | ⬜ |
 | **F2** | 07 | monotone flags declared by the factories | C1 #5 | ⬜ |
 | **F3** | 07 | the `validated` rule declared by the factory; `_StoredModel` gone | C1 #6 | ⬜ |
 | **F4** | 07 | the version and tag tables per U4; project names out of `ShardedPool`'s comments and messages | C1 #1, #7, #8 | ⬜ |

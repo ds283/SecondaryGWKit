@@ -2,10 +2,10 @@
 
 **Written:** 2026-10-04 on branch `datastore-generic-plan`, from `handover-remedial` at `dbd8a51`
 (the audit's tree), committed on `a6c8f39`, which changes no file the audit cites, by Claude Opus 5.5, from the audit [`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)
-and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–06 are
+and the user's decisions in §6.1. **Draft for the user's review.** **Prompts 01–07 are
 written**; their tasks are fixed by §6.1 and the audit alone (04 was written on 2026-10-04, after
-03 landed and was reviewed; 05 and 06 on 2026-10-05, each after the prompt before it landed and
-was reviewed). **07–09 are held** on the prompts before them (§2).
+03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07 on 2026-10-06, each after the prompt
+before it landed and was reviewed). **08–09 are held** on the prompts before them (§2).
 
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
@@ -82,7 +82,7 @@ path silently re-queries without grid identity. Deleting those refusals removes 
 | 04 | [`04-delete-the-legacy-shard-records.md`](04-delete-the-legacy-shard-records.md) | Audit B6. Absolute shard records in `shard_paths.py` and `ShardedPool`; `tools/shard_key_audit.py`'s pre-`a2bd966` and missing-`shard_key_config` paths, and its OK verdict on an unusable record; the sweep script's check and docstring; `write_legacy_primary` renamed for the malformed-record tests that use it; the legacy tests deleted, and an absolute record pinned as refused by every reader. | **written** 2026-10-04; after 03 |
 | 05 | `05-refuse-a-store-whose-schema-differs.md` | Audit B5. The reader, the inventory and the read-only pool stop tolerating absent or extra tables and columns; the reconcile's column-subset and `unkeyed` logic and the `columns` difference go. An **absent table** on a read-write open per U1. | **written** 2026-10-05; after 04 |
 | 06 | [`06-give-the-layer-its-registry.md`](06-give-the-layer-its-registry.md) | Audit C1 rows 9, 10, 11, 14 and the `config.sharding` import. `ShardedPool`, the actor, `store_reader` and `store_inventory` are given the factory registry instead of importing `Datastore._factories`; the inventory reads the replicated set from the store's primary instead of `config.sharding` (*amended 2026-10-05*, the user's decision, §6.2). `_factories`, the drop groups and `ClientPool`'s batch sizes move to `config/datastore.py` (U2); the layer is given the tables to drop, and `_drop_order` is replaced by an order derived from foreign keys. | **written** 2026-10-05; after 05 |
-| 07 | `07-declare-the-replication-facts-in-the-factories.md` | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **held** on 06 (U4 taken 2026-10-04) |
+| 07 | [`07-declare-the-replication-facts-in-the-factories.md`](07-declare-the-replication-facts-in-the-factories.md) | Audit C1 rows 1, 2, 4–8. The copy-as-a-unit rule derived from foreign keys (as `_prune_unit` is; *amended 2026-10-06*, the user's decision, §6.2: through the foreign key an owned table declares); monotone flags and the `validated` rule declared by the factories; the version and tag tables per U4; every project name out of `ShardedPool`'s code, comments and messages. | **written** 2026-10-06; after 06 |
 | 08 | `08-derive-the-inventorys-class-list.md` | Audit C1 rows 12, 13. The inventory's class list and order derived from the registry and foreign keys; the polymorphic cosmology reference declared by the client. | **held** on 06 |
 | 09 | `09-keep-the-layer-generic.md` | A test that the generic layer (audit §C) names no table of the registry and imports no client package, outside a stated allow-list; every suite; the closing verification of §5 rule 9. Closes the campaign. | **held** on 01–08 |
 
@@ -101,7 +101,14 @@ and every suite run, so that each test it moves is named with its fate before di
 its test plan and facts were measured the same way, against the tree 05 left (`dbc59f9`). Writing
 it put two choices of method to the user, recorded in §6.2 under U2.
 
-**Why 07–09 are held.** Their charters above are fixed and cannot drift to fit what 01–06 find.
+**Why 07 was written after 06.** It edits `ShardedPool`, the actor, `schema.py` and
+`read_records` after 06, and declares facts through the registry that 06 made the layer's input.
+Its test plan and facts were measured the same way, against the tree 06 left (`c6bddf8`). The
+measurement also recorded every repair, refusal and printed line of the check at open, so that the
+prompt could require them unchanged. Writing it put one choice of method to the user, recorded in
+§6.2.
+
+**Why 08–09 are held.** Their charters above are fixed and cannot drift to fit what 01–07 find.
 What waits is their method.
 
 **Order.**
@@ -148,7 +155,15 @@ internals are the implementing prompt's to design.
   - `Datastore.SQL.schema.drop_order(tables)`;
   - `config/datastore.py`: `factories`, `drop_groups`, `serial_batch_sizes`, `tables_to_drop`.
 - **07 ships** the `register()` keys (or factory hooks) for the facts of audit C1 rows 5 and 6. 07
-  names them; `schema.build_schema` carries them into `built.records`.
+  names them; `schema.build_schema` carries them into `built.records`. *Named 2026-10-06 (prompt
+  07, written):*
+  - the `register()` keys `owner_column`, `monotone_flags` and `validated_column`, carried into
+    every record of a class with a table and checked against it;
+  - the factory hooks `revalidate(serial, conn, table, tables)` and `owned_serials(obj)`, on
+    `SQLAFactoryBase` and not abstract;
+  - `Datastore/contract.py`: `VERSION_TABLE`, `VERSION_LABEL`, `TAG_TABLE`, `TAG_LABEL` and
+    `TAG_SERIAL`, the tables and columns the layer owns (U4);
+  - `ShardedPool._unit_tables(cls_name, specs)`, the one unit of the repair licence and the prune.
 
 ## 5. The rules this campaign runs under
 
@@ -248,6 +263,27 @@ recommendation below is the decision.
   **Recommended:** the layer owns both as part of its contract (named once, as constants of the
   layer), and builds their objects through their factories; `ShardedPool` stops importing
   `MetadataConcepts`. **Rejected:** declaring them per project (they are not a project's choice).
+
+*A choice of method for 07, taken by the user on 2026-10-06 as recommended* (audit C1 row 2):
+- **A table whose rows belong to another's declares the foreign-key column that names its owner**,
+  as a key of its factory's `register()`; the owner is the table that foreign key references. Tag
+  tables need no declaration: under U4 the tag table is the layer's own, so a table with a foreign
+  key to it and to one class is that class's tag table. One function gives both the copy unit of
+  the check at open and the prune unit. Today only `BackgroundModelValue` declares an owner.
+  - **Why a declaration.** No foreign key says that a value row belongs to its model while a model
+    does not belong to its redshift: `BackgroundModelValue → BackgroundModel` and
+    `BackgroundModel → redshift` have the same shape. Measured on 2026-10-06, `_prune_unit`'s rule
+    (every compared table with a foreign key to the class) gives `BackgroundModel` its right unit.
+    It also puts `BackgroundModel` and `BackgroundModelValue` in `redshift`'s unit, `BackgroundModel`
+    in `IntegrationSolver`'s, and `wavenumber_exit_time` in `wavenumber`'s and `tolerance`'s.
+  - **Rejected:** that rule as it is. Its outcomes are the same in every state an interrupted write
+    can leave, but its licence names tables the write never touches.
+  - **Rejected:** a structural rule with no declaration, under which a table nothing references
+    belongs to the most derived compared table it references. It matches today's unit, but it
+    infers an ownership the schema never states, and a future table would join a unit unasked.
+
+  This amends §2's "derived from foreign keys (as `_prune_unit` is)": the unit is still read from
+  foreign keys, through the one the owning table names.
 
 ## 7. Baselines
 
