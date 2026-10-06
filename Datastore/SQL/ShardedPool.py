@@ -17,6 +17,7 @@ from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
 from Datastore.SQL.schema import (
     StoreSchemaMismatch,
     build_schema,
+    dependent_tables,
     schema_differences,
 )
 from Datastore.contract import TAG_TABLE, VERSION_LABEL, VERSION_TABLE
@@ -122,7 +123,11 @@ class ShardedPool:
         :param drop_tables: the tables every actor drops when it opens an existing store, in
             any order: each actor drops them in the order ``schema.drop_order`` derives from their
             foreign keys. A read-only pool refuses any (``ReadOnlyWrite``); a read-write pool
-            refuses a name ``factories`` does not declare as a table, before anything is opened
+            refuses a name ``factories`` does not declare as a table, and then a drop that would
+            leave another table naming rows of a dropped one: every table
+            ``schema.dependent_tables`` derives from ``factories`` (a foreign key or a parent a
+            factory's ``inventory_spec`` declares, transitively) must be among them. Both before
+            anything is opened
         :param factories: the registry of storable classes, name -> factory, which the client owns
             and gives (prompts/datastore-generic, prompt 06). The pool, its actors and the reader
             build every table from it; the layer imports none. Required, by keyword
@@ -206,6 +211,8 @@ class ShardedPool:
         # a drop table the registry does not declare is refused before the primary is created or
         # opened
         self._refuse_undeclared_drop_tables()
+        # and so is a drop that would leave another table naming rows of a dropped one
+        self._refuse_drop_that_leaves_references()
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -707,6 +714,26 @@ class ShardedPool:
             raise RuntimeError(
                 f'Cannot open sharded datastore "{str(self._primary_file)}": cannot drop '
                 f"{undeclared}, which the registry does not declare as tables. Nothing was opened"
+            )
+
+    def _refuse_drop_that_leaves_references(self) -> None:
+        """Refuse drop tables that another table names, before the primary is created or opened,
+        naming the tables given and every table that must be dropped with them. Which tables those
+        are is ``schema.dependent_tables``' rule, read from the registry: a foreign key or a parent
+        a factory's ``inventory_spec`` declares, followed transitively. Read-write only, and after
+        ``_refuse_undeclared_drop_tables``, so every name is a declared table."""
+        if not self._drop_tables:
+            return
+        dependents = [
+            name
+            for name in dependent_tables(self._drop_tables, self._factories)
+            if name not in self._drop_tables
+        ]
+        if len(dependents) > 0:
+            raise RuntimeError(
+                f'Cannot open sharded datastore "{str(self._primary_file)}": cannot drop '
+                f"{sorted(set(self._drop_tables))} alone: the rows of {dependents} would name "
+                f"rows that are gone, so they must be dropped too. Nothing was opened"
             )
 
     @property

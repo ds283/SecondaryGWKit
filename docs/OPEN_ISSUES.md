@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-06 · **107 open** across twenty campaigns.
+**Last updated:** 2026-10-07 · **106 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -856,10 +856,10 @@ this campaign's board, and close there.
 the three issues `datastore-generic` left open (§1.18). Each prompt closes one, on
 `datastore-generic`'s board. Writing it found that the drop issue undercounted: foreign keys miss
 the references `QuadSourceIntegral` and `GkSource` declare without one (its README §0.2).
+Prompt 01 closed the drop issue on 2026-10-07: a read-write pool now refuses such a drop.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]` | datastore-generic | `--drop` of one group leaves other tables' rows naming rows it dropped (enforcement off); a re-created table's serials can then be reused [inferred]. Undercounted by foreign keys: by declared parents too, `tk-wkb` and `quad-source` alone also leave `QuadSourceIntegral` rows naming dropped rows. **Decided 2026-10-06:** refuse, counting foreign keys and declared `inventory_spec` parents transitively (8 of 10 groups refused alone). Assigned: follow-up prompt 01. |
 | `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]` | datastore-generic | `StoreInventory.resolve` renders a nullable key parent whose value is `None` as an unresolved reference (11 entries on `build_full_store`); a parent-set member gives `None`. Display and checking only. **Decided 2026-10-06:** render it as `None`. Assigned: follow-up prompt 02. |
 | `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` states its "Cannot … sharded datastore" prefix twice. Cosmetic. **Decided 2026-10-06:** remove it in `_read_closed_store`; the reader, a fourth caller, then wraps the message itself. Assigned: follow-up prompt 03. |
 

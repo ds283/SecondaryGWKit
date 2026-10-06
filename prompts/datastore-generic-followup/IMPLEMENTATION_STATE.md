@@ -1,7 +1,8 @@
 # datastore-generic-followup campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: WRITTEN — 0 of 3 prompts landed.** Prompts 01–03 are
-written; none has been dispatched.
+**Last updated:** 2026-10-07 · **Status: IN PROGRESS — 1 of 3 prompts landed (01).** Prompts
+01–03 are written; 01 landed on 2026-10-07 and closed the drop issue on `datastore-generic`'s
+board.
 
 The campaign was opened on 2026-10-06 to carry out the user's decisions on the three issues
 `datastore-generic` left open when it closed (README §0, §6.1). The issues stay on
@@ -37,7 +38,7 @@ The orchestrator's choices of method are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Refuse a drop that leaves references](01-refuse-a-drop-that-leaves-references.md) | **D1**–**D3** | Opus | ✍️ yes, 2026-10-06 | ⬜ | — | — |
+| 01 | [Refuse a drop that leaves references](01-refuse-a-drop-that-leaves-references.md) | **D1**–**D3** | Opus | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | this commit | [log](logs/01-refuse-a-drop-that-leaves-references.md) |
 | 02 | [Resolve an absent parent as `None`](02-resolve-an-absent-parent-as-none.md) | **V1** | Sonnet | ✍️ yes, 2026-10-06 | ⬜ | — | — |
 | 03 | [State each closed-store prefix once](03-state-each-closed-store-prefix-once.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-06 | ⬜ | — | — |
 
@@ -52,9 +53,9 @@ all three, the scripts, and the verdicts at `6de692a` (README §0.2).
 
 | Item | Prompt | What | Issue | Status |
 |---|---|---|---|---|
-| **D1** | 01 | `schema.dependent_tables(dropped, factories)`: the tables naming a dropped one, by foreign key or declared parent, transitively, in registry order | `[06-dropping-one-group-…]` | ⬜ |
-| **D2** | 01 | `ShardedPool._refuse_drop_that_leaves_references()`, after the undeclared-table refusal, before the primary is opened | `[06-dropping-one-group-…]` | ⬜ |
-| **D3** | 01 | `test_drop_refuses_dangling_references` (11 tests); `TestPruningAfterRepair.test_an_interrupted_store` re-fixtured | — | ⬜ |
+| **D1** | 01 | `schema.dependent_tables(dropped, factories)`: the tables naming a dropped one, by foreign key or declared parent, transitively, in registry order | `[06-dropping-one-group-…]` | ✅ this commit |
+| **D2** | 01 | `ShardedPool._refuse_drop_that_leaves_references()`, after the undeclared-table refusal, before the primary is opened | `[06-dropping-one-group-…]` | ✅ this commit |
+| **D3** | 01 | `test_drop_refuses_dangling_references` (11 tests); `TestPruningAfterRepair.test_an_interrupted_store` re-fixtured | — | ✅ this commit |
 | **V1** | 02 | `StoreInventory.resolve` gives `None` for a `None` key parent; two tests in `TestResolve` | `[08-resolve-shows-…]` | ⬜ |
 | **P1** | 03 | `_read_closed_store` raises the bare reason and takes no `verb` | `[04-closed-store-refusals-…]` | ⬜ |
 | **P2** | 03 | `open_read_only` wraps it with its own prefix; `test_closed_store_refusals` (5 tests); one `test_store_reader` test changed | `[04-closed-store-refusals-…]` | ⬜ |
@@ -63,11 +64,13 @@ all three, the scripts, and the verdicts at `6de692a` (README §0.2).
 
 ## 3. Active and unresolved issues
 
-None opened by this campaign. The three it owns are on `datastore-generic`'s board, §3.1.
+None opened by this campaign. The two it still owns are on `datastore-generic`'s board, §3.1.
 
 ## 4. Resolved issues
 
-None yet.
+None opened by this campaign. Closed on `datastore-generic`'s board, §4, which holds the record:
+- `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`, by prompt 01 (2026-10-07, this
+  commit).
 
 ## 5. Baselines
 
@@ -86,3 +89,20 @@ of all three prompts was measured against an export of `6de692a` (README §0.2).
 | RunRegistry | 280 OK |
 
 Expected after each prompt: Datastore 732 (01), 734 (02), 739 (03); every other suite unchanged.
+
+### 5.2 After prompt 01 (2026-10-07, this commit)
+
+Each suite run in the foreground, serially, with README §7's command, at load 5–11. Every suite
+OK on the first run; no flake.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 693 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 732 OK (158 + 183 + 200 + 191) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 280 OK |
+
+Datastore's `[a-f]` group is 147 + 11: the new
+`test_drop_refuses_dangling_references` module. Every other count is §5.1's.

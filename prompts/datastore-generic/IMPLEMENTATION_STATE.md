@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-07 (§4: the drop issue, closed by `datastore-generic-followup` 01) · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -1518,6 +1518,29 @@ retires it with `store retire`.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 03, which carries out
     the decision. Its measurement found a fourth caller, `store_reader.open_read_only`, which
     relies on the inner prefix and so must wrap the message itself (that campaign's README §0.2).
+- **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
+  08; measured at `5fe0ae6` and at 08's tree)*
+  - **The defect.** `StoreInventory.resolve` renders a nullable key parent whose value is `None` as
+    `{"class": …, "digest": None, "unresolved": 0}`. That is a parent it failed to resolve, where
+    the row has no such parent. On `build_full_store`, 11 entries are of this form, all the
+    `numeric` field of a pure-WKB `GkWKBIntegration` reached through `GkSource`'s parent set. By
+    contrast, `_resolve_reference`, for a parent-set member, returns `None`.
+  - **Its age.** It is the same at `5fe0ae6`; 08 keeps it, so that `resolve()` stays
+    byte-identical.
+  - **Impact.** `resolve()` is called only by tests, for display and checking. The report renders
+    through its own path.
+  - **Next step.** A decision for the user: render the absent parent as `None`, as members are.
+    Not assigned.
+  - **Decided (2026-10-06):** the user chose to render it as `None`.
+  - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 02, which carries out
+    the decision. Measured for it, the 11 entries are 2 direct `GkWKBIntegration` records and 9
+    reached through `GkSource`, `GkSourcePolicyData` and `QuadSourceIntegral`, 3 each. The hook
+    above says all 11 come through `GkSource`'s parent set; prompt 02's closing line corrects it.
+
+---
+
+## 4. Resolved issues
+
 - **[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]** *(opened 2026-10-05 while
   prompt 06 was written; measured at `dbc59f9`)*
   - **The defect.** `--drop` drops exactly the tables of the groups named, and nothing that
@@ -1555,29 +1578,23 @@ retires it with `store retire`.
     8 of the 10 groups are refused alone.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 01, which carries out
     the decision.
-- **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
-  08; measured at `5fe0ae6` and at 08's tree)*
-  - **The defect.** `StoreInventory.resolve` renders a nullable key parent whose value is `None` as
-    `{"class": …, "digest": None, "unresolved": 0}`. That is a parent it failed to resolve, where
-    the row has no such parent. On `build_full_store`, 11 entries are of this form, all the
-    `numeric` field of a pure-WKB `GkWKBIntegration` reached through `GkSource`'s parent set. By
-    contrast, `_resolve_reference`, for a parent-set member, returns `None`.
-  - **Its age.** It is the same at `5fe0ae6`; 08 keeps it, so that `resolve()` stays
-    byte-identical.
-  - **Impact.** `resolve()` is called only by tests, for display and checking. The report renders
-    through its own path.
-  - **Next step.** A decision for the user: render the absent parent as `None`, as members are.
-    Not assigned.
-  - **Decided (2026-10-06):** the user chose to render it as `None`.
-  - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 02, which carries out
-    the decision. Measured for it, the 11 entries are 2 direct `GkWKBIntegration` records and 9
-    reached through `GkSource`, `GkSourcePolicyData` and `QuadSourceIntegral`, 3 each. The hook
-    above says all 11 come through `GkSource`'s parent set; prompt 02's closing line corrects it.
-
----
-
-## 4. Resolved issues
-
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 01; this commit).** A
+    read-write `ShardedPool` refuses `drop_tables` that would leave another table naming rows of
+    a dropped one, before the primary is created or opened and before any actor exists, naming the
+    tables given (sorted) and every table that must go with them (registry order). The rule is
+    `Datastore.SQL.schema.dependent_tables(dropped, factories)`, read from the registry alone: a
+    table names another by a foreign key **or** by a parent its factory's `inventory_spec`
+    declares, followed transitively. Both halves are needed: as that campaign's README §0.2 found,
+    foreign keys alone undercount (they miss `QuadSourceIntegral`'s cross-shard parents and
+    `GkSource`'s parent set, so `--drop tk-wkb` and `--drop quad-source` alone would pass), and
+    declared parents alone miss every value, tag and member table. 8 of the 10 groups are refused
+    alone, each needing exactly §0.2's tables; every group together, and each group with its
+    dependents, is accepted and drops what it dropped before, in the same order. The refusal is
+    called immediately after `_refuse_undeclared_drop_tables()` (method
+    `_refuse_drop_that_leaves_references`), and names no `--drop` group. Pinned by
+    `Datastore/tests/test_drop_refuses_dangling_references.py` (11 tests); one test re-fixtured
+    (`test_reconcile_at_open.TestPruningAfterRepair.test_an_interrupted_store`, which now names
+    `gk-source-policy-records`' dependents); deliberate breakage (i)–(vi) in that prompt's log.
 - **[00-old-store-fallbacks-are-maintained-for-stores-nobody-keeps]** *(opened 2026-10-04 by the
   audit, §B; read, and G4 measured)*
   - **The defect.** About thirty sites exist only to open, read, repair or refuse a store written by

@@ -167,7 +167,8 @@ real-store fixtures. No rebuild is needed: no prompt touches the write path (§5
 ## 4. The interfaces between prompts
 
 The prompts are independent; these names are fixed so that the board and the index can name them.
-- **01 ships** `Datastore.SQL.schema.dependent_tables(dropped, factories) -> List[str]`:
+- **01 ships** (shipped 2026-10-07, as named) `Datastore.SQL.schema.dependent_tables(dropped,
+  factories) -> List[str]`:
   - the tables, other than `dropped`, that name a row of a dropped table, or of one of
     themselves, through a foreign key or a parent their factory's `inventory_spec` declares;
   - transitively, in registry order.

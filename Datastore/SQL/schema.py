@@ -22,6 +22,12 @@ set of tables in an order in which each can be dropped while the others are pres
 their foreign keys alone; the actor drops the tables it is given in that order. No order is kept by
 hand.
 
+**What a drop must take with it** is here too (prompts/datastore-generic-followup, prompt 01).
+``dependent_tables`` gives the tables that name a row of the dropped tables, by a foreign key or by
+a parent their factory's ``inventory_spec`` declares, followed transitively, so that a read-write
+pool can refuse a drop that would leave them naming rows that are gone. It is read from the
+registry, never from a store's rows.
+
 **The replication facts a factory declares** are carried here too (prompts/datastore-generic,
 prompt 07). Three keys of ``register()``, each checked against the class's own table and copied
 into the record of every class with a table: ``owner_column`` (the column whose one foreign key
@@ -30,10 +36,11 @@ on and nothing turns off) and ``validated_column`` (the Boolean column of the cl
 flag, which the factory's ``revalidate`` recomputes from stored rows). A declaration that does not
 fit its table raises ``ValueError``.
 
-This module itself imports only ``sqlalchemy`` and ``Datastore.contract``, which names the version
-table every prepended ``version`` column references. Importing it runs
-``Datastore/SQL/__init__.py``, which imports the actor module and so ``ray``; that initialises
-nothing.
+This module itself imports only ``sqlalchemy``, ``Datastore.contract``, which names the version
+table every prepended ``version`` column references, and ``Datastore.store_inventory``, for the
+parents a factory declares; that module imports nothing of this package at module scope. Importing
+it runs ``Datastore/SQL/__init__.py``, which imports the actor module and so ``ray``; that
+initialises nothing.
 """
 
 from typing import Any, Dict, Iterable, List, Mapping, NamedTuple, Optional, Tuple
@@ -41,6 +48,7 @@ from typing import Any, Dict, Iterable, List, Mapping, NamedTuple, Optional, Tup
 import sqlalchemy as sqla
 
 from Datastore.contract import VERSION_TABLE
+from Datastore.store_inventory import inventory_specs
 
 
 class BuiltSchema(NamedTuple):
@@ -314,6 +322,64 @@ def drop_order(tables: Iterable[sqla.Table]) -> List[sqla.Table]:
         remaining.remove(free[0])
 
     return ordered
+
+
+def dependent_tables(dropped: Iterable[str], factories: Mapping[str, Any]) -> List[str]:
+    """
+    The tables that must be dropped with ``dropped``: every table of the registry, other than those
+    in ``dropped``, that names a table in ``dropped`` or a table of the result, in the registry's
+    table order, each once. Empty when nothing must go with them.
+
+    Table ``A`` names table ``B`` (``B`` not ``A``) when either
+
+    - ``A`` declares a foreign key into ``B``; or
+    - ``A``'s factory declares an ``inventory_spec`` whose ``dependencies()`` hold ``B``.
+
+    Both count, because each sees references the other does not. A row that names its parent on
+    another shard, or through a set of members, has no foreign key to it, so only its factory's
+    declared parents show the reference. A table that belongs to another (its values, its tag
+    associations, its members) names its owner by foreign key and need declare no
+    ``inventory_spec`` of its own, so only the foreign key shows it. The rule is followed
+    transitively: a table that names a table which must go must go too.
+
+    Read from the registry alone (``build_schema`` and ``inventory_specs``), never from any store's
+    rows: a dependent table that holds no rows is still named, and every store gets the same
+    answer. Dropping an empty table costs nothing.
+
+    A name in ``dropped`` that the registry does not declare as a table raises ``ValueError``,
+    naming it.
+    """
+    tables = build_schema(sqla.MetaData(), factories).tables
+    names = list(dict.fromkeys(dropped))
+    undeclared = [name for name in names if name not in tables]
+    if len(undeclared) > 0:
+        raise ValueError(
+            f"dependent_tables(): {undeclared} "
+            f"{'is' if len(undeclared) == 1 else 'are'} not declared as tables by the registry"
+        )
+
+    # for each table, the other tables it names: by foreign key, then by declared parent
+    named: Dict[str, set] = {
+        name: {fk.column.table.name for fk in table.foreign_keys} - {name}
+        for name, table in tables.items()
+    }
+    for name, spec in inventory_specs(factories).items():
+        named.setdefault(name, set()).update(set(spec.dependencies()) - {name})
+
+    gone = set(names)
+    found: set = set()
+    while True:
+        more = {
+            name
+            for name, refs in named.items()
+            if name not in gone and not refs.isdisjoint(gone)
+        }
+        if len(more) == 0:
+            break
+        found |= more
+        gone |= more
+
+    return [name for name in tables if name in found]
 
 
 class SchemaDifferences(NamedTuple):

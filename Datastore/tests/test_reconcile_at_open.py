@@ -1084,7 +1084,10 @@ class TestPruningAfterRepair(_ReconcileTestCase):
     def test_an_interrupted_store(self):
         """The copied model is unvalidated everywhere: pruned on every shard, or kept on every
         shard, and never on some. The drop actions include gk-source-policy-records, which drops
-        the replicated GkSourcePolicy table: on every shard alike."""
+        the replicated GkSourcePolicy table: on every shard alike. They also name
+        gk-source-policy-records' dependents (gk-source-policy and quad-source-integral), because
+        a drop without them is refused (prompts/datastore-generic-followup, prompt 01).
+        """
         for prune in (True, False):
             with self.subTest(prune=prune):
                 self.fresh()
@@ -1105,7 +1108,12 @@ class TestPruningAfterRepair(_ReconcileTestCase):
                     self.reopen(
                         prune_unvalidated=prune,
                         drop_tables=tables_to_drop(
-                            ["gk-source", "gk-source-policy-records"]
+                            [
+                                "gk-source",
+                                "gk-source-policy-records",
+                                "gk-source-policy",
+                                "quad-source-integral",
+                            ]
                         ),
                     )
                 self.assertNoRecord()
