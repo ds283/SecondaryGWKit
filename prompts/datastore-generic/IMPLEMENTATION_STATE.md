@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-06 · **Status: IN PROGRESS — 9 of 9 prompts landed (01–09); the campaign closes when the review's rehearsal rebuild matches (K2).** The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-06 · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -68,7 +68,7 @@ the referencing `Parent`. For 09 (2026-10-06), four choices:
 | 06 | [Give the layer its registry](06-give-the-layer-its-registry.md) | **G1**–**G3** | Opus | ✍️ yes, 2026-10-05; after 05 | ✅ 2026-10-06 | `19f07ee` | [log](logs/06-give-the-layer-its-registry.md) |
 | 07 | [Declare the replication facts in the factories](07-declare-the-replication-facts-in-the-factories.md) | **F1**–**F4** | Opus | ✍️ yes, 2026-10-06; after 06 | ✅ 2026-10-06 | `3f51939` | [log](logs/07-declare-the-replication-facts-in-the-factories.md) |
 | 08 | [Derive the inventory's class list](08-derive-the-inventorys-class-list.md) | **I1**–**I2** | Sonnet | ✍️ yes, 2026-10-06; after 07 | ✅ 2026-10-06 | `6646b06` | [log](logs/08-derive-the-inventorys-class-list.md) |
-| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ✅ 2026-10-06 (K2: fixture half; the rebuild is the review's) | `e980b6e` | [log](logs/09-keep-the-layer-generic.md) |
+| 09 | [Keep the layer generic](09-keep-the-layer-generic.md) | **K1**–**K2** | Sonnet | ✍️ yes, 2026-10-06; after 08 | ✅ 2026-10-06 | `e980b6e` | [log](logs/09-keep-the-layer-generic.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -1407,6 +1407,46 @@ The checks:
 
 *Handed on.* Nothing: 09 is the campaign's last prompt. E7 follows (note §4.2).
 
+**The rehearsal rebuild, E7 (2026-10-06): the fingerprint matches, and the campaign is closed.**
+This is README §3's one exception, run under `CLAUDE.md`'s run-registry rules with nothing relaxed.
+
+*Before the launch.*
+- `RunRegistry list` showed nothing `running` and nothing stale (16 runs).
+- `store show var/datastores/datastore-generic-09-rehearsal.sqlite` gave kind `absent`, with no runs.
+- No Ray process was up.
+- The tree was clean at `53d4e18`, the review's follow-up, with no code changed since `e980b6e`.
+
+*The launch.* It used the reference's command, with a new store, job name, slug, purpose and
+campaign, detached under `nohup` with `disown`. The launch log is
+`var/runs/datastore-generic-09-rehearsal.launch.log`, beside the run directory, as
+a3-v2-readiness-07's was. One check showed it `running` with a fresh heartbeat, and the turn
+ended there.
+
+*The run,* `datastore-generic-09-rehearsal-20261006T152452`:
+- Created 15:24:52 at `53d4e18`, `git_dirty` false; last heartbeat 15:29:02. That is about
+  4 minutes, where the reference took 13 at `dbd8a51`.
+- `done`, exit code 0, and the launch log ends `** driver exit status 0`.
+- **The digest is `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`, equal to
+  a3-v2-readiness-07-reference's.**
+- All 21 classes' per-class entries (count and digest) in `status.json` equal the reference's.
+- `fingerprint_sidecar` reads "not written: … (there is none)", as the reference's did.
+- `store create --purpose …` then wrote the closed primary's registry sidecar, problems none.
+  `store fingerprint` on the closed store gives the same digest.
+- After the driver exited, `pgrep -lf 'gcs_server|raylet|ray::'` showed no Ray process.
+
+So rule 9 holds end to end. A store built through the write path at the campaign's final tree is
+the store `dbd8a51` built, class by class. K2 is ✅.
+
+*Left open on this board,* each a decision for the user or a cleanup the user will have done:
+- `[04-closed-store-refusals-repeat-their-prefix]`;
+- `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`;
+- `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`.
+
+They stay in §3 and in the index.
+
+*The store* `var/datastores/datastore-generic-09-rehearsal.sqlite` is throwaway, and the user
+retires it with `store retire`.
+
 ---
 
 ## 2. Items
@@ -1440,7 +1480,7 @@ The checks:
 | **I1** | 08 | the inventory's class list and order derived, from the parents each factory declares in an `inventory_spec`, roots first (the user, 2026-10-06; foreign keys miss nine of them) | C1 #12 | ✅ |
 | **I2** | 08 | the polymorphic cosmology reference declared by the client, in the referencing `Parent`'s type map (the user, 2026-10-06) | C1 #13 | ✅ |
 | **K1** | 09 | a test that the generic layer names no registry table and imports no client package: `test_layer_is_generic`, over every file of the layer, derived; `config.defaults` and `utilities` allow-listed, and 07's and 08's per-file tests folded in (the user, 2026-10-06) | §C | ✅ |
-| **K2** | 09 | every suite; README §5 rule 9's closing verification: fixtures in the prompt, and one rehearsal rebuild at the review compared with `dbd8a51`'s `39809dca…` (the user, 2026-10-06; README §3's exception) | — | ✅ fixture half; the rebuild at the review |
+| **K2** | 09 | every suite; README §5 rule 9's closing verification: fixtures in the prompt, and one rehearsal rebuild at the review compared with `dbd8a51`'s `39809dca…` (the user, 2026-10-06; README §3's exception) | — | ✅ (fixtures at `e980b6e`; the rebuild at the review, 2026-10-06) |
 
 ---
 

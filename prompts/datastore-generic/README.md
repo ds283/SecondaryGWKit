@@ -7,6 +7,11 @@ written**; their tasks are fixed by §6.1 and the audit alone (04 was written on
 03 landed and was reviewed; 05 and 06 on 2026-10-05, and 07, 08 and 09 on 2026-10-06, each after
 the prompt before it landed and was reviewed).
 
+**CLOSED 2026-10-06.** All nine prompts landed (01–09, the last `e980b6e`). The closing
+rehearsal rebuild of §3's one exception reproduced `dbd8a51`'s fingerprint, `39809dca…`, class
+by class (board §1, the review of 09). Three issues remain open on the board, each a decision for
+the user.
+
 **2026-10-04, after the user's review:** the user took **U1–U4 as recommended** (§6.2). 05 is no
 longer held on a decision, only on 03–04 landing; 06 and 07 wait only on the prompts before them.
 The branches `datastore-generic-plan` and `drop-valuerow-key-exception` were merged into
