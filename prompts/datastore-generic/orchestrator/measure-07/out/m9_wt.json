@@ -1,0 +1,78 @@
+{
+ "checksum_before": "246477ca0c0c1855",
+ "checksum_after": "246477ca0c0c1855",
+ "calls": [
+  {
+   "serial": 1,
+   "variant": "as stored",
+   "call": "validate",
+   "returned": true,
+   "written": true,
+   "printed": []
+  },
+  {
+   "serial": 1,
+   "variant": "as stored",
+   "call": "revalidate",
+   "returned": true,
+   "written": true,
+   "printed": []
+  },
+  {
+   "serial": 1,
+   "variant": "one value row deleted",
+   "call": "validate",
+   "returned": false,
+   "written": false,
+   "printed": [
+    "!! WARNING: Background model \"fixture-background\" did not validate after serialization (expected samples=3, number stored=2)"
+   ]
+  },
+  {
+   "serial": 1,
+   "variant": "one value row deleted",
+   "call": "revalidate",
+   "returned": false,
+   "written": false,
+   "printed": [
+    "!! WARNING: Background model \"fixture-background\" did not validate after serialization (expected samples=3, number stored=2)"
+   ]
+  },
+  {
+   "serial": 2,
+   "variant": "as stored",
+   "call": "validate",
+   "returned": true,
+   "written": true,
+   "printed": []
+  },
+  {
+   "serial": 2,
+   "variant": "as stored",
+   "call": "revalidate",
+   "returned": true,
+   "written": true,
+   "printed": []
+  },
+  {
+   "serial": 2,
+   "variant": "one value row deleted",
+   "call": "validate",
+   "returned": false,
+   "written": false,
+   "printed": [
+    "!! WARNING: Background model \"fixture-background-qcd\" did not validate after serialization (expected samples=2, number stored=1)"
+   ]
+  },
+  {
+   "serial": 2,
+   "variant": "one value row deleted",
+   "call": "revalidate",
+   "returned": false,
+   "written": false,
+   "printed": [
+    "!! WARNING: Background model \"fixture-background-qcd\" did not validate after serialization (expected samples=2, number stored=1)"
+   ]
+  }
+ ]
+}

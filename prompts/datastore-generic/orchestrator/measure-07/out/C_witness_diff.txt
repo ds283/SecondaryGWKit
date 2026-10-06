@@ -1,0 +1,3 @@
+added record key 'monotone_flags' on 38 classes; non-default: {'redshift': ['source', 'response'], 'wavenumber': ['source', 'response']}
+added record key 'owner_column' on 38 classes; non-default: {'BackgroundModelValue': 'model_serial'}
+added record key 'validated_column' on 38 classes; non-default: {'BackgroundModel': 'validated'}

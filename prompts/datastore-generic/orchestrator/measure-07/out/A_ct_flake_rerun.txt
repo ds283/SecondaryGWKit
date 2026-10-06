@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/ComputeTargets/tests/test_tk_wkb_phase.py", line 897, in test_wall_time_per_object
+    self.assertLessEqual(cold, COST_COLD_WALL_TIME_LIMIT)
+AssertionError: 0.07240708400786389 not less than or equal to 0.06
+
+----------------------------------------------------------------------
+Ran 1 test in 0.576s
+
+FAILED (failures=1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+[Tk cost] LambdaCDM k = 3.0e+08, 1384 source samples from z = 6.923e+12 to 0.1: best of 3 0.0724 s with the residual table built, 0.0264 s with it cached; 11376 integrand evaluations = 5840 residual (order 4, 1460 nodes) + 5536 leading-table anchor partials (4 per sample, the same panel every time); prompt 07 threshold 0.05 s, ODE 58 s

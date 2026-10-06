@@ -1,0 +1,58 @@
+=== Datastore/SQL/ShardedPool.py: 45 hits; by name: {'config': 3, 'version': 13, 'label': 7, 'source': 14, 'validated': 8}
+     35 code      config         from config.defaults import DEFAULT_STRING_LENGTH
+    195 comment   version        # the version row of version_label, found or written once every actor exists
+    291 comment   version        # create actor pool of datastores, one for each shard. No actor inserts the version row
+    328 code      config         for class_name, config in read_table_config.items():
+    339 comment   label          # already holds the label. Only a label no shard holds is written. Then every actor is
+    356 docstring version        """
+    356 docstring label          """
+    417 code      version        version = self._factories[VERSION_TABLE].build(
+    430 code      version        if version.store_id != row[0]:
+    434 code      version        f"{version.store_id}"
+    436 code      version        return version
+    465 comment   version        #   5. the version row is found by _find_version_row, mode=ro, before any actor exists. A
+    466 comment   label          #      label no shard holds refuses with ReadOnlyMiss, naming the labels the store holds. It is
+    529 comment   version        # 5. the version row, found and never written
+    570 code      config         for class_name, config in read_table_config.items():
+    652 docstring version        """Every version label the store holds, in serial order, read mode=ro from each shard
+    652 docstring label          """Every version label the store holds, in serial order, read mode=ro from each shard
+    664 code      label          for (label,) in rows:
+    665 code      label          if label not in labels:
+    666 code      label          labels.append(label)
+    920 comment   source         # shared with copy_store/move_store, which read a source store's records the same way
+   1053 comment   source         # shared with copy_store/move_store, which check a source store's shards the same way
+   1073 comment   version        # controller holds" (docs/datastore-integrity-audit.md §4.5). The version row is such a
+   1096 comment   validated      #      controller holds set is set, and after a validate the class's declared validated column
+   1628 docstring version        """
+   1628 docstring validated      """
+   1886 docstring validated      """
+   1945 docstring validated      """
+   1975 string    validated      "action": "validated recomputed",
+   1980 string    validated      "validated": True,
+   2035 string    validated      f'{a["validated"]}'
+   2506 comment   source         # source. delete_store deletes a closed store's own files, and those only: the shards its
+   2514 docstring source         """
+   2535 docstring source         """
+   2679 comment   source         # the source primary: an existing regular file, not a symbolic link (the same test as a
+   2694 string    source         refuse_journals(src_primary, "the source primary")
+   2696 comment   source         # the source's shard records, read and checked exactly as the constructor reads them
+   2715 comment   source         # the destination primary: a new file, and not the source
+   2730 comment   source         # source's table
+   2757 comment   source         # primary still holds the source's records, which it reads by name in its new directory.
+   2900 string    source         ". The source and the destination are on different filesystems, so the store "
+   2901 string    source         "cannot be moved by renaming it; copy it instead, and then delete the source by hand"
+   2923 comment   source         # _plan_relocation makes of a source). Without it nothing names the store's shards, so
+   3023 comment   version        # the get, store and validate of a replicated class take, the version row's included
+   3480 comment   validated      # item need only be validated on a single shard
+=== Datastore/SQL/Datastore.py: 11 hits; by name: {'version': 8, 'label': 1, 'config': 2}
+     56 docstring version        """
+     56 docstring label          """
+     91 comment   version        # the version row's serial, set by ShardedPool through set_version once the row exists
+    147 docstring version        """
+    167 comment   version        # replicated tables and found the version row, all on mode=ro files. The actor opens its own
+    169 comment   version        # and validates at startup in report-only form. It never receives the version serial
+    714 comment   version        # a row that carries a version serial cannot be written before the pool has set it
+    732 comment   version        # We shouldn't do this with the version table, however, which has to be treated specially
+    744 string    version        payload = payload | {"version": self._version_serial}
+    862 code      config         config = self._read_table_config[class_name]
+    863 code      config         if config.get("tables_arg", False):

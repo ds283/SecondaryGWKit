@@ -1,0 +1,203 @@
+{
+ "compared": [
+  "version",
+  "store_tag",
+  "redshift",
+  "wavenumber",
+  "wavenumber_exit_time",
+  "tolerance",
+  "LambdaCDM",
+  "QCD_Cosmology",
+  "IntegrationSolver",
+  "BackgroundModel",
+  "BackgroundModelValue",
+  "GkSourcePolicy",
+  "QuadSourcePolicy",
+  "BackgroundModel_tags"
+ ],
+ "units": {
+  "version": {
+   "old_copy_unit": [
+    "version"
+   ],
+   "old_prune_unit": [
+    "version",
+    "wavenumber_exit_time",
+    "BackgroundModel",
+    "GkSourcePolicy",
+    "QuadSourcePolicy"
+   ],
+   "pool_prune_unit": [
+    "version",
+    "wavenumber_exit_time",
+    "BackgroundModel",
+    "GkSourcePolicy",
+    "QuadSourcePolicy"
+   ]
+  },
+  "store_tag": {
+   "old_copy_unit": [
+    "store_tag"
+   ],
+   "old_prune_unit": [
+    "store_tag",
+    "BackgroundModel_tags"
+   ],
+   "pool_prune_unit": [
+    "store_tag",
+    "BackgroundModel_tags"
+   ]
+  },
+  "redshift": {
+   "old_copy_unit": [
+    "redshift"
+   ],
+   "old_prune_unit": [
+    "redshift",
+    "BackgroundModel",
+    "BackgroundModelValue"
+   ],
+   "pool_prune_unit": [
+    "redshift",
+    "BackgroundModel",
+    "BackgroundModelValue"
+   ]
+  },
+  "wavenumber": {
+   "old_copy_unit": [
+    "wavenumber"
+   ],
+   "old_prune_unit": [
+    "wavenumber",
+    "wavenumber_exit_time"
+   ],
+   "pool_prune_unit": [
+    "wavenumber",
+    "wavenumber_exit_time"
+   ]
+  },
+  "wavenumber_exit_time": {
+   "old_copy_unit": [
+    "wavenumber_exit_time"
+   ],
+   "old_prune_unit": [
+    "wavenumber_exit_time"
+   ],
+   "pool_prune_unit": [
+    "wavenumber_exit_time"
+   ]
+  },
+  "tolerance": {
+   "old_copy_unit": [
+    "tolerance"
+   ],
+   "old_prune_unit": [
+    "tolerance",
+    "wavenumber_exit_time"
+   ],
+   "pool_prune_unit": [
+    "tolerance",
+    "wavenumber_exit_time"
+   ]
+  },
+  "LambdaCDM": {
+   "old_copy_unit": [
+    "LambdaCDM"
+   ],
+   "old_prune_unit": [
+    "LambdaCDM"
+   ],
+   "pool_prune_unit": [
+    "LambdaCDM"
+   ]
+  },
+  "QCD_Cosmology": {
+   "old_copy_unit": [
+    "QCD_Cosmology"
+   ],
+   "old_prune_unit": [
+    "QCD_Cosmology"
+   ],
+   "pool_prune_unit": [
+    "QCD_Cosmology"
+   ]
+  },
+  "IntegrationSolver": {
+   "old_copy_unit": [
+    "IntegrationSolver"
+   ],
+   "old_prune_unit": [
+    "IntegrationSolver",
+    "BackgroundModel"
+   ],
+   "pool_prune_unit": [
+    "IntegrationSolver",
+    "BackgroundModel"
+   ]
+  },
+  "BackgroundModel": {
+   "old_copy_unit": [
+    "BackgroundModel",
+    "BackgroundModel_tags",
+    "BackgroundModelValue"
+   ],
+   "old_prune_unit": [
+    "BackgroundModel",
+    "BackgroundModelValue",
+    "BackgroundModel_tags"
+   ],
+   "pool_prune_unit": [
+    "BackgroundModel",
+    "BackgroundModelValue",
+    "BackgroundModel_tags"
+   ]
+  },
+  "BackgroundModelValue": {
+   "old_copy_unit": [
+    "BackgroundModelValue"
+   ],
+   "old_prune_unit": [
+    "BackgroundModelValue"
+   ],
+   "pool_prune_unit": [
+    "BackgroundModelValue"
+   ]
+  },
+  "GkSourcePolicy": {
+   "old_copy_unit": [
+    "GkSourcePolicy"
+   ],
+   "old_prune_unit": [
+    "GkSourcePolicy"
+   ],
+   "pool_prune_unit": [
+    "GkSourcePolicy"
+   ]
+  },
+  "QuadSourcePolicy": {
+   "old_copy_unit": [
+    "QuadSourcePolicy"
+   ],
+   "old_prune_unit": [
+    "QuadSourcePolicy"
+   ],
+   "pool_prune_unit": [
+    "QuadSourcePolicy"
+   ]
+  },
+  "BackgroundModel_tags": {
+   "old_copy_unit": [
+    "BackgroundModel_tags"
+   ],
+   "old_prune_unit": [
+    "BackgroundModel_tags"
+   ],
+   "pool_prune_unit": [
+    "BackgroundModel_tags"
+   ]
+  }
+ },
+ "prune_classes": [
+  "BackgroundModel"
+ ]
+}

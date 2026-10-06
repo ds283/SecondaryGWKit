@@ -1,0 +1,25 @@
+F.
+======================================================================
+FAIL: test_a_fresh_interpreter_loads_no_client_registry (Datastore.tests.test_layer_registry.TestTheLayerImportsNoClient.test_a_fresh_interpreter_loads_no_client_registry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/base/Datastore/tests/test_layer_registry.py", line 658, in test_a_fresh_interpreter_loads_no_client_registry
+    self.assertEqual(
+AssertionError: Lists differ: ['MetadataConcepts', 'MetadataConcepts.GkS[133 chars]ion'] != []
+
+First list contains 6 additional elements.
+First extra element 0:
+'MetadataConcepts'
+
++ []
+- ['MetadataConcepts',
+-  'MetadataConcepts.GkSourcePolicy',
+-  'MetadataConcepts.QuadSourcePolicy',
+-  'MetadataConcepts.store_tag',
+-  'MetadataConcepts.tolerance',
+-  'MetadataConcepts.version']
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.495s
+
+FAILED (failures=1)

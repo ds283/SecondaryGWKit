@@ -1,0 +1,235 @@
+{
+ "compared": [
+  "version",
+  "store_tag",
+  "redshift",
+  "wavenumber",
+  "wavenumber_exit_time",
+  "tolerance",
+  "LambdaCDM",
+  "QCD_Cosmology",
+  "IntegrationSolver",
+  "BackgroundModel",
+  "BackgroundModelValue",
+  "GkSourcePolicy",
+  "QuadSourcePolicy",
+  "BackgroundModel_tags"
+ ],
+ "units": {
+  "version": {
+   "old_copy_unit": [
+    "version"
+   ],
+   "old_prune_unit": [
+    "version",
+    "wavenumber_exit_time",
+    "BackgroundModel",
+    "GkSourcePolicy",
+    "QuadSourcePolicy"
+   ],
+   "new_unit": [
+    "version"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "store_tag": {
+   "old_copy_unit": [
+    "store_tag"
+   ],
+   "old_prune_unit": [
+    "store_tag",
+    "BackgroundModel_tags"
+   ],
+   "new_unit": [
+    "store_tag"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "redshift": {
+   "old_copy_unit": [
+    "redshift"
+   ],
+   "old_prune_unit": [
+    "redshift",
+    "BackgroundModel",
+    "BackgroundModelValue"
+   ],
+   "new_unit": [
+    "redshift"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "wavenumber": {
+   "old_copy_unit": [
+    "wavenumber"
+   ],
+   "old_prune_unit": [
+    "wavenumber",
+    "wavenumber_exit_time"
+   ],
+   "new_unit": [
+    "wavenumber"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "wavenumber_exit_time": {
+   "old_copy_unit": [
+    "wavenumber_exit_time"
+   ],
+   "old_prune_unit": [
+    "wavenumber_exit_time"
+   ],
+   "new_unit": [
+    "wavenumber_exit_time"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "tolerance": {
+   "old_copy_unit": [
+    "tolerance"
+   ],
+   "old_prune_unit": [
+    "tolerance",
+    "wavenumber_exit_time"
+   ],
+   "new_unit": [
+    "tolerance"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "LambdaCDM": {
+   "old_copy_unit": [
+    "LambdaCDM"
+   ],
+   "old_prune_unit": [
+    "LambdaCDM"
+   ],
+   "new_unit": [
+    "LambdaCDM"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "QCD_Cosmology": {
+   "old_copy_unit": [
+    "QCD_Cosmology"
+   ],
+   "old_prune_unit": [
+    "QCD_Cosmology"
+   ],
+   "new_unit": [
+    "QCD_Cosmology"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "IntegrationSolver": {
+   "old_copy_unit": [
+    "IntegrationSolver"
+   ],
+   "old_prune_unit": [
+    "IntegrationSolver",
+    "BackgroundModel"
+   ],
+   "new_unit": [
+    "IntegrationSolver"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": false,
+   "new_equals_old_prune_in_order": false
+  },
+  "BackgroundModel": {
+   "old_copy_unit": [
+    "BackgroundModel",
+    "BackgroundModel_tags",
+    "BackgroundModelValue"
+   ],
+   "old_prune_unit": [
+    "BackgroundModel",
+    "BackgroundModelValue",
+    "BackgroundModel_tags"
+   ],
+   "new_unit": [
+    "BackgroundModel",
+    "BackgroundModel_tags",
+    "BackgroundModelValue"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": false
+  },
+  "BackgroundModelValue": {
+   "old_copy_unit": [
+    "BackgroundModelValue"
+   ],
+   "old_prune_unit": [
+    "BackgroundModelValue"
+   ],
+   "new_unit": [
+    "BackgroundModelValue"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "GkSourcePolicy": {
+   "old_copy_unit": [
+    "GkSourcePolicy"
+   ],
+   "old_prune_unit": [
+    "GkSourcePolicy"
+   ],
+   "new_unit": [
+    "GkSourcePolicy"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "QuadSourcePolicy": {
+   "old_copy_unit": [
+    "QuadSourcePolicy"
+   ],
+   "old_prune_unit": [
+    "QuadSourcePolicy"
+   ],
+   "new_unit": [
+    "QuadSourcePolicy"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  },
+  "BackgroundModel_tags": {
+   "old_copy_unit": [
+    "BackgroundModel_tags"
+   ],
+   "old_prune_unit": [
+    "BackgroundModel_tags"
+   ],
+   "new_unit": [
+    "BackgroundModel_tags"
+   ],
+   "new_equals_old_copy": true,
+   "new_equals_old_prune_as_set": true,
+   "new_equals_old_prune_in_order": true
+  }
+ },
+ "prune_classes": [
+  "BackgroundModel"
+ ]
+}

@@ -1,0 +1,718 @@
+...FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF........................................................................................................................................................................................
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='BackgroundModel')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1134 chars]}], 'name': 'BackgroundModel', 'serial_col': {[8896 chars]el'}} != {'has[1134 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[8973 chars])']}}
+Diff is 19938 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='BackgroundModelValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1178 chars]}], 'name': 'BackgroundModelValue', 'serial_co[6507 chars]ue'}} != {'has[1178 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[6587 chars])']}}
+Diff is 15728 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='BackgroundModel_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[161 chars]}], 'name': 'BackgroundModel_tags', 'table': {[2162 chars]gs'}} != {'has[161 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[2232 chars])']}}
+Diff is 4583 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkNumericIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1596 chars]}], 'name': 'GkNumericIntegration', 'serial_co[11370 chars]on'}} != {'has[1596 chars]}], 'monotone_flags': [], 'name': 'GkNumericIn[11440 chars])']}}
+Diff is 26067 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkNumericValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[615 chars]}], 'name': 'GkNumericValue', 'serial_col': {'[4242 chars]ue'}} != {'has[615 chars]}], 'monotone_flags': [], 'name': 'GkNumericVa[4312 chars])']}}
+Diff is 9892 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkNumeric_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[155 chars]}], 'name': 'GkNumeric_tags', 'table': {'table[2171 chars]gs'}} != {'has[155 chars]}], 'monotone_flags': [], 'name': 'GkNumeric_t[2241 chars])']}}
+Diff is 4559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSource')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[636 chars]}], 'name': 'GkSource', 'serial_col': {'column[7503 chars]ce'}} != {'has[636 chars]}], 'monotone_flags': [], 'name': 'GkSource', [7573 chars])']}}
+Diff is 16030 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSourcePolicy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[207 chars]}], 'name': 'GkSourcePolicy', 'serial_col': {'[2544 chars]cy'}} != {'has[207 chars]}], 'monotone_flags': [], 'name': 'GkSourcePol[2614 chars])']}}
+Diff is 5512 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSourcePolicyData')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[520 chars]}], 'name': 'GkSourcePolicyData', 'serial_col'[5277 chars]ta'}} != {'has[520 chars]}], 'monotone_flags': [], 'name': 'GkSourcePol[5347 chars])']}}
+Diff is 11559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSourceValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1097 chars]}], 'name': 'GkSourceValue', 'serial_col': {'c[6515 chars]ue'}} != {'has[1097 chars]}], 'monotone_flags': [], 'name': 'GkSourceVal[6585 chars])']}}
+Diff is 15757 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSource_parents')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[282 chars]}], 'name': 'GkSource_parents', 'serial_col': [3532 chars]ts'}} != {'has[282 chars]}], 'monotone_flags': [], 'name': 'GkSource_pa[3602 chars])']}}
+Diff is 7561 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkSource_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[148 chars]}], 'name': 'GkSource_tags', 'table': {'table'[2074 chars]gs'}} != {'has[148 chars]}], 'monotone_flags': [], 'name': 'GkSource_ta[2144 chars])']}}
+Diff is 4455 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkWKBIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[2069 chars]}], 'name': 'GkWKBIntegration', 'serial_col': [13402 chars]on'}} != {'has[2069 chars]}], 'monotone_flags': [], 'name': 'GkWKBIntegr[13472 chars])']}}
+Diff is 31005 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkWKBValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[682 chars]}], 'name': 'GkWKBValue', 'serial_col': {'colu[4668 chars]ue'}} != {'has[682 chars]}], 'monotone_flags': [], 'name': 'GkWKBValue'[4738 chars])']}}
+Diff is 10918 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='GkWKB_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[139 chars]}], 'name': 'GkWKB_tags', 'table': {'table': '[2035 chars]gs'}} != {'has[139 chars]}], 'monotone_flags': [], 'name': 'GkWKB_tags'[2105 chars])']}}
+Diff is 4348 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='IntegrationSolver')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[89 chars]}], 'name': 'IntegrationSolver', 'serial_col':[1651 chars]er'}} != {'has[89 chars]}], 'monotone_flags': [], 'name': 'Integration[1721 chars] []}}
+Diff is 3602 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='LambdaCDM')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[366 chars]}], 'name': 'LambdaCDM', 'serial_col': {'colum[2777 chars]DM'}} != {'has[366 chars]}], 'monotone_flags': [], 'name': 'LambdaCDM',[2847 chars] []}}
+Diff is 6610 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='OneLoopIntegral')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[561 chars]}], 'name': 'OneLoopIntegral', 'serial_col': {[6338 chars]al'}} != {'has[561 chars]}], 'monotone_flags': [], 'name': 'OneLoopInte[6408 chars])']}}
+Diff is 13721 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='OneLoopIntegral_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[162 chars]}], 'name': 'OneLoopIntegral_tags', 'table': {[2172 chars]gs'}} != {'has[162 chars]}], 'monotone_flags': [], 'name': 'OneLoopInte[2242 chars])']}}
+Diff is 4594 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QCD_Cosmology')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[513 chars]}], 'name': 'QCD_Cosmology', 'serial_col': {'c[3538 chars]gy'}} != {'has[513 chars]}], 'monotone_flags': [], 'name': 'QCD_Cosmolo[3608 chars])']}}
+Diff is 8327 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSource')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[526 chars]}], 'name': 'QuadSource', 'serial_col': {'colu[6100 chars]ce'}} != {'has[526 chars]}], 'monotone_flags': [], 'name': 'QuadSource'[6170 chars])']}}
+Diff is 13101 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSourceIntegral')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[3051 chars]}], 'name': 'QuadSourceIntegral', 'serial_col'[20311 chars]al'}} != {'has[3051 chars]}], 'monotone_flags': [], 'name': 'QuadSourceI[20381 chars])']}}
+Diff is 46411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSourceIntegral_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[168 chars]}], 'name': 'QuadSourceIntegral_tags', 'table'[2214 chars]gs'}} != {'has[168 chars]}], 'monotone_flags': [], 'name': 'QuadSourceI[2284 chars])']}}
+Diff is 4672 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSourcePolicy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[213 chars]}], 'name': 'QuadSourcePolicy', 'serial_col': [2564 chars]cy'}} != {'has[213 chars]}], 'monotone_flags': [], 'name': 'QuadSourceP[2634 chars])']}}
+Diff is 5568 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSourceValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[693 chars]}], 'name': 'QuadSourceValue', 'serial_col': {[4469 chars]ue'}} != {'has[693 chars]}], 'monotone_flags': [], 'name': 'QuadSourceV[4539 chars])']}}
+Diff is 10531 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='QuadSource_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[152 chars]}], 'name': 'QuadSource_tags', 'table': {'tabl[2102 chars]gs'}} != {'has[152 chars]}], 'monotone_flags': [], 'name': 'QuadSource_[2172 chars])']}}
+Diff is 4514 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkNumericIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1594 chars]}], 'name': 'TkNumericIntegration', 'serial_co[11354 chars]on'}} != {'has[1594 chars]}], 'monotone_flags': [], 'name': 'TkNumericIn[11424 chars])']}}
+Diff is 26019 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkNumericValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[615 chars]}], 'name': 'TkNumericValue', 'serial_col': {'[4242 chars]ue'}} != {'has[615 chars]}], 'monotone_flags': [], 'name': 'TkNumericVa[4312 chars])']}}
+Diff is 9892 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkNumeric_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[155 chars]}], 'name': 'TkNumeric_tags', 'table': {'table[2171 chars]gs'}} != {'has[155 chars]}], 'monotone_flags': [], 'name': 'TkNumeric_t[2241 chars])']}}
+Diff is 4559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkWKBIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[2501 chars]}], 'name': 'TkWKBIntegration', 'serial_col': [15243 chars]on'}} != {'has[2501 chars]}], 'monotone_flags': [], 'name': 'TkWKBIntegr[15313 chars])']}}
+Diff is 35504 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkWKBValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[732 chars]}], 'name': 'TkWKBValue', 'serial_col': {'colu[4924 chars]ue'}} != {'has[732 chars]}], 'monotone_flags': [], 'name': 'TkWKBValue'[4994 chars])']}}
+Diff is 11558 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='TkWKB_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[139 chars]}], 'name': 'TkWKB_tags', 'table': {'table': '[2035 chars]gs'}} != {'has[139 chars]}], 'monotone_flags': [], 'name': 'TkWKB_tags'[2105 chars])']}}
+Diff is 4348 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='redshift')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[170 chars]}], 'name': 'redshift', 'serial_col': {'column[1832 chars]ft'}} != {'has[170 chars]}], 'monotone_flags': ['source', 'response'], [1922 chars])']}}
+Diff is 4205 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='store_tag')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[81 chars]}], 'name': 'store_tag', 'serial_col': {'colum[1253 chars]ag'}} != {'has[81 chars]}], 'monotone_flags': [], 'name': 'store_tag',[1323 chars] []}}
+Diff is 2797 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='tolerance')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[85 chars]}], 'name': 'tolerance', 'serial_col': {'colum[1248 chars]ce'}} != {'has[85 chars]}], 'monotone_flags': [], 'name': 'tolerance',[1318 chars] []}}
+Diff is 2796 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='version')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[79 chars]}], 'name': 'version', 'serial_col': {'column'[922 chars]on'}} != {'has[79 chars]}], 'monotone_flags': [], 'name': 'version', '[992 chars] []}}
+Diff is 2142 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='wavenumber')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[184 chars]}], 'name': 'wavenumber', 'serial_col': {'colu[1758 chars]er'}} != {'has[184 chars]}], 'monotone_flags': ['source', 'response'], [1848 chars] []}}
+Diff is 4093 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness) (cls='wavenumber_exit_time')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1212 chars]}], 'name': 'wavenumber_exit_time', 'serial_co[8631 chars]me'}} != {'has[1212 chars]}], 'monotone_flags': [], 'name': 'wavenumber_[8701 chars])']}}
+Diff is 19915 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actor_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_actor_build_schema_reproduces_the_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 109, in test_actor_build_schema_reproduces_the_witness
+    self.assert_matches_witness(
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 90, in assert_matches_witness
+    self.assertEqual(witness, description)
+AssertionError: {'class_order': ['version', 'store_tag', 'r[222408 chars]gs']} != {'format': 1, 'class_order': ['version', 's[225125 chars]me']}
+Diff is 780432 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='BackgroundModel')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1134 chars]}], 'name': 'BackgroundModel', 'serial_col': {[8896 chars]el'}} != {'has[1134 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[8973 chars])']}}
+Diff is 19938 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='BackgroundModelValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1178 chars]}], 'name': 'BackgroundModelValue', 'serial_co[6507 chars]ue'}} != {'has[1178 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[6587 chars])']}}
+Diff is 15728 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='BackgroundModel_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[161 chars]}], 'name': 'BackgroundModel_tags', 'table': {[2162 chars]gs'}} != {'has[161 chars]}], 'monotone_flags': [], 'name': 'BackgroundM[2232 chars])']}}
+Diff is 4583 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkNumericIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1596 chars]}], 'name': 'GkNumericIntegration', 'serial_co[11370 chars]on'}} != {'has[1596 chars]}], 'monotone_flags': [], 'name': 'GkNumericIn[11440 chars])']}}
+Diff is 26067 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkNumericValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[615 chars]}], 'name': 'GkNumericValue', 'serial_col': {'[4242 chars]ue'}} != {'has[615 chars]}], 'monotone_flags': [], 'name': 'GkNumericVa[4312 chars])']}}
+Diff is 9892 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkNumeric_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[155 chars]}], 'name': 'GkNumeric_tags', 'table': {'table[2171 chars]gs'}} != {'has[155 chars]}], 'monotone_flags': [], 'name': 'GkNumeric_t[2241 chars])']}}
+Diff is 4559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSource')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[636 chars]}], 'name': 'GkSource', 'serial_col': {'column[7503 chars]ce'}} != {'has[636 chars]}], 'monotone_flags': [], 'name': 'GkSource', [7573 chars])']}}
+Diff is 16030 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSourcePolicy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[207 chars]}], 'name': 'GkSourcePolicy', 'serial_col': {'[2544 chars]cy'}} != {'has[207 chars]}], 'monotone_flags': [], 'name': 'GkSourcePol[2614 chars])']}}
+Diff is 5512 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSourcePolicyData')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[520 chars]}], 'name': 'GkSourcePolicyData', 'serial_col'[5277 chars]ta'}} != {'has[520 chars]}], 'monotone_flags': [], 'name': 'GkSourcePol[5347 chars])']}}
+Diff is 11559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSourceValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1097 chars]}], 'name': 'GkSourceValue', 'serial_col': {'c[6515 chars]ue'}} != {'has[1097 chars]}], 'monotone_flags': [], 'name': 'GkSourceVal[6585 chars])']}}
+Diff is 15757 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSource_parents')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[282 chars]}], 'name': 'GkSource_parents', 'serial_col': [3532 chars]ts'}} != {'has[282 chars]}], 'monotone_flags': [], 'name': 'GkSource_pa[3602 chars])']}}
+Diff is 7561 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkSource_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[148 chars]}], 'name': 'GkSource_tags', 'table': {'table'[2074 chars]gs'}} != {'has[148 chars]}], 'monotone_flags': [], 'name': 'GkSource_ta[2144 chars])']}}
+Diff is 4455 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkWKBIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[2069 chars]}], 'name': 'GkWKBIntegration', 'serial_col': [13402 chars]on'}} != {'has[2069 chars]}], 'monotone_flags': [], 'name': 'GkWKBIntegr[13472 chars])']}}
+Diff is 31005 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkWKBValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[682 chars]}], 'name': 'GkWKBValue', 'serial_col': {'colu[4668 chars]ue'}} != {'has[682 chars]}], 'monotone_flags': [], 'name': 'GkWKBValue'[4738 chars])']}}
+Diff is 10918 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='GkWKB_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[139 chars]}], 'name': 'GkWKB_tags', 'table': {'table': '[2035 chars]gs'}} != {'has[139 chars]}], 'monotone_flags': [], 'name': 'GkWKB_tags'[2105 chars])']}}
+Diff is 4348 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='IntegrationSolver')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[89 chars]}], 'name': 'IntegrationSolver', 'serial_col':[1651 chars]er'}} != {'has[89 chars]}], 'monotone_flags': [], 'name': 'Integration[1721 chars] []}}
+Diff is 3602 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='LambdaCDM')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[366 chars]}], 'name': 'LambdaCDM', 'serial_col': {'colum[2777 chars]DM'}} != {'has[366 chars]}], 'monotone_flags': [], 'name': 'LambdaCDM',[2847 chars] []}}
+Diff is 6610 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='OneLoopIntegral')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[561 chars]}], 'name': 'OneLoopIntegral', 'serial_col': {[6338 chars]al'}} != {'has[561 chars]}], 'monotone_flags': [], 'name': 'OneLoopInte[6408 chars])']}}
+Diff is 13721 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='OneLoopIntegral_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[162 chars]}], 'name': 'OneLoopIntegral_tags', 'table': {[2172 chars]gs'}} != {'has[162 chars]}], 'monotone_flags': [], 'name': 'OneLoopInte[2242 chars])']}}
+Diff is 4594 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QCD_Cosmology')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[513 chars]}], 'name': 'QCD_Cosmology', 'serial_col': {'c[3538 chars]gy'}} != {'has[513 chars]}], 'monotone_flags': [], 'name': 'QCD_Cosmolo[3608 chars])']}}
+Diff is 8327 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSource')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[526 chars]}], 'name': 'QuadSource', 'serial_col': {'colu[6100 chars]ce'}} != {'has[526 chars]}], 'monotone_flags': [], 'name': 'QuadSource'[6170 chars])']}}
+Diff is 13101 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSourceIntegral')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[3051 chars]}], 'name': 'QuadSourceIntegral', 'serial_col'[20311 chars]al'}} != {'has[3051 chars]}], 'monotone_flags': [], 'name': 'QuadSourceI[20381 chars])']}}
+Diff is 46411 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSourceIntegral_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[168 chars]}], 'name': 'QuadSourceIntegral_tags', 'table'[2214 chars]gs'}} != {'has[168 chars]}], 'monotone_flags': [], 'name': 'QuadSourceI[2284 chars])']}}
+Diff is 4672 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSourcePolicy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[213 chars]}], 'name': 'QuadSourcePolicy', 'serial_col': [2564 chars]cy'}} != {'has[213 chars]}], 'monotone_flags': [], 'name': 'QuadSourceP[2634 chars])']}}
+Diff is 5568 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSourceValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[693 chars]}], 'name': 'QuadSourceValue', 'serial_col': {[4469 chars]ue'}} != {'has[693 chars]}], 'monotone_flags': [], 'name': 'QuadSourceV[4539 chars])']}}
+Diff is 10531 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='QuadSource_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[152 chars]}], 'name': 'QuadSource_tags', 'table': {'tabl[2102 chars]gs'}} != {'has[152 chars]}], 'monotone_flags': [], 'name': 'QuadSource_[2172 chars])']}}
+Diff is 4514 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkNumericIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1594 chars]}], 'name': 'TkNumericIntegration', 'serial_co[11354 chars]on'}} != {'has[1594 chars]}], 'monotone_flags': [], 'name': 'TkNumericIn[11424 chars])']}}
+Diff is 26019 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkNumericValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[615 chars]}], 'name': 'TkNumericValue', 'serial_col': {'[4242 chars]ue'}} != {'has[615 chars]}], 'monotone_flags': [], 'name': 'TkNumericVa[4312 chars])']}}
+Diff is 9892 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkNumeric_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[155 chars]}], 'name': 'TkNumeric_tags', 'table': {'table[2171 chars]gs'}} != {'has[155 chars]}], 'monotone_flags': [], 'name': 'TkNumeric_t[2241 chars])']}}
+Diff is 4559 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkWKBIntegration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[2501 chars]}], 'name': 'TkWKBIntegration', 'serial_col': [15243 chars]on'}} != {'has[2501 chars]}], 'monotone_flags': [], 'name': 'TkWKBIntegr[15313 chars])']}}
+Diff is 35504 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkWKBValue')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[732 chars]}], 'name': 'TkWKBValue', 'serial_col': {'colu[4924 chars]ue'}} != {'has[732 chars]}], 'monotone_flags': [], 'name': 'TkWKBValue'[4994 chars])']}}
+Diff is 11558 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='TkWKB_tags')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[139 chars]}], 'name': 'TkWKB_tags', 'table': {'table': '[2035 chars]gs'}} != {'has[139 chars]}], 'monotone_flags': [], 'name': 'TkWKB_tags'[2105 chars])']}}
+Diff is 4348 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='redshift')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[170 chars]}], 'name': 'redshift', 'serial_col': {'column[1832 chars]ft'}} != {'has[170 chars]}], 'monotone_flags': ['source', 'response'], [1922 chars])']}}
+Diff is 4205 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='store_tag')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[81 chars]}], 'name': 'store_tag', 'serial_col': {'colum[1253 chars]ag'}} != {'has[81 chars]}], 'monotone_flags': [], 'name': 'store_tag',[1323 chars] []}}
+Diff is 2797 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='tolerance')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[85 chars]}], 'name': 'tolerance', 'serial_col': {'colum[1248 chars]ce'}} != {'has[85 chars]}], 'monotone_flags': [], 'name': 'tolerance',[1318 chars] []}}
+Diff is 2796 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='version')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[79 chars]}], 'name': 'version', 'serial_col': {'column'[922 chars]on'}} != {'has[79 chars]}], 'monotone_flags': [], 'name': 'version', '[992 chars] []}}
+Diff is 2142 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='wavenumber')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[184 chars]}], 'name': 'wavenumber', 'serial_col': {'colu[1758 chars]er'}} != {'has[184 chars]}], 'monotone_flags': ['source', 'response'], [1848 chars] []}}
+Diff is 4093 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness) (cls='wavenumber_exit_time')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 87, in assert_matches_witness
+    self.assertEqual(
+AssertionError: {'has[1212 chars]}], 'name': 'wavenumber_exit_time', 'serial_co[8631 chars]me'}} != {'has[1212 chars]}], 'monotone_flags': [], 'name': 'wavenumber_[8701 chars])']}}
+Diff is 19915 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_build_schema_reproduces_the_witness (Datastore.tests.test_schema_builder.TestSchemaIsUnchanged.test_build_schema_reproduces_the_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 97, in test_build_schema_reproduces_the_witness
+    self.assert_matches_witness(
+  File "<scratch>/wt/Datastore/tests/test_schema_builder.py", line 90, in assert_matches_witness
+    self.assertEqual(witness, description)
+AssertionError: {'class_order': ['version', 'store_tag', 'r[222408 chars]gs']} != {'format': 1, 'class_order': ['version', 's[225125 chars]me']}
+Diff is 780432 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 191 tests in 55.907s
+
+FAILED (failures=78)
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.

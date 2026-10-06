@@ -1,0 +1,3 @@
+fixture-store-shard0000.sqlite e283a6bbff97ba72
+fixture-store-shard0001.sqlite e283a6bbff97ba72
+fixture-store.sqlite b52ad1d00fce7f8f

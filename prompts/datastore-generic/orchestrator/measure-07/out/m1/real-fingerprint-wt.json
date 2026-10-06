@@ -1,0 +1,177 @@
+{
+ "classes": {
+  "BackgroundModel": {
+   "count": 1,
+   "digest": "e3726430ba3623f9e31034d60b776a10391973225bd6f40e1ba884d4ae9c812d",
+   "tag_sets": [
+    {
+     "count": 1,
+     "digest": "e3726430ba3623f9e31034d60b776a10391973225bd6f40e1ba884d4ae9c812d",
+     "tags": [
+      "Run_fixture"
+     ]
+    }
+   ]
+  },
+  "GkNumericIntegration": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "GkSource": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "GkSourcePolicy": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "GkSourcePolicyData": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "GkWKBIntegration": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "IntegrationSolver": {
+   "count": 1,
+   "digest": "d44b41138ee20fdbb80ded0c20ae3d344b0231c333f027c9f3ce31ae35210436",
+   "tag_sets": [
+    {
+     "count": 1,
+     "digest": "d44b41138ee20fdbb80ded0c20ae3d344b0231c333f027c9f3ce31ae35210436",
+     "tags": []
+    }
+   ]
+  },
+  "LambdaCDM": {
+   "count": 1,
+   "digest": "6fe0caa942fa94019ddd404ab359b03657ad25420e5f6cf6968ee00533c324b3",
+   "tag_sets": [
+    {
+     "count": 1,
+     "digest": "6fe0caa942fa94019ddd404ab359b03657ad25420e5f6cf6968ee00533c324b3",
+     "tags": []
+    }
+   ]
+  },
+  "OneLoopIntegral": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "QCD_Cosmology": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "QuadSource": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "QuadSourceIntegral": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "QuadSourcePolicy": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "TkNumericIntegration": {
+   "count": 2,
+   "digest": "5f6a90bf7d31c71cc3fb45f3a9e69cb24f023a13295965e046525d52c160805f",
+   "tag_sets": [
+    {
+     "count": 2,
+     "digest": "5f6a90bf7d31c71cc3fb45f3a9e69cb24f023a13295965e046525d52c160805f",
+     "tags": [
+      "Run_fixture",
+      "grid-A"
+     ]
+    }
+   ]
+  },
+  "TkWKBIntegration": {
+   "count": 0,
+   "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "tag_sets": []
+  },
+  "redshift": {
+   "count": 3,
+   "digest": "73be9f4aa1913ecd9773eb8d1dfe8fa98418c4e74b58d49ada33b6dacedc3ffa",
+   "tag_sets": [
+    {
+     "count": 3,
+     "digest": "73be9f4aa1913ecd9773eb8d1dfe8fa98418c4e74b58d49ada33b6dacedc3ffa",
+     "tags": []
+    }
+   ]
+  },
+  "store_tag": {
+   "count": 3,
+   "digest": "dae832445575cf82ec2dc76dd3baf5fd0a18c6502e7d6d8a96fda8437a2d5f36",
+   "tag_sets": [
+    {
+     "count": 3,
+     "digest": "dae832445575cf82ec2dc76dd3baf5fd0a18c6502e7d6d8a96fda8437a2d5f36",
+     "tags": []
+    }
+   ]
+  },
+  "tolerance": {
+   "count": 2,
+   "digest": "06c995f38d3eff21a9f0b89a6c0005b24475179a3ba5a3320903e970e03a63bd",
+   "tag_sets": [
+    {
+     "count": 2,
+     "digest": "06c995f38d3eff21a9f0b89a6c0005b24475179a3ba5a3320903e970e03a63bd",
+     "tags": []
+    }
+   ]
+  },
+  "version": {
+   "count": 1,
+   "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+   "tag_sets": [
+    {
+     "count": 1,
+     "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+     "tags": []
+    }
+   ]
+  },
+  "wavenumber": {
+   "count": 2,
+   "digest": "f854caf879801b132ca752a34ca4713ff7b261769012fc25cb31c94405cde41f",
+   "tag_sets": [
+    {
+     "count": 2,
+     "digest": "f854caf879801b132ca752a34ca4713ff7b261769012fc25cb31c94405cde41f",
+     "tags": []
+    }
+   ]
+  },
+  "wavenumber_exit_time": {
+   "count": 2,
+   "digest": "4ad1b7074ea59bfe87b29ab939e4b1cd6d2df0ebfeb995ca0d44f9d921140f5d",
+   "tag_sets": [
+    {
+     "count": 2,
+     "digest": "4ad1b7074ea59bfe87b29ab939e4b1cd6d2df0ebfeb995ca0d44f9d921140f5d",
+     "tags": []
+    }
+   ]
+  }
+ },
+ "digest": "d932853819d07ce40fbb9cce544dabe4bbe968e4a7c908bb33e80eecbca3264f",
+ "fingerprint_format": 6,
+ "problems": {}
+}

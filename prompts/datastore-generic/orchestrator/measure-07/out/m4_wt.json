@@ -1,0 +1,38 @@
+{
+ "fresh, read-write": {
+  "type": "MetadataConcepts.store_tag.store_tag",
+  "store_id": 1,
+  "label": "standin",
+  "_deserialized": "<absent>",
+  "_new_insert": true,
+  "attributes": {
+   "_label": "'standin'",
+   "_my_id": "1",
+   "_new_insert": "True"
+  }
+ },
+ "existing, read-write": {
+  "type": "MetadataConcepts.store_tag.store_tag",
+  "store_id": 1,
+  "label": "standin",
+  "_deserialized": true,
+  "_new_insert": "<absent>",
+  "attributes": {
+   "_deserialized": "True",
+   "_label": "'standin'",
+   "_my_id": "1"
+  }
+ },
+ "existing, read-only": {
+  "type": "MetadataConcepts.store_tag.store_tag",
+  "store_id": 1,
+  "label": "standin",
+  "_deserialized": true,
+  "_new_insert": "<absent>",
+  "attributes": {
+   "_deserialized": "True",
+   "_label": "'standin'",
+   "_my_id": "1"
+  }
+ }
+}

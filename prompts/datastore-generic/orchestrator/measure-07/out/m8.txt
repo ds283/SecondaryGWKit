@@ -1,0 +1,11 @@
+owner_column absent: ValueError: build_schema: "Member" declares owner_column "nonesuch", which is not a column of its table ['serial', 'plain', 'owner_serial', 'two_keys', 'flag']
+owner_column with no foreign key: ValueError: build_schema: "Member" declares owner_column "plain", which has 0 foreign keys; the column naming a row's owner has exactly one
+owner_column with two foreign keys: ValueError: build_schema: "Member" declares owner_column "two_keys", which has 2 foreign keys; the column naming a row's owner has exactly one
+monotone_flags naming an absent column: ValueError: build_schema: "Member" declares monotone_flags ['flag', 'nonesuch'], and ['nonesuch'] are not columns of its table ['serial', 'plain', 'owner_serial', 'two_keys', 'flag']
+validated_column absent: ValueError: build_schema: "Member" declares validated_column "nonesuch", which is not a column of its table ['serial', 'plain', 'owner_serial', 'two_keys', 'flag']
+all three well declared: accepted: owner_column='owner_serial', monotone_flags=('flag',), validated_column='flag'
+
+the real registry: every record with a table, the three keys
+  non-default: {'redshift': (None, ('source', 'response'), None), 'wavenumber': (None, ('source', 'response'), None), 'BackgroundModel': (None, (), 'validated'), 'BackgroundModelValue': ('model_serial', (), None)}
+  every other record: [(None, (), None)]
+  exactly the declared values: True

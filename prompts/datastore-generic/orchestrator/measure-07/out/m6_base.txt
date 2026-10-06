@@ -1,0 +1,128 @@
+=== Datastore/SQL/ShardedPool.py: 107 hits; by name: {'MetadataConcepts': 1, 'store_tag': 5, 'config': 3, 'version': 16, 'label': 19, 'source': 17, 'BackgroundModel': 24, 'validated': 11, 'BackgroundModel_tags': 2, 'wavenumber': 4, 'response': 3, 'BackgroundModelValue': 1, 'redshift': 1}
+     35 code      MetadataConcepts from MetadataConcepts import store_tag
+     35 code      store_tag      from MetadataConcepts import store_tag
+     36 code      config         from config.defaults import DEFAULT_STRING_LENGTH
+    196 comment   version        # the version row of version_label, found or written once every actor exists
+    292 comment   version        # create actor pool of datastores, one for each shard. No actor inserts the version row
+    329 code      config         for class_name, config in read_table_config.items():
+    340 comment   label          # already holds the label. Only a label no shard holds is written. Then every actor is
+    345 string    version        self._get_impl_replicated_table("version", {"label": version_label})
+    345 string    label          self._get_impl_replicated_table("version", {"label": version_label})
+    355 docstring version        """
+    355 docstring store_tag      """
+    355 docstring label          """
+    369 string    version        "SELECT serial, label FROM version WHERE label = ?",
+    369 string    label          "SELECT serial, label FROM version WHERE label = ?",
+    391 code      version        version = store_tag(store_id=row[0], label=row[1])
+    391 code      store_tag      version = store_tag(store_id=row[0], label=row[1])
+    391 code      label          version = store_tag(store_id=row[0], label=row[1])
+    392 code      version        version._deserialized = True
+    393 code      version        return version
+    422 comment   version        #   5. the version row is found by _find_version_row, mode=ro, before any actor exists. A
+    423 comment   label          #      label no shard holds refuses with ReadOnlyMiss, naming the labels the store holds. It is
+    486 comment   version        # 5. the version row, found and never written
+    491 string    version        "version",
+    492 string    label          {"label": version_label},
+    527 code      config         for class_name, config in read_table_config.items():
+    609 docstring version        """Every version label the store holds, in serial order, read mode=ro from each shard
+    609 docstring label          """Every version label the store holds, in serial order, read mode=ro from each shard
+    617 string    version        "SELECT label FROM version ORDER BY serial"
+    617 string    label          "SELECT label FROM version ORDER BY serial"
+    621 code      label          for (label,) in rows:
+    622 code      label          if label not in labels:
+    623 code      label          labels.append(label)
+    877 comment   source         # shared with copy_store/move_store, which read a source store's records the same way
+   1010 comment   source         # shared with copy_store/move_store, which check a source store's shards the same way
+   1030 comment   version        # controller holds" (docs/datastore-integrity-audit.md §4.5). The version row is such a
+   1051 comment   BackgroundModel #      lacks is copied to that shard verbatim (a BackgroundModel as a unit: row, tags and
+   1053 comment   BackgroundModel #      BackgroundModel.validated is recomputed on each shard by the factory's own rule. Every
+   1053 comment   validated      #      BackgroundModel.validated is recomputed on each shard by the factory's own rule. Every
+   1258 docstring store_tag      """
+   1258 docstring BackgroundModel_tags """
+   1275 string    store_tag      "store_tag"
+   1392 docstring wavenumber     """
+   1579 docstring version        """
+   1579 docstring BackgroundModel """
+   1579 docstring source         """
+   1579 docstring response       """
+   1579 docstring validated      """
+   1630 string    BackgroundModel if cls_name == "BackgroundModel":
+   1634 string    BackgroundModel "BackgroundModel",
+   1635 string    BackgroundModel_tags "BackgroundModel_tags",
+   1636 string    BackgroundModelValue "BackgroundModelValue",
+   1641 string    redshift       "redshift": ("source", "response"),
+   1641 string    source         "redshift": ("source", "response"),
+   1641 string    response       "redshift": ("source", "response"),
+   1642 string    wavenumber     "wavenumber": ("source", "response"),
+   1642 string    source         "wavenumber": ("source", "response"),
+   1642 string    response       "wavenumber": ("source", "response"),
+   1653 comment   wavenumber     # compared again once the repair is written: a copied wavenumber can satisfy it
+   1708 string    BackgroundModel name == "BackgroundModel"
+   1709 string    validated      and differing == ["validated"]
+   1755 comment   BackgroundModel # a BackgroundModel is copied as a unit: a shard lacking the model row receives every
+   1757 string    BackgroundModel if cls_name == "BackgroundModel":
+   1759 string    BackgroundModel models = {k[0] for k in copies.get(("BackgroundModel", sid), set())}
+   1761 string    BackgroundModel if name == "BackgroundModel":
+   1763 comment   BackgroundModel # a row's model is the column its foreign key to BackgroundModel names
+   1769 string    BackgroundModel if fk.column.table.name == "BackgroundModel"
+   1789 string    BackgroundModel "BackgroundModel it lacks",
+   1795 string    BackgroundModel "table": "BackgroundModel",
+   1801 string    BackgroundModel "and a BackgroundModel is copied only as a unit",
+   1831 docstring validated      """
+   1890 docstring BackgroundModel """
+   1890 docstring validated      """
+   1898 string    BackgroundModel factory = self._factories["BackgroundModel"]
+   1899 string    BackgroundModel table = built.tables["BackgroundModel"]
+   1903 docstring label          """What the factory's validate reads of a model: its serial and its label."""
+   1905 code      label          def __init__(self, store_id: int, label):
+   1907 code      label          self.label = label
+   1907 code      label          self.label = label
+   1912 string    BackgroundModel snap = snapshots[sid]["BackgroundModel"]
+   1917 string    validated      stored = row[columns.index("validated")] is True
+   1918 code      label          label = row[columns.index("label")]
+   1918 string    label          label = row[columns.index("label")]
+   1922 code      label          _StoredModel(serial, label),
+   1931 string    validated      "action": "validated recomputed",
+   1932 string    BackgroundModel "class_name": "BackgroundModel",
+   1936 string    validated      "validated": True,
+   1944 string    BackgroundModel "class_name": "BackgroundModel",
+   1947 string    validated      "detail": "the shard holds validated=True, and the factory's rule "
+   1991 string    validated      f'{a["validated"]}'
+   1998 comment   BackgroundModel # validates at startup (today BackgroundModel, with its tags and values) are deleted by the
+   2041 docstring BackgroundModel """The compared tables a prune of ``cls_name`` may delete from: its own, and every
+   2417 comment   source         # source. delete_store deletes a closed store's own files, and those only: the shards its
+   2425 docstring source         """
+   2446 docstring source         """
+   2590 comment   source         # the source primary: an existing regular file, not a symbolic link (the same test as a
+   2605 string    source         refuse_journals(src_primary, "the source primary")
+   2607 comment   source         # the source's shard records, read and checked exactly as the constructor reads them
+   2626 comment   source         # the destination primary: a new file, and not the source
+   2641 comment   source         # source's table
+   2668 comment   source         # primary still holds the source's records, which it reads by name in its new directory.
+   2811 string    source         ". The source and the destination are on different filesystems, so the store "
+   2812 string    source         "cannot be moved by renaming it; copy it instead, and then delete the source by hand"
+   2834 comment   source         # _plan_relocation makes of a source). Without it nothing names the store's shards, so
+   2934 comment   version        # the get, store and validate of a replicated class take, the version row's included
+   3261 docstring BackgroundModel """The serials of an object's value rows, if it carries any (BackgroundModel), else None."""
+   3396 comment   validated      # item need only be validated on a single shard
+   3437 comment   wavenumber     # open compared shard_keys with the wavenumbers every shard holds, so a wavenumber with
+=== Datastore/SQL/Datastore.py: 19 hits; by name: {'version': 9, 'label': 1, 'store_tag': 1, 'redshift': 1, 'wavenumber': 1, 'tolerance': 1, 'LambdaCDM': 1, 'QCD_Cosmology': 1, 'GkSourcePolicy': 1, 'config': 2}
+     55 docstring version        """
+     55 docstring label          """
+     90 comment   version        # the version row's serial, set by ShardedPool through set_version once the row exists
+    146 docstring version        """
+    166 comment   version        # replicated tables and found the version row, all on mode=ro files. The actor opens its own
+    168 comment   version        # and validates at startup in report-only form. It never receives the version serial
+    269 docstring store_tag      """
+    269 docstring redshift       """
+    269 docstring wavenumber     """
+    269 docstring tolerance      """
+    269 docstring LambdaCDM      """
+    269 docstring QCD_Cosmology  """
+    269 docstring GkSourcePolicy """
+    715 comment   version        # a row that carries a version serial cannot be written before the pool has set it
+    733 comment   version        # We shouldn't do this with the "version", however, which has to be treated specially
+    737 string    version        uses_serial and ("serial" not in payload) and (cls_name != "version"),
+    745 string    version        payload = payload | {"version": self._version_serial}
+    863 code      config         config = self._read_table_config[class_name]
+    864 code      config         if config.get("tables_arg", False):

@@ -1,0 +1,323 @@
+{
+ "BackgroundModel": {
+  "count": 1,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+     "cosmology_type": 0,
+     "cs_tau_gauss_order": 8,
+     "friction_F_gauss_order": 8,
+     "source_grid_construction": 1,
+     "source_grid_digest": "fixture-digest",
+     "tau_gauss_order": 8,
+     "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+    },
+    "tags": [
+     "Run_fixture"
+    ],
+    "validated": true,
+    "value_count": 0
+   }
+  ],
+  "replicated": true
+ },
+ "GkNumericIntegration": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "GkSource": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "GkSourcePolicy": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": true
+ },
+ "GkSourcePolicyData": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "GkWKBIntegration": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "IntegrationSolver": {
+  "count": 1,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "label": "fixture-solver",
+     "stepping": 0
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "LambdaCDM": {
+  "count": 1,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "Neff": "0x1.85e353f7ced91p+1",
+     "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+     "f_baryon": "0x1.47ae147ae147bp-3",
+     "h": "0x1.570a3d70a3d71p-1",
+     "omega_cc": "0x1.6147ae147ae14p-1",
+     "omega_m": "0x1.3d70a3d70a3d7p-2"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "OneLoopIntegral": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "QCD_Cosmology": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": true
+ },
+ "QuadSource": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "QuadSourceIntegral": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "QuadSourcePolicy": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": true
+ },
+ "TkNumericIntegration": {
+  "count": 2,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+     "break_point_kind": "all",
+     "k": "4198ac43c0f2d0c0750f4f4b43f650a37be5ac01fe7126211a796f6099c4024e",
+     "model": "021ea8e13cfaa0771e9e353541b0ec63054903963716e1f739c975f97c1292c5",
+     "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+     "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+    },
+    "tags": [
+     "Run_fixture",
+     "grid-A"
+    ],
+    "validated": true,
+    "value_count": 3
+   },
+   {
+    "key": {
+     "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+     "break_point_kind": "all",
+     "k": "752a91c94c2cb9210d85b508dcadfc037c84933fd7156e12b9849872393df50a",
+     "model": "021ea8e13cfaa0771e9e353541b0ec63054903963716e1f739c975f97c1292c5",
+     "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+     "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+    },
+    "tags": [
+     "Run_fixture",
+     "grid-A"
+    ],
+    "validated": true,
+    "value_count": 3
+   }
+  ],
+  "replicated": false
+ },
+ "TkWKBIntegration": {
+  "count": 0,
+  "problems": [],
+  "records": [],
+  "replicated": false
+ },
+ "redshift": {
+  "count": 3,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "z": "0x0.0p+0"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "z": "0x1.4000000000000p+3"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "z": "0x1.86a0000000000p+16"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "store_tag": {
+  "count": 3,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "label": "Run_fixture"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "label": "grid-A"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "label": "unused-tag"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "tolerance": {
+  "count": 2,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "log10_tol": "-0x1.4000000000000p+2"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "log10_tol": "-0x1.c000000000000p+2"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "version": {
+  "count": 1,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "label": "2025.1.1"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "wavenumber": {
+  "count": 2,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "k_inv_Mpc": "0x1.0000000000000p+0"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "k_inv_Mpc": "0x1.999999999999ap-4"
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ },
+ "wavenumber_exit_time": {
+  "count": 2,
+  "problems": [],
+  "records": [
+   {
+    "key": {
+     "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+     "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+     "cosmology_type": 0,
+     "k": "a84ae635ec5b12490d34946a1c22a57e948f5bd49650b36991257c24e6bd96ee",
+     "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+     "stepping": 0
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   },
+   {
+    "key": {
+     "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+     "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+     "cosmology_type": 0,
+     "k": "b86954a37fb7a31b509624b9783097d3f410b343c4d1449f141576b4fe51db3e",
+     "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+     "stepping": 0
+    },
+    "tags": [],
+    "validated": null,
+    "value_count": null
+   }
+  ],
+  "replicated": true
+ }
+}
