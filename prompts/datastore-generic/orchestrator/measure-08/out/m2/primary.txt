@@ -1,0 +1,1 @@
+<scratch>/m08/out/m2/store/full-store.sqlite

@@ -1,0 +1,57 @@
+=== base
+{
+ "after import Datastore.store_inventory": {
+  "Datastore.store_inventory": [
+   "Datastore.store_inventory"
+  ],
+  "Datastore.contract": [
+   "Datastore.contract"
+  ]
+ },
+ "after import config.datastore": {
+  "Datastore.SQL.ObjectFactories": 22,
+  "config": 3,
+  "ComputeTargets": 21,
+  "CosmologyConcepts": 3,
+  "CosmologyModels": 11,
+  "MetadataConcepts": 6
+ },
+ "added by read_inventory": {
+  "Datastore.store_reader": [
+   "Datastore.store_reader"
+  ]
+ },
+ "store_inventory module globals naming a project package": [],
+ "classes read": 21,
+ "ray_initialized": false
+}
+=== wt08
+{
+ "after import Datastore.store_inventory": {
+  "Datastore.store_inventory": [
+   "Datastore.store_inventory"
+  ],
+  "Datastore.contract": [
+   "Datastore.contract"
+  ]
+ },
+ "after import config.datastore": {
+  "Datastore.SQL.ObjectFactories": 22,
+  "config": 3,
+  "ComputeTargets": 21,
+  "CosmologyConcepts": 3,
+  "CosmologyModels": 11,
+  "MetadataConcepts": 6
+ },
+ "added by read_inventory": {
+  "Datastore.SQL.ObjectFactories": [
+   "Datastore.SQL.ObjectFactories.cosmology_types"
+  ],
+  "Datastore.store_reader": [
+   "Datastore.store_reader"
+  ]
+ },
+ "store_inventory module globals naming a project package": [],
+ "classes read": 21,
+ "ray_initialized": false
+}

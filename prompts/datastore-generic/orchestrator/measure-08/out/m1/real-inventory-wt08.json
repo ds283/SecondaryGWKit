@@ -1,0 +1,552 @@
+{
+ "class_order": [
+  "version",
+  "store_tag",
+  "redshift",
+  "wavenumber",
+  "tolerance",
+  "LambdaCDM",
+  "QCD_Cosmology",
+  "IntegrationSolver",
+  "GkSourcePolicy",
+  "QuadSourcePolicy",
+  "wavenumber_exit_time",
+  "BackgroundModel",
+  "TkNumericIntegration",
+  "TkWKBIntegration",
+  "GkNumericIntegration",
+  "GkWKBIntegration",
+  "GkSource",
+  "GkSourcePolicyData",
+  "QuadSource",
+  "QuadSourceIntegral",
+  "OneLoopIntegral"
+ ],
+ "classes": {
+  "BackgroundModel": {
+   "count": 1,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "cosmology": "<polymorphic: cosmology_type -> {'0': 'LambdaCDM', '1': 'QCD_Cosmology'}>",
+    "z_init": "redshift"
+   },
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+      "cosmology_type": 0,
+      "cs_tau_gauss_order": 8,
+      "friction_F_gauss_order": 8,
+      "source_grid_construction": 1,
+      "source_grid_digest": "fixture-digest",
+      "tau_gauss_order": 8,
+      "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+     },
+     "tags": [
+      "Run_fixture"
+     ],
+     "validated": true,
+     "value_count": 0
+    }
+   ],
+   "replicated": true,
+   "tagged": true
+  },
+  "GkNumericIntegration": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "atol": "tolerance",
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "rtol": "tolerance",
+    "z_source": "redshift"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "GkSource": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {
+    "parents": {}
+   },
+   "parent_sets": {
+    "parents": {
+     "numeric": "GkNumericIntegration",
+     "wkb": "GkWKBIntegration",
+     "z_source": "redshift"
+    }
+   },
+   "parents_normalised": {
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "z_response": "redshift"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "GkSourcePolicy": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [],
+   "replicated": true,
+   "tagged": false
+  },
+  "GkSourcePolicyData": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "k": "wavenumber_exit_time",
+    "policy": "GkSourcePolicy",
+    "source": "GkSource"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": false
+  },
+  "GkWKBIntegration": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "numeric": "GkNumericIntegration",
+    "z_source": "redshift"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "IntegrationSolver": {
+   "count": 1,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "label": "fixture-solver",
+      "stepping": 0
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "LambdaCDM": {
+   "count": 1,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "Neff": "0x1.85e353f7ced91p+1",
+      "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+      "f_baryon": "0x1.47ae147ae147bp-3",
+      "h": "0x1.570a3d70a3d71p-1",
+      "omega_cc": "0x1.6147ae147ae14p-1",
+      "omega_m": "0x1.3d70a3d70a3d7p-2"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "OneLoopIntegral": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "atol": "tolerance",
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "rtol": "tolerance",
+    "z_response": "redshift"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "QCD_Cosmology": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [],
+   "replicated": true,
+   "tagged": false
+  },
+  "QuadSource": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "Tq": "TkNumericIntegration",
+    "Tr": "TkNumericIntegration",
+    "model": "BackgroundModel",
+    "q": "wavenumber_exit_time",
+    "r": "wavenumber_exit_time"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "QuadSourceIntegral": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "Tq_WKB": "TkWKBIntegration",
+    "Tq_numeric": "TkNumericIntegration",
+    "Tr_WKB": "TkWKBIntegration",
+    "Tr_numeric": "TkNumericIntegration",
+    "atol": "tolerance",
+    "data": "GkSourcePolicyData",
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "policy": "GkSourcePolicy",
+    "q": "wavenumber_exit_time",
+    "quad_policy": "QuadSourcePolicy",
+    "r": "wavenumber_exit_time",
+    "rtol": "tolerance",
+    "source": "QuadSource",
+    "z_response": "redshift",
+    "z_source_max": "redshift"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "QuadSourcePolicy": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [],
+   "replicated": true,
+   "tagged": false
+  },
+  "TkNumericIntegration": {
+   "count": 2,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "atol": "tolerance",
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "rtol": "tolerance",
+    "z_init": "redshift"
+   },
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+      "break_point_kind": "all",
+      "k": "4198ac43c0f2d0c0750f4f4b43f650a37be5ac01fe7126211a796f6099c4024e",
+      "model": "021ea8e13cfaa0771e9e353541b0ec63054903963716e1f739c975f97c1292c5",
+      "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+      "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+     },
+     "tags": [
+      "Run_fixture",
+      "grid-A"
+     ],
+     "validated": true,
+     "value_count": 3
+    },
+    {
+     "key": {
+      "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+      "break_point_kind": "all",
+      "k": "752a91c94c2cb9210d85b508dcadfc037c84933fd7156e12b9849872393df50a",
+      "model": "021ea8e13cfaa0771e9e353541b0ec63054903963716e1f739c975f97c1292c5",
+      "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+      "z_init": "d26d230f875bd379173d051f94894c0ef2a76c466219ec3e349f3f384c1b2ee0"
+     },
+     "tags": [
+      "Run_fixture",
+      "grid-A"
+     ],
+     "validated": true,
+     "value_count": 3
+    }
+   ],
+   "replicated": false,
+   "tagged": true
+  },
+  "TkWKBIntegration": {
+   "count": 0,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "k": "wavenumber_exit_time",
+    "model": "BackgroundModel",
+    "numeric": "TkNumericIntegration"
+   },
+   "problems": [],
+   "records": [],
+   "replicated": false,
+   "tagged": true
+  },
+  "redshift": {
+   "count": 3,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "z": "0x0.0p+0"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "z": "0x1.4000000000000p+3"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "z": "0x1.86a0000000000p+16"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "store_tag": {
+   "count": 3,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "label": "Run_fixture"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "label": "grid-A"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "label": "unused-tag"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "tolerance": {
+   "count": 2,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "log10_tol": "-0x1.4000000000000p+2"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "log10_tol": "-0x1.c000000000000p+2"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "version": {
+   "count": 1,
+   "earliest": "None",
+   "latest": "None",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "label": "2025.1.1"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "wavenumber": {
+   "count": 2,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {},
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "k_inv_Mpc": "0x1.0000000000000p+0"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "k_inv_Mpc": "0x1.999999999999ap-4"
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  },
+  "wavenumber_exit_time": {
+   "count": 2,
+   "earliest": "2026-09-24 12:00:00",
+   "latest": "2026-09-24 12:00:00",
+   "members": {},
+   "parent_sets": {},
+   "parents_normalised": {
+    "atol": "tolerance",
+    "cosmology": "<polymorphic: cosmology_type -> {'0': 'LambdaCDM', '1': 'QCD_Cosmology'}>",
+    "k": "wavenumber",
+    "rtol": "tolerance"
+   },
+   "problems": [],
+   "records": [
+    {
+     "key": {
+      "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+      "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+      "cosmology_type": 0,
+      "k": "a84ae635ec5b12490d34946a1c22a57e948f5bd49650b36991257c24e6bd96ee",
+      "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+      "stepping": 0
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    },
+    {
+     "key": {
+      "atol": "058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099",
+      "cosmology": "5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847",
+      "cosmology_type": 0,
+      "k": "b86954a37fb7a31b509624b9783097d3f410b343c4d1449f141576b4fe51db3e",
+      "rtol": "ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9",
+      "stepping": 0
+     },
+     "tags": [],
+     "validated": null,
+     "value_count": null
+    }
+   ],
+   "replicated": true,
+   "tagged": false
+  }
+ },
+ "shards": [
+  0,
+  1
+ ]
+}

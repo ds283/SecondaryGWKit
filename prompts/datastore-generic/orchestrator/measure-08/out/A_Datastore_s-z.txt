@@ -1,0 +1,45 @@
+...............................................E...............................................................................................EE......
+======================================================================
+ERROR: Datastore.tests.test_store_inventory (unittest.loader._FailedTest.Datastore.tests.test_store_inventory)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: Datastore.tests.test_store_inventory
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt08/Datastore/tests/test_store_inventory.py", line 39, in <module>
+    from Datastore.store_inventory import (
+ImportError: cannot import name 'INVENTORY_CLASSES' from 'Datastore.store_inventory' (<scratch>/wt08/Datastore/store_inventory.py)
+
+
+======================================================================
+ERROR: test_the_inventory_key_has_no_z_init (Datastore.tests.test_wkb_numeric_parent_key.TestZInitIsPayload.test_the_inventory_key_has_no_z_init) (factory='sqla_TkWKBIntegration_factory')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt08/Datastore/tests/test_wkb_numeric_parent_key.py", line 517, in test_the_inventory_key_has_no_z_init
+    factory.inventory_records(None, None, None, None)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'sqla_TkWKBIntegration_factory' has no attribute 'inventory_records'
+
+======================================================================
+ERROR: test_the_inventory_key_has_no_z_init (Datastore.tests.test_wkb_numeric_parent_key.TestZInitIsPayload.test_the_inventory_key_has_no_z_init) (factory='sqla_GkWKBIntegration_factory')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/wt08/Datastore/tests/test_wkb_numeric_parent_key.py", line 517, in test_the_inventory_key_has_no_z_init
+    factory.inventory_records(None, None, None, None)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'sqla_GkWKBIntegration_factory' has no attribute 'inventory_records'
+
+----------------------------------------------------------------------
+Ran 150 tests in 30.213s
+
+FAILED (errors=3)
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.

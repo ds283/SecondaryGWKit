@@ -1,0 +1,28 @@
+=== plain sort (no roots-first)
+    FAIL: test_it_is_the_order_the_inventory_was_built_in (Datastore.tests.test_inventory_declarations.TestTheDerivedOrder.test_it_is_the_order_the_inventory_was_built_in)
+    FAIL: test_roots_come_first_unlike_a_plain_sort (Datastore.tests.test_inventory_declarations.TestTheDerivedOrder.test_roots_come_first_unlike_a_plain_sort)
+    FAIL: test_roots_first_on_a_hand_built_registry (Datastore.tests.test_inventory_declarations.TestTheDerivedOrder.test_roots_first_on_a_hand_built_registry)
+    Ran 24 tests in 1.794s
+    FAILED (failures=3)
+=== resolve ignores the type map
+    FAIL: test_a_hand_built_inventory (Datastore.tests.test_inventory_declarations.TestResolve.test_a_hand_built_inventory)
+    FAIL: test_the_full_store_resolves_both_cosmology_types (Datastore.tests.test_inventory_declarations.TestResolve.test_the_full_store_resolves_both_cosmology_types) (cls='wavenumber_exit_time', record={'cosmology_type': 0, 'stepping': 0, 'k': 'a84ae635ec5b12490d34946a1c22a57e948f5bd49650b36991257c24e6bd96ee', 'cosmology': '5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847', 'atol': '058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099', 'rtol': 'ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9'})
+    FAIL: test_the_full_store_resolves_both_cosmology_types (Datastore.tests.test_inventory_declarations.TestResolve.test_the_full_store_resolves_both_cosmology_types) (cls='wavenumber_exit_time', record={'cosmology_type': 0, 'stepping': 0, 'k': 'b86954a37fb7a31b509624b9783097d3f410b343c4d1449f141576b4fe51db3e', 'cosmology': '5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847', 'atol': '058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099', 'rtol': 'ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9'})
+    FAIL: test_the_full_store_resolves_both_cosmology_types (Datastore.tests.test_inventory_declarations.TestResolve.test_the_full_store_resolves_both_cosmology_types) (cls='wavenumber_exit_time', record={'cosmology_type': 0, 'stepping': 0, 'k': 'c91a56fb0f5214b8f385fccbcdaa8a7404f69962347256bf5727fa3939a42428', 'cosmology': '5576942889db57e42a4e2b8dbb72c5c37be0d6507ea43554665bc3e10f44c847', 'atol': '058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099', 'rtol': 'ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9'})
+    FAIL: test_the_full_store_resolves_both_cosmology_types (Datastore.tests.test_inventory_declarations.TestResolve.test_the_full_store_resolves_both_cosmology_types) (cls='wavenumber_exit_time', record={'cosmology_type': 1, 'stepping': 0, 'k': 'b86954a37fb7a31b509624b9783097d3f410b343c4d1449f141576b4fe51db3e', 'cosmology': '71fe31dc1ba831367517e2e72ed28dfab85d28f1a7914e65ae9f80484354a5aa', 'atol': '058c07a4bec6200a587189296ae8c49881c41769290df38199f1ff2345a55099', 'rtol': 'ba82a40b68b49f6bab7516615c01d1630ac29dd6d3dc4c7ed901ffe02fc9b8c9'})
+    FAIL: test_the_full_store_resolves_both_cosmology_types (Datastore.tests.test_inventory_declarations.TestResolve.test_the_full_store_resolves_both_cosmology_types)
+    Ran 24 tests in 2.050s
+    FAILED (failures=6)
+=== no cycle refusal (loop would spin: guarded by IndexError)
+    ERROR: test_a_cycle_is_refused_by_name (Datastore.tests.test_inventory_declarations.TestRefusals.test_a_cycle_is_refused_by_name)
+    Ran 24 tests in 1.780s
+    FAILED (errors=1)
+=== polymorphic classes not dependencies
+    FAIL: test_a_polymorphic_class_with_no_spec_is_refused (Datastore.tests.test_inventory_declarations.TestRefusals.test_a_polymorphic_class_with_no_spec_is_refused)
+    FAIL: test_a_polymorphic_parents_classes_come_before_it (Datastore.tests.test_inventory_declarations.TestRefusals.test_a_polymorphic_parents_classes_come_before_it)
+    Ran 24 tests in 1.823s
+    FAILED (failures=2)
+=== a project name in a comment
+    FAIL: test_no_project_name_in_its_code_or_text (Datastore.tests.test_inventory_declarations.TestTheLayerKnowsNoProject.test_no_project_name_in_its_code_or_text)
+    Ran 24 tests in 1.825s
+    FAILED (failures=1)

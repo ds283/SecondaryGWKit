@@ -1,0 +1,3 @@
+fingerprint identical: True
+report identical: True  verbose identical: True
+inventory.classes order identical: False

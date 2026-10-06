@@ -1,0 +1,126 @@
+@dataclass(frozen=True)
+class Parent:
+    """A reference from a key field to a parent row, by the serial in ``column``.
+
+    The parent's class is named in one of two ways, and exactly one is given:
+
+    - ``of``: the parent class;
+    - ``types``, with ``type_column``: a **polymorphic** reference, whose class is named per row by
+      the value in ``type_column``, through ``types`` (type value -> class). The referencing
+      factory declares the map. A type value the map does not hold is a parent that cannot be
+      resolved. ``type_column`` is read with the reference, and must also be one of the class's
+      leaves, so that a key carries the type its reference was resolved through.
+
+    ``nullable``: whether a NULL in ``column`` is a value of the key rather than a missing parent.
+    A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a row
+    computed without the optional parent). On a parent that is not nullable a NULL is what it
+    always was, a parent that cannot be resolved.
+
+    ``cross_shard``: the parent row may be on another shard than the child's
+    (prompts/datastore-integrity prompt 09a). The serial is then resolved against the parent
+    class's records on **every** shard (``ShardContext.all_digests``), not this shard's alone.
+    The resolved identity is the parent's own reference digest, as for a same-shard parent, never
+    its serial. A serial that no shard holds, or that two shards hold with different records, is
+    an unresolved parent."""
+
+    column: str
+    of: Optional[str] = None
+    type_column: Optional[str] = None
+    # not hashed, so that a Parent stays hashable; it is compared
+    types: Optional[Mapping[Any, str]] = field(default=None, hash=False)
+    nullable: bool = False
+    cross_shard: bool = False
+
+    def __post_init__(self):
+        if (self.of is None) == (self.types is None):
+            raise ValueError(
+                f"Parent({self.column!r}): give exactly one of 'of' (the parent class) and "
+                f"'types' (a polymorphic reference's type map)"
+            )
+        if (self.types is None) != (self.type_column is None):
+            raise ValueError(
+                f"Parent({self.column!r}): 'type_column' and 'types' are given together or not "
+                f"at all"
+            )
+        if self.types is not None and len(self.types) == 0:
+            raise ValueError(f"Parent({self.column!r}): 'types' is empty")
+
+    def classes(self) -> Tuple[str, ...]:
+        """Every class this reference can name, each once, in declaration order."""
+        if self.types is None:
+            return (self.of,)
+        return tuple(dict.fromkeys(self.types.values()))
+
+    def class_of(self, mapping: Mapping[str, Any]) -> Optional[str]:
+        """The class this reference names in a row (or a key) ``mapping``: ``of``, or the class
+        its type map gives the row's ``type_column``; ``None`` for a type the map does not hold.
+        """
+        if self.types is None:
+            return self.of
+        return self.types.get(mapping[self.type_column])
+
+
+@dataclass(frozen=True)
+class ParentSet:
+    """A key field whose value is a **set** of parent references, one member per row of
+    ``table`` whose ``owner`` column holds the child's serial (prompts/datastore-integrity prompt
+    09b).
+
+    ``members`` maps each field of a member to a ``Parent``, resolved as a key parent is, within
+    this shard or, for a ``cross_shard`` one, on every shard. A member names its class (``of``):
+    a polymorphic member is refused. A member naming a row that cannot be resolved makes the
+    child an unresolved parent; a child with no member rows is an ``empty-parent-set``; a member
+    row whose owner is not on the shard is an ``orphan-member``.
+    """
+
+    table: str
+    owner: str
+    members: Mapping[str, Parent]
+
+    def __post_init__(self):
+        polymorphic = [m for m, p in self.members.items() if p.types is not None]
+        if len(polymorphic) > 0:
+            raise ValueError(
+                f"ParentSet({self.table!r}): member field(s) {', '.join(polymorphic)} are "
+                f"polymorphic; a member of a parent set names its class ('of')"
+            )
+
+
+@dataclass(frozen=True)
+class InventorySpec:
+    """What a factory's ``inventory_spec()`` declares: how its class's records are read. The
+    fields are ``read_records``' keywords, and mean what they mean there; ``keywords()`` gives
+    them as such. A spec holds no connection and reads nothing."""
+
+    leaves: Sequence[str] = ()
+    parents: Mapping[str, Parent] = field(default_factory=dict)
+    tags: Optional[Tuple[str, str]] = None
+    values: Optional[Tuple[str, str]] = None
+    validated: Optional[str] = None
+    parent_sets: Mapping[str, ParentSet] = field(default_factory=dict)
+
+    def keywords(self) -> Dict[str, Any]:
+        """The spec as ``read_records``' keyword arguments."""
+        return {
+            "leaves": self.leaves,
+            "parents": self.parents,
+            "tags": self.tags,
+            "values": self.values,
+            "validated": self.validated,
+            "parent_sets": self.parent_sets,
+        }
+
+    def dependencies(self) -> Tuple[str, ...]:
+        """Every class that must be built before this one, each once: the classes its parents
+        and its parent sets' members name (every class of a polymorphic parent's type map), and
+        the tag table where the class is tagged, since its tags are read through the tag table's
+        records."""
+        named: List[str] = []
+        for parent in self.parents.values():
+            named.extend(parent.classes())
+        for spec in self.parent_sets.values():
+            for parent in spec.members.values():
+                named.extend(parent.classes())
+        if self.tags is not None:
+            named.append(TAG_TABLE)
+        return tuple(dict.fromkeys(named))

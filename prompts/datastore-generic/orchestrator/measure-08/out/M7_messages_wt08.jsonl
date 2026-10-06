@@ -1,0 +1,16 @@
+{"case": "read_records: plain parent not built", "type": "RuntimeError", "message": "read_records(): Child.p references Parent, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: cross-shard parent not built", "type": "RuntimeError", "message": "read_records(): Child.p references Parent, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: polymorphic parent, second class not built", "type": "RuntimeError", "message": "read_records(): Child.cosmology references QCD_Cosmology, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: parent-set member not built", "type": "RuntimeError", "message": "read_records(): Child.s.m references Member, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "Parent: neither of nor types", "type": "ValueError", "message": "Parent('c'): give exactly one of 'of' (the parent class) and 'types' (a polymorphic reference's type map)"}
+{"case": "Parent: both of and types", "type": "ValueError", "message": "Parent('c'): give exactly one of 'of' (the parent class) and 'types' (a polymorphic reference's type map)"}
+{"case": "Parent: types without type_column", "type": "ValueError", "message": "Parent('c'): 'type_column' and 'types' are given together or not at all"}
+{"case": "Parent: type_column without types", "type": "ValueError", "message": "Parent('c'): 'type_column' and 'types' are given together or not at all"}
+{"case": "Parent: empty types", "type": "ValueError", "message": "Parent('c'): 'types' is empty"}
+{"case": "ParentSet: polymorphic member", "type": "ValueError", "message": "ParentSet('T'): member field(s) b are polymorphic; a member of a parent set names its class ('of')"}
+{"case": "inventory_classes: a parent with no spec", "type": "ValueError", "message": "inventory_classes(): B references A, which declares no inventory_spec"}
+{"case": "inventory_classes: two parents with no spec", "type": "ValueError", "message": "inventory_classes(): B references A, C, which declare no inventory_spec"}
+{"case": "inventory_classes: a tagged class, no tag-table spec", "type": "ValueError", "message": "inventory_classes(): B references store_tag, which declares no inventory_spec"}
+{"case": "inventory_classes: polymorphic type column not a leaf", "type": "ValueError", "message": "inventory_classes(): B.a is a polymorphic parent whose type column t is not one of B's leaves"}
+{"case": "inventory_classes: self reference", "type": "ValueError", "message": "inventory_classes(): A references itself"}
+{"case": "inventory_classes: cycle", "type": "ValueError", "message": "inventory_classes(): the references of A, B, C form a cycle, or depend on one; no order builds every parent before its child"}

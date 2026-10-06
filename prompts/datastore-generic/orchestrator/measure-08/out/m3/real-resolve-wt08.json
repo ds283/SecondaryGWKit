@@ -1,0 +1,375 @@
+{
+ "BackgroundModel": [
+  {
+   "cosmology": {
+    "class": "LambdaCDM",
+    "key": {
+     "Neff": "0x1.85e353f7ced91p+1",
+     "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+     "f_baryon": "0x1.47ae147ae147bp-3",
+     "h": "0x1.570a3d70a3d71p-1",
+     "omega_cc": "0x1.6147ae147ae14p-1",
+     "omega_m": "0x1.3d70a3d70a3d7p-2"
+    },
+    "tags": []
+   },
+   "cosmology_type": 0,
+   "cs_tau_gauss_order": 8,
+   "friction_F_gauss_order": 8,
+   "source_grid_construction": 1,
+   "source_grid_digest": "fixture-digest",
+   "tau_gauss_order": 8,
+   "z_init": {
+    "class": "redshift",
+    "key": {
+     "z": "0x1.86a0000000000p+16"
+    },
+    "tags": []
+   }
+  }
+ ],
+ "GkNumericIntegration": [],
+ "GkSource": [],
+ "GkSourcePolicy": [],
+ "GkSourcePolicyData": [],
+ "GkWKBIntegration": [],
+ "IntegrationSolver": [
+  {
+   "label": "fixture-solver",
+   "stepping": 0
+  }
+ ],
+ "LambdaCDM": [
+  {
+   "Neff": "0x1.85e353f7ced91p+1",
+   "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+   "f_baryon": "0x1.47ae147ae147bp-3",
+   "h": "0x1.570a3d70a3d71p-1",
+   "omega_cc": "0x1.6147ae147ae14p-1",
+   "omega_m": "0x1.3d70a3d70a3d7p-2"
+  }
+ ],
+ "OneLoopIntegral": [],
+ "QCD_Cosmology": [],
+ "QuadSource": [],
+ "QuadSourceIntegral": [],
+ "QuadSourcePolicy": [],
+ "TkNumericIntegration": [
+  {
+   "atol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.4000000000000p+2"
+    },
+    "tags": []
+   },
+   "break_point_kind": "all",
+   "k": {
+    "class": "wavenumber_exit_time",
+    "key": {
+     "atol": {
+      "class": "tolerance",
+      "key": {
+       "log10_tol": "-0x1.4000000000000p+2"
+      },
+      "tags": []
+     },
+     "cosmology": {
+      "class": "LambdaCDM",
+      "key": {
+       "Neff": "0x1.85e353f7ced91p+1",
+       "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+       "f_baryon": "0x1.47ae147ae147bp-3",
+       "h": "0x1.570a3d70a3d71p-1",
+       "omega_cc": "0x1.6147ae147ae14p-1",
+       "omega_m": "0x1.3d70a3d70a3d7p-2"
+      },
+      "tags": []
+     },
+     "cosmology_type": 0,
+     "k": {
+      "class": "wavenumber",
+      "key": {
+       "k_inv_Mpc": "0x1.999999999999ap-4"
+      },
+      "tags": []
+     },
+     "rtol": {
+      "class": "tolerance",
+      "key": {
+       "log10_tol": "-0x1.c000000000000p+2"
+      },
+      "tags": []
+     },
+     "stepping": 0
+    },
+    "tags": []
+   },
+   "model": {
+    "class": "BackgroundModel",
+    "key": {
+     "cosmology": {
+      "class": "LambdaCDM",
+      "key": {
+       "Neff": "0x1.85e353f7ced91p+1",
+       "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+       "f_baryon": "0x1.47ae147ae147bp-3",
+       "h": "0x1.570a3d70a3d71p-1",
+       "omega_cc": "0x1.6147ae147ae14p-1",
+       "omega_m": "0x1.3d70a3d70a3d7p-2"
+      },
+      "tags": []
+     },
+     "cosmology_type": 0,
+     "cs_tau_gauss_order": 8,
+     "friction_F_gauss_order": 8,
+     "source_grid_construction": 1,
+     "source_grid_digest": "fixture-digest",
+     "tau_gauss_order": 8,
+     "z_init": {
+      "class": "redshift",
+      "key": {
+       "z": "0x1.86a0000000000p+16"
+      },
+      "tags": []
+     }
+    },
+    "tags": [
+     "Run_fixture"
+    ]
+   },
+   "rtol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.c000000000000p+2"
+    },
+    "tags": []
+   },
+   "z_init": {
+    "class": "redshift",
+    "key": {
+     "z": "0x1.86a0000000000p+16"
+    },
+    "tags": []
+   }
+  },
+  {
+   "atol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.4000000000000p+2"
+    },
+    "tags": []
+   },
+   "break_point_kind": "all",
+   "k": {
+    "class": "wavenumber_exit_time",
+    "key": {
+     "atol": {
+      "class": "tolerance",
+      "key": {
+       "log10_tol": "-0x1.4000000000000p+2"
+      },
+      "tags": []
+     },
+     "cosmology": {
+      "class": "LambdaCDM",
+      "key": {
+       "Neff": "0x1.85e353f7ced91p+1",
+       "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+       "f_baryon": "0x1.47ae147ae147bp-3",
+       "h": "0x1.570a3d70a3d71p-1",
+       "omega_cc": "0x1.6147ae147ae14p-1",
+       "omega_m": "0x1.3d70a3d70a3d7p-2"
+      },
+      "tags": []
+     },
+     "cosmology_type": 0,
+     "k": {
+      "class": "wavenumber",
+      "key": {
+       "k_inv_Mpc": "0x1.0000000000000p+0"
+      },
+      "tags": []
+     },
+     "rtol": {
+      "class": "tolerance",
+      "key": {
+       "log10_tol": "-0x1.c000000000000p+2"
+      },
+      "tags": []
+     },
+     "stepping": 0
+    },
+    "tags": []
+   },
+   "model": {
+    "class": "BackgroundModel",
+    "key": {
+     "cosmology": {
+      "class": "LambdaCDM",
+      "key": {
+       "Neff": "0x1.85e353f7ced91p+1",
+       "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+       "f_baryon": "0x1.47ae147ae147bp-3",
+       "h": "0x1.570a3d70a3d71p-1",
+       "omega_cc": "0x1.6147ae147ae14p-1",
+       "omega_m": "0x1.3d70a3d70a3d7p-2"
+      },
+      "tags": []
+     },
+     "cosmology_type": 0,
+     "cs_tau_gauss_order": 8,
+     "friction_F_gauss_order": 8,
+     "source_grid_construction": 1,
+     "source_grid_digest": "fixture-digest",
+     "tau_gauss_order": 8,
+     "z_init": {
+      "class": "redshift",
+      "key": {
+       "z": "0x1.86a0000000000p+16"
+      },
+      "tags": []
+     }
+    },
+    "tags": [
+     "Run_fixture"
+    ]
+   },
+   "rtol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.c000000000000p+2"
+    },
+    "tags": []
+   },
+   "z_init": {
+    "class": "redshift",
+    "key": {
+     "z": "0x1.86a0000000000p+16"
+    },
+    "tags": []
+   }
+  }
+ ],
+ "TkWKBIntegration": [],
+ "redshift": [
+  {
+   "z": "0x0.0p+0"
+  },
+  {
+   "z": "0x1.4000000000000p+3"
+  },
+  {
+   "z": "0x1.86a0000000000p+16"
+  }
+ ],
+ "store_tag": [
+  {
+   "label": "Run_fixture"
+  },
+  {
+   "label": "grid-A"
+  },
+  {
+   "label": "unused-tag"
+  }
+ ],
+ "tolerance": [
+  {
+   "log10_tol": "-0x1.4000000000000p+2"
+  },
+  {
+   "log10_tol": "-0x1.c000000000000p+2"
+  }
+ ],
+ "version": [
+  {
+   "label": "2025.1.1"
+  }
+ ],
+ "wavenumber": [
+  {
+   "k_inv_Mpc": "0x1.0000000000000p+0"
+  },
+  {
+   "k_inv_Mpc": "0x1.999999999999ap-4"
+  }
+ ],
+ "wavenumber_exit_time": [
+  {
+   "atol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.4000000000000p+2"
+    },
+    "tags": []
+   },
+   "cosmology": {
+    "class": "LambdaCDM",
+    "key": {
+     "Neff": "0x1.85e353f7ced91p+1",
+     "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+     "f_baryon": "0x1.47ae147ae147bp-3",
+     "h": "0x1.570a3d70a3d71p-1",
+     "omega_cc": "0x1.6147ae147ae14p-1",
+     "omega_m": "0x1.3d70a3d70a3d7p-2"
+    },
+    "tags": []
+   },
+   "cosmology_type": 0,
+   "k": {
+    "class": "wavenumber",
+    "key": {
+     "k_inv_Mpc": "0x1.0000000000000p+0"
+    },
+    "tags": []
+   },
+   "rtol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.c000000000000p+2"
+    },
+    "tags": []
+   },
+   "stepping": 0
+  },
+  {
+   "atol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.4000000000000p+2"
+    },
+    "tags": []
+   },
+   "cosmology": {
+    "class": "LambdaCDM",
+    "key": {
+     "Neff": "0x1.85e353f7ced91p+1",
+     "T_CMB_Kelvin": "0x1.5cdd2f1a9fbe7p+1",
+     "f_baryon": "0x1.47ae147ae147bp-3",
+     "h": "0x1.570a3d70a3d71p-1",
+     "omega_cc": "0x1.6147ae147ae14p-1",
+     "omega_m": "0x1.3d70a3d70a3d7p-2"
+    },
+    "tags": []
+   },
+   "cosmology_type": 0,
+   "k": {
+    "class": "wavenumber",
+    "key": {
+     "k_inv_Mpc": "0x1.999999999999ap-4"
+    },
+    "tags": []
+   },
+   "rtol": {
+    "class": "tolerance",
+    "key": {
+     "log10_tol": "-0x1.c000000000000p+2"
+    },
+    "tags": []
+   },
+   "stepping": 0
+  }
+ ]
+}

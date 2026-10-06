@@ -1,0 +1,448 @@
+BackgroundModel.py:887: IMPORT from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+=== BackgroundModel.py class sqla_BackgroundModelFactory lines 880-909
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a BackgroundModel row (store-fingerprint prompt 02): what build()
+        # filters on -- the cosmology (type and row), the three Gauss orders, the source grid's
+        # construction and digest, and z_init (optional in the lookup, always in the key) -- with
+        # its tags, its validated flag and its BackgroundModelValue count. The solver is not in the
+        # lookup and is not identity
+        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=(
+                "cosmology_type",
+                "tau_gauss_order",
+                "cs_tau_gauss_order",
+                "friction_F_gauss_order",
+                "source_grid_construction",
+                "source_grid_digest",
+            ),
+            parents={
+                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
+                "z_init": Parent("z_init_serial", "redshift"),
+            },
+            tags=("BackgroundModel_tags", "model_serial"),
+            values=("BackgroundModelValue", "model_serial"),
+            validated="validated",
+        )
+GkNumericIntegration.py:639: IMPORT from Datastore.store_inventory import Parent, read_records
+=== GkNumericIntegration.py class sqla_GkNumericIntegration_factory lines 633-657
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkNumericIntegration row (store-fingerprint prompt 02): what
+        # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
+        # z_source (optional in the lookup, always in the key) -- with its tags, its validated flag
+        # and its GkNumericValue count. The solver is not in the lookup and is not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("break_point_kind",),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+                "z_source": Parent("z_source_serial", "redshift"),
+            },
+            tags=("GkNumeric_tags", "integration_serial"),
+            values=("GkNumericValue", "integration_serial"),
+            validated="validated",
+        )
+GkSource.py:847: IMPORT from Datastore.store_inventory import Parent, ParentSet, read_records
+=== GkSource.py class sqla_GkSource_factory lines 838-875
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkSource row (store-fingerprint prompt 02): what build() filters
+        # on -- the model, the wavenumber exit and z_response (optional in the lookup, always in
+        # the key) and, since prompts/datastore-integrity prompt 09b, its parent set -- with its
+        # tags, its validated flag and its GkSourceValue count. The parent set is resolved
+        # through GkSource_parents to the parents' own identities: for each member its z_source
+        # and the reference digests of its numeric and WKB rows, or None. parents_digest is not
+        # read: it is formed from serials, which are never identity
+        from Datastore.store_inventory import Parent, ParentSet, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+            },
+            parent_sets={
+                "parents": ParentSet(
+                    table="GkSource_parents",
+                    owner="gk_source_serial",
+                    members={
+                        "z_source": Parent("z_source_serial", "redshift"),
+                        "numeric": Parent(
+                            "numeric_serial", "GkNumericIntegration", nullable=True
+                        ),
+                        "wkb": Parent("wkb_serial", "GkWKBIntegration", nullable=True),
+                    },
+                )
+            },
+            tags=("GkSource_tags", "parent_serial"),
+            values=("GkSourceValue", "parent_serial"),
+            validated="validated",
+        )
+GkSourcePolicy.py:72: IMPORT from Datastore.store_inventory import read_records
+=== GkSourcePolicy.py class sqla_GkSourcePolicy_factory lines 68-80
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkSourcePolicy row (store-fingerprint prompt 02): the two
+        # columns build() matches. The label is descriptive and is not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("Levin_threshold", "numeric_policy"),
+        )
+GkSourcePolicyData.py:181: IMPORT from Datastore.store_inventory import Parent, read_records
+=== GkSourcePolicyData.py class sqla_GkSourcePolicyData_factory lines 176-193
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkSourcePolicyData row (store-fingerprint prompt 02): what
+        # build() filters on -- its GkSource (whose reference digest covers that row's tags), its
+        # GkSourcePolicy and the wavenumber exit. No tags, no validated flag, no value table
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "source": Parent("source_serial", "GkSource"),
+                "policy": Parent("policy_serial", "GkSourcePolicy"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+            },
+        )
+GkWKBIntegration.py:968: IMPORT from Datastore.store_inventory import Parent, read_records
+=== GkWKBIntegration.py class sqla_GkWKBIntegration_factory lines 959-987
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkWKBIntegration row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, rho_gauss_order, z_source (optional in the
+        # lookup, always in the key) and, since prompts/datastore-integrity prompt 07, the numeric
+        # parent (same shard, so a key parent; nullable, and a pure-WKB row's key field is None)
+        # -- with its tags, its validated flag and its GkWKBValue count. z_init left the key with
+        # prompt 07: it is a function of the parent, or of z_source. The solver is not in the
+        # lookup and is not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("rho_gauss_order",),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_source": Parent("z_source_serial", "redshift"),
+                "numeric": Parent(
+                    "numeric_serial", "GkNumericIntegration", nullable=True
+                ),
+            },
+            tags=("GkWKB_tags", "wkb_serial"),
+            values=("GkWKBValue", "wkb_serial"),
+            validated="validated",
+        )
+LambdaCDM.py:96: IMPORT from Datastore.store_inventory import read_records
+=== LambdaCDM.py class sqla_LambdaCDM_factory lines 92-104
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a LambdaCDM row (store-fingerprint prompt 02): the six parameters
+        # build() matches. The name is descriptive and is not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("omega_m", "omega_cc", "h", "f_baryon", "T_CMB_Kelvin", "Neff"),
+        )
+OneLoopIntegral.py:346: IMPORT from Datastore.store_inventory import Parent, read_records
+=== OneLoopIntegral.py class sqla_OneLoopIntegral_factory lines 340-361
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a OneLoopIntegral row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, z_response, atol and rtol -- with its tags.
+        # The tags are read from OneLoopIntegral_tags, which is what store() writes and what
+        # build() now joins too ([00-oneloop-lookup-joins-the-wrong-tag-table], fixed here)
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+            },
+            tags=("OneLoopIntegral_tags", "parent_serial"),
+        )
+QCD_Cosmology.py:132: IMPORT from Datastore.store_inventory import read_records
+=== QCD_Cosmology.py class sqla_QCDCosmology_factory lines 127-149
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QCD_Cosmology row (store-fingerprint prompt 02): the six
+        # parameters, log10_max_z and T_z_representation, which build() matches. The name is
+        # descriptive and is not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=(
+                "omega_m",
+                "omega_cc",
+                "h",
+                "f_baryon",
+                "T_CMB_Kelvin",
+                "Neff",
+                "log10_max_z",
+                "T_z_representation",
+            ),
+        )
+QuadSource.py:550: IMPORT from Datastore.store_inventory import Parent, read_records
+=== QuadSource.py class sqla_QuadSource_factory lines 541-567
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QuadSource row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the q and r wavenumber exits, and the two TkNumericIntegrations
+        # it is computed from -- with its tags, its validated flag and its QuadSourceValue count.
+        # Tq is on this row's shard, because both are sharded by q. Tr is the Tk row at k = r, on
+        # r's shard, so it is a cross-shard parent: it resolves against the TkNumericIntegration
+        # records of every shard, to that record's own reference digest and never its serial
+        # (prompts/datastore-integrity, prompt 09a)
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "Tq": Parent("Tq_serial", "TkNumericIntegration"),
+                "Tr": Parent("Tr_serial", "TkNumericIntegration", cross_shard=True),
+            },
+            tags=("QuadSource_tags", "parent_serial"),
+            values=("QuadSourceValue", "parent_serial"),
+            validated="validated",
+        )
+QuadSourceIntegral.py:973: IMPORT from Datastore.store_inventory import Parent, read_records
+=== QuadSourceIntegral.py class sqla_QuadSourceIntegral_factory lines 964-1003
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
+        # build() filters on -- the model, the GkSourcePolicy, the QuadSourcePolicy (prompt 08),
+        # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol, and the six
+        # stored rows it is computed from (prompts/datastore-integrity prompt 09c) -- with its
+        # tags. No validated flag and no value table. Of the six, the GkSourcePolicyData is on
+        # this shard (k's); the QuadSource is on q's, and each Tk row on its own mode's, so they
+        # resolve across shards, each to its parent's own identity, never its serial
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "policy": Parent("policy_serial", "GkSourcePolicy"),
+                "quad_policy": Parent("quad_policy_serial", "QuadSourcePolicy"),
+                "k": Parent("k_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+                "z_source_max": Parent("z_source_max_serial", "redshift"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+                "source": Parent("source_serial", "QuadSource", cross_shard=True),
+                "data": Parent("data_serial", "GkSourcePolicyData"),
+                "Tq_numeric": Parent(
+                    "Tq_numeric_serial", "TkNumericIntegration", cross_shard=True
+                ),
+                "Tq_WKB": Parent("Tq_WKB_serial", "TkWKBIntegration", cross_shard=True),
+                "Tr_numeric": Parent(
+                    "Tr_numeric_serial", "TkNumericIntegration", cross_shard=True
+                ),
+                "Tr_WKB": Parent("Tr_WKB_serial", "TkWKBIntegration", cross_shard=True),
+            },
+            tags=("QuadSourceIntegral_tags", "parent_serial"),
+        )
+QuadSourcePolicy.py:109: IMPORT from Datastore.store_inventory import read_records
+=== QuadSourcePolicy.py class sqla_QuadSourcePolicy_factory lines 105-117
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QuadSourcePolicy row (store-fingerprint prompt 02): the two
+        # columns build() matches. The label is descriptive and is not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("Levin_threshold", "numeric_policy"),
+        )
+TkNumericIntegration.py:641: IMPORT from Datastore.store_inventory import Parent, read_records
+=== TkNumericIntegration.py class sqla_TkNumericIntegration_factory lines 635-659
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a TkNumericIntegration row (store-fingerprint prompt 02): what
+        # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
+        # z_init (optional in the lookup, always in the key) -- with its tags, its validated flag
+        # and its TkNumericValue count. The solver is not in the lookup and is not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("break_point_kind",),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+                "z_init": Parent("z_init_serial", "redshift"),
+            },
+            tags=("TkNumeric_tags", "integration_serial"),
+            values=("TkNumericValue", "integration_serial"),
+            validated="validated",
+        )
+TkWKBIntegration.py:966: IMPORT from Datastore.store_inventory import Parent, read_records
+=== TkWKBIntegration.py class sqla_TkWKBIntegration_factory lines 958-982
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a TkWKBIntegration row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, rho_gauss_order and, since
+        # prompts/datastore-integrity prompt 07, the numeric parent (same shard, so a key parent)
+        # -- with its tags, its validated flag and its TkWKBValue count. z_init left the key with
+        # prompt 07: it is a function of the parent. The solvers are not in the lookup and are not
+        # identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("rho_gauss_order",),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "numeric": Parent("numeric_serial", "TkNumericIntegration"),
+            },
+            tags=("TkWKB_tags", "wkb_serial"),
+            values=("TkWKBValue", "wkb_serial"),
+            validated="validated",
+        )
+integration_metadata.py:61: IMPORT from Datastore.store_inventory import read_records
+=== integration_metadata.py class sqla_IntegrationSolver_factory lines 57-63
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of an IntegrationSolver row (store-fingerprint prompt 02): its label,
+        # which is this class's identity, and the stepping build() filters on
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("label", "stepping"))
+redshift.py:137: IMPORT from Datastore.store_inventory import read_records
+=== redshift.py class sqla_redshift_factory lines 132-139
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a redshift row (store-fingerprint prompt 02): z as stored, which is
+        # what build() matches (relative 1e-7). The source/response flags accumulate by OR and are
+        # not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("z",))
+store_tag.py:51: IMPORT from Datastore.store_inventory import read_records
+=== store_tag.py class sqla_store_tag_factory lines 46-53
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a store_tag row (store-fingerprint prompt 02): its label, which is
+        # what build() looks it up by. Which tags a work item carries is read from the work item's
+        # own association table, never from this one
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("label",))
+tolerance.py:59: IMPORT from Datastore.store_inventory import read_records
+=== tolerance.py class sqla_tolerance_factory lines 55-61
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a tolerance row (store-fingerprint prompt 02): log10_tol as
+        # stored, which is what build() matches -- never 10**log10_tol
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("log10_tol",))
+version.py:50: IMPORT from Datastore.store_inventory import read_records
+=== version.py class sqla_version_factory lines 46-52
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a version row (store-fingerprint prompt 02): its label, which is
+        # what build() looks it up by
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("label",))
+wavenumber.py:130: IMPORT from Datastore.store_inventory import read_records
+wavenumber.py:389: IMPORT from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+=== wavenumber.py class sqla_wavenumber_factory lines 125-132
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a wavenumber row (store-fingerprint prompt 02): k_inv_Mpc as
+        # stored, which is what build() matches (absolute 1e-7). The source/response flags
+        # accumulate by OR and are not identity
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("k_inv_Mpc",))
+=== wavenumber.py class sqla_wavenumber_exit_time_factory lines 384-403
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a wavenumber_exit_time row (store-fingerprint prompt 02): what
+        # build() filters on -- the wavenumber, the cosmology (its type and the row that type
+        # names; the serial has no foreign key), atol, rtol and stepping
+        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("cosmology_type", "stepping"),
+            parents={
+                "k": Parent("wavenumber_serial", "wavenumber"),
+                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+            },
+        )

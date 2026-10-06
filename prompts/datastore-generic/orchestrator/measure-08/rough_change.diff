@@ -1,0 +1,1805 @@
+diff --git a/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py b/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
+index 11fdf7d..e24dc32 100644
+--- a/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
++++ b/ComputeTargets/tests/test_qcd_cosmology_inventory_record.py
+@@ -12,7 +12,7 @@ That report is gone. The same three claims, against the service that replaces it
+ 1. Two rows that differ only in ``T_z_representation`` are two records of the structured
+    inventory, and render differently.
+ 2. In the rendered record, ``T_z_representation`` sits beside ``log10_max_z``. The display follows
+-   the order of the class's key as its factory's ``inventory_records`` declares it, where the
++   the order of the class's key as its factory's ``inventory_spec`` declares it, where the
+    representation comes directly **after** ``log10_max_z``; the retired test required it directly
+    before. Either way the two fields that say how the background was computed, and over what
+    range, sit together.
+diff --git a/Datastore/SQL/ObjectFactories/BackgroundModel.py b/Datastore/SQL/ObjectFactories/BackgroundModel.py
+index ee7d4c8..f6a8a8c 100644
+--- a/Datastore/SQL/ObjectFactories/BackgroundModel.py
++++ b/Datastore/SQL/ObjectFactories/BackgroundModel.py
+@@ -878,19 +878,16 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a BackgroundModel row (store-fingerprint prompt 02): what build()
+         # filters on -- the cosmology (type and row), the three Gauss orders, the source grid's
+         # construction and digest, and z_init (optional in the lookup, always in the key) -- with
+         # its tags, its validated flag and its BackgroundModelValue count. The solver is not in the
+         # lookup and is not identity
+-        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
++        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=(
+                 "cosmology_type",
+                 "tau_gauss_order",
+@@ -900,7 +897,11 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
+                 "source_grid_digest",
+             ),
+             parents={
+-                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
++                "cosmology": Parent(
++                    "cosmology_serial",
++                    type_column="cosmology_type",
++                    types=COSMOLOGY_TYPES,
++                ),
+                 "z_init": Parent("z_init_serial", "redshift"),
+             },
+             tags=("BackgroundModel_tags", "model_serial"),
+diff --git a/Datastore/SQL/ObjectFactories/GkNumericIntegration.py b/Datastore/SQL/ObjectFactories/GkNumericIntegration.py
+index 64719a1..d5ef3ad 100644
+--- a/Datastore/SQL/ObjectFactories/GkNumericIntegration.py
++++ b/Datastore/SQL/ObjectFactories/GkNumericIntegration.py
+@@ -631,18 +631,14 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a GkNumericIntegration row (store-fingerprint prompt 02): what
+         # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
+         # z_source (optional in the lookup, always in the key) -- with its tags, its validated flag
+         # and its GkNumericValue count. The solver is not in the lookup and is not identity
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("break_point_kind",),
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+diff --git a/Datastore/SQL/ObjectFactories/GkSource.py b/Datastore/SQL/ObjectFactories/GkSource.py
+index e8d01ed..5aefbe9 100644
+--- a/Datastore/SQL/ObjectFactories/GkSource.py
++++ b/Datastore/SQL/ObjectFactories/GkSource.py
+@@ -836,7 +836,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a GkSource row (store-fingerprint prompt 02): what build() filters
+         # on -- the model, the wavenumber exit and z_response (optional in the lookup, always in
+         # the key) and, since prompts/datastore-integrity prompt 09b, its parent set -- with its
+@@ -844,13 +844,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
+         # through GkSource_parents to the parents' own identities: for each member its z_source
+         # and the reference digests of its numeric and WKB rows, or None. parents_digest is not
+         # read: it is formed from serials, which are never identity
+-        from Datastore.store_inventory import Parent, ParentSet, read_records
++        from Datastore.store_inventory import InventorySpec, Parent, ParentSet
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+diff --git a/Datastore/SQL/ObjectFactories/GkSourcePolicy.py b/Datastore/SQL/ObjectFactories/GkSourcePolicy.py
+index 4ffdde6..276a3f4 100644
+--- a/Datastore/SQL/ObjectFactories/GkSourcePolicy.py
++++ b/Datastore/SQL/ObjectFactories/GkSourcePolicy.py
+@@ -66,15 +66,11 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a GkSourcePolicy row (store-fingerprint prompt 02): the two
+         # columns build() matches. The label is descriptive and is not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("Levin_threshold", "numeric_policy"),
+         )
+diff --git a/Datastore/SQL/ObjectFactories/GkSourcePolicyData.py b/Datastore/SQL/ObjectFactories/GkSourcePolicyData.py
+index 1b83090..e352a1f 100644
+--- a/Datastore/SQL/ObjectFactories/GkSourcePolicyData.py
++++ b/Datastore/SQL/ObjectFactories/GkSourcePolicyData.py
+@@ -174,17 +174,13 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a GkSourcePolicyData row (store-fingerprint prompt 02): what
+         # build() filters on -- its GkSource (whose reference digest covers that row's tags), its
+         # GkSourcePolicy and the wavenumber exit. No tags, no validated flag, no value table
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             parents={
+                 "source": Parent("source_serial", "GkSource"),
+                 "policy": Parent("policy_serial", "GkSourcePolicy"),
+diff --git a/Datastore/SQL/ObjectFactories/GkWKBIntegration.py b/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
+index 0826bc0..b9dcc29 100644
+--- a/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
++++ b/Datastore/SQL/ObjectFactories/GkWKBIntegration.py
+@@ -957,7 +957,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a GkWKBIntegration row (store-fingerprint prompt 02): what build()
+         # filters on -- the model, the wavenumber exit, rho_gauss_order, z_source (optional in the
+         # lookup, always in the key) and, since prompts/datastore-integrity prompt 07, the numeric
+@@ -965,13 +965,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
+         # -- with its tags, its validated flag and its GkWKBValue count. z_init left the key with
+         # prompt 07: it is a function of the parent, or of z_source. The solver is not in the
+         # lookup and is not identity
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("rho_gauss_order",),
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+diff --git a/Datastore/SQL/ObjectFactories/LambdaCDM.py b/Datastore/SQL/ObjectFactories/LambdaCDM.py
+index 2dd120a..5970930 100644
+--- a/Datastore/SQL/ObjectFactories/LambdaCDM.py
++++ b/Datastore/SQL/ObjectFactories/LambdaCDM.py
+@@ -90,15 +90,11 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a LambdaCDM row (store-fingerprint prompt 02): the six parameters
+         # build() matches. The name is descriptive and is not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("omega_m", "omega_cc", "h", "f_baryon", "T_CMB_Kelvin", "Neff"),
+         )
+diff --git a/Datastore/SQL/ObjectFactories/OneLoopIntegral.py b/Datastore/SQL/ObjectFactories/OneLoopIntegral.py
+index d57ca88..62ec876 100644
+--- a/Datastore/SQL/ObjectFactories/OneLoopIntegral.py
++++ b/Datastore/SQL/ObjectFactories/OneLoopIntegral.py
+@@ -338,18 +338,14 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
+         return [make_object(row) for row in row_data]
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a OneLoopIntegral row (store-fingerprint prompt 02): what build()
+         # filters on -- the model, the wavenumber exit, z_response, atol and rtol -- with its tags.
+         # The tags are read from OneLoopIntegral_tags, which is what store() writes and what
+         # build() now joins too ([00-oneloop-lookup-joins-the-wrong-tag-table], fixed here)
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+                 "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+diff --git a/Datastore/SQL/ObjectFactories/QCD_Cosmology.py b/Datastore/SQL/ObjectFactories/QCD_Cosmology.py
+index 1c5cf43..7125a55 100644
+--- a/Datastore/SQL/ObjectFactories/QCD_Cosmology.py
++++ b/Datastore/SQL/ObjectFactories/QCD_Cosmology.py
+@@ -125,17 +125,13 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a QCD_Cosmology row (store-fingerprint prompt 02): the six
+         # parameters, log10_max_z and T_z_representation, which build() matches. The name is
+         # descriptive and is not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=(
+                 "omega_m",
+                 "omega_cc",
+diff --git a/Datastore/SQL/ObjectFactories/QuadSource.py b/Datastore/SQL/ObjectFactories/QuadSource.py
+index 88baed8..a19dbf2 100644
+--- a/Datastore/SQL/ObjectFactories/QuadSource.py
++++ b/Datastore/SQL/ObjectFactories/QuadSource.py
+@@ -539,7 +539,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a QuadSource row (store-fingerprint prompt 02): what build()
+         # filters on -- the model, the q and r wavenumber exits, and the two TkNumericIntegrations
+         # it is computed from -- with its tags, its validated flag and its QuadSourceValue count.
+@@ -547,13 +547,9 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
+         # r's shard, so it is a cross-shard parent: it resolves against the TkNumericIntegration
+         # records of every shard, to that record's own reference digest and never its serial
+         # (prompts/datastore-integrity, prompt 09a)
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+                 "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
+diff --git a/Datastore/SQL/ObjectFactories/QuadSourceIntegral.py b/Datastore/SQL/ObjectFactories/QuadSourceIntegral.py
+index e2bd77f..7fe90fa 100644
+--- a/Datastore/SQL/ObjectFactories/QuadSourceIntegral.py
++++ b/Datastore/SQL/ObjectFactories/QuadSourceIntegral.py
+@@ -962,7 +962,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
+         return objects
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
+         # build() filters on -- the model, the GkSourcePolicy, the QuadSourcePolicy (prompt 08),
+         # the k, q and r wavenumber exits, z_response, z_source_max, atol and rtol, and the six
+@@ -970,13 +970,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
+         # tags. No validated flag and no value table. Of the six, the GkSourcePolicyData is on
+         # this shard (k's); the QuadSource is on q's, and each Tk row on its own mode's, so they
+         # resolve across shards, each to its parent's own identity, never its serial
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+                 "policy": Parent("policy_serial", "GkSourcePolicy"),
+diff --git a/Datastore/SQL/ObjectFactories/QuadSourcePolicy.py b/Datastore/SQL/ObjectFactories/QuadSourcePolicy.py
+index cbc26a9..ab2321a 100644
+--- a/Datastore/SQL/ObjectFactories/QuadSourcePolicy.py
++++ b/Datastore/SQL/ObjectFactories/QuadSourcePolicy.py
+@@ -103,15 +103,11 @@ class sqla_QuadSourcePolicy_factory(SQLAFactoryBase):
+         ]
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a QuadSourcePolicy row (store-fingerprint prompt 02): the two
+         # columns build() matches. The label is descriptive and is not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("Levin_threshold", "numeric_policy"),
+         )
+diff --git a/Datastore/SQL/ObjectFactories/TkNumericIntegration.py b/Datastore/SQL/ObjectFactories/TkNumericIntegration.py
+index d0cebb5..ea91a87 100644
+--- a/Datastore/SQL/ObjectFactories/TkNumericIntegration.py
++++ b/Datastore/SQL/ObjectFactories/TkNumericIntegration.py
+@@ -633,18 +633,14 @@ class sqla_TkNumericIntegration_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a TkNumericIntegration row (store-fingerprint prompt 02): what
+         # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
+         # z_init (optional in the lookup, always in the key) -- with its tags, its validated flag
+         # and its TkNumericValue count. The solver is not in the lookup and is not identity
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("break_point_kind",),
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+diff --git a/Datastore/SQL/ObjectFactories/TkWKBIntegration.py b/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
+index 63dee27..008c27f 100644
+--- a/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
++++ b/Datastore/SQL/ObjectFactories/TkWKBIntegration.py
+@@ -956,20 +956,16 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
+         return msgs
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a TkWKBIntegration row (store-fingerprint prompt 02): what build()
+         # filters on -- the model, the wavenumber exit, rho_gauss_order and, since
+         # prompts/datastore-integrity prompt 07, the numeric parent (same shard, so a key parent)
+         # -- with its tags, its validated flag and its TkWKBValue count. z_init left the key with
+         # prompt 07: it is a function of the parent. The solvers are not in the lookup and are not
+         # identity
+-        from Datastore.store_inventory import Parent, read_records
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("rho_gauss_order",),
+             parents={
+                 "model": Parent("model_serial", "BackgroundModel"),
+diff --git a/Datastore/SQL/ObjectFactories/base.py b/Datastore/SQL/ObjectFactories/base.py
+index 8e00e79..c2bb7e0 100644
+--- a/Datastore/SQL/ObjectFactories/base.py
++++ b/Datastore/SQL/ObjectFactories/base.py
+@@ -49,3 +49,14 @@ class SQLAFactoryBase(ABC):
+         with the same; the pool compares the two after a replicated store.
+         """
+         return None
++
++    @staticmethod
++    def inventory_spec():
++        """
++        How the inventory reads this factory's class (prompts/datastore-generic, prompt 08): an
++        ``InventorySpec`` (``Datastore/store_inventory.py``) naming the key's leaf columns, its
++        parent references and its association and value tables, or ``None`` where the class is not
++        a class of the inventory. It holds no connection and reads nothing; the inventory derives
++        which classes it reads, and in what order, from these declarations.
++        """
++        return None
+diff --git a/Datastore/SQL/ObjectFactories/cosmology_types.py b/Datastore/SQL/ObjectFactories/cosmology_types.py
+new file mode 100644
+index 0000000..883c0fc
+--- /dev/null
++++ b/Datastore/SQL/ObjectFactories/cosmology_types.py
+@@ -0,0 +1,20 @@
++"""
++The polymorphic cosmology reference (prompts/datastore-generic, prompt 08).
++
++A ``wavenumber_exit_time`` row and a ``BackgroundModel`` row name their cosmology by a serial with
++no foreign key, ``cosmology_serial``, and the table that serial is in by ``cosmology_type``, one of
++the identifiers of ``CosmologyModels/model_ids.py``. ``COSMOLOGY_TYPES`` maps each identifier to the
++class whose table holds that cosmology. Both factories declare their reference through it, in their
++``inventory_spec``, so that the map is written once and the datastore layer is told it rather than
++knowing it.
++"""
++
++from typing import Dict
++
++from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
++
++# cosmology_type -> the class whose table holds that cosmology
++COSMOLOGY_TYPES: Dict[int, str] = {
++    LAMBDACDM_IDENTIFIER: "LambdaCDM",
++    QCD_EOS_IDENTIFIER: "QCD_Cosmology",
++}
+diff --git a/Datastore/SQL/ObjectFactories/integration_metadata.py b/Datastore/SQL/ObjectFactories/integration_metadata.py
+index 5867140..9d24fed 100644
+--- a/Datastore/SQL/ObjectFactories/integration_metadata.py
++++ b/Datastore/SQL/ObjectFactories/integration_metadata.py
+@@ -55,9 +55,9 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of an IntegrationSolver row (store-fingerprint prompt 02): its label,
+         # which is this class's identity, and the stepping build() filters on
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("label", "stepping"))
++        return InventorySpec(leaves=("label", "stepping"))
+diff --git a/Datastore/SQL/ObjectFactories/redshift.py b/Datastore/SQL/ObjectFactories/redshift.py
+index 356f533..7ca0303 100644
+--- a/Datastore/SQL/ObjectFactories/redshift.py
++++ b/Datastore/SQL/ObjectFactories/redshift.py
+@@ -130,10 +130,10 @@ class sqla_redshift_factory(SQLAFactoryBase):
+         ]
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a redshift row (store-fingerprint prompt 02): z as stored, which is
+         # what build() matches (relative 1e-7). The source/response flags accumulate by OR and are
+         # not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("z",))
++        return InventorySpec(leaves=("z",))
+diff --git a/Datastore/SQL/ObjectFactories/store_tag.py b/Datastore/SQL/ObjectFactories/store_tag.py
+index 4a59dc0..4d36b0e 100644
+--- a/Datastore/SQL/ObjectFactories/store_tag.py
++++ b/Datastore/SQL/ObjectFactories/store_tag.py
+@@ -44,10 +44,10 @@ class sqla_store_tag_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a store_tag row (store-fingerprint prompt 02): its label, which is
+         # what build() looks it up by. Which tags a work item carries is read from the work item's
+         # own association table, never from this one
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("label",))
++        return InventorySpec(leaves=("label",))
+diff --git a/Datastore/SQL/ObjectFactories/tolerance.py b/Datastore/SQL/ObjectFactories/tolerance.py
+index 30d8796..3bbc689 100644
+--- a/Datastore/SQL/ObjectFactories/tolerance.py
++++ b/Datastore/SQL/ObjectFactories/tolerance.py
+@@ -53,9 +53,9 @@ class sqla_tolerance_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a tolerance row (store-fingerprint prompt 02): log10_tol as
+         # stored, which is what build() matches -- never 10**log10_tol
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("log10_tol",))
++        return InventorySpec(leaves=("log10_tol",))
+diff --git a/Datastore/SQL/ObjectFactories/version.py b/Datastore/SQL/ObjectFactories/version.py
+index 72c2e76..a73145f 100644
+--- a/Datastore/SQL/ObjectFactories/version.py
++++ b/Datastore/SQL/ObjectFactories/version.py
+@@ -44,9 +44,9 @@ class sqla_version_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a version row (store-fingerprint prompt 02): its label, which is
+         # what build() looks it up by
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("label",))
++        return InventorySpec(leaves=("label",))
+diff --git a/Datastore/SQL/ObjectFactories/wavenumber.py b/Datastore/SQL/ObjectFactories/wavenumber.py
+index 29f29c2..f231f4d 100644
+--- a/Datastore/SQL/ObjectFactories/wavenumber.py
++++ b/Datastore/SQL/ObjectFactories/wavenumber.py
+@@ -123,13 +123,13 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
+         ]
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a wavenumber row (store-fingerprint prompt 02): k_inv_Mpc as
+         # stored, which is what build() matches (absolute 1e-7). The source/response flags
+         # accumulate by OR and are not identity
+-        from Datastore.store_inventory import read_records
++        from Datastore.store_inventory import InventorySpec
+ 
+-        return read_records(conn, table, tables, context, leaves=("k_inv_Mpc",))
++        return InventorySpec(leaves=("k_inv_Mpc",))
+ 
+ 
+ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
+@@ -382,21 +382,22 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
+         return obj
+ 
+     @staticmethod
+-    def inventory_records(conn, table, tables, context):
++    def inventory_spec():
+         # the physical identity of a wavenumber_exit_time row (store-fingerprint prompt 02): what
+         # build() filters on -- the wavenumber, the cosmology (its type and the row that type
+         # names; the serial has no foreign key), atol, rtol and stepping
+-        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
++        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
++        from Datastore.store_inventory import InventorySpec, Parent
+ 
+-        return read_records(
+-            conn,
+-            table,
+-            tables,
+-            context,
++        return InventorySpec(
+             leaves=("cosmology_type", "stepping"),
+             parents={
+                 "k": Parent("wavenumber_serial", "wavenumber"),
+-                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
++                "cosmology": Parent(
++                    "cosmology_serial",
++                    type_column="cosmology_type",
++                    types=COSMOLOGY_TYPES,
++                ),
+                 "atol": Parent("atol_serial", "tolerance"),
+                 "rtol": Parent("rtol_serial", "tolerance"),
+             },
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index 12f6a8a..9c5490a 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -11,27 +11,40 @@ and ``problems``, a list of named strings. It reads; it never writes, and it nee
+ 
+ - ``key``: the class's physical identity. Its leaves are canonical (``canonical``), and a reference
+   to a parent row is the **digest of that parent's own canonical identity** (``reference_digest``),
+-  never its serial. The parent itself is a record of its own class. No serial, label, name or
+-  timestamp is in a key, except where the label *is* the identity (``version``, ``store_tag``,
+-  ``IntegrationSolver``);
+-- ``tags``: the sorted tuple of ``store_tag`` labels on the row's ``*_tags`` association rows,
+-  ``()`` where the class has no association table. The ``Run_<label>`` tag is included;
++  never its serial. The parent itself is a record of its own class. No serial or timestamp is in a
++  key; a label or name is in one only where the class declares it a leaf, because it *is* the
++  identity;
++- ``tags``: the sorted tuple of the tag labels on the row's association rows, ``()`` where the
++  class has no association table. The tag table and its columns are the layer's own
++  (``Datastore.contract``);
+ - ``validated``: the row's flag, or ``None`` where the class has no such column;
+-- ``value_count``: the number of rows in the class's ``*Value`` table whose parent is this row, or
++- ``value_count``: the number of rows in the class's value table whose parent is this row, or
+   ``None`` where the class has none. The value tables are counted, one ``GROUP BY`` per table per
+   shard, and never listed.
+ 
+ A computed-values field can be added to ``Record`` later, beside these four and outside ``key``,
+ without changing what they are.
+ 
+-**Who defines identity.** Each factory owns its record builder, a static
+-``inventory_records(conn, table, tables, context)`` beside its existing ``inventory()``. It states
+-its key -- the leaf columns, the parent references and the association and value tables -- and
+-calls ``read_records`` here, which does the reading. The driver builds classes in dependency order
+-(``INVENTORY_CLASSES``) and hands each builder, in ``context``, a map from serial to canonical key
+-and to reference digest for every class already built **on that shard**, and a map from serial to
+-reference digest for every class already built on **every** shard, which a ``cross_shard`` parent
+-resolves against (the store is still read once, and only for reading).
++**Who defines identity.** Each factory declares its key, as data, in a static ``inventory_spec()``
++beside its existing ``inventory()``: an ``InventorySpec`` naming the leaf columns, the parent
++references and the association and value tables (prompts/datastore-generic, prompt 08). A factory
++whose class is not in the inventory declares none (``SQLAFactoryBase.inventory_spec`` returns
++``None``). This module does the reading, in ``read_records``.
++
++**Which classes, in which order.** The classes are those of the registry that declare a spec, and
++their order is derived from what the specs declare (``inventory_classes``): first the classes that
++reference nothing, in registry order; then, one at a time, the earliest class in registry order
++whose parents have all been placed. A class depends on every class its parents and parent sets
++name, every class a polymorphic parent's type map names, and the tag table if it is tagged. The
++driver builds classes in that order and hands ``read_records``, in ``context``, a map from serial
++to canonical key and to reference digest for every class already built **on that shard**, and a
++map from serial to reference digest for every class already built on **every** shard, which a
++``cross_shard`` parent resolves against (the store is still read once, and only for reading).
++
++**A polymorphic parent.** A key field may reference a row whose class is named per row by a type
++column: ``Parent(column, type_column=..., types={type value: class, ...})``. The referencing
++factory declares the map; the layer knows only that one column names the class and another holds
++the serial.
+ 
+ **Floats (decision D1).** ``canonical`` is the one function that turns a leaf into its canonical
+ form. A float becomes ``float.hex`` of the value **as stored**; an integer, string, boolean or
+@@ -48,7 +61,7 @@ repaired.
+ 
+ - ``replicated-divergence``: a replicated class differs between shards;
+ - ``duplicate``: two or more records of a class share a key and a tag set. All are kept;
+-- ``orphan-value``: ``*Value`` rows whose parent row is not on their shard;
++- ``orphan-value``: value rows whose parent row is not on their shard;
+ - ``orphan-tag``: association rows whose parent row or whose tag is not on their shard;
+ - ``unresolved-parent``: rows referencing a parent row that cannot be resolved. They are not
+   records;
+@@ -56,20 +69,19 @@ repaired.
+   member rows. They are not records;
+ - ``orphan-member``: member rows of a ``ParentSet`` table whose owning row is not on their shard.
+ 
+-**A set of parents** (``ParentSet``, prompts/datastore-integrity prompt 09b). A ``GkSource`` is
+-assembled from one Gk numeric row, one Gk WKB row or both for each ``z_source`` of its grid, and its
+-table ``GkSource_parents`` records them, one member row per ``z_source``. Such a key field's value
+-is the digest of its member fields' names and the sorted list of its resolved members, each
+-member the tuple, in those fields' order, of the reference digests of the rows it names (``None``
+-for a nullable field that names none). Like
+-every parent reference it is formed from the parents' own identities, never their serials; the
+-members are kept beside the records, in ``ClassInventory.parent_sets``, so that a display can
+-render the set by its physical labels. The member table is read once per shard, read-only, as the
+-tag and value tables are.
+-
+-This module imports only the standard library and ``sqlalchemy`` at module scope, so a factory can
+-import it from inside its ``inventory_records``. The reader is imported inside ``read_inventory``,
+-and the factory registry is given to it.
++**A set of parents** (``ParentSet``, prompts/datastore-integrity prompt 09b). A row may be
++assembled from several parent rows, recorded in a member table with one member row per parent
++combination, each naming the row that owns it. Such a key field's value is the digest of its
++member fields' names and the sorted list of its resolved members, each member the tuple, in those
++fields' order, of the reference digests of the rows it names (``None`` for a nullable field that
++names none). Like every parent reference it is formed from the parents' own identities, never
++their serials; the members are kept beside the records, in ``ClassInventory.parent_sets``, so that
++a display can render the set by its physical labels. The member table is read once per shard,
++read-only, as the tag and value tables are.
++
++This module imports only the standard library, ``sqlalchemy`` and ``Datastore.contract`` at module
++scope, so a factory can import it from inside its ``inventory_spec``. The reader is imported inside
++``read_inventory``, and the factory registry is given to it.
+ """
+ 
+ import contextlib
+@@ -97,51 +109,10 @@ from Datastore.contract import TAG_LABEL, TAG_SERIAL, TAG_TABLE
+ 
+ PathType = Union[str, os.PathLike]
+ 
+-# the classes of the inventory, in dependency order: the leaves, then wavenumber_exit_time and
+-# BackgroundModel, then the compute targets. A class's parents always come before it. The *Value
+-# and *_tags tables are not classes here: they are read for their parents' value_count and tags
+-COMPUTE_TARGETS: Tuple[str, ...] = (
+-    "TkNumericIntegration",
+-    "TkWKBIntegration",
+-    "GkNumericIntegration",
+-    "GkWKBIntegration",
+-    "GkSource",
+-    "GkSourcePolicyData",
+-    "QuadSource",
+-    "QuadSourceIntegral",
+-    "OneLoopIntegral",
+-)
+-
+-INVENTORY_CLASSES: Tuple[str, ...] = (
+-    "version",
+-    "store_tag",
+-    "redshift",
+-    "wavenumber",
+-    "tolerance",
+-    "LambdaCDM",
+-    "QCD_Cosmology",
+-    "IntegrationSolver",
+-    "GkSourcePolicy",
+-    "QuadSourcePolicy",
+-    "wavenumber_exit_time",
+-    "BackgroundModel",
+-) + COMPUTE_TARGETS
+-
+-# the polymorphic cosmology reference of wavenumber_exit_time and BackgroundModel: a serial with no
+-# foreign key, whose table is named by the row's cosmology_type (CosmologyModels/model_ids.py)
+-COSMOLOGY = "cosmology"
+-
+ # up to this many examples are named in a problem
+ _EXAMPLES = 5
+ 
+ 
+-def cosmology_classes() -> Dict[int, str]:
+-    """``cosmology_type`` -> the class whose table holds that cosmology (CosmologyModels/model_ids.py)."""
+-    from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+-
+-    return {LAMBDACDM_IDENTIFIER: "LambdaCDM", QCD_EOS_IDENTIFIER: "QCD_Cosmology"}
+-
+-
+ # ---------------------------------------------------------------------------------------------
+ # canonical forms and digests
+ # ---------------------------------------------------------------------------------------------
+@@ -238,48 +209,133 @@ class Record:
+ class Parent:
+     """A reference from a key field to a parent row, by the serial in ``column``.
+ 
+-    ``of`` names the parent class, or is ``COSMOLOGY``, in which case ``type_column`` holds the
+-    ``cosmology_type`` that names it.
++    The parent's class is named in one of two ways, and exactly one is given:
++
++    - ``of``: the parent class;
++    - ``types``, with ``type_column``: a **polymorphic** reference, whose class is named per row by
++      the value in ``type_column``, through ``types`` (type value -> class). The referencing
++      factory declares the map. A type value the map does not hold is a parent that cannot be
++      resolved. ``type_column`` is read with the reference, and must also be one of the class's
++      leaves, so that a key carries the type its reference was resolved through.
+ 
+     ``nullable``: whether a NULL in ``column`` is a value of the key rather than a missing parent.
+-    A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a pure-WKB
+-    ``GkWKBIntegration`` has no numeric parent). On a parent that is not nullable a NULL is what
+-    it always was, a parent that cannot be resolved.
++    A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a row
++    computed without the optional parent). On a parent that is not nullable a NULL is what it
++    always was, a parent that cannot be resolved.
+ 
+-    ``cross_shard``: the parent row may be on another shard than the child's, as a
+-    ``QuadSource``'s ``Tr`` is (prompts/datastore-integrity prompt 09a). The serial is then
+-    resolved against the parent class's records on **every** shard (``ShardContext.all_digests``),
+-    not this shard's alone. The resolved identity is the parent's own reference digest, as for a
+-    same-shard parent, never its serial. A serial that no shard holds, or that two shards hold
+-    with different records, is an unresolved parent."""
++    ``cross_shard``: the parent row may be on another shard than the child's
++    (prompts/datastore-integrity prompt 09a). The serial is then resolved against the parent
++    class's records on **every** shard (``ShardContext.all_digests``), not this shard's alone.
++    The resolved identity is the parent's own reference digest, as for a same-shard parent, never
++    its serial. A serial that no shard holds, or that two shards hold with different records, is
++    an unresolved parent."""
+ 
+     column: str
+-    of: str
++    of: Optional[str] = None
+     type_column: Optional[str] = None
++    # not hashed, so that a Parent stays hashable; it is compared
++    types: Optional[Mapping[Any, str]] = field(default=None, hash=False)
+     nullable: bool = False
+     cross_shard: bool = False
+ 
++    def __post_init__(self):
++        if (self.of is None) == (self.types is None):
++            raise ValueError(
++                f"Parent({self.column!r}): give exactly one of 'of' (the parent class) and "
++                f"'types' (a polymorphic reference's type map)"
++            )
++        if (self.types is None) != (self.type_column is None):
++            raise ValueError(
++                f"Parent({self.column!r}): 'type_column' and 'types' are given together or not "
++                f"at all"
++            )
++        if self.types is not None and len(self.types) == 0:
++            raise ValueError(f"Parent({self.column!r}): 'types' is empty")
++
++    def classes(self) -> Tuple[str, ...]:
++        """Every class this reference can name, each once, in declaration order."""
++        if self.types is None:
++            return (self.of,)
++        return tuple(dict.fromkeys(self.types.values()))
++
++    def class_of(self, mapping: Mapping[str, Any]) -> Optional[str]:
++        """The class this reference names in a row (or a key) ``mapping``: ``of``, or the class
++        its type map gives the row's ``type_column``; ``None`` for a type the map does not hold.
++        """
++        if self.types is None:
++            return self.of
++        return self.types.get(mapping[self.type_column])
++
+ 
+ @dataclass(frozen=True)
+ class ParentSet:
+     """A key field whose value is a **set** of parent references, one member per row of
+     ``table`` whose ``owner`` column holds the child's serial (prompts/datastore-integrity prompt
+-    09b: a ``GkSource``'s rows of ``GkSource_parents``).
++    09b).
+ 
+     ``members`` maps each field of a member to a ``Parent``, resolved as a key parent is, within
+-    this shard or, for a ``cross_shard`` one, on every shard. A member naming a row that cannot be
+-    resolved makes the child an unresolved parent; a child with no member rows is an
+-    ``empty-parent-set``; a member row whose owner is not on the shard is an ``orphan-member``.
++    this shard or, for a ``cross_shard`` one, on every shard. A member names its class (``of``):
++    a polymorphic member is refused. A member naming a row that cannot be resolved makes the
++    child an unresolved parent; a child with no member rows is an ``empty-parent-set``; a member
++    row whose owner is not on the shard is an ``orphan-member``.
+     """
+ 
+     table: str
+     owner: str
+     members: Mapping[str, Parent]
+ 
++    def __post_init__(self):
++        polymorphic = [m for m, p in self.members.items() if p.types is not None]
++        if len(polymorphic) > 0:
++            raise ValueError(
++                f"ParentSet({self.table!r}): member field(s) {', '.join(polymorphic)} are "
++                f"polymorphic; a member of a parent set names its class ('of')"
++            )
++
++
++@dataclass(frozen=True)
++class InventorySpec:
++    """What a factory's ``inventory_spec()`` declares: how its class's records are read. The
++    fields are ``read_records``' keywords, and mean what they mean there; ``keywords()`` gives
++    them as such. A spec holds no connection and reads nothing."""
++
++    leaves: Sequence[str] = ()
++    parents: Mapping[str, Parent] = field(default_factory=dict)
++    tags: Optional[Tuple[str, str]] = None
++    values: Optional[Tuple[str, str]] = None
++    validated: Optional[str] = None
++    parent_sets: Mapping[str, ParentSet] = field(default_factory=dict)
++
++    def keywords(self) -> Dict[str, Any]:
++        """The spec as ``read_records``' keyword arguments."""
++        return {
++            "leaves": self.leaves,
++            "parents": self.parents,
++            "tags": self.tags,
++            "values": self.values,
++            "validated": self.validated,
++            "parent_sets": self.parent_sets,
++        }
++
++    def dependencies(self) -> Tuple[str, ...]:
++        """Every class that must be built before this one, each once: the classes its parents
++        and its parent sets' members name (every class of a polymorphic parent's type map), and
++        the tag table where the class is tagged, since its tags are read through the tag table's
++        records."""
++        named: List[str] = []
++        for parent in self.parents.values():
++            named.extend(parent.classes())
++        for spec in self.parent_sets.values():
++            for parent in spec.members.values():
++                named.extend(parent.classes())
++        if self.tags is not None:
++            named.append(TAG_TABLE)
++        return tuple(dict.fromkeys(named))
++
+ 
+ @dataclass(frozen=True)
+ class ShardContext:
+-    """What the driver hands a factory's record builder, for one shard.
++    """What the driver hands ``read_records``, for one shard.
+ 
+     ``keys[cls][serial]`` is the canonical key, and ``digests[cls][serial]`` the reference digest,
+     of every row of every class already built on this shard. ``all_digests[cls][serial]`` is the
+@@ -303,7 +359,8 @@ class ShardRead:
+     rows: List[Tuple[int, Record, Optional[datetime]]]
+     problems: List[str]
+     tagged: bool
+-    parents: Dict[str, str]
++    # key field -> the parent class, or None for a polymorphic parent (parent_types)
++    parents: Dict[str, Optional[str]]
+     # key field -> member field -> the class that member field names (a ParentSet field)
+     parent_sets: Dict[str, Dict[str, str]] = field(default_factory=dict)
+     # key field -> set digest -> the resolved members that digest is formed from, each a tuple in
+@@ -311,14 +368,16 @@ class ShardRead:
+     members: Dict[str, Dict[str, Tuple[Tuple[Optional[str], ...], ...]]] = field(
+         default_factory=dict
+     )
++    # key field -> (type column, type value -> class), for a polymorphic parent
++    parent_types: Dict[str, Tuple[str, Mapping[Any, str]]] = field(default_factory=dict)
+ 
+ 
+ @dataclass(frozen=True)
+ class ClassInventory:
+     """One class of the inventory. ``parents`` maps each key field that references a parent to
+-    the parent class (``COSMOLOGY`` for the polymorphic cosmology reference); ``tagged`` says
+-    whether the class has an association table, and so whether its reference digest covers
+-    tags.
++    the parent class, or to ``None`` for a polymorphic parent, whose type column and type map
++    ``parent_types`` holds; ``parent_class`` names the class either way. ``tagged`` says whether
++    the class has an association table, and so whether its reference digest covers tags.
+ 
+     ``parent_sets`` maps each key field that is a set of parents (``ParentSet``) to its member
+     fields and the class each names, and ``members`` maps that field and a set's digest, which is
+@@ -330,7 +389,7 @@ class ClassInventory:
+     name: str
+     replicated: bool
+     tagged: bool
+-    parents: Mapping[str, str]
++    parents: Mapping[str, Optional[str]]
+     records: Tuple[Record, ...]
+     count: int
+     earliest_timestamp: Optional[datetime]
+@@ -340,6 +399,19 @@ class ClassInventory:
+     members: Mapping[str, Mapping[str, Tuple[Tuple[Optional[str], ...], ...]]] = field(
+         default_factory=dict
+     )
++    parent_types: Mapping[str, Tuple[str, Mapping[Any, str]]] = field(
++        default_factory=dict
++    )
++
++    def parent_class(self, field: str, key: Mapping[str, Any]) -> Optional[str]:
++        """The class that key field ``field`` of the record whose key is ``key`` references: the
++        declared class, or for a polymorphic parent the class its type map gives the key's type
++        column (``None`` for a type the map does not hold, or a field that is not a parent).
++        """
++        if field in self.parent_types:
++            type_column, types = self.parent_types[field]
++            return types.get(key.get(type_column))
++        return self.parents.get(field)
+ 
+ 
+ @dataclass(frozen=True)
+@@ -376,7 +448,6 @@ class StoreInventory:
+         """
+         cls = self.classes[name]
+         out: Dict[str, Any] = {}
+-        types = cosmology_classes()
+         for field, value in record.key.items():
+             if field in cls.parent_sets:
+                 out[field] = {
+@@ -391,12 +462,10 @@ class StoreInventory:
+                     ]
+                 }
+                 continue
+-            of = cls.parents.get(field)
+-            if of is None:
++            if field not in cls.parents:
+                 out[field] = value
+                 continue
+-            if of == COSMOLOGY:
+-                of = types.get(record.key.get("cosmology_type"))
++            of = cls.parent_class(field, record.key)
+             found = self.find(of, value) if of is not None else []
+             if len(found) != 1:
+                 out[field] = {"class": of, "digest": value, "unresolved": len(found)}
+@@ -446,7 +515,8 @@ def read_records(
+     parent_sets: Optional[Mapping[str, ParentSet]] = None,
+ ) -> ShardRead:
+     """
+-    Read one class's records from one shard, as its factory's ``inventory_records`` specifies.
++    Read one class's records from one shard, as its factory's ``inventory_spec`` declares them
++    (``InventorySpec.keywords()``).
+ 
+     - ``leaves``: the key's leaf columns, each a key field of the same name, through ``canonical``;
+     - ``parents``: key field -> ``Parent``, each resolved to the parent's reference digest through
+@@ -465,6 +535,11 @@ def read_records(
+     parent_sets = dict(parent_sets or {})
+     problems: List[str] = []
+     parent_classes = {f: p.of for f, p in parents.items()}
++    parent_types = {
++        f: (p.type_column, dict(p.types))
++        for f, p in parents.items()
++        if p.types is not None
++    }
+     set_classes = {
+         f: {m: p.of for m, p in spec.members.items()} for f, spec in parent_sets.items()
+     }
+@@ -478,12 +553,7 @@ def read_records(
+         for m, p in spec.members.items()
+     ]
+     for field, parent in declared:
+-        needed_classes = (
+-            tuple(cosmology_classes().values())
+-            if parent.of == COSMOLOGY
+-            else (parent.of,)
+-        )
+-        for of in needed_classes:
++        for of in parent.classes():
+             built = context.all_digests if parent.cross_shard else context.digests
+             if of not in built:
+                 raise RuntimeError(
+@@ -501,6 +571,7 @@ def read_records(
+             parents=parent_classes,
+             parent_sets=set_classes,
+             members=set_members,
++            parent_types=parent_types,
+         )
+ 
+     needed = list(
+@@ -621,9 +692,7 @@ def read_records(
+         """(resolved, the reference digest) of one parent reference in ``mapping``."""
+         if parent.nullable and mapping[parent.column] is None:
+             return True, None
+-        of = parent.of
+-        if of == COSMOLOGY:
+-            of = types.get(mapping[parent.type_column])
++        of = parent.class_of(mapping)
+         # a cross-shard parent resolves against every shard's records of its class
+         resolving = context.all_digests if parent.cross_shard else context.digests
+         reference = (
+@@ -633,7 +702,6 @@ def read_records(
+         )
+         return reference is not None, reference
+ 
+-    types = cosmology_classes()
+     out: List[Tuple[int, Record, Optional[datetime]]] = []
+     unresolved: List[Tuple[int, str]] = []
+     empty: List[Tuple[int, str]] = []
+@@ -837,21 +905,89 @@ def _combine(
+         problems=tuple(problems),
+         parent_sets={f: dict(m) for f, m in first.parent_sets.items()},
+         members=members,
++        parent_types=dict(first.parent_types),
+     )
+ 
+ 
++def inventory_specs(factories: Mapping[str, Any]) -> Dict[str, InventorySpec]:
++    """Each class of the registry whose factory declares an ``inventory_spec``, mapped to it, in
++    registry order. A factory with no such hook, or whose hook returns ``None``, is not a class of
++    the inventory."""
++    specs: Dict[str, InventorySpec] = {}
++    for name, factory in factories.items():
++        hook = getattr(factory, "inventory_spec", None)
++        spec = hook() if hook is not None else None
++        if spec is not None:
++            specs[name] = spec
++    return specs
++
++
++def inventory_classes(factories: Mapping[str, Any]) -> List[str]:
++    """
++    The classes of the inventory, in the order they are built: the classes of the registry that
++    declare an ``inventory_spec``, ordered from what the specs declare.
++
++    First the **roots**, the classes that depend on nothing (``InventorySpec.dependencies``), in
++    registry order; then, one at a time, the earliest remaining class in registry order whose
++    dependencies have all been placed. So every class comes after every class it references.
++
++    A spec whose dependency is not a class of the inventory, a polymorphic parent whose type
++    column is not one of its class's leaves, or a cycle, raises ``ValueError`` naming the classes.
++    """
++    specs = inventory_specs(factories)
++    depends: Dict[str, Tuple[str, ...]] = {}
++    for name, spec in specs.items():
++        missing = [d for d in spec.dependencies() if d not in specs]
++        if len(missing) > 0:
++            raise ValueError(
++                f"inventory_classes(): {name} references {', '.join(missing)}, which "
++                f"declare{'s' if len(missing) == 1 else ''} no inventory_spec"
++            )
++        for field_name, parent in spec.parents.items():
++            if parent.types is not None and parent.type_column not in spec.leaves:
++                raise ValueError(
++                    f"inventory_classes(): {name}.{field_name} is a polymorphic parent whose "
++                    f"type column {parent.type_column} is not one of {name}'s leaves"
++                )
++        depends[name] = tuple(d for d in spec.dependencies() if d != name)
++        if name in spec.dependencies():
++            raise ValueError(f"inventory_classes(): {name} references itself")
++
++    order: List[str] = [name for name in specs if len(depends[name]) == 0]
++    placed = set(order)
++    while len(order) < len(specs):
++        ready = [
++            name
++            for name in specs
++            if name not in placed and all(d in placed for d in depends[name])
++        ]
++        if len(ready) == 0:
++            stuck = [name for name in specs if name not in placed]
++            raise ValueError(
++                f"inventory_classes(): the references of {', '.join(stuck)} form a cycle, "
++                f"or depend on one; no order builds every parent before its child"
++            )
++        order.append(ready[0])
++        placed.add(ready[0])
++    return order
++
++
+ def read_inventory(primary: PathType, factories: Mapping[str, Any]) -> StoreInventory:
+     """
+     The structured inventory of the closed store whose primary is ``primary``.
+ 
+     Read through ``open_read_only``: every file ``mode=ro``, a journal refused, no Ray. Each class
+-    in ``INVENTORY_CLASSES`` is built in that order by its factory's ``inventory_records`` on every
+-    shard, and then combined: a sharded class as the union, a replicated class compared across
++    of ``inventory_classes(factories)`` is read in that order, as its factory's ``inventory_spec``
++    declares, on every shard, and then combined: a sharded class as the union, a replicated class compared across
+     shards (module docstring). ``factories`` is the registry of storable classes; which classes
+     are replicated is read from the store's primary.
+     """
+     from Datastore.store_reader import open_read_only
+ 
++    # derived, and checked, before the store is opened
++    names = inventory_classes(factories)
++    specs = inventory_specs(factories)
++
+     with open_read_only(primary, factories) as store, contextlib.ExitStack() as stack:
+         replicated = set(store.replicated_tables)
+         conns = {
+@@ -869,8 +1005,8 @@ def read_inventory(primary: PathType, factories: Mapping[str, Any]) -> StoreInve
+         all_digests: Dict[str, Dict[int, str]] = {}
+ 
+         classes: Dict[str, ClassInventory] = {}
+-        for name in INVENTORY_CLASSES:
+-            factory = factories[name]
++        for name in names:
++            keywords = specs[name].keywords()
+             reads: Dict[int, ShardRead] = {}
+             for shard in store.shards:
+                 context = ShardContext(
+@@ -879,8 +1015,12 @@ def read_inventory(primary: PathType, factories: Mapping[str, Any]) -> StoreInve
+                     digests=digests[shard.serial],
+                     all_digests=all_digests,
+                 )
+-                read = factory.inventory_records(
+-                    conns[shard.serial], shard.tables[name], shard.tables, context
++                read = read_records(
++                    conns[shard.serial],
++                    shard.tables[name],
++                    shard.tables,
++                    context,
++                    **keywords,
+                 )
+                 reads[shard.serial] = read
+                 keys[shard.serial][name] = {s: r.key for s, r, _ in read.rows}
+diff --git a/Datastore/tests/real_store_fixtures.py b/Datastore/tests/real_store_fixtures.py
+index 0324fc4..2e2e246 100644
+--- a/Datastore/tests/real_store_fixtures.py
++++ b/Datastore/tests/real_store_fixtures.py
+@@ -400,7 +400,7 @@ def file_state(directory: Path) -> Tuple[List[str], Dict[str, Tuple[str, int, in
+ # ---------------------------------------------------------------------------------------------
+ #
+ # ``build_full_store`` builds a store holding at least one row of every class of the structured
+-# inventory (Datastore/store_inventory.py INVENTORY_CLASSES), with tags wherever the class has an
++# inventory (Datastore/store_inventory.py inventory_classes), with tags wherever the class has an
+ # association table, unvalidated rows, and value rows. It adds to the defaults above and leaves
+ # them as they are, so prompt 01's tests read the store they were written against.
+ #
+diff --git a/Datastore/tests/test_inventory_declarations.py b/Datastore/tests/test_inventory_declarations.py
+new file mode 100644
+index 0000000..9345535
+--- /dev/null
++++ b/Datastore/tests/test_inventory_declarations.py
+@@ -0,0 +1,458 @@
++"""
++The inventory's declarations (prompts/datastore-generic, prompt 08; audit C1 rows 12 and 13).
++
++Each factory declares how the inventory reads its class, as data (``inventory_spec()``); the layer
++derives which classes it reads and in what order (``inventory_classes``), and resolves a
++polymorphic parent through the type map its referencing factory declares. These tests pin:
++
++1. the derived order is today's order, written here as a literal, and it is the roots-first rule,
++   not a plain dependency sort;
++2. on hand-built registries: a cycle and a parent with no spec are refused, by name; a polymorphic
++   parent's classes are built before it; a malformed ``Parent`` is refused;
++3. ``resolve()`` goes through the declared type map;
++4. ``store_inventory`` names no project package or table and loads none.
++
++No Ray; stores are built in temporary directories; nothing under ``var/``.
++"""
++
++import ast
++import io
++import json
++import os
++import re
++import subprocess
++import sys
++import tempfile
++import tokenize
++import unittest
++from pathlib import Path
++
++from Datastore.store_inventory import (
++    ClassInventory,
++    InventorySpec,
++    Parent,
++    ParentSet,
++    Record,
++    StoreInventory,
++    inventory_classes,
++    inventory_specs,
++    read_inventory,
++    reference_digest,
++)
++from Datastore.tests.real_store_fixtures import build_full_store
++from config.datastore import factories as _factories
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++STORE_INVENTORY = REPO_ROOT / "Datastore" / "store_inventory.py"
++
++# the order the inventory was built in before prompt 08, when it was a hand-kept list
++ORDER = (
++    "version",
++    "store_tag",
++    "redshift",
++    "wavenumber",
++    "tolerance",
++    "LambdaCDM",
++    "QCD_Cosmology",
++    "IntegrationSolver",
++    "GkSourcePolicy",
++    "QuadSourcePolicy",
++    "wavenumber_exit_time",
++    "BackgroundModel",
++    "TkNumericIntegration",
++    "TkWKBIntegration",
++    "GkNumericIntegration",
++    "GkWKBIntegration",
++    "GkSource",
++    "GkSourcePolicyData",
++    "QuadSource",
++    "QuadSourceIntegral",
++    "OneLoopIntegral",
++)
++
++
++def registry(**specs):
++    """A hand-built registry, in keyword order: each name a stand-in factory whose
++    ``inventory_spec()`` returns the spec given (``None`` for a class outside the inventory).
++    """
++    return {
++        name: type(
++            f"{name}_factory", (), {"inventory_spec": staticmethod(lambda s=spec: s)}
++        )
++        for name, spec in specs.items()
++    }
++
++
++def plain_sort(factories):
++    """A dependency sort with no roots-first step: at each step the earliest class in registry
++    order whose dependencies are placed."""
++    specs = inventory_specs(factories)
++    order = []
++    while len(order) < len(specs):
++        order.append(
++            next(
++                n
++                for n, s in specs.items()
++                if n not in order
++                and all(d in order for d in s.dependencies() if d != n)
++            )
++        )
++    return order
++
++
++# ------------------------------------------------------------------------------------------------
++# 1. the derived order
++# ------------------------------------------------------------------------------------------------
++
++
++class TestTheDerivedOrder(unittest.TestCase):
++    def test_it_is_the_order_the_inventory_was_built_in(self):
++        self.assertEqual(tuple(inventory_classes(_factories)), ORDER)
++
++    def test_the_classes_are_those_that_declare_a_spec(self):
++        declared = [n for n, f in _factories.items() if f.inventory_spec() is not None]
++        self.assertEqual(sorted(declared), sorted(ORDER))
++        # the association, value and member tables declare none
++        for name in ("BackgroundModelValue", "GkSource_tags", "GkSource_parents"):
++            self.assertIsNone(_factories[name].inventory_spec())
++
++    def test_a_spec_takes_no_connection(self):
++        import inspect
++
++        for name in ORDER:
++            with self.subTest(cls=name):
++                hook = _factories[name].inventory_spec
++                self.assertEqual(list(inspect.signature(hook).parameters), [])
++                self.assertIsInstance(hook(), InventorySpec)
++
++    def test_roots_come_first_unlike_a_plain_sort(self):
++        derived = inventory_classes(_factories)
++        plain = plain_sort(_factories)
++        self.assertNotEqual(derived, plain)
++        # every class with no reference precedes every class with one
++        specs = inventory_specs(_factories)
++        roots = [n for n in derived if len(specs[n].dependencies()) == 0]
++        self.assertEqual(derived[: len(roots)], roots)
++
++    def test_roots_first_on_a_hand_built_registry(self):
++        factories = registry(
++            R1=InventorySpec(),
++            C=InventorySpec(parents={"r": Parent("r_serial", "R1")}),
++            R2=InventorySpec(),
++        )
++        self.assertEqual(inventory_classes(factories), ["R1", "R2", "C"])
++        self.assertEqual(plain_sort(factories), ["R1", "C", "R2"])
++
++    def test_the_earliest_ready_class_in_registry_order(self):
++        factories = registry(
++            R=InventorySpec(),
++            B=InventorySpec(parents={"a": Parent("a_serial", "A")}),
++            A=InventorySpec(parents={"r": Parent("r_serial", "R")}),
++            C=InventorySpec(parents={"r": Parent("r_serial", "R")}),
++        )
++        self.assertEqual(inventory_classes(factories), ["R", "A", "B", "C"])
++
++    def test_every_class_follows_every_class_it_references(self):
++        order = inventory_classes(_factories)
++        specs = inventory_specs(_factories)
++        for name in order:
++            for dep in specs[name].dependencies():
++                with self.subTest(cls=name, dep=dep):
++                    self.assertLess(order.index(dep), order.index(name))
++
++    def test_a_tagged_class_follows_the_tag_table(self):
++        factories = registry(
++            T=InventorySpec(tags=("T_tags", "t_serial")),
++            store_tag=InventorySpec(leaves=("label",)),
++        )
++        self.assertEqual(inventory_classes(factories), ["store_tag", "T"])
++
++
++# ------------------------------------------------------------------------------------------------
++# 2. refusals and the polymorphic parent
++# ------------------------------------------------------------------------------------------------
++
++
++class TestRefusals(unittest.TestCase):
++    def test_a_cycle_is_refused_by_name(self):
++        factories = registry(
++            R=InventorySpec(),
++            A=InventorySpec(parents={"b": Parent("b_serial", "B")}),
++            B=InventorySpec(parents={"a": Parent("a_serial", "A")}),
++        )
++        with self.assertRaisesRegex(ValueError, r"A, B form a cycle"):
++            inventory_classes(factories)
++
++    def test_a_self_reference_is_refused(self):
++        with self.assertRaisesRegex(ValueError, r"A references itself"):
++            inventory_classes(
++                registry(A=InventorySpec(parents={"a": Parent("a_serial", "A")}))
++            )
++
++    def test_a_parent_with_no_spec_is_refused_by_name(self):
++        for spec in (None, "absent"):
++            with self.subTest(parent=spec):
++                classes = dict(B=InventorySpec(parents={"a": Parent("a_serial", "A")}))
++                if spec is None:
++                    classes["A"] = None
++                with self.assertRaisesRegex(
++                    ValueError, r"B references A, which declares no inventory_spec"
++                ):
++                    inventory_classes(registry(**classes))
++
++    def test_a_polymorphic_class_with_no_spec_is_refused(self):
++        factories = registry(
++            A=InventorySpec(),
++            C=InventorySpec(
++                leaves=("kind",),
++                parents={
++                    "p": Parent("p_serial", type_column="kind", types={0: "A", 1: "B"})
++                },
++            ),
++        )
++        with self.assertRaisesRegex(ValueError, r"C references B"):
++            inventory_classes(factories)
++
++    def test_a_polymorphic_parents_classes_come_before_it(self):
++        factories = registry(
++            C=InventorySpec(
++                leaves=("kind",),
++                parents={
++                    "p": Parent("p_serial", type_column="kind", types={0: "A", 1: "B"})
++                },
++            ),
++            A=InventorySpec(),
++            D=InventorySpec(parents={"c": Parent("c_serial", "C")}),
++            B=InventorySpec(parents={"a": Parent("a_serial", "A")}),
++        )
++        self.assertEqual(inventory_classes(factories), ["A", "B", "C", "D"])
++
++    def test_a_type_column_that_is_not_a_leaf_is_refused(self):
++        factories = registry(
++            A=InventorySpec(),
++            C=InventorySpec(
++                parents={"p": Parent("p_serial", type_column="kind", types={0: "A"})}
++            ),
++        )
++        with self.assertRaisesRegex(ValueError, r"type column kind is not one of"):
++            inventory_classes(factories)
++
++    def test_a_malformed_parent_is_refused(self):
++        cases = {
++            "neither": dict(),
++            "both": dict(of="A", type_column="t", types={0: "A"}),
++            "types without type_column": dict(types={0: "A"}),
++            "type_column without types": dict(of="A", type_column="t"),
++            "empty types": dict(type_column="t", types={}),
++        }
++        for case, kwargs in cases.items():
++            with self.subTest(case=case):
++                with self.assertRaises(ValueError):
++                    Parent("c", **kwargs)
++
++    def test_a_polymorphic_member_of_a_parent_set_is_refused(self):
++        with self.assertRaisesRegex(ValueError, r"member field\(s\) b are polymorphic"):
++            ParentSet(
++                table="T",
++                owner="o",
++                members={"b": Parent("b", type_column="t", types={0: "A"})},
++            )
++
++    def test_a_parent_stays_hashable(self):
++        a = Parent("c", type_column="t", types={0: "A"})
++        b = Parent("c", type_column="t", types={0: "A"})
++        self.assertEqual(hash(a), hash(b))
++        self.assertEqual(a, b)
++        self.assertNotEqual(a, Parent("c", type_column="t", types={0: "B"}))
++
++
++# ------------------------------------------------------------------------------------------------
++# 3. resolve() through the declared map
++# ------------------------------------------------------------------------------------------------
++
++
++def _class(name, records, parents=None, parent_types=None):
++    return ClassInventory(
++        name=name,
++        replicated=True,
++        tagged=False,
++        parents=parents or {},
++        records=tuple(records),
++        count=len(records),
++        earliest_timestamp=None,
++        latest_timestamp=None,
++        problems=(),
++        parent_types=parent_types or {},
++    )
++
++
++class TestResolve(unittest.TestCase):
++    def test_a_hand_built_inventory(self):
++        a = Record(key={"x": 1}, tags=(), validated=None, value_count=None)
++        b = Record(key={"x": 2}, tags=(), validated=None, value_count=None)
++        da = reference_digest(a.key, (), False)
++        db = reference_digest(b.key, (), False)
++        children = [
++            Record(key={"kind": 0, "p": da}, tags=(), validated=None, value_count=None),
++            Record(key={"kind": 1, "p": db}, tags=(), validated=None, value_count=None),
++            Record(key={"kind": 7, "p": da}, tags=(), validated=None, value_count=None),
++        ]
++        inventory = StoreInventory(
++            primary=Path("x"),
++            shards=(0,),
++            classes={
++                "A": _class("A", [a]),
++                "B": _class("B", [b]),
++                "C": _class(
++                    "C",
++                    children,
++                    parents={"p": None},
++                    parent_types={"p": ("kind", {0: "A", 1: "B"})},
++                ),
++            },
++        )
++        resolved = [inventory.resolve("C", r) for r in children]
++        self.assertEqual(resolved[0]["p"], {"class": "A", "key": {"x": 1}, "tags": []})
++        self.assertEqual(resolved[1]["p"], {"class": "B", "key": {"x": 2}, "tags": []})
++        self.assertEqual(
++            resolved[2]["p"], {"class": None, "digest": da, "unresolved": 0}
++        )
++        self.assertEqual(resolved[0]["kind"], 0)
++
++    def test_the_full_store_resolves_both_cosmology_types(self):
++        from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
++
++        with tempfile.TemporaryDirectory() as tmp:
++            inventory = read_inventory(build_full_store(Path(tmp)).primary, _factories)
++        expected = {
++            LAMBDACDM_IDENTIFIER: "LambdaCDM",
++            QCD_EOS_IDENTIFIER: "QCD_Cosmology",
++        }
++        for name in ("wavenumber_exit_time", "BackgroundModel"):
++            seen = set()
++            for record in inventory[name].records:
++                with self.subTest(cls=name, record=record.key):
++                    resolved = inventory.resolve(name, record)["cosmology"]
++                    kind = record.key["cosmology_type"]
++                    self.assertEqual(resolved["class"], expected[kind])
++                    self.assertIn("key", resolved)
++                    seen.add(kind)
++            self.assertEqual(seen, set(expected))
++            self.assertIsNone(inventory[name].parents["cosmology"])
++            self.assertEqual(
++                inventory[name].parent_types["cosmology"],
++                ("cosmology_type", expected),
++            )
++
++    def test_both_referencing_factories_declare_the_one_map(self):
++        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
++
++        for name in ("wavenumber_exit_time", "BackgroundModel"):
++            with self.subTest(cls=name):
++                parent = _factories[name].inventory_spec().parents["cosmology"]
++                self.assertIs(parent.types, COSMOLOGY_TYPES)
++                self.assertEqual(parent.type_column, "cosmology_type")
++                self.assertIsNone(parent.of)
++
++
++# ------------------------------------------------------------------------------------------------
++# 4. the layer names and loads no project package or table
++# ------------------------------------------------------------------------------------------------
++
++PROJECT_PACKAGES = (
++    "CosmologyModels",
++    "CosmologyConcepts",
++    "ComputeTargets",
++    "MetadataConcepts",
++    "config",
++)
++
++
++def _run(code):
++    result = subprocess.run(
++        [sys.executable, "-c", code],
++        cwd=str(REPO_ROOT),
++        env=dict(os.environ, PYTHONPATH=str(REPO_ROOT)),
++        capture_output=True,
++        text=True,
++        timeout=300,
++    )
++    if result.returncode != 0:
++        raise AssertionError(result.stderr)
++    return json.loads(result.stdout.strip().splitlines()[-1])
++
++
++class TestTheLayerKnowsNoProject(unittest.TestCase):
++    def test_it_imports_no_project_package(self):
++        tree = ast.parse(STORE_INVENTORY.read_text())
++        imported = []
++        for node in ast.walk(tree):
++            if isinstance(node, ast.Import):
++                imported += [a.name for a in node.names]
++            elif isinstance(node, ast.ImportFrom):
++                imported.append(node.module)
++        self.assertEqual(
++            [m for m in imported if m.split(".")[0] in PROJECT_PACKAGES], []
++        )
++
++    def test_reading_records_loads_no_project_module(self):
++        code = (
++            "import json, sys\n"
++            "import sqlalchemy as sqla\n"
++            "from Datastore.store_inventory import ShardContext, read_records\n"
++            "md = sqla.MetaData()\n"
++            "t = sqla.Table('thing', md, sqla.Column('serial', sqla.Integer, primary_key=True),"
++            " sqla.Column('x', sqla.Float))\n"
++            "e = sqla.create_engine('sqlite://')\n"
++            "md.create_all(e)\n"
++            "with e.begin() as c:\n"
++            "    c.execute(t.insert(), [{'serial': 1, 'x': 0.5}])\n"
++            "    read_records(c, t, {'thing': t}, ShardContext(0, {}, {}), leaves=('x',))\n"
++            f"print(json.dumps(sorted(m for m in sys.modules if m.split('.')[0] in {PROJECT_PACKAGES!r})))\n"
++        )
++        self.assertEqual(_run(code), [])
++
++    def test_read_inventory_loads_only_what_the_registry_loads(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            primary = build_full_store(Path(tmp)).primary
++            code = (
++                "import json, sys\n"
++                "from Datastore.store_inventory import read_inventory\n"
++                "from config.datastore import factories\n"
++                "before = set(sys.modules)\n"
++                f"read_inventory({str(primary)!r}, factories)\n"
++                "print(json.dumps(sorted(set(sys.modules) - before)))\n"
++            )
++            added = _run(code)
++        self.assertEqual([m for m in added if m.split(".")[0] in PROJECT_PACKAGES], [])
++
++    def test_no_project_name_in_its_code_or_text(self):
++        names = (
++            set(_factories)
++            | set(PROJECT_PACKAGES)
++            | {
++                "cosmology",
++                "cosmology_type",
++                "cosmology_serial",
++                "COSMOLOGY",
++                "model_ids",
++            }
++        )
++        text = STORE_INVENTORY.read_text()
++        found = []
++        for tok in tokenize.generate_tokens(io.StringIO(text).readline):
++            if tok.type == tokenize.NAME:
++                if tok.string in names:
++                    found.append((tok.start[0], tok.string))
++            elif tok.type in (tokenize.STRING, tokenize.COMMENT):
++                for name in names:
++                    if re.search(
++                        rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])",
++                        tok.string,
++                    ):
++                        found.append((tok.start[0], name))
++        self.assertEqual(found, [])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/Datastore/tests/test_inventory_report.py b/Datastore/tests/test_inventory_report.py
+index 1d89f62..0912542 100644
+--- a/Datastore/tests/test_inventory_report.py
++++ b/Datastore/tests/test_inventory_report.py
+@@ -23,7 +23,7 @@ import unittest
+ from collections import Counter
+ from pathlib import Path
+ 
+-from Datastore.store_inventory import INVENTORY_CLASSES, read_inventory
++from Datastore.store_inventory import inventory_classes, read_inventory
+ from Datastore.tests.inventory_report_parsing import (
+     HEX64,
+     fields_of,
+@@ -44,6 +44,9 @@ from tools.inventory_report import (
+ )
+ from config.datastore import factories as _factories
+ 
++# the classes of the inventory, as read_inventory derives them from the registry
++INVENTORY_CLASSES = tuple(inventory_classes(_factories))
++
+ DB_NAME = "the-store.sqlite"
+ 
+ 
+diff --git a/Datastore/tests/test_store_inventory.py b/Datastore/tests/test_store_inventory.py
+index 9461535..bc9f1f6 100644
+--- a/Datastore/tests/test_store_inventory.py
++++ b/Datastore/tests/test_store_inventory.py
+@@ -37,9 +37,9 @@ import sqlalchemy as sqla
+ 
+ import Datastore.store_inventory as store_inventory
+ from Datastore.store_inventory import (
+-    INVENTORY_CLASSES,
+     canonical,
+     canonical_json,
++    inventory_classes,
+     read_inventory,
+ )
+ from Datastore.tests.real_store_fixtures import (
+@@ -52,6 +52,9 @@ from Datastore.tests.real_store_fixtures import (
+ )
+ from config.datastore import factories as _factories
+ 
++# the classes of the inventory, as read_inventory derives them from the registry
++INVENTORY_CLASSES = tuple(inventory_classes(_factories))
++
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ FACTORIES = REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories"
+ 
+@@ -563,7 +566,7 @@ class TestFloats(_Stores):
+ 
+     def test_only_canonical_formats_a_float(self):
+         """No code of the inventory but ``canonical`` calls ``float.hex``, ``.hex()``, ``round``,
+-        ``format`` or ``repr``, and no factory's ``inventory_records`` formats anything.
++        ``format`` or ``repr``, and no factory's ``inventory_spec`` formats anything.
+         """
+         tree = ast.parse((REPO_ROOT / "Datastore" / "store_inventory.py").read_text())
+         offenders = []
+@@ -590,11 +593,11 @@ class TestFloats(_Stores):
+ 
+         builders = 0
+         for path in sorted(FACTORIES.glob("*.py")):
++            # base.py's hook declares no class: it returns None
++            if path.name == "base.py":
++                continue
+             for func in ast.walk(ast.parse(path.read_text())):
+-                if (
+-                    isinstance(func, ast.FunctionDef)
+-                    and func.name == "inventory_records"
+-                ):
++                if isinstance(func, ast.FunctionDef) and func.name == "inventory_spec":
+                     builders += 1
+                     for node in ast.walk(func):
+                         if isinstance(node, (ast.JoinedStr, ast.FormattedValue)):
+diff --git a/Datastore/tests/test_wkb_numeric_parent_key.py b/Datastore/tests/test_wkb_numeric_parent_key.py
+index c7414c6..8f115cb 100644
+--- a/Datastore/tests/test_wkb_numeric_parent_key.py
++++ b/Datastore/tests/test_wkb_numeric_parent_key.py
+@@ -506,15 +506,7 @@ class TestZInitIsPayload(_StoreCase):
+     def test_the_inventory_key_has_no_z_init(self):
+         for factory in (sqla_TkWKBIntegration_factory, sqla_GkWKBIntegration_factory):
+             with self.subTest(factory=factory.__name__):
+-                captured = {}
+-
+-                def fake_read_records(conn, table, tables, context, **kwargs):
+-                    captured.update(kwargs)
+-
+-                with mock.patch(
+-                    "Datastore.store_inventory.read_records", fake_read_records
+-                ):
+-                    factory.inventory_records(None, None, None, None)
++                captured = factory.inventory_spec().keywords()
+                 self.assertNotIn("z_init", captured["leaves"])
+                 self.assertEqual(
+                     captured["parents"]["numeric"].column, "numeric_serial"
+diff --git a/RunRegistry/tests/test_store_fingerprint.py b/RunRegistry/tests/test_store_fingerprint.py
+index 671680c..c5310e4 100644
+--- a/RunRegistry/tests/test_store_fingerprint.py
++++ b/RunRegistry/tests/test_store_fingerprint.py
+@@ -46,7 +46,7 @@ from RunRegistry.tests.store_fixtures import (
+ )
+ from RunRegistry.tests.test_store_command_line import CommandLineTestCase
+ 
+-from Datastore.store_inventory import COMPUTE_TARGETS, read_inventory
++from Datastore.store_inventory import read_inventory
+ from Datastore.tests.real_store_fixtures import (
+     FIXED_TIMESTAMP,
+     _schema_tables,
+@@ -57,6 +57,19 @@ from Datastore.tests.real_store_fixtures import (
+ )
+ from config.datastore import factories as _factories
+ 
++# the compute targets, whose labels are not identity
++COMPUTE_TARGETS = (
++    "TkNumericIntegration",
++    "TkWKBIntegration",
++    "GkNumericIntegration",
++    "GkWKBIntegration",
++    "GkSource",
++    "GkSourcePolicyData",
++    "QuadSource",
++    "QuadSourceIntegral",
++    "OneLoopIntegral",
++)
++
+ REPO_ROOT = Path(RunRegistry.REPO_ROOT)
+ GOLDEN = (
+     Path(__file__).resolve().parent
+diff --git a/tools/inventory_report.py b/tools/inventory_report.py
+index ab6bce9..8ed9df7 100644
+--- a/tools/inventory_report.py
++++ b/tools/inventory_report.py
+@@ -71,7 +71,7 @@ class therefore never share a line within a tag set: a record line also shows ``
+ 
+ **Order.** Records are ordered by their resolved physical values, numerically where they are
+ numbers, never by digest. Fields are in the order of the class's key, as its factory's
+-``inventory_records`` declares it.
++``inventory_spec`` declares it.
+ """
+ 
+ from datetime import datetime
+@@ -80,11 +80,9 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
+ import sqlalchemy as sqla
+ 
+ from Datastore.store_inventory import (
+-    COSMOLOGY,
+     ClassInventory,
+     Record,
+     StoreInventory,
+-    cosmology_classes,
+ )
+ 
+ # categories are reported in this order, as before this prompt, less the value tables, which are
+@@ -117,7 +115,7 @@ INVENTORY_CATEGORIES: List[Tuple[str, List[str]]] = [
+     ),
+ ]
+ 
+-# the value table each class's value_count counts: the tables its factory's inventory_records
++# the value table each class's value_count counts: the tables its factory's inventory_spec
+ # names in ``values=``. Used only to name the table on the header
+ VALUE_TABLES: Dict[str, str] = {
+     "BackgroundModel": "BackgroundModelValue",
+@@ -174,7 +172,6 @@ class _Renderer:
+         self.inventory = inventory
+         self.verbose = verbose
+         self.tables = _schema_tables()
+-        self.types = cosmology_classes()
+         self._index: Dict[str, Dict[str, List[Record]]] = {}
+         self._varying: Dict[str, Tuple[Tuple[str, ...], bool]] = {}
+         self._float_fields: Dict[str, frozenset] = {}
+@@ -230,10 +227,7 @@ class _Renderer:
+         return self._varying[name]
+ 
+     def parent_class(self, name: str, record: Record, field: str) -> Optional[str]:
+-        of = self.cls(name).parents.get(field)
+-        if of == COSMOLOGY:
+-            return self.types.get(record.key.get("cosmology_type"))
+-        return of
++        return self.cls(name).parent_class(field, record.key)
+ 
+     def index(self, name: str) -> Dict[str, List[Record]]:
+         """reference digest -> the records of ``name`` it names."""

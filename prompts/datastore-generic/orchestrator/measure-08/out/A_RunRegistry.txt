@@ -1,0 +1,21 @@
+...............................................................s...................................................................................................................E....................................................................
+======================================================================
+ERROR: RunRegistry.tests.test_store_fingerprint (unittest.loader._FailedTest.RunRegistry.tests.test_store_fingerprint)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: RunRegistry.tests.test_store_fingerprint
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "<scratch>/wt08/RunRegistry/tests/test_store_fingerprint.py", line 49, in <module>
+    from Datastore.store_inventory import COMPUTE_TARGETS, read_inventory
+ImportError: cannot import name 'COMPUTE_TARGETS' from 'Datastore.store_inventory' (<scratch>/wt08/Datastore/store_inventory.py)
+
+
+----------------------------------------------------------------------
+Ran 248 tests in 52.120s
+
+FAILED (errors=1, skipped=1)
+** quadsource_atol_sweep: sweep store ready at /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/tmpsoiyexgm/B/sweep.sqlite

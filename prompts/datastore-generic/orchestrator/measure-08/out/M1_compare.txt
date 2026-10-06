@@ -1,0 +1,4 @@
+full-fingerprint: identical (7507 bytes, sha256 27beb9a13f07ae25)
+real-fingerprint: identical (4484 bytes, sha256 b8d5c8f37e597a44)
+full-inventory: identical (29950 bytes, sha256 53328a8c13e71664)
+real-inventory: identical (12297 bytes, sha256 ebe316fcac98ac74)

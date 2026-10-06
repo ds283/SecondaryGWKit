@@ -1,0 +1,61 @@
+### M8: removed names, .py files, after the change (word match)
+Datastore/tests/test_inventory_declarations.py:437:                "COSMOLOGY",
+Datastore/tests/test_inventory_report.py:48:INVENTORY_CLASSES = tuple(inventory_classes(_factories))
+Datastore/tests/test_inventory_report.py:83:        self.assertEqual(sorted(named), sorted(INVENTORY_CLASSES))
+Datastore/tests/test_inventory_report.py:85:        self.assertEqual(set(sections(self.report)), set(INVENTORY_CLASSES))
+Datastore/tests/test_inventory_report.py:96:            for name in INVENTORY_CLASSES:
+Datastore/tests/test_inventory_report.py:138:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_inventory_report.py:152:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_inventory_report.py:171:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_inventory_report.py:184:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_store_inventory.py:56:INVENTORY_CLASSES = tuple(inventory_classes(_factories))
+Datastore/tests/test_store_inventory.py:341:        self.assertEqual(tuple(self.baseline.classes), INVENTORY_CLASSES)
+Datastore/tests/test_store_inventory.py:342:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_store_inventory.py:467:        for name in INVENTORY_CLASSES:
+Datastore/tests/test_store_inventory.py:618:        self.assertEqual(builders, len(INVENTORY_CLASSES))
+RunRegistry/tests/test_store_fingerprint.py:61:COMPUTE_TARGETS = (
+RunRegistry/tests/test_store_fingerprint.py:314:        labelled = set(COMPUTE_TARGETS) | {"BackgroundModel"}
+main.py:1207:    ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
+### base tree, .py files
+72
+### non-.py files (records: audits, prompts, logs, measurement diffs): count per file
+docs/datastore-generic-audit.md:2
+docs/datastore-integrity-audit.md:1
+prompts/datastore-generic/05-refuse-a-store-whose-schema-differs.md:1
+prompts/datastore-generic/07-declare-the-replication-facts-in-the-factories.md:1
+prompts/datastore-generic/IMPLEMENTATION_STATE.md:4
+prompts/datastore-generic/logs/06-give-the-layer-its-registry.md:2
+prompts/datastore-generic/logs/07-declare-the-replication-facts-in-the-factories.md:1
+prompts/datastore-generic/orchestrator/measure-05/rough_change.diff:1
+prompts/datastore-generic/orchestrator/measure-06/rough_change.diff:4
+prompts/datastore-generic/orchestrator/prompt-07.md:2
+prompts/datastore-integrity/05b-repair-the-integral-read-batches.md:1
+prompts/datastore-integrity/07-key-wkb-rows-on-their-numeric-row.md:2
+prompts/datastore-integrity/08-key-quadsourceintegral-on-its-policy.md:3
+prompts/datastore-integrity/09-key-derived-rows-on-their-parents.md:2
+prompts/datastore-integrity/09a-key-quadsource-on-its-transfer-functions.md:2
+prompts/datastore-integrity/09b-key-gksource-on-its-parent-set.md:1
+prompts/datastore-integrity/09c-key-quadsourceintegral-on-its-inputs.md:2
+prompts/datastore-integrity/IMPLEMENTATION_STATE.md:6
+prompts/datastore-integrity/README.md:1
+prompts/datastore-integrity/logs/01-checked-replicated-write.md:1
+prompts/datastore-integrity/logs/03-exact-identity-lookups.md:2
+prompts/datastore-integrity/logs/05b-repair-the-integral-read-batches.md:2
+prompts/datastore-integrity/logs/06-correct-the-foreign-keys.md:2
+prompts/datastore-integrity/logs/07-key-wkb-rows-on-their-numeric-row.md:1
+prompts/datastore-integrity/logs/08-key-quadsourceintegral-on-its-policy.md:4
+prompts/datastore-integrity/logs/09a-key-quadsource-on-its-transfer-functions.md:2
+prompts/datastore-integrity/logs/09b-key-gksource-on-its-parent-set.md:3
+prompts/datastore-integrity/logs/09c-key-quadsourceintegral-on-its-inputs.md:1
+prompts/datastore-integrity/orchestrator/prompt-01.md:1
+prompts/datastore-integrity/orchestrator/prompt-06.md:2
+prompts/datastore-integrity/orchestrator/prompt-07.md:3
+prompts/datastore-integrity/orchestrator/prompt-08.md:2
+prompts/datastore-integrity/orchestrator/prompt-09.md:1
+prompts/store-fingerprint/03-one-inventory-service.md:2
+prompts/store-fingerprint/04-the-fingerprint.md:1
+prompts/store-fingerprint/IMPLEMENTATION_STATE.md:3
+prompts/store-fingerprint/logs/02-a-structured-inventory.md:11
+prompts/store-fingerprint/logs/03-one-inventory-service.md:2
+prompts/store-fingerprint/logs/04-the-fingerprint.md:2
+prompts/store-fingerprint/orchestrator/prompt-03.md:1

@@ -1,0 +1,63 @@
+def inventory_specs(factories: Mapping[str, Any]) -> Dict[str, InventorySpec]:
+    """Each class of the registry whose factory declares an ``inventory_spec``, mapped to it, in
+    registry order. A factory with no such hook, or whose hook returns ``None``, is not a class of
+    the inventory."""
+    specs: Dict[str, InventorySpec] = {}
+    for name, factory in factories.items():
+        hook = getattr(factory, "inventory_spec", None)
+        spec = hook() if hook is not None else None
+        if spec is not None:
+            specs[name] = spec
+    return specs
+
+
+def inventory_classes(factories: Mapping[str, Any]) -> List[str]:
+    """
+    The classes of the inventory, in the order they are built: the classes of the registry that
+    declare an ``inventory_spec``, ordered from what the specs declare.
+
+    First the **roots**, the classes that depend on nothing (``InventorySpec.dependencies``), in
+    registry order; then, one at a time, the earliest remaining class in registry order whose
+    dependencies have all been placed. So every class comes after every class it references.
+
+    A spec whose dependency is not a class of the inventory, a polymorphic parent whose type
+    column is not one of its class's leaves, or a cycle, raises ``ValueError`` naming the classes.
+    """
+    specs = inventory_specs(factories)
+    depends: Dict[str, Tuple[str, ...]] = {}
+    for name, spec in specs.items():
+        missing = [d for d in spec.dependencies() if d not in specs]
+        if len(missing) > 0:
+            raise ValueError(
+                f"inventory_classes(): {name} references {', '.join(missing)}, which "
+                f"declare{'s' if len(missing) == 1 else ''} no inventory_spec"
+            )
+        for field_name, parent in spec.parents.items():
+            if parent.types is not None and parent.type_column not in spec.leaves:
+                raise ValueError(
+                    f"inventory_classes(): {name}.{field_name} is a polymorphic parent whose "
+                    f"type column {parent.type_column} is not one of {name}'s leaves"
+                )
+        depends[name] = tuple(d for d in spec.dependencies() if d != name)
+        if name in spec.dependencies():
+            raise ValueError(f"inventory_classes(): {name} references itself")
+
+    order: List[str] = [name for name in specs if len(depends[name]) == 0]
+    placed = set(order)
+    while len(order) < len(specs):
+        ready = [
+            name
+            for name in specs
+            if name not in placed and all(d in placed for d in depends[name])
+        ]
+        if len(ready) == 0:
+            stuck = [name for name in specs if name not in placed]
+            raise ValueError(
+                f"inventory_classes(): the references of {', '.join(stuck)} form a cycle, "
+                f"or depend on one; no order builds every parent before its child"
+            )
+        order.append(ready[0])
+        placed.add(ready[0])
+    return order
+
+

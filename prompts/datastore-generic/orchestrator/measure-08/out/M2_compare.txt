@@ -1,0 +1,12 @@
+primary: <scratch>/m08/out/m2/store/full-store.sqlite
+plain stdout: identical (14840 / 14840 bytes; sha256 df32a64656aca652)
+plain stderr: identical (0 / 0 bytes; sha256 e3b0c44298fc1c14)
+plain exit: identical (2 / 2 bytes; sha256 9a271f2a916b0b6e)
+verbose stdout: identical (14952 / 14952 bytes; sha256 edf9e158f4a797bf)
+verbose stderr: identical (0 / 0 bytes; sha256 e3b0c44298fc1c14)
+verbose exit: identical (2 / 2 bytes; sha256 9a271f2a916b0b6e)
+sums-after-base-plain.txt: store files unchanged
+sums-after-base-verbose.txt: store files unchanged
+sums-after-wt08-plain.txt: store files unchanged
+sums-after-wt08-verbose.txt: store files unchanged
+exit codes: 0 0 0 0

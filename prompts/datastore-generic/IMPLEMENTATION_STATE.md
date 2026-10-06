@@ -78,7 +78,10 @@ measurement of 05's test plan in [`orchestrator/measure-05/`](orchestrator/measu
 measurement of 06's test plan in [`orchestrator/measure-06/`](orchestrator/measure-06/);
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-06, used for 07), with the
 measurement of 07's test plan and of the check at open in
-[`orchestrator/measure-07/`](orchestrator/measure-07/).
+[`orchestrator/measure-07/`](orchestrator/measure-07/);
+[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-06, not yet used), with the
+measurement of 08's test plan and of the inventory, the report and `resolve()` in
+[`orchestrator/measure-08/`](orchestrator/measure-08/).
 
 **Orchestrator review of prompt 01 (2026-10-04).** Dispatched from `6ea366e` to one Sonnet
 subagent; reviewed against its commit `8636491`, with nothing landed after it. **Every check of the

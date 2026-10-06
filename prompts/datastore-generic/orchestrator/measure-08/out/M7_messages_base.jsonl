@@ -1,0 +1,4 @@
+{"case": "read_records: plain parent not built", "type": "RuntimeError", "message": "read_records(): Child.p references Parent, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: cross-shard parent not built", "type": "RuntimeError", "message": "read_records(): Child.p references Parent, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: polymorphic parent, second class not built", "type": "RuntimeError", "message": "read_records(): Child.cosmology references QCD_Cosmology, which has not been built on shard #3; classes must be built in dependency order"}
+{"case": "read_records: parent-set member not built", "type": "RuntimeError", "message": "read_records(): Child.s.m references Member, which has not been built on shard #3; classes must be built in dependency order"}

@@ -1,0 +1,106 @@
+=== Datastore/store_inventory.py: 105 hits; by kind: {'docstring': 37, 'comment': 10, 'code': 29, 'string': 29}; by name: {'label': 4, 'version': 2, 'store_tag': 3, 'IntegrationSolver': 2, '\\*_tags': 2, 'Run_<': 1, 'validated': 14, '\\*Value': 3, 'INVENTORY_CLASSES': 4, 'GkSource': 3, 'z_source': 2, 'Gk': 1, 'WKB': 2, 'GkSource_parents': 2, 'wavenumber_exit_time': 3, 'BackgroundModel': 3, 'COMPUTE_TARGETS': 2, 'TkNumericIntegration': 1, 'TkWKBIntegration': 1, 'GkNumericIntegration': 1, 'GkWKBIntegration': 2, 'GkSourcePolicyData': 1, 'QuadSource': 2, 'QuadSourceIntegral': 1, 'OneLoopIntegral': 1, 'redshift': 1, 'wavenumber': 1, 'tolerance': 1, 'LambdaCDM': 2, 'QCD_Cosmology': 2, 'GkSourcePolicy': 1, 'QuadSourcePolicy': 1, 'cosmology': 4, 'CosmologyModels': 3, 'model_ids': 3, 'cosmology_type': 4, 'COSMOLOGY': 6, 'cosmology_classes': 4, 'LAMBDACDM_IDENTIFIER': 2, 'QCD_EOS_IDENTIFIER': 2, 'Tr': 1, 'tag_serial': 4}
+     14 docstring label                never its serial. The parent itself is a record of its own class. No serial, label, name or
+     15 docstring version              timestamp is in a key, except where the label *is* the identity (``version``, ``store_tag``,
+     15 docstring store_tag            timestamp is in a key, except where the label *is* the identity (``version``, ``store_tag``,
+     15 docstring label                timestamp is in a key, except where the label *is* the identity (``version``, ``store_tag``,
+     16 docstring IntegrationSolver    ``IntegrationSolver``);
+     17 docstring store_tag            - ``tags``: the sorted tuple of ``store_tag`` labels on the row's ``*_tags`` association rows,
+     17 docstring \*_tags              - ``tags``: the sorted tuple of ``store_tag`` labels on the row's ``*_tags`` association rows,
+     18 docstring label                ``()`` where the class has no association table. The ``Run_<label>`` tag is included;
+     18 docstring Run_<                ``()`` where the class has no association table. The ``Run_<label>`` tag is included;
+     19 docstring validated            - ``validated``: the row's flag, or ``None`` where the class has no such column;
+     20 docstring \*Value              - ``value_count``: the number of rows in the class's ``*Value`` table whose parent is this row, or
+     31 docstring INVENTORY_CLASSES    (``INVENTORY_CLASSES``) and hands each builder, in ``context``, a map from serial to canonical key
+     41 docstring validated            every shard and compared on key, tags, validated flag and value count; its records are the
+     51 docstring \*Value              - ``orphan-value``: ``*Value`` rows whose parent row is not on their shard;
+     59 docstring GkSource             **A set of parents** (``ParentSet``, prompts/datastore-integrity prompt 09b). A ``GkSource`` is
+     60 docstring z_source             assembled from one Gk numeric row, one Gk WKB row or both for each ``z_source`` of its grid, and its
+     60 docstring Gk                   assembled from one Gk numeric row, one Gk WKB row or both for each ``z_source`` of its grid, and its
+     60 docstring WKB                  assembled from one Gk numeric row, one Gk WKB row or both for each ``z_source`` of its grid, and its
+     61 docstring GkSource_parents     table ``GkSource_parents`` records them, one member row per ``z_source``. Such a key field's value
+     61 docstring z_source             table ``GkSource_parents`` records them, one member row per ``z_source``. Such a key field's value
+    100 comment   wavenumber_exit_time # the classes of the inventory, in dependency order: the leaves, then wavenumber_exit_time and
+    101 comment   BackgroundModel      # BackgroundModel, then the compute targets. A class's parents always come before it. The *Value
+    101 comment   \*Value              # BackgroundModel, then the compute targets. A class's parents always come before it. The *Value
+    102 comment   \*_tags              # and *_tags tables are not classes here: they are read for their parents' value_count and tags
+    103 code      COMPUTE_TARGETS      COMPUTE_TARGETS: Tuple[str, ...] = (
+    104 string    TkNumericIntegration "TkNumericIntegration",
+    105 string    TkWKBIntegration     "TkWKBIntegration",
+    106 string    GkNumericIntegration "GkNumericIntegration",
+    107 string    GkWKBIntegration     "GkWKBIntegration",
+    108 string    GkSource             "GkSource",
+    109 string    GkSourcePolicyData   "GkSourcePolicyData",
+    110 string    QuadSource           "QuadSource",
+    111 string    QuadSourceIntegral   "QuadSourceIntegral",
+    112 string    OneLoopIntegral      "OneLoopIntegral",
+    115 code      INVENTORY_CLASSES    INVENTORY_CLASSES: Tuple[str, ...] = (
+    116 string    version              "version",
+    117 string    store_tag            "store_tag",
+    118 string    redshift             "redshift",
+    119 string    wavenumber           "wavenumber",
+    120 string    tolerance            "tolerance",
+    121 string    LambdaCDM            "LambdaCDM",
+    122 string    QCD_Cosmology        "QCD_Cosmology",
+    123 string    IntegrationSolver    "IntegrationSolver",
+    124 string    GkSourcePolicy       "GkSourcePolicy",
+    125 string    QuadSourcePolicy     "QuadSourcePolicy",
+    126 string    wavenumber_exit_time "wavenumber_exit_time",
+    127 string    BackgroundModel      "BackgroundModel",
+    128 code      COMPUTE_TARGETS      ) + COMPUTE_TARGETS
+    130 comment   wavenumber_exit_time # the polymorphic cosmology reference of wavenumber_exit_time and BackgroundModel: a serial with no
+    130 comment   BackgroundModel      # the polymorphic cosmology reference of wavenumber_exit_time and BackgroundModel: a serial with no
+    130 comment   cosmology            # the polymorphic cosmology reference of wavenumber_exit_time and BackgroundModel: a serial with no
+    131 comment   CosmologyModels      # foreign key, whose table is named by the row's cosmology_type (CosmologyModels/model_ids.py)
+    131 comment   model_ids            # foreign key, whose table is named by the row's cosmology_type (CosmologyModels/model_ids.py)
+    131 comment   cosmology_type       # foreign key, whose table is named by the row's cosmology_type (CosmologyModels/model_ids.py)
+    132 code      COSMOLOGY            COSMOLOGY = "cosmology"
+    132 string    cosmology            COSMOLOGY = "cosmology"
+    138 code      cosmology_classes    def cosmology_classes() -> Dict[int, str]:
+    139 docstring CosmologyModels      """``cosmology_type`` -> the class whose table holds that cosmology (CosmologyModels/model_ids.py)."""
+    139 docstring model_ids            """``cosmology_type`` -> the class whose table holds that cosmology (CosmologyModels/model_ids.py)."""
+    139 docstring cosmology            """``cosmology_type`` -> the class whose table holds that cosmology (CosmologyModels/model_ids.py)."""
+    139 docstring cosmology_type       """``cosmology_type`` -> the class whose table holds that cosmology (CosmologyModels/model_ids.py)."""
+    140 code      CosmologyModels      from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+    140 code      model_ids            from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+    140 code      LAMBDACDM_IDENTIFIER from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+    140 code      QCD_EOS_IDENTIFIER   from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+    142 code      LAMBDACDM_IDENTIFIER return {LAMBDACDM_IDENTIFIER: "LambdaCDM", QCD_EOS_IDENTIFIER: "QCD_Cosmology"}
+    142 string    LambdaCDM            return {LAMBDACDM_IDENTIFIER: "LambdaCDM", QCD_EOS_IDENTIFIER: "QCD_Cosmology"}
+    142 code      QCD_EOS_IDENTIFIER   return {LAMBDACDM_IDENTIFIER: "LambdaCDM", QCD_EOS_IDENTIFIER: "QCD_Cosmology"}
+    142 string    QCD_Cosmology        return {LAMBDACDM_IDENTIFIER: "LambdaCDM", QCD_EOS_IDENTIFIER: "QCD_Cosmology"}
+    215 code      validated            validated: Optional[bool]
+    222 string    validated            "validated": self.validated,
+    222 code      validated            "validated": self.validated,
+    241 docstring COSMOLOGY            ``of`` names the parent class, or is ``COSMOLOGY``, in which case ``type_column`` holds the
+    242 docstring cosmology_type       ``cosmology_type`` that names it.
+    245 docstring WKB                  A NULL there gives the key field ``None`` (prompts/datastore-integrity prompt 07: a pure-WKB
+    246 docstring GkWKBIntegration     ``GkWKBIntegration`` has no numeric parent). On a parent that is not nullable a NULL is what
+    250 docstring QuadSource           ``QuadSource``'s ``Tr`` is (prompts/datastore-integrity prompt 09a). The serial is then
+    250 docstring Tr                   ``QuadSource``'s ``Tr`` is (prompts/datastore-integrity prompt 09a). The serial is then
+    267 docstring GkSource             09b: a ``GkSource``'s rows of ``GkSource_parents``).
+    267 docstring GkSource_parents     09b: a ``GkSource``'s rows of ``GkSource_parents``).
+    319 docstring cosmology            the parent class (``COSMOLOGY`` for the polymorphic cosmology reference); ``tagged`` says
+    319 docstring COSMOLOGY            the parent class (``COSMOLOGY`` for the polymorphic cosmology reference); ``tagged`` says
+    379 code      cosmology_classes    types = cosmology_classes()
+    398 code      COSMOLOGY            if of == COSMOLOGY:
+    399 string    cosmology_type       of = types.get(record.key.get("cosmology_type"))
+    445 code      validated            validated: Optional[str] = None,
+    459 docstring validated            - ``validated``: the name of the class's validated-flag column, or ``None`` where it has
+    460 docstring validated            none. It is read into the record's ``validated``.
+    482 code      cosmology_classes    tuple(cosmology_classes().values())
+    483 code      COSMOLOGY            if parent.of == COSMOLOGY
+    515 code      validated            has_validated = validated is not None
+    517 code      validated            columns.append(table.c[validated].label("validated"))
+    517 code      label                columns.append(table.c[validated].label("validated"))
+    517 string    validated            columns.append(table.c[validated].label("validated"))
+    536 code      tag_serial           for parent_serial, tag_serial in conn.execute(
+    541 code      tag_serial           elif tag_serial not in labels:
+    542 code      tag_serial           no_tag.append(tag_serial)
+    544 code      tag_serial           tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
+    625 code      COSMOLOGY            if of == COSMOLOGY:
+    636 code      cosmology_classes    types = cosmology_classes()
+    696 code      validated            validated=(
+    697 string    validated            (None if mapping["validated"] is None else bool(mapping["validated"]))
+    697 string    validated            (None if mapping["validated"] is None else bool(mapping["validated"]))
+    848 docstring INVENTORY_CLASSES    in ``INVENTORY_CLASSES`` is built in that order by its factory's ``inventory_records`` on every
+    872 code      INVENTORY_CLASSES    for name in INVENTORY_CLASSES:

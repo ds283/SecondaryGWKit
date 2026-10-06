@@ -1,0 +1,28 @@
+=== A_AdaptiveLevin.txt
+    ['Ran 32 tests in 0.054s', 'OK']
+=== A_ComputeTargets.txt
+    ['Ran 693 tests in 145.054s', 'OK']
+=== A_CosmologyModels.txt
+    ['Ran 39 tests in 0.675s', 'OK']
+=== A_Datastore_a-f.txt
+    ['Ran 150 tests in 7.915s', 'OK']
+=== A_Datastore_g-o.txt
+ERROR: Datastore.tests.test_inventory_report (unittest.loader._FailedTest.Datastore.tests.test_inventory_report)
+    -> ImportError: cannot import name 'INVENTORY_CLASSES' from 'Datastore.store_inventory' (<scratch>/wt08/Datastore/store_inventory.py)
+    ['Ran 134 tests in 79.790s', 'FAILED (errors=1)']
+=== A_Datastore_p-r.txt
+    ['Ran 200 tests in 108.662s', 'OK']
+=== A_Datastore_s-z.txt
+ERROR: Datastore.tests.test_store_inventory (unittest.loader._FailedTest.Datastore.tests.test_store_inventory)
+    -> ImportError: cannot import name 'INVENTORY_CLASSES' from 'Datastore.store_inventory' (<scratch>/wt08/Datastore/store_inventory.py)
+ERROR: test_the_inventory_key_has_no_z_init (Datastore.tests.test_wkb_numeric_parent_key.TestZInitIsPayload.test_the_inventory_key_has_no_z_init) (factory='sqla_TkWKBIntegration_factory')
+    -> AttributeError: type object 'sqla_TkWKBIntegration_factory' has no attribute 'inventory_records'
+ERROR: test_the_inventory_key_has_no_z_init (Datastore.tests.test_wkb_numeric_parent_key.TestZInitIsPayload.test_the_inventory_key_has_no_z_init) (factory='sqla_GkWKBIntegration_factory')
+    -> AttributeError: type object 'sqla_GkWKBIntegration_factory' has no attribute 'inventory_records'
+    ['Ran 150 tests in 30.213s', 'FAILED (errors=3)']
+=== A_LiouvilleGreen.txt
+    ['Ran 148 tests in 24.063s', 'OK (skipped=1)']
+=== A_RunRegistry.txt
+ERROR: RunRegistry.tests.test_store_fingerprint (unittest.loader._FailedTest.RunRegistry.tests.test_store_fingerprint)
+    -> ImportError: cannot import name 'COMPUTE_TARGETS' from 'Datastore.store_inventory' (<scratch>/wt08/Datastore/store_inventory.py)
+    ['Ran 248 tests in 52.120s', 'FAILED (errors=1, skipped=1)']

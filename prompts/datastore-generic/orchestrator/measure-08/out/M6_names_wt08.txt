@@ -1,0 +1,24 @@
+=== Datastore/store_inventory.py: 23 hits; by kind: {'docstring': 5, 'code': 13, 'string': 5}; by name: {'label': 2, 'validated': 17, 'tag_serial': 4}
+     15 docstring label                key; a label or name is in one only where the class declares it a leaf, because it *is* the
+     20 docstring validated            - ``validated``: the row's flag, or ``None`` where the class has no such column;
+     54 docstring validated            every shard and compared on key, tags, validated flag and value count; its records are the
+    186 code      validated            validated: Optional[bool]
+    193 string    validated            "validated": self.validated,
+    193 code      validated            "validated": self.validated,
+    306 code      validated            validated: Optional[str] = None
+    316 string    validated            "validated": self.validated,
+    316 code      validated            "validated": self.validated,
+    514 code      validated            validated: Optional[str] = None,
+    529 docstring validated            - ``validated``: the name of the class's validated-flag column, or ``None`` where it has
+    530 docstring validated            none. It is read into the record's ``validated``.
+    586 code      validated            has_validated = validated is not None
+    588 code      validated            columns.append(table.c[validated].label("validated"))
+    588 code      label                columns.append(table.c[validated].label("validated"))
+    588 string    validated            columns.append(table.c[validated].label("validated"))
+    607 code      tag_serial           for parent_serial, tag_serial in conn.execute(
+    612 code      tag_serial           elif tag_serial not in labels:
+    613 code      tag_serial           no_tag.append(tag_serial)
+    615 code      tag_serial           tag_sets.setdefault(parent_serial, []).append(labels[tag_serial])
+    764 code      validated            validated=(
+    765 string    validated            (None if mapping["validated"] is None else bool(mapping["validated"]))
+    765 string    validated            (None if mapping["validated"] is None else bool(mapping["validated"]))

@@ -1,0 +1,85 @@
+"""
+A structured inventory of a **closed** ShardedPool store: what it holds, named by physical labels.
+
+``read_inventory(primary, factories)`` opens the store with ``open_read_only`` (prompt 01) and
+returns a ``StoreInventory``. ``factories`` is the registry of storable classes, which the caller
+gives (prompts/datastore-generic, prompt 06). For each class it holds ``records``, their
+``count``, the earliest and latest ``timestamp`` (for display only: no timestamp is in any record)
+and ``problems``, a list of named strings. It reads; it never writes, and it needs no Ray.
+
+**A record** (``Record``) is a small JSON-safe object:
+
+- ``key``: the class's physical identity. Its leaves are canonical (``canonical``), and a reference
+  to a parent row is the **digest of that parent's own canonical identity** (``reference_digest``),
+  never its serial. The parent itself is a record of its own class. No serial or timestamp is in a
+  key; a label or name is in one only where the class declares it a leaf, because it *is* the
+  identity;
+- ``tags``: the sorted tuple of the tag labels on the row's association rows, ``()`` where the
+  class has no association table. The tag table and its columns are the layer's own
+  (``Datastore.contract``);
+- ``validated``: the row's flag, or ``None`` where the class has no such column;
+- ``value_count``: the number of rows in the class's value table whose parent is this row, or
+  ``None`` where the class has none. The value tables are counted, one ``GROUP BY`` per table per
+  shard, and never listed.
+
+A computed-values field can be added to ``Record`` later, beside these four and outside ``key``,
+without changing what they are.
+
+**Who defines identity.** Each factory declares its key, as data, in a static ``inventory_spec()``
+beside its existing ``inventory()``: an ``InventorySpec`` naming the leaf columns, the parent
+references and the association and value tables (prompts/datastore-generic, prompt 08). A factory
+whose class is not in the inventory declares none (``SQLAFactoryBase.inventory_spec`` returns
+``None``). This module does the reading, in ``read_records``.
+
+**Which classes, in which order.** The classes are those of the registry that declare a spec, and
+their order is derived from what the specs declare (``inventory_classes``): first the classes that
+reference nothing, in registry order; then, one at a time, the earliest class in registry order
+whose parents have all been placed. A class depends on every class its parents and parent sets
+name, every class a polymorphic parent's type map names, and the tag table if it is tagged. The
+driver builds classes in that order and hands ``read_records``, in ``context``, a map from serial
+to canonical key and to reference digest for every class already built **on that shard**, and a
+map from serial to reference digest for every class already built on **every** shard, which a
+``cross_shard`` parent resolves against (the store is still read once, and only for reading).
+
+**A polymorphic parent.** A key field may reference a row whose class is named per row by a type
+column: ``Parent(column, type_column=..., types={type value: class, ...})``. The referencing
+factory declares the map; the layer knows only that one column names the class and another holds
+the serial.
+
+**Floats (decision D1).** ``canonical`` is the one function that turns a leaf into its canonical
+form. A float becomes ``float.hex`` of the value **as stored**; an integer, string, boolean or
+``None`` is kept as it is. The lookups match floats within 1e-7; the key records the stored bits.
+
+**Shards.** A sharded class is the union of every shard's records. A replicated class is read from
+every shard and compared on key, tags, validated flag and value count; its records are the
+lowest-serial shard's, and any shard that differs is a named problem (``replicated-divergence``).
+Which classes are replicated is what the store's primary records in its ``replicated_tables`` table
+(``ReadOnlyStore.replicated_tables``), not anything this module or its caller says. Nothing is
+repaired.
+
+**Named problems.** Each problem string starts with its name:
+
+- ``replicated-divergence``: a replicated class differs between shards;
+- ``duplicate``: two or more records of a class share a key and a tag set. All are kept;
+- ``orphan-value``: value rows whose parent row is not on their shard;
+- ``orphan-tag``: association rows whose parent row or whose tag is not on their shard;
+- ``unresolved-parent``: rows referencing a parent row that cannot be resolved. They are not
+  records;
+- ``empty-parent-set``: rows of a class keyed on a set of parents (``ParentSet``) that have no
+  member rows. They are not records;
+- ``orphan-member``: member rows of a ``ParentSet`` table whose owning row is not on their shard.
+
+**A set of parents** (``ParentSet``, prompts/datastore-integrity prompt 09b). A row may be
+assembled from several parent rows, recorded in a member table with one member row per parent
+combination, each naming the row that owns it. Such a key field's value is the digest of its
+member fields' names and the sorted list of its resolved members, each member the tuple, in those
+fields' order, of the reference digests of the rows it names (``None`` for a nullable field that
+names none). Like every parent reference it is formed from the parents' own identities, never
+their serials; the members are kept beside the records, in ``ClassInventory.parent_sets``, so that
+a display can render the set by its physical labels. The member table is read once per shard,
+read-only, as the tag and value tables are.
+
+This module imports only the standard library, ``sqlalchemy`` and ``Datastore.contract`` at module
+scope, so a factory can import it from inside its ``inventory_spec``. The reader is imported inside
+``read_inventory``, and the factory registry is given to it.
+"""
