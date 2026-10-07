@@ -41,7 +41,7 @@ The orchestrator's choices of method are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Refuse a drop that leaves references](01-refuse-a-drop-that-leaves-references.md) | **D1**–**D3** | Opus | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | `fee1fbf` | [log](logs/01-refuse-a-drop-that-leaves-references.md) |
 | 02 | [Resolve an absent parent as `None`](02-resolve-an-absent-parent-as-none.md) | **V1** | Sonnet | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | `4c34f13` | [log](logs/02-resolve-an-absent-parent-as-none.md) |
-| 03 | [State each closed-store prefix once](03-state-each-closed-store-prefix-once.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | this commit | [log](logs/03-state-each-closed-store-prefix-once.md) |
+| 03 | [State each closed-store prefix once](03-state-each-closed-store-prefix-once.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | `086c81a` | [log](logs/03-state-each-closed-store-prefix-once.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -51,7 +51,7 @@ all three, the scripts, and the verdicts at `6de692a` (README §0.2).
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-06, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-07,
-used for 02).
+used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-07, used for 03).
 
 **Orchestrator review of prompt 01 (2026-10-07).** Dispatched from `3e1e7f0` to one Opus
 subagent. Reviewed against its commit `fee1fbf`, with nothing landed after it. **Every check of the
@@ -196,6 +196,93 @@ fixtures hold `None` on `GkWKBIntegration.numeric` alone. Prompts 08's and 09's 
 *Handed on.* Nothing to 03, which edits `ShardedPool.py` and `store_reader.py`, neither of which 02
 touched. The index counts 105; §1.19 holds the one issue 03 closes.
 
+**Orchestrator review of prompt 03 (2026-10-07).** Dispatched from `21ee420` to Sonnet, with the
+note's §0 addition: a third fixture (a missing shard file) in test 5, and breakage (v). The first
+subagent was killed when the machine slept, leaving the code, the changed test and the new module
+uncommitted, and no log or records. A second Sonnet subagent was dispatched with the same brief,
+told to adopt that tree only after reading every line of it and to re-run every measurement. It
+kept the tree unchanged, and its log says the work was resumed. Reviewed against its commit
+`086c81a`, with nothing landed after it. **Every check of the note's §3 passed**, and acceptance
+1–3 are met. No stop condition fired, and the agent ran its suites in the foreground.
+
+*At dispatch.* The note's gate held at `21ee420`:
+- the tree was clean, and the only worktree was this checkout;
+- `f8fafbf..21ee420` touches only `prompts/`;
+- the registry held 17 runs (15 finished, 2 `unknown`, none `running`), and no Ray process was up;
+- the venv imported `scipy.sparse.linalg`;
+- the baselines at `21ee420` were §5.3's, all OK, at load 8–16; the index counted 105 rows;
+- the pre-images were `49d6aca` (`ShardedPool.py`), `dd7e4a1` (`store_reader.py`) and `e16c472`
+  (`test_store_reader.py`);
+- at an export of `21ee420`, `m3_messages.py` gave output byte-identical to
+  `measure-03/out/messages-parent.json`.
+
+*The checks.*
+1. **Scope.** `086c81a` touches 10 files, all on the prompt's §6 list. Outside the four Python
+   files and the records, the diff is empty.
+2. **E1, by reading.** `_read_closed_store(primary, *, missing_ok=False)` raises
+   `its shards table could not be read ({e})` and the joined file problems bare, and lets the
+   resolver's `RuntimeError` propagate (the log's IMPLEMENTATION CHOICE; breakage (i) adds the
+   wrap back). The resolver's and the file problems' text is unchanged. The docstring says it
+   raises naming the problem and that each caller states the operation and the store; it names no
+   project table. `open_read_only` catches `RuntimeError` only and raises
+   `_refuse(primary_path, str(e)) from e`.
+3. **E2, by `ast`** against the pre-images, docstrings stripped. In `ShardedPool.py` only
+   `_read_closed_store`, `_plan_relocation`, `_read_back` and `_plan_deletion` differ, each caller
+   by its call line alone. In `store_reader.py` only `open_read_only`; in `test_store_reader.py`
+   only `test_missing_shard_is_refused_by_read_closed_store`.
+4. **E3, by running.** At an export of `086c81a`, `m3_messages.py` gives output byte-identical to
+   `messages-rough.json`, and `m3_compare.py` against the parent side gives 18 of 18 as expected,
+   0 unexpected. `git grep '_read_closed_store('` shows the four calls, none with a verb.
+5. **The tests, by reading.** "Once" is a `startswith` of the operation's prefix and a count of 1
+   of `sharded datastore`. Test 2 names the destination and checks it was not created; test 3
+   ends `Nothing was read or repaired`; test 4 covers `delete_store`, `copy_store` and
+   `open_read_only`, each holding the shards-table reason once; test 5 covers the unusable record,
+   the dropped table and the missing shard. Every message is taken through `assertRaises`, so none
+   passes on a call that does not raise. The module and `test_store_reader`,
+   `test_absolute_shard_record_refused`, `test_delete_store` and `test_copy_move_store` run 80, OK.
+6. **The changed test, by reading.** It calls `_read_closed_store(self.store.primary)`, asserts
+   that the reader's message contains that message and holds `Cannot read sharded datastore`
+   once, and its comment says the refusal is `_read_closed_store`'s under the reader's one prefix.
+7. **E4, the pins.** Replayed in `bash` from the log against the log's 16 modules (282 tests):
+   (i) 5 failures, tests 1, 2 (copy and move), 3 and 5; (ii) 4, tests 4 (three subtests) and 5;
+   (iii) 4, tests 3 and 4, the changed test and `test_primary_with_no_shards_table`; (iv) 56,
+   tests 1 and 4 and 54 subtests of `test_delete_store`; (v) 1, test 5. Each matches the log
+   exactly. Each passes `--check` and `-R --check` and reverts with `git apply -R`; the tree was
+   clean of each.
+8. **E5, the records.** The issue is in `datastore-generic`'s §4 with a dated "Closed" line naming
+   this campaign, the change and the fourth caller; that board's §3.1 says none open. It is gone
+   from the index, which counts 104 rows, matching the header. §1.19's table is gone, and §1.18
+   and §1.19 say both campaigns' issues are closed. This board has the §1 row, P1–P2 ✅, §5.4 and
+   the header CLOSED — 3 of 3; the README header says the campaign closed; `prompts/INDEX.md`
+   says closed 3 / 3 with 0 open issues.
+9. **Suites**, serially at `086c81a`, load 6–17:
+   - Datastore 739 (163 + 185 + 200 + 191), OK; RunRegistry 280, OK; ComputeTargets 693, OK;
+   - AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped).
+
+   No flake appeared. `black --check` is clean on the four Python files.
+
+*The agent's deviations.* Six, all IMPLEMENTATION CHOICE. The orchestrator accepts each. Two of
+substance: the record edits beyond the prompt's list (`datastore-generic`'s header and §3.1 "None
+open", §1.18's closing sentence, `INDEX.md`'s `datastore-generic` row at 0) are what closing the
+last issue requires, all in permitted files; and the breakages ran against the 16 modules that
+reach these operations rather than the whole suites, which the orchestrator also did.
+
+*Kept as is.* `_read_back`'s refusal, reached by no test, no longer carries the inner
+`Cannot copy sharded datastore "<file read back>": ` (the log's observation). `_failure_message`
+names the step, and the step names which file was read back; it is the removed repetition, not
+an issue. An untracked `docs/status-update-2026-10/` appeared during the review; it is another
+session's and was not touched.
+
+*Residue, fixed in the follow-up commit that records this review.*
+- "this commit" → `086c81a` in §1, §2, §4, §5.4, README §0 and §2, the log and
+  `datastore-generic`'s §4.
+- The index header said "across twenty campaigns". Counted as before (distinct boards in the
+  Board column), closing `datastore-generic`'s last row makes it nineteen.
+- The note list above marks `orchestrator/prompt-03.md` used for 03.
+
+*Handed on.* Nothing. The campaign is closed, `datastore-generic` and this campaign have no open
+issue, and the index counts 104.
+
 ---
 
 ## 2. Items
@@ -206,8 +293,8 @@ touched. The index counts 105; §1.19 holds the one issue 03 closes.
 | **D2** | 01 | `ShardedPool._refuse_drop_that_leaves_references()`, after the undeclared-table refusal, before the primary is opened | `[06-dropping-one-group-…]` | ✅ `fee1fbf` |
 | **D3** | 01 | `test_drop_refuses_dangling_references` (11 tests); `TestPruningAfterRepair.test_an_interrupted_store` re-fixtured | — | ✅ `fee1fbf` |
 | **V1** | 02 | `StoreInventory.resolve` gives `None` for a `None` key parent; two tests in `TestResolve` | `[08-resolve-shows-…]` | ✅ `4c34f13` |
-| **P1** | 03 | `_read_closed_store` raises the bare reason and takes no `verb` | `[04-closed-store-refusals-…]` | ✅ this commit |
-| **P2** | 03 | `open_read_only` wraps it with its own prefix; `test_closed_store_refusals` (5 tests); one `test_store_reader` test changed | `[04-closed-store-refusals-…]` | ✅ this commit |
+| **P1** | 03 | `_read_closed_store` raises the bare reason and takes no `verb` | `[04-closed-store-refusals-…]` | ✅ `086c81a` |
+| **P2** | 03 | `open_read_only` wraps it with its own prefix; `test_closed_store_refusals` (5 tests); one `test_store_reader` test changed | `[04-closed-store-refusals-…]` | ✅ `086c81a` |
 
 ---
 
@@ -221,7 +308,7 @@ None opened by this campaign, and none open. The three it owned are closed on
 None opened by this campaign. Closed on `datastore-generic`'s board, §4, which holds the record:
 - `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`, by prompt 01 (2026-10-07, `fee1fbf`);
 - `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`, by prompt 02 (2026-10-07, `4c34f13`);
-- `[04-closed-store-refusals-repeat-their-prefix]`, by prompt 03 (2026-10-07, this commit).
+- `[04-closed-store-refusals-repeat-their-prefix]`, by prompt 03 (2026-10-07, `086c81a`).
 
 ## 5. Baselines
 
@@ -275,7 +362,7 @@ OK on the first run; no flake.
 Datastore's `[g-o]` group is 183 + 2: the two new methods of
 `test_inventory_declarations.TestResolve`. Every other count is §5.2's.
 
-### 5.4 After prompt 03 (2026-10-07, this commit)
+### 5.4 After prompt 03 (2026-10-07, `086c81a`)
 
 Each suite run in the foreground, serially, with README §7's command. Every suite OK on the first
 run; no flake. The work was resumed from an interrupted predecessor's uncommitted tree (see the

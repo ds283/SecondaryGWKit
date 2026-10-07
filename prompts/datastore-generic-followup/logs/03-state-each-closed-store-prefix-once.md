@@ -9,7 +9,7 @@
 
 No stop condition fired. Closes `[04-closed-store-refusals-repeat-their-prefix]`
 (`datastore-generic`), and with it the last of that campaign's issues and this campaign. Narrows
-nothing. Opens nothing. Index 105 -> 104. The commit is this commit.
+nothing. Opens nothing. Index 105 -> 104. The commit is `086c81a`.
 
 **Resumed work.** A previous agent on this prompt was killed when the machine slept. It left
 uncommitted changes to `Datastore/SQL/ShardedPool.py`, `Datastore/store_reader.py` and
@@ -189,7 +189,7 @@ file. This is the removed repetition, not a changed reason.
 
 ## The deliberate-breakage record
 
-Each diff is exactly as applied, against this commit's tree, produced by `git diff` after staging
+Each diff is exactly as applied, against `086c81a`'s tree, produced by `git diff` after staging
 the change, then checked in `bash` with `git apply --check` (forward, on the clean tree) and
 `git apply -R --check` (applied), run, and reversed with `git apply -R`, leaving `git status` clean.
 The modules run were the 16 that mention these operations or messages: `test_closed_store_refusals`,
@@ -198,7 +198,7 @@ The modules run were the 16 that mention these operations or messages: `test_clo
 `test_shard_file_name`, `test_sharded_store_script`, `test_store_schema` (Datastore) and
 `test_store_retire_references`, `test_store_amend`, `test_store_fingerprint`,
 `test_store_copy_move`, `test_store_retire`, `test_store_sidecar` (RunRegistry): 282 tests, which
-pass on this commit.
+pass on `086c81a`.
 
 **(i) The resolver branch's `raise` prefixed again.**
 

@@ -5,8 +5,8 @@ three issues `datastore-generic` left open and the user's decision on each (§6.
 `datastore-generic`'s board, which holds each issue's original measurement. §0.2 re-measures each
 issue at `6de692a`. **All three prompts are written**: their tasks are fixed by §6.1, and a rough
 version of each change was measured against the tree (§0.2, [`measure/`](measure/)).
-**The campaign closed on 2026-10-07, 3 of 3 prompts landed** (01 `fee1fbf`, 02 `4c34f13`, 03 this
-commit); [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) holds the record.
+**The campaign closed on 2026-10-07, 3 of 3 prompts landed** (01 `fee1fbf`, 02 `4c34f13`, 03
+`086c81a`); [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) holds the record.
 
 ## 0. Why this campaign exists
 
@@ -156,7 +156,7 @@ change is [`measure/rough_change.diff`](measure/rough_change.diff), made in a sc
 |---|---|---|---|---|
 | 01 | [`01-refuse-a-drop-that-leaves-references.md`](01-refuse-a-drop-that-leaves-references.md) | §6.1 decision 1. A read-write pool refuses `drop_tables` that leave any other table naming a dropped one, by foreign key or by a declared parent, transitively. The refusal names the dropped tables and every table that must go with them, before the primary is opened. Closes `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`. | Opus | **landed** 2026-10-07 (`fee1fbf`) |
 | 02 | [`02-resolve-an-absent-parent-as-none.md`](02-resolve-an-absent-parent-as-none.md) | §6.1 decision 2. `resolve()` gives `None` for a key parent whose value is `None`, as `_resolve_reference` does for a member. Closes `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`. | Sonnet | **landed** 2026-10-07 (`4c34f13`) |
-| 03 | [`03-state-each-closed-store-prefix-once.md`](03-state-each-closed-store-prefix-once.md) | §6.1 decision 3. `_read_closed_store` raises the bare reason, and each of its four callers states its prefix once; its `verb` parameter goes. Closes `[04-closed-store-refusals-repeat-their-prefix]`. | Sonnet | **landed** 2026-10-07 (this commit) |
+| 03 | [`03-state-each-closed-store-prefix-once.md`](03-state-each-closed-store-prefix-once.md) | §6.1 decision 3. `_read_closed_store` raises the bare reason, and each of its four callers states its prefix once; its `verb` parameter goes. Closes `[04-closed-store-refusals-repeat-their-prefix]`. | Sonnet | **landed** 2026-10-07 (`086c81a`) |
 
 ## 3. Datastores
 

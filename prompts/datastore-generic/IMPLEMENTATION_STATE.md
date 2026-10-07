@@ -1524,7 +1524,7 @@ None open.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 03, which carries out
     the decision. Its measurement found a fourth caller, `store_reader.open_read_only`, which
     relies on the inner prefix and so must wrap the message itself (that campaign's README §0.2).
-  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 03; this commit).**
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 03; `086c81a`).**
     `ShardedPool._read_closed_store(primary, *, missing_ok=False)` raises the bare reason for each
     of its three refusals (the `shards` table could not be read; the resolver's message; the joined
     file problems) and takes no `verb`. Its three callers in `ShardedPool.py` (`_plan_relocation`,
