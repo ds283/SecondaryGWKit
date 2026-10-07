@@ -1,0 +1,15 @@
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 751c24a..bc9dd34 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -2677,7 +2677,9 @@ class ShardedPool:
+             files, records, missing_ok=missing_ok
+         )
+         if len(problems) > 0:
+-            raise RuntimeError("; ".join(problems))
++            raise RuntimeError(
++                f'Cannot open sharded datastore "{str(primary)}": ' + "; ".join(problems)
++            )
+ 
+         return files, records
+ 

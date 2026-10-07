@@ -1,0 +1,88 @@
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 49d6aca..751c24a 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -2646,7 +2646,7 @@ class ShardedPool:
+ 
+     @staticmethod
+     def _read_closed_store(
+-        primary: Path, verb: str, *, missing_ok: bool = False
++        primary: Path, *, missing_ok: bool = False
+     ) -> Tuple[Dict[int, Path], Dict[int, str]]:
+         """
+         Read the `shards` rows of the closed store ``primary`` (opened mode=ro) and check the files
+@@ -2661,7 +2661,7 @@ class ShardedPool:
+                 conn.close()
+         except sqlite3.Error as e:
+             raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": its shards table could not be read ({e})'
++                f'its shards table could not be read ({e})'
+             ) from e
+ 
+         files: Dict[int, Path] = {}
+@@ -2669,9 +2669,7 @@ class ShardedPool:
+         try:
+             ShardedPool._resolve_shard_rows(primary, rows, files, records)
+         except RuntimeError as e:
+-            raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": {e}'
+-            ) from e
++            raise RuntimeError(str(e)) from e
+ 
+         # missing_ok is for delete_store(resume=True) only: a shard file that is not there is not
+         # refused. Every serial is still returned, present or not
+@@ -2679,10 +2677,7 @@ class ShardedPool:
+             files, records, missing_ok=missing_ok
+         )
+         if len(problems) > 0:
+-            raise RuntimeError(
+-                f'Cannot {verb} sharded datastore "{str(primary)}": '
+-                + "; ".join(problems)
+-            )
++            raise RuntimeError("; ".join(problems))
+ 
+         return files, records
+ 
+@@ -2717,7 +2712,7 @@ class ShardedPool:
+ 
+         # the source's shard records, read and checked exactly as the constructor reads them
+         try:
+-            src_files, src_records = ShardedPool._read_closed_store(src_primary, mode)
++            src_files, src_records = ShardedPool._read_closed_store(src_primary)
+         except RuntimeError as e:
+             raise refuse(str(e)) from e
+ 
+@@ -2827,7 +2822,7 @@ class ShardedPool:
+         """Read ``primary``'s records back through the constructor's read-and-check, and require
+         them to be exactly the destination's bare names, resolving to the destination's files.
+         """
+-        files, records = ShardedPool._read_closed_store(primary, plan.mode)
++        files, records = ShardedPool._read_closed_store(primary)
+         if records != plan.dst_records or files != plan.dst_files:
+             raise RuntimeError(
+                 f'"{str(primary)}" reads back records {records} resolving to {({s: str(p) for s, p in files.items()})}, expected {plan.dst_records}'
+@@ -2969,7 +2964,7 @@ class ShardedPool:
+         # missing shard is not refused, and nothing else is relaxed
+         try:
+             recorded, _records = ShardedPool._read_closed_store(
+-                primary_file, "delete", missing_ok=resume
++                primary_file, missing_ok=resume
+             )
+         except RuntimeError as e:
+             raise refuse(str(e)) from e
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index dd7e4a1..6258b9e 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -203,7 +203,10 @@ def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlySt
+ 
+     _refuse_journals(primary_path, primary_path, "the primary")
+ 
+-    files, _records = ShardedPool._read_closed_store(primary_path, _VERB)
++    try:
++        files, _records = ShardedPool._read_closed_store(primary_path)
++    except RuntimeError as e:
++        raise _refuse(primary_path, str(e)) from e
+     if len(files) == 0:
+         raise _refuse(
+             primary_path, f'the primary "{str(primary_path)}" records no shards'

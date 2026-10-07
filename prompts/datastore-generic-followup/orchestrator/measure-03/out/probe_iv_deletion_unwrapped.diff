@@ -1,0 +1,13 @@
+diff --git a/Datastore/SQL/ShardedPool.py b/Datastore/SQL/ShardedPool.py
+index 751c24a..1f65a18 100644
+--- a/Datastore/SQL/ShardedPool.py
++++ b/Datastore/SQL/ShardedPool.py
+@@ -2967,7 +2967,7 @@ class ShardedPool:
+                 primary_file, missing_ok=resume
+             )
+         except RuntimeError as e:
+-            raise refuse(str(e)) from e
++            raise RuntimeError(str(e)) from e
+ 
+         if len(recorded) == 0:
+             raise refuse(f'the primary "{str(primary_file)}" records no shards')

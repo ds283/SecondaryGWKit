@@ -1,0 +1,16 @@
+diff --git a/Datastore/store_reader.py b/Datastore/store_reader.py
+index 6258b9e..0958e07 100644
+--- a/Datastore/store_reader.py
++++ b/Datastore/store_reader.py
+@@ -203,10 +203,7 @@ def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlySt
+ 
+     _refuse_journals(primary_path, primary_path, "the primary")
+ 
+-    try:
+-        files, _records = ShardedPool._read_closed_store(primary_path)
+-    except RuntimeError as e:
+-        raise _refuse(primary_path, str(e)) from e
++    files, _records = ShardedPool._read_closed_store(primary_path)
+     if len(files) == 0:
+         raise _refuse(
+             primary_path, f'the primary "{str(primary_path)}" records no shards'

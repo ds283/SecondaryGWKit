@@ -1,0 +1,71 @@
+# Suites at an export of f8fafbf (code of 4c34f13), with rough_closed_store.diff applied.
+# The export was made a git repository (git init; add -A; commit), because test_inventory_retired's
+# grep tests run git grep; without it they fail with 'not a git repository'. RunRegistry's 1 skip is
+# test_pipeline_adoption, whose manifest is under the gitignored var/. Load 26-87 (another session).
+
+## A. code only (no test change)
+-- Datastore [a-f]
+OK
+Ran 158 tests in 8.028s
+-- Datastore [g-o]
+OK
+Ran 185 tests in 79.849s
+-- Datastore [p-r]
+OK
+Ran 200 tests in 109.819s
+-- Datastore [s-z]
+ERROR: test_missing_shard_is_refused_by_read_closed_store
+FAILED (errors=1)
+Ran 191 tests in 45.169s
+-- RunRegistry
+OK (skipped=1)
+Ran 280 tests in 63.383s
+
+## B. code + the test_store_reader hunk: test_store_reader alone
+OK
+Ran 15 tests in 6.880s
+
+## C. B + gap_problems_branch.diff (the file-problem raise prefixed again, 'Cannot open'): every suite
+-- Datastore [a-f]
+OK
+Ran 158 tests in 8.017s
+-- Datastore [g-o]
+OK
+Ran 185 tests in 81.706s
+-- Datastore [p-r]
+OK
+Ran 200 tests in 98.132s
+-- Datastore [s-z]
+OK
+Ran 191 tests in 43.035s
+-- RunRegistry
+OK (skipped=1)
+Ran 280 tests in 62.642s
+=> nothing fails: no existing test pins the file-problem branch, and the prompt's five tests use no fixture that reaches it
+
+## D. B + probe_iii_reader_unwrapped.diff: the eight Datastore modules that reach the closed-store operations, and RunRegistry
+FAIL: test_missing_shard_is_refused_by_read_closed_store
+FAIL: test_primary_with_no_shards_table
+FAILED (failures=2)
+Ran 117 tests in 20.826s
+-- RunRegistry
+OK (skipped=1)
+Ran 280 tests in 72.986s
+
+## E. B + probe_iv_deletion_unwrapped.diff: the same
+Ran 117 tests in 21.330s
+FAILED (failures=54)
+      4 FAIL: test_a_symbolic_link_is_still_refused
+      8 FAIL: test_every_point_of_interruption
+      2 FAIL: test_missing_shard
+      4 FAIL: test_record_resolves_to_a_non_regular_file
+      4 FAIL: test_record_resolves_to_a_symbolic_link
+      8 FAIL: test_shards_table_cannot_be_read
+      8 FAIL: test_two_serials_share_a_file
+     16 FAIL: test_unusable_record
+-- RunRegistry
+OK (skipped=1)
+Ran 280 tests in 71.693s
+
+# the eight modules: test_absolute_shard_record_refused test_copy_move_store test_delete_store test_layer_registry
+# test_shard_file_name test_sharded_store_script test_store_reader test_store_schema (117 tests, OK under B)

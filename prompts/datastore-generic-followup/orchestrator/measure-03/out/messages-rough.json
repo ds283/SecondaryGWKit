@@ -1,0 +1,26 @@
+{
+ "absolute": {
+  "_read_closed_store": "RuntimeError: Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else",
+  "closed_store_files": "RuntimeError: Cannot delete sharded datastore \"<T>/B/store.sqlite\": Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was deleted",
+  "copy_store": "RuntimeError: Cannot copy sharded datastore \"<T>/B/store.sqlite\" to \"<T>/D/absolute.sqlite\": Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was written",
+  "delete_store": "RuntimeError: Cannot delete sharded datastore \"<T>/B/store.sqlite\": Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was deleted",
+  "move_store": "RuntimeError: Cannot move sharded datastore \"<T>/B/store.sqlite\" to \"<T>/D/absolute.sqlite\": Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was written",
+  "open_read_only": "RuntimeError: Cannot read sharded datastore \"<R>/B/store.sqlite\": Shard #0 of primary database \"<R>/B/store.sqlite\" has an unusable record: shard record '<T>/A/store-shard0000.sqlite' is not a bare file name; ShardedPool only ever records shards that are siblings of the primary, so this row was written by something else. Nothing was read or repaired"
+ },
+ "missing_shard": {
+  "_read_closed_store": "RuntimeError: shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist",
+  "closed_store_files": "RuntimeError: Cannot delete sharded datastore \"<T>/M/store.sqlite\": shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist. Nothing was deleted",
+  "copy_store": "RuntimeError: Cannot copy sharded datastore \"<T>/M/store.sqlite\" to \"<T>/D/missing_shard.sqlite\": shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist. Nothing was written",
+  "delete_store": "RuntimeError: Cannot delete sharded datastore \"<T>/M/store.sqlite\": shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist. Nothing was deleted",
+  "move_store": "RuntimeError: Cannot move sharded datastore \"<T>/M/store.sqlite\" to \"<T>/D/missing_shard.sqlite\": shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist. Nothing was written",
+  "open_read_only": "RuntimeError: Cannot read sharded datastore \"<R>/M/store.sqlite\": shard #1: stored record \"store-shard0001.sqlite\" resolves to \"<R>/M/store-shard0001.sqlite\", which does not exist. Nothing was read or repaired"
+ },
+ "no_shards_table": {
+  "_read_closed_store": "RuntimeError: its shards table could not be read (no such table: shards)",
+  "closed_store_files": "RuntimeError: Cannot delete sharded datastore \"<T>/N/store.sqlite\": its shards table could not be read (no such table: shards). Nothing was deleted",
+  "copy_store": "RuntimeError: Cannot copy sharded datastore \"<T>/N/store.sqlite\" to \"<T>/D/no_shards_table.sqlite\": its shards table could not be read (no such table: shards). Nothing was written",
+  "delete_store": "RuntimeError: Cannot delete sharded datastore \"<T>/N/store.sqlite\": its shards table could not be read (no such table: shards). Nothing was deleted",
+  "move_store": "RuntimeError: Cannot move sharded datastore \"<T>/N/store.sqlite\" to \"<T>/D/no_shards_table.sqlite\": its shards table could not be read (no such table: shards). Nothing was written",
+  "open_read_only": "RuntimeError: Cannot read sharded datastore \"<R>/N/store.sqlite\": its shards table could not be read (no such table: shards). Nothing was read or repaired"
+ }
+}
