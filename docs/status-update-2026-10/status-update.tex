@@ -1,0 +1,211 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{xurl}
+
+\sisetup{exponent-product=\times, separate-uncertainty}
+\setlist{itemsep=2pt, topsep=4pt}
+\newcommand{\src}[1]{{\footnotesize\color{black!60}\path{#1}}}
+\newcommand{\envl}{\,\text{env}}
+
+\title{SecondaryGWKit: numerical correctness and performance\\[2pt]
+\large Status summary}
+\author{David Seery}
+\date{7 October 2026}
+
+\begin{document}
+\maketitle
+
+\noindent
+This note collects the quantitative checks we have so far on the correctness of the
+Green's functions $G_k$, the transfer functions $T_k$ and the source integral, together with
+performance measurements of the adaptive Levin integrator. Errors labelled ``env'' are relative
+to the local oscillation envelope. Each figure is the latest measurement on record; superseded
+figures are quoted only where they show what has changed. The file paths in grey give the
+repository document where each number is recorded.
+
+\section{Green's functions and transfer functions}
+
+\paragraph{Numerical $G_k$ against the exact radiation Green's function.}
+Over all 50 production wavenumbers ($k = 10^5$--$3\times10^8\,\mathrm{Mpc}^{-1}$), the worst
+error at the production tolerances $(\mathrm{atol},\mathrm{rtol}) = (10^{-10},10^{-8})$ is
+$2.6\times10^{-7}\envl$. The error tracks rtol cleanly (Table~\ref{tab:gk}). Self-convergence
+and the oracle agree to a ratio of $1.00$ at every setting. We therefore trust self-convergence
+on $\Lambda$CDM and on the QCD background, where no oracle exists; there the solver error is the
+same, about $2.5\times10^{-7}$.
+\src{docs/tolerance-convergence/GK-NUMERIC-SWEEP.md}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+rtol & $10^{-6}$ & $10^{-7}$ & $10^{-8}$ & $10^{-9}$ & $10^{-10}$ \\
+\midrule
+max error vs exact $G$ (env) & \num{3.21e-5} & \num{2.93e-6} & \num{2.6e-7} & \num{2.51e-8} & \num{2.44e-9}\\
+\bottomrule
+\end{tabular}
+\caption{Numerical $G_k$ in radiation against the closed form, worst case over 50 $k$ values.
+atol is inert: four decades change the result by at most 1.2\%.}
+\label{tab:gk}
+\end{table}
+
+\paragraph{Numerical $T_k$ against $T = 3(\sin x - x\cos x)/x^3$.}
+At the adopted rtol of $3\times10^{-11}$, the worst self-convergence error over 150
+(model, $k$) runs is $3.9\times10^{-8}$. Against the exact $T$ the error is about
+$2.6\times10^{-6}$. This floor comes from the super-horizon initial condition
+($T=1$, $T'=0$ at $x_i \approx 0.004$), not from the solver: with exact initial data the
+converged run matches the closed form to about $10^{-11}$.
+\src{docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md}
+
+\paragraph{Liouville--Green (WKB) representations.}
+\begin{itemize}
+\item \emph{$G_k$ phase in radiation}, where the Liouville--Green form is exact: the error is
+  about 2\,ulp, $3.7\times10^{-9}$\,rad over a span of $9\times10^6$\,rad. The previous
+  two-stage phase ODE was $0.98$\,rad off over a span of $10^9$\,rad.
+  \src{prompts/GkTk-remedial/logs/06-gk-wkb-phase-from-primitive.md}
+\item \emph{$T_k$ truncation floor}: the error scales as $x_i^{-3}$ in the hand-over point,
+  $3.8\times10^{-5}$ at $x_i=24$ and $7.8\times10^{-9}$ at $x_i=400$. At the production
+  hand-over $x_T\approx15.5$ this implies about $1.4\times10^{-4}\envl$.
+  \src{prompts/GkTk-remedial/logs/07-tk-wkb-phase-from-primitive.md}
+\item \emph{Bessel-phase oracle}: about $10^{-12}$ for low orders, and accurate to
+  $2\times10^{-16}$ up to $x\sim10^{15}$. The naive evaluation was $O(1)$ wrong beyond
+  $x\sim10^{12}$.
+  \src{docs/transfer-remedial-verification.md}
+\item \emph{Stored WKB phases on $\Lambda$CDM and QCD}, compared against high-precision
+  references: 1--2\,ulp of the phase span. Before remediation $\theta_G$ was off by up to
+  $7\times10^3$\,rad at $k=3\times10^8$.
+  \src{docs/gktk-remedial-verification.md, docs/qcd-background-verification.md}
+\end{itemize}
+
+\section{Source integral against analytic oracles}
+
+We test the normalisation $N = -\tfrac98\,I_{\text{code}}/I_{\text{oracle}}$. In radiation
+($b=0$) it should equal $-9/8$; for general $b$ it should equal
+$N(b) = -(3+2b)^2/[2(2+b)^2]$. The fixture spans $x = k\tau$ from 4 to $1.6\times10^3$ and
+$u = q/k$ from $0.01$ to $12$, including squeezed and non-closable configurations.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llll}
+\toprule
+Oracle & Regime & Result & Worst deviation \\
+\midrule
+Kohri--Terada, quadrature of eq.~(15) & $b=0$, 9 cases & $N=-1.125000000000$ & \num{3.1e-13}\\
+Kohri--Terada, eq.~(22) at 50 digits & $b=0$, 9 cases & & \num{3.7e-13}\\
+Kohri--Terada, large $x$ & $b=0$, $x\le\num{1.6e8}$ & & $\le\num{3.1e-10}$\\
+Domènech kernel, by quadrature & $b=0.2$, 9 cases & $N=-1.194214876033$ & \num{4.1e-13}\\
+\bottomrule
+\end{tabular}
+\caption{Source integral against the analytic oracles. Each oracle is fed exact closed-form
+$G$ and $T$.}
+\label{tab:oracles}
+\end{table}
+\noindent\src{docs/radiation-oracle/KOHRI-TERADA-ORACLE.md},
+\src{prompts/handover/logs/01-domenech-general-b-oracle.md}\par\medskip
+
+
+Notes on the oracles:
+\begin{itemize}
+\item In double precision, Kohri--Terada eq.~(22) is itself accurate only to about $10^{-10}$
+  at $u=0.01$, which is why it is evaluated at 50 digits. Its small-$x$ limit is
+  $I\to 2x^2/9$, not the $x^2/2$ given in the paper.
+\item The review arXiv:2109.01398 has two sign errors, in eqs.~(4.10) and (4.12); after
+  correction, the kernel agrees with an independent quadrature to $2\times10^{-15}$.
+  Domènech's large-$x$ asymptotic form is only about a 5\% oracle at fixture $x$ for squeezed
+  shapes, and is $O(1)$ off near the resonance $c_s(u+v)=1$. We therefore score against a
+  quadrature of his exact kernel, not the asymptotic form.
+\item The pipeline's declared error grows like $x\varepsilon$, from about $4\times10^{-8}$ at
+  $x=1.6\times10^8$ to a projected $\sim10^{-3}$ at production $x\sim4\times10^{12}$.
+\end{itemize}
+
+\paragraph{Caveat: realistic inputs.}
+The oracle tests use exact closed-form $G$ and $T$. They validate the quadrature machinery,
+not the stored production functions. With production-like interpolated inputs (so far at $b=0$
+only) the error splits additively into two parts:
+\begin{itemize}
+\item a \emph{representation} term (interpolated $G$, $T$ against exact) of
+  $4\times10^{-5}$ to $3\times10^{-3}$, flat in $x$. This is an upper bound, because the fixture
+  still uses an older $G$-phase construction;
+\item a \emph{$T_k$ seam-clamp} term (the numeric $\to$ WKB hand-over) of $4\times10^{-3}$ to
+  $0.9$.
+\end{itemize}
+On production rows with a clamp gap, the deviation from the radiation oracle is $0.07$--$0.46$,
+against $6\times10^{-5}$ for rows without one. \textbf{The seam clamp is the dominant known
+error; its fix is planned but has not started.}
+\src{docs/handover/REALISTIC-LARGE-X.md, docs/source-remediation-verification.md}
+
+\section{Performance and integrator comparisons}
+
+\paragraph{Levin against adaptive Gauss--Kronrod (\texttt{scipy.quad}).}
+On benchmark oscillatory integrals, \texttt{quad} fails between $\omega=10^5$ and $10^6$: it
+saturates at about 1\,s and $2\times10^6$ evaluations while returning results with median
+relative error $O(10^2)$ or worse. Levin stays accurate at a flat cost of a few ms
+(Table~\ref{tab:levin}). On three-Bessel integrals with $10^6$--$2\times10^8$ oscillations,
+Levin takes 0.2--1\,s at relative error $10^{-8}$--$6\times10^{-7}$, while \texttt{quad} converged
+in 0 of 12 cases within a 60\,s budget. For a purely linear phase, QAWO beats both, as expected.
+\src{docs/adaptive-levin-benchmark/LEVIN-PERFORMANCE-REPORT.md}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+$\omega$ & $10^3$ & $10^5$ & $10^6$ & $10^8$ & $10^{10}$ & $10^{12}$\\
+\midrule
+\texttt{quad} & \num{3.4e-13} & \num{8.3e-11} & \num{2.3e2} & \num{4.3e3} & \num{1.7e6} & \num{2.4e8}\\
+Levin & \num{3.6e-14} & \num{7.0e-14} & \num{7.7e-12} & \num{1.2e-9} & \num{6.1e-8} & \num{4.6e-6}\\
+\bottomrule
+\end{tabular}
+\caption{Median relative error against oscillation frequency on the benchmark suite.}
+\label{tab:levin}
+\end{table}
+
+\paragraph{Levin against a published trapezoid scheme.}
+The test case is the radiation-era kernel from a published QCD-crossover kernel paper. Both
+methods were scored against a composite Gauss--Legendre reference that is converged to
+$10^{-14}$. The paper's trapezoid rule takes 0.4--25\,ms with errors of $10^{-5}$--$6\times10^{-2}$.
+Levin, at production settings, reaches $2\times10^{-16}$--$6\times10^{-12}$ at a flat
+0.5--0.7\,s. We have not yet run a direct head-to-head of Levin against Gauss--Legendre as a
+production integrator.
+\src{docs/one-loop-planning/QCD-CROSSOVER-KERNELS-REVIEW.md}
+
+\paragraph{Pipeline costs.}
+\begin{itemize}
+\item A WKB $G_k$ object fell from 64\,s to about 1\,ms, and a WKB $T_k$ object from 58\,s to
+  about 0.05\,s.
+\item A typical source-integral row takes 0.1\,s (median) and 0.5\,s (90th percentile).
+\item \emph{Production bottleneck}: the $\Lambda$CDM baseline build was stopped at 7{,}600 of
+  9{,}280 rows, after 98 CPU-hours. On squeezed triangles ($r\approx k\gg q$) at low $z$, the
+  adaptive bisection reaches its depth cap. These rows average 171\,s each, against 0.8\,s for
+  the rest, and account for 97.5 of the 98 CPU-hours.
+\item Relaxing the quadrature rtol from $10^{-8}$ to $10^{-7}$ gives a $6.8\times$ speedup and
+  changes the results by at most $2\times10^{-6}$. This cuts the projected full rebuild from
+  about 1{,}000 to about 250 CPU-hours (roughly 36 wall-hours), and is now the default.
+\item The underlying limit on squeezed triangles is the phase representation, which delivers
+  about six digits; the quadrature method itself is not the limit.
+\end{itemize}
+\src{prompts/handover/IMPLEMENTATION_STATE.md, docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md}
+
+\section{Main open items}
+\begin{enumerate}
+\item \textbf{$T_k$ seam clamp}: the dominant error, at $0.07$--$0.46$ on affected production
+  rows.
+\item \textbf{Coverage in $x$}: the oracle tests reach $x\approx1.6\times10^8$, against
+  $\sim4\times10^{12}$ in production, where the $x\varepsilon$ term alone is about $10^{-3}$.
+\item \textbf{Coverage in $b$ and background}: realistic inputs have not yet been scored at
+  $b\neq0$. All the oracles assume constant $w$, so there is no oracle for $\Lambda$CDM or for
+  the QCD era; there we rely on self-convergence.
+\item \textbf{QCD sound speed}: the transfer sector uses $p/\rho$ in place of
+  $\mathrm{d}p/\mathrm{d}\rho$, which differ by up to 23\%. This produces up to $O(10)$\,rad of
+  sound-phase error at high $k$, and affects every stored QCD $T_k$.
+\end{enumerate}
+
+\end{document}
