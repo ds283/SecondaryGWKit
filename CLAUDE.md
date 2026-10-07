@@ -44,6 +44,34 @@ that hold across all of them:
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
 
+## The datastore layer is frozen — it is moving to DatastoreKit
+
+Since 2026-10-07 the generic datastore layer is being extracted into a separate package,
+**DatastoreKit** (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit),
+which SecondaryGWKit, ChamPBH and StochasticInstantons will all depend on. Its plan is that
+repository's `prompts/extraction/README.md`. The package is a copy of this repository's layer at
+**`6f7f291`** (the import commit), and its first prompts check, line by line, that it still equals
+that copy.
+
+**Until SecondaryGWKit adopts the package (that plan's gate G2), these files do not change:**
+- `Datastore/__init__.py`, `object.py`, `contract.py`, `replication.py`, `shard_paths.py`,
+  `store_reader.py`, `store_inventory.py`;
+- `Datastore/SQL/__init__.py`, `schema.py`, `ShardedPool.py`, `Datastore.py`, `ClientPool.py`,
+  `SerialPoolBroker.py`, `ProfileAgent.py`;
+- `Datastore/SQL/ObjectFactories/base.py`;
+- `tools/sharded_store.py` and `tools/shard_key_audit.py`.
+
+A defect found in them in the meantime is **recorded** as an issue on the board of the campaign
+that found it (and in `docs/OPEN_ISSUES.md`), saying it is held by the freeze. It is **not fixed
+here**. It is fixed in DatastoreKit after G2, and reaches this repository through a release. A
+prompt whose acceptance test cannot pass without editing one of these files stops and asks.
+
+The factories under `Datastore/SQL/ObjectFactories/` (other than `base.py`), `config/`, and every
+caller of the layer are **not** frozen. They are this project's code, and change as usual. The
+`RayTools/` files are not frozen either: they are not part of this extraction. SecondaryGWKit's
+adoption will be a campaign in this repository, planned from DatastoreKit's adoption checklist;
+the freeze ends when that campaign lands.
+
 ## Long-running jobs — the run registry
 
 A job that takes hours must not be something a conversation owns. `RunRegistry/` records that one
