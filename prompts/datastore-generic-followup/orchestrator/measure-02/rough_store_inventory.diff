@@ -1,0 +1,14 @@
+diff --git a/Datastore/store_inventory.py b/Datastore/store_inventory.py
+index 22087d6..7be0ab1 100644
+--- a/Datastore/store_inventory.py
++++ b/Datastore/store_inventory.py
+@@ -465,6 +465,9 @@ class StoreInventory:
+             if field not in cls.parents:
+                 out[field] = value
+                 continue
++            if value is None:
++                out[field] = None
++                continue
+             of = cls.parent_class(field, record.key)
+             found = self.find(of, value) if of is not None else []
+             if len(found) != 1:

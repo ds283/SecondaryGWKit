@@ -1,0 +1,5 @@
+11 entries differ
+3 ('full', 'GkSource', 'numeric', '{"class": "GkNumericIntegration", "digest": null, "unresolved": 0}', 'null')
+3 ('full', 'GkSourcePolicyData', 'numeric', '{"class": "GkNumericIntegration", "digest": null, "unresolved": 0}', 'null')
+2 ('full', 'GkWKBIntegration', 'numeric', '{"class": "GkNumericIntegration", "digest": null, "unresolved": 0}', 'null')
+3 ('full', 'QuadSourceIntegral', 'numeric', '{"class": "GkNumericIntegration", "digest": null, "unresolved": 0}', 'null')
