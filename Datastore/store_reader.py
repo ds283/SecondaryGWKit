@@ -203,7 +203,10 @@ def open_read_only(primary: PathType, factories: Mapping) -> Iterator[ReadOnlySt
 
     _refuse_journals(primary_path, primary_path, "the primary")
 
-    files, _records = ShardedPool._read_closed_store(primary_path, _VERB)
+    try:
+        files, _records = ShardedPool._read_closed_store(primary_path)
+    except RuntimeError as e:
+        raise _refuse(primary_path, str(e)) from e
     if len(files) == 0:
         raise _refuse(
             primary_path, f'the primary "{str(primary_path)}" records no shards'

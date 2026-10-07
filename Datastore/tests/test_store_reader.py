@@ -306,10 +306,11 @@ class TestRefusals(_TempStore):
         missing.unlink()
         message = self.assert_refused_naming(str(missing))
         self.assertIn("does not exist", message)
-        # the refusal is _read_closed_store's own, not a copy of it
+        # the refusal is _read_closed_store's own, under the reader's one prefix
         with self.assertRaises(RuntimeError) as cm:
-            ShardedPool._read_closed_store(self.store.primary, "read")
-        self.assertEqual(message, str(cm.exception))
+            ShardedPool._read_closed_store(self.store.primary)
+        self.assertIn(str(cm.exception), message)
+        self.assertEqual(message.count("Cannot read sharded datastore"), 1)
 
     def test_primary_with_no_shards_table(self):
         self.store.primary.unlink()

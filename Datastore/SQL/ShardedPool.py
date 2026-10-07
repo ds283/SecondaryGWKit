@@ -2646,12 +2646,13 @@ class ShardedPool:
 
     @staticmethod
     def _read_closed_store(
-        primary: Path, verb: str, *, missing_ok: bool = False
+        primary: Path, *, missing_ok: bool = False
     ) -> Tuple[Dict[int, Path], Dict[int, str]]:
         """
         Read the `shards` rows of the closed store ``primary`` (opened mode=ro) and check the files
         they name, through the same two methods the constructor uses. Return (serial -> path,
-        serial -> stored record), or raise RuntimeError naming the store and the problem.
+        serial -> stored record), or raise RuntimeError naming the problem, and nothing else: each
+        caller states the operation and the store.
         """
         try:
             conn = sqlite3.connect(f"{primary.as_uri()}?mode=ro", uri=True)
@@ -2660,18 +2661,11 @@ class ShardedPool:
             finally:
                 conn.close()
         except sqlite3.Error as e:
-            raise RuntimeError(
-                f'Cannot {verb} sharded datastore "{str(primary)}": its shards table could not be read ({e})'
-            ) from e
+            raise RuntimeError(f"its shards table could not be read ({e})") from e
 
         files: Dict[int, Path] = {}
         records: Dict[int, str] = {}
-        try:
-            ShardedPool._resolve_shard_rows(primary, rows, files, records)
-        except RuntimeError as e:
-            raise RuntimeError(
-                f'Cannot {verb} sharded datastore "{str(primary)}": {e}'
-            ) from e
+        ShardedPool._resolve_shard_rows(primary, rows, files, records)
 
         # missing_ok is for delete_store(resume=True) only: a shard file that is not there is not
         # refused. Every serial is still returned, present or not
@@ -2679,10 +2673,7 @@ class ShardedPool:
             files, records, missing_ok=missing_ok
         )
         if len(problems) > 0:
-            raise RuntimeError(
-                f'Cannot {verb} sharded datastore "{str(primary)}": '
-                + "; ".join(problems)
-            )
+            raise RuntimeError("; ".join(problems))
 
         return files, records
 
@@ -2717,7 +2708,7 @@ class ShardedPool:
 
         # the source's shard records, read and checked exactly as the constructor reads them
         try:
-            src_files, src_records = ShardedPool._read_closed_store(src_primary, mode)
+            src_files, src_records = ShardedPool._read_closed_store(src_primary)
         except RuntimeError as e:
             raise refuse(str(e)) from e
 
@@ -2827,7 +2818,7 @@ class ShardedPool:
         """Read ``primary``'s records back through the constructor's read-and-check, and require
         them to be exactly the destination's bare names, resolving to the destination's files.
         """
-        files, records = ShardedPool._read_closed_store(primary, plan.mode)
+        files, records = ShardedPool._read_closed_store(primary)
         if records != plan.dst_records or files != plan.dst_files:
             raise RuntimeError(
                 f'"{str(primary)}" reads back records {records} resolving to {({s: str(p) for s, p in files.items()})}, expected {plan.dst_records}'
@@ -2969,7 +2960,7 @@ class ShardedPool:
         # missing shard is not refused, and nothing else is relaxed
         try:
             recorded, _records = ShardedPool._read_closed_store(
-                primary_file, "delete", missing_ok=resume
+                primary_file, missing_ok=resume
             )
         except RuntimeError as e:
             raise refuse(str(e)) from e

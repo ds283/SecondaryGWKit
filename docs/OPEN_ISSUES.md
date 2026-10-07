@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-07 · **105 open** across twenty campaigns.
+**Last updated:** 2026-10-07 · **104 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -848,7 +848,8 @@ that keeps the layer generic.
 The campaign **closed on 2026-10-06 at 9 / 9**, when its closing rehearsal rebuild reproduced
 `dbd8a51`'s fingerprint. Its three remaining issues were decided by the user the same day and
 **assigned to `prompts/datastore-generic-followup`**, and their rows moved to §1.19. They stay on
-this campaign's board, and close there.
+this campaign's board, and close there. All three are now closed (§1.19), so
+this campaign has no open issue.
 
 ### 1.19 The datastore-generic follow-up campaign
 
@@ -859,10 +860,8 @@ the references `QuadSourceIntegral` and `GkSource` declare without one (its READ
 Prompt 01 closed the drop issue on 2026-10-07: a read-write pool now refuses such a drop.
 Prompt 02 closed the resolve issue the same day: `resolve()` now gives `None` for an absent nullable
 parent.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[04-closed-store-refusals-repeat-their-prefix]` | datastore-generic | A refusal from `closed_store_files`, `delete_store`, `copy_store` or `move_store` states its "Cannot … sharded datastore" prefix twice. Cosmetic. **Decided 2026-10-06:** remove it in `_read_closed_store`; the reader, a fourth caller, then wraps the message itself. Assigned: follow-up prompt 03. |
+Prompt 03 closed the closed-store prefix issue the same day: each refusal states its prefix once, and
+the reader wraps its own. **The campaign is closed at 3 / 3, and no issue is open here.**
 
 ---
 

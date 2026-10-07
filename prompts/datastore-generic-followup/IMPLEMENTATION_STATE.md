@@ -1,8 +1,9 @@
 # datastore-generic-followup campaign — implementation state
 
-**Last updated:** 2026-10-07 · **Status: IN PROGRESS — 2 of 3 prompts landed (01, 02).** Prompts
-01–03 are written; 01 and 02 landed on 2026-10-07 and closed the drop issue and the resolve issue
-on `datastore-generic`'s board.
+**Last updated:** 2026-10-07 · **Status: CLOSED — 3 of 3 prompts landed (01–03).** Prompts 01–03
+are written and landed on 2026-10-07, and closed the drop issue, the resolve issue and the
+closed-store prefix issue on `datastore-generic`'s board. With 03, the last of that campaign's
+issues is closed.
 
 The campaign was opened on 2026-10-06 to carry out the user's decisions on the three issues
 `datastore-generic` left open when it closed (README §0, §6.1). The issues stay on
@@ -40,7 +41,7 @@ The orchestrator's choices of method are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Refuse a drop that leaves references](01-refuse-a-drop-that-leaves-references.md) | **D1**–**D3** | Opus | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | `fee1fbf` | [log](logs/01-refuse-a-drop-that-leaves-references.md) |
 | 02 | [Resolve an absent parent as `None`](02-resolve-an-absent-parent-as-none.md) | **V1** | Sonnet | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | `4c34f13` | [log](logs/02-resolve-an-absent-parent-as-none.md) |
-| 03 | [State each closed-store prefix once](03-state-each-closed-store-prefix-once.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-06 | ⬜ | — | — |
+| 03 | [State each closed-store prefix once](03-state-each-closed-store-prefix-once.md) | **P1**–**P2** | Sonnet | ✍️ yes, 2026-10-06 | ✅ 2026-10-07 | this commit | [log](logs/03-state-each-closed-store-prefix-once.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not landed · ✅ landed.
 
@@ -205,21 +206,22 @@ touched. The index counts 105; §1.19 holds the one issue 03 closes.
 | **D2** | 01 | `ShardedPool._refuse_drop_that_leaves_references()`, after the undeclared-table refusal, before the primary is opened | `[06-dropping-one-group-…]` | ✅ `fee1fbf` |
 | **D3** | 01 | `test_drop_refuses_dangling_references` (11 tests); `TestPruningAfterRepair.test_an_interrupted_store` re-fixtured | — | ✅ `fee1fbf` |
 | **V1** | 02 | `StoreInventory.resolve` gives `None` for a `None` key parent; two tests in `TestResolve` | `[08-resolve-shows-…]` | ✅ `4c34f13` |
-| **P1** | 03 | `_read_closed_store` raises the bare reason and takes no `verb` | `[04-closed-store-refusals-…]` | ⬜ |
-| **P2** | 03 | `open_read_only` wraps it with its own prefix; `test_closed_store_refusals` (5 tests); one `test_store_reader` test changed | `[04-closed-store-refusals-…]` | ⬜ |
+| **P1** | 03 | `_read_closed_store` raises the bare reason and takes no `verb` | `[04-closed-store-refusals-…]` | ✅ this commit |
+| **P2** | 03 | `open_read_only` wraps it with its own prefix; `test_closed_store_refusals` (5 tests); one `test_store_reader` test changed | `[04-closed-store-refusals-…]` | ✅ this commit |
 
 ---
 
 ## 3. Active and unresolved issues
 
-None opened by this campaign. The one it still owns, `[04-closed-store-refusals-repeat-their-prefix]`,
-is on `datastore-generic`'s board, §3.1.
+None opened by this campaign, and none open. The three it owned are closed on
+`datastore-generic`'s board (§4).
 
 ## 4. Resolved issues
 
 None opened by this campaign. Closed on `datastore-generic`'s board, §4, which holds the record:
 - `[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]`, by prompt 01 (2026-10-07, `fee1fbf`);
-- `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`, by prompt 02 (2026-10-07, `4c34f13`).
+- `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`, by prompt 02 (2026-10-07, `4c34f13`);
+- `[04-closed-store-refusals-repeat-their-prefix]`, by prompt 03 (2026-10-07, this commit).
 
 ## 5. Baselines
 
@@ -272,3 +274,21 @@ OK on the first run; no flake.
 
 Datastore's `[g-o]` group is 183 + 2: the two new methods of
 `test_inventory_declarations.TestResolve`. Every other count is §5.2's.
+
+### 5.4 After prompt 03 (2026-10-07, this commit)
+
+Each suite run in the foreground, serially, with README §7's command. Every suite OK on the first
+run; no flake. The work was resumed from an interrupted predecessor's uncommitted tree (see the
+log), and every suite below was run on the final tree.
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 OK |
+| ComputeTargets | 693 OK |
+| CosmologyModels | 39 OK |
+| Datastore | 739 OK (163 + 185 + 200 + 191) |
+| LiouvilleGreen | 148 OK (1 skipped) |
+| RunRegistry | 280 OK |
+
+Datastore's `[a-f]` group is 158 + 5: the new `test_closed_store_refusals` module. Every other
+count is §5.3's.

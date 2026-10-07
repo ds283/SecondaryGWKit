@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-07 (§4: the resolve issue, closed by `datastore-generic-followup` 02; before it, the drop issue, by 01) · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-07 (§4: the closed-store prefix issue, closed by `datastore-generic-followup` 03, the last of this campaign's issues; before it, the resolve issue by 02 and the drop issue by 01) · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -1496,6 +1496,12 @@ retires it with `store retire`.
 
 ### 3.1 Opened by this campaign's audit (2026-10-04)
 
+None open.
+
+---
+
+## 4. Resolved issues
+
 - **[04-closed-store-refusals-repeat-their-prefix]** *(opened 2026-10-04 by prompt 04; measured)*
   - **The defect.** A refusal of a closed store's operation prints its prefix twice. On a hand-built
     primary with `{0: "../outside.sqlite"}`, `ShardedPool.closed_store_files` and `delete_store`
@@ -1518,10 +1524,19 @@ retires it with `store retire`.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 03, which carries out
     the decision. Its measurement found a fourth caller, `store_reader.open_read_only`, which
     relies on the inner prefix and so must wrap the message itself (that campaign's README §0.2).
-
----
-
-## 4. Resolved issues
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 03; this commit).**
+    `ShardedPool._read_closed_store(primary, *, missing_ok=False)` raises the bare reason for each
+    of its three refusals (the `shards` table could not be read; the resolver's message; the joined
+    file problems) and takes no `verb`. Its three callers in `ShardedPool.py` (`_plan_relocation`,
+    `_read_back`, `_plan_deletion`) keep their wrapping and stop passing a verb, so
+    `closed_store_files`, `delete_store`, `copy_store` and `move_store` state their prefix once.
+    The fourth caller, `store_reader.open_read_only`, which relied on the inner prefix, now wraps
+    the reason with its own `_refuse`, so its message ends ". Nothing was read or repaired", which
+    it lacked. Which stores are refused, the reason text and the phrase "its shards table could not
+    be read" are unchanged. For a dropped `shards` table, `delete_store`, `copy_store` and
+    `move_store` no longer name the resolved path anywhere (the removed prefix was the one that
+    did); the reason names no file. Pinned by `test_closed_store_refusals` (5 tests) and the one
+    changed `test_store_reader` test; deliberate breakage (i)-(v) in that prompt's log.
 
 - **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
   08; measured at `5fe0ae6` and at 08's tree)*
