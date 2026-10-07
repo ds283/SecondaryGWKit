@@ -1541,7 +1541,7 @@ retires it with `store retire`.
     the decision. Measured for it, the 11 entries are 2 direct `GkWKBIntegration` records and 9
     reached through `GkSource`, `GkSourcePolicyData` and `QuadSourceIntegral`, 3 each. The hook
     above says all 11 come through `GkSource`'s parent set; prompt 02's closing line corrects it.
-  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 02; this commit).**
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 02; `4c34f13`).**
     `StoreInventory.resolve` gives `None` for a key parent whose value is `None`: one branch, after
     the `field not in cls.parents` branch, before the parent is looked up. A value that is not
     `None` and does not resolve to exactly one record keeps `{"class", "digest", "unresolved"}`,

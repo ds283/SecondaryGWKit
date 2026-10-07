@@ -6,7 +6,7 @@
   in `test_inventory_declarations.TestResolve`.
 
 No stop condition fired. Closes `[08-resolve-shows-an-absent-nullable-parent-as-unresolved]`
-(`datastore-generic`). Narrows nothing. Opens nothing. Index 106 → 105. The commit is this commit.
+(`datastore-generic`). Narrows nothing. Opens nothing. Index 106 → 105. The commit is `4c34f13`.
 
 ## What shipped
 
@@ -138,7 +138,7 @@ No Ray was started, and nothing under `var/` was opened.
 
 ## The deliberate-breakage record
 
-Each diff is exactly as applied, against this commit's tree. Each was checked in `bash` with
+Each diff is exactly as applied, against `4c34f13`'s tree. Each was checked in `bash` with
 `git apply --check` before and `git apply -R --check` after applying, then reversed with
 `git apply -R`, and the file compared with the original (identical). The tests run were
 `test_inventory_declarations` and `test_store_inventory` (68 tests). The tests the prompt names
