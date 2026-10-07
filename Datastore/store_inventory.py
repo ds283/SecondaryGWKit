@@ -445,6 +445,11 @@ class StoreInventory:
     def resolve(self, name: str, record: Record) -> Dict[str, Any]:
         """``record``'s key with every parent reference replaced, recursively, by the parent's
         own resolved key and tags. For display and for checking; the key itself is unchanged.
+
+        A parent whose value is ``None`` is a row with no such parent, which only a nullable parent
+        can hold (``read_records`` drops a row whose parent does not resolve). It resolves to
+        ``None``, as a parent-set member does. A value that is not ``None`` and does not resolve to
+        exactly one record keeps the form ``{"class", "digest", "unresolved"}``.
         """
         cls = self.classes[name]
         out: Dict[str, Any] = {}
@@ -464,6 +469,9 @@ class StoreInventory:
                 continue
             if field not in cls.parents:
                 out[field] = value
+                continue
+            if value is None:
+                out[field] = None
                 continue
             of = cls.parent_class(field, record.key)
             found = self.find(of, value) if of is not None else []

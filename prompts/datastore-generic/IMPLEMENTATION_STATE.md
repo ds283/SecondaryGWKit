@@ -1,6 +1,6 @@
 # datastore-generic campaign — implementation state
 
-**Last updated:** 2026-10-07 (§4: the drop issue, closed by `datastore-generic-followup` 01) · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
+**Last updated:** 2026-10-07 (§4: the resolve issue, closed by `datastore-generic-followup` 02; before it, the drop issue, by 01) · **Status: CLOSED — 9 of 9 prompts landed (01–09).** The closing rehearsal rebuild's fingerprint equals `dbd8a51`'s (K2, 2026-10-06). The audit ([`docs/datastore-generic-audit.md`](../../docs/datastore-generic-audit.md)) is
 written. Prompts 01–09 are written. The user took U1–U4
 as recommended on 2026-10-04 (README §6.2), and had the plan and `e53f323` merged into
 `handover-remedial` the same day.
@@ -1518,6 +1518,11 @@ retires it with `store retire`.
   - **Assigned (2026-10-06):** `prompts/datastore-generic-followup` prompt 03, which carries out
     the decision. Its measurement found a fourth caller, `store_reader.open_read_only`, which
     relies on the inner prefix and so must wrap the message itself (that campaign's README §0.2).
+
+---
+
+## 4. Resolved issues
+
 - **[08-resolve-shows-an-absent-nullable-parent-as-unresolved]** *(opened 2026-10-06 by prompt
   08; measured at `5fe0ae6` and at 08's tree)*
   - **The defect.** `StoreInventory.resolve` renders a nullable key parent whose value is `None` as
@@ -1536,11 +1541,27 @@ retires it with `store retire`.
     the decision. Measured for it, the 11 entries are 2 direct `GkWKBIntegration` records and 9
     reached through `GkSource`, `GkSourcePolicyData` and `QuadSourceIntegral`, 3 each. The hook
     above says all 11 come through `GkSource`'s parent set; prompt 02's closing line corrects it.
-
----
-
-## 4. Resolved issues
-
+  - **Closed (2026-10-07, `prompts/datastore-generic-followup` prompt 02; this commit).**
+    `StoreInventory.resolve` gives `None` for a key parent whose value is `None`: one branch, after
+    the `field not in cls.parents` branch, before the parent is looked up. A value that is not
+    `None` and does not resolve to exactly one record keeps `{"class", "digest", "unresolved"}`,
+    and `_resolve_reference`, `read_records`, the fingerprint, the inventory and the report are
+    unchanged. The docstring says that only a nullable parent can hold `None` (`read_records` drops
+    a row whose parent does not resolve). Over every record of `build_full_store` and
+    `build_real_store`, `resolve()` differs from its parent's in exactly **11 entries**, each the
+    `numeric` field of a `GkWKBIntegration` key going from
+    `{"class": "GkNumericIntegration", "digest": None, "unresolved": 0}` to `None`: 2 in direct
+    `GkWKBIntegration` records, and 3 each reached through `GkSource`, `GkSourcePolicyData` and
+    `QuadSourceIntegral` (the 9 are the key of the `wkb` member in a `GkSource` record's parent set,
+    which `GkSourcePolicyData` and `QuadSourceIntegral` reach through their own parents). **This
+    corrects the hook above**, which said all 11 came through `GkSource`'s parent set: 2 are
+    direct `GkWKBIntegration` records. `GkSource`'s parent set also has a member field named
+    `numeric`; its 9 absent members were already `None` (through `_resolve_reference`) and are
+    unchanged. Before, `build_full_store` held 11 `"unresolved"` mappings, all with a `None`
+    digest; after, none. Pinned by two tests in `test_inventory_declarations.TestResolve`
+    (`test_an_absent_nullable_parent_resolves_to_none` and
+    `test_the_full_store_resolves_no_absent_parent_as_unresolved`); deliberate breakage (i)–(iii)
+    in that prompt's log.
 - **[06-dropping-one-group-leaves-rows-that-name-what-it-dropped]** *(opened 2026-10-05 while
   prompt 06 was written; measured at `dbc59f9`)*
   - **The defect.** `--drop` drops exactly the tables of the groups named, and nothing that

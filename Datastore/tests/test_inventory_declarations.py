@@ -339,6 +339,84 @@ class TestResolve(unittest.TestCase):
         )
         self.assertEqual(resolved[0]["kind"], 0)
 
+    def test_an_absent_nullable_parent_resolves_to_none(self):
+        """A key parent whose value is ``None`` is a row with no such parent: it resolves to
+        ``None``, as a parent-set member does, not to the form of a parent that was not found.
+        A second parent of the same record that does resolve keeps its resolved form, and a value
+        that is not ``None`` and names no record keeps the unresolved form.
+        """
+        a = Record(key={"x": 1}, tags=(), validated=None, value_count=None)
+        b = Record(key={"x": 2}, tags=(), validated=None, value_count=None)
+        da = reference_digest(a.key, (), False)
+        missing = reference_digest({"x": 99}, (), False)
+        children = [
+            Record(key={"p": da, "q": None}, tags=(), validated=None, value_count=None),
+            Record(
+                key={"p": da, "q": missing}, tags=(), validated=None, value_count=None
+            ),
+        ]
+        inventory = StoreInventory(
+            primary=Path("x"),
+            shards=(0,),
+            classes={
+                "A": _class("A", [a]),
+                "B": _class("B", [b]),
+                "C": _class("C", children, parents={"p": "A", "q": "B"}),
+            },
+        )
+        absent, not_found = (inventory.resolve("C", r) for r in children)
+        self.assertEqual(absent["p"], {"class": "A", "key": {"x": 1}, "tags": []})
+        self.assertIsNone(absent["q"])
+        self.assertEqual(not_found["p"], absent["p"])
+        self.assertEqual(
+            not_found["q"], {"class": "B", "digest": missing, "unresolved": 0}
+        )
+
+    def test_the_full_store_resolves_no_absent_parent_as_unresolved(self):
+        """Walking ``resolve()`` of every record of the full store: no mapping that holds
+        ``"unresolved"`` has a ``None`` digest, and the 11 ``numeric`` key parents of a
+        ``GkWKBIntegration`` key that are ``None`` (the key of a record of that class, or the
+        ``"key"`` of a mapping whose ``"class"`` is that class) resolve to ``None``. The
+        ``numeric`` field of a ``GkSource`` parent-set member is a different field with the same
+        name; its 9 absent members were ``None`` before, through ``_resolve_reference``, and are
+        counted apart so that the test shows them untouched.
+        """
+        wkb = "GkWKBIntegration"
+        seen = {"records": 0, "key": 0, "member": 0, "no_digest": 0}
+
+        def walk(value, cls, in_set):
+            if isinstance(value, dict):
+                if "unresolved" in value:
+                    seen["no_digest"] += value["digest"] is None
+                if "numeric" in value and value["numeric"] is None:
+                    if cls == wkb:
+                        seen["key"] += 1
+                    elif in_set:
+                        seen["member"] += 1
+                for field, inner in value.items():
+                    if field == "key" and "class" in value:
+                        walk(inner, value["class"], False)
+                    elif field == "set":
+                        for member in inner:
+                            walk(member, None, True)
+                    else:
+                        walk(inner, None, False)
+            elif isinstance(value, list):
+                for inner in value:
+                    walk(inner, None, in_set)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            inventory = read_inventory(build_full_store(Path(tmp)).primary, _factories)
+        for name, cls in inventory.classes.items():
+            for record in cls.records:
+                seen["records"] += name == wkb
+                walk(inventory.resolve(name, record), name, False)
+        # the walk reached the class, so that it cannot pass on an empty inventory
+        self.assertGreater(seen["records"], 0)
+        self.assertEqual(seen["no_digest"], 0)
+        self.assertEqual(seen["key"], 11)
+        self.assertEqual(seen["member"], 9)
+
     def test_the_full_store_resolves_both_cosmology_types(self):
         from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
 
