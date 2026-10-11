@@ -50,7 +50,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
 | 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `643c3b2` | [log](logs/07-adopt-raypoolkit.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f539015` | [log](logs/08-rehearse-through-both-packages.md) |
-| 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-12 | this commit | [log](logs/09-close-the-migration.md) |
+| 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-12 | `5943492` | [log](logs/09-close-the-migration.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -1203,7 +1203,7 @@ and acceptance 1–7 are met. No stop condition fired. **R2 holds, and RayPoolKi
 
 ### 5.9 After prompt 09 (2026-10-12)
 
-**What landed (this commit).** The migration is closed. Both of the user's decisions of 2026-10-12 are
+**What landed (`5943492`).** The migration is closed. Both of the user's decisions of 2026-10-12 are
 recorded as the user's: **Z7 is chosen** (the six `docs/` probes are repaired), and
 `[01-cross-filesystem-move-advice-says-delete-by-hand]` is **narrowed, not transferred whole**.
 - **Z1.** `[00-a-new-stores-first-open-…]` and `[00-a-drop-action-…]` (`a3-v2-readiness`) and
@@ -1256,4 +1256,51 @@ run (0.0613 s against 0.06 s at load 25) and, alone at load 8, passed twice and 
 - whether SGK moves to `datastorekit` `v0.2.3` (released 2026-10-11, `factory-defaults` U5). SGK stays at
   `v0.2.2`, which DatastoreKit's G2 admits; 09 moved no pin.
 
-The campaign's remaining step is the orchestrator's review of 09.
+**Orchestrator review of prompt 09 (2026-10-12).** Dispatched from `b95bf19` to one Sonnet subagent,
+after the six roots were re-measured at `ede4062` (every count 08's, all OK, load 12–23) and the user had
+taken README §6.3's two decisions for 09: Z7 chosen, and the move advice narrowed. Reviewed against its
+commit `5943492`, with nothing landed after it. **Every check of the note's §3 passed**, and acceptance
+1–6 are met. No stop condition fired. **The campaign is closed.**
+- **Scope (check 1).** 47 paths, exactly the note's list: the 18 Z2 files, the six probes, `CLAUDE.md`,
+  the three inherited boards, `docs/OPEN_ISSUES.md`, verification (§4 appended, no line above it
+  removed), README, this board, `prompts/INDEX.md`, the log and 13 `measure/out/09-*` files. No test,
+  tool, rehearsal script or `requirements.txt`; nothing in DatastoreKit or RayPoolKit.
+- **Z2 (check 2).** A word-diff of the 18 files shows only the 23 paths changing, with three lines
+  re-wrapped; `ast.dump` with docstrings removed is identical for all 18, run here. The orchestrator's
+  regex prints nothing at `5943492` (23 lines at `ede4062`).
+- **Z7 (check 3).** Six one-statement diffs, `probe_03`'s `# noqa: E402` kept. Run here at `5943492`, the
+  import-only check gives the six probes `all OK` at 4, 6, 6, 4, 10 and 25 statements, and the six
+  dependents at 14, 6, 9, 7, 14 and 7. No probe was run.
+- **The boards (check 4).** Two hunks on each. The three moved entries' bodies are identical to
+  `ede4062`'s line for line, compared here; each heading gains the transfer note and each entry the
+  "still open there" line. `store-retirement`'s entry gains the narrowing line, naming both halves with
+  current lines, and nothing else changed in it.
+- **The index (check 5).** 103 rows by counting: §1.14 4, §1.15 5, §1.17 7, §1.20 2; header 103,
+  2026-10-12. The five deleted rows are the three transferred and two closed; the narrowed row's hook names
+  SGK's half. The three lead-in sentences the agent added (its deviation 11) are accurate.
+- **The measurements (check 6).** Both scripts run here at `5943492`: DatastoreKit's (its checkout moved
+  to `251986b` meanwhile, the script unchanged since `v0.2.2`) equals the saved `09-*` output but for the
+  commit; RayPoolKit's (`c9b0e11`) equals it but for the commit, 1510 tracked files and 937 non-`.py`
+  lines, the new ones in this commit's records. `pip freeze` equals 06's after-freeze and the saved one.
+- **Verification §4 (check 7).** The twelve runs' `state`, `exit_code`, digest prefix and `git_head`,
+  read here from each run directory, equal §4.1's table. Each G2 draft is in its board's cell form, keeps
+  DatastoreKit's dated notes verbatim, and maps every checklist item (DatastoreKit §9's three; RayPoolKit
+  §8's 1–5) to a commit or run that holds it.
+- **Records (check 8).** This board's status, §1 row, Z1–Z7, §3 (two open), §4 (two closed) and §5.9;
+  README §2's nine rows landed; `prompts/INDEX.md` closed, "§1.20; 2", 3 live / 21 closed; `CLAUDE.md`'s
+  block names the six roots and four groups, with the ten-minute reason, and the stand-in sentence kept.
+- **Suites and `black` (check 9).** At `5943492`, load 10–16: AdaptiveLevin 32, CosmologyModels 39,
+  LiouvilleGreen 148 (1 skipped), RunRegistry 286 and Datastore 320 (54 + 103 + 101 + 62) pass;
+  ComputeTargets 693 with the one wall-clock failure (0.126 s), which failed three times more alone
+  (0.072–0.082 s, load 13–20), as at 08's review. It is README §7's known flake; nothing 09 changed is on
+  its path. `black --check` clean on the 24 Python files touched.
+- **The log (check 10).** README §5.1's sections; the note's nine corrections and the user's two
+  decisions classified among its 13 deviations, no `UNINTENDED DRIFT`; both scripts quoted with their
+  before and after; Z1's reading with its lines; five observations, none needing an issue.
+- **The note held.** Its corrections were each needed and followed, and its predictions (23 lines, the
+  statement counts, 108 → 103, the measurements) all held.
+- **Residue fixed here:** "this commit" → `5943492` on this board (the §1 row and §5.9), in README §2's
+  row, in the log (header, deviation 10 and the hand-off) and in verification §4 (§4.4's lead-in and both
+  G2 drafts).
+- **Left for the user:** the six rehearsal stores; the two G2 commits, drafted in verification §4.4 and
+  §4.5; the `Datastore` rename; and whether to move to `datastorekit` `v0.2.3`.

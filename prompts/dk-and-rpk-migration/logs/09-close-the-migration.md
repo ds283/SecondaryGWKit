@@ -2,7 +2,7 @@
 
 **Prompt:** [`../09-close-the-migration.md`](../09-close-the-migration.md) ·
 **Board items:** Z1–Z7 · **Date:** 2026-10-12 · **Model:** Sonnet 5.5 ·
-**Commit:** this commit · **Result:** landed.
+**Commit:** `5943492` · **Result:** landed.
 
 **What it did:**
 - **Z1.** Three inherited issues moved to their boards' §4, **transferred to DatastoreKit, still open
@@ -100,7 +100,7 @@ Each correction of the orchestrator's note (`orchestrator/prompt-09.md` §0) is 
    `✅ 2026-10-12: holds …` then the existing notes verbatim, mapped to its checklist §9's three parts.
    RayPoolKit's: G1's form, `**holds** 2026-10-12: …`, keeping the checklist pointer, mapped to items 1-5
    of its §8. Each is a fenced block in verification §4.4 and §4.5.
-10. **Z4's measurements are at `b95bf19`, not at this commit.** `STRUCTURALLY REQUIRED`: both scripts read
+10. **Z4's measurements are at `b95bf19`, not at its own commit (`5943492`).** `STRUCTURALLY REQUIRED`: both scripts read
     the committed tree through `git show`, and a commit cannot name its own SHA in its own content. As an
     additional check (an `IMPLEMENTATION CHOICE`), `git stash create` made a commit object of the working
     tree (`43458c2`, tracked changes only; no ref, no change to the tree), and both scripts were run on it:
@@ -370,7 +370,7 @@ non-vacuity run (Verification 1); the six probes' failing import checks before Z
 ## State handed to the orchestrator
 
 - **Review 09** against its commit: V1 (the sweep is prose only), V2 (the probes get past their imports),
-  V3 (the hand-over, by counting), V4 (the close, with both measurements re-run at this commit), V5 (the
+  V3 (the hand-over, by counting), V4 (the close, with both measurements re-run at `5943492`), V5 (the
   records), V6 (the six roots). "This commit" stands for the SHA wherever it appears on this board, in
   README §2, in verification §4.4 and §4.5 (the two drafts) and in this log.
 - **The user's, after the review:** retiring the six rehearsal stores; the two G2 commits in DatastoreKit

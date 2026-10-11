@@ -193,7 +193,7 @@ pre-registry `a3-pilot` pair), none `running`.
 | 06 | [`06-pin-raypoolkit-v0.2.0.md`](06-pin-raypoolkit-v0.2.0.md) | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | landed 2026-10-11 (`b6cc119`) |
 | 07 | [`07-adopt-raypoolkit.md`](07-adopt-raypoolkit.md) | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | landed 2026-10-11 (`643c3b2`) |
 | 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2.** §4.1's protocol through both packages. It equals R1 and `39809dca`; the `GkSourcePolicyData` statistics equal R1's. **RayPoolKit's G2 holds** | Opus | landed 2026-10-11 (`f539015`) |
-| 09 | [`09-close-the-migration.md`](09-close-the-migration.md) | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | landed 2026-10-12 (this commit) |
+| 09 | [`09-close-the-migration.md`](09-close-the-migration.md) | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | landed 2026-10-12 (`5943492`) |
 
 ### 2.1 When each prompt file is written
 
