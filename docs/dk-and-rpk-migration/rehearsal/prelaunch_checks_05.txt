@@ -1,0 +1,145 @@
+== 2026-10-11T19:26:30+0100 pre-launch check before reference
+HEAD 6861a9fc0eb8cd60bb25cda8529ab45a51e50632
+git status --short: []
+RAY_ADDRESS=[unset]
+19:26  up 6 days, 17:11, 3 users, load averages: 13.84 29.00 32.74
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+21 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 19 finished, 2 unknown.
+/dev/disk3s1s1  927G  853G   75G  92% /
+2026-10-11T19:28:00+0100 no dummy-test child alive: ps -p 83227,83290,83318,83364,83395,83460,83477,83483 rc=1 (none)
+== 2026-10-11T19:41:33+0100 pre-launch check before resumed-a
+HEAD 6861a9fc0eb8cd60bb25cda8529ab45a51e50632
+git status --short: []
+RAY_ADDRESS=[unset]
+19:41  up 6 days, 17:26, 3 users, load averages: 23.81 38.25 42.20
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 83628 83632
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-05-reference-20261011T192802           done              -      14m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 dk-and-rpk-migration-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+22 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 20 finished, 2 unknown.
+/dev/disk3s1s1  927G  854G   73G  93% /
+resumed files:
+rc=1
+== 2026-10-11T19:46:57+0100 pre-launch check before resumed-b
+HEAD 6861a9fc0eb8cd60bb25cda8529ab45a51e50632
+git status --short: []
+RAY_ADDRESS=[unset]
+19:46  up 6 days, 17:31, 3 users, load averages: 21.18 45.52 46.62
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 92751 92759 92862
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-05-resumed-a-20261011T194149           killed            -       5m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 dk-and-rpk-migration-02-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-05-reference-20261011T192802           done              -      19m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 dk-and-rpk-migration-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+23 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 21 finished, 2 unknown.
+/dev/disk3s1s1  927G  854G   73G  93% /
+== 2026-10-11T19:50:37+0100 pre-launch check before resumed-c
+HEAD 6861a9fc0eb8cd60bb25cda8529ab45a51e50632
+git status --short: []
+RAY_ADDRESS=[unset]
+19:50  up 6 days, 17:35, 3 users, load averages: 31.43 43.39 45.53
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 96219 96222 96313
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-05-resumed-b-20261011T194703           killed            -       4m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (comm
+   dk-and-rpk-migration-05-resumed-a-20261011T194149           killed            -       9m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (comm
+   dk-and-rpk-migration-05-reference-20261011T192802           done              -      23m  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (comm
+24 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 22 finished, 2 unknown.
+/dev/disk3s1s1  927G  854G   73G  93% /
+
+== 2026-10-11T19:26:40+0100 environment before reference
+-- store show var/datastores/dk-and-rpk-migration-05-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-05-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- store show var/datastores/dk-and-rpk-migration-05-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-05-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/datastores and var/runs containing dk-and-rpk-migration-05
+rc=1
+-- journals under var/datastores
+rc=1
+-- pip show datastorekit
+Name: datastorekit
+Version: 0.2.2
+Summary: A sharded SQLite datastore layer (Datastore / ShardedPool) on Ray and SQLAlchemy
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: ray, sqlalchemy
+Required-by: 
+rc=0
+-- pip show raypoolkit
+WARNING: Package(s) not found: raypoolkit
+rc=1
+-- pip check
+No broken requirements found.
+rc=0
+-- package_provenance()
+{"datastorekit": {"version": "0.2.2", "url": "https://github.com/ds283/DatastoreKit", "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6", "requested_revision": "v0.2.2", "editable": false}, "raypoolkit": null}
+-- datastorekit.__file__
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+-- shasum -a 256 docs/handover/quadsource_atol_sweep.py
+b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac  docs/handover/quadsource_atol_sweep.py
+-- requirements.txt datastorekit line
+requirements.txt:17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.2.2
+
+== 2026-10-11T19:26:58+0100 each of 04's 15 deleted layer modules, fresh 'python -I' with the repository on sys.path
+Datastore.object -> ModuleNotFoundError: No module named 'Datastore.object'
+Datastore.contract -> ModuleNotFoundError: No module named 'Datastore.contract'
+Datastore.replication -> ModuleNotFoundError: No module named 'Datastore.replication'
+Datastore.shard_paths -> ModuleNotFoundError: No module named 'Datastore.shard_paths'
+Datastore.store_reader -> ModuleNotFoundError: No module named 'Datastore.store_reader'
+Datastore.store_inventory -> ModuleNotFoundError: No module named 'Datastore.store_inventory'
+Datastore.SQL.schema -> ModuleNotFoundError: No module named 'Datastore.SQL.schema'
+Datastore.SQL.ShardedPool -> ModuleNotFoundError: No module named 'Datastore.SQL.ShardedPool'
+Datastore.SQL.Datastore -> ModuleNotFoundError: No module named 'Datastore.SQL.Datastore'
+Datastore.SQL.ClientPool -> ModuleNotFoundError: No module named 'Datastore.SQL.ClientPool'
+Datastore.SQL.SerialPoolBroker -> ModuleNotFoundError: No module named 'Datastore.SQL.SerialPoolBroker'
+Datastore.SQL.ProfileAgent -> ModuleNotFoundError: No module named 'Datastore.SQL.ProfileAgent'
+Datastore.SQL.ObjectFactories.base -> ModuleNotFoundError: No module named 'Datastore.SQL.ObjectFactories.base'
+tools.sharded_store -> ModuleNotFoundError: No module named 'tools.sharded_store'
+tools.shard_key_audit -> ModuleNotFoundError: No module named 'tools.shard_key_audit'
+-- files
+Datastore/__init__.py 0 bytes
+Datastore/SQL/__init__.py 0 bytes
+-- datastorekit.__file__, datastorekit.SQL.ShardedPool.__file__
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/SQL/ShardedPool.py
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/store_inventory.py
+
+== R0's twelve store files before the first launch (SHA-256, mtime, mtime_ns, size)
+12 files
+3e469052e8810e1efec8dee53c3a89ea4a2a343d3346cd2a64681170fd478bd5  2026-10-11 14:38:00  1791725880295300805  23732224  var/datastores/dk-and-rpk-migration-02-reference-shard0000.sqlite
+210f494aedfd154fde34754d0dffb8030c42a1ae701fb3b10c9f94434293b8f8  2026-10-11 14:38:00  1791725880293528131  23719936  var/datastores/dk-and-rpk-migration-02-reference-shard0001.sqlite
+37b12c1592c2f03e22a862797c30dc6f2b01c4e8c3af4f83bd672d79fed21ec9  2026-10-11 14:30:17  1791725417030008225  1077248  var/datastores/dk-and-rpk-migration-02-reference-shard0002.sqlite
+db35d513a3d6278f09729dcdb7c0ba3ca645562dfaf1df4de5b9f4070099f1ce  2026-10-11 14:38:00  1791725880274060223  23363584  var/datastores/dk-and-rpk-migration-02-reference-shard0003.sqlite
+755da82a40a26c4b530f4ad6451939cc6863f9370ba42ef006f275c621f595f2  2026-10-11 14:38:55  1791725935837698991  10466  var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+9b7a0acc8bcca22171ada0a9ba08b892aa6eb470e24d8fbe35c587efbdc682a8  2026-10-11 14:30:17  1791725417111208533  36864  var/datastores/dk-and-rpk-migration-02-reference.sqlite
+e1340524ecc5bb94224b6aafae357df17e9e4ecc09bbd7af892f6ef7010acb4f  2026-10-11 14:48:46  1791726526631653714  23830528  var/datastores/dk-and-rpk-migration-02-resumed-shard0000.sqlite
+35908f3a09e6683843fc5f62e7da968a6693a473df90fc448420e5dcd8ecae3b  2026-10-11 14:48:46  1791726526642044002  23773184  var/datastores/dk-and-rpk-migration-02-resumed-shard0001.sqlite
+fafbe696ba83ac3bf6dfea5c96ac84a1a8485b885bc96adad95f25618826060b  2026-10-11 14:39:24  1791725964370661399  1077248  var/datastores/dk-and-rpk-migration-02-resumed-shard0002.sqlite
+09b8aef1061ef5ed2182833353402af30c9f99cd39c7318a6358682acf2640ea  2026-10-11 14:48:41  1791726521610428975  23609344  var/datastores/dk-and-rpk-migration-02-resumed-shard0003.sqlite
+c93c629616fa92a11c2a324f0382d45df5b91b7ebbb4e64822967c6cc53b58da  2026-10-11 14:48:49  1791726529710955605  10553  var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+bf22863f9ea8b6cf39ab9e4bbcebe5ae0e303983b9106be63abb53ece5508062  2026-10-11 14:45:54  1791726354390738383  36864  var/datastores/dk-and-rpk-migration-02-resumed.sqlite

@@ -1,0 +1,92 @@
+# Line kinds of each R1 log against R0's same slug: ANSI codes stripped, the prompt number, the repository path and Ray's [repeated Nx] count normalised, every number replaced by N.
+== reference stderr.log: R0 4 lines / 4 kinds; R1 4 lines / 4 kinds; R1 only 0; R0 only 0
+== reference launch log: R0 96 lines / 79 kinds; R1 96 lines / 79 kinds; R1 only 0; R0 only 0
+== reference stdout.log: R0 90 lines / 73 kinds; R1 90 lines / 73 kinds; R1 only 0; R0 only 0
+== resumed-a stderr.log: R0 2 lines / 2 kinds; R1 2 lines / 2 kinds; R1 only 0; R0 only 0
+== resumed-a launch log: R0 75 lines / 65 kinds; R1 75 lines / 65 kinds; R1 only 0; R0 only 0
+== resumed-a stdout.log: R0 71 lines / 61 kinds; R1 71 lines / 61 kinds; R1 only 0; R0 only 0
+== resumed-b stderr.log: R0 2 lines / 2 kinds; R1 6 lines / 6 kinds; R1 only 4; R0 only 0
+   R1 only (x1): (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be
+   R1 only (x1): (compute_QuadSource_integral pid=N)   underestimated.
+   R1 only (x1): (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+   R1 only (x1): (compute_QuadSource_integral pid=N) <repo>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents
+== resumed-b launch log: R0 120 lines / 73 kinds; R1 132 lines / 77 kinds; R1 only 4; R0 only 0
+   R1 only (x1): (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be
+   R1 only (x1): (compute_QuadSource_integral pid=N)   underestimated.
+   R1 only (x1): (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+   R1 only (x1): (compute_QuadSource_integral pid=N) <repo>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents
+== resumed-b stdout.log: R0 115 lines / 68 kinds; R1 123 lines / 68 kinds; R1 only 0; R0 only 0
+== resumed-c stderr.log: R0 4 lines / 4 kinds; R1 0 lines / 0 kinds; R1 only 0; R0 only 4
+   R0 only (x1): (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be
+   R0 only (x1): (compute_QuadSource_integral pid=N)   underestimated.
+   R0 only (x1): (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+   R0 only (x1): (compute_QuadSource_integral pid=N) <repo>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents
+== resumed-c launch log: R0 94 lines / 64 kinds; R1 90 lines / 60 kinds; R1 only 0; R0 only 4
+   R0 only (x1): (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be
+   R0 only (x1): (compute_QuadSource_integral pid=N)   underestimated.
+   R0 only (x1): (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+   R0 only (x1): (compute_QuadSource_integral pid=N) <repo>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents
+== resumed-c stdout.log: R0 87 lines / 57 kinds; R1 87 lines / 57 kinds; R1 only 0; R0 only 0
+
+# The '** ' lines of the two reference stdout.logs
+R0 reference: 26 lines beginning '** '; R1 reference: 26
+equal after replacing the prompt number and the run stamp: True
+stage banners only, equal: True 15
+-- R1 stage banners in order
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE
+** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+** CALCULATING BACKGROUND LambdaCDM MODEL
+** BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM
+** CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS
+** CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS
+** CALCULATE QUADRATIC SOURCE TERMS
+** CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+** CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS
+** CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+** APPLY GKSOURCE POLICIES
+** GkSourcePolicyData SUMMARY STATISTICS
+** CALCULATE QUADRATIC SOURCE INTEGRALS
+
+# Stage times (ALL WORK ITEMS COMPLETE in time ...)
+== reference
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 1.95s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0409s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 4.07s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 1.32s
+   CALCULATE QUADRATIC SOURCE TERMS: 3.04s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1m 46.2s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3m 37.2s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 55.1s
+   APPLY GKSOURCE POLICIES: 21.5s
+   CALCULATE QUADRATIC SOURCE INTEGRALS: 4m 49.7s
+== resumed-a
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 1.52s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.107s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 2.29s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.732s
+   CALCULATE QUADRATIC SOURCE TERMS: 1.98s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1m 21.5s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 2m 15.1s
+== resumed-b
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0132s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0114s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00654s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.00928s
+   CALCULATE QUADRATIC SOURCE TERMS: 0.00972s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.65s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.38s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 36.9s
+   APPLY GKSOURCE POLICIES: 13.9s
+== resumed-c
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0142s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0114s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00729s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.0116s
+   CALCULATE QUADRATIC SOURCE TERMS: 0.0106s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.61s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 4.05s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 5.61s
+   APPLY GKSOURCE POLICIES: 5.17s
+   CALCULATE QUADRATIC SOURCE INTEGRALS: 3m 48.2s
