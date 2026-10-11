@@ -2,7 +2,7 @@
 
 **Prompt:** [`../05-rehearse-through-datastorekit.md`](../05-rehearse-through-datastorekit.md) ·
 **Board items:** L1–L4 (R1), G-DK · **Date:** 2026-10-11 · **Model:** Opus 5.5 ·
-**Commit:** this commit · **Result:** landed.
+**Commit:** `f3f0879` · **Result:** landed.
 
 **R1 holds:**
 - Both stores are `39809dca…`, all 21 classes. They are equal to each other and to the
