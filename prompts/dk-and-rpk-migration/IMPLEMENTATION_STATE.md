@@ -49,7 +49,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f3f0879` | [log](logs/05-rehearse-through-datastorekit.md) |
 | 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
 | 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `643c3b2` | [log](logs/07-adopt-raypoolkit.md) |
-| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/08-rehearse-through-both-packages.md) |
+| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f539015` | [log](logs/08-rehearse-through-both-packages.md) |
 | 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
@@ -61,7 +61,8 @@ used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-11, used for 04);
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-11, used for 05);
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-11, used for 06);
-[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-11, used for 07).
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-11, used for 07);
+[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-11, used for 08).
 
 **Written in two batches (README §2.1).**
 - **01–04** after the user's review of the plan.
@@ -117,7 +118,7 @@ Datastore root by module; and the venv's `pip freeze` (README §0.2).
 |---|---|---|---|
 | R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ **holds** (2026-10-11): both stores `39809dca…`, all 21 classes, equal to each other and to 07's and 09's recorded fingerprints (verification §1.3.4) |
 | DatastoreKit G2 | the 17 files are gone (two emptied, U3), the pin is in place and installed, the suites pass, and R1 reproduces `39809dca…` | 04, 05 | ✅ **holds** (2026-10-11): the deletions at `0c9e2cf` (04); the pin at `9ec603a` (03), installed and recorded in every R1 manifest; the six roots pass at `6861a9f` (05); R1's runs `dk-and-rpk-migration-05-reference-20261011T192802` and `dk-and-rpk-migration-05-resumed-c-20261011T195044`, both `done`, both `39809dca…`, equal to R0's, 07's and 09's (verification §2.10); recorded by 05 in `f3f0879` |
-| RayPoolKit G2 | `RayTools/` is gone, 0 imports, the pin is installed, the six roots pass, all 54 sites construct, and R2 reproduces `39809dca…` | 07, 08 | ✅ **holds** (2026-10-11): `RayTools/` gone at `643c3b2` (07); 0 imports, 0 `import_module` calls and 54 sites `constructs` by RayPoolKit's script at `5631f0e` (08, `measure/out/08-raypoolkit-measure_client_pools.md`); the pin at `b6cc119` (06), installed and recorded in every R2 manifest; the six roots pass at `5631f0e` (08); R2's runs `dk-and-rpk-migration-08-reference-20261011T224347` and `dk-and-rpk-migration-08-resumed-c-20261011T230717`, both `done`, both `39809dca…`, equal to R1's, R0's, 07's and 09's (verification §3.10); recorded by 08 in this commit |
+| RayPoolKit G2 | `RayTools/` is gone, 0 imports, the pin is installed, the six roots pass, all 54 sites construct, and R2 reproduces `39809dca…` | 07, 08 | ✅ **holds** (2026-10-11): `RayTools/` gone at `643c3b2` (07); 0 imports, 0 `import_module` calls and 54 sites `constructs` by RayPoolKit's script at `5631f0e` (08, `measure/out/08-raypoolkit-measure_client_pools.md`); the pin at `b6cc119` (06), installed and recorded in every R2 manifest; the six roots pass at `5631f0e` (08); R2's runs `dk-and-rpk-migration-08-reference-20261011T224347` and `dk-and-rpk-migration-08-resumed-c-20261011T230717`, both `done`, both `39809dca…`, equal to R1's, R0's, 07's and 09's (verification §3.10); recorded by 08 in `f539015` |
 
 Recording each gate on its package's own extraction board is a commit in that repository, not
 here (README §6.2 C12).
@@ -990,7 +991,7 @@ failed once in the root run, 0.0602 s, and passed alone three times). Reviewed a
 
 ### 5.8 After prompt 08 (2026-10-11)
 
-**What landed (this commit).** R2: README §4.1's protocol at `5631f0e`, whose code is `643c3b2`'s
+**What landed (`f539015`).** R2: README §4.1's protocol at `5631f0e`, whose code is `643c3b2`'s
 but for one test comment (`af26914`, `ast` unchanged). The layer is the installed `datastorekit`
 0.2.2, and the work queue the installed `raypoolkit` 0.2.0.
 - Four registered launches of `quadsource_atol_sweep.py --build --rehearsal`, then the readers and
@@ -1081,3 +1082,100 @@ LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 3
 - RayPoolKit's G2 record, for 09 to draft for RayPoolKit's own board (C12), is verification §3.10;
   DatastoreKit's is §2.10.
 - The registry holds 29 runs, none `running`. The venv is unchanged.
+
+**Orchestrator review of prompt 08 (2026-10-11).** Dispatched from `5631f0e` to one Opus subagent,
+after the six roots were re-measured at `af26914` (every count 07's; the wall-clock test failed in
+the root run and six times alone, 0.106–0.120 s at load 12–16, with the machine shared with other
+sessions). The agent was resumed with `SendMessage` after each of the four launches, with one wait
+per launch on the run's liveness; every wait ended `finished`, heartbeat never stale. Reviewed
+against its commit `f539015`, with nothing landed after it. **Every check of the note's §3 passed**,
+and acceptance 1–7 are met. No stop condition fired. **R2 holds, and RayPoolKit's G2 holds.**
+- **Scope (check 1).** 23 files: verification §3 appended after `:1620` (1063 lines added, none
+  removed, so the header, §1 and §2 are untouched), 19 saved outputs named `*_08*`, the saved
+  measurement, the log, and this board. README, `docs/OPEN_ISSUES.md`, every script and all code
+  are untouched.
+- **The runs (check 2).** Read from each run directory. `reference` and `resumed-c` are `done`/0;
+  `resumed-a` and `resumed-b` are `killed`/143, with fingerprints `ff6c4257…` and `aa860ed8…`, 21
+  classes, problems `{}`, no `fingerprint_error`. Each launch log ends with the matching driver exit
+  status. The killed `stderr.log`s hold the handler's two lines (both `SystemExit(1)`) and nothing
+  else; no traceback or `ValueError` anywhere. The interrupters signalled at 23:01:02, 10 s after
+  first reading the `GkSource` banner, and at 23:05:44, 100 s after first reading the QSI banner
+  (handler stamped 23:05:45). No interrupter, build or Ray process of this checkout is alive; the
+  Ray processes up at the review were another repository's.
+- **The manifests (check 3).** All four: `git_head` `5631f0e`, `git_dirty: false`, `packages` the
+  prompt's §2 record exactly (compared as JSON), `script_sha256` `b7935877…`, `--build --rehearsal`
+  on all and `--resume` on `resumed-b` and `-c` only, the rehearsal `scope`, the right `results`, and
+  a `--purpose` naming R2, both packages' commits and `39809dca`.
+- **Nothing stored was recomputed (check 4).** `stage_counts.py` on the four runs equals the
+  committed table, and its `reference` column equals R1's stage by stage. `GkSource` 0 + 291 − 0 =
+  291, QSI 281 + 583 = 864, and every stage finished before an interruption computes 0 next.
+- **The prune (check 5), and the one thing R2 does not cover.** `resumed-a` was signalled 10–15 s
+  into the `GkSource` stage, as at R0 and R1, but had stored **no** `GkSource` row (0 on all four
+  shards; R1 101 with 45 unvalidated, R0 119 with 43). So `resumed-b`'s prune at open had nothing to
+  remove, `prune_check.py` reports "nothing to check", and L2's prune clause holds only vacuously at
+  R2. The review judged this an observation, not an issue: it is not a missed interruption (the
+  run was killed in the right stage), the copy-to-package diff shows the queue schedules as before,
+  the prune runs in `datastorekit`'s shard actors at open, not in the queue, and R1 exercised it
+  with the same `datastorekit` 0.2.2. Why nothing had landed 10–15 s in is not in the record; the
+  log labels its load explanation as an inference. What R2 leaves unexercised is the queue
+  interrupted between store and validate; `resumed-b`'s kill exercised it interrupted with stores
+  in flight, and `resumed-c` then computed exactly the 583 missing rows.
+- **The fingerprints (check 6).** `compare_stores.py`: verdict equal, each store equal to its
+  sidecar. `compare_with_recorded.py` on both primaries against R1's reference, R0's reference,
+  07's reference and 09's rehearsal: 0 differences in each of the eight comparisons, format 6,
+  `39809dca…`, 21 classes.
+- **Integrity (check 7).** `store_soundness.py` exits 0, `=> clean`: every file `integrity_check`
+  `ok`, 0 foreign-key rows, one `(1, '2025.1.1')` version row per shard, no inventory problem or
+  `duplicate`. The census gives "no divergence" for both. No journal file.
+- **The readers (check 8).** All seven exit 0 with the store byte-identical around each and no
+  `ReadOnlyMiss`, `ReadOnlyWrite` or traceback. Run here through `run_readers.sh … nomodels
+  extract_TkWKB_data` into the scratchpad, the reader exits 0, prints the skip line, writes 27
+  files, and leaves the store unchanged. The two matplotlib `UserWarning`s in the GkWKB reader's log
+  come from its `random.sample` of source redshifts (`extract_GkWKB_data.py:444`); each plot gets
+  its refs from `object_get` directly, so the queue cannot change what it plots.
+- **L4 (check 9).** The 26 `** ` lines of each run equal R1's same slug, in order, numbers
+  stripped (23 for `resumed-a`). The chain identities are in the log, logged `STRUCTURALLY
+  REQUIRED`.
+- **C8 (check 10).** `policy_statistics.py` on R2's `reference`, `resumed-b` and `resumed-c`: 14
+  lines each, every count R1's (291; 109 / 26 (25 complete, 1 minimal) / 156), each equal to its
+  committed output. `reference` and `resumed-b` differ from R1's only by the order of the two
+  `mixed` lines, and sorted are equal; `reference` equals R0's line for line; `resumed-c` equals
+  R1's line for line. So the persisted object changes nothing the block records. The trace through
+  the installed `datastorekit` is verification §3.11, and `resumed-c` is named as not exercising it.
+- **The printed lines (check 11).** For each slug, the counts of `ALL WORK ITEMS COMPLETE`,
+  `Queue summary:` and `(no compute items` lines equal R1's, and every line kind of `stdout.log`
+  is R1's once numbers are stripped. No build printed a progress line at R1 or R2 (R2's reference
+  QSI took 299.2 s, 0.8 s inside the 300 s minimum); the GkWKB reader's two are the copy's form.
+  Every final and at-the-signal `status.json` `stage` is R1's.
+- **The log differences (check 12).** As line kinds, numbers stripped, against R1's same slug:
+  `reference` and `resumed-a` identical in all three files; `resumed-b` lacks the SciPy
+  `IntegrationWarning` (4 kinds) and the integrity warning's entries (12 kinds in `stdout.log`, 16
+  in the launch log), and `resumed-c` gains the warning. The first moved because R2's `resumed-b`
+  stored 281 QSI rows at its point against R1's 334; the second is absent because nothing was
+  unvalidated. Nothing else differs.
+- **G-RPK, R0 and R1 (check 13).** `RayTools` is absent and cannot be imported. RayPoolKit's script
+  at `f539015` (RayPoolKit clean at `c9b0e11`): 0 imports, 0 `import_module` calls, 2 strings, 54
+  calls all `constructs`; it differs from the saved `measure/out/08-…md` only by commit, file count
+  and record lines. The §2 row names each of G2's five parts with its commit or run. R0's and R1's
+  24 files equal the note's table, and all 36 store files of R0, R1 and R2 were unchanged by this
+  review's reads.
+- **Records, suites and `black` (check 14).** The §1 row, L1–L4 (R2) and G-RPK ✅, the §2 G2 row,
+  §5.8, the log's 13 classified deviations (the note's five corrections among them) and its four
+  observations agree with the run directories; the index is 108 by counting, nothing opened. At
+  `f539015`, load 13–44: AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped),
+  RunRegistry 286 and Datastore 320 (54 + 103 + 101 + 62) pass; ComputeTargets 693 with the one
+  wall-clock failure (0.082 s), which failed three times more alone (0.079–0.083 s, load 11–30)
+  against the agent's pass at its own root run. It is README §7's known flake; nothing it reaches
+  has changed since `643c3b2`. No Python file was added.
+- **The note held.** Its five corrections were each needed and each followed; its facts (script
+  hash, manifest record, 24 hashes, C8's reading, the printed lines unchanged) all held.
+- **Residue fixed here:** "this commit" → `f539015` on this board (the §1 row, the §2 G2 row and
+  §5.8) and in the log (header and hand-off), and `orchestrator/prompt-08.md` added to the list of
+  notes.
+- **Handed to 09.**
+  - Both packages' G2 hold; 09 drafts the two records for DatastoreKit's and RayPoolKit's boards
+    from verification §2.10 and §3.10 (C12).
+  - The six stores and twelve run directories stay for the user to retire after 09's review.
+  - The wall-clock test failed in every run here, alone included, at loads of 11–30, and passed
+    in the agent's root run; 09's final measurement should re-run it alone at low load before
+    reporting it.

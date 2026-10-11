@@ -2,7 +2,7 @@
 
 **Prompt:** [`../08-rehearse-through-both-packages.md`](../08-rehearse-through-both-packages.md) ·
 **Board items:** L1–L4 (R2), G-RPK · **Date:** 2026-10-11 · **Model:** Opus 5.5 ·
-**Commit:** this commit · **Result:** landed.
+**Commit:** `f539015` · **Result:** landed.
 
 **R2 holds:**
 - Both stores are `39809dca…`, all 21 classes. They are equal to each other and to the
@@ -413,7 +413,7 @@ fingerprints from other trees. The scripts' failure paths were exercised on real
 
 - **R2 holds, and RayPoolKit's G2 holds** (board §2), resting on:
   - `b6cc119` (06) and `643c3b2` (07);
-  - this commit;
+  - `f539015`;
   - the runs `dk-and-rpk-migration-08-reference-20261011T224347` and
     `dk-and-rpk-migration-08-resumed-c-20261011T230717`.
 - **R2's stores** are `var/datastores/dk-and-rpk-migration-08-{reference,resumed}.sqlite`, with
