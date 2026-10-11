@@ -45,7 +45,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
-| 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/04-adopt-datastorekit.md) |
+| 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
 | 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
 | 07 | Adopt `raypoolkit` | the RayPoolKit swap | Sonnet | ⬜ | ⬜ | — | — |
@@ -57,7 +57,8 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-11, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-11,
-used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03).
+used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03);
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-11, used for 04).
 
 **Held, by design (README §2.1).**
 - **01–04** are written after the user's review of the plan.
@@ -481,7 +482,7 @@ passed**, and acceptance 1–5 are met. No stop condition fired.
 
 ### 5.4 After prompt 04 (2026-10-11)
 
-**What landed (this commit).** The DatastoreKit swap, in one commit, from `67dd316` (code of
+**What landed (`0c9e2cf`).** The DatastoreKit swap, in one commit, from `67dd316` (code of
 `9ec603a`):
 - **A1.** The 15 layer files deleted; `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at
   0 bytes (U3); `tools/__init__.py` and `tools/inventory_report.py` kept.
@@ -518,7 +519,7 @@ ComputeTargets 693, AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 
 `test_tk_wkb_phase.TestCost.test_wall_time_per_object` failed in one root run and passed in the
 final one and twice of four alone.
 
-**Rollback (README §4.2).** `git revert` of this commit alone. The installed, unimported package is
+**Rollback (README §4.2).** `git revert` of `0c9e2cf` alone. The installed, unimported package is
 then inert; nothing in the venv changes.
 
 **Opened:** `[04-six-docs-probes-import-factories-from-the-layer]` and
@@ -529,3 +530,83 @@ under §1.20.
 package's. Its manifests should record `packages.datastorekit` at `6d8ee9ae…`, `editable: false`,
 and `raypoolkit` `null`. S1's scripts are as 04 left them (`store_soundness.py:30` imports
 `datastorekit.store_inventory`).
+
+**Orchestrator review of prompt 04 (2026-10-11).** Dispatched from `67dd316` to one Opus subagent,
+after the six roots were re-measured at `41d9bc0` (same counts, all OK, load 4–9). The agent
+stopped once, on a staying test the note had not foreseen (below), and was resumed with the user's
+decision. Reviewed against its commit `0c9e2cf`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–6 are met. **R0's reference store fingerprints `39809dca…`
+through the package.**
+- **The stop.** `ComputeTargets/tests/test_quadsource_integral.py`'s `load_pre_commit_module()`
+  execs `QuadSourceIntegral.py` as it was at `39ed7fc`, by `git show`. Its `:15`, `from Datastore
+  import DatastoreObject`, fails once `Datastore/__init__.py` is empty. The rewrite cannot reach it
+  (it is in history) and DatastoreKit's script cannot see it; the root's count did not move, since
+  the test errors rather than disappears. It is the only staying test that loads historical code.
+  The user chose to map that one line before exec, with an assertion that it occurs exactly once;
+  no assertion changed, and no issue was opened.
+- **Scope (check 1).** 42 `D` (the 15, the 26 and `schema_description.py`, each as expected), 95 `M`
+  (the 88 rewritten files, the two `__init__.py`, `CLAUDE.md`, `test_quadsource_integral.py`, this
+  board, README and the index) and 3 `A` (the script, the measurement, the log). `RayTools/`'s
+  diff is `:8` alone. `tools/` holds `__init__.py` and `inventory_report.py`.
+- **The rewrite is exact (check 2).** The module map, applied here independently to `67dd316`'s
+  text at the 141 sites of a fresh JSON, reproduces all 84 script-only files byte for byte. In the
+  four hand-edited files the residue is the hand edit alone.
+- **By the script at the commit (check 3).** 15 absent; outside `prompts/` 0 statements, 0 strings,
+  0 `import_module` calls; `prompts/` 51 statements in 31 files, 20 strings (the 3 of
+  `m5_imports.py` and 17 in the rewrite script's map) and 1 call; factory imports 99 (97). The
+  saved measurement equals this run but for its header, and `git diff --stat addc09f 0c9e2cf`
+  lists only the five records.
+- **The layer is gone (check 4).** Both `__init__.py` are 0 bytes. In a fresh `python -I` each of
+  the 15 modules raises `ModuleNotFoundError`; all 38 factories subclass
+  `datastorekit.SQL.factory_base.SQLAFactoryBase`; Ray stays down.
+- **The rewrite script (check 5).** It plans every site before writing and writes nothing on a
+  refusal. Re-run on the committed tree with its own JSON, with and without `--dry-run`, it refuses
+  at the first site ("the line is not the line at 67dd316") and leaves `git status` clean.
+- **The moved test (check 6).** Its method is identical by `ast` (docstring stripped) and as
+  source; the class docstring gives its origin and U16.
+- **`test_inventory_retired` (check 7).** By `ast`: four tests identical; the actor test differs in
+  the file it parses, the grep test in its pathspec; `HELPER_MODULE`, `HELPER_MATCH` and the
+  excluded-file test are gone; one import added (`importlib.util`) and one rewritten.
+- **Suites (check 8), at `0c9e2cf`, load 7–18.** All six pass: Datastore 320 (54 + 103 + 101 + 62),
+  RunRegistry 286, ComputeTargets 693, AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148
+  (1 skipped). Against the agent's before-lists, the ids gone are the 419 of the deleted modules and
+  `test_the_excluded_file_holds_only_the_new_service_helper`, and the one new id is the moved test.
+  `black --check` is clean on the 92 touched `.py` files.
+- **R0's store (check 9).** `store fingerprint` without `--write`, and `fingerprint_store(write=False)`
+  in-process: format 6, `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`, 21
+  classes, comparison with the sidecar `[]`, `wrote: false`, `read_inventory` from
+  `datastorekit.store_inventory`. The six files' SHA-256 and mtimes equal those taken before
+  dispatch, after the agent's reads and this one, and no journal appeared.
+- **The breakages (check 10).** Replayed in `bash` from the log's diffs, each applying cleanly at
+  `0c9e2cf` and reverting to a clean tree:
+  - (i) three Datastore a–f modules fail on `ModuleNotFoundError: …ObjectFactories.base`, and the
+    script, at a commit from a temporary index, counts the one layer import at `redshift.py:8`;
+  - (ii) every importer of `BackgroundModel` fails with the `DatastoreObject` `ImportError`: the
+    log's three ComputeTargets modules, and all 18 Datastore modules here;
+  - (iii) Datastore g–o runs 102, so the root 319;
+  - (iv) `test_quadsource_policy_main` fails on `No module named 'Datastore.SQL.ShardedPool'`;
+  - (v) only `test_the_datastore_actor_class_has_no_method` fails;
+  - (vi) `TestOldRegimeRegression` errors with the `ImportError`.
+- **A5 (check 11).** All six raise the `_factories` `ImportError`, now from
+  `datastorekit.SQL.Datastore`: five run bare, `order_audit.py` through `d3_tables()`.
+- **`CLAUDE.md` (check 12).** One hunk, 26 lines for 27, the six points of §2.4.1; the test command
+  is untouched. `RunRegistry/stores.py`'s docstring diff is `:5-8`, re-flowed, words unchanged
+  but for the names.
+- **Entry points (check 13).** `py_compile` passes on `main.py`, the seven `extract_*.py`
+  (`extract_common.py` included) and the 14 rewritten `docs/` files; the five `docs/` scripts load
+  by path with Ray down.
+- **The records (check 14)** agree with the tree: the board's row, items, two §3 entries and §5.4;
+  README §4's line, which names both differences; the index at 108 by counting, both rows under
+  §1.20.
+- **One statement of the note was wrong, and the agent caught it.** §0 said `config/`'s one
+  rewritten import was in `config/datastore.py`; it is `config/model_list.py:4`. The note stays as
+  written, as the record of what the agent was given.
+- **Residue fixed here:** "this commit" → `0c9e2cf` on this board and in the log, and
+  `orchestrator/prompt-04.md` added to the list of notes.
+- **Handed to 05–08, whose prompts are now written (README §2.1).**
+  - R1 runs at `0c9e2cf` or a later commit touching no code. Every manifest's `packages` should
+    be `datastorekit` at `6d8ee9ae…`, `editable: false`, and `raypoolkit` `null`.
+  - S1's scripts are as 04 left them: `store_soundness.py:30` now imports
+    `datastorekit.store_inventory`.
+  - Under `v0.2.2` the pools release their actor names on close (DatastoreKit's `v0.2.2`
+    addendum); R1 is the first build to run that code.

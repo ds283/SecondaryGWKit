@@ -2,7 +2,7 @@
 
 **Prompt:** [`../04-adopt-datastorekit.md`](../04-adopt-datastorekit.md) ·
 **Board items:** A1–A5 · **Date:** 2026-10-11 · **Model:** Opus 5.5 ·
-**Commit:** this commit · **Result:** landed, after one stop. A1–A5 as the prompt says. SGK's
+**Commit:** `0c9e2cf` · **Result:** landed, after one stop. A1–A5 as the prompt says. SGK's
 layer is the installed package: 42 files deleted, 2 emptied, 141 lines in 88 files rewritten by
 module path, 6 files hand-edited. DatastoreKit's script finds 0 layer imports, strings or
 `import_module` calls outside `prompts/`. **R0's reference store fingerprints `39809dca…` through
@@ -614,7 +614,7 @@ index 5ca38cc..6c720dc 100644
 
 ## State handed to the next prompt
 
-- **The commit:** this commit. Its code is the tree measured at scratch commit `addc09f`.
+- **The commit:** `0c9e2cf`. Its code is the tree measured at scratch commit `addc09f`.
 - **The venv**, unchanged by 04. `RunRegistry.package_provenance()`:
   ```json
   {"datastorekit": {"version": "0.2.2", "url": "https://github.com/ds283/DatastoreKit", "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6", "requested_revision": "v0.2.2", "editable": false}, "raypoolkit": null}
