@@ -1,0 +1,7 @@
+.........................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 185 tests in 95.221s
+
+OK
+!! GkSource.build(): multiple results found when querying for GkSource
+!! GkSourceValue.build(): multiple results found when querying for GkSourceValue

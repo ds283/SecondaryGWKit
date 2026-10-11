@@ -1,0 +1,59 @@
+................................
+----------------------------------------------------------------------
+Ran 32 tests in 0.063s
+
+OK
+integral_(1)^(500,000) cos(x) = -0.6636397832896364 (1 regions, 3 evaluations in time 0.00395s)
+  -- region: (1, 500000), depth=0 | Levin, abserr=1.0658141e-14, relerr=1.606013e-14, phase_err=7.499985e-11 | p-ratios=[1, 1.369e-18]
+integral_(-1)^(+1) cos(10.0 arctan(x)) / (1 + x^2) = 0.20000000000000007 (8 regions, 15 evaluations in time 0.0016s)
+  -- region: (-1, -0.75), depth=3 | direct, abserr=1.0685897e-15, relerr=1.2590057e-14, phase_err=1.86144e-15 | p-ratios=[]
+  -- region: (-0.75, -0.5), depth=3 | direct, abserr=7.6466611e-15, relerr=6.6587482e-14, phase_err=1.8225e-15 | p-ratios=[]
+  -- region: (-0.5, -0.25), depth=3 | direct, abserr=7.3913098e-14, relerr=4.5205432e-13, phase_err=1.7197232e-15 | p-ratios=[]
+  -- region: (-0.25, 0), depth=3 | direct, abserr=1.4342694e-13, relerr=2.2483212e-12, phase_err=1.5557813e-15 | p-ratios=[]
+  -- region: (0, 0.25), depth=3 | direct, abserr=1.4341306e-13, relerr=2.2481037e-12, phase_err=1.5557813e-15 | p-ratios=[]
+  -- region: (0.25, 0.5), depth=3 | direct, abserr=7.3913098e-14, relerr=4.5205432e-13, phase_err=1.7197232e-15 | p-ratios=[]
+  -- region: (0.5, 0.75), depth=3 | direct, abserr=7.6466611e-15, relerr=6.6587482e-14, phase_err=1.8225e-15 | p-ratios=[]
+  -- region: (0.75, 1), depth=3 | direct, abserr=1.0547119e-15, relerr=1.2426549e-14, phase_err=1.86144e-15 | p-ratios=[]
+integral_(-1)^(+1) cos(100.0 arctan(x)) / (1 + x^2) = -2.822271496366602e-13 (24 regions, 51 evaluations in time 0.00973s)
+  -- region: (-1, -0.9375), depth=5 | direct, abserr=3.6341589e-14, relerr=4.378505e-11, phase_err=1.5671426e-16 | p-ratios=[]
+  -- region: (-0.9375, -0.875), depth=5 | direct, abserr=7.2941653e-14, relerr=1.6281678e-11, phase_err=1.5689232e-16 | p-ratios=[]
+  -- region: (-0.875, -0.8125), depth=5 | direct, abserr=1.0484669e-13, relerr=9.2141461e-12, phase_err=1.5703253e-16 | p-ratios=[]
+  -- region: (-0.8125, -0.75), depth=5 | direct, abserr=2.823089e-14, relerr=1.593606e-12, phase_err=1.57125e-16 | p-ratios=[]
+  -- region: (-0.75, -0.6875), depth=5 | direct, abserr=6.8432239e-13, relerr=4.5275981e-11, phase_err=1.5715864e-16 | p-ratios=[]
+  -- region: (-0.6875, -0.65625), depth=6 | direct, abserr=1.4571677e-16, relerr=9.6382044e-15, phase_err=1.5044298e-16 | p-ratios=[]
+  -- region: (-0.65625, -0.625), depth=6 | direct, abserr=5.2041704e-17, relerr=3.1837545e-15, phase_err=1.5042561e-16 | p-ratios=[]
+  -- region: (-0.625, -0.59375), depth=6 | direct, abserr=2.0469737e-16, relerr=4.4269351e-14, phase_err=1.5039787e-16 | p-ratios=[]
+  -- region: (-0.59375, -0.5625), depth=6 | direct, abserr=5.4817262e-16, relerr=5.4816714e-14, phase_err=1.5035899e-16 | p-ratios=[]
+  -- region: (-0.5625, -0.53125), depth=6 | direct, abserr=6.1756156e-16, relerr=3.3983601e-14, phase_err=1.5030819e-16 | p-ratios=[]
+  -- region: (-0.53125, -0.5), depth=6 | direct, abserr=3.0878078e-16, relerr=1.8394205e-14, phase_err=1.5024473e-16 | p-ratios=[]
+  -- region: (-0.5, 0), depth=2 | Levin, abserr=1.382592e-13, relerr=2.0087353e-11, phase_err=2.3625e-16 | p-ratios=[1, 5.667e-11]
+  -- region: (0, 0.5), depth=2 | Levin, abserr=1.3827394e-13, relerr=2.0089495e-11, phase_err=2.3625e-16 | p-ratios=[1, 5.667e-11]
+  -- region: (0.5, 0.53125), depth=6 | direct, abserr=3.1225023e-16, relerr=1.8600881e-14, phase_err=1.5024473e-16 | p-ratios=[]
+  -- region: (0.53125, 0.5625), depth=6 | direct, abserr=6.1409211e-16, relerr=3.3792681e-14, phase_err=1.5030819e-16 | p-ratios=[]
+  -- region: (0.5625, 0.59375), depth=6 | direct, abserr=5.4817262e-16, relerr=5.4816714e-14, phase_err=1.5035899e-16 | p-ratios=[]
+  -- region: (0.59375, 0.625), depth=6 | direct, abserr=2.0383001e-16, relerr=4.4081769e-14, phase_err=1.5039787e-16 | p-ratios=[]
+  -- region: (0.625, 0.65625), depth=6 | direct, abserr=4.8572257e-17, relerr=2.9715042e-15, phase_err=1.5042561e-16 | p-ratios=[]
+  -- region: (0.65625, 0.6875), depth=6 | direct, abserr=1.474515e-16, relerr=9.752945e-15, phase_err=1.5044298e-16 | p-ratios=[]
+  -- region: (0.6875, 0.75), depth=5 | direct, abserr=6.8432066e-13, relerr=4.5275866e-11, phase_err=1.5715864e-16 | p-ratios=[]
+  -- region: (0.75, 0.8125), depth=5 | direct, abserr=2.8234359e-14, relerr=1.5938018e-12, phase_err=1.57125e-16 | p-ratios=[]
+  -- region: (0.8125, 0.875), depth=5 | direct, abserr=1.0485016e-13, relerr=9.214451e-12, phase_err=1.5703253e-16 | p-ratios=[]
+  -- region: (0.875, 0.9375), depth=5 | direct, abserr=7.2941653e-14, relerr=1.6281678e-11, phase_err=1.5689232e-16 | p-ratios=[]
+  -- region: (0.9375, 1), depth=5 | direct, abserr=3.6341156e-14, relerr=4.3784527e-11, phase_err=1.5671426e-16 | p-ratios=[]
+integral_(-1)^(+1) cos(1000.0 arctan(x)) / (1 + x^2) = -1.020248338937102e-13 (4 regions, 15 evaluations in time 0.00101s)
+  -- region: (-1, -0.5), depth=2 | Levin, abserr=3.2237125e-14, relerr=3.3382331e-11, phase_err=8.4e-17 | p-ratios=[1, 2.257e-11]
+  -- region: (-0.5, 0), depth=2 | Levin, abserr=1.8705849e-14, relerr=1.9370363e-11, phase_err=8.75e-17 | p-ratios=[1, 2.496e-11]
+  -- region: (0, 0.5), depth=2 | Levin, abserr=1.8659011e-14, relerr=1.9321862e-11, phase_err=8.75e-17 | p-ratios=[1, 2.496e-11]
+  -- region: (0.5, 1), depth=2 | Levin, abserr=3.2337956e-14, relerr=3.3486744e-11, phase_err=8.4e-17 | p-ratios=[1, 2.257e-11]
+integral_(1)^(50,000) sin(x) = 0.5581795618346952 (1 regions, 3 evaluations in time 0.00087s)
+  -- region: (1, 50000), depth=0 | Levin, abserr=1.2323476e-14, relerr=2.2077977e-14, phase_err=7.49985e-12 | p-ratios=[1.561e-17, 1]
+integral_1^100 sin(100x)/x = 0.008666078496808147 (10 regions, 39 evaluations in time 0.00259s)
+  -- region: (1, 1.3867188), depth=8 | Levin, abserr=1.7286519e-15, relerr=8.5136917e-13, phase_err=1.8267188e-16 | p-ratios=[0.008829, 1]
+  -- region: (1.3867188, 1.7734375), depth=8 | Levin, abserr=1.1553258e-15, relerr=2.0514753e-13, phase_err=1.3172958e-16 | p-ratios=[0.00652, 1]
+  -- region: (1.7734375, 2.546875), depth=7 | Levin, abserr=5.59882e-15, relerr=1.1799429e-12, phase_err=1.2481057e-16 | p-ratios=[0.004935, 1]
+  -- region: (2.546875, 4.09375), depth=6 | Levin, abserr=4.5479245e-14, relerr=8.7022406e-12, phase_err=1.1727607e-16 | p-ratios=[0.003357, 1]
+  -- region: (4.09375, 7.1875), depth=5 | Levin, abserr=4.1181468e-14, relerr=1.6638079e-11, phase_err=1.1335878e-16 | p-ratios=[0.002061, 1]
+  -- region: (7.1875, 13.375), depth=4 | Levin, abserr=3.7806997e-14, relerr=2.3692576e-11, phase_err=1.2913043e-16 | p-ratios=[0.001166, 1]
+  -- region: (13.375, 19.5625), depth=4 | Levin, abserr=2.493665e-17, relerr=3.1072712e-14, phase_err=6.9392523e-17 | p-ratios=[0.0006516, 1]
+  -- region: (19.5625, 25.75), depth=4 | Levin, abserr=1.1633489e-16, relerr=2.4965937e-13, phase_err=4.7444089e-17 | p-ratios=[0.0004582, 1]
+  -- region: (25.75, 50.5), depth=2 | Levin, abserr=1.88018e-14, relerr=9.6044015e-11, phase_err=1.4417476e-16 | p-ratios=[0.0003241, 1]
+  -- region: (50.5, 100), depth=1 | Levin, abserr=4.596963e-15, relerr=6.2625666e-11, phase_err=1.470297e-16 | p-ratios=[0.0001651, 1]
