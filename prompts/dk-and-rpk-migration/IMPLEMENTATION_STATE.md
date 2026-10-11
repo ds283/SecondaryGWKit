@@ -603,7 +603,7 @@ through the package.**
   written, as the record of what the agent was given.
 - **Residue fixed here:** "this commit" → `0c9e2cf` on this board and in the log, and
   `orchestrator/prompt-04.md` added to the list of notes.
-- **Handed to 05–08, whose prompts are now written (README §2.1).**
+- **Handed to 05–08, whose prompts are written next (README §2.1).**
   - R1 runs at `0c9e2cf` or a later commit touching no code. Every manifest's `packages` should
     be `datastorekit` at `6d8ee9ae…`, `editable: false`, and `raypoolkit` `null`.
   - S1's scripts are as 04 left them: `store_soundness.py:30` now imports
