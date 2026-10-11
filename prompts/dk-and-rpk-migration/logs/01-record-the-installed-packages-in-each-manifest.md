@@ -2,7 +2,7 @@
 
 **Prompt:** [`../01-record-the-installed-packages-in-each-manifest.md`](../01-record-the-installed-packages-in-each-manifest.md) ·
 **Board items:** P1–P3 · **Date:** 2026-10-11 · **Model:** Sonnet 5.5 ·
-**Commit:** this commit · **Result:** landed. P1–P3 as the prompt says; every suite at its
+**Commit:** `f54f1c5` · **Result:** landed. P1–P3 as the prompt says; every suite at its
 README §7 count plus the six new tests; no issue opened or closed.
 
 Started from `6edb2f9` (code identical to `b510bc9`), tree clean, `RunRegistry list` showing 17

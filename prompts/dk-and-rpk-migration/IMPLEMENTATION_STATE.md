@@ -42,7 +42,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
+| 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
@@ -53,6 +53,10 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 09 | Close the migration | the inherited issues; the close | Sonnet | ⬜ | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
+
+**Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
+carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
+(2026-10-11, used for 01).
 
 **Held, by design (README §2.1).**
 - **01–04** are written after the user's review of the plan.
@@ -111,7 +115,7 @@ and the state handed to the next prompt. The orchestrator's review of each follo
 
 ### 5.1 After prompt 01 (2026-10-11)
 
-**What landed (this commit).** `RunRegistry.RECORDED_DISTRIBUTIONS`,
+**What landed (`f54f1c5`).** `RunRegistry.RECORDED_DISTRIBUTIONS`,
 `RunRegistry.package_provenance()` and the manifest key `packages`, written by `begin()` after
 `git_provenance()`; `TestPackageProvenance` (five tests) and
 `TestManifest.test_manifest_records_the_installed_packages`. `begin()`'s docstring no longer says
@@ -128,3 +132,56 @@ tree before this prompt too. Breakages (i)-(v) each fail the named tests (log).
 
 **Handed to 02 and on.** Every manifest written from now on says what was installed; R0's says
 neither package. No §3 entry was opened, and `docs/OPEN_ISSUES.md` is unchanged at 104.
+
+**Orchestrator review of prompt 01 (2026-10-11).** Dispatched from `6edb2f9` to one Sonnet
+subagent. Reviewed against its commit `f54f1c5`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–3 are met. No stop condition fired.
+- **Scope (check 1).** Five files: `RunRegistry/__init__.py`,
+  `RunRegistry/tests/test_run_registry.py`, the log, this board, and one line under README §4's
+  "01 ships". Nothing else moved, and
+  `docs/OPEN_ISSUES.md` is untouched at 104.
+- **The function, by reading (check 2).** `RunRegistry` uses `import importlib.metadata`. Only
+  `PackageNotFoundError` gives `None`. `url`, `vcs_info.commit_id`, `vcs_info.requested_revision`
+  and `dir_info.editable` are each read from their PEP 610 place. A `direct_url.json` that is
+  absent, does not parse, is not an object, or has a non-object `vcs_info` or `dir_info` gives the
+  defaults. `editable` is `dir_info.get("editable") is True`, a stricter reading than "true" that
+  the log records as an IMPLEMENTATION CHOICE. The docstring says what the prompt asks.
+- **The odd cases (check 3).** No call raised. Tried: a list `vcs_info` with a string `dir_info`;
+  `editable: false`; a `vcs_info` without `requested_revision`; `editable: "yes"` (gives `False`);
+  and `read_text` raising `OSError`, `PermissionError` or `UnicodeDecodeError`.
+- **The tests (check 4).** The stand-in replaces `RunRegistry.importlib.metadata.distribution`
+  (`mock.patch.object`), which is what the function calls. Test 2's commit is 40 hex, and every
+  field is asserted as a whole dict. Test 4 has seven sub-cases, each asserting all four defaults.
+  Test 6 asserts the key set and equality with `package_provenance()`, returned and on disk. It
+  asserts nothing about what this venv holds, so it passes unchanged after 03 and 06.
+- **The probe without a mock (check 5).** A scratch `datastorekit-0.2.2.dist-info/` was put first
+  on `sys.path`, in a fresh `-I` interpreter. With a PEP 610 VCS record at `v0.2.2`, commit
+  `6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6`, the result gave all five fields, with
+  `editable: False` and `raypoolkit: None`. An editable record gave `editable: True`, and with the
+  file removed it gave the defaults. Each time, a `begin()` into a temporary root wrote the same
+  `packages`. `var/runs/` gained nothing.
+- **`ast` against the pre-images (check 6).** In `RunRegistry/__init__.py`, every function and
+  class but `begin` dumps identically with docstrings stripped. The module gains the import, the
+  tuple and `package_provenance`. `begin`'s body differs by the one assignment, between
+  `manifest.update(git_provenance())` and `write_json_atomic`. The docstring change is the
+  "but one" → "but two" correction and a paragraph naming `packages`, as the note asked. In the
+  tests, every existing method dumps identically.
+- **The pins (check 7).** Replayed in `bash` from the log's diffs. Each applied cleanly, failed
+  exactly the agent's reported tests, and reverted to a clean tree:
+  - (i) fails test 3 alone;
+  - (ii) fails six of test 4's seven sub-cases (the seventh has an object at the top level);
+  - (iii) fails test 6;
+  - (iv) fails tests 1, 2 and 5;
+  - (v) fails test 6, on the key set (`'raypoolkit'` missing).
+- **Suites (check 8), at `f54f1c5`, load 8–19.**
+  - Five roots pass: AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped),
+    RunRegistry 286, Datastore 739 (163 + 185 + 200 + 191).
+  - ComputeTargets ran 693 with the README §7 wall-clock flake,
+    `test_tk_wkb_phase.TestCost.test_wall_time_per_object`. Alone at load 16–19 it passed twice
+    and failed once, at 0.056 s against 0.05 s. The agent saw the same on an export of the tree
+    before the prompt, and the test touches nothing 01 changed.
+  - `black --check` is clean on both files.
+- **Residue fixed here:** "this commit" → `f54f1c5` on this board and in the log's header, and the
+  orchestrator-notes list above. **Handed on:** nothing. 02's manifests will record
+  `{"datastorekit": null, "raypoolkit": null}` (its acceptance 2). From 03 on, the record is read
+  from a real VCS install for the first time. 03's acceptance 3 checks it against the tag.
