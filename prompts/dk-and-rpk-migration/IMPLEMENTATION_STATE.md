@@ -47,7 +47,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
 | 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f3f0879` | [log](logs/05-rehearse-through-datastorekit.md) |
-| 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
+| 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
 | 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
@@ -59,7 +59,8 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 (2026-10-11, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-11,
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-11, used for 04);
-[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-11, used for 05).
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-11, used for 05);
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-11, used for 06).
 
 **Written in two batches (README §2.1).**
 - **01–04** after the user's review of the plan.
@@ -776,7 +777,7 @@ and DatastoreKit's G2 holds.**
 
 ### 5.6 After prompt 06 (2026-10-11)
 
-**What landed (this commit).** Q1: `requirements.txt` gains
+**What landed (`b6cc119`).** Q1: `requirements.txt` gains
 `raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0` at `:76`, between `ray==2.43.0` and
 `referencing==0.36.2`, and no other line changes (99 -> 100 lines). Q2: the venv was installed from it,
 after a `--dry-run` whose report's `install` list held `raypoolkit` 0.2.0 alone. Q3: the proof, in
@@ -801,9 +802,70 @@ LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 3
 (54 + 103 + 101 + 62). All OK except `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (README
 §7's), which failed once in the suite (0.0611 s against 0.06 s, load ~13) and passed alone three times.
 
-**Rollback (README §4.2).** `git revert` of this commit plus `./venv/bin/pip uninstall -y raypoolkit`.
+**Rollback (README §4.2).** `git revert` of `b6cc119` plus `./venv/bin/pip uninstall -y raypoolkit`.
 The venv is not in git, so the revert alone leaves the package installed (inert while nothing imports it).
 
 **Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 108.
 
 **Handed to 07.** The package is installed and importable, and nothing in SGK imports it yet.
+
+**Orchestrator review of prompt 06 (2026-10-11).** Dispatched from `0972599` to one Sonnet
+subagent, after the six roots were re-measured at `2d3429c` (every count 04's; the wall-clock test
+failed in the root run and three times alone at load ~20). Reviewed against its commit `b6cc119`,
+with nothing landed after it. **Every check of the note's §3 passed**, and acceptance 1–5 are met.
+No stop condition fired.
+- **Scope (check 1).** Four files: `requirements.txt`, the log, this board, and README §4's one
+  line ("06 shipped as named"). `requirements.txt` gains the one line at `:76`, between
+  `ray==2.43.0` and `referencing==0.36.2`, spelled as Q1 (99 → 100 lines).
+- **The venv (check 2).** `pip freeze` against 03's after-freeze is exactly
+  `75a76 > raypoolkit @ git+https://github.com/ds283/RayPoolKit@eaef0ce60e2fc354bb32f0ad576010e6a83c1976`,
+  and `pip check` is clean. With both packages' lines removed from each, `pip freeze` equals
+  `requirements.txt`. `pip show` gives `Location` in this venv's `site-packages`, `Requires: ray`,
+  and no editable location.
+- **`datastorekit` untouched (check 3).** The snapshot of its 28 installed files and `dist-info`,
+  taken before dispatch, is equal after, by SHA-256 and mtime. The `site-packages` listing gains
+  exactly `raypoolkit` and `raypoolkit-0.2.0.dist-info`. pip's saved outputs show `datastorekit`
+  cloned at `v0.2.2` and skipped in both the dry run and the install, as the note predicted from
+  pip's resolver; the dry-run report's `install` list holds `raypoolkit` alone, and the install
+  printed no uninstall and installed `raypoolkit-0.2.0` alone.
+- **The record (check 4).** The raw `direct_url.json` is `url` `https://github.com/ds283/RayPoolKit`
+  and `vcs_info` `{vcs: git, commit_id: eaef0ce6…, requested_revision: v0.2.0}`, with no
+  `dir_info`. `package_provenance()` in a fresh process gives the five fields for each package,
+  `datastorekit`'s unchanged.
+- **The files (check 5).** 03's script, taken from 03's log (byte-equal to the agent's copy), on a
+  fresh `git archive v0.2.0 raypoolkit` gives 4 byte-identical, none missing, differing or extra,
+  and no `tests/`. A sha256 listing of the 4 installed `.py` files equals the archive's.
+  `importlib.metadata.files("raypoolkit")` has 16 entries, under `raypoolkit` and
+  `raypoolkit-0.2.0.dist-info` only; `top_level.txt` is `raypoolkit`.
+  - **Non-vacuity.** The same script against `git archive v0.1.0 raypoolkit` exits 1 with
+    `differ: ['RayWorkPool.py', '__init__.py', '_timing.py', 'contract.py']`, as the note
+    predicted and the log records. So the comparison would have caught the wrong tag.
+- **The import (check 6).** In `python -I`, `import raypoolkit; from raypoolkit import RayWorkPool`
+  resolves to the venv's `site-packages`, `RayWorkPool` is the class, and `ray.is_initialized()`
+  is false. No Ray process was up before or after.
+- **The tags (check 7).** Local `rev-parse` gives `4e7eb153…` and `^{commit}` `eaef0ce6…`;
+  `ls-remote` gives the same pair. RayPoolKit's checkout is clean on `main` at `c9b0e11`, and
+  DatastoreKit's is clean; both untouched.
+- **Inert (check 8).** `git grep` for an `import`/`from raypoolkit` statement outside `prompts/`
+  finds nothing.
+- **The registry and `var/` (check 9).** `RunRegistry list` shows the same 25 runs, none
+  `running`. `var/dk-and-rpk-migration-06/` holds the seven saves, and its `freeze-before.txt`
+  equals 03's after-freeze.
+- **Suites (check 10), at `b6cc119`, load 8–18.** All six pass: AdaptiveLevin 32, CosmologyModels
+  39, LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693 (the wall-clock test
+  passed in the root run this time), Datastore 320 (54 + 103 + 101 + 62).
+- **The records (check 11).** The log shows every §2.3 check with its command and output, the dry
+  run and its report, pip's output, the comparison's arguments and both runs, and the suites
+  against the baselines. It gives the script by reference to 03's log (`:139-172`) rather than
+  pasting it; the reference is exact, so this is not residue. Its one deviation, README §4's line,
+  is an `IMPLEMENTATION CHOICE` the note directed. The board's row, Q1–Q3 and §5.6, with the
+  rollback, agree with the venv. The index is untouched at 108.
+- **Residue fixed here:** "this commit" → `b6cc119` on this board (the §1 row and §5.6) and in the
+  log's header; README §4's new line rewrapped to the file's width; and `orchestrator/prompt-06.md`
+  added to the list of notes.
+- **Handed to 07.**
+  - Every manifest written from now on records `raypoolkit` at `eaef0ce6…` beside `datastorekit`
+    at `6d8ee9ae…`, both `editable: false`.
+  - `from raypoolkit import RayWorkPool` gives the class, which is the form 07's rewrite uses.
+  - 07's note must re-measure RayPoolKit's `measure_client_pools.py` at its own `HEAD` (7 imports,
+    54 calls at `b510bc9`).

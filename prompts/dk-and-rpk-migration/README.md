@@ -425,8 +425,8 @@ up, waiting by pid for a killed build's agents
   other file.
   **03 shipped as named** (prompt 03's log): the one line at `requirements.txt:17`, installed
   after a dry run that added only `datastorekit` 0.2.2, at `6d8ee9ae…`, not editable.
-  **06 shipped as named** (prompt 06's log): the one line at `requirements.txt:76`, installed after a
-  dry run that added only `raypoolkit` 0.2.0, at `eaef0ce6…`, not editable.
+  **06 shipped as named** (prompt 06's log): the one line at `requirements.txt:76`, installed
+  after a dry run that added only `raypoolkit` 0.2.0, at `eaef0ce6…`, not editable.
 - **04 ships** `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at 0 bytes, no
   `Datastore.<layer module>` anywhere outside `prompts/`, and
   `prompts/dk-and-rpk-migration/scripts/rewrite_layer_imports.py`, the record of how the rewrite
