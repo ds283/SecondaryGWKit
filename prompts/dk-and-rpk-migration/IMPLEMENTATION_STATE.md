@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–05 landed. R0 and R1 hold; SGK's layer is `datastorekit` 0.2.2, pinned and installed, and DatastoreKit's G2 holds; the RayPoolKit pin (06) is next.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–06 landed. R0 and R1 hold; SGK's layer is `datastorekit` 0.2.2, pinned and installed, and DatastoreKit's G2 holds; the RayPoolKit pin (06) is installed, and 07 may import `raypoolkit`.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 were written the same day, after 04's review (README §2.1).
@@ -47,7 +47,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
 | 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f3f0879` | [log](logs/05-rehearse-through-datastorekit.md) |
-| 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
 | 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
@@ -89,9 +89,9 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 
 | **L1**–**L4** (R1) | 05 | README §4.1 through `datastorekit`; L4 against R0 | ✅ |
 | **G-DK** | 05 | DatastoreKit's G2 recorded as holding (§2) | ✅ |
-| **Q1** | 06 | the `raypoolkit` pin in `requirements.txt` | ⬜ |
-| **Q2** | 06 | the venv installed from it, after a dry run | ⬜ |
-| **Q3** | 06 | the proof: one distribution added, at `eaef0ce…`, the tag's files, not editable | ⬜ |
+| **Q1** | 06 | the `raypoolkit` pin in `requirements.txt` | ✅ |
+| **Q2** | 06 | the venv installed from it, after a dry run | ✅ |
+| **Q3** | 06 | the proof: one distribution added, at `eaef0ce…`, the tag's files, not editable | ✅ |
 | **B1** | 07 | `RayTools/` deleted | ⬜ |
 | **B2** | 07 | the seven `RayTools` imports rewritten to `from raypoolkit import RayWorkPool` | ⬜ |
 | **B3** | 07 | `CLAUDE.md`'s package section completed; `test_pipeline_adoption.py`'s comment | ⬜ |
@@ -773,3 +773,37 @@ and DatastoreKit's G2 holds.**
     stage took 289.7 s, within 10 s of the 300 s minimum notify interval, so R2's reference may
     print a QSI progress line. 08 chooses its points from its own reference.
   - **09** drafts DatastoreKit's G2 record (C12) from verification §2.10.
+
+### 5.6 After prompt 06 (2026-10-11)
+
+**What landed (this commit).** Q1: `requirements.txt` gains
+`raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0` at `:76`, between `ray==2.43.0` and
+`referencing==0.36.2`, and no other line changes (99 -> 100 lines). Q2: the venv was installed from it,
+after a `--dry-run` whose report's `install` list held `raypoolkit` 0.2.0 alone. Q3: the proof, in
+[the log](logs/06-pin-raypoolkit-v0.2.0.md). No code and no test changed.
+
+**What the venv holds.**
+- `pip freeze` differs from 03's after-freeze by exactly
+  `raypoolkit @ git+https://github.com/ds283/RayPoolKit@eaef0ce60e2fc354bb32f0ad576010e6a83c1976`;
+  `pip check` is clean. With the `datastorekit` and `raypoolkit` lines removed, `requirements.txt`
+  equals the freeze.
+- `package_provenance()["raypoolkit"]` is version `0.2.0`, URL `https://github.com/ds283/RayPoolKit`,
+  commit `eaef0ce6…`, requested revision `v0.2.0`, `editable: false`. `["datastorekit"]` is unchanged
+  (`6d8ee9ae…`).
+- The installed `raypoolkit/` holds the tag's 4 `.py` files outside `tests/`, byte for byte, no
+  `tests/`, nothing else `.py`. Against `v0.1.0` the same script fails, naming all four files.
+- `import raypoolkit; from raypoolkit import RayWorkPool` succeeds with `ray.is_initialized()` false.
+  Local and remote tags agree: object `4e7eb153…`, commit `eaef0ce6…`. Nothing outside `prompts/`
+  imports it.
+
+**Counts against the dispatch baselines**, unchanged: AdaptiveLevin 32, CosmologyModels 39,
+LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 320
+(54 + 103 + 101 + 62). All OK except `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (README
+§7's), which failed once in the suite (0.0611 s against 0.06 s, load ~13) and passed alone three times.
+
+**Rollback (README §4.2).** `git revert` of this commit plus `./venv/bin/pip uninstall -y raypoolkit`.
+The venv is not in git, so the revert alone leaves the package installed (inert while nothing imports it).
+
+**Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 108.
+
+**Handed to 07.** The package is installed and importable, and nothing in SGK imports it yet.
