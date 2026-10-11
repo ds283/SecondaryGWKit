@@ -2,7 +2,7 @@
 
 **Prompt:** [`../02-rehearse-the-start-tree.md`](../02-rehearse-the-start-tree.md) ·
 **Board items:** S1, L1–L4 (R0) · **Date:** 2026-10-11 · **Model:** Opus 5.5 ·
-**Commit:** this commit · **Result:** landed. **R0 holds:** both stores are `39809dca…`, all 21
+**Commit:** `7650102` · **Result:** landed. **R0 holds:** both stores are `39809dca…`, all 21
 classes, equal to each other and to the fingerprints 07's reference and 09's rehearsal recorded.
 L1–L4 recorded; every suite at its dispatch count; two issues opened, none closed.
 

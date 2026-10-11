@@ -43,7 +43,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
-| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/02-rehearse-the-start-tree.md) |
+| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
@@ -56,7 +56,8 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
-(2026-10-11, used for 01).
+(2026-10-11, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-11,
+used for 02).
 
 **Held, by design (README §2.1).**
 - **01–04** are written after the user's review of the plan.
@@ -219,7 +220,7 @@ note's §3 passed**, and acceptance 1–3 are met. No stop condition fired.
 
 ### 5.2 After prompt 02 (2026-10-11)
 
-**What landed (this commit).** R0: README §4.1's protocol at `a5392fd`, whose code is `f54f1c5`'s and
+**What landed (`7650102`).** R0: README §4.1's protocol at `a5392fd`, whose code is `f54f1c5`'s and
 whose layer is `b510bc9`'s. Four registered launches of `quadsource_atol_sweep.py --build
 --rehearsal`, the readers and the checks, recorded in
 [`docs/dk-and-rpk-migration-verification.md`](../../docs/dk-and-rpk-migration-verification.md) §1.
@@ -261,3 +262,87 @@ R1's comparison. 05 and 08 run S1's scripts unchanged, with `prune_check.py`,
 `compare_with_recorded.py` (`--against` R0's `reference` run directory) and this campaign's
 `store_soundness.py`, not 07's. The interruption points used here are recorded with the reason for
 each; R1 should choose its own from its own reference, as R0 did.
+
+**Orchestrator review of prompt 02 (2026-10-11).** Dispatched from `a5392fd` to one Opus subagent,
+resumed with `SendMessage` after each of the four launches, with one wait per launch on the run's
+liveness. Reviewed against its commit `7650102`, with nothing landed after it. **Every check of the
+note's §3 passed**, and acceptance 1–6 are met. No stop condition fired. **R0 holds.**
+- **Scope (check 1).** 27 files: the verification record, `docs/dk-and-rpk-migration/rehearsal/`
+  (six scripts, sixteen outputs), the log, this board, `docs/OPEN_ISSUES.md` and one statement
+  under README §4's "02 ships". Only the board, README and the index are modified. Nothing else
+  moved.
+- **The runs (check 2).** Read from each run directory. `reference` and `resumed-c` are `done`/0;
+  `resumed-a` and `resumed-b` are `killed`/143, each with its fingerprint (`eaf590af…`,
+  `fc02616e…`) and no `fingerprint_error`. Each launch log ends with the matching driver exit
+  status. Each killed `stderr.log` holds the handler's two lines and nothing else: no traceback, no
+  `SIGTERM received` banner. `resumed-b`'s second line says `SystemExit(1)`, as at 07. Each
+  interrupter log has one `sent SIGTERM`: 14:41:42 after a 10 s hold on the `GkSource` banner, and
+  14:44:53 after a 70 s hold on the QSI banner. The handler's lines are 14:41:42 and 14:44:54. No
+  process the agent started is alive, and no Ray process of this checkout.
+- **The manifests (check 3).** All four: `git_head` `a5392fd`, `git_dirty: false`, `packages`
+  `{"datastorekit": null, "raypoolkit": null}`, one `script_sha256` (`d745783e…`), `--build
+  --rehearsal` on all, `--resume` on `resumed-b` and `-c` only, the rehearsal `scope`, and the
+  right `results`.
+- **Nothing stored was recomputed (check 4).** S1's `stage_counts.py`, run on the four runs,
+  equals the committed table. Every stage finished before an interruption computes 0 on the next
+  launch. `GkSource` 119 + 215 − 43 = 291, and QSI 332 + 532 = 864, with no excess for rows in
+  flight.
+- **The prune (check 5).** `prune_check.py` exits 0. Independently, the 43 serials listed after
+  `resumed-a` (11 on shard 0, 10 on shard 1 and 22 on shard 3, all `GkSource`) were each looked up
+  on the shard read `mode=ro`, and none is present.
+- **The fingerprints (check 6).** `compare_stores.py` exits 0 ("verdict: equal", each store equal
+  to its sidecar). `fingerprint_store(write=False)` gives both stores `39809dca…` with 21 classes,
+  and `compare_fingerprints` against 07's reference and 09's rehearsal `status.json` is `[]` for
+  each.
+- **Integrity (check 7).** This campaign's `store_soundness.py` exits 0 on both stores. Every file
+  is `integrity_check` `ok` with no foreign-key rows. There is one `(1, '2025.1.1')` version row
+  per shard, and no inventory problem or `duplicate`. The census gives "no divergence".
+  `replication_in_flight` is empty on both primaries, and no journal file is present. 07's original
+  raises the `TypeError` the issue records. The copy differs from it only by passing `factories`
+  and reading the shards from the `shards` table.
+- **The readers (check 8).** All seven logs exit 0, with no `ReadOnlyMiss`, `ReadOnlyWrite` or
+  traceback, and the store unchanged around each. Run here through `run_readers.sh … nomodels
+  extract_TkWKB_data` into the scratchpad, the reader exits 0 with the QCD skip line, and all ten
+  store files are byte-identical to the hashes taken at the review's start. `extract_Gk_data`
+  wrote 324 files with `--models` and 423 without. That is not a defect: the reader draws its
+  source redshifts at random, and both runs are LambdaCDM only.
+- **S1 and L4 (check 9).** The scripts carry their usage, name no prompt and take every path as
+  an argument. `run_readers.sh` reads its shards from the `shards` table, and refused a misnamed
+  script with exit 1, the store unchanged. `stage_counts.py` takes labels from the manifest, and
+  labels 07's four runs. `policy_statistics.py` gives 14 lines for R0's reference and for 09, and
+  exits 1 on `resumed-a`, which has no block. R0's reference differs from 09 only by the swap of
+  `minimal` and `complete` under `mixed`. R0's own `resumed-b` equals 09's exactly, and sorted,
+  the blocks are equal. `main.py:2871-2893` inserts each quality on first sight, in completion
+  order, as the issue says.
+- **The guard (check 10).** It refused with `RuntimeError`, naming the five files. All twelve
+  files, the sidecars included, matched hashes taken before it, and no run was registered.
+- **The records (check 11).** The board, README's statement, the index (106 by counting, §1.20
+  new) and the verification record agree with the run directories. The run table's times and pids
+  equal the manifests and `status.json`.
+- **Suites (check 12), at `7650102`, load 4–17.** All six pass: AdaptiveLevin 32, CosmologyModels
+  39, LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 739
+  (163 + 185 + 200 + 191). The wall-clock test did not fail. `black --check` is clean on the five
+  new Python files.
+- **Two statements of the note were wrong, and the agent caught both.**
+  - §0 said 07's `store_soundness.py` runs unchanged. It has failed since `19f07ee`, and the second
+    issue records it.
+  - At `resumed-b`'s launch the orchestrator said a QSI progress line could come after about 60 s.
+    That holds for `RayWorkPool`'s defaults only. `main.py` gives the QSI queue a 300 s minimum and
+    a batch of 2000 (`main.py:119`, `:4155-4156`), as the agent's log records. The pattern change
+    it prompted is harmless either way.
+
+  The note stays as written, since it is the record of what the agent was given.
+- **Residue fixed here:** "this commit" → `7650102` on this board and in the log's header, and
+  `orchestrator/prompt-02.md` added to the list of notes.
+- **Handed on.**
+  - **04.** Its read-only fingerprint of R0's reference store (acceptance 3) has the store, at
+    `39809dca…`.
+    - The new `docs/dk-and-rpk-migration/rehearsal/store_soundness.py` imports
+      `Datastore.store_inventory`. That makes one more `docs/` layer import than README §0.2's 17.
+    - 04 measures at its own `HEAD`, so its rewrite reaches the new import. Its note should give
+      the new count.
+  - **05 and 08,** when written:
+    - L4's block comparison must allow for `[02-the-policy-statistics-block-orders-its-lines-by-completion]`,
+      comparing counts, or sorted lines where only the order differs. 08's acceptance 3 says
+      "line for line", and needs that wording.
+    - Interruption points are chosen from their own reference, as here.
