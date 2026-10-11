@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), none landed.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01 landed.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 are held (README §2.1).
@@ -42,7 +42,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
@@ -65,9 +65,9 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 
 | Item | Prompt | What | State |
 |---|---|---|---|
-| **P1** | 01 | `RunRegistry.package_provenance()` and `RECORDED_DISTRIBUTIONS` | ⬜ |
-| **P2** | 01 | the manifest's `packages`, written by `begin()` | ⬜ |
-| **P3** | 01 | `TestPackageProvenance` and the manifest test | ⬜ |
+| **P1** | 01 | `RunRegistry.package_provenance()` and `RECORDED_DISTRIBUTIONS` | ✅ |
+| **P2** | 01 | the manifest's `packages`, written by `begin()` | ✅ |
+| **P3** | 01 | `TestPackageProvenance` and the manifest test | ✅ |
 | **S1** | 02 | `docs/dk-and-rpk-migration/rehearsal/`: `run_readers.sh`, `stage_counts.py`, `policy_statistics.py` | ⬜ |
 | **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 recorded as the baseline | ⬜ |
 | **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ⬜ |
@@ -109,4 +109,22 @@ None yet.
 Each prompt adds `### 5.N After prompt NN (<date>)`: what landed, the counts against README §7,
 and the state handed to the next prompt. The orchestrator's review of each follows it.
 
-None yet.
+### 5.1 After prompt 01 (2026-10-11)
+
+**What landed (this commit).** `RunRegistry.RECORDED_DISTRIBUTIONS`,
+`RunRegistry.package_provenance()` and the manifest key `packages`, written by `begin()` after
+`git_provenance()`; `TestPackageProvenance` (five tests) and
+`TestManifest.test_manifest_records_the_installed_packages`. `begin()`'s docstring no longer says
+that only one manifest field lies outside README §0: it names `packages` as the second
+(`STRUCTURALLY REQUIRED`). In this venv `package_provenance()` is
+`{"datastorekit": null, "raypoolkit": null}`, shown by a hand-made manifest in a temporary root
+outside the repository. Nothing under `var/` was touched.
+
+**Counts against README §7.** RunRegistry 286 (280 + 6), AdaptiveLevin 32, CosmologyModels 39,
+LiouvilleGreen 148 (1 skipped), ComputeTargets 693, Datastore 739 (163 + 185 + 200 + 191). All OK
+except one ComputeTargets test, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, a
+load-sensitive one that also passed and failed when re-run alone, and did so on an export of the
+tree before this prompt too. Breakages (i)-(v) each fail the named tests (log).
+
+**Handed to 02 and on.** Every manifest written from now on says what was installed; R0's says
+neither package. No §3 entry was opened, and `docs/OPEN_ISSUES.md` is unchanged at 104.

@@ -403,6 +403,7 @@ up, waiting by pid for a killed build's agents
 
 - **01 ships** `RunRegistry.RECORDED_DISTRIBUTIONS`, `RunRegistry.package_provenance()` and the
   manifest key `packages`, shaped as in §2.2. 03, 05, 06 and 08 read it.
+  **Shipped as named** (prompt 01's log): no difference.
 - **02 ships the rehearsal scripts** under `docs/dk-and-rpk-migration/rehearsal/` (§4.1, L3):
   `run_readers.sh <primary> <output dir>`, `stage_counts.py <run dir>...` and
   `policy_statistics.py <run dir>`.

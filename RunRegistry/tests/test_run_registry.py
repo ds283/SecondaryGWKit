@@ -5,6 +5,7 @@ The first test is the campaign's whole justification in miniature and is the rea
 here at all — see `TestSelfMatch`.
 """
 
+import importlib.metadata
 import json
 import os
 import subprocess
@@ -271,6 +272,128 @@ class TestManifest(RegistryTestCase):
         )
         self.assertEqual(len(run.manifest["git_head"]), 40)
         self.assertIn(run.manifest["git_dirty"], (True, False))
+
+    def test_manifest_records_the_installed_packages(self):
+        # Deliberately silent on what this venv holds: prompts 03 and 06 install the packages,
+        # and this test must pass unchanged before and after.
+        run = self.begin()
+        self.assertIn("packages", run.manifest)
+        self.assertEqual(
+            set(run.manifest["packages"]), set(RunRegistry.RECORDED_DISTRIBUTIONS)
+        )
+        self.assertEqual(run.manifest["packages"], RunRegistry.package_provenance())
+        on_disk = RunRegistry.read_json(run.manifest_path)
+        self.assertEqual(on_disk["packages"], RunRegistry.package_provenance())
+
+
+class StandInDistribution:
+    """What `importlib.metadata.distribution(name)` returns, with `version` and `read_text`
+    under the test's control."""
+
+    def __init__(self, version="0.2.2", direct_url=None):
+        self.version = version
+        self._direct_url = direct_url
+
+    def read_text(self, filename):
+        assert filename == "direct_url.json", filename
+        return self._direct_url
+
+
+class TestPackageProvenance(unittest.TestCase):
+    COMMIT = "6d8ee9ae" + "0123456789abcdef" * 2
+
+    def provenance(self, installed):
+        """`package_provenance()` with `importlib.metadata.distribution` replaced, through the
+        name the module calls (`RunRegistry.importlib.metadata.distribution`, which is the same
+        object). `installed` maps names to stand-ins; any other name is not installed.
+        """
+
+        def distribution(name):
+            if name not in installed:
+                raise importlib.metadata.PackageNotFoundError(name)
+            return installed[name]
+
+        with mock.patch.object(
+            RunRegistry.importlib.metadata, "distribution", distribution
+        ):
+            return RunRegistry.package_provenance()
+
+    def one(self, stand_in):
+        return self.provenance({"datastorekit": stand_in})["datastorekit"]
+
+    def test_a_distribution_not_installed_is_none(self):
+        result = self.provenance({})
+        self.assertEqual(result, {"datastorekit": None, "raypoolkit": None})
+
+    def test_a_vcs_install_records_its_commit_and_tag(self):
+        self.assertEqual(len(self.COMMIT), 40)
+        text = json.dumps(
+            {
+                "url": "git+https://github.com/ds283/DatastoreKit.git",
+                "vcs_info": {
+                    "vcs": "git",
+                    "commit_id": self.COMMIT,
+                    "requested_revision": "v0.2.2",
+                },
+            }
+        )
+        result = self.provenance({"datastorekit": StandInDistribution("0.2.2", text)})
+        self.assertEqual(
+            result["datastorekit"],
+            {
+                "version": "0.2.2",
+                "url": "git+https://github.com/ds283/DatastoreKit.git",
+                "commit": self.COMMIT,
+                "requested_revision": "v0.2.2",
+                "editable": False,
+            },
+        )
+        self.assertIsNone(result["raypoolkit"])
+
+    def test_an_editable_install_is_recorded_as_editable(self):
+        text = json.dumps(
+            {
+                "url": "file:///Users/someone/Code/DatastoreKit",
+                "dir_info": {"editable": True},
+            }
+        )
+        result = self.one(StandInDistribution("0.3.0.dev0", text))
+        self.assertEqual(
+            result,
+            {
+                "version": "0.3.0.dev0",
+                "url": "file:///Users/someone/Code/DatastoreKit",
+                "commit": None,
+                "requested_revision": None,
+                "editable": True,
+            },
+        )
+
+    def test_an_absent_or_unreadable_direct_url_gives_nones(self):
+        expected = {
+            "version": "0.2.2",
+            "url": None,
+            "commit": None,
+            "requested_revision": None,
+            "editable": False,
+        }
+        cases = {
+            "absent": None,
+            "not json": "this is not json",
+            "a list": "[1, 2]",
+            "a string": '"git+https://example"',
+            "null": "null",
+            "empty": "",
+            "vcs_info is not an object": '{"vcs_info": "git", "dir_info": 3}',
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.one(StandInDistribution("0.2.2", text)), expected)
+
+    def test_the_recorded_names_are_the_two_packages(self):
+        self.assertEqual(
+            RunRegistry.RECORDED_DISTRIBUTIONS, ("datastorekit", "raypoolkit")
+        )
 
 
 class TestCheckpoint(RegistryTestCase):

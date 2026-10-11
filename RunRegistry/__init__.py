@@ -45,6 +45,7 @@ to be running but are not.
 """
 
 import hashlib
+import importlib.metadata
 import json
 import os
 import re
@@ -109,6 +110,63 @@ def git_provenance(cwd=REPO_ROOT) -> dict:
         "git_head": run(["git", "rev-parse", "HEAD"]) or "unknown",
         "git_dirty": bool(run(["git", "status", "--porcelain"])),
     }
+
+
+# The distributions a run's manifest says it ran with: the two packages `prompts/dk-and-rpk-migration`
+# adopts (README §0, U4). From prompt 04 on a run executes code that is not in this repository's
+# tree, so the manifest records which release of it was installed, and R0, R1 and R2 each say what
+# they ran.
+RECORDED_DISTRIBUTIONS = ("datastorekit", "raypoolkit")
+
+
+def package_provenance(names=RECORDED_DISTRIBUTIONS) -> dict:
+    """What is installed of each named distribution, as it stands at `begin()`.
+
+    Maps each name to `None` when it is not installed, and otherwise to a dict with exactly:
+    - `version`: the installed distribution's version;
+    - `url`: `url` in the distribution's PEP 610 `direct_url.json`, or `None`;
+    - `commit`: its `vcs_info.commit_id`, or `None`;
+    - `requested_revision`: its `vcs_info.requested_revision` (the tag or branch asked for), or
+      `None`;
+    - `editable`: `True` when `dir_info.editable` is true, and `False` otherwise.
+
+    It is read from the installed distribution's metadata with the standard library only; no
+    package being described is imported. For a VCS install, `commit` is the commit the tag
+    resolved to when pip installed it, and that is what makes the record reproducible: a tag can
+    move, a commit cannot. An absent `direct_url.json`, or one that is not a JSON object, or a
+    `vcs_info` or `dir_info` that is not one, gives `None` for the three fields and `False` for
+    `editable`; it never raises, because `begin()` must not fail on odd metadata.
+
+    An editable install is recorded, not refused: the registry records (`CLAUDE.md`).
+    """
+    packages = {}
+    for name in names:
+        try:
+            distribution = importlib.metadata.distribution(name)
+        except importlib.metadata.PackageNotFoundError:
+            packages[name] = None
+            continue
+        origin = None
+        try:
+            origin = json.loads(distribution.read_text("direct_url.json"))
+        except (TypeError, ValueError, OSError):
+            origin = None
+        if not isinstance(origin, dict):
+            origin = {}
+        vcs_info = origin.get("vcs_info")
+        if not isinstance(vcs_info, dict):
+            vcs_info = {}
+        dir_info = origin.get("dir_info")
+        if not isinstance(dir_info, dict):
+            dir_info = {}
+        packages[name] = {
+            "version": distribution.version,
+            "url": origin.get("url"),
+            "commit": vcs_info.get("commit_id"),
+            "requested_revision": vcs_info.get("requested_revision"),
+            "editable": dir_info.get("editable") is True,
+        }
+    return packages
 
 
 # =================================================================================================
@@ -516,10 +574,10 @@ def begin(
     §0 item 5, since a resume must know what it is resuming into.
 
     `pid` defaults to the calling process; a launcher that spawns a detached child passes the
-    child's pid to `heartbeat()` once it has one. Every manifest field but one is one README §0
+    child's pid to `heartbeat()` once it has one. Every manifest field but two is one README §0
     would have caught something with; there are no others.
 
-    The one is `results_store_id`, which is `prompts/datastore-portability` README §6.5 point 5.
+    The first is `results_store_id`, which is `prompts/datastore-portability` README §6.5 point 5.
     When `results` has a problem-free registry sidecar beside it (`RunRegistry.stores`), it holds
     that sidecar's `store_id`, and otherwise `null`: no store, no sidecar, a legacy sidecar, or a
     sidecar with a problem. It matches a run to its store after the store has moved, which a path
@@ -528,6 +586,11 @@ def begin(
     it, and are read exactly as before. A `results` whose sidecar is a tombstone
     (`RunRegistry.stores.retire_store`) is refused before the run directory is created, because a
     retired name is never reused.
+
+    The second is `packages`, which is `package_provenance()`: what was installed of each package
+    the `dk-and-rpk-migration` campaign adopts, when the run began (its README §6.1, U4). It
+    exists so that a run says which package release it ran, instead of that being implied by
+    `requirements.txt` at its `HEAD`; no README §0 failure asked for it.
 
     `scope` is one line saying what the run covers, and is what tells a stranger whether the run
     is still relevant — the hand-written `handover-A3-baseline-lambdacdm.manifest.json` carried it
@@ -584,6 +647,7 @@ def begin(
         "heartbeat_means": heartbeat_means,
     }
     manifest.update(git_provenance())
+    manifest["packages"] = package_provenance()
     write_json_atomic(os.path.join(path, "manifest.json"), manifest)
     run = Run(path)
     run._update(
