@@ -17,13 +17,14 @@ directory. No Ray; nothing under ``var/``.
 """
 
 import math
+import re
 import sqlite3
 import tempfile
 import unittest
 from collections import Counter
 from pathlib import Path
 
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.inventory_report_parsing import (
     HEX64,
     fields_of,
@@ -411,6 +412,43 @@ class TestTheRepresentationAndTheGridIdentity(_Stores):
             section = sections(report)["QCD_Cosmology"]
             (line,) = [line for _, line in section.records]
             self.assertEqual(dict(fields_of(line))["T_z_representation"], "3")
+
+
+class TestTheReportRendersBothCosmologyTypes(unittest.TestCase):
+    """Moved here, unchanged but for its class, from
+    ``test_inventory_declarations.TestResolve`` by ``dk-and-rpk-migration`` prompt 04, when that
+    module was deleted because ``datastorekit`` carries it. This one test stayed in SGK: it asserts
+    on SGK's ``tools.inventory_report``, so it is the one test of that module that DatastoreKit's
+    ``compare_ported_tests.py`` declares ``NOT_PORTED`` (its decision U16).
+    """
+
+    def test_the_report_renders_both_cosmology_types(self):
+        """The report resolves a polymorphic parent through ``ClassInventory.parent_class``, as
+        ``resolve()`` does: every cosmology field of the full store's report is the key of the class
+        its ``cosmology_type`` names. A ``QCD_Cosmology``'s key carries ``T_z_representation``, a
+        ``LambdaCDM``'s does not. Added at the review of prompt 08, whose breakage (iv) the report
+        tests did not catch.
+        """
+        from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER
+
+        with tempfile.TemporaryDirectory() as tmp:
+            inventory = read_inventory(build_full_store(Path(tmp)).primary, _factories)
+        report = format_inventory_report(inventory, "the-store.sqlite")
+        self.assertNotIn("<unresolved reference>", report)
+        # a type and the cosmology it names sit at one level of a rendered key
+        rendered = re.findall(
+            r"cosmology_type=(\d+), [^{}]*?cosmology=\{([^{}]*)\}", report
+        )
+        self.assertEqual(
+            {int(kind) for kind, _ in rendered},
+            {LAMBDACDM_IDENTIFIER, QCD_EOS_IDENTIFIER},
+        )
+        for kind, key in rendered:
+            with self.subTest(cosmology_type=kind, key=key):
+                self.assertIn("omega_m=", key)
+                self.assertEqual(
+                    "T_z_representation=" in key, int(kind) == QCD_EOS_IDENTIFIER
+                )
 
 
 if __name__ == "__main__":

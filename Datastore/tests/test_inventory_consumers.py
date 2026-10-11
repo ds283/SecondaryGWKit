@@ -30,7 +30,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ShardedPool import ShardedPool
 from Datastore.tests.inventory_report_parsing import sections
 from Datastore.tests.real_store_fixtures import (
     build_full_store,

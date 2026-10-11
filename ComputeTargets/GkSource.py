@@ -10,7 +10,7 @@ from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkNumericIntegration import GkNumericValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag
 from Units import check_units

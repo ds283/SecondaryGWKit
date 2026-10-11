@@ -1,7 +1,7 @@
 import ray
 
 from CosmologyModels.LambdaCDM import Planck2018
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ShardedPool import ShardedPool
 from Units.base import UnitsLike
 
 

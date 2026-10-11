@@ -34,9 +34,9 @@ HERE = Path(__file__).resolve().parent
 
 ray.get = lambda x, *args, **kwargs: x  # every "ref" below is already its value
 
-sp_mod = importlib.import_module("Datastore.SQL.ShardedPool")
-ds_mod = importlib.import_module("Datastore.SQL.Datastore")
-broker_mod = importlib.import_module("Datastore.SQL.SerialPoolBroker")
+sp_mod = importlib.import_module("datastorekit.SQL.ShardedPool")
+ds_mod = importlib.import_module("datastorekit.SQL.Datastore")
+broker_mod = importlib.import_module("datastorekit.SQL.SerialPoolBroker")
 
 DatastoreClass = ds_mod.Datastore.__ray_metadata__.modified_class
 BrokerClass = broker_mod.SerialPoolBroker.__ray_metadata__.modified_class
@@ -156,7 +156,7 @@ def controller_index_for(pool, shard_id):
 
 
 def main():
-    from Datastore.store_inventory import read_inventory
+    from datastorekit.store_inventory import read_inventory
 
     with tempfile.TemporaryDirectory(dir=HERE, prefix="fault-") as tmp:
         primary = Path(tmp) / "store.sqlite"

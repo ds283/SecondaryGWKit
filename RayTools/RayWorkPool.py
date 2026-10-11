@@ -5,7 +5,7 @@ from typing import Optional
 import ray
 from ray import ObjectRef
 
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ShardedPool import ShardedPool
 from utilities import format_time
 
 DEFAULT_CREATE_BATCH_SIZE = 5

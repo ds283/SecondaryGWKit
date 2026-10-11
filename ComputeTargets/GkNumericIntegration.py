@@ -11,7 +11,7 @@ from ComputeTargets.BackgroundModel import (
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.integrators.numeric_with_phase_cut import (

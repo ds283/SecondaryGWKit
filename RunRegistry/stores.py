@@ -2,10 +2,10 @@
 
 A `ShardedPool` datastore is a primary SQLite file and its shards. Beside the primary there may be
 a **sidecar**, `<stem>.manifest.json`, which is where a person learns what the store is for and
-where it came from. `ShardedPool` and `tools/sharded_store.py` know nothing about it
-(`prompts/datastore-portability` README §6.3). This module is its one owner (README §6.5): the
-name (`sidecar_path`), the format, the reader (`read_sidecar`) and the writer are defined here and
-nowhere else, and only the operations below write a sidecar.
+where it came from. `datastorekit`'s `ShardedPool` and its `datastorekit.tools.sharded_store` know
+nothing about it (`prompts/datastore-portability` README §6.3). This module is its one owner
+(README §6.5): the name (`sidecar_path`), the format, the reader (`read_sidecar`) and the writer
+are defined here and nowhere else, and only the operations below write a sidecar.
 
 **The format.** A *registry sidecar* is a JSON object with `"sidecar_format": 1`. Its fields:
 
@@ -1081,7 +1081,7 @@ def copy_store(src, dst, purpose, runs_root=None) -> dict:
             f"written"
         )
     src, dst, reading, dst_sidecar = _prepare("copy", src, dst, runs_root)
-    from Datastore.SQL.ShardedPool import ShardedPool
+    from datastorekit.SQL.ShardedPool import ShardedPool
 
     _store_files("copy", ShardedPool.copy_store, src, dst)
 
@@ -1118,7 +1118,7 @@ def move_store(src, dst, runs_root=None) -> dict:
     Nothing is written anew and nothing is deleted: the one sidecar is renamed.
     """
     src, dst, reading, dst_sidecar = _prepare("move", src, dst, runs_root)
-    from Datastore.SQL.ShardedPool import ShardedPool
+    from datastorekit.SQL.ShardedPool import ShardedPool
 
     _store_files("move", ShardedPool.move_store, src, dst)
 
@@ -1194,7 +1194,7 @@ def fingerprint_of(inventory, taken=None) -> dict:
       Outside every digest.
     """
     # here, not at module scope: that module imports sqlalchemy, and `import RunRegistry` must not
-    from Datastore.store_inventory import canonical_json
+    from datastorekit.store_inventory import canonical_json
 
     classes = {}
     problems = {}
@@ -1380,7 +1380,7 @@ def listing_lines(inventory, fingerprint):
     (SHA-256, each line followed by a newline) to that tag set's digest, and a class's record lines,
     sorted bytewise, hash to the class's digest. ``fingerprint`` is `fingerprint_of(inventory)`.
     """
-    from Datastore.store_inventory import canonical_json
+    from datastorekit.store_inventory import canonical_json
 
     yield (
         f"# fingerprint_format {fingerprint['fingerprint_format']} "
@@ -1490,7 +1490,7 @@ def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) ->
         )
 
     # 2, 3. the inventory, read-only
-    from Datastore.store_inventory import read_inventory
+    from datastorekit.store_inventory import read_inventory
     from config.datastore import factories
 
     inventory = read_inventory(primary, factories)
@@ -1811,7 +1811,7 @@ def retire_store(
             f"the fingerprint that retirement needs"
         )
 
-    from Datastore.SQL.ShardedPool import ShardedPool
+    from datastorekit.SQL.ShardedPool import ShardedPool
 
     # 3. the files, and (on a first retirement) the fingerprint. The plan's refusals come through
     def plan_refusal(e):

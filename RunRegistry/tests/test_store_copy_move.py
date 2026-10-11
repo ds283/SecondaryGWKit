@@ -27,8 +27,8 @@ from RunRegistry.tests.store_fixtures import (
     write_sidecar_json,
 )
 
-from Datastore.SQL.ShardedPool import ShardedPool
-from Datastore.shard_paths import shard_file_name
+from datastorekit.SQL.ShardedPool import ShardedPool
+from datastorekit.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import tree_state
 
 

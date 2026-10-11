@@ -10,7 +10,7 @@ from ComputeTargets.analytic_Gk import (
     compute_analytic_Gprime,
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag

@@ -15,8 +15,8 @@ from datetime import datetime
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.Datastore import _factories
+from datastorekit.SQL.schema import build_schema
 from Units import Mpc_units
 
 UNITS = Mpc_units()

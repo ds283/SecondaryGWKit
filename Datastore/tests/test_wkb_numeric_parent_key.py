@@ -78,14 +78,14 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
 )
-from Datastore.SQL.schema import build_schema, drop_order
-from Datastore.store_inventory import Parent, ShardContext, read_records
+from datastorekit.SQL.schema import build_schema, drop_order
+from datastorekit.store_inventory import Parent, ShardContext, read_records
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 
-# the module itself: `import Datastore.SQL.Datastore as ...` binds the package's re-exported actor
-# class of the same name, not the module whose drop_order TestDropOrder patches
-datastore_module = importlib.import_module("Datastore.SQL.Datastore")
+# the module itself: `import datastorekit.SQL.Datastore as ...` binds the package's re-exported
+# actor class of the same name, not the module whose drop_order TestDropOrder patches
+datastore_module = importlib.import_module("datastorekit.SQL.Datastore")
 
 UNITS = Mpc_units()
 FIXED_TIMESTAMP = datetime(2026, 9, 29, 12, 0, 0)

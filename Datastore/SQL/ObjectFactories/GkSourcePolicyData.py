@@ -6,7 +6,7 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import GkSourceProxy, GkSourcePolicyData
 from CosmologyConcepts import wavenumber_exit_time
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import GkSourcePolicy
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -178,7 +178,7 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
         # the physical identity of a GkSourcePolicyData row (store-fingerprint prompt 02): what
         # build() filters on -- its GkSource (whose reference digest covers that row's tags), its
         # GkSourcePolicy and the wavenumber exit. No tags, no validated flag, no value table
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             parents={

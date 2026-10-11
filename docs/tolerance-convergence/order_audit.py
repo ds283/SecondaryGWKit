@@ -1250,7 +1250,7 @@ def d3_tables():
     ``GkSource`` is a fourth vestigial case and is a different question -- it integrates nothing,
     so there is no order to put there.
     """
-    from Datastore.SQL.Datastore import _factories
+    from datastorekit.SQL.Datastore import _factories
 
     rows = []
     for name in ("BackgroundModel", "GkWKBIntegration", "TkWKBIntegration", "GkSource"):

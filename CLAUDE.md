@@ -44,33 +44,32 @@ that hold across all of them:
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
 
-## The datastore layer is frozen — it is moving to DatastoreKit
+## The datastore layer is `datastorekit`
 
-Since 2026-10-07 the generic datastore layer is being extracted into a separate package,
-**DatastoreKit** (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit),
-which SecondaryGWKit, ChamPBH and StochasticInstantons will all depend on. Its plan is that
-repository's `prompts/extraction/README.md`. The package is a copy of this repository's layer at
-**`6f7f291`** (the import commit), and its first prompts check, line by line, that it still equals
-that copy.
+Since 2026-10-11 the generic datastore layer is the package `datastorekit`, from DatastoreKit
+(`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit), pinned in
+`requirements.txt` at `v0.2.2`. ChamPBH and StochasticInstantons use it too; this repository
+adopted it in the `dk-and-rpk-migration` campaign.
 
-**Until SecondaryGWKit adopts the package (that plan's gate G2), these files do not change:**
-- `Datastore/__init__.py`, `object.py`, `contract.py`, `replication.py`, `shard_paths.py`,
-  `store_reader.py`, `store_inventory.py`;
-- `Datastore/SQL/__init__.py`, `schema.py`, `ShardedPool.py`, `Datastore.py`, `ClientPool.py`,
-  `SerialPoolBroker.py`, `ProfileAgent.py`;
-- `Datastore/SQL/ObjectFactories/base.py`;
-- `tools/sharded_store.py` and `tools/shard_key_audit.py`.
+**It is not this repository's code.** A defect in it is recorded on the board of the campaign that
+found it, and in `docs/OPEN_ISSUES.md`. It is reported to DatastoreKit, fixed there in a release,
+and reaches this repository by moving the pin in a commit of its own: it is never patched here,
+and never worked around. A prompt whose acceptance cannot pass without a change to the package
+stops and asks. **A pin is a tag**; an editable install is never used for a production run. This
+repository keeps its own `ray` and `SQLAlchemy` pins.
 
-A defect found in them in the meantime is **recorded** as an issue on the board of the campaign
-that found it (and in `docs/OPEN_ISSUES.md`), saying it is held by the freeze. It is **not fixed
-here**. It is fixed in DatastoreKit after G2, and reaches this repository through a release. A
-prompt whose acceptance test cannot pass without editing one of these files stops and asks.
+**Imports name the package:** `from datastorekit import DatastoreObject`,
+`datastorekit.SQL.ShardedPool`, `datastorekit.SQL.factory_base`. The actor's module is
+`importlib.import_module("datastorekit.SQL.Datastore")`. The tools are
+`python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
 
-The factories under `Datastore/SQL/ObjectFactories/` (other than `base.py`), `config/`, and every
-caller of the layer are **not** frozen. They are this project's code, and change as usual. The
-`RayTools/` files are not frozen either: they are not part of this extraction. SecondaryGWKit's
-adoption will be a campaign in this repository, planned from DatastoreKit's adoption checklist;
-the freeze ends when that campaign lands.
+**This repository's side of the layer changes as usual:** the factories under
+`Datastore/SQL/ObjectFactories/`, `config/datastore.py` and `config/sharding.py`,
+`tools/inventory_report.py`, `Datastore/tests/`, and every caller. `Datastore/__init__.py` and
+`Datastore/SQL/__init__.py` are empty, and exist only to make the factories' folders packages.
+
+**`RayTools/RayWorkPool.py` is frozen** while it moves to RayPoolKit, except its one import, which
+RayPoolKit's decision U12 allows. `dk-and-rpk-migration` prompt 07 replaces it with `raypoolkit`.
 
 ## Long-running jobs — the run registry
 

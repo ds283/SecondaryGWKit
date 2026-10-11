@@ -18,7 +18,7 @@ from math import log10
 import sqlalchemy as sqla
 
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from config.defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
 
@@ -129,7 +129,7 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         # the physical identity of a QCD_Cosmology row (store-fingerprint prompt 02): the six
         # parameters, log10_max_z and T_z_representation, which build() matches. The name is
         # descriptive and is not identity
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(
             leaves=(

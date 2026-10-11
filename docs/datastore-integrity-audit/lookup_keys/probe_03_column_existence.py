@@ -22,8 +22,8 @@ sys.path.insert(0, str(ROOT))
 
 import sqlalchemy as sqla  # noqa: E402
 
-from Datastore.SQL.Datastore import _factories  # noqa: E402
-from Datastore.SQL.schema import build_schema  # noqa: E402
+from datastorekit.SQL.Datastore import _factories  # noqa: E402
+from datastorekit.SQL.schema import build_schema  # noqa: E402
 
 FACTORY_DIR = ROOT / "Datastore" / "SQL" / "ObjectFactories"
 

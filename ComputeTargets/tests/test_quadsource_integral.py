@@ -1006,6 +1006,15 @@ def load_pre_commit_module():
         ).stdout
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
+    # the package replaced SGK's layer in dk-and-rpk-migration 04, and Datastore/__init__.py is
+    # now empty (U3), so the old file's one layer import is pointed at the package
+    old_import = "from Datastore import DatastoreObject\n"
+    if text.count(old_import) != 1:
+        raise AssertionError(
+            f"expected one {old_import.strip()!r} in the pre-commit file, "
+            f"found {text.count(old_import)}"
+        )
+    text = text.replace(old_import, "from datastorekit import DatastoreObject\n")
     with tempfile.NamedTemporaryFile("w", suffix="_old_qsi.py", delete=False) as fh:
         fh.write(text)
         path = fh.name

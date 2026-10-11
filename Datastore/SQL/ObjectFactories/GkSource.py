@@ -45,7 +45,7 @@ from ComputeTargets import (
 from ComputeTargets.GkSource import GkSource_parent_set, GkSource_parents_differ
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -844,7 +844,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         # through GkSource_parents to the parents' own identities: for each member its z_source
         # and the reference digests of its numeric and WKB rows, or None. parents_digest is not
         # read: it is formed from serials, which are never identity
-        from Datastore.store_inventory import InventorySpec, Parent, ParentSet
+        from datastorekit.store_inventory import InventorySpec, Parent, ParentSet
 
         return InventorySpec(
             parents={

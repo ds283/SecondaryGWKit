@@ -1,6 +1,6 @@
 from math import log10, pow
 
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 
 
 class tolerance(DatastoreObject):

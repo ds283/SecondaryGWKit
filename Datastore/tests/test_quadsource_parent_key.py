@@ -44,7 +44,7 @@ from sqlalchemy.exc import IntegrityError, MultipleResultsFound
 
 from ComputeTargets import QuadSource
 from Datastore.SQL.ObjectFactories.QuadSource import sqla_QuadSource_factory
-from Datastore.store_inventory import (
+from datastorekit.store_inventory import (
     Parent,
     ShardContext,
     _merge_digests,

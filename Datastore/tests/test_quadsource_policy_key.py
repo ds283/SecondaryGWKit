@@ -354,7 +354,7 @@ class TestTheInventoryIdentityIncludesIt(unittest.TestCase):
     def read_the_store(self, added_quad_policy):
         import copy
 
-        from Datastore.store_inventory import read_inventory
+        from datastorekit.store_inventory import read_inventory
 
         replicated, sharded, keys = rsf.full_rows()
         row = copy.deepcopy(sharded[0]["QuadSourceIntegral"][0])

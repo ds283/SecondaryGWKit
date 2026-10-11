@@ -14,7 +14,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
 )
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from config.defaults import DEFAULT_STRING_LENGTH
@@ -970,7 +970,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         # tags. No validated flag and no value table. Of the six, the GkSourcePolicyData is on
         # this shard (k's); the QuadSource is on q's, and each Tk row on its own mode's, so they
         # resolve across shards, each to its parent's own identity, never its serial
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             parents={

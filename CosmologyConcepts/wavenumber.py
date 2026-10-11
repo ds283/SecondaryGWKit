@@ -8,7 +8,7 @@ from numpy import logspace
 from scipy.optimize import root_scalar
 
 from CosmologyModels import BaseCosmology
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from MetadataConcepts import tolerance
 from Units import check_units
 from config.defaults import (

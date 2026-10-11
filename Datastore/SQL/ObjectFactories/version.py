@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -47,6 +47,6 @@ class sqla_version_factory(SQLAFactoryBase):
     def inventory_spec():
         # the physical identity of a version row (store-fingerprint prompt 02): its label, which is
         # what build() looks it up by
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("label",))

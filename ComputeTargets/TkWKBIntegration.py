@@ -7,7 +7,7 @@ from ComputeTargets import ModelProxy, BackgroundModel
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber, redshift
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag

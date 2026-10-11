@@ -32,7 +32,7 @@ from ComputeTargets.BackgroundModel import ModelProxy
 from ComputeTargets.QuadSource import source_function
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 from config.defaults import DEFAULT_HEXIT_ABS_TOLERANCE, DEFAULT_HEXIT_REL_TOLERANCE

@@ -14,7 +14,7 @@ from ComputeTargets.QuadSource import QuadSource
 from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from ComputeTargets.phase_groups import build_phase_groups
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from LiouvilleGreen.three_bessel_integrals import BesselPhaseGroup
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData

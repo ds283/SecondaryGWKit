@@ -27,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from Datastore.store_inventory import read_inventory  # noqa: E402
+from datastorekit.store_inventory import read_inventory  # noqa: E402
 from config.datastore import factories  # noqa: E402
 
 

@@ -21,7 +21,7 @@ from CosmologyModels.GenericEOS.GenericEOS import (
     BREAK_POINT_ALL,
     BREAK_POINT_DISCONTINUITY,
 )
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.supervisors.base import RHS_timer, IntegrationSupervisor

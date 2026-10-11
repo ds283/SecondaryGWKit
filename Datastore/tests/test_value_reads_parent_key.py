@@ -55,7 +55,7 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericValue_factory,
 )
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.schema import build_schema
 from Datastore.tests.test_factory_select_columns import FACTORY_DIR, iter_functions
 from MetadataConcepts import tolerance
 from Units import Mpc_units

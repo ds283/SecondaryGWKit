@@ -53,7 +53,7 @@ from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericValue_factory,
 )
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.schema import build_schema
 from Units import Mpc_units
 
 UNITS = Mpc_units()

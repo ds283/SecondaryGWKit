@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from config.defaults import DEFAULT_LEVIN_THRESHOLD, DEFAULT_QUADSOURCE_NUMERIC_POLICY
 
 _allowed_numeric_policies = ["maximize_numeric", "maximize-WKB"]

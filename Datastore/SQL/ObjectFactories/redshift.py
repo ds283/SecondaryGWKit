@@ -5,7 +5,7 @@ from sqlalchemy import and_
 
 from ComputeTargets import ModelProxy, BackgroundModel
 from CosmologyConcepts import redshift
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from config.defaults import DEFAULT_REDSHIFT_RELATIVE_PRECISION
 
 
@@ -134,6 +134,6 @@ class sqla_redshift_factory(SQLAFactoryBase):
         # the physical identity of a redshift row (store-fingerprint prompt 02): z as stored, which is
         # what build() matches (relative 1e-7). The source/response flags accumulate by OR and are
         # not identity
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("z",))

@@ -13,7 +13,7 @@ Run from the repository root:
 import tempfile
 from pathlib import Path
 
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import build_full_store
 
 HERE = Path(__file__).resolve().parent

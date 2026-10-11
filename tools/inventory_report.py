@@ -79,7 +79,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import sqlalchemy as sqla
 
-from Datastore.store_inventory import (
+from datastorekit.store_inventory import (
     ClassInventory,
     Record,
     StoreInventory,
@@ -159,7 +159,7 @@ def _plural(n: int, word: str) -> str:
 
 
 def _schema_tables() -> Mapping[str, sqla.Table]:
-    from Datastore.SQL.schema import build_schema
+    from datastorekit.SQL.schema import build_schema
     from config.datastore import factories
 
     return build_schema(sqla.MetaData(), factories).tables

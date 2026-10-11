@@ -4,7 +4,7 @@ import ray
 
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
 
 

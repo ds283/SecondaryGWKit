@@ -193,7 +193,7 @@ def lookup_predicates(factory) -> List[Predicate]:
 
 def keyed_object_types() -> List[Tuple[str, List[str], List[Predicate]]]:
     """Every registered table whose lookup predicate set mentions an accuracy column."""
-    from Datastore.SQL.Datastore import _factories
+    from datastorekit.SQL.Datastore import _factories
 
     rows = []
     for name, factory in sorted(_factories.items()):

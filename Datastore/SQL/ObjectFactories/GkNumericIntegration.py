@@ -11,7 +11,7 @@ from ComputeTargets import (
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from config.defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
@@ -636,7 +636,7 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
         # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
         # z_source (optional in the lookup, always in the key) -- with its tags, its validated flag
         # and its GkNumericValue count. The solver is not in the lookup and is not identity
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             leaves=("break_point_kind",),

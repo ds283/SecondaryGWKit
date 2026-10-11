@@ -49,7 +49,7 @@ from Datastore.SQL.ObjectFactories.QuadSource import sqla_QuadSourceValue_factor
 from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import build_full_store, full_rows, with_rows
 from Datastore.tests.test_integral_read_batch import (
     Store,

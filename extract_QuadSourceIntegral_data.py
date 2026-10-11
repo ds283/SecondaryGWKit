@@ -37,8 +37,8 @@ from CosmologyConcepts import (
 from CosmologyConcepts.wavenumber import (
     wavenumber_exit_time_array,
 )
-from Datastore.SQL.ProfileAgent import ProfileAgent
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ProfileAgent import ProfileAgent
+from datastorekit.SQL.ShardedPool import ShardedPool
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from config.defaults import (

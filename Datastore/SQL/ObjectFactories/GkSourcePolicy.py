@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import GkSourcePolicy
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
@@ -69,7 +69,7 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
     def inventory_spec():
         # the physical identity of a GkSourcePolicy row (store-fingerprint prompt 02): the two
         # columns build() matches. The label is descriptive and is not identity
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(
             leaves=("Levin_threshold", "numeric_policy"),

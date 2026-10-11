@@ -55,8 +55,8 @@ from CosmologyConcepts.wavenumber import (
     SOURCE_GRID_CONSTRUCTION_VERSION,
     SOURCE_GRID_MAX_GUARDED_FRACTION,
 )
-from Datastore.SQL.ProfileAgent import ProfileAgent
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ProfileAgent import ProfileAgent
+from datastorekit.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationSolver
@@ -89,7 +89,7 @@ from config.sharding import (
     read_table_config,
 )
 from extract_common import run_label_tag, source_grid_construction_tag
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from tools.inventory_report import format_inventory_report
 from utilities import grouper, format_time, WallclockTimer
 

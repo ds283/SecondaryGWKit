@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01–03 landed. R0 holds; `datastorekit` 0.2.2 is pinned and installed.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01–04 landed. R0 holds; SGK's layer is now `datastorekit` 0.2.2, pinned and installed; R1 (05) is next.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 are held (README §2.1).
@@ -45,7 +45,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
-| 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
+| 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/04-adopt-datastorekit.md) |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
 | 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
 | 07 | Adopt `raypoolkit` | the RayPoolKit swap | Sonnet | ⬜ | ⬜ | — | — |
@@ -78,11 +78,11 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ✅ |
 | **K2** | 03 | the venv installed from it | ✅ |
 | **K3** | 03 | the proof: one distribution added, at `6d8ee9ae…`, the tag's files, not editable | ✅ |
-| **A1** | 04 | the 15 layer files deleted, two `__init__.py` emptied | ⬜ |
-| **A2** | 04 | every layer import outside `prompts/` rewritten, by `scripts/rewrite_layer_imports.py` | ⬜ |
-| **A3** | 04 | `Datastore/tests/`: 26 modules and `schema_description.py` deleted, one test moved, `test_inventory_retired` and the two import strings changed | ⬜ |
-| **A4** | 04 | `CLAUDE.md`'s layer section, `RunRegistry/stores.py:5` | ⬜ |
-| **A5** | 04 | `[04-six-docs-probes-import-factories-from-the-layer]` opened | ⬜ |
+| **A1** | 04 | the 15 layer files deleted, two `__init__.py` emptied | ✅ |
+| **A2** | 04 | every layer import outside `prompts/` rewritten, by `scripts/rewrite_layer_imports.py` | ✅ |
+| **A3** | 04 | `Datastore/tests/`: 26 modules and `schema_description.py` deleted, one test moved, `test_inventory_retired` and the two import strings changed | ✅ |
+| **A4** | 04 | `CLAUDE.md`'s layer section, `RunRegistry/stores.py:5` | ✅ |
+| **A5** | 04 | `[04-six-docs-probes-import-factories-from-the-layer]` opened | ✅ |
 
 05–09's items are added when they are written.
 
@@ -135,6 +135,51 @@ here (README §6.2 C12).
     it reaches 07's.
   - **Next step.** Not assigned. 07's script stays a record of `dbd8a51`; this campaign's copy is the
     one to run.
+
+- **[04-six-docs-probes-import-factories-from-the-layer]** *(opened 2026-10-11 by prompt 04;
+  measured; `docs/` probes only; README §6.3)*
+  - **The defect.** Six `docs/` files import `_factories` from the layer's `SQL/Datastore.py`, a
+    name that left it at `19f07ee` ("Give the datastore layer its registries instead of importing
+    them"): `docs/datastore-integrity-audit/fk_sweep_probe.py:8`, `lookup_keys/common.py:18`,
+    `lookup_keys/probe_03_column_existence.py:25`, `tq_fk_probe.py:8`;
+    `docs/tolerance-convergence/inventory.py:196` and `order_audit.py:1253`. Six more probes fail
+    through `lookup_keys/common.py` (`probe_01`, `01b`, `04`, `04b`, `05`, `06`). DatastoreKit's
+    checklist item 3 counts ten such statements; the other four are in `prompts/`, which is not
+    rewritten.
+  - **Measured.** Before 04 each raised `ImportError: cannot import name '_factories' from
+    'Datastore.SQL.Datastore'`; after it, the same from `'datastorekit.SQL.Datastore'` (the
+    package's module). Five on a run with no arguments; `order_audit.py` by loading it by path and
+    calling `d3_tables()`, whose nested import its `main` reaches only at stage 6 (log 04, A5).
+  - **Impact.** None on a build, a store or a test: no test or rehearsal reaches them. They are
+    audit probes that cannot run.
+  - **Next step.** The fix is `from config.datastore import factories as _factories`. Whether to
+    repair them is the user's decision at the close (README §6.3); 04 rewrote their module paths
+    only (C2).
+- **[04-comments-name-the-layers-old-module-paths]** *(opened 2026-10-11 by prompt 04; measured;
+  prose only)*
+  - **The defect.** 23 comment and docstring lines outside `prompts/` and `docs/` name a layer
+    module or file by its pre-04 path. 04's rewrite reaches statements, string literals and
+    `import_module` calls only, and its prompt's §2.4.3 changes no other prose. They are:
+    - ``Datastore.SQL.Datastore._build_schema`` / ``._factories`` in docstrings:
+      `ComputeTargets/tests/test_cosmology_representation_key.py:32`, `test_gauss_order_key.py:60`,
+      `test_numeric_break_point_key.py:31`, `test_run_identity.py:41`;
+      `Datastore/tests/test_database_errors_reach_the_caller.py:37`,
+      `test_exact_identity_lookups.py:29`, `test_integral_read_batch.py:26`,
+      `test_quadsource_policy_key.py:28`, `test_read_path_mechanics.py:25`,
+      `test_value_reads_parent_key.py:27`, `test_wkb_numeric_parent_key.py:35` (`._factories` has
+      been wrong since `19f07ee`);
+    - `Datastore.store_inventory…`, `Datastore.shard_paths…`, `Datastore.SQL.schema…`:
+      `RunRegistry/stores.py:107`, `:114`, `:1155`;
+      `RunRegistry/tests/test_quadsource_atol_sweep_prepare.py:7`; `config/datastore.py:18`;
+      `extract_common.py:157`; `main.py:283`; `tools/inventory_report.py:5`;
+    - file paths: `config/datastore.py:4-5`; `RunRegistry/stores.py:209`;
+      `Datastore/tests/real_store_fixtures.py:403`.
+  - **Measured.** By a regex over every file in the index outside `prompts/` and `docs/`, skipping
+    import statements and `import_module` calls (log 04, "Observations not acted on"); the same 23
+    lines the orchestrator's note listed at `41d9bc0`.
+  - **Impact.** None on code. A reader is pointed at a file that no longer exists in SGK.
+  - **Next step.** 09's acceptance 2 ("nothing outside `prompts/` and dated `docs/` names a deleted
+    file as a current path").
 
 ## 4. Resolved issues
 
@@ -433,3 +478,54 @@ passed**, and acceptance 1–5 are met. No stop condition fired.
   - Every manifest written from now on records `datastorekit` at `6d8ee9ae…`, `editable: false`.
   - 04's note must give the `docs/` layer-import count measured at its own `HEAD`. 02's review
     found one more than README §0.2's 17: `docs/dk-and-rpk-migration/rehearsal/store_soundness.py`.
+
+### 5.4 After prompt 04 (2026-10-11)
+
+**What landed (this commit).** The DatastoreKit swap, in one commit, from `67dd316` (code of
+`9ec603a`):
+- **A1.** The 15 layer files deleted; `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at
+  0 bytes (U3); `tools/__init__.py` and `tools/inventory_report.py` kept.
+- **A2.** 134 `from` statements (35 nested) and 7 `import_module` calls, at 141 lines in 88 files,
+  rewritten by module path only, by `scripts/rewrite_layer_imports.py` from DatastoreKit's
+  measuring script's JSON at `67dd316`. `RayTools/RayWorkPool.py:8` and
+  `docs/dk-and-rpk-migration/rehearsal/store_soundness.py:30` are among them. Every name each
+  statement imports exists in the package, but the six `_factories` of A5.
+- **A3.** The 26 carried test modules (419 tests) and `schema_description.py` deleted; the unported
+  test moved to `test_inventory_report.TestTheReportRendersBothCosmologyTypes`, identical by `ast`;
+  `test_inventory_retired` reads the package (7 tests → 6).
+- **A4.** `CLAUDE.md`'s section is now "The datastore layer is `datastorekit`" (26 lines);
+  `RunRegistry/stores.py:5` names the package.
+- **A5.** The six failing `docs/` probes fail as before, now on `datastorekit.SQL.Datastore`.
+- **By the user's decision of 2026-10-11** (after 04 stopped on it):
+  `ComputeTargets/tests/test_quadsource_integral.py`'s `load_pre_commit_module()` maps the one
+  layer import of the historical `39ed7fc` file it execs, which `Datastore/__init__.py`'s emptying
+  broke. No assertion changes.
+
+**Measured** ([log](logs/04-adopt-datastorekit.md)):
+- DatastoreKit's script at a commit of the staged tree
+  ([`measure/out/04-datastorekit-measure_client_imports.md`](measure/out/04-datastorekit-measure_client_imports.md)):
+  15 absent; 0 layer imports, strings and `import_module` calls outside `prompts/`; `prompts/`'s 51
+  statements unchanged; factory imports 99 (97), `b510bc9`'s 100 less `test_inventory_declarations.py:474`.
+- **R0's reference store fingerprints `39809dca…` through the package**, format 6, all 21 classes
+  equal to its sidecar's; `datastorekit.tools.shard_key_audit` gives `VERDICT: OK`; the six store
+  files kept their SHA-256 and mtimes, and no journal appeared.
+- Breakages (i)–(vi) each fail what they should.
+
+**Counts against README §7:** Datastore **320** (54 + 103 + 101 + 62, 18 modules); RunRegistry 286,
+ComputeTargets 693, AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped). All OK.
+1937 test ids before, 1518 after: 420 gone (the 26 modules and one `test_inventory_retired` test),
+1 added (the moved test), no outcome changed. The wall-clock flake
+`test_tk_wkb_phase.TestCost.test_wall_time_per_object` failed in one root run and passed in the
+final one and twice of four alone.
+
+**Rollback (README §4.2).** `git revert` of this commit alone. The installed, unimported package is
+then inert; nothing in the venv changes.
+
+**Opened:** `[04-six-docs-probes-import-factories-from-the-layer]` and
+`[04-comments-name-the-layers-old-module-paths]`. `docs/OPEN_ISSUES.md` goes from 106 to 108, both
+under §1.20.
+
+**Handed to 05.** Every `ShardedPool`, actor, `read_inventory` and `open_read_only` SGK runs is the
+package's. Its manifests should record `packages.datastorekit` at `6d8ee9ae…`, `editable: false`,
+and `raypoolkit` `null`. S1's scripts are as 04 left them (`store_soundness.py:30` imports
+`datastorekit.store_inventory`).

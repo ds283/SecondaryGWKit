@@ -46,7 +46,7 @@ from RunRegistry.tests.store_fixtures import (
 )
 from RunRegistry.tests.test_store_command_line import CommandLineTestCase
 
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import (
     FIXED_TIMESTAMP,
     _schema_tables,

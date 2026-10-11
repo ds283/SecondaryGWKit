@@ -57,7 +57,7 @@ from ComputeTargets import (
 import ComputeTargets.phase_residual as phase_residual
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
@@ -963,7 +963,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
         # -- with its tags, its validated flag and its TkWKBValue count. z_init left the key with
         # prompt 07: it is a function of the parent. The solvers are not in the lookup and are not
         # identity
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             leaves=("rho_gauss_order",),

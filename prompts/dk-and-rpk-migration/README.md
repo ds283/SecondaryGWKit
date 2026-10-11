@@ -424,6 +424,13 @@ up, waiting by pid for a killed build's agents
   `Datastore.<layer module>` anywhere outside `prompts/`, and
   `prompts/dk-and-rpk-migration/scripts/rewrite_layer_imports.py`, the record of how the rewrite
   was made. 07 may reuse its pattern for its seven imports.
+  **Shipped as named** (prompt 04's log), with two differences:
+  - 02's `docs/dk-and-rpk-migration/rehearsal/store_soundness.py` changes at `:30`, its one layer
+    import, by the rewrite. That is the only change to S1's scripts, so "05 and 08 run them
+    unchanged" (02's line above) now reads "as 04 left them".
+  - `ComputeTargets/tests/test_quadsource_integral.py`'s `load_pre_commit_module()` maps the one
+    layer import of the historical file it execs (`39ed7fc`), by the user's decision of 2026-10-11.
+    No assertion changes.
 
 ### 4.1 The rehearsal protocol
 

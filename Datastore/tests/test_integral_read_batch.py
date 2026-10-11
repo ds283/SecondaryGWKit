@@ -59,7 +59,7 @@ from Datastore.SQL.ObjectFactories.OneLoopIntegral import sqla_OneLoopIntegral_f
 from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.schema import build_schema
 from MetadataConcepts import store_tag, tolerance
 from Units import Mpc_units
 

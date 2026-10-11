@@ -5,8 +5,8 @@ they are in the factory's lookup key (unique constraint / index). Writes nothing
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.Datastore import _factories
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.Datastore import _factories
+from datastorekit.SQL.schema import build_schema
 from config.sharding import replicated_tables, sharded_tables
 
 md = sqla.MetaData()

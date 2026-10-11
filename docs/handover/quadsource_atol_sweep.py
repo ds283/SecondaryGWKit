@@ -690,7 +690,7 @@ def assert_store_is_self_consistent(primary):
     """
     import sqlite3
 
-    from Datastore.shard_paths import resolve_shard_path
+    from datastorekit.shard_paths import resolve_shard_path
 
     expected = {i: path.resolve() for i, path in enumerate(shard_paths(primary))}
     conn = sqlite3.connect(f"file:{primary}?mode=ro", uri=True)

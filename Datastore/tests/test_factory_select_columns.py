@@ -737,7 +737,7 @@ class TestFactorySelectColumns(unittest.TestCase):
 import sqlalchemy as sqla  # noqa: E402
 
 from config.datastore import factories as _factories  # noqa: E402
-from Datastore.SQL.schema import build_schema  # noqa: E402
+from datastorekit.SQL.schema import build_schema  # noqa: E402
 
 # Column-existence defects found today, each (module, class, function, table, name) exactly as
 # ColumnProblem below reports it. Each names the board item that will fix it (prompt 05, board §2);

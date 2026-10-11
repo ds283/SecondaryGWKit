@@ -8,7 +8,7 @@ from sqlalchemy.exc import MultipleResultsFound
 from ComputeTargets import OneLoopIntegral
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -343,7 +343,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
         # filters on -- the model, the wavenumber exit, z_response, atol and rtol -- with its tags.
         # The tags are read from OneLoopIntegral_tags, which is what store() writes and what
         # build() now joins too ([00-oneloop-lookup-joins-the-wrong-tag-table], fixed here)
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             parents={

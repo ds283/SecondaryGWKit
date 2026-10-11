@@ -36,7 +36,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 from unittest import mock
 
-from Datastore.store_inventory import (
+from datastorekit.store_inventory import (
     Record,
     StoreInventory,
     digest,

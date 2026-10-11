@@ -8,7 +8,7 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
 )
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import tolerance
 from Units.base import UnitsLike
 from config.defaults import (
@@ -127,7 +127,7 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         # the physical identity of a wavenumber row (store-fingerprint prompt 02): k_inv_Mpc as
         # stored, which is what build() matches (absolute 1e-7). The source/response flags
         # accumulate by OR and are not identity
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("k_inv_Mpc",))
 
@@ -326,7 +326,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         #   - a row with this serial that differs, or the key held under another serial: raise.
         # The controlling shard's own store (no serial yet) is unchanged.
         if "serial" in payload:
-            from Datastore.replication import ReplicationMismatch, differing_columns
+            from datastorekit.replication import ReplicationMismatch, differing_columns
 
             serial = payload["serial"]
             row = (
@@ -387,7 +387,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         # build() filters on -- the wavenumber, the cosmology (its type and the row that type
         # names; the serial has no foreign key), atol, rtol and stepping
         from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             leaves=("cosmology_type", "stepping"),

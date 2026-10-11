@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from Units.base import UnitsLike
 
 

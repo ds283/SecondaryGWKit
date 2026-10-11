@@ -41,7 +41,7 @@ from ComputeTargets import GkSource, GkSourcePolicyData
 from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 
 # ---------------------------------------------------------------------------------------------
 # run identity (prompt 14 of prompts/qcd-background-audit)

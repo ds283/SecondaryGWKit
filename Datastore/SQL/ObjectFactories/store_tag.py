@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -48,6 +48,6 @@ class sqla_store_tag_factory(SQLAFactoryBase):
         # the physical identity of a store_tag row (store-fingerprint prompt 02): its label, which is
         # what build() looks it up by. Which tags a work item carries is read from the work item's
         # own association table, never from this one
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("label",))

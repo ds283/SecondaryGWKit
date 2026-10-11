@@ -59,7 +59,7 @@ from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
 from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
 from Datastore.SQL.ObjectFactories.version import sqla_version_factory
 from Datastore.SQL.ObjectFactories.wavenumber import sqla_wavenumber_exit_time_factory
-from Datastore.SQL.schema import build_schema
+from datastorekit.SQL.schema import build_schema
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 

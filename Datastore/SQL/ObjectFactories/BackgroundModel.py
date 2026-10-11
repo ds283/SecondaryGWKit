@@ -87,7 +87,7 @@ from ComputeTargets import (
 from CosmologyConcepts import redshift_array, redshift
 from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from CosmologyModels import BaseCosmology
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Units.base import UnitsLike
@@ -576,7 +576,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         #   - a row with this serial that differs, or the key held under another serial: raise.
         # The controlling shard's own store (no serial yet) is unchanged.
         if replica:
-            from Datastore.replication import ReplicationMismatch, differing_columns
+            from datastorekit.replication import ReplicationMismatch, differing_columns
 
             serial = payload["serial"]
             tag_table = tables["BackgroundModel_tags"]
@@ -885,7 +885,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         # its tags, its validated flag and its BackgroundModelValue count. The solver is not in the
         # lookup and is not identity
         from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             leaves=(

@@ -19,8 +19,8 @@ import sqlite3
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
 
-from Datastore.SQL.ShardedPool import ShardedPool
-from Datastore.shard_paths import shard_file_name
+from datastorekit.SQL.ShardedPool import ShardedPool
+from datastorekit.shard_paths import shard_file_name
 
 KEY_TYPE = "wavenumber"
 REPLICATED = ["version", "wavenumber"]

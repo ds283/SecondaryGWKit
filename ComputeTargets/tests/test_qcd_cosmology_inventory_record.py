@@ -30,7 +30,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from Datastore.store_inventory import read_inventory
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.inventory_report_parsing import fields_of, sections
 from Datastore.tests.real_store_fixtures import (
     build_full_store,

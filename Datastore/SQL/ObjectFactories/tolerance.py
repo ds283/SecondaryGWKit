@@ -2,7 +2,7 @@ from math import log10
 
 import sqlalchemy as sqla
 
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import tolerance
 from config.defaults import DEFAULT_FLOAT_PRECISION
 
@@ -56,6 +56,6 @@ class sqla_tolerance_factory(SQLAFactoryBase):
     def inventory_spec():
         # the physical identity of a tolerance row (store-fingerprint prompt 02): log10_tol as
         # stored, which is what build() matches -- never 10**log10_tol
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("log10_tol",))

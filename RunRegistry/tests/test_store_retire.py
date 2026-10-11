@@ -42,9 +42,9 @@ from RunRegistry.tests.test_store_command_line import (
     CommandLineTestCase,
 )
 
-from Datastore.SQL.ShardedPool import ShardedPool
-from Datastore.shard_paths import shard_file_name
-from Datastore.store_inventory import read_inventory
+from datastorekit.SQL.ShardedPool import ShardedPool
+from datastorekit.shard_paths import shard_file_name
+from datastorekit.store_inventory import read_inventory
 from Datastore.tests.real_store_fixtures import build_full_store
 from Datastore.tests.shard_store_fixtures import (
     stored_records,

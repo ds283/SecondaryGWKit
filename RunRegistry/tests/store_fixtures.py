@@ -16,7 +16,7 @@ import RunRegistry
 from RunRegistry import stores
 from RunRegistry.tests.test_run_registry import RegistryTestCase
 
-from Datastore.shard_paths import shard_file_name
+from datastorekit.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import read_pool, tree_state, write_new_store
 
 N_SHARDS = 3

@@ -13,7 +13,7 @@ from ComputeTargets.TkNumericIntegration import (
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_exit_time
 from CosmologyModels.base import check_cosmology
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_FLOAT_PRECISION
 from utilities import WallclockTimer

@@ -9,7 +9,7 @@ from ComputeTargets.GkSource import GkSourceProxy, GkSource
 from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
-from Datastore import DatastoreObject
+from datastorekit import DatastoreObject
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import GkSourcePolicy
 from config.defaults import DEFAULT_FLOAT_PRECISION

@@ -26,7 +26,7 @@ import RunRegistry
 from RunRegistry import stores
 from RunRegistry.tests.store_fixtures import StoreTestCase
 
-from Datastore.shard_paths import shard_file_name
+from datastorekit.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import (
     stored_records,
     tree_state,

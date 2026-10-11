@@ -1,7 +1,7 @@
 import sqlalchemy as sqla
 
 from CosmologyModels.LambdaCDM import LambdaCDM
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from config.defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
 
@@ -93,7 +93,7 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
     def inventory_spec():
         # the physical identity of a LambdaCDM row (store-fingerprint prompt 02): the six parameters
         # build() matches. The name is descriptive and is not identity
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(
             leaves=("omega_m", "omega_cc", "h", "f_baryon", "T_CMB_Kelvin", "Neff"),

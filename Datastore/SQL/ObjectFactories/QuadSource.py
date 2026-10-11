@@ -11,7 +11,7 @@ from ComputeTargets import (
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift, redshift_array, wavenumber_exit_time
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
@@ -547,7 +547,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         # r's shard, so it is a cross-shard parent: it resolves against the TkNumericIntegration
         # records of every shard, to that record's own reference digest and never its serial
         # (prompts/datastore-integrity, prompt 09a)
-        from Datastore.store_inventory import InventorySpec, Parent
+        from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(
             parents={

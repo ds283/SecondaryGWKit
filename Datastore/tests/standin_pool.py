@@ -40,9 +40,9 @@ from unittest import mock
 
 import ray
 
-sp_mod = importlib.import_module("Datastore.SQL.ShardedPool")
-ds_mod = importlib.import_module("Datastore.SQL.Datastore")
-broker_mod = importlib.import_module("Datastore.SQL.SerialPoolBroker")
+sp_mod = importlib.import_module("datastorekit.SQL.ShardedPool")
+ds_mod = importlib.import_module("datastorekit.SQL.Datastore")
+broker_mod = importlib.import_module("datastorekit.SQL.SerialPoolBroker")
 
 DatastoreClass = ds_mod.Datastore.__ray_metadata__.modified_class
 BrokerClass = broker_mod.SerialPoolBroker.__ray_metadata__.modified_class

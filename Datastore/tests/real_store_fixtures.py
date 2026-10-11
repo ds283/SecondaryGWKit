@@ -49,8 +49,8 @@ import sqlalchemy as sqla
 
 from config.datastore import factories as _factories
 from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
-from Datastore.SQL.schema import build_schema
-from Datastore.shard_paths import shard_file_name
+from datastorekit.SQL.schema import build_schema
+from datastorekit.shard_paths import shard_file_name
 from Datastore.tests.shard_store_fixtures import bare_pool
 from config.sharding import replicated_tables, sharded_tables
 

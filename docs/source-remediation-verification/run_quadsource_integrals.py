@@ -38,7 +38,7 @@ from CosmologyConcepts import (
     wavenumber_array,
     redshift_array,
 )
-from Datastore.SQL.ShardedPool import ShardedPool
+from datastorekit.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import tolerance
 from Units import Mpc_units

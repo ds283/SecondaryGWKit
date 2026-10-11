@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 
-from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from datastorekit.SQL.factory_base import SQLAFactoryBase
 from Quadrature.integration_metadata import IntegrationSolver
 from config.defaults import DEFAULT_STRING_LENGTH
 
@@ -58,6 +58,6 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
     def inventory_spec():
         # the physical identity of an IntegrationSolver row (store-fingerprint prompt 02): its label,
         # which is this class's identity, and the stepping build() filters on
-        from Datastore.store_inventory import InventorySpec
+        from datastorekit.store_inventory import InventorySpec
 
         return InventorySpec(leaves=("label", "stepping"))
