@@ -1,9 +1,9 @@
 """
 The datastore's client registries (prompts/datastore-generic, prompt 06; README §6.2, U2).
 
-The generic datastore layer (``Datastore/SQL/``, ``Datastore/store_reader.py`` and
-``Datastore/store_inventory.py``) does not import this project's registries: it is given them, and
-this module is where this project keeps them.
+The generic datastore layer (``datastorekit/SQL/``, ``datastorekit/store_reader.py`` and
+``datastorekit/store_inventory.py``) does not import this project's registries: it is given them,
+and this module is where this project keeps them.
 
 - ``factories``: the registry of storable classes, each name mapped to its factory, in the order the
   schema is built. ``main.py`` and the extract scripts give it to ``ShardedPool``, which gives it to
@@ -15,7 +15,7 @@ this module is where this project keeps them.
   ``tables_to_drop``, which resolves a list of actions to tables. The groups are a client fact
   because they are the command line's vocabulary: ``main.py`` offers their names as the choices of
   ``--drop``, in this order, and gives ``ShardedPool`` only the tables. The layer drops whatever
-  tables it is given in the order ``Datastore.SQL.schema.drop_order`` derives from their foreign
+  tables it is given in the order ``datastorekit.SQL.schema.drop_order`` derives from their foreign
   keys, so **the order of the groups, and of the tables within a group, decides nothing about the
   order of a drop**. No drop order is kept by hand.
 

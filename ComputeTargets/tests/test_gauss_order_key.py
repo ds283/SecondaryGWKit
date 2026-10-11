@@ -57,7 +57,7 @@ orders its tables were built at, each ``store()`` records the payload's value, a
 below is the demonstration, on both paths.
 
 Nothing here needs Ray, a datastore or SQLite. The tables are built from the factories' own
-``register()`` output in the shape ``Datastore.SQL.Datastore._build_schema`` builds them, and the
+``register()`` output in the shape ``datastorekit.SQL.Datastore._build_schema`` builds them, and the
 connection is a stand-in that captures the query instead of executing it.
 """
 

@@ -104,14 +104,14 @@ ever lost. It never touches a known field, `retired` included: those belong to t
 owns them. It never opens the store's files; it reads and writes only the sidecar.
 
 **The fingerprint** (store-fingerprint prompt 04) says what a closed store holds, as digests of its
-structured inventory (`Datastore.store_inventory.read_inventory`): per class and per tag set a
+structured inventory (`datastorekit.store_inventory.read_inventory`): per class and per tag set a
 count and a SHA-256 digest, and one overall digest. It never holds a listing; `listing_lines`
 generates one on demand, whose lines hash to the digests it lists. `fingerprint_of` and
 `compare_fingerprints` are pure. `fingerprint_store` reads the store read-only, with no Ray, and
 writes only the sidecar's `fingerprint` field, and only when asked.
 
 `ShardedPool` is imported inside `copy_store`, `move_store` and `retire_store` only, and
-`Datastore.store_inventory` inside the fingerprint functions only, so that importing this module,
+`datastorekit.store_inventory` inside the fingerprint functions only, so that importing this module,
 like `import RunRegistry`, loads neither `ray` nor `sqlalchemy`.
 """
 
@@ -206,7 +206,7 @@ _DIGEST = re.compile(r"[0-9a-f]{64}")
 FINGERPRINT_FORMAT = 6
 TAKEN_KEYS = ("when", "git_head", "git_dirty", "run_id")
 
-# both separators, on every platform, as `Datastore/shard_paths.py` treats a shard record
+# both separators, on every platform, as `datastorekit/shard_paths.py` treats a shard record
 _SEPARATORS = re.compile(r"[\\/]")
 
 
@@ -1152,7 +1152,7 @@ def move_store(src, dst, runs_root=None) -> dict:
 # =================================================================================================
 # the fingerprint (store-fingerprint prompt 04)
 #
-# A fingerprint digests the structured inventory, `Datastore.store_inventory.read_inventory`. A
+# A fingerprint digests the structured inventory, `datastorekit.store_inventory.read_inventory`. A
 # record's canonical form is `record.canonical_json()`, which is `canonical_json(record.as_json())`:
 # its key, its tags, `validated` and `value_count`, and no timestamp. A digest is the SHA-256 of
 # records' canonical JSON, one per line, each followed by "\n", in the order the inventory gives,

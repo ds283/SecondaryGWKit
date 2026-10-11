@@ -103,9 +103,20 @@ a sidecar or any other record.
 
 ## Repository mechanics
 
-- **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root:
+- **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There
+  are six roots, each run by its own command. The `Datastore` root goes in four groups of modules,
+  the last four lines, because a Bash call is capped at ten minutes and the whole root does not
+  reliably fit:
   ```bash
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunRegistry/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[a-f]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[g-o]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[p-r]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[s-z]*.py'
   ```
   They must not need Ray or a datastore — use the stand-in model pattern in
   `ComputeTargets/tests/test_tk_source_functions.py` and `docs/spec-code-audit/scripts/`.

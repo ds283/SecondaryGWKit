@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-11 · **108 open** across twenty campaigns.
+**Last updated:** 2026-10-12 · **103 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -732,14 +732,16 @@ three on the board's §4 the same day; their rows are deleted here. The other fo
 recorded here for its owner. A fifth, in this campaign's code, was seen on 2026-10-02 when the user
 retired `datastore-integrity` prompt 10's two stores. It had **no board row**: the user will set up
 a campaign to own it, and its board takes the issue over. **Taken over on 2026-10-02 by
-`prompts/a3-v2-readiness`**, whose board §3.2 now holds it; its row moved to §1.17.
+`prompts/a3-v2-readiness`**, whose board §3.2 now holds it; its row moved to §1.17. On 2026-10-12
+`dk-and-rpk-migration` prompt 09 **narrowed** `[01-cross-filesystem-move-advice-…]`: the advice text
+went to DatastoreKit, and SGK's half stays in the row above.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` | store-retirement | The 2026-09-23 A3 resume run is recorded `failed`, exit 1. The `handover` board says `killed`, and its launcher log holds a SIGTERM trace. `terminal_state` maps `SystemExit(15)` to `killed`, but this run left through `except BaseException`. One instance. |
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
-| `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
+| `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | **Narrowed 2026-10-12** by dk-and-rpk-migration 09, to SGK's half: `store move` passes the package's "delete the source by hand" advice on for a registered store (`RunRegistry/stores.py` `_store_files`, `move_store`), against the rule that one is only ever retired. The advice text is DatastoreKit's, listed in its `docs/OPEN_ISSUES.md` §1.2. Unassigned. |
 
 ### 1.15 The datastore integrity campaign
 
@@ -780,10 +782,11 @@ board the same day, three below and one assigned to `handover` (§1.1).
 recorded here for its owner. **Four of them were assigned to `prompts/a3-v2-readiness` on
 2026-10-02**, with the one first assigned to `handover`, and their rows moved to §1.17; seven stay
 below.
+On 2026-10-12 `dk-and-rpk-migration` prompt 09 transferred `[00-the-inventory-cannot-see-a-serial-split]`
+to DatastoreKit, where it stays open (`docs/OPEN_ISSUES.md` §1.2 there); its row is deleted here.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-the-inventory-cannot-see-a-serial-split]` | datastore-integrity | The structured inventory compares replicated classes by key, tags, `validated` and value count, not by serial, flags or value contents, so a serial split fingerprints clean. Not this campaign's. |
 | `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | **Narrowed 2026-09-28** by prompt 05b: `store()`'s `validated` key to no column is fixed. `OneLoopIntegral.build`/`read_batch` still put no `source_serial` in the payload, which the target reads. For when `OneLoopIntegral` is built. |
 | `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 | `[05c-read-back-guard-cannot-see-reads-in-a-comprehension]` | datastore-integrity | The read-back guard walks a comprehension's element before its target is bound, so a row read inside a comprehension is never checked (`redshift`/`wavenumber`/`QuadSourcePolicy` `read_table`, seven `validate_on_startup` sites). Nothing missed today; the fix is the guard's. |
@@ -821,6 +824,9 @@ Prompt 07, the rehearsal of A3 v2's launch, opened three (2026-10-04). Prompt 07
 them the same day, the tensor-source reader's, and opened one.
 **The user closed the campaign on 2026-10-04 at 10 / 10.** The nine rows below stay open, each
 recorded here for its owner.
+On 2026-10-12 `dk-and-rpk-migration` prompt 09 transferred two of the nine, `[00-a-new-stores-first-open-…]`
+and `[00-a-drop-action-drops-…]`, to DatastoreKit, where both stay open (`docs/OPEN_ISSUES.md` §1.2
+there); their rows are deleted here.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -831,8 +837,6 @@ recorded here for its owner.
 | `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | a3-v2-readiness | A `SIGTERM` during the ~2.3 s of `ray.init` reaches Ray's own handler, before the driver's exists, so it is recorded by `terminal_state`: `killed`/15 or `failed`/1, exit 15 or 1, not 143 (read, not measured). Not assigned. |
 | `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]` | a3-v2-readiness | `quadsource_atol_sweep.run_child`, left unchanged by prompt 04, still calls `ray.init` with no `address` (refused beside a `ray start` cluster) and installs no handler (a `SIGTERM` in a wait is `SystemExit(1)` under absl's alarm). Not A3 v2's path. Not assigned. |
 | `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]` | a3-v2-readiness | `test_main_plumbing.ReaderToleranceAgreementTestCase` reads only `object_get`/`object_get_vectorized`, so a reader's `object_read_batch` of a tolerance-keyed target is never compared with `main.py`. Today's one instance, the `QuadSourceIntegral` extractor, is pinned by `test_quadrature_tolerance_pin.py`. Test gap; does not block A3 v2. |
-| `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` | a3-v2-readiness | A new store's first open interrupted before every shard file exists leaves a primary whose next open is refused for a missing shard. Empty store; a person deletes it. Does not block A3 v2. U2 taken: record only, no code change. |
-| `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]` | a3-v2-readiness | `--drop gk-source-policy-records` drops the replicated `GkSourcePolicy` table in each actor's constructor, outside the record, so a drop interrupted between actors would leave shards the check at open refuses (read, not measured). A3 v2 passes no `--drop`. Not assigned. |
 
 ### 1.18 The datastore-generic campaign
 
@@ -869,14 +873,16 @@ the reader wraps its own. **The campaign is closed at 3 / 3, and no issue is ope
 `prompts/dk-and-rpk-migration` was opened on 2026-10-11 to adopt `datastorekit` and `raypoolkit` in
 SGK, with a fingerprint rehearsal before the first swap and after each. Its prompt 02, the start-tree
 rehearsal R0, opened two (2026-10-11); its prompt 04, the `datastorekit` swap, opened two more
-(2026-10-11).
+(2026-10-11). **Its prompt 09 closed both of those on 2026-10-12**, on the board's §4: the 23 prose lines
+are rewritten, and the six `docs/` probes (the user chose to repair them) import `factories` from
+`config.datastore`; their rows are deleted here. It also handed the four issues inherited from the
+layer to DatastoreKit: three transferred whole (§1.15 and §1.17), one narrowed (§1.14). The two rows
+below stay open, unassigned.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[02-the-policy-statistics-block-orders-its-lines-by-completion]` | dk-and-rpk-migration | `main.py`'s `GkSourcePolicyData SUMMARY STATISTICS` prints dicts filled in Ray completion order, so its line order varies between runs of one tree (R0's reference vs its own `resumed-b`); counts identical. L4's and 08's "line for line" can fail on order alone. Not assigned. |
 | `[02-07s-store-soundness-calls-read-inventory-without-its-registry]` | dk-and-rpk-migration | `docs/a3-v2-readiness/rehearsal/store_soundness.py` calls `read_inventory(primary)`, which needs `factories` since `19f07ee`: `TypeError`. README §4.1 names it; R0 ran a copy under `docs/dk-and-rpk-migration/rehearsal/`. Verification tool only. Not assigned. |
-| `[04-six-docs-probes-import-factories-from-the-layer]` | dk-and-rpk-migration | Six `docs/` probes (four in `datastore-integrity-audit/`, two in `tolerance-convergence/`) import `_factories`, which left the layer at `19f07ee`; 04 rewrote their module paths, so they now fail on `datastorekit.SQL.Datastore`. Fix: `config.datastore.factories`. Whether to repair them is the user's decision (README §6.3). |
-| `[04-comments-name-the-layers-old-module-paths]` | dk-and-rpk-migration | 23 comment and docstring lines outside `prompts/` and `docs/` still name a layer module or file by its pre-04 path (`Datastore.SQL.Datastore._factories`, `Datastore.store_inventory…`, `Datastore/shard_paths.py`, …). Prose only. Next step: 09's acceptance 2. |
 
 ---
 

@@ -23,7 +23,7 @@ Round-trip tests for the integral `read_batch`es prompt 05b repairs
     below keeps visible rather than papering over.
 
 No Ray, no datastore file, nothing under `var/`: the schema is built in memory with
-`build_schema(MetaData(), Datastore.SQL.Datastore._factories)`, the same construction
+`build_schema(MetaData(), config.datastore.factories)`, the same construction
 `docs/datastore-integrity-audit/lookup_keys/common.py` and
 `Datastore/tests/test_read_path_mechanics.py` use, and every call below is to the real,
 unmodified `build()` / `read_batch()` code.

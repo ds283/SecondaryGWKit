@@ -26,7 +26,7 @@ exactly, and a duplicate raises (docs/datastore-integrity-audit.md §3.5-§3.9).
     the unchanged relative match.
 
 No Ray, no datastore file, nothing under ``var/``: the schema is built in memory with
-``build_schema(MetaData(), Datastore.SQL.Datastore._factories)``, exactly as
+``build_schema(MetaData(), config.datastore.factories)``, exactly as
 ``docs/datastore-integrity-audit/lookup_keys/common.py`` and the probes do, and every call below is
 to the real, unmodified ``build()`` of the factory named.
 """

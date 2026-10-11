@@ -34,7 +34,7 @@ another (``raise`` for every ``OperationalError``, or a miss for one); each stil
 ``columns=``, the column the deleted handler looked for.
 
 No Ray, no datastore file, nothing under ``var/``: the schema is
-``build_schema(MetaData(), Datastore.SQL.Datastore._factories)`` in memory, as in
+``build_schema(MetaData(), config.datastore.factories)`` in memory, as in
 ``test_value_reads_parent_key.py``, and every call is to the real factory code.
 """
 

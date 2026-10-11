@@ -280,7 +280,7 @@ if args.database is None:
     parser.print_help()
     sys.exit()
 
-# --inventory reads the closed store read-only (Datastore.store_inventory.read_inventory), before
+# --inventory reads the closed store read-only (datastorekit.store_inventory.read_inventory), before
 # anything below can start Ray, build a ProfileAgent or open a ShardedPool -- whose open would run
 # --drop, create missing tables and, by default, prune unvalidated rows. It never creates a store:
 # a path that does not exist is refused by the reader

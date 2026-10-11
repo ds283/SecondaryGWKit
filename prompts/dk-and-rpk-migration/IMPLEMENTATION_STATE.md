@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–08 landed. R0, R1 and R2 hold; SGK's layer is `datastorekit` 0.2.2 and its work queue `raypoolkit` 0.2.0, both pinned and installed, and both packages' G2 hold; the close (09) is next.**
+**Last updated:** 2026-10-12 · **Status: CLOSED — 9 of 9 prompts landed. R0, R1 and R2 hold; SGK's layer is `datastorekit` 0.2.2 and its work queue `raypoolkit` 0.2.0, both pinned and installed, both packages' G2 hold and are drafted for their own boards, and the four inherited issues are handed to DatastoreKit (three transferred, one narrowed). Two issues stay open, unassigned (§5.9).**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 were written the same day, after 04's review (README §2.1).
@@ -50,7 +50,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
 | 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `643c3b2` | [log](logs/07-adopt-raypoolkit.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f539015` | [log](logs/08-rehearse-through-both-packages.md) |
-| 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-12 | this commit | [log](logs/09-close-the-migration.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -62,7 +62,8 @@ used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-11, used for 05);
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-11, used for 06);
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-11, used for 07);
-[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-11, used for 08).
+[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-11, used for 08);
+[`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) (2026-10-12, used for 09).
 
 **Written in two batches (README §2.1).**
 - **01–04** after the user's review of the plan.
@@ -100,13 +101,13 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **B3** | 07 | `CLAUDE.md`'s package section completed; `test_pipeline_adoption.py`'s comment | ✅ |
 | **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1, with `main.py:3247` (C8) | ✅ |
 | **G-RPK** | 08 | RayPoolKit's G2 recorded as holding (§2) | ✅ |
-| **Z1** | 09 | the four inherited issues handed to DatastoreKit (C11) | ⬜ |
-| **Z2** | 09 | the prose of `[04-comments-name-the-layers-old-module-paths]` rewritten; the issue closed | ⬜ |
-| **Z3** | 09 | `CLAUDE.md`'s test command names all six roots and Datastore's four groups | ⬜ |
-| **Z4** | 09 | the final measurements at `HEAD` | ⬜ |
-| **Z5** | 09 | verification §4, with the two G2 records drafted | ⬜ |
-| **Z6** | 09 | the board, README, `prompts/INDEX.md` and the index closed | ⬜ |
-| **Z7** | 09 | only if the user chooses it: the six `docs/` probes repaired (README §6.3) | ⬜ |
+| **Z1** | 09 | the four inherited issues handed to DatastoreKit (C11) | ✅ three transferred whole to their boards' §4 (still open at DatastoreKit); `[01-cross-filesystem-move-advice-…]` narrowed to SGK's half, at the user's decision |
+| **Z2** | 09 | the prose of `[04-comments-name-the-layers-old-module-paths]` rewritten; the issue closed | ✅ 23 lines in 18 files rewritten; the regex 23 → 0; every module `ast`-equal; the issue closed (§4) |
+| **Z3** | 09 | `CLAUDE.md`'s test command names all six roots and Datastore's four groups | ✅ `CLAUDE.md`'s test command names the six roots and Datastore's four groups |
+| **Z4** | 09 | the final measurements at `HEAD` | ✅ DatastoreKit's script: 0 outside `prompts/`; RayPoolKit's: 0 imports, 54 `constructs`; the six roots at 08's counts; `pip freeze` equals 06's |
+| **Z5** | 09 | verification §4, with the two G2 records drafted | ✅ verification §4, with both G2 records drafted (§4.4, §4.5), uncommitted in their repositories |
+| **Z6** | 09 | the board, README, `prompts/INDEX.md` and the index closed | ✅ this board, README §2, `prompts/INDEX.md` and the index closed (108 → 103) |
+| **Z7** | 09 | only if the user chooses it: the six `docs/` probes repaired (README §6.3) | ✅ chosen by the user (2026-10-12): the six probes repaired, one statement each; the issue closed (§4) |
 
 The measurement the plan was written against is [`measure/`](measure/): both packages' scripts at
 `b510bc9`, each equal to its checklist's appendix byte for byte; the six roots' counts; the
@@ -121,7 +122,9 @@ Datastore root by module; and the venv's `pip freeze` (README §0.2).
 | RayPoolKit G2 | `RayTools/` is gone, 0 imports, the pin is installed, the six roots pass, all 54 sites construct, and R2 reproduces `39809dca…` | 07, 08 | ✅ **holds** (2026-10-11): `RayTools/` gone at `643c3b2` (07); 0 imports, 0 `import_module` calls and 54 sites `constructs` by RayPoolKit's script at `5631f0e` (08, `measure/out/08-raypoolkit-measure_client_pools.md`); the pin at `b6cc119` (06), installed and recorded in every R2 manifest; the six roots pass at `5631f0e` (08); R2's runs `dk-and-rpk-migration-08-reference-20261011T224347` and `dk-and-rpk-migration-08-resumed-c-20261011T230717`, both `done`, both `39809dca…`, equal to R1's, R0's, 07's and 09's (verification §3.10); recorded by 08 in `f539015` |
 
 Recording each gate on its package's own extraction board is a commit in that repository, not
-here (README §6.2 C12).
+here (README §6.2 C12). 09 drafted both records, in the form of each board's §2 row
+(verification §4.4 and §4.5); the user makes those commits, or has a session in that repository
+make them.
 
 ## 3. Active and unresolved issues
 
@@ -158,8 +161,10 @@ here (README §6.2 C12).
   - **Next step.** Not assigned. 07's script stays a record of `dbd8a51`; this campaign's copy is the
     one to run.
 
+## 4. Resolved issues
+
 - **[04-six-docs-probes-import-factories-from-the-layer]** *(opened 2026-10-11 by prompt 04;
-  measured; `docs/` probes only; README §6.3)*
+  measured; `docs/` probes only; README §6.3; **closed 2026-10-12 by prompt 09**)*
   - **The defect.** Six `docs/` files import `_factories` from the layer's `SQL/Datastore.py`, a
     name that left it at `19f07ee` ("Give the datastore layer its registries instead of importing
     them"): `docs/datastore-integrity-audit/fk_sweep_probe.py:8`, `lookup_keys/common.py:18`,
@@ -177,8 +182,20 @@ here (README §6.2 C12).
   - **Next step.** The fix is `from config.datastore import factories as _factories`. Whether to
     repair them is the user's decision at the close (README §6.3); 04 rewrote their module paths
     only (C2).
+  - **Closed (2026-10-12) by prompt 09 (Z7), at the user's decision** (README §6.3; the orchestrator's
+    note for 09). In each of the six, the one statement importing `_factories` from
+    `datastorekit.SQL.Datastore` is now `from config.datastore import factories as _factories`
+    (`config.datastore.factories` is a dict from table name to factory, the old `_factories`'s
+    shape), and nothing else changed: `probe_03_column_existence.py`'s `# noqa: E402` stays, and the
+    two nested statements in `inventory.py` and `order_audit.py` keep their indentation.
+    `inventory.py:1315`'s string naming the layer's `_factories` is a dated record in `docs/`, and is
+    left. **No probe was run.** Each file's import statements alone were executed (log 09, the
+    script quoted there): before, each of the six failed on its `_factories` line; after, each
+    prints `all OK`, at 4, 6, 6, 4, 10 and 25 statements, and the six that fail through
+    `lookup_keys/common.py` (`probe_01`, `01b`, `04`, `04b`, `05`, `06`) do too, at 14, 6, 9, 7, 14
+    and 7. Record: verification §4.3.3.
 - **[04-comments-name-the-layers-old-module-paths]** *(opened 2026-10-11 by prompt 04; measured;
-  prose only)*
+  prose only; **closed 2026-10-12 by prompt 09**)*
   - **The defect.** 23 comment and docstring lines outside `prompts/` and `docs/` name a layer
     module or file by its pre-04 path. 04's rewrite reaches statements, string literals and
     `import_module` calls only, and its prompt's §2.4.3 changes no other prose. They are:
@@ -202,10 +219,14 @@ here (README §6.2 C12).
   - **Impact.** None on code. A reader is pointed at a file that no longer exists in SGK.
   - **Next step.** 09's acceptance 2 ("nothing outside `prompts/` and dated `docs/` names a deleted
     file as a current path").
-
-## 4. Resolved issues
-
-None yet.
+  - **Closed (2026-10-12) by prompt 09 (Z2).** The 23 lines, in 18 files, each name what is
+    current: `datastorekit.store_inventory`, `.shard_paths`, `.SQL.schema` and
+    `.SQL.Datastore._build_schema`; `config.datastore.factories` for the `_factories` that left the
+    layer at `19f07ee`; and `datastorekit/…` for the file paths, `config/datastore.py:4-5`'s three
+    in file-path form. Three lines were re-wrapped, where the longer name passed 100 columns. For
+    every one of the 18 files, `ast.dump` with docstrings removed is identical to `HEAD`'s. The
+    regex of log 09 printed these 23 lines before the sweep and none after. Record: verification
+    §4.3.2.
 
 ## 5. After each prompt
 
@@ -1179,3 +1200,60 @@ and acceptance 1–7 are met. No stop condition fired. **R2 holds, and RayPoolKi
   - The wall-clock test failed in every run here, alone included, at loads of 11–30, and passed
     in the agent's root run; 09's final measurement should re-run it alone at low load before
     reporting it.
+
+### 5.9 After prompt 09 (2026-10-12)
+
+**What landed (this commit).** The migration is closed. Both of the user's decisions of 2026-10-12 are
+recorded as the user's: **Z7 is chosen** (the six `docs/` probes are repaired), and
+`[01-cross-filesystem-move-advice-says-delete-by-hand]` is **narrowed, not transferred whole**.
+- **Z1.** `[00-a-new-stores-first-open-…]` and `[00-a-drop-action-…]` (`a3-v2-readiness`) and
+  `[00-the-inventory-cannot-see-a-serial-split]` (`datastore-integrity`) moved to their boards' §4,
+  each text verbatim, **transferred to DatastoreKit and still open there**. The fourth stays in
+  `store-retirement`'s §3, narrowed to SGK's half.
+- **Z2.** The 23 prose lines, in 18 files, name what is current; the regex printed 23 lines before and
+  none after; every module is `ast`-equal with docstrings removed.
+- **Z3.** `CLAUDE.md`'s test command names the six roots and Datastore's four groups.
+- **Z4.** At `b95bf19`: DatastoreKit's script gives 15 layer files absent and **0 imports, 0 strings and
+  0 `import_module` calls outside `prompts/`** (51, 20 and 1 inside it); RayPoolKit's gives `RayTools/`
+  absent, 0 imports, 0 `import_module` calls and **54 calls, all `constructs`**; `pip freeze` equals
+  06's after-freeze, and `package_provenance()` is 08's record. Run on the working tree as a commit
+  object, both scripts differ from the saved outputs by the commit line only.
+- **Z5.** Verification §4, "The close": R0–R2's table, Z4, and both G2 records drafted in their boards'
+  forms (§4.4, §4.5), **not committed** in either repository (C12).
+- **Z6.** This board; README §2 (all nine rows marked landed); `prompts/INDEX.md` (closed, "§1.20; 2");
+  `docs/OPEN_ISSUES.md`, **108 → 103 by counting** (§1.14 4, §1.15 5, §1.17 7, §1.20 2).
+- **Z7.** The six probes, one statement each. No probe was run: each file's import statements were
+  executed alone, and the six, and the six that fail through `lookup_keys/common.py`, are `all OK`.
+
+**Counts against README §7**, unchanged: AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1
+skipped), RunRegistry 286, ComputeTargets 693, Datastore 320 (54 + 103 + 101 + 62). All OK, but for the
+known wall-clock flake, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, which failed in the root
+run (0.0613 s against 0.06 s at load 25) and, alone at load 8, passed twice and failed once.
+
+**Opened:** nothing.
+
+**Every issue this campaign leaves open, and where each stands.**
+- `[02-the-policy-statistics-block-orders-its-lines-by-completion]`: open, §3 above, index §1.20,
+  **unassigned**. A fix in `main.py` (sorted keys) is the user's to decide.
+- `[02-07s-store-soundness-calls-read-inventory-without-its-registry]`: open, §3 above, index §1.20,
+  **unassigned**. A verification tool of `docs/a3-v2-readiness/rehearsal/`, a record; this campaign's copy
+  is the one to run.
+- `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` and
+  `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]`: **transferred to
+  DatastoreKit, still open there** (its `docs/OPEN_ISSUES.md` §1.2). SGK's measurement stays on
+  `prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md` §4. Their index rows are deleted.
+- `[00-the-inventory-cannot-see-a-serial-split]`: the same, from
+  `prompts/datastore-integrity/IMPLEMENTATION_STATE.md` §4. Its index row is deleted.
+- `[01-cross-filesystem-move-advice-says-delete-by-hand]`: **narrowed**. The advice text is DatastoreKit's
+  (§1.2 there); SGK's half, that `store move` relays it for a registered store against decision 6.1.1,
+  stays in `prompts/store-retirement/IMPLEMENTATION_STATE.md` §3, index §1.14, **unassigned**.
+
+**Left for the user**, none of them an issue (README §6.3):
+- retiring the six rehearsal stores `var/datastores/dk-and-rpk-migration-{02,05,08}-{reference,resumed}.sqlite`
+  (README §3), and the twelve run directories stay as the record;
+- the two G2 commits in DatastoreKit and RayPoolKit, drafted in verification §4.4 and §4.5 (C12);
+- whether to rename the `Datastore` package (U3);
+- whether SGK moves to `datastorekit` `v0.2.3` (released 2026-10-11, `factory-defaults` U5). SGK stays at
+  `v0.2.2`, which DatastoreKit's G2 admits; 09 moved no pin.
+
+The campaign's remaining step is the orchestrator's review of 09.

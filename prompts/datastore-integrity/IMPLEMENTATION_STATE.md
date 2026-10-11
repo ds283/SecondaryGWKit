@@ -1903,16 +1903,6 @@ Each stays on its owning board, which carries an **Assigned** line, and closes o
 
 None is assigned to a prompt of this campaign.
 
-- **[00-the-inventory-cannot-see-a-serial-split]** *(opened 2026-09-25 by the audit)*
-  - **The defect.** The structured inventory compares replicated classes across shards by key,
-    tags, `validated` and value count. It does not compare serials, the `source`/`response` flags,
-    timestamps or value contents (audit §4.3, `replicated_divergence_probe.py`). A store holding a
-    serial split, or shards that disagree on a flag, fingerprints with no problem.
-  - **Impact.** The fingerprint is not evidence that a store's replicated tables agree. After
-    prompt 02, the check at open is that evidence for any store the tree can open. The fingerprint
-    reads stores the tree may not open.
-  - **Next step.** Decide whether the fingerprint should carry replicated agreement, or say plainly
-    that it does not. Not this campaign's: README §1.
 - **[00-oneloop-factory-cannot-round-trip-a-row]** *(opened 2026-09-25 by the audit; **narrowed**
   2026-09-28 by prompt 05b)*
   - **The defect.** `sqla_OneLoopIntegral_factory.build` puts no `source_serial` in the payload
@@ -2449,6 +2439,22 @@ None is assigned to a prompt of this campaign.
     twice only to return each tolerance's `log10_tol`, and that the match is exact on the two
     serials. It is a comment only: no statement changed, and the read-back guard and `black` are
     unaffected.
+- **[00-the-inventory-cannot-see-a-serial-split]** *(opened 2026-09-25 by the audit;
+  **transferred 2026-10-12 to DatastoreKit by dk-and-rpk-migration 09**)*
+  - **The defect.** The structured inventory compares replicated classes across shards by key,
+    tags, `validated` and value count. It does not compare serials, the `source`/`response` flags,
+    timestamps or value contents (audit §4.3, `replicated_divergence_probe.py`). A store holding a
+    serial split, or shards that disagree on a flag, fingerprints with no problem.
+  - **Impact.** The fingerprint is not evidence that a store's replicated tables agree. After
+    prompt 02, the check at open is that evidence for any store the tree can open. The fingerprint
+    reads stores the tree may not open.
+  - **Next step.** Decide whether the fingerprint should carry replicated agreement, or say plainly
+    that it does not. Not this campaign's: README §1.
+  - **Transferred (2026-10-12) by `dk-and-rpk-migration` prompt 09 (C11).** The code this entry
+    describes is `datastorekit`'s since that campaign's prompt 04, and no longer SGK's, so the entry
+    leaves §3. A transfer is not a resolution: the issue is **still open there**, indexed in
+    DatastoreKit's `docs/OPEN_ISSUES.md` §1.2, and this entry stays, its text unchanged, as the
+    record of its measurement.
 
 ---
 

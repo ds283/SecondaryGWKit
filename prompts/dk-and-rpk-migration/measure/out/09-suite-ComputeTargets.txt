@@ -1,0 +1,1050 @@
+...............  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/BackgroundModel.py", line 450, in compute_background
+    cs_tau_table = CumulativeTable(
+                   ^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 169, in __init__
+    self._hi, self._lo = self._accumulate()
+                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 188, in _accumulate
+    increments = [self._increment(z[i + 1], z[i]) for i in range(self._n - 1)]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 270, in _increment
+    return self._panel(z_lo, width)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 249, in _panel
+    return half * fsum(
+                  ^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 250, in <genexpr>
+    w * g(z_lo + opz * expm1(half * (1.0 + x))) for x, w in self._gauss
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/cumulative_table.py", line 242, in _g
+    return self._f(z) * (1.0 + z)
+           ^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/BackgroundModel.py", line 333, in f
+    return sqrt(_sound_speed_sq(cosmology, z)) / cosmology.Hubble(z)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/BackgroundModel.py", line 316, in _sound_speed_sq
+    raise ValueError(
+....................................................@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[friction_F] LambdaCDM, k = 1e+05/Mpc, z_init = z_e3 = 2.3076e+09 down to 0.1: DOP853 _friction_RHS at (atol, rtol) = (1e-10, 1e-08) differs from friction_F.delta by 2.261e-07 absolute in F -- i.e. relative in the amplitude exp(F) -- at z = 0.1 (5.810e-09 relative in F), 1814 RHS evaluations. Review §12.3 measures 2.3e-7.
+[tables] LambdaCDM build: tau 6924, cs_tau 6924, friction_F 6924 integrand evaluations; all three tables 0.223 s, whole compute_background 0.263 s
+[tables] QCD build: tau 6936, cs_tau 6936, friction_F 6936 integrand evaluations; all three tables 0.573 s, whole compute_background 0.806 s
+
+[cs_tau] LambdaCDM checkpoints: max rel err 2.521e-16 at z = 10.01
+[friction_F] LambdaCDM checkpoints: max rel err 3.314e-16 at z = 1.005e+07 (absolute 1.421e-14)
+[cs_tau] LambdaCDM short baseline at z = 1.004e+06: one interval 2.804e-16, 37% fraction 0.000e+00 | friction absolute 7.980e-16 / 6.939e-18
+[cs_tau] LambdaCDM short baseline at z = 100.2: one interval 1.275e-16, 37% fraction 1.724e-16 | friction absolute 2.200e-15 / 1.735e-18
+[cs_tau] LambdaCDM short baseline at z = 1.001: one interval 2.793e-16, 37% fraction 3.770e-16 | friction absolute 2.377e-15 / 8.674e-19
+[cs_tau] QCD checkpoints: max rel err 2.212e-15 at z = 1.005e+07; bound 1.000e-14 (the JSON reference's own agreement with a converged rule, not asserted against, is 4.354e-16)
+[friction_F] QCD checkpoints: max rel err 3.340e-16 at z = 1.005e+07 (absolute 1.421e-14)
+[cs_tau] QCD interval 862 at z = 4.9241e+07 [T_LO]: one interval 4.286e-16, 37% fraction 1.459e-16 | friction absolute 9.923e-16 / 3.469e-18
+[cs_tau] QCD interval 1031 at z = 1.0043e+06JSON baseline z = 1.004e+06: one interval 2.801e-16, 37% fraction 0.000e+00 | friction absolute 3.351e-15 / 3.469e-18
+[cs_tau] QCD interval 1107 at z = 1.7445e+05 [EOS_T_LO]: one interval 3.956e-16, 37% fraction 2.692e-16 | friction absolute 5.669e-15 / 3.469e-18
+[cs_tau] QCD interval 1293 at z = 2405.3 [T_120_MEV] [steepest c_s^2 transition]: one interval 2.084e-16, 37% fraction 4.236e-16 | friction absolute 1.006e-15 / 3.469e-18
+[cs_tau] QCD interval 1431 at z = 100.19JSON baseline z = 100.2: one interval 1.275e-16, 37% fraction 1.724e-16 | friction absolute 7.841e-16 / 1.735e-18
+[cs_tau] QCD interval 1631 at z = 1.0006JSON baseline z = 1.001: one interval 1.397e-16, 37% fraction 1.885e-16 | friction absolute 7.917e-15 / 8.674e-19
+[cs_tau] radiation delta: adjacent 4.797e-16 at z = 0.1318; 37% fraction (off-grid) 0.000e+00; whole range 2.115e-16
+
+[cs_tau] radiation nodes: vs closed form 2.782e-16 at z = 7.586e+05; vs tau/sqrt(3) 2.443e-16
+[friction_F] radiation delta (absolute): adjacent 7.105e-15 at z = 3.548e+09; 37% fraction (off-grid) 1.117e-15; whole range 7.105e-15 (F = -55.0714, single-limb floor 7.105e-15)
+type=<class 'ValueError'>, value=sound horizon: wPerturbations(z) = -0.25 is negative at z = 898.40424 for cosmology _NegativeSoundSpeedCosmology (store_id=0); c_s^2 < 0 has no sound horizon, so the cs_tau and friction_F tables cannot be built
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+[tau] LambdaCDM build: 6924 Hubble evaluations, table 0.266 s, whole compute_background 0.310 s, mean Hubble evaluation 0.50 us
+[tau] QCD build: 6936 Hubble evaluations, table 0.508 s, whole compute_background 0.722 s, mean Hubble evaluation 7.04 us
+[tau] LambdaCDM delta throughput (20000 calls, best of 3): on-grid/on-grid 0.52 us, on/off 5.82 us, off/off 10.88 us; pointwise on-grid 0.40 us
+[tau] QCD delta throughput (20000 calls, best of 3): on-grid/on-grid 0.60 us, on/off 33.56 us, off/off 66.82 us; pointwise on-grid 0.39 us
+
+[tau] LambdaCDM checkpoints: tau.delta(z_top, z) max rel err 3.810e-16 at z = 1002; tau(z) - tau(z_top) max rel err 3.810e-16
+[tau] LambdaCDM short baseline at z = 1.004e+06: one interval 1.616e-16, 37% fraction (off-grid endpoint) 4.400e-16
+[tau] LambdaCDM short baseline at z = 100.2: one interval 1.990e-16, 37% fraction (off-grid endpoint) 4.049e-16
+[tau] LambdaCDM short baseline at z = 1.001: one interval 2.494e-16, 37% fraction (off-grid endpoint) 1.686e-16
+
+[tau] oracle at k = 1e+05/Mpc, z_s = 1.004e+06, z_r = 0.1: k*Delta tau = 1.372755e+09 rad; RK45+cubic accessor differs by -3.080e+00 rad (2.24e-09 relative); |G_old - G_new| / envelope = 9.090e-01
+[tau] cubic spline of the new nodes, off-grid z = 99221.3: -2.991e-04 rad against the accessor (7.17e-10 relative)
+[tau] QCD break points in (0.1, 2.06e+16): 3 (= 3 temperature crossings, 0 of the tabulation's 2411 interior knots in range; the convergence block still records 2411 knots, from before prompt 06)
+[tau] QCD checkpoints: tau.delta(z_top, z) max rel err 2.254e-15 at z = 1.005e+07; tau(z) - tau(z_top) 2.254e-15; bound 1.000e-14 (the JSON reference's own agreement with a converged rule, not asserted against, is 3.224e-16)
+[tau] QCD short baseline at z = 1.004e+06: one interval 4.200e-15, 37% fraction (off-grid endpoint) 3.386e-14
+[tau] QCD short baseline at z = 100.2: one interval 9.354e-15, 37% fraction (off-grid endpoint) 1.984e-14
+[tau] QCD short baseline at z = 1.001: one interval 1.746e-15, 37% fraction (off-grid endpoint) 9.275e-15
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"................................................/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/domenech.py:680: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  the requested tolerance from being achieved.  The error may be 
+  underestimated.
+  piece, piece_err = quad(
+........./Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_quadsource_integral.py:497: DeprecationWarning: bessel_phase: atol, rtol is deprecated and has no effect. It described a tolerance of the phase ODE solve, which no longer exists, so it maps to nothing rather than to a translated value; the new defaults are being used instead. Use phase_atol (absolute radians) and amplitude_rtol (relative) instead.
+  bessel_phase(0.5 + self.b, x_max, atol=1e-25, rtol=5e-14),
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_quadsource_integral.py:498: DeprecationWarning: bessel_phase: atol, rtol is deprecated and has no effect. It described a tolerance of the phase ODE solve, which no longer exists, so it maps to nothing rather than to a translated value; the new defaults are being used instead. Use phase_atol (absolute radians) and amplitude_rtol (relative) instead.
+  bessel_phase(2.5 + self.b, x_max, atol=1e-25, rtol=5e-14),
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/domenech.py:680: IntegrationWarning: Extremely bad integrand behavior occurs at some points of the
+  integration interval.
+  piece, piece_err = quad(
+/Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  the requested tolerance from being achieved.  The error may be 
+  underestimated.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+......................................................................................./Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/kohri_terada.py:461: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  the requested tolerance from being achieved.  The error may be 
+  underestimated.
+  piece, piece_err = quad(
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/kohri_terada.py:461: IntegrationWarning: Extremely bad integrand behavior occurs at some points of the
+  integration interval.
+  piece, piece_err = quad(
+............................................................
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+[cumulative_table] jump inside interval 650: unsplit rel err 7.140e-02, split rel err 1.697e-14; build calls 5200 -> 5204
+[cumulative_table] adjacent-node delta: max rel err 6.154e-16 at z = 3.16228
+[cumulative_table] 37%-fraction delta: max rel err 5.952e-16 at z = 1000
+
+[cumulative_table] nodes: max rel err 5.129e-16 at z = 0.154882
+[cumulative_table] adjacent-node delta near z = 1 (T = 0.5): double-double 1.507e-16, single-double 1.507e-15; with a 1e8 offset: double-double 1.507e-16, single-double 1.016e-06
+[cumulative_table] off-grid value: max rel err 5.779e-16 at z = 0.735048
+[10-classify-levin-keyerror] d theta/d log(1+z) = 5000, Levin_threshold = 1e2: Levin_z = 1e+08, recorded dtheta/dlogz = 5000
+
+[10-classify-levin-keyerror] d theta/d log(1+z) = 50 everywhere, Levin_threshold = 1e4: payload keys ['Levin_z', 'metadata'], Levin_z = None
+
+[prompt 09 test 2] k = 1e+07/Mpc, 210 interior points: raw_theta - exact = 148 cycles + 4.55e-13 rad (|theta| up to 945.931 rad)
+[prompt 09 test 2] theta_mod_2pi at the samples reproduces the stored remainder to 1.58e-13 rad
+
+[prompt 09 test 3] k = 1e+07/Mpc, x_r = 1e+03: 147 pure-WKB objects (z_s from 10350.8 to 299806, all delta = 0), 0 rectifier corrections, max |phi| = 4.55e-13 rad
+
+[prompt 09 test 3] k = 1e+06/Mpc, x_r = 1e+02: 51 pure-WKB objects (z_s from 9461.9 to 29975.6, all delta = 0), 0 rectifier corrections, max |phi| = 2.13e-14 rad
+
+[prompt 09 test 3] k = 1e+08/Mpc, x_r = 1e+04: 243 pure-WKB objects (z_s from 11331 to 2.99835e+06, all delta = 0), 0 rectifier corrections, max |phi| = 3.64e-12 rad
+[prompt 09 test 3] pure-WKB band, 1460 interior points: max |raw_theta - exact| = 3.41e-13 rad (|theta| up to 932.662 rad)
+[prompt 09 test 1] sweep: 990 objects, 90 phi jumps before rectification = 90 stop-point transitions, 90 rectifier corrections; after rectification max |d phi| = 3.64e-12 rad
+
+[prompt 09 test 1] k = 1e+07/Mpc, x_r = 1e+03 (z_response = 10350.8): 22 objects in the numeric-initialised band z_s in [301973, 497870]
+  before rectification: 2 jumps in phi, at z_s (321275 -> 328768: +1.0000 cycles), (395358 -> 404579: +1.0000 cycles)
+  stop-point transitions at z_s (321275 -> 328768), (395358 -> 404579)
+  after rectification (2 corrections applied): max |d phi| = 2.27e-13 rad, phi = 929.911 rad = 148 cycles
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+[cost] LambdaCDM k = 3.0e+08, 116 response samples from z = 6.923e+12 to 0.1: best of 3 0.0010 s (in-call 0.0010 s); 468 integrand evaluations = 4 residual (order 4, 1732 nodes) + 464 leading-table partials; threshold 0.05 s
+
+[sweep, stop at maximum] 990 objects over 15 k x 3 response points: stored - exact is an integer number of cycles to 3.97e-12 rad; apply_phase_offset defect 4.44e-16 rad; 90 one-cycle jumps between neighbours against 90 stop-point transitions; shift_theta_sample would have rebased 270 of them
+[sweep, stop at maximum] k = 1.000e+07, x_r = 1e+03: 22 objects, 2 cycle jumps, between neighbouring z_s = (316700 -> 324331: +1), (401839 -> 411522: +1)
+
+[sweep, stop at extremum] 990 objects over 15 k x 3 response points: stored - exact is an integer number of cycles to 5.12e-12 rad; apply_phase_offset defect 4.44e-16 rad; 90 one-cycle jumps between neighbours against 180 stop-point transitions; shift_theta_sample would have rebased 180 of them
+[sweep, stop at extremum] k = 1.000e+07, x_r = 1e+03: 22 objects, 2 cycle jumps, between neighbouring z_s = (356739 -> 365335: +1), (452641 -> 463548: +1)
+
+[off-grid anchor] k = 1.000e+07, z_init = 490692.0041 (37% through [486525, 497870] in u): max phase error 3.7253e-09 rad at z = 0.1; {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 670, 'rho_evals': 2680, 'rho_reused': False, 'lead_partials': 56, 'lead_evals': 224, 'offgrid_init': True, 'rho_end': 0.0}
+
+[Tk sector] k = 1.0e+07: friction vs closed form 7.105e-15; theta_T vs the exact radiation primitive 1.863e-09 rad at z = 0.30235 over 56 samples; rho_T over the range -8.634090e-02 rad
+
+[radiation] k = 1.000e+07: span 9.0909e+06 rad over 56 response samples; max phase error 3.7253e-09 rad at z = 0.229289 (eps*theta floor 2.02e-09; threshold 1e-08); {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 670, 'rho_evals': 2676, 'rho_reused': False, 'lead_partials': 0, 'lead_evals': 0, 'offgrid_init': False, 'rho_end': 0.0}
+
+[radiation] k = 1.000e+09: span 9.0909e+08 rad over 73 response samples; max phase error 3.5763e-07 rad at z = 0.398558 (eps*theta floor 2.02e-07; threshold 1e-06); {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 870, 'rho_evals': 3476, 'rho_reused': False, 'lead_partials': 0, 'lead_evals': 0, 'offgrid_init': False, 'rho_end': 0.0}
+
+[LambdaCDMModel] k = 1.000e+05: 9 checkpoints from the anchor z = 2.30758e+09 to z = 0.1, span 1.3728e+09 rad; max phase error 1.1921e-07 rad at z = 10.0123 (eps*k*tau floor 3.05e-07; threshold 1e-05); {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 1732, 'rho_evals': 6928, 'rho_reused': False, 'lead_partials': 9, 'lead_evals': 36, 'offgrid_init': True, 'rho_end': -2.588116068646981e-07}
+
+[LambdaCDMModel] k = 3.000e+08: 10 checkpoints from the anchor z = 6.92274e+12 to z = 0.1, span 4.1184e+12 rad; max phase error 9.7656e-04 rad at z = 1.00062 (eps*k*tau floor 9.14e-04; threshold 0.005); {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 1732, 'rho_evals': 4, 'rho_reused': True, 'lead_partials': 10, 'lead_evals': 40, 'offgrid_init': True, 'rho_end': -1.352729168892815e-10}
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[QCDModel] k = 3.000e+08: 11 checkpoints from the anchor z = 1.02355e+13 to z = 0.1, span 4.1184e+12 rad; max phase error 4.8828e-04 rad at z = 10.0123 (eps*k*tau floor 9.14e-04; threshold 0.005); {'solver': 'wkb-primitive', 'sector': 'Gk', 'N_rho': 4, 'N_lead': 4, 'rho_nodes': 1603, 'rho_evals': 6424, 'rho_reused': False, 'lead_partials': 11, 'lead_evals': 44, 'offgrid_init': True, 'rho_end': -0.0012724811172115781}
+
+[store algebra] 206 (G, G') pairs at k = 1.0e+05, z_init = 2.30758e+09: G reproduced to 2.948e-16, G' to 2.809e-16 of the LG amplitude; sin_coeff = B > 0 and the removed sign factor was +1 in every case
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"................................................................
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+[break points] k = 4.972e+07/Mpc: split drift 1.8191e-09, unsplit 9.8961e-09 (5.44x), criterion 3.400e-08
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+    LambdaCDMModel, k=1e7, GkNumericIntegration RHS: 0.0839 s (pre-change 0.1299 s, 35.4 % faster)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[Tk] radiation correction vs -2/s^2: worst 0.000e+00 relative at z = None
+
+[Gk] leading + correction == Gk_omegaEff_sq exactly on 1557/1800 samples; worst re-association 1.000 ulp at ('LambdaCDMModel', 100000.0, 451.1747986243092)
+
+[Tk] leading + correction == Tk_omegaEff_sq exactly on 1583/1800 samples; worst re-association 1.000 ulp at ('LambdaCDMModel', 100000.0, 0.1)
+
+[boundary, exact fixture, w=0.33333, x_r = 19.1 -> 27.9] LG side vs extended numeric spline, /envelope: G smooth: nodes 8.726e-06, midpoints 1.031e-03; G oscillatory: nodes 7.848e-06, midpoints 8.342e-04
+
+[boundary, exact fixture, w=0.2, x_r = 18.5 -> 27.1] LG side vs extended numeric spline, /envelope: G smooth: nodes 1.514e-04, midpoints 7.226e-04; G oscillatory: nodes 1.070e-04, midpoints 6.991e-04
+
+[boundary, matched LG fixture, w=0.33333, x_r = 19.1 -> 27.9] LG side vs extended numeric spline, /envelope: G smooth: nodes 4.144e-05, midpoints 1.065e-03; G oscillatory: nodes 2.380e-05, midpoints 8.618e-04
+
+[boundary, matched LG fixture, w=0.2, x_r = 18.5 -> 27.1] LG side vs extended numeric spline, /envelope: G smooth: nodes 1.017e-03, midpoints 1.064e-03; G oscillatory: nodes 6.629e-04, midpoints 8.260e-04
+
+[Oracle 1, exact stand-ins] max |sum - G f/H^2| / max(|G f/H^2|, envelope):
+    Gqr: w=0.3333: 4.260e-16  w=0.2: 4.844e-16
+     Gq: w=0.3333: 5.258e-16  w=0.2: 5.513e-16
+     Gr: w=0.3333: 4.789e-16  w=0.2: 5.469e-16
+      G: w=0.3333: 3.501e-16  w=0.2: 4.008e-16
+     qr: w=0.3333: 6.669e-16  w=0.2: 4.909e-16
+      q: w=0.3333: 4.444e-16  w=0.2: 5.689e-16
+      r: w=0.3333: 5.254e-16  w=0.2: 4.297e-16
+
+[Oracle 1, realistic fixtures] max |sum - G f/H^2| / max(|G f/H^2|, envelope):
+    Gqr: w=0.3333: 2.894e-16  w=0.2: 3.568e-16
+     qr: w=0.3333: 5.805e-16  w=0.2: 3.530e-16
+     Gr: w=0.3333: 5.112e-16  w=0.2: 2.928e-16
+      r: w=0.3333: 4.430e-16  w=0.2: 6.170e-16
+      G: w=0.3333: 5.493e-16  w=0.2: 4.254e-16
+
+[LG form of G, w=0.33333] max |A_G sin theta_G - G_analytic| / A_G = 6.372e-13
+
+[LG form of G, w=0.2] max |A_G sin theta_G - G_analytic| / A_G = 3.014e-13
+
+[LG truncation attribution, w=0.33333] realistic floor 5.477e-06 -> 3.277e-07 with exact omega, d ln M/dz
+
+[LG truncation attribution, w=0.2] realistic floor 7.775e-05 -> 2.931e-07 with exact omega, d ln M/dz
+
+[Oracle 2, exact stand-ins vs scipy] max |sum - G_an f_an/H^2| / max(|.|, envelope):
+    Gqr: w=0.3333: 4.236e-15  w=0.2: 8.190e-15
+     Gq: w=0.3333: 4.150e-15  w=0.2: 1.458e-14
+     Gr: w=0.3333: 1.140e-15  w=0.2: 1.040e-15
+      G: w=0.3333: 5.984e-16  w=0.2: 2.270e-15
+     qr: w=0.3333: 4.815e-15  w=0.2: 1.190e-14
+      q: w=0.3333: 7.378e-15  w=0.2: 3.412e-14
+      r: w=0.3333: 1.022e-15  w=0.2: 7.457e-16
+
+[Oracle 2, realistic fixtures vs scipy, w=0.33333] all-oscillatory, x_q in [19, 1000]: 100/decade 7.024e-06 (T fixtures only 7.033e-06; x_q > 100 only 4.429e-07); 300/decade 6.249e-06 (T fixtures only 6.249e-06; x_q > 100 only 7.036e-09)
+
+[Oracle 2, realistic fixtures vs scipy, w=0.2] all-oscillatory, x_q in [19, 1000]: 100/decade 1.375e-04 (T fixtures only 1.375e-04; x_q > 100 only 6.240e-06); 300/decade 1.075e-04 (T fixtures only 1.075e-04; x_q > 100 only 5.568e-06)
+
+[phase composition, phase_spline constituents, |Psi| up to 2.19e+05 rad] remainder route 3.269e-11 rad; reduce-raw route 4.869e-11 rad; raw phase 5.821e-11 rad; theta_deriv vs FD 3.607e-12
+
+[phase composition, phase_spline constituents, |Psi| up to 2.19e+06 rad] remainder route 4.085e-10 rad; reduce-raw route 3.606e-10 rad; raw phase 4.657e-10 rad; theta_deriv vs FD 3.452e-12
+
+[phase composition, exact constituents, |Psi| up to 2.19e+05 rad] remainder route 3.553e-15 rad; reduce-raw route 3.079e-11 rad; raw phase 2.910e-11 rad; theta_deriv vs FD 2.332e-12
+
+[phase composition, exact constituents, |Psi| up to 2.19e+06 rad] remainder route 1.776e-15 rad; reduce-raw route 3.800e-10 rad; raw phase 4.657e-10 rad; theta_deriv vs FD 2.332e-12
+
+[G-only regime, w=0.33333] f_sin vs A_G f/H^2: 2.532e-16
+
+[G-only regime, w=0.2] f_sin vs A_G f/H^2: 2.288e-16
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[rho] against prompt 01's references (rad, absolute):
+    LambdaCDMModel Gk  k = 1.000000e+05   3.5546e-18  at z = 1002.4686317608628
+    LambdaCDMModel Tk  k = 1.000000e+05   2.7756e-17  at z = 1004324.1040406098
+    LambdaCDMModel Gk  k = 1.000000e+07   2.4718e-18  at z = 100.18509030816094
+    LambdaCDMModel Tk  k = 1.000000e+07   4.1633e-17  at z = 1006183010.6197172
+    LambdaCDMModel Gk  k = 3.000000e+08   6.0772e-18  at z = 1.0006165874356605.............................................  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py", line 188, in compute_quad_source
+    Tq_: Optional[TkNumericValue] = _lookup(z, "Tq", Tq_map, Tq_z_max)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py", line 177, in _lookup
+    raise RuntimeError(
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py", line 189, in compute_quad_source
+    Tr_: Optional[TkNumericValue] = _lookup(z, "Tr", Tr_map, Tr_z_max)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py", line 177, in _lookup
+    raise RuntimeError(
+....
+    LambdaCDMModel Tk  k = 3.000000e+08   4.1633e-17  at z = 1006183010.6197172
+    QCDModel       Gk  k = 1.000000e+05   2.6563e-18  at z = 1006183010.6197172
+    QCDModel       Tk  k = 1.000000e+05   5.5511e-17  at z = 1006183010.6197172
+    QCDModel       Gk  k = 1.000000e+07   2.2328e-18  at z = 1004324.1040406098
+    QCDModel       Tk  k = 1.000000e+07   4.8572e-17  at z = 100742419275.51031
+    QCDModel       Gk  k = 3.000000e+08   2.5195e-15  at z = 1006183010.6197172
+    QCDModel       Tk  k = 3.000000e+08   5.4262e-15  at z = 100742419275.51031
+    worst 5.4262e-15 rad at (model, sector, k, z) = ('QCDModel', 'Tk', 300000000.0, 100742419275.51031); threshold 1e-07
+
+[cost] LambdaCDMModel Gk  k = 1.000000e+05  1037 nodes  4144 evaluations (1.000 x order*intervals)  0.018 s
+[cost] LambdaCDMModel Tk  k = 1.000000e+05  1037 nodes  4144 evaluations (1.000 x order*intervals)  0.020 s
+[cost] LambdaCDMModel Gk  k = 1.000000e+07  1236 nodes  4940 evaluations (1.000 x order*intervals)  0.025 s
+[cost] LambdaCDMModel Tk  k = 1.000000e+07  1236 nodes  4940 evaluations (1.000 x order*intervals)  0.027 s
+[cost] LambdaCDMModel Gk  k = 3.000000e+08  1384 nodes  5532 evaluations (1.000 x order*intervals)  0.027 s
+[cost] LambdaCDMModel Tk  k = 3.000000e+08  1384 nodes  5532 evaluations (1.000 x order*intervals)  0.030 s
+[cost] QCDModel       Gk  k = 1.000000e+05  1040 nodes  4160 evaluations (1.001 x order*intervals)  0.069 s
+[cost] QCDModel       Tk  k = 1.000000e+05  1040 nodes  4160 evaluations (1.001 x order*intervals)  0.124 s
+[cost] QCDModel       Gk  k = 1.000000e+07  1242 nodes  4972 evaluations (1.002 x order*intervals)  0.084 s
+[cost] QCDModel       Tk  k = 1.000000e+07  1242 nodes  4972 evaluations (1.002 x order*intervals)  0.174 s
+[cost] QCDModel       Gk  k = 3.000000e+08  1401 nodes  5612 evaluations (1.002 x order*intervals)  0.098 s
+[cost] QCDModel       Tk  k = 3.000000e+08  1401 nodes  5612 evaluations (1.002 x order*intervals)  0.198 s
+
+[rho_T] radiation control, x in [24, 10000]: max 2.6888e-17 rad absolute at z = 2244.0007652843915, 1.5527e-14 relative (271 nodes, order 4)
+[rho_T] whole window: table -4.157873557184e-02 rad; asymptote 1/x - 1/x_i -4.156666666667e-02; departure 2.9027e-04 relative; review §12.4 quotes 1/x_i - 1/x = 0.041567 at x_i = 24
+
+[rho_G] LambdaCDM k = 1.000000e+05: -2.588116e-07 rad; QCD k = 3.000000e+08: -1.272481e-03 rad
+
+[rho_T] LambdaCDMModel k = 1.000000e+05: -8.634258e-02 rad
+[rho_T] LambdaCDMModel k = 1.000000e+07: -8.634111e-02 rad
+[rho_T] LambdaCDMModel k = 3.000000e+08: -8.634109e-02 rad
+[rho_T] QCDModel       k = 1.000000e+05: -8.866755e-02 rad
+[rho_T] QCDModel       k = 1.000000e+07: -8.902578e-02 rad
+[rho_T] QCDModel       k = 3.000000e+08: -9.327126e-02 rad
+[prompt 10] resolved kink: default knots 3.4739e-03, C0 knot at the break 6.6613e-16 (5.22e+12x)
+[prompt 10] unresolved feature of width h: default knots 8.2184e-05, C0 knot 3.5928e-04 (0.229x), 2x samples and default knots 3.1871e-06 (25.8x)
+
+[prompt 09 test 2] d theta/dz relative error 2.22e-16, d theta/d log(1+z) relative error 3.63e-16 (required <= 1e-12)
+[prompt 09] build_phi_samples round trip at the samples: 0 rad; max |phi| = 18.85 rad (3 cycles = 18.85)
+
+[prompt 09] quintic phi spline: max |dphi| = 1.37e-14 rad
+[prompt 09 test 1] at the samples: max |dtheta| = 3.681e-08 rad
+
+[prompt 09 test 1] k = 1e+08/Mpc, z_r = 0.1, z_s in [10, 10000] at 100/decade (296 samples, 2890 interior evaluation points):
+  PrimitivePhase max |dtheta| = 4.189e-08 rad (at z_s = 1730.75) = 2.81 ulp of the 9.09e+07 rad span
+  phase_spline   max |dtheta| = 0.007286 rad  ->  ratio 1.739e+05 (required > 1e+05)
+  floors: eps*k*tau = 2.02e-08 rad, 1 ulp = 1.49e-08 rad; README Sec 6 consumer target 1e-06 rad
+
+[prompt 09 test 4] phi = 0.3 sin(log(1+z)): max |dphi| = 2.157e-10 rad against the cubic law h^4 max|phi''''|/384 = 2.19e-10 (h = 0.02302)
+[prompt 09 test 4] d theta/d log(1+z) minus the closed-form leading term reproduces d phi/d log(1+z) to 2.88e-08
+
+source_function vs independent spec 03 R22: worst relative = 2.802e-16
+type=<class 'RuntimeError'>, value=QuadSource: redshift z=6251.5344 (store_id=1120) is missing from the sampled values of Tq, but lies inside its sampled range (z_max=25003.069). The source and transfer-function grids are expected to be nested, so this is a gap in the Tq data.
+type=<class 'RuntimeError'>, value=QuadSource: redshift z=6251.5344 (store_id=1120) is missing from the sampled values of Tr, but lies inside its sampled range (z_max=62998.63). The source and transfer-function grids are expected to be nested, so this is a gap in the Tr data.
+
+spline residual of _create_functions inside the both-numeric region
+(q = r = k, exact radiation source, 100 samples per log10 z,
+ region from 5 e-folds super-horizon down to the stated hand-over)
+                         hand-over  x at hand-over  cycles of f  max err / envelope         at z
+          z_exit_subh_e3 (typical)            11.6        3.691           4.493e-04        501.2
+                    z_exit_subh_e6           232.9        74.14           1.220e+00        24.17
+    0.85 * z_exit_subh_e6 (latest)           272.1        86.61           1.129e+00        56.43
+
+[oracle 1, exact] total vs analytic_rad, worst 1.860e-08:
+  b=0 together x_resp=980 exact        total=+9.2632298681e-13 analytic=+9.2632300404e-13 rel=1.860e-08 regimes=['-', 'r', 'Gr', 'Gqr'] Levin abserr/|total|=1.7e-12 converged=True solves=15
+  b=0 together x_resp=100 exact        total=-1.4546904149e-10 analytic=-1.4546904142e-10 rel=5.047e-10 regimes=['-', 'r', 'Gr', 'Gqr'] Levin abserr/|total|=4.6e-14 converged=True solves=15
+  b=0 together x_resp=30 exact         total=-1.9958705760e-10 analytic=-1.9958705760e-10 rel=2.896e-12 regimes=['-', 'r', 'Gr', 'Gqr'] Levin abserr/|total|=1.1e-13 converged=True solves=9
+  b=0 T-first x_resp=980 exact         total=+7.4690421983e-11 analytic=+7.4690421987e-11 rel=5.580e-11 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=4.4e-13 converged=True solves=15
+  b=0 T-first x_resp=100 exact         total=-8.4352152992e-09 analytic=-8.4352152992e-09 rel=1.942e-14 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=3.4e-14 converged=True solves=13
+  b=0 T-first x_resp=30 exact          total=+2.3437794771e-08 analytic=+2.3437794771e-08 rel=7.059e-16 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=3.9e-14 converged=True solves=7
+  b=0 q-smooth x_resp=980 exact        total=-8.5701377060e-12 analytic=-8.5701377049e-12 rel=1.272e-10 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=1.4e-10 converged=True solves=19
+  b=0 q-smooth x_resp=100 exact        total=+1.5578803620e-10 analytic=+1.5578803620e-10 rel=1.386e-11 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=1.5e-11 converged=True solves=11
+  b=0 q-smooth x_resp=30 exact         total=+7.4905262167e-10 analytic=+7.4905262167e-10 rel=9.540e-12 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=1.0e-11 converged=True solves=9
+  b=0.2 together x_resp=980 exact      total=+4.9847338684e-12 analytic=+4.9847338677e-12 rel=1.348e-10 regimes=['-', 'G', 'Gr', 'Gqr'] Levin abserr/|total|=5.2e-13 converged=True solves=15
+  b=0.2 together x_resp=100 exact      total=-4.2083425529e-11 analytic=-4.2083425543e-11 rel=3.151e-10 regimes=['-', 'G', 'Gr', 'Gqr'] Levin abserr/|total|=2.3e-13 converged=True solves=13
+  b=0.2 together x_resp=30 exact       total=+3.1040426690e-10 analytic=+3.1040426690e-10 rel=3.439e-13 regimes=['-', 'G', 'Gr', 'Gqr'] Levin abserr/|total|=1.1e-13 converged=True solves=9
+  b=0.2 T-first x_resp=980 exact       total=-6.8179016559e-11 analytic=-6.8179016560e-11 rel=7.323e-12 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=3.3e-10 converged=True solves=13
+  b=0.2 T-first x_resp=100 exact       total=+5.6035620689e-09 analytic=+5.6035620689e-09 rel=7.086e-15 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=4.6e-14 converged=True solves=13
+  b=0.2 T-first x_resp=30 exact        total=+2.1035156913e-08 analytic=+2.1035156913e-08 rel=2.359e-15 regimes=['-', 'r', 'qr', 'Gqr'] Levin abserr/|total|=5.5e-14 converged=True solves=7
+  b=0.2 q-smooth x_resp=980 exact      total=-2.5224741948e-12 analytic=-2.5224741942e-12 rel=2.167e-10 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=2.9e-10 converged=True solves=19
+  b=0.2 q-smooth x_resp=100 exact      total=+2.4408179425e-11 analytic=+2.4408179429e-11 rel=1.521e-10 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=1.8e-10 converged=True solves=11
+  b=0.2 q-smooth x_resp=30 exact       total=+5.6787830863e-10 analytic=+5.6787830861e-10 rel=3.597e-11 regimes=['-', 'G', 'Gr'] Levin abserr/|total|=4.1e-11 converged=True solves=9...  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 775, in evaluate_QuadSource_integral
+    _check_bessel_order("Bessel_0pt5", Bessel_0pt5, 0.5 + b)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 723, in _check_bessel_order
+    raise RuntimeError(
+....
+
+[oracle 1, realistic] worst: total vs analytic_rad 2.380e-03 relative; normalised by scale: smooth part 4.553e-04, Levin part 1.303e-04, total 4.912e-04
+  b=0 together x_resp=980 realistic        rel(total, analytic)=2.380e-03 |numeric_quad/total|=4.8 /scale: smooth-part dev=4.553e-04 Levin-part dev=3.581e-05 total dev=4.912e-04 solves=403 t=2.64s
+  b=0 together x_resp=100 realistic        rel(total, analytic)=2.563e-05 |numeric_quad/total|=1.3 /scale: smooth-part dev=1.460e-05 Levin-part dev=4.970e-06 total dev=1.957e-05 solves=101 t=1.07s
+  b=0 together x_resp=30 realistic         rel(total, analytic)=4.256e-04 |numeric_quad/total|=0.6 /scale: smooth-part dev=4.008e-04 Levin-part dev=2.477e-05 total dev=4.256e-04 solves=17 t=0.41s
+  b=0 T-first x_resp=980 realistic         rel(total, analytic)=3.011e-04 |numeric_quad/total|=1.9 /scale: smooth-part dev=1.014e-04 Levin-part dev=2.919e-06 total dev=1.043e-04 solves=127 t=0.84s
+  b=0 T-first x_resp=100 realistic         rel(total, analytic)=4.775e-05 |numeric_quad/total|=0.9 /scale: smooth-part dev=4.153e-05 Levin-part dev=6.222e-06 total dev=4.775e-05 solves=57 t=0.56s
+  b=0 T-first x_resp=30 realistic          rel(total, analytic)=7.238e-05 |numeric_quad/total|=0.9 /scale: smooth-part dev=6.528e-05 Levin-part dev=7.101e-06 total dev=7.238e-05 solves=13 t=0.41s
+  b=0 q-smooth x_resp=980 realistic        rel(total, analytic)=3.657e-04 |numeric_quad/total|=3.1 /scale: smooth-part dev=1.569e-09 Levin-part dev=1.180e-04 total dev=1.180e-04 solves=345 t=1.16s
+  b=0 q-smooth x_resp=100 realistic        rel(total, analytic)=2.058e-04 |numeric_quad/total|=1.6 /scale: smooth-part dev=1.190e-11 Levin-part dev=1.303e-04 total dev=1.303e-04 solves=87 t=0.41s
+  b=0 q-smooth x_resp=30 realistic         rel(total, analytic)=1.427e-04 |numeric_quad/total|=0.9 /scale: smooth-part dev=1.231e-09 Levin-part dev=7.343e-05 total dev=7.343e-05 solves=47 t=0.14s
+  b=0.2 together x_resp=980 realistic      rel(total, analytic)=5.868e-05 |numeric_quad/total|=1.4 /scale: smooth-part dev=6.308e-06 Levin-part dev=3.527e-05 total dev=4.157e-05 solves=437 t=2.13s
+  b=0.2 together x_resp=100 realistic      rel(total, analytic)=1.304e-04 |numeric_quad/total|=1.5 /scale: smooth-part dev=4.056e-05 Levin-part dev=4.714e-05 total dev=8.769e-05 solves=65 t=0.65s
+  b=0.2 together x_resp=30 realistic       rel(total, analytic)=5.760e-05 |numeric_quad/total|=1.5 /scale: smooth-part dev=4.921e-06 Levin-part dev=3.391e-05 total dev=3.883e-05 solves=25 t=0.53s
+  b=0.2 T-first x_resp=980 realistic       rel(total, analytic)=2.507e-05 |numeric_quad/total|=0.5 /scale: smooth-part dev=1.021e-05 Levin-part dev=1.486e-05 total dev=2.507e-05 solves=89 t=0.71s
+  b=0.2 T-first x_resp=100 realistic       rel(total, analytic)=8.704e-06 |numeric_quad/total|=0.8 /scale: smooth-part dev=6.497e-06 Levin-part dev=1.520e-05 total dev=8.704e-06 solves=55 t=0.67s
+  b=0.2 T-first x_resp=30 realistic        rel(total, analytic)=2.523e-06 |numeric_quad/total|=0.9 /scale: smooth-part dev=6.815e-06 Levin-part dev=9.338e-06 total dev=2.523e-06 solves=13 t=0.28s
+  b=0.2 q-smooth x_resp=980 realistic      rel(total, analytic)=7.512e-06 |numeric_quad/total|=2.4 /scale: smooth-part dev=1.568e-09 Levin-part dev=3.127e-06 total dev=3.126e-06 solves=367 t=1.23s
+  b=0.2 q-smooth x_resp=100 realistic      rel(total, analytic)=4.321e-04 |numeric_quad/total|=5.0 /scale: smooth-part dev=6.355e-10 Levin-part dev=7.147e-05 total dev=7.147e-05 solves=65 t=0.35s
+  b=0.2 q-smooth x_resp=30 realistic       rel(total, analytic)=1.122e-04 |numeric_quad/total|=0.9 /scale: smooth-part dev=7.864e-10 Levin-part dev=1.122e-04 total dev=1.122e-04 solves=59 t=0.23s
+type=<class 'RuntimeError'>, value=compute_QuadSource_integral: the supplied Bessel_0pt5 phase spline does not appear to be a Liouville-Green representation of the Bessel function of order nu=0.7 required by b=0.2: at x=1.4 the spline gives J=0.66452377 against scipy's J_nu=0.63171865, a discrepancy of 4.865e-02 of the local envelope m=0.67434 (tolerance 1.0e-03). The Bessel phase splines must be built with the same b that is passed to the source time integral (audit QI-1)
+
+[b guard] compute_QuadSource_integral: the supplied Bessel_0pt5 phase spline does not appear to be a Liouville-Green representation of the Bessel function of order nu=0.7 required by b=0.2: at x=1.4 the spline gives J=0.66452377 a
+
+[oracle 2] b=0 together x_resp=60 exact: total=-1.196660220570e-10 quad=-1.196660220570e-10 rel=4.320e-15 (quad err 2.2e-13) regimes=['-', 'r', 'Gr', 'Gqr']
+
+[oracle 2] b=0 T-first x_resp=60 exact: total=-3.861167962962e-09 quad=-3.861167962962e-09 rel=1.500e-15 (quad err 1.0e-13) regimes=['-', 'r', 'qr', 'Gqr']
+
+[oracle 2] b=0 q-smooth x_resp=60 exact: total=-2.292731245284e-10 quad=-2.292731245284e-10 rel=4.352e-14 (quad err 6.5e-13) regimes=['G', 'Gr']
+
+[oracle 2] b=0.2 together x_resp=60 exact: total=+2.044830055377e-11 quad=+2.044830055377e-11 rel=1.054e-13 (quad err 2.8e-13) regimes=['-', 'G', 'Gr', 'Gqr']
+
+[oracle 2] b=0.2 T-first x_resp=60 exact: total=+2.409158654220e-09 quad=+2.409158654220e-09 rel=2.575e-15 (quad err 5.9e-13) regimes=['-', 'r', 'qr', 'Gqr']
+
+[oracle 2] b=0.2 q-smooth x_resp=60 exact: total=-1.125643845185e-10 quad=-1.125643845184e-10 rel=3.422e-13 (quad err 7.0e-13) regimes=['G', 'Gr']
+
+[error bound] rtol 1e-8 vs 1e-11, worst ratio 6.529e-01:
+  b=0 together x_resp=980 exact        |Delta total|=3.312e-26 bound=1.437e-21 ratio=2.305e-05
+  b=0 together x_resp=100 exact        |Delta total|=5.170e-25 bound=3.775e-19 ratio=1.370e-06
+  b=0 together x_resp=30 exact         |Delta total|=1.809e-25 bound=3.533e-20 ratio=5.122e-06
+  b=0 T-first x_resp=980 exact         |Delta total|=5.170e-26 bound=1.663e-19 ratio=3.108e-07
+  b=0 T-first x_resp=100 exact         |Delta total|=0.000e+00 bound=1.460e-18 ratio=0.000e+00
+  b=0 T-first x_resp=30 exact          |Delta total|=6.617e-24 bound=1.343e-18 ratio=4.928e-06
+  b=0 q-smooth x_resp=980 exact        |Delta total|=1.089e-21 bound=1.148e-20 ratio=9.482e-02
+  b=0 q-smooth x_resp=100 exact        |Delta total|=2.173e-21 bound=1.117e-19 ratio=1.946e-02
+  b=0 q-smooth x_resp=30 exact         |Delta total|=7.144e-21 bound=3.748e-19 ratio=1.906e-02
+  b=0.2 together x_resp=980 exact      |Delta total|=1.616e-27 bound=1.276e-22 ratio=1.266e-05
+  b=0.2 together x_resp=100 exact      |Delta total|=3.877e-26 bound=1.403e-19 ratio=2.763e-07
+  b=0.2 together x_resp=30 exact       |Delta total|=2.068e-25 bound=3.801e-18 ratio=5.440e-08
+  b=0.2 T-first x_resp=980 exact       |Delta total|=1.680e-25 bound=2.678e-20 ratio=6.274e-06
+  b=0.2 T-first x_resp=100 exact       |Delta total|=6.617e-24 bound=6.671e-19 ratio=9.920e-06
+  b=0.2 T-first x_resp=30 exact        |Delta total|=2.647e-23 bound=4.014e-18 ratio=6.595e-06
+  b=0.2 q-smooth x_resp=980 exact      |Delta total|=5.482e-22 bound=1.041e-21 ratio=5.268e-01
+  b=0.2 q-smooth x_resp=100 exact      |Delta total|=3.730e-21 bound=5.713e-21 ratio=6.529e-01
+  b=0.2 q-smooth x_resp=30 exact       |Delta total|=2.041e-20 bound=3.274e-20 ratio=6.236e-01
+
+[error bound] total_abserr: worst |total-analytic|/abserr 1.229e+01 (exact), 4.468e+04 (realistic); worst abserr/|total| 1.435e-07; 14 of 36 cases report total_converged=False:
+  b=0 together x_resp=980 exact            abserr=1.402e-21 (quad 1.40e-21 + Levin 1.57e-24) = 1.51e-09 of |total|; |total-analytic|/abserr=1.229e+01 converged=True phase_limited=False
+  b=0 together x_resp=100 exact            abserr=3.757e-19 (quad 3.76e-19 + Levin 6.75e-24) = 2.58e-09 of |total|; |total-analytic|/abserr=1.954e-01 converged=True phase_limited=False
+  b=0 together x_resp=30 exact             abserr=3.523e-20 (quad 3.52e-20 + Levin 2.15e-23) = 1.76e-10 of |total|; |total-analytic|/abserr=1.641e-02 converged=True phase_limited=False
+  b=0 T-first x_resp=980 exact             abserr=1.656e-19 (quad 1.66e-19 + Levin 3.27e-23) = 2.22e-09 of |total|; |total-analytic|/abserr=2.517e-02 converged=True phase_limited=False
+  b=0 T-first x_resp=100 exact             abserr=1.449e-18 (quad 1.45e-18 + Levin 2.85e-22) = 1.72e-10 of |total|; |total-analytic|/abserr=1.130e-04 converged=True phase_limited=False
+  b=0 T-first x_resp=30 exact              abserr=1.254e-18 (quad 1.25e-18 + Levin 9.18e-22) = 5.35e-11 of |total|; |total-analytic|/abserr=1.319e-05 converged=True phase_limited=False
+  b=0 q-smooth x_resp=980 exact            abserr=1.146e-20 (quad 1.03e-20 + Levin 1.21e-21) = 1.34e-09 of |total|; |total-analytic|/abserr=9.513e-02 converged=True phase_limited=False
+  b=0 q-smooth x_resp=100 exact            abserr=1.115e-19 (quad 1.09e-19 + Levin 2.28e-21) = 7.16e-10 of |total|; |total-analytic|/abserr=1.936e-02 converged=True phase_limited=False
+  b=0 q-smooth x_resp=30 exact             abserr=3.717e-19 (quad 3.64e-19 + Levin 7.58e-21) = 4.96e-10 of |total|; |total-analytic|/abserr=1.922e-02 converged=True phase_limited=False
+  b=0.2 together x_resp=980 exact          abserr=6.380e-23 (quad 6.12e-23 + Levin 2.59e-24) = 1.28e-11 of |total|; |total-analytic|/abserr=1.053e+01 converged=True phase_limited=False
+  b=0.2 together x_resp=100 exact          abserr=1.400e-19 (quad 1.40e-19 + Levin 9.82e-24) = 3.33e-09 of |total|; |total-analytic|/abserr=9.470e-02 converged=True phase_limited=False
+  b=0.2 together x_resp=30 exact           abserr=3.797e-18 (quad 3.80e-18 + Levin 3.50e-23) = 1.22e-08 of |total|; |total-analytic|/abserr=2.812e-05 converged=True phase_limited=False
+  b=0.2 T-first x_resp=980 exact           abserr=2.672e-20 (quad 4.19e-21 + Levin 2.25e-20) = 3.92e-10 of |total|; |total-analytic|/abserr=1.869e-02 converged=True phase_limited=False
+  b=0.2 T-first x_resp=100 exact           abserr=6.616e-19 (quad 6.61e-19 + Levin 2.58e-22) = 1.18e-10 of |total|; |total-analytic|/abserr=6.001e-05 converged=True phase_limited=False
+  b=0.2 T-first x_resp=30 exact            abserr=3.996e-18 (quad 3.99e-18 + Levin 1.16e-21) = 1.90e-10 of |total|; |total-analytic|/abserr=1.242e-05 converged=True phase_limited=False
+  b=0.2 q-smooth x_resp=980 exact          abserr=9.877e-22 (quad 2.60e-22 + Levin 7.28e-22) = 3.92e-10 of |total|; |total-analytic|/abserr=5.534e-01 converged=True phase_limited=False
+  b=0.2 q-smooth x_resp=100 exact          abserr=4.708e-21 (quad 2.73e-22 + Levin 4.43e-21) = 1.93e-10 of |total|; |total-analytic|/abserr=7.886e-01 converged=True phase_limited=False
+  b=0.2 q-smooth x_resp=30 exact           abserr=2.652e-20 (quad 3.11e-21 + Levin 2.34e-20) = 4.67e-11 of |total|; |total-analytic|/abserr=7.702e-01 converged=True phase_limited=False
+  b=0 together x_resp=980 realistic        abserr=7.096e-20 (quad 4.21e-20 + Levin 2.89e-20) = 7.64e-08 of |total|; |total-analytic|/abserr=3.107e+04 converged=False phase_limited=False
+  b=0 together x_resp=100 realistic        abserr=2.042e-18 (quad 1.77e-18 + Levin 2.72e-19) = 1.40e-08 of |total|; |total-analytic|/abserr=1.825e+03 converged=False phase_limited=False
+  b=0 together x_resp=30 realistic         abserr=1.901e-18 (quad 1.17e-18 + Levin 7.33e-19) = 9.53e-09 of |total|; |total-analytic|/abserr=4.468e+04 converged=False phase_limited=False
+  b=0 T-first x_resp=980 realistic         abserr=1.683e-18 (quad 1.34e-18 + Levin 3.40e-19) = 2.25e-08 of |total|; |total-analytic|/abserr=1.336e+04 converged=False phase_limited=False
+  b=0 T-first x_resp=100 realistic         abserr=6.714e-17 (quad 6.50e-17 + Levin 2.19e-18) = 7.96e-09 of |total|; |total-analytic|/abserr=5.999e+03 converged=False phase_limited=False
+  b=0 T-first x_resp=30 realistic          abserr=1.925e-16 (quad 1.87e-16 + Levin 5.36e-18) = 8.21e-09 of |total|; |total-analytic|/abserr=8.812e+03 converged=True phase_limited=False
+  b=0 q-smooth x_resp=980 realistic        abserr=1.147e-18 (quad 1.09e-20 + Levin 1.14e-18) = 1.34e-07 of |total|; |total-analytic|/abserr=2.732e+03 converged=False phase_limited=False
+  b=0 q-smooth x_resp=100 realistic        abserr=7.028e-18 (quad 1.52e-19 + Levin 6.88e-18) = 4.51e-08 of |total|; |total-analytic|/abserr=4.562e+03 converged=False phase_limited=False
+  b=0 q-smooth x_resp=30 realistic         abserr=1.874e-17 (quad 6.75e-19 + Levin 1.81e-17) = 2.50e-08 of |total|; |total-analytic|/abserr=5.704e+03 converged=False phase_limited=False
+  b=0.2 together x_resp=980 realistic      abserr=7.042e-20 (quad 6.32e-20 + Levin 7.21e-21) = 1.41e-08 of |total|; |total-analytic|/abserr=4.153e+03 converged=False phase_limited=False
+  b=0.2 together x_resp=100 realistic      abserr=7.700e-19 (quad 6.03e-19 + Levin 1.67e-19) = 1.83e-08 of |total|; |total-analytic|/abserr=7.129e+03 converged=False phase_limited=False
+  b=0.2 together x_resp=30 realistic       abserr=4.495e-18 (quad 4.17e-18 + Levin 3.21e-19) = 1.45e-08 of |total|; |total-analytic|/abserr=3.977e+03 converged=False phase_limited=False
+  b=0.2 T-first x_resp=980 realistic       abserr=2.326e-18 (quad 2.18e-18 + Levin 1.45e-19) = 3.41e-08 of |total|; |total-analytic|/abserr=7.348e+02 converged=True phase_limited=False
+  b=0.2 T-first x_resp=100 realistic       abserr=4.062e-17 (quad 3.98e-17 + Levin 8.22e-19) = 7.25e-09 of |total|; |total-analytic|/abserr=1.201e+03 converged=True phase_limited=False
+  b=0.2 T-first x_resp=30 realistic        abserr=1.964e-16 (quad 1.93e-16 + Levin 3.00e-18) = 9.34e-09 of |total|; |total-analytic|/abserr=2.702e+02 converged=True phase_limited=False
+  b=0.2 q-smooth x_resp=980 realistic      abserr=3.607e-19 (quad 5.99e-23 + Levin 3.61e-19) = 1.43e-07 of |total|; |total-analytic|/abserr=5.253e+01 converged=False phase_limited=False
+  b=0.2 q-smooth x_resp=100 realistic      abserr=3.502e-18 (quad 8.68e-22 + Levin 3.50e-18) = 1.44e-07 of |total|; |total-analytic|/abserr=3.012e+03 converged=False phase_limited=False
+  b=0.2 q-smooth x_resp=30 realistic       abserr=9.884e-18 (quad 1.92e-21 + Levin 9.88e-18) = 1.74e-08 of |total|; |total-analytic|/abserr=6.447e+03 converged=False phase_limited=False.  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 796, in evaluate_QuadSource_integral
+    partition = build_partition(GkPolicy, Tq_f, Tr_f, source, z_resp, z_top)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 491, in build_partition
+    gaps[label] = _check_gap(
+                  ^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 307, in _check_gap
+    raise RuntimeError(
+..  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 796, in evaluate_QuadSource_integral
+    partition = build_partition(GkPolicy, Tq_f, Tr_f, source, z_resp, z_top)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 488, in build_partition
+    raise RuntimeError(
+./Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_quadsource_integral.py:497: DeprecationWarning: bessel_phase: atol, rtol is deprecated and has no effect. It described a tolerance of the phase ODE solve, which no longer exists, so it maps to nothing rather than to a translated value; the new defaults are being used instead. Use phase_atol (absolute radians) and amplitude_rtol (relative) instead.
+  bessel_phase(0.5 + self.b, x_max, atol=1e-25, rtol=5e-14),
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_quadsource_integral.py:498: DeprecationWarning: bessel_phase: atol, rtol is deprecated and has no effect. It described a tolerance of the phase ODE solve, which no longer exists, so it maps to nothing rather than to a translated value; the new defaults are being used instead. Use phase_atol (absolute radians) and amplitude_rtol (relative) instead.
+  bessel_phase(2.5 + self.b, x_max, atol=1e-25, rtol=5e-14),
+......................................................
+type=<class 'RuntimeError'>, value=compute_QuadSource_integral: the Liouville-Green representation of Tr is not evaluable over the whole sub-interval z in (361.37, 332.33): WKB region = (321.99, 5.9282), hand-over z=361.37; the shortfall is 1.150e-01 in log(1+z), but at most 3.455e-02 (1.5 mean source-grid steps) can be bridged by clamping
+
+[hand-over clamp] gap 2.301e-02 in log(1+z) (1.00 grid steps); total with gap vs without: rel 5.140e-03; with gap vs analytic_rad: rel 5.114e-03
+type=<class 'RuntimeError'>, value=compute_QuadSource_integral: z_response=68.282 (sub-interval bottom z=68.282) lies below the lowest Liouville-Green sample z=92.251 of Tr (WKB region = (361.37, 92.251))
+
+[old-regime regression] theta_G span 4.4 cycles; old total -1.426544368746e-16 (numeric +6.084616e-17, Levin -2.035006e-16), new total -1.426544368746e-16 (numeric +6.084616e-17, Levin -2.035006e-16); rel 2.139e-13
+
+[G type numeric] b=0 T-first x_resp=100 exact: rel vs analytic_rad 4.948e-11
+
+[G type WKB] b=0 T-first x_resp=100 exact: rel vs analytic_rad 1.706e-14
+
+[q = r] rel vs analytic_rad 6.486e-11
+
+[partition] rows reached: ['G and one T', 'G only', 'Tq and Tr, G smooth', 'all three', 'none', 'one T only']
+
+[schema] b: FLOAT nullable=False, total_abserr: FLOAT nullable=True, total_converged: BOOLEAN nullable=True, total_phase_limited: BOOLEAN nullable=True
+
+[13] region bottom raised 0.1114 in log(1+z) (5 source-grid steps of 0.02228) to z=5.44188e+14, against a sub-interval bottom of z=4.8682e+14
+[13] raised: compute_QuadSource_integral: sub-interval bottom z=4.8682e+14 is out-of-bounds for the Gk numeric region (6.8e+14, 5.4419e+14) [domain=6.8e+14, 4.8682e+14]
+
+[13] log/exp round trip at the sub-interval ends: z_top 6.8e+14 -> 6.8e+14 (+1.125), z_bottom 4.8682e+14 -> 4.8682e+14 (-1.188); the retired absolute tolerance was 1.0e-07 in z
+
+[13] 784 redshifts at 100 per log10(z) over z in [1e7, 6.8788e14]: the retired comparison selected 329 downward (42 %) and 313 upward (40 %)
+
+[13] numeric_quad_integral over the round-tripped limits (6.8e+14, 4.8682e+14) against a region (6.8e+14, 4.8682e+14): value=1.59767e-45
+[13] raised: compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z=4.8682e+14 is out-of-bounds for the region (6.8e+14, 5.4419e+14) where a numerical solution is available [domain=6.8e+14, 4.8682e+14]
+
+[B11] q = r: skipped=[{'factor': 'Tq', 'z': 300.973834223185, 'log_width': 0.0, 'reason': 'hand-over within MIN_SUBINTERVAL_LOG_WIDTH of the sub-interval above it'}]
+
+[B11] hand-overs z=1000 and z=999.99996 (separation 4.000e-08 in log(1+z), MIN_SUBINTERVAL_LOG_WIDTH=1.0e-07): 2 sub-intervals, skipped=[{'factor': 'Tr', 'z': 999.9999599600009, 'log_width': 3.999999975690116e-08, 'reason': 'hand-over within MIN_SUBINTERVAL_LOG_WIDTH of the sub-interval above it'}]
+
+[B11] z_response = 0: 1 sub-interval(s), method quad
+
+[split] b=0: whole=-1.579228192505e-13 split=-1.579228192504e-13 rel=4.150e-13
+
+[split] b=0.2: whole=+8.426573158295e-13 split=+8.426573158295e-13 rel=4.182e-14
+
+[hand-over seam, exact, b=0] smooth side -1.152671e-11, LG side -1.152671e-11, |diff|/envelope 1.288e-15
+
+[hand-over seam, exact, b=0.2] smooth side +1.327557e-12, LG side +1.327557e-12, |diff|/envelope 8.214e-15
+
+[hand-over seam, realistic, b=0] smooth side -1.152671e-11, LG side -1.152654e-11, |diff|/envelope 5.619e-06
+
+[hand-over seam, realistic, b=0.2] smooth side +1.327557e-12, LG side +1.327716e-12, |diff|/envelope 4.005e-05
+
+[declared phase error] reported abserr without / with theta_abserr:
+   analytic J1  3.193335e-17 -> 3.193335e-17  (x1)
+   analytic Y1  1.234371e-17 -> 1.234371e-17  (x1)
+   analytic J2  4.193014e-17 -> 4.193014e-17  (x1)
+   analytic Y2  1.108063e-16 -> 1.108063e-16  (x1)
+   analytic J3  3.608551e-17 -> 3.608551e-17  (x1)
+   analytic Y3  8.966511e-17 -> 8.966511e-17  (x1)
+   analytic J4  4.603709e-17 -> 4.603709e-17  (x1)
+   analytic Y4  5.017040e-17 -> 5.017040e-17  (x1)
+   analytic J1  1.257996e-16 -> 1.257996e-16  (x1)
+   analytic Y1  1.142989e-16 -> 1.142989e-16  (x1)
+   analytic J2  5.568159e-17 -> 5.568159e-17  (x1)
+   analytic Y2  1.485487e-16 -> 1.485487e-16  (x1)
+   analytic J3  3.536765e-17 -> 3.536765e-17  (x1)
+   analytic Y3  6.716966e-17 -> 6.716966e-17  (x1)
+   analytic J4  1.058153e-18 -> 2.496587e-17  (x23.59)
+   analytic Y4  6.325102e-16 -> 6.325102e-16  (x1)
+
+[phase keys] 16 analytic Levin calls, key sets [('theta', 'theta_abserr', 'theta_deriv', 'theta_mod_2pi')]
+
+@@ QSI group derivative at resonance, eta=78730: dTheta/dlog eta = 1.210000e-08 against a constituent scale of 1.000e+09
+   relative error (the metric this test refuses to use): new 0.000e+00, old 1.000e+00
+
+@@ QSI group (near-resonant): K=0.0, |K|/max=0.000e+00
+   |delta Theta|              new 1.3758e-12 (eta=0.010133), old 5.1473e-08 (eta=78730), ratio old/new 3.741e+04; worst error/declared-bound 0.4877
+   |delta dTheta/dlog eta|    new 9.6402e-12 (eta=0.010133), old 2.2824e-08 (eta=41737), ratio old/new 2368
+   scaled by max(k,q cs,r cs) eta: new 7.4898e-14, old 7.4728e-14
+
+@@ QSI group (generic): K=-2701.7059221717664, |K|/max=2.702e-01
+   |delta Theta|              new 7.4506e-09 (eta=14547), old 1.1921e-07 (eta=52592), ratio old/new 16; worst error/declared-bound 0.4895
+   |delta dTheta/dlog eta|    new 2.9802e-08 (eta=52592), old 2.9802e-08 (eta=27660), ratio old/new 1
+   scaled by max(k,q cs,r cs) eta: new 6.8962e-14, old 6.8996e-14
+
+[tolerances] _three_bessel_integrals saw [('0pt5', 3.25e-23, 7.5e-09), ('2pt5', 3.25e-23, 7.5e-09)]
+
+[tolerances] analytic Levin calls: ['analytic J1', 'analytic J1', 'analytic J2', 'analytic J2', 'analytic J3', 'analytic J3', 'analytic J4', 'analytic J4', 'analytic Y1', 'analytic Y1', 'analytic Y2', 'analytic Y2', 'analytic Y3', 'analytic Y3', 'analytic Y4', 'analytic Y4']
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=2.4691e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=2.4691e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=2.4691e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales........................................................................................................................
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=2.4691e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=2.4691e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[cost] LambdaCDMModel k = 3.0e+08, 50 objects of one wavenumber: table of 1732 nodes built once for 6924 integrand evaluations; every later object spends 4 (its anchor partial) and no build evaluation. Amortised 142.5 residual-integrand evaluations per object, against 6924 per object before prompt 14 (49x)
+
+[cost] QCDModel k = 3.0e+08, 50 objects of one wavenumber: table of 1603 nodes built once for 6420 integrand evaluations; every later object spends 4 (its anchor partial) and no build evaluation. Amortised 132.4 residual-integrand evaluations per object, against 6420 per object before prompt 14 (48x)
+
+[anchoring, Tk] worst over six (model, k) cases: theta 0.000e+00 rad at None, rho 1.388e-17 rad at ('LambdaCDMModel', '1.000e+05', 694753.9975049251); threshold 1e-09
+[anchoring] RadiationModel k = 1.000e+05: 40 samples from z_init = 4905.91; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 4864.23 (in rho alone 0.000e+00 rad at z = 4864.23)
+[anchoring] RadiationModel k = 1.000e+07: 56 samples from z_init = 490692; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 404594 (in rho alone 0.000e+00 rad at z = 404594)
+[anchoring] RadiationModel k = 3.000e+08: 69 samples from z_init = 1.47209e+07; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 1.4596e+07 (in rho alone 0.000e+00 rad at z = 1.4596e+07)
+[anchoring] LambdaCDMModel k = 1.000e+05: 87 samples from z_init = 2.30758e+09; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 2.10263e+09 (in rho alone 5.294e-23 rad at z = 2094.87)
+[anchoring] LambdaCDMModel k = 1.000e+07: 103 samples from z_init = 2.30758e+11; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 1.75096e+11 (in rho alone 2.827e-19 rad at z = 4.80901e+06)
+[anchoring] LambdaCDMModel k = 3.000e+08: 116 samples from z_init = 6.92274e+12; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 6.36347e+12 (in rho alone 6.061e-20 rad at z = 19116.7)
+[anchoring] QCDModel k = 1.000e+05: 87 samples from z_init = 2.49443e+09; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 2.10263e+09 (in rho alone 1.084e-19 rad at z = 9.17627e+08)
+[anchoring] QCDModel k = 1.000e+07: 104 samples from z_init = 2.5982e+11; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 2.30839e+11 (in rho alone 3.388e-21 rad at z = 6.9604e+08)
+[anchoring] QCDModel k = 3.000e+08: 117 samples from z_init = 1.02355e+13; max |theta_shared - theta_per_object| = 0.000e+00 rad at z = 8.38931e+12 (in rho alone 2.168e-19 rad at z = 1.00742e+11)
+[anchoring] worst over 9 (model, k) cases: theta 0.000e+00 rad at None, rho 2.827e-19 rad at ('LambdaCDMModel', '1.000e+07', 4809012.662857707); threshold 1e-09
+
+[key] two offline stand-ins (store_id=None) at k = 1.0e+07: separate tables, rho_T over the range -8.634090e-02 and -1.733378e-01 rad
+
+[radiation] k = 1.0e+07, z_init = 497869.6837: rho_G is bit-exactly zero through the shared table; max |theta + k tau.delta| = 3.725e-09 rad
+
+[radiation] k = 1.0e+07, z_init = 490692.0041: rho_G is bit-exactly zero through the shared table; max |theta + k tau.delta| = 3.725e-09 rad
+
+[metadata] longest JSON payload 227 characters (Gk, call 1) against the String(256) column; prompt 06 measured 206 without 'rho_reused'
+
+[shared table] LambdaCDM k = 1.0e+07, sector Gk: one table of 1732 nodes and 6924 integrand evaluations serves 4 objects with anchors 2.25583e+11, 2.22333e+11, 8.84906e+10, 3.57348e+10 and 155, 83, 55, 40 samples; their rho_evals are [0, 4, 4, 0] (the anchor partials alone)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407..........................
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+   @@ the curvature criterion guarded 53 node(s) of 136453 band-node evaluation(s) (3.884e-04) where the Liouville-Green expansion does not exist at a stencil arm, over 53 (k, sector) case(s); each was filled by log-interpolation from either side
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+   @@ the curvature criterion guarded 53 node(s) of 136453 band-node evaluation(s) (3.884e-04) where the Liouville-Green expansion does not exist at a stencil arm, over 53 (k, sector) case(s); each was filled by log-interpolation from either side
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+   @@ the curvature criterion guarded 53 node(s) of 136453 band-node evaluation(s) (3.884e-04) where the Liouville-Green expansion does not exist at a stencil arm, over 53 (k, sector) case(s); each was filled by log-interpolation from either side
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+  a cosmology that cannot answer:
+    cosmology_feature_redshifts: the cosmology 'a cosmology that cannot answer' (_BrokenCosmology) declares break points, so the source grid is built around the features it declares, but it does not supply matter-radiation equality as 'z_matter_radiation_equality'. BaseCosmology declares that obligation and every production cosmology answers it. There is no fallback to 1 + z_eq = Omega_m/Omega_r here on purpose -- see this function's docstring -- so a cosmology that declares non-smoothness and cannot say where its own equality redshifts are is a broken cosmology, not a grid to build anyway.
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"..........................................................F........................................
+======================================================================
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_tk_wkb_phase.py", line 897, in test_wall_time_per_object
+    self.assertLessEqual(cold, COST_COLD_WALL_TIME_LIMIT)
+AssertionError: 0.06127970805391669 not less than or equal to 0.06
+
+----------------------------------------------------------------------
+Ran 693 tests in 170.424s
+
+FAILED (failures=1)
+
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[spline bounds] ZSplineWrapper: evaluated test out of bounds @ z=-0.5 (min allowed z=-0.24, recommended limit is z >= -0.2376)
+[exact envelope, 100/decade] max d ln M/dz vs finite difference = 8.528e-06
+[exact envelope, 300/decade] max d ln M/dz vs finite difference = 1.025e-05
+
+[LG fixture, w=0.33333] max d ln M/dz vs finite difference = 5.274e-11
+
+[LG fixture, w=0.2] max d ln M/dz vs finite difference = 7.012e-11
+[LG fixture, w=0.33333] max omega vs phase.theta_deriv = 1.049e-10
+[LG fixture, w=0.2] max omega vs phase.theta_deriv = 7.950e-11
+
+[exact LG fixture, w=0.33333] max |dM|/M = 1.655e-15; |T_WKB - M sin(theta)|/envelope = 1.659e-12; vs scipy J_nu = 1.654e-12
+
+[exact LG fixture, w=0.2] max |dM|/M = 2.166e-15; |T_WKB - M sin(theta)|/envelope = 1.461e-12; vs scipy J_nu = 2.492e-12
+
+[grid refinement] |T_WKB - exact|/envelope: 100/decade 1.776e-10, 300/decade 1.659e-12
+
+[numeric region, w=0.33333] node error: T 2.220e-16, dT/dz 1.879e-16; midpoint error: T 7.400e-06, dT/dz 2.720e-04
+
+[numeric region, w=0.2] node error: T 2.220e-16, dT/dz 1.692e-16; midpoint error: T 1.322e-06, dT/dz 2.701e-04
+
+[friction from the table, w=0.33333] max |F - closed form| = 8.8818e-16 over |F| <= 7.914
+
+[friction from the table, w=0.2] max |F - closed form| = 1.7764e-15 over |F| <= 8.976
+
+[primitive phase, x_T = 1e+06] max |theta - exact|: PrimitivePhase 3.4482e-10 rad (at the stored samples 4.5475e-13 rad); cubic spline of the same samples 7.0854e-03 rad; ratio 2.0548e+07
+
+[primitive phase, w=0.33333] max |omega - theta_deriv|/omega = 1.0492e-10 over z_WKB[3:-3], 5.5590e-12 over z_WKB[5:-3]
+
+[primitive phase, w=0.2] max |omega - theta_deriv|/omega = 7.9502e-11 over z_WKB[3:-3], 3.7565e-12 over z_WKB[5:-3]
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+
+[Tk cost] LambdaCDM k = 3.0e+08, 1384 source samples from z = 6.923e+12 to 0.1: best of 3 0.0613 s with the residual table built, 0.0226 s with it cached; 11376 integrand evaluations = 5840 residual (order 4, 1460 nodes) + 5536 leading-table anchor partials (4 per sample, the same panel every time); prompt 07 threshold 0.05 s, ODE 58 s
+
+[Tk radiation phase] k = 1.7321e+06, x from 24 to 10000 over 263 samples, span 9.97596e+03 rad: max error 3.6380e-12 rad at z = 113.683 (x = 8719.7); threshold 1e-09, ulp of the span 1.82e-12
+[Tk radiation residual] max |theta_T + k cs_tau.delta - (-rho_T)| = 6.3329e-13 rad at z = 108.561 (threshold 1e-12); against the asymptote 1/x_i - 1/x 1.2069e-05 (the 2/(3 x_i^3) term is 4.8225e-05)
+[Tk radiation value] x_i =    24: max |dT|/env = 3.8118e-05 at x = 2527.4 over 263 samples; amplitude offset at x = 10000 is 1.30e-05; sin_coeff = 1.250002e-04, cos_coeff = 0.0
+[Tk radiation value] x_i =   400: max |dT|/env = 7.7760e-09 at x = 5775.8 over 141 samples; amplitude offset at x = 10000 is 2.39e-09; sin_coeff = 7.500000e-06, cos_coeff = 0.0
+[Tk radiation value] max(x_i=24)/max(x_i=400) = 4902; (400/24)^3 = 4630; bounds (3000.0, 6000.0)
+[Tk radiation value] x_i =    50: max |dT|/env = 4.0663e-06 at x = 1182.8 over 231 samples; amplitude offset at x = 10000 is 1.14e-06; sin_coeff = 5.999999e-05, cos_coeff = 0.0
+[Tk radiation value] x_i =   100: max |dT|/env = 5.0628e-07 at x = 1182.8 over 201 samples; amplitude offset at x = 10000 is 1.51e-07; sin_coeff = 3.000000e-05, cos_coeff = 0.0
+
+[LambdaCDMModel] Tk k = 1.000e+05: 9 checkpoints from the anchor z = 2.30758e+09 to z = 0.1, span 6.1747e+07 rad; max phase error 1.4901e-08 rad at z = 0.1 (eps*k*cs_tau floor 1.37e-08; threshold 0.0001); max friction error 6.5351e-16 relative (7.11e-15 absolute) at z = 1.00494e+07; rho_T over the range -8.634258e-02 rad
+
+[LambdaCDMModel] Tk k = 3.000e+08: 10 checkpoints from the anchor z = 6.92274e+12 to z = 0.1, span 1.8524e+11 rad; max phase error 9.1553e-05 rad at z = 0.1 (eps*k*cs_tau floor 4.11e-05; threshold 0.005); max friction error 3.9643e-16 relative (1.07e-14 absolute) at z = 1.00494e+07; rho_T over the range -8.634109e-02 rad
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+
+[QCDModel] Tk k = 3.000e+08: 11 checkpoints from the anchor z = 1.02355e+13 to z = 0.1, span 1.8523e+11 rad; max phase error 4.5776e-05 rad at z = 10.0123 (eps*k*cs_tau floor 4.11e-05; threshold 0.005); max friction error 6.2523e-14 relative (1.80e-15 absolute) at z = 1.00867e+13; rho_T over the range -9.327126e-02 rad
+
+[Tk store algebra] 206 cases incl. T_init = 0 and T_init < 0: sgn(sin deltaTheta) sgn(T_init) = +1 in every case; B > 0 reproduces T_init to 8.588e-15 relative (worst at (0.0007574719340850376, -1.879610202855077e-05)); threshold 1e-12
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034

@@ -24,7 +24,7 @@ P9):
     round-trips it.
 
 No Ray, no datastore file, nothing under `var/`: the schema is built in memory with
-`build_schema(MetaData(), Datastore.SQL.Datastore._factories)`, as in
+`build_schema(MetaData(), config.datastore.factories)`, as in
 `test_read_path_mechanics.py` and `test_integral_read_batch.py`, and every call is to the real
 factory code. SQLite does not enforce foreign keys here, so parents that exist only as a serial --
 a model, a tolerance, a tag, a solver -- are stand-ins carrying only `.store_id`.

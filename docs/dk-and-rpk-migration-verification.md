@@ -2681,3 +2681,244 @@ R1's same slug (§3.5.1):
   It is not C8's.
 
 **C8 is measured, and changes nothing the block records.** No issue is opened.
+
+---
+
+## 4. The close
+
+**§4's tree.** Prompt 09 ran on branch `handover-remedial` at **`b95bf19`** ("Write the orchestrator note
+for dk-and-rpk-migration prompt 09"), whose code is `f539015`'s (prompt 08): `ede4062` and `b95bf19`
+touch only `prompts/`. Its measurements were taken there, because both packages' scripts read the
+committed tree through `git show`. 09's own changes (§4.3) are comment text and six `docs/` import
+statements, and the orchestrator re-runs both measurements at 09's commit. Before the commit, both
+scripts were also run on the working tree as a commit object (`git stash create`, `43458c2`, tracked
+changes only), and each differs from the saved output only by the commit line. `git status --short` was
+empty at the start, nothing was `running` in the registry (29 runs: 27 finished, 2 `unknown`), and no
+Ray process was up (`RAY_ADDRESS` unset; `pgrep -lf 'gcs_server|raylet|ray::'` found nothing).
+
+**Headline.**
+1. **Both packages' G2 hold**, and §4.4 and §4.5 draft each record for its own repository (C12). Neither
+   is committed there.
+2. **Nothing outside `prompts/` and dated `docs/` names a deleted layer file as a current path** (§4.3.2):
+   the regex printed 23 lines before 09's sweep and none after.
+3. **Both packages' measurements are as expected** (§4.2): DatastoreKit's script finds the 15 layer files
+   absent and **0 imports, 0 string literals and 0 `import_module` calls outside `prompts/`**; RayPoolKit's
+   finds `RayTools/` absent, **0 imports**, 0 `import_module` calls and **54 calls, all `constructs`**.
+4. **The six roots are at 08's counts** (§4.2.3), and the venv is 06's, byte for byte (§4.2.4).
+5. **The four inherited issues are handed over** (§4.3.1): three transferred whole, one narrowed.
+
+### 4.1 R0, R1 and R2
+
+| | R0 (prompt 02) | R1 (prompt 05) | R2 (prompt 08) |
+|---|---|---|---|
+| **SGK tree** | `a5392fd`, code `f54f1c5`'s | `6861a9f`, code `0c9e2cf`'s | `5631f0e`, code `643c3b2`'s but for one test comment |
+| **Layer** | SGK's own, `b510bc9`'s | `datastorekit` 0.2.2 | `datastorekit` 0.2.2 |
+| **Work queue** | SGK's own `RayTools/` | SGK's own `RayTools/` | `raypoolkit` 0.2.0 |
+| **`packages` in every manifest** | `{"datastorekit": null, "raypoolkit": null}` | `datastorekit` 0.2.2 at `6d8ee9ae…`, `editable: false`; `raypoolkit` `null` | `datastorekit` 0.2.2 at `6d8ee9ae…` and `raypoolkit` 0.2.0 at `eaef0ce6…`, both `editable: false` |
+| **`git_dirty`, every manifest** | `false` | `false` | `false` |
+| **Reference fingerprint** | format 6, `39809dca…`, 21 classes | the same | the same |
+| **Rehearsal stores** | `var/datastores/dk-and-rpk-migration-02-{reference,resumed}.sqlite` | `…-05-…` | `…-08-…` |
+
+`39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2` is the reference digest in every
+row. The twelve runs, read from each run directory's `manifest.json` and `status.json` for this record
+(`state`, `exit_code`, the first eight characters of the fingerprint's digest, `git_head`):
+
+| Run | `state` | `exit_code` | Fingerprint |
+|---|---|---|---|
+| `dk-and-rpk-migration-02-reference-20261011T143003` | `done` | 0 | `39809dca` |
+| `dk-and-rpk-migration-02-resumed-a-20261011T143917` | `killed` | 143 | `eaf590af` |
+| `dk-and-rpk-migration-02-resumed-b-20261011T144253` | `killed` | 143 | `fc02616e` |
+| `dk-and-rpk-migration-02-resumed-c-20261011T144549` | `done` | 0 | `39809dca` |
+| `dk-and-rpk-migration-05-reference-20261011T192802` | `done` | 0 | `39809dca` |
+| `dk-and-rpk-migration-05-resumed-a-20261011T194149` | `killed` | 143 | `b6b89d84` |
+| `dk-and-rpk-migration-05-resumed-b-20261011T194703` | `killed` | 143 | `09170e40` |
+| `dk-and-rpk-migration-05-resumed-c-20261011T195044` | `done` | 0 | `39809dca` |
+| `dk-and-rpk-migration-08-reference-20261011T224347` | `done` | 0 | `39809dca` |
+| `dk-and-rpk-migration-08-resumed-a-20261011T225623` | `killed` | 143 | `ff6c4257` |
+| `dk-and-rpk-migration-08-resumed-b-20261011T230305` | `killed` | 143 | `aa860ed8` |
+| `dk-and-rpk-migration-08-resumed-c-20261011T230717` | `done` | 0 | `39809dca` |
+
+Each `killed` run's digest differs from its namesake's in the other rehearsals, as it must: each digests
+a store killed at a different point (§1.2.1, §2.2.1, §3.2.1). Each rehearsal's `reference` and
+`resumed-c` end `done`/0 at `39809dca…`, and equal each other and every earlier rehearsal's.
+
+### 4.2 The final measurements (Z4)
+
+Saved under [`prompts/dk-and-rpk-migration/measure/out/`](../prompts/dk-and-rpk-migration/measure/out/),
+names beginning `09-`.
+
+#### 4.2.1 DatastoreKit's `measure_client_imports.py`
+
+`cd /Users/ds283/Documents/Code/DatastoreKit && ./venv/bin/python docs/extraction/measure_client_imports.py sgk --commit b95bf19`,
+DatastoreKit clean at `83068cb`. DatastoreKit has since released `v0.2.3`; SGK stays on `v0.2.2`, and the
+script is unchanged since `v0.2.2` (`git diff v0.2.2 HEAD -- docs/extraction/measure_client_imports.py` is
+empty), so this is the tag's script. Saved as
+[`09-datastorekit-measure_client_imports.md`](../prompts/dk-and-rpk-migration/measure/out/09-datastorekit-measure_client_imports.md).
+
+| | Count |
+|---|---|
+| Layer files absent | **15** of the 15 deleted; `Datastore/__init__.py` and `Datastore/SQL/__init__.py` present, 0 bytes |
+| Tracked `.py` files read | 423, 0 unparsed |
+| Import statements naming a layer module | **51 in 31 files, all in `prompts/`**; **0 outside** |
+| String literals naming a layer module | 20, all in `prompts/`; 0 outside |
+| `import_module` / `__import__` calls naming a layer module | 1, in `prompts/`; 0 outside |
+| Import statements naming a factory module | 99 (97 outside `Datastore/SQL/ObjectFactories/`; 15 in `docs/`) |
+
+So the checklist's "0 imports" reads "0 outside `prompts/`", the record of the campaigns that wrote the
+layer. The output equals 04's saved
+[`04-datastorekit-measure_client_imports.md`](../prompts/dk-and-rpk-migration/measure/out/04-datastorekit-measure_client_imports.md)
+but for the commit line and 425 → 423 files read (07 deleted `RayTools/`'s two). The 99 factory imports
+are 04's.
+
+#### 4.2.2 RayPoolKit's `measure_client_pools.py`
+
+`cd /Users/ds283/Documents/Code/RayPoolKit && ./venv/bin/python docs/adoption/measure_client_pools.py sgk --commit b95bf19`,
+RayPoolKit clean at `c9b0e11`, verdicts by `raypoolkit 0.2.0`'s own constructor. Saved as
+[`09-raypoolkit-measure_client_pools.md`](../prompts/dk-and-rpk-migration/measure/out/09-raypoolkit-measure_client_pools.md).
+
+| | Count |
+|---|---|
+| `RayTools/` at the commit | absent |
+| Imports of a `RayTools` module | **0** |
+| `import_module` / `__import__` calls naming `RayTools` | **0** |
+| String literals naming `RayTools` | 2: `docs/tolerance-convergence/inventory.py:382` (kept, C10) and one in `prompts/` |
+| `RayWorkPool(...)` calls | **54**, verdicts `constructs` **54**, no flag |
+| `ray.is_initialized()` after the verdicts | False |
+| Tracked files; `.py` parsed | 1496; 425, 0 unparsed |
+| Lines of non-`.py` files naming `RayTools` or `RayWorkPool` | 793 |
+
+The output equals 08's saved
+[`08-raypoolkit-measure_client_pools.md`](../prompts/dk-and-rpk-migration/measure/out/08-raypoolkit-measure_client_pools.md)
+but for the commit (`5631f0e` → `b95bf19`), the tracked-file count (1474 → 1496) and the non-`.py` lines
+(651 → 793). The 142 new lines are 23 in `docs/` (this record's §3 and the rehearsal outputs) and 119 in
+`prompts/`.
+
+#### 4.2.3 The six roots
+
+Serially, in the foreground, README §7's command, on the working tree with 09's changes (Z2, Z3, Z7 and
+the records), at `b95bf19` plus those. Datastore in the four groups. Each full output is saved as
+`09-suite-<root>.txt` in the directory above.
+
+| Root | Ran | 08's | Result | Load (1 min) at the start |
+|---|---|---|---|---|
+| AdaptiveLevin | 32 | 32 | OK | 43.8 |
+| CosmologyModels | 39 | 39 | OK | 43.8 |
+| LiouvilleGreen | 148 | 148 | OK (1 skipped) | 44.1 |
+| RunRegistry | 286 | 286 | OK | 54.4 |
+| ComputeTargets | 693 | 693 | 1 failure, below | 24.8 |
+| Datastore `[a-f]` / `[g-o]` / `[p-r]` / `[s-z]` | 54 / 103 / 101 / 62 = 320 | 320 | OK | 8.2 / 7.9 / 7.3 / 7.5 |
+
+**The one failure** is `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, README §7's known
+wall-clock flake: `0.0613 not less than or equal to 0.06`. Re-run alone at load 8.2, three times, it passed,
+passed, and failed once (`0.0658 not less than or equal to 0.06`). The assertion has
+a margin of about one, nothing 09 changed is on its path (comments and six `docs/` statements), and it
+passed in R1's and R2's root runs (§2.8, §3.8). `black --check` is clean on the 24 Python files 09
+touches.
+
+#### 4.2.4 The venv
+
+`pip freeze` is saved as [`09-pip-freeze.txt`](../prompts/dk-and-rpk-migration/measure/out/09-pip-freeze.txt)
+and `diff`s empty against 06's `var/dk-and-rpk-migration-06/freeze-after.txt` (100 lines each).
+`pip check` reports no broken requirements. `RunRegistry.package_provenance()`, saved as
+[`09-package-provenance.json`](../prompts/dk-and-rpk-migration/measure/out/09-package-provenance.json):
+
+- `datastorekit` 0.2.2, commit `6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6`, requested revision `v0.2.2`,
+  `editable: false`;
+- `raypoolkit` 0.2.0, commit `eaef0ce60e2fc354bb32f0ad576010e6a83c1976`, requested revision `v0.2.0`,
+  `editable: false`.
+
+### 4.3 What 09 changed
+
+#### 4.3.1 The hand-over of the four inherited issues (Z1, C11)
+
+DatastoreKit's `docs/OPEN_ISSUES.md` §1.2 (at `83068cb`) lists all four, with SGK's board for each.
+- **Three transferred whole** to their boards' §4, each entry's text verbatim, its heading noting
+  "transferred 2026-10-12 to DatastoreKit by dk-and-rpk-migration 09", and a line saying the issue is
+  **still open there**: a transfer is not a resolution.
+  - `[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]` and
+    `[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]`
+    (`prompts/a3-v2-readiness`);
+  - `[00-the-inventory-cannot-see-a-serial-split]` (`prompts/datastore-integrity`).
+- **One narrowed**, at the user's decision, and kept on `prompts/store-retirement`'s §3:
+  `[01-cross-filesystem-move-advice-says-delete-by-hand]`. The advice text is the package's
+  (`ShardedPool._failure_message`, installed `datastorekit/SQL/ShardedPool.py:3026-3030`, with `delete_store`
+  at `:2704`); `RunRegistry.stores.move_store` (`RunRegistry/stores.py:1109-1123`) relays it through
+  `_store_files` (`:1052-1060`) with the sidecar listing appended, adding and shaping no advice. What stays
+  SGK's is that `store move` passes on, for a registered store, advice that decision 6.1.1 forbids (a
+  registered store's source is retired, never deleted by hand). The test that asserted the text moved to the
+  package with 04.
+
+#### 4.3.2 The sweep of prose (Z2) and the regex
+
+`[04-comments-name-the-layers-old-module-paths]`: its 23 lines, in 18 files, each rewritten to name what is
+current and nothing else (`datastorekit.store_inventory`, `.shard_paths`, `.SQL.schema`, `.SQL.Datastore._build_schema`;
+`config.datastore.factories` for the `_factories` that left the layer at `19f07ee`; file paths
+`datastorekit/…`). Three lines were re-wrapped, where the longer name passed 100 columns. For every one of
+the 18 files, `ast.dump` of the module with docstrings removed is identical to `HEAD`'s.
+
+The regex (the orchestrator's, over `git ls-files` outside `prompts/` and `docs/`, skipping import
+statements and `import_module` calls; quoted verbatim in log 09) printed **23 lines before** the sweep,
+exactly the board's, and **0 after**. `import RunRegistry.stores` in a fresh `python -I` still loads neither
+`ray`, `sqlalchemy` nor `datastorekit.store_inventory` (`RunRegistry/stores.py:114`).
+
+#### 4.3.3 The six `docs/` probes (Z7, chosen by the user on 2026-10-12)
+
+`[04-six-docs-probes-import-factories-from-the-layer]`: in each of `docs/datastore-integrity-audit/fk_sweep_probe.py`,
+`lookup_keys/common.py`, `lookup_keys/probe_03_column_existence.py`, `tq_fk_probe.py`,
+`docs/tolerance-convergence/inventory.py` and `order_audit.py`, the one statement importing `_factories`
+from `datastorekit.SQL.Datastore` is now `from config.datastore import factories as _factories`, and
+nothing else changed. No probe was run. Each file's import statements alone were executed
+(an `ast` extraction, log 09): before the change each of the six failed on its `_factories` line
+(`ImportError: cannot import name '_factories' from 'datastorekit.SQL.Datastore'`); after it each is
+`all OK`, at 4, 6, 6, 4, 10 and 25 statements, and the six that fail through `lookup_keys/common.py`
+(`probe_01`, `01b`, `04`, `04b`, `05`, `06`) are `all OK` at 14, 6, 9, 7, 14 and 7.
+
+#### 4.3.4 `CLAUDE.md`'s test command (Z3)
+
+The one `unittest discover` line for `ComputeTargets/tests` is now the command for each of the six roots,
+and the Datastore root's four groups, with the reason for them. Nothing else in the section changed.
+
+### 4.4 DatastoreKit's G2, drafted
+
+For DatastoreKit's `prompts/extraction/IMPLEMENTATION_STATE.md` §2, row **G2**. It is its G1 cell's form
+(`✅ <date>: …`), followed by the cell's existing notes **verbatim**. Not committed there (C12): the user
+makes that commit, or has a session in that repository make it. "This commit" is SGK's 09 commit.
+Each part of DatastoreKit's checklist, `docs/adoption/secondarygwkit.md` §9, rests on:
+
+| Checklist part | Rests on |
+|---|---|
+| 1. the 17 layer files deleted, and the pinned tag imported | `0c9e2cf` (prompt 04, reviewed, board §5.4); the pin at `9ec603a` (prompt 03); §4.2.1, the script at `b95bf19` |
+| 2. its remaining suites pass | §2.8 at `6861a9f` (R1); §4.2.3 at 09 |
+| 3. a rehearsal reproduces the reference fingerprint | R1's runs `dk-and-rpk-migration-05-reference-20261011T192802` and `dk-and-rpk-migration-05-resumed-c-20261011T195044` (§2.3.4, §2.10); §4.1 |
+
+````markdown
+| **G2**: SGK adopted `v0.2.2` or later (U37; `actor-names` U3; `factory-defaults` U5), fingerprint reproduced | ✅ 2026-10-12: holds. SGK adopted `v0.2.2` (the pin at SGK `9ec603a`, installed at `6d8ee9ae…`, not editable) and a rehearsal through the package reproduces the reference fingerprint. Against the checklist, [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md) §9: (1) **the 17 layer files are deleted and the tag imported**: 15 removed and the two `__init__.py` emptied (U3) by SGK `0c9e2cf`; `docs/extraction/measure_client_imports.py sgk --commit b95bf19` finds the 15 layer files absent and, outside SGK's `prompts/` record, 0 import statements, 0 string literals and 0 `import_module` calls naming a layer module (the 51 statements, 20 literals and 1 call it counts are all in `prompts/`), unchanged at SGK's 09 commit (this commit); (2) **its remaining suites pass**: at SGK `6861a9f` (R1), AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 320 (54 + 103 + 101 + 62), all OK; at SGK's 09 commit the same counts, all OK but one wall-clock assertion, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, a known load-sensitive flake: it failed once in the root run at load 25 and once in three runs alone, passed in the other two, and passed in R1's and R2's root runs; (3) **a rehearsal rebuild through the package reproduces the reference fingerprint**, run under SGK's run-registry rules: R1's `dk-and-rpk-migration-05-reference-20261011T192802` and `dk-and-rpk-migration-05-resumed-c-20261011T195044`, both `done`, format 6, `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`, all 21 classes equal, each manifest recording `datastorekit` 0.2.2 at `6d8ee9ae…`; equal to each other and to R0's (SGK `a5392fd`, before the swap), to `a3-v2-readiness` 07's and to `datastore-generic` 09's. R2 (SGK `5631f0e`, with both packages) reproduced it again. SGK's record is `docs/dk-and-rpk-migration-verification.md` §2.10 and §4 (campaign `dk-and-rpk-migration`). SGK stays on `v0.2.2`; moving to `v0.2.3` is the user's (`factory-defaults` U5). *(2026-10-09: the adoption checklist is [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md), measured at SGK `b510bc9` by 07a.)* *(2026-10-09: `v0.1.0` is made, annotated, on 05's commit `68db557` (tag object `0ece4aa`) and pushed, after CI passed there at both ends, [run 37922626418](https://github.com/ds283/DatastoreKit/actions/runs/37922626418): Python 3.12.15 / Ray 2.43.0 / SQLAlchemy 2.0.39 and 3.13.16 / 2.55.1 / 2.0.46, SQLite 3.45.1 at both, each `Ran 444 tests … OK`. SGK may now adopt it.)* *(2026-10-10: `v0.2.1` is ready to be tagged on extraction prompt 10's commit once CI passes there at both ends, as U23 and U28; 10 makes no tag and pushes nothing. SGK's addendum is [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md#addendum-v021-extraction-prompt-10-2026-10-10).)* *(2026-10-10: `v0.2.1` is made, annotated, on 10's commit `33778b0` (tag object `0ba2e4d`) and pushed, after CI passed there at both ends, [run 38054748108](https://github.com/ds283/DatastoreKit/actions/runs/38054748108): Python 3.12.15 / Ray 2.43.0 / SQLAlchemy 2.0.39 and 3.13.16 / 2.55.1 / 2.0.46, SQLite 3.45.1 at both, each `Ran 486 tests … OK`. SGK may now adopt it.)* *(2026-10-11: `v0.2.2` is ready to be tagged on `actor-names` prompt 02's commit once CI passes there at both ends, as U23 and U28; 02 makes no tag and pushes nothing. SGK's addendum is [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md#addendum-v022-actor-names-prompt-02-2026-10-11).)* *(2026-10-11: `v0.2.2` is made, annotated, on 02's commit `6d8ee9a` (tag object `c32d027`) and pushed, after CI passed there at both ends, [run 38131949852](https://github.com/ds283/DatastoreKit/actions/runs/38131949852): Python 3.12.15 / Ray 2.43.0 / SQLAlchemy 2.0.39 and 3.13.16 / 2.55.1 / 2.0.46, SQLite 3.45.1 at both, each `Ran 494 tests … OK`. SGK may now adopt it.)* *(2026-10-11: `v0.2.3` is ready to be tagged on `factory-defaults` prompt 02's commit once CI passes there at both ends, as U23 and U28; 02 makes no tag and pushes nothing. SGK may stay on `v0.2.2` or move to `v0.2.3`, as it chooses (`factory-defaults` U5). SGK's addendum is [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md#addendum-v023-factory-defaults-prompt-02-2026-10-11).)* *(2026-10-11: `v0.2.3` is made, annotated, on `factory-defaults` 02's commit `0de2b16` (tag object `8dac562`) and pushed, after CI passed there at both ends, [run 38177954330](https://github.com/ds283/DatastoreKit/actions/runs/38177954330): Python 3.12.15 / Ray 2.43.0 / SQLAlchemy 2.0.39 and 3.13.16 / 2.55.1 / 2.0.46, SQLite 3.45.1 at both, each `Ran 504 tests … OK`. SGK may adopt it, or stay on `v0.2.2` (`factory-defaults` U5).)* |
+````
+
+### 4.5 RayPoolKit's G2, drafted
+
+For RayPoolKit's `prompts/extraction/IMPLEMENTATION_STATE.md` §2, row **G2**. It is its G1 cell's form
+(`**holds** <date>, …`), keeping the checklist pointer. Not committed there (C12). Each part of its
+checklist, `docs/adoption/secondarygwkit.md` §8, items 1-5 (item 6 is this recording), rests on:
+
+| Checklist item | Rests on |
+|---|---|
+| 1. `RayTools/` is gone | `643c3b2` (prompt 07, reviewed, board §5.7); `git ls-tree HEAD RayTools` is empty at `b95bf19` |
+| 2. no import of `RayTools` | §4.2.2, the script at `b95bf19`, run from RayPoolKit's root; and §3.10 at `5631f0e` |
+| 3. the pin, and the venv installed from it | `b6cc119` (prompt 06, board §5.6), `requirements.txt:76`; §4.2.4; every R2 manifest |
+| 4. SGK's suites pass | §3.8 at `5631f0e` (R2); §4.2.3 at 09 |
+| 5. every site constructs | §4.2.2: 54 calls, `constructs` 54; R2's `main.py:3247` measurement, §3.11 |
+
+````markdown
+| **G2** | **holds** 2026-10-12: SGK adopted `v0.2.0`, and its five parts of the checklist's item 8 hold. (1) `RayTools/` is gone: `git ls-tree 643c3b2 RayTools` is empty (SGK's prompt 07), and so it is at `5631f0e` and `b95bf19`. (2) No import of it: `docs/adoption/measure_client_pools.py sgk --commit b95bf19`, run from this repository (clean, `c9b0e11`) with its own venv, gives 0 imports and 0 `import_module` / `__import__` calls naming `RayTools`, and 2 string literals, `docs/tolerance-convergence/inventory.py:382` (item 9's kept `"RayTools"`) and one in SGK's `prompts/` record; it is unchanged at SGK's 09 commit (this commit). (3) The pin is in place and the venv installed from it: `requirements.txt:76` at SGK `b6cc119`, `raypoolkit` 0.2.0 at `eaef0ce60e2fc354bb32f0ad576010e6a83c1976`, not editable, recorded in every R2 manifest. (4) SGK's suites pass: at SGK `5631f0e` (R2), AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693 (the five modules of item 6 among them), Datastore 320 (54 + 103 + 101 + 62), all OK; at SGK's 09 commit the same counts, all OK but one wall-clock assertion, `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, a known load-sensitive flake: it failed once in the root run at load 25 and once in three runs alone, passed in the other two, and passed in R1's and R2's root runs. (5) Every site constructs: the same script gives 54 `RayWorkPool(...)` calls, every one `constructs`. R2, SGK `5631f0e`, reproduced the reference fingerprint `39809dca…` (21 classes) through both packages, in runs `dk-and-rpk-migration-08-reference-20261011T224347` and `dk-and-rpk-migration-08-resumed-c-20261011T230717`, and measured item 5 (`main.py:3247`): the counts the post handler records are unchanged. SGK's record is `docs/dk-and-rpk-migration-verification.md` §3.10 and §4 (campaign `dk-and-rpk-migration`). Checklist: [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md), measured at SGK `b510bc9`; its item 8 is the acceptance |
+````
+
+### 4.6 Left for the user
+
+Not issues, and not done here (README §6.3):
+- retiring the six rehearsal stores `var/datastores/dk-and-rpk-migration-{02,05,08}-{reference,resumed}.sqlite`
+  (README §3), after 09's review;
+- the two G2 commits in DatastoreKit and RayPoolKit (§4.4, §4.5);
+- whether to rename the `Datastore` package (U3), which now holds only the factories and the tests;
+- whether SGK moves to `datastorekit` `v0.2.3`, released 2026-10-11 (`factory-defaults` U5). SGK stays pinned
+  at `v0.2.2`, which DatastoreKit's G2 admits, and 09 moves no pin.

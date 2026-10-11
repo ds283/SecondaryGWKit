@@ -25,7 +25,7 @@ and, from the orchestrator note:
 The foreign key itself is checked by ``test_quadsource_policy_foreign_key.py``.
 
 No Ray, nothing under ``var/``: the schema is built in memory with
-``build_schema(MetaData(), Datastore.SQL.Datastore._factories)``, and every call is to the real
+``build_schema(MetaData(), config.datastore.factories)``, and every call is to the real
 factory code. Parents that exist only as a serial -- a model, a policy, a tag -- are stand-ins
 carrying ``.store_id``.
 """

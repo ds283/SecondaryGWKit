@@ -400,7 +400,7 @@ def file_state(directory: Path) -> Tuple[List[str], Dict[str, Tuple[str, int, in
 # ---------------------------------------------------------------------------------------------
 #
 # ``build_full_store`` builds a store holding at least one row of every class of the structured
-# inventory (Datastore/store_inventory.py inventory_classes), with tags wherever the class has an
+# inventory (datastorekit/store_inventory.py inventory_classes), with tags wherever the class has an
 # association table, unvalidated rows, and value rows. It adds to the defaults above and leaves
 # them as they are, so prompt 01's tests read the store they were written against.
 #

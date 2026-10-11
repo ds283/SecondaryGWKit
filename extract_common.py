@@ -154,7 +154,7 @@ def available_run_labels(pool) -> List[str]:
     The names of the runs this datastore holds, in sorted order.
 
     They are read from the ``store_tag`` class of the structured inventory,
-    ``Datastore.store_inventory.read_inventory(pool.primary, pool.factories)`` (the registry the
+    ``datastorekit.store_inventory.read_inventory(pool.primary, pool.factories)`` (the registry the
     pool was given), which reads that replicated class from **every** shard and compares the
     copies. This needs no lookup key and no knowledge of what the store contains -- which is the
     property that makes the "exactly one run" case answerable without the user saying anything.

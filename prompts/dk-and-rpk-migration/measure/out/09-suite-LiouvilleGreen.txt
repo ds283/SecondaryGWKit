@@ -1,0 +1,734 @@
+..s@@ (J0,J0,J0):
+   k=1.1433611507699926, q=4.6649505699871145, s=1.0812076269164133 does not satisfy the triangle inequality
+   quadrature result = 1.844429202708236e-12
+   analytic result = 0.0
+   abserr=1.8444e-12
+   reported abserr=1.1189e-07, converged=False, phase_limited=True
+@@ (J1,J1,J0):
+   k=3.1348836478620368, q=0.381556321665652, s=2.3822258230922415 does not satisfy the triangle inequality
+   quadrature result = 4.360123373459146e-13
+   analytic result = 0.0
+   abserr=4.3601e-13
+   reported abserr=2.4454e-10, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=3.5083857656108393, q=2.647370263531436, s=0.45389797962685996 does not satisfy the triangle inequality
+   quadrature result = -3.0933589023618424e-14
+   analytic result = 0.0
+   abserr=3.0934e-14
+   reported abserr=1.349e-10, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=2.536575952074201, q=4.653257799023251, s=3.8072025239342886 satisfies the triangle inequality
+   quadrature result = 0.008264369581271962
+   analytic result = 0.008264369581267406
+   relerr=5.5121e-13, abserr=4.5554e-15
+   reported abserr=3.2195e-11, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=1.0471077575055814, q=3.934026551784817, s=3.5297321362793594 satisfies the triangle inequality
+   quadrature result = -0.0005696698405088753
+   analytic result = -0.0005696698405105889
+   relerr=-3.0082e-12, abserr=1.7137e-15
+   reported abserr=5.135e-11, converged=False, phase_limited=True
+@@ (Y0,J0,J0):
+   k=1.4132541651916055, q=1.301795009634206, s=3.982255561777219 does not satisfy the triangle inequality
+   quadrature result = -0.05490052258302105
+   analytic result = -0.054900522590910765
+   relerr=-1.4371e-10, abserr=7.8897e-12
+   reported abserr=9.7149e-08, converged=False, phase_limited=True
+@@ (Y0,J2,J2):
+   k=2.2391693373382813, q=1.3984535483647036, s=0.7896724533820735 does not satisfy the triangle inequality
+   quadrature result = 0.06986683082152415
+   analytic result = 0.06986683081954836
+   relerr=2.8279e-11, abserr=1.9758e-12
+   reported abserr=3.153e-10, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=0.1 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.8512304389802767 satisfies the triangle inequality
+   quadrature result = 0.03735512828017482
+   analytic result = 0.037355128878485834
+   relerr=1.6017e-08, abserr=5.9831e-10
+   reported abserr=4.2892e-08, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=0.1 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.7467274876612615 satisfies the triangle inequality
+   quadrature result = -0.014821316322660018
+   analytic result = -0.01482131607898239
+   relerr=-1.6441e-08, abserr=2.4368e-10
+   reported abserr=1.3863e-08, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=0.01 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7612304389802766 satisfies the triangle inequality
+   quadrature result = 0.06914361165123842
+   analytic result = 0.06914361164918625
+   relerr=2.968e-11, abserr=2.0522e-12
+   reported abserr=3.6054e-08, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=0.01 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.836727487661261 satisfies the triangle inequality
+   quadrature result = -0.022360186016974867
+   analytic result = -0.022360186017002265
+   relerr=-1.2253e-12, abserr=2.7398e-14
+   reported abserr=1.1413e-08, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=0.001 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7522304389802765 satisfies the triangle inequality
+   quadrature result = 0.09949656113787042
+   analytic result = 0.09949656112782805
+   relerr=1.0093e-10, abserr=1.0042e-11
+   reported abserr=6.5889e-08, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=0.001 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.845727487661261 satisfies the triangle inequality
+   quadrature result = -0.030012785560776387
+   analytic result = -0.030012785558619717
+   relerr=-7.1858e-11, abserr=2.1567e-12
+   reported abserr=2.2435e-08, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=0.0001 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7513304389802766 satisfies the triangle inequality
+   quadrature result = 0.12955799111132055
+   analytic result = 0.12955799099102594
+   relerr=9.285e-10, abserr=1.2029e-10
+   reported abserr=3.6716e-07, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=0.0001 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846627487661261 satisfies the triangle inequality
+   quadrature result = -0.03768569095735155
+   analytic result = -0.037685690926322665
+   relerr=-8.2336e-10, abserr=3.1029e-11
+   reported abserr=1.3416e-07, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=1e-05 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512404389802767 satisfies the triangle inequality
+   quadrature result = 0.1595762049696595
+   analytic result = 0.15957620441898102
+   relerr=3.4509e-09, abserr=5.5068e-10
+   reported abserr=3.3253e-06, converged=False, phase_limited=True
+@@ (Y0,J0,J0) eps=1e-05 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.8467174876612615 satisfies the triangle inequality
+   quadrature result = -0.045361532243002045
+   analytic result = -0.045361532102496764
+   relerr=-3.0975e-09, abserr=1.4051e-10
+   reported abserr=1.2349e-06, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-06 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512314389802766 satisfies the triangle inequality
+   quadrature result = 0.18958870080622003
+   analytic result = 0.18958870536314243
+   relerr=2.4036e-08, abserr=4.5569e-09
+   reported abserr=3.2907e-05, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-06 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846726487661261 satisfies the triangle inequality
+   quadrature result = -0.05303775646323294
+   analytic result = -0.05303775762923647
+   relerr=-2.1984e-08, abserr=1.166e-09
+   reported abserr=1.2243e-05, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-07 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512305389802767 satisfies the triangle inequality
+   quadrature result = 0.2196005008552986
+   analytic result = 0.21960049619959224
+   relerr=2.1201e-08, abserr=4.6557e-09
+   reported abserr=0.00032872, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-07 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846727387661261 satisfies the triangle inequality
+   quadrature result = -0.060714031846745085
+   analytic result = -0.0607140306636321
+   relerr=-1.9487e-08, abserr=1.1831e-09
+   reported abserr=0.00012232, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-08 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512304489802766 satisfies the triangle inequality
+   quadrature result = 0.2496118041072327
+   analytic result = 0.24961220223995007
+   relerr=1.595e-06, abserr=3.9813e-07
+   reported abserr=0.0032869, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-08 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846727477661261 satisfies the triangle inequality
+   quadrature result = -0.06839020756276094
+   analytic result = -0.06839030939624778
+   relerr=-1.489e-06, abserr=1.0183e-07
+   reported abserr=0.0012231, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-09 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512304399802767 satisfies the triangle inequality
+   quadrature result = 0.27963466789237246
+   analytic result = 0.27962389715853875
+   relerr=3.8519e-05, abserr=1.0771e-05
+   reported abserr=0.032869, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-09 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846727486661261 satisfies the triangle inequality
+   quadrature result = -0.07606934335780376
+   analytic result = -0.07606658845994241
+   relerr=-3.6217e-05, abserr=2.7549e-06
+   reported abserr=0.012231, converged=False, phase_limited=False
+@@ (Y0,J0,J0) eps=1e-10 lo:
+   k=4.298978963320769, q=2.5477485243404923, s=1.7512304390802766 satisfies the triangle inequality
+   quadrature result = 0.3095684837090188
+   analytic result = 0.30963559210822755
+   relerr=0.00021673, abserr=6.7108e-05
+   reported abserr=0.32869, converged=False, phase_limited=False............
+@@ (Y0,J0,J0) eps=1e-10 hi:
+   k=4.298978963320769, q=2.5477485243404923, s=6.846727487561261 satisfies the triangle inequality
+   quadrature result = -0.08372570315675971
+   analytic result = -0.08374286789449499
+   relerr=-0.00020497, abserr=1.7165e-05
+   reported abserr=0.12231, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=0.1 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.190672000974685 satisfies the triangle inequality
+   quadrature result = -0.09644634608630268
+   analytic result = -0.09644634606621962
+   relerr=-2.0823e-10, abserr=2.0083e-11
+   reported abserr=2.2773e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=0.1 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.4843525675358835 satisfies the triangle inequality
+   quadrature result = 0.09102170580560158
+   analytic result = 0.09102170578996921
+   relerr=1.7174e-10, abserr=1.5632e-11
+   reported abserr=2.0236e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=0.01 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.1006720009746855 satisfies the triangle inequality
+   quadrature result = 0.02664168769196945
+   analytic result = 0.026641687692974397
+   relerr=3.7721e-11, abserr=1.0049e-12
+   reported abserr=1.4086e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=0.01 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.574352567535883 satisfies the triangle inequality
+   quadrature result = -0.030891176908250564
+   analytic result = -0.030891176909853713
+   relerr=-5.1897e-11, abserr=1.6031e-12
+   reported abserr=1.2618e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=0.001 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.091672000974686 satisfies the triangle inequality
+   quadrature result = 0.17549134325855148
+   analytic result = 0.17549134322019902
+   relerr=2.1854e-10, abserr=3.8352e-11
+   reported abserr=1.3957e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=0.001 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.583352567535883 satisfies the triangle inequality
+   quadrature result = -0.1627644043862938
+   analytic result = -0.16276440435282094
+   relerr=-2.0565e-10, abserr=3.3473e-11
+   reported abserr=1.2128e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=0.0001 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.0907720009746855 satisfies the triangle inequality
+   quadrature result = 0.31028759346177814
+   analytic result = 0.31028759295335784
+   relerr=1.6385e-09, abserr=5.0842e-10
+   reported abserr=1.8651e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=0.0001 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584252567535883 satisfies the triangle inequality
+   quadrature result = -0.2827355097905725
+   analytic result = -0.28273550933766417
+   relerr=-1.6019e-09, abserr=4.5291e-10
+   reported abserr=1.6309e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-05 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090682000974685 satisfies the triangle inequality
+   quadrature result = 0.4422132840926872
+   analytic result = 0.44221328148632943
+   relerr=5.8939e-09, abserr=2.6064e-09
+   reported abserr=5.7577e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-05 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.5843425675358835 satisfies the triangle inequality
+   quadrature result = -0.40040356973113445
+   analytic result = -0.4004035674063076
+   relerr=-5.8062e-09, abserr=2.3248e-09
+   reported abserr=5.1038e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-06 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090673000974686 satisfies the triangle inequality
+   quadrature result = 0.5737110410545233
+   analytic result = 0.573711061023453
+   relerr=3.4807e-08, abserr=1.9969e-08
+   reported abserr=1.3859e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-06 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584351567535883 satisfies the triangle inequality
+   quadrature result = -0.517733535697753
+   analytic result = -0.5177335535170018
+   relerr=-3.4418e-08, abserr=1.7819e-08
+   reported abserr=1.2164e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-07 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090672100974686 satisfies the triangle inequality
+   quadrature result = 0.7051520757446121
+   analytic result = 0.7051520553683284
+   relerr=2.8896e-08, abserr=2.0376e-08
+   reported abserr=4.8043e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-07 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584352467535883 satisfies the triangle inequality
+   quadrature result = -0.6350190259868203
+   analytic result = -0.635019007805615
+   relerr=-2.8631e-08, abserr=1.8181e-08
+   reported abserr=4.254e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-08 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090672010974686 satisfies the triangle inequality
+   quadrature result = 0.8365842313630073
+   analytic result = 0.8365859737038109
+   relerr=2.0827e-06, abserr=1.7423e-06
+   reported abserr=4.4885e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-08 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584352557535883 satisfies the triangle inequality
+   quadrature result = -0.7522973830440002
+   analytic result = -0.7522989377560951
+   relerr=-2.0666e-06, abserr=1.5547e-06
+   reported abserr=2.9367e-10, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-09 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090672001974686 satisfies the triangle inequality
+   quadrature result = 0.9680662110148208
+   analytic result = 0.968019038995161
+   relerr=4.873e-05, abserr=4.7172e-05
+   reported abserr=1.1786e-09, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-09 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584352566535883 satisfies the triangle inequality
+   quadrature result = -0.8696202952207681
+   analytic result = -0.8695782030705826
+   relerr=-4.8405e-05, abserr=4.2092e-05
+   reported abserr=1.0518e-09, converged=True, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-10 lo:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.090672001074686 satisfies the triangle inequality
+   quadrature result = 1.0991581253560074
+   analytic result = 1.0994520106297603
+   relerr=0.0002673, abserr=0.00029389
+   reported abserr=4.0658e-10, converged=False, phase_limited=False
+@@ (Y0,J2,J2) eps=1e-10 hi:
+   k=4.3375122842552845, q=0.2468402832805986, s=4.584352567435883 satisfies the triangle inequality
+   quadrature result = -0.9865951589210727
+   analytic result = -0.9868573962264433
+   relerr=-0.00026573, abserr=0.00026224
+   reported abserr=3.5613e-10, converged=True, phase_limited=False
+@@ (JJJ 0,0,0): true abserr=2.3641e-11, reported abserr=1.5331e-07, ratio (true/reported)=0.0001542, bounds=True
+@@ (JJJ 1,1,0): true abserr=3.8114e-14, reported abserr=2.927e-10, ratio (true/reported)=0.00013021, bounds=True
+@@ (JJJ 2,2,0): true abserr=2.1233e-15, reported abserr=2.1734e-10, ratio (true/reported)=9.7693e-06, bounds=True
+@@ (JJJ 2,2,2): true abserr=3.1364e-15, reported abserr=2.2052e-10, ratio (true/reported)=1.4223e-05, bounds=True
+@@ (JJJ 2,3,1): true abserr=9.2773e-15, reported abserr=1.8239e-10, ratio (true/reported)=5.0864e-05, bounds=True
+@@ (YJJ 0,0,0): true abserr=5.449e-12, reported abserr=1.5335e-07, ratio (true/reported)=3.5533e-05, bounds=True
+@@ (YJJ 0,2,2): true abserr=1.5432e-14, reported abserr=2.1715e-10, ratio (true/reported)=7.1065e-05, bounds=True
+nu=2.5: near declares 5.000e-12 rad, tail at 1e7 declares 8.882e-16 rad
+corner declared/measured: worst ratio 2.05 at nu=1000.5, x=100050 (measured 5.547e-14, declared 1.137e-13)
+dense declared/measured: worst ratio 2.01 at nu=20.5, x=979.972 (measured 1.646e-13)
+span=(10.0, 60.0): value=8.2275350693217036e-02, mpmath=8.2275350693218757e-02, |difference|=1.721e-15, abserr=2.538774e-11
+span=(1000.0, 1100.0): value=7.5784805462043685e-03, mpmath=7.5784805462043676e-03, |difference|=8.674e-19, abserr=9.420688e-16
+tail span (1000.0, 1100.0): abserr callable 9.420688e-16 vs scalar 2.474591e-13 (factor 262.7)
+near span (10.0, 60.0): abserr 3.536275e-13 -> 2.538774e-11 (roundoff 2.437887e-14 -> 2.538774e-11, resolution 1.873501e-15)............./Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_bessel_near_region.py:234: RuntimeWarning: divide by zero encountered in log
+  self.assertEqual(np.log(np.abs(value)), -np.inf)
+..........................
+
+negative control: advance 3.6820 rad/interval, E_theta at midpoints 1.9954e+00 (x=1018.66), E_theta at nodes 5.4388e-11
+
+shipped tracker at nu=1000.5: E_theta=4.0447e-11 at x=56540.2, wraps_tracked=89, max branch advance=1.5635 rad (limit 1.5708), max snap=6.637e-11 rad
+
+nu=     0.5 x_star=      1e-05 nodes=    1 panels=   0 passes= 0 wraps=   0 build=0.000 s
+nu=     1.5 x_star=    34.4119 nodes=  113 panels=   7 passes= 0 wraps=   0 build=0.003 s
+nu=    1.75 x_star=    54.5456 nodes=  113 panels=   7 passes= 0 wraps=   0 build=0.003 s
+nu=     2.5 x_star=    64.4688 nodes=  113 panels=   7 passes= 0 wraps=   0 build=0.003 s
+nu=    20.5 x_star=    664.389 nodes=  145 panels=   9 passes= 2 wraps=   1 build=0.009 s
+nu=   100.5 x_star=    4199.98 nodes=  177 panels=  11 passes= 3 wraps=   9 build=0.015 s
+nu=  1000.5 x_star=    58122.8 nodes=  817 panels=  51 passes= 5 wraps=  89 build=0.075 s
+
+nu=     1.5 exp(-2 ell)=4.663e-14@9.53078  1+r_u/x=5.373e-14@1.41731  routes agree to 5.396e-14@1.41731
+nu=    1.75 exp(-2 ell)=6.284e-14@12.9894  1+r_u/x=7.505e-14@1.68106  routes agree to 7.505e-14@1.68106
+nu=     2.5 exp(-2 ell)=4.285e-14@16.752  1+r_u/x=5.862e-14@2.45499  routes agree to 5.873e-14@2.45499
+nu=    20.5 exp(-2 ell)=8.393e-14@119.55  1+r_u/x=9.248e-13@20.5061  routes agree to 9.246e-13@20.5061
+nu=   100.5 exp(-2 ell)=1.995e-12@3979.9  1+r_u/x=9.922e-12@100.527  routes agree to 9.913e-12@100.527
+nu=  1000.5 exp(-2 ell)=4.746e-11@51560.5  1+r_u/x=4.746e-11@51560.5  routes agree to 2.167e-11@1014.78
+
+nu=    20.5 x=     20.4939 E_theta=2.554e-15 E_A=1.332e-15 theta'=3.331e-15 dr=-1.776e-15
+nu=    20.5 x=    30.74085 E_theta=1.305e-15 E_A=4.441e-16 theta'=3.331e-16 dr=-3.553e-15
+nu=    20.5 x=         205 E_theta=5.940e-15 E_A=0.000e+00 theta'=2.220e-16 dr=+6.661e-16
+nu=   100.5 x=    100.4988 E_theta=8.521e-14 E_A=1.021e-14 theta'=2.043e-14 dr=+9.948e-14
+nu=   100.5 x=    150.7481 E_theta=7.938e-15 E_A=0.000e+00 theta'=2.220e-16 dr=+1.421e-14
+nu=   100.5 x=        1000 E_theta=5.718e-15 E_A=2.220e-16 theta'=0.000e+00 dr=+7.105e-15
+nu=   100.5 x=        1005 E_theta=1.314e-14 E_A=2.220e-16 theta'=2.220e-16 dr=-8.882e-16
+nu=  1000.5 x=      1000.5 E_theta=8.954e-14 E_A=2.354e-14 theta'=4.707e-14 dr=-2.274e-13
+nu=  1000.5 x=     1500.75 E_theta=4.269e-13 E_A=9.992e-15 theta'=2.021e-14 dr=+1.705e-13
+nu=  1000.5 x=       10005 E_theta=4.383e-13 E_A=5.285e-14 theta'=1.058e-13 dr=+2.629e-13
+
+nu=    20.5 nodes               E_theta=2.998e-14@149.602 E_A=4.929e-14@201.328 theta'=9.848e-14@201.328
+nu=    20.5 midpoints           E_theta=4.619e-14@149.245 E_A=4.208e-14@119.55 theta'=8.393e-14@119.55
+nu=    20.5 endpoint intervals  E_theta=1.033e-14@20.5184 E_A=2.442e-15@20.5184 theta'=4.663e-15@20.5023
+nu=   100.5 nodes               E_theta=1.726e-12@3922.58 E_A=9.812e-13@4199.98 theta'=1.962e-12@4199.98
+nu=   100.5 midpoints           E_theta=1.343e-12@3557.94 E_A=9.972e-13@3979.9 theta'=1.995e-12@3979.9
+nu=   100.5 endpoint intervals  E_theta=2.714e-12@4192.92 E_A=1.432e-12@4196.45 theta'=2.864e-12@4196.45
+nu=  1000.5 nodes               E_theta=3.539e-11@39540.1 E_A=2.704e-11@48468.5 theta'=5.409e-11@48468.5
+nu=  1000.5 midpoints           E_theta=4.045e-11@56540.2 E_A=2.373e-11@51560.5 theta'=4.746e-11@51560.5
+nu=  1000.5 endpoint intervals  E_theta=2.657e-11@57879.1 E_A=3.443e-11@57926.2 theta'=6.887e-11@57926.2
+
+nu=     2.5: 6 interior panel edges, r jump 2.776e-16, ell jump 9.714e-17, dr/du jump 4.116e-13
+nu=   100.5: 10 interior panel edges, r jump 5.684e-14, ell jump 2.776e-15, dr/du jump 8.087e-11
+nu=  1000.5: 50 interior panel edges, r jump 4.547e-13, ell jump 8.327e-16, dr/du jump 8.790e-09
+
+nu=   1.5 nodes               E_theta=9.770e-15 at x=16.6093, E_A=2.087e-14 at x=9.69685
+nu=   1.5 midpoints           E_theta=9.326e-15 at x=16.2579, E_A=2.331e-14 at x=9.53078
+nu=   1.5 endpoint intervals  E_theta=7.216e-16 at x=1.41712, E_A=4.441e-16 at x=1.41848
+nu=  1.75 nodes               E_theta=1.787e-14 at x=14.9834, E_A=2.387e-14 at x=16.5104
+nu=  1.75 midpoints           E_theta=1.454e-14 at x=16.9, E_A=3.153e-14 at x=12.9894
+nu=  1.75 endpoint intervals  E_theta=7.772e-16 at x=54.3342, E_A=5.551e-16 at x=1.68207
+nu=   2.5 nodes               E_theta=9.881e-15 at x=16.5104, E_A=2.098e-14 at x=14.3078
+nu=   2.5 midpoints           E_theta=9.548e-15 at x=11.7464, E_A=2.143e-14 at x=16.752
+nu=   2.5 endpoint intervals  E_theta=8.882e-16 at x=2.44983, E_A=6.661e-16 at x=64.2792
+
+nu=   1.5 theta' relerr=4.663e-14 at x=9.53078 (x_0=1.41421)
+nu=  1.75 theta' relerr=6.284e-14 at x=12.9894 (x_0=1.67705)
+nu=   2.5 theta' relerr=4.285e-14 at x=16.752 (x_0=2.44949)
+
+refinement cap at 1 pass, nu=1000.5: converged=False, achieved phase abserr=7.143e-05 against a budget of 1e-11, 15 panels
+
+nu=     2.5: achieved_phase_abserr=1.110e-15, worst |dr| at the cached corners=4.441e-16, ratio=2.50
+nu=    20.5: achieved_phase_abserr=1.599e-14, worst |dr| at the cached corners=3.553e-15, ratio=4.50
+nu=   100.5: achieved_phase_abserr=1.279e-13, worst |dr| at the cached corners=9.948e-14, ratio=1.29
+nu=  1000.5: achieved_phase_abserr=1.251e-12, worst |dr| at the cached corners=2.629e-13, ratio=4.76
+
+nu=     0.5 samples only: E_theta=4.552e-15@15.2639 E_A=3.997e-15@4.65971 (target 1e-13)
+nu=     1.5 samples only: E_theta=9.770e-15@14.7081 E_A=1.932e-14@9.78765 (target 1e-13)
+nu=    1.75 samples only: E_theta=7.550e-15@21.1584 E_A=1.332e-14@15.6088 (target 1e-13)
+nu=     2.5 samples only: E_theta=9.603e-15@16.6379 E_A=2.121e-14@16.6379 (target 1e-13)
+nu=    20.5 samples only: E_theta=4.101e-14@168.471 E_A=4.552e-14@112.787 (target 1e-13)
+nu=   100.5 samples only: E_theta=9.834e-13@5025 E_A=1.051e-12@3719.17 (target 1e-10)
+nu=  1000.5 samples only: E_theta=2.476e-11@40931.8 E_A=1.808e-11@45250.5 (target 1e-10)
+
+nu=   100.5: top decade 28.3 nodes/e-fold, turning-point decade 75.3 nodes/e-fold, coarsening factor 2.66; the top decade is 8.84x coarser than the prototype's 250 per e-fold
+nu=  1000.5: top decade 77.9 nodes/e-fold, turning-point decade 467.9 nodes/e-fold, coarsening factor 6.01; the top decade is 3.21x coarser than the prototype's 250 per e-fold
+
+[nu=1.5, x <= 1000, 324 points, tier=exact] E_theta=2.482e-12@34.4119 E_A=2.545e-13@34.4119 theta' relerr=5.090e-13@34.4119 (x_star=34.4119, declared theta_abserr=5.000e-12)
+
+[nu=2.5, x <= 1000, 325 points, tier=exact] E_theta=2.484e-12@64.4688 E_A=1.358e-13@64.4688 theta' relerr=2.713e-13@64.4688 (x_star=64.4688, declared theta_abserr=5.000e-12)
+integral = -0.19279384236256392 (reported abserr = 9.1465e-12, 1 regions, 1 evaluations in time 0.0111s)
+  -- region: (5, 10), depth=0 | direct, abserr=5.5511151e-17, relerr=2.879301e-16, phase_err=9.1465151e-12 | p-ratios=[]
+integral = -0.30118794575444024 (reported abserr = 2.1478e-12, 2 regions, 7 evaluations in time 0.0125s)
+  -- region: (5, 52.5), depth=1 | Levin, abserr=3.5615955e-13, relerr=8.3337813e-13, phase_err=2.1037226e-12 | p-ratios=[0.08705, 1]
+  -- region: (52.5, 100), depth=1 | Levin, abserr=3.3029135e-15, relerr=2.6176094e-14, phase_err=4.410342e-14 | p-ratios=[0.007632, 1]
+integral = -0.450278073203563 (reported abserr = 9.5573e-12, 1 regions, 1 evaluations in time 0.0106s)
+  -- region: (5, 10), depth=0 | direct, abserr=1.6653345e-16, relerr=3.698458e-16, phase_err=9.5572673e-12 | p-ratios=[]
+integral = -0.20136738094448708 (reported abserr = 3.5131e-12, 2 regions, 7 evaluations in time 0.00763s)
+  -- region: (5, 52.5), depth=1 | Levin, abserr=1.8061663e-12, relerr=5.2631489e-12, phase_err=2.923019e-12 | p-ratios=[0.1224, 1]
+  -- region: (52.5, 100), depth=1 | Levin, abserr=2.3925306e-14, relerr=1.6871999e-13, phase_err=5.900799e-13 | p-ratios=[0.007664, 1]
+
+[nu=2.5, x <= 1000, 325 points, tier=exact] E_theta=2.484e-12@64.4688 E_A=1.358e-13@64.4688 theta' relerr=2.713e-13@64.4688 (x_star=64.4688)
+
+[nu=20.5, x <= 1000, 388 points, tier=scipy] E_theta=2.418e-12@664.389 E_A=4.929e-14@201.328 theta' relerr=9.848e-14@201.328 (x_star=664.389)
+
+[nu=100.5, x <= 1005, 350 points, tier=scipy] E_theta=3.768e-13@959.318 E_A=2.489e-13@858.818 theta' relerr=4.977e-13@858.818 (x_star=4199.98)
+
+[nu=400.5, x <= 4005, 728 points, tier=scipy] E_theta=2.037e-12@3786.55 E_A=1.084e-12@2758.21 theta' relerr=2.168e-12@2758.21 (x_star=20412.9)..........................................................
+
+[nu=1000.5, x <= 10005, 1581 points, tier=scipy] E_theta=8.776e-12@9962.19 E_A=4.047e-12@9505.02 theta' relerr=8.095e-12@9505.02 (x_star=58122.8)
+
+[nu=2.5, theta' from x_0=2.44949, tier=exact] max relative error 4.197e-14 at x=81.412 (target 1e-09)
+
+[nu=20.5, theta' from x_0=20.4939, tier=scipy] max relative error 2.265e-14 at x=678.894 (target 1e-06)
+
+[nu=100.5, theta' from x_0=100.499, tier=scipy] max relative error 3.643e-13 at x=919.156 (target 1e-06)
+
+[nu=0.5, 9 cached 40-digit corners up to 1e15] E_theta=1.110e-16@10 E_A=2.220e-16@1.5e-05 theta' relerr=0.000e+00@1e-05
+
+[nu=2.5, 9 cached 40-digit corners up to 1e15] E_theta=5.274e-16@3.674 E_A=4.441e-16@2.449 theta' relerr=6.661e-16@3.674
+
+[nu=0.5, log mode at u=log(25), scored at exp(u)=24.999999999999996] E_theta=0.000e+00
+
+[nu=0.5, log mode at u=log(1000), scored at exp(u)=999.9999999999998] E_theta=0.000e+00
+
+[nu=0.5, log mode at u=log(1e+06), scored at exp(u)=999999.9999999995] E_theta=0.000e+00
+
+[nu=2.5, log mode at u=log(25), scored at exp(u)=24.999999999999996] E_theta=5.117e-16
+
+[nu=2.5, log mode at u=log(1000), scored at exp(u)=999.9999999999998] E_theta=2.220e-16
+
+[nu=2.5, log mode at u=log(1e+06), scored at exp(u)=999999.9999999995] E_theta=1.110e-16
+test_cached_residual_matches_tail_series: nu=0.5 at x=1e+16: |r - series| = 0
+test_cached_residual_matches_tail_series: nu=1.5 at x=1e+16: |r - series| = 3.33e-49
+test_cached_residual_matches_tail_series: nu=1.75 at x=1e+16: |r - series| = 3.74e-49
+test_cached_residual_matches_tail_series: nu=2.5 at x=1e+16: |r - series| = 0
+test_cached_residual_matches_tail_series: nu=20.5 at x=1e+16: |r - series| = 7.24e-45
+test_cached_residual_matches_tail_series: nu=100.5 at x=1e+16: |r - series| = 4.25e-42
+test_cached_residual_matches_tail_series: nu=1000.5 at x=1e+16: |r - series| = 4.17e-38
+test_tiers_agree: worst relative disagreement 5.44e-15 at ('J scipy', 0.5, 10.0) (tolerance 1e-14)
+test_wronskian_at_every_corner: worst |a^2 theta' - 1| = 2.22e-16 at (nu, x)=(1.5, 10.0) over 73 corners (tolerance 1e-13)
+nu=     0.5: corner E_theta=1.110e-16 declared theta_abserr=8.882e-16; corner E_A=2.220e-16 declared amplitude_relerr=8.882e-16
+nu=     1.5: corner E_theta=2.220e-16 declared theta_abserr=5.000e-12; corner E_A=4.441e-16 declared amplitude_relerr=5.090e-13
+nu=    1.75: corner E_theta=7.910e-16 declared theta_abserr=5.000e-12; corner E_A=4.441e-16 declared amplitude_relerr=3.210e-13
+nu=     2.5: corner E_theta=5.274e-16 declared theta_abserr=5.000e-12; corner E_A=4.441e-16 declared amplitude_relerr=3.007e-13
+nu=    20.5: corner E_theta=1.324e-13 declared theta_abserr=5.000e-12; corner E_A=1.332e-15 declared amplitude_relerr=3.028e-13
+nu=   100.5: corner E_theta=8.610e-14 declared theta_abserr=5.000e-12; corner E_A=1.021e-14 declared amplitude_relerr=3.223e-13
+nu=  1000.5: corner E_theta=2.443e-13 declared theta_abserr=5.000e-12; corner E_A=5.285e-14 declared amplitude_relerr=5.833e-13
+nu=    20.5      nodes: E_theta=2.418e-12@664.389 E_A=4.929e-14@201.328 E_deriv=9.848e-14@201.328
+nu=    20.5  midpoints: E_theta=4.188e-14@149.245 E_A=4.208e-14@119.55 E_deriv=8.393e-14@119.55
+nu=    20.5  endpoints: E_theta=6.550e-15@20.5135 E_A=3.109e-15@20.4951 E_deriv=5.995e-15@20.4951
+nu=    20.5       tail: E_theta=2.462e-12@665.752 E_A=1.321e-14@665.752 E_deriv=2.642e-14@665.07
+nu=   100.5      nodes: E_theta=2.194e-13@996.012 E_A=1.985e-13@897.004 E_deriv=3.970e-13@897.004
+nu=   100.5  midpoints: E_theta=1.966e-13@981.668 E_A=2.287e-13@801.934 E_deriv=4.579e-13@801.934
+nu=   100.5  endpoints: E_theta=1.023e-13@100.5 E_A=1.243e-14@100.5 E_deriv=2.465e-14@100.5
+nu=  1000.5      nodes: E_theta=6.307e-12@8175.84 E_A=3.325e-12@7625.74 E_deriv=6.650e-12@7625.74
+nu=  1000.5  midpoints: E_theta=8.776e-12@9962.19 E_A=4.047e-12@9505.02 E_deriv=8.095e-12@9505.02
+nu=  1000.5  endpoints: E_theta=5.753e-13@1000.56 E_A=4.541e-14@1000.6 E_deriv=9.104e-14@1000.6
+nu=     0.5       tail: E_theta=8.660e-15@14.6357 E_A=1.821e-14@14.6357 E_deriv=3.642e-14@14.6357
+nu=     1.5      nodes: E_theta=2.482e-12@34.4119 E_A=2.545e-13@34.4119 E_deriv=5.090e-13@34.4119
+nu=     1.5  midpoints: E_theta=9.326e-15@16.2579 E_A=2.331e-14@9.53078 E_deriv=4.663e-14@9.53078
+nu=     1.5  endpoints: E_theta=6.661e-16@1.41623 E_A=4.441e-16@1.41669 E_deriv=8.882e-16@1.41669
+nu=     1.5       tail: E_theta=2.482e-12@34.4119 E_A=2.545e-13@34.4119 E_deriv=5.090e-13@34.4119
+nu=    1.75      nodes: E_theta=1.787e-14@14.9834 E_A=2.387e-14@16.5104 E_deriv=4.774e-14@16.5104
+nu=    1.75  midpoints: E_theta=1.454e-14@16.9 E_A=3.153e-14@12.9894 E_deriv=6.284e-14@12.9894
+nu=    1.75  endpoints: E_theta=7.772e-16@54.305 E_A=5.551e-16@1.68207 E_deriv=8.882e-16@1.68207
+nu=    1.75       tail: E_theta=1.786e-12@54.5456 E_A=1.599e-13@54.5456 E_deriv=3.195e-13@54.5456
+nu=     2.5      nodes: E_theta=2.484e-12@64.4688 E_A=1.358e-13@64.4688 E_deriv=2.713e-13@64.4688
+nu=     2.5  midpoints: E_theta=9.548e-15@11.7464 E_A=2.143e-14@16.752 E_deriv=4.285e-14@16.752
+nu=     2.5  endpoints: E_theta=8.882e-16@2.45086 E_A=6.661e-16@64.1945 E_deriv=8.882e-16@64.2161
+nu=     2.5       tail: E_theta=2.484e-12@64.4688 E_A=1.357e-13@64.4688 E_deriv=2.713e-13@64.4688
+build times, nu=5/2: 1e+03:0.0115s, 1e+07:0.0074s, 1e+11:0.0079s, 1e+13:0.0065s, 1e+15:0.0077s
+max_x=3e+15: built in 0.0077s
+max_x=8.6e+15: built in 0.0070s
+x=2.5e15 corner: E_theta=2.220e-16 E_A=0.000e+00
+nu=     1.5 x_star=34.4119: phase agreement 2.499e-12 (budget 1e-11), amplitude agreement 2.541e-13 (budget 1e-11)
+nu=    1.75 x_star=54.5456: phase agreement 2.491e-12 (budget 1e-11), amplitude agreement 1.601e-13 (budget 1e-11)
+nu=     2.5 x_star=64.4688: phase agreement 2.501e-12 (budget 1e-11), amplitude agreement 1.361e-13 (budget 1e-11)
+nu=    20.5 x_star=664.389: phase agreement 2.501e-12 (budget 1e-11), amplitude agreement 1.354e-14 (budget 1e-11)
+nu=   100.5 x_star=4199.98: phase agreement 2.502e-12 (budget 1e-11), amplitude agreement 2.442e-15 (budget 1e-11)
+nu=  1000.5 x_star=58122.8: phase agreement 2.524e-12 (budget 1e-11), amplitude agreement 2.220e-16 (budget 1e-11)
+nu=     1.5 seam jumps: r 2.499e-12, a 2.539e-13, theta' 5.082e-13
+nu=     2.5 seam jumps: r 2.501e-12, a 1.360e-13, theta' 2.719e-13
+nu=    20.5 seam jumps: r 2.501e-12, a 1.373e-14, theta' 2.723e-14
+nu=   100.5 seam jumps: r 2.503e-12, a 2.311e-15, theta' 4.843e-15
+nu=  1000.5 seam jumps: r 2.521e-12, a 4.089e-16, theta' 3.736e-16
+nu=0.5 against the exact tier: E_theta=2.220e-16 E_A=2.220e-16
+nu=     0.5: exp(-2 ell) vs 1+r_u/x 0.000e+00; vs reference 3.642e-14; alternative vs reference 3.642e-14
+nu=     1.5: exp(-2 ell) vs 1+r_u/x 1.421e-13; vs reference 5.090e-13; alternative vs reference 5.090e-13
+nu=    1.75: exp(-2 ell) vs 1+r_u/x 1.434e-13; vs reference 3.195e-13; alternative vs reference 3.195e-13
+nu=     2.5: exp(-2 ell) vs 1+r_u/x 9.293e-14; vs reference 2.713e-13; alternative vs reference 2.713e-13
+nu=    20.5: exp(-2 ell) vs 1+r_u/x 2.099e-12; vs reference 9.848e-14; alternative vs reference 2.103e-12
+nu=   100.5: exp(-2 ell) vs 1+r_u/x 1.805e-11; vs reference 4.579e-13; alternative vs reference 1.807e-11
+nu=  1000.5: exp(-2 ell) vs 1+r_u/x 3.958e-11; vs reference 8.095e-12; alternative vs reference 3.961e-11
+nu=1.5 x=1e+03: naive 5.951e-14 vs split 0.000e+00
+nu=1.5 x=1e+07: naive 1.210e-10 vs split 0.000e+00
+nu=1.5 x=1e+12: naive 2.723e-06 vs split 2.220e-16
+nu=1.5 x=1e+15: naive 4.725e-02 vs split 1.110e-16
+nu=1.75 x=1e+03: naive 2.243e-14 vs split 1.110e-16
+nu=1.75 x=1e+07: naive 1.140e-09 vs split 2.220e-16
+nu=1.75 x=1e+12: naive 4.831e-06 vs split 1.110e-16
+nu=1.75 x=1e+15: naive 3.620e-02 vs split 2.776e-17
+nu=1.5 x=1e+03: split E_theta=0.000e+00 E_A=2.220e-16
+nu=1.5 x=1e+07: split E_theta=1.110e-16 E_A=2.220e-16
+nu=1.5 x=1e+12: split E_theta=2.220e-16 E_A=0.000e+00
+nu=1.5 x=1e+15: split E_theta=1.110e-16 E_A=0.000e+00
+nu=1.75 x=1e+03: split E_theta=1.110e-16 E_A=0.000e+00
+nu=1.75 x=1e+07: split E_theta=2.220e-16 E_A=0.000e+00
+nu=1.75 x=1e+12: split E_theta=1.110e-16 E_A=0.000e+00
+nu=1.75 x=1e+15: split E_theta=1.110e-16 E_A=0.000e+00
+nu=     1.5 zeros/extrema: E_theta=2.447e-12@34.514 E_A=2.482e-13
+nu=     2.5 zeros/extrema: E_theta=1.713e-15@12.3229 E_A=2.065e-14..........................
+nu=    20.5 zeros/extrema: E_theta=7.480e-15@32.5469 E_A=1.332e-15
+test_crossover_stays_far_below_hankel1e_boundary: worst boundary/x_star ratio 7139 (required >= 1e+03)
+
+** J integral data
+integral_(100.0)^(2353237.9395207786) J_(0.5)(x) = 0.0690910169411588 (16 regions, 63 evaluations in time 0.0156s)
+
+** Y integral data
+integral_(100.0)^(2353237.9395207786) Y_(0.5)(x) = -0.04090264297903339 (15 regions, 59 evaluations in time 0.0124s)
+
+** J integral data
+integral_(3.0)^(2353237.9395207786) J_(0.5)(x) = -0.42287502724830234 (24 regions, 79 evaluations in time 0.032s)
+
+** Y integral data
+integral_(3.0)^(2353237.9395207786) Y_(0.5)(x) = 0.12188100662581602 (24 regions, 79 evaluations in time 0.0317s)
+
+** J integral data
+integral_(100.0)^(2353237.9395207786) J_(2.5)(x) = -0.070313241312078 (16 regions, 63 evaluations in time 0.0149s)
+
+** Y integral data
+integral_(100.0)^(2353237.9395207786) Y_(2.5)(x) = 0.03884486232444391 (16 regions, 63 evaluations in time 0.016s)
+
+** J integral data
+integral_(3.0)^(2353237.9395207786) J_(2.5)(x) = 0.5315713707330593 (24 regions, 79 evaluations in time 0.0845s)
+
+** Y integral data
+integral_(3.0)^(2353237.9395207786) Y_(2.5)(x) = 0.29621649010972667 (24 regions, 79 evaluations in time 0.0883s)
+
+** 0pt5 integral data
+{
+    "J": 0.00032674803379432614,
+    "J_abserr": 7.123733831187819e-13,
+    "J_converged": true,
+    "Y": -0.0001689562920599968,
+    "Y_abserr": 2.5816759966009584e-14,
+    "Y_converged": true,
+    "metadata": {
+        "Levin": {
+            "J1_data": {
+                "abserr": 3.636091034182299e-13,
+                "converged": true,
+                "elapsed": 0.020497457939200103,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "J2_data": {
+                "abserr": 3.622663521067142e-16,
+                "converged": true,
+                "elapsed": 0.03493433305993676,
+                "phase_limited": false,
+                "regions": 3
+            },
+            "J3_data": {
+                "abserr": 2.484141748981989e-12,
+                "converged": true,
+                "elapsed": 0.018938041990622878,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "J4_data": {
+                "abserr": 3.6769046503603687e-16,
+                "converged": true,
+                "elapsed": 0.042692082934081554,
+                "phase_limited": false,
+                "regions": 3
+            },
+            "Y1_data": {
+                "abserr": 1.0209599542887493e-13,
+                "converged": true,
+                "elapsed": 0.017542249988764524,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "Y2_data": {
+                "abserr": 3.622663521067142e-16,
+                "converged": true,
+                "elapsed": 0.03774779196828604,
+                "phase_limited": false,
+                "regions": 3
+            },
+            "Y3_data": {
+                "abserr": 3.699211401341445e-16,
+                "converged": true,
+                "elapsed": 0.03634287498425692,
+                "phase_limited": false,
+                "regions": 3
+            },
+            "Y4_data": {
+                "abserr": 3.489129451564851e-16,
+                "converged": true,
+                "elapsed": 0.042594917002134025,
+                "phase_limited": false,
+                "regions": 3
+            }
+        },
+        "compute_time": 0.2535435419995338,
+        "quad": {}
+    }
+}
+
+** 2pt5 integral data
+{
+    "J": 5.718077536589882e-05,
+    "J_abserr": 1.3227635751732192e-13,
+    "J_converged": true,
+    "Y": 0.00017974297015895343,
+    "Y_abserr": 1.8567607775220796e-12,
+    "Y_converged": true,
+    "metadata": {
+        "Levin": {
+            "J1_data": {
+                "abserr": 1.4231820483789671e-13,
+                "converged": true,
+                "elapsed": 0.03013691701926291,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "J2_data": {
+                "abserr": 1.5729274488278394e-13,
+                "converged": true,
+                "elapsed": 0.027681709034368396,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "J3_data": {
+                "abserr": 8.97181180671982e-14,
+                "converged": true,
+                "elapsed": 0.02701404201798141,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "J4_data": {
+                "abserr": 1.3976969303192175e-13,
+                "converged": true,
+                "elapsed": 0.027548874961212277,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "Y1_data": {
+                "abserr": 5.099905964074681e-16,
+                "converged": true,
+                "elapsed": 0.0448992500314489,
+                "phase_limited": false,
+                "regions": 3
+            },
+            "Y2_data": {
+                "abserr": 7.132324432142597e-14,
+                "converged": true,
+                "elapsed": 0.027673083008266985,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "Y3_data": {
+                "abserr": 3.913120134513271e-14,
+                "converged": true,
+                "elapsed": 0.027237667003646493,
+                "phase_limited": false,
+                "regions": 2
+            },
+            "Y4_data": {
+                "abserr": 1.1675127195749643e-15,
+                "converged": true,
+                "elapsed": 0.04275058407802135,
+                "phase_limited": false,
+                "regions": 3
+            }
+        },
+        "compute_time": 0.2588672909187153,
+        "quad": {}
+    }
+}
+
+@@ 8 Levin calls, all with keys ['theta', 'theta_abserr', 'theta_deriv', 'theta_mod_2pi']
+
+@@ quad_JJJ rtol=1.0e-08: value=1.6923037351074446e-01, |value - analytic|=1.4203e-11, reported abserr=1.5379e-07, phase_limited=True
+
+@@ quad_JJJ rtol=1.0e-10: value=1.6923037347290040e-01, |value - analytic|=2.3641e-11, reported abserr=1.5331e-07, phase_limited=True
+
+@@ quad_JJJ rtol=1.0e-12: value=1.6923037347263692e-01, |value - analytic|=2.3904e-11, reported abserr=1.5331e-07, phase_limited=True
+
+@@ quad_JJJ rtol=1.0e-13: value=1.6923037347263686e-01, |value - analytic|=2.3904e-11, reported abserr=1.5331e-07, phase_limited=True
+
+@@ quad_JJJ rtol=1.0e-14: value=1.6923037347263697e-01, |value - analytic|=2.3904e-11, reported abserr=1.5331e-07, phase_limited=True
+
+@@ floor: |value(1e-12..1e-14) spread| = 1.1102e-16, |value - analytic| = 2.3904e-11 (1.4125e-10 relative), reported abserr 1.5331e-07
+
+@@ group (sin, cos), K = 0 exactly: new 1.3947e-13, old 3.0518e-05, ratio old/new 2.188e+08
+
+@@ group (sin, cos), K/max ~ 1e-6: new 5.6801e-11, old 6.9543e-05, ratio old/new 1.224e+06
+
+@@ group (sin, cos), K/max ~ 1e-10: new 1.3936e-13, old 7.6389e-05, ratio old/new 5.481e+08
+
+@@ group (sin, cos), generic: new 1.2410e-05, old 1.4232e-05, ratio old/new 1.147
+
+@@ four-group identity: worst |direct - groups| = 1.2463e-04 (worst error/bound 0.0563); worst |constituent pair - reference| = 1.4252e-13
+
+@@ group derivative, K = 0 exactly:
+   |delta dTheta/dlog x| / (max(k,q,s) x): new 1.4517e-14 (x=34.545), old 1.4406e-14 (x=34.545)
+   |delta dTheta/dlog x| absolute: new 1.0030e-12 (x=34.545), old 3.0518e-05 (x=5.215e+11), ratio old/new 3.043e+07
+
+@@ group derivative, K/max ~ 1e-6:
+   |delta dTheta/dlog x| / (max(k,q,s) x): new 1.4517e-14 (x=34.545), old 1.4443e-14 (x=34.545)
+   |delta dTheta/dlog x| absolute: new 1.0030e-12 (x=34.545), old 7.3671e-05 (x=5.215e+11), ratio old/new 7.345e+07
+
+@@ group derivative, K/max ~ 1e-10:
+   |delta dTheta/dlog x| / (max(k,q,s) x): new 1.4517e-14 (x=34.545), old 1.4327e-14 (x=34.545)
+   |delta dTheta/dlog x| absolute: new 1.0030e-12 (x=34.545), old 8.9636e-05 (x=5.215e+11), ratio old/new 8.937e+07
+
+@@ group derivative, generic:
+   |delta dTheta/dlog x| / (max(k,q,s) x): new 1.3823e-14 (x=34.545), old 1.3627e-14 (x=34.545)
+   |delta dTheta/dlog x| absolute: new 1.4901e-08 (x=7.7587e+08), old 1.7166e-05 (x=1.4183e+11), ratio old/new 1152
+
+@@ at exact resonance dTheta/dlog x = 6.666667e-12 at x = 1e+12, against a constituent scale of 2e+12
+   reference 6.666667e-12; relative error (the metric this test refuses to use) new 0.000e+00, old 1.000e+00..........
+----------------------------------------------------------------------
+Ran 148 tests in 41.322s
+
+OK (skipped=1)
+
+
+@@ group phase, K = 0 exactly: K=0.0
+   |delta Theta| new 1.4211e-13 (x=34.545), old 2.8622e-05 (x=2.7196e+11), ratio old/new 2.014e+08; worst error/declared-bound 0.4812
+
+@@ group phase, K/max ~ 1e-6: K=9.5367431640625e-07
+   |delta Theta| new 2.9104e-11 (x=1.4183e+11), old 6.0307e-05 (x=5.215e+11), ratio old/new 2.072e+06; worst error/declared-bound 0.4845
+
+@@ group phase, K/max ~ 1e-10: K=1.1641532182693481e-10
+   |delta Theta| new 1.4211e-13 (x=34.545), old 7.6272e-05 (x=5.215e+11), ratio old/new 5.367e+08; worst error/declared-bound 0.4812
+
+@@ group phase, generic: K=0.10000000000000009
+   |delta Theta| new 1.5259e-05 (x=1e+12), old 1.5259e-05 (x=1.4183e+11), ratio old/new 1; worst error/declared-bound 0.4594
+
+@@ J000: value=1.6923037347290040e-01, analytic=1.6923037349654133e-01, relerr=1.3970e-10, reported abserr=1.5331e-07, converged=False, phase_limited=True
+
+@@ Y000: value=-1.1421372205889066e-01, analytic=-1.1421372205344167e-01, relerr=4.7709e-11, reported abserr=1.5335e-07, converged=False, phase_limited=True

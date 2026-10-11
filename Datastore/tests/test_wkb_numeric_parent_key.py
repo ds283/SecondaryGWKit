@@ -32,7 +32,7 @@ The prompt's §3 tests, by class:
 and, for the inventory's nullable parent (the orchestrator note's §0.5), ``TestNullableParent``.
 
 No Ray, nothing under ``var/``: the schema is built in memory (or, for the drop order, in a file in
-a temporary directory) with ``build_schema(MetaData(), Datastore.SQL.Datastore._factories)``, and
+a temporary directory) with ``build_schema(MetaData(), config.datastore.factories)``, and
 every call is to the real factory code. Parents that exist only as a serial -- a model, a tag, a
 solver -- are stand-ins carrying ``.store_id``.
 """

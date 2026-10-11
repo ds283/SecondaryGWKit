@@ -38,8 +38,9 @@ What is asserted here, in the order prompt 14 §3 states it:
   scripts open a Ray connection and a ``ShardedPool`` at module scope for the same reason.
 
 Nothing here needs Ray or the project's ``Datastore`` machinery: the tables are built from the
-factories' own ``register()`` output in the shape ``Datastore.SQL.Datastore._build_schema`` builds
-them, and the inserter is the shape of ``Datastore._insert`` reduced to what these tables use.
+factories' own ``register()`` output in the shape ``datastorekit.SQL.Datastore._build_schema``
+builds them, and the inserter is the shape of ``Datastore._insert`` reduced to what these tables
+use.
 """
 
 import ast

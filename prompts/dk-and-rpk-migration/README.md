@@ -185,15 +185,15 @@ pre-registry `a3-pilot` pair), none `running`.
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | [`01-record-the-installed-packages-in-each-manifest.md`](01-record-the-installed-packages-in-each-manifest.md) | U4. A run's manifest records the installed `datastorekit` and `raypoolkit` (version, VCS URL and commit, editable or not), or `null` for one not installed | Sonnet | written 2026-10-11 |
-| 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1's protocol at the start tree. Every fingerprint is `39809dca`. It closes the `53d4e18` → `b510bc9` gap (§0.1) | Opus | written 2026-10-11 |
-| 03 | [`03-pin-datastorekit-v0.2.2.md`](03-pin-datastorekit-v0.2.2.md) | The `datastorekit` pin in a commit of its own; the venv installed from it, adding one distribution, at the tag's commit | Sonnet | written 2026-10-11 |
-| 04 | [`04-adopt-datastorekit.md`](04-adopt-datastorekit.md) | **The DatastoreKit swap.** The 17 files go (two emptied, U3), every layer import outside `prompts/` is rewritten, the carried tests are deleted, and the staying ones are adapted. The freeze section of `CLAUDE.md` is rewritten | Opus | written 2026-10-11 |
-| 05 | [`05-rehearse-through-datastorekit.md`](05-rehearse-through-datastorekit.md) | **R1.** §4.1's protocol through the package. It equals R0 and `39809dca`. **DatastoreKit's G2 holds** | Opus | written 2026-10-11 |
-| 06 | [`06-pin-raypoolkit-v0.2.0.md`](06-pin-raypoolkit-v0.2.0.md) | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | written 2026-10-11 |
-| 07 | [`07-adopt-raypoolkit.md`](07-adopt-raypoolkit.md) | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | written 2026-10-11 |
-| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2.** §4.1's protocol through both packages. It equals R1 and `39809dca`; the `GkSourcePolicyData` statistics equal R1's. **RayPoolKit's G2 holds** | Opus | written 2026-10-11 |
-| 09 | [`09-close-the-migration.md`](09-close-the-migration.md) | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | written 2026-10-11 |
+| 01 | [`01-record-the-installed-packages-in-each-manifest.md`](01-record-the-installed-packages-in-each-manifest.md) | U4. A run's manifest records the installed `datastorekit` and `raypoolkit` (version, VCS URL and commit, editable or not), or `null` for one not installed | Sonnet | landed 2026-10-11 (`f54f1c5`) |
+| 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1's protocol at the start tree. Every fingerprint is `39809dca`. It closes the `53d4e18` → `b510bc9` gap (§0.1) | Opus | landed 2026-10-11 (`7650102`) |
+| 03 | [`03-pin-datastorekit-v0.2.2.md`](03-pin-datastorekit-v0.2.2.md) | The `datastorekit` pin in a commit of its own; the venv installed from it, adding one distribution, at the tag's commit | Sonnet | landed 2026-10-11 (`9ec603a`) |
+| 04 | [`04-adopt-datastorekit.md`](04-adopt-datastorekit.md) | **The DatastoreKit swap.** The 17 files go (two emptied, U3), every layer import outside `prompts/` is rewritten, the carried tests are deleted, and the staying ones are adapted. The freeze section of `CLAUDE.md` is rewritten | Opus | landed 2026-10-11 (`0c9e2cf`) |
+| 05 | [`05-rehearse-through-datastorekit.md`](05-rehearse-through-datastorekit.md) | **R1.** §4.1's protocol through the package. It equals R0 and `39809dca`. **DatastoreKit's G2 holds** | Opus | landed 2026-10-11 (`f3f0879`) |
+| 06 | [`06-pin-raypoolkit-v0.2.0.md`](06-pin-raypoolkit-v0.2.0.md) | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | landed 2026-10-11 (`b6cc119`) |
+| 07 | [`07-adopt-raypoolkit.md`](07-adopt-raypoolkit.md) | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | landed 2026-10-11 (`643c3b2`) |
+| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2.** §4.1's protocol through both packages. It equals R1 and `39809dca`; the `GkSourcePolicyData` statistics equal R1's. **RayPoolKit's G2 holds** | Opus | landed 2026-10-11 (`f539015`) |
+| 09 | [`09-close-the-migration.md`](09-close-the-migration.md) | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | landed 2026-10-12 (this commit) |
 
 ### 2.1 When each prompt file is written
 

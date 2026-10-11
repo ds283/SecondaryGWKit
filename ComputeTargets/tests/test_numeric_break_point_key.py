@@ -28,7 +28,7 @@ Four things are checked, in the order prompt 20 §3 states them:
    by running a production QCD object in both sectors on this tree and on ``HEAD~1``.
 
 Nothing here needs Ray, a datastore or SQLite. The tables are built from the factories' own
-``register()`` output in the shape ``Datastore.SQL.Datastore._build_schema`` builds them, and the
+``register()`` output in the shape ``datastorekit.SQL.Datastore._build_schema`` builds them, and the
 connection is a stand-in that captures the query instead of executing it -- the "compile the query
 without a connection" route prompt 20 §4 names, alongside the ``ast`` route that
 ``test_numeric_break_points.test_each_production_call_site_passes_the_kind_its_sector_decided_on``

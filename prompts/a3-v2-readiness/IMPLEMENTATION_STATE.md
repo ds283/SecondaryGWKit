@@ -1350,41 +1350,6 @@ with its closing note; log 03). Both index rows are deleted.
 
 ### 3.2 Held on this board
 
-- **[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]** *(opened 2026-10-02 by
-  audit 00, V1; does not block A3 v2)*
-  - **The defect.** `ShardedPool.__init__` writes a new store's primary and its `shards` table
-    first, and each shard file is created by its actor's constructor afterwards. Interrupted in
-    between, the store's next open is refused by `_check_shard_files` for a shard that does not
-    exist.
-  - **Measured** (`version_window_probe.py`, cases 1 and 2): `shard #0 … which does not exist;
-    shard #1 … which does not exist`, and `shard #1 … which does not exist`.
-  - **Impact.** None to data: the store is empty. But a person must delete it, since `--build`
-    refuses an existing path and `--build --resume` checks the store first.
-  - **Next step.** User decision U2 (audit, closing section): recommended, record only; 07's
-    rehearsal can confirm the refusal makes the remedy clear.
-  - **Decided (2026-10-02):** record only (U2); no prompt changes code for it. 02 moves the version
-    row after the shard files exist, which narrows the window without closing it, and its log says
-    by how much. It stays open here.
-  - **Narrowed, not closed (2026-10-03, prompt 02):** the shard files after the first no longer
-    wait on the first actor's constructor, its version insert and a `ray.get`; every constructor is
-    submitted at once, and the version row comes after the last file exists (log 02, observation 1).
-- **[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]** *(opened 2026-10-02
-  by the orchestrator, writing 02; read, not measured; does not block A3 v2)*
-  - **The defect.** `_drop_actions` (`Datastore/SQL/Datastore.py`) maps `gk-source-policy-records`
-    to `GkSourcePolicy`, a replicated table. Each actor drops it from its own shard in its
-    constructor (`Datastore.__init__` → `_drop_actions`), and recreates it empty in
-    `_ensure_tables`, outside the `replication_in_flight` record. It is the third replicated write
-    a constructor makes, beside the version row and the prune.
-  - **Since 02 (2026-10-03, `b647c0b`):** it is the only one. The version row and the prune of a
-    replicated class are now the pool's, each under a record (log 02, observation 5). The defect
-    and its remedy are unchanged.
-  - **Impact (inferred, from the code).** `main.py --drop gk-source-policy-records`, interrupted
-    between actors, would leave `GkSourcePolicy` rows on some shards and not others. The check at
-    open would refuse that store, with no record to repair it from. A3 v2's launch passes no
-    `--drop`, so A3 v2 does not reach this.
-  - **Next step.** Not assigned. The user did not decide it with U1, so 02 does not fix it (02 §6).
-    The remedy has U1's shape: the pool drops replicated tables before any actor exists, under a
-    record. Measure it first on stand-in shards, as audit V1 case 4 did for the prune.
 - **[01-reader-tolerance-agreement-does-not-scan-object-read-batch]** *(seen 2026-10-02 by prompt
   01's deliberate breakage (iii), log 01 deviation 1 and observation 3; opened by the
   orchestrator's review; does not block A3 v2)*
@@ -1661,6 +1626,53 @@ with its closing note; log 03). Both index rows are deleted.
     signal-check interval is not changed, and K4's `ray.init` call stays as `address` alone.
   - **What it leaves.** 07's rehearsal and A3 v2 read `killed` up to about a second after the
     signal. Nothing that waits on the record may assume less.
+- **[00-a-new-stores-first-open-can-leave-a-primary-without-its-shards]** *(opened 2026-10-02 by
+  audit 00, V1; does not block A3 v2;
+  **transferred 2026-10-12 to DatastoreKit by dk-and-rpk-migration 09**)*
+  - **The defect.** `ShardedPool.__init__` writes a new store's primary and its `shards` table
+    first, and each shard file is created by its actor's constructor afterwards. Interrupted in
+    between, the store's next open is refused by `_check_shard_files` for a shard that does not
+    exist.
+  - **Measured** (`version_window_probe.py`, cases 1 and 2): `shard #0 … which does not exist;
+    shard #1 … which does not exist`, and `shard #1 … which does not exist`.
+  - **Impact.** None to data: the store is empty. But a person must delete it, since `--build`
+    refuses an existing path and `--build --resume` checks the store first.
+  - **Next step.** User decision U2 (audit, closing section): recommended, record only; 07's
+    rehearsal can confirm the refusal makes the remedy clear.
+  - **Decided (2026-10-02):** record only (U2); no prompt changes code for it. 02 moves the version
+    row after the shard files exist, which narrows the window without closing it, and its log says
+    by how much. It stays open here.
+  - **Narrowed, not closed (2026-10-03, prompt 02):** the shard files after the first no longer
+    wait on the first actor's constructor, its version insert and a `ray.get`; every constructor is
+    submitted at once, and the version row comes after the last file exists (log 02, observation 1).
+  - **Transferred (2026-10-12) by `dk-and-rpk-migration` prompt 09 (C11).** The code this entry
+    describes is `datastorekit`'s since that campaign's prompt 04, and no longer SGK's, so the entry
+    leaves §3. A transfer is not a resolution: the issue is **still open there**, indexed in
+    DatastoreKit's `docs/OPEN_ISSUES.md` §1.2, and this entry stays, its text unchanged, as the
+    record of its measurement.
+- **[00-a-drop-action-drops-a-replicated-table-outside-the-in-flight-record]** *(opened 2026-10-02
+  by the orchestrator, writing 02; read, not measured; does not block A3 v2;
+  **transferred 2026-10-12 to DatastoreKit by dk-and-rpk-migration 09**)*
+  - **The defect.** `_drop_actions` (`Datastore/SQL/Datastore.py`) maps `gk-source-policy-records`
+    to `GkSourcePolicy`, a replicated table. Each actor drops it from its own shard in its
+    constructor (`Datastore.__init__` → `_drop_actions`), and recreates it empty in
+    `_ensure_tables`, outside the `replication_in_flight` record. It is the third replicated write
+    a constructor makes, beside the version row and the prune.
+  - **Since 02 (2026-10-03, `b647c0b`):** it is the only one. The version row and the prune of a
+    replicated class are now the pool's, each under a record (log 02, observation 5). The defect
+    and its remedy are unchanged.
+  - **Impact (inferred, from the code).** `main.py --drop gk-source-policy-records`, interrupted
+    between actors, would leave `GkSourcePolicy` rows on some shards and not others. The check at
+    open would refuse that store, with no record to repair it from. A3 v2's launch passes no
+    `--drop`, so A3 v2 does not reach this.
+  - **Next step.** Not assigned. The user did not decide it with U1, so 02 does not fix it (02 §6).
+    The remedy has U1's shape: the pool drops replicated tables before any actor exists, under a
+    record. Measure it first on stand-in shards, as audit V1 case 4 did for the prune.
+  - **Transferred (2026-10-12) by `dk-and-rpk-migration` prompt 09 (C11).** The code this entry
+    describes is `datastorekit`'s since that campaign's prompt 04, and no longer SGK's, so the entry
+    leaves §3. A transfer is not a resolution: the issue is **still open there**, indexed in
+    DatastoreKit's `docs/OPEN_ISSUES.md` §1.2, and this entry stays, its text unchanged, as the
+    record of its measurement.
 
 ---
 

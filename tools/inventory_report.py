@@ -2,7 +2,7 @@
 The datastore inventory report: ``main.py --inventory`` (store-fingerprint prompt 03).
 
 ``format_inventory_report(inventory, db_name, verbose=False)`` renders the structured inventory
-that ``Datastore.store_inventory.read_inventory`` returns. It reads nothing from a store itself:
+that ``datastorekit.store_inventory.read_inventory`` returns. It reads nothing from a store itself:
 whatever it prints is in the ``StoreInventory`` it is given, which was read read-only, with no Ray.
 
 **What it shows.** The report opens with the store's total number of named problems ("none" when

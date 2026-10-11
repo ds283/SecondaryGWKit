@@ -522,7 +522,8 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
     `store amend` is the remedy for a given copy.
   - **Measurement:** audit §2.12. Indexed at `docs/OPEN_ISSUES.md` §1.14.
 
-- **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01)*
+- **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01;
+  **narrowed** 2026-10-12 by dk-and-rpk-migration 09)*
   - **The defect.** When `ShardedPool.move_store` fails with `EXDEV`, `_failure_message` advises
     "copy it instead, and then delete the source by hand". `RunRegistry.stores.move_store` calls
     `ShardedPool.move_store` (`RunRegistry/stores.py:753`), so `store move` gives that advice about
@@ -538,6 +539,26 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
     modifying. Prompt 01 was told to leave the text alone. Unassigned.
   - **Measurement:** log 01, "Observations not acted on", item 1. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
+  - **Narrowed (2026-10-12, `dk-and-rpk-migration` prompt 09, at the user's decision).** The text is
+    the package's, and the harm is SGK's rule. Two halves:
+    - **To DatastoreKit.** `ShardedPool._failure_message` appends, on `EXDEV`, "copy it instead,
+      and then delete the source by hand" (installed `datastorekit/SQL/ShardedPool.py:3026-3030`;
+      `move_store`'s docstring says the same at `:2683-2684`). The package has
+      `ShardedPool.delete_store` (`:2704`), so advising a deletion by hand is its own defect. It is
+      indexed in DatastoreKit's `docs/OPEN_ISSUES.md` §1.2. The test that asserted the text,
+      `Datastore/tests/test_copy_move_store.py`, was deleted from SGK by 04 and is the package's
+      (`datastorekit/tests/test_copy_move_store.py`), so the constraint on "Next step" above goes
+      with this half.
+    - **Stays SGK's.** `RunRegistry.stores.move_store` (`RunRegistry/stores.py:1109-1123`) calls
+      `_store_files("move", ShardedPool.move_store, …)` at `:1123`, and `_store_files`
+      (`:1052-1060`) re-raises `f"{e}. No sidecar was written or moved: …"`, the package's message
+      verbatim with the sidecar listing appended. SGK adds and shapes no advice. But a registered
+      store's source is retired with `store retire`, never deleted by hand (decision 6.1.1), and the
+      package cannot know that a store is registered. So `store move` passes on, for a registered
+      store, advice that SGK's own rule forbids. The place to say otherwise is `_store_files` or
+      `move_store`. Unassigned; no test constrains it.
+    - The line numbers of the entry above (`RunRegistry/stores.py:753`) are 2026-09-25's, and the
+      entry's text is left as the record.
 
 ---
 

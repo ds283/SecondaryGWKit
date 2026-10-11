@@ -29,9 +29,9 @@ Four things are checked, in the order prompt 03 §3 states them:
    spline and no representation to key on, and must not acquire a column.
 
 Nothing here needs Ray or the project's ``Datastore`` machinery. The tables are built from the
-factories' own ``register()`` output in the shape ``Datastore.SQL.Datastore._build_schema`` builds
-them, and the inserter is the shape of ``Datastore._insert`` reduced to what this table uses
-(a serial from the engine, and a timestamp).
+factories' own ``register()`` output in the shape ``datastorekit.SQL.Datastore._build_schema``
+builds them, and the inserter is the shape of ``Datastore._insert`` reduced to what this table
+uses (a serial from the engine, and a timestamp).
 """
 
 import ast

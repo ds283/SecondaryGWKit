@@ -4,7 +4,7 @@ for `store-retirement` prompt 02 (**R4**, **R5**).
 `prepare()` now makes the sweep store with one `RunRegistry.stores.copy_store` call, so that a
 tombstone left behind by a future `store retire` is never silently overwritten
 (`docs/store-retirement-audit.md` §2.6). `assert_store_is_self_consistent` now compares each
-`shards` row, serial by serial, through `Datastore.shard_paths.resolve_shard_path`, which is what
+`shards` row, serial by serial, through `datastorekit.shard_paths.resolve_shard_path`, which is what
 `ShardedPool` itself has read every record through since `datastore-portability` prompt 01, and
 what unblocks `--build --resume` of a store built since then.
 

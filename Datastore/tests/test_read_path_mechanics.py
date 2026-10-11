@@ -22,7 +22,7 @@ column never passed on to the object it builds" -- ``TkWKBValue.read_batch``'s m
 round trip that executes the real factory code, which is what this module is.
 
 No Ray, no datastore file, nothing under ``var/``: the schema is built in memory with
-``build_schema(MetaData(), Datastore.SQL.Datastore._factories)`` -- the same construction
+``build_schema(MetaData(), config.datastore.factories)`` -- the same construction
 ``docs/datastore-integrity-audit/lookup_keys/common.py`` uses for the audit's probes, and what
 prompt 05a §3 names as the pattern to follow -- so every table the real factories declare exists,
 and every call below is to the real, unmodified ``build()`` / ``read_batch`` / ``_build_impl_*``
