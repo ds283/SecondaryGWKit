@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01 and 02 landed. R0 holds.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01–03 landed. R0 holds; `datastorekit` 0.2.2 is pinned and installed.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 are held (README §2.1).
@@ -44,7 +44,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
-| 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/03-pin-datastorekit-v0.2.2.md) |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
 | 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
@@ -75,9 +75,9 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **P3** | 01 | `TestPackageProvenance` and the manifest test | ✅ |
 | **S1** | 02 | `docs/dk-and-rpk-migration/rehearsal/`: `run_readers.sh`, `stage_counts.py`, `policy_statistics.py` (with `prune_check.py`, `compare_with_recorded.py` and `store_soundness.py` beside them) | ✅ |
 | **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 recorded as the baseline | ✅ |
-| **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ⬜ |
-| **K2** | 03 | the venv installed from it | ⬜ |
-| **K3** | 03 | the proof: one distribution added, at `6d8ee9ae…`, the tag's files, not editable | ⬜ |
+| **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ✅ |
+| **K2** | 03 | the venv installed from it | ✅ |
+| **K3** | 03 | the proof: one distribution added, at `6d8ee9ae…`, the tag's files, not editable | ✅ |
 | **A1** | 04 | the 15 layer files deleted, two `__init__.py` emptied | ⬜ |
 | **A2** | 04 | every layer import outside `prompts/` rewritten, by `scripts/rewrite_layer_imports.py` | ⬜ |
 | **A3** | 04 | `Datastore/tests/`: 26 modules and `schema_description.py` deleted, one test moved, `test_inventory_retired` and the two import strings changed | ⬜ |
@@ -346,3 +346,36 @@ note's §3 passed**, and acceptance 1–6 are met. No stop condition fired. **R0
       comparing counts, or sorted lines where only the order differs. 08's acceptance 3 says
       "line for line", and needs that wording.
     - Interruption points are chosen from their own reference, as here.
+
+### 5.3 After prompt 03 (2026-10-11)
+
+**What landed (this commit).** K1: `requirements.txt` gains
+`datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.2.2` at `:17`, between `cycler` and
+`distlib`, and no other line changes. K2: the venv was installed from it, after a `--dry-run` that
+said `Would install datastorekit-0.2.2` and nothing else. K3: the proof, in
+[the log](logs/03-pin-datastorekit-v0.2.2.md). No code and no test changed.
+
+**What the venv holds.**
+- `pip freeze` differs from `b510bc9-pip-freeze.txt` by exactly
+  `datastorekit @ git+https://github.com/ds283/DatastoreKit@6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6`;
+  `pip check` is clean.
+- `package_provenance()["datastorekit"]` is version `0.2.2`, URL `https://github.com/ds283/DatastoreKit`,
+  commit `6d8ee9ae…`, requested revision `v0.2.2`, `editable: false`; `["raypoolkit"]` is `None`.
+- The installed `datastorekit/` holds the tag's 20 `.py` files outside `tests/`, byte for byte, no
+  `tests/`, nothing else `.py`. The distribution owns 48 entries, all under `datastorekit/` or its
+  `dist-info`.
+- `import datastorekit, datastorekit.SQL.ShardedPool` succeeds with `ray.is_initialized()` false. Local
+  and remote tags agree: object `c32d0278…`, commit `6d8ee9ae…`.
+
+**Counts against the dispatch baselines**, unchanged: AdaptiveLevin 32, CosmologyModels 39,
+LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 739
+(163 + 185 + 200 + 191). All OK except `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (README
+§7's), which failed once in the suite (0.0612 s against 0.06 s) and passed alone three times.
+
+**Rollback (README §4.2).** `git revert` of this commit plus
+`./venv/bin/pip uninstall -y datastorekit`. The venv is not in git, so the revert alone leaves the
+package installed (inert while nothing imports it).
+
+**Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 106.
+
+**Handed to 04.** The package is installed and importable, and nothing in SGK imports it yet.

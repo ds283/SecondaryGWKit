@@ -418,6 +418,8 @@ up, waiting by pid for a killed build's agents
   record their measurements in their logs, and 09 adds §4, the close.
 - **03 and 06 ship the pins** exactly as §2.2 gives them, each in `requirements.txt` and in no
   other file.
+  **03 shipped as named** (prompt 03's log): the one line at `requirements.txt:17`, installed
+  after a dry run that added only `datastorekit` 0.2.2, at `6d8ee9ae…`, not editable.
 - **04 ships** `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at 0 bytes, no
   `Datastore.<layer module>` anywhere outside `prompts/`, and
   `prompts/dk-and-rpk-migration/scripts/rewrite_layer_imports.py`, the record of how the rewrite
