@@ -2,7 +2,7 @@
 
 **Prompt:** [`../03-pin-datastorekit-v0.2.2.md`](../03-pin-datastorekit-v0.2.2.md) ·
 **Board items:** K1–K3 · **Date:** 2026-10-11 · **Model:** Sonnet 5.5 ·
-**Commit:** this commit · **Result:** landed. K1–K3 as the prompt says. The venv gained one
+**Commit:** `9ec603a` · **Result:** landed. K1–K3 as the prompt says. The venv gained one
 distribution, `datastorekit` 0.2.2 at `6d8ee9ae…`, not editable, its files the tag's. Every suite at
 its dispatch count, except the load-sensitive ComputeTargets test, which passed alone three times. No
 issue opened or closed.

@@ -44,7 +44,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
-| 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/03-pin-datastorekit-v0.2.2.md) |
+| 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
 | 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
@@ -57,7 +57,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-11, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-11,
-used for 02).
+used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03).
 
 **Held, by design (README §2.1).**
 - **01–04** are written after the user's review of the plan.
@@ -349,7 +349,7 @@ note's §3 passed**, and acceptance 1–6 are met. No stop condition fired. **R0
 
 ### 5.3 After prompt 03 (2026-10-11)
 
-**What landed (this commit).** K1: `requirements.txt` gains
+**What landed (`9ec603a`).** K1: `requirements.txt` gains
 `datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.2.2` at `:17`, between `cycler` and
 `distlib`, and no other line changes. K2: the venv was installed from it, after a `--dry-run` that
 said `Would install datastorekit-0.2.2` and nothing else. K3: the proof, in
@@ -372,10 +372,64 @@ LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 7
 (163 + 185 + 200 + 191). All OK except `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (README
 §7's), which failed once in the suite (0.0612 s against 0.06 s) and passed alone three times.
 
-**Rollback (README §4.2).** `git revert` of this commit plus
+**Rollback (README §4.2).** `git revert` of `9ec603a` plus
 `./venv/bin/pip uninstall -y datastorekit`. The venv is not in git, so the revert alone leaves the
 package installed (inert while nothing imports it).
 
 **Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 106.
 
 **Handed to 04.** The package is installed and importable, and nothing in SGK imports it yet.
+
+**Orchestrator review of prompt 03 (2026-10-11).** Dispatched from `1321e0e` to one Sonnet
+subagent, after the six roots were re-measured at `09cc40a` (same counts, all OK, load 4–11).
+Reviewed against its commit `9ec603a`, with nothing landed after it. **Every check of the note's §3
+passed**, and acceptance 1–5 are met. No stop condition fired.
+- **Scope (check 1).** Four files: `requirements.txt`, the log, this board, and README §4's one
+  line ("03 shipped as named"). Nothing outside `requirements.txt` and this folder moved.
+  `requirements.txt` gains the one line at `:17`, between `cycler==0.12.1` and `distlib==0.3.9`,
+  spelled as K1.
+- **The venv (check 2).** `pip freeze` against `b510bc9-pip-freeze.txt` is exactly
+  `16a17 > datastorekit @ git+https://github.com/ds283/DatastoreKit@6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6`,
+  and `pip check` is clean. With the `datastorekit` line removed from each, `pip freeze` equals
+  `requirements.txt`. `pip show` gives `Location` in this venv's `site-packages`, `Requires: ray,
+  sqlalchemy`, and no editable location.
+- **The record (check 3).** The raw `direct_url.json` is `url` `https://github.com/ds283/DatastoreKit`
+  and `vcs_info` `{vcs: git, commit_id: 6d8ee9ae…, requested_revision: v0.2.2}`, with no
+  `dir_info`. `package_provenance()` in a fresh process gives the five fields of K3.3, and
+  `raypoolkit` `None`. The dry-run report's `install` list has one entry, `datastorekit` 0.2.2, at
+  `6d8ee9ae…`.
+- **The files (check 4).** The log's script, taken from the log verbatim (equal to the agent's
+  file), on a fresh `git archive v0.2.2 datastorekit` gives 20 byte-identical, none missing,
+  differing or extra, and no `tests/`. A sha256 listing of the 20 installed `.py` files equals the
+  archive's. `importlib.metadata.files("datastorekit")` has 48 entries, under `datastorekit` and
+  `datastorekit-0.2.2.dist-info` only.
+  - **Non-vacuity.** The same script against `git archive v0.2.1 datastorekit` exits 1 with
+    `differ: ['SQL/ShardedPool.py']`, and nothing else differs. That is the one non-test file
+    `v0.2.1` → `v0.2.2` changes. So the comparison would have caught the wrong tag.
+- **The import (check 5).** In `python -I`, `import datastorekit, datastorekit.SQL.ShardedPool`
+  resolves to the venv's `site-packages`, and `ray.is_initialized()` is false. No Ray process was
+  up before or after.
+- **The tags (check 6).** Local `rev-parse` gives `c32d0278…` and `^{commit}` `6d8ee9ae…`.
+  `ls-remote` gives the same pair. DatastoreKit's checkout is clean at `460b012`, untouched.
+- **Inert (check 7).** `git grep` for an `import`/`from datastorekit` statement outside `prompts/`
+  finds nothing.
+- **The registry and `var/` (check 8).** `RunRegistry list` shows the same 21 runs, none
+  `running`. `var/dk-and-rpk-migration-03/` holds the seven saves, and its `freeze-before.txt`
+  equals `b510bc9-pip-freeze.txt`.
+- **Suites (check 9), at `9ec603a`, load 4–7.** All six pass: AdaptiveLevin 32, CosmologyModels 39,
+  LiouvilleGreen 148 (1 skipped), RunRegistry 286, ComputeTargets 693, Datastore 739
+  (163 + 185 + 200 + 191). The wall-clock test the agent saw fail once
+  (`test_tk_wkb_phase.TestCost.test_wall_time_per_object`, 0.0612 s against 0.06 s) passed here.
+- **The records (check 10).** The log shows every check with its command and output, the dry run,
+  pip's output and the suites against the baselines. Its three deviations are each an
+  `IMPLEMENTATION CHOICE` the note directed. The board's row, K1–K3 and §5.3, with the rollback,
+  agree with the venv. The index is untouched at 106.
+- **The agent's observation on pip's log** holds, and is not a defect. pip's "Resolved … to
+  commit `c32d0278…`" prints the annotated tag object's id. The checkout of a tag object lands on
+  its commit, and `direct_url.json` and `pip freeze` record `6d8ee9ae…`.
+- **Residue fixed here:** "this commit" → `9ec603a` on this board and in the log's header, and
+  `orchestrator/prompt-03.md` added to the list of notes.
+- **Handed to 04.**
+  - Every manifest written from now on records `datastorekit` at `6d8ee9ae…`, `editable: false`.
+  - 04's note must give the `docs/` layer-import count measured at its own `HEAD`. 02's review
+    found one more than README §0.2's 17: `docs/dk-and-rpk-migration/rehearsal/store_soundness.py`.
