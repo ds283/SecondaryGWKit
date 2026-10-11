@@ -1304,3 +1304,11 @@ commit `5943492`, with nothing landed after it. **Every check of the note's §3 
   G2 drafts).
 - **Left for the user:** the six rehearsal stores; the two G2 commits, drafted in verification §4.4 and
   §4.5; the `Datastore` rename; and whether to move to `datastorekit` `v0.2.3`.
+
+**The six rehearsal stores retired (2026-10-12, by the user's instruction).** Each was retired with
+`python -m RunRegistry store retire` at `f78e8b6`, after a dry run of each: a fresh read-only fingerprint
+matched the recorded `39809dca…` in all six, and the only references were each store's own building runs.
+Five files went per store (the primary and four shards, 418 MB in all); each sidecar,
+`var/datastores/dk-and-rpk-migration-{02,05,08}-{reference,resumed}.manifest.json`, stays as its
+tombstone, `completed` set. The twelve run directories stay as the record. The retire outputs are under
+`var/dk-and-rpk-migration-09/retire-*.log`.
