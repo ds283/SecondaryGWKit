@@ -409,6 +409,10 @@ up, waiting by pid for a killed build's agents
   `policy_statistics.py <run dir>`.
   05 and 08 run them unchanged. A change to one is a deviation, logged and reviewed, since L4
   compares their outputs.
+  **Shipped as named** (prompt 02's log), `run_readers.sh` taking an optional trailing
+  `nomodels <script>`, plus three more that 05 and 08 run too: `prune_check.py <closed_store_state
+  output> <primary>`, `compare_with_recorded.py <primary>... --against <run dir>...`, and
+  `store_soundness.py <primary>...`, which replaces 07's (it fails since `19f07ee`).
 - **02, 05 and 08 each add a section** to `docs/dk-and-rpk-migration-verification.md`, which 02
   creates. The sections are §1 R0, §2 R1 and §3 R2, each with §4.1's tables. 03, 04, 06 and 07
   record their measurements in their logs, and 09 adds §4, the close.

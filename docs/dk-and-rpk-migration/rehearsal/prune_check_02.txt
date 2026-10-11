@@ -1,0 +1,52 @@
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-resumed.sqlite
+serials listed unvalidated in var/dk-and-rpk-migration-02/state/after-resumed-a.txt
+-- shard 0, GkSource: 11 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 214: absent
+   serial 215: absent
+   serial 219: absent
+   serial 224: absent
+   serial 227: absent
+   serial 234: absent
+   serial 235: absent
+   serial 236: absent
+   serial 237: absent
+   serial 238: absent
+   serial 239: absent
+-- shard 1, GkSource: 10 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 524: absent
+   serial 532: absent
+   serial 535: absent
+   serial 537: absent
+   serial 538: absent
+   serial 541: absent
+   serial 542: absent
+   serial 543: absent
+   serial 544: absent
+   serial 545: absent
+-- shard 3, GkSource: 22 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 19: absent
+   serial 21: absent
+   serial 23: absent
+   serial 24: absent
+   serial 26: absent
+   serial 27: absent
+   serial 30: absent
+   serial 31: absent
+   serial 32: absent
+   serial 34: absent
+   serial 35: absent
+   serial 36: absent
+   serial 37: absent
+   serial 38: absent
+   serial 39: absent
+   serial 40: absent
+   serial 41: absent
+   serial 42: absent
+   serial 43: absent
+   serial 44: absent
+   serial 45: absent
+   serial 46: absent
+43 serial(s) checked: 43 absent, 0 reused by a validated row, 0 still unvalidated
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-resumed.sqlite
+serials listed unvalidated in var/dk-and-rpk-migration-02/state/after-resumed-b.txt
+   none: there is nothing to check

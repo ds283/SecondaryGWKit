@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01 landed.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01 and 02 landed. R0 holds.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 are held (README §2.1).
@@ -43,7 +43,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f54f1c5` | [log](logs/01-record-the-installed-packages-in-each-manifest.md) |
-| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
+| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
@@ -72,8 +72,8 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **P1** | 01 | `RunRegistry.package_provenance()` and `RECORDED_DISTRIBUTIONS` | ✅ |
 | **P2** | 01 | the manifest's `packages`, written by `begin()` | ✅ |
 | **P3** | 01 | `TestPackageProvenance` and the manifest test | ✅ |
-| **S1** | 02 | `docs/dk-and-rpk-migration/rehearsal/`: `run_readers.sh`, `stage_counts.py`, `policy_statistics.py` | ⬜ |
-| **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 recorded as the baseline | ⬜ |
+| **S1** | 02 | `docs/dk-and-rpk-migration/rehearsal/`: `run_readers.sh`, `stage_counts.py`, `policy_statistics.py` (with `prune_check.py`, `compare_with_recorded.py` and `store_soundness.py` beside them) | ✅ |
+| **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 recorded as the baseline | ✅ |
 | **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ⬜ |
 | **K2** | 03 | the venv installed from it | ⬜ |
 | **K3** | 03 | the proof: one distribution added, at `6d8ee9ae…`, the tag's files, not editable | ⬜ |
@@ -93,7 +93,7 @@ Datastore root by module; and the venv's `pip freeze` (README §0.2).
 
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
-| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ⬜ |
+| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ **holds** (2026-10-11): both stores `39809dca…`, all 21 classes, equal to each other and to 07's and 09's recorded fingerprints (verification §1.3.4) |
 | DatastoreKit G2 | the 17 files are gone (two emptied, U3), the pin is in place and installed, the suites pass, and R1 reproduces `39809dca…` | 04, 05 | ⬜ |
 | RayPoolKit G2 | `RayTools/` is gone, 0 imports, the pin is installed, the six roots pass, all 54 sites construct, and R2 reproduces `39809dca…` | 07, 08 | ⬜ |
 
@@ -102,7 +102,38 @@ here (README §6.2 C12).
 
 ## 3. Active and unresolved issues
 
-None yet.
+- **[02-the-policy-statistics-block-orders-its-lines-by-completion]** *(opened 2026-10-11 by prompt
+  02; measured; bears on 05's and 08's L4)*
+  - **The defect.** `main.py`'s `** GkSourcePolicyData SUMMARY STATISTICS` block
+    (`main.py:3265-3278`) prints nested plain dictionaries in insertion order. They are filled by
+    `postprocess_GkSourcePolicy` (`main.py:2871-2893`), the `APPLY GKSOURCE POLICIES` queue's
+    `post_handler`, which `RayWorkPool` calls in Ray's completion order. So the order of the quality
+    lines under a type, and in principle of the types, depends on which object completed first.
+  - **Measured.** R0's reference prints `minimal` before `complete` under `>> mixed`; `datastore-generic`
+    09's and `a3-v2-readiness` 07's print `complete` first; R0's own `resumed-b`, on the same tree,
+    prints `complete` first and `resumed-c` `minimal` first. Every line's content and every count is
+    the same, and the blocks sorted are equal (verification §1.5.2).
+  - **Impact.** README §4.1's L4 and 08's acceptance 3 compare the block "line for line", and 08's
+    measures `main.py:3247` (C8) by it. A comparison of the raw blocks can then fail on order alone.
+    The store, the fingerprint and the counts are unaffected.
+  - **Next step.** Not assigned. For 05 and 08, the comparison is of the counts: compare the blocks
+    line for line and, where only the order differs, as sorted lines, saying so. A fix in `main.py`
+    (sorted keys) would change the printed order once, and is the user's to decide.
+- **[02-07s-store-soundness-calls-read-inventory-without-its-registry]** *(opened 2026-10-11 by
+  prompt 02; measured; verification tool only)*
+  - **The defect.** `docs/a3-v2-readiness/rehearsal/store_soundness.py` calls
+    `read_inventory(primary)`. Since `19f07ee` ("Give the datastore layer its registries instead of
+    importing them") `read_inventory` takes the registry too, so the script raises `TypeError:
+    read_inventory() missing 1 required positional argument: 'factories'` after printing the first
+    store's pragmas. README §4.1's L2 names it, and 04 §3.3 imports it (an import that succeeds).
+  - **Measured.** On R0's two stores at `a5392fd` (verification §1.3.5). It was not changed: it is
+    07's record. R0 ran `docs/dk-and-rpk-migration/rehearsal/store_soundness.py`, a copy that passes
+    `config.datastore.factories` as `RunRegistry.stores.fingerprint_store` does, and reads the shards
+    from the primary's `shards` table.
+  - **Impact.** None on a build or a store. 05 and 08 run the copy; 04's import rewrite reaches it as
+    it reaches 07's.
+  - **Next step.** Not assigned. 07's script stays a record of `dbd8a51`; this campaign's copy is the
+    one to run.
 
 ## 4. Resolved issues
 
@@ -185,3 +216,48 @@ note's §3 passed**, and acceptance 1–3 are met. No stop condition fired.
   orchestrator-notes list above. **Handed on:** nothing. 02's manifests will record
   `{"datastorekit": null, "raypoolkit": null}` (its acceptance 2). From 03 on, the record is read
   from a real VCS install for the first time. 03's acceptance 3 checks it against the tag.
+
+### 5.2 After prompt 02 (2026-10-11)
+
+**What landed (this commit).** R0: README §4.1's protocol at `a5392fd`, whose code is `f54f1c5`'s and
+whose layer is `b510bc9`'s. Four registered launches of `quadsource_atol_sweep.py --build
+--rehearsal`, the readers and the checks, recorded in
+[`docs/dk-and-rpk-migration-verification.md`](../../docs/dk-and-rpk-migration-verification.md) §1.
+S1's scripts, and three more, are in `docs/dk-and-rpk-migration/rehearsal/`, with the small outputs
+under names carrying `02`. No production code and no test changed.
+
+**R0 holds.**
+- `reference` `done`/0 (8 m 0 s); `resumed-a` `killed`/143 in the `GkSource` stage; `resumed-b`
+  `killed`/143 in the `QuadSourceIntegral` stage; `resumed-c` `done`/0. Each driver's exit status
+  agrees, each has its fingerprint, and every manifest has `git_dirty: false`, `git_head`
+  `a5392fd`, and `packages` `{"datastorekit": null, "raypoolkit": null}`.
+- **Both stores are `39809dca…`**, format 6, all 21 classes equal. `compare_fingerprints` is empty
+  between them, against each sidecar, and against the fingerprints recorded by 07's reference and
+  09's rehearsal. So `fee1fbf`, `4c34f13` and `086c81a` change nothing a build writes.
+- The resume pruned the 43 `GkSource` rows `resumed-a` left unvalidated (all 43 serials absent),
+  recomputed 215 = 291 − 119 + 43, and `resumed-c` computed 532 = 864 − 332 `QuadSourceIntegral`
+  rows. Nothing stored was recomputed; nothing is duplicated.
+- The census, `integrity_check`, `foreign_key_check`, the version row and the inventory are clean on
+  both stores. The guard refused, naming the five files, and changed none.
+- The six readers and `extract_Gk_data.py` without `--models` exit 0, refuse nothing, and leave
+  every store file byte-identical. `extract_tensor_source_data.py` exits 0 (07a's fix holds).
+- No Ray process of this repository outlived either killed driver (07's finding did not recur, at
+  loads 7–17).
+
+**L4, the baseline for 05 and 08** (verification §1.5): the statistics block (291; 109 numeric, 26
+mixed of which 25 complete and 1 minimal, 156 WKB); the stage-count table; the prune and recompute
+table; the stage times. R0's block equals 09's but for the order of two lines, which follows Ray's
+completion order. Opened `[02-the-policy-statistics-block-orders-its-lines-by-completion]`.
+
+**Counts against README §7**, unchanged: AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1
+skipped), RunRegistry 286, ComputeTargets 693, Datastore 739 (163 + 185 + 200 + 191), all OK.
+
+**Opened:** the statistics-order issue, and
+`[02-07s-store-soundness-calls-read-inventory-without-its-registry]`. `docs/OPEN_ISSUES.md` gains
+§1.20 and goes from 104 to 106.
+
+**Handed to 03 and on.** R0's stores and run directories, for 04's read-only fingerprint and for
+R1's comparison. 05 and 08 run S1's scripts unchanged, with `prune_check.py`,
+`compare_with_recorded.py` (`--against` R0's `reference` run directory) and this campaign's
+`store_soundness.py`, not 07's. The interruption points used here are recorded with the reason for
+each; R1 should choose its own from its own reference, as R0 did.

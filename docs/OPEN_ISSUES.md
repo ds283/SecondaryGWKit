@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-07 · **104 open** across nineteen campaigns.
+**Last updated:** 2026-10-11 · **106 open** across twenty campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -34,6 +34,7 @@ the two disagree, the board is right.
 [`a3-v2-readiness`](../prompts/a3-v2-readiness/IMPLEMENTATION_STATE.md) ·
 [`datastore-generic`](../prompts/datastore-generic/IMPLEMENTATION_STATE.md) ·
 [`datastore-generic-followup`](../prompts/datastore-generic-followup/IMPLEMENTATION_STATE.md) ·
+[`dk-and-rpk-migration`](../prompts/dk-and-rpk-migration/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -862,6 +863,17 @@ Prompt 02 closed the resolve issue the same day: `resolve()` now gives `None` fo
 parent.
 Prompt 03 closed the closed-store prefix issue the same day: each refusal states its prefix once, and
 the reader wraps its own. **The campaign is closed at 3 / 3, and no issue is open here.**
+
+### 1.20 The dk-and-rpk-migration campaign
+
+`prompts/dk-and-rpk-migration` was opened on 2026-10-11 to adopt `datastorekit` and `raypoolkit` in
+SGK, with a fingerprint rehearsal before the first swap and after each. Its prompt 02, the start-tree
+rehearsal R0, opened two (2026-10-11).
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[02-the-policy-statistics-block-orders-its-lines-by-completion]` | dk-and-rpk-migration | `main.py`'s `GkSourcePolicyData SUMMARY STATISTICS` prints dicts filled in Ray completion order, so its line order varies between runs of one tree (R0's reference vs its own `resumed-b`); counts identical. L4's and 08's "line for line" can fail on order alone. Not assigned. |
+| `[02-07s-store-soundness-calls-read-inventory-without-its-registry]` | dk-and-rpk-migration | `docs/a3-v2-readiness/rehearsal/store_soundness.py` calls `read_inventory(primary)`, which needs `factories` since `19f07ee`: `TypeError`. README §4.1 names it; R0 ran a copy under `docs/dk-and-rpk-migration/rehearsal/`. Verification tool only. Not assigned. |
 
 ---
 

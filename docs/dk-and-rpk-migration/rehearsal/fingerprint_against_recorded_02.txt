@@ -1,0 +1,18 @@
+recorded: var/runs/a3-v2-readiness-07-reference-20261004T012909/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by a3-v2-readiness-07-reference-20261004T012909 at dbd8a511fd3c22f1c8aed8374c5c452b7b25f453 (git_dirty False)
+recorded: var/runs/datastore-generic-09-rehearsal-20261006T152452/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by datastore-generic-09-rehearsal-20261006T152452 at 53d4e188842119aa2209eac58fc64506132b7a9b (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/a3-v2-readiness-07-reference-20261004T012909/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/datastore-generic-09-rehearsal-20261006T152452/status.json, store): 0 difference(s)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-resumed.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/a3-v2-readiness-07-reference-20261004T012909/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/datastore-generic-09-rehearsal-20261006T152452/status.json, store): 0 difference(s)
+
+verdict: equal

@@ -1,0 +1,310 @@
+==================== dk-and-rpk-migration-02-reference-20261011T143003
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/dk-and-rpk-migration-02-reference.sqlite",
+    "--job-name",
+    "dk-and-rpk-migration-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "reference",
+    "--purpose",
+    "dk-and-rpk-migration prompt 02, R0 at the start tree (layer b510bc9, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, a3-v2-readiness-07-reference",
+    "--campaign",
+    "dk-and-rpk-migration",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "dk-and-rpk-migration",
+  "checkpoint": null,
+  "created": "2026-10-11T14:30:03+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": null,
+    "raypoolkit": null
+  },
+  "prompt": "02",
+  "purpose": "dk-and-rpk-migration prompt 02, R0 at the start tree (layer b510bc9, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, a3-v2-readiness-07-reference",
+  "results": "var/datastores/dk-and-rpk-migration-02-reference.sqlite",
+  "results_store_id": null,
+  "run_id": "dk-and-rpk-migration-02-reference-20261011T143003",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into dk-and-rpk-migration-02-reference.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "d745783e65bfff99b9c704117f3fd63527f8b70b9a1a450a053b718ad120e9eb",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "run_id": "dk-and-rpk-migration-02-reference-20261011T143003",
+      "when": "2026-10-11T14:38:02+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-reference.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-11T14:38:03+01:00",
+  "pid": 65761,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- stderr.log
+(compute_QuadSource_integral pid=65813) /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+(compute_QuadSource_integral pid=65813)   the requested tolerance from being achieved.  The error may be 
+(compute_QuadSource_integral pid=65813)   underestimated.
+(compute_QuadSource_integral pid=65813)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+-- launch log's last line: ** driver exit status 0
+
+==================== dk-and-rpk-migration-02-resumed-a-20261011T143917
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+    "--job-name",
+    "dk-and-rpk-migration-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-a",
+    "--purpose",
+    "dk-and-rpk-migration prompt 02, R0 at the start tree: first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, a3-v2-readiness-07-reference",
+    "--campaign",
+    "dk-and-rpk-migration",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "dk-and-rpk-migration",
+  "checkpoint": null,
+  "created": "2026-10-11T14:39:17+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": null,
+    "raypoolkit": null
+  },
+  "prompt": "02",
+  "purpose": "dk-and-rpk-migration prompt 02, R0 at the start tree: first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, a3-v2-readiness-07-reference",
+  "results": "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+  "results_store_id": null,
+  "run_id": "dk-and-rpk-migration-02-resumed-a-20261011T143917",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into dk-and-rpk-migration-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "d745783e65bfff99b9c704117f3fd63527f8b70b9a1a450a053b718ad120e9eb",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "eaf590af20c10c9e92af848143754cbdf29ce2fd684d76715b2c3ca34d5ee4ca",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "run_id": "dk-and-rpk-migration-02-resumed-a-20261011T143917",
+      "when": "2026-10-11T14:41:44+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-resumed.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-11T14:41:44+01:00",
+  "pid": 71276,
+  "stage": "CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- stderr.log
+** SIGTERM at 2026-10-11 14:41:42 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(143); recording killed, exit code 143
+-- launch log's last line: ** driver exit status 143
+
+==================== dk-and-rpk-migration-02-resumed-b-20261011T144253
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+    "--job-name",
+    "dk-and-rpk-migration-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-b",
+    "--purpose",
+    "dk-and-rpk-migration prompt 02, R0 at the start tree: second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+    "--campaign",
+    "dk-and-rpk-migration",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "dk-and-rpk-migration",
+  "checkpoint": null,
+  "created": "2026-10-11T14:42:53+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": null,
+    "raypoolkit": null
+  },
+  "prompt": "02",
+  "purpose": "dk-and-rpk-migration prompt 02, R0 at the start tree: second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+  "results": "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+  "results_store_id": "157d877a6a7e440ead4211e5c1425ba4",
+  "run_id": "dk-and-rpk-migration-02-resumed-b-20261011T144253",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into dk-and-rpk-migration-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "d745783e65bfff99b9c704117f3fd63527f8b70b9a1a450a053b718ad120e9eb",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "fc02616e9cb3e653e81580ef2f7827da476082a3908ddec06513cb66a83a90b4",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "run_id": "dk-and-rpk-migration-02-resumed-b-20261011T144253",
+      "when": "2026-10-11T14:45:00+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-11T14:45:01+01:00",
+  "pid": 73797,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- stderr.log
+** SIGTERM at 2026-10-11 14:44:54 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+-- launch log's last line: ** driver exit status 143
+
+==================== dk-and-rpk-migration-02-resumed-c-20261011T144549
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+    "--job-name",
+    "dk-and-rpk-migration-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-c",
+    "--purpose",
+    "dk-and-rpk-migration prompt 02, R0 at the start tree: third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and a3-v2-readiness-07-reference",
+    "--campaign",
+    "dk-and-rpk-migration",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "dk-and-rpk-migration",
+  "checkpoint": null,
+  "created": "2026-10-11T14:45:49+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": null,
+    "raypoolkit": null
+  },
+  "prompt": "02",
+  "purpose": "dk-and-rpk-migration prompt 02, R0 at the start tree: third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and a3-v2-readiness-07-reference",
+  "results": "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+  "results_store_id": "157d877a6a7e440ead4211e5c1425ba4",
+  "run_id": "dk-and-rpk-migration-02-resumed-c-20261011T144549",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into dk-and-rpk-migration-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "d745783e65bfff99b9c704117f3fd63527f8b70b9a1a450a053b718ad120e9eb",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "run_id": "dk-and-rpk-migration-02-resumed-c-20261011T144549",
+      "when": "2026-10-11T14:48:49+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-11T14:48:49+01:00",
+  "pid": 75882,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- stderr.log
+(compute_QuadSource_integral pid=76174) /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+(compute_QuadSource_integral pid=76174)   the requested tolerance from being achieved.  The error may be 
+(compute_QuadSource_integral pid=76174)   underestimated.
+(compute_QuadSource_integral pid=76174)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+-- launch log's last line: ** driver exit status 0
+

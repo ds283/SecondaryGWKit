@@ -1,0 +1,92 @@
+== reference, 14:38:52
+>> create: var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+{
+  "created": "2026-10-11T14:38:52+01:00",
+  "datastore": "dk-and-rpk-migration-02-reference.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "operation": "create",
+      "to": "var/datastores/dk-and-rpk-migration-02-reference.sqlite",
+      "when": "2026-10-11T14:38:52+01:00"
+    }
+  ],
+  "name": "dk-and-rpk-migration-02-reference",
+  "purpose": "dk-and-rpk-migration prompt 02 (R0): reference rehearsal store built straight through at the start tree; throwaway, kept for the campaign's review and for R1/R2 comparison, retired by the user after 09",
+  "sidecar_format": 1,
+  "store_id": "b9a1b4132a4f4066887c077bd4adae5a"
+}
+create rc=0
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-02-reference.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint rc=0
+
+== resumed, 14:42:42
+>> create: var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+{
+  "created": "2026-10-11T14:42:42+01:00",
+  "datastore": "dk-and-rpk-migration-02-resumed.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82",
+      "operation": "create",
+      "to": "var/datastores/dk-and-rpk-migration-02-resumed.sqlite",
+      "when": "2026-10-11T14:42:43+01:00"
+    }
+  ],
+  "name": "dk-and-rpk-migration-02-resumed",
+  "purpose": "dk-and-rpk-migration prompt 02 (R0): resumed rehearsal store, built by resumed-a (killed in GkSource), resumed-b (killed in QuadSourceIntegral) and resumed-c (to done); throwaway, must equal 39809dca and the reference; retired by the user after 09",
+  "sidecar_format": 1,
+  "store_id": "157d877a6a7e440ead4211e5c1425ba4"
+}
+create rc=0

@@ -1,0 +1,67 @@
+== 2026-10-11T14:29:57+0100 pre-launch check before reference
+HEAD a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82
+git status --short: []
+RAY_ADDRESS=[unset]
+14:29  up 6 days, 12:15, 3 users, load averages: 30.74 35.73 25.37
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+17 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 15 finished, 2 unknown.
+/dev/disk3s1s1  927G  843G   84G  91% /
+
+== 2026-10-11T14:39:11+0100 pre-launch check before resumed-a
+HEAD a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82
+git status --short: []
+RAY_ADDRESS=[unset]
+14:39  up 6 days, 12:24, 3 users, load averages: 9.17 23.05 26.14
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 65752 65761
+  PID COMMAND
+rc=1
+   RUN                                                         STATE      PROGRESS      AGE  PURPOSE · STAGE
+   dk-and-rpk-migration-02-reference-20261011T143003           done              -       9m  dk-and-rpk-migration prompt 02, R0 at the start tree (layer b510bc9, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, a3-v2-readiness-07-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+18 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 16 finished, 2 unknown.
+resumed files rc=1
+/dev/disk3s1s1  927G  844G   83G  92% /
+
+== 2026-10-11T14:42:48+0100 pre-launch check before resumed-b
+HEAD a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82
+git status --short: []
+RAY_ADDRESS=[unset]
+14:42  up 6 days, 12:27, 3 users, load averages: 6.38 15.81 22.43
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 71273 71276 71349
+  PID COMMAND
+rc=1
+   RUN                                                         STATE      PROGRESS      AGE  PURPOSE · STAGE
+   dk-and-rpk-migration-02-resumed-a-20261011T143917           killed            -       4m  dk-and-rpk-migration prompt
+   dk-and-rpk-migration-02-reference-20261011T143003           done              -      13m  dk-and-rpk-migration prompt
+19 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 17 finished, 2 unknown.
+/dev/disk3s1s1  927G  845G   82G  92% /
+
+== 2026-10-11T14:45:43+0100 pre-launch check before resumed-c
+HEAD a5392fd1c4ae1c88aa929525ed3f1e6a55c51c82
+git status --short: []
+RAY_ADDRESS=[unset]
+14:45  up 6 days, 12:30, 3 users, load averages: 15.51 17.26 21.88
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 73794 73797 73873
+  PID COMMAND
+rc=1
+   RUN                                                         STATE      PROGRESS      AGE  PURPOSE · STAGE
+   dk-and-rpk-migration-02-resumed-b-20261011T144253           killed            -       3m  dk-and-rpk-migration prompt
+   dk-and-rpk-migration-02-resumed-a-20261011T143917           killed            -       6m  dk-and-rpk-migration prompt
+   dk-and-rpk-migration-02-reference-20261011T143003           done              -      16m  dk-and-rpk-migration prompt
+20 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 18 finished, 2 unknown.
+/dev/disk3s1s1  927G  845G   82G  92% /
+

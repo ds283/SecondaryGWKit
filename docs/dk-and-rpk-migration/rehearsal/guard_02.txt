@@ -1,0 +1,27 @@
+== 2026-10-11T14:52:26+0100 guard
+PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/dk-and-rpk-migration-02-resumed.sqlite --job-name dk-and-rpk-migration-02 --atol 1e-32 --rtol 1e-7
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1050, in <module>
+    main()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1034, in main
+    run_build(args)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 537, in run_build
+    raise RuntimeError(
+RuntimeError: quadsource_atol_sweep --build: dk-and-rpk-migration-02-resumed.sqlite, dk-and-rpk-migration-02-resumed-shard0000.sqlite, dk-and-rpk-migration-02-resumed-shard0001.sqlite, dk-and-rpk-migration-02-resumed-shard0002.sqlite, dk-and-rpk-migration-02-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+exit 1
+== 2026-10-11T14:52:27+0100 after
+-- SHA-256 of every file of both stores and their sidecars, against var/dk-and-rpk-migration-02/state/after-resumed-c.sha256 (taken 14:49, before the guard):
+var/datastores/dk-and-rpk-migration-02-reference-shard0000.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-reference-shard0001.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-reference-shard0002.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-reference-shard0003.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-reference.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-resumed-shard0000.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-resumed-shard0001.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-resumed-shard0002.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-resumed-shard0003.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-resumed.sqlite: OK
+var/datastores/dk-and-rpk-migration-02-reference.manifest.json: OK
+var/datastores/dk-and-rpk-migration-02-resumed.manifest.json: OK
+run directories under var/runs named dk-and-rpk-migration-02-*: 4, the four launches' (no run was registered by the guard)
+Ray processes of this checkout after: 0
