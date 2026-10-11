@@ -1,0 +1,19 @@
+==================== prune_check.py after-resumed-a.txt, at 23:06:54, after resumed-b had opened (and closed) the store
+./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/dk-and-rpk-migration-08/state/after-resumed-a.txt var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+serials listed unvalidated in var/dk-and-rpk-migration-08/state/after-resumed-a.txt
+   none: there is nothing to check
+rc=0
+
+==================== prune_check.py after-resumed-b.txt, at 23:13:43, after resumed-c
+./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/dk-and-rpk-migration-08/state/after-resumed-b.txt var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+serials listed unvalidated in var/dk-and-rpk-migration-08/state/after-resumed-b.txt
+   none: there is nothing to check
+rc=0
+
+==================== prune_check.py after-resumed-a.txt again, at 23:13:44, after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+serials listed unvalidated in var/dk-and-rpk-migration-08/state/after-resumed-a.txt
+   none: there is nothing to check
+rc=0

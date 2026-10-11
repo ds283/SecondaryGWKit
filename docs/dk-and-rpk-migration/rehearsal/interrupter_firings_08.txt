@@ -1,0 +1,19 @@
+resumed-a (interrupter pid 64545; '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10)
+2026-10-11T22:56:27+01:00 interrupter pid 64545 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/dk-and-rpk-migration-08-resumed-a-20261011T225623 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-11T22:56:27+01:00 liveness alive; pid 64487; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-11T22:56:32+01:00 liveness alive; pid 64487; stage 'CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS'
+2026-10-11T22:56:37+01:00 liveness alive; pid 64487; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-11T22:58:02+01:00 liveness alive; pid 64487; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-11T23:00:52+01:00 liveness alive; pid 64487; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-11T23:00:52+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-11T23:01:02+01:00 sent SIGTERM to pid 64487 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --job-name dk-and-rpk-migration-08 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R1 dk-and-rpk-migration-05-reference --campaign dk-and-rpk-migration --prompt 08'; exiting
+
+resumed-b (interrupter pid 69114; '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 100)
+2026-10-11T23:03:09+01:00 interrupter pid 69114 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/dk-and-rpk-migration-08-resumed-b-20261011T230305 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 100 s
+2026-10-11T23:03:09+01:00 liveness alive; pid 69056; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-11T23:03:14+01:00 liveness alive; pid 69056; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-11T23:03:19+01:00 liveness alive; pid 69056; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-11T23:03:49+01:00 liveness alive; pid 69056; stage 'APPLY GKSOURCE POLICIES'
+2026-10-11T23:04:04+01:00 liveness alive; pid 69056; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-11T23:04:04+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 100 s, then reading again
+2026-10-11T23:05:44+01:00 sent SIGTERM to pid 69056 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --job-name dk-and-rpk-migration-08 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca --campaign dk-and-rpk-migration --prompt 08'; exiting

@@ -1,0 +1,187 @@
+==================== after reference (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-reference.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: dk-and-rpk-migration-08-reference.sqlite; version rows None
+-- shard 0: dk-and-rpk-migration-08-reference-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: dk-and-rpk-migration-08-reference-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: dk-and-rpk-migration-08-reference-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: dk-and-rpk-migration-08-reference-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+a1c89174063273ebed8372198b323a128808d3b4e2a6f2119b54f252ec66c4b2  var/datastores/dk-and-rpk-migration-08-reference-shard0000.sqlite
+417db16c1d1998300a41c8af9c2b2f38caa507a44963d8cccfeca99cb58303c2  var/datastores/dk-and-rpk-migration-08-reference-shard0001.sqlite
+268400e6eb1a920310cda30b14da672fa6c4b7b309e0809339d4c1f569553891  var/datastores/dk-and-rpk-migration-08-reference-shard0002.sqlite
+349e0f57058e2013fc55ae7c03baf7251f041c9765bbfb5c48ac5b1327c6fc67  var/datastores/dk-and-rpk-migration-08-reference-shard0003.sqlite
+5c8d286b0edada7f8abdd1aaacc1f431f79be809893ffc50f7d3298202e98c04  var/datastores/dk-and-rpk-migration-08-reference.sqlite
+
+==================== after resumed-a (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: dk-and-rpk-migration-08-resumed.sqlite; version rows None
+-- shard 0: dk-and-rpk-migration-08-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: dk-and-rpk-migration-08-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: dk-and-rpk-migration-08-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: dk-and-rpk-migration-08-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+e83c091559fada42b5d6024e6483547e796ec344f1163a6eabf603b0f5f70693  var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+5cd2b6d2ae53f501bced48a8e8eeacc380a70ba9472ddda1785edf61ac9c796e  var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+31e89f5427eb3bc96612933a048daab851f873f57f1d679d60c90569cd982ee4  var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+1cd7765fcd169130ec1fd82e9b8bb62395f1e56c942f545498416598e2e0db65  var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+
+==================== after resumed-b (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: dk-and-rpk-migration-08-resumed.sqlite; version rows None
+-- shard 0: dk-and-rpk-migration-08-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: dk-and-rpk-migration-08-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: dk-and-rpk-migration-08-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: dk-and-rpk-migration-08-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+9606c9e5bd075da1e57e276496db6bb4baf6f1948cc0ae2e298815f4537bd3d8  var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+7c55db70fdf645592cc8073615d3f7b547fc707cbf3ed71e47f260c3e937d515  var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+ea178f9a3eb68fa3c0f6072dd49a0909bad6540a30de3b8e5f8d35092eca5df8  var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+1738fac1b7caa311efec4dd56f6e531350f1bfdcab12ebb63da06d3bcda2f224  var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+
+==================== after resumed-c (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: dk-and-rpk-migration-08-resumed.sqlite; version rows None
+-- shard 0: dk-and-rpk-migration-08-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: dk-and-rpk-migration-08-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: dk-and-rpk-migration-08-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: dk-and-rpk-migration-08-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+
+==================== after resumed-b: QuadSourceIntegral rows per shard, read mode=ro by sqlite3, every file's SHA-256 unchanged
+var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite QuadSourceIntegral 79
+var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite QuadSourceIntegral_tags 711
+var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite QuadSourceIntegral 92
+var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite QuadSourceIntegral_tags 828
+var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite QuadSourceIntegral 0
+var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite QuadSourceIntegral_tags 0
+var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite QuadSourceIntegral 110
+var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite QuadSourceIntegral_tags 990
+totals {'QuadSourceIntegral': 281, 'QuadSourceIntegral_tags': 2529}
+unchanged

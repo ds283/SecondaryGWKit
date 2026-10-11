@@ -1,0 +1,36 @@
+== guard 2026-10-11T23:22:58+0100
+PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --job-name dk-and-rpk-migration-08 --atol 1e-32 --rtol 1e-7
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1050, in <module>
+    main()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1034, in main
+    run_build(args)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 537, in run_build
+    raise RuntimeError(
+RuntimeError: quadsource_atol_sweep --build: dk-and-rpk-migration-08-resumed.sqlite, dk-and-rpk-migration-08-resumed-shard0000.sqlite, dk-and-rpk-migration-08-resumed-shard0001.sqlite, dk-and-rpk-migration-08-resumed-shard0002.sqlite, dk-and-rpk-migration-08-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+guard exit 1
+== end 2026-10-11T23:22:59+0100
+-- after: hashes of every -08- file against before_guard.sha256 (taken after the readers)
+var/datastores/dk-and-rpk-migration-08-reference-shard0000.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-reference-shard0001.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-reference-shard0002.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-reference-shard0003.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-reference.manifest.json: OK
+var/datastores/dk-and-rpk-migration-08-reference.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed.manifest.json: OK
+var/datastores/dk-and-rpk-migration-08-resumed.sqlite: OK
+-- after: against after-resumed-c (closed-store state, 23:13, before the readers)
+var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite: OK
+var/datastores/dk-and-rpk-migration-08-resumed.sqlite: OK
+-- run directories: 55 (before: 55)
+-- pgrep (zsh -c / grep excluded)
+rc=1
+-- journals
+rc=1

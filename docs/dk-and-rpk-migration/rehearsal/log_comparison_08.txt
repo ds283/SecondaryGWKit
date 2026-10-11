@@ -1,0 +1,192 @@
+== printed-line counts in stdout.log, R2 (08) against R1 (05)
+  reference  banner '** '                               R2   26  R1   26  equal
+  reference  -- ALL WORK ITEMS COMPLETE in time         R2   10  R1   10  equal
+  reference  Queue summary:                             R2   10  R1   10  equal
+  reference  (no compute items were evaluated ...)      R2    1  R1    1  equal
+  reference  work items remaining (progress)            R2    0  R1    0  equal
+  reference  inflight: (progress)                       R2    0  R1    0  equal
+  resumed-a  banner '** '                               R2   23  R1   23  equal
+  resumed-a  -- ALL WORK ITEMS COMPLETE in time         R2    7  R1    7  equal
+  resumed-a  Queue summary:                             R2    7  R1    7  equal
+  resumed-a  (no compute items were evaluated ...)      R2    1  R1    1  equal
+  resumed-a  work items remaining (progress)            R2    0  R1    0  equal
+  resumed-a  inflight: (progress)                       R2    0  R1    0  equal
+  resumed-b  banner '** '                               R2   26  R1   26  equal
+  resumed-b  -- ALL WORK ITEMS COMPLETE in time         R2    9  R1    9  equal
+  resumed-b  Queue summary:                             R2    9  R1    9  equal
+  resumed-b  (no compute items were evaluated ...)      R2    7  R1    7  equal
+  resumed-b  work items remaining (progress)            R2    0  R1    0  equal
+  resumed-b  inflight: (progress)                       R2    0  R1    0  equal
+  resumed-c  banner '** '                               R2   26  R1   26  equal
+  resumed-c  -- ALL WORK ITEMS COMPLETE in time         R2   10  R1   10  equal
+  resumed-c  Queue summary:                             R2   10  R1   10  equal
+  resumed-c  (no compute items were evaluated ...)      R2    9  R1    9  equal
+  resumed-c  work items remaining (progress)            R2    0  R1    0  equal
+  resumed-c  inflight: (progress)                       R2    0  R1    0  equal
+
+== each ALL WORK ITEMS COMPLETE followed by Queue summary (R2)
+  reference: every one
+  resumed-a: every one
+  resumed-b: every one
+  resumed-c: every one
+
+== completion-line form, normalised, R2 set vs R1 set (stdout.log, all slugs)
+  -- ALL WORK ITEMS COMPLETE in time: R2 kinds 2, R1 kinds 2, only R2 [], only R1 []
+  Queue summary:: R2 kinds 7, R1 kinds 7, only R2 [], only R1 []
+  (no compute items were evaluated ...): R2 kinds 1, R1 kinds 1, only R2 [], only R1 []
+
+== stage sequence (the '** ' banner lines of reference stdout.log, normalised)
+  R2 26 lines, R1 26 lines: equal, in order
+  pipeline banners (sweep's own lines excluded): R2 15, R1 15: equal verbatim, in order
+    ** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+    ** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE
+    ** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE
+    ** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+    ** CALCULATING BACKGROUND LambdaCDM MODEL
+    ** BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM
+    ** CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS
+    ** CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS
+    ** CALCULATE QUADRATIC SOURCE TERMS
+    ** CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+    ** CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS
+    ** CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+    ** APPLY GKSOURCE POLICIES
+    ** GkSourcePolicyData SUMMARY STATISTICS
+    ** CALCULATE QUADRATIC SOURCE INTEGRALS
+
+== status.json stage at the end, R2 against R1
+  reference: R2 state 'done' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' progress None; R1 state 'done' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' progress None: equal
+  resumed-a: R2 state 'killed' stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' progress None; R1 state 'killed' stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' progress None: equal
+  resumed-b: R2 state 'killed' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' progress None; R1 state 'killed' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' progress None: equal
+  resumed-c: R2 state 'done' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' progress None; R1 state 'done' stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' progress None: equal
+
+== line kinds per file (ANSI stripped, prompt and repository path replaced, Ray's repeat count replaced, every number -> N)
+  reference  stderr.log  R2 4 lines/4 kinds; R1 4/4: equal kinds
+  reference  launch log  R2 116 lines/80 kinds; R1 116/80: equal kinds
+  reference  stdout.log  R2 110 lines/74 kinds; R1 110/74: equal kinds
+  resumed-a  stderr.log  R2 2 lines/2 kinds; R1 2/2: equal kinds
+  resumed-a  launch log  R2 88 lines/66 kinds; R1 88/66: equal kinds
+  resumed-a  stdout.log  R2 84 lines/62 kinds; R1 84/62: equal kinds
+  resumed-b  stderr.log  R2 2 lines/2 kinds; R1 6/6
+      only R1: (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be 
+      only R1: (compute_QuadSource_integral pid=N)   underestimated.
+      only R1: (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+      only R1: (compute_QuadSource_integral pid=N) <REPO>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  resumed-b  launch log  R2 108 lines/62 kinds; R1 152/78
+      only R1: (Datastore pid=N)           contains N z-sample values | expected=N
+      only R1: (Datastore pid=N)           contains N z-sample values | expected=N [repeated Nx across cluster]
+      only R1: (Datastore pid=N)        -- "dk-and-rpk-migration-NN-GkSource-kN-responsezN-N-N-NTN:N:N" (store_id=N) for k=N/Mpc and z_response=N
+      only R1: (Datastore pid=N)        -- "dk-and-rpk-migration-NN-GkSource-kN-responsezN-N-N-NTN:N:N" (store_id=N) for k=N/Mpc and z_response=N [repeated Nx across cluster]
+      only R1: (Datastore pid=N)      ** Note: these values have been pruned from the datastore.
+      only R1: (Datastore pid=N)      ** Note: these values have been pruned from the datastore. [repeated Nx across cluster]
+      only R1: (Datastore pid=N)      The following unvalidated GkSource objects were detected in the datastore:
+      only R1: (Datastore pid=N)      The following unvalidated GkSource objects were detected in the datastore: [repeated Nx across cluster]
+      only R1: (Datastore pid=N) !! INTEGRITY WARNING (N-N-NTN:N:N): datastore "shardN-store" (physical file <REPO>/var/datastores/dk-and-rpk-migration-NN-resumed-shardN.sqlite)
+      only R1: (Datastore pid=N) !! INTEGRITY WARNING (N-N-NTN:N:N): datastore "shardN-store" (physical file <REPO>/var/datastores/dk-and-rpk-migration-NN-resumed-shardN.sqlite) [repeated Nx across cluster] (Ray ded
+      only R1: (Datastore pid=N) >> GkSource objects
+      only R1: (Datastore pid=N) >> GkSource objects [repeated Nx across cluster]
+      only R1: (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be 
+      only R1: (compute_QuadSource_integral pid=N)   underestimated.
+      only R1: (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+      only R1: (compute_QuadSource_integral pid=N) <REPO>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  resumed-b  stdout.log  R2 103 lines/57 kinds; R1 143/69
+      only R1: (Datastore pid=N)           contains N z-sample values | expected=N
+      only R1: (Datastore pid=N)           contains N z-sample values | expected=N [repeated Nx across cluster]
+      only R1: (Datastore pid=N)        -- "dk-and-rpk-migration-NN-GkSource-kN-responsezN-N-N-NTN:N:N" (store_id=N) for k=N/Mpc and z_response=N
+      only R1: (Datastore pid=N)        -- "dk-and-rpk-migration-NN-GkSource-kN-responsezN-N-N-NTN:N:N" (store_id=N) for k=N/Mpc and z_response=N [repeated Nx across cluster]
+      only R1: (Datastore pid=N)      ** Note: these values have been pruned from the datastore.
+      only R1: (Datastore pid=N)      ** Note: these values have been pruned from the datastore. [repeated Nx across cluster]
+      only R1: (Datastore pid=N)      The following unvalidated GkSource objects were detected in the datastore:
+      only R1: (Datastore pid=N)      The following unvalidated GkSource objects were detected in the datastore: [repeated Nx across cluster]
+      only R1: (Datastore pid=N) !! INTEGRITY WARNING (N-N-NTN:N:N): datastore "shardN-store" (physical file <REPO>/var/datastores/dk-and-rpk-migration-NN-resumed-shardN.sqlite)
+      only R1: (Datastore pid=N) !! INTEGRITY WARNING (N-N-NTN:N:N): datastore "shardN-store" (physical file <REPO>/var/datastores/dk-and-rpk-migration-NN-resumed-shardN.sqlite) [repeated Nx across cluster] (Ray ded
+      only R1: (Datastore pid=N) >> GkSource objects
+      only R1: (Datastore pid=N) >> GkSource objects [repeated Nx across cluster]
+  resumed-c  stderr.log  R2 4 lines/4 kinds; R1 0/0
+      only R2: (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be 
+      only R2: (compute_QuadSource_integral pid=N)   underestimated.
+      only R2: (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+      only R2: (compute_QuadSource_integral pid=N) <REPO>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  resumed-c  launch log  R2 114 lines/65 kinds; R1 110/61
+      only R2: (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be 
+      only R2: (compute_QuadSource_integral pid=N)   underestimated.
+      only R2: (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+      only R2: (compute_QuadSource_integral pid=N) <REPO>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  resumed-c  stdout.log  R2 107 lines/58 kinds; R1 107/58: equal kinds
+
+== hunts (stdout.log and launch log, every slug, R2)
+  'Traceback': 0
+  'ray.kill': 0
+  'killed actor': 0
+  'ActorDiedError': 0
+  'RayActorError': 0
+  'ValueError': 0
+  'RuntimeWarning': 0
+  '--no-prune-unvalidated': 0
+  'INTEGRITY WARNING': 0
+  'did not validate': 0
+  /reconcil/i: 0
+  /repair/i: 0
+  /in.flight/i: 0
+  /replicat/i: 0
+
+== launcher lines in each stdout.log (and the launch log where named)
+reference replaced 1 occurrence=4; rehearsal scope=1; argv zend 250=1; bootstrapping (stdout)=1; 'Started a local Ray instance.' (launch log)=1; --no-prune-unvalidated=0; launch log first line='** quadsource_atol_sweep --build: registered as dk-and-rpk-migration-08-reference-20261011'
+resumed-a replaced 1 occurrence=4; rehearsal scope=1; argv zend 250=1; bootstrapping (stdout)=1; 'Started a local Ray instance.' (launch log)=1; --no-prune-unvalidated=0; launch log first line='** quadsource_atol_sweep --build: registered as dk-and-rpk-migration-08-resumed-a-20261011'
+resumed-b replaced 1 occurrence=4; rehearsal scope=1; argv zend 250=1; bootstrapping (stdout)=1; 'Started a local Ray instance.' (launch log)=1; --no-prune-unvalidated=0; launch log first line='** quadsource_atol_sweep --build: resuming into dk-and-rpk-migration-08-resumed.sqlite'
+resumed-c replaced 1 occurrence=4; rehearsal scope=1; argv zend 250=1; bootstrapping (stdout)=1; 'Started a local Ray instance.' (launch log)=1; --no-prune-unvalidated=0; launch log first line='** quadsource_atol_sweep --build: resuming into dk-and-rpk-migration-08-resumed.sqlite'
+
+== stage times (ALL WORK ITEMS COMPLETE in time ..., each stdout.log)
+== reference
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 1.36s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0147s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 1.05s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.352s
+   CALCULATE QUADRATIC SOURCE TERMS: 1.21s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1m 48.6s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3m 15.7s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 41.8s
+   APPLY GKSOURCE POLICIES: 23.1s
+   CALCULATE QUADRATIC SOURCE INTEGRALS: 4m 59.2s
+== resumed-a
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.923s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0122s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.835s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.319s
+   CALCULATE QUADRATIC SOURCE TERMS: 1.11s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1m 26s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 2m 50.7s
+== resumed-b
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0339s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0209s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00693s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.00942s
+   CALCULATE QUADRATIC SOURCE TERMS: 0.0103s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.69s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.49s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 30.4s
+   APPLY GKSOURCE POLICIES: 14.2s
+== resumed-c
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0209s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0167s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00808s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.0117s
+   CALCULATE QUADRATIC SOURCE TERMS: 0.0154s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 5.13s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 9.17s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 8.34s
+   APPLY GKSOURCE POLICIES: 8.4s
+   CALCULATE QUADRATIC SOURCE INTEGRALS: 4m 59s
+
+reader logs, R2 (08) against R1 (05): line kinds (ANSI, prompt, repo path, Ray repeat count, numbers normalised)
+  extract_GkSource_data.log: R2 42 lines/26 kinds, R1 46/26: equal kinds
+  extract_GkWKB_data.log: R2 70 lines/35 kinds, R1 60/31
+     only R2: (plot_Gk pid=N)   ax.legend(loc="best")
+     only R2: (plot_Gk pid=N)   ax.set_yscale("log")
+     only R2: (plot_Gk pid=N) <REPO>/extract_common.py:N: UserWarning: Data has no positive values, and therefore cannot be log-scaled.
+     only R2: (plot_Gk pid=N) <REPO>/extract_common.py:N: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when leg
+  extract_Gk_data-no-models.log: R2 42 lines/24 kinds, R1 42/24: equal kinds
+  extract_Gk_data.log: R2 38 lines/22 kinds, R1 38/22: equal kinds
+  extract_QuadSourceIntegral_data.log: R2 38 lines/22 kinds, R1 38/22: equal kinds
+  extract_TkWKB_data.log: R2 33 lines/22 kinds, R1 33/22: equal kinds
+  extract_tensor_source_data.log: R2 33 lines/22 kinds, R1 33/22: equal kinds

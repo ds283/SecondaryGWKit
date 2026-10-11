@@ -1,0 +1,169 @@
+== 2026-10-11T22:42:05+0100 pre-launch check before reference
+HEAD 5631f0ed5d9cefd8a3c79ba42480f2b9c59eb925
+git status --short: []
+RAY_ADDRESS=[unset]
+22:42  up 6 days, 20:27, 3 users, load averages: 12.82 15.94 14.77
+-- pgrep -lf 'gcs_server|raylet|ray::'
+50609 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1791752169976-0aivs5.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'R=/private/tmp/claude-35086/-Users-ds283-Documents-Code-DatastoreKit/0cf154d2-a315-4675-8138-d4c10a8c97d0/scratchpad/review02 && venv/bin/pip show datastorekit | sed -n 2p; ls -d datastorekit.egg-info 2>&1 | tail -1; (time venv/bin/python -m unittest discover -s datastorekit/tests -t . > $R/suite-venv.txt 2>&1) 2>&1 | tail -1; tail -3 $R/suite-venv.txt; grep -c ResourceWarning $R/suite-venv.txt; venv/bin/python docs/extraction/compare_ported_tests.py | tail -1; echo "port exit $?"; venv/bin/black --check datastorekit docs 2>&1 | tail -1; uv venv --offline -q -p /opt/local/bin/python3.13 $R/high && uv pip install -q --offline --python $R/high/bin/python "ray==2.55.1" "sqlalchemy==2.0.46" setuptools && uv pip install -q --offline --no-deps --no-build-isolation --python $R/high/bin/python -e $R/src && cd $R/src && (time $R/high/bin/python -m unittest discover -s datastorekit/tests -t . > $R/suite-high.txt 2>&1) 2>&1 | tail -1; tail -3 $R/suite-high.txt; grep -c ResourceWarning $R/suite-high.txt; $R/high/bin/python -m pip show datastorekit 2>/dev/null | sed -n 2p; pgrep -lf '"'"'gcs_server|raylet|ray::'"'"'; echo done' < /dev/null && pwd -P >| /tmp/claude-adc9-cwd
+53388 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1791752169976-0aivs5.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'R=/private/tmp/claude-35086/-Users-ds283-Documents-Code-DatastoreKit/0cf154d2-a315-4675-8138-d4c10a8c97d0/scratchpad/review02 && venv/bin/pip show datastorekit | sed -n 2p; ls -d datastorekit.egg-info 2>&1 | tail -1; (time venv/bin/python -m unittest discover -s datastorekit/tests -t . > $R/suite-venv.txt 2>&1) 2>&1 | tail -1; tail -3 $R/suite-venv.txt; grep -c ResourceWarning $R/suite-venv.txt; venv/bin/python docs/extraction/compare_ported_tests.py | tail -1; echo "port exit $?"; venv/bin/black --check datastorekit docs 2>&1 | tail -1; uv venv --offline -q -p /opt/local/bin/python3.13 $R/high && uv pip install -q --offline --python $R/high/bin/python "ray==2.55.1" "sqlalchemy==2.0.46" setuptools && uv pip install -q --offline --no-deps --no-build-isolation --python $R/high/bin/python -e $R/src && cd $R/src && (time $R/high/bin/python -m unittest discover -s datastorekit/tests -t . > $R/suite-high.txt 2>&1) 2>&1 | tail -1; tail -3 $R/suite-high.txt; grep -c ResourceWarning $R/suite-high.txt; $R/high/bin/python -m pip show datastorekit 2>/dev/null | sed -n 2p; pgrep -lf '"'"'gcs_server|raylet|ray::'"'"'; echo done' < /dev/null && pwd -P >| /tmp/claude-adc9-cwd
+rc=0
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+25 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 23 finished, 2 unknown.
+/dev/disk3s1s1  927G  855G   72G  93% /
+-- note 22:42: pgrep's two matches (50609, 53388) are another session's zsh shells, in DatastoreKit's
+   scratchpad (review02), whose command text contains the pattern string itself; neither is a Ray
+   process. Excluding 'zsh -c' and grep lines, no gcs_server/raylet/ray:: process exists (rc=1).
+   Not this repository's, not touched.
+2026-10-11T22:43:35+0100 no dummy-test child or interrupter alive: ps -p 55416,55418,55466,55468,55527,55529,55534,55536,55590,55593,55685,55687,55691,55693,55699
+  PID TTY           TIME CMD
+rc=1
+2026-10-11T22:43:39+0100 recheck including 'child N' lines: ps -p 55416,55418,55466,55468,55527,55529,55534,55536,55590,55593,55685,55687,55691,55693,55697,55699
+  PID TTY           TIME CMD
+rc=1
+== 2026-10-11T22:56:13+0100 pre-launch check before resumed-a
+HEAD 5631f0ed5d9cefd8a3c79ba42480f2b9c59eb925
+git status --short: []
+RAY_ADDRESS=[unset]
+22:56  up 6 days, 20:41, 3 users, load averages: 22.83 26.98 22.25
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 55974 55979 56026 56028 56029 56349
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-08-reference-20261011T224347           done              -      12m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+26 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 24 finished, 2 unknown.
+/dev/disk3s1s1  927G  858G   70G  93% /
+== 2026-10-11T23:02:58+0100 pre-launch check before resumed-b
+HEAD 5631f0ed5d9cefd8a3c79ba42480f2b9c59eb925
+git status --short: []
+RAY_ADDRESS=[unset]
+23:02  up 6 days, 20:48, 3 users, load averages: 16.79 27.73 25.57
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 64482 64487 64545 64535 64536 64539
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-08-resumed-a-20261011T225623           killed            -       7m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-08-reference-20261011T224347           done              -      19m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+27 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 25 finished, 2 unknown.
+/dev/disk3s1s1  927G  859G   69G  93% /
+== 2026-10-11T23:07:10+0100 pre-launch check before resumed-c
+HEAD 5631f0ed5d9cefd8a3c79ba42480f2b9c59eb925
+git status --short: []
+RAY_ADDRESS=[unset]
+23:07  up 6 days, 20:52, 3 users, load averages: 15.16 25.83 25.56
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 69051 69056 69114 69106
+  PID COMMAND
+rc=1
+   dk-and-rpk-migration-08-resumed-b-20261011T230305           killed            -       4m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   dk-and-rpk-migration-08-resumed-a-20261011T225623           killed            -      11m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-08-reference-20261011T224347           done              -      23m  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+28 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 26 finished, 2 unknown.
+/dev/disk3s1s1  927G  859G   68G  93% /
+
+== 2026-10-11T22:42:21+0100 environment before reference
+-- store show var/datastores/dk-and-rpk-migration-08-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- store show var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/dk-and-rpk-migration-08-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/datastores and var/runs containing dk-and-rpk-migration-08
+rc=1
+-- journals under var/datastores
+rc=1
+-- pip show datastorekit raypoolkit
+Name: datastorekit
+Version: 0.2.2
+Summary: A sharded SQLite datastore layer (Datastore / ShardedPool) on Ray and SQLAlchemy
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: ray, sqlalchemy
+Required-by: 
+---
+Name: raypoolkit
+Version: 0.2.0
+Summary: A Ray work queue (RayWorkPool) that drives lookup, compute, store and validation tasks
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: ray
+Required-by: 
+rc=0
+-- pip check
+No broken requirements found.
+rc=0
+-- package_provenance()
+{"datastorekit": {"version": "0.2.2", "url": "https://github.com/ds283/DatastoreKit", "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6", "requested_revision": "v0.2.2", "editable": false}, "raypoolkit": {"version": "0.2.0", "url": "https://github.com/ds283/RayPoolKit", "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "requested_revision": "v0.2.0", "editable": false}}
+-- shasum -a 256 docs/handover/quadsource_atol_sweep.py
+b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac  docs/handover/quadsource_atol_sweep.py
+-- requirements.txt package lines
+requirements.txt:17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.2.2
+requirements.txt:76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0
+-- RayTools in tree
+ls: cannot access 'RayTools': No such file or directory
+ls-tree 643c3b2 RayTools rc=0 (empty = absent)
+-- correction 1: git diff --stat 643c3b2 HEAD -- . ':!prompts'
+ RunRegistry/tests/test_pipeline_adoption.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+== 2026-10-11T22:42:33 what runs is the package, and correction 1
+-- correction 1: ast of RunRegistry/tests/test_pipeline_adoption.py at 643c3b2 vs HEAD
+ast equal: True
+-- what runs is the package (fresh python -I, repository on sys.path)
+RayTools -> ModuleNotFoundError: No module named 'RayTools'
+RayTools.RayWorkPool -> ModuleNotFoundError: No module named 'RayTools'
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+ray.is_initialized() False
+-- RayTools anywhere (incl. __pycache__)
+rc=0
+
+== R0's and R1's 24 store files before the first launch (SHA-256, mtime, mtime_ns, size; checked against the orchestrator's table)
+24 files
+3e469052e8810e1efec8dee53c3a89ea4a2a343d3346cd2a64681170fd478bd5  2026-10-11 14:38:00  1791725880295300805  23732224  var/datastores/dk-and-rpk-migration-02-reference-shard0000.sqlite  ok
+210f494aedfd154fde34754d0dffb8030c42a1ae701fb3b10c9f94434293b8f8  2026-10-11 14:38:00  1791725880293528131  23719936  var/datastores/dk-and-rpk-migration-02-reference-shard0001.sqlite  ok
+37b12c1592c2f03e22a862797c30dc6f2b01c4e8c3af4f83bd672d79fed21ec9  2026-10-11 14:30:17  1791725417030008225  1077248  var/datastores/dk-and-rpk-migration-02-reference-shard0002.sqlite  ok
+db35d513a3d6278f09729dcdb7c0ba3ca645562dfaf1df4de5b9f4070099f1ce  2026-10-11 14:38:00  1791725880274060223  23363584  var/datastores/dk-and-rpk-migration-02-reference-shard0003.sqlite  ok
+755da82a40a26c4b530f4ad6451939cc6863f9370ba42ef006f275c621f595f2  2026-10-11 14:38:55  1791725935837698991  10466  var/datastores/dk-and-rpk-migration-02-reference.manifest.json  ok
+9b7a0acc8bcca22171ada0a9ba08b892aa6eb470e24d8fbe35c587efbdc682a8  2026-10-11 14:30:17  1791725417111208533  36864  var/datastores/dk-and-rpk-migration-02-reference.sqlite  ok
+e1340524ecc5bb94224b6aafae357df17e9e4ecc09bbd7af892f6ef7010acb4f  2026-10-11 14:48:46  1791726526631653714  23830528  var/datastores/dk-and-rpk-migration-02-resumed-shard0000.sqlite  ok
+35908f3a09e6683843fc5f62e7da968a6693a473df90fc448420e5dcd8ecae3b  2026-10-11 14:48:46  1791726526642044002  23773184  var/datastores/dk-and-rpk-migration-02-resumed-shard0001.sqlite  ok
+fafbe696ba83ac3bf6dfea5c96ac84a1a8485b885bc96adad95f25618826060b  2026-10-11 14:39:24  1791725964370661399  1077248  var/datastores/dk-and-rpk-migration-02-resumed-shard0002.sqlite  ok
+09b8aef1061ef5ed2182833353402af30c9f99cd39c7318a6358682acf2640ea  2026-10-11 14:48:41  1791726521610428975  23609344  var/datastores/dk-and-rpk-migration-02-resumed-shard0003.sqlite  ok
+c93c629616fa92a11c2a324f0382d45df5b91b7ebbb4e64822967c6cc53b58da  2026-10-11 14:48:49  1791726529710955605  10553  var/datastores/dk-and-rpk-migration-02-resumed.manifest.json  ok
+bf22863f9ea8b6cf39ab9e4bbcebe5ae0e303983b9106be63abb53ece5508062  2026-10-11 14:45:54  1791726354390738383  36864  var/datastores/dk-and-rpk-migration-02-resumed.sqlite  ok
+1ae3eec6bc37799547d8332e39a8b7a723913971f6acc29d3961b0e835ff56dc  2026-10-11 19:40:08  1791744008560227426  23732224  var/datastores/dk-and-rpk-migration-05-reference-shard0000.sqlite  ok
+6151d1d673c3e170c5ef54b54ee785beee2ec62f6f3decb870fb0667cf4d0254  2026-10-11 19:40:08  1791744008625191024  23502848  var/datastores/dk-and-rpk-migration-05-reference-shard0001.sqlite  ok
+09689a714bba7ddb12881481bc8cc33a8d90ef4e2a16326fa5aa1d7aa3675435  2026-10-11 19:28:29  1791743309917630715  1077248  var/datastores/dk-and-rpk-migration-05-reference-shard0002.sqlite  ok
+cb2eeb797cbb4e67783f289d418644f1020e129aa13dd36d6ddc0d4a873f4961  2026-10-11 19:40:08  1791744008548060425  23502848  var/datastores/dk-and-rpk-migration-05-reference-shard0003.sqlite  ok
+bbde995d5c0d0a181369d64433f4b0f8a61fcfa5227c19528c4acbf1303c7d54  2026-10-11 19:41:08  1791744068816798384  10464  var/datastores/dk-and-rpk-migration-05-reference.manifest.json  ok
+6f01ba6041cb3b2fca06bfb33ee2729757cecdaca9eba0bd6a58026d79191e70  2026-10-11 19:28:30  1791743310065656373  36864  var/datastores/dk-and-rpk-migration-05-reference.sqlite  ok
+47ec005237b142280f6a6df9418e27cd52ba4ad5f6b6e74a07cf61d8a3858fc7  2026-10-11 19:54:54  1791744894521973550  23994368  var/datastores/dk-and-rpk-migration-05-resumed-shard0000.sqlite  ok
+430dba4def831f9fdfceef03bdc24b46ac5d478a3e65b5a8194b003dcc2f33b9  2026-10-11 19:54:54  1791744894521599841  23748608  var/datastores/dk-and-rpk-migration-05-resumed-shard0001.sqlite  ok
+b12a4bf7df09a2e49debb9661f3a7684d846f879b3cc3f02a2c03416abfe895b  2026-10-11 19:42:14  1791744134210893792  1077248  var/datastores/dk-and-rpk-migration-05-resumed-shard0002.sqlite  ok
+47338a1922fe06adc06ca88b0dc7f6fc4ecfe63763023a4d59d157a94bbb9bed  2026-10-11 19:54:54  1791744894509495924  23629824  var/datastores/dk-and-rpk-migration-05-resumed-shard0003.sqlite  ok
+30252d1d9f2a3c9839ec4cdd39d424f2537a174f6767db7fbf39535604227106  2026-10-11 19:54:57  1791744897179059286  10603  var/datastores/dk-and-rpk-migration-05-resumed.manifest.json  ok
+19cd8373ae0a45d62eedff2a6c4c2031d2a07a3c49eaa54ebdcce991306cc563  2026-10-11 19:50:49  1791744649787979967  36864  var/datastores/dk-and-rpk-migration-05-resumed.sqlite  ok
+against the brief's table: 24 of 24 equal; missing []

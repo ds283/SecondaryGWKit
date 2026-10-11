@@ -1,0 +1,20 @@
+=== case A: a --build manifest (argv[0] the sweep script), a child named for it: signals
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-a/interrupter.log
+2026-10-11T22:43:26+01:00 interrupter pid 55687 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-a (slug 'dummy-build-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-11T22:43:26+01:00 liveness alive; pid 55685; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-11T22:43:26+01:00 sent SIGTERM to pid 55685 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)' (45% >= 40%); command 'python docs/handover/quadsource_atol_sweep.py --build --register dummy-build-a 120'; exiting
+=== case B: the same manifest, a child named for scoped_pipeline_run.py: refuses
+interrupter exit=2
+child 55691 still alive (not signalled)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-b/interrupter.log
+2026-10-11T22:43:26+01:00 interrupter pid 55693 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-b (slug 'dummy-build-b'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-11T22:43:26+01:00 liveness alive; pid 55691; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-11T22:43:26+01:00 pid 55691's command line does not name quadsource_atol_sweep.py (the run's own driver, its manifest's argv[0]) and --register dummy-build-b: 'python docs/gktk-remedial/scoped_pipeline_run.py --build --register dummy-build-b 30'; exiting without signalling
+=== case C: a manifest whose argv[0] is empty: exits without signalling
+interrupter exit=2
+child 55697 still alive (not signalled)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-c/interrupter.log
+2026-10-11T22:43:26+01:00 interrupter pid 55699 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/8b6672dc-3aa7-4e5b-ac07-729e5a512a5c/scratchpad/agent08/work/dummy-build/case-c (slug 'dummy-build-c'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-11T22:43:26+01:00 the run's manifest names no argv[0]; exiting without signalling

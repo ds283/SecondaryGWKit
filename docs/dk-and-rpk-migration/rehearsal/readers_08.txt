@@ -1,0 +1,110 @@
+# run_readers.sh on the resumed store, after resumed-c. The six with --models LambdaCDM, then extract_Gk_data without --models.
+# bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/dk-and-rpk-migration-08-resumed.sqlite var/dk-and-rpk-migration-08/extract
+=== extract_Gk_data: 2026-10-11 23:14:37 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_Gk_data/
+exit 0; wall 44 s; files written 441
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 946.8/sec)
+26:      Queue summary: 3 lookup (avg 1112/sec)
+31:      Queue summary: 116 lookup (avg 224/min)
+=== extract_GkWKB_data: 2026-10-11 23:15:22 +0100: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_GkWKB_data/
+exit 0; wall 192 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+33:** reading run "default", the only run in this datastore (no --run-label given)
+42:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+49:      Queue summary: 3 lookup (avg 452/sec)
+54:      Queue summary: 3 lookup (avg 556/sec)
+63:      Queue summary: 348 lookup (avg 118.6/min)
+=== extract_GkSource_data: 2026-10-11 23:18:36 +0100: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_GkSource_data/
+exit 0; wall 52 s; files written 174
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+9:** reading run "default", the only run in this datastore (no --run-label given)
+18:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+25:      Queue summary: 3 lookup (avg 293.3/sec)
+30:      Queue summary: 3 lookup (avg 300.8/sec)
+35:      Queue summary: 10 lookup (avg 20.82/min)
+=== extract_TkWKB_data: 2026-10-11 23:19:30 +0100: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_TkWKB_data/
+exit 0; wall 23 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 493.2/sec)
+26:      Queue summary: 3 lookup (avg 34.09/min)
+=== extract_tensor_source_data: 2026-10-11 23:19:54 +0100: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_tensor_source_data/
+exit 0; wall 25 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 358.1/sec)
+26:      Queue summary: 6 lookup (avg 55.55/min)
+=== extract_QuadSourceIntegral_data: 2026-10-11 23:20:20 +0100: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local --models LambdaCDM --output var/dk-and-rpk-migration-08/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 28 s; files written 71
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 411/sec)
+26:      Queue summary: 3 lookup (avg 416.7/sec)
+31:      Queue summary: 24 lookup (avg 117.7/min)
+run_readers (six) exit 0
+# bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/dk-and-rpk-migration-08-resumed.sqlite var/dk-and-rpk-migration-08/extract nomodels extract_Gk_data
+=== extract_Gk_data-no-models: 2026-10-11 23:20:50 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/dk-and-rpk-migration-08-resumed.sqlite --ray-address local  --output var/dk-and-rpk-migration-08/extract/extract_Gk_data-no-models/
+exit 0; wall 48 s; files written 459
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  e1edd62956f7ec02a051ec56d83cd469508320998dab1ddfc77ed768002ba473  2026-10-11T23:07:23 36864 var/datastores/dk-and-rpk-migration-08-resumed.sqlite
+  97b78adeddcf430d9a3efab898a8f0bb732cae0da30e45ee644ad9e9f4e4b411  2026-10-11T23:12:53 23830528 var/datastores/dk-and-rpk-migration-08-resumed-shard0000.sqlite
+  321cc333eb47e3811b5d2d2c531c2c1bf1c28c0db1fe23d46fff69e5a4932f0b  2026-10-11T23:12:53 23781376 var/datastores/dk-and-rpk-migration-08-resumed-shard0001.sqlite
+  a9473aa3522a146676d5c1bb871c8bb5a0a741d52d4854898434606affaeb26d  2026-10-11T22:56:31 1077248 var/datastores/dk-and-rpk-migration-08-resumed-shard0002.sqlite
+  3f2189d4d4fb7c61d458b8f5e61ec3950d896a5a56c8dfa7f283b5d1c5be7882  2026-10-11T23:12:53 23379968 var/datastores/dk-and-rpk-migration-08-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 328.7/sec)
+26:      Queue summary: 3 lookup (avg 280/sec)
+31:      Queue summary: 116 lookup (avg 216.9/min)
+34:>> RUNNING PIPELINE FOR MODEL QCD_Cosmology
+36:>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it
+run_readers (nomodels) exit 0
