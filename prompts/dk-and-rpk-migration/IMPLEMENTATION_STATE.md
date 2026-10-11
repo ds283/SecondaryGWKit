@@ -1,8 +1,9 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: PLANNED — 0 of 9 prompts written, none landed.** The plan
-is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions U1–U4.
-Prompts 01–04 are written once the user has reviewed the plan (README §2.1).
+**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), none landed.**
+The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
+U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
+against it. 05–09 are held (README §2.1).
 
 The campaign adopts `datastorekit` `v0.2.2` and `raypoolkit` `v0.2.0`, in that order. A
 fingerprint rehearsal comes before the first swap (R0) and after each swap (R1, R2). Each
@@ -41,10 +42,10 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | Record the installed packages in each manifest | **U4** | Sonnet | ⬜ | ⬜ | — | — |
-| 02 | Rehearse the start tree (R0) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ⬜ | ⬜ | — | — |
-| 03 | Pin `datastorekit` `v0.2.2` | the DatastoreKit pin | Sonnet | ⬜ | ⬜ | — | — |
-| 04 | Adopt `datastorekit` | the DatastoreKit swap; **U3** | Opus | ⬜ | ⬜ | — | — |
+| 01 | [Record the installed packages in each manifest](01-record-the-installed-packages-in-each-manifest.md) | **U4** | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
+| 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
 | 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
 | 07 | Adopt `raypoolkit` | the RayPoolKit swap | Sonnet | ⬜ | ⬜ | — | — |
@@ -59,6 +60,26 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 - **09** is written after 08's review.
 
 No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
+
+### 1.1 Items
+
+| Item | Prompt | What | State |
+|---|---|---|---|
+| **P1** | 01 | `RunRegistry.package_provenance()` and `RECORDED_DISTRIBUTIONS` | ⬜ |
+| **P2** | 01 | the manifest's `packages`, written by `begin()` | ⬜ |
+| **P3** | 01 | `TestPackageProvenance` and the manifest test | ⬜ |
+| **S1** | 02 | `docs/dk-and-rpk-migration/rehearsal/`: `run_readers.sh`, `stage_counts.py`, `policy_statistics.py` | ⬜ |
+| **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 recorded as the baseline | ⬜ |
+| **K1** | 03 | the `datastorekit` pin in `requirements.txt` | ⬜ |
+| **K2** | 03 | the venv installed from it | ⬜ |
+| **K3** | 03 | the proof: one distribution added, at `6d8ee9ae…`, the tag's files, not editable | ⬜ |
+| **A1** | 04 | the 15 layer files deleted, two `__init__.py` emptied | ⬜ |
+| **A2** | 04 | every layer import outside `prompts/` rewritten, by `scripts/rewrite_layer_imports.py` | ⬜ |
+| **A3** | 04 | `Datastore/tests/`: 26 modules and `schema_description.py` deleted, one test moved, `test_inventory_retired` and the two import strings changed | ⬜ |
+| **A4** | 04 | `CLAUDE.md`'s layer section, `RunRegistry/stores.py:5` | ⬜ |
+| **A5** | 04 | `[04-six-docs-probes-import-factories-from-the-layer]` opened | ⬜ |
+
+05–09's items are added when they are written.
 
 The measurement the plan was written against is [`measure/`](measure/): both packages' scripts at
 `b510bc9`, each equal to its checklist's appendix byte for byte; the six roots' counts; the
@@ -80,5 +101,12 @@ here (README §6.2 C12).
 None yet.
 
 ## 4. Resolved issues
+
+None yet.
+
+## 5. After each prompt
+
+Each prompt adds `### 5.N After prompt NN (<date>)`: what landed, the counts against README §7,
+and the state handed to the next prompt. The orchestrator's review of each follows it.
 
 None yet.

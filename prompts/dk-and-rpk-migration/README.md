@@ -8,9 +8,9 @@ adoption checklists, and from the user's decisions U1–U4 of the same day (§6.
 - **Checklists:** DatastoreKit's `docs/adoption/secondarygwkit.md`, read with both addenda, and
   RayPoolKit's `docs/adoption/secondarygwkit.md`.
 
-§0.2 re-measures both checklists at `b510bc9`. **No prompt file is written yet.** §2 fixes each
-prompt's charter and acceptance, and the prompt files are written after the user has reviewed this
-plan (§2.1).
+§0.2 re-measures both checklists at `b510bc9`. §2 fixes each prompt's charter and acceptance.
+**Prompts 01–04 are written** (2026-10-11, after the user reviewed the plan at `4532188`); 05–09
+are held as §2.1 says.
 
 ## 0. Why this campaign exists
 
@@ -185,10 +185,10 @@ pre-registry `a3-pilot` pair), none `running`.
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | `01-record-the-installed-packages-in-each-manifest.md` | U4. A run's manifest records the installed `datastorekit` and `raypoolkit` (version, VCS URL and commit, editable or not), or `null` for one not installed | Sonnet | not written |
-| 02 | `02-rehearse-the-start-tree.md` | **R0.** §4.1's protocol at the start tree. Every fingerprint is `39809dca`. It closes the `53d4e18` → `b510bc9` gap (§0.1) | Opus | not written |
-| 03 | `03-pin-datastorekit-v0.2.2.md` | The `datastorekit` pin in a commit of its own; the venv installed from it, adding one distribution, at the tag's commit | Sonnet | not written |
-| 04 | `04-adopt-datastorekit.md` | **The DatastoreKit swap.** The 17 files go (two emptied, U3), every layer import outside `prompts/` is rewritten, the carried tests are deleted, and the staying ones are adapted. The freeze section of `CLAUDE.md` is rewritten | Opus | not written |
+| 01 | [`01-record-the-installed-packages-in-each-manifest.md`](01-record-the-installed-packages-in-each-manifest.md) | U4. A run's manifest records the installed `datastorekit` and `raypoolkit` (version, VCS URL and commit, editable or not), or `null` for one not installed | Sonnet | written 2026-10-11 |
+| 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1's protocol at the start tree. Every fingerprint is `39809dca`. It closes the `53d4e18` → `b510bc9` gap (§0.1) | Opus | written 2026-10-11 |
+| 03 | [`03-pin-datastorekit-v0.2.2.md`](03-pin-datastorekit-v0.2.2.md) | The `datastorekit` pin in a commit of its own; the venv installed from it, adding one distribution, at the tag's commit | Sonnet | written 2026-10-11 |
+| 04 | [`04-adopt-datastorekit.md`](04-adopt-datastorekit.md) | **The DatastoreKit swap.** The 17 files go (two emptied, U3), every layer import outside `prompts/` is rewritten, the carried tests are deleted, and the staying ones are adapted. The freeze section of `CLAUDE.md` is rewritten | Opus | written 2026-10-11 |
 | 05 | `05-rehearse-through-datastorekit.md` | **R1.** §4.1's protocol through the package. It equals R0 and `39809dca`. **DatastoreKit's G2 holds** | Opus | not written |
 | 06 | `06-pin-raypoolkit-v0.2.0.md` | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | not written |
 | 07 | `07-adopt-raypoolkit.md` | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | not written |
@@ -403,7 +403,9 @@ up, waiting by pid for a killed build's agents
 
 - **01 ships** `RunRegistry.RECORDED_DISTRIBUTIONS`, `RunRegistry.package_provenance()` and the
   manifest key `packages`, shaped as in §2.2. 03, 05, 06 and 08 read it.
-- **02 ships the rehearsal scripts** under `docs/dk-and-rpk-migration/rehearsal/` (§4.1, L3).
+- **02 ships the rehearsal scripts** under `docs/dk-and-rpk-migration/rehearsal/` (§4.1, L3):
+  `run_readers.sh <primary> <output dir>`, `stage_counts.py <run dir>...` and
+  `policy_statistics.py <run dir>`.
   05 and 08 run them unchanged. A change to one is a deviation, logged and reviewed, since L4
   compares their outputs.
 - **02, 05 and 08 each add a section** to `docs/dk-and-rpk-migration-verification.md`, which 02
@@ -411,8 +413,10 @@ up, waiting by pid for a killed build's agents
   record their measurements in their logs, and 09 adds §4, the close.
 - **03 and 06 ship the pins** exactly as §2.2 gives them, each in `requirements.txt` and in no
   other file.
-- **04 ships** `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at 0 bytes, and no
-  `Datastore.<layer module>` anywhere outside `prompts/`.
+- **04 ships** `Datastore/__init__.py` and `Datastore/SQL/__init__.py` at 0 bytes, no
+  `Datastore.<layer module>` anywhere outside `prompts/`, and
+  `prompts/dk-and-rpk-migration/scripts/rewrite_layer_imports.py`, the record of how the rewrite
+  was made. 07 may reuse its pattern for its seven imports.
 
 ### 4.1 The rehearsal protocol
 
