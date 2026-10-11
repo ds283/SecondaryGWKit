@@ -31,10 +31,11 @@ DRIVER = os.path.join(REPO_ROOT, "docs", "gktk-remedial", "scoped_pipeline_run.p
 
 # Five lines in the vocabulary `RayWorkPool` prints: the banner (`raypoolkit/RayWorkPool.py:206`)
 # and two progress notifications of two lines (`print(msg)` :588); no completion line (:606). They
-# are transcribed from `var/runs/a3-pilot/run.out`, the stdout of the 10 h 33 m A3 baseline run,
-# rather than read from it: that file is gitignored evidence, and a test that needs it would not
-# run on a fresh clone. The whole of that file, fed through `StageTracker`, ends at the last
-# stage asserted below.
+# are modelled on `var/runs/a3-pilot/run.out`, the stdout of the 10 h 33 m A3 baseline run, not
+# copied from it (its stamps carry no UTC offset, and its notifications fall at other times), and
+# not read from it: that file is gitignored evidence, and a test that needs it would not run on a
+# fresh clone. The whole of that file, fed through `StageTracker`, ends at the last stage asserted
+# below.
 A3_OUTPUT = """
 ** CALCULATE QUADRATIC SOURCE INTEGRALS
    -- 2026-09-21 02:14:03+0100 (5h 11m running): 4/13 work items remaining = 69.23% complete

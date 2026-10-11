@@ -48,7 +48,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
 | 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f3f0879` | [log](logs/05-rehearse-through-datastorekit.md) |
 | 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
-| 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/07-adopt-raypoolkit.md) |
+| 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `643c3b2` | [log](logs/07-adopt-raypoolkit.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 
@@ -60,7 +60,8 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-11, used for 04);
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-11, used for 05);
-[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-11, used for 06).
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-11, used for 06);
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-11, used for 07).
 
 **Written in two batches (README §2.1).**
 - **01–04** after the user's review of the plan.
@@ -872,7 +873,7 @@ No stop condition fired.
 
 ### 5.7 After prompt 07 (2026-10-11)
 
-**What landed (this commit).** B1: `RayTools/RayWorkPool.py` and `RayTools/__init__.py` deleted by
+**What landed (`643c3b2`).** B1: `RayTools/RayWorkPool.py` and `RayTools/__init__.py` deleted by
 `git rm` (the directory's ignored bytecode removed too, so `RayTools` cannot be imported as a
 namespace package). B2: seven lines, `main.py:63` and the six `extract_*.py`, one line each, now
 `from raypoolkit import RayWorkPool`, and nothing else on a line or in a file changed. B3:
@@ -899,10 +900,90 @@ Nothing else in the test file changed. No pool site, handler keyword or other te
 **The gate.** RayPoolKit's G2 (§2) waits for R2 (08); 07 supplies `RayTools/` gone, 0 imports, the
 pin installed, the six roots passing and all 54 sites constructing.
 
-**Rollback (README §4.2).** `git revert` of this commit alone. An unimported package is inert.
+**Rollback (README §4.2).** `git revert` of `643c3b2` alone. An unimported package is inert.
 
 **Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 108.
 
 **Handed to 08.** The package is the only pool; `main.py:3247`'s post handler now gets the persisted
 object (C8), measured by 08 from the policy statistics block. The log's last section lists what R2's
 launches should expect to differ from R1's.
+
+**Orchestrator review of prompt 07 (2026-10-11).** Dispatched from `789b72d` to one Sonnet
+subagent, after the six roots were re-measured at `cd03ec4` (every count 04's; the wall-clock test
+failed once in the root run, 0.0602 s, and passed alone three times). Reviewed against its commit
+`643c3b2`, with nothing landed after it. **Every check of the note's §3 passed**, and acceptance
+1–6 are met. No stop condition fired.
+- **Scope (check 1).** `D` for the two `RayTools/` files; `A` for the log and the saved
+  measurement; `M` for the seven importing files, `CLAUDE.md`, `test_pipeline_adoption.py`, this
+  board and README. Nothing else; `docs/` and `docs/OPEN_ISSUES.md` untouched.
+- **The seven hunks (check 2).** Each `git diff -U0` is one line, `-from RayTools.RayWorkPool import
+  RayWorkPool` / `+from raypoolkit import RayWorkPool`, at the prompt's line. Independently, `sed` of
+  each `HEAD~1` blob hashes to the committed blob, all seven.
+- **By the script at the commit (check 3).** RayPoolKit's `measure_client_pools.py sgk --commit
+  643c3b2` (RayPoolKit clean at `c9b0e11`): `RayTools/` absent, **0 imports**, **0 `import_module`
+  calls**, the 2 strings, **54 calls, every one `constructs`**. Against the note's own scratch
+  measurement of the bare swap (`2bdfdaa`) it differs only by the tracked-file count and the record
+  lines naming `RayWorkPool` (`CLAUDE.md:51`, `:65`, the test comment, `prompts/`); every call and
+  handler table is identical. The saved `measure/out/07-…md` differs from it only by commit, file
+  count and record lines, and `git diff --stat 5624f4c 643c3b2` lists only the four records.
+  `git ls-tree 643c3b2 RayTools` is empty.
+- **The queue is the package's (check 4).** In a fresh `python -I`: `import RayTools` and
+  `import RayTools.RayWorkPool` raise `ModuleNotFoundError`; `RayWorkPool` is
+  `raypoolkit.RayWorkPool.RayWorkPool` from the venv's `site-packages`; `ray.is_initialized()`
+  false. `main.py` and the six `extract_*.py` byte-compile. The agent's removal of the ignored
+  `RayTools/__pycache__/` (its deviation 4) was needed for the first of these: with it left, the
+  directory imports as a namespace package. It is gone.
+- **`CLAUDE.md` (check 5).** Retitled as the prompt says; 27 lines (`:47-73`, limit 29); names
+  RayPoolKit with its path, URL and `v0.2.0`; "Neither is this repository's code", each package
+  reported to its own repository; the import and the bare name, with the `ast.Name` reason; the
+  `RayTools/` paragraph gone. The diff touches nothing outside the section.
+- **`test_pipeline_adoption.py` (check 6).** The agent's diff is the first sentence, `:32-33`, naming
+  `:206`, `:588` and `:606` of the installed file (each checked) and five lines with no completion
+  line. `ast.dump` equals `HEAD~1`'s.
+- **Suites (check 7), at `643c3b2`, load 11–17.** AdaptiveLevin 32, CosmologyModels 39,
+  LiouvilleGreen 148 (1 skipped), RunRegistry 286, Datastore 320 (54 + 103 + 101 + 62), all OK.
+  ComputeTargets 693 with one failure, `test_wall_time_per_object` (0.0607 s, load ~15), which alone
+  passed twice and failed once (0.066 s): README §7's wall-clock test, touching nothing 07 changed.
+  `black --check` clean on the eight touched `.py` files.
+- **Breakages (check 8).** All four replayed from the log's diffs in `bash` (`git apply --check`,
+  apply, check, `-R`), the tree clean after each. (i) at `main.py:3686`: the same six failures the
+  note predicted, in `test_quadsource_policy_main` and `test_main_plumbing`; the other three modules
+  pass. (ii) `extract_Gk_data.py:32` and (iii) `main.py:63`, each on a temporary-index scratch commit
+  of `643c3b2`: the script counts 1 import, at that line, and still 54 `constructs`; with (iii)
+  applied, `test_main_plumbing` passes (27). (iv) 1 failure and 2 errors in `test_pipeline_adoption`,
+  as predicted.
+- **Item 5 (check 9).** The log's row-by-row table gives "nothing" for every row but `main.py:3247`,
+  each with its reason, and traces `:3247` through the installed `datastorekit` as the note's
+  correction 2 directs. It also finds the other post-handler sites at `:1427`, `:2122`, `:3235` (the
+  checklist's `:1420`, `:2115`, `:3229`) and `:2985`, a lookup-only pool with no persist.
+- **The machine (check 10).** `RunRegistry list`: the same 25 runs, none `running`; no Ray process.
+  RayPoolKit unchanged. **DatastoreKit's checkout is not as at 06's review**: its `HEAD` is
+  `389e13b` and `pyproject.toml` is modified (`version` `0.2.2` → `0.2.3`, saved 22:11). That is
+  DatastoreKit's own `factory-defaults` campaign, run by another session there, whose commits
+  continue through 22:02; nothing of 07's touched it. SGK pins the tag, and
+  `package_provenance()["datastorekit"]` is unchanged (`6d8ee9ae…`, `v0.2.2`, not editable).
+- **The records (check 11).** The log has the note's three corrections classified, both
+  measurements, the seven hunks, item 5's table, the suites beside the baselines, the four breakages
+  as diffs, and what 08 should expect. Its six deviations are classified; none is drift. Board row,
+  B1–B3 and §5.7 with the rollback, and README §4's "07 ships" line, agree with the tree. Index 108.
+- **The note's own slip.** Its correction 2 put `_type` and `_quality` at
+  `ComputeTargets/GkSourcePolicyData.py:573-574`; they are at `:574-575`, as the checklist says. The
+  agent measured and logged it.
+- **The comment's provenance (check 12).** `test_pipeline_adoption.py:33-37` said `A3_OUTPUT` was
+  "transcribed from" `var/runs/a3-pilot/run.out`. Neither of its progress lines is in that file or in
+  `a3-pilot-resume/run.out`, and their `+0100` stamps are an offset the pool never prints. Judged
+  residue, not an issue: one comment in a file 07 touched, with no assertion behind it. Fixed here
+  to "modelled on … not copied from it", with the reason; `ast` unchanged and the module passes.
+- **Residue fixed here:** "this commit" → `643c3b2` on this board (the §1 row and §5.7) and in the
+  log (header, breakage preamble, state, rollback); the comment above; and
+  `orchestrator/prompt-07.md` added to the list of notes.
+- **Handed to 08.**
+  - Every pool is `raypoolkit` 0.2.0's, and every manifest records both packages at their tags'
+    commits, neither editable.
+  - L4's `GkSourcePolicyData` block is the measurement of `main.py:3247` (C8); compare it with R1's
+    as sorted lines where only the order differs
+    (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`).
+  - The printed lines are the copy's strings at new places in the file; the registry's stage and
+    progress fields are the run-level test.
+  - DatastoreKit is moving towards `0.2.3` in its own campaign. 08 runs at the `v0.2.2` pin; a move
+    of the pin is a pin prompt of its own, never part of 08.

@@ -2,7 +2,7 @@
 
 **Prompt:** [`../07-adopt-raypoolkit.md`](../07-adopt-raypoolkit.md) ·
 **Board items:** B1–B3 · **Date:** 2026-10-11 · **Model:** Sonnet 5.5 ·
-**Commit:** this commit · **Result:** landed, no stop. B1–B3 as the prompt says. `RayTools/` is gone,
+**Commit:** `643c3b2` · **Result:** landed, no stop. B1–B3 as the prompt says. `RayTools/` is gone,
 seven import lines read `from raypoolkit import RayWorkPool`, `CLAUDE.md`'s section covers both
 packages, and one comment sentence of `test_pipeline_adoption.py` is corrected. RayPoolKit's script
 finds 0 imports and 0 `import_module` calls naming `RayTools`, and all 54 pool constructions
@@ -214,7 +214,7 @@ Each diff is exactly as applied, made against the staged tree (index against wor
 with `git apply -R --check` while applied and `git apply --check` after the revert. Saves are in
 `var/dk-and-rpk-migration-07/breakage/`. After each, the working tree equalled the staged tree. (The
 first attempt at (i) saved a `-U0` diff, which `git apply` refuses without `--unidiff-zero`; the diffs
-here are the default context.) Replay in `bash` from a clean tree at this commit.
+here are the default context.) Replay in `bash` from a clean tree at `643c3b2`.
 
 ### (i) a call spelled `raypoolkit.RayWorkPool(...)`, at `main.py:3686`
 
@@ -349,7 +349,7 @@ QUADRATIC SOURCE INTEGRALS, 92.31% (1 of 13 work items remaining)'`), and the er
 
 ## State handed to the next prompt
 
-- **The commit:** this commit. Its code is the tree measured at scratch commit `5624f4c`.
+- **The commit:** `643c3b2`. Its code is the tree measured at scratch commit `5624f4c`.
 - **The venv**, unchanged by 07. `RunRegistry.package_provenance()`:
   ```json
   {"datastorekit": {"version": "0.2.2", "url": "https://github.com/ds283/DatastoreKit", "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6", "requested_revision": "v0.2.2", "editable": false}, "raypoolkit": {"version": "0.2.0", "url": "https://github.com/ds283/RayPoolKit", "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "requested_revision": "v0.2.0", "editable": false}}
@@ -367,6 +367,6 @@ QUADRATIC SOURCE INTEGRALS, 92.31% (1 of 13 work items remaining)'`), and the er
     `test_pipeline_adoption` passes on them. Their places in the file moved by 40 lines
     (`:166`/`:548`/`:566` to `:206`/`:588`/`:606`), which only matters to prose.
   - No log line should differ otherwise; the registry's `StageTracker` fields are the run-level test.
-- **Rollback (README §4.2):** `git revert` of this commit alone. An unimported package is inert.
+- **Rollback (README §4.2):** `git revert` of `643c3b2` alone. An unimported package is inert.
 - **Registry:** 25 runs, none `running`. 07 launched nothing and started no Ray process.
 - **`docs/OPEN_ISSUES.md`:** 108, unchanged.
