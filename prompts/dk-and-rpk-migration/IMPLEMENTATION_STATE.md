@@ -1,6 +1,6 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–06 landed. R0 and R1 hold; SGK's layer is `datastorekit` 0.2.2, pinned and installed, and DatastoreKit's G2 holds; the RayPoolKit pin (06) is installed, and 07 may import `raypoolkit`.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–07 landed. R0 and R1 hold; SGK's layer is `datastorekit` 0.2.2, pinned and installed, and DatastoreKit's G2 holds; `RayTools/` is gone and every pool is `raypoolkit`'s (07); R2 (08) is next.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
 against it. 05–09 were written the same day, after 04's review (README §2.1).
@@ -48,7 +48,7 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
 | 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `f3f0879` | [log](logs/05-rehearse-through-datastorekit.md) |
 | 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `b6cc119` | [log](logs/06-pin-raypoolkit-v0.2.0.md) |
-| 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | this commit | [log](logs/07-adopt-raypoolkit.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
 | 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 
@@ -93,9 +93,9 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **Q1** | 06 | the `raypoolkit` pin in `requirements.txt` | ✅ |
 | **Q2** | 06 | the venv installed from it, after a dry run | ✅ |
 | **Q3** | 06 | the proof: one distribution added, at `eaef0ce…`, the tag's files, not editable | ✅ |
-| **B1** | 07 | `RayTools/` deleted | ⬜ |
-| **B2** | 07 | the seven `RayTools` imports rewritten to `from raypoolkit import RayWorkPool` | ⬜ |
-| **B3** | 07 | `CLAUDE.md`'s package section completed; `test_pipeline_adoption.py`'s comment | ⬜ |
+| **B1** | 07 | `RayTools/` deleted | ✅ |
+| **B2** | 07 | the seven `RayTools` imports rewritten to `from raypoolkit import RayWorkPool` | ✅ |
+| **B3** | 07 | `CLAUDE.md`'s package section completed; `test_pipeline_adoption.py`'s comment | ✅ |
 | **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1, with `main.py:3247` (C8) | ⬜ |
 | **G-RPK** | 08 | RayPoolKit's G2 recorded as holding (§2) | ⬜ |
 | **Z1** | 09 | the four inherited issues handed to DatastoreKit (C11) | ⬜ |
@@ -869,3 +869,40 @@ No stop condition fired.
   - `from raypoolkit import RayWorkPool` gives the class, which is the form 07's rewrite uses.
   - 07's note must re-measure RayPoolKit's `measure_client_pools.py` at its own `HEAD` (7 imports,
     54 calls at `b510bc9`).
+
+### 5.7 After prompt 07 (2026-10-11)
+
+**What landed (this commit).** B1: `RayTools/RayWorkPool.py` and `RayTools/__init__.py` deleted by
+`git rm` (the directory's ignored bytecode removed too, so `RayTools` cannot be imported as a
+namespace package). B2: seven lines, `main.py:63` and the six `extract_*.py`, one line each, now
+`from raypoolkit import RayWorkPool`, and nothing else on a line or in a file changed. B3:
+`CLAUDE.md`'s section is "The datastore layer is `datastorekit`; the work queue is `raypoolkit`"
+(27 lines, was 26), and `RunRegistry/tests/test_pipeline_adoption.py:32-33`, the comment's first
+sentence, gives the package's places (`:206`, `:588`, `:606`) and says the block holds five lines.
+Nothing else in the test file changed. No pool site, handler keyword or other test changed.
+
+**Measured** ([the log](logs/07-adopt-raypoolkit.md); [the script's output](measure/out/07-raypoolkit-measure_client_pools.md)).
+- RayPoolKit's script at a scratch commit of the staged tree: `RayTools/` absent, **0 imports**, **0
+  `import_module` calls**, the 2 string literals (`docs/tolerance-convergence/inventory.py:382`, a
+  `prompts/` script), **54 calls, every one `constructs`**, the handler table identical to `HEAD`'s.
+- Six roots at their counts: AdaptiveLevin 32, CosmologyModels 39, LiouvilleGreen 148 (1 skipped),
+  RunRegistry 286, ComputeTargets 693 (the wall-clock test passed), Datastore 320 (54 + 103 + 101 +
+  62). The five `ast`-matching `ComputeTargets/tests` modules and `test_pipeline_adoption` have equal
+  test ids and outcomes before and after. `black --check` clean.
+- In a fresh `python -I`: `RayWorkPool.__module__` is `raypoolkit.RayWorkPool`, `import RayTools`
+  raises `ModuleNotFoundError`, `ray.is_initialized()` is false. Ray was never started.
+- Four breakages, each caught: (i) `raypoolkit.RayWorkPool(...)` at `main.py:3686` fails six tests in
+  two modules; (ii) and (iii) one reverted import is counted by the script, and with `main.py:63`
+  reverted `test_main_plumbing` still passes, so the script, not the suite, is B2's proof; (iv) the
+  `A3_OUTPUT` banner changed fails one test and errors two.
+
+**The gate.** RayPoolKit's G2 (§2) waits for R2 (08); 07 supplies `RayTools/` gone, 0 imports, the
+pin installed, the six roots passing and all 54 sites constructing.
+
+**Rollback (README §4.2).** `git revert` of this commit alone. An unimported package is inert.
+
+**Opened:** nothing. `docs/OPEN_ISSUES.md` is unchanged at 108.
+
+**Handed to 08.** The package is the only pool; `main.py:3247`'s post handler now gets the persisted
+object (C8), measured by 08 from the policy statistics block. The log's last section lists what R2's
+launches should expect to differ from R1's.

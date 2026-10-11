@@ -60,7 +60,7 @@ from datastorekit.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import GkSourcePolicy, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationSolver
-from RayTools.RayWorkPool import RayWorkPool
+from raypoolkit import RayWorkPool
 from Units import Mpc_units
 from config.defaults import (
     DEFAULT_FLOAT_PRECISION,

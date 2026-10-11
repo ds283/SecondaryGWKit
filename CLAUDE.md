@@ -44,22 +44,26 @@ that hold across all of them:
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
 
-## The datastore layer is `datastorekit`
+## The datastore layer is `datastorekit`; the work queue is `raypoolkit`
 
 Since 2026-10-11 the generic datastore layer is the package `datastorekit`, from DatastoreKit
 (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit), pinned in
-`requirements.txt` at `v0.2.2`. ChamPBH and StochasticInstantons use it too; this repository
-adopted it in the `dk-and-rpk-migration` campaign.
+`requirements.txt` at `v0.2.2`, and the work queue `RayWorkPool` is the package `raypoolkit`, from
+RayPoolKit (`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned
+at `v0.2.0`. ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in
+the `dk-and-rpk-migration` campaign.
 
-**It is not this repository's code.** A defect in it is recorded on the board of the campaign that
-found it, and in `docs/OPEN_ISSUES.md`. It is reported to DatastoreKit, fixed there in a release,
-and reaches this repository by moving the pin in a commit of its own: it is never patched here,
-and never worked around. A prompt whose acceptance cannot pass without a change to the package
-stops and asks. **A pin is a tag**; an editable install is never used for a production run. This
-repository keeps its own `ray` and `SQLAlchemy` pins.
+**Neither is this repository's code.** A defect in one is recorded on the board of the campaign
+that found it, and in `docs/OPEN_ISSUES.md`. It is reported to that package's own repository, fixed
+there in a release, and reaches this repository by moving the pin in a commit of its own: it is
+never patched here, and never worked around. A prompt whose acceptance cannot pass without a change
+to a package stops and asks. **A pin is a tag**; an editable install is never used for a production
+run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 
 **Imports name the package:** `from datastorekit import DatastoreObject`,
-`datastorekit.SQL.ShardedPool`, `datastorekit.SQL.factory_base`. The actor's module is
+`datastorekit.SQL.ShardedPool`, `datastorekit.SQL.factory_base`, and
+`from raypoolkit import RayWorkPool`. The name `RayWorkPool` stays bare at every call, because five
+`ComputeTargets/tests` modules find pool constructions by `ast.Name`. The actor's module is
 `importlib.import_module("datastorekit.SQL.Datastore")`. The tools are
 `python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
 
@@ -67,9 +71,6 @@ repository keeps its own `ray` and `SQLAlchemy` pins.
 `Datastore/SQL/ObjectFactories/`, `config/datastore.py` and `config/sharding.py`,
 `tools/inventory_report.py`, `Datastore/tests/`, and every caller. `Datastore/__init__.py` and
 `Datastore/SQL/__init__.py` are empty, and exist only to make the factories' folders packages.
-
-**`RayTools/RayWorkPool.py` is frozen** while it moves to RayPoolKit, except its one import, which
-RayPoolKit's decision U12 allows. `dk-and-rpk-migration` prompt 07 replaces it with `raypoolkit`.
 
 ## Long-running jobs — the run registry
 

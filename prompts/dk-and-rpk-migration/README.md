@@ -438,6 +438,10 @@ up, waiting by pid for a killed build's agents
   - `ComputeTargets/tests/test_quadsource_integral.py`'s `load_pre_commit_module()` maps the one
     layer import of the historical file it execs (`39ed7fc`), by the user's decision of 2026-10-11.
     No assertion changes.
+- **07 ships** `RayTools/` gone (`RayWorkPool.py` and `__init__.py`), the seven imports rewritten
+  to `from raypoolkit import RayWorkPool`, `CLAUDE.md`'s section completed for both packages, and
+  one corrected comment in `RunRegistry/tests/test_pipeline_adoption.py`.
+  **Shipped as named** (prompt 07's log), the comment being `:32-33` and the section 27 lines.
 
 ### 4.1 The rehearsal protocol
 

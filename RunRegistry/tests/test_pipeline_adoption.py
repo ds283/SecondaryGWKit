@@ -29,8 +29,8 @@ import RunRegistry
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DRIVER = os.path.join(REPO_ROOT, "docs", "gktk-remedial", "scoped_pipeline_run.py")
 
-# Six lines in the vocabulary `RayWorkPool` prints, in the order it prints them: the banner from
-# its constructor (:166), two progress notifications (:548) and the completion pair (:566). They
+# Five lines in the vocabulary `RayWorkPool` prints: the banner (`raypoolkit/RayWorkPool.py:206`)
+# and two progress notifications of two lines (`print(msg)` :588); no completion line (:606). They
 # are transcribed from `var/runs/a3-pilot/run.out`, the stdout of the 10 h 33 m A3 baseline run,
 # rather than read from it: that file is gitignored evidence, and a test that needs it would not
 # run on a fresh clone. The whole of that file, fed through `StageTracker`, ends at the last

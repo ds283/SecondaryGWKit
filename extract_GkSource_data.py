@@ -34,7 +34,7 @@ from CosmologyConcepts.wavenumber import (
 from datastorekit.SQL.ProfileAgent import ProfileAgent
 from datastorekit.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
-from RayTools.RayWorkPool import RayWorkPool
+from raypoolkit import RayWorkPool
 from Units import Mpc_units
 from config.defaults import (
     DEFAULT_HEXIT_ABS_TOLERANCE,
