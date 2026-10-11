@@ -1,9 +1,9 @@
 # dk-and-rpk-migration campaign — implementation state
 
-**Last updated:** 2026-10-11 · **Status: LIVE — 4 of 9 prompts written (01–04), 01–04 landed. R0 holds; SGK's layer is now `datastorekit` 0.2.2, pinned and installed; R1 (05) is next.**
+**Last updated:** 2026-10-11 · **Status: LIVE — 9 of 9 prompts written, 01–04 landed. R0 holds; SGK's layer is now `datastorekit` 0.2.2, pinned and installed; R1 (05) is next.**
 The plan is [`README.md`](README.md), written on 2026-10-11 at `b510bc9` with the user's decisions
 U1–U4, and committed at `4532188`. The user reviewed it the same day, and 01–04 were written
-against it. 05–09 are held (README §2.1).
+against it. 05–09 were written the same day, after 04's review (README §2.1).
 
 The campaign adopts `datastorekit` `v0.2.2` and `raypoolkit` `v0.2.0`, in that order. A
 fingerprint rehearsal comes before the first swap (R0) and after each swap (R1, R2). Each
@@ -46,11 +46,11 @@ The orchestrator's choices of method, C1–C14, are in README §6.2.
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | §0.1's gap `53d4e18` → `b510bc9` | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `7650102` | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | [Pin `datastorekit` `v0.2.2`](03-pin-datastorekit-v0.2.2.md) | the DatastoreKit pin | Sonnet | ✍️ 2026-10-11 | ✅ 2026-10-11 | `9ec603a` | [log](logs/03-pin-datastorekit-v0.2.2.md) |
 | 04 | [Adopt `datastorekit`](04-adopt-datastorekit.md) | the DatastoreKit swap; **U3** | Opus | ✍️ 2026-10-11 | ✅ 2026-10-11 | `0c9e2cf` | [log](logs/04-adopt-datastorekit.md) |
-| 05 | Rehearse through `datastorekit` (R1) | **DatastoreKit G2** | Opus | ⬜ | ⬜ | — | — |
-| 06 | Pin `raypoolkit` `v0.2.0` | the RayPoolKit pin | Sonnet | ⬜ | ⬜ | — | — |
-| 07 | Adopt `raypoolkit` | the RayPoolKit swap | Sonnet | ⬜ | ⬜ | — | — |
-| 08 | Rehearse through both packages (R2) | **RayPoolKit G2**; `main.py:3247` | Opus | ⬜ | ⬜ | — | — |
-| 09 | Close the migration | the inherited issues; the close | Sonnet | ⬜ | ⬜ | — | — |
+| 05 | [Rehearse through `datastorekit` (R1)](05-rehearse-through-datastorekit.md) | **DatastoreKit G2** | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
+| 06 | [Pin `raypoolkit` `v0.2.0`](06-pin-raypoolkit-v0.2.0.md) | the RayPoolKit pin | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 07 | [Adopt `raypoolkit`](07-adopt-raypoolkit.md) | the RayPoolKit swap | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
+| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **RayPoolKit G2**; `main.py:3247` | Opus | ✍️ 2026-10-11 | ⬜ | — | — |
+| 09 | [Close the migration](09-close-the-migration.md) | the inherited issues; the close | Sonnet | ✍️ 2026-10-11 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -60,10 +60,11 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 used for 02); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-11, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-11, used for 04).
 
-**Held, by design (README §2.1).**
-- **01–04** are written after the user's review of the plan.
-- **05–08** are written after 04's review, whose log fixes the counts and names they cite.
-- **09** is written after 08's review.
+**Written in two batches (README §2.1).**
+- **01–04** after the user's review of the plan.
+- **05–09** after 04's review, whose log fixes the counts and names they cite. **09 was written
+  with them at the user's request**, not after 08's review as planned: its orchestrator note,
+  written after that review, carries 05–08's results to it and governs where they differ.
 
 No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 
@@ -85,7 +86,23 @@ No prompt waits on another's *scope*. Each charter is fixed in README §2.2.
 | **A4** | 04 | `CLAUDE.md`'s layer section, `RunRegistry/stores.py:5` | ✅ |
 | **A5** | 04 | `[04-six-docs-probes-import-factories-from-the-layer]` opened | ✅ |
 
-05–09's items are added when they are written.
+| **L1**–**L4** (R1) | 05 | README §4.1 through `datastorekit`; L4 against R0 | ⬜ |
+| **G-DK** | 05 | DatastoreKit's G2 recorded as holding (§2) | ⬜ |
+| **Q1** | 06 | the `raypoolkit` pin in `requirements.txt` | ⬜ |
+| **Q2** | 06 | the venv installed from it, after a dry run | ⬜ |
+| **Q3** | 06 | the proof: one distribution added, at `eaef0ce…`, the tag's files, not editable | ⬜ |
+| **B1** | 07 | `RayTools/` deleted | ⬜ |
+| **B2** | 07 | the seven `RayTools` imports rewritten to `from raypoolkit import RayWorkPool` | ⬜ |
+| **B3** | 07 | `CLAUDE.md`'s package section completed; `test_pipeline_adoption.py`'s comment | ⬜ |
+| **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1, with `main.py:3247` (C8) | ⬜ |
+| **G-RPK** | 08 | RayPoolKit's G2 recorded as holding (§2) | ⬜ |
+| **Z1** | 09 | the four inherited issues handed to DatastoreKit (C11) | ⬜ |
+| **Z2** | 09 | the prose of `[04-comments-name-the-layers-old-module-paths]` rewritten; the issue closed | ⬜ |
+| **Z3** | 09 | `CLAUDE.md`'s test command names all six roots and Datastore's four groups | ⬜ |
+| **Z4** | 09 | the final measurements at `HEAD` | ⬜ |
+| **Z5** | 09 | verification §4, with the two G2 records drafted | ⬜ |
+| **Z6** | 09 | the board, README, `prompts/INDEX.md` and the index closed | ⬜ |
+| **Z7** | 09 | only if the user chooses it: the six `docs/` probes repaired (README §6.3) | ⬜ |
 
 The measurement the plan was written against is [`measure/`](measure/): both packages' scripts at
 `b510bc9`, each equal to its checklist's appendix byte for byte; the six roots' counts; the

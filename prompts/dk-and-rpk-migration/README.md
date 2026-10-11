@@ -9,8 +9,8 @@ adoption checklists, and from the user's decisions U1–U4 of the same day (§6.
   RayPoolKit's `docs/adoption/secondarygwkit.md`.
 
 §0.2 re-measures both checklists at `b510bc9`. §2 fixes each prompt's charter and acceptance.
-**Prompts 01–04 are written** (2026-10-11, after the user reviewed the plan at `4532188`); 05–09
-are held as §2.1 says.
+**All nine prompts are written**: 01–04 on 2026-10-11, after the user reviewed the plan at
+`4532188`, and 05–09 the same day, after 04's review (§2.1).
 
 ## 0. Why this campaign exists
 
@@ -189,11 +189,11 @@ pre-registry `a3-pilot` pair), none `running`.
 | 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1's protocol at the start tree. Every fingerprint is `39809dca`. It closes the `53d4e18` → `b510bc9` gap (§0.1) | Opus | written 2026-10-11 |
 | 03 | [`03-pin-datastorekit-v0.2.2.md`](03-pin-datastorekit-v0.2.2.md) | The `datastorekit` pin in a commit of its own; the venv installed from it, adding one distribution, at the tag's commit | Sonnet | written 2026-10-11 |
 | 04 | [`04-adopt-datastorekit.md`](04-adopt-datastorekit.md) | **The DatastoreKit swap.** The 17 files go (two emptied, U3), every layer import outside `prompts/` is rewritten, the carried tests are deleted, and the staying ones are adapted. The freeze section of `CLAUDE.md` is rewritten | Opus | written 2026-10-11 |
-| 05 | `05-rehearse-through-datastorekit.md` | **R1.** §4.1's protocol through the package. It equals R0 and `39809dca`. **DatastoreKit's G2 holds** | Opus | not written |
-| 06 | `06-pin-raypoolkit-v0.2.0.md` | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | not written |
-| 07 | `07-adopt-raypoolkit.md` | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | not written |
-| 08 | `08-rehearse-through-both-packages.md` | **R2.** §4.1's protocol through both packages. It equals R1 and `39809dca`; the `GkSourcePolicyData` statistics equal R1's. **RayPoolKit's G2 holds** | Opus | not written |
-| 09 | `09-close-the-migration.md` | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | not written |
+| 05 | [`05-rehearse-through-datastorekit.md`](05-rehearse-through-datastorekit.md) | **R1.** §4.1's protocol through the package. It equals R0 and `39809dca`. **DatastoreKit's G2 holds** | Opus | written 2026-10-11 |
+| 06 | [`06-pin-raypoolkit-v0.2.0.md`](06-pin-raypoolkit-v0.2.0.md) | The `raypoolkit` pin in a commit of its own, installed as 03 | Sonnet | written 2026-10-11 |
+| 07 | [`07-adopt-raypoolkit.md`](07-adopt-raypoolkit.md) | **The RayPoolKit swap.** `RayTools/` goes and 7 imports are rewritten; every one of the 54 sites constructs | Sonnet | written 2026-10-11 |
+| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2.** §4.1's protocol through both packages. It equals R1 and `39809dca`; the `GkSourcePolicyData` statistics equal R1's. **RayPoolKit's G2 holds** | Opus | written 2026-10-11 |
+| 09 | [`09-close-the-migration.md`](09-close-the-migration.md) | The four inherited issues handed to DatastoreKit; `CLAUDE.md`'s test command names all six roots; the final measurements; the G2 records drafted for the two package repositories | Sonnet | written 2026-10-11 |
 
 ### 2.1 When each prompt file is written
 
@@ -203,6 +203,11 @@ previous review's findings:
 - **01–04 are written first**, once the user has reviewed this plan.
 - **05–08** follow 04's review: 04's log fixes the expected counts and names that they cite.
 - **09** follows 08's review.
+
+**As written** (2026-10-11): 05–08 after 04's review, as planned. **09 was written with them, at
+the user's request**, not after 08's review. Its task is fixed by its charter, so nothing in it
+waits on 05–08's results; what they produce (counts, findings, issues opened) reaches 09 through
+its orchestrator note, which is written after 08's review and governs where the two differ.
 
 ### 2.2 The charters
 
