@@ -8,7 +8,7 @@ the audit's §8, accepted as recommended (§6.1).
   [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md) and
   [`runregistrykit-extraction-brief.md`](runregistrykit-extraction-brief.md).
 
-§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01 and 02 are
+§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01, 02 and 02a are
 written**; 03–09 wait on releases in the two other repositories (§2.1).
 
 ## 0. Why this campaign exists
@@ -127,6 +127,7 @@ all 38 factories, but not a build.
 |---|---|---|---|---|
 | 01 | [`01-freeze-the-run-registry.md`](01-freeze-the-run-registry.md) | The freeze, in `CLAUDE.md`; the frozen tree recorded file by file; the baselines 06 and 08 compare with | Sonnet | written 2026-10-12 |
 | 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1 at the start tree; every fingerprint `39809dca…`. Closes the `f539015` → `511ef5f` gap (§0.1) | Opus | written 2026-10-12 |
+| 02a | [`02a-the-rehearsal-lock-helper.md`](02a-the-rehearsal-lock-helper.md) | **The lock helper**: §4.1's lock steps as `tools/rehearsal_lock.py`, with a check for this repository's Ray processes; proved against SI's and ChamPBH's scripts and on the real lock; `CLAUDE.md`'s pointer | Sonnet | written 2026-10-12 |
 | 03 | Pin `datastorekit` at E1's release | The pin moved from `v0.2.2`, in a commit of its own; the venv installed from it | Sonnet | held: E1 |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint taken both ways and equal | Opus | held: E1, 03 |
 | 05 | Pin `runregistrykit` at E2's release | The pin, with the `[stores]` extra, in a commit of its own | Sonnet | held: E2 |
@@ -141,6 +142,8 @@ The charters below fix every prompt's task now. The files are written in batches
 must cite exists (the user's pattern: a prompt is written once its task is determined, and held
 while an earlier step establishes its method):
 - **01–02 are written now.** Their task depends on nothing outside this repository.
+- **02a** was written after R0, when the user adopted the shared rehearsal lock (§4.1). It depends
+  on nothing held, and lands before 04, the first rehearsal to take the lock.
 - **03–04** are written when E1's release is tagged: they cite its tag, its commit and its
   SGK-facing note.
 - **05–08** are written when E2's release is tagged and its SGK adoption checklist exists: 06 is
@@ -185,6 +188,23 @@ explain before any pin moves.
      (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`).
   4. `docs/runregistry-extraction-verification.md` is created, with §1, R0.
 - **Out.** Any code or test. Retiring a store.
+
+**02a — A helper for the shared rehearsal lock** (Sonnet). Added 2026-10-12, after R0.
+- **What it changes.**
+  - `tools/rehearsal_lock.py`, standard library only, with five commands: `acquire`, `set-pid`,
+    `release`, `status` and `ray-processes`. Together they are §4.1's lock steps, following SI's
+    brief §2. The helper never waits for, retries or breaks a lock, and never starts or stops Ray.
+  - Its tests, in `tools/tests/`. They use no Ray and never touch the real lock.
+  - `CLAUDE.md` gains a short section on the shared lock.
+- **Acceptance.**
+  1. Each command refuses what the contract forbids, and its tests catch six named mutations.
+  2. SI's and ChamPBH's scripts, at `8e04a7c` and `288b385`, and the helper each respect the
+     other's lock, under a temporary `HOME`.
+  3. On the real lock, with a one-CPU in-process probe, `release` is refused while the probe is
+     alive and succeeds once its processes are gone.
+  4. The seven roots pass; `tools` gains the new tests.
+- **Out.** Any rehearsal tool, driver or `extract_*.py`; the `auto` default (assigned to
+  `handover`); `RunRegistry/`; other repositories.
 
 **03 — Pin `datastorekit` at E1's release** (Sonnet).
 - **What it changes.** `requirements.txt:17`, the one line, from `v0.2.2` to E1's tag. The venv is
@@ -309,6 +329,8 @@ for a killed build's agents (`[07-a-killed-builds-ray-agents-outlive-the-driver]
   `docs/runregistry-extraction/rehearsal/` named with `02`. It runs `dk-and-rpk-migration`'s
   rehearsal tooling under `docs/dk-and-rpk-migration/rehearsal/` unchanged. 04 and 08 add §2 and §3,
   and 09 §4.
+- **02a ships** `tools/rehearsal_lock.py`, which 04 and 08 run for §4.1's lock steps, and its
+  proofs, `measure/out/02a-interop.txt` and `02a-real.txt`.
 - **03 and 05 ship the pins**, each in `requirements.txt` and no other file.
 - **04 ships** `docs/runregistry-extraction/fingerprint_both_ways.py <primary>...`, which 08 runs
   again.
@@ -358,20 +380,26 @@ takes the lock and nothing else.
   - `pid:` as below.
 
   `owner` is always written to `owner.tmp` first, then renamed.
-- **Take it before the `reference` launch.** Run `mkdir -p ~/ScienceData`, then
-  `mkdir ~/ScienceData/.rehearsal-lock` without `-p`. If that `mkdir` fails, the lock is held:
-  print `owner`, or say that it is missing, launch nothing, and **stop and ask the user**. Never
-  wait in a loop, retry, or remove the lock. If it succeeds, write `owner` with `pid: -`.
+- **The helper.** From 02a on, each step below is a command of `tools/rehearsal_lock.py`, run as
+  `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock <command>`. The helper writes the owner
+  file and refuses any step that would break the contract. Its `ray-processes` command is §3's
+  check for Ray processes of this repository. A machine-wide `pgrep 'gcs_server|raylet|ray::'`,
+  as R0 ran, now also finds SI's and ChamPBH's clusters, and is not the test.
+- **Take it before the `reference` launch**, with
+  `acquire --purpose "runregistry-extraction NN (R<n>)"`. Exit 3 means the lock is held: the
+  helper prints `owner`, and the prompt launches nothing and **stops and asks the user**. Never
+  wait in a loop, retry, or remove the lock. Exit 4 means a Ray process of this repository is
+  still alive; the helper has released the lock again, and the prompt stops in the same way.
 - **Hold it through all four launches and L3's readers.** It is one lock for the whole rehearsal,
   not one per launch: other projects must not start between the launches either.
-- **At each launch, set `pid`** to that run's driver pid, from its `status.json`, in the same
-  check that confirms the run started. The readers leave it alone. Between launches the pid is
+- **At each launch, set `pid`** with `set-pid <pid>`, using that run's driver pid from its
+  `status.json`, in the same check that confirms the run started. The readers leave it alone. Between launches the pid is
   the previous driver's and is dead. The lock is still held then: only the user removes a lock,
   by hand, after looking.
-- **Release it after the readers**, once no Ray process of this repository is alive. This is §3's
-  pre-launch check, which waits by pid for a killed build's agents. Check that `owner` says
-  `project: SecondaryGWKit` and `ray_temp_dir: in-process`, then remove `owner` and `rmdir` the
-  directory. If either field differs, print both and stop and ask the user.
+- **Release it after the readers**, with `release`. The helper refuses, exit 1, while the
+  recorded pid is alive or `ray-processes` lists anything: wait by pid for a killed build's agents,
+  as §3 says, then release. It also refuses an owner that is not `project: SecondaryGWKit` with
+  `ray_temp_dir: in-process`, and prints both: stop and ask the user.
 - **A prompt that stops early** releases the lock the same way once no Ray process of this
   repository is alive. If it cannot, it says so in its report, so the user can remove the lock.
 

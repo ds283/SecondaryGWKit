@@ -1,7 +1,8 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 2 of 9 prompts written (01, 02), 2 landed (01, 02); R0 holds.
-03–09 held on two releases in other repositories (E1, E2). D1–D5 and Q1–Q8 ruled by the user.**
+**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 3 of 10 prompts written (01, 02, 02a), 2 landed (01, 02); R0 holds.
+02a, the rehearsal-lock helper, is ready to dispatch. 03–09 held on two releases in other
+repositories (E1, E2). D1–D5 and Q1–Q8 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -47,6 +48,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
+| 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ⬜ | — | — |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
@@ -57,7 +59,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
-**Written in batches (README §2.1).** 01–02 now; 03–04 when E1's release is tagged; 05–08 when E2's
+**Written in batches (README §2.1).** 01–02 now; 02a after R0, when the shared lock was adopted; 03–04 when E1's release is tagged; 05–08 when E2's
 release is tagged and its SGK checklist exists; 09 after 08's review. The holds are for **method**,
 not scope: every charter is fixed in README §2.2.
 
@@ -74,6 +76,10 @@ used for 02).
 | **F2** | 01 | the frozen tree, file by file (§2.1 below) | ✅ |
 | **F3** | 01 | the baselines: `list`, `store show` on the 14 sidecars, the seven roots | ✅ |
 | **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 against `dk-and-rpk-migration`'s R2 | ✅ |
+| **H1** | 02a | `tools/rehearsal_lock.py`: five commands, the owner format, no way to break a lock | ⬜ |
+| **H2** | 02a | its tests, and the six mutations they catch | ⬜ |
+| **H3** | 02a | the interoperability proof against SI's and ChamPBH's scripts | ⬜ |
+| **H4** | 02a | the real-lock proof, with an in-process probe | ⬜ |
 | **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ⬜ |
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ⬜ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ⬜ |
@@ -394,4 +400,7 @@ It is not a prompt, and it changes no code.
 - **Opened:** `[00-main-and-the-readers-default-to-ray-address-auto]` (§3), the gap SGK's review
   found in the brief. SI confirmed it and amended its brief at `d6d550b`. The index goes to 106.
   The user then assigned it to `handover`, which owns the A3 v2 launch.
+- **Prompt 02a** was then written, at the user's request. It replaces §4.1's hand-run lock steps
+  with `tools/rehearsal_lock.py`, and adds a check for this repository's Ray processes. R0's
+  machine-wide `pgrep` would now also see other projects' clusters. 02a lands before 04.
 - When the lock was adopted, it was free and the registry showed nothing `running`.
