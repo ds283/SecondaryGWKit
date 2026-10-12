@@ -103,6 +103,19 @@ a sidecar or any other record.
    whose script hash does not match is discarded and recomputed, never blended and **never
    re-stamped**: re-stamping falsifies the thing the stamp exists to prove.
 
+## `RunRegistry/` is frozen — it is moving to RunRegistryKit
+
+Since prompt 01 of `runregistry-extraction`, `RunRegistry/` is frozen: RunRegistryKit imports it
+and checks the import, file by file, against the frozen tree (the blob hashes are in
+`prompts/runregistry-extraction/IMPLEMENTATION_STATE.md` §2.1). The freeze covers the package
+`RunRegistry/` and nothing else.
+
+- **Nothing under `RunRegistry/` changes**, its tests included, until
+  `prompts/runregistry-extraction` prompt 06 replaces it with the pinned `runregistrykit`.
+- **A defect found in it** is recorded on that campaign's board and in `docs/OPEN_ISSUES.md`, and
+  is fixed in RunRegistryKit, not here. If a fix cannot wait, stop and ask the user.
+- **The six rules above still bind**, unchanged.
+
 ## Repository mechanics
 
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There
