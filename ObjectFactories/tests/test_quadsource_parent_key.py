@@ -51,7 +51,7 @@ from datastorekit.store_inventory import (
     read_inventory,
     read_records,
 )
-from ObjectFactories.tests.real_store_fixtures import (
+from StoreFixtures.real_store_fixtures import (
     _tk_numeric,
     build_full_store,
     full_rows,

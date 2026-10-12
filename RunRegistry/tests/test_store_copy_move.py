@@ -29,7 +29,7 @@ from RunRegistry.tests.store_fixtures import (
 
 from datastorekit.SQL.ShardedPool import ShardedPool
 from datastorekit.shard_paths import shard_file_name
-from ObjectFactories.tests.shard_store_fixtures import tree_state
+from StoreFixtures.shard_store_fixtures import tree_state
 
 
 def _fail_when(real, predicate, error=None):

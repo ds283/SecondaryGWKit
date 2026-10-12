@@ -50,7 +50,7 @@ from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
 from datastorekit.store_inventory import read_inventory
-from ObjectFactories.tests.real_store_fixtures import (
+from StoreFixtures.real_store_fixtures import (
     build_full_store,
     full_rows,
     with_rows,

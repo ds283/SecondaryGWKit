@@ -68,9 +68,10 @@ run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 `python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
 
 **This repository's side of the layer changes as usual:** the factories under `ObjectFactories/`,
-`config/datastore.py` and `config/sharding.py`, `tools/inventory_report.py`,
-`ObjectFactories/tests/`, and every caller. Until 2026-10-12 the factories lived at
-`Datastore/SQL/ObjectFactories/` and their tests at `Datastore/tests/`. Campaign records and dated
+`config/datastore.py` and `config/sharding.py`, `tools/inventory_report.py`, the tests in
+`ObjectFactories/tests/` and `tools/tests/`, the store fixtures in `StoreFixtures/`, and every
+caller. Until 2026-10-12 the factories lived at `Datastore/SQL/ObjectFactories/`, and their tests,
+the inventory-report tests and the store fixtures at `Datastore/tests/`. Campaign records and dated
 `docs/` prose from before then still use those paths, and are left as they were written.
 
 ## Long-running jobs — the run registry
@@ -105,22 +106,21 @@ a sidecar or any other record.
 ## Repository mechanics
 
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There
-  are six roots, each run by its own command. The `ObjectFactories` root goes in four groups of modules,
-  the last four lines, because a Bash call is capped at ten minutes and the whole root does not
-  reliably fit:
+  are seven roots, each run by its own command:
   ```bash
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunRegistry/tests -t .
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[a-f]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[g-o]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[p-r]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[s-z]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t .
   ```
   They must not need Ray or a datastore — use the stand-in model pattern in
-  `ComputeTargets/tests/test_tk_source_functions.py` and `docs/spec-code-audit/scripts/`.
+  `ComputeTargets/tests/test_tk_source_functions.py` and `docs/spec-code-audit/scripts/`. A test
+  that needs a store on disk builds one with `StoreFixtures/`, which any root may import:
+  `shard_store_fixtures` (a primary with placeholder shards), `real_store_fixtures` (a small real
+  store, no Ray) and `standin_pool` (a real `ShardedPool` on stand-in actors).
 - **Formatting** is `black`, with no configuration. Run `./venv/bin/python -m black <files>` before
   committing; the tree is clean under `--check`.
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a

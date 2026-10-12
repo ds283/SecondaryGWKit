@@ -51,7 +51,7 @@ from config.datastore import factories as _factories
 from ObjectFactories.GkSource import GkSource_parents_digest
 from datastorekit.SQL.schema import build_schema
 from datastorekit.shard_paths import shard_file_name
-from ObjectFactories.tests.shard_store_fixtures import bare_pool
+from StoreFixtures.shard_store_fixtures import bare_pool
 from config.sharding import replicated_tables, sharded_tables
 
 RowSet = Dict[str, List[Dict[str, object]]]

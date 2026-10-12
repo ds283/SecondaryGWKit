@@ -37,7 +37,7 @@ from pathlib import Path
 
 import ray
 
-import ObjectFactories.tests.standin_pool as sp
+import StoreFixtures.standin_pool as sp
 from ComputeTargets import QuadSourceIntegral
 from ComputeTargets.tests.test_main_plumbing import (
     MAIN_PY,

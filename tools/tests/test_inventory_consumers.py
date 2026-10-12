@@ -31,8 +31,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from datastorekit.SQL.ShardedPool import ShardedPool
-from ObjectFactories.tests.inventory_report_parsing import sections
-from ObjectFactories.tests.real_store_fixtures import (
+from tools.tests.inventory_report_parsing import sections
+from StoreFixtures.real_store_fixtures import (
     build_full_store,
     file_state,
     full_rows,

@@ -37,7 +37,7 @@ from unittest import mock
 
 import ray
 
-from ObjectFactories.tests import standin_pool as sp
+from StoreFixtures import standin_pool as sp
 from config.sharding import (
     replicated_tables,
     sharded_tables,

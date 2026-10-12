@@ -43,8 +43,8 @@ from datastorekit.store_inventory import (
     read_inventory,
     reference_digest,
 )
-from ObjectFactories.tests.inventory_report_parsing import HEX64, fields_of, sections
-from ObjectFactories.tests.real_store_fixtures import (
+from tools.tests.inventory_report_parsing import HEX64, fields_of, sections
+from StoreFixtures.real_store_fixtures import (
     build_full_store,
     full_rows,
     relabel_serials,

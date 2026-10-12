@@ -44,7 +44,7 @@ from ObjectFactories.QuadSourceIntegral import (
 from ObjectFactories.QuadSourcePolicy import (
     sqla_QuadSourcePolicy_factory,
 )
-from ObjectFactories.tests import real_store_fixtures as rsf
+from StoreFixtures import real_store_fixtures as rsf
 from ObjectFactories.tests import test_database_errors_reach_the_caller as harness
 from ObjectFactories.tests.test_integral_read_batch import (
     Store,

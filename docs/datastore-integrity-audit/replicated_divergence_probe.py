@@ -14,7 +14,7 @@ import tempfile
 from pathlib import Path
 
 from datastorekit.store_inventory import read_inventory
-from ObjectFactories.tests.real_store_fixtures import build_full_store
+from StoreFixtures.real_store_fixtures import build_full_store
 
 HERE = Path(__file__).resolve().parent
 

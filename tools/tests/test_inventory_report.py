@@ -12,7 +12,7 @@ renders a ``StoreInventory`` and says what it holds.
    ``source_grid_digest`` and ``source_grid_construction``, and a ``QCD_Cosmology`` record shows
    ``T_z_representation`` ([03-qcd-inventory-does-not-report-the-representation]).
 
-Stores are built with ``ObjectFactories/tests/real_store_fixtures.build_full_store`` in a temporary
+Stores are built with ``StoreFixtures/real_store_fixtures.build_full_store`` in a temporary
 directory. No Ray; nothing under ``var/``.
 """
 
@@ -25,13 +25,13 @@ from collections import Counter
 from pathlib import Path
 
 from datastorekit.store_inventory import read_inventory
-from ObjectFactories.tests.inventory_report_parsing import (
+from tools.tests.inventory_report_parsing import (
     HEX64,
     fields_of,
     sections,
 )
-from ObjectFactories.tests.test_inventory_report_labels import OWN_LABEL
-from ObjectFactories.tests.real_store_fixtures import (
+from tools.tests.test_inventory_report_labels import OWN_LABEL
+from StoreFixtures.real_store_fixtures import (
     build_full_store,
     full_rows,
     vary_row,

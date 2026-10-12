@@ -56,7 +56,7 @@ from ObjectFactories.GkSource import (
 )
 from ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
 from datastorekit.store_inventory import read_inventory
-from ObjectFactories.tests.real_store_fixtures import (
+from StoreFixtures.real_store_fixtures import (
     build_full_store,
     full_rows,
     vary_row,

@@ -11,7 +11,7 @@ the two layer checks read the release SGK pins: the actor's source is the packag
 ``datastorekit/SQL/Datastore.py`` (found by ``importlib.util.find_spec``), and ``ShardedPool`` is
 ``datastorekit.SQL.ShardedPool``'s. SGK thereby still checks that the release it pins lacks the old
 service. The grep runs over every tracked ``*.py`` file with no exclusion: the one file it used to
-exclude, ``ObjectFactories/tests/test_store_inventory.py``, whose helper ``_Stores.inventory`` called the
+exclude, ``Datastore/tests/test_store_inventory.py``, whose helper ``_Stores.inventory`` called the
 new service, was deleted with the other tests the package now carries, and so was the test that
 checked what matched in it.
 

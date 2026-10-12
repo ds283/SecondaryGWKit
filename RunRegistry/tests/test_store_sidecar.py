@@ -25,7 +25,7 @@ from RunRegistry.tests.store_fixtures import (
     write_sidecar_json,
 )
 
-from ObjectFactories.tests.shard_store_fixtures import tree_state, write_placeholder
+from StoreFixtures.shard_store_fixtures import tree_state, write_placeholder
 
 
 class TestName(StoreTestCase):

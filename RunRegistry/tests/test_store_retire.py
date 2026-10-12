@@ -15,7 +15,7 @@
 8. the history rule;
 9. the command line, and what importing the registry loads.
 
-Stores are real multi-shard fixture stores (`ObjectFactories.tests.real_store_fixtures`), which can be
+Stores are real multi-shard fixture stores (`StoreFixtures.real_store_fixtures`), which can be
 fingerprinted, in a temporary directory with a runs root and a stores root of its own. Every call
 passes both roots. No Ray is initialised and nothing under `var/` is opened.
 """
@@ -45,8 +45,8 @@ from RunRegistry.tests.test_store_command_line import (
 from datastorekit.SQL.ShardedPool import ShardedPool
 from datastorekit.shard_paths import shard_file_name
 from datastorekit.store_inventory import read_inventory
-from ObjectFactories.tests.real_store_fixtures import build_full_store
-from ObjectFactories.tests.shard_store_fixtures import (
+from StoreFixtures.real_store_fixtures import build_full_store
+from StoreFixtures.shard_store_fixtures import (
     stored_records,
     tree_state,
     write_new_store,
