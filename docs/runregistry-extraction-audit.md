@@ -201,11 +201,14 @@ version is recorded **beside** the digest (say `inventory_format`), not inside t
 Its acceptance is that the rehearsal fingerprint `39809dca` reproduces, as it has at every
 rehearsal since `a3-v2-readiness` 07.
 
-**There is no live sidecar to amend.** All 13 sidecars under `var/datastores/` are tombstones
-(`retired` present): eleven at format 6 (digests `39809dca` and `10b8725f`) and the two
-`handover-*` stores at format 1. **[probed]** The planner's earlier remark to the user, that "13
-sidecars already hold a fingerprint, and retiring a store requires a fresh fingerprint to match the
-recorded one", was true of the count but not of the consequence: a tombstone is never fingerprinted
+**There is no live sidecar to amend.** All 14 sidecars under `var/datastores/` are tombstones
+(`retired` present): eleven at format 6 (digests `39809dca` and `10b8725f`), and three at format 1,
+the two `handover-*` stores and the A3 backup's, which sits in
+`backup-pre-resume-20260921T091011/`. **[probed]** *(Corrected 2026-10-12, before review: this
+paragraph first said 13, from a glob that missed the backup's subdirectory.)* The planner's
+earlier remark to the user, that "13 sidecars already hold a fingerprint, and retiring a store
+requires a fresh fingerprint to match the recorded one", was wrong in the count and in the
+consequence: a tombstone is never fingerprinted
 again. So the new field needs no `store amend` and no reader that tolerates its absence (the
 standing rule against version-aware readers). The first live store under the new layout will be
 A3 v2's (D2).
