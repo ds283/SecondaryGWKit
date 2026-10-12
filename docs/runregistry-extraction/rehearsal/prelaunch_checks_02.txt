@@ -1,0 +1,255 @@
+== 2026-10-12T09:17:54+0100 pre-launch check before reference
+HEAD fe16d8e76e6d40d5e53eb6649a03834dda82be93
+git status --short: []
+RAY_ADDRESS=[unset]
+ 9:17  up 7 days,  7:02, 3 users, load averages: 69.76 54.73 65.04
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+29 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 27 finished, 2 unknown.
+/dev/disk3s1s1  927G  859G   68G  93% /
+
+== 2026-10-12T09:18:10+0100 environment before reference
+-- store show var/datastores/runregistry-extraction-02-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- store show var/datastores/runregistry-extraction-02-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/datastores and var/runs containing runregistry-extraction
+rc=1
+-- journals under var/datastores
+rc=1 (1 = none)
+-- pip show datastorekit raypoolkit runregistrykit
+Name: datastorekit
+Version: 0.2.2
+Summary: A sharded SQLite datastore layer (Datastore / ShardedPool) on Ray and SQLAlchemy
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: ray, sqlalchemy
+Required-by: 
+---
+Name: raypoolkit
+Version: 0.2.0
+Summary: A Ray work queue (RayWorkPool) that drives lookup, compute, store and validation tasks
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: ray
+Required-by: 
+rc=0
+WARNING: Package(s) not found: runregistrykit
+rc=1
+-- pip check
+No broken requirements found.
+rc=0
+-- package_provenance() (keys sorted)
+{"datastorekit": {"commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6", "editable": false, "requested_revision": "v0.2.2", "url": "https://github.com/ds283/DatastoreKit", "version": "0.2.2"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}}
+-- equal as JSON to R2 reference manifest packages:
+True
+-- shasum -a 256 docs/handover/quadsource_atol_sweep.py
+b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac  docs/handover/quadsource_atol_sweep.py
+-- git log -1 --format=%h docs/handover/quadsource_atol_sweep.py
+0c9e2cf
+-- requirements.txt package lines
+requirements.txt:17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.2.2
+requirements.txt:76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0
+-- correction 1: git diff --stat a45aefc HEAD -- . ':!prompts'
+ CLAUDE.md | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+-- git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit fe16d8e [handover-remedial]
+-- the factory move: ObjectFactories present, Datastore/SQL/ObjectFactories absent
+ls: cannot access 'Datastore/SQL/ObjectFactories': No such file or directory
+ObjectFactories
+-- what runs (fresh python -I, repository on sys.path)
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+ObjectFactories.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/__init__.py
+Datastore.SQL.ObjectFactories -> ModuleNotFoundError: No module named 'Datastore'
+runregistrykit -> ModuleNotFoundError: No module named 'runregistrykit'
+ray.is_initialized() False
+
+== 2026-10-12T09:18:33-09:18:59 interrupter dummy tests (into scratchpad agent02/work/dummy-scoped, dummy-build)
+interrupter_dummy_test.sh rc=0 (09:18:33-09:18:58); interrupter_build_dummy_test.sh rc=0 (09:18:58-09:18:59)
+normalised (times, pids, scratch paths) equal to R2's interrupter_dummy_test_08.txt (40 lines) and interrupter_build_dummy_test_08.txt (20 lines): True, True
+ps -p 69086,69089,69147,69149,69301,69303,69318,69320,69347,69349,69406,69408,69412,69414,69418,69420 -> none alive (rc=1)
+== 2026-10-12T09:19:20+0100 launch reference
+ 9:19  up 7 days,  7:04, 3 users, load averages: 27.44 44.58 60.15
+sh pid 69774
+== 2026-10-12T09:19:29+0100 one check after reference launch
+run dir: var/runs/runregistry-extraction-02-reference-20261012T091921
+manifest.json
+status.json
+stderr.log
+stdout.log
+manifest run_id runregistry-extraction-02-reference-20261012T091921 git_head fe16d8e76e6d40d5e53eb6649a03834dda82be93 git_dirty False script_sha256 b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac
+status state running pid 69779 stage BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE heartbeat 2026-10-12T09:19:29+01:00
+kill -0 69779 ok
+  PID  PPID COMMAND
+69774     1 sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/runregistry-extraction-02-reference.sqlite \\
+   runregistry-extraction-02-reference-20261012T091921         running           -       9s  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+30 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 27 finished, 2 unknown.
+ 9:19  up 7 days,  7:04, 3 users, load averages: 26.31 43.77 59.68
+
+== after reference: no Ray process left
+== 2026-10-12T09:49:43+0100 pre-launch check before (post-reference check)
+HEAD fe16d8e76e6d40d5e53eb6649a03834dda82be93
+git status --short: []
+RAY_ADDRESS=[unset]
+ 9:49  up 7 days,  7:34, 3 users, load averages: 157.91 339.39 312.04
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 69774 69779 69821 69824 69825 69964
+  PID COMMAND
+rc=1
+   runregistry-extraction-02-reference-20261012T091921         done              -      30m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+30 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 28 finished, 2 unknown.
+/dev/disk3s1s1  927G  862G   65G  94% /
+
+== 2026-10-12T09:50:26+0100 pre-launch check before resumed-a
+HEAD fe16d8e76e6d40d5e53eb6649a03834dda82be93
+git status --short: []
+RAY_ADDRESS=[unset]
+ 9:50  up 7 days,  7:35, 3 users, load averages: 127.20 309.05 302.19
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 69774 69779 69821 69824 69825 69964
+  PID COMMAND
+rc=1
+   runregistry-extraction-02-reference-20261012T091921         done              -      31m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+30 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 28 finished, 2 unknown.
+/dev/disk3s1s1  927G  862G   65G  94% /
+-- resumed store files
+0
+== 2026-10-12T09:50:39+0100 launch resumed-a
+ 9:50  up 7 days,  7:35, 3 users, load averages: 108.36 295.96 297.64
+sh pid 90847
+interrupter pid 90922 at 09:50:44
+== 2026-10-12T09:50:51+0100 one check after resumed-a launch
+interrupter.log
+manifest.json
+status.json
+stderr.log
+stdout.log
+manifest run_id runregistry-extraction-02-resumed-a-20261012T095041 git_head fe16d8e76e6d40d5e53eb6649a03834dda82be93 git_dirty False script_sha256 b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac
+status state running pid 90851 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-12T09:50:45+01:00
+kill -0 90851 ok
+  PID  PPID COMMAND
+90847     1 sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/runregistry-extraction-02-resumed.sqlite \\012    --job-name runregistry-extraction-02 --atol 1e-32 --rto
+90922     1 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/runregistry-extraction-02-resumed-a-20261012T095041 ^CALCULATE GREENS FUNCTI
+2026-10-12T09:50:44+01:00 interrupter pid 90922 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-02-resumed-a-20261012T095041 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 31 s
+2026-10-12T09:50:44+01:00 liveness alive; pid 90851; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-12T09:50:49+01:00 liveness alive; pid 90851; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+   runregistry-extraction-02-resumed-a-20261012T095041         running           -      12s  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference  · quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_c
+31 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 28 finished, 2 unknown.
+ 9:50  up 7 days,  7:35, 3 users, load averages: 102.55 288.57 295.00
+
+== 2026-10-12T10:03:39+0100 pre-launch check before resumed-b
+HEAD fe16d8e76e6d40d5e53eb6649a03834dda82be93
+git status --short: []
+RAY_ADDRESS=[unset]
+10:03  up 7 days,  7:48, 2 users, load averages: 57.90 169.94 235.46
+-- pgrep -lf 'gcs_server|raylet|ray::'
+rc=1
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 90847 90851 90922 90983 90995 90996
+  PID COMMAND
+rc=1
+   runregistry-extraction-02-resumed-a-20261012T095041         killed            -      13m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   runregistry-extraction-02-reference-20261012T091921         done              -      44m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+31 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 29 finished, 2 unknown.
+/dev/disk3s1s1  927G  862G   65G  94% /
+== 2026-10-12T10:03:52+0100 launch resumed-b
+10:03  up 7 days,  7:48, 2 users, load averages: 52.76 165.15 232.99
+sh pid 99172
+interrupter pid 99219 at 10:03:56
+== 2026-10-12T10:04:02+0100 one check after resumed-b launch
+interrupter.log
+manifest.json
+status.json
+stderr.log
+stdout.log
+manifest run_id runregistry-extraction-02-resumed-b-20261012T100353 git_head fe16d8e76e6d40d5e53eb6649a03834dda82be93 git_dirty False script_sha256 b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac True
+status state running pid 99176 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-12T10:03:57+01:00
+kill -0 99176 ok
+  PID  PPID COMMAND
+99172     1 sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/runregistry-extraction-02-resumed.sq
+99219     1 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/runregistry-extr
+2026-10-12T10:03:56+01:00 interrupter pid 99219 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-02-resumed-b-20261012T100353 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 250 s
+2026-10-12T10:03:56+01:00 liveness alive; pid 99176; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-12T10:04:01+01:00 liveness alive; pid 99176; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+   runregistry-extraction-02-resumed-b-20261012T100353         running           -      11s  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories
+32 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 29 finished, 2 unknown.
+10:04  up 7 days,  7:49, 2 users, load averages: 48.49 160.54 230.56
+
+== 2026-10-12T10:11:13+0100 pre-launch check before resumed-c
+HEAD fe16d8e76e6d40d5e53eb6649a03834dda82be93
+git status --short: []
+RAY_ADDRESS=[unset]
+10:11  up 7 days,  7:56, 2 users, load averages: 90.21 106.44 172.86
+-- pgrep -lf 'gcs_server|raylet|ray::'
+4084 /Users/ds283/Documents/Code/StochasticInstantons/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server  [truncated in this saved copy: another repository's process; its arguments and environment omitted]
+4173 /Users/ds283/Documents/Code/StochasticInstantons/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet  [truncated in this saved copy: another repository's process; its arguments and environment omitted]
+4178 ray::DashboardAgent  [truncated in this saved copy: another repository's process; its arguments and environment omitted]
+rc=0
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 99172 99176 99219 99264 99265 99266 99267
+  PID COMMAND
+rc=1
+   runregistry-extraction-02-resumed-b-20261012T100353         killed            -       7m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   runregistry-extraction-02-resumed-a-20261012T095041         killed            -      21m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   runregistry-extraction-02-reference-20261012T091921         done              -      52m  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+32 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 30 finished, 2 unknown.
+/dev/disk3s1s1  927G  861G   66G  93% /
+-- note 10:11: pgrep's three matches (4084 gcs_server, 4173 raylet, 4178 ray::DashboardAgent) are a Ray cluster of
+   StochasticInstantons' venv (python3.13), started 10:11:04 by another session; not this repository's (ps search for
+   SecondaryGWKit/venv + ray is empty), not touched. The build starts its own instance with ray.init(address="local")
+   (quadsource_atol_sweep.py:601-618), so it cannot join that cluster; /tmp/ray/ray_current_cluster does not exist.
+== 2026-10-12T10:11:42+0100 launch resumed-c
+10:11  up 7 days,  7:56, 2 users, load averages: 67.12 99.72 168.51
+sh pid 4615
+== 2026-10-12T10:11:49+0100 one check after resumed-c launch
+run dir: var/runs/runregistry-extraction-02-resumed-c-20261012T101145
+manifest.json
+status.json
+stderr.log
+stdout.log
+manifest run_id runregistry-extraction-02-resumed-c-20261012T101145 git_head fe16d8e76e6d40d5e53eb6649a03834dda82be93 git_dirty False script_sha256 b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac True
+status state running pid 4791 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-12T10:11:49+01:00
+kill -0 4791 ok
+  PID  PPID COMMAND
+ 4615     1 sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/runregistry-extraction-02-resumed.sq
+   runregistry-extraction-02-resumed-c-20261012T101145         running           -       7s  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 30 finished, 2 unknown.
+10:11  up 7 days,  7:56, 2 users, load averages: 60.60 97.26 166.83
+
+== 2026-10-12T10:17:45+0100 after resumed-c: no Ray process of this repository left
+10:17  up 7 days,  8:02, 2 users, load averages: 92.01 107.30 146.96
+-- pgrep -lf 'gcs_server|raylet|ray::' (other repositories' venvs excluded by path)
+rc=1
+-- pgrep raw count
+-- ps search SecondaryGWKit/venv + ray
+rc=1
+-- pids 4615 4791 4898 4901
+  PID COMMAND
+rc=1

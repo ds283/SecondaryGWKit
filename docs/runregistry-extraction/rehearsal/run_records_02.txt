@@ -1,0 +1,346 @@
+==================== runregistry-extraction-02-reference-20261012T091921
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-02-reference.sqlite",
+    "--job-name",
+    "runregistry-extraction-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "reference",
+    "--purpose",
+    "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-12T09:19:21+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6",
+      "editable": false,
+      "requested_revision": "v0.2.2",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.2.2"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "02",
+  "purpose": "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference",
+  "results": "var/datastores/runregistry-extraction-02-reference.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-02-reference-20261012T091921",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-02-reference.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+      "run_id": "runregistry-extraction-02-reference-20261012T091921",
+      "when": "2026-10-12T09:48:39+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-reference.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-12T09:48:40+01:00",
+  "pid": 69779,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 1759 s (2026-10-12T09:19:21+01:00 to 2026-10-12T09:48:40+01:00)
+-- launch log, last line: ** driver exit status 0
+
+==================== runregistry-extraction-02-resumed-a-20261012T095041
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-02-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-a",
+    "--purpose",
+    "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-12T09:50:41+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6",
+      "editable": false,
+      "requested_revision": "v0.2.2",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.2.2"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "02",
+  "purpose": "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference",
+  "results": "var/datastores/runregistry-extraction-02-resumed.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-02-resumed-a-20261012T095041",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "9bb753bd48450e64c6ad8dd3254c35ce91786363eb91d7735fa29c43b98fae18",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+      "run_id": "runregistry-extraction-02-resumed-a-20261012T095041",
+      "when": "2026-10-12T10:02:54+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-resumed.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-12T10:02:55+01:00",
+  "pid": 90851,
+  "stage": "CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 734 s (2026-10-12T09:50:41+01:00 to 2026-10-12T10:02:55+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-02-resumed-b-20261012T100353
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-02-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-b",
+    "--purpose",
+    "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-12T10:03:53+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6",
+      "editable": false,
+      "requested_revision": "v0.2.2",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.2.2"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "02",
+  "purpose": "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+  "results": "var/datastores/runregistry-extraction-02-resumed.sqlite",
+  "results_store_id": "836df36b0e3f4c45b8a8dddffaa9f212",
+  "run_id": "runregistry-extraction-02-resumed-b-20261012T100353",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "a0d053af1167bd327bebfd4d5c5d207563c49ce37db8c1d9af3baca8ff744225",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+      "run_id": "runregistry-extraction-02-resumed-b-20261012T100353",
+      "when": "2026-10-12T10:10:29+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-12T10:10:30+01:00",
+  "pid": 99176,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 397 s (2026-10-12T10:03:53+01:00 to 2026-10-12T10:10:30+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-02-resumed-c-20261012T101145
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-02-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-02",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-c",
+    "--purpose",
+    "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R2 dk-and-rpk-migration-08-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "02"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-12T10:11:45+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "6d8ee9ae2c056b8b1d0cf9cd460d867c47057ec6",
+      "editable": false,
+      "requested_revision": "v0.2.2",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.2.2"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "02",
+  "purpose": "runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R2 dk-and-rpk-migration-08-reference",
+  "results": "var/datastores/runregistry-extraction-02-resumed.sqlite",
+  "results_store_id": "836df36b0e3f4c45b8a8dddffaa9f212",
+  "run_id": "runregistry-extraction-02-resumed-c-20261012T101145",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-02-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "fe16d8e76e6d40d5e53eb6649a03834dda82be93",
+      "run_id": "runregistry-extraction-02-resumed-c-20261012T101145",
+      "when": "2026-10-12T10:17:15+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-12T10:17:16+01:00",
+  "pid": 4791,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 331 s (2026-10-12T10:11:45+01:00 to 2026-10-12T10:17:16+01:00)
+-- launch log, last line: ** driver exit status 0
+

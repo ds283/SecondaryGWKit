@@ -1,6 +1,6 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 2 of 9 prompts written (01, 02), 1 landed (01).
+**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 2 of 9 prompts written (01, 02), 2 landed (01, 02); R0 holds.
 03–09 held on two releases in other repositories (E1, E2). D1–D5 and Q1–Q8 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
@@ -46,7 +46,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
-| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ⬜ | — | — |
+| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | this commit | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
@@ -72,7 +72,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 | **F1** | 01 | `CLAUDE.md`'s freeze section | ✅ |
 | **F2** | 01 | the frozen tree, file by file (§2.1 below) | ✅ |
 | **F3** | 01 | the baselines: `list`, `store show` on the 14 sidecars, the seven roots | ✅ |
-| **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 against `dk-and-rpk-migration`'s R2 | ⬜ |
+| **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 against `dk-and-rpk-migration`'s R2 | ✅ |
 | **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ⬜ |
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ⬜ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ⬜ |
@@ -91,7 +91,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
-| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ⬜ |
+| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (this commit): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
 | **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ⬜ requested 2026-10-12 |
 | R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ⬜ |
 | **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ⬜ requested 2026-10-12 |
@@ -226,3 +226,38 @@ the list of orchestrator notes; `prompts/INDEX.md`'s row (1 of 9 landed).
 
 **Handed on.** To 02: nothing beyond the prompt. To RunRegistryKit's campaign, through the user:
 **the import commit is `a45aefc`**, or any later commit at which `RunRegistry/` equals §2.1.
+
+### 5.2 After prompt 02 (2026-10-12)
+
+Prompt 02 landed at this commit, with `HEAD` `fe16d8e` as its parent. Its log is
+[`logs/02-rehearse-the-start-tree.md`](logs/02-rehearse-the-start-tree.md); the record is
+[`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md)
+§1.
+- **R0 holds** (L1–L4, gate R0). Four registered builds at `fe16d8e`, whose code is `a45aefc`'s:
+  `reference` and `resumed-c` `done`/0, `resumed-a` and `resumed-b` `killed`/143. Both stores are
+  format 6, `39809dca…`, all 21 classes, equal to each other, to their sidecars, and to the
+  fingerprints `dk-and-rpk-migration`'s R2 recorded in its `reference` and `resumed-c` run
+  directories.
+- **The factory move (`511ef5f`) is invisible to a build.** No build or reader raised on an import
+  or an unpickling. All 38 registered factories come from `ObjectFactories`, and the fingerprint did
+  not move (verification §1.10).
+- **The manifests say what ran.** Every `packages` is R2's record, compared as JSON. Every
+  `git_dirty` is `false`, every `git_head` `fe16d8e7…`, every `script_sha256` `b7935877…`.
+- **L4 equals R2's.** The statistics counts are equal (291; numeric 109; mixed 26, 25 complete and 1
+  minimal; WKB 156), in the reference and both resumed runs that print the block. The reference's
+  stage counts and its `** ` sequence are equal, and the printed lines and registry fields are R2's.
+  The block's line order is R1's, not R2's: `[02-the-policy-statistics-block-orders-its-lines-by-completion]`
+  again.
+- **The prune at open is exercised**, which R2 held only vacuously. The orchestrator's 40 % hold left
+  164 `GkSource` rows, 63 unvalidated, after `resumed-a`. `resumed-b` pruned exactly those 63, and
+  computed 190 = 291 − 164 + 63. `resumed-c` computed 378 = 864 − 486 QSI rows.
+- **The load.** The machine was heavily loaded by processes not of this repository: five-minute
+  load up to 339. The reference took 29 m 19 s, against R2's 11 m 25 s. Its QSI stage, 1230.1 s,
+  printed three pool progress lines, and `resumed-a`'s GkWKB stage one. These are the first from a
+  registered build under `raypoolkit`. `resumed-a`'s interrupter read one back from `status.json`.
+- **Nothing else under `var/` moved.** The 14 sidecars keep their SHA-256, mtime and size
+  (`023d139f…` over them).
+- **The seven roots** are at 01's counts. ComputeTargets has the one known wall-clock flake
+  (`test_wall_time_per_object`), which passed twice in three runs alone.
+- No code or test was added. Nothing was opened or closed; the index stays at 105. The two stores
+  stay, with their sidecars (README §3).

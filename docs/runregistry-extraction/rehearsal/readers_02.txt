@@ -1,0 +1,113 @@
+# run_readers.sh on the resumed store, after resumed-c. The six with --models LambdaCDM, then extract_Gk_data without --models.
+# bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/runregistry-extraction-02-resumed.sqlite var/runregistry-extraction-02/extract
+10:19  up 7 days,  8:04, 2 users, load averages: 40.67 84.49 133.64
+=== extract_Gk_data: 2026-10-12 10:19:29 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_Gk_data/
+exit 0; wall 67 s; files written 396
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+27:      Queue summary: 3 lookup (avg 410.8/sec)
+32:      Queue summary: 3 lookup (avg 556.8/sec)
+37:      Queue summary: 116 lookup (avg 164.7/min)
+=== extract_GkWKB_data: 2026-10-12 10:20:38 +0100: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_GkWKB_data/
+exit 0; wall 201 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+21:** reading run "default", the only run in this datastore (no --run-label given)
+30:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+35:      Queue summary: 3 lookup (avg 399.4/sec)
+40:      Queue summary: 3 lookup (avg 603.6/sec)
+51:      Queue summary: 348 lookup (avg 118.7/min)
+=== extract_GkSource_data: 2026-10-12 10:24:01 +0100: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_GkSource_data/
+exit 0; wall 58 s; files written 210
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+13:** reading run "default", the only run in this datastore (no --run-label given)
+22:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+35:      Queue summary: 3 lookup (avg 297.5/sec)
+40:      Queue summary: 3 lookup (avg 600/sec)
+45:      Queue summary: 10 lookup (avg 17.65/min)
+=== extract_TkWKB_data: 2026-10-12 10:25:01 +0100: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_TkWKB_data/
+exit 0; wall 34 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 373.2/sec)
+26:      Queue summary: 3 lookup (avg 19.76/min)
+=== extract_tensor_source_data: 2026-10-12 10:25:37 +0100: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_tensor_source_data/
+exit 0; wall 35 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 405.4/sec)
+26:      Queue summary: 6 lookup (avg 32.33/min)
+=== extract_QuadSourceIntegral_data: 2026-10-12 10:26:14 +0100: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local --models LambdaCDM --output var/runregistry-extraction-02/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 52 s; files written 76
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 430.6/sec)
+24:      Queue summary: 3 lookup (avg 503.3/sec)
+31:      Queue summary: 24 lookup (avg 55.55/min)
+run_readers (six) exit 0
+10:27  up 7 days,  8:12, 2 users, load averages: 93.63 100.81 123.19
+# bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/runregistry-extraction-02-resumed.sqlite var/runregistry-extraction-02/extract nomodels extract_Gk_data
+=== extract_Gk_data-no-models: 2026-10-12 10:27:09 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/runregistry-extraction-02-resumed.sqlite --ray-address local  --output var/runregistry-extraction-02/extract/extract_Gk_data-no-models/
+exit 0; wall 66 s; files written 459
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597  2026-10-12T10:12:00 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+  7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e  2026-10-12T10:17:09 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+  6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54  2026-10-12T10:17:09 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+  19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd  2026-10-12T09:51:10 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+  96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e  2026-10-12T10:17:09 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 467.9/sec)
+26:      Queue summary: 3 lookup (avg 875/sec)
+31:      Queue summary: 116 lookup (avg 156.7/min)
+34:>> RUNNING PIPELINE FOR MODEL QCD_Cosmology
+36:>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it
+run_readers (nomodels) exit 0
+10:28  up 7 days,  8:13, 2 users, load averages: 106.02 101.65 121.63
