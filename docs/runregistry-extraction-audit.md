@@ -400,7 +400,10 @@ Neither amendment brings RunRegistryKit into those campaigns' scope.
 
 ## 8. Open questions for the user
 
-Each has a recommendation, given first.
+Each has a recommendation, given first. **Ruled by the user on 2026-10-12: all eight as
+recommended** ("Accept all §8 recommendations, write the campaign"). The campaign that carries them
+is [`prompts/runregistry-extraction/`](../prompts/runregistry-extraction/README.md), whose README
+§6.1 records them beside D1–D5.
 
 | | Recommended | The alternative |
 |---|---|---|
@@ -441,7 +444,7 @@ Sequenced by what each step needs to exist, not by convenience.
    P5's helper by `package_provenance`.
 
 Steps 1–3 follow this repository's campaign conventions and the user's audit-then-prompts pattern:
-the SGK campaign (say `prompts/runregistry-extraction/`) owns step 3 and writes the briefs for
+the SGK campaign, [`prompts/runregistry-extraction/`](../prompts/runregistry-extraction/README.md), owns step 3 and writes the briefs for
 steps 1 and 2, whose campaigns are written in their own repositories, as DatastoreKit's and
 RayPoolKit's `extraction` campaigns were.
 
