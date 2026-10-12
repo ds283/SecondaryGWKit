@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-12 · **103 open** across twenty campaigns.
+**Last updated:** 2026-10-12 · **105 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -35,6 +35,7 @@ the two disagree, the board is right.
 [`datastore-generic`](../prompts/datastore-generic/IMPLEMENTATION_STATE.md) ·
 [`datastore-generic-followup`](../prompts/datastore-generic-followup/IMPLEMENTATION_STATE.md) ·
 [`dk-and-rpk-migration`](../prompts/dk-and-rpk-migration/IMPLEMENTATION_STATE.md) ·
+[`runregistry-extraction`](../prompts/runregistry-extraction/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -883,6 +884,21 @@ below stay open, unassigned.
 |---|---|---|
 | `[02-the-policy-statistics-block-orders-its-lines-by-completion]` | dk-and-rpk-migration | `main.py`'s `GkSourcePolicyData SUMMARY STATISTICS` prints dicts filled in Ray completion order, so its line order varies between runs of one tree (R0's reference vs its own `resumed-b`); counts identical. L4's and 08's "line for line" can fail on order alone. Not assigned. |
 | `[02-07s-store-soundness-calls-read-inventory-without-its-registry]` | dk-and-rpk-migration | `docs/a3-v2-readiness/rehearsal/store_soundness.py` calls `read_inventory(primary)`, which needs `factories` since `19f07ee`: `TypeError`. README §4.1 names it; R0 ran a copy under `docs/dk-and-rpk-migration/rehearsal/`. Verification tool only. Not assigned. |
+
+
+### 1.21 The runregistry-extraction campaign
+
+`prompts/runregistry-extraction` was opened on 2026-10-12, when the user decided that SGK's
+`RunRegistry/` moves to a repository of its own, RunRegistryKit, before the A3 v2 compute run, with
+the store fingerprint's encoding and algorithm moved to DatastoreKit under a version of their own
+(`docs/runregistry-extraction-audit.md`). Its plan opened two issues from the audit, both assigned
+to its prompt 06; the second is a DatastoreKit defect, reported by the campaign's brief to
+DatastoreKit.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-a-run-launched-from-a-worktree-records-into-the-worktree]` | runregistry-extraction | `REPO_ROOT` is the parent of the imported package's directory, so a run launched from a git worktree records into the worktree's `var/runs/` and is lost with it. None lost yet. **Assigned (2026-10-12):** to 06, which roots runs in the main checkout (Q3). |
+| `[00-the-fingerprint-encoding-has-no-version-of-its-own]` | runregistry-extraction | `FINGERPRINT_FORMAT` is SGK's; `datastorekit.store_inventory`'s encoding has no version, so a release that changed it would read as content differences in every class. DatastoreKit's defect, reported by the brief. **Assigned (2026-10-12):** SGK's half to 06. |
 
 ---
 
