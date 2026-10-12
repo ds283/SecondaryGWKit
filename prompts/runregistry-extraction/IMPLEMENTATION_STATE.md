@@ -1,8 +1,9 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 3 of 10 prompts written (01, 02, 02a), 2 landed (01, 02); R0 holds.
-02a, the rehearsal-lock helper, is ready to dispatch. 03–09 held on two releases in other
-repositories (E1, E2). D1–D5 and Q1–Q8 ruled by the user.**
+**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 3 of 10 prompts written (01, 02, 02a), 3 landed (01, 02, 02a); R0 holds.
+02a, the rehearsal-lock helper, is `tools/rehearsal_lock.py`, proved against SI's and ChamPBH's
+scripts and on the real lock. 03–09 held on two releases in other repositories (E1, E2). D1–D5 and
+Q1–Q8 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -48,7 +49,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
-| 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ⬜ | — | — |
+| 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | this commit | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
@@ -76,10 +77,10 @@ used for 02).
 | **F2** | 01 | the frozen tree, file by file (§2.1 below) | ✅ |
 | **F3** | 01 | the baselines: `list`, `store show` on the 14 sidecars, the seven roots | ✅ |
 | **L1**–**L4** (R0) | 02 | README §4.1 at the start tree; L4 against `dk-and-rpk-migration`'s R2 | ✅ |
-| **H1** | 02a | `tools/rehearsal_lock.py`: five commands, the owner format, no way to break a lock | ⬜ |
-| **H2** | 02a | its tests, and the six mutations they catch | ⬜ |
-| **H3** | 02a | the interoperability proof against SI's and ChamPBH's scripts | ⬜ |
-| **H4** | 02a | the real-lock proof, with an in-process probe | ⬜ |
+| **H1** | 02a | `tools/rehearsal_lock.py`: five commands, the owner format, no way to break a lock | ✅ |
+| **H2** | 02a | its tests, and the six mutations they catch | ✅ |
+| **H3** | 02a | the interoperability proof against SI's and ChamPBH's scripts | ✅ |
+| **H4** | 02a | the real-lock proof, with an in-process probe | ✅ |
 | **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ⬜ |
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ⬜ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ⬜ |
@@ -404,3 +405,23 @@ It is not a prompt, and it changes no code.
   with `tools/rehearsal_lock.py`, and adds a check for this repository's Ray processes. R0's
   machine-wide `pgrep` would now also see other projects' clusters. 02a lands before 04.
 - When the lock was adopted, it was free and the registry showed nothing `running`.
+
+### 5.4 After prompt 02a (2026-10-12)
+
+[`02a`](02a-the-rehearsal-lock-helper.md) landed at this commit; its log is
+[`logs/02a-the-rehearsal-lock-helper.md`](logs/02a-the-rehearsal-lock-helper.md). It opened and closed
+no issue, so `docs/OPEN_ISSUES.md` is unchanged (106).
+- **H1.** `tools/rehearsal_lock.py`: `acquire`, `set-pid`, `release`, `status`, `ray-processes`;
+  standard library only; no way to break, wait for or retry a lock.
+- **H2.** `tools/tests/test_rehearsal_lock.py`, 42 tests; `tools` is 91 (49 + 42). The six mutations
+  of acceptance 6 are each caught (log, "The deliberate-breakage record"). The other six roots are at
+  02's counts; `ComputeTargets` shows only `test_wall_time_per_object`, which also failed alone in 3
+  of 4 runs at load 26–27.
+- **H3.** [`measure/out/02a-interop.txt`](measure/out/02a-interop.txt): both directions for SI
+  (`8e04a7c`) and ChamPBH (`288b385`), every lock byte-identical wherever a refusal left it. Their
+  `release_lock` was read, not run (orchestrator correction 1, `STRUCTURALLY REQUIRED`); each other
+  project's lock was left in its temporary `HOME`.
+- **H4.** [`measure/out/02a-real.txt`](measure/out/02a-real.txt): the real lock held 14:42:29 to
+  14:42:56, an in-process probe (pid 2778); `release` refused while it lived; all ten of its pids
+  were gone 3–5 s after `kill -TERM`; the lock is free and `ray-processes` exits 0.
+- **`CLAUDE.md`** has "The shared rehearsal lock", one inserted hunk. README §4.1 was not edited.

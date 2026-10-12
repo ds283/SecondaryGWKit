@@ -1,0 +1,95 @@
+02a real-lock proof, 2026-10-12T14:42:27+0100, HEAD 96a7f6e plus the uncommitted helper; real HOME=/Users/ds283
+ps lines below are cut to 150 columns by the helper itself; the probe is: ./venv/bin/python -c 'import os, time, ray; ray.init(address="local", num_cpus=1, include_dashboard=False); print(os.getpid(), flush=True); time.sleep(600)'
+
+== step 1: status (the lock must be free)
+
+[2026-10-12T14:42:28+0100] $ ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
+== step 2: acquire
+
+[2026-10-12T14:42:29+0100] $ ./venv/bin/python -m tools.rehearsal_lock acquire --purpose runregistry-extraction 02a (lock helper proof)
+acquired the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock) for SecondaryGWKit: runregistry-extraction 02a (lock helper proof)
+[exit 0]
+
+== step 3: start the probe
+[2026-10-12T14:42:31+0100] probe started, $! = 2778
+[2026-10-12T14:42:39+0100] probe printed pid: 2778 ; agrees with $!: yes
+== probe.out:
+2026-10-12 14:42:35,048	INFO worker.py:1841 -- Started a local Ray instance.
+2778
+
+== step 4: set-pid
+
+[2026-10-12T14:42:40+0100] $ ./venv/bin/python -m tools.rehearsal_lock set-pid 2778
+recorded pid 2778 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+[exit 0]
+
+== step 5: ray-processes (must exit 1)
+
+[2026-10-12T14:42:41+0100] $ ./venv/bin/python -m tools.rehearsal_lock ray-processes
+2782 2778 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+2783 2778 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026
+2795 2778 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+2796 2778 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Secondar
+2799 2778 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/se
+2800 2778 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+2801 2799 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+2802 2799 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+2803 2799 ray::IDLE                   
+[exit 1]
+-- pids listed: 2782 2783 2795 2796 2799 2800 2801 2802 2803
+-- gcs_server listed: 1; raylet: 1; agent.py: 0; runtime_env/agent: 0; ray:: workers: 1
+
+== step 6: release (must exit 1; the lock stays)
+
+[2026-10-12T14:42:48+0100] $ ./venv/bin/python -m tools.rehearsal_lock release
+release: the recorded pid 2778 is alive; not releasing
+[exit 1]
+-- lock still there: /Users/ds283/ScienceData/.rehearsal-lock
+
+== step 7: kill -TERM the probe, wait by pid
+[2026-10-12T14:42:49+0100] kill -TERM 2778
+-- pids recorded at the signal: 2778 2782
+2783
+2795
+2796
+2799
+2800
+2801
+2802
+2803
+[2026-10-12T14:42:55+0100] wait ended after 6 s
+-- pid 2778: gone 3 s after the signal
+-- pid 2782: gone 3 s after the signal
+-- pid 2783: gone 3 s after the signal
+-- pid 2795: gone 4 s after the signal
+-- pid 2796: gone 4 s after the signal
+-- pid 2799: gone 4 s after the signal
+-- pid 2800: gone 5 s after the signal
+-- pid 2801: gone 5 s after the signal
+-- pid 2802: gone 5 s after the signal
+-- pid 2803: gone 5 s after the signal
+
+[2026-10-12T14:42:55+0100] $ ./venv/bin/python -m tools.rehearsal_lock ray-processes
+[exit 0]
+
+== step 8: release, then status
+
+[2026-10-12T14:42:57+0100] $ ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock)
+[exit 0]
+-- acquired at 2026-10-12T14:42:29+0100 ; released at 2026-10-12T14:42:56+0100
+
+[2026-10-12T14:42:58+0100] $ ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+-- ls -A ~/ScienceData: ChamPBH-rehearsals 
+
+== notes on the record
+- Step 5's count line greps the helper's lines after its 150-column cut: the 'Python -u /Users/ds283/...' lines' script names are cut off, so 'agent.py: 0' there is the cut, not their absence. Listed: 1 gcs_server and 1 raylet (named by the venv path, parents 2778 and 2778), six `Python` processes with a bare interpreter or `-u` as argv[0] (children of the driver 2778 or of the raylet 2799), and 1 'ray::IDLE' worker (child of the raylet, naming no path). The dashboard was off (include_dashboard=False).
+- The 'pids recorded at the signal' line prints one pid per line after the first because of the script's own word-splitting of the captured list; the list is the nine pids of step 5 plus the probe 2778.
+- Every listed process was gone 3 to 5 s after the SIGTERM: none outlived the signal by the 1-2 min of [07-a-killed-builds-ray-agents-outlive-the-driver]. The wait was bounded at 300 s, by pid, with kill -0 every 2 s; no pgrep loop.

@@ -116,6 +116,21 @@ imports it and checks the import, file by file, against the frozen tree (the blo
   is fixed in RunRegistryKit, not here. If a fix cannot wait, stop and ask the user.
 - **The six rules above still bind**, unchanged.
 
+## The shared rehearsal lock
+
+Three projects on this machine (this one, ChamPBH and StochasticInstantons) run Ray builds. One
+lock, the directory `~/ScienceData/.rehearsal-lock`, lets only one rehearsal or long build run at a
+time.
+
+- A rehearsal or long build takes it with `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock
+  acquire --purpose "<text>"`, records the pid at each launch with `set-pid`, and releases it with
+  `release` once its last Ray process is gone. **A held lock (exit 3) means stop and ask the user.**
+  Never wait, retry or remove it. The helper has no option to do so.
+- Every Ray driver names its address (`local` for this repository's), never `auto`, and `ray stop`
+  is never run: it stops every project's Ray processes.
+- The contract is StochasticInstantons' `rehearsal-lock-brief.md` at its `d6d550b`;
+  `prompts/runregistry-extraction/README.md` §4.1 is this repository's protocol.
+
 ## Repository mechanics
 
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There

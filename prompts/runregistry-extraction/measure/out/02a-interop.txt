@@ -1,0 +1,329 @@
+02a interoperability proof, 2026-10-12, HEAD 96a7f6e plus the uncommitted helper
+Helper: tools/rehearsal_lock.py (this working tree). SI's script: StochasticInstantons 8e04a7c, ChamPBH's: ChamPBH 288b385,
+both extracted with 'git -C <repo> show <sha>:.documents/dk-and-rpk-migration/rehearsal/ray_cluster.sh' into the scratch directory and run from those copies.
+Only their acquire_lock and status were run. Never start, stop or release_lock (orchestrator note correction 1, STRUCTURALLY REQUIRED).
+One temporary HOME per project (home-si, home-cpbh); the real ~/ScienceData was not touched. 'rc=N' is the function's return value; '[exit N]' after a bash -c line is echo's, not the function's.
+Direction 1 shows the other script's release_lock by reading, below. Direction 2 leaves the other project's lock in place.
+
+================ release_lock, read not run ================
+-- StochasticInstantons 8e04a7c, ray_cluster.sh lines 130-147
+130: release_lock() {
+131:     # Release only if the owner's project and ray_temp_dir are SI's (brief section 2).
+132:     if [ ! -d "$LOCK_DIR" ]; then
+133:         say "no lock to release"
+134:         return 0
+135:     fi
+136:     local proj tdir
+137:     proj="$(owner_field project)"
+138:     tdir="$(owner_field ray_temp_dir)"
+139:     if [ "$proj" != "$LOCK_PROJECT" ] || [ "$tdir" != "$SI_TEMP_DIR" ]; then
+140:         err "the lock is not SI's; not releasing it. owner has project='$proj' ray_temp_dir='$tdir'; SI is project='$LOCK_PROJECT' ray_temp_dir='$SI_TEMP_DIR'"
+141:         return 1
+142:     fi
+143:     rm -f "$OWNER_FILE" "$LOCK_DIR/owner.tmp"
+144:     rmdir "$LOCK_DIR" || { err "could not rmdir $LOCK_DIR"; return 1; }
+145:     say "released the rehearsal lock"
+146:     return 0
+147: }
+Reading: for SGK's owner (project: SecondaryGWKit, ray_temp_dir: in-process) the guard on project and ray_temp_dir is true, so it prints both sides and 'return 1' before the 'rm -f'. The helper's own owner text never matches either project's pair.
+
+-- ChamPBH 288b385, ray_cluster.sh lines 131-148
+131: release_lock() {
+132:     # Release only if the owner's project and ray_temp_dir are ChamPBH's (brief section 2).
+133:     if [ ! -d "$LOCK_DIR" ]; then
+134:         say "no lock to release"
+135:         return 0
+136:     fi
+137:     local proj tdir
+138:     proj="$(owner_field project)"
+139:     tdir="$(owner_field ray_temp_dir)"
+140:     if [ "$proj" != "$LOCK_PROJECT" ] || [ "$tdir" != "$CPBH_TEMP_DIR" ]; then
+141:         err "the lock is not ChamPBH's; not releasing it. owner has project='$proj' ray_temp_dir='$tdir'; ChamPBH is project='$LOCK_PROJECT' ray_temp_dir='$CPBH_TEMP_DIR'"
+142:         return 1
+143:     fi
+144:     rm -f "$OWNER_FILE" "$LOCK_DIR/owner.tmp"
+145:     rmdir "$LOCK_DIR" || { err "could not rmdir $LOCK_DIR"; return 1; }
+146:     say "released the rehearsal lock"
+147:     return 0
+148: }
+Reading: for SGK's owner (project: SecondaryGWKit, ray_temp_dir: in-process) the guard on project and ray_temp_dir is true, so it prints both sides and 'return 1' before the 'rm -f'. The helper's own owner text never matches either project's pair.
+
+================ StochasticInstantons (8e04a7c) ================
+################ si (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/si/ray_cluster.sh), HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si
+
+######## Direction 1: SGK holds the lock
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose 02a proof
+acquired the rehearsal lock (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock) for SecondaryGWKit: 02a proof
+[exit 0]
+-- background sleep 300, pid 1655
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 1655
+recorded pid 1655 in /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock/owner
+[exit 0]
+-- lock bytes: b50583165232cb35  entries: owner 
+
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si bash /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/si/ray_cluster.sh status
+lock: HELD (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:17+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 1655
+owner pid 1655: alive
+SI cluster (/tmp/ray-si): no processes
+port 6390: free
+port 6391: free
+port 8266: free
+port 52366: free
+[exit 0]
+
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si bash -c 'source /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/si/ray_cluster.sh; acquire_lock "02a proof"; echo rc=$?'
+>> ray_cluster: the rehearsal lock is held (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock); its owner file:
+    project: SecondaryGWKit
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:17+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 1655
+>> ray_cluster: stop and ask the user; this script never waits on, or breaks, the lock
+rc=3
+[exit 0]
+-- lock bytes: b50583165232cb35  entries: owner 
+-- owner byte-identical after the other's status and acquire_lock
+-- release_lock is not run (orchestrator correction 1); see the quoted source below
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+release: the recorded pid 1655 is alive; not releasing
+[exit 1]
+-- lock bytes: b50583165232cb35  entries: owner 
+-- killed the sleep (1655); alive? no
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock)
+[exit 0]
+-- lock bytes: e3b0c44298fc1c14  entries: 
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
+######## Direction 2: the other project holds the lock
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si bash -c 'source /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/si/ray_cluster.sh; acquire_lock "02a proof"; echo rc=$?'
+rc=0
+[exit 0]
+-- lock bytes: 913da846dcbe5181  entries: owner 
+-- owner as written:
+project: StochasticInstantons
+purpose: 02a proof
+acquired: 2026-10-12T14:41:23+01:00
+host: mps026088
+ray_temp_dir: /tmp/ray-si
+ray_address: 127.0.0.1:6390
+pid: -
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose 02a proof
+the rehearsal lock is held (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock); its owner file:
+    project: StochasticInstantons
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:23+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-si
+    ray_address: 127.0.0.1:6390
+    pid: -
+stop and ask the user; this helper never waits on, retries or breaks the lock
+[exit 3]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 1635
+set-pid: the lock is not SGK's (project is 'StochasticInstantons', not 'SecondaryGWKit'); not touching it
+    owner:
+    project: StochasticInstantons
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:23+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-si
+    ray_address: 127.0.0.1:6390
+    pid: -
+    SGK is project: SecondaryGWKit, ray_temp_dir: in-process
+[exit 1]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+release: the lock is not SGK's (project is 'StochasticInstantons', not 'SecondaryGWKit'); not touching it
+    owner:
+    project: StochasticInstantons
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:23+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-si
+    ray_address: 127.0.0.1:6390
+    pid: -
+    SGK is project: SecondaryGWKit, ray_temp_dir: in-process
+[exit 1]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock)
+    project: StochasticInstantons
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:23+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-si
+    ray_address: 127.0.0.1:6390
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+[exit 0]
+-- lock bytes: 913da846dcbe5181  entries: owner 
+-- owner byte-identical after SGK's refusals
+-- the other project's lock is left in place at: /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock
+
+================ ChamPBH (288b385) ================
+################ cpbh (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/cpbh/ray_cluster.sh), HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh
+
+######## Direction 1: SGK holds the lock
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose 02a proof
+acquired the rehearsal lock (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock) for SecondaryGWKit: 02a proof
+[exit 0]
+-- background sleep 300, pid 1908
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 1908
+recorded pid 1908 in /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock/owner
+[exit 0]
+-- lock bytes: 110f040c69cc25f3  entries: owner 
+
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh bash /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/cpbh/ray_cluster.sh status
+lock: HELD (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:31+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 1908
+owner pid 1908: alive
+ChamPBH cluster (/tmp/ray-cpbh): no processes
+port 6380: free
+port 6381: free
+port 8267: free
+port 52367: free
+[exit 0]
+
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh bash -c 'source /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/cpbh/ray_cluster.sh; acquire_lock "02a proof"; echo rc=$?'
+>> ray_cluster: the rehearsal lock is held (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock); its owner file:
+    project: SecondaryGWKit
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:31+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 1908
+>> ray_cluster: stop and ask the user; this script never waits on, or breaks, the lock
+rc=3
+[exit 0]
+-- lock bytes: 110f040c69cc25f3  entries: owner 
+-- owner byte-identical after the other's status and acquire_lock
+-- release_lock is not run (orchestrator correction 1); see the quoted source below
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+release: the recorded pid 1908 is alive; not releasing
+[exit 1]
+-- lock bytes: 110f040c69cc25f3  entries: owner 
+-- killed the sleep (1908); alive? no
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock)
+[exit 0]
+-- lock bytes: e3b0c44298fc1c14  entries: 
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
+######## Direction 2: the other project holds the lock
+$ HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh bash -c 'source /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/cpbh/ray_cluster.sh; acquire_lock "02a proof"; echo rc=$?'
+rc=0
+[exit 0]
+-- lock bytes: 617462748e8b31bc  entries: owner 
+-- owner as written:
+project: ChamPBH
+purpose: 02a proof
+acquired: 2026-10-12T14:41:35+01:00
+host: mps026088
+ray_temp_dir: /tmp/ray-cpbh
+ray_address: 127.0.0.1:6380
+pid: -
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose 02a proof
+the rehearsal lock is held (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock); its owner file:
+    project: ChamPBH
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:35+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-cpbh
+    ray_address: 127.0.0.1:6380
+    pid: -
+stop and ask the user; this helper never waits on, retries or breaks the lock
+[exit 3]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 1899
+set-pid: the lock is not SGK's (project is 'ChamPBH', not 'SecondaryGWKit'); not touching it
+    owner:
+    project: ChamPBH
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:35+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-cpbh
+    ray_address: 127.0.0.1:6380
+    pid: -
+    SGK is project: SecondaryGWKit, ray_temp_dir: in-process
+[exit 1]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+release: the lock is not SGK's (project is 'ChamPBH', not 'SecondaryGWKit'); not touching it
+    owner:
+    project: ChamPBH
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:35+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-cpbh
+    ray_address: 127.0.0.1:6380
+    pid: -
+    SGK is project: SecondaryGWKit, ray_temp_dir: in-process
+[exit 1]
+
+$ env HOME=/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock)
+    project: ChamPBH
+    purpose: 02a proof
+    acquired: 2026-10-12T14:41:35+01:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-cpbh
+    ray_address: 127.0.0.1:6380
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+[exit 0]
+-- lock bytes: 617462748e8b31bc  entries: owner 
+-- owner byte-identical after SGK's refusals
+-- the other project's lock is left in place at: /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock
+
+================ end state ================
+No lock of SGK's left. Each other project's lock is where its acquire_lock put it, owner byte-identical to when written:
+  /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-si/ScienceData/.rehearsal-lock/owner  sha256 913da846dcbe5181
+  /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/5ba097f8-db0f-47b1-9360-71f9761e5e01/scratchpad/agent02a/home-cpbh/ScienceData/.rehearsal-lock/owner  sha256 617462748e8b31bc
+Processes started for the proof: two 'sleep 300', both killed and confirmed dead.
