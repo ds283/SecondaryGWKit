@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-12 · **105 open** across twenty-one campaigns.
+**Last updated:** 2026-10-12 · **106 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -893,12 +893,14 @@ below stay open, unassigned.
 the store fingerprint's encoding and algorithm moved to DatastoreKit under a version of their own
 (`docs/runregistry-extraction-audit.md`). Its plan opened two issues from the audit, both assigned
 to its prompt 06; the second is a DatastoreKit defect, reported by the campaign's brief to
-DatastoreKit.
+DatastoreKit. A third, unassigned, was opened the same day after R0. That was the plan's amendment
+that adopted the shared rehearsal lock (its README §4.1).
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-a-run-launched-from-a-worktree-records-into-the-worktree]` | runregistry-extraction | `REPO_ROOT` is the parent of the imported package's directory, so a run launched from a git worktree records into the worktree's `var/runs/` and is lost with it. None lost yet. **Assigned (2026-10-12):** to 06, which roots runs in the main checkout (Q3). |
 | `[00-the-fingerprint-encoding-has-no-version-of-its-own]` | runregistry-extraction | `FINGERPRINT_FORMAT` is SGK's; `datastorekit.store_inventory`'s encoding has no version, so a release that changed it would read as content differences in every class. DatastoreKit's defect, reported by the brief. **Assigned (2026-10-12):** SGK's half to 06. |
+| `[00-main-and-the-readers-default-to-ray-address-auto]` | runregistry-extraction | `main.py` and the six `extract_*.py` default to `--ray-address auto`, which attaches to any Ray instance it finds: another project's isolated cluster (refused today only by a version mismatch) or SGK's own build in flight. The rehearsal and A3 v2 drivers force `local`. Not assigned. |
 
 ---
 

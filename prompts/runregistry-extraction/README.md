@@ -318,9 +318,9 @@ for a killed build's agents (`[07-a-killed-builds-ray-agents-outlive-the-driver]
 
 ### 4.1 The rehearsal protocol
 
-**`dk-and-rpk-migration`'s protocol, unchanged but for names** (its README §4.1, as its prompts 02,
-05 and 08 ran it, and `docs/dk-and-rpk-migration-verification.md` §1–§3 record it). NN is the
-prompt's number:
+**`dk-and-rpk-migration`'s protocol, unchanged but for names and the lock below** (its README §4.1,
+as its prompts 02, 05 and 08 ran it, and `docs/dk-and-rpk-migration-verification.md` §1–§3 record
+it). NN is the prompt's number:
 - stores `var/datastores/runregistry-extraction-NN-{reference,resumed}.sqlite`;
 - `--campaign runregistry-extraction --prompt NN --job-name runregistry-extraction-NN`;
 - launch logs `var/runs/runregistry-extraction-NN-<slug>.launch.log`;
@@ -341,6 +341,49 @@ to explain; the fingerprint is the acceptance.
 **If a fingerprint misses**, the prompt stops, records both fingerprints and `compare_fingerprints`,
 and changes no code. R0's miss is SGK's; R1's is DatastoreKit's; R2's is RunRegistryKit's or
 DatastoreKit's (§5 rule 11).
+
+**The rehearsal lock** (added 2026-10-12, after R0, at the user's request). Three projects on this
+machine, SGK, ChamPBH and StochasticInstantons (SI), run Ray builds. The user ruled that only one
+rehearsal or long build runs at a time, under one shared lock. The contract is SI's
+`.prompts/dk-and-rpk-migration/rehearsal-lock-brief.md` §2 and §5, at SI's `d6d550b`, with SI's
+handover note at `5fb4a1d`. SGK's builds already start a private in-process Ray instance, so SGK
+takes the lock and nothing else.
+- **The lock** is the directory `~/ScienceData/.rehearsal-lock`. Its file `owner` has seven
+  `key: value` lines, in this order:
+  - `project: SecondaryGWKit`;
+  - `purpose: runregistry-extraction NN (R<n>)`;
+  - `acquired:` ISO 8601, local time with its offset;
+  - `host:` the output of `hostname -s`;
+  - `ray_temp_dir: in-process` and `ray_address: in-process`;
+  - `pid:` as below.
+
+  `owner` is always written to `owner.tmp` first, then renamed.
+- **Take it before the `reference` launch.** Run `mkdir -p ~/ScienceData`, then
+  `mkdir ~/ScienceData/.rehearsal-lock` without `-p`. If that `mkdir` fails, the lock is held:
+  print `owner`, or say that it is missing, launch nothing, and **stop and ask the user**. Never
+  wait in a loop, retry, or remove the lock. If it succeeds, write `owner` with `pid: -`.
+- **Hold it through all four launches and L3's readers.** It is one lock for the whole rehearsal,
+  not one per launch: other projects must not start between the launches either.
+- **At each launch, set `pid`** to that run's driver pid, from its `status.json`, in the same
+  check that confirms the run started. The readers leave it alone. Between launches the pid is
+  the previous driver's and is dead. The lock is still held then: only the user removes a lock,
+  by hand, after looking.
+- **Release it after the readers**, once no Ray process of this repository is alive. This is §3's
+  pre-launch check, which waits by pid for a killed build's agents. Check that `owner` says
+  `project: SecondaryGWKit` and `ray_temp_dir: in-process`, then remove `owner` and `rmdir` the
+  directory. If either field differs, print both and stop and ask the user.
+- **A prompt that stops early** releases the lock the same way once no Ray process of this
+  repository is alive. If it cannot, it says so in its report, so the user can remove the lock.
+
+**Ray addresses.** Every Ray driver this protocol runs gets an explicit address and starts its own
+instance:
+- `quadsource_atol_sweep.py --build` replaces `main.py`'s `ray.init` with `address="local"`;
+- `run_readers.sh` passes `--ray-address local`.
+
+Nothing in a rehearsal runs `main.py` or an `extract_*.py` at its default, `--ray-address auto`. The
+reason is `[00-main-and-the-readers-default-to-ray-address-auto]`: `auto` attaches to any Ray
+instance it finds on the machine. Every `ray` CLI call names `--address`. **`ray stop` is never
+run.** It stops every Ray process on the machine, including other projects' builds.
 
 ### 4.2 Rollback
 

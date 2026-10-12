@@ -169,6 +169,40 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
   - **Next step.** DatastoreKit versions the encoding and algorithm (E1). 06 records that version
     in every fingerprint SGK takes, and closes SGK's half; R2 (08) confirms it.
 
+- **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
+  rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief; not
+  assigned)*
+  - **The defect.** `main.py`'s `--ray-address` defaults to `auto` (`DEFAULT_RAY_ADDRESS`,
+    `main.py:99`; `ray.init` at `:308`), and so does each of the six `extract_*.py`.
+    - In SGK's Ray, 2.43.0, `auto` with `RAY_ADDRESS` unset first reads
+      `/tmp/ray/ray_current_cluster`. If that gives nothing, it takes any `gcs_server` address it
+      finds by scanning running processes, without a warning
+      (`ray/_private/services.py:389-430`).
+    - SI and ChamPBH now run isolated `ray start` clusters, which write that file into their own
+      temp dirs, not `/tmp/ray`.
+  - **Impact.**
+    - A `main.py` build or a reader left at the default, run while any other Ray instance is up,
+      attaches to that instance.
+    - **Against another project's cluster,** today it fails at `ray.init`. Ray refuses to connect
+      across versions, and SGK runs Ray 2.43.0 on Python 3.12, against SI's 2.55.1 on 3.13 and
+      ChamPBH's 2.53.0 on 3.13. That protection is incidental: it is read from the code, not
+      observed, and it disappears if the versions converge.
+    - **Against SGK's own in-process instance,** for example a rehearsal or build in flight, the
+      versions match. A reader at `auto` would then attach and submit its work into that
+      instance.
+    - Nothing has gone wrong yet. The rehearsal and the A3 v2 driver,
+      `quadsource_atol_sweep.py --build`, force `address="local"`, and `run_readers.sh` passes
+      `local`; README §4.1 now requires both.
+  - **Next step.** Change the default to `local`, or make the flag required, as SI did (SI's
+    `d6d550b`). Either is SGK code, and neither belongs in this campaign:
+    - **Required** breaks `quadsource_atol_sweep._main_py_argv`, which passes no
+      `--ray-address`. That list is pinned element by element by
+      `RunRegistry/tests/test_prune_on_resume.py`, which is frozen until 06.
+    - **Either change** would land an SGK change in R1's window, which isolates the DatastoreKit pin
+      (README §0.1).
+
+    It fits after 08, or in the campaign that runs A3 v2. Until then, every run states its address.
+
 ## 4. Resolved issues
 
 None yet.
@@ -338,3 +372,22 @@ every wait ended `ENDED finished`, heartbeat never stale. Nothing landed after t
   compares with R0 through `runregistry-extraction-02-reference-20261012T091921` and
   `-resumed-c-20261012T101145`. The wall-clock test failed in every run of this review; 09's final
   measurement should re-run it alone at low load.
+
+### 5.3 The rehearsal lock (2026-10-12, after 02)
+
+At the user's request, the plan's §4.1 adopts the rehearsal lock that StochasticInstantons (SI)
+proposed. SI's documents are its `.prompts/dk-and-rpk-migration/rehearsal-lock-brief.md` at
+`d6d550b` and the handover note at `5fb4a1d`. The lock applies to every rehearsal from R1 (04) on.
+It is not a prompt, and it changes no code.
+- **Why.** `ray stop` kills every Ray process on the machine. Two `ray start` clusters on Ray's
+  default ports collide. Load moves results that have a wall-clock budget. So the user ruled
+  (SI's U9) that each project runs and stops only its own Ray, and only one rehearsal runs at a
+  time.
+- **SGK's part is the lock alone.** SGK's builds already start an in-process instance, and SGK
+  runs no `ray stop`. SI's `ray_cluster.sh` is not adopted: it manages a `ray start` cluster, and
+  its lock functions are SI's. It does refuse, and leave untouched, a lock whose owner is SGK.
+- **What this plan adds to the brief.** One lock covers all four launches and the readers, and
+  `pid` is set again at each launch. SI's §5 assumed a single driver.
+- **Opened:** `[00-main-and-the-readers-default-to-ray-address-auto]` (§3), the gap SGK's review
+  found in the brief. SI confirmed it and amended its brief at `d6d550b`. The index goes to 106.
+- When the lock was adopted, it was free and the registry showed nothing `running`.
