@@ -49,7 +49,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 |---|---|---|---|---|---|---|---|
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
-| 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | this commit | [log](logs/02a-the-rehearsal-lock-helper.md) |
+| 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
@@ -67,7 +67,8 @@ not scope: every charter is fixed in README §2.2.
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 (2026-10-12, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-12,
-used for 02).
+used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-10-12, used for
+02a).
 
 ### 1.1 Items
 
@@ -408,7 +409,7 @@ It is not a prompt, and it changes no code.
 
 ### 5.4 After prompt 02a (2026-10-12)
 
-[`02a`](02a-the-rehearsal-lock-helper.md) landed at this commit; its log is
+[`02a`](02a-the-rehearsal-lock-helper.md) landed at `c863055`; its log is
 [`logs/02a-the-rehearsal-lock-helper.md`](logs/02a-the-rehearsal-lock-helper.md). It opened and closed
 no issue, so `docs/OPEN_ISSUES.md` is unchanged (106).
 - **H1.** `tools/rehearsal_lock.py`: `acquire`, `set-pid`, `release`, `status`, `ray-processes`;
@@ -425,3 +426,71 @@ no issue, so `docs/OPEN_ISSUES.md` is unchanged (106).
   14:42:56, an in-process probe (pid 2778); `release` refused while it lived; all ten of its pids
   were gone 3–5 s after `kill -TERM`; the lock is free and `ray-processes` exits 0.
 - **`CLAUDE.md`** has "The shared rehearsal lock", one inserted hunk. README §4.1 was not edited.
+
+**Orchestrator review of prompt 02a** (2026-10-12, against `c863055`, by
+[`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) §3). Dispatched from `96a7f6e` to one
+Sonnet subagent, after the seven roots were measured at `c89fc9e`. Before writing the note the
+orchestrator's dry run of SI's `release_lock` was denied by Claude Code's removal check; the user
+ruled that those calls are dropped (the note's correction 1). Nothing landed after the agent's
+commit. **All eleven checks pass**, and no stop condition fired.
+1. **Scope.** Five files added (the module, its tests, the two proofs, the log) and two modified
+   (`CLAUDE.md`, this board). README, `prompts/INDEX.md`, `orchestrator/`, `docs/`,
+   `RunRegistry/`, `main.py` and every `extract_*.py` are untouched.
+2. **The module, by reading.** Standard library only; the five commands and their exit statuses
+   are §2.1's; `argparse` offers nothing to break, wait or retry. `os.mkdir` without `exist_ok`,
+   `owner.tmp` then `os.replace`, seven keys in the brief's order, the default lock directory
+   resolved at call time. `set-pid` and `release` check `project` and `ray_temp_dir`; `release`
+   removes `owner`, `owner.tmp` and the directory by name, no `rmtree`. `ray_processes()` matches
+   the venv's Ray path anywhere in the line, in both spellings, adds descendants, and never lists
+   itself, its ancestors or its own children.
+3. **The commands, run here** in a temporary `HOME`: `status` 0, `acquire` 0, `acquire` 3 (owner
+   printed, byte-identical), `set-pid` of a live process 0 (only `pid` changed), `release` 1 (pid
+   alive), then after the kill `release` 0 and 0 again ("no lock"); `set-pid 1x`, a bare
+   `acquire` and an unknown command exit 2; `ray-processes` 0.
+4. **The tests, by reading.** §2.2's eight points are present. Every refusal test leaves one
+   reason standing, and the agent added the two owners that make that true for the `project`
+   check (another project at `in-process`; SGK's name with a cluster's temp dir). The `set-pid`
+   test starts from `2026-01-01T00:00:00+00:00`. `setUp` patches `HOME` and `_ps_output` for every
+   lock test. No Ray, nothing under `var/`.
+5. **The mutations**, re-applied from the log's diffs to a copy of `tools/` in the scratchpad:
+   each fails exactly the tests the log names (4, 2, 2, 1, 1 and 5). The copy's own baseline also
+   failed three tests. They assert that `gcs_server` appears in the output, which the 150-column
+   cut hides once the checkout's path is longer than the repository's by more than 36 characters,
+   as the scratchpad's is, and as a worktree's under `.claude/worktrees/` would be. Fixed in the
+   follow-up (below).
+6. **The interop proof.** Both directions for both projects, every exit status as the note
+   amends §2.4, every refused owner byte-identical by hash, `release_lock` quoted (SI 130–147,
+   ChamPBH 131–148) and never run. The extracted copies hash to `b934a75c…` and `ad4b9021…`, and
+   the two locks left in the agent's scratchpad still hash to `913da846…` and `61746274…`. Direction
+   2 for SI, re-run here in a fresh temporary `HOME`: `acquire` 3, `set-pid` 1, `release` 1 (both
+   sides printed), `status` 0, the owner byte-identical.
+7. **The real proof.** The eight steps, each exit status as §2.5 says. The lock was held 14:42:29
+   to 14:42:56. The probe's pid, 2778, came the same from `$!` and from its output. `ray-processes`
+   listed nine processes: `gcs_server`, `raylet`, one `ray::IDLE`, and six Python processes that
+   are the probe's children. The agents' argv[0] is MacPorts' framework `Python`, and the venv's
+   Ray path sits past the 150-column cut, so the record cannot name them. Every pid was gone 3–5 s
+   after `kill -TERM`. Now the lock is absent and `ray-processes` exits 0.
+8. **`CLAUDE.md`.** One inserted hunk after the freeze section, titled as §2.3 asks, making its four
+   points; it claims nothing the helper does not do.
+9. **Nothing outside moved.** `find var -newer <marker>` is empty. `~/ScienceData` holds the same
+   single entry, `ChamPBH-rehearsals`. Its mtime moved to 14:42, from the real proof's `mkdir` and
+   `rmdir`, as it must.
+10. **The records.** Board, log and commit message are in the campaign's form. The log
+    classifies the note's seven corrections and five choices of its own, records the six mutations
+    as diffs, and its counts agree with the outputs.
+11. **The suites and `black`.** At `c863055`, load 18–39: AdaptiveLevin 32, CosmologyModels
+    39, ObjectFactories 271, **tools 91** (49 + 42), LiouvilleGreen 148 (1 skipped) and RunRegistry
+    286 pass; ComputeTargets 693 with the one wall-clock failure (0.106 s against 0.06 s), which then
+    failed three times alone at load 19–25 (0.081–0.095 s). No code it runs has changed since
+    `74eff08`; it is README §8's known flake, now failing alone at this machine's load as well.
+    `~/ScienceData` was listed identically before and after the `tools` root. `black --check` is
+    clean on both new files.
+- **Residue fixed here:** "this commit" → `c863055` on this board (§1 row, §5.4) and in the log's
+  header; this note added to the list of notes; `prompts/INDEX.md`'s row (3 of 10 landed). The
+  three tests of check 5 now assert on the pid column (`    100 1 `), which no path length moves,
+  and in the scratchpad copy the baseline then passes and each mutation fails the same number of
+  tests as the log records.
+- **Handed on.** 04 is the first rehearsal to take the lock with the helper. A refusal there lists
+  agents by pid and a cut command line; their names are found with `ps -p <pid> -o command=`. The
+  wall-clock flake failed alone in three of four runs at load 26–27 during the agent's session;
+  09's final measurement should re-run it alone at low load, as §5.2 already asks.

@@ -173,7 +173,7 @@ class TestAcquire(LockTestCase):
         rc, out, err = self.run_cmd(rl.acquire, "p", self.lock)
         self.assertEqual(rc, 4)
         self.assertFalse(self.lock.exists())
-        self.assertIn("gcs_server", err)
+        self.assertIn("    100 1 ", err)
         self.assertTrue(self.lock.parent.is_dir())
 
 
@@ -274,7 +274,7 @@ class TestRelease(LockTestCase):
     def test_ray_processes_are_refused(self):
         self.ps = SGK_PS
         err = self.refused(sgk_owner("-"))
-        self.assertIn("gcs_server", err)
+        self.assertIn("    100 1 ", err)
 
     def test_ray_processes_are_refused_with_a_dead_pid(self):
         self.ps = SGK_PS
@@ -445,7 +445,7 @@ class TestCommandLine(LockTestCase):
         self.assertEqual(rc, 0)
         self.assertIn("HELD", out)
         self.assertIn(f"owner pid {os.getpid()}: alive", out)
-        self.assertIn("gcs_server", out)
+        self.assertIn("    100 1 ", out)
 
     def test_usage_errors_exit_2(self):
         for argv in ([], ["acquire"], ["set-pid", "x"], ["nonsense"]):

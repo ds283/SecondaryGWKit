@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 02a, the rehearsal-lock helper
 
 - **Subject:** [`02a-the-rehearsal-lock-helper.md`](../02a-the-rehearsal-lock-helper.md), board items H1–H4.
-- **Commit:** this commit (parent `96a7f6e`).
+- **Commit:** `c863055` (parent `96a7f6e`).
 - **Result:** landed. H1–H4 pass; no stop condition of the prompt's §4 fired. `ComputeTargets` shows
   its known wall-clock failure, and see "Verification performed" for how that re-ran alone.
 - **Model:** Sonnet 5.5.
