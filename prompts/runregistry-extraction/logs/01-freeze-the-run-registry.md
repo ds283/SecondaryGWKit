@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 01, freeze the run registry
 
 - **Subject:** [`01-freeze-the-run-registry.md`](../01-freeze-the-run-registry.md), board items F1–F3.
-- **Commit:** this commit (parent `d94d66b`).
+- **Commit:** `a45aefc` (parent `d94d66b`).
 - **Result:** landed. Every acceptance item passes; no stop condition fired.
 - **Model:** Sonnet 5.5.
 

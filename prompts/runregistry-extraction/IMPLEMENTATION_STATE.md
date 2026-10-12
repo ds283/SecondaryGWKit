@@ -45,7 +45,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | this commit | [log](logs/01-freeze-the-run-registry.md) |
+| 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ⬜ | — | — |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
@@ -61,8 +61,9 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 release is tagged and its SGK checklist exists; 09 after 08's review. The holds are for **method**,
 not scope: every charter is fixed in README §2.2.
 
-**Orchestrator notes** are written one prompt at a time, just before its dispatch, under
-`orchestrator/`.
+**Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
+carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
+(2026-10-12, used for 01).
 
 ### 1.1 Items
 
@@ -104,8 +105,9 @@ Recording a gate on RunRegistryKit's or DatastoreKit's own board is a commit in 
 01 fills this table: every tracked file under `RunRegistry/` at 01's commit, with its blob hash. It
 is what E2's G1 compares RunRegistryKit's import with.
 
-Taken at prompt 01's commit ("this commit"), from `git ls-tree -r HEAD RunRegistry/`: 25 rows,
-equal to `git ls-tree -r --name-only HEAD RunRegistry/ | wc -l`, and identical to `c8a7f14`'s
+Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8eed`), from
+`git ls-tree -r HEAD RunRegistry/`: 25 rows, equal to
+`git ls-tree -r --name-only HEAD RunRegistry/ | wc -l`, and identical to `c8a7f14`'s
 (`git diff --stat c8a7f14 HEAD -- RunRegistry/` is empty).
 
 | File | Blob |
@@ -185,7 +187,7 @@ None yet.
 
 ### 5.1 After prompt 01 (2026-10-12)
 
-Prompt 01 landed at "this commit", with `HEAD` `d94d66b` as its parent. Its log is
+Prompt 01 landed at `a45aefc`, with `HEAD` `d94d66b` as its parent. Its log is
 [`logs/01-freeze-the-run-registry.md`](logs/01-freeze-the-run-registry.md).
 - `CLAUDE.md` carries the freeze section (F1); §2.1 above is the frozen tree, 25 files (F2).
 - The baselines (F3) are under [`measure/out/`](measure/out/): `01-list.txt` (29 runs, 27 finished,
@@ -194,3 +196,33 @@ Prompt 01 landed at "this commit", with `HEAD` `d94d66b` as its parent. Its log 
   failure).
 - No code or test was added; nothing under `RunRegistry/` or `var/` changed. No issue opened or
   closed; the index stays at 105.
+
+**Orchestrator review of prompt 01** (2026-10-12, against `a45aefc`, by
+[`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) §3). All seven checks pass; nothing opened.
+1. **Scope.** Six files, all on the prompt's §6 list. `RunRegistry/`, `README.md`,
+   `prompts/INDEX.md`, `orchestrator/` and `docs/` are untouched; `docs/OPEN_ISSUES.md` stays at 105.
+2. **The freeze section** sits between the registry section and "Repository mechanics", titled as
+   the prompt asks, and makes its four points. It limits the freeze to `RunRegistry/` and names no
+   caller. `CLAUDE.md`'s diff is one inserted hunk.
+3. **The frozen tree**, parsed from the committed board by script: 25 rows, path order, every hash
+   40 hex, and equal row for row to `git ls-tree -r` at `a45aefc` and at `c8a7f14`, and to the
+   orchestrator's own reading at `e3a7077`.
+4. **`01-list.txt`**: taken at `d94d66b`; 29 runs, 27 finished, 2 `unknown`. Run ids and states equal
+   a fresh `list` at review time, row for row.
+5. **`01-store-show.txt`**: 14 blocks, the backup's among them, each headed by its command. Each is
+   byte-identical to a fresh `store show` at review time, and every exit status is 0.
+   **`01-roots.txt`**: seven roots at §0.2's counts, LiouvilleGreen with 1 skipped. No flake fired,
+   though the load reached 29 from another session.
+6. **Nothing moved.** `find var -newer <marker>`, with the marker set just before dispatch, is
+   empty. `git diff --stat c8a7f14 a45aefc -- RunRegistry/` is empty.
+7. **The records.** The board header, the §1 row, F1–F3, §2.1 and §5.1 are as the note asks. The log
+   has every §5.1 heading. Of its five deviations, four are the note's own requests. The fifth,
+   "`HEAD` is `d94d66b`", is not a deviation, since the prompt never put `HEAD` at `c8a7f14`, but
+   the label does no harm. The commit message is in `CLAUDE.md`'s form.
+
+**Residue fixed in the orchestrator's follow-up:** "this commit" → `a45aefc` on the board and in the
+log; the SHA added beside "prompt 01 of `runregistry-extraction`" in `CLAUDE.md`'s freeze section;
+the list of orchestrator notes; `prompts/INDEX.md`'s row (1 of 9 landed).
+
+**Handed on.** To 02: nothing beyond the prompt. To RunRegistryKit's campaign, through the user:
+**the import commit is `a45aefc`**, or any later commit at which `RunRegistry/` equals §2.1.

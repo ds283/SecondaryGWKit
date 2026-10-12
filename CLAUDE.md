@@ -105,8 +105,8 @@ a sidecar or any other record.
 
 ## `RunRegistry/` is frozen — it is moving to RunRegistryKit
 
-Since prompt 01 of `runregistry-extraction`, `RunRegistry/` is frozen: RunRegistryKit imports it
-and checks the import, file by file, against the frozen tree (the blob hashes are in
+Since prompt 01 of `runregistry-extraction` (`a45aefc`), `RunRegistry/` is frozen: RunRegistryKit
+imports it and checks the import, file by file, against the frozen tree (the blob hashes are in
 `prompts/runregistry-extraction/IMPLEMENTATION_STATE.md` §2.1). The freeze covers the package
 `RunRegistry/` and nothing else.
 
