@@ -2,7 +2,7 @@
 
 - **Subject:** [`02-rehearse-the-start-tree.md`](../02-rehearse-the-start-tree.md), board items
   L1–L4 (R0); gate R0.
-- **Commit:** this commit (parent `fe16d8e`).
+- **Commit:** `74eff08` (parent `fe16d8e`).
 - **Result:** landed. **R0 holds.** Every acceptance item passes, and no stop condition fired.
 - **Model:** Opus 5.5.
 - **Date:** 2026-10-12.
@@ -417,7 +417,7 @@ scripts' failure and non-trivial paths were exercised on real inputs:
 
 - **R0 holds** (board §2), resting on:
   - the dispatch `HEAD` `fe16d8e`, whose code is `a45aefc`'s;
-  - this commit;
+  - `74eff08`;
   - the runs `runregistry-extraction-02-reference-20261012T091921` and
     `runregistry-extraction-02-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to
     R2's recorded fingerprints.

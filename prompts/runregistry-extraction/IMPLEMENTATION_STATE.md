@@ -46,7 +46,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
-| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | this commit | [log](logs/02-rehearse-the-start-tree.md) |
+| 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
 | 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
 | 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
@@ -63,7 +63,8 @@ not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
-(2026-10-12, used for 01).
+(2026-10-12, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-12,
+used for 02).
 
 ### 1.1 Items
 
@@ -91,7 +92,7 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
-| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (this commit): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
+| R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (`74eff08`): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
 | **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ⬜ requested 2026-10-12 |
 | R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ⬜ |
 | **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ⬜ requested 2026-10-12 |
@@ -229,7 +230,7 @@ the list of orchestrator notes; `prompts/INDEX.md`'s row (1 of 9 landed).
 
 ### 5.2 After prompt 02 (2026-10-12)
 
-Prompt 02 landed at this commit, with `HEAD` `fe16d8e` as its parent. Its log is
+Prompt 02 landed at `74eff08`, with `HEAD` `fe16d8e` as its parent. Its log is
 [`logs/02-rehearse-the-start-tree.md`](logs/02-rehearse-the-start-tree.md); the record is
 [`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md)
 §1.
@@ -261,3 +262,79 @@ Prompt 02 landed at this commit, with `HEAD` `fe16d8e` as its parent. Its log is
   (`test_wall_time_per_object`), which passed twice in three runs alone.
 - No code or test was added. Nothing was opened or closed; the index stays at 105. The two stores
   stay, with their sidecars (README §3).
+
+**Orchestrator review of prompt 02** (2026-10-12, against `74eff08`, by
+[`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) §3). Dispatched from `fe16d8e` to one Opus
+subagent, after the seven roots were measured at `cf978c6`. The agent was resumed with
+`SendMessage` after each of the four launches, with one wait per launch on the run's liveness;
+every wait ended `ENDED finished`, heartbeat never stale. Nothing landed after the agent's commit.
+**All thirteen checks pass**, acceptance 1–7 are met, and no stop condition fired. **R0 holds.**
+1. **Scope.** 25 files, all added but this board: the verification document, 20 `*_02*` outputs
+   and the log. README, `prompts/INDEX.md`, `orchestrator/`, `docs/OPEN_ISSUES.md`, `RunRegistry/`
+   and every script are untouched. The verification header names §1–§4 and holds §1 alone.
+2. **The runs**, read from each run directory. `reference` and `resumed-c` are `done`/0;
+   `resumed-a` and `resumed-b` are `killed`/143, with fingerprints `9bb753bd…` and `a0d053af…`, 21
+   classes, problems `{}`, no `fingerprint_error`. Each launch log ends with the matching driver
+   exit status. The killed `stderr.log`s hold the handler's two lines and, in `resumed-b`, the
+   SciPy `IntegrationWarning`; no traceback anywhere. Each interrupter sent one `SIGTERM`:
+   10:02:51, 31 s after first reading the `GkSource` banner, and 10:10:17, 250 s after first
+   reading the QSI banner. No process of this checkout is alive.
+3. **The manifests.** All four: `git_head` `fe16d8e`, `git_dirty` false, `packages` equal to R2's
+   as JSON, `script_sha256` `b7935877…`, `--build --rehearsal` on all and `--resume` on `resumed-b`
+   and `-c` only, the rehearsal `scope`, the right `results`, and a purpose naming R0, `fe16d8e`
+   and `39809dca`.
+4. **Nothing stored was recomputed.** `stage_counts.py` on the four runs equals the committed
+   table byte for byte, and its `reference` column equals R2's stage by stage. `GkSource` 164 +
+   190 = 291 + 63 pruned; QSI 486 + 378 = 864; every stage finished before an interruption computes
+   0 next.
+5. **The prune.** `prune_check.py` on the saved state after `resumed-a`: 63 serials checked, 63
+   absent, 0 reused, 0 unvalidated. `resumed-b`'s integrity warnings name the same 63: shard 1's
+   block lists 20 rows, and Ray folds the other two shards' 23 + 20 into `[repeated 43x across
+   cluster]` (`stdout.log:13`, `:142-146`). The verification record says the warnings are the
+   prune's but does not count them; this review does. R2 held this clause only vacuously; R0
+   exercises it, through correction 4's 40 % hold.
+6. **The fingerprints.** `compare_stores.py`: equal, each store equal to its sidecar.
+   `compare_with_recorded.py` on both primaries against R2's `reference` and `resumed-c` run
+   directories: 0 differences in each of the four comparisons. Format 6, `39809dca…`, 21 classes.
+7. **Integrity.** `store_soundness.py` exits 0, `=> clean`, on both: `integrity_check` `ok`, 0
+   foreign-key rows, one `(1, '2025.1.1')` version row per shard, no inventory problem or
+   `duplicate`. The census gives "no divergence" for both. No journal file.
+8. **The readers.** All seven logs: exit 0, store identical around each, and no `Traceback`,
+   `ReadOnlyMiss`, `ReadOnlyWrite`, `ModuleNotFoundError`, pickling error or `Datastore.SQL`.
+   Run here through `run_readers.sh … nomodels extract_TkWKB_data` into the scratchpad, the reader
+   exits 0, prints the skip line, writes 27 files, and leaves all five store files byte-identical.
+9. **L4.** `policy_statistics.py` on `reference`, `resumed-b` and `resumed-c`: 14 lines each, every
+   count R2's (291; 109 / 26 (25 complete, 1 minimal) / 156), each equal to its committed output and
+   to R2's sorted; `resumed-c` equals R2's line for line, the other two differ by the order of the
+   two `mixed` lines (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`). The `** `
+   lines of each run equal R2's same slug in order, numbers and prefix stripped (26, 23, 26, 26).
+10. **The printed lines.** Completion, `Queue summary` and `(no compute items` counts equal R2's in
+    every run. The new kinds are the progress lines: three in `reference`'s QSI stage (1230.1 s),
+    one in `resumed-a`'s GkWKB stage. They have the copy's form
+    (`a3-v2-readiness-07-reference…/stdout.log:100-101`), the later ones with the instantaneous
+    rate an earlier registered run's lines also carry. Every final `status.json` `stage` is R2's,
+    and `progress` is `null` at the end of all four.
+11. **The log differences**, as line kinds, numbers, pids, paths and prefix stripped: `reference`
+    and `resumed-a` add only the progress kinds (and `resumed-a` one `Queue summary` in `/min`);
+    `resumed-b` adds the integrity warning's kinds and a completion time in `Nm Ns`, and the
+    `IntegrationWarning`, which `resumed-c` loses; each `stderr.log` otherwise equals R2's. Each is
+    explained in verification §1.2.5 by the point or the load. No import or unpickling error.
+12. **`var/`.** The 14 sidecars hash to `023d139f…` as before dispatch; the only new files under
+    `var/datastores/` are R0's ten store files and two sidecars; nothing else under `var/` is newer
+    than the pre-dispatch marker but R0's runs and working directory. The guard refused, exit 1,
+    naming the five files.
+13. **Records and suites.** The board and the log are as the note asks; the log has every §5.1
+    heading and 16 classified deviations, the note's eight corrections among them. At `74eff08`,
+    load 17–55: AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 271, tools 49, LiouvilleGreen
+    148 (1 skipped) and RunRegistry 286 pass; ComputeTargets 693 with the one wall-clock failure
+    (0.057 s against 0.05 s), which failed three times more alone at load 38–45. It is README §8's
+    known flake; no code has changed since `a45aefc`. No Python file was added.
+- **The note held.** All eight corrections were needed and followed. Correction 4 was the one that
+  changed the outcome: it turned R2's vacuous prune clause into a measured one.
+- **Residue fixed here:** "this commit" → `74eff08` on this board (§1 row, §2 R0 row, §5.2) and in
+  the log (header and hand-off); this note added to the list of notes; `prompts/INDEX.md`'s row (2
+  of 9 landed).
+- **Handed on.** 03 waits on E1. R0's two stores and four run directories stay (README §3); 04
+  compares with R0 through `runregistry-extraction-02-reference-20261012T091921` and
+  `-resumed-c-20261012T101145`. The wall-clock test failed in every run of this review; 09's final
+  measurement should re-run it alone at low load.
