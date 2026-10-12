@@ -170,8 +170,8 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     in every fingerprint SGK takes, and closes SGK's half; R2 (08) confirms it.
 
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
-  rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief; not
-  assigned)*
+  rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
+  **Assigned (2026-10-12):** to `handover`, by the user)*
   - **The defect.** `main.py`'s `--ray-address` defaults to `auto` (`DEFAULT_RAY_ADDRESS`,
     `main.py:99`; `ray.init` at `:308`), and so does each of the six `extract_*.py`.
     - In SGK's Ray, 2.43.0, `auto` with `RAY_ADDRESS` unset first reads
@@ -201,7 +201,10 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     - **Either change** would land an SGK change in R1's window, which isolates the DatastoreKit pin
       (README §0.1).
 
-    It fits after 08, or in the campaign that runs A3 v2. Until then, every run states its address.
+    Until it is fixed, every run states its address.
+  - **Assigned (2026-10-12):** to `handover`, by the user. That campaign owns the A3 v2 launch
+    (`a3-v2-readiness` README §1), the next long build that runs `main.py`. The fix lands there,
+    before A3 v2 or with it.
 
 ## 4. Resolved issues
 
@@ -390,4 +393,5 @@ It is not a prompt, and it changes no code.
   `pid` is set again at each launch. SI's §5 assumed a single driver.
 - **Opened:** `[00-main-and-the-readers-default-to-ray-address-auto]` (§3), the gap SGK's review
   found in the brief. SI confirmed it and amended its brief at `d6d550b`. The index goes to 106.
+  The user then assigned it to `handover`, which owns the A3 v2 launch.
 - When the lock was adopted, it was free and the registry showed nothing `running`.
