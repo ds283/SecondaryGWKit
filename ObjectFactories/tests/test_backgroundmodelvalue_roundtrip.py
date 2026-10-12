@@ -46,7 +46,7 @@ from typing import Optional
 import sqlalchemy as sqla
 
 from CosmologyConcepts import redshift
-from Datastore.SQL.ObjectFactories.BackgroundModel import (
+from ObjectFactories.BackgroundModel import (
     sqla_BackgroundModelValue_factory,
 )
 from Units import Mpc_units

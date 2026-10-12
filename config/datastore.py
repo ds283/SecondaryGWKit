@@ -25,65 +25,65 @@ Importing this module imports every factory, and through them the compute target
 
 from typing import Iterable, List
 
-from Datastore.SQL.ObjectFactories.BackgroundModel import (
+from ObjectFactories.BackgroundModel import (
     sqla_BackgroundModelFactory,
     sqla_BackgroundModelTagAssociation_factory,
     sqla_BackgroundModelValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
     sqla_GkNumericValue_factory,
     sqla_GkNumericTagAssociation_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSource import (
+from ObjectFactories.GkSource import (
     sqla_GkSourceTagAssociation_factory,
     sqla_GkSource_factory,
     sqla_GkSourceValue_factory,
     sqla_GkSourceParents_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
+from ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
+from ObjectFactories.GkSourcePolicyData import (
     sqla_GkSourcePolicyData_factory,
 )
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+from ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBTagAssociation_factory,
     sqla_GkWKBValue_factory,
 )
-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
+from ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+from ObjectFactories.OneLoopIntegral import (
     sqla_OneLoopIntegral_factory,
     sqla_OneLoopIntegralTagAssociation_factory,
 )
-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
-from Datastore.SQL.ObjectFactories.QuadSource import (
+from ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+from ObjectFactories.QuadSource import (
     sqla_QuadSource_factory,
     sqla_QuadSourceTagAssocation_factory,
     sqla_QuadSourceValue_factory,
 )
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegralTagAssociation_factory,
     sqla_QuadSourceIntegral_factory,
 )
-from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericIntegration_factory,
     sqla_TkNumericValue_factory,
     sqla_TkNumericTagAssociation_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+from ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
     sqla_TkWKBTagAssociation_factory,
     sqla_TkWKBValue_factory,
 )
-from Datastore.SQL.ObjectFactories.integration_metadata import (
+from ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
-from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
-from Datastore.SQL.ObjectFactories.version import sqla_version_factory
-from Datastore.SQL.ObjectFactories.wavenumber import (
+from ObjectFactories.redshift import sqla_redshift_factory
+from ObjectFactories.store_tag import sqla_store_tag_factory
+from ObjectFactories.tolerance import sqla_tolerance_factory
+from ObjectFactories.version import sqla_version_factory
+from ObjectFactories.wavenumber import (
     sqla_wavenumber_factory,
     sqla_wavenumber_exit_time_factory,
 )

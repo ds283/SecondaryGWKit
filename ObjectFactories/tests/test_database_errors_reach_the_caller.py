@@ -47,35 +47,35 @@ from sqlalchemy.exc import OperationalError
 from CosmologyConcepts import redshift, redshift_array
 from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from CosmologyModels.LambdaCDM import Planck2018
-from Datastore.SQL.ObjectFactories.BackgroundModel import sqla_BackgroundModelFactory
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.BackgroundModel import sqla_BackgroundModelFactory
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
     sqla_GkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericIntegration_factory,
     sqla_TkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSource import (
+from ObjectFactories.GkSource import (
     sqla_GkSource_factory,
     sqla_GkSourceValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+from ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBValue_factory,
 )
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+from ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
     sqla_TkWKBValue_factory,
 )
-from Datastore.tests import test_gksource_parent_set as gk_source_keys
-from Datastore.tests import test_quadsource_integral_parent_key as qsi_keys
-from Datastore.tests import test_wkb_numeric_parent_key as wkb_keys
-from Datastore.tests.test_value_reads_parent_key import (
+from ObjectFactories.tests import test_gksource_parent_set as gk_source_keys
+from ObjectFactories.tests import test_quadsource_integral_parent_key as qsi_keys
+from ObjectFactories.tests import test_wkb_numeric_parent_key as wkb_keys
+from ObjectFactories.tests.test_value_reads_parent_key import (
     ATOL,
     K_EXIT,
     MODEL,

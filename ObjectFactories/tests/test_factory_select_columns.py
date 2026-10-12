@@ -3,13 +3,13 @@ Structural guard: every attribute a factory's ``build()`` reads off a query resu
 column that query actually asked for.
 
 The defect this exists for (prompts/datastore-readback, prompt 01): the ``SELECT`` in
-``Datastore/SQL/ObjectFactories/QuadSourceIntegral.py`` omitted ``table.c.numeric_quad`` while
+``ObjectFactories/QuadSourceIntegral.py`` omitted ``table.c.numeric_quad`` while
 ``build()`` read ``row_data.numeric_quad``. SQLAlchemy raises ``NoSuchColumnError`` only when the
 attribute is touched, so the defect is invisible until a *stored* row is read back. A fresh
 pipeline run computes these rows and never reads them; a resume does, and lost a 10 h 33 m run.
 Nothing in the tree exercised the read-back path, so nothing caught it.
 
-The check is static. The module sources under ``Datastore/SQL/ObjectFactories/`` are parsed with
+The check is static. The module sources under ``ObjectFactories/`` are parsed with
 ``ast`` -- following the precedent of ``ComputeTargets/tests/test_main_plumbing.py``, which reads
 ``main.py`` statically rather than executing it -- and for each ``build()`` we collect
 
@@ -93,7 +93,7 @@ import unittest
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
-FACTORY_DIR = Path(__file__).parents[2] / "Datastore" / "SQL" / "ObjectFactories"
+FACTORY_DIR = Path(__file__).parents[2] / "ObjectFactories"
 
 # query-builder methods that carry the selected column list through unchanged
 _PASSTHROUGH = frozenset(
@@ -532,7 +532,7 @@ def analyse_factories() -> List[Finding]:
 # opened it with [01-backgroundmodelvalue-hubble] -- sqla_BackgroundModelValue_factory.build()
 # reading row_data.Hubble where the column is Hubble_GeV -- which its own §4 forbade it to fix.
 # That defect was fixed on 2026-09-22 and the entry struck; see
-# Datastore/tests/test_backgroundmodelvalue_roundtrip.py, which now exercises that build().
+# ObjectFactories/tests/test_backgroundmodelvalue_roundtrip.py, which now exercises that build().
 #
 # prompts/datastore-integrity prompt 04 extended the analyser to _build_impl_serial /
 # _build_impl_model and read_batch (docs/datastore-integrity-audit.md §3.10, probe_02), and found

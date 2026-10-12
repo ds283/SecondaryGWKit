@@ -27,8 +27,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from Datastore.tests.inventory_report_parsing import HEX64, sections  # noqa: E402
-from Datastore.tests.test_inventory_report_labels import (  # noqa: E402
+from ObjectFactories.tests.inventory_report_parsing import HEX64, sections  # noqa: E402
+from ObjectFactories.tests.test_inventory_report_labels import (  # noqa: E402
     definitions,
     references,
 )

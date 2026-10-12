@@ -21,7 +21,7 @@ That report is gone. The same three claims, against the service that replaces it
    key, so under the structured inventory they are **one key held twice**: both are kept as
    records, and the inventory names them a ``duplicate`` problem, which the display prints.
 
-Stores are built with ``Datastore/tests/real_store_fixtures.build_full_store`` in a temporary
+Stores are built with ``ObjectFactories/tests/real_store_fixtures.build_full_store`` in a temporary
 directory. No Ray; nothing under ``var/``.
 """
 
@@ -31,8 +31,8 @@ import unittest
 from pathlib import Path
 
 from datastorekit.store_inventory import read_inventory
-from Datastore.tests.inventory_report_parsing import fields_of, sections
-from Datastore.tests.real_store_fixtures import (
+from ObjectFactories.tests.inventory_report_parsing import fields_of, sections
+from ObjectFactories.tests.real_store_fixtures import (
     build_full_store,
     full_rows,
     with_rows,

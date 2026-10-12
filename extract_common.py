@@ -25,7 +25,7 @@ The mechanism here preserves the ergonomic property that made the tagless design
     with everything it computes, so a store holding rows has at least one.
 
 **Verification** -- that everything pulled under one label really is one generation -- is not done
-here. It is done by ``Datastore/SQL/ObjectFactories/BackgroundModel.py``'s ``build()``, which is
+here. It is done by ``ObjectFactories/BackgroundModel.py``'s ``build()``, which is
 the first lookup every one of these scripts makes and the only object that carries the grid's
 identity as columns rather than as a tag; it refuses, naming every generation it found, rather
 than returning a mixture. ``describe_background_generation`` below renders what it found.
@@ -259,7 +259,7 @@ def describe_background_generation(model) -> str:
     """
     Which generation of the source grid a BackgroundModel row belongs to, as a printable string.
 
-    ``_source_grid_identity`` is set by Datastore/SQL/ObjectFactories/BackgroundModel.py's
+    ``_source_grid_identity`` is set by ObjectFactories/BackgroundModel.py's
     build() to the (construction version, digest) of the row it found. It is None when build()
     found no row, which is a model the datastore holds no background for: that has no generation
     to report, and is said so rather than defaulted. The extract_*.py scripts call

@@ -12,7 +12,7 @@
 7. two amendments of one field, read back as a sequence;
 8. the command line, `--json`/`--remove`, bad JSON, and the exit codes.
 
-Stores are the lightweight placeholder fixture (`Datastore.tests.shard_store_fixtures`), because
+Stores are the lightweight placeholder fixture (`ObjectFactories.tests.shard_store_fixtures`), because
 `amend_sidecar` never opens a store's files — it reads and writes only the sidecar. Every call
 passes `runs_root`. No Ray is initialised and nothing under `var/` is opened.
 """

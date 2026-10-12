@@ -47,7 +47,7 @@ DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
 # assembled, for each z_source of its grid, from the value at z_response of one GkNumericIntegration,
 # one GkWKBIntegration, or both. Those integration rows are its parents, and they are a *set*: one
 # member (z_source serial, numeric serial or None, WKB serial or None) per z_source. The set is the
-# GkSource's lookup key (through a digest of it, Datastore/SQL/ObjectFactories/GkSource.py) and is
+# GkSource's lookup key (through a digest of it, ObjectFactories/GkSource.py) and is
 # recorded in the GkSource_parents table. These are the only functions that form one, so that
 # main.py's stages, compute() and assemble_GkSource_values cannot form it differently.
 GkSourceParentSet = Tuple[Tuple[int, Optional[int], Optional[int]], ...]

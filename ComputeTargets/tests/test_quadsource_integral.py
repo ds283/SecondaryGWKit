@@ -2131,7 +2131,7 @@ class TestPersistedSchema(unittest.TestCase):
     """
 
     def _table(self):
-        from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+        from ObjectFactories.QuadSourceIntegral import (
             sqla_QuadSourceIntegral_factory,
         )
 

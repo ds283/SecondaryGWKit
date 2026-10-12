@@ -65,17 +65,17 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
 from config.datastore import drop_groups, factories as _factories, tables_to_drop
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
 )
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+from ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBValue_factory,
 )
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericIntegration_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+from ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
 )
 from datastorekit.SQL.schema import build_schema, drop_order

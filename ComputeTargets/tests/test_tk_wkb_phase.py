@@ -74,7 +74,7 @@ from ComputeTargets.tests.wkb_reference import (
     production_source_grid,
     to_redshift_array,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+from ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
 )
 from Quadrature.integration_metadata import IntegrationData

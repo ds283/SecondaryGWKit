@@ -1,6 +1,6 @@
 """
 Tests for prompt 08 of ``prompts/datastore-integrity`` (board item K3), the parts that are not the
-factory (``Datastore/tests/test_quadsource_policy_key.py`` holds those): a ``QuadSourceIntegral``
+factory (``ObjectFactories/tests/test_quadsource_policy_key.py`` holds those): a ``QuadSourceIntegral``
 is keyed on ``QuadSource_policy_1pt5`` (decision D6).
 
   3. ``TestTheConstructorRequiresIt`` -- the compute target takes the policy, required, as
@@ -37,7 +37,7 @@ from pathlib import Path
 
 import ray
 
-import Datastore.tests.standin_pool as sp
+import ObjectFactories.tests.standin_pool as sp
 from ComputeTargets import QuadSourceIntegral
 from ComputeTargets.tests.test_main_plumbing import (
     MAIN_PY,

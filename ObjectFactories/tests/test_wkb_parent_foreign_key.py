@@ -33,7 +33,7 @@ from typing import Dict, List
 
 import ray
 
-from Datastore.tests import real_store_fixtures as rsf
+from ObjectFactories.tests import real_store_fixtures as rsf
 
 ADDED_TK_WKB = 10
 ADDED_TK_PARENT = 3

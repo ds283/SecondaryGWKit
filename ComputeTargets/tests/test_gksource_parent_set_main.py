@@ -1,6 +1,6 @@
 """
 Tests for prompt 09b of ``prompts/datastore-integrity`` (board item K6), the parts that are not the
-factory, the value reads or the inventory (``Datastore/tests/test_gksource_parent_set.py`` holds
+factory, the value reads or the inventory (``ObjectFactories/tests/test_gksource_parent_set.py`` holds
 those): a ``GkSource`` is keyed on the set of Gk numeric and WKB rows it is assembled from.
 
   * ``TestTheConstructor`` -- an object to be computed names the parent set it is keyed on;
@@ -38,11 +38,11 @@ from ComputeTargets.GkSource import (
 )
 from ComputeTargets.tests.test_main_plumbing import MAIN_PY
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories.GkSource import (
+from ObjectFactories.GkSource import (
     GkSource_parents_digest,
     sqla_GkSource_factory,
 )
-from Datastore.tests.test_gksource_parent_set import (
+from ObjectFactories.tests.test_gksource_parent_set import (
     ATOL,
     K_EXIT,
     MODEL,

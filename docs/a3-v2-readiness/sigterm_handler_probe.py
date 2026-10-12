@@ -149,7 +149,7 @@ def child(variant, which, root, store_dir):
 
     import RunRegistry
     import RunRegistry.stores as registry_stores
-    from Datastore.tests.real_store_fixtures import build_real_store
+    from ObjectFactories.tests.real_store_fixtures import build_real_store
 
     scoped = _load("_scoped_pipeline_run", SCOPED_DRIVER)
     say(

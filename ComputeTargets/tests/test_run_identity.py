@@ -53,21 +53,21 @@ from typing import List, Optional
 
 import sqlalchemy as sqla
 
-import Datastore.SQL.ObjectFactories.BackgroundModel as background_model_factory_module
+import ObjectFactories.BackgroundModel as background_model_factory_module
 from ComputeTargets.BackgroundModel import BackgroundModel, BackgroundModelValue
 from ComputeTargets.tests.test_main_plumbing import MAIN_PY
 from CosmologyConcepts import redshift, redshift_array
 from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
-from Datastore.SQL.ObjectFactories.BackgroundModel import (
+from ObjectFactories.BackgroundModel import (
     sqla_BackgroundModelFactory,
     sqla_BackgroundModelTagAssociation_factory,
     sqla_BackgroundModelValue_factory,
 )
-from Datastore.SQL.ObjectFactories.integration_metadata import (
+from ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
-from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
+from ObjectFactories.redshift import sqla_redshift_factory
+from ObjectFactories.store_tag import sqla_store_tag_factory
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Units import Mpc_units
@@ -87,9 +87,7 @@ BackgroundModelModule = import_module("ComputeTargets.BackgroundModel")
 REPO_ROOT = Path(__file__).parents[2]
 
 WAVENUMBER_SOURCE = REPO_ROOT / "CosmologyConcepts" / "wavenumber.py"
-FACTORY_SOURCE = (
-    REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories" / "BackgroundModel.py"
-)
+FACTORY_SOURCE = REPO_ROOT / "ObjectFactories" / "BackgroundModel.py"
 
 CONSTANT_NAME = "SOURCE_GRID_CONSTRUCTION_VERSION"
 DIGEST_COLUMN = "source_grid_digest"

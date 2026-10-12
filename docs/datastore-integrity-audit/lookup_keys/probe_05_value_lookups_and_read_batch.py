@@ -15,22 +15,22 @@ import ComputeTargets.phase_residual as phase_residual  # noqa: E402
 from common import RecordingConn, StandInModelProxy, Store  # noqa: E402
 from ComputeTargets import GkNumericIntegration, TkNumericIntegration  # noqa: E402
 from CosmologyConcepts import redshift  # noqa: E402
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (  # noqa: E402
+from ObjectFactories.GkNumericIntegration import (  # noqa: E402
     sqla_GkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSource import (
+from ObjectFactories.GkSource import (
     sqla_GkSourceValue_factory,
 )  # noqa: E402
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (  # noqa: E402
+from ObjectFactories.GkWKBIntegration import (  # noqa: E402
     sqla_GkWKBValue_factory,
 )
-from Datastore.SQL.ObjectFactories.QuadSource import (  # noqa: E402
+from ObjectFactories.QuadSource import (  # noqa: E402
     sqla_QuadSourceValue_factory,
 )
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (  # noqa: E402
+from ObjectFactories.TkNumericIntegration import (  # noqa: E402
     sqla_TkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (  # noqa: E402
+from ObjectFactories.TkWKBIntegration import (  # noqa: E402
     sqla_TkWKBValue_factory,
 )
 from common import Ref  # noqa: E402

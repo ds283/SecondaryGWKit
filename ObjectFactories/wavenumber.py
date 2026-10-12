@@ -386,7 +386,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         # the physical identity of a wavenumber_exit_time row (store-fingerprint prompt 02): what
         # build() filters on -- the wavenumber, the cosmology (its type and the row that type
         # names; the serial has no foreign key), atol, rtol and stepping
-        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
+        from ObjectFactories.cosmology_types import COSMOLOGY_TYPES
         from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(

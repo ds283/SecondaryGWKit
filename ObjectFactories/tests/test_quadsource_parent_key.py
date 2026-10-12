@@ -43,7 +43,7 @@ import sqlalchemy as sqla
 from sqlalchemy.exc import IntegrityError, MultipleResultsFound
 
 from ComputeTargets import QuadSource
-from Datastore.SQL.ObjectFactories.QuadSource import sqla_QuadSource_factory
+from ObjectFactories.QuadSource import sqla_QuadSource_factory
 from datastorekit.store_inventory import (
     Parent,
     ShardContext,
@@ -51,13 +51,13 @@ from datastorekit.store_inventory import (
     read_inventory,
     read_records,
 )
-from Datastore.tests.real_store_fixtures import (
+from ObjectFactories.tests.real_store_fixtures import (
     _tk_numeric,
     build_full_store,
     full_rows,
     with_rows,
 )
-from Datastore.tests.test_wkb_numeric_parent_key import (
+from ObjectFactories.tests.test_wkb_numeric_parent_key import (
     MODEL,
     Store,
     _base_store,

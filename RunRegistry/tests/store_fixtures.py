@@ -1,7 +1,7 @@
 """Shared set-up for the store-sidecar tests (`prompts/datastore-portability` prompt 03).
 
 Not a test module (no ``test_`` prefix); the test modules import it. Every store and every run is
-built in one temporary directory: stores with `Datastore/tests/shard_store_fixtures.py` (a real
+built in one temporary directory: stores with `ObjectFactories/tests/shard_store_fixtures.py` (a real
 primary with the five tables, placeholder shard files), runs with the `RegistryTestCase` pattern in
 a runs root inside the same directory, so that one `tree_state` covers both. No Ray is
 initialised, the `ShardedPool` constructor is never called, and nothing under `var/` is opened.
@@ -17,7 +17,11 @@ from RunRegistry import stores
 from RunRegistry.tests.test_run_registry import RegistryTestCase
 
 from datastorekit.shard_paths import shard_file_name
-from Datastore.tests.shard_store_fixtures import read_pool, tree_state, write_new_store
+from ObjectFactories.tests.shard_store_fixtures import (
+    read_pool,
+    tree_state,
+    write_new_store,
+)
 
 N_SHARDS = 3
 

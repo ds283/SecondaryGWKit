@@ -22,7 +22,7 @@ Four things are checked, in the order prompt 20 §3 states them:
 3. **(Removed by ``datastore-generic`` prompt 01.)** An old-schema datastore used to raise, with a
    message naming this prompt. No code accommodates a store written by older code now: the
    database's own error reaches the caller
-   (``Datastore/tests/test_database_errors_reach_the_caller.py``).
+   (``ObjectFactories/tests/test_database_errors_reach_the_caller.py``).
 4. **No computed value moves.** That is not tested here -- it is a property of the diff, which
    does not touch ``Quadrature/`` at all, and is measured in ``logs/20-key-the-break-point-policy.md``
    by running a production QCD object in both sectors on this tree and on ``HEAD~1``.
@@ -48,10 +48,10 @@ from ComputeTargets.BackgroundModel import (
 from ComputeTargets.GkNumericIntegration import GkNumericIntegration
 from ComputeTargets.TkNumericIntegration import TkNumericIntegration
 from CosmologyModels.GenericEOS.GenericEOS import BREAK_POINT_KINDS
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
 )
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericIntegration_factory,
 )
 

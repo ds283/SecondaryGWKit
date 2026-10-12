@@ -418,7 +418,7 @@ class TestQuadSourceRegion(unittest.TestCase):
 
     def test_datastore_round_trip_shape(self):
         """
-        Mimic what Datastore/SQL/ObjectFactories/QuadSource.py does on read: it rebuilds
+        Mimic what ObjectFactories/QuadSource.py does on read: it rebuilds
         z_sample from the stored value rows themselves (`imported_z_sample`, factory line
         261) and compares its length against the `z_samples` column, which store() writes as
         `len(obj.values)` (factory line 313). A truncated value list therefore reads back

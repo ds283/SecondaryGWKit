@@ -67,10 +67,11 @@ run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 `importlib.import_module("datastorekit.SQL.Datastore")`. The tools are
 `python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
 
-**This repository's side of the layer changes as usual:** the factories under
-`Datastore/SQL/ObjectFactories/`, `config/datastore.py` and `config/sharding.py`,
-`tools/inventory_report.py`, `Datastore/tests/`, and every caller. `Datastore/__init__.py` and
-`Datastore/SQL/__init__.py` are empty, and exist only to make the factories' folders packages.
+**This repository's side of the layer changes as usual:** the factories under `ObjectFactories/`,
+`config/datastore.py` and `config/sharding.py`, `tools/inventory_report.py`,
+`ObjectFactories/tests/`, and every caller. Until 2026-10-12 the factories lived at
+`Datastore/SQL/ObjectFactories/` and their tests at `Datastore/tests/`. Campaign records and dated
+`docs/` prose from before then still use those paths, and are left as they were written.
 
 ## Long-running jobs — the run registry
 
@@ -104,7 +105,7 @@ a sidecar or any other record.
 ## Repository mechanics
 
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There
-  are six roots, each run by its own command. The `Datastore` root goes in four groups of modules,
+  are six roots, each run by its own command. The `ObjectFactories` root goes in four groups of modules,
   the last four lines, because a Bash call is capped at ten minutes and the whole root does not
   reliably fit:
   ```bash
@@ -113,10 +114,10 @@ a sidecar or any other record.
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunRegistry/tests -t .
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[a-f]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[g-o]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[p-r]*.py'
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t . -p 'test_[s-z]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[a-f]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[g-o]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[p-r]*.py'
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . -p 'test_[s-z]*.py'
   ```
   They must not need Ray or a datastore — use the stand-in model pattern in
   `ComputeTargets/tests/test_tk_source_functions.py` and `docs/spec-code-audit/scripts/`.

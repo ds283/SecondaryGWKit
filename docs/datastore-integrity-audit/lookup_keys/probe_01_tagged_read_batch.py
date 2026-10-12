@@ -30,8 +30,8 @@ from CosmologyConcepts.wavenumber import (  # noqa: E402
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
-from Datastore.SQL.ObjectFactories import OneLoopIntegral as OLI_module  # noqa: E402
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (  # noqa: E402
+from ObjectFactories import OneLoopIntegral as OLI_module  # noqa: E402
+from ObjectFactories.QuadSourceIntegral import (  # noqa: E402
     sqla_QuadSourceIntegral_factory,
 )
 from MetadataConcepts import store_tag, tolerance  # noqa: E402
@@ -213,7 +213,7 @@ def main():
     print("\n" + "=" * 100)
     print("OneLoopIntegral: module-level read_batch (not a factory method)")
     print("=" * 100)
-    from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
+    from ObjectFactories.OneLoopIntegral import (
         sqla_OneLoopIntegral_factory,
     )
 

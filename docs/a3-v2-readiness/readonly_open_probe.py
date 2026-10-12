@@ -51,7 +51,7 @@ import ray
 import sqlalchemy as sqla
 
 from datastorekit.store_reader import open_read_only, read_only_url
-from Datastore.tests import standin_pool as sp
+from ObjectFactories.tests import standin_pool as sp
 from config.sharding import read_table_config
 
 _spec = importlib.util.spec_from_file_location(

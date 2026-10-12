@@ -47,18 +47,18 @@ from CosmologyConcepts.wavenumber import (
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import Planck2018
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
-from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.integration_metadata import (
+from ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
+from ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+from ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+from ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
+from ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
-from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
-from Datastore.SQL.ObjectFactories.version import sqla_version_factory
-from Datastore.SQL.ObjectFactories.wavenumber import sqla_wavenumber_exit_time_factory
+from ObjectFactories.redshift import sqla_redshift_factory
+from ObjectFactories.store_tag import sqla_store_tag_factory
+from ObjectFactories.tolerance import sqla_tolerance_factory
+from ObjectFactories.version import sqla_version_factory
+from ObjectFactories.wavenumber import sqla_wavenumber_exit_time_factory
 from datastorekit.SQL.schema import build_schema
 from MetadataConcepts import tolerance
 from Units import Mpc_units
@@ -84,7 +84,7 @@ class Store:
     nothing under ``var/``: ``build_schema`` only declares ``sqla.Table`` objects, and
     ``create_all`` makes an in-memory schema from them -- the same construction
     ``docs/datastore-integrity-audit/lookup_keys/common.py`` and
-    ``Datastore/tests/test_integral_read_batch.py`` use.
+    ``ObjectFactories/tests/test_integral_read_batch.py`` use.
     """
 
     def __init__(self):
@@ -472,7 +472,7 @@ class TestDuplicatesRaise(unittest.TestCase):
 
     def test_qcd_cosmology(self):
         """QCD_Cosmology.build's .scalar() sits inside a try/except SQLAlchemyError whose handler
-        (Datastore/SQL/ObjectFactories/QCD_Cosmology.py:98-117, read for this test) re-raises
+        (ObjectFactories/QCD_Cosmology.py:98-117, read for this test) re-raises
         everything except a message naming "T_z_representation", which it turns into a
         RuntimeError about a pre-representation datastore. MultipleResultsFound is a
         SQLAlchemyError, but its message ("Multiple rows were found when one or none was

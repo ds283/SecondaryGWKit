@@ -18,7 +18,7 @@
 12. the drivers pass `fingerprint=True` to every `run.finish(` outside a `terminal` handler, and
     to none inside one.
 
-Stores are built with `Datastore.tests.real_store_fixtures` in temporary directories, runs in a
+Stores are built with `ObjectFactories.tests.real_store_fixtures` in temporary directories, runs in a
 temporary runs root. No Ray is initialised and nothing under `var/` is opened.
 """
 
@@ -47,7 +47,7 @@ from RunRegistry.tests.store_fixtures import (
 from RunRegistry.tests.test_store_command_line import CommandLineTestCase
 
 from datastorekit.store_inventory import read_inventory
-from Datastore.tests.real_store_fixtures import (
+from ObjectFactories.tests.real_store_fixtures import (
     FIXED_TIMESTAMP,
     _schema_tables,
     build_full_store,

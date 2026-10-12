@@ -21,10 +21,10 @@ from CosmologyConcepts.wavenumber import (  # noqa: E402
     WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
-from Datastore.SQL.ObjectFactories.integration_metadata import (  # noqa: E402
+from ObjectFactories.integration_metadata import (  # noqa: E402
     sqla_IntegrationSolver_factory,
 )
-from Datastore.SQL.ObjectFactories.wavenumber import (  # noqa: E402
+from ObjectFactories.wavenumber import (  # noqa: E402
     sqla_wavenumber_exit_time_factory,
 )
 from MetadataConcepts import tolerance  # noqa: E402

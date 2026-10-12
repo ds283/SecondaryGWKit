@@ -46,23 +46,23 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import GkSource, GkWKBIntegration
 from CosmologyConcepts import redshift, redshift_array
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSource import (
+from ObjectFactories.GkSource import (
     GkSource_parents_digest,
     sqla_GkSource_factory,
     sqla_GkSourceValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
+from ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
 from datastorekit.store_inventory import read_inventory
-from Datastore.tests.real_store_fixtures import (
+from ObjectFactories.tests.real_store_fixtures import (
     build_full_store,
     full_rows,
     vary_row,
     with_rows,
 )
-from Datastore.tests.test_wkb_numeric_parent_key import (
+from ObjectFactories.tests.test_wkb_numeric_parent_key import (
     MODEL,
     Store,
     _exit_time,

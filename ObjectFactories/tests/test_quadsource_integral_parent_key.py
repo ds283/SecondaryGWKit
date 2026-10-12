@@ -45,13 +45,17 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import QuadSourceIntegral
 from CosmologyConcepts import redshift
-from Datastore.SQL.ObjectFactories.QuadSource import sqla_QuadSourceValue_factory
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+from ObjectFactories.QuadSource import sqla_QuadSourceValue_factory
+from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
 from datastorekit.store_inventory import read_inventory
-from Datastore.tests.real_store_fixtures import build_full_store, full_rows, with_rows
-from Datastore.tests.test_integral_read_batch import (
+from ObjectFactories.tests.real_store_fixtures import (
+    build_full_store,
+    full_rows,
+    with_rows,
+)
+from ObjectFactories.tests.test_integral_read_batch import (
     Store,
     _exit_time_obj,
     _exit_time_row,
@@ -487,14 +491,14 @@ class TestTheQuadSourceValueModelRead(unittest.TestCase):
     """
 
     def setUp(self):
-        from Datastore.tests.test_quadsource_parent_key import (
+        from ObjectFactories.tests.test_quadsource_parent_key import (
             Q_EXIT,
             R_EXIT,
             TAG,
             _base_store,
             store_source,
         )
-        from Datastore.tests.test_wkb_numeric_parent_key import MODEL
+        from ObjectFactories.tests.test_wkb_numeric_parent_key import MODEL
 
         self.s = _base_store()
         self.addCleanup(self.s.close)

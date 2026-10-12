@@ -39,7 +39,7 @@ DEFAULT_REL_TOLERANCE = 1e-8
 # DEFAULT_HEXIT_REL_TOLERANCE is the *chosen* half. Brent stops at `xtol + rtol*|u|`, so at the
 # largest production |u| = 38.04 an rtol of 1e-9 guarantees a displacement of 3.81e-8, which is
 # the loosest setting whose guarantee clears the only floor in the tree: the
-# DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7 at which Datastore/SQL/ObjectFactories/redshift.py
+# DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7 at which ObjectFactories/redshift.py
 # reuses an existing redshift row, and so the displacement a grid can absorb without moving. The
 # previous shared 1e-8 guarantees 3.8e-7, which is 3.8x *over* that floor. Cost: 7,009 Hubble
 # evaluations against 6,963, for all 150 (k, offset) solves on all three models -- +0.7%.

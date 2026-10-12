@@ -1,6 +1,6 @@
 """
 Tests for prompt 09a of ``prompts/datastore-integrity`` (board item K4), the parts that are not the
-factory or the inventory (``Datastore/tests/test_quadsource_parent_key.py`` holds those): a
+factory or the inventory (``ObjectFactories/tests/test_quadsource_parent_key.py`` holds those): a
 ``QuadSource`` is keyed on the two ``TkNumericIntegration`` rows it is computed from.
 
   4. ``TestTheAssertion`` -- a ``QuadSource`` made to be computed carries the two serials it is keyed

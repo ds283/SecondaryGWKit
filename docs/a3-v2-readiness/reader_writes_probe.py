@@ -52,7 +52,7 @@ from typing import Dict, List, Optional
 
 import ray
 
-from Datastore.tests import standin_pool as sp
+from ObjectFactories.tests import standin_pool as sp
 from config.defaults import (
     DEFAULT_GK_NUMERIC_ABS_TOLERANCE,
     DEFAULT_GK_NUMERIC_REL_TOLERANCE,

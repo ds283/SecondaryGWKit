@@ -11,7 +11,7 @@ what unblocks `--build --resume` of a store built since then.
 The script is imported by path with `importlib.util`; its module-level imports are light
 (`argparse`, `json`, `numpy`, the standard library), so this costs nothing. `BASELINE_STORE` and
 `SWEEP_STORE` are monkeypatched onto a fresh copy of the module, at stores in one temporary
-directory per test, built with `Datastore/tests/shard_store_fixtures.py` (no Ray, no real
+directory per test, built with `ObjectFactories/tests/shard_store_fixtures.py` (no Ray, no real
 ``ShardedPool`` actors). `RunRegistry.stores.DEFAULT_ROOT` is monkeypatched at the same store, so
 that the running-run check `copy_store` makes reads a temporary runs root and never
 ``var/runs/``. Nothing here calls `ShardedPool` through Ray, and nothing here opens anything
@@ -27,7 +27,7 @@ from RunRegistry import stores
 from RunRegistry.tests.store_fixtures import StoreTestCase
 
 from datastorekit.shard_paths import shard_file_name
-from Datastore.tests.shard_store_fixtures import (
+from ObjectFactories.tests.shard_store_fixtures import (
     stored_records,
     tree_state,
     write_hand_built_primary,

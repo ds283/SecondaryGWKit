@@ -25,12 +25,12 @@ Round-trip tests for the integral `read_batch`es prompt 05b repairs
 No Ray, no datastore file, nothing under `var/`: the schema is built in memory with
 `build_schema(MetaData(), config.datastore.factories)`, the same construction
 `docs/datastore-integrity-audit/lookup_keys/common.py` and
-`Datastore/tests/test_read_path_mechanics.py` use, and every call below is to the real,
+`ObjectFactories/tests/test_read_path_mechanics.py` use, and every call below is to the real,
 unmodified `build()` / `read_batch()` code.
 
 Tests 3 and 4 construct a real `OneLoopIntegral` from what `build()`/`read_batch()` pass it, which
 -- as test 5 demonstrates, and D3 accepted -- raises `KeyError: 'source_serial'` on every hit. So
-those two patch the name `OneLoopIntegral` inside `Datastore.SQL.ObjectFactories.OneLoopIntegral`
+those two patch the name `OneLoopIntegral` inside `ObjectFactories.OneLoopIntegral`
 with a stand-in that only records its constructor's keyword arguments, scoped by
 `unittest.mock.patch` (README §5 rule 9); the real class, and every other module, are untouched.
 
@@ -54,9 +54,9 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories import OneLoopIntegral as OLI_module
-from Datastore.SQL.ObjectFactories.OneLoopIntegral import sqla_OneLoopIntegral_factory
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+from ObjectFactories import OneLoopIntegral as OLI_module
+from ObjectFactories.OneLoopIntegral import sqla_OneLoopIntegral_factory
+from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
 from datastorekit.SQL.schema import build_schema
@@ -339,7 +339,7 @@ class TestQuadSourceIntegralExitTimeSerials(unittest.TestCase):
 
 class _OneLoopStandIn:
     """
-    Stand-in for `ComputeTargets.OneLoopIntegral`, patched in for `Datastore.SQL.ObjectFactories.
+    Stand-in for `ComputeTargets.OneLoopIntegral`, patched in for `ObjectFactories.
     OneLoopIntegral.OneLoopIntegral` so that `build()`/`read_batch()` can be exercised without
     hitting the real constructor's `payload["source_serial"]`, which is `[00-oneloop-factory-
     cannot-round-trip-a-row]` -- D3's declared, deliberately unfixed hole (test 5 keeps it real).

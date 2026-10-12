@@ -16,11 +16,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from common import Ref, RecordingConn, StandInModelProxy, Store  # noqa: E402
-from Datastore.SQL.ObjectFactories.OneLoopIntegral import (  # noqa: E402
+from ObjectFactories.OneLoopIntegral import (  # noqa: E402
     sqla_OneLoopIntegral_factory,
 )
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory  # noqa: E402
-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory  # noqa: E402
+from ObjectFactories.redshift import sqla_redshift_factory  # noqa: E402
+from ObjectFactories.tolerance import sqla_tolerance_factory  # noqa: E402
 from MetadataConcepts import store_tag, tolerance  # noqa: E402
 
 

@@ -46,17 +46,20 @@ from CosmologyConcepts.wavenumber import (
     WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
 )
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericIntegration_factory,
     sqla_GkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
+from ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
 from datastorekit.SQL.schema import build_schema
-from Datastore.tests.test_factory_select_columns import FACTORY_DIR, iter_functions
+from ObjectFactories.tests.test_factory_select_columns import (
+    FACTORY_DIR,
+    iter_functions,
+)
 from MetadataConcepts import tolerance
 from Units import Mpc_units
 
@@ -774,11 +777,11 @@ class TestResponseFlagsAreRead(_StoreCase):
 # "module.py:class", each naming the test module that round-trips it. A new read_batch fails
 # test_every_read_batch_has_a_round_trip until someone writes its test and adds it here.
 READ_BATCH_ROUND_TRIPS = {
-    "GkNumericIntegration.py:sqla_GkNumericValue_factory": "Datastore.tests.test_value_reads_parent_key",
-    "GkWKBIntegration.py:sqla_GkWKBValue_factory": "Datastore.tests.test_value_reads_parent_key",
-    "TkWKBIntegration.py:sqla_TkWKBValue_factory": "Datastore.tests.test_value_reads_parent_key",
-    "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory": "Datastore.tests.test_integral_read_batch",
-    "OneLoopIntegral.py:sqla_OneLoopIntegral_factory": "Datastore.tests.test_integral_read_batch",
+    "GkNumericIntegration.py:sqla_GkNumericValue_factory": "ObjectFactories.tests.test_value_reads_parent_key",
+    "GkWKBIntegration.py:sqla_GkWKBValue_factory": "ObjectFactories.tests.test_value_reads_parent_key",
+    "TkWKBIntegration.py:sqla_TkWKBValue_factory": "ObjectFactories.tests.test_value_reads_parent_key",
+    "QuadSourceIntegral.py:sqla_QuadSourceIntegral_factory": "ObjectFactories.tests.test_integral_read_batch",
+    "OneLoopIntegral.py:sqla_OneLoopIntegral_factory": "ObjectFactories.tests.test_integral_read_batch",
 }
 
 

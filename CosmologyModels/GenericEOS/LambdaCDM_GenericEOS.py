@@ -370,7 +370,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
 
     # The identity of the T(z) representation this class builds its background from. It is part of
     # the QCD cosmology's datastore lookup key
-    # (Datastore/SQL/ObjectFactories/QCD_Cosmology.py), and it exists because nothing else in that
+    # (ObjectFactories/QCD_Cosmology.py), and it exists because nothing else in that
     # key can see the representation: build() matches on the seven parameter values and
     # log10_max_z, every one of which is an *input* to the model rather than a property of how
     # T(z) is approximated from those inputs.

@@ -884,7 +884,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         # construction and digest, and z_init (optional in the lookup, always in the key) -- with
         # its tags, its validated flag and its BackgroundModelValue count. The solver is not in the
         # lookup and is not identity
-        from Datastore.SQL.ObjectFactories.cosmology_types import COSMOLOGY_TYPES
+        from ObjectFactories.cosmology_types import COSMOLOGY_TYPES
         from datastorekit.store_inventory import InventorySpec, Parent
 
         return InventorySpec(

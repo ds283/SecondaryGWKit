@@ -24,7 +24,7 @@ Four things are checked, in the order prompt 03 §3 states them:
 3. **(Removed by ``datastore-generic`` prompt 01.)** A table without the column used to raise the
    campaign's message. No code accommodates a store written by older code now: SQLite's own
    "no such column" reaches the caller, as every database error does
-   (``Datastore/tests/test_database_errors_reach_the_caller.py``).
+   (``ObjectFactories/tests/test_database_errors_reach_the_caller.py``).
 4. **``LambdaCDM`` is untouched.** It computes ``T = T_CMB (1+z)`` in closed form, has no ``T(z)``
    spline and no representation to key on, and must not acquire a column.
 
@@ -46,15 +46,13 @@ import sqlalchemy as sqla
 from CosmologyModels.GenericEOS.LambdaCDM_GenericEOS import LambdaCDM_GenericEOS
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import Planck2018
-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
+from ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+from ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
 from Units import Mpc_units
 
 REPO_ROOT = Path(__file__).parents[2]
 
-FACTORY_SOURCE = (
-    REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories" / "QCD_Cosmology.py"
-)
+FACTORY_SOURCE = REPO_ROOT / "ObjectFactories" / "QCD_Cosmology.py"
 
 # the production configuration (config/model_list.py)
 PRODUCTION_MAX_Z = 1e20
@@ -444,9 +442,7 @@ class TestLambdaCDMIsUntouched(unittest.TestCase):
         self.assertNotIn(KEY_COLUMN, columns)
 
     def test_the_lambdacdm_factory_never_mentions_the_representation(self):
-        source = (
-            REPO_ROOT / "Datastore" / "SQL" / "ObjectFactories" / "LambdaCDM.py"
-        ).read_text()
+        source = (REPO_ROOT / "ObjectFactories" / "LambdaCDM.py").read_text()
         self.assertNotIn(KEY_COLUMN, source)
         self.assertNotIn(CONSTANT_NAME, source)
 

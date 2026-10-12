@@ -26,7 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from Datastore.tests.test_factory_select_columns import (  # noqa: E402
+from ObjectFactories.tests.test_factory_select_columns import (  # noqa: E402
     FACTORY_DIR,
     analyse_build,
 )

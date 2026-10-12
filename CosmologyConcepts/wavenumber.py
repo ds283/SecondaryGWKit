@@ -37,7 +37,7 @@ from utilities import WallclockTimer
 # **A bump is the only signal a datastore gets.** Nothing about how a grid was constructed is
 # recoverable from the stored samples, so an unbumped change to the code in this section serves
 # objects computed under the old construction as if they were the new one -- which is the failure
-# Datastore/SQL/ObjectFactories/QCD_Cosmology.py's module docstring describes one level in, for
+# ObjectFactories/QCD_Cosmology.py's module docstring describes one level in, for
 # the T(z) representation. **Any prompt that changes how the grid is constructed bumps this**,
 # and records what it changed in the table below.
 #
@@ -76,7 +76,7 @@ SOURCE_GRID_CONSTRUCTION_VERSION = 2
 # consumer's storage granularity -- and its choice is delicate. Four constraints bracket it, the
 # last two of which are why an absolute 1e-12, or even 1e-5, is the wrong answer:
 #
-#  * **Above 1e-7 relative, by the datastore.** Datastore/SQL/ObjectFactories/redshift.py matches
+#  * **Above 1e-7 relative, by the datastore.** ObjectFactories/redshift.py matches
 #    an existing row with |z_stored - z| / z < DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7, so a
 #    pair closer than that is *one row*: the two samples would silently collapse into a single
 #    redshift object and the straddle would not exist. build_z_sample refuses such a standoff
@@ -129,7 +129,7 @@ SOURCE_GRID_BREAK_REFINEMENT = 2
 # The closest two samples of the grid are ever allowed to be, relative in (1+z). This is a
 # *degeneracy guard*, not a spacing policy: its only job is to keep any two samples further apart
 # than DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7, the tolerance with which
-# Datastore/SQL/ObjectFactories/redshift.py identifies an existing redshift row, so that no two
+# ObjectFactories/redshift.py identifies an existing redshift row, so that no two
 # grid points can silently become the same redshift object. Ten times that leaves a margin and is
 # still 4.3e-05 of a production grid interval.
 SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION

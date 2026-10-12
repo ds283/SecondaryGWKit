@@ -14,7 +14,7 @@ fixed (docs/datastore-integrity-audit.md §3.10-§3.11, board items P6/P7):
   * three ``raise ("...")`` sites, which raised ``TypeError: exceptions must derive from
     BaseException`` instead of the message they carry.
 
-``Datastore/tests/test_factory_select_columns.py`` is a static guard: it can see the two wrong
+``ObjectFactories/tests/test_factory_select_columns.py`` is a static guard: it can see the two wrong
 names and the two wrong column names (they are read-back defects and column-existence defects
 respectively), but by its own module docstring (point 3) it "cannot see ... a correctly selected
 column never passed on to the object it builds" -- ``TkWKBValue.read_batch``'s missing ``friction``
@@ -43,16 +43,16 @@ import sqlalchemy as sqla
 import ComputeTargets.phase_residual as phase_residual
 from CosmologyConcepts import redshift
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+from ObjectFactories.GkNumericIntegration import (
     sqla_GkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkSource import sqla_GkSourceValue_factory
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
-from Datastore.SQL.ObjectFactories.QuadSource import sqla_QuadSourceValue_factory
-from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+from ObjectFactories.GkSource import sqla_GkSourceValue_factory
+from ObjectFactories.GkWKBIntegration import sqla_GkWKBValue_factory
+from ObjectFactories.QuadSource import sqla_QuadSourceValue_factory
+from ObjectFactories.TkNumericIntegration import (
     sqla_TkNumericValue_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
+from ObjectFactories.TkWKBIntegration import sqla_TkWKBValue_factory
 from datastorekit.SQL.schema import build_schema
 from Units import Mpc_units
 
@@ -565,7 +565,7 @@ class TestTagsOmittedDefaultToEmpty(unittest.TestCase):
 
     def test_tk_numeric_value_build_impl_model(self):
         # build()'s own dispatch reads "z_init"; _build_impl_model then reads "z_source" off the
-        # same payload (Datastore/SQL/ObjectFactories/TkNumericIntegration.py:853) -- both keys
+        # same payload (ObjectFactories/TkNumericIntegration.py:853) -- both keys
         # must carry the same redshift for the model path to be reached at all, independent of
         # anything this prompt fixes.
         z_source = _z(1, 1.0e5)

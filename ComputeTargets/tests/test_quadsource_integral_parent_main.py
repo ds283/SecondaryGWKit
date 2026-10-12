@@ -1,6 +1,6 @@
 """
 Tests for prompt 09c of ``prompts/datastore-integrity`` (board item K5), the parts that are not the
-factory or the inventory (``Datastore/tests/test_quadsource_integral_parent_key.py`` holds those):
+factory or the inventory (``ObjectFactories/tests/test_quadsource_integral_parent_key.py`` holds those):
 a ``QuadSourceIntegral`` is keyed on the six stored rows it is computed from -- its
 ``QuadSource``, its ``GkSourcePolicyData``, and the Tk numeric and WKB rows for q and r.
 
@@ -39,13 +39,13 @@ import sqlalchemy as sqla
 from ComputeTargets import QuadSourceIntegral
 from ComputeTargets.tests.test_main_plumbing import MAIN_PY
 from config.datastore import factories as _factories
-from Datastore.SQL.ObjectFactories.GkSource import GkSource_parents_digest
-from Datastore.tests.test_quadsource_integral_parent_key import (
+from ObjectFactories.GkSource import GkSource_parents_digest
+from ObjectFactories.tests.test_quadsource_integral_parent_key import (
     OTHER,
     PARENTS,
     _WithAStore,
 )
-from Datastore.tests.test_wkb_numeric_parent_key import (
+from ObjectFactories.tests.test_wkb_numeric_parent_key import (
     K_EXIT,
     MODEL,
     OTHER_K_EXIT,

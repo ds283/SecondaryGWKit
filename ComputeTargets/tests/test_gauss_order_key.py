@@ -92,12 +92,12 @@ from Quadrature.integrators.WKB_phase_function import (
     PHASE_SOLVER_LABEL,
     WKB_phase_function,
 )
-from Datastore.SQL.ObjectFactories.BackgroundModel import sqla_BackgroundModelFactory
-from Datastore.SQL.ObjectFactories.GkSource import sqla_GkSource_factory
-from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
+from ObjectFactories.BackgroundModel import sqla_BackgroundModelFactory
+from ObjectFactories.GkSource import sqla_GkSource_factory
+from ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
 )
-from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+from ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
 )
 from Units import Mpc_units

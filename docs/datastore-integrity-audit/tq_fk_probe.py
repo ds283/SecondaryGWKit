@@ -12,7 +12,7 @@ from datastorekit.SQL.schema import build_schema
 def attempt(retarget):
     # seed the parents with foreign_keys OFF, then switch it ON for the QuadSource insert
     md = sqla.MetaData()
-    import Datastore.SQL.ObjectFactories.QuadSource as QS
+    import ObjectFactories.QuadSource as QS
 
     factories = dict(_factories)
     if retarget:

@@ -38,15 +38,15 @@ import sqlalchemy as sqla
 
 from ComputeTargets import QuadSourceIntegral
 from CosmologyConcepts import redshift
-from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+from ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
-from Datastore.SQL.ObjectFactories.QuadSourcePolicy import (
+from ObjectFactories.QuadSourcePolicy import (
     sqla_QuadSourcePolicy_factory,
 )
-from Datastore.tests import real_store_fixtures as rsf
-from Datastore.tests import test_database_errors_reach_the_caller as harness
-from Datastore.tests.test_integral_read_batch import (
+from ObjectFactories.tests import real_store_fixtures as rsf
+from ObjectFactories.tests import test_database_errors_reach_the_caller as harness
+from ObjectFactories.tests.test_integral_read_batch import (
     Store,
     _exit_time_obj,
     _exit_time_row,
