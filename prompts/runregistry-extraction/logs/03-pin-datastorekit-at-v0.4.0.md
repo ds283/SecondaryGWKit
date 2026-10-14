@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 03, pin `datastorekit` at `v0.4.0`
 
 - **Subject:** [`03-pin-datastorekit-at-v0.4.0.md`](../03-pin-datastorekit-at-v0.4.0.md), board item K1.
-- **Commit:** this commit (parent `3b6ef6a`).
+- **Commit:** `5b81f2e` (parent `3b6ef6a`).
 - **Result:** landed. K1 passes; no stop condition of the prompt's §4 fired. `ComputeTargets` shows its
   known wall-clock failure, which re-ran alone twice and failed both times (below).
 - **Model:** Sonnet 5.5.
@@ -117,6 +117,6 @@ None. This prompt adds no code and no test (README §5 rule 8; acceptance 6).
   by D6).
 - **04 runs R1 at this tree.** Its fingerprint-both-ways script may call `datastorekit.store_fingerprint` (the prompt-04 charter);
   the module's `ENCODING_FORMAT` is `1`. The lock is free, the registry shows nothing running, and nothing here took the lock or started Ray.
-- **Rollback** (README §4.2): `git revert` of this commit, then `pip install -r requirements.txt` from the reverted file to put
+- **Rollback** (README §4.2): `git revert` of `5b81f2e`, then `pip install -r requirements.txt` from the reverted file to put
   `v0.2.2` back.
 - **06's list** is in `03-addenda.txt`, "Handed to 06".
