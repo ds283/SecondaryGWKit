@@ -2,7 +2,7 @@
 
 - **Subject:** [`04-rehearse-through-the-new-datastorekit.md`](../04-rehearse-through-the-new-datastorekit.md),
   board items L1–L4 (R1) and W1; gate R1.
-- **Commit:** this commit (parent `89ff8b7`).
+- **Commit:** `ec61569` (parent `89ff8b7`).
 - **Result:** landed. **R1 holds, and W1 holds.** Every acceptance item passes, and no stop
   condition fired.
 - **Model:** Opus 5.5.
@@ -500,7 +500,7 @@ The diffs and outputs are kept under `var/runregistry-extraction-04/breakage/`, 
 
 - **R1 holds** (board §2), resting on:
   - the dispatch `HEAD` `89ff8b7`, whose code is `5b81f2e`'s;
-  - this commit;
+  - `ec61569`;
   - the runs `runregistry-extraction-04-reference-20261014T154651` and
     `runregistry-extraction-04-resumed-c-20261014T161739`, both `done`, both `39809dca…`, equal to
     R0's recorded fingerprints.
