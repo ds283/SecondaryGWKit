@@ -8,8 +8,9 @@ the audit's §8, accepted as recommended (§6.1).
   [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md) and
   [`runregistrykit-extraction-brief.md`](runregistrykit-extraction-brief.md).
 
-§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01, 02 and 02a are
-written**; 03–09 wait on releases in the two other repositories (§2.1).
+§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01, 02, 02a, 03 and
+04 are written**, 03 and 04 on 2026-10-14 after DatastoreKit's `v0.4.0` (E1); 05–09 wait on
+RunRegistryKit's release (§2.1).
 
 ## 0. Why this campaign exists
 
@@ -128,8 +129,8 @@ all 38 factories, but not a build.
 | 01 | [`01-freeze-the-run-registry.md`](01-freeze-the-run-registry.md) | The freeze, in `CLAUDE.md`; the frozen tree recorded file by file; the baselines 06 and 08 compare with | Sonnet | written 2026-10-12 |
 | 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1 at the start tree; every fingerprint `39809dca…`. Closes the `f539015` → `511ef5f` gap (§0.1) | Opus | written 2026-10-12 |
 | 02a | [`02a-the-rehearsal-lock-helper.md`](02a-the-rehearsal-lock-helper.md) | **The lock helper**: §4.1's lock steps as `tools/rehearsal_lock.py`, with a check for this repository's Ray processes; proved against SI's and ChamPBH's scripts and on the real lock; `CLAUDE.md`'s pointer | Sonnet | written 2026-10-12 |
-| 03 | Pin `datastorekit` at E1's release | The pin moved from `v0.2.2`, in a commit of its own; the venv installed from it | Sonnet | held: E1 |
-| 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint taken both ways and equal | Opus | held: E1, 03 |
+| 03 | [`03-pin-datastorekit-at-v0.4.0.md`](03-pin-datastorekit-at-v0.4.0.md) | The pin moved from `v0.2.2` to `v0.4.0`, in a commit of its own; the venv installed from it | Sonnet | written 2026-10-14 |
+| 04 | [`04-rehearse-through-the-new-datastorekit.md`](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint taken both ways and equal | Opus | written 2026-10-14; held: 03 |
 | 05 | Pin `runregistrykit` at E2's release | The pin, with the `[stores]` extra, in a commit of its own | Sonnet | held: E2 |
 | 06 | Adopt `runregistrykit` | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | held: E2, 04, 05 |
 | 07 | Guard the fingerprint format | **Q5**: a test that a spec change without a format bump fails | Sonnet | held: 06 |
@@ -211,8 +212,8 @@ explain before any pin moves.
   installed from it after a dry run.
 - **Acceptance.**
   1. The dry run moves only `datastorekit`; after install it is at the tag's commit, not editable.
-  2. The seven roots pass at §0.2's counts, apart from any count E1's SGK-facing note says changes,
-     and why.
+  2. The seven roots pass at 02a's counts (§0.2's, with `tools` 91), apart from any count E1's
+     SGK-facing note says changes, and why. (`v0.4.0`'s note says none does.)
   3. The SGK-facing notes of `v0.2.3`, `v0.3.0` and E1's release are each read, and every item they
      ask of SGK is either done here, by name, or shown not to apply.
 - **Out.** Any use of DatastoreKit's new fingerprint code (06).
@@ -224,7 +225,9 @@ explain before any pin moves.
   2. **The fingerprint both ways.** For each store, DatastoreKit's new fingerprint function, given
      `read_inventory(primary, factories)` and SGK's format 6, gives the same overall digest, the
      same per-class and per-tag-set digests, and the same counts as `RunRegistry.stores.fingerprint_of`
-     (§6.2 C3). Run as a verification script under `docs/runregistry-extraction/`, not a test.
+     (§6.2 C3): every field equal but `encoding_format`, which the package adds and SGK's code
+     lacks. On R1's two stores and R0's two, which are still live. Run as a verification script
+     under `docs/runregistry-extraction/`, not a test.
   3. L4 against R0.
 - **Stop.** A miss in (2) with (1) holding is a DatastoreKit defect (§5 rule 11).
 
@@ -271,6 +274,10 @@ explain before any pin moves.
      its digest equals `fingerprint_of`'s on 06's own test store.
   6. Closes `[00-a-run-launched-from-a-worktree-records-into-the-worktree]` and
      `[00-the-fingerprint-encoding-has-no-version-of-its-own]` (§6.2 C8).
+  7. Closes `[00-recorded-fingerprints-lack-the-encoding-format]`: before any call of the package's
+     comparison, no sidecar under `var/datastores/` is a live store whose recorded fingerprint lacks
+     `encoding_format` (R0's and R1's retired under D6, §3). The addendum's items 1, 2 and 5 are
+     06's changes, named (§5 rule 7).
 - **Out.** The guard (07). Any change in what is stored.
 
 **07 — Guard the fingerprint format against spec changes** (Sonnet).
@@ -289,7 +296,10 @@ explain before any pin moves.
   RunRegistryKit and DatastoreKit's fingerprint code.
 - **Acceptance.**
   1. L1–L3 hold, `39809dca…`, equal to R1's and R0's recorded fingerprints; each fingerprint
-     carries DatastoreKit's version.
+     carries DatastoreKit's version. The recorded ones are SGK's and lack `encoding_format`, so they
+     are compared field by field with it set aside, not through the package's
+     `compare_fingerprints`, which gives one `encoding` entry for them
+     (`[00-recorded-fingerprints-lack-the-encoding-format]`).
   2. Every manifest's `packages` names `datastorekit`, `raypoolkit` and `runregistrykit`, each at
      its pin, none editable.
   3. L4 against R1.
@@ -314,7 +324,13 @@ explain before any pin moves.
 with a sidecar (`store create`) and a written fingerprint.
 
 **No prompt retires a store.** They stay for each review, and R0's and R1's are compared with later
-ones through their recorded fingerprints. The user retires them after 09's review, or not.
+ones through their recorded fingerprints, which their run directories keep.
+- **R0's and R1's four are retired after 04's review** (the user's ruling D6, 2026-10-14, §6.1). Their
+  recorded fingerprints are SGK's, without `encoding_format`, and from 06 the package's comparison
+  refuses them (`[00-recorded-fingerprints-lack-the-encoding-format]`). The orchestrator retires
+  each with `store retire`, after a dry run, while SGK's own code still compares them, in a commit
+  of its own, as `dk-and-rpk-migration`'s were at `718e650`.
+- **R2's two** the user retires after 09's review, or not.
 
 **Before touching anything,** a prompt runs the registry's `list` and reports anything `running` or
 stale. Before each launch it checks that no Ray process of this repository is up, waiting by pid
@@ -488,6 +504,12 @@ From the audit, §0 and §8.
 | **Q7** — a manifest format field | **Not during the move**; proposed separately after it | Added during the move |
 | **Q8** — two value tables per spec | **Left to SI's prompt 10** | Asking DatastoreKit now |
 
+**Made by the user on 2026-10-14**, at E1, from DatastoreKit's `v0.4.0` addendum (item 3):
+
+| | Decided | Rejected |
+|---|---|---|
+| **D6** — the fingerprints SGK holds, which lack `encoding_format` | **Option (c): retire R0's and R1's four stores after 04's review**, while SGK's own code still compares them (§3) | (a) recomputing each with `--write`, replacing the recorded fingerprint; (b) keeping SGK's comparison beside the package's, a version-aware reader |
+
 ### 6.2 Choices of method made in writing this plan
 
 The orchestrator's, recorded so that the user can reverse any of them.
@@ -530,7 +552,7 @@ The orchestrator's, recorded so that the user can reverse any of them.
 - **Before E2:** creating the RunRegistryKit repository, at `/Users/ds283/Documents/Code/RunRegistryKit`
   and `https://github.com/ds283/RunRegistryKit`, and handing each brief to a session in its
   repository.
-- **At the close:** retiring the six rehearsal stores (§3); the two gate records (C11).
+- **At the close:** retiring R2's two rehearsal stores, or not (§3); the two gate records (C11).
 
 ## 7. The briefs, and what this campaign needs back
 

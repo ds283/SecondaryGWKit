@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-12 · **106 open** across twenty-one campaigns.
+**Last updated:** 2026-10-14 · **107 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -896,12 +896,14 @@ the store fingerprint's encoding and algorithm moved to DatastoreKit under a ver
 to its prompt 06; the second is a DatastoreKit defect, reported by the campaign's brief to
 DatastoreKit. A third was opened the same day after R0, by the plan's amendment that adopted the
 shared rehearsal lock (its README §4.1). It was assigned to `handover` the same day, and its row
-is in §1.1.
+is in §1.1. A fourth was opened on 2026-10-14 at E1, from DatastoreKit's `v0.4.0` note, and ruled by
+the user the same day.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-a-run-launched-from-a-worktree-records-into-the-worktree]` | runregistry-extraction | `REPO_ROOT` is the parent of the imported package's directory, so a run launched from a git worktree records into the worktree's `var/runs/` and is lost with it. None lost yet. **Assigned (2026-10-12):** to 06, which roots runs in the main checkout (Q3). |
-| `[00-the-fingerprint-encoding-has-no-version-of-its-own]` | runregistry-extraction | `FINGERPRINT_FORMAT` is SGK's; `datastorekit.store_inventory`'s encoding has no version, so a release that changed it would read as content differences in every class. DatastoreKit's defect, reported by the brief. **Assigned (2026-10-12):** SGK's half to 06. |
+| `[00-the-fingerprint-encoding-has-no-version-of-its-own]` | runregistry-extraction | `FINGERPRINT_FORMAT` is SGK's; `datastorekit.store_inventory`'s encoding has no version, so a release that changed it would read as content differences in every class. DatastoreKit's defect, reported by the brief. **Assigned (2026-10-12):** SGK's half to 06. **Narrowed (2026-10-14):** DatastoreKit's half closed by `v0.4.0` (`encoding_format`). |
+| `[00-recorded-fingerprints-lack-the-encoding-format]` | runregistry-extraction | Every fingerprint SGK's code has recorded lacks `encoding_format`, so the package's `compare_fingerprints` refuses it; on a live store, `store fingerprint` exits 1 and `store retire` refuses. **Assigned (2026-10-14):** by the user (D6), R0's and R1's stores retired after 04's review; checked at 06's gate. |
 
 ---
 

@@ -1,9 +1,8 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-12 · **Status: IN PROGRESS — 3 of 10 prompts written (01, 02, 02a), 3 landed (01, 02, 02a); R0 holds.
-02a, the rehearsal-lock helper, is `tools/rehearsal_lock.py`, proved against SI's and ChamPBH's
-scripts and on the real lock. 03–09 held on two releases in other repositories (E1, E2). D1–D5 and
-Q1–Q8 ruled by the user.**
+**Last updated:** 2026-10-14 · **Status: IN PROGRESS — 5 of 10 prompts written (01, 02, 02a, 03,
+04), 3 landed (01, 02, 02a); R0 holds. E1 holds: DatastoreKit `v0.4.0` (§5.5), so 03 and 04 are
+written. 05–09 held on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -37,6 +36,7 @@ A3 v2 compute run. A fingerprint rehearsal comes at the start tree (R0), after t
 | **D3** — the fingerprint | encoding and digest to DatastoreKit, versioned there; content specification and format number grouped in one client module; RunRegistryKit takes a client fingerprinter |
 | **D4** — no fingerprinter | not supported; `[stores]` is a dependency split, not a degraded mode |
 | **D5** — client spec coverage | ChamPBH 09 and SI 10 prove it by a test (ChamPBH `64ef9aa`; SI's plan, uncommitted) |
+| **D6** — fingerprints SGK holds without `encoding_format` (2026-10-14) | the `v0.4.0` addendum's option (c): R0's and R1's four stores are retired after 04's review, while SGK's own code still compares them (§5.5) |
 | **Q1–Q8** | the audit's §8, all as recommended: the names; a config file at the root; a worktree's run recorded in the main checkout; one distribution with a `[stores]` extra; the spec-digest guard (07); a test root for the driver tests; no manifest format field during the move; two value tables per spec left to SI |
 
 The orchestrator's choices of method, C1–C11, are in README §6.2.
@@ -50,8 +50,8 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
-| 03 | Pin `datastorekit` at E1's release | the DatastoreKit pin | Sonnet | ⏸ E1 | ⬜ | — | — |
-| 04 | Rehearse through the new DatastoreKit (R1) | **R1**; the fingerprint both ways | Opus | ⏸ E1, 03 | ⬜ | — | — |
+| 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ⬜ | — | — |
+| 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14; ⏸ 03 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
 | 06 | Adopt `runregistrykit` | the swap; closes both `00-` issues | Opus | ⏸ E2, 04, 05 | ⬜ | — | — |
 | 07 | Guard the fingerprint format | **Q5** | Sonnet | ⏸ 06 | ⬜ | — | — |
@@ -60,7 +60,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
-**Written in batches (README §2.1).** 01–02 now; 02a after R0, when the shared lock was adopted; 03–04 when E1's release is tagged; 05–08 when E2's
+**Written in batches (README §2.1).** 01–02 now; 02a after R0, when the shared lock was adopted; 03–04 when E1's release was tagged (written 2026-10-14); 05–08 when E2's
 release is tagged and its SGK checklist exists; 09 after 08's review. The holds are for **method**,
 not scope: every charter is fixed in README §2.2.
 
@@ -101,7 +101,7 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (`74eff08`): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
-| **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ⬜ requested 2026-10-12 |
+| **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ✅ holds (2026-10-14, §5.5): `v0.4.0`, tag object `8e7c1d77…` on `c8570e84…`, CI run 38538726292 green on `c8570e8`; the note is DatastoreKit's `docs/adoption/secondarygwkit.md`, "Addendum: v0.4.0" |
 | R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ⬜ |
 | **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ⬜ requested 2026-10-12 |
 | RunRegistryKit G2 | `RunRegistry/` is gone and nothing imports it, the pin is installed, the roots pass, `list` gives 01's runs, and R2 reproduces `39809dca…` | 06, 08 | ⬜ |
@@ -176,6 +176,40 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     class, not a format mismatch. Today only the rehearsal acceptance (`39809dca…`) would catch it.
   - **Next step.** DatastoreKit versions the encoding and algorithm (E1). 06 records that version
     in every fingerprint SGK takes, and closes SGK's half; R2 (08) confirms it.
+  - **Narrowed (2026-10-14, at E1):** DatastoreKit's half is closed by `v0.4.0`.
+    `datastorekit.store_fingerprint` holds the algorithm, with `ENCODING_FORMAT = 1` recorded beside
+    the digest as `encoding_format` (outside every digest), the client's format a required argument,
+    and contract §9.7's rule for when the package bumps its version. SGK's half, recording it, is
+    still 06's.
+
+- **[00-recorded-fingerprints-lack-the-encoding-format]** *(opened 2026-10-14 at E1, from
+  DatastoreKit's `v0.4.0` addendum to its SGK checklist, item 3; **Assigned (2026-10-14):** by the
+  user's ruling D6, to the orchestrator's retirement of R0's and R1's stores after 04's review, and
+  checked at 06's gate)*
+  - **The defect.** The package's `compare_fingerprints` reads `fingerprint_format`, then
+    `encoding_format`; if either differs it gives one entry for each and compares nothing else.
+    Every fingerprint SGK's own code takes (`RunRegistry/stores.py:1182-1253`) lacks
+    `encoding_format`. So once SGK compares through the package (06), each fingerprint SGK already
+    holds compares as one `encoding` entry, whatever the stores hold: a sidecar's `fingerprint`, a
+    run's `status.json`, and the six golden files.
+  - **Impact.**
+    - On a **live** store with such a sidecar, `store fingerprint` would report one difference and
+      exit 1, and `store retire` would refuse the store, since it needs an empty comparison. There
+      are two such stores today, R0's (`runregistry-extraction-02-{reference,resumed}`; the other 14
+      sidecars are tombstones, never fingerprinted again). R1 (04) adds two more.
+    - **Run directories** keep their recorded fingerprints as records. A later comparison with one,
+      as 08's acceptance 1 makes with R0's and R1's, compares the digests and classes field by field
+      with `encoding_format` set aside, not through the package's comparison (README §2.2, 08).
+    - The golden files are 06's to change, with `test_the_shape` and `test_the_golden_fingerprint`
+      (the addendum's item 2).
+  - **Next step.** The user ruled option (c) of the addendum (D6, 2026-10-14). After 04's review,
+    the orchestrator retires R0's and R1's four stores with `store retire`, each after a dry run, in
+    a commit of its own, as `718e650` did for `dk-and-rpk-migration`'s six. Option (b), SGK's
+    comparison kept beside the package's for old fingerprints, is a version-aware reader, which the
+    user's standing rule excludes; option (a), `--write` over the recorded fingerprint, would replace
+    R0's record in its sidecar.
+  - **Closes** at 06's gate, when no sidecar under `var/datastores/` is a live store whose recorded
+    fingerprint lacks `encoding_format`.
 
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
@@ -494,3 +528,42 @@ commit. **All eleven checks pass**, and no stop condition fired.
   agents by pid and a cut command line; their names are found with `ps -p <pid> -o command=`. The
   wall-clock flake failed alone in three of four runs at load 26–27 during the agent's session;
   09's final measurement should re-run it alone at low load, as §5.2 already asks.
+
+### 5.5 E1 holds (2026-10-14)
+
+DatastoreKit released `v0.4.0`, and the user brought its report to this session. The orchestrator
+checked it against DatastoreKit's repository and this tree, at `a5a6f6d`, read-only.
+- **The tag.** `v0.4.0` is an annotated tag, object `8e7c1d77b3792b57b98983e84b99fc68ab88cb89`, on
+  commit `c8570e849334d09085bbd84876095fc9e22bd005`, the same locally and on `origin`.
+  `pyproject.toml` there gives `version = "0.4.0"`, and differs from `v0.2.2`'s by that line alone.
+- **CI.** Run 38538726292, on `c8570e8` itself, passed both jobs, `suite (high)` and `suite
+  (low)`. DatastoreKit's later `b01737f` touches its records only.
+- **What moved under `datastorekit/`.** Between `v0.2.2` and `v0.4.0`: `SQL/factory_base.py`
+  (`v0.2.3`), `object.py` (`v0.3.0`) and the new `store_fingerprint.py`. Between `v0.3.0` and
+  `v0.4.0`, and between the brief's `d88615e` and `v0.4.0`, the new module alone.
+  `store_inventory.py`, which SGK's own fingerprint code reads, is unchanged since `v0.2.2`.
+- **The dry run.** `pip install --dry-run` with line 17 moved to `v0.4.0` gave `Would install
+  datastorekit-0.4.0` and nothing else.
+- **The note** is DatastoreKit's `docs/adoption/secondarygwkit.md`, "Addendum: v0.4.0 (fingerprint
+  prompt 02, 2026-10-14)", in the tag. At the pin it asks nothing of SGK; at the call (06) it names
+  seven items. Its two findings on SGK's code were checked here: `fingerprint_store` passes `taken`
+  as the second positional argument (`RunRegistry/stores.py:1499-1507`), and so does
+  `test_taken_is_outside_every_digest` (`RunRegistry/tests/test_store_fingerprint.py:378`).
+- **Where the release differs from the brief**, as DatastoreKit reports it, and what each means here:
+  - `fingerprint_of(inventory, fingerprint_format, taken=None)`, the format required. 06 passes it;
+    the ten calls and the two positional `taken` are 06's (addendum item 1).
+  - The version is `encoding_format`, not the audit's placeholder `inventory_format`. No record
+    here is corrected: the audit and the brief named it as a suggestion.
+  - The listing's first line gains ` encoding_format <e>` at its end. 04's script checks it.
+  - Two SGK tests change when SGK calls the package (`test_the_shape`, the golden comparison): 06
+    names them, by README §5 rule 7.
+- **Opened:** `[00-recorded-fingerprints-lack-the-encoding-format]` (§3), and the user ruled it
+  (D6, option (c)). **Narrowed:** `[00-the-fingerprint-encoding-has-no-version-of-its-own]`,
+  DatastoreKit's half closed. The index goes to 107.
+- **Written:** prompts [03](03-pin-datastorekit-at-v0.4.0.md) and
+  [04](04-rehearse-through-the-new-datastorekit.md). The plan is amended where the release and D6
+  made it inexact: §2.2's 03 (02a's counts), 04 (`encoding_format` aside, on all four live stores)
+  and 08 (the recorded fingerprints compared field by field), §3 and §6.3 (R0's and R1's stores
+  retired after 04's review), and §6.1 (D6).
+- The registry showed nothing `running`, and exactly two live stores, R0's.
+
