@@ -798,3 +798,20 @@ eight run directories stay as the record. The outputs are under
 **Afterwards** all 18 sidecars under `var/datastores/` are tombstones, and no `.sqlite` file
 remains there. The issue above is narrowed, and `docs/OPEN_ISSUES.md`'s row with it (the count
 stays 107).
+
+### 5.9 The plan amended: what 08 repeats of W1 (2026-10-14)
+
+At the user's request, after 04's review (§5.7, "Handed on"), README §4 now says what 08 repeats of
+W1. The script compares SGK's `fingerprint_of` with the package's. 06 deletes the first, and R0's
+and R1's stores are retired (§5.8), so the script cannot run at 08 as 04 left it.
+- **What 08 repeats.** 08 repeats W1's claim across stores. The package's fingerprint of each R2
+  store equals R0's and R1's recorded fingerprints in every field but `encoding_format`. That is
+  08's acceptance 1, which is unchanged.
+- **06 rewrites the script into that comparison**, under C6:
+  `fingerprint_both_ways.py <primary>... --against <run dir>...`. The checks of W1 that still have
+  two sides are kept, and 06 names the script's breakages.
+- **`compare_with_recorded.py` is run at 08 on R2's own stores only.** Through the package, every
+  fingerprint SGK's code recorded compares as one `encoding` entry.
+
+The charters in README §2.2 are not changed. 06's acceptance 1 already requires the script's
+`RunRegistry` imports to go, and 08's acceptance 1 already makes the comparison field by field.

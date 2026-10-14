@@ -348,8 +348,31 @@ for a killed build's agents (`[07-a-killed-builds-ray-agents-outlive-the-driver]
 - **02a ships** `tools/rehearsal_lock.py`, which 04 and 08 run for §4.1's lock steps, and its
   proofs, `measure/out/02a-interop.txt` and `02a-real.txt`.
 - **03 and 05 ship the pins**, each in `requirements.txt` and no other file.
-- **04 ships** `docs/runregistry-extraction/fingerprint_both_ways.py <primary>...`, which 08 runs
-  again.
+- **04 ships** `docs/runregistry-extraction/fingerprint_both_ways.py <primary>...` (W1). It compares
+  two live implementations on one inventory: SGK's `fingerprint_of` and the package's. 06 deletes
+  the first, and R0's and R1's stores were retired after 04's review (§3). So **08 does not run the
+  script as 04 left it; it repeats W1's claim across stores** (amended 2026-10-14, after 04's
+  review):
+  - **What 08 repeats.** The package's fingerprint of each of R2's two stores equals, in every field
+    but `encoding_format`, the fingerprints SGK's code recorded for R0 and R1 in their `reference`
+    and `resumed-c` run directories. This is 08's acceptance 1. W1 showed that SGK's fingerprint and
+    the package's agree on the same store. So this equality carries W1's claim to the tree where only
+    the package's implementation is left.
+  - **06 rewrites the script for it**, under C6, since its `RunRegistry` imports must go (06's
+    acceptance 1). The new form is `fingerprint_both_ways.py <primary>... --against <run dir>...`.
+    - It takes each store's fingerprint through `config/fingerprint.py`'s fingerprinter.
+    - It compares that fingerprint field by field with each run directory's recorded one,
+      `encoding_format` set aside, and prints every differing path.
+    - It keeps W1's checks that still have two sides:
+      - the store's `encoding_format` is the package's `ENCODING_FORMAT`;
+      - the recorded fingerprint lacks it;
+      - the package's `compare_fingerprints(recorded, current)` is exactly one `encoding` entry;
+      - the sidecar's fingerprint, now the package's, compares empty.
+    - 06 names the script's breakages (§5 rule 8), as 04 did.
+  - **`compare_with_recorded.py` is not 08's comparison with R1 and R0.** After 06 it compares
+    through the package, which gives one `encoding` entry for every fingerprint SGK's code recorded
+    (`[00-recorded-fingerprints-lack-the-encoding-format]`). At 08 it is run on R2's own stores and
+    sidecars only.
 - **06 ships** the config file, `config/fingerprint.py`, `RunDrivers/tests/`, and the rewritten
   tooling. From 06 on, §4.1's commands name `runregistrykit` where they named `RunRegistry`; 06
   states the replacements in its log, and 08 runs them.
