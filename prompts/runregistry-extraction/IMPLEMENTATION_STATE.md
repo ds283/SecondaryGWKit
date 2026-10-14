@@ -212,6 +212,10 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     R0's record in its sidecar.
   - **Closes** at 06's gate, when no sidecar under `var/datastores/` is a live store whose recorded
     fingerprint lacks `encoding_format`.
+  - **Narrowed (2026-10-14, after 04's review):** the four stores are retired (§5.8). All 18
+    sidecars under `var/datastores/` are tombstones, so there is no live store for the package's
+    comparison to refuse. What remains is 06's: the recorded fingerprints in run directories and
+    the six golden files, and the check at its gate.
 
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
@@ -773,3 +777,24 @@ acceptance 1–7 are met, and no stop condition fired. **R1 holds.**
   (README §4) cannot mean this script as it stands. 08 compares through recorded fingerprints field
   by field (README §2.2, 08, acceptance 1), and its prompt must say what, if anything, of W1 it
   repeats.
+
+### 5.8 R0's and R1's stores retired (2026-10-14, D6)
+
+**The four rehearsal stores retired, by the user's ruling D6 and instruction.** Each was retired with
+`python -m RunRegistry store retire` at `e7d18bd`, after a dry run of each, while SGK's own code
+still compares their recorded fingerprints (`[00-recorded-fingerprints-lack-the-encoding-format]`):
+- `var/datastores/runregistry-extraction-02-reference.sqlite` and `-02-resumed.sqlite` (R0);
+- `var/datastores/runregistry-extraction-04-reference.sqlite` and `-04-resumed.sqlite` (R1).
+
+**The dry runs** exited 0. In each, a fresh read-only fingerprint matched the recorded
+`39809dca…`, and the only references were the store's own building runs: one for each `reference`
+and three for each `resumed`, and no sidecar.
+
+**The retirements** exited 0, between 16:59:25 and 16:59:39. Five files went per store (the primary
+and four shards), 281 MB in all. Each sidecar stays as its tombstone, with `completed` set. The
+eight run directories stay as the record. The outputs are under
+`var/runregistry-extraction-04/retire/` (`dry-run-*.log`, `retire-*.log`).
+
+**Afterwards** all 18 sidecars under `var/datastores/` are tombstones, and no `.sqlite` file
+remains there. The issue above is narrowed, and `docs/OPEN_ISSUES.md`'s row with it (the count
+stays 107).
