@@ -1,0 +1,90 @@
+# 03-addenda.txt — runregistry-extraction prompt 03 §2.6, 2026-10-14.
+# DatastoreKit's docs/adoption/secondarygwkit.md, read at the tag v0.4.0
+# (git -C /Users/ds283/Documents/Code/DatastoreKit show v0.4.0:docs/adoption/secondarygwkit.md):
+# "Addendum: v0.2.3" (:555), "Addendum: v0.3.0" (:641), "Addendum: v0.4.0" (:732) and its table
+# "For SGK's prompt 03" (:895). SGK's tree at HEAD 3b6ef6a, read by git grep and sed.
+# Dispositions: DONE HERE (how) | NOT AT THE PIN (why, with the addendum's own line) | 06's (the item).
+
+## A. Addendum v0.2.3 (SGK may stay on v0.2.2 or move to v0.2.3)
+
+| # | The item (as the addendum words it) | Disposition |
+|---|---|---|
+| A1 | The pin: "SGK may stay on v0.2.2 or move to v0.2.3, as SGK chooses", a move being a commit of its own | DONE HERE, in the sense that matters: this prompt moves the pin, further, to v0.4.0 (the v0.4.0 addendum's supersession table, row :649-669, gives v0.4.0 as SGK's pin "by its runregistry-extraction prompt 03"), in a commit of its own. |
+| A2 | "Nothing changes for SGK": SGK instantiates no factory; it registers classes, so the three removed @abstractmethod lines and the new defaults of store, validate and validate_on_startup are never met | NOT AT THE PIN: the addendum asks nothing ("Nothing changes for SGK"). Checked at HEAD, below (check 1): 38 classes name SQLAFactoryBase as a base; each calls nothing of them by name; the roots (03-roots.txt) pass at 02a's counts. |
+| A3 | Item 8 still holds: no SGK store is refused | NOT AT THE PIN: asks nothing. Measured: SGK's own fingerprint reads both R0 stores through the new pin (03-fingerprint.txt). |
+| A4 | The factory base differs from SGK's former base.py by decorators, a comment and docstrings; "SGK ... never meets the difference" | NOT AT THE PIN: SGK's base.py was deleted at 0c9e2cf; ObjectFactories/ imports SQLAFactoryBase from datastorekit.SQL.factory_base. Nothing to do. |
+| A5 | "G2 reads 'SGK has adopted v0.2.2 or later'" and the pin text | NOT AT THE PIN: a gate wording; G2 holds already (board §2). Nothing asked. |
+| A6 | The supersession table (path:line rows of earlier addenda) | NOT AT THE PIN: bookkeeping of DatastoreKit's own file; asks nothing of SGK. |
+
+## B. Addendum v0.3.0 (SGK may stay on v0.2.2 or move to v0.2.3 or v0.3.0)
+
+| # | The item | Disposition |
+|---|---|---|
+| B1 | The pin, v0.2.2, v0.2.3 or v0.3.0 as SGK chooses | DONE HERE, as A1: v0.4.0 is carried by this prompt (row :649-669 of the v0.4.0 addendum). |
+| B2 | "SGK passes store_id alone": 38 DatastoreObject.__init__(...) calls each pass store_id alone; no class defines or assigns timestamp; the package's DatastoreObject takes an optional keyword-only timestamp | NOT AT THE PIN: asks nothing. Checked at HEAD (check 2, below): the 38 calls are there, each with one positional argument, which is store_id; no class defines or assigns timestamp. |
+| B3 | "One key more in vars()": every DatastoreObject has _timestamp, None unless given; SGK reads no stored object's vars() or __dict__ (its two __dict__ reads are of classes) | NOT AT THE PIN: asks nothing. Left as read; the roots pass at 02a's counts, so no test sees the extra key. |
+| B4 | Item 8 still holds | NOT AT THE PIN: as A3. |
+| B5 | G2 holds (2026-10-12); the supersession table | NOT AT THE PIN: records; ask nothing. |
+
+## C. Addendum v0.4.0 (SGK adopts v0.4.0 in place of v0.2.2, by its prompt 03)
+
+"What moving the pin changes: nothing SGK calls" (:769):
+
+| # | The item | Disposition |
+|---|---|---|
+| C0a | The pin ...@v0.4.0 in place of v0.2.2 (table row 1: "SGK does it: requirements.txt:17") | DONE HERE: requirements.txt:17, one line; installed after a dry run that said "Would install datastorekit-0.4.0" and nothing else; package_provenance() gives datastorekit 0.4.0 at c8570e849334d09085bbd84876095fc9e22bd005, requested_revision v0.4.0, editable false (03-pip.txt). |
+| C0b | "SGK's three functions stay SGK's until its prompt 06": fingerprint_of, compare_fingerprints, listing_lines; each of SGK's 20 calls calls SGK's own; no SGK file names datastorekit.store_fingerprint | NOT AT THE PIN (table row 2 and the addendum's own line). Checked at HEAD (checks 3 and 4): the three defs are at RunRegistry/stores.py:1182, :1256, :1376; the 20 calls are 10 of fingerprint_of, 9 of compare_fingerprints and 1 of listing_lines (check 3); no file outside prompts/ and docs/ imports the module (git grep: 0). Nothing here imports it either: 03-pip.txt shows the one verification read. |
+| C0c | "What they read from the package is unchanged since v0.2.2": canonical_json (stores.py:1197, :1383) and read_inventory (:1493), from store_inventory.py, unchanged | NOT AT THE PIN. Measured: SGK's fingerprint of R0's two stores is 39809dca…, format 6, 21 classes, "recorded: matches", exit 0, files byte-identical (03-fingerprint.txt). |
+| C0d | "v0.2.3 and v0.3.0 ask nothing of SGK" | NOT AT THE PIN: sections A and B above. |
+| C0e | "No SGK suite count changes with the pin" (SGK's 03 measures it) | DONE HERE: all seven roots at 02a's counts (03-roots.txt). |
+| C0f | Item 8 still holds | NOT AT THE PIN: as A3. |
+
+"What changes when SGK calls the package's functions" (:792), the seven items, with the closing table's column for the pin (:895):
+
+| # | The item | At the pin (03) | At the call (06) |
+|---|---|---|---|
+| C1 | fingerprint_format is required: the ten calls of fingerprint_of gain SGK's format 6; the eight that pass the inventory alone would raise TypeError; the two that pass `taken` second positionally (stores.py:1500, test_store_fingerprint.py:378) would pass it as the format | NOT AT THE PIN (table: "does not apply: SGK's own fingerprint_of is called") | 06's: add 6 (or taken=) at the ten calls: RunRegistry/stores.py:1500 (fingerprint_store); RunRegistry/tests/test_store_fingerprint.py:147, :162, :196, :336, :378, :566; ObjectFactories/tests/test_quadsource_policy_key.py:413, :416, :419 (the import at :411 goes to the package's). Their consequence lists: `store fingerprint` would fail, retire_store's fresh fingerprint would be refused, Run.finish(..., fingerprint=True) would record fingerprint_error. |
+| C2 | Every fingerprint gains encoding_format (six keys, where SGK's has five): TestGolden.test_the_shape (:358-374) and test_the_golden_fingerprint (:350-356) against GOLDEN and the six golden files RunRegistry/tests/data/full_store_fingerprint*.json would fail; _fingerprint_problems (stores.py:416-436) checks four keys and allows others | NOT AT THE PIN (table: "does not apply") | 06's: change those two tests (README §5 rule 7 names them), and the six golden files move with TestGolden to ObjectFactories/tests/ (C5). _fingerprint_problems needs nothing. |
+| C3 | compare_fingerprints refuses on encoding_format; every fingerprint SGK holds lacks one, so each compares as one `encoding` entry: store fingerprint exits 1, retire_store refuses; TestFormats keeps its answer. Options (a) recompute with --write, (b) keep SGK's comparison beside the package's, (c) retire such a store before 06 calls the package | NOT AT THE PIN (table: "does not apply: SGK's own compare_fingerprints is called") | 06's gate, by D6 (README §6.1), option (c): R0's and R1's four stores are retired by the orchestrator after 04's review, while SGK's own code compares them. Issue [00-recorded-fingerprints-lack-the-encoding-format] (board §3, assigned). The live stores at HEAD are exactly R0's two (check 5). |
+| C4 | The listing's first line gains ` encoding_format <e>`; parse_listing (test_store_fingerprint.py:114-135) reads words[2] and words[4], unchanged | NOT AT THE PIN (table: "does not apply") | 06's: nothing to change; "parse_listing unchanged". 04's script checks the first line (board §5.5). |
+| C5 | listing_lines needs a fingerprint of the package's fingerprint_of (it reads fingerprint["encoding_format"], KeyError otherwise); SGK's one call, write_listing (stores.py:1432), is given fingerprint_store's fresh fingerprint | NOT AT THE PIN (table: "does not apply") | 06's: holds once fingerprint_store calls the package's fingerprint_of; the two must not be mixed. |
+| C6 | FINGERPRINT_FORMAT stays SGK's (6, history comment and bumps, stores.py:194-206), moving to config/fingerprint.py; SGK never bumps ENCODING_FORMAT | NOT AT THE PIN (table: "does not apply") | 06's, as planned for config/fingerprint.py (README §2.2, 06). |
+| C7 | SGK's R1 (prompt 04) takes each store's fingerprint both ways at format 6 and requires every digest and count equal; a difference is a DatastoreKit defect | NOT AT THE PIN: it is 04's (table: "R1 runs at 03's tree (its 04)") | — (04's; its acceptance 2) |
+
+Closing table rows 1-2 ("The pin" / "Nothing SGK calls changes; no suite count changes; item 8") are C0a-C0f. Nothing at the pin
+is asked that this prompt does not cover (prompt §4, third stop condition: not fired).
+
+## Handed to 06 (the list 06's writer finds)
+
+C1 (ten calls; two positional `taken`), C2 (test_the_shape, test_the_golden_fingerprint, the six golden files), C3 (D6: retire R0's and
+R1's stores first; the issue), C4 (parse_listing unchanged), C5 (listing_lines needs the package's fingerprint), C6 (format 6
+and its history to config/fingerprint.py; never ENCODING_FORMAT).
+Handed to 04: C7.
+
+## The v0.4.0 addendum's claims about SGK's tree, checked at HEAD 3b6ef6a
+
+1. A2 (38 factory classes). An `ast` read of every tracked .py outside prompts/ and docs/ finds 38 classes whose bases name SQLAFactoryBase,
+   the addendum's count. TRUE. (Whether 31 of them lack one of store, validate, validate_on_startup was not recounted: nothing at the pin depends on it.)
+2. B2 (DatastoreObject). `git grep -nE 'DatastoreObject\.__init__\('` outside prompts/ and docs/: 38 lines, each `DatastoreObject.__init__(self, None)`
+   (a single positional argument, store_id) or with store_id. `from datastorekit import DatastoreObject`: 19 imports of code, plus one string
+   in ComputeTargets/tests/test_quadsource_integral.py:1017 (a text replacement in a test), which the raw grep counts: 20 lines. TRUE.
+   The same `ast` read finds 27 classes with DatastoreObject named directly as a base (the addendum's 30 counts descendants; not recounted). No class defines or assigns timestamp: the only `timestamp` hits in SGK code are two `"timestamp" in table.c` column checks in tests. TRUE.
+3. C0b/C1 (SGK's functions and calls). defs at RunRegistry/stores.py:1182, :1256, :1376 TRUE; FINGERPRINT_FORMAT = 6 at :206 TRUE;
+   canonical_json imports at :1197, :1383 and read_inventory at :1493 TRUE; fingerprint_of calls: stores.py:1500, test_store_fingerprint.py:147,
+   :162, :196, :336, :378, :566 and test_quadsource_policy_key.py:413, :416, :419, ten; eight pass the inventory alone, two pass `taken` second
+   positionally (stores.py:1500-1508, test_store_fingerprint.py:378). TRUE. compare_fingerprints: stores.py:1529; tests :176, :219, :254, :338,
+   :381, :447, :455 and test_store_retire.py:471; listing_lines: stores.py:1432; total 20 with the ten. TRUE.
+   One line drift only: the orchestrator's note and board §5.5 cite stores.py:1499-1507 for the call, the addendum :1500-1508; the call
+   starts at :1500 (the `fingerprint = fingerprint_of(` line is :1500), so the addendum is right and :1499-1507 is one line early. Not false in substance.
+4. C0b "no SGK file names datastorekit.store_fingerprint": `git grep -nE 'datastorekit\.store_fingerprint|import store_fingerprint'`
+   outside prompts/ and docs/: 0 lines, before and after the install. TRUE. (The prompt's plain `git grep -n 'store_fingerprint'` gives two lines,
+   both the substring of `full_store_fingerprint`, a comment at RunRegistry/stores.py:197 and a golden file's name at
+   RunRegistry/tests/test_store_fingerprint.py:77; the same two before and after. See the log's observations.)
+5. C3 (live stores). `python -m RunRegistry list`: no run `running`; var/datastores/ holds exactly two live stores,
+   runregistry-extraction-02-{reference,resumed}.sqlite, each with a sidecar recording an SGK fingerprint at format 6 (the "recorded:
+   matches" lines of 03-fingerprint.txt: taken 2026-10-12T09:50:07+01:00 and 10:17:15+01:00). The other 14 sidecars (the manifests of
+   earlier campaigns) are tombstones, as the audit found. TRUE, as board §5.5 reads.
+6. Other line cites of the addendum (stores.py:416-436, :1879-1886; __init__.py:379-392; __main__.py:313-318, :335-337, :414-423;
+   test_store_fingerprint.py:74-78, :114-135, :350-374, :434-457; test_store_retire.py:460-479): each points at the code the addendum
+   describes (checked by reading the neighbourhood), some a line or two off. These are 06's to use and 06 will re-read each.
+   No claim found false.

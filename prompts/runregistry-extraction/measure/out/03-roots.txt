@@ -1,0 +1,43 @@
+# HEAD 3b6ef6a plus the edited requirements.txt line 17 and the venv at datastorekit 0.4.0 (c8570e84…); each root once, foreground, serially, by README §8: PYTHONPATH=. ./venv/bin/python -m unittest discover -s <root>/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+# Load at the ComputeTargets run: 19 at start (uptime 10:32), 75 at the end. Full output of every root is in the session scratchpad, not kept.
+
+## AdaptiveLevin/tests
+Ran 32 tests in 0.059s
+OK
+
+## CosmologyModels/tests
+Ran 39 tests in 0.649s
+OK
+
+## ObjectFactories/tests
+Ran 271 tests in 13.184s
+OK
+
+## tools/tests
+Ran 91 tests in 9.873s
+OK
+
+## LiouvilleGreen/tests
+Ran 148 tests in 24.459s
+OK (skipped=1)
+
+## RunRegistry/tests
+Ran 286 tests in 72.775s
+OK
+
+## ComputeTargets/tests
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+Ran 693 tests in 405.723s
+FAILED (failures=1)
+
+## ComputeTargets: the known failure's assertion
+    self.assertLessEqual(cold, COST_COLD_WALL_TIME_LIMIT)
+AssertionError: 0.146740416996181 not less than or equal to 0.06
+
+## test_tk_wkb_phase.TestCost.test_wall_time_per_object, re-run alone (load ~68 at the time)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object
+run 1: AssertionError: 0.08970154204871505 not less than or equal to 0.06
+run 2: AssertionError: 0.11818612494971603 not less than or equal to 0.06
+
+## Against 02a's counts (board §5.4, README §2.5)
+AdaptiveLevin 32, ComputeTargets 693, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), ObjectFactories 271, RunRegistry 286, tools 91: every count equal; the only failure is the known wall-clock test (README §8).

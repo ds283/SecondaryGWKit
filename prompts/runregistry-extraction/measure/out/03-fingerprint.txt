@@ -1,0 +1,117 @@
+# 03-fingerprint.txt — runregistry-extraction prompt 03 §2.4, 2026-10-14. SGK's own fingerprint_of, through datastorekit 0.4.0. Read-only: no --write, no --listing.
+
+$ python -m RunRegistry store fingerprint var/datastores/runregistry-extraction-02-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-reference.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-12T09:50:07+01:00 by a person, at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+exit 0
+
+$ python -m RunRegistry store fingerprint var/datastores/runregistry-extraction-02-resumed.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-02-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-12T10:17:15+01:00 by run runregistry-extraction-02-resumed-c-20261012T101145, at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+exit 0
+
+# Every file of both stores (primary, 4 shards, sidecar and manifest each: sha256, size, mtime_ns), before the reads:
+379a2e8dfdc8fe8b1a8ff04e67da1c550b3792bc96ca541c60346dad13d688fc 23711744 1791794911279669970 var/datastores/runregistry-extraction-02-reference-shard0000.sqlite
+3ed596358bcd9ad30b9998b0f112e727b30ad7512f19faed164b17bc707b8fa2 23916544 1791794911266545256 var/datastores/runregistry-extraction-02-reference-shard0001.sqlite
+8a444c0e2852bd88bc4fb67673b2f964aefddad51e5e6f1aeda98c1600ea061c 1077248 1791793173671010782 var/datastores/runregistry-extraction-02-reference-shard0002.sqlite
+5a07e478c58f23da7a97dac13be035520c1047e9daa04a0e80db1e282f25f19b 23212032 1791794911221166362 var/datastores/runregistry-extraction-02-reference-shard0003.sqlite
+a19e04ae6ecac7f34a3d2c1a3a41b527a89143923934c74b30414e8f955ebf6a 10545 1791795008383176750 var/datastores/runregistry-extraction-02-reference.manifest.json
+4a02dd71c937ee3b50adab9d403047ab350676f25e07b00e3cc77683b2c0541a 36864 1791793173674007447 var/datastores/runregistry-extraction-02-reference.sqlite
+7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e 23773184 1791796629336774748 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54 23838720 1791796629514460730 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd 1077248 1791795070826853311 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e 23650304 1791796629315432877 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+f67daec4d4da5156e54c35a51aa89f6bbceba8b4ec72ebd9a2398f64455453da 10675 1791796635990097568 var/datastores/runregistry-extraction-02-resumed.manifest.json
+16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597 36864 1791796320838742923 var/datastores/runregistry-extraction-02-resumed.sqlite
+
+# After the reads: the same script gives the same 12 lines; diff before after is empty (STORE-FILES-IDENTICAL).

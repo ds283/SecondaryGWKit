@@ -1,8 +1,7 @@
 # runregistry-extraction campaign — implementation state
 
 **Last updated:** 2026-10-14 · **Status: IN PROGRESS — 5 of 10 prompts written (01, 02, 02a, 03,
-04), 3 landed (01, 02, 02a); R0 holds. E1 holds: DatastoreKit `v0.4.0` (§5.5), so 03 and 04 are
-written. 05–09 held on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled by the user.**
+04), 4 landed (01, 02, 02a, 03); R0 holds. E1 holds: DatastoreKit `v0.4.0` (§5.5), and 03 pinned it (§5.6), so 04 is next. 05–09 held on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -50,8 +49,8 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 01 | [Freeze the run registry](01-freeze-the-run-registry.md) | the freeze; the frozen tree; the baselines | Sonnet | ✍️ 2026-10-12 | ✅ | `a45aefc` | [log](logs/01-freeze-the-run-registry.md) |
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
-| 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ⬜ | — | — |
-| 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14; ⏸ 03 | ⬜ | — | — |
+| 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | this commit | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
+| 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ⬜ | — | — |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
 | 06 | Adopt `runregistrykit` | the swap; closes both `00-` issues | Opus | ⏸ E2, 04, 05 | ⬜ | — | — |
 | 07 | Guard the fingerprint format | **Q5** | Sonnet | ⏸ 06 | ⬜ | — | — |
@@ -82,7 +81,7 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **H2** | 02a | its tests, and the six mutations they catch | ✅ |
 | **H3** | 02a | the interoperability proof against SI's and ChamPBH's scripts | ✅ |
 | **H4** | 02a | the real-lock proof, with an in-process probe | ✅ |
-| **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ⬜ |
+| **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ✅ |
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ⬜ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ⬜ |
 | **K2** | 05 | the `runregistrykit[stores]` pin; the venv installed from it | ⬜ |
@@ -567,3 +566,27 @@ checked it against DatastoreKit's repository and this tree, at `a5a6f6d`, read-o
   retired after 04's review), and §6.1 (D6).
 - The registry showed nothing `running`, and exactly two live stores, R0's.
 
+### 5.6 After prompt 03 (2026-10-14)
+
+[`03`](03-pin-datastorekit-at-v0.4.0.md) landed at this commit; its log is
+[`logs/03-pin-datastorekit-at-v0.4.0.md`](logs/03-pin-datastorekit-at-v0.4.0.md). It opened and closed no issue, so
+`docs/OPEN_ISSUES.md` is unchanged (107).
+- **K1.** `requirements.txt:17` is `datastorekit @ ...@v0.4.0`, one line. The dry run said `Would install datastorekit-0.4.0` and
+  nothing else; the install replaced 0.2.2 and nothing else. `package_provenance()` gives `datastorekit` 0.4.0 at
+  `c8570e849334d09085bbd84876095fc9e22bd005`, `requested_revision` `v0.4.0`, not editable; `raypoolkit` unchanged
+  (`eaef0ce6…`, `v0.2.0`); `pip freeze` differs by line 17 alone; `pip check` clean. `ENCODING_FORMAT` reads `1`.
+  [`measure/out/03-pip.txt`](measure/out/03-pip.txt).
+- **SGK's own fingerprint through the new pin.** R0's two stores, read-only: format 6, `39809dca…`, 21 classes, `recorded:
+  matches`, exit 0; all twelve store files byte-identical (SHA-256, size, mtime) around the reads.
+  [`measure/out/03-fingerprint.txt`](measure/out/03-fingerprint.txt).
+- **The roots** at 02a's counts: AdaptiveLevin 32, ComputeTargets 693 (the known wall-clock failure alone, 0.147 s against 0.06 s,
+  and 0.090 s and 0.118 s alone), CosmologyModels 39, LiouvilleGreen 148 (1 skipped), ObjectFactories 271, RunRegistry 286, tools 91.
+  [`measure/out/03-roots.txt`](measure/out/03-roots.txt).
+- **The three addenda** tabled in [`measure/out/03-addenda.txt`](measure/out/03-addenda.txt): `v0.2.3` and `v0.3.0` ask nothing
+  of SGK; `v0.4.0` asks nothing at the pin and names seven items at the call. **06's:** the ten `fingerprint_of` calls (two with
+  `taken` second positionally), `test_the_shape` and the golden comparison, the retirement of R0's and R1's stores first (D6), the
+  listing and `listing_lines` points, and format 6 to `config/fingerprint.py`. **04's:** the fingerprint both ways. Every claim the
+  `v0.4.0` table makes about SGK's tree holds at `HEAD`.
+- **Deviation worth knowing:** the prompt's `git grep -n 'store_fingerprint'` is not empty (`full_store_fingerprint`, two lines,
+  unchanged by the install); the module-naming pattern is empty (log, deviation 3).
+- **Venv.** Not recorded by any commit: `git revert` of 03 needs `pip install -r requirements.txt` afterwards (README §4.2).
