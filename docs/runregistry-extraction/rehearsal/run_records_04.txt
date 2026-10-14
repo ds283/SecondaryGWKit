@@ -1,0 +1,352 @@
+==================== runregistry-extraction-04-reference-20261014T154651
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-04-reference.sqlite",
+    "--job-name",
+    "runregistry-extraction-04",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "reference",
+    "--purpose",
+    "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 runregistry-extraction-02-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "04"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-14T15:46:51+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "04",
+  "purpose": "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 runregistry-extraction-02-reference",
+  "results": "var/datastores/runregistry-extraction-04-reference.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-04-reference-20261014T154651",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-04-reference.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+      "run_id": "runregistry-extraction-04-reference-20261014T154651",
+      "when": "2026-10-14T16:00:47+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-reference.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-14T16:00:48+01:00",
+  "pid": 3243,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 837 s (2026-10-14T15:46:51+01:00 to 2026-10-14T16:00:48+01:00)
+-- launch log, last line: ** driver exit status 0
+
+==================== runregistry-extraction-04-resumed-a-20261014T160226
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-04-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-04",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-a",
+    "--purpose",
+    "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 runregistry-extraction-02-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "04"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-14T16:02:26+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "04",
+  "purpose": "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 runregistry-extraction-02-reference",
+  "results": "var/datastores/runregistry-extraction-04-resumed.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-04-resumed-a-20261014T160226",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-04-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "a410cce07d9fb7a424e64ebd0b7819a096b9075ad7394ed5e78599b9f3cf8fe6",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+      "run_id": "runregistry-extraction-04-resumed-a-20261014T160226",
+      "when": "2026-10-14T16:11:14+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-14T16:11:15+01:00",
+  "pid": 11561,
+  "stage": "CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 529 s (2026-10-14T16:02:26+01:00 to 2026-10-14T16:11:15+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-04-resumed-b-20261014T161222
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-04-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-04",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-b",
+    "--purpose",
+    "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "04"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-14T16:12:22+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "04",
+  "purpose": "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca",
+  "results": "var/datastores/runregistry-extraction-04-resumed.sqlite",
+  "results_store_id": "bc2ac248bfab423cb8ef47be37efdcdd",
+  "run_id": "runregistry-extraction-04-resumed-b-20261014T161222",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-04-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "8146dab80c46050bff5e33e77f3ec288b3dd644b0fe4448ac9fb6f96b15ff446",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+      "run_id": "runregistry-extraction-04-resumed-b-20261014T161222",
+      "when": "2026-10-14T16:16:37+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-14T16:16:38+01:00",
+  "pid": 17571,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 256 s (2026-10-14T16:12:22+01:00 to 2026-10-14T16:16:38+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-04-resumed-c-20261014T161739
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-04-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-04",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-c",
+    "--purpose",
+    "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R0 runregistry-extraction-02-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "04"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-14T16:17:39+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    }
+  },
+  "prompt": "04",
+  "purpose": "runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R0 runregistry-extraction-02-reference",
+  "results": "var/datastores/runregistry-extraction-04-resumed.sqlite",
+  "results_store_id": "bc2ac248bfab423cb8ef47be37efdcdd",
+  "run_id": "runregistry-extraction-04-resumed-c-20261014T161739",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-04-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "89ff8b728b61ba22452110de88718094361e4e15",
+      "run_id": "runregistry-extraction-04-resumed-c-20261014T161739",
+      "when": "2026-10-14T16:24:51+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-14T16:24:51+01:00",
+  "pid": 20688,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 432 s (2026-10-14T16:17:39+01:00 to 2026-10-14T16:24:51+01:00)
+-- launch log, last line: ** driver exit status 0
+
+==================== summary
+slug, packages == expected record (JSON), raypoolkit == R0's, git_dirty, git_head, script_sha256, --resume, results, results_store_id, scope == R0 reference's (normalised), manifest keys == R0's
+('reference', True, True, False, '89ff8b728b61ba22452110de88718094361e4e15', 'b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac', False, 'var/datastores/runregistry-extraction-04-reference.sqlite', None, True, True)
+('resumed-a', True, True, False, '89ff8b728b61ba22452110de88718094361e4e15', 'b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac', False, 'var/datastores/runregistry-extraction-04-resumed.sqlite', None, None, True)
+('resumed-b', True, True, False, '89ff8b728b61ba22452110de88718094361e4e15', 'b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac', True, 'var/datastores/runregistry-extraction-04-resumed.sqlite', 'bc2ac248bfab423cb8ef47be37efdcdd', None, True)
+('resumed-c', True, True, False, '89ff8b728b61ba22452110de88718094361e4e15', 'b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac', True, 'var/datastores/runregistry-extraction-04-resumed.sqlite', 'bc2ac248bfab423cb8ef47be37efdcdd', None, True)

@@ -1,0 +1,190 @@
+==================== after reference (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-reference.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: runregistry-extraction-04-reference.sqlite; version rows None
+-- shard 0: runregistry-extraction-04-reference-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: runregistry-extraction-04-reference-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: runregistry-extraction-04-reference-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: runregistry-extraction-04-reference-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+rc=0
+store files unchanged by the read
+5 files
+972a44a2def0a032a02e016795de132539da903db522ada699f8ab1524ed3894 2026-10-14 16:00:39 1791990039395130367 23498752 var/datastores/runregistry-extraction-04-reference-shard0000.sqlite
+979c77f2d694c5712c5dafdd24553f7faa7af08d56350958ebe2bcc84d76ae68 2026-10-14 16:00:39 1791990039455710557 23851008 var/datastores/runregistry-extraction-04-reference-shard0001.sqlite
+e7657fb08c6577db50ba53ddfc2aefad4be0fe7810bc3327c61887b4456de23d 2026-10-14 15:46:59 1791989219106681200 1077248 var/datastores/runregistry-extraction-04-reference-shard0002.sqlite
+bf867e6f4f549bf37e0b7e1385c8a7b2f7ad3ecb26f3232261be31de2b6c78ad 2026-10-14 16:00:39 1791990039406123579 23621632 var/datastores/runregistry-extraction-04-reference-shard0003.sqlite
+fb04de8b96d4e1f2cc51ca349c0df8e70139249c68a201310ac14613f5cd74e7 2026-10-14 15:46:59 1791989219133991294 36864 var/datastores/runregistry-extraction-04-reference.sqlite
+==================== after resumed-a (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: runregistry-extraction-04-resumed.sqlite; version rows None
+-- shard 0: runregistry-extraction-04-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 67 row(s), 14 with validated = 0: serials [213, 230, 239, 247, 254, 257, 258, 261, 262, 263, 264, 265, 266, 267]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: runregistry-extraction-04-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 71 row(s), 19 with validated = 0: serials [546, 553, 560, 563, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: runregistry-extraction-04-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: runregistry-extraction-04-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 69 row(s), 15 with validated = 0: serials [28, 30, 45, 46, 55, 56, 57, 62, 63, 64, 65, 66, 67, 68, 69]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+rc=0
+store files unchanged by the read
+5 files
+d789be6d63f228344e6fba821be862d048c9dd13d42e89725800fb9151d6b97d 2026-10-14 16:11:09 1791990669417613600 16318464 var/datastores/runregistry-extraction-04-resumed-shard0000.sqlite
+51bd881c9437fafb382838024d4e4a821fd546cbff4bc550da7b8a28127a72fe 2026-10-14 16:11:10 1791990670719783731 17043456 var/datastores/runregistry-extraction-04-resumed-shard0001.sqlite
+64aaa173c7ee0d6221c1452385a30990779421c8c19c780048022efbc85b4c73 2026-10-14 16:02:54 1791990174549005224 1077248 var/datastores/runregistry-extraction-04-resumed-shard0002.sqlite
+531b27da79a8ff2fc1b52517ab02d0affd696d1296a004578a2a327bf77668ba 2026-10-14 16:11:09 1791990669257777036 16338944 var/datastores/runregistry-extraction-04-resumed-shard0003.sqlite
+d25ece02eea29c46adb9063a77cac431428a5372097c439db53a9de1fc9a716e 2026-10-14 16:02:54 1791990174708574078 36864 var/datastores/runregistry-extraction-04-resumed.sqlite
+==================== after resumed-b (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: runregistry-extraction-04-resumed.sqlite; version rows None
+-- shard 0: runregistry-extraction-04-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: runregistry-extraction-04-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: runregistry-extraction-04-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: runregistry-extraction-04-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+rc=0
+store files unchanged by the read
+6 files
+fc0763f8fbfe46223c382fc47a3440bf98b099d522024957ded0dc87886ee348 2026-10-14 16:15:54 1791990954785648694 22966272 var/datastores/runregistry-extraction-04-resumed-shard0000.sqlite
+205c69f41de8bfd070ee81e8b44973bb1f13fe65ef46e3c13ecb73fead61be88 2026-10-14 16:15:54 1791990954850455705 22962176 var/datastores/runregistry-extraction-04-resumed-shard0001.sqlite
+64aaa173c7ee0d6221c1452385a30990779421c8c19c780048022efbc85b4c73 2026-10-14 16:02:54 1791990174549005224 1077248 var/datastores/runregistry-extraction-04-resumed-shard0002.sqlite
+c034ac68afe3aafb352a259a11b6da86b44a52f1aff037047224f0c55f9760a5 2026-10-14 16:15:46 1791990946954857885 22876160 var/datastores/runregistry-extraction-04-resumed-shard0003.sqlite
+941eea93705ff595aa92aada381e2ea61d2027c01549901644b270335746a90c 2026-10-14 16:16:38 1791990998584600242 10660 var/datastores/runregistry-extraction-04-resumed.manifest.json
+5fe685543ca08b1d0ef48495c65405a38d13e5119a47d76012b18d05dc6055d5 2026-10-14 16:12:34 1791990754683908869 36864 var/datastores/runregistry-extraction-04-resumed.sqlite
+==================== after resumed-c (closed_store_state.py, then the SHA-256 of each file, unchanged by the read)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: runregistry-extraction-04-resumed.sqlite; version rows None
+-- shard 0: runregistry-extraction-04-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: runregistry-extraction-04-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: runregistry-extraction-04-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: runregistry-extraction-04-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+rc=0
+var/datastores/runregistry-extraction-04-reference-shard0000.sqlite: OK
+var/datastores/runregistry-extraction-04-reference-shard0001.sqlite: OK
+var/datastores/runregistry-extraction-04-reference-shard0002.sqlite: OK
+var/datastores/runregistry-extraction-04-reference-shard0003.sqlite: OK
+var/datastores/runregistry-extraction-04-reference.manifest.json: OK
+var/datastores/runregistry-extraction-04-reference.sqlite: OK
+var/datastores/runregistry-extraction-04-resumed-shard0000.sqlite: OK
+var/datastores/runregistry-extraction-04-resumed-shard0001.sqlite: OK
+var/datastores/runregistry-extraction-04-resumed-shard0002.sqlite: OK
+var/datastores/runregistry-extraction-04-resumed-shard0003.sqlite: OK
+var/datastores/runregistry-extraction-04-resumed.manifest.json: OK
+var/datastores/runregistry-extraction-04-resumed.sqlite: OK

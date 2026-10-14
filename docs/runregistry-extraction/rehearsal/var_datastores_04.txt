@@ -1,0 +1,78 @@
+== 2026-10-14T15:45:40+0100 every file under var/datastores before the first launch (SHA-256, mtime, mtime_ns, size)
+26 files
+03ba60187b25a3ff2a6f94abed4776ad460c044c3b1be476db8ee52f705a7372 2026-10-04 12:03:17 1791111797282581799 12216 var/datastores/a3-v2-readiness-07-reference.manifest.json
+c6efe688e21de0ca7f595b136a9ca737cd174d1a0acc0e2393332024212087e1 2026-10-04 12:03:37 1791111817438845786 12720 var/datastores/a3-v2-readiness-07-resumed.manifest.json
+d76258854ae57d3f08fa8295ac12f100b5d002f1900cdb8e03d08725189a872a 2026-09-25 23:36:55 1790375815169136727 14927 var/datastores/backup-pre-resume-20260921T091011/handover-A3-baseline-lambdacdm.manifest.json
+0fb525671ca159e5823e2118f7cb7b4101f247a5e88492625713d7733dc17e31 2026-10-06 20:21:22 1791314482945892376 12215 var/datastores/datastore-generic-09-rehearsal.manifest.json
+e85d16ba83ebd0e92d32e11a428fbe17abaedc2e685205f84467bf539382f3bc 2026-10-02 01:19:49 1790900389476369529 12660 var/datastores/datastore-integrity-10-reference.manifest.json
+3302f5003bc038720e8850b3f62661717aa8cd1f7c28882b0154e0868c15d942 2026-10-02 01:19:58 1790900398317591942 13512 var/datastores/datastore-integrity-10-resumed.manifest.json
+cc3b7ad0ec251a1a733427e7022ad9661fb6ac087ac96a1ae2dd2532ab3bb479 2026-10-12 00:42:21 1791762141836436657 12293 var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+8d9b34216ca38bc5ae7e7bcdb85d88fce8ef0c035e8f6a5d5970d211eb1dad5c 2026-10-12 00:42:28 1791762148013674296 12790 var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+b76c359ca5f2af9e700c80f62be1353802e8884bca60f6d584ac94a77c9b6232 2026-10-12 00:42:34 1791762154296405497 12291 var/datastores/dk-and-rpk-migration-05-reference.manifest.json
+2b57ff6fb806b43307de3ec3211dc70cff52a8007f0ba6e56d2fc9d31eb0f43f 2026-10-12 00:42:40 1791762160138199449 12840 var/datastores/dk-and-rpk-migration-05-resumed.manifest.json
+c65cc44726a739159e750c1fbf7f87209eeba7debb092ec9bfac709c5ee664fe 2026-10-12 00:42:45 1791762165799803236 12290 var/datastores/dk-and-rpk-migration-08-reference.manifest.json
+f47f83d5afc1f85d1bb72c10a63cc1c7d91c7808c15358e782a352144d55c498 2026-10-12 00:42:54 1791762174141900499 12814 var/datastores/dk-and-rpk-migration-08-resumed.manifest.json
+237e3a370160b6bcbf9d668e14c4613ba300c22c7dbf65f46d90c98e5c7392e7 2026-10-04 21:31:59 1791145919818063745 17892 var/datastores/handover-A3-baseline-lambdacdm.manifest.json
+1a4984677a673b54bdfd46ec5169b5968b25503fcc60ceb6969c9a688f1f678a 2026-09-25 23:35:57 1790375757460021032 12976 var/datastores/handover-atol-sweep.manifest.json
+379a2e8dfdc8fe8b1a8ff04e67da1c550b3792bc96ca541c60346dad13d688fc 2026-10-12 09:48:31 1791794911279669970 23711744 var/datastores/runregistry-extraction-02-reference-shard0000.sqlite
+3ed596358bcd9ad30b9998b0f112e727b30ad7512f19faed164b17bc707b8fa2 2026-10-12 09:48:31 1791794911266545256 23916544 var/datastores/runregistry-extraction-02-reference-shard0001.sqlite
+8a444c0e2852bd88bc4fb67673b2f964aefddad51e5e6f1aeda98c1600ea061c 2026-10-12 09:19:33 1791793173671010782 1077248 var/datastores/runregistry-extraction-02-reference-shard0002.sqlite
+5a07e478c58f23da7a97dac13be035520c1047e9daa04a0e80db1e282f25f19b 2026-10-12 09:48:31 1791794911221166362 23212032 var/datastores/runregistry-extraction-02-reference-shard0003.sqlite
+a19e04ae6ecac7f34a3d2c1a3a41b527a89143923934c74b30414e8f955ebf6a 2026-10-12 09:50:08 1791795008383176750 10545 var/datastores/runregistry-extraction-02-reference.manifest.json
+4a02dd71c937ee3b50adab9d403047ab350676f25e07b00e3cc77683b2c0541a 2026-10-12 09:19:33 1791793173674007447 36864 var/datastores/runregistry-extraction-02-reference.sqlite
+7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e 2026-10-12 10:17:09 1791796629336774748 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54 2026-10-12 10:17:09 1791796629514460730 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd 2026-10-12 09:51:10 1791795070826853311 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e 2026-10-12 10:17:09 1791796629315432877 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+f67daec4d4da5156e54c35a51aa89f6bbceba8b4ec72ebd9a2398f64455453da 2026-10-12 10:17:15 1791796635990097568 10675 var/datastores/runregistry-extraction-02-resumed.manifest.json
+16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597 2026-10-12 10:12:00 1791796320838742923 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+-- find var/datastores -type f -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256
+3e0e6badf16a57c786772255f2b5276274db5c913a4fcadcd27539e9464b01c9  -
+-- over the 14 tombstones alone (all files not named runregistry-extraction-02*)
+023d139fb714e229f96c6fb61894daf526b768fd603307d153d4d91810cd2626  -
+== 2026-10-14T16:41:55+0100 every file under var/datastores after the last step (SHA-256, mtime, mtime_ns, size)
+38 files
+03ba60187b25a3ff2a6f94abed4776ad460c044c3b1be476db8ee52f705a7372 2026-10-04 12:03:17 1791111797282581799 12216 var/datastores/a3-v2-readiness-07-reference.manifest.json
+c6efe688e21de0ca7f595b136a9ca737cd174d1a0acc0e2393332024212087e1 2026-10-04 12:03:37 1791111817438845786 12720 var/datastores/a3-v2-readiness-07-resumed.manifest.json
+d76258854ae57d3f08fa8295ac12f100b5d002f1900cdb8e03d08725189a872a 2026-09-25 23:36:55 1790375815169136727 14927 var/datastores/backup-pre-resume-20260921T091011/handover-A3-baseline-lambdacdm.manifest.json
+0fb525671ca159e5823e2118f7cb7b4101f247a5e88492625713d7733dc17e31 2026-10-06 20:21:22 1791314482945892376 12215 var/datastores/datastore-generic-09-rehearsal.manifest.json
+e85d16ba83ebd0e92d32e11a428fbe17abaedc2e685205f84467bf539382f3bc 2026-10-02 01:19:49 1790900389476369529 12660 var/datastores/datastore-integrity-10-reference.manifest.json
+3302f5003bc038720e8850b3f62661717aa8cd1f7c28882b0154e0868c15d942 2026-10-02 01:19:58 1790900398317591942 13512 var/datastores/datastore-integrity-10-resumed.manifest.json
+cc3b7ad0ec251a1a733427e7022ad9661fb6ac087ac96a1ae2dd2532ab3bb479 2026-10-12 00:42:21 1791762141836436657 12293 var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+8d9b34216ca38bc5ae7e7bcdb85d88fce8ef0c035e8f6a5d5970d211eb1dad5c 2026-10-12 00:42:28 1791762148013674296 12790 var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+b76c359ca5f2af9e700c80f62be1353802e8884bca60f6d584ac94a77c9b6232 2026-10-12 00:42:34 1791762154296405497 12291 var/datastores/dk-and-rpk-migration-05-reference.manifest.json
+2b57ff6fb806b43307de3ec3211dc70cff52a8007f0ba6e56d2fc9d31eb0f43f 2026-10-12 00:42:40 1791762160138199449 12840 var/datastores/dk-and-rpk-migration-05-resumed.manifest.json
+c65cc44726a739159e750c1fbf7f87209eeba7debb092ec9bfac709c5ee664fe 2026-10-12 00:42:45 1791762165799803236 12290 var/datastores/dk-and-rpk-migration-08-reference.manifest.json
+f47f83d5afc1f85d1bb72c10a63cc1c7d91c7808c15358e782a352144d55c498 2026-10-12 00:42:54 1791762174141900499 12814 var/datastores/dk-and-rpk-migration-08-resumed.manifest.json
+237e3a370160b6bcbf9d668e14c4613ba300c22c7dbf65f46d90c98e5c7392e7 2026-10-04 21:31:59 1791145919818063745 17892 var/datastores/handover-A3-baseline-lambdacdm.manifest.json
+1a4984677a673b54bdfd46ec5169b5968b25503fcc60ceb6969c9a688f1f678a 2026-09-25 23:35:57 1790375757460021032 12976 var/datastores/handover-atol-sweep.manifest.json
+379a2e8dfdc8fe8b1a8ff04e67da1c550b3792bc96ca541c60346dad13d688fc 2026-10-12 09:48:31 1791794911279669970 23711744 var/datastores/runregistry-extraction-02-reference-shard0000.sqlite
+3ed596358bcd9ad30b9998b0f112e727b30ad7512f19faed164b17bc707b8fa2 2026-10-12 09:48:31 1791794911266545256 23916544 var/datastores/runregistry-extraction-02-reference-shard0001.sqlite
+8a444c0e2852bd88bc4fb67673b2f964aefddad51e5e6f1aeda98c1600ea061c 2026-10-12 09:19:33 1791793173671010782 1077248 var/datastores/runregistry-extraction-02-reference-shard0002.sqlite
+5a07e478c58f23da7a97dac13be035520c1047e9daa04a0e80db1e282f25f19b 2026-10-12 09:48:31 1791794911221166362 23212032 var/datastores/runregistry-extraction-02-reference-shard0003.sqlite
+a19e04ae6ecac7f34a3d2c1a3a41b527a89143923934c74b30414e8f955ebf6a 2026-10-12 09:50:08 1791795008383176750 10545 var/datastores/runregistry-extraction-02-reference.manifest.json
+4a02dd71c937ee3b50adab9d403047ab350676f25e07b00e3cc77683b2c0541a 2026-10-12 09:19:33 1791793173674007447 36864 var/datastores/runregistry-extraction-02-reference.sqlite
+7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e 2026-10-12 10:17:09 1791796629336774748 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54 2026-10-12 10:17:09 1791796629514460730 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd 2026-10-12 09:51:10 1791795070826853311 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e 2026-10-12 10:17:09 1791796629315432877 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+f67daec4d4da5156e54c35a51aa89f6bbceba8b4ec72ebd9a2398f64455453da 2026-10-12 10:17:15 1791796635990097568 10675 var/datastores/runregistry-extraction-02-resumed.manifest.json
+16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597 2026-10-12 10:12:00 1791796320838742923 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+972a44a2def0a032a02e016795de132539da903db522ada699f8ab1524ed3894 2026-10-14 16:00:39 1791990039395130367 23498752 var/datastores/runregistry-extraction-04-reference-shard0000.sqlite
+979c77f2d694c5712c5dafdd24553f7faa7af08d56350958ebe2bcc84d76ae68 2026-10-14 16:00:39 1791990039455710557 23851008 var/datastores/runregistry-extraction-04-reference-shard0001.sqlite
+e7657fb08c6577db50ba53ddfc2aefad4be0fe7810bc3327c61887b4456de23d 2026-10-14 15:46:59 1791989219106681200 1077248 var/datastores/runregistry-extraction-04-reference-shard0002.sqlite
+bf867e6f4f549bf37e0b7e1385c8a7b2f7ad3ecb26f3232261be31de2b6c78ad 2026-10-14 16:00:39 1791990039406123579 23621632 var/datastores/runregistry-extraction-04-reference-shard0003.sqlite
+accb71b0ff52f4f776f45e380cf69288e8cf95872e36f3a5a17a47bd050ced87 2026-10-14 16:02:03 1791990123726670661 10530 var/datastores/runregistry-extraction-04-reference.manifest.json
+fb04de8b96d4e1f2cc51ca349c0df8e70139249c68a201310ac14613f5cd74e7 2026-10-14 15:46:59 1791989219133991294 36864 var/datastores/runregistry-extraction-04-reference.sqlite
+08ae31128714c112613b467192ee35e03eb913692725ef9263e30a3e51d49db5 2026-10-14 16:24:44 1791991484796740901 23838720 var/datastores/runregistry-extraction-04-resumed-shard0000.sqlite
+f0c14a6493ccd5c86a7f60458b8bc9d27bd85f1c5ab93d54eaf0e9d06c6af568 2026-10-14 16:24:44 1791991484953385710 23896064 var/datastores/runregistry-extraction-04-resumed-shard0001.sqlite
+64aaa173c7ee0d6221c1452385a30990779421c8c19c780048022efbc85b4c73 2026-10-14 16:02:54 1791990174549005224 1077248 var/datastores/runregistry-extraction-04-resumed-shard0002.sqlite
+d865ea572b8caf9d354dac42390a54969e9a4ddbd891a396d262b5e1d1c1d5dd 2026-10-14 16:24:44 1791991484836823917 23621632 var/datastores/runregistry-extraction-04-resumed-shard0003.sqlite
+2739d5ff191f28b60588b422bf774689d65c18fc0f3aad87590f1a0414979f7d 2026-10-14 16:24:51 1791991491735172463 10660 var/datastores/runregistry-extraction-04-resumed.manifest.json
+232b8b784921d03d9e2ec0e9810bac16631800d34a2d4d20c658ebea0dc75bd3 2026-10-14 16:17:57 1791991077103206015 36864 var/datastores/runregistry-extraction-04-resumed.sqlite
+-- find var/datastores -type f -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256
+e9cd22487edf780142d622bdc85c2fc2af78d4cba16c08dec1f5d7838779233d  -
+-- over the 26 files present before the first launch (all but runregistry-extraction-04*)
+3e0e6badf16a57c786772255f2b5276274db5c913a4fcadcd27539e9464b01c9  -
+-- over the 14 tombstones alone
+023d139fb714e229f96c6fb61894daf526b768fd603307d153d4d91810cd2626  -

@@ -1,0 +1,212 @@
+== 2026-10-14T15:46:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose "runregistry-extraction 04 (R1)"
+acquired the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock) for SecondaryGWKit: runregistry-extraction 04 (R1)
+exit 0
+== 2026-10-14T15:46:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T15:47:01+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 3243   (reference's driver pid, from its status.json)
+recorded pid 3243 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit 0
+== 2026-10-14T15:47:01+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 3243
+owner pid 3243: alive
+Ray processes of this repository: 20
+    3262 3243 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+    3263 3243 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026
+    3270 3243 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+    3271 3243 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Secondar
+    3273 3243 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/se
+    3274 3243 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+    3286 3273 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+    3287 3273 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Secon
+    3288 3273 ray::Datastore                   
+    3289 3273 ray::Datastore                   
+    3290 3273 ray::numeric_with_phase_cut                   
+    3291 3273 ray::Datastore                   
+    3292 3273 ray::SerialPoolBroker                   
+    3293 3273 ray::Datastore                   
+    3307 3273 ray::numeric_with_phase_cut                   
+    3308 3273 ray::IDLE                   
+    3309 3273 ray::numeric_with_phase_cut                   
+    3310 3273 ray::numeric_with_phase_cut                   
+    3399 3273 ray::IDLE                   
+    3400 3273 ray::IDLE                   
+exit 0
+== 2026-10-14T16:01:26+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status   (after reference ended)
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 3243
+owner pid 3243: NOT alive
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:02:37+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 11561   (resumed-a's driver pid, from its status.json)
+recorded pid 11561 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit 0
+== 2026-10-14T16:02:38+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 11561
+owner pid 11561: alive
+Ray processes of this repository: 14
+    11742 11561 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    11743 11561 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    11761 11561 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    11763 11561 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    11775 11561 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    11776 11561 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    11777 11775 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    11778 11775 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    11779 11775 ray::shard0000-store:Datastore.__init__                   
+    11780 11775 ray::IDLE                   
+    11781 11775 ray::shard0003-store:Datastore.__init__                   
+    11782 11775 ray::shard0002-store:Datastore.__init__                   
+    11783 11775 ray::shard0001-store:Datastore.__init__                   
+    11784 11775 ray::SerialPoolBroker:SerialPoolBroker.__init__                   
+exit 0
+== 2026-10-14T16:11:47+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status   (after resumed-a ended)
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 11561
+owner pid 11561: NOT alive
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:12:32+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 17571   (resumed-b's driver pid, from its status.json)
+recorded pid 17571 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit 0
+== 2026-10-14T16:12:32+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 17571
+owner pid 17571: alive
+Ray processes of this repository: 14
+    17612 17571 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    17613 17571 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    17615 17571 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    17627 17571 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    17628 17571 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    17629 17571 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    17630 17628 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    17631 17628 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    17643 17628 ray::Datastore                   
+    17644 17628 ray::SerialPoolBroker                   
+    17645 17628 ray::Datastore                   
+    17646 17628 ray::Datastore                   
+    17647 17628 ray::IDLE                   
+    17648 17628 ray::Datastore                   
+exit 0
+== 2026-10-14T16:17:07+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status   (after resumed-b ended)
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 17571
+owner pid 17571: NOT alive
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:17:48+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 20688   (resumed-c's driver pid, from its status.json)
+recorded pid 20688 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit 0
+== 2026-10-14T16:17:49+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 20688
+owner pid 20688: alive
+Ray processes of this repository: 14
+    20730 20688 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    20731 20688 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    20734 20688 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    20736 20688 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20765 20688 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    20766 20688 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    20783 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    20784 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    20785 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20786 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20787 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20788 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20789 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    20790 20765 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+exit 0
+== 2026-10-14T16:25:52+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status   (after resumed-c ended)
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 20688
+owner pid 20688: NOT alive
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:33:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status   (after the readers and the guard)
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: runregistry-extraction 04 (R1)
+    acquired: 2026-10-14T15:46:42+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 20688
+owner pid 20688: NOT alive
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:33:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit 0
+== 2026-10-14T16:33:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock)
+exit 0
+== 2026-10-14T16:33:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+exit 0
+== 2026-10-14T16:33:42+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit 0
+-- ls -a ~/ScienceData
+.
+..
+ChamPBH-rehearsals

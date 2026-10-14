@@ -1,0 +1,122 @@
+== 2026-10-14 16:17:20 prune_check.py state/after-resumed-a.txt, after resumed-b opened and closed the store (before resumed-c)
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/runregistry-extraction-04/state/after-resumed-a.txt var/datastores/runregistry-extraction-04-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-04/state/after-resumed-a.txt
+-- shard 0, GkSource: 14 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 213: absent
+   serial 230: absent
+   serial 239: absent
+   serial 247: absent
+   serial 254: absent
+   serial 257: absent
+   serial 258: absent
+   serial 261: absent
+   serial 262: absent
+   serial 263: absent
+   serial 264: absent
+   serial 265: absent
+   serial 266: absent
+   serial 267: absent
+-- shard 1, GkSource: 19 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 546: absent
+   serial 553: absent
+   serial 560: absent
+   serial 563: absent
+   serial 568: absent
+   serial 569: absent
+   serial 570: absent
+   serial 571: absent
+   serial 572: absent
+   serial 573: absent
+   serial 574: absent
+   serial 575: absent
+   serial 576: absent
+   serial 577: absent
+   serial 578: absent
+   serial 579: absent
+   serial 580: absent
+   serial 581: absent
+   serial 582: absent
+-- shard 3, GkSource: 15 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 28: absent
+   serial 30: absent
+   serial 45: absent
+   serial 46: absent
+   serial 55: absent
+   serial 56: absent
+   serial 57: absent
+   serial 62: absent
+   serial 63: absent
+   serial 64: absent
+   serial 65: absent
+   serial 66: absent
+   serial 67: absent
+   serial 68: absent
+   serial 69: absent
+48 serial(s) checked: 48 absent, 0 reused by a validated row, 0 still unvalidated
+prune_check rc=0
+store files: unchanged by the check (sha-before-prune-check1 = sha-after-prune-check1)
+
+== 2026-10-14 16:26:03 prune_check.py state/after-resumed-a.txt, after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-04/state/after-resumed-a.txt
+-- shard 0, GkSource: 14 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 213: absent
+   serial 230: absent
+   serial 239: absent
+   serial 247: absent
+   serial 254: absent
+   serial 257: absent
+   serial 258: absent
+   serial 261: absent
+   serial 262: absent
+   serial 263: absent
+   serial 264: absent
+   serial 265: absent
+   serial 266: absent
+   serial 267: absent
+-- shard 1, GkSource: 19 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 546: absent
+   serial 553: absent
+   serial 560: absent
+   serial 563: absent
+   serial 568: absent
+   serial 569: absent
+   serial 570: absent
+   serial 571: absent
+   serial 572: absent
+   serial 573: absent
+   serial 574: absent
+   serial 575: absent
+   serial 576: absent
+   serial 577: absent
+   serial 578: absent
+   serial 579: absent
+   serial 580: absent
+   serial 581: absent
+   serial 582: absent
+-- shard 3, GkSource: 15 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 28: absent
+   serial 30: absent
+   serial 45: absent
+   serial 46: absent
+   serial 55: absent
+   serial 56: absent
+   serial 57: absent
+   serial 62: absent
+   serial 63: absent
+   serial 64: absent
+   serial 65: absent
+   serial 66: absent
+   serial 67: absent
+   serial 68: absent
+   serial 69: absent
+48 serial(s) checked: 48 absent, 0 reused by a validated row, 0 still unvalidated
+prune_check rc=0
+
+== 2026-10-14 16:26:03 prune_check.py state/after-resumed-b.txt, after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-04/state/after-resumed-b.txt
+   none: there is nothing to check
+prune_check rc=0
+store files after both: shasum -c after-resumed-c.sha256 all OK

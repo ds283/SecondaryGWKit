@@ -1,0 +1,16 @@
+lookup/compute/store per stage, from each run's stdout.log
+  reference: runregistry-extraction-04-reference-20261014T154651
+  resumed-a: runregistry-extraction-04-resumed-a-20261014T160226
+  resumed-b: runregistry-extraction-04-resumed-b-20261014T161222
+  resumed-c: runregistry-extraction-04-resumed-c-20261014T161739
+  stage                                                         reference       resumed-a           resumed-b           resumed-c  
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  132/132/132         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  440/440/440

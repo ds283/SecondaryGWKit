@@ -1107,3 +1107,954 @@ to its shard actors, so Ray pickles them by their module path.
 
 So the factory move changes nothing a build writes, reads or records. R1 can isolate the
 DatastoreKit pin.
+
+---
+
+## 2. R1 — through DatastoreKit `v0.4.0`
+
+**§2's tree, stores and runs.** Every R1 launch ran on branch `handover-remedial` at **`89ff8b7`**
+("Write the orchestrator note for runregistry-extraction prompt 04").
+- **Its code is `5b81f2e`'s** (prompt 03). `git diff --stat 5b81f2e 89ff8b7 -- . ':!prompts' ':!docs'`
+  is empty: `e150335` and `89ff8b7` touch `prompts/` only.
+- **What it adds over R0's tree (`fe16d8e`)**:
+  - `5b81f2e`, which moved `requirements.txt:17` from `datastorekit` `v0.2.2` to `v0.4.0`;
+  - `c863055` (02a), which added `tools/rehearsal_lock.py`, its tests and `CLAUDE.md`'s lock
+    section. No build or reader imports any of them.
+
+  `git diff --stat fe16d8e 5b81f2e -- . ':!prompts' ':!docs'` lists those four files alone.
+
+  Under `datastorekit/`, `v0.2.2` → `v0.4.0` changes `SQL/factory_base.py` (`v0.2.3`) and
+  `object.py` (`v0.3.0`), and adds `store_fingerprint.py`. `store_inventory.py`, which SGK's
+  fingerprint reads, is unchanged (board §5.5).
+- **The packages.**
+  - The datastore layer is the installed **`datastorekit` 0.4.0**, at `c8570e84…`, not editable.
+  - The work queue is the installed **`raypoolkit` 0.2.0**, at `eaef0ce6…`, not editable, as at R0.
+  - `runregistrykit` is not installed.
+- **The tree was clean.** `git status --short` was empty at every launch.
+- **The manifests.** Every manifest stamps `git_dirty: false` and `packages`
+  `{"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}}`,
+  compared as JSON. The `raypoolkit` entry is R0's exactly.
+- **The lock.** R1 is the first rehearsal under the shared rehearsal lock (README §4.1). It was
+  taken before `reference`, its `pid` set at each launch, held through the readers and the guard,
+  and released (§2.1.3).
+
+R1's launcher built two throwaway stores:
+- **`var/datastores/runregistry-extraction-04-reference.sqlite`** (sidecar `store_id`
+  `0ab77b25f9e74b20977a7dba409c1e32`), built straight through by the run **`reference`**;
+- **`var/datastores/runregistry-extraction-04-resumed.sqlite`** (`store_id`
+  `bc2ac248bfab423cb8ef47be37efdcdd`), built by three runs:
+  - **`resumed-a`**, killed by `SIGTERM` in the `GkSource` stage;
+  - **`resumed-b`**, with `--resume`, killed in the `QuadSourceIntegral` stage;
+  - **`resumed-c`**, with `--resume`, run to `done`.
+
+The runs are `var/runs/runregistry-extraction-04-<slug>-<stamp>/`. Both stores stay, with their
+sidecars. After this prompt's review the orchestrator retires them and R0's two (D6, board §5.5).
+The small outputs quoted below are in
+[`runregistry-extraction/rehearsal/`](runregistry-extraction/rehearsal/), under names carrying `04`.
+The large ones stay under `var/` (§2.9).
+
+R1 is compared with R0 through R0's stores, which are still live, and through the fingerprints R0's
+`reference` and `resumed-c` run directories recorded (§2.3.4). The 26 files under `var/datastores/`
+were hashed before R1's first launch and after its last step (§2.9).
+
+**Headline.**
+1. **R1 reproduces the reference fingerprint through `datastorekit` 0.4.0.**
+   - Both stores are format 6, digest `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`,
+     all 21 classes equal, and each equals its sidecar's.
+   - `compare_fingerprints` is empty between the two stores.
+   - It is also empty between each store and the fingerprints recorded by R0's
+     `runregistry-extraction-02-reference` and `runregistry-extraction-02-resumed-c` (`fe16d8e`)
+     (§2.3.4).
+   - The only change to what runs between R0 and R1 is the pin. So the three releases between
+     `v0.2.2` and `v0.4.0` move nothing a build writes or reads.
+2. **The fingerprint both ways holds on all four live stores (W1, §2.10).**
+   `fingerprint_both_ways.py` exits 0 on R1's two stores and R0's two. On each, the package's
+   fingerprint equals SGK's in every field but `encoding_format`: the same keys in the same order,
+   the overall digest, all 21 classes in order with every count and digest, and every tag set. The
+   listings are 7542 lines each, equal but for the first. Each of the five deliberate breakages
+   makes it exit 1, naming what failed.
+3. **Every launch ended as recorded.** `reference` and `resumed-c` are `done`/0. `resumed-a` and
+   `resumed-b` are `killed`/143, each with its fingerprint, and each driver exited 143 (§2.2).
+4. **The resume recomputed nothing it had stored, and the prune at open was exercised again.**
+   - `resumed-a` stored 207 `GkSource` rows before its signal, 48 of them unvalidated.
+   - `resumed-b`'s open pruned exactly those 48: every serial is absent afterwards and none was
+     reused.
+   - `resumed-b` then computed 132 = 291 − 207 + 48.
+   - `resumed-c` computed the 440 = 864 − 424 `QuadSourceIntegral` rows not stored when `resumed-b`
+     was killed, and nothing else.
+   - Nothing is duplicated (§2.3).
+5. **Every reader exits 0, refuses nothing, and leaves every file of the store byte-identical**
+   (§2.4).
+6. **L4 equals R0's** (§2.5):
+   - the statistics counts are equal, in `reference` and in both resumed runs that print the block;
+   - the reference's stage counts are equal, stage by stage;
+   - the resumed chain's identities hold, the prune's with 48 rows;
+   - the `** ` lines of every run are equal, in order;
+   - every completion line has R0's form and number, and the registry's `stage` fields are R0's.
+
+   The reference's statistics block prints `minimal` before `complete` under `mixed`, R2's order
+   and not R0's. That is `[02-the-policy-statistics-block-orders-its-lines-by-completion]` again,
+   not a new finding.
+7. **No log line names `datastorekit`**, in any of the twelve build logs, as in R0's. None holds a
+   `DeprecationWarning` or `_timestamp` (§2.2.5). The logs differ from R0's only where the
+   interruption points and the load put them.
+8. **The lock held for the whole rehearsal, and is free again** (§2.1.3).
+9. **Nothing else under `var/` moved.** The 14 tombstones and R0's twelve store files have the same
+   SHA-256, mtime and size before the first launch and after the last step (§2.9).
+
+### 2.1 How each was launched
+
+Each launch was §1.1's command, with `runregistry-extraction-04`, `--prompt 04` and this prompt's
+store names, run from the repository root, detached, the purpose passed to `sh -c` as its `$0`:
+
+```bash
+nohup sh -c 'PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \
+    --build --rehearsal [--resume] \
+    --database var/datastores/runregistry-extraction-04-<store>.sqlite \
+    --job-name runregistry-extraction-04 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register <slug> --purpose "$0" --campaign runregistry-extraction --prompt 04; \
+  echo "** driver exit status $?"' "<one line>" \
+  > var/runs/runregistry-extraction-04-<slug>.launch.log 2>&1 &
+disown
+```
+
+- `reference`: the reference store, no `--resume`.
+- `resumed-a`: the resumed store, no `--resume`.
+- `resumed-b` and `resumed-c`: the resumed store, with `--resume`.
+
+Each `--purpose` names R1 of this campaign, the tree's commit and its code's, `datastorekit` 0.4.0
+at `c8570e8` and `raypoolkit` 0.2.0, and the fingerprint it must equal
+([`run_records_04.txt`](runregistry-extraction/rehearsal/run_records_04.txt)).
+
+**One check per launch, one wait per launch.** After each launch the agent made one check:
+- the manifest existed;
+- `status.json` said `running`, with a pid answering `kill -0`;
+- `RunRegistry list` showed the run;
+- in the same check, `tools.rehearsal_lock set-pid` with that pid (§2.1.3), and, for `resumed-a`
+  and `resumed-b`, the interrupter's launch.
+
+The agent then ended its turn. The orchestrator ran one wait per launch on the run's liveness, and
+resumed the agent when the run was no longer alive. Neither polled. Every wait ended
+`ENDED finished`, with the heartbeat never stale. The wait on `resumed-a` ended when
+`status.json` first said `killed`, 5–6 s before the fingerprint was written; the orchestrator's
+waits on `resumed-b` and `resumed-c` ended on the pid's death (§2.6).
+
+| Slug | Run id | Store | `--resume` | Python pid (`sh` pid) | State | Exit code | Driver exit status | Wall time | Load before / after |
+|---|---|---|---|---|---|---|---|---|---|
+| `reference` | `runregistry-extraction-04-reference-20261014T154651` | reference | no | 3243 (3239) | `done` | 0 | 0 | 13 m 57 s (15:46:51–16:00:48) | 11.37 31.55 34.93 / 100.13 94.44 62.59 |
+| `resumed-a` | `runregistry-extraction-04-resumed-a-20261014T160226` | resumed | no | 11561 (11558) | `killed` | 143 | 143 | 8 m 49 s (16:02:26–16:11:15) | 59.78 84.55 60.76 / 20.53 61.19 67.51 |
+| `resumed-b` | `runregistry-extraction-04-resumed-b-20261014T161222` | resumed | yes | 17571 (17565) | `killed` | 143 | 143 | 4 m 16 s (16:12:22–16:16:38) | 16.46 56.99 65.82 / 56.62 50.74 59.30 |
+| `resumed-c` | `runregistry-extraction-04-resumed-c-20261014T161739` | resumed | yes | 20688 (20685) | `done` | 0 | 0 | 7 m 12 s (16:17:39–16:24:51) | 40.63 47.46 57.87 / 38.73 59.13 59.23 |
+
+- **Wall time** is from the manifest's `created` to the final heartbeat.
+- **Load** is `uptime`'s on 10 CPUs: at the pre-launch check, and at the agent's first check after
+  the run. The machine was shared, and loaded by processes not of this repository: the one-minute
+  load at the checks ran from 11 to 100, and reached 161 at 16:29, during the readers. R0's checks
+  ran at 58–158, with a five-minute load up to 339. The load slowed the stages (§2.5.5), and changed
+  nothing a build wrote.
+
+**The sidecars** ([`store_sidecars_04.txt`](runregistry-extraction/rehearsal/store_sidecars_04.txt)):
+- **The reference store.** `store create` ran on its closed primary at 16:01:53, after `reference`.
+  `store fingerprint --write` followed: `39809dca…`, problems none, "it replaced none".
+- **The resumed store.** `store create` ran on its closed primary at 16:12:07, after `resumed-a`.
+
+`resumed-b` and `resumed-c` then each record `fingerprint_sidecar: written`. The commands are §1.1's,
+with `runregistry-extraction-04` for `runregistry-extraction-02`.
+
+#### 2.1.1 The pre-launch checks
+
+Before each launch ([`prelaunch_checks_04.txt`](runregistry-extraction/rehearsal/prelaunch_checks_04.txt)):
+- **The tree.**
+  - `git rev-parse HEAD` was `89ff8b728b61ba22452110de88718094361e4e15`.
+  - `git status --short` was empty, and was checked again in the same shell command that launched.
+  - `git worktree list` showed this checkout alone.
+  - `git diff --stat 5b81f2e HEAD -- . ':!prompts' ':!docs'` was empty.
+  - Every working note and capture went under `var/runregistry-extraction-04/`, which is ignored,
+    until the last launch had ended. This record's files, and the W1 script, were written
+    afterwards.
+- `RAY_ADDRESS` was unset.
+- **The registry.** `python -m RunRegistry list` showed nothing `running`: 33 runs before
+  `reference` (31 finished, 2 `unknown`, the pre-registry `a3-pilot` pair); then 34, 35 and 36, all
+  finished but those two.
+- **No Ray process of this repository.** Before each launch `tools.rehearsal_lock ray-processes`
+  exited 0, listing nothing. This is the test (README §4.1). The machine-wide
+  `pgrep -lf 'gcs_server|raylet|ray::'` was also recorded, and was empty (rc 1) before every launch:
+  no other project's cluster was up. Before each later launch the previous run's pids were checked
+  by `ps -p`: the `sh` and Python pids, the interrupter's, and every Ray pid its logs name. None was
+  alive.
+- **The lock** was free before `reference` (`status`: `lock: free`, exit 0), and
+  `~/ScienceData/` held `ChamPBH-rehearsals/` alone.
+- **The store names.**
+  - Before `reference`, `store show` on both names gave kind `absent`, problems none, and no run
+    naming either.
+  - Nothing under `var/datastores/` or `var/runs/` contained `runregistry-extraction-04`, and there
+    was no `-journal`, `-wal` or `-shm` file under `var/datastores/`.
+  - Before `resumed-a`, no `runregistry-extraction-04-resumed*` file existed.
+- **The packages.**
+  - `./venv/bin/pip show datastorekit raypoolkit` gave 0.4.0 and 0.2.0, each with `Location` this
+    venv's `site-packages`.
+  - `pip show runregistrykit` found nothing. `pip check` was clean.
+  - `RunRegistry.package_provenance()` gave the record above, equal as JSON to the expected record,
+    and its `raypoolkit` equal to R0's reference manifest's.
+  - `requirements.txt:17` is `datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0`;
+    `requirements.txt:76` is `raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0`.
+- **What runs.** In a fresh `python -I` with the repository on `sys.path`:
+  - `datastorekit.__file__` and `raypoolkit.__file__` are under the venv's `site-packages`;
+  - `RayWorkPool.__module__` is `raypoolkit.RayWorkPool`;
+  - `ObjectFactories.__file__` is the repository's `ObjectFactories/__init__.py`;
+  - `datastorekit.store_fingerprint.ENCODING_FORMAT` is `1`;
+  - `import runregistrykit` raises `ModuleNotFoundError`;
+  - `ray.is_initialized()` is false.
+- **The launcher.** `shasum -a 256 docs/handover/quadsource_atol_sweep.py` was `b7935877…`, R0's.
+  Its last change is `0c9e2cf`.
+- **`var/datastores/`.** 26 files: the 14 tombstones and R0's twelve. Their full SHA-256, mtime and
+  size were recorded before `reference` (§2.9).
+- 72 GB free on `var/`'s volume (93 % used).
+
+#### 2.1.2 The interrupter
+
+**The dummy tests, at `HEAD`, before the first launch.** Each ran into a new directory under the
+agent's scratchpad, with §1.1.2's commands. Both exited 0
+([`interrupter_dummy_test_04.txt`](runregistry-extraction/rehearsal/interrupter_dummy_test_04.txt),
+[`interrupter_build_dummy_test_04.txt`](runregistry-extraction/rehearsal/interrupter_build_dummy_test_04.txt)):
+the five cases 15:45:47–15:46:11, the `--build` cases 15:46:11–15:46:12.
+- **Against R0's.** With times, pids and scratch paths stripped, each output equals R0's
+  `interrupter_dummy_test_02.txt` (40 lines) and `interrupter_build_dummy_test_02.txt` (20 lines),
+  line for line.
+- **No dummy child or interrupter was left alive.** `ps -p` on all 16 pids the two outputs name
+  found none.
+
+**The points, from R1's own reference `stdout.log`, sized as the orchestrator's note directs.**
+Both queues have a 300 s minimum notify interval (`main.py:119`).
+- **`resumed-a`.** `CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT` took **1 m 42.9 s (102.9 s)**
+  (R0: 78 s; `dk-and-rpk-migration` R2: 41.8 s). It was interrupted from the banner with
+  `--interval 5 --hold 41`.
+  - That is 40 % of 102.9 s, rounded to whole seconds, and above the 10 s floor.
+  - It puts the signal 41–46 s into the stage, so that `resumed-a` leaves stored and unvalidated
+    rows for `resumed-b` to prune, as at R0.
+- **`resumed-b`.** `CALCULATE QUADRATIC SOURCE INTEGRALS` took **8 m 14.9 s (494.9 s)** (R0:
+  1230.1 s). It was interrupted from the banner with `--interval 5 --hold 165`.
+  - A third of the stage is 165 s, under the 250 s cap that keeps the hold inside the queue's 300 s
+    minimum.
+  - The pattern is `'^CALCULATE QUADRATIC SOURCE INTEGRALS'`, not anchored at its end, as at R0.
+
+**The real firings** ([`interrupter_firings_04.txt`](runregistry-extraction/rehearsal/interrupter_firings_04.txt)):
+
+```
+resumed-a (interrupter pid 11805; '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 41)
+2026-10-14T16:06:28+01:00 liveness alive; pid 11561; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-14T16:10:28+01:00 liveness alive; pid 11561; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-14T16:10:28+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 41 s, then reading again
+2026-10-14T16:11:09+01:00 sent SIGTERM to pid 11561 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command '/opt/local/…/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/runregistry-extraction-04-resumed.sqlite … --register resumed-a …'; exiting
+
+resumed-b (interrupter pid 17691; '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 165)
+2026-10-14T16:13:22+01:00 liveness alive; pid 17571; stage 'APPLY GKSOURCE POLICIES'
+2026-10-14T16:13:37+01:00 liveness alive; pid 17571; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-14T16:13:37+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 165 s, then reading again
+2026-10-14T16:16:22+01:00 sent SIGTERM to pid 17571 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command '/opt/local/…/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/runregistry-extraction-04-resumed.sqlite … --register resumed-b …'; exiting
+```
+
+- **Each interrupter checked the pid before it signalled**: its command line named
+  `quadsource_atol_sweep.py`, its manifest's `argv[0]`, and `--register <slug>`. It refused no
+  real run's pid.
+- **Each interrupter read its stage from `status.json`.** Both banners were read, as at R0. No
+  progress line was read: `resumed-a`'s GkWKB stage took 4 m 0.4 s here and printed none.
+- **The interrupter logs a reading only when the stage changes**, and reads every 5 s. So:
+  - the `GkSource` stage began between 16:10:23 and 16:10:28, and the signal came 41–46 s into it;
+  - the QSI stage began between 16:13:32 and 16:13:37, and the signal came 165–170 s into it.
+- **No progress line appeared during `resumed-b`'s hold.**
+
+Both interrupters were launched detached, about 10 s after their builds, once the run directory and
+its `status.json` existed, in the one check after the launch:
+
+```bash
+nohup ./venv/bin/python -u docs/datastore-integrity-verification/interrupt_when.py \
+    var/runs/runregistry-extraction-04-resumed-a-20261014T160226 \
+    '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 41 > /dev/null 2>&1 &
+disown
+nohup ./venv/bin/python -u docs/datastore-integrity-verification/interrupt_when.py \
+    var/runs/runregistry-extraction-04-resumed-b-20261014T161222 \
+    '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 165 > /dev/null 2>&1 &
+disown
+```
+
+#### 2.1.3 The lock
+
+Every helper command and its exit status
+([`lock_04.txt`](runregistry-extraction/rehearsal/lock_04.txt)), each run as
+`PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock <command>` from the repository root:
+
+| When | Command | Exit | What it said |
+|---|---|---|---|
+| 15:46:42 | `acquire --purpose "runregistry-extraction 04 (R1)"` | 0 | acquired, for SecondaryGWKit |
+| 15:46:42 | `status` | 0 | `HELD`; `pid: -` (no pid recorded yet); no Ray process |
+| 15:47:01 | `set-pid 3243` (`reference`) | 0 | recorded |
+| 15:47:01 | `status` | 0 | `pid: 3243`, alive; `reference`'s own Ray processes |
+| 16:01:26 | `status` | 0 | `pid: 3243`, NOT alive; no Ray process |
+| 16:02:37 | `set-pid 11561` (`resumed-a`) | 0 | recorded |
+| 16:02:38 | `status` | 0 | `pid: 11561`, alive; 14 Ray processes, the run's |
+| 16:11:46 | `status` | 0 | `pid: 11561`, NOT alive; no Ray process |
+| 16:12:32 | `set-pid 17571` (`resumed-b`) | 0 | recorded |
+| 16:12:32 | `status` | 0 | `pid: 17571`, alive; 14 Ray processes, the run's |
+| 16:17:05 | `status` | 0 | `pid: 17571`, NOT alive; no Ray process |
+| 16:17:48 | `set-pid 20688` (`resumed-c`) | 0 | recorded |
+| 16:17:49 | `status` | 0 | `pid: 20688`, alive; 14 Ray processes, the run's |
+| 16:25:50 | `status` | 0 | `pid: 20688`, NOT alive; no Ray process |
+| 16:33:42 | `status` | 0 | `pid: 20688`, NOT alive; no Ray process (after the readers and the guard) |
+| 16:33:42 | `ray-processes` | 0 | none |
+| 16:33:42 | `release` | 0 | released |
+| 16:33:42 | `status` | 0 | `lock: free`; no Ray process |
+| 16:33:42 | `ray-processes` | 0 | none |
+
+- The owner file named `project: SecondaryGWKit`, `purpose: runregistry-extraction 04 (R1)`,
+  `ray_temp_dir: in-process` and `ray_address: in-process` throughout.
+- Between launches the lock was held and its pid was the previous driver's, dead: the protocol, not a
+  stale lock.
+- `release` was not refused: the recorded pid was dead and no Ray process of this repository was
+  alive. No wait by pid was needed before it (§2.2.3).
+- Afterwards `~/ScienceData/` holds `ChamPBH-rehearsals/` alone, as before.
+
+### 2.2 L1 — every launch ends as recorded
+
+#### 2.2.1 The states
+
+| Slug | `state` | `exit_code` | `fingerprint` | `fingerprint_error` | `fingerprint_sidecar` | Launch log ends |
+|---|---|---|---|---|---|---|
+| `reference` | `done` | 0 | format 6, `39809dca…`, problems `{}` | absent | not written: "…runregistry-extraction-04-reference.manifest.json is not a problem-free registry sidecar (there is none)" | `** driver exit status 0` |
+| `resumed-a` | `killed` | 143 | format 6, `a410cce0…`, problems `{}` | absent | not written: "…runregistry-extraction-04-resumed.manifest.json is not a problem-free registry sidecar (there is none)" | `** driver exit status 143` |
+| `resumed-b` | `killed` | 143 | format 6, `8146dab8…`, problems `{}` | absent | `written` | `** driver exit status 143` |
+| `resumed-c` | `done` | 0 | format 6, `39809dca…`, problems `{}` | absent | `written` | `** driver exit status 0` |
+
+Each fingerprint holds 21 classes, and its `taken` names its run, `git_head` `89ff8b72…` and
+`git_dirty` false.
+
+The full digests:
+- `reference` and `resumed-c`: `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`;
+- `resumed-a`: `a410cce07d9fb7a424e64ebd0b7819a096b9075ad7394ed5e78599b9f3cf8fe6`;
+- `resumed-b`: `8146dab80c46050bff5e33e77f3ec288b3dd644b0fe4448ac9fb6f96b15ff446`.
+
+The two intermediate digests differ from R0's (`9bb753bd…`, `a0d053af…`), as they must: each
+digests a store killed at a different point. By their recorded class counts:
+- `resumed-a`'s store held `GkSource` 207, `GkSourcePolicyData` 0 and `QuadSourceIntegral` 0;
+- `resumed-b`'s held 291, 291 and 424.
+
+#### 2.2.2 Each killed launch
+
+| | `resumed-a` | `resumed-b` |
+|---|---|---|
+| Interrupter's `sent SIGTERM` | 16:11:09 | 16:16:22 |
+| Handler's line | `** SIGTERM at 2026-10-14 16:11:09 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143` | `** SIGTERM at 2026-10-14 16:16:23 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143` |
+| Delay | under 1 s (equal whole-second stamps) | at most about 1 s (stamps one second apart) |
+| `stderr.log`'s handler lines | the line above, then `** SIGTERM: the pipeline ended with SystemExit(143); recording killed, exit code 143` | the line above, then `** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143` |
+| Python traceback | none | none |
+| Ray's `*** SIGTERM received` banner | absent (`stderr.log` and launch log) | absent |
+| Stage at the signal | the `GkSource` banner, first read 16:10:28, signal 41 s later (**207 of 291 rows stored, 48 unvalidated**) | the `QuadSourceIntegral` banner, first read 16:13:37, signal 165 s later (424 of 864 stored) |
+
+- **`SystemExit(143)` in `resumed-a`, `SystemExit(1)` in `resumed-b`**, as at R0. The record is
+  `killed`/143 and the exit is 143 either way (§1.2.2).
+- **`stderr.log` of `resumed-a` and of `resumed-b`** each hold only the handler's two lines.
+- **`stderr.log` of `reference`** holds only the SciPy `IntegrationWarning` ("The occurrence of
+  roundoff error is detected…", worker pid 3309), as at every rehearsal.
+- **`stderr.log` of `resumed-c`** holds the same warning (worker pid 20790). At R0 it was in
+  `resumed-b` (§2.2.5).
+
+#### 2.2.3 No Ray process of this repository left
+
+| After | When | Processes of this repository |
+|---|---|---|
+| `reference` | 16:01:25 (~37 s after the final heartbeat; load 100.13) | none: `ray-processes` exit 0, `pgrep` empty, pids 3239 and 3243 gone, and the Ray pids its logs name (3289, 3291, 3293, 3309) gone |
+| `resumed-a` | 16:11:46 (~31 s; load 20.53) | none, by the same checks for pids 11558, 11561, the interrupter 11805, and the Ray pids 11779, 11782, 11783 |
+| `resumed-b` | 16:17:05 (~27 s; load 56.62) | none, by the same checks for pids 17565, 17571, the interrupter 17691, and the Ray pids 17643, 17645, 17646, 17648 |
+| `resumed-c` | 16:25:50 (~59 s; load 38.73) | none, for pids 20685, 20688 and the Ray pids 20785, 20787, 20790 |
+
+- **No Ray process outlived either killed driver**, so no wait by pid was run. The agents' exit time
+  is "none listed at the first check", as at R0.
+- `[07-a-killed-builds-ray-agents-outlive-the-driver]` did not recur. The issue stays open; it is
+  not this campaign's.
+- No launch log or `stderr.log` holds a `ray.kill`, killed-actor, `ActorDiedError` or
+  `RayActorError` line (§2.2.5).
+
+#### 2.2.4 The manifests
+
+From [`run_records_04.txt`](runregistry-extraction/rehearsal/run_records_04.txt), for all four:
+- `git_head` `89ff8b728b61ba22452110de88718094361e4e15`, the dispatch `HEAD`; `git_dirty` false.
+- **`packages`** equals, compared as JSON, the record of §2's header: `datastorekit` 0.4.0 at
+  `c8570e84…`, `requested_revision` `v0.4.0`, and `raypoolkit` 0.2.0 at `eaef0ce6…`, R0's, neither
+  editable, each with its URL.
+- `script` is `docs/handover/quadsource_atol_sweep.py`. **`script_sha256`** is
+  `b7935877cdbc4e54f6e85a9769f16c2182f7840eaa4bfcb0af2da5bfb9bd3cac`, the same in all four, and
+  R0's.
+- `argv[0]` is `docs/handover/quadsource_atol_sweep.py`. `argv` holds `--build --rehearsal`, and
+  `--resume` in `resumed-b` and `resumed-c` only.
+- `results` names the reference store for `reference`, and the resumed store for the other three.
+  `results_store_id` is `null` for `reference` and `resumed-a`, whose stores had no sidecar at
+  launch, and `bc2ac248…` for `resumed-b` and `resumed-c`, as at R0.
+- `scope` is R0's with `runregistry-extraction-04` for `runregistry-extraction-02`. The manifests
+  have R0's keys exactly.
+
+#### 2.2.5 Every launch's `stdout.log`, and what is new in the logs
+
+Counted in each of the four, as §1.2.5
+([`log_comparison_04.txt`](runregistry-extraction/rehearsal/log_comparison_04.txt), section 2):
+
+| Line | Each launch |
+|---|---|
+| `** quadsource_atol_sweep: replaced 1 occurrence of …` | 4, one per substitution |
+| `** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250` | 1 |
+| `main.py argv = [… '--zend', '250', …]` | 1 |
+| `--no-prune-unvalidated`, in `stdout.log` or the launch log | 0 |
+| `bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)`, then `Started a local Ray instance.` (launch log) | 1 each |
+| `reconcil`, `repair`, `in.flight`, `replicat` (case-insensitive), in `stdout.log` or the launch log | 0 |
+| `Traceback`, `ModuleNotFoundError`, `ImportError`, `AttributeError`, `pickle`/`unpickl`, `Datastore.SQL`/`Datastore/SQL`, `ray.kill`, `killed actor`, `ActorDiedError`, `RayActorError`, `ValueError`, `RuntimeWarning`, `did not validate`, in any of the three logs | 0 |
+| **`datastorekit`**, anywhere in a line, `DeprecationWarning`, `_timestamp`, in any of the three logs | **0**, as in R0's twelve |
+| `INTEGRITY WARNING`, in any of the three logs | 0, but for `resumed-b`: 2 in `stdout.log` and 2 in the launch log |
+
+The launch logs of `resumed-b` and `resumed-c` hold `** quadsource_atol_sweep --build: resuming
+into runregistry-extraction-04-resumed.sqlite`.
+
+**The three releases' signatures are absent.** No line names `datastorekit`, even through a path:
+a traceback or warning raised inside the package would. No `DeprecationWarning` and no
+`_timestamp`, the attribute `v0.3.0`'s `DatastoreObject` added, appear. The counts of every search
+equal R0's but for `IntegrationWarning` and the progress lines, below.
+
+**The comparison with R0, slug by slug.** The method is §1.2.5's: each line of each R1 log
+normalised (ANSI codes stripped, the campaign and prompt and the repository path replaced, Ray's
+`[repeated Nx across cluster]` count and every number replaced by `N`) and compared, as a set of
+line kinds, with R0's same file for the same slug. The script was a throwaway in the agent's
+scratchpad, not committed.
+
+| Slug | `stderr.log` | launch log | `stdout.log` |
+|---|---|---|---|
+| `reference` | equal (4 lines, 4 kinds each) | R0 has 2 kinds R1 has not: a `Queue summary` in `/sec`, and the two-rate `inflight` line of a later progress line; 118 lines against 122 | the same 2 kinds; 112 lines against 116 |
+| `resumed-a` | equal (2, 2) | R1 has 1 kind R0 has not, a `Queue summary` in `/sec` that R0 printed in `/min`; R0 has 2 kinds R1 has not, its one progress line and its `inflight` line; 88 lines against 90 | the same 3 kinds; 84 lines against 86 |
+| `resumed-b` | R0 has 4 kinds R1 has not: the `IntegrationWarning`'s four lines; 2 lines against 6 | R0 has 5 kinds R1 has not: the same 4, and a completion time in `Nm Ns`; 148 lines against 162 | R0 has 1 kind R1 has not, the completion time in `Nm Ns`; 143 lines against 153 |
+| `resumed-c` | R1 has 4 kinds R0 has not: the `IntegrationWarning`'s four lines; 4 lines against 0 | R1 has 6 kinds R0 has not: the same 4, and a progress line and its `inflight` line; 116 lines against 110 | R1 has 2 kinds R0 has not: the progress line and its `inflight` line; 109 lines against 107 |
+
+**Every difference, explained.**
+1. **The pool's progress lines.** R1's `reference` printed one in its QSI stage (8 m 14.9 s), where
+   R0's printed three in a 20 m 30.1 s stage; R1's `resumed-a` printed none, its GkWKB stage taking
+   4 m 0.4 s, under 300 s; R1's `resumed-c` printed one in its QSI stage (5 m 43.8 s), where R0's
+   (4 m 24 s) printed none. A stage that runs past the queue's 300 s minimum notify interval prints
+   one, as the orchestrator's note expected (correction 4). The later lines of a stage print two
+   rates per kind (§1.5.6); R1 printed no stage's second line, so has none of that kind.
+2. **The `Queue summary` rate unit**, `/sec` against `/min`, in `reference` and `resumed-a`. The
+   pool chooses the unit from the rate. The line's form is the same (§1.2.5, item 2).
+3. **The SciPy `IntegrationWarning`.** It belongs to one integral, which falls in whichever resumed
+   launch computes it. R1's `resumed-b` stored 424 QSI rows before its signal, against R0's 486, so
+   here the integral fell after the point, in `resumed-c`, as at `dk-and-rpk-migration`'s R0 and
+   R2. It is in `reference`, as at every rehearsal. The point moves it; it is not a finding.
+4. **`resumed-b`'s `GkSource` completion time** is `in time 32.5s`, where R0's was `1m 10s`.
+5. **`resumed-b`'s integrity warning** is in both, with equal line kinds: the prune at open of the
+   rows `resumed-a` left unvalidated (§2.3.2). Shard 3's block lists its 15 rows in full
+   (`stdout.log:13-46`); Ray folds shard 1's 19 and shard 0's 14 into one block with
+   `[repeated 33x across cluster]` (`:132-137`). 15 + 33 = 48.
+
+**Nothing else differs.** No warning or traceback appears that no earlier rehearsal printed. Every
+pool line, banner, completion and `Queue summary` alike, has R0's form (§2.5.6).
+
+#### 2.2.6 A3 v2's guard
+
+After `resumed-c` and the readers, in the foreground, with no `--register`, the lock still held
+([`guard_04.txt`](runregistry-extraction/rehearsal/guard_04.txt)):
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal \
+    --database var/datastores/runregistry-extraction-04-resumed.sqlite \
+    --job-name runregistry-extraction-04 --atol 1e-32 --rtol 1e-7
+```
+
+It exited 1 within a second (16:33:33–16:33:34), with R0's `RuntimeError`, naming the five files of
+`runregistry-extraction-04-resumed.sqlite` that exist and refusing to build into an existing store.
+- **Nothing changed.** Afterwards, `shasum -a 256 -c` gave `OK` on every file of both stores and
+  both sidecars, against the hashes taken just before it, after the readers, and against those
+  taken after `resumed-c`, before the readers.
+- **Nothing was created.** No run directory appeared (71 entries under `var/runs/` before and
+  after), and no Ray process of this repository and no journal appeared.
+
+### 2.3 L2 — the resume is the reference
+
+#### 2.3.1 Nothing stored is recomputed
+
+Through `dk-and-rpk-migration`'s
+[`stage_counts.py`](dk-and-rpk-migration/rehearsal/stage_counts.py), unchanged
+([`stage_counts_04.txt`](runregistry-extraction/rehearsal/stage_counts_04.txt)), with §1.3.1's
+command and this prompt's run directories. Lookup / compute / store:
+
+| Stage | `reference` | `resumed-a` | `resumed-b` | `resumed-c` |
+|---|---|---|---|---|
+| HORIZON EXIT TIMES, SOURCE K-SAMPLE | 3/3/3 | 3/3/3 | 3/0/0 | 3/0/0 |
+| HORIZON EXIT TIMES, RESPONSE K-SAMPLE | 3/0/0 | 3/0/0 | 3/0/0 | 3/0/0 |
+| NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | 3/3/3 | 3/3/3 | 0/0/0 | 0/0/0 |
+| WKB PART OF MATTER TRANSFER FUNCTIONS | 3/3/3 | 3/3/3 | 0/0/0 | 0/0/0 |
+| QUADRATIC SOURCE TERMS | 6/6/6 | 6/6/6 | 0/0/0 | 0/0/0 |
+| NUMERICAL PART OF TENSOR GREEN FUNCTIONS | 1368/1368/1368 | 1368/1368/1368 | 0/0/0 | 0/0/0 |
+| WKB PART OF TENSOR GREEN FUNCTIONS | 3477/3477/3477 | 3477/3477/3477 | 0/0/0 | 0/0/0 |
+| GREENS FUNCTIONS FOR SOURCE REDSHIFT | 291/291/291 | (no progress line) | **132/132/132** | 0/0/0 |
+| APPLY GKSOURCE POLICIES | 291/291/291 | — | 291/291/291 | 0/0/0 |
+| QUADRATIC SOURCE INTEGRALS | 864/864/864 | — | (no progress line) | **440/440/440** |
+
+- **Every stage that finished before an interruption computed zero on the next launch.**
+- **`GkSource`.**
+  - `resumed-a` stored **207** `GkSource` rows before the signal (67 + 71 + 0 + 69 by shard), of
+    which **48** were unvalidated (14 + 19 + 0 + 15) (§2.3.2).
+  - `resumed-b` pruned those 48 at open, and computed **132 = 291 − 207 + 48**: the 84 never
+    stored, and the 48 pruned. No validated row was computed again.
+  - Summed, less the pruned: 207 + 132 − 48 = 291, the reference's.
+- **`QuadSourceIntegral`.**
+  - `resumed-b` printed no progress line in the stage. Its fingerprint, taken by `finish` on the
+    closed store, records **424** rows.
+  - `resumed-c` computed **440** = 864 − 424, exactly what was missing.
+  - Summed: 424 + 440 = 864, the reference's. No stored row was computed again.
+- `APPLY GKSOURCE POLICIES` is 291/291/291 in `resumed-b`, because `resumed-a` never reached it, and
+  0/0/0 in `resumed-c`.
+
+#### 2.3.2 The prune at startup
+
+The closed store after each launch, read `mode=ro` by
+`docs/a3-v2-readiness/rehearsal/closed_store_state.py`, with §1.3.2's command. Each file's SHA-256
+was unchanged by the read
+([`closed_store_state_04.txt`](runregistry-extraction/rehearsal/closed_store_state_04.txt)):
+
+| After | `-journal`/`-wal`/`-shm` | `replication_in_flight` | Rows `validated = 0` |
+|---|---|---|---|
+| `reference` | none | 0 rows | none |
+| `resumed-a` | none | 0 rows | **`GkSource` 14 + 19 + 0 + 15 = 48**, of 67 + 71 + 0 + 69 = 207 stored, each listed by serial. `GkNumericIntegration` 456 + 406 + 0 + 506 = 1368 and `GkWKBIntegration` 3 × 1159 = 3477 are all stored and validated |
+| `resumed-b` | none | 0 rows | none (`GkSource` 97 + 97 + 0 + 97 = 291) |
+| `resumed-c` | none | 0 rows | none |
+
+**`resumed-a` stored and left unvalidated rows, as the point intended** (§2.1.2). The signal came
+41–46 s into a stage the reference took 102.9 s over. 207 of 291 rows were stored by then, and 48
+of them were not yet validated. R0's `resumed-a` left 164 rows (63 unvalidated).
+
+**By serial**, through `dk-and-rpk-migration`'s
+[`prune_check.py`](dk-and-rpk-migration/rehearsal/prune_check.py), unchanged, with §1.3.2's
+commands and this prompt's state files
+([`prune_check_04.txt`](runregistry-extraction/rehearsal/prune_check_04.txt)):
+- **The first ran twice:** at 16:17:20, after `resumed-b` had opened and closed the store, and again
+  after `resumed-c`. Both times it gave:
+  - `48 serial(s) checked: 48 absent, 0 reused by a validated row, 0 still unvalidated`, exit 0;
+  - by shard, 14 serials in shard 0, 19 in shard 1 and 15 in shard 3, each `absent`.
+- **The second**, after `resumed-c`, gave `none: there is nothing to check`, exit 0.
+- Every file of the store had the same SHA-256 before and after each check.
+
+**So the prune at open removed exactly the rows `resumed-a` left unvalidated**, and no validated row,
+now through `datastorekit` 0.4.0's shard actors. Each pruned serial is gone, and none was reused.
+
+**Nothing is duplicated.** `read_inventory` after `resumed-c` reports no problem in any class
+(§2.3.5). Each finish's fingerprint has `problems` `{}`, for all four launches.
+
+**The pool's prune of a replicated class.** None. After every launch each shard's `BackgroundModel`
+row is validated, and the census finds the replicated tables equal (§2.3.5).
+
+#### 2.3.3 The version row
+
+From `closed_store_state.py`, after every launch: exactly one row, `(1, '2025.1.1')`, on each of the
+four shards of both stores. The primary has no `version` table.
+
+#### 2.3.4 The comparison
+
+**The two stores**, by `compare_stores.py`, with §1.3.4's command and this prompt's stores
+([`fingerprint_comparison_04.txt`](runregistry-extraction/rehearsal/fingerprint_comparison_04.txt)).
+It exited 0: both stores format 6, digest `39809dca…`, problems none, each with 0 differences
+against its sidecar; `compare_fingerprints(reference, resumed): 0 difference(s)`; `verdict: equal`.
+All 21 classes are `equal`. With the campaign and prompt normalised, the output equals R0's
+`fingerprint_comparison_02.txt` line for line (the command line and the exit line aside).
+
+**Against R0's reference and `resumed-c`**, by `compare_with_recorded.py`, unchanged
+([`fingerprint_against_recorded_04.txt`](runregistry-extraction/rehearsal/fingerprint_against_recorded_04.txt)):
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py \
+    var/datastores/runregistry-extraction-04-reference.sqlite \
+    var/datastores/runregistry-extraction-04-resumed.sqlite \
+    --against var/runs/runregistry-extraction-02-reference-20261012T091921 \
+    var/runs/runregistry-extraction-02-resumed-c-20261012T101145
+```
+
+It exited 0, verdict `equal`. For each store there were 0 differences against:
+- its sidecar;
+- R0's reference (taken at `fe16d8e7…`, `git_dirty` false);
+- R0's `resumed-c` (taken at `fe16d8e7…`, `git_dirty` false).
+
+All are format 6, digest `39809dca…`, 21 classes, problems none. Both sides are SGK's fingerprints,
+so SGK's comparison applies. The files of both stores had the same SHA-256 before and after these
+reads (`after-resumed-c.sha256`, all `OK`).
+
+| Class | Reference | Resumed | Digests | R0's reference |
+|---|---|---|---|---|
+| `version` | 1 | 1 | equal | 1 |
+| `store_tag` | 10 | 10 | equal | 10 |
+| `redshift` | 1159 | 1159 | equal | 1159 |
+| `wavenumber` | 3 | 3 | equal | 3 |
+| `tolerance` | 7 | 7 | equal | 7 |
+| `LambdaCDM` | 1 | 1 | equal | 1 |
+| `QCD_Cosmology` | 1 | 1 | equal | 1 |
+| `IntegrationSolver` | 7 | 7 | equal | 7 |
+| `GkSourcePolicy` | 2 | 2 | equal | 2 |
+| `QuadSourcePolicy` | 2 | 2 | equal | 2 |
+| `wavenumber_exit_time` | 3 | 3 | equal | 3 |
+| `BackgroundModel` | 1 | 1 | equal | 1 |
+| `TkNumericIntegration` | 3 | 3 | equal | 3 |
+| `TkWKBIntegration` | 3 | 3 | equal | 3 |
+| `GkNumericIntegration` | 1368 | 1368 | equal | 1368 |
+| `GkWKBIntegration` | 3477 | 3477 | equal | 3477 |
+| `GkSource` | 291 | 291 | equal | 291 |
+| `GkSourcePolicyData` | 291 | 291 | equal | 291 |
+| `QuadSource` | 6 | 6 | equal | 6 |
+| `QuadSourceIntegral` | 864 | 864 | equal | 864 |
+| `OneLoopIntegral` | 0 | 0 | equal | 0 |
+
+#### 2.3.5 Integrity, both stores, read-only
+
+**The census**, with §1.3.5's command and this prompt's stores
+([`census_04.txt`](runregistry-extraction/rehearsal/census_04.txt)): every table is `OK` on both
+stores (28 lines), and the verdict is `no divergence` on both. Exit 0. With the campaign and prompt
+normalised, the output equals R0's `census_02.txt` line for line.
+
+**`integrity_check`, `foreign_key_check` and the inventory**, through `dk-and-rpk-migration`'s
+[`store_soundness.py`](dk-and-rpk-migration/rehearsal/store_soundness.py), unchanged
+([`store_soundness_04.txt`](runregistry-extraction/rehearsal/store_soundness_04.txt)):
+- It exited 0, `=> clean`.
+- On the primary and every shard of both stores, opened `mode=ro`, `PRAGMA integrity_check` is
+  `['ok']` and `PRAGMA foreign_key_check` returns 0 rows.
+- The package's `read_inventory(primary, factories)`, now `datastorekit` 0.4.0's, reads shards
+  `(0, 1, 2, 3)`, and reports no problem in any class of either store, and 0 `duplicate`.
+- With the campaign and prompt normalised, the output equals R0's `store_soundness_02.txt` line for
+  line.
+- Every file of both stores had the same SHA-256 before and after these reads, and no journal
+  appeared.
+
+### 2.4 L3 — every reader, read-only, on the resumed store
+
+Each reader ran once, serially, on the closed resumed store, with its own local Ray instance
+(`--ray-address local`), through `dk-and-rpk-migration`'s
+[`run_readers.sh`](dk-and-rpk-migration/rehearsal/run_readers.sh), unchanged, with §1.4's two
+commands and this prompt's store and output directory, the lock held
+([`readers_04.txt`](runregistry-extraction/rehearsal/readers_04.txt)). Both invocations exited 0.
+
+| Script | Exit | Wall | What it read (last queue's lookups) | Files written | `ReadOnlyMiss` / `ReadOnlyWrite` / traceback | Store files after |
+|---|---|---|---|---|---|---|
+| `extract_Gk_data.py` | 0 | 52 s | `GENERATING GkNumeric DATA PRODUCTS`: 116 | 315 | none | identical |
+| `extract_GkWKB_data.py` | 0 | 125 s | `GENERATING GkNumeric/GkWKB DATA PRODUCTS`: 348 | 2436 | none | identical |
+| `extract_GkSource_data.py` | 0 | 41 s | `GENERATING GkSource DATA PRODUCTS`: 10 | 176 | none | identical |
+| `extract_TkWKB_data.py` | 0 | 26 s | `GENERATING TkNumeric/TkWKB DATA PRODUCTS FOR LambdaCDM`: 3 | 27 | none | identical |
+| `extract_tensor_source_data.py` | 0 | 25 s | `EXTRACT TENSOR SOURCE DATA`: 6 | 27 | none | identical |
+| `extract_QuadSourceIntegral_data.py` | 0 | 33 s | `GENERATING QuadSourceIntegral DATA PRODUCTS`: 24 | 73 | none | identical |
+| `extract_Gk_data.py`, **no `--models`** | 0 | 54 s | LambdaCDM: 116; then `>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it` | 369 | none | identical |
+
+- **The lookups equal R0's, queue by queue and reader by reader**
+  ([`log_comparison_04.txt`](runregistry-extraction/rehearsal/log_comparison_04.txt), section 4).
+- **The files written differ** in the readers that draw random subsamples, as between R0, R2 and
+  R1: against R0's 396, 210, 76 and 459, R1 wrote 315, 176, 73 and 369. Each draws its subsample with
+  `random.sample`; it is not a finding.
+- **The reader logs' line kinds against R0's**, normalised as §2.2.5: six are equal.
+  `extract_GkWKB_data`'s queue printed one progress line, where R0's printed two; R0's second, in
+  the two-rate form, is the one kind R1's log lacks. The first has R0's form:
+
+  ```
+     -- 2026-10-14 16:28:19 (1m 2.21s running): 168/348 work items remaining = 51.72% complete
+        inflight: 0 lookup | completed: 180 lookup (avg 173.6/min)
+  ```
+- **The load.** The readers ran 16:26:11–16:32:19, at a one-minute load of 36–161 from processes
+  not of this repository.
+- **The model and the run.** Every run printed `** reading run "default", the only run in this
+  datastore (no --run-label given)`. With `--models LambdaCDM` each printed `>> RUNNING PIPELINE FOR
+  MODEL LambdaCDM`; without it, `extract_Gk_data.py` read LambdaCDM, then printed the
+  `QCD_Cosmology` skip line, and exited 0.
+- **No file of the store changed.** Before and after each reader, the SHA-256, mtime and size of the
+  primary and of every shard were identical, and no `-journal`, `-wal` or `-shm` file appeared. No
+  Ray process of this checkout was left after any reader.
+- **The fingerprint afterwards.** `store fingerprint` (without `--write`) on the resumed store gave
+  `39809dca…`, problems none, "matches the fingerprint taken 2026-10-14T16:24:51+01:00 by run
+  runregistry-extraction-04-resumed-c-20261014T161739, at 89ff8b728b61ba22452110de88718094361e4e15".
+
+### 2.5 L4 — equal to R0
+
+#### 2.5.1 The `GkSourcePolicyData SUMMARY STATISTICS` block
+
+`policy_statistics.py`, with §1.5.1's command, on each of R1's runs. Exit 0 on `reference`,
+`resumed-b` and `resumed-c`; exit 1 on `resumed-a`, which has no block, as at R0. The reference's
+block, lines 83–96 of its `stdout.log`, verbatim
+([`policy_statistics_04_reference.txt`](runregistry-extraction/rehearsal/policy_statistics_04_reference.txt)):
+
+```
+** GkSourcePolicyData SUMMARY STATISTICS
+
+     * Policy: policy="maximize-WKB"-Levin-threshold="1.5"
+        Total instances: 291
+
+        >> numeric: 109 instances = 37.46%
+           complete: 109 instances = 100.00% of this type, 37.46% of total
+
+        >> mixed: 26 instances = 8.93%
+           minimal: 1 instances = 3.85% of this type, 0.34% of total
+           complete: 25 instances = 96.15% of this type, 8.59% of total
+
+        >> WKB: 156 instances = 53.61%
+           complete: 156 instances = 100.00% of this type, 53.61% of total
+```
+
+| | R0 | R1 |
+|---|---|---|
+| Total instances | 291 | 291 |
+| numeric | 109 (109 complete) | 109 (109 complete) |
+| mixed | 26 (25 complete, 1 minimal) | 26 (25 complete, 1 minimal) |
+| WKB | 156 (156 complete) | 156 (156 complete) |
+| `reference`'s order under `mixed` | `complete`, `minimal` | `minimal`, `complete` |
+| `reference`, against R0's | — | differs in the order of those two lines; equal sorted |
+| `resumed-b` (`stdout.log:115`) | `complete` first | equal to R0's `resumed-b` line for line |
+| `resumed-c` (`stdout.log:83`) | `minimal` first | equal to R0's `resumed-c` line for line |
+
+**Every count is R0's**, in every run that prints the block. The order is Ray's completion order:
+`[02-the-policy-statistics-block-orders-its-lines-by-completion]`, with one more instance and no
+new fact. R1's reference block equals `dk-and-rpk-migration` R2's line for line.
+
+#### 2.5.2 The reference run's stage counts
+
+From [`stage_counts_04.txt`](runregistry-extraction/rehearsal/stage_counts_04.txt), against R0's
+`stage_counts_02.txt`: the `reference` column is equal in every stage, and so is the `resumed-a`
+column, since both were killed in the same stage. (The table is §2.3.1's.)
+
+#### 2.5.3 The resumed chain, by identity
+
+| Identity | R0 | R1 | Holds |
+|---|---|---|---|
+| Every stage finished before a kill computes 0 on the next launch | yes | yes | ✅ |
+| `GkSource` rows pruned at `resumed-b`'s open = rows `resumed-a` left unvalidated (`prune_check.py`) | 63 = 63, all absent, none reused | **48 = 48, all absent, none reused** | ✅ |
+| `resumed-b` computed 291 − (stored by `resumed-a`) + (pruned) `GkSource` | 190 = 291 − 164 + 63 | **132 = 291 − 207 + 48** | ✅ |
+| `resumed-c` computed 864 − (stored by `resumed-b`) `QuadSourceIntegral`, and nothing else | 378 = 864 − 486 | 440 = 864 − 424 | ✅ |
+| Totals per class over the chain equal the reference's | `GkSource` 164 + 190 − 63 = 291; QSI 486 + 378 = 864 | `GkSource` 207 + 132 − 48 = 291; QSI 424 + 440 = 864 | ✅ |
+
+What each resumed launch pruned and recomputed:
+
+| Launch | Pruned at open | Computed, stage by stage | Of which recomputing a pruned row |
+|---|---|---|---|
+| `resumed-a` | nothing (new store) | everything up to the `GkSource` stage, as `reference`; **207 `GkSource` stored** at the signal, 48 unvalidated | — |
+| `resumed-b` | **48 `GkSource`** (the unvalidated ones), in shards 0, 1 and 3 | `GkSource` 132; `GkSourcePolicyData` 291; `QuadSourceIntegral` 424 stored at the signal; every earlier stage 0 | 48 `GkSource` |
+| `resumed-c` | nothing | `QuadSourceIntegral` 440; every other stage 0 | — |
+
+No replicated class was pruned at any open. No `QuadSourceIntegral` row was pruned: the class has no
+`validated` column.
+
+#### 2.5.4 The stage sequence
+
+The lines of each `stdout.log` that begin `** `
+([`log_comparison_04.txt`](runregistry-extraction/rehearsal/log_comparison_04.txt), section 3):
+- R1's and R0's hold 26, 23, 26 and 26 such lines, slug by slug.
+- With the campaign and prompt, the repository path and every number normalised, each slug's
+  sequence equals R0's, in order.
+- In the reference, 15 of the 26 are the pipeline's stage banners, `** BUILD ARRAY OF WAVENUMBERS
+  TO SAMPLE` through `** CALCULATE QUADRATIC SOURCE INTEGRALS`. They equal R0's verbatim, in order,
+  with nothing normalised. The other 11 are the launcher's own lines.
+
+#### 2.5.5 The stage times
+
+Not compared (`ALL WORK ITEMS COMPLETE in time …` in each `stdout.log`):
+
+| Stage | `reference` | `resumed-a` | `resumed-b` | `resumed-c` |
+|---|---|---|---|---|
+| NUMERICAL PART OF TENSOR GREEN FUNCTIONS | 1 m 1.85 s | 3 m 19.5 s | 4.27 s | 13 s |
+| WKB PART OF TENSOR GREEN FUNCTIONS | 1 m 43.8 s | 4 m 0.42 s, no progress line | 8.6 s | 23.1 s |
+| GREENS FUNCTIONS FOR SOURCE REDSHIFT | **1 m 42.9 s**, no progress line | killed | 32.5 s | 14.4 s |
+| APPLY GKSOURCE POLICIES | 54.7 s | — | 13.9 s | 13.2 s |
+| QUADRATIC SOURCE INTEGRALS | **8 m 14.9 s**, one progress line | — | killed, no progress line | 5 m 43.8 s, one progress line |
+
+- Each earlier stage took under 5 s.
+- **The reference took 13 m 57 s**, against R0's 29 m 19 s and `dk-and-rpk-migration` R2's
+  11 m 25 s.
+- **The `GkSource` stage took 102.9 s and the QSI stage 494.9 s**, against R0's 78 s and 1230.1 s.
+  The `GkSource` stage was slower than R0's and the QSI stage faster; the load moved between them.
+  The stores are equal, so the time is the machine's.
+
+#### 2.5.6 The printed lines and the registry's fields
+
+Against R0's same slug ([`log_comparison_04.txt`](runregistry-extraction/rehearsal/log_comparison_04.txt), section 3):
+
+| Line, in `stdout.log` | `reference` R1 / R0 | `resumed-a` | `resumed-b` | `resumed-c` |
+|---|---|---|---|---|
+| `** ` (banners and the launcher's lines) | 26 / 26 | 23 / 23 | 26 / 26 | 26 / 26 |
+| `-- ALL WORK ITEMS COMPLETE in time …` | 10 / 10 | 7 / 7 | 9 / 9 | 10 / 10 |
+| `Queue summary: …`, one after each completion line | 10 / 10 | 7 / 7 | 9 / 9 | 10 / 10 |
+| `(no compute items were evaluated - all assets read from datastore)` | 1 / 1 | 1 / 1 | 7 / 7 | 9 / 9 |
+| progress: `n/m work items remaining = p% complete` | **1** / 3 | **0** / 1 | 0 / 0 | **1** / 0 |
+| progress: `inflight: … \| completed: …` | **1** / 3 | **0** / 1 | 0 / 0 | **1** / 0 |
+
+- **Every completion line is followed by its `Queue summary` line**, in all four.
+- **The forms are R0's.** Normalised as §2.2.5, the completion lines of R1's four runs make 2
+  kinds, the `Queue summary` lines 7 and the `(no compute items …)` line 1. Each set equals R0's.
+- **The progress lines** are R0's first-line form, field for field:
+
+  ```
+     -- 2026-10-14 15:57:46 (5m 21.8s running): 0/2 work items remaining = 100.00% complete (may be waiting for compute/store/validate tasks to finish)
+        inflight: 0 lookup, 226 compute, 40 store | completed: 864 lookup (avg 161.1/min), 638 compute (avg 119/min), 598 store (avg 111.5/min)
+  ```
+
+  in the reference's QSI stage (`stdout.log:100-101`), and in `resumed-c`'s QSI stage at
+  5 m 43.4 s (`stdout.log:100-101`). The orchestrator's note expected that whether they appear is
+  the 300 s threshold and the load (correction 4).
+- **The registry's fields at each run's end**, R1 against R0: `state`, `stage`, `units_done` and
+  `units_total` are R0's in all four, and each `status.json` has R0's keys exactly.
+
+| Slug | `state` | `stage` | `units_done` / `units_total` | R0's `stage` |
+|---|---|---|---|---|
+| `reference` | `done` | `CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete` | 0 / `null` | the same |
+| `resumed-a` | `killed` | `CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT` | 0 / `null` | the same |
+| `resumed-b` | `killed` | `CALCULATE QUADRATIC SOURCE INTEGRALS` | 0 / `null` | the same |
+| `resumed-c` | `done` | `CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete` | 0 / `null` | the same |
+
+### 2.6 What was expected not to happen
+
+- **An unvalidated `BackgroundModel`.** Did not happen (§2.3.2).
+- **An in-flight record left by a killed launch.** Did not happen: `replication_in_flight` had 0
+  rows after every launch.
+- **A repair by the check at open.** Did not happen (§2.2.5).
+- **A Ray agent outliving a killed driver.** Did not happen (§2.2.3).
+- **A line from the three releases**: a `datastorekit` frame, a `DeprecationWarning`, or
+  `_timestamp`. Did not happen (§2.2.5).
+- **A printed line the registry or the interrupter could not read.** Did not happen (§2.5.6).
+- **A missed interruption.** Did not happen. Both killed launches ended `killed`, in the stage the
+  interrupter waited for.
+- **A held lock, or a refused `release`.** Did not happen (§2.1.3).
+
+One thing about the record's timing was seen by the orchestrator's wait, not by the build. A killed
+run's `status.json` says `killed` from the moment the driver's handler records it (16:11:09 for
+`resumed-a`); `finish_after_exec` adds the fingerprint once the pipeline has unwound (16:11:14) and
+the final heartbeat follows (16:11:15). That wait, which ended on the state, ended 5–6 s before
+the record was complete; the waits on `resumed-b` and `resumed-c` ended on the pid's death, as
+`CLAUDE.md`'s liveness rule reads it. This is the registry's and the launcher's ordering
+(`docs/gktk-remedial/scoped_pipeline_run.py`, `RunRegistry/__init__.py` `Run.finish`'s docstring),
+documented and frozen; no issue is opened.
+
+### 2.7 Issues opened
+
+None. Every difference from R0 is explained by:
+- where a launch was killed;
+- Ray's completion order (an issue already open);
+- the readers' random subsamples;
+- or the load, with the pool's 300 s notify threshold.
+
+### 2.8 The suites
+
+After the last launch, the readers, the guard and the release: README §8's command, each root in
+the foreground, serially, its output in the agent's scratchpad and its verdict taken by `grep`.
+
+| Root | Ran | Result | Load (1 min) at start |
+|---|---|---|---|
+| AdaptiveLevin | 32 | OK | 29.5 |
+| CosmologyModels | 39 | OK | 29.5 |
+| ObjectFactories | 271 | OK | 29.5 |
+| tools | 91 | OK | 25.5 |
+| LiouvilleGreen | 148 | OK (1 skipped) | 19.0 |
+| RunRegistry | 286 | OK | 14.2 |
+| ComputeTargets | 693 | 2 failures: `test_background_tau.TestBackgroundTau.test_build_cost` (0.653 s against 0.5 s) and `test_tk_wkb_phase.TestCost.test_wall_time_per_object` (0.0923 s against 0.06 s) | 7.8 |
+
+**Both failures are README §8's known wall-clock tests.** Run alone three times each at 16:41, at a
+load of 11–13: `test_build_cost` passed three times; `test_wall_time_per_object` failed three times
+(0.0805 s, 0.105 s, 0.113 s), as it failed alone twice at 03's run. It is a wall-clock assertion with
+about 1× margin; no code it runs has changed since `a45aefc`. Every count is 03's.
+
+`docs/runregistry-extraction/fingerprint_both_ways.py`, the one Python file added, is clean under
+`black --check`.
+
+### 2.9 What stays under `var/`
+
+- `var/runs/runregistry-extraction-04-{reference,resumed-a,resumed-b,resumed-c}-<stamp>/`. Each
+  holds the run's manifest, `status.json` with its full fingerprint, `stdout.log` and `stderr.log`.
+  For `resumed-a` and `resumed-b` it also holds `interrupter.log`.
+- `var/runs/runregistry-extraction-04-<slug>.launch.log`, beside each run directory.
+- `var/datastores/runregistry-extraction-04-{reference,resumed}.sqlite`, four shards each, and each
+  store's `.manifest.json` sidecar. Shard 2 of each, 1 077 248 bytes, holds only replicated rows.
+- `var/runregistry-extraction-04/`, which holds:
+  - the agent's working notes (`NOTES.md`), the pre-launch captures, the lock record, the dummy-test
+    outputs and the listings of `var/datastores/`;
+  - the closed-store states, the prune checks and the hashes (`state/`);
+  - the check outputs (`checks/`), among them every run's statistics block;
+  - the readers' outputs and logs (`extract/`, `readers.txt`);
+  - the five breakages' diffs and outputs (`breakage/`), and the suites' outputs (`suites/`).
+
+**Nothing else under `var/` moved**
+([`var_datastores_04.txt`](runregistry-extraction/rehearsal/var_datastores_04.txt)).
+- Before the first launch, `var/datastores/` held 26 files: the 14 tombstones and R0's twelve.
+  `find var/datastores -type f -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256` was
+  `3e0e6badf16a57c786772255f2b5276274db5c913a4fcadcd27539e9464b01c9`; over the 14 tombstones alone,
+  `023d139fb714e229f96c6fb61894daf526b768fd603307d153d4d91810cd2626`.
+- After the last step it held 38. The 26 have the same SHA-256, mtime (to the nanosecond) and size
+  as before, and the same two digests. The 12 new files are this rehearsal's two stores and their
+  sidecars. R0's stores were read by the comparisons and by W1, and none of their files moved.
+- No `-journal`, `-wal` or `-shm` file is under `var/datastores/`.
+- `RunRegistry list` shows 37 runs: R0's 33 and this rehearsal's four, all finished but the two
+  `unknown` of the `a3-pilot` pair.
+
+### 2.10 W1 — the fingerprint both ways
+
+**The script.** [`runregistry-extraction/fingerprint_both_ways.py`](runregistry-extraction/fingerprint_both_ways.py),
+written after `resumed-c` had ended and the readers had run. For each primary, read-only and with no
+Ray, it reads `inventory = read_inventory(primary, factories)` (`datastorekit.store_inventory`,
+`config.datastore`), takes `sgk = RunRegistry.stores.fingerprint_of(inventory)` and
+`pkg = datastorekit.store_fingerprint.fingerprint_of(inventory, RunRegistry.stores.FINGERPRINT_FORMAT)`,
+and prints one line per check:
+1. `pkg["encoding_format"]` is `ENCODING_FORMAT`, and is `1`; `"encoding_format"` is not in `sgk`;
+2. with `encoding_format` removed from `pkg`, `pkg == sgk` as dictionaries, every differing path
+   printed with both values (the class, the tag set by its tags, the field);
+3. **the order**, which `dict` equality does not compare: `list(pkg_without_encoding) == list(sgk)`
+   and `list(pkg["classes"]) == list(sgk["classes"])`, the first differing position printed if not.
+   `tag_sets` are lists, so (2) already compares their order (the orchestrator's correction 5);
+4. `fingerprint_format` 6 and `taken` `None` in both;
+5. the overall digest, printed, `39809dca…` in both;
+6. the listings: equal in length, equal line for line but the first, and the package's first line
+   SGK's with ` encoding_format 1` appended (the addendum's item 4);
+7. the package's `compare_fingerprints(pkg, pkg)` and SGK's `compare_fingerprints(sgk, sgk)` empty,
+   and the package's `compare_fingerprints(sgk, pkg)` exactly one entry, of kind `encoding`;
+8. SGK's `compare_fingerprints` of the sidecar's recorded fingerprint with `sgk` empty.
+
+It exits 0 if and only if every check holds on every store, and writes nothing.
+
+**The run** ([`fingerprint_both_ways_04.txt`](runregistry-extraction/rehearsal/fingerprint_both_ways_04.txt)),
+at 16:33:54, after the lock was released:
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/runregistry-extraction/fingerprint_both_ways.py \
+    var/datastores/runregistry-extraction-04-reference.sqlite \
+    var/datastores/runregistry-extraction-04-resumed.sqlite \
+    var/datastores/runregistry-extraction-02-reference.sqlite \
+    var/datastores/runregistry-extraction-02-resumed.sqlite
+```
+
+It exited 0 in 11 s: `summary: 4 store(s); every check holds on every store`. On each store all 20
+checks hold:
+
+| Store | SGK's and the package's digest | Classes, in order | Listings | `compare_fingerprints(sgk, pkg)` (package's) | Against the sidecar |
+|---|---|---|---|---|---|
+| R1 reference | `39809dca…`, equal | 21, equal | 7542 lines each, equal but the first | one `encoding` entry: recorded `None`, current 1 | 0 differences (taken 16:02:03 by `store fingerprint --write`) |
+| R1 resumed | `39809dca…`, equal | 21, equal | 7542, equal but the first | the same | 0 (taken 16:24:51 by `resumed-c`) |
+| R0 reference | `39809dca…`, equal | 21, equal | 7542, equal but the first | the same | 0 (taken 2026-10-12 09:50:07 by `store fingerprint --write`) |
+| R0 resumed | `39809dca…`, equal | 21, equal | 7542, equal but the first | the same | 0 (taken 2026-10-12 10:17:15 by R0's `resumed-c`) |
+
+- **On every store the package's fingerprint has SGK's five keys plus `encoding_format`**, second.
+  With it removed, the dictionaries are equal, key for key and in order: `fingerprint_format` 6, the
+  overall digest, `problems` `{}`, `taken` `None`, and for each of the 21 classes, in the same
+  order, its `count`, `digest` and every tag set's `tags`, `count` and `digest`.
+- **So DatastoreKit's `fingerprint_of` is SGK's on real stores**, the check its own tests cannot
+  make. 06 can make SGK depend on it.
+- **The one `encoding` entry** is `[00-recorded-fingerprints-lack-the-encoding-format]`, measured:
+  once SGK compares through the package, every fingerprint SGK now holds compares as that one entry,
+  whatever the stores hold. The issue is assigned to the retirement of these four stores after this
+  prompt's review (D6).
+- **The stores were untouched.** Every file of the four stores (24: each primary, its four shards and
+  its sidecar) had the same SHA-256, `mtime_ns` and size before and after the run, and no journal
+  appeared.
+
+**The deliberate breakages** (README §5 rule 8). Each was applied to a copy of the script in the
+agent's scratchpad, never committed, and run on R1's reference store. Each exits 1 and names what
+failed. The diffs, exactly as applied, are in the log
+([`logs/04-rehearse-through-the-new-datastorekit.md`](../prompts/runregistry-extraction/logs/04-rehearse-through-the-new-datastorekit.md)).
+
+| # | Breakage | Exit | The line that names the failure |
+|---|---|---|---|
+| 1 | `encoding_format` not removed from `pkg` before the comparison | 1 | `encoding_format: package 1, SGK '<absent>'`, and the key order differs at position 1 |
+| 2 | `GkSource`'s `digest` in `pkg` altered after it is taken | 1 | `classes.GkSource.digest: package '0000…', SGK '6a001ba4…'` |
+| 3 | format `5` passed to the package's `fingerprint_of` | 1 | `fingerprint_format: package 5, SGK 6` and `digest: package 'b40736b5…', SGK '39809dca…'` |
+| 4 | one tag set's `count` in `sgk` incremented | 1 | `classes.GkSource.tag_sets[0] tags [GkOneLoopDensity, …, SourceRedshiftGrid_1159_7139cb9c].count` with both values |
+| 5 | the listing check compares the first lines unmodified | 1 | `[FAIL] package's first line is SGK's + ' encoding_format 1'` |
+
+The reference store's files were unchanged by the five runs.

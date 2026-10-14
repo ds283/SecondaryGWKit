@@ -1,9 +1,9 @@
 # runregistry-extraction campaign — implementation state
 
 **Last updated:** 2026-10-14 · **Status: IN PROGRESS — 5 of 10 prompts written (01, 02, 02a, 03,
-04), 4 landed (01, 02, 02a, 03); R0 holds. E1 holds: DatastoreKit `v0.4.0` (§5.5), and 03 pinned
-it (§5.6), so 04 is next. 05–09 held on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled
-by the user.**
+04), 5 landed (01, 02, 02a, 03, 04); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03
+pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). 05–09 held
+on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -52,7 +52,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 02 | [Rehearse the start tree (R0)](02-rehearse-the-start-tree.md) | **R0**; the `f539015` → `511ef5f` gap | Opus | ✍️ 2026-10-12 | ✅ | `74eff08` | [log](logs/02-rehearse-the-start-tree.md) |
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
-| 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ⬜ | — | — |
+| 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | this commit | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
 | 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
 | 06 | Adopt `runregistrykit` | the swap; closes both `00-` issues | Opus | ⏸ E2, 04, 05 | ⬜ | — | — |
 | 07 | Guard the fingerprint format | **Q5** | Sonnet | ⏸ 06 | ⬜ | — | — |
@@ -84,8 +84,8 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **H3** | 02a | the interoperability proof against SI's and ChamPBH's scripts | ✅ |
 | **H4** | 02a | the real-lock proof, with an in-process probe | ✅ |
 | **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ✅ |
-| **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ⬜ |
-| **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ⬜ |
+| **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ✅ |
+| **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ✅ |
 | **K2** | 05 | the `runregistrykit[stores]` pin; the venv installed from it | ⬜ |
 | **A1** | 06 | the client config file and `config/fingerprint.py` | ⬜ |
 | **A2** | 06 | every `RunRegistry` import outside `prompts/` rewritten | ⬜ |
@@ -103,7 +103,7 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 |---|---|---|---|
 | R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (`74eff08`): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
 | **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ✅ holds (2026-10-14, §5.5): `v0.4.0`, tag object `8e7c1d77…` on `c8570e84…`, CI run 38538726292 green on `c8570e8`; the note is DatastoreKit's `docs/adoption/secondarygwkit.md`, "Addendum: v0.4.0" |
-| R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ⬜ |
+| R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ✅ holds (this commit): `runregistry-extraction-04-reference-20261014T154651` and `-resumed-c-20261014T161739`, both `done`, both `39809dca…`, equal to R0's recorded fingerprints; `fingerprint_both_ways.py` exits 0 on R1's two stores and R0's two, every field equal but `encoding_format` |
 | **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ⬜ requested 2026-10-12 |
 | RunRegistryKit G2 | `RunRegistry/` is gone and nothing imports it, the pin is installed, the roots pass, `list` gives 01's runs, and R2 reproduces `39809dca…` | 06, 08 | ⬜ |
 
@@ -632,3 +632,54 @@ commit. **All six checks pass**, and no stop condition fired.
 - **Handed on.** 04, R1, is next, at `5b81f2e`'s tree: the first rehearsal under the lock, run on
   `datastorekit` 0.4.0. R0's two stores stay live for it, and after its review the orchestrator
   retires R0's and R1's four under D6.
+
+### 5.7 After prompt 04 (2026-10-14)
+
+[`04`](04-rehearse-through-the-new-datastorekit.md) landed at this commit, with `HEAD` `89ff8b7` as
+its parent; its log is
+[`logs/04-rehearse-through-the-new-datastorekit.md`](logs/04-rehearse-through-the-new-datastorekit.md),
+and the record is
+[`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md)
+§2. It opened and closed no issue, so `docs/OPEN_ISSUES.md` is unchanged (107).
+- **R1 holds** (L1–L4, gate R1). Four registered builds at `89ff8b7`, whose code is `5b81f2e`'s,
+  through `datastorekit` 0.4.0: `reference` and `resumed-c` `done`/0, `resumed-a` and `resumed-b`
+  `killed`/143. Both stores are format 6, `39809dca…`, all 21 classes, equal to each other, to their
+  sidecars, and to the fingerprints R0 recorded in `runregistry-extraction-02-reference-20261012T091921`
+  and `-resumed-c-20261012T101145`. So `v0.2.3`, `v0.3.0` and `v0.4.0` move nothing a build writes or
+  reads. No build log names `datastorekit`, and none holds a `DeprecationWarning` or `_timestamp`.
+- **W1 holds.** `docs/runregistry-extraction/fingerprint_both_ways.py` exits 0 on R1's two stores
+  and R0's two: the package's `fingerprint_of(inventory, 6)` equals SGK's in every field but
+  `encoding_format`, keys and classes in the same order; the listings are 7542 lines each, equal but
+  the first, which gains ` encoding_format 1`; the package's `compare_fingerprints(sgk, pkg)` is one
+  `encoding` entry (`[00-recorded-fingerprints-lack-the-encoding-format]`, measured); each sidecar
+  compares empty. Every store file was unchanged by it. Its five breakages each exit 1, naming what
+  failed (log).
+- **The manifests say what ran.** Every `packages` is `datastorekit` 0.4.0 at `c8570e84…`
+  (`v0.4.0`) and `raypoolkit` 0.2.0 at `eaef0ce6…`, neither editable, compared as JSON. Every
+  `git_dirty` is `false`, every `git_head` `89ff8b72…`, every `script_sha256` `b7935877…`.
+- **L4 equals R0's.** The statistics counts are equal (291; numeric 109; mixed 26, 25 complete and 1
+  minimal; WKB 156) in the reference and both resumed runs that print the block; the reference's
+  block has R2's line order, not R0's (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`
+  again). The reference's stage counts, every run's `** ` sequence, the printed lines and the
+  registry fields are R0's.
+- **The prune at open is exercised again.** The 40 % hold (41 s of a 102.9 s stage) left 207
+  `GkSource` rows, 48 unvalidated, after `resumed-a`. `resumed-b` pruned exactly those 48 and
+  computed 132 = 291 − 207 + 48. `resumed-c` computed 440 = 864 − 424 QSI rows.
+- **The lock.** The first rehearsal under it: `acquire` before `reference`, `set-pid` at each launch,
+  held through the readers and the guard, `release` at 16:33:42; every command exit 0, all in
+  `lock_04.txt`. `status` reports it free, and `ray-processes` lists nothing.
+- **The load** was lighter than at R0 (one-minute 11–100 at the checks, 161 during the readers). The
+  reference took 13 m 57 s. Its QSI stage, 494.9 s, and `resumed-c`'s, 5 m 43.8 s, printed one
+  progress line each, in R0's form.
+- **Nothing else under `var/` moved.** The 26 files present before keep their SHA-256, mtime and size
+  (`3e0e6bad…` over them, `023d139f…` over the 14 tombstones); the only new files are R1's ten store
+  files and two sidecars.
+- **The seven roots** are at 03's counts. ComputeTargets has two of README §8's wall-clock tests:
+  `test_build_cost`, which passed three times alone, and `test_wall_time_per_object`, which failed
+  three times alone at load 11–13.
+- **For the orchestrator's waits:** a killed run's `status.json` says `killed` 5–6 s before its
+  fingerprint and final heartbeat are written, by the launcher's and the registry's design. A wait
+  should end on the pid's death (log, observation 1). No issue opened.
+- **Handed on.** By D6 the orchestrator retires R0's and R1's four stores after this prompt's review,
+  while SGK's own code still compares them. 05–09 wait on E2. 08 runs `fingerprint_both_ways.py`
+  again, on the tree 06 leaves.

@@ -1,0 +1,28 @@
+# interrupter_firings_04.txt — each interrupter's log, verbatim (R1, runregistry-extraction-04)
+
+== resumed-a (interrupter pid 11805; '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 41)
+-- var/runs/runregistry-extraction-04-resumed-a-20261014T160226/interrupter.log
+2026-10-14T16:02:37+01:00 interrupter pid 11805 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-04-resumed-a-20261014T160226 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 41 s
+2026-10-14T16:02:37+01:00 liveness alive; pid 11561; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-14T16:02:42+01:00 liveness alive; pid 11561; stage 'Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite" with 4 shards'
+2026-10-14T16:02:47+01:00 liveness alive; pid 11561; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-14T16:02:52+01:00 liveness alive; pid 11561; stage 'BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE'
+2026-10-14T16:02:57+01:00 liveness alive; pid 11561; stage 'CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS'
+2026-10-14T16:03:02+01:00 liveness alive; pid 11561; stage 'CALCULATE QUADRATIC SOURCE TERMS'
+2026-10-14T16:03:07+01:00 liveness alive; pid 11561; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-14T16:06:28+01:00 liveness alive; pid 11561; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-14T16:10:28+01:00 liveness alive; pid 11561; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-14T16:10:28+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 41 s, then reading again
+2026-10-14T16:11:09+01:00 sent SIGTERM to pid 11561 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/runregistry-extraction-04-resumed.sqlite --job-name runregistry-extraction-04 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 runregistry-extraction-02-reference --campaign runregistry-extraction --prompt 04'; exiting
+
+== resumed-b (interrupter pid 17691; '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 165)
+-- var/runs/runregistry-extraction-04-resumed-b-20261014T161222/interrupter.log
+2026-10-14T16:12:32+01:00 interrupter pid 17691 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-04-resumed-b-20261014T161222 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 165 s
+2026-10-14T16:12:32+01:00 liveness alive; pid 17571; stage 'Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-resumed.sqlite" with 4 shards'
+2026-10-14T16:12:37+01:00 liveness alive; pid 17571; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-14T16:12:42+01:00 liveness alive; pid 17571; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-14T16:12:52+01:00 liveness alive; pid 17571; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-14T16:13:22+01:00 liveness alive; pid 17571; stage 'APPLY GKSOURCE POLICIES'
+2026-10-14T16:13:37+01:00 liveness alive; pid 17571; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-14T16:13:37+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 165 s, then reading again
+2026-10-14T16:16:22+01:00 sent SIGTERM to pid 17571 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/runregistry-extraction-04-resumed.sqlite --job-name runregistry-extraction-04 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca --campaign runregistry-extraction --prompt 04'; exiting

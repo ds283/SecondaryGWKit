@@ -1,0 +1,138 @@
+# fingerprint_both_ways_04.txt — W1: the fingerprint both ways, on R1's two stores and R0's two
+# every file of the four stores (primary, shards, sidecar): SHA-256, mtime, mtime_ns, size, before and after
+
+== 2026-10-14T16:33:54+0100 before
+24 files
+379a2e8dfdc8fe8b1a8ff04e67da1c550b3792bc96ca541c60346dad13d688fc 2026-10-12 09:48:31 1791794911279669970 23711744 var/datastores/runregistry-extraction-02-reference-shard0000.sqlite
+3ed596358bcd9ad30b9998b0f112e727b30ad7512f19faed164b17bc707b8fa2 2026-10-12 09:48:31 1791794911266545256 23916544 var/datastores/runregistry-extraction-02-reference-shard0001.sqlite
+8a444c0e2852bd88bc4fb67673b2f964aefddad51e5e6f1aeda98c1600ea061c 2026-10-12 09:19:33 1791793173671010782 1077248 var/datastores/runregistry-extraction-02-reference-shard0002.sqlite
+5a07e478c58f23da7a97dac13be035520c1047e9daa04a0e80db1e282f25f19b 2026-10-12 09:48:31 1791794911221166362 23212032 var/datastores/runregistry-extraction-02-reference-shard0003.sqlite
+a19e04ae6ecac7f34a3d2c1a3a41b527a89143923934c74b30414e8f955ebf6a 2026-10-12 09:50:08 1791795008383176750 10545 var/datastores/runregistry-extraction-02-reference.manifest.json
+4a02dd71c937ee3b50adab9d403047ab350676f25e07b00e3cc77683b2c0541a 2026-10-12 09:19:33 1791793173674007447 36864 var/datastores/runregistry-extraction-02-reference.sqlite
+7b2c7feefd7eefa957536093969a7ad84f04c0d15f03917a3f531e73afb3af6e 2026-10-12 10:17:09 1791796629336774748 23773184 var/datastores/runregistry-extraction-02-resumed-shard0000.sqlite
+6c1bbd16c6e170174c85602d95a0f9abd3a4a7bf7aac47d5980f59da8feaec54 2026-10-12 10:17:09 1791796629514460730 23838720 var/datastores/runregistry-extraction-02-resumed-shard0001.sqlite
+19f771d51c0a980f21e67adfabca15b15a6bad1e1c8ea0ff2901ea3bf2ac12dd 2026-10-12 09:51:10 1791795070826853311 1077248 var/datastores/runregistry-extraction-02-resumed-shard0002.sqlite
+96abbb176cbf64cbafaf041f620cd54544f11ea6178edf89e3d13355086f2e3e 2026-10-12 10:17:09 1791796629315432877 23650304 var/datastores/runregistry-extraction-02-resumed-shard0003.sqlite
+f67daec4d4da5156e54c35a51aa89f6bbceba8b4ec72ebd9a2398f64455453da 2026-10-12 10:17:15 1791796635990097568 10675 var/datastores/runregistry-extraction-02-resumed.manifest.json
+16af4d1613eba42b7012eac7b0ae52038828db5b8b1f5ff4646afa945753c597 2026-10-12 10:12:00 1791796320838742923 36864 var/datastores/runregistry-extraction-02-resumed.sqlite
+972a44a2def0a032a02e016795de132539da903db522ada699f8ab1524ed3894 2026-10-14 16:00:39 1791990039395130367 23498752 var/datastores/runregistry-extraction-04-reference-shard0000.sqlite
+979c77f2d694c5712c5dafdd24553f7faa7af08d56350958ebe2bcc84d76ae68 2026-10-14 16:00:39 1791990039455710557 23851008 var/datastores/runregistry-extraction-04-reference-shard0001.sqlite
+e7657fb08c6577db50ba53ddfc2aefad4be0fe7810bc3327c61887b4456de23d 2026-10-14 15:46:59 1791989219106681200 1077248 var/datastores/runregistry-extraction-04-reference-shard0002.sqlite
+bf867e6f4f549bf37e0b7e1385c8a7b2f7ad3ecb26f3232261be31de2b6c78ad 2026-10-14 16:00:39 1791990039406123579 23621632 var/datastores/runregistry-extraction-04-reference-shard0003.sqlite
+accb71b0ff52f4f776f45e380cf69288e8cf95872e36f3a5a17a47bd050ced87 2026-10-14 16:02:03 1791990123726670661 10530 var/datastores/runregistry-extraction-04-reference.manifest.json
+fb04de8b96d4e1f2cc51ca349c0df8e70139249c68a201310ac14613f5cd74e7 2026-10-14 15:46:59 1791989219133991294 36864 var/datastores/runregistry-extraction-04-reference.sqlite
+08ae31128714c112613b467192ee35e03eb913692725ef9263e30a3e51d49db5 2026-10-14 16:24:44 1791991484796740901 23838720 var/datastores/runregistry-extraction-04-resumed-shard0000.sqlite
+f0c14a6493ccd5c86a7f60458b8bc9d27bd85f1c5ab93d54eaf0e9d06c6af568 2026-10-14 16:24:44 1791991484953385710 23896064 var/datastores/runregistry-extraction-04-resumed-shard0001.sqlite
+64aaa173c7ee0d6221c1452385a30990779421c8c19c780048022efbc85b4c73 2026-10-14 16:02:54 1791990174549005224 1077248 var/datastores/runregistry-extraction-04-resumed-shard0002.sqlite
+d865ea572b8caf9d354dac42390a54969e9a4ddbd891a396d262b5e1d1c1d5dd 2026-10-14 16:24:44 1791991484836823917 23621632 var/datastores/runregistry-extraction-04-resumed-shard0003.sqlite
+2739d5ff191f28b60588b422bf774689d65c18fc0f3aad87590f1a0414979f7d 2026-10-14 16:24:51 1791991491735172463 10660 var/datastores/runregistry-extraction-04-resumed.manifest.json
+232b8b784921d03d9e2ec0e9810bac16631800d34a2d4d20c658ebea0dc75bd3 2026-10-14 16:17:57 1791991077103206015 36864 var/datastores/runregistry-extraction-04-resumed.sqlite
+
+$ PYTHONPATH=. ./venv/bin/python docs/runregistry-extraction/fingerprint_both_ways.py var/datastores/runregistry-extraction-04-reference.sqlite var/datastores/runregistry-extraction-04-resumed.sqlite var/datastores/runregistry-extraction-02-reference.sqlite var/datastores/runregistry-extraction-02-resumed.sqlite
+== var/datastores/runregistry-extraction-04-reference.sqlite
+  SGK format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  package format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] package encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] package encoding_format == 1: 1
+  [PASS] 'encoding_format' not in SGK's fingerprint: SGK's keys ['fingerprint_format', 'classes', 'digest', 'problems', 'taken']
+  [PASS] package without encoding_format == SGK's, as dictionaries: 0 differing path(s)
+  [PASS] the keys in the same order: 5 in order
+  [PASS] the classes in the same order: 21 in order
+  [PASS] SGK fingerprint_format == 6: 6
+  [PASS] SGK taken is None: None
+  [PASS] package fingerprint_format == 6: 6
+  [PASS] package taken is None: None
+  [PASS] SGK digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] package digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] listings have the same length: SGK 7542, package 7542
+  [PASS] listings equal line for line but the first: 0 differing line(s)
+  [PASS] package's first line is SGK's + ' encoding_format 1': SGK '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2'; package '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 encoding_format 1'
+  [PASS] package compare_fingerprints(pkg, pkg) is empty: 0
+  [PASS] SGK compare_fingerprints(sgk, sgk) is empty: 0
+  [PASS] package compare_fingerprints(sgk, pkg) is one entry, kind 'encoding': encoding: recorded None, current 1
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] SGK compare_fingerprints(sidecar's, sgk) is empty: 0 difference(s); recorded 39809dca…, taken 2026-10-14T16:02:03+01:00 by None
+  => every check holds (20 of 20 checks hold)
+
+== var/datastores/runregistry-extraction-04-resumed.sqlite
+  SGK format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  package format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] package encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] package encoding_format == 1: 1
+  [PASS] 'encoding_format' not in SGK's fingerprint: SGK's keys ['fingerprint_format', 'classes', 'digest', 'problems', 'taken']
+  [PASS] package without encoding_format == SGK's, as dictionaries: 0 differing path(s)
+  [PASS] the keys in the same order: 5 in order
+  [PASS] the classes in the same order: 21 in order
+  [PASS] SGK fingerprint_format == 6: 6
+  [PASS] SGK taken is None: None
+  [PASS] package fingerprint_format == 6: 6
+  [PASS] package taken is None: None
+  [PASS] SGK digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] package digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] listings have the same length: SGK 7542, package 7542
+  [PASS] listings equal line for line but the first: 0 differing line(s)
+  [PASS] package's first line is SGK's + ' encoding_format 1': SGK '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2'; package '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 encoding_format 1'
+  [PASS] package compare_fingerprints(pkg, pkg) is empty: 0
+  [PASS] SGK compare_fingerprints(sgk, sgk) is empty: 0
+  [PASS] package compare_fingerprints(sgk, pkg) is one entry, kind 'encoding': encoding: recorded None, current 1
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] SGK compare_fingerprints(sidecar's, sgk) is empty: 0 difference(s); recorded 39809dca…, taken 2026-10-14T16:24:51+01:00 by runregistry-extraction-04-resumed-c-20261014T161739
+  => every check holds (20 of 20 checks hold)
+
+== var/datastores/runregistry-extraction-02-reference.sqlite
+  SGK format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  package format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] package encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] package encoding_format == 1: 1
+  [PASS] 'encoding_format' not in SGK's fingerprint: SGK's keys ['fingerprint_format', 'classes', 'digest', 'problems', 'taken']
+  [PASS] package without encoding_format == SGK's, as dictionaries: 0 differing path(s)
+  [PASS] the keys in the same order: 5 in order
+  [PASS] the classes in the same order: 21 in order
+  [PASS] SGK fingerprint_format == 6: 6
+  [PASS] SGK taken is None: None
+  [PASS] package fingerprint_format == 6: 6
+  [PASS] package taken is None: None
+  [PASS] SGK digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] package digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] listings have the same length: SGK 7542, package 7542
+  [PASS] listings equal line for line but the first: 0 differing line(s)
+  [PASS] package's first line is SGK's + ' encoding_format 1': SGK '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2'; package '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 encoding_format 1'
+  [PASS] package compare_fingerprints(pkg, pkg) is empty: 0
+  [PASS] SGK compare_fingerprints(sgk, sgk) is empty: 0
+  [PASS] package compare_fingerprints(sgk, pkg) is one entry, kind 'encoding': encoding: recorded None, current 1
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] SGK compare_fingerprints(sidecar's, sgk) is empty: 0 difference(s); recorded 39809dca…, taken 2026-10-12T09:50:07+01:00 by None
+  => every check holds (20 of 20 checks hold)
+
+== var/datastores/runregistry-extraction-02-resumed.sqlite
+  SGK format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  package format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] package encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] package encoding_format == 1: 1
+  [PASS] 'encoding_format' not in SGK's fingerprint: SGK's keys ['fingerprint_format', 'classes', 'digest', 'problems', 'taken']
+  [PASS] package without encoding_format == SGK's, as dictionaries: 0 differing path(s)
+  [PASS] the keys in the same order: 5 in order
+  [PASS] the classes in the same order: 21 in order
+  [PASS] SGK fingerprint_format == 6: 6
+  [PASS] SGK taken is None: None
+  [PASS] package fingerprint_format == 6: 6
+  [PASS] package taken is None: None
+  [PASS] SGK digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] package digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] listings have the same length: SGK 7542, package 7542
+  [PASS] listings equal line for line but the first: 0 differing line(s)
+  [PASS] package's first line is SGK's + ' encoding_format 1': SGK '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2'; package '# fingerprint_format 6 digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 encoding_format 1'
+  [PASS] package compare_fingerprints(pkg, pkg) is empty: 0
+  [PASS] SGK compare_fingerprints(sgk, sgk) is empty: 0
+  [PASS] package compare_fingerprints(sgk, pkg) is one entry, kind 'encoding': encoding: recorded None, current 1
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] SGK compare_fingerprints(sidecar's, sgk) is empty: 0 difference(s); recorded 39809dca…, taken 2026-10-12T10:17:15+01:00 by runregistry-extraction-02-resumed-c-20261012T101145
+  => every check holds (20 of 20 checks hold)
+
+summary: 4 store(s); every check holds on every store: the package's fingerprint equals SGK's in every field but encoding_format
+exit 0 (wall 11 s)
+
+== 2026-10-14T16:34:05+0100 after
+every file equal to the listing before (SHA-256, mtime_ns, size): True (24 files)
+-- journals
+(end)

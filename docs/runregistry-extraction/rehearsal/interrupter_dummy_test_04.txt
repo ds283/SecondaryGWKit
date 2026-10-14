@@ -1,0 +1,40 @@
+=== case A: signals when the stage matches
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-a/interrupter.log
+2026-10-14T15:45:47+01:00 interrupter pid 2342 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-a (slug 'dummy-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-14T15:45:47+01:00 liveness stale; pid 2338; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-14T15:45:50+01:00 liveness alive; pid 2338; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 10.00% (18 of 20 work items remaining)'
+2026-10-14T15:45:53+01:00 liveness alive; pid 2338; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-14T15:45:53+01:00 sent SIGTERM to pid 2338 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)' (45% >= 40%); command 'python docs/gktk-remedial/scoped_pipeline_run.py --register dummy-a 120'; exiting
+=== case B: exits silently when the child dies first
+child exit=0 (0 = sleep ended by itself)
+interrupter exit=0
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-b/interrupter.log
+2026-10-14T15:45:53+01:00 interrupter pid 2413 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-b (slug 'dummy-b'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-14T15:45:53+01:00 liveness alive; pid 2411; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 10.00% (18 of 20 work items remaining)'
+2026-10-14T15:45:57+01:00 run's pid 2411 no longer answers kill -0; exiting without signalling
+=== case C: refuses a pid whose command line does not name the run
+interrupter exit=2
+child 2446 still alive (not signalled)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-c/interrupter.log
+2026-10-14T15:45:58+01:00 interrupter pid 2448 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-c (slug 'dummy-c'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-14T15:45:58+01:00 liveness alive; pid 2446; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-14T15:45:58+01:00 pid 2446's command line does not name scoped_pipeline_run.py (the run's own driver, its manifest's argv[0]) and --register dummy-c: 'sleep 30'; exiting without signalling
+=== case D: --hold 4 at a bare banner (0%): holds, reads again, then signals
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-d/interrupter.log
+2026-10-14T15:45:58+01:00 interrupter pid 2480 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-d (slug 'dummy-d'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 1 s; stale after 900 s; hold 4 s
+2026-10-14T15:45:58+01:00 liveness alive; pid 2478; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-14T15:45:58+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 4 s, then reading again
+2026-10-14T15:46:02+01:00 sent SIGTERM to pid 2478 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command 'python docs/gktk-remedial/scoped_pipeline_run.py --register dummy-d 120'; exiting
+=== case E: --hold 4, but the stage completes during the hold: no signal; exits when the child dies
+child exit=0 (0 = sleep ended by itself)
+interrupter exit=0
+--- /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-e/interrupter.log
+2026-10-14T15:46:02+01:00 interrupter pid 2551 watching /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/a96ab67d-7809-4072-b632-8f348a3cc2c5/scratchpad/agent04/work/dummy-scoped/case-e (slug 'dummy-e'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' at >= 0.0%; every 1 s; stale after 900 s; hold 4 s
+2026-10-14T15:46:02+01:00 liveness alive; pid 2549; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-14T15:46:02+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 4 s, then reading again
+2026-10-14T15:46:06+01:00 liveness alive; pid 2549; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, all work items complete'
+2026-10-14T15:46:11+01:00 run's pid 2549 no longer answers kill -0; exiting without signalling
