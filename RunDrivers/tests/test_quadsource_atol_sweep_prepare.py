@@ -1,7 +1,7 @@
 """`docs/handover/quadsource_atol_sweep.py` `prepare()` and `assert_store_is_self_consistent()`,
 for `store-retirement` prompt 02 (**R4**, **R5**).
 
-`prepare()` now makes the sweep store with one `RunRegistry.stores.copy_store` call, so that a
+`prepare()` now makes the sweep store with one `runregistrykit.stores.copy_store` call, so that a
 tombstone left behind by a future `store retire` is never silently overwritten
 (`docs/store-retirement-audit.md` §2.6). `assert_store_is_self_consistent` now compares each
 `shards` row, serial by serial, through `datastorekit.shard_paths.resolve_shard_path`, which is what
@@ -12,19 +12,19 @@ The script is imported by path with `importlib.util`; its module-level imports a
 (`argparse`, `json`, `numpy`, the standard library), so this costs nothing. `BASELINE_STORE` and
 `SWEEP_STORE` are monkeypatched onto a fresh copy of the module, at stores in one temporary
 directory per test, built with `StoreFixtures/shard_store_fixtures.py` (no Ray, no real
-``ShardedPool`` actors). `RunRegistry.stores.DEFAULT_ROOT` is monkeypatched at the same store, so
-that the running-run check `copy_store` makes reads a temporary runs root and never
+``ShardedPool`` actors). Every `prepare()` call passes ``runs_root``, the temporary runs root
+inside the same directory, so that the running-run check `copy_store` makes reads it and never
 ``var/runs/``. Nothing here calls `ShardedPool` through Ray, and nothing here opens anything
 under `var/`.
 """
 
 import importlib.util
+import os
 from pathlib import Path
-from unittest import mock
 
-import RunRegistry
-from RunRegistry import stores
-from RunRegistry.tests.store_fixtures import StoreTestCase
+from runregistrykit import stores
+
+from RunDrivers.tests.registry_fixtures import StoreTestCase
 
 from datastorekit.shard_paths import shard_file_name
 from StoreFixtures.shard_store_fixtures import (
@@ -60,8 +60,8 @@ def _load_script():
 
 class SweepPrepareTestCase(StoreTestCase):
     """One temporary directory (`self.top`), a runs root inside it (`self.root`), and a fresh
-    import of the script with `BASELINE_STORE` / `SWEEP_STORE` pointed into that directory and
-    `RunRegistry.stores.DEFAULT_ROOT` pointed at the temporary runs root."""
+    import of the script with `BASELINE_STORE` / `SWEEP_STORE` pointed into that directory. Each
+    test passes the temporary runs root to `prepare()` as ``runs_root``."""
 
     def setUp(self):
         super().setUp()
@@ -70,9 +70,6 @@ class SweepPrepareTestCase(StoreTestCase):
         self.sweep_store = self.top / "B" / "sweep.sqlite"
         self.sweep.BASELINE_STORE = self.baseline
         self.sweep.SWEEP_STORE = self.sweep_store
-        patcher = mock.patch.object(stores, "DEFAULT_ROOT", self.root)
-        patcher.start()
-        self.addCleanup(patcher.stop)
 
     # --- fixtures, at the script's own shard count -----------------------------------------
 
@@ -115,7 +112,7 @@ class SweepPrepareTestCase(StoreTestCase):
         baseline_id = stores.read_sidecar(baseline).fields["store_id"]
         before = self.dir_state("A")
 
-        self.sweep.prepare()
+        self.sweep.prepare(runs_root=self.root)
 
         self.assertEqual(self.dir_state("A"), before, "prepare() touched the source")
 
@@ -131,7 +128,7 @@ class SweepPrepareTestCase(StoreTestCase):
         self.assertNotEqual(reading.fields["store_id"], baseline_id)
         self.assertEqual(
             reading.fields["copied_from"],
-            {"store_id": baseline_id, "datastore": RunRegistry._repo_path(baseline)},
+            {"store_id": baseline_id, "datastore": os.path.abspath(baseline)},
         )
         self.assertEqual(reading.fields["purpose"], SWEEP_PURPOSE)
         self.assertEqual(reading.fields["history"][-1]["operation"], "copy")
@@ -148,7 +145,7 @@ class SweepPrepareTestCase(StoreTestCase):
         baseline_before = self.dir_state("A")
 
         with self.assertRaises(RuntimeError) as ctx:
-            self.sweep.prepare()
+            self.sweep.prepare(runs_root=self.root)
         self.assertIn("already exist", str(ctx.exception))
         self.assertEqual(
             sidecar_path.read_bytes(), sidecar_before, "the tombstone was rewritten"
@@ -165,7 +162,7 @@ class SweepPrepareTestCase(StoreTestCase):
 
         # again, with force=True: refused before anything is read
         with self.assertRaises(RuntimeError) as ctx2:
-            self.sweep.prepare(force=True)
+            self.sweep.prepare(force=True, runs_root=self.root)
         self.assertIn("no longer means", str(ctx2.exception))
         self.assertEqual(sidecar_path.read_bytes(), sidecar_before)
         self.assertFalse(self.sweep_store.exists())
@@ -179,14 +176,32 @@ class SweepPrepareTestCase(StoreTestCase):
         before = self.state()
 
         with self.assertRaises(RuntimeError) as ctx:
-            self.sweep.prepare()
+            self.sweep.prepare(runs_root=self.root)
         self.assertIn("already exist", str(ctx.exception))
         self.assertEqual(self.state(), before)
 
         with self.assertRaises(RuntimeError) as ctx2:
-            self.sweep.prepare(force=True)
+            self.sweep.prepare(force=True, runs_root=self.root)
         self.assertIn("no longer means", str(ctx2.exception))
         self.assertEqual(self.state(), before)
+
+    def test_a_running_run_in_the_given_runs_root_blocks_the_copy(self):
+        """`prepare()` passes its ``runs_root`` on to `copy_store`: a run begun in the temporary
+        runs root, still `running`, with the baseline as its `results`, makes the copy refuse, and
+        nothing is written. Had the root not been passed on, `copy_store` would read the real
+        runs root, which no run of this test is in, and copy."""
+        baseline = self.a_baseline()
+        run = self.begin("sweep-baseline-in-use", results=str(baseline))
+        self.assertEqual(os.path.dirname(run.path), self.root)
+        before = self.state()
+
+        with self.assertRaises(RuntimeError) as ctx:
+            self.sweep.prepare(runs_root=self.root)
+        message = str(ctx.exception)
+        self.assertIn(f"run {run.id} is running", message)
+        self.assertIn("names this store", message)
+        self.assertEqual(self.state(), before, "a refused copy wrote something")
+        self.assertFalse(self.sweep_store.exists(), "a store file was created")
 
     # --- test 4 -------------------------------------------------------------------------------
 

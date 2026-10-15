@@ -416,7 +416,7 @@ def _main_py_argv(database, job_name, zend=PRODUCTION_ZEND):
     Pruning is not mentioned: `main.py`'s `--prune-unvalidated` defaults to true, and that is
     the designed recovery for a row stored but not validated when a build was interrupted
     (`[10-a3-v2-launch-resumes-without-pruning-unvalidated-rows]`, a3-v2-readiness prompt 05).
-    `RunRegistry/tests/test_prune_on_resume.py` pins the list, element by element.
+    `RunDrivers/tests/test_prune_on_resume.py` pins the list, element by element.
     """
     return [
         "main.py",
@@ -551,9 +551,9 @@ def run_build(args):
     scoped = _load_scoped_driver()
     run = None
     if args.register:
-        import RunRegistry
+        import runregistrykit
 
-        run = RunRegistry.begin(
+        run = runregistrykit.begin(
             campaign=args.campaign,
             prompt=args.prompt,
             slug=args.register,
@@ -592,7 +592,7 @@ def run_build(args):
         print(
             f"** quadsource_atol_sweep --build: registered as {run.id}\n"
             f"**   manifest {run.manifest_path}\n"
-            f"**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list"
+            f"**   list it with: ./venv/bin/python -m runregistrykit list"
         )
 
     # a fresh local instance (`address="local"`), never another `ray start` cluster this machine
@@ -736,31 +736,35 @@ def assert_store_is_self_consistent(primary):
         raise RuntimeError("\n".join(lines))
 
 
-def prepare(force=False):
+def prepare(force=False, runs_root=None):
     """Make the sweep store from the baseline through one registry copy.
 
-    `RunRegistry.stores.copy_store` copies the store's files and writes the destination's sidecar
+    `runregistrykit.stores.copy_store` copies the store's files and writes the destination's sidecar
     as a new, problem-free registry sidecar: a new `store_id`, this function's `purpose`,
     `copied_from` naming the baseline, and a `copy` history entry. It never overwrites: it refuses
     if the destination's sidecar name is already taken, whether by an existing store or by a
-    tombstone left behind by `RunRegistry store retire` (`store-retirement` prompt 03). That
+    tombstone left behind by `runregistrykit store retire` (`store-retirement` prompt 03). That
     refusal is exactly what a retired name needs -- a plain `--prepare` at a retired name must not
     silently replace the tombstone that records what was there.
+
+    ``runs_root`` is passed to `copy_store` as its ``runs_root``, where it looks for a `running`
+    run naming the baseline: `None`, the default, is the runs root `runregistrykit.toml` names
+    (`var/runs`); a test passes a temporary one.
     """
     if force:
         raise RuntimeError(
             'quadsource_atol_sweep --prepare: --force no longer means "replace". '
-            "RunRegistry.stores.copy_store never overwrites a destination whose sidecar name is "
+            "runregistrykit.stores.copy_store never overwrites a destination whose sidecar name is "
             "already taken -- by an existing store or by a retired store's tombstone -- and "
             "prepare() no longer either. A sweep store, once made, is not replaced: point "
-            "SWEEP_STORE at a name that has never held a store, or, once `RunRegistry store "
+            "SWEEP_STORE at a name that has never held a store, or, once `runregistrykit store "
             "retire` exists (store-retirement prompt 03), retire the old one first."
         )
 
-    import RunRegistry.stores
+    import runregistrykit.stores
 
     try:
-        RunRegistry.stores.copy_store(
+        runregistrykit.stores.copy_store(
             BASELINE_STORE,
             SWEEP_STORE,
             purpose=(
@@ -769,6 +773,7 @@ def prepare(force=False):
                 "at the production tolerance pair belongs to a sweep and nothing else reads "
                 "it. The comparator is handover-A3-baseline-lambdacdm, not this."
             ),
+            runs_root=runs_root,
         )
     except RuntimeError as e:
         raise RuntimeError(f"quadsource_atol_sweep: {e}") from e
@@ -859,9 +864,9 @@ def sweep(args):
     scoped = _load_scoped_driver()
     run = None
     if args.register:
-        import RunRegistry
+        import runregistrykit
 
-        run = RunRegistry.begin(
+        run = runregistrykit.begin(
             campaign=args.campaign,
             prompt=args.prompt,
             slug=args.register,
@@ -903,7 +908,7 @@ def sweep(args):
         print(
             f"** quadsource_atol_sweep: registered as {run.id}\n"
             f"**   manifest {run.manifest_path}\n"
-            f"**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list"
+            f"**   list it with: ./venv/bin/python -m runregistrykit list"
         )
 
     try:

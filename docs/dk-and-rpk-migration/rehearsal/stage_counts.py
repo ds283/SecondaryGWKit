@@ -23,19 +23,19 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "docs" / "datastore-integrity-verification"))
 
-import RunRegistry  # noqa: E402
+import runregistrykit  # noqa: E402
 from stage_counts import read  # noqa: E402
 
 
 def slug_of(run_dir: Path) -> str:
-    """The slug `RunRegistry.run_id` was given, recovered from the manifest's own fields."""
+    """The slug `runregistrykit.run_id` was given, recovered from the manifest's own fields."""
     manifest = json.loads((run_dir / "manifest.json").read_text())
     run_id = manifest["run_id"]
     prefix = (
         "-".join(
             (
-                RunRegistry._slug(manifest["campaign"]),
-                RunRegistry._slug(manifest["prompt"]),
+                runregistrykit.slugify(manifest["campaign"]),
+                runregistrykit.slugify(manifest["prompt"]),
             )
         )
         + "-"

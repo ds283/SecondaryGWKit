@@ -22,9 +22,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest import mock
 
-import RunRegistry
+import runregistrykit
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DRIVER = os.path.join(REPO_ROOT, "docs", "gktk-remedial", "scoped_pipeline_run.py")
@@ -71,7 +70,7 @@ class PipelineAdoptionTestCase(unittest.TestCase):
     def a_run(self, **kwargs):
         kwargs.setdefault("purpose", "a test run, in a temporary directory")
         kwargs.setdefault("argv", ["unittest"])
-        return RunRegistry.begin(
+        return runregistrykit.begin(
             campaign="run-registry",
             prompt="02",
             slug="pipeline",
@@ -139,11 +138,11 @@ class TestStage(PipelineAdoptionTestCase):
         self.assertEqual(
             status["units_done"], 0, "the pipeline records no units at all"
         )
-        entry = RunRegistry.list_runs(root=self.root)[0]
+        entry = runregistrykit.list_runs(root=self.root)[0]
         self.assertIsNone(entry["units_total"])
         self.assertEqual(entry["stage"], "CALCULATE QUADRATIC SOURCE INTEGRALS, 92.31%")
         done = subprocess.run(
-            [sys.executable, "-m", "RunRegistry", "list", "--root", self.root],
+            [sys.executable, "-m", "runregistrykit", "list", "--root", self.root],
             capture_output=True,
             text=True,
             cwd=REPO_ROOT,
@@ -155,7 +154,7 @@ class TestStage(PipelineAdoptionTestCase):
         run = self.a_run()
         run.heartbeat(stage=HAND_WRITTEN)
         done = subprocess.run(
-            [sys.executable, "-m", "RunRegistry", "list", "--root", self.root],
+            [sys.executable, "-m", "runregistrykit", "list", "--root", self.root],
             capture_output=True,
             text=True,
             cwd=REPO_ROOT,
@@ -176,11 +175,11 @@ class TestHeartbeatHonesty(PipelineAdoptionTestCase):
             ),
             scope="2 log-spaced k over 1e5-1e6 /Mpc, LambdaCDM, 2 cpus",
         )
-        said = RunRegistry.read_json(run.manifest_path)["heartbeat_means"]
+        said = runregistrykit.read_json(run.manifest_path)["heartbeat_means"]
         self.assertIn("does NOT mean any Ray actor is progressing", said)
         self.assertIn("stale", said)
         self.assertEqual(
-            RunRegistry.read_json(run.manifest_path)["scope"],
+            runregistrykit.read_json(run.manifest_path)["scope"],
             "2 log-spaced k over 1e5-1e6 /Mpc, LambdaCDM, 2 cpus",
         )
 
@@ -249,7 +248,9 @@ class TestTerminalState(PipelineAdoptionTestCase):
 
     def test_every_state_it_can_return_is_one_the_registry_accepts(self):
         for code in (None, 0, 1, int(signal.SIGTERM), "a message"):
-            self.assertIn(self.driver.terminal_state(code), RunRegistry.TERMINAL_STATES)
+            self.assertIn(
+                self.driver.terminal_state(code), runregistrykit.TERMINAL_STATES
+            )
 
 
 class TestOptIn(PipelineAdoptionTestCase):
@@ -275,7 +276,7 @@ class TestOptIn(PipelineAdoptionTestCase):
     def test_a_refused_datastore_leaves_no_run_behind(self):
         """The existing-datastore guard runs *before* `begin()`, so a run that is never going to
         start does not leave a manifest claiming it did."""
-        root = RunRegistry.DEFAULT_ROOT
+        root = runregistrykit.find_client_root(client_root=REPO_ROOT).runs_root
         before = sorted(os.listdir(root)) if os.path.isdir(root) else None
         done = self.driver_run(
             "--register",
@@ -327,10 +328,13 @@ class TestTheDatastoreIsNotALedger(PipelineAdoptionTestCase):
         streams = (sys.stdout, sys.stderr)
         sys.stdout, sys.stderr = StringWriter(), StringWriter()
         try:
-            with mock.patch.object(RunRegistry, "DEFAULT_ROOT", self.root):
-                return self.driver.register(
-                    args, ["--database", database], [1e5, 1e6], database
-                )
+            return self.driver.register(
+                args,
+                ["--database", database],
+                [1e5, 1e6],
+                database,
+                runs_root=self.root,
+            )
         finally:
             for stream in (sys.stdout, sys.stderr):
                 close_copy = getattr(stream, "close_copy", None)
@@ -343,8 +347,13 @@ class TestTheDatastoreIsNotALedger(PipelineAdoptionTestCase):
     def test_the_datastore_is_registered_as_results_and_not_as_a_ledger(self):
         database = os.path.join(self.root, "store.sqlite")
         run = self.register(database)
+        self.assertEqual(
+            os.path.dirname(run.path),
+            self.root,
+            "the driver's run was not made in the runs root it was given",
+        )
 
-        manifest = RunRegistry.read_json(run.manifest_path)
+        manifest = runregistrykit.read_json(run.manifest_path)
         self.assertEqual(manifest["results"], database)
         self.assertIsNone(
             manifest["checkpoint"], "the datastore is declared as a unit ledger"

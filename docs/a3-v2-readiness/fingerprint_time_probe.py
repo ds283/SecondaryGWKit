@@ -2,11 +2,11 @@
 S4 (a3-v2-readiness audit 00): how long the fingerprint that ``Run.finish(..., fingerprint=True)``
 takes lasts on a real-sized store.
 
-``Run.finish(fingerprint=True)`` calls ``RunRegistry.stores.fingerprint_store(results,
+``Run.finish(fingerprint=True)`` calls ``runregistrykit.stores.fingerprint_store(results,
 write=reading.ok, ...)``, which writes the sidecar when the sidecar is a problem-free registry
 sidecar. This probe calls ``fingerprint_store(primary, write=False)`` directly, on the A3 baseline,
 ``var/datastores/handover-A3-baseline-lambdacdm.sqlite``, and on nothing else. It never calls
-``Run.finish``, ``RunRegistry.begin``, any ``store`` subcommand, or ``ShardedPool``.
+``Run.finish``, ``runregistrykit.begin``, any ``store`` subcommand, or ``ShardedPool``.
 ``fingerprint_store`` reads the store through ``Datastore.store_inventory.read_inventory``, which
 opens every file ``mode=ro`` and refuses a journal (``Datastore/store_reader.py``), and reads the
 sidecar and ``var/runs/`` (for its running-run refusal). The README of the a3-v2-readiness campaign,
@@ -80,9 +80,11 @@ def main():
     print(f"  journals beside the store: {journals()}")
 
     t = time.perf_counter()
-    from RunRegistry.stores import FINGERPRINT_FORMAT, fingerprint_store
+    from runregistrykit.stores import fingerprint_store
 
-    print(f"\nimport RunRegistry.stores: {time.perf_counter() - t:.3f} s")
+    print(f"\nimport runregistrykit.stores: {time.perf_counter() - t:.3f} s")
+    from config.fingerprint import FINGERPRINT_FORMAT
+
     print(f"FINGERPRINT_FORMAT at HEAD: {FINGERPRINT_FORMAT}")
 
     for n in (1, 2):

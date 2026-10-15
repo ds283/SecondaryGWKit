@@ -7,7 +7,7 @@ Each run is a child process (``--child VARIANT DRIVER ROOT STORE``), built as ``
 builds its children. The child:
 
 - builds a small store in a temporary directory (``Datastore/tests/real_store_fixtures.py``
-  ``build_real_store``) and registers a ``Run`` with ``RunRegistry.begin(..., results=<that store>,
+  ``build_real_store``) and registers a ``Run`` with ``runregistrykit.begin(..., results=<that store>,
   root=<a temporary directory>)``. Nothing is written under ``var/``;
 - replaces ``ray.init`` with the **real** ``_local_ray_init`` of one driver, read out of its source
   with ``ast`` (``scoped_pipeline_run.main``'s or ``quadsource_atol_sweep.run_build``'s, alternating
@@ -147,8 +147,8 @@ def child(variant, which, root, store_dir):
 
     import ray
 
-    import RunRegistry
-    import RunRegistry.stores as registry_stores
+    import runregistrykit
+    import runregistrykit.stores as registry_stores
     from StoreFixtures.real_store_fixtures import build_real_store
 
     scoped = _load("_scoped_pipeline_run", SCOPED_DRIVER)
@@ -156,7 +156,7 @@ def child(variant, which, root, store_dir):
         f"child pid={os.getpid()} variant={variant} wrapper={which} ray={ray.__version__}"
     )
     store = build_real_store(Path(store_dir))
-    run = RunRegistry.begin(
+    run = runregistrykit.begin(
         campaign="a3-v2-readiness",
         prompt="04",
         slug=f"probe-{variant}",

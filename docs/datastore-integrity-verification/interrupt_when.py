@@ -15,7 +15,7 @@ Every `--interval` seconds (15) it reads the run's `status.json`, and:
 
 - if the run is in a terminal state, or its pid no longer answers `kill -0`, it logs that and exits
   **without signalling**;
-- while `RunRegistry.liveness(status, --stale-after)` is `stale` with the pid still alive, it waits
+- while `runregistrykit.liveness(status, --stale-after)` is `stale` with the pid still alive, it waits
   and never signals: a long work item makes the heartbeat go stale, and stale means "go and look";
 - if the run is `alive` and its `stage` matches the regex (`re.search`) with a progress reading at
   or above the percentage, it checks that the pid still answers `kill -0` and that
@@ -58,14 +58,14 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import RunRegistry  # noqa: E402
+import runregistrykit  # noqa: E402
 
 _PERCENT = re.compile(r",\s*([\d.]+)%\s*\(")
 _COMPLETE = re.compile(r",\s*all work items complete\s*$")
 
 
 def now() -> str:
-    return RunRegistry.now_iso()
+    return runregistrykit.now_iso()
 
 
 class Log:
@@ -84,7 +84,7 @@ class Log:
 
 def run_slug(run_dir: Path):
     """The `--register` slug from the run's manifest `argv`, or `None`."""
-    manifest = RunRegistry.read_json(str(run_dir / "manifest.json")) or {}
+    manifest = runregistrykit.read_json(str(run_dir / "manifest.json")) or {}
     argv = manifest.get("argv") or []
     for i, token in enumerate(argv[:-1]):
         if token == "--register":
@@ -95,10 +95,10 @@ def run_slug(run_dir: Path):
 def run_driver(run_dir: Path):
     """The basename of the run's own driver, from its manifest's `argv[0]`, or `None`.
 
-    `RunRegistry.begin` records `sys.argv` before a driver replaces it, so `argv[0]` is the script
+    `runregistrykit.begin` records `sys.argv` before a driver replaces it, so `argv[0]` is the script
     that was launched: `scoped_pipeline_run.py`, or `quadsource_atol_sweep.py` for a `--build`.
     """
-    manifest = RunRegistry.read_json(str(run_dir / "manifest.json")) or {}
+    manifest = runregistrykit.read_json(str(run_dir / "manifest.json")) or {}
     argv = manifest.get("argv") or []
     if not argv or not isinstance(argv[0], str):
         return None
@@ -158,21 +158,21 @@ def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0)
     last = None
     held = hold <= 0
     while True:
-        status = RunRegistry.read_json(str(run_dir / "status.json")) or {}
+        status = runregistrykit.read_json(str(run_dir / "status.json")) or {}
         state = status.get("state")
         pid = status.get("pid")
         stage = status.get("stage")
-        if state in RunRegistry.TERMINAL_STATES:
+        if state in runregistrykit.TERMINAL_STATES:
             log(
                 f"run is {state!r} (exit code {status.get('exit_code')!r}); exiting without signalling"
             )
             return 0
-        if state == "running" and not RunRegistry.pid_alive(pid):
+        if state == "running" and not runregistrykit.pid_alive(pid):
             log(
                 f"run's pid {pid} no longer answers kill -0; exiting without signalling"
             )
             return 0
-        verdict = RunRegistry.liveness(status, stale_after)
+        verdict = runregistrykit.liveness(status, stale_after)
         reading = (verdict, stage)
         if reading != last:
             log(f"liveness {verdict}; pid {pid}; stage {stage!r}")
@@ -187,7 +187,7 @@ def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0)
                 time.sleep(hold)
                 continue
             if percent is not None and percent >= minimum:
-                if not RunRegistry.pid_alive(pid):
+                if not runregistrykit.pid_alive(pid):
                     log(
                         f"pid {pid} no longer answers kill -0; exiting without signalling"
                     )
@@ -227,7 +227,7 @@ def main(argv=None) -> int:
         "signalling only if that reading is eligible too (default 0)",
     )
     parser.add_argument(
-        "--stale-after", type=float, default=RunRegistry.DEFAULT_STALE_AFTER
+        "--stale-after", type=float, default=runregistrykit.DEFAULT_STALE_AFTER
     )
     parser.add_argument(
         "--log", type=Path, default=None, help="default <run dir>/interrupter.log"

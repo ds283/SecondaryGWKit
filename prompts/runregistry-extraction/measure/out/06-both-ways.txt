@@ -1,0 +1,37 @@
+# 06-both-ways.txt — runregistry-extraction prompt 06, 2026-10-15: docs/runregistry-extraction/fingerprint_both_ways.py at the probe ec781383730ff477c63430f0ea8fc10e106e0efc (working tree equal to its tree), on a scratch set (§5); no store under var/ is read
+# the scratch set, in the agent's scratch directory, written $B below:
+#   $B/store/full-store.sqlite: StoreFixtures.real_store_fixtures.build_full_store; its sidecar made by
+#     ./venv/bin/python -m runregistrykit store create $B/store/full-store.sqlite --purpose '...' (exit 0) and
+#     ./venv/bin/python -m runregistrykit store fingerprint --write $B/store/full-store.sqlite (exit 0)
+#   $B/rundir-09c/status.json: {"fingerprint": <ObjectFactories/tests/data/full_store_fingerprint_datastore-integrity-09c.json>},
+#     the fixture's digest as this repository's own code recorded it
+# every file of the set before (sha256, size, mtime_ns):
+  b9ec22e484ff168fdd9c0ce4ba63a422084bda5e9a270f7b0b0f119502380488     9445 1792100506968198106 rundir-09c/status.json
+  9e946826ecfd00fe2e03d7c53a177eb757638b8fc4796de277dabd14939d9d75   774144 1792100506681356985 store/full-store-shard0000.sqlite
+  1062d27cd47653c7f7069c6532ad7fc5fefcb453b7fbb0b14386af35a8dafe6a   774144 1792100506695213354 store/full-store-shard0001.sqlite
+  16430f3a8e8c23bf2b1e9eab1b6fd6bcbf8d306ae674cc945cb305f82a358fea    10303 1792100513290860890 store/full-store.manifest.json
+  378a2564aaa25aaa04d9eb001a0e79a50730be4b5229199661436df93a9a8c23    36864 1792100506703435376 store/full-store.sqlite
+
+$ ./venv/bin/python docs/runregistry-extraction/fingerprint_both_ways.py $B/store/full-store.sqlite --against $B/rundir-09c --expect-digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+== $B/store/full-store.sqlite
+  current: format 6, encoding 1, digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759, 21 classes
+  [PASS] current encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] current digest == 6576b85d…: 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] compare_fingerprints(sidecar's, current) is empty: 0 entries; sidecar's digest 6576b85d…, encoding 1, taken 2026-10-15T22:41:53+01:00
+  -- against $B/rundir-09c/status.json: format 6, digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759, 21 classes; taken by None at None
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 6576b85d…: 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  => every check holds (8 of 8 checks hold)
+
+summary: 1 store(s) against 1 recorded fingerprint(s); every check holds: each store's fingerprint equals every recorded one in every field but encoding_format and taken
+# exit status: 0
+
+# every file of the set after:
+  b9ec22e484ff168fdd9c0ce4ba63a422084bda5e9a270f7b0b0f119502380488     9445 1792100506968198106 rundir-09c/status.json
+  9e946826ecfd00fe2e03d7c53a177eb757638b8fc4796de277dabd14939d9d75   774144 1792100506681356985 store/full-store-shard0000.sqlite
+  1062d27cd47653c7f7069c6532ad7fc5fefcb453b7fbb0b14386af35a8dafe6a   774144 1792100506695213354 store/full-store-shard0001.sqlite
+  16430f3a8e8c23bf2b1e9eab1b6fd6bcbf8d306ae674cc945cb305f82a358fea    10303 1792100513290860890 store/full-store.manifest.json
+  378a2564aaa25aaa04d9eb001a0e79a50730be4b5229199661436df93a9a8c23    36864 1792100506703435376 store/full-store.sqlite

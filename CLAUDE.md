@@ -44,21 +44,24 @@ that hold across all of them:
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
 
-## The datastore layer is `datastorekit`; the work queue is `raypoolkit`
+## The datastore layer is `datastorekit`; the work queue is `raypoolkit`; the registry is `runregistrykit`
 
 Since 2026-10-11 the generic datastore layer is the package `datastorekit`, from DatastoreKit
 (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit), pinned in
-`requirements.txt` at `v0.2.2`, and the work queue `RayWorkPool` is the package `raypoolkit`, from
+`requirements.txt` at `v0.4.0`, and the work queue `RayWorkPool` is the package `raypoolkit`, from
 RayPoolKit (`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned
 at `v0.2.0`. ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in
-the `dk-and-rpk-migration` campaign.
+the `dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package
+`runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`,
+https://github.com/ds283/RunRegistryKit), pinned at `v0.1.0` with the extra `[stores]`, adopted in
+the `runregistry-extraction` campaign.
 
-**Neither is this repository's code.** A defect in one is recorded on the board of the campaign
-that found it, and in `docs/OPEN_ISSUES.md`. It is reported to that package's own repository, fixed
-there in a release, and reaches this repository by moving the pin in a commit of its own: it is
-never patched here, and never worked around. A prompt whose acceptance cannot pass without a change
-to a package stops and asks. **A pin is a tag**; an editable install is never used for a production
-run. This repository keeps its own `ray` and `SQLAlchemy` pins.
+**None of the three is this repository's code.** A defect in one is recorded on the board of the
+campaign that found it, and in `docs/OPEN_ISSUES.md`. It is reported to that package's own
+repository, fixed there in a release, and reaches this repository by moving the pin in a commit of
+its own: it is never patched here, and never worked around. A prompt whose acceptance cannot pass
+without a change to a package stops and asks. **A pin is a tag**; an editable install is never used
+for a production run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 
 **Imports name the package:** `from datastorekit import DatastoreObject`,
 `datastorekit.SQL.ShardedPool`, `datastorekit.SQL.factory_base`, and
@@ -66,27 +69,36 @@ run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 `ComputeTargets/tests` modules find pool constructions by `ast.Name`. The actor's module is
 `importlib.import_module("datastorekit.SQL.Datastore")`. The tools are
 `python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
+The registry is `import runregistrykit` (`runregistrykit.begin`, `runregistrykit.list_runs`, …)
+and `runregistrykit.stores` for the store layer; its command line is `python -m runregistrykit`
+(`list`, and `store show | create | fingerprint | copy | move | retire | amend`).
 
 **This repository's side of the layer changes as usual:** the factories under `ObjectFactories/`,
 `config/datastore.py` and `config/sharding.py`, `tools/inventory_report.py`, the tests in
 `ObjectFactories/tests/` and `tools/tests/`, the store fixtures in `StoreFixtures/`, and every
 caller. Until 2026-10-12 the factories lived at `Datastore/SQL/ObjectFactories/`, and their tests,
 the inventory-report tests and the store fixtures at `Datastore/tests/`. Campaign records and dated
-`docs/` prose from before then still use those paths, and are left as they were written.
+`docs/` prose from before then still use those paths, and are left as they were written. Until
+2026-10-15 the registry was this repository's own package `RunRegistry/`; campaign records from
+before then use that name, and are left as written.
 
 ## Long-running jobs — the run registry
 
-A job that takes hours must not be something a conversation owns. `RunRegistry/` records that one
-exists, in `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`, and
-`prompts/run-registry/README.md` §0 lists the five failures in one working session that are the
-reason for each rule below. It records; it does not schedule, supervise, restart or lock. It
-deletes nothing but a store's own files, and those only through `store retire`, which a person
-runs and which leaves the store's sidecar behind as its record. It never deletes a run directory,
-a sidecar or any other record.
+A job that takes hours must not be something a conversation owns. `runregistrykit`
+(RunRegistryKit, pinned at `v0.1.0`) records that one exists, in
+`var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`. It is configured by `runregistrykit.toml` at
+the repository root, which names the runs root, the stores root, the distributions every manifest
+records and the store fingerprinter, `config/fingerprint.py`'s `fingerprinter`. A run launched from
+a git worktree is recorded in the main checkout's `var/runs/`. `prompts/run-registry/README.md` §0
+lists the five failures in one working session that are the reason for each rule below, and
+RunRegistryKit's `README.md`, "The rules", tells each rule with the failure it answers. It records;
+it does not schedule, supervise, restart or lock. It deletes nothing but a store's own files, and
+those only through `store retire`, which a person runs and which leaves the store's sidecar behind
+as its record. It never deletes a run directory, a sidecar or any other record.
 
-1. **Discovery.** Run `python -m RunRegistry list` at the start of a session and before launching
-   anything long, and report anything `running` or stale. A job's existence must not depend on a
-   conversation remembering it.
+1. **Discovery.** Run `./venv/bin/python -m runregistrykit list` at the start of a session and
+   before launching anything long, and report anything `running` or stale. A job's existence must
+   not depend on a conversation remembering it.
 2. **Liveness.** A run is alive iff its pid answers `kill -0` **and** its heartbeat is inside the
    staleness window. **Never a command-line pattern match**: `pgrep -f <name>` matches other
    pollers waiting on the same job, so the condition can never be satisfied — nineteen poll loops
@@ -102,19 +114,6 @@ a sidecar or any other record.
 6. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record
    whose script hash does not match is discarded and recomputed, never blended and **never
    re-stamped**: re-stamping falsifies the thing the stamp exists to prove.
-
-## `RunRegistry/` is frozen — it is moving to RunRegistryKit
-
-Since prompt 01 of `runregistry-extraction` (`a45aefc`), `RunRegistry/` is frozen: RunRegistryKit
-imports it and checks the import, file by file, against the frozen tree (the blob hashes are in
-`prompts/runregistry-extraction/IMPLEMENTATION_STATE.md` §2.1). The freeze covers the package
-`RunRegistry/` and nothing else.
-
-- **Nothing under `RunRegistry/` changes**, its tests included, until
-  `prompts/runregistry-extraction` prompt 06 replaces it with the pinned `runregistrykit`.
-- **A defect found in it** is recorded on that campaign's board and in `docs/OPEN_ISSUES.md`, and
-  is fixed in RunRegistryKit, not here. If a fix cannot wait, stop and ask the user.
-- **The six rules above still bind**, unchanged.
 
 ## The shared rehearsal lock
 
@@ -141,7 +140,7 @@ time.
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t .
-  PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunRegistry/tests -t .
+  PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t .
   PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t .
   ```
   They must not need Ray or a datastore — use the stand-in model pattern in

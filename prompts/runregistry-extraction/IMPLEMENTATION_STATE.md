@@ -1,10 +1,11 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 6
-landed (01, 02, 02a, 03, 04, 05); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned
+**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 7
+landed (01, 02, 02a, 03, 04, 05, 06); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned
 it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
-RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05 pinned it (§5.11);
-09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
+RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05 pinned it (§5.11),
+and 06 adopted it: `RunRegistry/` is gone (§5.12). 09 follows 08's review. D1–D5, Q1–Q8 and D6
+ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -55,7 +56,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
 | 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | `3dcab1b` | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
-| 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15; ⏸ 05 | ⬜ | — | — |
+| 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15; ⏸ 06 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
 | 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
@@ -90,11 +91,11 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ✅ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ✅ |
 | **K2** | 05 | the `runregistrykit[stores]` pin; the venv installed from it | ✅ |
-| **A1** | 06 | the client config file and `config/fingerprint.py` | ⬜ |
-| **A2** | 06 | every `RunRegistry` import outside `prompts/` rewritten | ⬜ |
-| **A3** | 06 | the 101 SGK tests moved (C5); `RunRegistry/` deleted | ⬜ |
-| **A4** | 06 | `CLAUDE.md`: the registry section, the package section, the roots | ⬜ |
-| **A5** | 06 | the worktree check (Q3) | ⬜ |
+| **A1** | 06 | the client config file and `config/fingerprint.py` | ✅ |
+| **A2** | 06 | every `RunRegistry` import outside `prompts/` rewritten | ✅ |
+| **A3** | 06 | the 101 SGK tests moved (C5); `RunRegistry/` deleted | ✅ |
+| **A4** | 06 | `CLAUDE.md`: the registry section, the package section, the roots | ✅ |
+| **A5** | 06 | the worktree check (Q3) | ✅ |
 | **V1** | 07 | the spec-digest guard and its breakages | ⬜ |
 | **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1 | ⬜ |
 | **G-RRK** | 08 | RunRegistryKit's G2 recorded as holding (§2) | ⬜ |
@@ -152,72 +153,6 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
 | `RunRegistry/tests/test_store_sidecar.py` | `533d1118447527cfef65a833525516fcadbbc2e7` |
 
 ## 3. Active and unresolved issues
-
-- **[00-a-run-launched-from-a-worktree-records-into-the-worktree]** *(opened 2026-10-12 by the
-  plan, from audit §2; **Assigned (2026-10-12):** to 06, which closes it with RunRegistryKit's root
-  rule, Q3)*
-  - **The defect.** `RunRegistry.REPO_ROOT` is the parent of the package's own directory
-    (`RunRegistry/__init__.py:57`), and `DEFAULT_ROOT` is `var/runs` under it (`:58`). A run
-    launched from a git worktree of this repository imports the worktree's copy, and so records
-    into the worktree's `var/runs/`.
-  - **Impact.** The run's record is deleted with the worktree, which breaks `CLAUDE.md`'s
-    durability rule (rule 5) without any error. No worktree exists today (`git worktree list`,
-    2026-10-12), so no record has been lost; campaigns here do run in worktrees.
-  - **Next step.** 06: the root becomes the parent of `git rev-parse --git-common-dir` (Q3), and
-    acceptance 4 shows a worktree's run recorded in the main checkout.
-
-- **[00-the-fingerprint-encoding-has-no-version-of-its-own]** *(opened 2026-10-12 by the plan,
-  from audit §3.2; a DatastoreKit defect, reported by
-  [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md); **Assigned
-  (2026-10-12):** SGK's half to 06)*
-  - **The defect.** A fingerprint's one version, `FINGERPRINT_FORMAT` (`RunRegistry/stores.py:206`),
-    is SGK's and enters the digest. The encoding it digests, `datastorekit.store_inventory`
-    (`canonical`, `canonical_json`, `reference_digest`, `Record`), has no version. Three of the six
-    format bumps extended that encoding together with a key change (`a171ced`, `dbf2cf2`,
-    `3d7b606`).
-  - **Impact.** A DatastoreKit release that changed the encoding would change every digest while
-    the format stayed `6`. `compare_fingerprints` would then report a content difference in every
-    class, not a format mismatch. Today only the rehearsal acceptance (`39809dca…`) would catch it.
-  - **Next step.** DatastoreKit versions the encoding and algorithm (E1). 06 records that version
-    in every fingerprint SGK takes, and closes SGK's half; R2 (08) confirms it.
-  - **Narrowed (2026-10-14, at E1):** DatastoreKit's half is closed by `v0.4.0`.
-    `datastorekit.store_fingerprint` holds the algorithm, with `ENCODING_FORMAT = 1` recorded beside
-    the digest as `encoding_format` (outside every digest), the client's format a required argument,
-    and contract §9.7's rule for when the package bumps its version. SGK's half, recording it, is
-    still 06's.
-
-- **[00-recorded-fingerprints-lack-the-encoding-format]** *(opened 2026-10-14 at E1, from
-  DatastoreKit's `v0.4.0` addendum to its SGK checklist, item 3; **Assigned (2026-10-14):** by the
-  user's ruling D6, to the orchestrator's retirement of R0's and R1's stores after 04's review, and
-  checked at 06's gate)*
-  - **The defect.** The package's `compare_fingerprints` reads `fingerprint_format`, then
-    `encoding_format`; if either differs it gives one entry for each and compares nothing else.
-    Every fingerprint SGK's own code takes (`RunRegistry/stores.py:1182-1253`) lacks
-    `encoding_format`. So once SGK compares through the package (06), each fingerprint SGK already
-    holds compares as one `encoding` entry, whatever the stores hold: a sidecar's `fingerprint`, a
-    run's `status.json`, and the six golden files.
-  - **Impact.**
-    - On a **live** store with such a sidecar, `store fingerprint` would report one difference and
-      exit 1, and `store retire` would refuse the store, since it needs an empty comparison. There
-      are two such stores today, R0's (`runregistry-extraction-02-{reference,resumed}`; the other 14
-      sidecars are tombstones, never fingerprinted again). R1 (04) adds two more.
-    - **Run directories** keep their recorded fingerprints as records. A later comparison with one,
-      as 08's acceptance 1 makes with R0's and R1's, compares the digests and classes field by field
-      with `encoding_format` set aside, not through the package's comparison (README §2.2, 08).
-    - The golden files are 06's to change, with `test_the_shape` and `test_the_golden_fingerprint`
-      (the addendum's item 2).
-  - **Next step.** The user ruled option (c) of the addendum (D6, 2026-10-14). After 04's review,
-    the orchestrator retires R0's and R1's four stores with `store retire`, each after a dry run, in
-    a commit of its own, as `718e650` did for `dk-and-rpk-migration`'s six. Option (b), SGK's
-    comparison kept beside the package's for old fingerprints, is a version-aware reader, which the
-    user's standing rule excludes; option (a), `--write` over the recorded fingerprint, would replace
-    R0's record in its sidecar.
-  - **Closes** at 06's gate, when no sidecar under `var/datastores/` is a live store whose recorded
-    fingerprint lacks `encoding_format`.
-  - **Narrowed (2026-10-14, after 04's review):** the four stores are retired (§5.8). All 18
-    sidecars under `var/datastores/` are tombstones, so there is no live store for the package's
-    comparison to refuse. What remains is 06's: the recorded fingerprints in run directories and
-    the six golden files, and the check at its gate.
 
 - **[00-open-issues-about-the-registry-code-stay-on-sgk-boards]** *(opened 2026-10-15 at E2, by
   the orchestrator, in writing 05–08; **Assigned (2026-10-15):** to 09, which drafts the hand-over,
@@ -283,7 +218,99 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
 
 ## 4. Resolved issues
 
-None yet.
+- **[00-a-run-launched-from-a-worktree-records-into-the-worktree]** *(opened 2026-10-12 by the
+  plan, from audit §2; **Assigned (2026-10-12):** to 06, which closes it with RunRegistryKit's root
+  rule, Q3)*
+  - **The defect.** `RunRegistry.REPO_ROOT` is the parent of the package's own directory
+    (`RunRegistry/__init__.py:57`), and `DEFAULT_ROOT` is `var/runs` under it (`:58`). A run
+    launched from a git worktree of this repository imports the worktree's copy, and so records
+    into the worktree's `var/runs/`.
+  - **Impact.** The run's record is deleted with the worktree, which breaks `CLAUDE.md`'s
+    durability rule (rule 5) without any error. No worktree exists today (`git worktree list`,
+    2026-10-12), so no record has been lost; campaigns here do run in worktrees.
+  - **Next step.** 06: the root becomes the parent of `git rev-parse --git-common-dir` (Q3), and
+    acceptance 4 shows a worktree's run recorded in the main checkout.
+  - **Closed (2026-10-15, prompt 06, this commit).** `runregistrykit` finds the record root from the
+    config's directory, and for a linked worktree takes the main checkout, the parent of `git rev-parse
+    --git-common-dir` (Q3). `docs/runregistry-extraction/worktree_run_check.py`, run from a scratch
+    worktree at the probe `ec781383730ff477c63430f0ea8fc10e106e0efc` with the main checkout's venv, began
+    `runregistry-extraction-06-worktree-check-20261015T224836` in the main checkout's `var/runs/`, its
+    manifest's `git_head` the probe and `git_dirty` false while the main checkout was at `85f273d` and
+    dirty; the run ended `done`/0, and `runregistrykit list` shows it after the worktree was removed and
+    pruned ([`measure/out/06-worktree.txt`](measure/out/06-worktree.txt)). The check's breakage left a
+    second run there too, `…-worktree-check-breakage-20261015T225237`, `failed`/1.
+
+- **[00-the-fingerprint-encoding-has-no-version-of-its-own]** *(opened 2026-10-12 by the plan,
+  from audit §3.2; a DatastoreKit defect, reported by
+  [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md); **Assigned
+  (2026-10-12):** SGK's half to 06)*
+  - **The defect.** A fingerprint's one version, `FINGERPRINT_FORMAT` (`RunRegistry/stores.py:206`),
+    is SGK's and enters the digest. The encoding it digests, `datastorekit.store_inventory`
+    (`canonical`, `canonical_json`, `reference_digest`, `Record`), has no version. Three of the six
+    format bumps extended that encoding together with a key change (`a171ced`, `dbf2cf2`,
+    `3d7b606`).
+  - **Impact.** A DatastoreKit release that changed the encoding would change every digest while
+    the format stayed `6`. `compare_fingerprints` would then report a content difference in every
+    class, not a format mismatch. Today only the rehearsal acceptance (`39809dca…`) would catch it.
+  - **Next step.** DatastoreKit versions the encoding and algorithm (E1). 06 records that version
+    in every fingerprint SGK takes, and closes SGK's half; R2 (08) confirms it.
+  - **Narrowed (2026-10-14, at E1):** DatastoreKit's half is closed by `v0.4.0`.
+    `datastorekit.store_fingerprint` holds the algorithm, with `ENCODING_FORMAT = 1` recorded beside
+    the digest as `encoding_format` (outside every digest), the client's format a required argument,
+    and contract §9.7's rule for when the package bumps its version. SGK's half, recording it, is
+    still 06's.
+  - **Closed (2026-10-15, prompt 06, this commit), SGK's half.** Every fingerprint SGK takes now goes
+    through `config/fingerprint.py`'s `DatastoreKitFingerprinter`, which records DatastoreKit's
+    `encoding_format` beside the digest. `TestConfigFingerprint.test_the_fingerprinter_takes_the_golden_fingerprint`
+    shows it (`encoding_format` 1, the fingerprint equal to `fingerprint_of(read_inventory(primary,
+    factories), 6)` and to the new golden file, digest `6576b85d…`); the scratch store's sidecar, written
+    by `runregistrykit store fingerprint --write`, carries it and compares empty
+    ([`measure/out/06-both-ways.txt`](measure/out/06-both-ways.txt)). `FINGERPRINT_FORMAT` stays 6, and
+    the format history in `config/fingerprint.py` says that an encoding change does not bump it. R2 (08)
+    confirms it on real stores.
+
+- **[00-recorded-fingerprints-lack-the-encoding-format]** *(opened 2026-10-14 at E1, from
+  DatastoreKit's `v0.4.0` addendum to its SGK checklist, item 3; **Assigned (2026-10-14):** by the
+  user's ruling D6, to the orchestrator's retirement of R0's and R1's stores after 04's review, and
+  checked at 06's gate)*
+  - **The defect.** The package's `compare_fingerprints` reads `fingerprint_format`, then
+    `encoding_format`; if either differs it gives one entry for each and compares nothing else.
+    Every fingerprint SGK's own code takes (`RunRegistry/stores.py:1182-1253`) lacks
+    `encoding_format`. So once SGK compares through the package (06), each fingerprint SGK already
+    holds compares as one `encoding` entry, whatever the stores hold: a sidecar's `fingerprint`, a
+    run's `status.json`, and the six golden files.
+  - **Impact.**
+    - On a **live** store with such a sidecar, `store fingerprint` would report one difference and
+      exit 1, and `store retire` would refuse the store, since it needs an empty comparison. There
+      are two such stores today, R0's (`runregistry-extraction-02-{reference,resumed}`; the other 14
+      sidecars are tombstones, never fingerprinted again). R1 (04) adds two more.
+    - **Run directories** keep their recorded fingerprints as records. A later comparison with one,
+      as 08's acceptance 1 makes with R0's and R1's, compares the digests and classes field by field
+      with `encoding_format` set aside, not through the package's comparison (README §2.2, 08).
+    - The golden files are 06's to change, with `test_the_shape` and `test_the_golden_fingerprint`
+      (the addendum's item 2).
+  - **Next step.** The user ruled option (c) of the addendum (D6, 2026-10-14). After 04's review,
+    the orchestrator retires R0's and R1's four stores with `store retire`, each after a dry run, in
+    a commit of its own, as `718e650` did for `dk-and-rpk-migration`'s six. Option (b), SGK's
+    comparison kept beside the package's for old fingerprints, is a version-aware reader, which the
+    user's standing rule excludes; option (a), `--write` over the recorded fingerprint, would replace
+    R0's record in its sidecar.
+  - **Closes** at 06's gate, when no sidecar under `var/datastores/` is a live store whose recorded
+    fingerprint lacks `encoding_format`.
+  - **Narrowed (2026-10-14, after 04's review):** the four stores are retired (§5.8). All 18
+    sidecars under `var/datastores/` are tombstones, so there is no live store for the package's
+    comparison to refuse. What remains is 06's: the recorded fingerprints in run directories and
+    the six golden files, and the check at its gate.
+  - **Closed (2026-10-15, prompt 06, this commit).** The gate's check holds: all 18 sidecars under
+    `var/datastores/` are tombstones, each read by `runregistrykit store show` exit 0 with a `retired`
+    block and `problems: none`, and no `.sqlite` file remains there
+    ([`measure/out/06-after.txt`](measure/out/06-after.txt)), so no live store's recorded fingerprint can
+    be refused. The golden data: the six golden files moved unchanged to `ObjectFactories/tests/data/`,
+    and a seventh, `full_store_fingerprint_runregistry-extraction-06.json`, is `09c`'s with
+    `encoding_format` added (C13), pinned by `TestConfigFingerprint`. The run directories' recorded
+    fingerprints stay as records; `fingerprint_both_ways.py`, rewritten, compares them field by field with
+    `encoding_format` set aside, and on a `09c` record it measures the package's comparison as exactly one
+    `encoding` entry (06-both-ways.txt). 08 makes that comparison with R0's and R1's.
 
 ## 5. Dispatch record
 
@@ -959,3 +986,44 @@ commit. **All six checks pass**, and no stop condition fired.
   of notes; README §5 rule 9's "(05)" → "(06)"; `prompts/INDEX.md`'s row (6 of 10 landed).
 - **Handed on.** 06, the swap, is next, at `3dcab1b`'s tree, with `runregistrykit` 0.1.0 installed
   and nothing yet importing it. Its note is written after this review.
+
+### 5.12 After prompt 06 (2026-10-15)
+
+[`06`](06-adopt-runregistrykit.md) landed at this commit, with `HEAD` `85f273d` as its parent; its
+log is [`logs/06-adopt-runregistrykit.md`](logs/06-adopt-runregistrykit.md). It closed three issues
+(§4) and opened none, so `docs/OPEN_ISSUES.md` goes from 108 to 105.
+- **A1.** `runregistrykit.toml` at the root, the checklist's item 3; `config/fingerprint.py` with the
+  format history moved verbatim, a dated paragraph, `FINGERPRINT_FORMAT = 6` and `fingerprinter`, a
+  `DatastoreKitFingerprinter` over `config.datastore.factories`.
+- **A2.** Every `RunRegistry` import, literal, comment and command outside `prompts/` and dated `docs/`
+  prose rewritten, in twelve files; `fingerprint_both_ways.py` rewritten whole as README §4's
+  comparison across stores. The two seams, `scoped_pipeline_run.register(..., runs_root=None)` and
+  `quadsource_atol_sweep.prepare(..., runs_root=None)`, each tested (C12). `git grep -nP
+  'RunRegistry(?!Kit)'` outside `prompts/` and `docs/*.md|*.txt` prints `CLAUDE.md`'s one sentence and
+  the format history's one line (the orchestrator's ruling 1); `import RunRegistry` fails.
+- **A3.** The 101 tests moved, counted first (28, 26, 15, 18, 10, 3, 1): the five driver modules to
+  `RunDrivers/tests/` by `git mv`, with `registry_fixtures.py` (C14) and `test_finish_calls.py`;
+  `TestGolden` to `ObjectFactories/tests/test_store_fingerprint_golden.py` with `TestConfigFingerprint`
+  (C18); the six golden files to `ObjectFactories/tests/data/`, and a seventh beside them, `09c`'s with
+  `encoding_format` (C13), digest `6576b85d…` unmoved. `RunRegistry/` deleted, from disk too.
+- **A4.** `CLAUDE.md`: the package section names RunRegistryKit at `v0.1.0` with `[stores]` (and
+  `datastorekit` at `v0.4.0`, ruling 8); the registry section points at `runregistrykit` and its README;
+  the freeze section is gone; the roots list `RunDrivers/tests`.
+- **A5.** The worktree check: from a scratch worktree at the probe `ec781383…`, the run
+  `runregistry-extraction-06-worktree-check-20261015T224836` is in the main checkout's `var/runs/` with
+  the probe's `git_head` and `git_dirty` false, `done`, and listed after the worktree is gone. Breakage
+  8 left `…-worktree-check-breakage-20261015T225237`, `failed`. These two are the only things 06 wrote
+  under `var/`; 08's acceptance 4 counts them.
+- **The registry reads as before** (§7.1): `list` gives the same 37 runs, and `store show` the same 18
+  blocks byte for byte, once the tool's name and the age column are set aside.
+- **The roots** at the staged tree, no failure: AdaptiveLevin 32, ComputeTargets 693, CosmologyModels
+  39, LiouvilleGreen 148 (1 skipped), **ObjectFactories 277**, **RunDrivers 99**, tools 91.
+- **The checklist's measure** at the probe: 0 imports, 0 literals, 0 `-m RunRegistry`.
+- **The probe** is `ec781383730ff477c63430f0ea8fc10e106e0efc`, tree
+  `f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b`; this commit differs from it by the records alone.
+- **Deviations worth knowing** (log): the golden file is written with sorted keys, as `09c` was; the
+  both-ways script compares key order only where a record keeps it, since every record is written
+  with `sort_keys`; and breakage 4 fails `TestConfigFingerprint` test 1 at its config assertion, before
+  the loader's refusal, which was shown directly instead (log, deviation 9, `UNINTENDED DRIFT`).
+- **RunRegistryKit G2** (§2): 06's half holds (nothing imports `RunRegistry`, the pin is installed, the
+  roots pass, `list` gives 01's runs); R2 (08) is the other half.

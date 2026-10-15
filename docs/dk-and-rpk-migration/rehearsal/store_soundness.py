@@ -13,7 +13,7 @@ nothing.
 It is `docs/a3-v2-readiness/rehearsal/store_soundness.py` with two changes, and that record is left
 as it is. That script calls `read_inventory(primary)`, which raises `TypeError` since `19f07ee`
 gave the inventory its registry as an argument; this one passes `factories` exactly as
-`RunRegistry.stores.fingerprint_store` does. And that one globs for shard files; this one reads the
+`runregistrykit.stores.fingerprint_store` does. And that one globs for shard files; this one reads the
 `shards` table.
 
 Exit status: 0 if every check is clean on every store; 1 otherwise.

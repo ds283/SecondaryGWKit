@@ -36,7 +36,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from RunRegistry.tests.test_prune_on_resume import parsed_arguments
+from RunDrivers.tests.test_prune_on_resume import parsed_arguments
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_PATH = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
@@ -314,7 +314,7 @@ class TestTheDriversReadTheScope(unittest.TestCase):
             ast.unparse(keyword.value)
             for node in ast.walk(self.functions["run_build"])
             if isinstance(node, ast.Call)
-            and ast.unparse(node.func) == "RunRegistry.begin"
+            and ast.unparse(node.func) == "runregistrykit.begin"
             for keyword in node.keywords
             if keyword.arg == "scope"
         ]

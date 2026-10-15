@@ -44,7 +44,7 @@ existing datastore can be overwritten or migrated.
 
 REGISTERING THE RUN. A pipeline run takes hours -- the A3 baseline ran for 10 h 33 m -- and
 `prompts/run-registry` README §0 is a list of what that costs when nothing on disk says the job
-exists. With `--register <slug> --purpose "..."` this script writes a `RunRegistry` manifest
+exists. With `--register <slug> --purpose "..."` this script writes a `runregistrykit` manifest
 **before** the pipeline starts, keeps `status.json` current while it runs, tees its output into
 the run directory and records a terminal state on exit. Without the flag nothing changes at all.
 
@@ -113,7 +113,7 @@ HEARTBEAT_MEANS = (
 
 # How often the heartbeat may be rewritten. status.json is fsynced and renamed on every beat, so
 # this is throttled against main.py's per-batch progress lines rather than written per line; it is
-# two orders below RunRegistry's 900 s staleness window.
+# two orders below runregistrykit's 900 s staleness window.
 BEAT_MIN_INTERVAL = 30.0
 
 # main.py's and RayWorkPool's own progress vocabulary, which this file only reads.
@@ -514,21 +514,24 @@ def _code_text(exc):
     return f"({exc.code!r})" if isinstance(exc, SystemExit) else ""
 
 
-def register(args, main_args, k_sample, database):
+def register(args, main_args, k_sample, database, runs_root=None):
     """Write the manifest, take over both output streams, and arrange a terminal state.
     Returns the `Run`.
 
     Called **before** the pipeline starts -- before Ray is bootstrapped and before main.py's
     source is read -- so that a crash in the first instant still leaves a record of what was
     running and what it was for.
+
+    ``runs_root`` is passed to `runregistrykit.begin` as its ``root``: `None`, the default, is
+    the runs root `runregistrykit.toml` names (`var/runs`); a test passes a temporary one.
     """
     try:
-        import RunRegistry
+        import runregistrykit
     except ImportError as exc:  # pragma: no cover -- an operator-facing message
         raise RuntimeError(
-            "scoped_pipeline_run: --register needs RunRegistry on the path; run this script "
-            "from the repository root with PYTHONPATH=., as the usage line in this file's "
-            "docstring does"
+            "scoped_pipeline_run: --register needs the runregistrykit package, which is "
+            "missing from this venv; install requirements.txt into it "
+            "(./venv/bin/pip install -r requirements.txt)"
         ) from exc
 
     models = (
@@ -538,7 +541,7 @@ def register(args, main_args, k_sample, database):
         f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
         f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
     )
-    run = RunRegistry.begin(
+    run = runregistrykit.begin(
         campaign=args.campaign,
         prompt=args.prompt,
         slug=args.register,
@@ -552,6 +555,7 @@ def register(args, main_args, k_sample, database):
         results=str(database) if database is not None else None,
         scope=scope,
         heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
+        root=runs_root,
     )
 
     def terminal(signum, _frame):
@@ -577,7 +581,7 @@ def register(args, main_args, k_sample, database):
     print(
         f"** scoped_pipeline_run: registered as {run.id}\n"
         f"**   manifest {run.manifest_path}\n"
-        f"**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list"
+        f"**   list it with: ./venv/bin/python -m runregistrykit list"
     )
     return run
 
@@ -608,7 +612,7 @@ def main():
         type=str,
         default=None,
         metavar="SLUG",
-        help="record this run in var/runs/ through RunRegistry, under this slug. Without it "
+        help="record this run in var/runs/ through runregistrykit, under this slug. Without it "
         "nothing is registered and the run behaves exactly as it always has",
     )
     parser.add_argument(

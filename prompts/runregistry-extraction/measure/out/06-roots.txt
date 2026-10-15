@@ -1,0 +1,29 @@
+# 06-roots.txt — runregistry-extraction prompt 06, 2026-10-15, at HEAD 85f273d with prompt 06's changes staged (index tree f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b, working tree equal to the index), before the probe commit; serial, foreground; load average 10.6-12.8 (1 min) at each start, 8.2 before ComputeTargets. RunRegistry/tests is gone; RunDrivers/tests is new.
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 32 tests in 0.052s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 693 tests in 135.828s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 39 tests in 0.676s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 148 tests in 23.089s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 277 tests in 13.515s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 99 tests in 2.940s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 91 tests in 9.248s
+OK

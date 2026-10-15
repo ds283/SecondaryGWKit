@@ -3,7 +3,7 @@
     PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py \\
         var/datastores/<store>.sqlite [...] --against var/runs/<run id> [...]
 
-Each store is fingerprinted read-only by `RunRegistry.stores.fingerprint_store(write=False)`, which
+Each store is fingerprinted read-only by `runregistrykit.stores.fingerprint_store(write=False)`, which
 reads it through `read_inventory`, `mode=ro` and with no Ray, and writes nothing. Each `--against`
 argument is a run directory whose `status.json` carries a `fingerprint` (its run's fingerprint at
 finish), or a path to such a `status.json`. Every store is compared with every recorded fingerprint
@@ -26,11 +26,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from RunRegistry.stores import (  # noqa: E402
-    FINGERPRINT_FORMAT,
-    compare_fingerprints,
-    fingerprint_store,
-)
+from datastorekit.store_fingerprint import compare_fingerprints  # noqa: E402
+from runregistrykit.stores import fingerprint_store  # noqa: E402
+
+from config.fingerprint import FINGERPRINT_FORMAT  # noqa: E402
 
 
 def recorded(path: Path):

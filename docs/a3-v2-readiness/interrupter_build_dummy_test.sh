@@ -3,7 +3,7 @@
 # `docs/datastore-integrity-verification/interrupter_dummy_test.sh`, which is unchanged and covers
 # a `scoped_pipeline_run.py` run. `interrupt_when.py` checks that the pid it signals is still the
 # run's own, and takes the driver's name from the run's manifest `argv[0]`. A `--build` run's
-# `argv[0]` is `docs/handover/quadsource_atol_sweep.py` (`RunRegistry.begin` records `sys.argv`
+# `argv[0]` is `docs/handover/quadsource_atol_sweep.py` (`runregistrykit.begin` records `sys.argv`
 # before `run_build` replaces it). Fake run directories whose status.json names a `sleep` child of
 # this shell, named for a driver with `exec -a`.
 # Case A: a manifest whose argv[0] is the sweep script, a child named for it (must signal).

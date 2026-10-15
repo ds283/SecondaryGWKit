@@ -1,0 +1,179 @@
+# 06-commands.txt — runregistry-extraction prompt 06, 2026-10-15, §7.8: README §4.1's commands as they are from 06 on, each run once, read-only, on a tombstone, the scratch store or R1's run directories, at the probe's tree (working tree equal to it). $B is the agent's scratch set (06-both-ways.txt); $SCRATCH its scratch directory. Nothing here starts Ray.
+
+$ ./venv/bin/python -m runregistrykit list | tail -1
+39 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 37 finished, 2 unknown.
+# exit status: 0
+
+$ ./venv/bin/python -m runregistrykit store show var/datastores/runregistry-extraction-04-reference.sqlite | head -3
+retirement:
+  state:     retired
+  when:      2026-10-14T16:59:35+01:00 at e7d18bd2dcac686c9f255edef9aad39ab1d8c372
+
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/runregistry-extraction-04-reference.sqlite
+!! Cannot fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-reference.sqlite": its sidecar "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-04-reference.manifest.json" is a tombstone: the store was retired 2026-10-14T16:59:35+01:00, because "runregistry-extraction D6: throwaway rehearsal store, retired after prompt 04's review (e7d18bd) while SGK's own code still compares its recorded fingerprint". A retired name is never reused, and a tombstone describes a store that is gone. Nothing was read or written
+# exit status: 1
+
+$ ./venv/bin/python -m runregistrykit store fingerprint $B/store/full-store.sqlite | grep -E '^(digest|format|recorded|>>)'
+digest:   6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759
+format:   6
+recorded: matches the fingerprint taken 2026-10-15T22:41:53+01:00 by a person, at 85f273d92aa8e9188aede94fbd2f4a1999cfa5f5 (dirty)
+# (store create and store fingerprint --write: 06-both-ways.txt's set-up)
+
+$ ./venv/bin/python -c 'import runregistrykit, json; print(json.dumps(runregistrykit.package_provenance(["runregistrykit", "datastorekit", "raypoolkit"]), indent=1))'
+{
+ "runregistrykit": {
+  "version": "0.1.0",
+  "url": "https://github.com/ds283/RunRegistryKit",
+  "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+  "requested_revision": "v0.1.0",
+  "editable": false
+ },
+ "datastorekit": {
+  "version": "0.4.0",
+  "url": "https://github.com/ds283/DatastoreKit",
+  "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+  "requested_revision": "v0.4.0",
+  "editable": false
+ },
+ "raypoolkit": {
+  "version": "0.2.0",
+  "url": "https://github.com/ds283/RayPoolKit",
+  "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+  "requested_revision": "v0.2.0",
+  "editable": false
+ }
+}
+# exit status: 0
+
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py $B/store/full-store.sqlite --against var/runs/runregistry-extraction-04-reference-20261014T154651
+recorded: var/runs/runregistry-extraction-04-reference-20261014T154651/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by runregistry-extraction-04-reference-20261014T154651 at 89ff8b728b61ba22452110de88718094361e4e15 (git_dirty False)
+
+store: $B/store/full-store.sqlite
+  format 6, digest 6576b85d72e8acb547bca59f9fd0214c3e96ef45a3cbc41298a4dff85192e759, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-04-reference-20261014T154651/status.json, store): 1 difference(s)
+    the recorded fingerprint is encoding format None and this one is encoding format 1; fingerprints encoded by different releases of datastorekit are not compared. Recompute both from the stores with one release
+
+verdict: DIFFERENT
+# exit status: 1 (expected 1: the fixture store is not R1's, and the recorded fingerprint lacks encoding_format, so the package's comparison gives one encoding entry; [00-recorded-fingerprints-lack-the-encoding-format])
+# (first tried against $B/rundir-09c, whose recorded taken is null: AttributeError at compare_with_recorded.py:59, 'NoneType' object has no attribute 'get'; the script reads fp.get('taken', {}), which a null taken defeats; a real run's recorded taken is an object)
+
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/stage_counts.py var/runs/runregistry-extraction-04-reference-20261014T154651 var/runs/runregistry-extraction-04-resumed-a-20261014T160226 var/runs/runregistry-extraction-04-resumed-b-20261014T161222 var/runs/runregistry-extraction-04-resumed-c-20261014T161739
+lookup/compute/store per stage, from each run's stdout.log
+  reference: runregistry-extraction-04-reference-20261014T154651
+  resumed-a: runregistry-extraction-04-resumed-a-20261014T160226
+  resumed-b: runregistry-extraction-04-resumed-b-20261014T161222
+  resumed-c: runregistry-extraction-04-resumed-c-20261014T161739
+  stage                                                         reference       resumed-a           resumed-b           resumed-c  
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  132/132/132         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  440/440/440
+# exit status: 0
+
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/store_soundness.py $B/store/full-store.sqlite
+== full-store.sqlite
+  full-store.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version no table
+  full-store-shard0000.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1'), (2, '2024.9.9')]
+  full-store-shard0001.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1'), (2, '2024.9.9')]
+  read_inventory: shards (0, 1)
+    version                  replicated count      2  problems none
+    store_tag                replicated count      5  problems none
+    redshift                 replicated count      5  problems none
+    wavenumber               replicated count      3  problems none
+    tolerance                replicated count      3  problems none
+    LambdaCDM                replicated count      2  problems none
+    QCD_Cosmology            replicated count      1  problems none
+    IntegrationSolver        replicated count      2  problems none
+    GkSourcePolicy           replicated count      2  problems none
+    QuadSourcePolicy         replicated count      2  problems none
+    wavenumber_exit_time     replicated count      4  problems none
+    BackgroundModel          replicated count      2  problems none
+    TkNumericIntegration     sharded    count      3  problems none
+    TkWKBIntegration         sharded    count      3  problems none
+    GkNumericIntegration     sharded    count      2  problems none
+    GkWKBIntegration         sharded    count      2  problems none
+    GkSource                 sharded    count      3  problems none
+    GkSourcePolicyData       sharded    count      3  problems none
+    QuadSource               sharded    count      2  problems none
+    QuadSourceIntegral       sharded    count      3  problems none
+    OneLoopIntegral          sharded    count      1  problems none
+  problems in any class: 0; of them 'duplicate': 0
+=> clean
+# exit status: 0
+
+
+$ bash docs/datastore-integrity-verification/interrupter_dummy_test.sh $SCRATCH/int1
+=== case A: signals when the stage matches
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- $SCRATCH/int1/case-a/interrupter.log
+2026-10-15T22:53:50+01:00 interrupter pid 98713 watching $SCRATCH/int1/case-a (slug 'dummy-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:53:50+01:00 liveness stale; pid 98711; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-15T22:53:53+01:00 liveness alive; pid 98711; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 10.00% (18 of 20 work items remaining)'
+2026-10-15T22:53:57+01:00 liveness alive; pid 98711; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-15T22:53:57+01:00 sent SIGTERM to pid 98711 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)' (45% >= 40%); command 'python docs/gktk-remedial/scoped_pipeline_run.py --register dummy-a 120'; exiting
+=== case B: exits silently when the child dies first
+child exit=0 (0 = sleep ended by itself)
+interrupter exit=0
+--- $SCRATCH/int1/case-b/interrupter.log
+2026-10-15T22:53:58+01:00 interrupter pid 98828 watching $SCRATCH/int1/case-b (slug 'dummy-b'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:53:58+01:00 liveness alive; pid 98826; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 10.00% (18 of 20 work items remaining)'
+2026-10-15T22:54:02+01:00 run's pid 98826 no longer answers kill -0; exiting without signalling
+=== case C: refuses a pid whose command line does not name the run
+interrupter exit=2
+child 98902 still alive (not signalled)
+--- $SCRATCH/int1/case-c/interrupter.log
+2026-10-15T22:54:02+01:00 interrupter pid 98904 watching $SCRATCH/int1/case-c (slug 'dummy-c'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:54:02+01:00 liveness alive; pid 98902; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-15T22:54:02+01:00 pid 98902's command line does not name scoped_pipeline_run.py (the run's own driver, its manifest's argv[0]) and --register dummy-c: 'sleep 30'; exiting without signalling
+=== case D: --hold 4 at a bare banner (0%): holds, reads again, then signals
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- $SCRATCH/int1/case-d/interrupter.log
+2026-10-15T22:54:02+01:00 interrupter pid 98910 watching $SCRATCH/int1/case-d (slug 'dummy-d'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 1 s; stale after 900 s; hold 4 s
+2026-10-15T22:54:02+01:00 liveness alive; pid 98908; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-15T22:54:02+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 4 s, then reading again
+2026-10-15T22:54:06+01:00 sent SIGTERM to pid 98908 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command 'python docs/gktk-remedial/scoped_pipeline_run.py --register dummy-d 120'; exiting
+=== case E: --hold 4, but the stage completes during the hold: no signal; exits when the child dies
+child exit=0 (0 = sleep ended by itself)
+interrupter exit=0
+--- $SCRATCH/int1/case-e/interrupter.log
+2026-10-15T22:54:06+01:00 interrupter pid 98982 watching $SCRATCH/int1/case-e (slug 'dummy-e'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' at >= 0.0%; every 1 s; stale after 900 s; hold 4 s
+2026-10-15T22:54:06+01:00 liveness alive; pid 98980; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-15T22:54:06+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 4 s, then reading again
+2026-10-15T22:54:10+01:00 liveness alive; pid 98980; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, all work items complete'
+2026-10-15T22:54:15+01:00 run's pid 98980 no longer answers kill -0; exiting without signalling
+# exit status: 0
+
+$ bash docs/a3-v2-readiness/interrupter_build_dummy_test.sh $SCRATCH/int2
+=== case A: a --build manifest (argv[0] the sweep script), a child named for it: signals
+interrupter exit=0
+child exit=143 (143 = killed by SIGTERM)
+--- $SCRATCH/int2/case-a/interrupter.log
+2026-10-15T22:54:15+01:00 interrupter pid 99161 watching $SCRATCH/int2/case-a (slug 'dummy-build-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:54:15+01:00 liveness alive; pid 99159; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-15T22:54:15+01:00 sent SIGTERM to pid 99159 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)' (45% >= 40%); command 'python docs/handover/quadsource_atol_sweep.py --build --register dummy-build-a 120'; exiting
+=== case B: the same manifest, a child named for scoped_pipeline_run.py: refuses
+interrupter exit=2
+child 99165 still alive (not signalled)
+--- $SCRATCH/int2/case-b/interrupter.log
+2026-10-15T22:54:16+01:00 interrupter pid 99167 watching $SCRATCH/int2/case-b (slug 'dummy-build-b'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:54:16+01:00 liveness alive; pid 99165; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, 45.00% (11 of 20 work items remaining)'
+2026-10-15T22:54:16+01:00 pid 99165's command line does not name quadsource_atol_sweep.py (the run's own driver, its manifest's argv[0]) and --register dummy-build-b: 'python docs/gktk-remedial/scoped_pipeline_run.py --build --register dummy-build-b 30'; exiting without signalling
+=== case C: a manifest whose argv[0] is empty: exits without signalling
+interrupter exit=2
+child 99171 still alive (not signalled)
+--- $SCRATCH/int2/case-c/interrupter.log
+2026-10-15T22:54:16+01:00 interrupter pid 99173 watching $SCRATCH/int2/case-c (slug 'dummy-build-c'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' at >= 40.0%; every 1 s; stale after 900 s; hold 0 s
+2026-10-15T22:54:16+01:00 the run's manifest names no argv[0]; exiting without signalling
+# exit status: 0
+
+# not run: docs/dk-and-rpk-migration/rehearsal/run_readers.sh, which runs the extract_*.py readers and so starts Ray; policy_statistics.py and prune_check.py, which 06 does not change and which import neither registry

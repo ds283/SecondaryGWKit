@@ -1,0 +1,123 @@
+# 06-worktree.txt — runregistry-extraction prompt 06, 2026-10-15: the worktree check (§7.4) at the probe ec781383730ff477c63430f0ea8fc10e106e0efc (tree f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b); the main checkout at HEAD 85f273d92aa8e9188aede94fbd2f4a1999cfa5f5, dirty (prompt 06's changes staged, its records untracked)
+
+$ cd /Users/ds283/Documents/Code/SecondaryGWKit && git status --short | wc -l
+51
+
+$ git worktree add --detach $SCRATCH/sgk-06-worktree ec781383730ff477c63430f0ea8fc10e106e0efc
+Preparing worktree (detached HEAD ec78138)
+Updating files:  81% (1292/1581)Updating files:  82% (1297/1581)Updating files:  83% (1313/1581)Updating files:  84% (1329/1581)Updating files:  85% (1344/1581)Updating files:  86% (1360/1581)Updating files:  87% (1376/1581)Updating files:  88% (1392/1581)Updating files:  89% (1408/1581)Updating files:  90% (1423/1581)Updating files:  91% (1439/1581)Updating files:  92% (1455/1581)Updating files:  93% (1471/1581)Updating files:  94% (1487/1581)Updating files:  95% (1502/1581)Updating files:  96% (1518/1581)Updating files:  97% (1534/1581)Updating files:  98% (1550/1581)Updating files:  99% (1566/1581)Updating files: 100% (1581/1581)Updating files: 100% (1581/1581), done.
+HEAD is now at ec78138 runregistry-extraction 06 probe; not a branch
+# exit status: 0
+
+$ git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                                                                                                   85f273d [handover-remedial]
+$SCRATCH/sgk-06-worktree ec78138 (detached HEAD)
+
+$ cd $SCRATCH/sgk-06-worktree && git status --short && git rev-parse HEAD
+ec781383730ff477c63430f0ea8fc10e106e0efc
+
+$ cd $SCRATCH/sgk-06-worktree && /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python docs/runregistry-extraction/worktree_run_check.py
+run runregistry-extraction-06-worktree-check-20261015T224836
+path /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-06-worktree-check-20261015T224836
+  worktree top level  $SCRATCH/sgk-06-worktree
+  main checkout       /Users/ds283/Documents/Code/SecondaryGWKit
+  worktree HEAD       ec781383730ff477c63430f0ea8fc10e106e0efc
+  main checkout HEAD  85f273d92aa8e9188aede94fbd2f4a1999cfa5f5
+  manifest git_head   ec781383730ff477c63430f0ea8fc10e106e0efc, git_dirty False
+  [PASS] this is a linked worktree, not the main checkout: $SCRATCH/sgk-06-worktree and /Users/ds283/Documents/Code/SecondaryGWKit
+  [PASS] the run directory lies directly under the main checkout's var/runs/: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs and /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+  [PASS] the manifest's git_head is the worktree's HEAD: ec781383730ff477c63430f0ea8fc10e106e0efc and ec781383730ff477c63430f0ea8fc10e106e0efc
+  [PASS] the manifest's git_head is not the main checkout's HEAD: ec781383730ff477c63430f0ea8fc10e106e0efc and 85f273d92aa8e9188aede94fbd2f4a1999cfa5f5
+=> every check holds (4 of 4); run runregistry-extraction-06-worktree-check-20261015T224836 finished done
+# exit status: 0
+
+$ cd $SCRATCH/sgk-06-worktree && git status --short --ignored
+
+$ git worktree remove $SCRATCH/sgk-06-worktree
+# exit status: 0
+
+$ git worktree prune
+# exit status: 0
+
+$ git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit 85f273d [handover-remedial]
+
+$ ls $SCRATCH/sgk-06-worktree
+ls: cannot access '$SCRATCH/sgk-06-worktree': No such file or directory
+
+$ ./venv/bin/python -m runregistrykit list | grep -E 'RUN|worktree-check'
+   RUN                                                         STATE      PROGRESS      AGE  PURPOSE · STAGE
+   runregistry-extraction-06-worktree-check-20261015T224836    done              -      10s  runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+
+$ ./venv/bin/python -m runregistrykit list | tail -1
+38 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 36 finished, 2 unknown.
+
+$ ls var/runs/runregistry-extraction-06-worktree-check-20261015T224836
+manifest.json
+status.json
+
+$ python3 -c '<manifest and status fields>' var/runs/runregistry-extraction-06-worktree-check-20261015T224836
+manifest run_id: "runregistry-extraction-06-worktree-check-20261015T224836"
+manifest campaign: "runregistry-extraction"
+manifest prompt: "06"
+manifest git_head: "ec781383730ff477c63430f0ea8fc10e106e0efc"
+manifest git_dirty: false
+manifest script: "$SCRATCH/sgk-06-worktree/docs/runregistry-extraction/worktree_run_check.py"
+manifest script_sha256: "5aff8eda5550da40e5ac81c697fe8698f18d7d2e98bd76a20260938337ee2022"
+manifest cwd: "$SCRATCH/sgk-06-worktree"
+manifest argv: ["docs/runregistry-extraction/worktree_run_check.py"]
+manifest packages: {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92", "editable": false, "requested_revision": "v0.1.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.1.0"}}
+manifest purpose: runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+status state: "done"
+status exit_code: 0
+status pid: 91998
+
+# ---- §8 breakage 8, in a second scratch worktree at the probe ($SCRATCH below is the agent's scratch directory); its run is a record too, and ends failed/1 ----
+
+$ git worktree add --detach $SCRATCH/sgk-06-worktree-breakage ec781383730ff477c63430f0ea8fc10e106e0efc
+# exit status: 0
+
+# the mutation, applied in the second worktree:
+$ git -C $SCRATCH/sgk-06-worktree-breakage diff
+diff --git a/docs/runregistry-extraction/worktree_run_check.py b/docs/runregistry-extraction/worktree_run_check.py
+index 5467de8..82fe94a 100644
+--- a/docs/runregistry-extraction/worktree_run_check.py
++++ b/docs/runregistry-extraction/worktree_run_check.py
+@@ -57,7 +57,7 @@ def main(argv=None) -> int:
+     common_dir = os.path.join(HERE, git("rev-parse", "--git-common-dir"))
+     main_checkout = os.path.dirname(os.path.realpath(common_dir))
+     main_head = git("rev-parse", "HEAD", cwd=main_checkout)
+-    expected_root = os.path.join(main_checkout, "var", "runs")
++    expected_root = os.path.join(worktree_top, "var", "runs")
+ 
+     run = runregistrykit.begin(
+         campaign="runregistry-extraction",
+
+$ cd $SCRATCH/sgk-06-worktree-breakage && /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python docs/runregistry-extraction/worktree_run_check.py --slug worktree-check-breakage
+run runregistry-extraction-06-worktree-check-breakage-20261015T225237
+path /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-06-worktree-check-breakage-20261015T225237
+  worktree top level  $SCRATCH/sgk-06-worktree-breakage
+  main checkout       /Users/ds283/Documents/Code/SecondaryGWKit
+  worktree HEAD       ec781383730ff477c63430f0ea8fc10e106e0efc
+  main checkout HEAD  85f273d92aa8e9188aede94fbd2f4a1999cfa5f5
+  manifest git_head   ec781383730ff477c63430f0ea8fc10e106e0efc, git_dirty True
+  [PASS] this is a linked worktree, not the main checkout: $SCRATCH/sgk-06-worktree-breakage and /Users/ds283/Documents/Code/SecondaryGWKit
+  [FAIL] the run directory lies directly under the main checkout's var/runs/: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs and $SCRATCH/sgk-06-worktree-breakage/var/runs
+  [PASS] the manifest's git_head is the worktree's HEAD: ec781383730ff477c63430f0ea8fc10e106e0efc and ec781383730ff477c63430f0ea8fc10e106e0efc
+  [PASS] the manifest's git_head is not the main checkout's HEAD: ec781383730ff477c63430f0ea8fc10e106e0efc and 85f273d92aa8e9188aede94fbd2f4a1999cfa5f5
+=> FAILED (3 of 4); run runregistry-extraction-06-worktree-check-breakage-20261015T225237 finished failed
+# exit status: 1
+
+$ git -C $SCRATCH/sgk-06-worktree-breakage checkout -- docs/runregistry-extraction/worktree_run_check.py && git -C $SCRATCH/sgk-06-worktree-breakage status --short
+# exit status: 0
+
+$ git worktree remove $SCRATCH/sgk-06-worktree-breakage
+# exit status: 0
+
+$ git worktree prune && git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit 85f273d [handover-remedial]
+
+$ ./venv/bin/python -m runregistrykit list | grep -E 'worktree-check|run\(s\)'
+   runregistry-extraction-06-worktree-check-breakage-20261015T225237  failed            -      14s  runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+   runregistry-extraction-06-worktree-check-20261015T224836           done              -       4m  runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+39 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 37 finished, 2 unknown.

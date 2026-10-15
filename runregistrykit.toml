@@ -1,0 +1,7 @@
+# This repository's client config for runregistrykit (RunRegistryKit's README.md, "Using it").
+runs_root = "var/runs"
+stores_root = "var/datastores"
+distributions = ["datastorekit", "raypoolkit"]
+
+[stores]
+fingerprinter = "config.fingerprint:fingerprinter"

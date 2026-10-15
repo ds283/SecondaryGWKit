@@ -23,8 +23,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-import RunRegistry
-from RunRegistry.tests.test_pipeline_adoption import DRIVER, REPO_ROOT, load_driver
+import runregistrykit
+from RunDrivers.tests.test_pipeline_adoption import DRIVER, REPO_ROOT, load_driver
 
 SWEEP = os.path.join(REPO_ROOT, "docs", "handover", "quadsource_atol_sweep.py")
 
@@ -87,7 +87,7 @@ class DriverTestCase(unittest.TestCase):
         return self.driver.make_killed_handler(run, self.latch, stream=self.out)
 
     def a_real_run(self):
-        return RunRegistry.begin(
+        return runregistrykit.begin(
             campaign="a3-v2-readiness",
             prompt="04",
             slug="killed-handler",
@@ -183,7 +183,7 @@ class TestTheHandler(DriverTestCase):
         run = self.a_real_run()
         with self.assertRaises(SystemExit):
             self.handler(run)(SIGTERM, None)
-        status = RunRegistry.read_json(run.status_path)
+        status = runregistrykit.read_json(run.status_path)
         self.assertEqual((status["state"], status["exit_code"]), ("killed", 143))
         for key in ("fingerprint", "fingerprint_error", "fingerprint_sidecar"):
             self.assertNotIn(key, status)
@@ -333,7 +333,7 @@ class TestSignalled(DriverTestCase):
         with mock.patch.object(run, "_fingerprint_results", interrupted):
             raised, shutdown, _ = self.after_exec(run, SystemExit(1))
         self.assertEqual(raised.code, 143)
-        status = RunRegistry.read_json(run.status_path)
+        status = runregistrykit.read_json(run.status_path)
         self.assertEqual((status["state"], status["exit_code"]), ("killed", 143))
         self.assertIn("names no results store", status["fingerprint_error"])
         self.assertEqual(len(shutdown.calls), 1)
@@ -432,7 +432,7 @@ class TestNotSignalled(DriverTestCase):
         with mock.patch.object(run, "_fingerprint_results", interrupted):
             raised, _, _ = self.after_exec(run, RuntimeError("a real failure"))
         self.assertIsNone(raised)
-        status = RunRegistry.read_json(run.status_path)
+        status = runregistrykit.read_json(run.status_path)
         self.assertEqual((status["state"], status["exit_code"]), ("failed", 1))
         self.assertIn("names no results store", status["fingerprint_error"])
         self.assertNotIn("interrupted", status["fingerprint_error"])

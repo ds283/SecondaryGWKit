@@ -408,15 +408,17 @@ class TestTheInventoryIdentityIncludesIt(unittest.TestCase):
         self.assertTrue(cls.problems[0].startswith("duplicate: QuadSourceIntegral"))
 
     def test_the_fingerprint_moves_with_the_policy(self):
-        from RunRegistry.stores import fingerprint_of
+        from datastorekit.store_fingerprint import fingerprint_of
 
-        under_1 = fingerprint_of(self.read_the_store(1))["classes"][
+        from config.fingerprint import FINGERPRINT_FORMAT
+
+        under_1 = fingerprint_of(self.read_the_store(1), FINGERPRINT_FORMAT)["classes"][
             "QuadSourceIntegral"
         ]
-        under_2 = fingerprint_of(self.read_the_store(2))["classes"][
+        under_2 = fingerprint_of(self.read_the_store(2), FINGERPRINT_FORMAT)["classes"][
             "QuadSourceIntegral"
         ]
-        again_2 = fingerprint_of(self.read_the_store(2))["classes"][
+        again_2 = fingerprint_of(self.read_the_store(2), FINGERPRINT_FORMAT)["classes"][
             "QuadSourceIntegral"
         ]
         self.assertEqual(under_2, again_2)
