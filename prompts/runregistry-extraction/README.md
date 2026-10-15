@@ -8,9 +8,9 @@ the audit's §8, accepted as recommended (§6.1).
   [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md) and
   [`runregistrykit-extraction-brief.md`](runregistrykit-extraction-brief.md).
 
-§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01, 02, 02a, 03 and
-04 are written**, 03 and 04 on 2026-10-14 after DatastoreKit's `v0.4.0` (E1); 05–09 wait on
-RunRegistryKit's release (§2.1).
+§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01–08 are written**:
+03 and 04 on 2026-10-14 after DatastoreKit's `v0.4.0` (E1), and 05–08 on 2026-10-15 after
+RunRegistryKit's `v0.1.0` and its SGK checklist (E2); 09 follows 08's review (§2.1).
 
 ## 0. Why this campaign exists
 
@@ -131,10 +131,10 @@ all 38 factories, but not a build.
 | 02a | [`02a-the-rehearsal-lock-helper.md`](02a-the-rehearsal-lock-helper.md) | **The lock helper**: §4.1's lock steps as `tools/rehearsal_lock.py`, with a check for this repository's Ray processes; proved against SI's and ChamPBH's scripts and on the real lock; `CLAUDE.md`'s pointer | Sonnet | written 2026-10-12 |
 | 03 | [`03-pin-datastorekit-at-v0.4.0.md`](03-pin-datastorekit-at-v0.4.0.md) | The pin moved from `v0.2.2` to `v0.4.0`, in a commit of its own; the venv installed from it | Sonnet | written 2026-10-14 |
 | 04 | [`04-rehearse-through-the-new-datastorekit.md`](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint taken both ways and equal | Opus | written 2026-10-14; held: 03 |
-| 05 | Pin `runregistrykit` at E2's release | The pin, with the `[stores]` extra, in a commit of its own | Sonnet | held: E2 |
-| 06 | Adopt `runregistrykit` | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | held: E2, 04, 05 |
-| 07 | Guard the fingerprint format | **Q5**: a test that a spec change without a format bump fails | Sonnet | held: 06 |
-| 08 | Rehearse through both packages (R2) | **R2**; **RunRegistryKit's G2** | Opus | held: 07 |
+| 05 | [`05-pin-runregistrykit-at-v0.1.0.md`](05-pin-runregistrykit-at-v0.1.0.md) | The pin, with the `[stores]` extra, at `v0.1.0`, in a commit of its own | Sonnet | written 2026-10-15 |
+| 06 | [`06-adopt-runregistrykit.md`](06-adopt-runregistrykit.md) | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | written 2026-10-15; held: 05 |
+| 07 | [`07-guard-the-fingerprint-format.md`](07-guard-the-fingerprint-format.md) | **Q5**: a test that a spec change without a format bump fails | Sonnet | written 2026-10-15; held: 06 |
+| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit's G2** | Opus | written 2026-10-15; held: 07 |
 | 09 | Close the campaign | the records, the gates drafted for the two repositories, the hand-over to A3 v2 | Sonnet | held: 08 |
 
 ### 2.1 When each prompt file is written
@@ -148,7 +148,8 @@ while an earlier step establishes its method):
 - **03–04** are written when E1's release is tagged: they cite its tag, its commit and its
   SGK-facing note.
 - **05–08** are written when E2's release is tagged and its SGK adoption checklist exists: 06 is
-  that checklist applied, and its counts and names come from it.
+  that checklist applied, and its counts and names come from it. (Written 2026-10-15, at
+  `14bcac0`, from `v0.1.0` and the checklist at RunRegistryKit's `aaab408`; board §5.10.)
 - **09** follows 08's review.
 
 E1 and E2 run in parallel with 02. Neither waits on R0, but 03 does: a miss at R0 is SGK's to
@@ -232,7 +233,7 @@ explain before any pin moves.
 - **Stop.** A miss in (2) with (1) holding is a DatastoreKit defect (§5 rule 11).
 
 **05 — Pin `runregistrykit` at E2's release** (Sonnet).
-- **What it changes.** `requirements.txt` gains `runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@<tag>`,
+- **What it changes.** `requirements.txt` gains `runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0`,
   in a commit of its own. The venv is installed from it after a dry run.
 - **Acceptance.**
   1. The dry run adds only `runregistrykit`; `datastorekit` stays at 03's release, which satisfies
@@ -264,12 +265,17 @@ explain before any pin moves.
   1. No `RunRegistry` import, string literal or `python -m RunRegistry` remains outside `prompts/`
      and dated `docs/` prose (§6.2 C6).
   2. The roots pass: `RunRegistry` gone; `RunDrivers` with the 98 driver tests (97 + `TestDrivers`'
-     1); `ObjectFactories` 271 + 3; the rest at 05's counts.
-  3. `python -m runregistrykit list` gives 01's baseline: the same 29 runs, states and purposes.
-     `store show` on each of the 14 sidecars gives 01's reading.
+     1) and one new test of the sweep's runs-root seam (C12), 99; `ObjectFactories` 271 + 3 + the
+     3 tests of `config/fingerprint.py` (C18), 277; the rest at 05's counts. *(Amended 2026-10-15,
+     at E2: the seam's test and C18's three.)*
+  3. `python -m runregistrykit list` reads every run as `python -m RunRegistry list` did just
+     before the swap: 37 at E2, 01's 29 as 01's baseline has them, and R0's and R1's 8. `store show`
+     on each of the 18 sidecars (01's 14 and R0's and R1's 4 tombstones) reads it as `RunRegistry`
+     did. *(Amended 2026-10-15, at E2: 01's counts were taken before R0 and R1.)*
   4. **From a worktree** of this repository, `begin()` of a throwaway run records it under the main
      checkout's `var/runs/` (Q3), which the run directory then shows; the run is ended with
-     `finish("done")` and left as a record, never deleted.
+     `finish("done")` and left as a record, never deleted. The worktree is at a probe commit of
+     06's staged tree, and is removed after (C15).
   5. A fingerprint taken through the new path carries DatastoreKit's version beside the digest, and
      its digest equals `fingerprint_of`'s on 06's own test store.
   6. Closes `[00-a-run-launched-from-a-worktree-records-into-the-worktree]` and
@@ -303,8 +309,9 @@ explain before any pin moves.
   2. Every manifest's `packages` names `datastorekit`, `raypoolkit` and `runregistrykit`, each at
      its pin, none editable.
   3. L4 against R1.
-  4. `python -m runregistrykit list` shows 01's 29 runs and this campaign's thirteen (the twelve
-     rehearsal launches and 06's worktree check), and nothing `running`.
+  4. `python -m runregistrykit list` shows 01's 29 runs and this campaign's fourteen (the twelve
+     rehearsal launches, 06's worktree check and the run of its breakage), and nothing `running`.
+     *(Amended 2026-10-15, at E2: 06's breakage of the check leaves a run of its own.)*
   5. **The board records RunRegistryKit's G2 as holding** (§6.2 C11).
 
 **09 — Close the campaign** (Sonnet).
@@ -313,6 +320,9 @@ explain before any pin moves.
     `RunRegistry` reference outside `prompts/` and dated `docs/`.
   - Drafts the gate records for RunRegistryKit's board (G2) and DatastoreKit's (the fingerprint
     release adopted), in each board's form, in verification §4 (§6.2 C11).
+  - Drafts, for the user to hand to RunRegistryKit, the SGK issues whose defect lies in code that
+    moved there (`[00-open-issues-about-the-registry-code-stay-on-sgk-boards]`, opened at E2), each
+    located in `runregistrykit` at `v0.1.0`.
   - Closes the board, README §2, `prompts/INDEX.md` and `docs/OPEN_ISSUES.md` §1.21.
   - States, for the A3 v2 campaign, what it inherits: the launcher, the commands, and that its
     store is the first live one in the new layout.
@@ -373,8 +383,9 @@ for a killed build's agents (`[07-a-killed-builds-ray-agents-outlive-the-driver]
     through the package, which gives one `encoding` entry for every fingerprint SGK's code recorded
     (`[00-recorded-fingerprints-lack-the-encoding-format]`). At 08 it is run on R2's own stores and
     sidecars only.
-- **06 ships** the config file, `config/fingerprint.py`, `RunDrivers/tests/`, and the rewritten
-  tooling. From 06 on, §4.1's commands name `runregistrykit` where they named `RunRegistry`; 06
+- **06 ships** the config file, `config/fingerprint.py`, `RunDrivers/tests/`, the moved and new
+  golden files under `ObjectFactories/tests/data/`, the rewritten tooling,
+  `docs/runregistry-extraction/worktree_run_check.py`, and `measure/out/06-*`. From 06 on, §4.1's commands name `runregistrykit` where they named `RunRegistry`; 06
   states the replacements in its log, and 08 runs them.
 
 ### 4.1 The rehearsal protocol
@@ -569,6 +580,40 @@ The orchestrator's, recorded so that the user can reverse any of them.
 - **C11 — the gates.** This board records E1, E2, R0–R2 and RunRegistryKit's G2 as each holds.
   Recording a gate on RunRegistryKit's or DatastoreKit's board is a commit in that repository: 09
   drafts the text, and the user makes the commits there, or has a session there make them.
+
+**Made at E2 (2026-10-15), in writing 05–08 from RunRegistryKit's SGK checklist**, where the
+checklist leaves a choice to SGK:
+- **C12 — the drivers' runs root.** Two staying tests redirected a driver's runs by patching
+  `DEFAULT_ROOT`, which `v0.1.0` deletes. `scoped_pipeline_run.register` and
+  `quadsource_atol_sweep.prepare` each gain a `runs_root=None` keyword, passed to `begin(root=)` and
+  `copy_store(runs_root=)`, whose default changes nothing; the tests pass a temporary root. This is
+  the checklist's advice. The alternatives patch `runregistrykit.begin`, which the package does not
+  promise, or let a test read the real `var/runs/`. Neither seam was tested before: the registration
+  test gains an assertion, and the sweep a test (06 §3.2).
+- **C13 — the golden fingerprint.** SGK's golden files lack `encoding_format`. 06 captures a new
+  golden file beside the six, `full_store_fingerprint_runregistry-extraction-06.json`, through the
+  config's fingerprinter; a test pins it as `09c`'s with `encoding_format` added. This is the format
+  history's own convention, a new golden beside the old and never over it. The format is not
+  bumped, since the digest has not moved. Setting `encoding_format` aside in the golden comparison
+  instead would be a version-aware comparison in a test.
+- **C14 — the test helpers.** `v0.1.0` ships no test support (its U21). SGK keeps its own copy of
+  what its staying tests use of `StoreTestCase` and `RegistryTestCase`, in
+  `RunDrivers/tests/registry_fixtures.py`, taken from the frozen tree.
+- **C15 — the probe commit.** 06's worktree check and the checklist's measure need 06's tree as a
+  commit, before 06's one commit exists. 06 makes one with `git commit-tree` from its staged tree,
+  which no branch names. The worktree runs there, clean, while the main checkout is dirty, which
+  shows that the run's provenance is the worktree's. Its commit then differs from the probe by the
+  records alone.
+- **C16 — the rewrite boundary.** C6 made precise: every tracked file outside `prompts/` is
+  rewritten, `.py` and `.sh` under `docs/` included, docstrings and comments too. `.md` and `.txt`
+  under `docs/` are dated records and recorded output, and `docs/OPEN_ISSUES.md`'s rows are the
+  boards'. `CLAUDE.md` may keep one sentence naming the registry's former home.
+- **C17 — `config/fingerprint.py`.** The fingerprinter is named `fingerprinter`, an instance of
+  `DatastoreKitFingerprinter`. The format history moves verbatim, followed by one dated paragraph:
+  where the golden files now are, and that the encoding's version is DatastoreKit's and does not
+  bump SGK's format.
+- **C18 — `config/fingerprint.py` is tested.** It is new code (§5 rule 8): three tests beside
+  `TestGolden`, on the config's naming of it, its take of the fixture store, and the new golden.
 
 ### 6.3 Left for the user
 

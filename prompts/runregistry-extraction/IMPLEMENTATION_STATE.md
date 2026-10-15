@@ -1,9 +1,10 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-14 · **Status: IN PROGRESS — 5 of 10 prompts written (01, 02, 02a, 03,
-04), 5 landed (01, 02, 02a, 03, 04); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03
-pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). 05–09 held
-on RunRegistryKit's release (E2). D1–D5, Q1–Q8 and D6 ruled by the user.**
+**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 5
+landed (01, 02, 02a, 03, 04); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned it
+(§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
+RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 09 follows 08's
+review. D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -53,16 +54,16 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
-| 05 | Pin `runregistrykit` at E2's release | the RunRegistryKit pin | Sonnet | ⏸ E2 | ⬜ | — | — |
-| 06 | Adopt `runregistrykit` | the swap; closes both `00-` issues | Opus | ⏸ E2, 04, 05 | ⬜ | — | — |
-| 07 | Guard the fingerprint format | **Q5** | Sonnet | ⏸ 06 | ⬜ | — | — |
-| 08 | Rehearse through both packages (R2) | **R2**; **RunRegistryKit G2** | Opus | ⏸ 07 | ⬜ | — | — |
-| 09 | Close the campaign | the records; the gates drafted; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
+| 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ⬜ | — | — |
+| 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15; ⏸ 05 | ⬜ | — | — |
+| 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15; ⏸ 06 | ⬜ | — | — |
+| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
+| 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
 **Written in batches (README §2.1).** 01–02 now; 02a after R0, when the shared lock was adopted; 03–04 when E1's release was tagged (written 2026-10-14); 05–08 when E2's
-release is tagged and its SGK checklist exists; 09 after 08's review. The holds are for **method**,
+release was tagged and its SGK checklist existed (written 2026-10-15); 09 after 08's review. The holds are for **method**,
 not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
@@ -105,7 +106,7 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | R0 | the start tree reproduces `39809dca…` under README §4.1 | 02 | ✅ holds (`74eff08`): `runregistry-extraction-02-reference-20261012T091921` and `-resumed-c-20261012T101145`, both `done`, both `39809dca…`, equal to `dk-and-rpk-migration` R2's recorded fingerprints |
 | **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ✅ holds (2026-10-14, §5.5): `v0.4.0`, tag object `8e7c1d77…` on `c8570e84…`, CI run 38538726292 green on `c8570e8`; the note is DatastoreKit's `docs/adoption/secondarygwkit.md`, "Addendum: v0.4.0" |
 | R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ✅ holds (`ec61569`): `runregistry-extraction-04-reference-20261014T154651` and `-resumed-c-20261014T161739`, both `done`, both `39809dca…`, equal to R0's recorded fingerprints; `fingerprint_both_ways.py` exits 0 on R1's two stores and R0's two, every field equal but `encoding_format` |
-| **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ⬜ requested 2026-10-12 |
+| **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ✅ holds (2026-10-15, §5.10): `v0.1.0`, tag object `fd5ce480…` on `9f8ebe43…`, CI run 38754093289 green on `9f8ebe4` in all three jobs; the checklist is RunRegistryKit's `docs/adoption/secondarygwkit.md` at `aaab408` |
 | RunRegistryKit G2 | `RunRegistry/` is gone and nothing imports it, the pin is installed, the roots pass, `list` gives 01's runs, and R2 reproduces `39809dca…` | 06, 08 | ⬜ |
 
 Recording a gate on RunRegistryKit's or DatastoreKit's own board is a commit in that repository
@@ -216,6 +217,31 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     sidecars under `var/datastores/` are tombstones, so there is no live store for the package's
     comparison to refuse. What remains is 06's: the recorded fingerprints in run directories and
     the six golden files, and the check at its gate.
+
+- **[00-open-issues-about-the-registry-code-stay-on-sgk-boards]** *(opened 2026-10-15 at E2, by
+  the orchestrator, in writing 05–08; **Assigned (2026-10-15):** to 09, which drafts the hand-over,
+  README §2.2)*
+  - **The defect.** Four open issues on SGK's boards describe a defect or a decided change in code
+    under `RunRegistry/`, which 06 deletes and which is RunRegistryKit's from `v0.1.0`. Neither
+    the brief nor RunRegistryKit's campaign carried them: its `docs/OPEN_ISSUES.md` holds two
+    issues, both about its own test fixtures, and its SGK checklist lists two of the four only as
+    `docs/OPEN_ISSUES.md` lines that name `RunRegistry` (its appendix, item 7). By their hooks:
+    - `[04-runs-do-not-say-which-machine-produced-them]` (`run-registry`): a manifest field and a
+      `list` refusal, decided 2026-09-24 and not built;
+    - `[00-a-copy-carries-its-sources-present-tense-fields]` (`store-retirement`): `copy_store`
+      carries unknown fields verbatim;
+    - `[01-cross-filesystem-move-advice-says-delete-by-hand]` (`store-retirement`), SGK's half:
+      `store move` passes DatastoreKit's advice on (`_store_files`, `move_store`);
+    - `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`
+      (`a3-v2-readiness`): `finish` and the heartbeat share `status.json.tmp`.
+  - **Impact.** After 06 each points at code that is no longer in this repository. By CLAUDE.md a
+    package's defect is fixed there, in a release, so none of them can be fixed here, and
+    RunRegistryKit does not know of them. The decided `machine` field is the one a later campaign
+    would most likely look for. Nothing is wrong in a record today.
+  - **Next step.** 09 checks each of the four against `runregistrykit` at `v0.1.0`: whether the
+    defect is still there and where, by file and line. It drafts each for RunRegistryKit's
+    `docs/OPEN_ISSUES.md`, and the user hands them over (README §6.2 C11). Each SGK board's entry
+    then says where its issue went. 06 does not touch them.
 
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
@@ -815,3 +841,54 @@ and R1's stores are retired (§5.8), so the script cannot run at 08 as 04 left i
 
 The charters in README §2.2 are not changed. 06's acceptance 1 already requires the script's
 `RunRegistry` imports to go, and 08's acceptance 1 already makes the comparison field by field.
+
+### 5.10 E2 holds (2026-10-15)
+
+RunRegistryKit closed its `extraction` campaign and released `v0.1.0`, and the user asked this
+session to inspect it. The orchestrator checked it against RunRegistryKit's repository and this
+tree at `14bcac0`, read-only, and the user then asked for E2 to be recorded and 05–08 written.
+- **The tag.** `v0.1.0` is an annotated tag, object `fd5ce4806a3cea09a27d92d5d811600c62dac376`, on
+  commit `9f8ebe431503fb8c79ee1407cc460501f1ca2d92`, the same locally and on `origin`. GitHub has no
+  Release object for it (`gh release view v0.1.0`: not found). Neither DatastoreKit nor RayPoolKit
+  has one either, and the pin needs only the tag. `pyproject.toml` there gives `version = "0.1.0"`,
+  `requires-python = ">=3.12"`, no core dependency, and `[stores]` = `datastorekit>=0.4.0`.
+- **CI.** Run 38754093289, on `9f8ebe4` itself, passed all three jobs: `suite (low)`, `suite
+  (high)` and `core (no store layer)`. Every later push to `main` is green too, to
+  `caad864`.
+- **After the tag.** Nothing under `runregistrykit/` and nothing in `pyproject.toml` changed between
+  `9f8ebe4` and `caad864`. The later commits are records, the verification, and the adoption
+  checklists.
+- **The checklist** is `docs/adoption/secondarygwkit.md`, written at `aaab408` (extraction prompt
+  07), a commit after the tag and unchanged since. It describes the package at the tag, and it
+  measured this repository at `14bcac0`, which is `HEAD` here: its lines and counts are current.
+  Checked here: the 101 staying tests (28, 26, 15, 18, 10, `TestGolden` 3, `TestDrivers` 1); 21
+  specs over the 38-name registry; and the 13 files outside `RunRegistry/` that name it.
+- **G1**, as RunRegistryKit's board records it: the source side holds (`git ls-tree -r a45aefc --
+  RunRegistry/` equals §2.1, 25 rows, unchanged to `14bcac0`). The package side holds for the files
+  its prompts 01 and 02 imported. The three test modules its 04 ported were rebuilt on a store of
+  its own and are its tests now. That does not touch SGK.
+- **The dry run.** `pip install --dry-run -r requirements.txt` with the `runregistrykit[stores]`
+  line added gave `Would install runregistrykit-0.1.0` and nothing else. `datastorekit` 0.4.0
+  satisfies the extra.
+- **Its open issues**, two, are about its own test fixtures' use of `ShardedPool` internals and a
+  message-text match on DatastoreKit's. Neither asks anything of SGK.
+- **What the checklist leaves to SGK**, decided here as choices of method (README §6.2 C12–C18), so
+  that the user can reverse any: the drivers' runs root, the golden file, the test helpers, the
+  probe commit, the rewrite boundary, `config/fingerprint.py`'s form, and its tests. The two that
+  matter most:
+  - `test_store_fingerprint.py:378`'s `fingerprint_of(self.baseline_inventory, taken)` binds at
+    `v0.1.0` and puts `taken` on the format. 06 names it.
+  - Two tests patched `DEFAULT_ROOT`, and neither seam was tested. 06 adds an assertion and a test
+    (C12).
+- **Since 01's baseline**, R0 and R1 added 8 runs and 4 sidecars. The registry shows 37 runs, none
+  `running` or stale, and 18 sidecars, all tombstones. 06's acceptance 3 is amended to compare
+  before and after the swap, with 01's 29 inside it; 08's acceptance 4 counts 06's two worktree
+  runs (README §2.2).
+- **Opened:** `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` (§3), assigned to 09.
+  The index goes to 108.
+- **Written:** prompts [05](05-pin-runregistrykit-at-v0.1.0.md), [06](06-adopt-runregistrykit.md),
+  [07](07-guard-the-fingerprint-format.md) and [08](08-rehearse-through-both-packages.md). The plan
+  is amended where E2 made it inexact: the README's status line, §2's table, §2.1, §2.2 (05's tag,
+  06's acceptance 2–4, 08's acceptance 4, 09's hand-over), §4 (what 06 ships), and §6.2 (C12–C18).
+- **RunRegistryKit's records**: its board records E2 as holding, from its side. G2 is SGK's to show
+  (08), and its record there is drafted by 09.
