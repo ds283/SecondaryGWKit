@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 06, adopt `runregistrykit`
 
 - **Subject:** [`06-adopt-runregistrykit.md`](../06-adopt-runregistrykit.md), board items A1–A5.
-- **Commit:** this commit (parent `85f273d`). **Probe:** `ec781383730ff477c63430f0ea8fc10e106e0efc`, tree
+- **Commit:** `740bafc` (parent `85f273d`). **Probe:** `ec781383730ff477c63430f0ea8fc10e106e0efc`, tree
   `f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b`, parent `85f273d`, named by no branch (§7.2).
 - **Result:** landed. `runregistrykit` is the registry; `RunRegistry/` is gone from git and from disk. All seven roots pass at
   §7.5's counts with no failure. Acceptance 1–8 hold; one breakage (4) fails its named test at a different assertion
@@ -380,6 +380,6 @@ are minor and pre-existing or cosmetic.
   `runregistry-extraction-06-worktree-check-breakage-20261015T225237` (`failed`). 18 sidecars, all tombstones.
 - **For 08:** §7.8's commands; `fingerprint_both_ways.py` takes R2's primaries and `--against` R0's and R1's run
   directories, at its default digest. A manifest's `packages` now names `runregistrykit` 0.1.0 beside the two.
-- **The probe** `ec781383…` is a commit no branch names; `git diff --stat ec781383 <this commit>` is the records alone.
-- **Rollback:** `git revert` of this commit restores `RunRegistry/` and the old tests; nothing in the venv changes (README
+- **The probe** `ec781383…` is a commit no branch names; `git diff --stat ec781383 740bafc` is the records alone.
+- **Rollback:** `git revert` of `740bafc` restores `RunRegistry/` and the old tests; nothing in the venv changes (README
   §4.2). The two run directories under `var/runs/` stay as records either way.

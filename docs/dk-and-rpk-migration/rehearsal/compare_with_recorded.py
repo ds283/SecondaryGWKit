@@ -52,7 +52,7 @@ def main(argv) -> int:
     records = [recorded(Path(p)) for p in against]
     ok = True
     for status, fp in records:
-        taken = fp.get("taken", {})
+        taken = fp.get("taken") or {}
         print(
             f"recorded: {status}\n  format {fp.get('fingerprint_format')}, digest {fp.get('digest')}, "
             f"{len(fp.get('classes', {}))} classes, problems {fp.get('problems') or 'none'}; "

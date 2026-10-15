@@ -149,7 +149,8 @@ time.
   `shard_store_fixtures` (a primary with placeholder shards), `real_store_fixtures` (a small real
   store, no Ray) and `standin_pool` (a real `ShardedPool` on stand-in actors).
 - **Formatting** is `black`, with no configuration. Run `./venv/bin/python -m black <files>` before
-  committing; the tree is clean under `--check`.
+  committing; the tree outside `prompts/` is clean under `--check` (49 orchestrator measure
+  scripts under `prompts/datastore-generic/` are records, left as written).
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
   `docs/source-remediation-verification/scoped_pipeline_run.py`; to extract one of its functions

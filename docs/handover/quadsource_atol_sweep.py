@@ -757,8 +757,8 @@ def prepare(force=False, runs_root=None):
             "runregistrykit.stores.copy_store never overwrites a destination whose sidecar name is "
             "already taken -- by an existing store or by a retired store's tombstone -- and "
             "prepare() no longer either. A sweep store, once made, is not replaced: point "
-            "SWEEP_STORE at a name that has never held a store, or, once `runregistrykit store "
-            "retire` exists (store-retirement prompt 03), retire the old one first."
+            "SWEEP_STORE at a name that has never held a store, or retire the old one first with "
+            "`runregistrykit store retire`."
         )
 
     import runregistrykit.stores

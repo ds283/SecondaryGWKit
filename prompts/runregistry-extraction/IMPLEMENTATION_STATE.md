@@ -56,7 +56,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
 | 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | `3dcab1b` | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
-| 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/06-adopt-runregistrykit.md) |
+| 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15; ⏸ 06 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
 | 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
@@ -73,7 +73,8 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-10-12, used for
 02a); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-14, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-14, used for 04);
-[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-15, used for 05).
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-15, used for 05);
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-15, used for 06).
 
 ### 1.1 Items
 
@@ -230,7 +231,7 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     2026-10-12), so no record has been lost; campaigns here do run in worktrees.
   - **Next step.** 06: the root becomes the parent of `git rev-parse --git-common-dir` (Q3), and
     acceptance 4 shows a worktree's run recorded in the main checkout.
-  - **Closed (2026-10-15, prompt 06, this commit).** `runregistrykit` finds the record root from the
+  - **Closed (2026-10-15, prompt 06, `740bafc`).** `runregistrykit` finds the record root from the
     config's directory, and for a linked worktree takes the main checkout, the parent of `git rev-parse
     --git-common-dir` (Q3). `docs/runregistry-extraction/worktree_run_check.py`, run from a scratch
     worktree at the probe `ec781383730ff477c63430f0ea8fc10e106e0efc` with the main checkout's venv, began
@@ -259,7 +260,7 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     the digest as `encoding_format` (outside every digest), the client's format a required argument,
     and contract §9.7's rule for when the package bumps its version. SGK's half, recording it, is
     still 06's.
-  - **Closed (2026-10-15, prompt 06, this commit), SGK's half.** Every fingerprint SGK takes now goes
+  - **Closed (2026-10-15, prompt 06, `740bafc`), SGK's half.** Every fingerprint SGK takes now goes
     through `config/fingerprint.py`'s `DatastoreKitFingerprinter`, which records DatastoreKit's
     `encoding_format` beside the digest. `TestConfigFingerprint.test_the_fingerprinter_takes_the_golden_fingerprint`
     shows it (`encoding_format` 1, the fingerprint equal to `fingerprint_of(read_inventory(primary,
@@ -301,7 +302,7 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     sidecars under `var/datastores/` are tombstones, so there is no live store for the package's
     comparison to refuse. What remains is 06's: the recorded fingerprints in run directories and
     the six golden files, and the check at its gate.
-  - **Closed (2026-10-15, prompt 06, this commit).** The gate's check holds: all 18 sidecars under
+  - **Closed (2026-10-15, prompt 06, `740bafc`).** The gate's check holds: all 18 sidecars under
     `var/datastores/` are tombstones, each read by `runregistrykit store show` exit 0 with a `retired`
     block and `problems: none`, and no `.sqlite` file remains there
     ([`measure/out/06-after.txt`](measure/out/06-after.txt)), so no live store's recorded fingerprint can
@@ -989,7 +990,7 @@ commit. **All six checks pass**, and no stop condition fired.
 
 ### 5.12 After prompt 06 (2026-10-15)
 
-[`06`](06-adopt-runregistrykit.md) landed at this commit, with `HEAD` `85f273d` as its parent; its
+[`06`](06-adopt-runregistrykit.md) landed at `740bafc`, with `HEAD` `85f273d` as its parent; its
 log is [`logs/06-adopt-runregistrykit.md`](logs/06-adopt-runregistrykit.md). It closed three issues
 (§4) and opened none, so `docs/OPEN_ISSUES.md` goes from 108 to 105.
 - **A1.** `runregistrykit.toml` at the root, the checklist's item 3; `config/fingerprint.py` with the
@@ -1020,10 +1021,86 @@ log is [`logs/06-adopt-runregistrykit.md`](logs/06-adopt-runregistrykit.md). It 
   39, LiouvilleGreen 148 (1 skipped), **ObjectFactories 277**, **RunDrivers 99**, tools 91.
 - **The checklist's measure** at the probe: 0 imports, 0 literals, 0 `-m RunRegistry`.
 - **The probe** is `ec781383730ff477c63430f0ea8fc10e106e0efc`, tree
-  `f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b`; this commit differs from it by the records alone.
+  `f2e20c2ad7ff0165d69dbc3051066b7a9d42a30b`; `740bafc` differs from it by the records alone.
 - **Deviations worth knowing** (log): the golden file is written with sorted keys, as `09c` was; the
   both-ways script compares key order only where a record keeps it, since every record is written
   with `sort_keys`; and breakage 4 fails `TestConfigFingerprint` test 1 at its config assertion, before
   the loader's refusal, which was shown directly instead (log, deviation 9, `UNINTENDED DRIFT`).
 - **RunRegistryKit G2** (§2): 06's half holds (nothing imports `RunRegistry`, the pin is installed, the
   roots pass, `list` gives 01's runs); R2 (08) is the other half.
+
+**Orchestrator review of prompt 06** (2026-10-15, against `740bafc`, by
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) §3). Dispatched from `85f273d` to one Opus
+subagent, after the seven roots were measured at `29a3f2d`. Nothing landed after the agent's commit.
+**All twelve checks pass**, and no stop condition fired.
+1. **Scope.** `git show --name-status 740bafc` is the note's list: 12 `R` (the five driver modules,
+   the six golden files at 100%, and the two empty `__init__.py`, which git pairs: log, deviation
+   10), 13 `D` under `RunRegistry/`, the added client files, tests and scripts, and the thirteen
+   modified files. Not `README.md`, `prompts/INDEX.md`, `orchestrator/`, `requirements.txt` or any
+   `.md`/`.txt` under `docs/` but `OPEN_ISSUES.md`. The probe `ec781383…` is a commit whose parent
+   is `85f273d`; `git diff --stat ec781383 740bafc` is ten record files.
+2. **Nothing names `RunRegistry`.** The grep at `740bafc` prints `CLAUDE.md:82` and
+   `config/fingerprint.py:31` (ruling 1) and nothing else; `RunRegistry/` is not on disk and
+   `import RunRegistry` is `ModuleNotFoundError`. RunRegistryKit's measure, re-run here at
+   `740bafc`: 0 import statements, 0 literals, 0 `-m RunRegistry`, 421 files.
+3. **The moves, by diff.** Every hunk of the five modules is one §3.2 names, plus the removal of the
+   `mock` imports the patches left unused. `test_prune_on_resume.py` is a 100% rename. `TestDrivers`
+   and `_finish_calls` are byte-identical to `a45aefc`'s; `_FullStores`, `without_taken` and
+   `TestGolden` differ from `a45aefc`'s only by the format passed, the `encoding_format` assertions,
+   `_fingerprint_problems`' module and `maxDiff`. `registry_fixtures.py` copies the two helpers, and
+   names both sources.
+4. **The counts.** `RunDrivers` 99, `ObjectFactories` 277, by run (check 11).
+5. **The client files.** The config is item 3's five keys under one comment line. The history in
+   `config/fingerprint.py` is `a45aefc:RunRegistry/stores.py:194-205`, all twelve lines verbatim,
+   then one dated paragraph. Importing it after `config.datastore` adds `config.fingerprint`,
+   `runregistrykit`, `.client`, `.fingerprint` and `tomllib`: no DatastoreKit module, no Ray.
+6. **The seams.** Each driver's diff is the keyword, its forwarding, a docstring sentence (log,
+   deviation 7), §2.1's rewrites and §2.3's literals; `main()`'s call is unchanged. Breakages 5 and
+   6, re-applied here, each fail their test.
+7. **The golden.** `diff 09c 06` is the one added line `"encoding_format": 1,`; test 3 pins the rest
+   to `09c` and both digests to `6576b85d…`.
+8. **The registry.** `06-before.txt` and `06-after.txt`, with command lines, the header and the
+   AGE column removed, are identical: 37 runs, 18 `store show` blocks, 19 exit statuses 0, and 69
+   "by results" lines in each, so the block the note singled out reads as before. 01's 29 are all
+   present with their states. `runregistrykit list` now: 39, the two new ones `done` and `failed`.
+9. **The worktree run.** Both manifests read here: `git_head` the probe; `git_dirty` `false` for the
+   check, `true` for the breakage; `script` and `cwd` in the scratch worktrees; `packages` naming
+   `runregistrykit` 0.1.0 at `9f8ebe43…` first, then `datastorekit` and `raypoolkit` at their pins,
+   none editable. The check's `script_sha256` `5aff8eda…` is the committed script's. `find var
+   -newer <marker>` lists those two run directories and nothing else; `git worktree list` shows this
+   checkout alone.
+10. **The breakages and the script.** `fingerprint_both_ways.py` on a fresh scratch set built as §5
+    says (fixture store, `store create`, `store fingerprint --write`, a run directory holding `09c`):
+    exit 0, 8 of 8 checks. Breakages 1–6 and 7a re-applied to the working tree and reverted, 7b to a
+    scratch record: each fails exactly as the log says (1: three tests; 2: test 2 errors with
+    `StoreSchemaMismatch`, test 1 fails; 3: three tests; 4: test 1; 5, 6: the new assertion and the
+    new test; 7a, 7b: exit 1 naming `encoding_format` and the tag set's `count`). Breakage 8 by its
+    record (check 9). The tree and `var/runs/` were unchanged after.
+11. **The roots,** re-run here at `740bafc`, serially, load 6–18: AdaptiveLevin 32, CosmologyModels
+    39, ObjectFactories 277, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 99, ComputeTargets
+    693, all OK. `RunDrivers` takes 3 s, where `RunRegistry/tests` took 73 s: the 185 that left were
+    the package's.
+12. **The records.** `CLAUDE.md`: the package section names the three pins truly (ruling 8), the
+    registry section points at `runregistrykit` and its README with the six rules unchanged, the
+    freeze section is gone, the roots list `RunDrivers/tests`; nothing else moved. The log has every
+    §5.1 heading, eleven classified deviations and a twelfth saying there is no other and the rulings logged. The board's A1–A5, §4 and
+    §5.12; `docs/OPEN_ISSUES.md` at 105 rows, counted, with §1.21's prose true.
+- **Breakage 4 is the prompt's inconsistency, not drift.** §3.3 orders test 1's assertions with the
+  config's `stores` table first, and §8 expected the loader's refusal; the mutation can only fail at
+  the first. The test catches a config naming the class, and the loader's refusal of a class is the
+  package's behaviour, tested there. The agent's `UNINTENDED DRIFT` stays in the log as written; no
+  change is made.
+- **The both-ways script's order check (deviation 8) is right.** Every record is written with
+  `sort_keys`, so a recorded fingerprint keeps neither its keys' order nor its classes'; only the
+  tag-set lists keep theirs. 08 runs the script as it stands.
+- **Seen in passing, not opened:** `python -m runregistrykit list | head` ends with a
+  `BrokenPipeError` traceback once `head` closes the pipe. Cosmetic, and RunRegistryKit's; it is
+  for 09 to carry over with the four issues, if the user wants it carried.
+- **Residue fixed here:** "this commit" → `740bafc` on this board (§1 row, §4's three closures,
+  §5.12) and in the log; this note listed; `prompts/INDEX.md`'s row (7 of 10 landed, 2 rows). Of the
+  log's observations: `compare_with_recorded.py` now reads a `null` `taken` as empty instead of
+  raising (observation 3); the sweep driver's `--force` message no longer says `store retire` does
+  not exist yet (observation 4); and `CLAUDE.md`'s formatting line says that the tree outside
+  `prompts/` is clean under `black --check`, the 49 measure scripts under `prompts/datastore-generic/`
+  being records (observation 6).
+- **Handed on.** 07, the guard, is next, at `740bafc`'s tree. Its note is written after this review.
