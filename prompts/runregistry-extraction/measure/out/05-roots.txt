@@ -1,0 +1,29 @@
+# 05-roots.txt — runregistry-extraction prompt 05, 2026-10-15, at HEAD e381906 with the pin installed; serial, foreground; load average 27.9 (1 min) after the last (ComputeTargets)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 32 tests in 0.058s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 693 tests in 139.368s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 39 tests in 0.671s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 148 tests in 20.861s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 271 tests in 13.112s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunRegistry/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 286 tests in 71.732s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > f 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' f
+Ran 91 tests in 9.236s
+OK

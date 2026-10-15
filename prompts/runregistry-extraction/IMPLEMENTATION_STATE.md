@@ -1,7 +1,7 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 5
-landed (01, 02, 02a, 03, 04); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned it
+**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 6
+landed (01, 02, 02a, 03, 04, 05); R0 and R1 hold; K2 holds (§5.11). E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned it
 (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
 RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 09 follows 08's
 review. D1–D5, Q1–Q8 and D6 ruled by the user.**
@@ -54,7 +54,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
-| 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ⬜ | — | — |
+| 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15; ⏸ 05 | ⬜ | — | — |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15; ⏸ 06 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
@@ -88,7 +88,7 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **K1** | 03 | the `datastorekit` pin moved to E1's release; the venv installed from it | ✅ |
 | **L1**–**L4** (R1) | 04 | README §4.1 through E1's release; L4 against R0 | ✅ |
 | **W1** | 04 | the fingerprint both ways, equal on every store (C3) | ✅ |
-| **K2** | 05 | the `runregistrykit[stores]` pin; the venv installed from it | ⬜ |
+| **K2** | 05 | the `runregistrykit[stores]` pin; the venv installed from it | ✅ |
 | **A1** | 06 | the client config file and `config/fingerprint.py` | ⬜ |
 | **A2** | 06 | every `RunRegistry` import outside `prompts/` rewritten | ⬜ |
 | **A3** | 06 | the 101 SGK tests moved (C5); `RunRegistry/` deleted | ⬜ |
@@ -892,3 +892,32 @@ tree at `14bcac0`, read-only, and the user then asked for E2 to be recorded and 
   06's acceptance 2–4, 08's acceptance 4, 09's hand-over), §4 (what 06 ships), and §6.2 (C12–C18).
 - **RunRegistryKit's records**: its board records E2 as holding, from its side. G2 is SGK's to show
   (08), and its record there is drafted by 09.
+
+### 5.11 After prompt 05 (2026-10-15)
+
+[`05`](05-pin-runregistrykit-at-v0.1.0.md) landed at this commit; its log is
+[`logs/05-pin-runregistrykit-at-v0.1.0.md`](logs/05-pin-runregistrykit-at-v0.1.0.md). It opened and
+closed no issue, so `docs/OPEN_ISSUES.md` is unchanged (108).
+- **K2.** `requirements.txt:81` is `runregistrykit[stores] @ ...@v0.1.0`, one added line. The dry run
+  said `Would install runregistrykit-0.1.0` and nothing else (it printed the tag object `fd5ce480…`,
+  as pip does); the install added that and nothing else. `direct_url.json`: commit
+  `9f8ebe431503fb8c79ee1407cc460501f1ca2d92`, `requested_revision` `v0.1.0`, no `dir_info`, so not
+  editable. `pip freeze` differs by one added line; `pip check` clean; `package_provenance()`
+  byte-identical before and after (`datastorekit` 0.4.0 at `c8570e84…`, `raypoolkit` 0.2.0 at
+  `eaef0ce6…`; it does not name `runregistrykit`, which enters `packages` at 06).
+  [`measure/out/05-pip.txt`](measure/out/05-pip.txt).
+- **Nothing imports it, and importing it is light.** `import runregistrykit,
+  runregistrykit.fingerprint` loads none of `ray`, `sqlalchemy` or `datastorekit` (`[]`). No code
+  names the package; the only non-pin hit outside `prompts/` and `docs/` is `CLAUDE.md:114`'s prose.
+- **The roots** at 03's counts, no failure: AdaptiveLevin 32, ComputeTargets 693, CosmologyModels 39,
+  LiouvilleGreen 148 (1 skipped), ObjectFactories 271, RunRegistry 286, tools 91.
+  [`measure/out/05-roots.txt`](measure/out/05-roots.txt).
+- **The checklist's item 1** holds against the venv: Python 3.12.15, `ray` 2.43.0, `SQLAlchemy`
+  2.0.39, `datastorekit` 0.4.0, `raypoolkit` 0.2.0.
+- **Deviation worth knowing:** the prompt's `git grep` outside `prompts/` and `docs/` is not empty
+  (`CLAUDE.md:114`); excluding `CLAUDE.md` it is empty before and gives only the pin after (log,
+  deviation 2).
+- **For the orchestrator:** README §5 rule 9 says `packages` names `runregistrykit` "(05)"; it enters
+  at 06, as `RECORDED_DISTRIBUTIONS` is frozen (log, "Observations not acted on").
+- **Venv.** Not recorded by any commit: rolling 05 back needs `pip uninstall -y runregistrykit`
+  after the revert (README §4.2).
