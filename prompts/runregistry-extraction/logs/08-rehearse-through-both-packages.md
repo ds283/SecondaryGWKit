@@ -2,7 +2,7 @@
 
 - **Subject:** [`08-rehearse-through-both-packages.md`](../08-rehearse-through-both-packages.md),
   board items L1–L4 (R2) and G-RRK; gates R2 and RunRegistryKit's G2.
-- **Commit:** this commit (parent `b9daf44`).
+- **Commit:** `957d658` (parent `b9daf44`).
 - **Result:** landed. **R2 holds, and RunRegistryKit's G2 holds.** Every acceptance item passes, and
   no stop condition fired.
 - **Model:** Opus 5.5.
@@ -412,7 +412,7 @@ None. This prompt adds no code, no test and no script (README §5 rule 8). The b
 
 - **R2 holds** (board §2), resting on:
   - the dispatch `HEAD` `b9daf44`, whose code is `a9ed928`'s;
-  - this commit;
+  - `957d658`;
   - the runs `runregistry-extraction-08-reference-20261015T235716` and
     `runregistry-extraction-08-resumed-c-20261016T000959`, both `done`, both `39809dca…` with
     `encoding_format` 1, equal field by field to R0's and R1's recorded fingerprints.
