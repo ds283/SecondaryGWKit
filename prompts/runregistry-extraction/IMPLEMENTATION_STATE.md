@@ -1,11 +1,11 @@
 # runregistry-extraction campaign — implementation state
 
 **Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 8
-landed (01, 02, 02a, 03, 04, 05, 06, 07); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned
-it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
+landed (01, 02, 02a, 03, 04, 05, 06, 07); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03
+pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
 RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05 pinned it (§5.11),
-and 06 adopted it: `RunRegistry/` is gone (§5.12); 07 pinned the spec digests and guards the format (§5.13). 09 follows 08's review. D1–D5, Q1–Q8 and D6
-ruled by the user.**
+06 adopted it: `RunRegistry/` is gone (§5.12), and 07 pinned the spec digests and guards the format
+(§5.13). 09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -57,7 +57,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
 | 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | `3dcab1b` | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
-| 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/07-guard-the-fingerprint-format.md) |
+| 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | `a9ed928` | [log](logs/07-guard-the-fingerprint-format.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
 | 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
 
@@ -74,7 +74,8 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 02a); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-14, used for 03);
 [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-14, used for 04);
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-15, used for 05);
-[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-15, used for 06).
+[`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-15, used for 06);
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-15, used for 07).
 
 ### 1.1 Items
 
@@ -1127,7 +1128,7 @@ subagent, after the seven roots were measured at `29a3f2d`. Nothing landed after
 
 ### 5.13 After prompt 07 (2026-10-15)
 
-[`07`](07-guard-the-fingerprint-format.md) landed at this commit, with `c72ea2a` as its parent; its log is
+[`07`](07-guard-the-fingerprint-format.md) landed at `a9ed928`, with `c72ea2a` as its parent; its log is
 [`logs/07-guard-the-fingerprint-format.md`](logs/07-guard-the-fingerprint-format.md). It closed no issue and opened none, so
 `docs/OPEN_ISSUES.md` is unchanged (106).
 
@@ -1138,6 +1139,57 @@ subagent, after the seven roots were measured at `29a3f2d`. Nothing landed after
   class is named as added (a scratch runner); `COSMOLOGY_TYPES`' key `0` as `"0"` names `BackgroundModel` and `wavenumber_exit_time`
   (ruling 1); `str(k)` fails tests 1 and 2, and the digests are equal with and without the key change, which shows the blindness
   (ruling 2).
-- **The roots** at this commit: AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped),
+- **The roots** at `a9ed928`: AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped),
   RunDrivers 99, ComputeTargets 693, all OK.
 - **Handed on.** 08, the R2 rehearsal, is next.
+
+**Orchestrator review of prompt 07** (2026-10-15, against `a9ed928`, by
+[`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) §3). Dispatched from `c72ea2a` to one Sonnet
+subagent, after the seven roots were measured at `ba15458`. Nothing landed after the agent's commit.
+**All nine checks pass**, and no stop condition fired.
+1. **Scope.** `git show --name-status a9ed928`: `A` for the guard module, `07-roots.txt` and the log;
+   `M` for `config/fingerprint.py` and this board. No factory, `cosmology_types.py`, golden file,
+   test of 06's, `README.md`, `prompts/INDEX.md`, `orchestrator/`, `CLAUDE.md` or
+   `docs/OPEN_ISSUES.md`.
+2. **The pin.** `config/fingerprint.py`'s diff is added lines only: one docstring bullet (ruling 5),
+   the comment and `SPEC_DIGESTS`. Its one key is `6`, and its 21 pairs equal, in order, the
+   orchestrator's own run of the recipe at `ba15458`. The comment states the computation, names the
+   test, says why a list of pairs, and gives the rule.
+3. **The test, by reading.** `plain` and `spec_digests` are the recipe's, with `json.dumps(k)`.
+   Test 1 checks membership with a message first, then names changed, added and removed classes on
+   separate lines, with the bump sentence; test 2 is the two inequalities. Its imports are the
+   standard library, `datastorekit.store_inventory`, `config.datastore` and `config.fingerprint`;
+   it opens no store and starts no Ray. (`import config.datastore` imports the `ray` module, as it
+   does for every `ObjectFactories` test; nothing is started.) `black --check` is clean on both
+   files.
+4. **Breakages 1, 2 and 4,** re-applied here from the log's diffs and reverted: the guard fails
+   naming `QuadSourceIntegral`; "no pin for it (it has [6])"; `wavenumber_exit_time` and
+   `BackgroundModel` and no other class (ruling 1). The root fails exactly the tests the log lists:
+   3; 4; 28 failures and 1 error.
+5. **Breakage 3,** the log's runner extracted and run from the scratchpad: test 1 fails with "class
+   added to the registry with a spec: StandIn", test 2 passes, no tracked file touched.
+6. **Breakage 5,** both runs re-applied here: tests 1 and 2 fail in each, test 1 naming the same
+   eleven classes; the root fails 2, then 30 (29 failures, 1 error). The `str(k)` lists with and
+   without breakage 4 are equal, as the orchestrator's in-memory run before dispatch also found
+   (ruling 2). `git status --short` was clean after every revert.
+7. **The roots,** re-run here at `a9ed928`, serially, load 3–6: AdaptiveLevin 32, CosmologyModels 39,
+   ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 99, ComputeTargets 693,
+   all OK, as `07-roots.txt` records.
+8. **Nothing moved.** `git diff --stat a9ed928~1 a9ed928` over `ObjectFactories` outside its tests,
+   `StoreFixtures`, `config/datastore.py` and `config/sharding.py` is empty; `FINGERPRINT_FORMAT` is
+   6. `find var -newer <marker>` is empty; `runregistrykit list` shows 39 runs, none `running`.
+9. **The records.** The log has every §5.1 heading, the five breakages as diffs (3 as its runner)
+   with every failing test, and seven classified deviations: rulings 1 and 2 `STRUCTURALLY
+   REQUIRED`, 3 and 5 `IMPLEMENTATION CHOICE`, and three of the agent's own (`self.fail` in place of
+   `assertIn`, `black`'s wrapping, the extra failures under ruling 4). The board's header, §1 row, V1
+   and §5.13; the commit message in `CLAUDE.md`'s form, ending `Co-Authored-By: Claude Sonnet 5.5`.
+- **The guard also catches its own weakening.** With the pin taken through `json.dumps`, `plain`
+  changed to `str(k)` fails test 1 at eleven classes as well as test 2, so the conversion is pinned
+  twice while the pin stands.
+- **Neither observation is opened.** `COSMOLOGY_TYPES`' 29 consumers failing under breakage 4 is
+  those tests doing their job. That nothing but review keeps an old pin untouched is true of the
+  golden files too, and the rule in the comment is the same rule.
+- **Residue fixed here:** "this commit" → `a9ed928` on this board (§1 row, §5.13) and in the log;
+  the header rewrapped; this note listed; `prompts/INDEX.md`'s row (8 of 10 landed).
+- **Handed on.** 08, R2, is next, at `a9ed928`'s tree. Its note is written after this review; it
+  takes the rehearsal lock.

@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 07, guard the fingerprint format
 
 - **Subject:** [`07-guard-the-fingerprint-format.md`](../07-guard-the-fingerprint-format.md), board item V1 (Q5).
-- **Commit:** this commit (parent `c72ea2a`).
+- **Commit:** `a9ed928` (parent `c72ea2a`).
 - **Result:** landed. `config/fingerprint.py` holds `SPEC_DIGESTS[6]`, 21 pairs in registry order, and
   `ObjectFactories/tests/test_fingerprint_format_guard.py` fails, naming the class, when a spec changes without a bump. All five
   breakages fail as ruled; all seven roots pass at the expected counts. No stop condition of §5 fired. Opens and closes no issue.
@@ -76,7 +76,7 @@ equals the orchestrator's own run (all 19 distinct values; two pairs are equal):
 
 - **The pin against the orchestrator's prefixes**: all 21 first-twelve-digit prefixes agree.
 - **The guard passes at 06's tree**: `Ran 2 tests ... OK`.
-- **The roots**, serially, in the foreground, at `c72ea2a`'s code plus this commit's two files (`measure/out/07-roots.txt`):
+- **The roots**, serially, in the foreground, at `c72ea2a`'s code plus `a9ed928`'s two files (`measure/out/07-roots.txt`):
   AdaptiveLevin 32, CosmologyModels 39, ObjectFactories **279** (277 and the 2), tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 99,
   ComputeTargets 693; all OK, none of README §8's four known tests failing.
 - **`black --check`** on both `.py` files: clean.
@@ -216,4 +216,4 @@ Each was applied to the working tree (or run from a scratch runner, breakage 3),
   RunDrivers 99, tools 91.
 - The registry is as 06 left it (39 runs, none `running`); 07 wrote nothing under `var/`.
 - **For 08:** nothing changes in its commands; the guard runs in the ObjectFactories root.
-- **Rollback:** `git revert` of this commit removes the pin and the guard; nothing in the venv or `var/` changes.
+- **Rollback:** `git revert` of `a9ed928` removes the pin and the guard; nothing in the venv or `var/` changes.
