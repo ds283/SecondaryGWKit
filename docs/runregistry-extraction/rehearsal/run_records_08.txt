@@ -1,0 +1,450 @@
+==================== runregistry-extraction-08-reference-20261015T235716
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-08-reference.sqlite",
+    "--job-name",
+    "runregistry-extraction-08",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "reference",
+    "--purpose",
+    "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "08"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-15T23:57:16+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    },
+    "runregistrykit": {
+      "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+      "editable": false,
+      "requested_revision": "v0.1.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.1.0"
+    }
+  },
+  "prompt": "08",
+  "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+  "results": "var/datastores/runregistry-extraction-08-reference.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-08-reference-20261015T235716",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-08-reference.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "run_id": "runregistry-extraction-08-reference-20261015T235716",
+      "when": "2026-10-16T00:01:46+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-reference.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-16T00:01:49+01:00",
+  "pid": 76434,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 273 s (2026-10-15T23:57:16+01:00 to 2026-10-16T00:01:49+01:00)
+-- launch log, last line: ** driver exit status 0
+
+==================== runregistry-extraction-08-resumed-a-20261016T000342
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "var/datastores/runregistry-extraction-08-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-08",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-a",
+    "--purpose",
+    "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "08"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-16T00:03:42+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    },
+    "runregistrykit": {
+      "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+      "editable": false,
+      "requested_revision": "v0.1.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.1.0"
+    }
+  },
+  "prompt": "08",
+  "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+  "results": "var/datastores/runregistry-extraction-08-resumed.sqlite",
+  "results_store_id": null,
+  "run_id": "runregistry-extraction-08-resumed-a-20261016T000342",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-08-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "87e55e8fad8d95010f5739d0bf1aaa445a185030797fdbfe4adc7fd70b3cd87d",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "run_id": "runregistry-extraction-08-resumed-a-20261016T000342",
+      "when": "2026-10-16T00:05:43+01:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-16T00:05:44+01:00",
+  "pid": 83931,
+  "stage": "CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 122 s (2026-10-16T00:03:42+01:00 to 2026-10-16T00:05:44+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-08-resumed-b-20261016T000708
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-08-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-08",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-b",
+    "--purpose",
+    "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, with --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "08"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-16T00:07:08+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    },
+    "runregistrykit": {
+      "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+      "editable": false,
+      "requested_revision": "v0.1.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.1.0"
+    }
+  },
+  "prompt": "08",
+  "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, with --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+  "results": "var/datastores/runregistry-extraction-08-resumed.sqlite",
+  "results_store_id": "86b70a5d966347fbbbac46140ba8e57e",
+  "run_id": "runregistry-extraction-08-resumed-b-20261016T000708",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-08-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 143,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "8978b72e8d41837d45118740b9a7f414a5ea651db7d3758137f4c52725eb8c41",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "run_id": "runregistry-extraction-08-resumed-b-20261016T000708",
+      "when": "2026-10-16T00:08:33+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-16T00:08:35+01:00",
+  "pid": 87907,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 87 s (2026-10-16T00:07:08+01:00 to 2026-10-16T00:08:35+01:00)
+-- launch log, last line: ** driver exit status 143
+
+==================== runregistry-extraction-08-resumed-c-20261016T000959
+-- manifest.json
+{
+  "argv": [
+    "docs/handover/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--resume",
+    "--database",
+    "var/datastores/runregistry-extraction-08-resumed.sqlite",
+    "--job-name",
+    "runregistry-extraction-08",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "resumed-c",
+    "--purpose",
+    "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third launch of the resumed rehearsal build, with --resume, run to done; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+    "--campaign",
+    "runregistry-extraction",
+    "--prompt",
+    "08"
+  ],
+  "campaign": "runregistry-extraction",
+  "checkpoint": null,
+  "created": "2026-10-16T00:09:59+01:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "packages": {
+    "datastorekit": {
+      "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+      "editable": false,
+      "requested_revision": "v0.4.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.4.0"
+    },
+    "raypoolkit": {
+      "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.2.0"
+    },
+    "runregistrykit": {
+      "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+      "editable": false,
+      "requested_revision": "v0.1.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.1.0"
+    }
+  },
+  "prompt": "08",
+  "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third launch of the resumed rehearsal build, with --resume, run to done; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference",
+  "results": "var/datastores/runregistry-extraction-08-resumed.sqlite",
+  "results_store_id": "86b70a5d966347fbbbac46140ba8e57e",
+  "run_id": "runregistry-extraction-08-resumed-c-20261016T000959",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into runregistry-extraction-08-resumed.sqlite",
+  "script": "docs/handover/quadsource_atol_sweep.py",
+  "script_sha256": "2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d",
+  "unit": null
+}
+-- status.json (the fingerprint's per-class detail omitted)
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": "<21 classes omitted>",
+    "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "run_id": "runregistry-extraction-08-resumed-c-20261016T000959",
+      "when": "2026-10-16T00:11:37+01:00"
+    }
+  },
+  "fingerprint_sidecar": "written",
+  "heartbeat": "2026-10-16T00:11:39+01:00",
+  "pid": 91423,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+-- wall time (created to final heartbeat): 100 s (2026-10-16T00:09:59+01:00 to 2026-10-16T00:11:39+01:00)
+-- launch log, last line: ** driver exit status 0
+
+==================== summary
+slug, packages == the note's record (JSON), datastorekit+raypoolkit == R1's, git_dirty, git_head, script_sha256, --resume, results, results_store_id, scope == R1 same slug's (normalised), manifest keys == R1's, status.json keys == R1's, fingerprint carries encoding_format, final stage == R1 same slug's
+('reference', True, True, False, 'b9daf449722f3e443f8dd592c1a890752cbeed6c', '2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d', False, 'var/datastores/runregistry-extraction-08-reference.sqlite', None, True, True, True, True, True)
+('resumed-a', True, True, False, 'b9daf449722f3e443f8dd592c1a890752cbeed6c', '2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d', False, 'var/datastores/runregistry-extraction-08-resumed.sqlite', None, True, True, True, True, True)
+('resumed-b', True, True, False, 'b9daf449722f3e443f8dd592c1a890752cbeed6c', '2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d', True, 'var/datastores/runregistry-extraction-08-resumed.sqlite', '86b70a5d966347fbbbac46140ba8e57e', True, True, True, True, True)
+('resumed-c', True, True, False, 'b9daf449722f3e443f8dd592c1a890752cbeed6c', '2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d', True, 'var/datastores/runregistry-extraction-08-resumed.sqlite', '86b70a5d966347fbbbac46140ba8e57e', True, True, True, True, True)
+
+==================== ./venv/bin/python -m runregistrykit list
+   RUN                                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   runregistry-extraction-08-resumed-c-20261016T000959                done              -       8m  runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third launch of the resumed rehearsal build, with --resume, run to done; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   runregistry-extraction-08-resumed-b-20261016T000708                killed            -      11m  runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, with --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   runregistry-extraction-08-resumed-a-20261016T000342                killed            -      14m  runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   runregistry-extraction-08-reference-20261015T235716                done              -      21m  runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   runregistry-extraction-06-worktree-check-breakage-20261015T225237  failed            -   1h 25m  runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+   runregistry-extraction-06-worktree-check-20261015T224836           done              -   1h 29m  runregistry-extraction prompt 06, the worktree check (acceptance 4, Q3): a run begun from a linked git worktree at ec781383730f, the probe commit of 06's staged tree, which no branch names; it is recorded in the main checkout's var/runs/, and this record is meant to outlive the worktree
+   runregistry-extraction-04-resumed-c-20261014T161739                done              -   1d 08h  runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R0 runregistry-extraction-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   runregistry-extraction-04-resumed-b-20261014T161222                killed            -   1d 08h  runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   runregistry-extraction-04-resumed-a-20261014T160226                killed            -   1d 08h  runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 runregistry-extraction-02-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   runregistry-extraction-04-reference-20261014T154651                done              -   1d 08h  runregistry-extraction prompt 04, R1 through the new DatastoreKit (89ff8b7, code 5b81f2e; datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 runregistry-extraction-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   runregistry-extraction-02-resumed-c-20261012T101145                done              -   3d 14h  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   runregistry-extraction-02-resumed-b-20261012T100353                killed            -   3d 14h  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   runregistry-extraction-02-resumed-a-20261012T095041                killed            -   3d 14h  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   runregistry-extraction-02-reference-20261012T091921                done              -   3d 14h  runregistry-extraction prompt 02, R0 at the start tree (fe16d8e, code a45aefc; factories at ObjectFactories/ since 511ef5f; datastorekit 0.2.2 6d8ee9ae, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R2 dk-and-rpk-migration-08-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-08-resumed-c-20261011T230717                  done              -   4d 01h  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R1 dk-and-rpk-migration-05-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-08-resumed-b-20261011T230305                  killed            -   4d 01h  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   dk-and-rpk-migration-08-resumed-a-20261011T225623                  killed            -   4d 01h  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-08-reference-20261011T224347                  done              -   4d 01h  dk-and-rpk-migration prompt 08, R2 through datastorekit 0.2.2 (commit 6d8ee9ae) and raypoolkit 0.2.0 (commit eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R1 dk-and-rpk-migration-05-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-05-resumed-c-20261011T195044                  done              -   4d 04h  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and R0 dk-and-rpk-migration-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-05-resumed-b-20261011T194703                  killed            -   4d 04h  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   dk-and-rpk-migration-05-resumed-a-20261011T194149                  killed            -   4d 04h  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 dk-and-rpk-migration-02-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-05-reference-20261011T192802                  done              -   4d 04h  dk-and-rpk-migration prompt 05, R1 through datastorekit 0.2.2 (commit 6d8ee9ae, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, R0 dk-and-rpk-migration-02-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-02-resumed-c-20261011T144549                  done              -   4d 09h  dk-and-rpk-migration prompt 02, R0 at the start tree: third and last launch of the resumed rehearsal build, --resume on the resumed-b store, run to done; its fingerprint must equal the reference store, 39809dca and a3-v2-readiness-07-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   dk-and-rpk-migration-02-resumed-b-20261011T144253                  killed            -   4d 09h  dk-and-rpk-migration prompt 02, R0 at the start tree: second launch of the resumed rehearsal build, --resume on the resumed-a store (pruning its unvalidated GkSource rows at open), to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the store must end equal to 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   dk-and-rpk-migration-02-resumed-a-20261011T143917                  killed            -   4d 09h  dk-and-rpk-migration prompt 02, R0 at the start tree: first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, a3-v2-readiness-07-reference  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   dk-and-rpk-migration-02-reference-20261011T143003                  done              -   4d 09h  dk-and-rpk-migration prompt 02, R0 at the start tree (layer b510bc9, frozen RayTools): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, a3-v2-readiness-07-reference  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   datastore-generic-09-rehearsal-20261006T152452                     done              -   9d 08h  datastore-generic prompt 09: README section 5 rule 9 closing rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) at the campaign final tree; its fingerprint must equal a3-v2-readiness-07-reference (dbd8a51) 39809dca  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   a3-v2-readiness-07-resumed-c-20261004T020421                       done              -  11d 22h  a3-v2-readiness prompt 07: third and last launch of the resumed rehearsal build, resuming resumed-b store with --resume, run to done; its fingerprint must then equal the reference store fingerprint  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   a3-v2-readiness-07-resumed-b-20261004T015203                       killed            -  11d 22h  a3-v2-readiness prompt 07: second launch of the resumed rehearsal build, resuming resumed-a store with --resume (pruning its unvalidated GkSource rows at open), to be interrupted by SIGTERM during CALCULATE QUADRATIC SOURCE INTEGRALS  · CALCULATE QUADRATIC SOURCE INTEGRALS, 100.00% (0 of 2 work items remaini
+   a3-v2-readiness-07-resumed-a-20261004T014440                       killed            -  11d 22h  a3-v2-readiness prompt 07: first launch of the resumed rehearsal build (same scope as the reference), to be interrupted by SIGTERM during CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   a3-v2-readiness-07-reference-20261004T012909                       done              -  11d 22h  a3-v2-readiness prompt 07: reference rehearsal build of a throwaway LambdaCDM store (3 k over 1e5-1e6/Mpc, zend 250) at atol 1e-32 rtol 1e-7, run straight through to done; the interrupted-and-resumed store must equal its fingerprint  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   datastore-integrity-10-resumed-d-20261001T235455                   done              -  14d 00h  datastore-integrity prompt 10: the user's pruned resume of the resumed store, with main.py's default pruning of unvalidated rows at startup (no --no-prune-unvalidated), run to done; its fingerprint must then equal the reference's  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   datastore-integrity-10-resumed-c-20261001T234503                   done              -  14d 00h  datastore-integrity prompt 10: third and last launch of the resumed build, resuming resumed-b's store, run to done; its fingerprint is then compared with the reference's  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   datastore-integrity-10-resumed-b-20261001T230813                   killed            -  14d 01h  datastore-integrity prompt 10: second launch of the resumed build, resuming resumed-a's store, to be interrupted by SIGTERM during CALCULATE QUADRATIC SOURCE INTEGRALS  · CALCULATE QUADRATIC SOURCE INTEGRALS, 100.00% (0 of 2 work items remaini
+   datastore-integrity-10-resumed-a-20261001T210301                   failed            -  14d 03h  datastore-integrity prompt 10: first launch of the resumed build (same scope as the reference), to be interrupted by SIGTERM during CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   datastore-integrity-10-reference-20261001T204320                   done              -  14d 03h  datastore-integrity prompt 10: reference build of a throwaway LambdaCDM store (3 k over 1e5-1e6/Mpc, zend 250), run straight through, whose fingerprint the interrupted-and-resumed build must equal  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover--quadsource-atol-sweep-lowz-check-20260924T001705         done              -  22d 00h  Phase 3b: is rtol 1e-7 converged at low z, or is it another c5? Three cheapest phase-2 cases plus the control, at rtol 1e-8 only; their 1e-5/1e-6/1e-7 rungs are already stored, so this completes a four-rung ladder in the band that carries all the cost.  · low-z-check pair 1/1: atol=1e-32 rtol=1e-08 done in 9682 s
+   handover--quadsource-atol-sweep-seam-20260923T225928               done              -  22d 01h  Phase 3a: the band where a numeric branch of G_k exists (z_response above the numeric solve's z_min, 6.3 e-folds inside horizon entry). Five mixed-policy and four numeric-policy work items, severe geometry, over rtol 1e-6/1e-7/1e-8 at atol 1e-32. Sub-5 s rows, so this is the cheap half of phase 3; it settles the tolerance in the only band where the consumer-side crossover and D1's numeric spline exist.  · seam pair 3/3: atol=1e-32 rtol=1e-08 done in 30 s
+   handover--quadsource-atol-sweep-lowz-20260923T132309               done              -  22d 10h  Phase 2 of the QuadSourceIntegral tolerance sweep: seven work items in the z_response <= 6.32 block that no run has ever attempted, at rtol 1e-5/1e-6/1e-7 and atol 1e-32. No 1e-8 reference -- unaffordable at these eta_response -- so the test is self-convergence of the three. Decides the pair the store is regenerated at.  · low-z pair 3/3: atol=1e-32 rtol=1e-07 done in 7782 s
+   handover--quadsource-atol-sweep-20260923T110622                    done              -  22d 13h  Decide whether DEFAULT_QUADRATURE_ATOL=1e-32 buys any digit of QuadSourceIntegral's total that depth-20 Levin bisection was not already failing to deliver. Nine fixed production work items x seven tolerance pairs, on a copy of the A3 baseline store; the baseline store itself is untouched. Opened by [a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles].  · pair 7/7: atol=1e-32 rtol=1e-08 done in 54 s
+   handover-03-a3-baseline-resume-20260923T024847                     failed            -  22d 21h  Finish the interrupted A3 policy-geometry baseline: the quadratic-source-integral stage on the current-grid LambdaCDM store, resumed after the numeric_quad read-back fix (210f0a0). Policy rows are already complete; this stage is for QuadSourceIntegral outcomes useful later.  · CALCULATE QUADRATIC SOURCE INTEGRALS, 92.31% (1 of 13 work items remaini
+   a3-pilot-resume                                                    unknown           -  24d 15h  (no manifest — predates the registry, or was not begun through it)
+   a3-pilot                                                           unknown           -  24d 15h  (no manifest — predates the registry, or was not begun through it)
+
+43 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 41 finished, 2 unknown.
+exit 0
+rows 43 by state {'done': 23, 'failed': 3, 'killed': 15, 'unknown': 2}
+this campaign's runs: 14
+runregistry-extraction-02-reference-20261012T091921
+runregistry-extraction-02-resumed-a-20261012T095041
+runregistry-extraction-02-resumed-b-20261012T100353
+runregistry-extraction-02-resumed-c-20261012T101145
+runregistry-extraction-04-reference-20261014T154651
+runregistry-extraction-04-resumed-a-20261014T160226
+runregistry-extraction-04-resumed-b-20261014T161222
+runregistry-extraction-04-resumed-c-20261014T161739
+runregistry-extraction-06-worktree-check-20261015T224836
+runregistry-extraction-06-worktree-check-breakage-20261015T225237
+runregistry-extraction-08-reference-20261015T235716
+runregistry-extraction-08-resumed-a-20261016T000342
+runregistry-extraction-08-resumed-b-20261016T000708
+runregistry-extraction-08-resumed-c-20261016T000959
+01's 29 runs (measure/out/01-list.txt), by id and state, equal to the 29 not of this campaign: True

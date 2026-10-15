@@ -1,0 +1,95 @@
+== reference, 00:03:15
+$ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/runregistry-extraction-08-reference.sqlite
+>> create: var/datastores/runregistry-extraction-08-reference.manifest.json
+{
+  "created": "2026-10-16T00:03:16+01:00",
+  "datastore": "runregistry-extraction-08-reference.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "operation": "create",
+      "to": "var/datastores/runregistry-extraction-08-reference.sqlite",
+      "when": "2026-10-16T00:03:16+01:00"
+    }
+  ],
+  "name": "runregistry-extraction-08-reference",
+  "purpose": "runregistry-extraction prompt 08 (R2): reference rehearsal store built straight through at b9daf44 (code a9ed928), runregistrykit 0.1.0 (9f8ebe4), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0; throwaway, kept for the campaign's review; the user retires it after 09's review, or not",
+  "sidecar_format": 1,
+  "store_id": "6bce4480eba24f4291bfe72ea55b4d23"
+}
+create rc=0
+$ ./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/runregistry-extraction-08-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-reference.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint --write rc=0
+
+== resumed, 00:06:52
+$ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/runregistry-extraction-08-resumed.sqlite
+>> create: var/datastores/runregistry-extraction-08-resumed.manifest.json
+{
+  "created": "2026-10-16T00:06:52+01:00",
+  "datastore": "runregistry-extraction-08-resumed.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "b9daf449722f3e443f8dd592c1a890752cbeed6c",
+      "operation": "create",
+      "to": "var/datastores/runregistry-extraction-08-resumed.sqlite",
+      "when": "2026-10-16T00:06:52+01:00"
+    }
+  ],
+  "name": "runregistry-extraction-08-resumed",
+  "purpose": "runregistry-extraction prompt 08 (R2): resumed rehearsal store (resumed-a killed in GkSource, resumed-b killed in QSI, resumed-c to done) at b9daf44 (code a9ed928), runregistrykit 0.1.0 (9f8ebe4), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0; throwaway, kept for the campaign's review; the user retires it after 09's review, or not",
+  "sidecar_format": 1,
+  "store_id": "86b70a5d966347fbbbac46140ba8e57e"
+}
+create rc=0

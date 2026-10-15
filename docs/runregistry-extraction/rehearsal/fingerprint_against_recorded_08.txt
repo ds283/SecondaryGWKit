@@ -1,0 +1,20 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py var/datastores/runregistry-extraction-08-reference.sqlite var/datastores/runregistry-extraction-08-resumed.sqlite --against var/runs/runregistry-extraction-08-reference-20261015T235716 var/runs/runregistry-extraction-08-resumed-c-20261016T000959
+recorded: var/runs/runregistry-extraction-08-reference-20261015T235716/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by runregistry-extraction-08-reference-20261015T235716 at b9daf449722f3e443f8dd592c1a890752cbeed6c (git_dirty False)
+recorded: var/runs/runregistry-extraction-08-resumed-c-20261016T000959/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by runregistry-extraction-08-resumed-c-20261016T000959 at b9daf449722f3e443f8dd592c1a890752cbeed6c (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-reference-20261015T235716/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-resumed-c-20261016T000959/status.json, store): 0 difference(s)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-reference-20261015T235716/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-resumed-c-20261016T000959/status.json, store): 0 difference(s)
+
+verdict: equal
+exit 0

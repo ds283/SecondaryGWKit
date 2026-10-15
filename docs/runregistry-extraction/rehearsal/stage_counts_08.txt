@@ -1,0 +1,18 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/stage_counts.py var/runs/runregistry-extraction-08-reference-20261015T235716 var/runs/runregistry-extraction-08-resumed-a-20261016T000342 var/runs/runregistry-extraction-08-resumed-b-20261016T000708 var/runs/runregistry-extraction-08-resumed-c-20261016T000959
+lookup/compute/store per stage, from each run's stdout.log
+  reference: runregistry-extraction-08-reference-20261015T235716
+  resumed-a: runregistry-extraction-08-resumed-a-20261016T000342
+  resumed-b: runregistry-extraction-08-resumed-b-20261016T000708
+  resumed-c: runregistry-extraction-08-resumed-c-20261016T000959
+  stage                                                         reference       resumed-a           resumed-b           resumed-c  
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  170/170/170         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  567/567/567
+exit 0

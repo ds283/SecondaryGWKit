@@ -1,0 +1,113 @@
+== 2026-10-16 00:09:45 prune_check.py state/after-resumed-a.txt, after resumed-b opened and closed the store (before resumed-c)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-08/state/after-resumed-a.txt
+-- shard 0, GkSource: 12 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 214: absent
+   serial 231: absent
+   serial 237: absent
+   serial 247: absent
+   serial 248: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 254: absent
+   serial 255: absent
+-- shard 1, GkSource: 23 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 528: absent
+   serial 529: absent
+   serial 531: absent
+   serial 540: absent
+   serial 547: absent
+   serial 551: absent
+   serial 552: absent
+   serial 553: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 559: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+   serial 567: absent
+   serial 568: absent
+-- shard 3, GkSource: 9 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 21: absent
+   serial 39: absent
+   serial 40: absent
+   serial 48: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+44 serial(s) checked: 44 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 2026-10-16 00:12:48 prune_check.py state/after-resumed-a.txt, after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-08/state/after-resumed-a.txt
+-- shard 0, GkSource: 12 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 214: absent
+   serial 231: absent
+   serial 237: absent
+   serial 247: absent
+   serial 248: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 254: absent
+   serial 255: absent
+-- shard 1, GkSource: 23 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 528: absent
+   serial 529: absent
+   serial 531: absent
+   serial 540: absent
+   serial 547: absent
+   serial 551: absent
+   serial 552: absent
+   serial 553: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 559: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+   serial 567: absent
+   serial 568: absent
+-- shard 3, GkSource: 9 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 21: absent
+   serial 39: absent
+   serial 40: absent
+   serial 48: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+44 serial(s) checked: 44 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 2026-10-16 00:12:48 prune_check.py state/after-resumed-b.txt, after resumed-c
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite
+serials listed unvalidated in var/runregistry-extraction-08/state/after-resumed-b.txt
+   none: there is nothing to check
+rc=0
+
+-- every store file had the same SHA-256, mtime and size before and after each check (state/sha-resumed-b-after-state.txt = sha-after-prune-check1.txt; after-resumed-c.sha256 = sha-after-prune-checks-c.txt)

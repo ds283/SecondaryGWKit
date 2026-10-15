@@ -1,0 +1,277 @@
+# log_comparison_08.txt — R2 (runregistry-extraction-08) against R1 (runregistry-extraction-04)
+# A throwaway script in the agent's scratchpad, not committed; normalisation as verification §1.2.5: ANSI stripped, the campaign and prompt and the repository path replaced, Ray's [repeated Nx] count and every number replaced by N
+
+########## 1. Build logs, slug by slug, as sets of normalised line kinds
+== reference stderr.log: R2 30 lines, 5 kinds; R1 4 lines, 4 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+== reference launch log: R2 142 lines, 81 kinds; R1 118 lines, 81 kinds; equal: False
+   R2 only:       Queue summary: N lookup (avg N/sec), N compute (avg N/sec), N store (avg N/sec)
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only:       inflight: N lookup, N compute, N store | completed: N lookup (avg N/min), N compute (avg N/min), N store (avg N/min)
+   R1 only:    -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete (may be waiting for compute/store/validate tasks to finish)
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== reference stdout.log: R2 110 lines, 74 kinds; R1 112 lines, 75 kinds; equal: False
+   R2 only:       Queue summary: N lookup (avg N/sec), N compute (avg N/sec), N store (avg N/sec)
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only:       inflight: N lookup, N compute, N store | completed: N lookup (avg N/min), N compute (avg N/min), N store (avg N/min)
+   R1 only:    -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete (may be waiting for compute/store/validate tasks to finish)
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-a stderr.log: R2 13 lines, 3 kinds; R1 2 lines, 2 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+== resumed-a launch log: R2 99 lines, 67 kinds; R1 88 lines, 66 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-a stdout.log: R2 84 lines, 62 kinds; R1 84 lines, 62 kinds; equal: False
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-b stderr.log: R2 10 lines, 3 kinds; R1 2 lines, 2 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+== resumed-b launch log: R2 144 lines, 75 kinds; R1 148 lines, 74 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-b stdout.log: R2 131 lines, 69 kinds; R1 143 lines, 69 kinds; equal: False
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-c stderr.log: R2 13 lines, 5 kinds; R1 4 lines, 4 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+== resumed-c launch log: R2 123 lines, 66 kinds; R1 116 lines, 67 kinds; equal: False
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only:       inflight: N lookup, N compute, N store | completed: N lookup (avg N/min), N compute (avg N/min), N store (avg N/min)
+   R1 only:    -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete (may be waiting for compute/store/validate tasks to finish)
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+== resumed-c stdout.log: R2 107 lines, 58 kinds; R1 109 lines, 60 kinds; equal: False
+   R2 only: **   list it with: ./venv/bin/python -m runregistrykit list
+   R1 only:       inflight: N lookup, N compute, N store | completed: N lookup (avg N/min), N compute (avg N/min), N store (avg N/min)
+   R1 only:    -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete (may be waiting for compute/store/validate tasks to finish)
+   R1 only: **   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+
+########## 2. Searches of the build logs (counts per file), R2; then R1's, for comparison
+columns: reference:stdout.log  reference:stderr.log  reference:launch log  resumed-a:stdout.log  resumed-a:stderr.log  resumed-a:launch log  resumed-b:stdout.log  resumed-b:stderr.log  resumed-b:launch log  resumed-c:stdout.log  resumed-c:stderr.log  resumed-c:launch log
+-- R2
+Traceback                                                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ModuleNotFoundError|ImportError                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+unpickl|pickle                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Datastore.SQL / Datastore/SQL                                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+AttributeError                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ray.kill|killed actor|ActorDiedError|RayActorError           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ValueError                                                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+RuntimeWarning                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DeprecationWarning                                           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+_timestamp                                                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ConfigError                                                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+RunRegistry (not RunRegistryKit/runregistrykit)              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+runregistrykit (any line)                                    [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+runregistrykit, not the banner's list-it-with line           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+datastorekit (any line)                                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+datastorekit, not inside a path                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+did not validate                                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+INTEGRITY WARNING                                            [0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0]
+reconcil|repair|in.flight|replicat (ci)                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+--no-prune-unvalidated                                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+replaced 1 occurrence                                        [4, 0, 4, 4, 0, 4, 4, 0, 4, 4, 0, 4]
+rehearsal scope, NOT A3 v2                                   [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+main.py argv = ... '--zend', '250'                           [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+bootstrapping a local Ray instance (num_cpus=6, include_dash [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+Started a local Ray instance.                                [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]
+resuming into                                                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1]
+IntegrationWarning                                           [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1]
+SystemExit                                                   [0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0]
+SystemExit(143)                                              [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0]
+SystemExit(1)                                                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]
+raylet file_system_monitor (disk over 95% full)              [0, 26, 26, 0, 11, 11, 0, 8, 8, 0, 9, 9]
+list it with: ...                                            [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+-- R1
+Traceback                                                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ModuleNotFoundError|ImportError                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+unpickl|pickle                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Datastore.SQL / Datastore/SQL                                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+AttributeError                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ray.kill|killed actor|ActorDiedError|RayActorError           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ValueError                                                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+RuntimeWarning                                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DeprecationWarning                                           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+_timestamp                                                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ConfigError                                                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+RunRegistry (not RunRegistryKit/runregistrykit)              [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+runregistrykit (any line)                                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+runregistrykit, not the banner's list-it-with line           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+datastorekit (any line)                                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+datastorekit, not inside a path                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+did not validate                                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+INTEGRITY WARNING                                            [0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0]
+reconcil|repair|in.flight|replicat (ci)                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+--no-prune-unvalidated                                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+replaced 1 occurrence                                        [4, 0, 4, 4, 0, 4, 4, 0, 4, 4, 0, 4]
+rehearsal scope, NOT A3 v2                                   [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+main.py argv = ... '--zend', '250'                           [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+bootstrapping a local Ray instance (num_cpus=6, include_dash [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+Started a local Ray instance.                                [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]
+resuming into                                                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1]
+IntegrationWarning                                           [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1]
+SystemExit                                                   [0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0]
+SystemExit(143)                                              [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]
+SystemExit(1)                                                [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0]
+raylet file_system_monitor (disk over 95% full)              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+list it with: ...                                            [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]
+-- the banner's list-it-with line, verbatim, each run's stdout.log, R2 / R1
+reference: R2 ['**   list it with: ./venv/bin/python -m runregistrykit list']  R1 ['**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list']
+resumed-a: R2 ['**   list it with: ./venv/bin/python -m runregistrykit list']  R1 ['**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list']
+resumed-b: R2 ['**   list it with: ./venv/bin/python -m runregistrykit list']  R1 ['**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list']
+resumed-c: R2 ['**   list it with: ./venv/bin/python -m runregistrykit list']  R1 ['**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list']
+-- lines naming datastorekit or runregistrykit, as normalised kinds, R2 (all twelve files): 1
+    **   list it with: ./venv/bin/python -m runregistrykit list
+-- lines naming datastorekit or runregistrykit, as normalised kinds, R1 (all twelve files): 0
+
+########## 3. Printed lines, the ** sequence, status.json fields, stage times
+== counts in stdout.log, R2 / R1
+line                       reference    resumed-a    resumed-b    resumed-c   
+`** `                      26 / 26      23 / 23      26 / 26      26 / 26     
+ALL WORK ITEMS COMPLETE    10 / 10      7 / 7        9 / 9        10 / 10     
+Queue summary              10 / 10      7 / 7        9 / 9        10 / 10     
+(no compute items ...)     1 / 1        1 / 1        7 / 7        9 / 9       
+progress n/m remaining     0 / 1        0 / 0        0 / 0        0 / 1       
+progress inflight          0 / 1        0 / 0        0 / 0        0 / 1       
+
+== forms (normalised kinds) over the four runs, R2 vs R1
+ALL WORK ITEMS COMPLETE: R2 2 kinds, R1 2 kinds, equal True
+Queue summary: R2 7 kinds, R1 7 kinds, equal True
+(no compute items ...): R2 1 kinds, R1 1 kinds, equal True
+progress n/m remaining: R2 0 kinds, R1 1 kinds, equal False
+   R1 only: -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete (may be waiting for compute/store/validate tasks to finish)
+progress inflight: R2 0 kinds, R1 1 kinds, equal False
+   R1 only: inflight: N lookup, N compute, N store | completed: N lookup (avg N/min), N compute (avg N/min), N store (avg N/min)
+
+== the `** ` sequence, slug by slug
+reference: R2 26 lines, R1 26; normalised equal in order: False
+    --- R1
+    +++ R2
+    @@ -3 +3 @@
+    -**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+    +**   list it with: ./venv/bin/python -m runregistrykit list
+   stage banners: R2 15, R1 15; verbatim equal in order: True
+    ** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+    ** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE
+    ** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE
+    ** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+    ** CALCULATING BACKGROUND LambdaCDM MODEL
+    ** BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM
+    ** CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS
+    ** CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS
+    ** CALCULATE QUADRATIC SOURCE TERMS
+    ** CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+    ** CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS
+    ** CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+    ** APPLY GKSOURCE POLICIES
+    ** GkSourcePolicyData SUMMARY STATISTICS
+    ** CALCULATE QUADRATIC SOURCE INTEGRALS
+resumed-a: R2 23 lines, R1 23; normalised equal in order: False
+    --- R1
+    +++ R2
+    @@ -3 +3 @@
+    -**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+    +**   list it with: ./venv/bin/python -m runregistrykit list
+resumed-b: R2 26 lines, R1 26; normalised equal in order: False
+    --- R1
+    +++ R2
+    @@ -3 +3 @@
+    -**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+    +**   list it with: ./venv/bin/python -m runregistrykit list
+resumed-c: R2 26 lines, R1 26; normalised equal in order: False
+    --- R1
+    +++ R2
+    @@ -3 +3 @@
+    -**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list
+    +**   list it with: ./venv/bin/python -m runregistrykit list
+
+== status.json at the end, R2 vs R1
+reference: state done/done exit 0/0 units 0,None/0,None keys equal True stage equal True: 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete'; fingerprint keys R2 ['classes', 'digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken'] / R1 ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']; sidecar R2 'not written: /Users/ds283/Documents/Code' R1 'not written: /Users/ds283/Documents/Code'
+resumed-a: state killed/killed exit 143/143 units 0,None/0,None keys equal True stage equal True: 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; fingerprint keys R2 ['classes', 'digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken'] / R1 ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']; sidecar R2 'not written: /Users/ds283/Documents/Code' R1 'not written: /Users/ds283/Documents/Code'
+resumed-b: state killed/killed exit 143/143 units 0,None/0,None keys equal True stage equal True: 'CALCULATE QUADRATIC SOURCE INTEGRALS'; fingerprint keys R2 ['classes', 'digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken'] / R1 ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']; sidecar R2 'written' R1 'written'
+resumed-c: state done/done exit 0/0 units 0,None/0,None keys equal True stage equal True: 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete'; fingerprint keys R2 ['classes', 'digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken'] / R1 ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']; sidecar R2 'written' R1 'written'
+
+== stage times (ALL WORK ITEMS COMPLETE in time ...), R2
+reference
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.523s
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0117s
+    CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.99s
+    CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.331s
+    CALCULATE QUADRATIC SOURCE TERMS: 1.07s
+    CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 29.7s
+    CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 11.2s
+    CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 27.4s
+    APPLY GKSOURCE POLICIES: 10.4s
+    CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 59.8s
+resumed-a
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.845s
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0147s
+    CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.984s
+    CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.315s
+    CALCULATE QUADRATIC SOURCE TERMS: 0.983s
+    CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 25.4s
+    CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 11.4s
+resumed-b
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0152s
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0125s
+    CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00706s
+    CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.0135s
+    CALCULATE QUADRATIC SOURCE TERMS: 0.0114s
+    CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.61s
+    CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.58s
+    CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 20.5s
+    APPLY GKSOURCE POLICIES: 10.4s
+resumed-c
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0151s
+    CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.014s
+    CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00659s
+    CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.0103s
+    CALCULATE QUADRATIC SOURCE TERMS: 0.0109s
+    CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.73s
+    CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.71s
+    CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 5.64s
+    APPLY GKSOURCE POLICIES: 5.46s
+    CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 14.6s
+
+== progress lines, R2, verbatim
+
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 lines matching file_system_monitor: 2
+== extract_GkWKB_data: R2 46 lines 27 kinds; R1 50 lines 30 kinds; equal False
+   lookups per queue R2 ['3', '3', '348']  R1 ['3', '3', '348']  equal True
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R1 only:       inflight: N lookup | completed: N lookup (avg N/min)
+   R1 only:    -- ALL WORK ITEMS COMPLETE in time Nm Ns
+   R1 only:    -- N-N-N N:N:N (Nm Ns running): N/N work items remaining = N% complete
+   R1 only: (plot_Gk pid=N) <REPO>/extract_GkWKB_data.py:N: RuntimeWarning: More than N figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may
+   R2 lines matching file_system_monitor: 4
+== extract_GkSource_data: R2 43 lines 27 kinds; R1 44 lines 27 kinds; equal False
+   lookups per queue R2 ['3', '3', '10']  R1 ['3', '3', '10']  equal True
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R1 only: (plot_Gk pid=N) <REPO>/extract_GkSource_data.py:N: MatplotlibDeprecationWarning: The x parameter as float was deprecated in Matplotlib N and will be removed in N. Use int(x) instead. [repeated Nx across cluster]
+   R2 lines matching DeprecationWarning: 2
+   R2 lines matching file_system_monitor: 1
+== extract_TkWKB_data: R2 33 lines 22 kinds; R1 33 lines 22 kinds; equal True
+   lookups per queue R2 ['3', '3']  R1 ['3', '3']  equal True
+== extract_tensor_source_data: R2 33 lines 22 kinds; R1 33 lines 22 kinds; equal True
+   lookups per queue R2 ['3', '6']  R1 ['3', '6']  equal True
+== extract_QuadSourceIntegral_data: R2 38 lines 22 kinds; R1 38 lines 22 kinds; equal True
+   lookups per queue R2 ['3', '3', '24']  R1 ['3', '3', '24']  equal True
+== extract_Gk_data-no-models: R2 43 lines 25 kinds; R1 42 lines 24 kinds; equal False
+   lookups per queue R2 ['3', '3', '116']  R1 ['3', '3', '116']  equal True
+   R2 only: (raylet) [N-N-N N:N:N,N E N N] (raylet) file_system_monitor.cc:N: /tmp/ray/session_N-N-N_N-N-N_N_N is over N% full, available space: N GB; capacity: N GB. Object creation will fail if spilling is required.
+   R2 lines matching file_system_monitor: 1
+
+########## 5. store fingerprint on the resumed store, after the readers
+== 2026-10-16T00:16:06+0100 store fingerprint (no --write) on the resumed store, after the readers
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+problems: none
+recorded: matches the fingerprint taken 2026-10-16T00:11:37+01:00 by run runregistry-extraction-08-resumed-c-20261016T000959, at b9daf449722f3e443f8dd592c1a890752cbeed6c
+rc=0
+-- files against after-resumed-c.sha256
+0

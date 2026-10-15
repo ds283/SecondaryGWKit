@@ -1,11 +1,12 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 8
-landed (01, 02, 02a, 03, 04, 05, 06, 07); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03
-pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
-RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05 pinned it (§5.11),
-06 adopted it: `RunRegistry/` is gone (§5.12), and 07 pinned the spec digests and guards the format
-(§5.13). 09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
+**Last updated:** 2026-10-16 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 9
+landed (01, 02, 02a, 03, 04, 05, 06, 07, 08); R0, R1 and R2 hold. E1 holds: DatastoreKit
+`v0.4.0` (§5.5), 03 pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways
+(§5.7). E2 holds: RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05
+pinned it (§5.11), 06 adopted it: `RunRegistry/` is gone (§5.12), 07 pinned the spec digests and
+guards the format (§5.13), and 08 rehearsed through both packages: R2 and RunRegistryKit's G2 hold
+(§5.14). 09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -58,7 +59,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | `3dcab1b` | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | `a9ed928` | [log](logs/07-guard-the-fingerprint-format.md) |
-| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
+| 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/08-rehearse-through-both-packages.md) |
 | 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
@@ -99,8 +100,8 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **A4** | 06 | `CLAUDE.md`: the registry section, the package section, the roots | ✅ |
 | **A5** | 06 | the worktree check (Q3) | ✅ |
 | **V1** | 07 | the spec-digest guard and its breakages | ✅ |
-| **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1 | ⬜ |
-| **G-RRK** | 08 | RunRegistryKit's G2 recorded as holding (§2) | ⬜ |
+| **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1 | ✅ |
+| **G-RRK** | 08 | RunRegistryKit's G2 recorded as holding (§2) | ✅ |
 | **Z1** | 09 | the final measurements; the gate records drafted; the close | ⬜ |
 
 ## 2. The gates
@@ -111,7 +112,8 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **E1** | DatastoreKit has tagged a release carrying the fingerprint algorithm and a version for the encoding and algorithm, with an SGK-facing note ([brief](datastorekit-fingerprint-brief.md)) | — | ✅ holds (2026-10-14, §5.5): `v0.4.0`, tag object `8e7c1d77…` on `c8570e84…`, CI run 38538726292 green on `c8570e8`; the note is DatastoreKit's `docs/adoption/secondarygwkit.md`, "Addendum: v0.4.0" |
 | R1 | E1's release reproduces `39809dca…`, and DatastoreKit's fingerprint equals SGK's on every store | 04 | ✅ holds (`ec61569`): `runregistry-extraction-04-reference-20261014T154651` and `-resumed-c-20261014T161739`, both `done`, both `39809dca…`, equal to R0's recorded fingerprints; `fingerprint_both_ways.py` exits 0 on R1's two stores and R0's two, every field equal but `encoding_format` |
 | **E2** | RunRegistryKit has tagged a release imported from 01's frozen tree (its G1), with the client config, a `[stores]` extra over E1's release, and SGK's adoption checklist ([brief](runregistrykit-extraction-brief.md)) | — | ✅ holds (2026-10-15, §5.10): `v0.1.0`, tag object `fd5ce480…` on `9f8ebe43…`, CI run 38754093289 green on `9f8ebe4` in all three jobs; the checklist is RunRegistryKit's `docs/adoption/secondarygwkit.md` at `aaab408` |
-| RunRegistryKit G2 | `RunRegistry/` is gone and nothing imports it, the pin is installed, the roots pass, `list` gives 01's runs, and R2 reproduces `39809dca…` | 06, 08 | ⬜ |
+| R2 | both packages reproduce `39809dca…`, and each R2 store's fingerprint equals R0's and R1's recorded ones in every field but `encoding_format` | 08 | ✅ holds (this commit): `runregistry-extraction-08-reference-20261015T235716` and `-resumed-c-20261016T000959`, both `done`, both `39809dca…` with `encoding_format` 1; `fingerprint_both_ways.py` exits 0 against R0's and R1's four recorded fingerprints, 20 of 20 checks on each store |
+| RunRegistryKit G2 | `RunRegistry/` is gone and nothing imports it, the pin is installed, the roots pass, `list` gives 01's runs, and R2 reproduces `39809dca…` | 06, 08 | ✅ holds (this commit): its checklist item 9's six clauses, each with its evidence (verification §3.11), resting on 06 (`740bafc`), 07 (`a9ed928`) and R2's two `done` runs; 09 drafts the record for RunRegistryKit's board |
 
 Recording a gate on RunRegistryKit's or DatastoreKit's own board is a commit in that repository
 (README §6.2 C11).
@@ -1193,3 +1195,58 @@ subagent, after the seven roots were measured at `ba15458`. Nothing landed after
   the header rewrapped; this note listed; `prompts/INDEX.md`'s row (8 of 10 landed).
 - **Handed on.** 08, R2, is next, at `a9ed928`'s tree. Its note is written after this review; it
   takes the rehearsal lock.
+
+### 5.14 After prompt 08 (2026-10-16)
+
+[`08`](08-rehearse-through-both-packages.md) landed at this commit, with `b9daf44` as its parent; its
+log is [`logs/08-rehearse-through-both-packages.md`](logs/08-rehearse-through-both-packages.md), and
+the record is [`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md)
+§3. It opened and closed no issue, so `docs/OPEN_ISSUES.md` is unchanged (106).
+- **R2 holds** (L1–L4, gate R2). Four registered builds at `b9daf44`, whose code is `a9ed928`'s,
+  through `runregistrykit` 0.1.0 and `datastorekit` 0.4.0: `reference` and `resumed-c` `done`/0,
+  `resumed-a` and `resumed-b` `killed`/143. Both stores are format 6, `encoding_format` 1,
+  `39809dca…`, all 21 classes, equal to each other, to their sidecars and to the fingerprints R2's
+  own `reference` and `resumed-c` recorded. So the swap moves nothing a build writes or a fingerprint
+  reads. The one build-log line naming `runregistrykit` is the launcher's banner; none names
+  `datastorekit`, and none holds a `DeprecationWarning` or `ConfigError`.
+- **W1 across stores holds.** `docs/runregistry-extraction/fingerprint_both_ways.py` exits 0 on R2's
+  two stores against the four fingerprints SGK's own code recorded for R0 and R1
+  (`runregistry-extraction-02-reference-20261012T091921`, `-02-resumed-c-20261012T101145`,
+  `-04-reference-20261014T154651`, `-04-resumed-c-20261014T161739`): 20 of 20 checks on each store,
+  every field equal but `encoding_format` and `taken`, the package's comparison one `encoding` entry
+  against each record. Every store file was unchanged by it.
+- **The manifests say what ran.** Every `packages` is `runregistrykit` 0.1.0 at `9f8ebe43…`
+  (`v0.1.0`), `datastorekit` 0.4.0 at `c8570e84…` (`v0.4.0`) and `raypoolkit` 0.2.0 at `eaef0ce6…`
+  (`v0.2.0`), none editable, compared as JSON. Every `git_dirty` is `false`, every `git_head`
+  `b9daf449…`, every `script_sha256` `2a985303…`; R1's nineteen keys.
+- **L4 equals R1's.** The statistics counts are equal (291; numeric 109; mixed 26, 25 complete and 1
+  minimal; WKB 156) in the reference and both resumed runs that print the block; the reference's
+  block has R0's line order, not R1's (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`
+  again). The reference's stage counts, every run's stage banners, the printed lines and the
+  registry fields are R1's.
+- **The prune at open is exercised a third time.** At this load the reference's `GkSource` stage
+  took 27.4 s, so the 40 % hold was 11 s, just above the 10 s floor. It left 165 `GkSource` rows, 44
+  unvalidated, after `resumed-a`. `resumed-b` pruned exactly those 44 and computed 170 = 291 − 165 +
+  44. `resumed-c` computed 567 = 864 − 297 QSI rows.
+- **RunRegistryKit's G2 holds**, its checklist item 9 clause by clause (verification §3.11): the
+  measure at `b9daf44` finds 0 imports, names, bound calls, string literals and `-m RunRegistry`; the
+  roots pass; `list` gives 01's 29 and `store show` reads all 18 sidecars; the worktree run (06);
+  `encoding_format` beside every R2 digest; the pin, and every manifest naming the three packages.
+- **The lock.** `acquire` before `reference`, `set-pid` at each launch, held through the readers and
+  the guard, `release` at 00:16:31; every command exit 0, all in `lock_08.txt`. `status` reports it
+  free, and `ray-processes` lists nothing.
+- **The load** was light (one-minute 6–19 at the checks, 56 at the end of the readers). The
+  reference took 4 m 33 s; no stage ran past the queue's 300 s notify interval, so no progress line
+  was printed.
+- **The machine's disk.** The volume holding `/tmp/ray` is 96 % used (40–44 GB free), and every
+  raylet warned every 10 s that it is "over 95% full … Object creation will fail if spilling is
+  required". Nothing spilled and both stores are `39809dca…`; recorded in the log's observations, not
+  opened.
+- **Nothing else under `var/` moved.** The 18 tombstones keep their SHA-256, mtime and size
+  (`1fbaf5b7…` over them); the only new files are R2's ten store files and two sidecars. `list`
+  shows 43 runs, none `running`. Neither R2 store is retired.
+- **The seven roots** are at 07's counts, with no failure: AdaptiveLevin 32, CosmologyModels 39,
+  ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 99, ComputeTargets 693.
+- **Handed on.** 09 closes the campaign: the final measurements, the gate records drafted for
+  RunRegistryKit's board (G2) and the five registry issues for its `docs/OPEN_ISSUES.md` (§3). The
+  user retires R2's two stores after 09's review, or not.

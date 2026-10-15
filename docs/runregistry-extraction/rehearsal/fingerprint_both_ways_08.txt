@@ -1,0 +1,90 @@
+-- every file of R2's two stores and their sidecars, before
+12 files (SHA-256, size, mtime_ns)
+82d51cee45b0d50df87fa9534294dd245bfcde843279f27c19c91f7f6d904977 23695360 1792105305482134537 var/datastores/runregistry-extraction-08-reference-shard0000.sqlite
+0fe97931258fec913939a9bc9355590a745256551eeefe564be07a5972df29be 23949312 1792105305486725469 var/datastores/runregistry-extraction-08-reference-shard0001.sqlite
+8046f737c85c0af63b584d44d8cda82624f2f8df9fa9526446a31f8159f44892 1077248 1792105044434338529 var/datastores/runregistry-extraction-08-reference-shard0002.sqlite
+aa1efb8c0b7ec3217ee2ebfd223de61f1f3eabaa4314e289b9b9ad2eea62e677 23232512 1792105305481478826 var/datastores/runregistry-extraction-08-reference-shard0003.sqlite
+74c02b871e6ac888b2078a406ce430cc653d221440e2c690d39a443b91f9c8a8 10583 1792105399755044076 var/datastores/runregistry-extraction-08-reference.manifest.json
+4fd1a5786c7cebf27a0b15b719c81f2eb20287467002401baa1c294619856240 36864 1792105044482902734 var/datastores/runregistry-extraction-08-reference.sqlite
+c081ee34ae86756be56ed3784148ce526af81ebf3d4073904275a65a30db91e1 23805952 1792105897047376705 var/datastores/runregistry-extraction-08-resumed-shard0000.sqlite
+060c20ed8c3d101bfa3682f112cbe4c139334522646c841c0264f89c50e5bf93 23838720 1792105897058750243 var/datastores/runregistry-extraction-08-resumed-shard0001.sqlite
+4dfb4c723fda5d20f31e9e7c22cc58cf2754ef099dd9f338e7cc7ab313d7455c 1077248 1792105430531482541 var/datastores/runregistry-extraction-08-resumed-shard0002.sqlite
+b8122b3edbfc5c5337e225e060af1b94c1b4e46fb139d73a1f2f9adc68722e7e 23572480 1792105897033595450 var/datastores/runregistry-extraction-08-resumed-shard0003.sqlite
+4727c31e2400a3035922f8f056123d51952c8f4c3101a6780dc9c27151b9446f 10676 1792105899372000676 var/datastores/runregistry-extraction-08-resumed.manifest.json
+3ef18373da9ed9adfaed5655ed3a0aca8abbc052ce68d9e0d883d1674dfa7d27 36864 1792105805822339870 var/datastores/runregistry-extraction-08-resumed.sqlite
+
+$ PYTHONPATH=. ./venv/bin/python docs/runregistry-extraction/fingerprint_both_ways.py var/datastores/runregistry-extraction-08-reference.sqlite var/datastores/runregistry-extraction-08-resumed.sqlite --against var/runs/runregistry-extraction-02-reference-20261012T091921 var/runs/runregistry-extraction-02-resumed-c-20261012T101145 var/runs/runregistry-extraction-04-reference-20261014T154651 var/runs/runregistry-extraction-04-resumed-c-20261014T161739
+== var/datastores/runregistry-extraction-08-reference.sqlite
+  current: format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] current encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] current digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] compare_fingerprints(sidecar's, current) is empty: 0 entries; sidecar's digest 39809dca…, encoding 1, taken 2026-10-16T00:03:17+01:00
+  -- against var/runs/runregistry-extraction-02-reference-20261012T091921/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-02-reference-20261012T091921 at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-02-resumed-c-20261012T101145/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-02-resumed-c-20261012T101145 at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-04-reference-20261014T154651/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-04-reference-20261014T154651 at 89ff8b728b61ba22452110de88718094361e4e15
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-04-resumed-c-20261014T161739/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-04-resumed-c-20261014T161739 at 89ff8b728b61ba22452110de88718094361e4e15
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  => every check holds (20 of 20 checks hold)
+
+== var/datastores/runregistry-extraction-08-resumed.sqlite
+  current: format 6, encoding 1, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes
+  [PASS] current encoding_format == ENCODING_FORMAT: 1 and 1
+  [PASS] current digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] the sidecar records a fingerprint: sidecar kind registry
+  [PASS] compare_fingerprints(sidecar's, current) is empty: 0 entries; sidecar's digest 39809dca…, encoding 1, taken 2026-10-16T00:11:37+01:00
+  -- against var/runs/runregistry-extraction-02-reference-20261012T091921/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-02-reference-20261012T091921 at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-02-resumed-c-20261012T101145/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-02-resumed-c-20261012T101145 at fe16d8e76e6d40d5e53eb6649a03834dda82be93
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-04-reference-20261014T154651/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-04-reference-20261014T154651 at 89ff8b728b61ba22452110de88718094361e4e15
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  -- against var/runs/runregistry-extraction-04-resumed-c-20261014T161739/status.json: format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes; taken by runregistry-extraction-04-resumed-c-20261014T161739 at 89ff8b728b61ba22452110de88718094361e4e15
+  [PASS] 'encoding_format' not in the recorded fingerprint: recorded keys ['classes', 'digest', 'fingerprint_format', 'problems', 'taken']
+  [PASS] recorded digest == 39809dca…: 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  [PASS] field by field, encoding_format and taken set aside, current == recorded: 0 differing path(s)
+  [PASS] compare_fingerprints(recorded, current) is one entry, kind 'encoding': encoding: recorded None, current 1
+  => every check holds (20 of 20 checks hold)
+
+summary: 2 store(s) against 4 recorded fingerprint(s); every check holds: each store's fingerprint equals every recorded one in every field but encoding_format and taken
+exit 0 (5 s, 00:17:21-00:17:26)
+
+-- after
+12 files (SHA-256, size, mtime_ns)
+82d51cee45b0d50df87fa9534294dd245bfcde843279f27c19c91f7f6d904977 23695360 1792105305482134537 var/datastores/runregistry-extraction-08-reference-shard0000.sqlite
+0fe97931258fec913939a9bc9355590a745256551eeefe564be07a5972df29be 23949312 1792105305486725469 var/datastores/runregistry-extraction-08-reference-shard0001.sqlite
+8046f737c85c0af63b584d44d8cda82624f2f8df9fa9526446a31f8159f44892 1077248 1792105044434338529 var/datastores/runregistry-extraction-08-reference-shard0002.sqlite
+aa1efb8c0b7ec3217ee2ebfd223de61f1f3eabaa4314e289b9b9ad2eea62e677 23232512 1792105305481478826 var/datastores/runregistry-extraction-08-reference-shard0003.sqlite
+74c02b871e6ac888b2078a406ce430cc653d221440e2c690d39a443b91f9c8a8 10583 1792105399755044076 var/datastores/runregistry-extraction-08-reference.manifest.json
+4fd1a5786c7cebf27a0b15b719c81f2eb20287467002401baa1c294619856240 36864 1792105044482902734 var/datastores/runregistry-extraction-08-reference.sqlite
+c081ee34ae86756be56ed3784148ce526af81ebf3d4073904275a65a30db91e1 23805952 1792105897047376705 var/datastores/runregistry-extraction-08-resumed-shard0000.sqlite
+060c20ed8c3d101bfa3682f112cbe4c139334522646c841c0264f89c50e5bf93 23838720 1792105897058750243 var/datastores/runregistry-extraction-08-resumed-shard0001.sqlite
+4dfb4c723fda5d20f31e9e7c22cc58cf2754ef099dd9f338e7cc7ab313d7455c 1077248 1792105430531482541 var/datastores/runregistry-extraction-08-resumed-shard0002.sqlite
+b8122b3edbfc5c5337e225e060af1b94c1b4e46fb139d73a1f2f9adc68722e7e 23572480 1792105897033595450 var/datastores/runregistry-extraction-08-resumed-shard0003.sqlite
+4727c31e2400a3035922f8f056123d51952c8f4c3101a6780dc9c27151b9446f 10676 1792105899372000676 var/datastores/runregistry-extraction-08-resumed.manifest.json
+3ef18373da9ed9adfaed5655ed3a0aca8abbc052ce68d9e0d883d1674dfa7d27 36864 1792105805822339870 var/datastores/runregistry-extraction-08-resumed.sqlite
+-- before == after (SHA-256, size, mtime_ns): True

@@ -1,0 +1,21 @@
+# interrupter_firings_08.txt — each interrupter's log, verbatim (R2, runregistry-extraction-08)
+
+== resumed-a (interrupter pid 84032; '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 11)
+2026-10-16T00:03:47+01:00 interrupter pid 84032 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-08-resumed-a-20261016T000342 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 11 s
+2026-10-16T00:03:47+01:00 liveness alive; pid 83931; stage 'Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite" with 4 shards'
+2026-10-16T00:03:52+01:00 liveness alive; pid 83931; stage 'CALCULATE QUADRATIC SOURCE TERMS'
+2026-10-16T00:03:57+01:00 liveness alive; pid 83931; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-16T00:04:22+01:00 liveness alive; pid 83931; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-16T00:05:32+01:00 liveness alive; pid 83931; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-16T00:05:32+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 11 s, then reading again
+2026-10-16T00:05:43+01:00 sent SIGTERM to pid 83931 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/runregistry-extraction-08-resumed.sqlite --job-name runregistry-extraction-08 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference --campaign runregistry-extraction --prompt 08'; exiting
+
+== resumed-b (interrupter pid 88011; '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 40)
+2026-10-16T00:07:12+01:00 interrupter pid 88011 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/runregistry-extraction-08-resumed-b-20261016T000708 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 40 s
+2026-10-16T00:07:12+01:00 liveness alive; pid 87907; stage 'Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/runregistry-extraction-08-resumed.sqlite" with 4 shards'
+2026-10-16T00:07:17+01:00 liveness alive; pid 87907; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-16T00:07:22+01:00 liveness alive; pid 87907; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-16T00:07:42+01:00 liveness alive; pid 87907; stage 'APPLY GKSOURCE POLICIES'
+2026-10-16T00:07:52+01:00 liveness alive; pid 87907; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-16T00:07:52+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 40 s, then reading again
+2026-10-16T00:08:32+01:00 sent SIGTERM to pid 87907 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command '/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/runregistry-extraction-08-resumed.sqlite --job-name runregistry-extraction-08 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8ebe4, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, with --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, R0 and R1 runregistry-extraction-02-reference and -04-reference --campaign runregistry-extraction --prompt 08'; exiting
