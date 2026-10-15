@@ -322,7 +322,9 @@ explain before any pin moves.
     release adopted), in each board's form, in verification §4 (§6.2 C11).
   - Drafts, for the user to hand to RunRegistryKit, the SGK issues whose defect lies in code that
     moved there (`[00-open-issues-about-the-registry-code-stay-on-sgk-boards]`, opened at E2), each
-    located in `runregistrykit` at `v0.1.0`.
+    located in `runregistrykit` at `v0.1.0`, and with them
+    `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`, a defect in the package itself
+    seen in 06's review (added 2026-10-15, at the user's request).
   - Closes the board, README §2, `prompts/INDEX.md` and `docs/OPEN_ISSUES.md` §1.21.
   - States, for the A3 v2 campaign, what it inherits: the launcher, the commands, and that its
     store is the first live one in the new layout.

@@ -180,6 +180,24 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     `docs/OPEN_ISSUES.md`, and the user hands them over (README §6.2 C11). Each SGK board's entry
     then says where its issue went. 06 does not touch them.
 
+- **[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]** *(opened 2026-10-15 in 06's
+  review, by the orchestrator, at the user's request; **Assigned (2026-10-15):** to 09, to hand
+  over to RunRegistryKit with the four above)*
+  - **The defect.** `python -m runregistrykit list` flushes `stdout` unguarded after printing the
+    table (`runregistrykit/__main__.py:563` at `v0.1.0`). When the reader closes the pipe first, as
+    `list | head -4` does, the flush raises `BrokenPipeError`: a traceback, then Python's
+    "Exception ignored … BrokenPipeError" on exit. It is a race: 1 of 30 runs of `list | head -4`,
+    on a 17 kB listing, at `7af17bd`. It is inherited: the frozen `RunRegistry/__main__.py:503` at
+    `a45aefc` has the same flush, and RunRegistryKit imported it. Every other `print` there is
+    equally unguarded, so other commands can probably do it too; only `list` was seen.
+  - **Impact.** Nothing is lost or written; the run listing a reader saw is complete up to where it
+    stopped. A shell with `pipefail`, or a script that treats stderr as failure, would read a
+    discovery check (`CLAUDE.md`, run-registry rule 1) as failing. Cosmetic otherwise.
+  - **Next step.** 09 drafts it for RunRegistryKit's `docs/OPEN_ISSUES.md` beside the four above,
+    with the line and the reproduction; the usual remedy is to catch `BrokenPipeError` in `main`
+    and point `stdout` at `os.devnull` before exiting. Nothing is changed here (`CLAUDE.md`: a
+    package's defect is fixed in its own release).
+
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
   **Assigned (2026-10-12):** to `handover`, by the user)*
@@ -1095,7 +1113,9 @@ subagent, after the seven roots were measured at `29a3f2d`. Nothing landed after
   tag-set lists keep theirs. 08 runs the script as it stands.
 - **Seen in passing, not opened:** `python -m runregistrykit list | head` ends with a
   `BrokenPipeError` traceback once `head` closes the pipe. Cosmetic, and RunRegistryKit's; it is
-  for 09 to carry over with the four issues, if the user wants it carried.
+  for 09 to carry over with the four issues, if the user wants it carried. **Opened (2026-10-15,
+  after this review, at the user's request)** as
+  `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` (§3), assigned to 09.
 - **Residue fixed here:** "this commit" → `740bafc` on this board (§1 row, §4's three closures,
   §5.12) and in the log; this note listed; `prompts/INDEX.md`'s row (7 of 10 landed, 2 rows). Of the
   log's observations: `compare_with_recorded.py` now reads a `null` `taken` as empty instead of

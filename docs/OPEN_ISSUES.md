@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-15 · **105 open** across twenty-one campaigns.
+**Last updated:** 2026-10-15 · **106 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -899,11 +899,13 @@ shared rehearsal lock (its README §4.1). It was assigned to `handover` the same
 is in §1.1. A fourth was opened on 2026-10-14 at E1, from DatastoreKit's `v0.4.0` note, and ruled by
 the user the same day. A fifth was opened on 2026-10-15 at E2, in writing prompts 05–08, and assigned
 to the campaign's prompt 09. Prompt 06 closed the first, the second (SGK's half) and the fourth on
-2026-10-15; their record is the board's §4.
+2026-10-15; their record is the board's §4. A sixth was opened the same day in 06's review, a
+RunRegistryKit defect seen in passing, and assigned to prompt 09 to hand over with the fifth.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` | runregistry-extraction | Four open issues on other SGK boards describe defects or a decided change in `RunRegistry/` code, which is RunRegistryKit's from `v0.1.0`; neither the brief nor RunRegistryKit carried them. **Assigned (2026-10-15):** to 09, which locates each in the package and drafts the hand-over. |
+| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` | runregistry-extraction | `python -m runregistrykit list` piped into `head` sometimes ends in a `BrokenPipeError` traceback: an unguarded `sys.stdout.flush()` (`__main__.py:563` at `v0.1.0`), inherited from `RunRegistry/`. RunRegistryKit's defect; cosmetic, nothing lost. **Assigned (2026-10-15):** to 09, to hand over with the row above. |
 
 ---
 
