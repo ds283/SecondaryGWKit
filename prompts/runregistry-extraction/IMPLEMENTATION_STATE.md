@@ -1,10 +1,10 @@
 # runregistry-extraction campaign — implementation state
 
 **Last updated:** 2026-10-15 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 6
-landed (01, 02, 02a, 03, 04, 05); R0 and R1 hold; K2 holds (§5.11). E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned it
-(§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
-RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 09 follows 08's
-review. D1–D5, Q1–Q8 and D6 ruled by the user.**
+landed (01, 02, 02a, 03, 04, 05); R0 and R1 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned
+it (§5.6), and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds:
+RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05 pinned it (§5.11);
+09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -54,7 +54,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 02a | [The rehearsal-lock helper](02a-the-rehearsal-lock-helper.md) | `tools/rehearsal_lock.py`; the interop and real-lock proofs; `CLAUDE.md`'s lock section | Sonnet | ✍️ 2026-10-12 | ✅ | `c863055` | [log](logs/02a-the-rehearsal-lock-helper.md) |
 | 03 | [Pin `datastorekit` at `v0.4.0`](03-pin-datastorekit-at-v0.4.0.md) | the DatastoreKit pin; the three addenda | Sonnet | ✍️ 2026-10-14 | ✅ | `5b81f2e` | [log](logs/03-pin-datastorekit-at-v0.4.0.md) |
 | 04 | [Rehearse through the new DatastoreKit (R1)](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint both ways | Opus | ✍️ 2026-10-14 | ✅ | `ec61569` | [log](logs/04-rehearse-through-the-new-datastorekit.md) |
-| 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | this commit | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
+| 05 | [Pin `runregistrykit` at `v0.1.0`](05-pin-runregistrykit-at-v0.1.0.md) | the RunRegistryKit pin | Sonnet | ✍️ 2026-10-15 | ✅ | `3dcab1b` | [log](logs/05-pin-runregistrykit-at-v0.1.0.md) |
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15; ⏸ 05 | ⬜ | — | — |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15; ⏸ 06 | ⬜ | — | — |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15; ⏸ 07 | ⬜ | — | — |
@@ -71,7 +71,8 @@ carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrat
 (2026-10-12, used for 01); [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-12,
 used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-10-12, used for
 02a); [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-14, used for 03);
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-14, used for 04).
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-14, used for 04);
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-15, used for 05).
 
 ### 1.1 Items
 
@@ -895,7 +896,7 @@ tree at `14bcac0`, read-only, and the user then asked for E2 to be recorded and 
 
 ### 5.11 After prompt 05 (2026-10-15)
 
-[`05`](05-pin-runregistrykit-at-v0.1.0.md) landed at this commit; its log is
+[`05`](05-pin-runregistrykit-at-v0.1.0.md) landed at `3dcab1b`; its log is
 [`logs/05-pin-runregistrykit-at-v0.1.0.md`](logs/05-pin-runregistrykit-at-v0.1.0.md). It opened and
 closed no issue, so `docs/OPEN_ISSUES.md` is unchanged (108).
 - **K2.** `requirements.txt:81` is `runregistrykit[stores] @ ...@v0.1.0`, one added line. The dry run
@@ -921,3 +922,40 @@ closed no issue, so `docs/OPEN_ISSUES.md` is unchanged (108).
   at 06, as `RECORDED_DISTRIBUTIONS` is frozen (log, "Observations not acted on").
 - **Venv.** Not recorded by any commit: rolling 05 back needs `pip uninstall -y runregistrykit`
   after the revert (README §4.2).
+
+**Orchestrator review of prompt 05** (2026-10-15, against `3dcab1b`, by
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) §3). Dispatched from `e381906` to one
+Sonnet subagent, after the seven roots were measured at `17512cb`. Nothing landed after the agent's
+commit. **All six checks pass**, and no stop condition fired.
+1. **Scope.** Five files: `requirements.txt`, `measure/out/05-pip.txt` and `05-roots.txt`, the log
+   and this board. `requirements.txt`'s diff is the one added line, between `rpds-py` and `rsa`.
+   Nothing under `RunRegistry/`, `docs/`, `README.md`, `prompts/INDEX.md` or `orchestrator/`; the
+   index untouched, at 108.
+2. **The venv, measured here.** `direct_url.json`: `commit_id` `9f8ebe43…`, `requested_revision`
+   `v0.1.0`, no `dir_info`. The installed files are the five modules, with no
+   `runregistrykit/tests/`. `pip freeze` against the agent's 2.1 freeze differs by the one line;
+   `datastorekit` and `raypoolkit` unchanged; `pip check` clean; `pip install --dry-run -r
+   requirements.txt` now installs nothing. `05-pip.txt` has the dry run before the install.
+3. **The imports.** The `sys.modules` check prints `[]`; `package_provenance()` equals the agent's
+   2.1 reading. `git grep -n runregistrykit -- . ':!prompts' ':!docs'` gives the pin and
+   `CLAUDE.md:114`, prose in the freeze section; no code names the package.
+4. **The roots,** re-run here at `3dcab1b`, load 9–22: all seven pass at 03's counts with no
+   failure, as at `17512cb` and in the agent's run.
+5. **Nothing else moved.** `find var -newer <marker>`, the marker set just before dispatch, is
+   empty. `git status --short` is clean. RunRegistryKit's checkout is unchanged, at `caad864`,
+   clean.
+6. **The records.** The log has every §5.1 heading and classifies its three deviations, no
+   `UNINTENDED DRIFT`; checklist item 1's five versions hold; README §5 rule 9 is under
+   "Observations not acted on", as the note asked. The commit message is in `CLAUDE.md`'s form.
+- **Deviation 2 is the prompt's and the note's, not the agent's.** Both said the `git grep` outside
+  `prompts/` and `docs/` would be empty but for the pin; `CLAUDE.md:114` was always going to match.
+  06's checks of "nothing names `RunRegistry`" should scope to code, or name `CLAUDE.md`'s prose.
+- **One explanation corrected.** The log says `pip show` lists no `Requires:` partly because
+  `datastorekit` was already installed. The installed `METADATA` carries `Requires-Dist:
+  datastorekit>=0.4.0; extra == "stores"`; `pip show` lists unconditional requirements only, so the
+  line would be empty either way. The install is right; the log stays as written.
+- **Residue fixed here:** "this commit" → `3dcab1b` on this board (§1 row, §5.11) and in the log
+  (commit line and rollback); the header rewrapped to the board's width; this note added to the list
+  of notes; README §5 rule 9's "(05)" → "(06)"; `prompts/INDEX.md`'s row (6 of 10 landed).
+- **Handed on.** 06, the swap, is next, at `3dcab1b`'s tree, with `runregistrykit` 0.1.0 installed
+  and nothing yet importing it. Its note is written after this review.

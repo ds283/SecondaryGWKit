@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 05, pin `runregistrykit` at `v0.1.0`
 
 - **Subject:** [`05-pin-runregistrykit-at-v0.1.0.md`](../05-pin-runregistrykit-at-v0.1.0.md), board item K2.
-- **Commit:** this commit (parent `e381906`).
+- **Commit:** `3dcab1b` (parent `e381906`).
 - **Result:** landed. K2 passes; no stop condition of the prompt's §4 fired. All seven roots pass at 03's
   counts with no failure, so no known flake needed a re-run.
 - **Model:** Sonnet 5.5.
@@ -96,4 +96,4 @@ None. This prompt adds no code and no test (README §5 rule 8; acceptance 5).
   only `datastorekit` and `raypoolkit`. There is no `runregistrykit.toml`, so no `runregistrykit` command works yet (06 writes it).
 - **The roots pass at 03's counts.** The lock is free, the registry shows nothing `running` (37 runs, 35 finished, 2 `unknown`),
   and this prompt took no lock, started no Ray and wrote nothing under `var/`.
-- **Rollback** (README §4.2): `git revert` of this commit, then `./venv/bin/pip uninstall -y runregistrykit`.
+- **Rollback** (README §4.2): `git revert` of `3dcab1b`, then `./venv/bin/pip uninstall -y runregistrykit`.

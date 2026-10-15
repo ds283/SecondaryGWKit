@@ -490,7 +490,7 @@ The project-wide ones in `CLAUDE.md`, plus:
 9. **Nothing the code stores changes.** No table, column, key or stored value; the fingerprint's
    overall digest stays `39809dca…`. Two records gain fields, by D3 and the pins: a fingerprint
    carries DatastoreKit's version beside its digest (06), and a manifest's `packages` names
-   `runregistrykit` (05). A prompt that cannot keep the digest stops.
+   `runregistrykit` (06). A prompt that cannot keep the digest stops.
 10. **No test needs Ray, and no test opens anything under `var/`.** A rehearsal's reads of its own
     stores, and 01's and 06's reads of the registry and the sidecars, are verification steps, not
     tests.
