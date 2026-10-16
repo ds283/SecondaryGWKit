@@ -10,13 +10,15 @@ large-$x$ harness** as [`docs/handover/realistic_large_x.py`](../../docs/handove
 with [`REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md), and **has separated the
 clamp term from the representation term** — the measurement
 `[12-handover-clamp-error-in-production]` records as impossible. A3 is written and not run; B1, B2,
-B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. **Seven** issues are open in §3 — four from
-prompts 01 and 02, and **three opened 2026-09-23 by the A3 baseline run**, which was stopped by the
+B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. **Eight** issues are open in §3 — four from
+prompts 01 and 02, **three opened 2026-09-23 by the A3 baseline run**, which was stopped by the
 user after a read of its cost showed the shipped quadrature tolerance pair unreachable on
-production's squeezed triples; one is closed in §4 on another board. **Prompt 05 (2026-10-16)**
-is not seam work: it closed `[00-main-and-the-readers-default-to-ray-address-auto]`, which the
-user assigned here on 2026-10-12 and the `runregistry-extraction` board holds, so a second issue
-is recorded in §4 as closed on another board.
+production's squeezed triples, and **one opened 2026-10-16 by a measurement of a hard-killed run
+ahead of A3 v2**, a `runregistrykit` defect drafted for RunRegistryKit; one is closed in §4 on
+another board. **Prompt 05 (2026-10-16)** is not seam work: it closed
+`[00-main-and-the-readers-default-to-ray-address-auto]`, which the user assigned here on
+2026-10-12 and the `runregistry-extraction` board holds, so a second issue is recorded in §4 as
+closed on another board.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -86,6 +88,78 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 ---
 
 ## 3. Active and unresolved issues
+
+- **[a3-v2-a-hard-killed-run-blocks-its-store]** *(opened 2026-10-16 by a measurement ahead of the
+  A3 v2 launch, not by a prompt; a `runregistrykit` defect at `v0.1.0`, drafted for RunRegistryKit
+  in [`runregistrykit-stale-run-brief.md`](runregistrykit-stale-run-brief.md))* — after a hard
+  kill, the registry blocks the store's fingerprint, copy, move, retire and amend, and no registry
+  command clears the block. A run killed by `SIGKILL`, power loss, a reboot or the OOM killer never
+  reaches `Run.finish`, so its `status.json` says `state: running` for ever. `list` shows it stale
+  (`!!`), correctly. But every store operation that checks for a running run counts it "alive
+  **or stale**": `_running_runs_naming` (`runregistrykit/stores.py:998`, the filter at `:1017`),
+  called by copy and move (`_refuse_if_in_use`, `:1029`), fingerprint (`:1338`), retire (`:1664`)
+  and amend (`:2017`). A later run on the same store finishes with `fingerprint=True`. It excludes
+  only itself (`taken_by=self`, `__init__.py:476`), so it records `fingerprint_error` and never
+  writes the sidecar. `begin` (`__init__.py:604`) refuses a tombstone (`:686-698`) and nothing else,
+  so it does not refuse a new run on a store that a `running` run names.
+
+  **This is by design, and the remedy is incomplete.** Each refusal names its own remedy: "a
+  stale run is ended by a person, with Run.finish" (`stores.py:1038`, `:1344`, `:1667`, `:2020`).
+  RunRegistryKit tests that message (`tests/test_store_retire.py:436`, against a stand-in dead pid).
+  But `Run.finish` is the Python API only. The command line has `list` and `store
+  show|create|adopt|copy|move|fingerprint|retire|amend` (`__main__.py:418-522`), and none of them
+  writes a `status.json`. `Run.finish` itself checks neither the pid nor the heartbeat
+  (`__init__.py:424-459`), so it would end a live run just as readily.
+
+  **Measured 2026-10-16** at SGK `f1a7de3` (clean), with `runregistrykit` 0.1.0 (commit `9f8ebe4`;
+  the installed `__init__.py`, `stores.py` and `__main__.py` are byte-identical to the tag). There
+  was no Ray and no build. The store was a throwaway `StoreFixtures.real_store_fixtures` store,
+  `var/datastores/handover-stale-run-probe.sqlite` (two shards, `store_id` `dab353cd…`), and the
+  runs went in the main checkout's `var/runs/`. The sequence:
+  1. `store create`, then `store fingerprint --write`: digest `d9328538…`.
+  2. A child process ran `runregistrykit.begin(..., results=<store>)` and one heartbeat, and was
+     sent `SIGKILL` (returncode −9). Its `status.json` was unchanged by the kill: `state: running`,
+     `pid 88637`, `exit_code: null`.
+  3. `list` showed `!! handover-stale-run-probe-killed-20261016T110844  running`, then "44 run(s)
+     … 41 finished, 1 stale, 2 unknown".
+  4. A second `begin` on the same store **was not refused** (`results_store_id` `dab353cd…`).
+     `finish("done", exit_code=0, fingerprint=True)` returned `state: done` with
+     `fingerprint_error: "RuntimeError: Cannot fingerprint …: run
+     handover-stale-run-probe-killed-20261016T110844 is running (stale, pid 88637) and names this
+     store by its results and results_store_id. … Nothing was read or written"`. There was no
+     `fingerprint_sidecar` field.
+  5. `store fingerprint --write`, `store retire --dry-run`, `store retire --without-fingerprint
+     --dry-run` and `store copy` each exited 1, with the same "is running (stale, pid 88637)"
+     refusal. The sidecar's SHA-256 was unchanged by all four.
+  6. Then `kill -0 88637` gave "no such process", and a person's
+     `runregistrykit.Run("<run dir>").finish("killed", exit_code=137)` ended the run. After that,
+     `list` showed it `killed` with no `!!`, `store fingerprint` matched `d9328538…`, `store retire
+     --dry-run` passed, and `store retire` deleted the primary and its two shards. The sidecar is
+     the tombstone, `completed 2026-10-16T11:11:25+01:00`. The two probe run directories stay in
+     `var/runs/` as `killed` and `done`, and nothing under `var/datastores/` is live. The full
+     transcript is not committed; the outputs quoted here are exact.
+
+  **Impact on A3 v2.** A `SIGTERM` is unaffected: the driver's handler ends the run `killed`/143,
+  as rehearsed (`docs/runregistry-extraction-verification.md` §3.2–3.3). After a **hard** kill,
+  the store **can be resumed**. Neither `begin` nor the driver's `--resume` pre-check
+  (`docs/handover/quadsource_atol_sweep.py:535-545`, which reads the store and not the registry)
+  refuses. The resumed run ends `done`. But it **cannot be fingerprinted, copied, moved, retired
+  or amended through any registry command**. The resumed run's own
+  `finish(..., fingerprint=True)` (`docs/gktk-remedial/scoped_pipeline_run.py:476`, through
+  `quadsource_atol_sweep.py:654-656`) records `fingerprint_error`, and the sidecar keeps whatever
+  fingerprint it had before: none, for a new A3 v2 store. The only route out is the one the
+  refusal names, step 6 above: a person calls the package's Python API on the dead run's
+  directory, after checking `kill -0` by hand, and then runs `store fingerprint --write`. That is
+  the package's documented API and not a patch. Whether a person uses it is the user's call; SGK
+  adds no code for it. The block does not stop the launch or a resume, and it costs no rows. The
+  related inherited issue `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`
+  (now RunRegistryKit's) can leave a `SIGTERM`'d run reading `running` by another route, and would
+  meet the same block.
+
+  **Next step:** the brief above is for the user to hand to RunRegistryKit. It names options, and
+  RunRegistryKit's choice decides the fix. Until RunRegistryKit's index lists the issue, it stays
+  open here. Then it moves to §4 as transferred, and its row leaves `docs/OPEN_ISSUES.md` §1.1.
+  A fix reaches SGK by a pin move, in a commit of its own. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 - **[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]** *(opened 2026-09-23
   by the A3 baseline run, not by a prompt)* — on production's **squeezed** triples the source
