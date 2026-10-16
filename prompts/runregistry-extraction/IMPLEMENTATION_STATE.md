@@ -8,7 +8,7 @@ pinned the spec digests and guards the format (§5.13), 08 rehearsed through bot
 RunRegistryKit's G2 hold (§5.14). 09 took the final measurements, drafted the two gate records and the
 hand-over of the registry issues, and wrote what A3 v2 inherits (§5.15). D1–D5, Q1–Q8 and D6 ruled by the
 user. It closes with three issues still open in §3 (the two awaiting the hand-over, and the one assigned
-to `handover`), and the user's three decisions pending (§5.15).**
+to `handover`), and two of the user's three decisions pending: R2's stores are retired (§5.16).**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -1490,3 +1490,24 @@ pass**, acceptance 1–7 are met, and no stop condition fired. **The campaign is
 - **What is left is the user's** (§5.15): R2's two stores, the two gate commits, and handing the brief
   to RunRegistryKit. After the hand-over, a records commit moves the four entries to their boards' §4
   as transferred and closes this board's two; the index goes from 106 to 100.
+
+### 5.16 R2's stores retired (2026-10-16)
+
+**R2's two rehearsal stores retired, by the user's instruction** after 09's review (README §3, §6.3).
+Each was retired with `python -m runregistrykit store retire` at `e8776ae`, clean, after a dry run of
+each: `var/datastores/runregistry-extraction-08-reference.sqlite` and `-08-resumed.sqlite`.
+
+**The dry runs** exited 0. In each, a fresh read-only fingerprint matched the recorded
+`39809dca…`, and the only references were the store's own building runs: one for `reference` and
+three for `resumed`, and no sidecar.
+
+**The retirements** exited 0, at 01:55:05 and 01:55:09. Five files went per store (the primary and
+four shards), 140 MB in all. Each sidecar stays as its tombstone, with `completed` set. The four run
+directories stay as the record. The outputs are under `var/runregistry-extraction-09/retire/`
+(`dry-run-08-*.log`, `retire-08-*.log`).
+
+**Afterwards** all 20 sidecars under `var/datastores/` are tombstones, each read by `store show` with
+`problems: none`, and no `.sqlite` file remains there. `list` gives 43 runs, none `running`. No issue
+moves, and `docs/OPEN_ISSUES.md` stays at 106. Verification §4.2 and §4.5, which call R2's two live,
+were true at `ef34ed0` and stay as written. **Still the user's:** the two gate commits and the
+hand-over of the brief (§5.15).
