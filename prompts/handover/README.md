@@ -342,6 +342,12 @@ abandoned at `GkTk-remedial` prompt 09, so its representation term and its Levin
 upper bounds of unknown tightness. A4 decides whether they stand. Since A2 is the instrument B2, D
 and E are scored on, that question is upstream of everything after it.
 
+**Prompt 05 is not seam work** ([`05-ray-address-defaults-to-local.md`](05-ray-address-defaults-to-local.md),
+written 2026-10-16). It closes `[00-main-and-the-readers-default-to-ray-address-auto]`, which the
+`runregistry-extraction` board holds and the user assigned here on 2026-10-12 because this campaign
+owns the A3 v2 launch: `main.py` and the six readers stop defaulting to `--ray-address auto`. It
+belongs to no workstream and has no place in §4's ordering beyond landing before that launch.
+
 ### Workstream A — instruments
 
 Pure information gain, independent of every line of hand-over code and of each other.

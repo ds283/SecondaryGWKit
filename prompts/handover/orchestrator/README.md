@@ -10,12 +10,17 @@ reviews its commit against fixed criteria, and either hands back or stops and re
 | 02 | The realistic-flavour large-$x$ harness | [`prompt-02.md`](prompt-02.md) | **yes** | A `docs/` measurement script and a document; **no production file and no test**. Suite counts must be *unchanged*, not risen. The review turns on the control cell reproducing KT §8 Table 8.1 and on whether the attribution of the two terms is honest about its own error |
 | 03 | The policy-geometry census | — | **not yet** | A `docs/` census script and a document; **no production file and no test**. Unlike 01 and 02 it **needs a datastore**, so its dispatch has to name one and record which source-grid construction its rows carry. The review turns on the type/quality census matching `source-remediation-verification.md` §5.5's **shape** — a like-for-like comparison is impossible and prompt 03 §2.2 says why — on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, and on the agent having opened the two §2 (o) issues **without fixing them** |
 | 04 | The $G_k$ phase decision test | [`prompt-04.md`](prompt-04.md) | **yes** | A `docs/` script and a short memo; **no production file and no test**. Added after A2 landed, because A2's fixture turned out to carry a $G$ phase one campaign behind production. It decides whether A2's numbers stand. The review turns on one thing a green suite cannot see: whether the threshold for "material" was fixed **before** the numbers were seen — so the prompt fixes it and the dispatch restates it |
+| 05 | The Ray address default | [`prompt-05.md`](prompt-05.md) | **yes** | Added 2026-10-16 for an issue the user assigned here on 2026-10-12; **not seam work** and independent of every other prompt. Seven `--ray-address` defaults go from `auto` to `local`, plus one `ast` test module. The review turns on the A3 v2 launcher, `quadsource_atol_sweep.py`, being byte-identical, and on the test reading the scripts rather than restating them. Lands before the A3 v2 launch or with it |
 
 ## Running them
 
 > Read `prompts/handover/orchestrator/prompt-04.md` and follow it.
 
 **01 and 02 have landed** (`c414451`, `0d7c05c`). **04 comes next, before 03.**
+
+**05 is outside that order** (added 2026-10-16). It shares no file with 01–04 and depends on none of
+them; its only constraint is to land before the A3 v2 launch or with it. Run it whenever that
+launch is near, serialised with the others only because they all update the board.
 
 That ordering is not the one this file originally carried, and the reason it changed is worth
 stating: 04 did not exist when the campaign was planned. It exists because A2, on landing, was
