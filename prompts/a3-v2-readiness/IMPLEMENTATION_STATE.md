@@ -1389,10 +1389,13 @@ with its closing note; log 03). Both index rows are deleted.
   - **Next step.** In `RunRegistry`: a unique temporary name per write (for example `mkstemp` in
     the same directory), so that a nested write never shares an inode with the one it interrupts.
     Not prompt 04's to change (its §6). Not assigned.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit/__init__.py` at `v0.1.0`: `write_json_atomic` is
-    `:242-251`, with the fixed `tmp = path + ".tmp"` at `:245`, and `Run._update` (`:398-403`) writes
-    `status.json` through it for both `heartbeat` and `finish`. Still present. The brief is
-    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md) §2.4. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
+    `runregistrykit/__init__.py` at `v0.1.0`: `write_json_atomic` is `:242-251`, with the fixed
+    `tmp = path + ".tmp"` at `:245`, and `Run._update` (`:398-403`) writes `status.json` through it for
+    both `heartbeat` and `finish`. Still present. The brief is
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.4. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists it.
 - **[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]** *(opened 2026-10-03 by prompt
   04; read, not measured; does not block A3 v2)*
   - **The defect.** `ray.init` installs Ray's `sys.exit(signum)` at its start (`worker.py`

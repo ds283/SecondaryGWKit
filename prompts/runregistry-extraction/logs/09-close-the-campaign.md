@@ -1,7 +1,7 @@
 # Log — runregistry-extraction prompt 09, close the campaign
 
 - **Subject:** [`09-close-the-campaign.md`](../09-close-the-campaign.md), board items Z1–Z5.
-- **Commit:** this commit (parent `ef34ed0`).
+- **Commit:** `e96c1ea` (parent `ef34ed0`).
 - **Result:** landed. The final measurements are saved, the two gate records are drafted, the six registry issues
   are placed and the five that are the package's are drafted for RunRegistryKit, what A3 v2 inherits is stated,
   and the board, README §2, `prompts/INDEX.md` and `docs/OPEN_ISSUES.md` close the campaign. **Nothing is

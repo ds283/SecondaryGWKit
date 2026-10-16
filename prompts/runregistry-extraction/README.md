@@ -135,7 +135,7 @@ all 38 factories, but not a build.
 | 06 | [`06-adopt-runregistrykit.md`](06-adopt-runregistrykit.md) | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | written 2026-10-15; landed `740bafc` |
 | 07 | [`07-guard-the-fingerprint-format.md`](07-guard-the-fingerprint-format.md) | **Q5**: a test that a spec change without a format bump fails | Sonnet | written 2026-10-15; landed `a9ed928` |
 | 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit's G2** | Opus | written 2026-10-15; landed `957d658` |
-| 09 | [`09-close-the-campaign.md`](09-close-the-campaign.md) | The final measurements; the gates drafted for the two repositories; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2; the close | Sonnet | written 2026-10-16; landed this commit |
+| 09 | [`09-close-the-campaign.md`](09-close-the-campaign.md) | The final measurements; the gates drafted for the two repositories; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2; the close | Sonnet | written 2026-10-16; landed `e96c1ea` |
 
 ### 2.1 When each prompt file is written
 

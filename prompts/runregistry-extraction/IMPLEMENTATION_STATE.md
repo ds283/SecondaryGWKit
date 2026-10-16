@@ -7,8 +7,8 @@ with its SGK checklist (§5.10); 05 pinned it (§5.11), 06 adopted it and `RunRe
 pinned the spec digests and guards the format (§5.13), 08 rehearsed through both packages, and R2 and
 RunRegistryKit's G2 hold (§5.14). 09 took the final measurements, drafted the two gate records and the
 hand-over of the registry issues, and wrote what A3 v2 inherits (§5.15). D1–D5, Q1–Q8 and D6 ruled by the
-user. It closes with this campaign's two issues still open (§3), and the user's three decisions pending
-(§5.15).**
+user. It closes with three issues still open in §3 (the two awaiting the hand-over, and the one assigned
+to `handover`), and the user's three decisions pending (§5.15).**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -62,7 +62,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | `a9ed928` | [log](logs/07-guard-the-fingerprint-format.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15 | ✅ | `957d658` | [log](logs/08-rehearse-through-both-packages.md) |
-| 09 | [Close the campaign](09-close-the-campaign.md) | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ✍️ 2026-10-16 | ✅ | this commit | [log](logs/09-close-the-campaign.md) |
+| 09 | [Close the campaign](09-close-the-campaign.md) | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ✍️ 2026-10-16 | ✅ | `e96c1ea` | [log](logs/09-close-the-campaign.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -79,7 +79,8 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-15, used for 05);
 [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md) (2026-10-15, used for 06);
 [`orchestrator/prompt-07.md`](orchestrator/prompt-07.md) (2026-10-15, used for 07);
-[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-15, used for 08).
+[`orchestrator/prompt-08.md`](orchestrator/prompt-08.md) (2026-10-15, used for 08);
+[`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) (2026-10-16, used for 09).
 
 ### 1.1 Items
 
@@ -1376,7 +1377,7 @@ fired. **R2 holds, and RunRegistryKit's G2 holds.**
 
 ### 5.15 After prompt 09 (2026-10-16)
 
-[`09`](09-close-the-campaign.md) landed at this commit, with `ef34ed0` as its parent; its log is
+[`09`](09-close-the-campaign.md) landed at `e96c1ea`, with `ef34ed0` as its parent; its log is
 [`logs/09-close-the-campaign.md`](logs/09-close-the-campaign.md), and the record is
 [`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md) §4. It
 changed no code, no test and no script. It opened and closed no issue, so `docs/OPEN_ISSUES.md` holds
@@ -1435,3 +1436,57 @@ Three of them name this board (`docs/OPEN_ISSUES.md` §1.1, §1.21); the rest st
 
 **Handed on.** The A3 v2 build (`handover`). It starts with `list`, takes the lock, forces `address="local"`
 and registers its run, and its store is the first live one recorded in the new layout meant to be kept.
+
+**Orchestrator review of prompt 09** (2026-10-16, against `e96c1ea`, by
+[`orchestrator/prompt-09.md`](orchestrator/prompt-09.md) §3). Dispatched from `ef34ed0` to one Sonnet
+subagent, after the seven roots, the measure, `pip freeze`, the provenance, `list` and the twenty
+`store show`s were taken at `33a7346`. Nothing landed after the agent's commit. **All eleven checks
+pass**, acceptance 1–7 are met, and no stop condition fired. **The campaign is closed.**
+1. **Scope.** 17 paths: `A` for the brief, the log and seven `measure/out/09-*` files; `M` for exactly
+   the note's list. No code, test, script, `CLAUDE.md` or `config/`. Verification: one hunk appending
+   §4, no line removed. `find var -newer <marker>` is empty.
+2. **The measurements,** re-run here at `e96c1ea`: RunRegistryKit's measure (its root at `caad864`,
+   clean) equals `09-measure.txt` but for the commit and the record lines 09 itself added (every
+   live-code and staying-test figure 0, 422 files); the `git grep` prints `CLAUDE.md:82` and
+   `config/fingerprint.py:33` alone; `pip freeze` is unchanged from the orchestrator's; `list` gives
+   43 runs, none `running`, the same ids and states as `09-list.txt`; the twenty `store show`s equal
+   `09-store-show.txt` block for block, each exit 0 and `problems: none`, eighteen `retired`.
+3. **The placement,** read here at `v0.1.0`: every file and line the brief, verification §4.4 and the
+   board lines cite exists and says what is claimed, including the agent's additions to the note's
+   (the manifest `:707-723`, `git_provenance` `:724`, `packages` `:725`, `Run._update` `:398-403`,
+   `write_json_atomic` in `__all__` at `:96`, the re-raise `:1125-1128`, DatastoreKit's string at the
+   installed `ShardedPool.py:3029`). The package has no `SIGTERM` or `signal.` outside its tests.
+4. **The brief,** read whole: five entries in RunRegistryKit's board-entry form, each readable without
+   SGK's boards, with lines at the tag, measurement, impact, next step and a proposed row; rulings 3
+   and 4 as stated; the two SIGTERM issues named as SGK's with their lines; placement left to
+   RunRegistryKit; nothing claimed transferred.
+5. **The boards.** One added paragraph per entry on the three other boards, at the end of the right
+   entry, and nothing else; the two SIGTERM entries untouched. This board's two §3 entries gain the
+   narrowing line and stay in §3.
+6. **The index.** 106 rows by counting; date 2026-10-16; six hooks changed, each agreeing with its
+   board, none naming `RunRegistry/` code; §1.21's lead-in true. No row added or deleted.
+7. **The drafts.** The G2 cell in E1's and E2's form with the checklist pointer kept, its six clauses
+   mapped to §3.11 and §4.2. The DatastoreKit note in its section's form; its account of R1 (20 of 20
+   on four stores, the listings equal but the first line, one `encoding` entry) equals §2.10.
+8. **§4.1 and the hand-over.** The twelve runs equal the note's table and `09-runs.txt`. §4.5's
+   launcher, its hash `2a985303…` (last commit `7af17bd`), `address="local"` at `:610`, the
+   `--rehearsal` help text and the `--build` checks at `:1031-1037`, `--job-name` and `--campaign`
+   defaults, and `store retire --dry-run --reason` each check against the tree. Its board line numbers
+   are `ef34ed0`'s, as its section says.
+9. **The records.** Status closed, §1 row 09, Z1–Z5, the closing line under §2, §5.15 with every open
+   issue and the three things left to the user. README §2: ten rows landed with commits.
+   `prompts/INDEX.md`: closed 10 / 10, 2 live, 23 closed, "§1.1, §1.21; 3".
+10. **The roots,** re-run here at `e96c1ea`, serially, load 5–9: AdaptiveLevin 32, CosmologyModels
+    39, ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 99, ComputeTargets
+    693, all OK, no failure; `09-roots.txt` agrees.
+11. **The log.** README §5.1's sections; rulings 1–8 classified, five deviations of the agent's own,
+    one `UNINTENDED DRIFT` (a first `store show` pass on extension-less paths, overwritten before
+    anything relied on it); six observations, none needing an issue.
+- **Residue fixed here:** "this commit" → `e96c1ea` on this board (§1 row, §5.15), in README §2's
+  row 09 and in the log's header; the status line's count of open §3 issues, which said two and is
+  three (the ray-address issue, assigned to `handover`, is the third); this note listed as used for
+  09; and the four "Drafted for RunRegistryKit" paragraphs on the `run-registry`, `store-retirement`
+  and `a3-v2-readiness` boards re-wrapped to 100 columns, their words unchanged.
+- **What is left is the user's** (§5.15): R2's two stores, the two gate commits, and handing the brief
+  to RunRegistryKit. After the hand-over, a records commit moves the four entries to their boards' §4
+  as transferred and closes this board's two; the index goes from 106 to 100.

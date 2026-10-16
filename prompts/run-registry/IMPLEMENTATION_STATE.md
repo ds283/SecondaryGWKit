@@ -81,11 +81,14 @@ README §0.3 calls worse than nothing.
   inside §0.2's boundary. Pair it with a stated rule that **only terminal-state run directories are
   transferred**. Indexed at `docs/OPEN_ISSUES.md` §1.11.
 
-  **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit` at `v0.1.0` records no machine:
-  `begin` is `runregistrykit/__init__.py:604`, the manifest `:707-723`, `pid_alive` `:258` and
-  `liveness` `:294`, and `machine` and `platform` appear nowhere in the package's code. The brief is
-  [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md) §2.1. It is a decided change, not a
-  defect, and whether RunRegistryKit adopts it for every client is its decision. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
+  **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit` at
+  `v0.1.0` records no machine: `begin` is `runregistrykit/__init__.py:604`, the manifest `:707-723`,
+  `pid_alive` `:258` and `liveness` `:294`, and `machine` and `platform` appear nowhere in the
+  package's code. The brief is
+  [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+  §2.1. It is a decided change, not a defect, and whether RunRegistryKit adopts it for every client
+  is its decision. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+  `docs/OPEN_ISSUES.md` lists it.
 
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing

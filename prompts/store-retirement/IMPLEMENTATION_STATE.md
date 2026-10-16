@@ -521,10 +521,13 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
     for `datastore-portability`'s area, not this campaign's. If D5 is taken, prompt 04's
     `store amend` is the remedy for a given copy.
   - **Measurement:** audit §2.12. Indexed at `docs/OPEN_ISSUES.md` §1.14.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit/stores.py` at `v0.1.0`: `copy_store` is `:1138`,
-    its docstring says every other field, "unknown ones included, is the source's, verbatim", and
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
+    `runregistrykit/stores.py` at `v0.1.0`: `copy_store` is `:1138`, its docstring says every other
+    field, "unknown ones included, is the source's, verbatim", and
     `fields = _copy.deepcopy(reading.fields)` is `:1160`. Still present. The brief is
-    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md) §2.2. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.2. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists it.
 
 - **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01;
   **narrowed** 2026-10-12 by dk-and-rpk-migration 09)*
@@ -563,12 +566,14 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
       `move_store`. Unassigned; no test constrains it.
     - The line numbers of the entry above (`RunRegistry/stores.py:753`) are 2026-09-25's, and the
       entry's text is left as the record.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** the half that stayed SGK's is the package's now.
-    `runregistrykit/stores.py` at `v0.1.0`: `_store_files` is `:1119-1129` (re-raising the pool's message
-    with the sidecar listing appended, `:1125-1128`), and `move_store` is `:1179`, calling
-    `_store_files("move", ShardedPool.move_store, src, dst)` at `:1195`. Still present. The advice text
-    stays DatastoreKit's. The brief is [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md) §2.3,
-    which hands over the relaying half only. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** the half that
+    stayed SGK's is the package's now. `runregistrykit/stores.py` at `v0.1.0`: `_store_files` is
+    `:1119-1129` (re-raising the pool's message with the sidecar listing appended, `:1125-1128`),
+    and `move_store` is `:1179`, calling `_store_files("move", ShardedPool.move_store, src, dst)` at
+    `:1195`. Still present. The advice text stays DatastoreKit's. The brief is
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.3, which hands over the relaying half only. The entry stays in §3, and moves to §4 as
+    transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
 
 ---
 
