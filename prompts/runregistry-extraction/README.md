@@ -126,16 +126,16 @@ all 38 factories, but not a build.
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | [`01-freeze-the-run-registry.md`](01-freeze-the-run-registry.md) | The freeze, in `CLAUDE.md`; the frozen tree recorded file by file; the baselines 06 and 08 compare with | Sonnet | written 2026-10-12 |
-| 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1 at the start tree; every fingerprint `39809dca…`. Closes the `f539015` → `511ef5f` gap (§0.1) | Opus | written 2026-10-12 |
-| 02a | [`02a-the-rehearsal-lock-helper.md`](02a-the-rehearsal-lock-helper.md) | **The lock helper**: §4.1's lock steps as `tools/rehearsal_lock.py`, with a check for this repository's Ray processes; proved against SI's and ChamPBH's scripts and on the real lock; `CLAUDE.md`'s pointer | Sonnet | written 2026-10-12 |
-| 03 | [`03-pin-datastorekit-at-v0.4.0.md`](03-pin-datastorekit-at-v0.4.0.md) | The pin moved from `v0.2.2` to `v0.4.0`, in a commit of its own; the venv installed from it | Sonnet | written 2026-10-14 |
-| 04 | [`04-rehearse-through-the-new-datastorekit.md`](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint taken both ways and equal | Opus | written 2026-10-14; held: 03 |
-| 05 | [`05-pin-runregistrykit-at-v0.1.0.md`](05-pin-runregistrykit-at-v0.1.0.md) | The pin, with the `[stores]` extra, at `v0.1.0`, in a commit of its own | Sonnet | written 2026-10-15 |
-| 06 | [`06-adopt-runregistrykit.md`](06-adopt-runregistrykit.md) | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | written 2026-10-15; held: 05 |
-| 07 | [`07-guard-the-fingerprint-format.md`](07-guard-the-fingerprint-format.md) | **Q5**: a test that a spec change without a format bump fails | Sonnet | written 2026-10-15; held: 06 |
-| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit's G2** | Opus | written 2026-10-15; held: 07 |
-| 09 | [`09-close-the-campaign.md`](09-close-the-campaign.md) | The final measurements; the gates drafted for the two repositories; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2; the close | Sonnet | written 2026-10-16 |
+| 01 | [`01-freeze-the-run-registry.md`](01-freeze-the-run-registry.md) | The freeze, in `CLAUDE.md`; the frozen tree recorded file by file; the baselines 06 and 08 compare with | Sonnet | written 2026-10-12; landed `a45aefc` |
+| 02 | [`02-rehearse-the-start-tree.md`](02-rehearse-the-start-tree.md) | **R0.** §4.1 at the start tree; every fingerprint `39809dca…`. Closes the `f539015` → `511ef5f` gap (§0.1) | Opus | written 2026-10-12; landed `74eff08` |
+| 02a | [`02a-the-rehearsal-lock-helper.md`](02a-the-rehearsal-lock-helper.md) | **The lock helper**: §4.1's lock steps as `tools/rehearsal_lock.py`, with a check for this repository's Ray processes; proved against SI's and ChamPBH's scripts and on the real lock; `CLAUDE.md`'s pointer | Sonnet | written 2026-10-12; landed `c863055` |
+| 03 | [`03-pin-datastorekit-at-v0.4.0.md`](03-pin-datastorekit-at-v0.4.0.md) | The pin moved from `v0.2.2` to `v0.4.0`, in a commit of its own; the venv installed from it | Sonnet | written 2026-10-14; landed `5b81f2e` |
+| 04 | [`04-rehearse-through-the-new-datastorekit.md`](04-rehearse-through-the-new-datastorekit.md) | **R1**; the fingerprint taken both ways and equal | Opus | written 2026-10-14; landed `ec61569` |
+| 05 | [`05-pin-runregistrykit-at-v0.1.0.md`](05-pin-runregistrykit-at-v0.1.0.md) | The pin, with the `[stores]` extra, at `v0.1.0`, in a commit of its own | Sonnet | written 2026-10-15; landed `3dcab1b` |
+| 06 | [`06-adopt-runregistrykit.md`](06-adopt-runregistrykit.md) | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | written 2026-10-15; landed `740bafc` |
+| 07 | [`07-guard-the-fingerprint-format.md`](07-guard-the-fingerprint-format.md) | **Q5**: a test that a spec change without a format bump fails | Sonnet | written 2026-10-15; landed `a9ed928` |
+| 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit's G2** | Opus | written 2026-10-15; landed `957d658` |
+| 09 | [`09-close-the-campaign.md`](09-close-the-campaign.md) | The final measurements; the gates drafted for the two repositories; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2; the close | Sonnet | written 2026-10-16; landed this commit |
 
 ### 2.1 When each prompt file is written
 

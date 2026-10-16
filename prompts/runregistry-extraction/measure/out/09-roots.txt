@@ -1,0 +1,36 @@
+# 09-roots.txt — runregistry-extraction prompt 09, 2026-10-16, at HEAD ef34ed06ab1adc80d0bab51d39fed3125d3c8a82 plus 09's uncommitted records (no code changed); each root once, foreground, serially: PYTHONPATH=. ./venv/bin/python -m unittest discover -s <root>/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+
+## AdaptiveLevin/tests   (load before: 9.63 9.45 9.12)
+# exit status: 0
+Ran 32 tests in 0.046s
+OK
+
+## CosmologyModels/tests   (load before: 9.63 9.45 9.12)
+# exit status: 0
+Ran 39 tests in 0.670s
+OK
+
+## ObjectFactories/tests   (load before: 9.63 9.45 9.12)
+# exit status: 0
+Ran 279 tests in 13.037s
+OK
+
+## tools/tests   (load before: 8.18 9.13 9.01)
+# exit status: 0
+Ran 91 tests in 9.071s
+OK
+
+## LiouvilleGreen/tests   (load before: 7.93 9.04 8.98)
+# exit status: 0
+Ran 148 tests in 22.978s
+OK (skipped=1)
+
+## RunDrivers/tests   (load before: 19.01 11.41 9.82)
+# exit status: 0
+Ran 99 tests in 3.053s
+OK
+
+## ComputeTargets/tests   (load before: 21.89 12.13 10.09)
+# exit status: 0
+Ran 693 tests in 138.340s
+OK

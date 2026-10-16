@@ -1,0 +1,640 @@
+# 09-measure.txt — runregistry-extraction prompt 09, 2026-10-16: RunRegistryKit's measure script at its caad864 (clean), run from its root with its own venv, on SGK's HEAD ef34ed06ab1adc80d0bab51d39fed3125d3c8a82 (the tree 09 starts from; 09 changes records only, and the measure reads the committed tree), read through git only
+$ ./venv/bin/python docs/adoption/measure_client_registry.py sgk --commit ef34ed06ab1adc80d0bab51d39fed3125d3c8a82   # exit status: 0
+### Measured: SecondaryGWKit (SGK) at `ef34ed0`
+
+- Repository `/Users/ds283/Documents/Code/SecondaryGWKit`, commit `ef34ed06ab1adc80d0bab51d39fed3125d3c8a82`, 2026-10-16, “Write the orchestrator note for runregistry-extraction prompt 09”.
+- Read through `git` only: 422 tracked `.py` files parsed with `ast`.
+- Against `runregistrykit` 0.1.0 and `datastorekit` 0.4.0 as installed; signatures before the move from SecondaryGWKit a45aefc.
+- `requirements.txt`: `datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0` (`:17`); `ray==2.43.0` (`:75`); `raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0` (`:76`); `runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0` (`:81`); `SQLAlchemy==2.0.39` (`:88`).
+
+| Figure | Live code | Staying tests |
+|---|---|---|
+| Import statements | 0 | 0 |
+| … at module level | 0 | 0 |
+| Files importing it | 0 | 0 |
+| Names used | 0 | 0 |
+| Calls bound | 0 | 0 |
+| … binding | 0 | 0 |
+| … not binding: the move's new `fingerprint_format` only | 0 | 0 |
+| … not binding for any other reason | 0 | 0 |
+| Name-alike calls, not the registry's | 48 | 0 |
+| String literals naming it | 0 | 0 |
+| … holding `-m RunRegistry` | 0 | 0 |
+
+Campaign records: **6** `.py` files import it, 7 name it.
+
+#### 1. Imports: live code
+
+None.
+
+#### 2–3. Names and their fates at `v0.1.0`: live code
+
+None.
+
+#### 4. Calls: live code
+
+None.
+
+Not the registry's (their callee does not resolve to it), so not bound:
+
+- `ObjectFactories/tests/test_quadsource_parent_key.py:445` `engine.begin(…)`, in `TestCrossShardParentUnit._read`
+- `ObjectFactories/tests/test_quadsource_policy_key.py:415` `fingerprint_of(…)`, in `TestTheInventoryIdentityIncludesIt.test_the_fingerprint_moves_with_the_policy`
+- `ObjectFactories/tests/test_quadsource_policy_key.py:418` `fingerprint_of(…)`, in `TestTheInventoryIdentityIncludesIt.test_the_fingerprint_moves_with_the_policy`
+- `ObjectFactories/tests/test_quadsource_policy_key.py:421` `fingerprint_of(…)`, in `TestTheInventoryIdentityIncludesIt.test_the_fingerprint_moves_with_the_policy`
+- `ObjectFactories/tests/test_store_fingerprint_golden.py:71` `fingerprint_of(…)`, in `_FullStores.setUpClass`
+- `ObjectFactories/tests/test_store_fingerprint_golden.py:86` `fingerprint_of(…)`, in `_FullStores.fingerprint`
+- `ObjectFactories/tests/test_store_fingerprint_golden.py:133` `fingerprint_of(…)`, in `TestGolden.test_taken_is_outside_every_digest`
+- `ObjectFactories/tests/test_store_fingerprint_golden.py:159` `fingerprint_of(…)`, in `TestConfigFingerprint.test_the_fingerprinter_takes_the_golden_fingerprint`
+- `ObjectFactories/tests/test_wkb_numeric_parent_key.py:983` `engine.begin(…)`, in `TestNullableParent._read`
+- `RunDrivers/tests/registry_fixtures.py:45` `runregistrykit.begin(…)`, in `RegistryTestCase.begin`
+- `RunDrivers/tests/test_killed_handler.py:90` `runregistrykit.begin(…)`, in `DriverTestCase.a_real_run`
+- `RunDrivers/tests/test_pipeline_adoption.py:73` `runregistrykit.begin(…)`, in `PipelineAdoptionTestCase.a_run`
+- `RunDrivers/tests/test_quadsource_atol_sweep_prepare.py:84` `stores.create_sidecar(…)`, in `SweepPrepareTestCase.a_baseline`
+- `RunDrivers/tests/test_quadsource_atol_sweep_prepare.py:93` `stores.create_sidecar(…)`, in `SweepPrepareTestCase.a_tombstone_at_sweep_name`
+- `RunDrivers/tests/test_quadsource_atol_sweep_prepare.py:102` `stores.create_sidecar(…)`, in `SweepPrepareTestCase.an_existing_sweep_store`
+- `RunDrivers/tests/test_quadsource_atol_sweep_prepare.py:194` `self.begin(…)`, in `SweepPrepareTestCase.test_a_running_run_in_the_given_runs_root_blocks_the_copy`
+- `StoreFixtures/real_store_fixtures.py:229` `pool._engine.begin(…)`, in `_write_primary`
+- `StoreFixtures/real_store_fixtures.py:270` `engine.begin(…)`, in `_write_shard`
+- `StoreFixtures/real_store_fixtures.py:1159` `engine.begin(…)`, in `_write_full_shard`
+- `docs/a3-v2-readiness/fingerprint_time_probe.py:95` `fingerprint_store(…)`, in `main`
+- `docs/a3-v2-readiness/reader_writes_probe.py:772` `copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/reader_writes_probe.py:830` `copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/reader_writes_probe.py:881` `copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:203` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:209` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:223` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:231` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:239` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:248` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:282` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:316` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:362` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:393` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/readonly_open_probe.py:407` `rw.copy_store(…)`, in `main`
+- `docs/a3-v2-readiness/sigterm_handler_probe.py:159` `runregistrykit.begin(…)`, in `child`
+- `docs/datastore-generic-audit/str_e_misfire_probe.py:45` `engine.begin(…)`, in `module`
+- `docs/datastore-integrity-verification/compare_stores.py:31` `fingerprint_store(…)`, in `main`
+- `docs/datastore-integrity-verification/fault_copies.py:137` `copy_store(…)`, in `main`
+- `docs/datastore-integrity-verification/fault_copies.py:141` `copy_store(…)`, in `main`
+- `docs/datastore-integrity-verification/fault_copies.py:148` `copy_store(…)`, in `main`
+- `docs/datastore-integrity-verification/fault_copies.py:166` `copy_store(…)`, in `main`
+- `docs/datastore-integrity-verification/fault_copies.py:178` `copy_store(…)`, in `main`
+- `docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py:63` `fingerprint_store(…)`, in `main`
+- `docs/gktk-remedial/scoped_pipeline_run.py:544` `runregistrykit.begin(…)`, in `register`
+- `docs/handover/quadsource_atol_sweep.py:556` `runregistrykit.begin(…)`, in `run_build`
+- `docs/handover/quadsource_atol_sweep.py:767` `runregistrykit.stores.copy_store(…)`, in `prepare`
+- `docs/handover/quadsource_atol_sweep.py:869` `runregistrykit.begin(…)`, in `sweep`
+- `docs/runregistry-extraction/worktree_run_check.py:62` `runregistrykit.begin(…)`, in `main`
+
+#### 5. String literals naming `RunRegistry`: live code
+
+None.
+
+#### 1. Imports: the staying tests
+
+None.
+
+#### 2–3. Names and their fates at `v0.1.0`: the staying tests
+
+None.
+
+#### 4. Calls: the staying tests
+
+None.
+
+#### 5. String literals naming `RunRegistry`: the staying tests
+
+None.
+
+#### 1. Campaign records
+
+Importing it: `prompts/datastore-generic/orchestrator/measure-05/scripts/m4_fingerprint.py` (1), `prompts/datastore-generic/orchestrator/measure-06/scripts/m1_fingerprint.py` (1), `prompts/datastore-generic/orchestrator/measure-07/scripts/m1_fingerprint.py` (1), `prompts/datastore-generic/orchestrator/measure-08/scripts/m1_fingerprint.py` (1), `prompts/datastore-generic/orchestrator/measure-08/scripts/m4b_order_matters.py` (1), `prompts/datastore-generic/orchestrator/measure-09/scripts/m4_inventory.py` (1).
+
+Naming it without importing it: `prompts/datastore-generic/orchestrator/measure-08/scripts/phaseB_edit_tests.py`.
+
+#### 6. `installed_package_provenance`
+
+Not defined.
+
+#### 7. Tracked files other than `.py` matching `RunRegistry|run registry|runregistrykit`
+
+Lines by top directory: `CLAUDE.md` 13, `docs` 481, `prompts` 2887, `requirements.txt` 1, `runregistrykit.toml` 1.
+
+Outside the campaign records (text squeezed, first 110 characters):
+
+| File | Line | Text |
+|---|---|---|
+| `CLAUDE.md` | 47 | ## The datastore layer is `datastorekit`; the work queue is `raypoolkit`; the registry is `runregistrykit` |
+| `CLAUDE.md` | 54 | the `dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package |
+| `CLAUDE.md` | 55 | `runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`, |
+| `CLAUDE.md` | 56 | https://github.com/ds283/RunRegistryKit), pinned at `v0.1.0` with the extra `[stores]`, adopted in |
+| `CLAUDE.md` | 72 | The registry is `import runregistrykit` (`runregistrykit.begin`, `runregistrykit.list_runs`, …) |
+| `CLAUDE.md` | 73 | and `runregistrykit.stores` for the store layer; its command line is `python -m runregistrykit` |
+| `CLAUDE.md` | 82 | 2026-10-15 the registry was this repository's own package `RunRegistry/`; campaign records from |
+| `CLAUDE.md` | 85 | ## Long-running jobs — the run registry |
+| `CLAUDE.md` | 87 | A job that takes hours must not be something a conversation owns. `runregistrykit` |
+| `CLAUDE.md` | 88 | (RunRegistryKit, pinned at `v0.1.0`) records that one exists, in |
+| `CLAUDE.md` | 89 | `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`. It is configured by `runregistrykit.toml` at |
+| `CLAUDE.md` | 94 | RunRegistryKit's `README.md`, "The rules", tells each rule with the failure it answers. It records; |
+| `CLAUDE.md` | 99 | 1. **Discovery.** Run `./venv/bin/python -m runregistrykit list` at the start of a session and |
+| `docs/OPEN_ISSUES.md` | 661 | ### 1.11 The run registry campaign |
+| `docs/OPEN_ISSUES.md` | 666 | was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/` package, the |
+| `docs/OPEN_ISSUES.md` | 692 | Prompt 03 landed the same day: `RunRegistry/stores.py` owns the store sidecar, and `python -m RunRegistry stor |
+| `docs/OPEN_ISSUES.md` | 746 | \| `[01-cross-filesystem-move-advice-says-delete-by-hand]` \| store-retirement \| **Narrowed 2026-10-12** by dk-a |
+| `docs/OPEN_ISSUES.md` | 838 | \| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` \| a3-v2-readiness \| A handler's ` |
+| `docs/OPEN_ISSUES.md` | 893 | `RunRegistry/` moves to a repository of its own, RunRegistryKit, before the A3 v2 compute run, with |
+| `docs/OPEN_ISSUES.md` | 903 | RunRegistryKit defect seen in passing, and assigned to prompt 09 to hand over with the fifth. |
+| `docs/OPEN_ISSUES.md` | 907 | \| `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` \| runregistry-extraction \| Four open issues on |
+| `docs/OPEN_ISSUES.md` | 908 | \| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` \| runregistry-extraction \| `python -m runr |
+| `docs/a3-v2-readiness-audit.md` | 7 | baseline, `mode=ro`, through `RunRegistry.stores.fingerprint_store(..., write=False)`, with the |
+| `docs/a3-v2-readiness-audit.md` | 293 | - **The read.** `RunRegistry.stores.fingerprint_store(primary, write=False)` on |
+| `docs/a3-v2-readiness-audit.md` | 295 | `RunRegistry.begin`, no `store` subcommand, no `ShardedPool`. The five store files and the sidecar |
+| `docs/a3-v2-readiness-verification.md` | 75 | `running` with a pid answering `kill -0`, and that `RunRegistry list` showed it, and ended its turn. |
+| `docs/a3-v2-readiness-verification.md` | 162 | - `python -m RunRegistry list` showed nothing `running`: 12 runs before `reference` (10 finished, |
+| `docs/a3-v2-readiness-verification.md` | 209 | interrupter's from `RunRegistry.now_iso()`. Equal stamps bound the delay below 1 s; they do not |
+| `docs/a3-v2-readiness-verification.md` | 309 | appeared. The refusal is raised before `RunRegistry.begin` and `ray.init`. |
+| `docs/a3-v2-readiness-verification.md` | 638 | **Before the first run** (10:23–10:31): `python -m RunRegistry list` showed 16 runs, none |
+| `docs/a3-v2-readiness-verification.md` | 722 | - [ ] **The pre-launch checks**, on that machine (§1.3): `RunRegistry list` shows nothing `running` |
+| `docs/a3-v2-readiness-verification.md` | 728 | with a pid answering `kill -0`, and `RunRegistry list`. |
+| `docs/a3-v2-readiness-verification.md` | 845 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/a3-v2-readiness-verification.md` | 847 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store fingerprint --write \ |
+| `docs/a3-v2-readiness-verification.md` | 849 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/a3-v2-readiness/fingerprint_time_probe.txt` | 15 | import RunRegistry.stores: 0.017 s |
+| `docs/a3-v2-readiness/interrupter_build_dummy_test.sh` | 6 | # `argv[0]` is `docs/handover/quadsource_atol_sweep.py` (`runregistrykit.begin` records `sys.argv` |
+| `docs/a3-v2-readiness/rehearsal/interrupter_firings.txt` | 3 | 2026-10-04T01:44:41+01:00 liveness alive; pid 41825; stage 'list it with: PYTHONPATH=. ./venv/bin/python -m Ru |
+| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` | 9 | --- PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` | 48 | --- PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` | 88 | --- PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` | 129 | --- PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/datastore-generic-audit.md` | 183 | `RunRegistry.stores.copy_store`. **Keep** `_require_bare_name` and the "both resolve to one file" |
+| `docs/datastore-generic-audit.md` | 230 | `RunRegistry/` has fallbacks for legacy store **sidecars** (no `sidecar_format`; `adopt_sidecar` is |
+| `docs/datastore-generic-audit.md` | 233 | not stores; the registry never deletes a record, and `python -m RunRegistry list` lists the old run |
+| `docs/datastore-integrity-audit.md` | 135 | design. `RunRegistry/tests/test_store_fingerprint.py:60` pins `full_store_fingerprint.json`. Every |
+| `docs/datastore-integrity-audit.md` | 309 | **[probed]** Nothing was `running` (`python -m RunRegistry list`), no journal was present, and the |
+| `docs/datastore-integrity-verification.md` | 64 | `PYTHONPATH=.` is not in the prompt's §1.3 command; the driver's `register()` imports `RunRegistry`, |
+| `docs/datastore-integrity-verification.md` | 68 | Before each launch: `python -m RunRegistry list` showed nothing `running`; `ray status` found no |
+| `docs/datastore-integrity-verification.md` | 71 | `status.json` says `running` with a pid answering `kill -0`, `RunRegistry list` shows the run), and |
+| `docs/datastore-integrity-verification.md` | 169 | a person, `RunRegistry.Run(…).finish('killed', exit_code=None)`, after `kill -0 6384` failed: |
+| `docs/datastore-integrity-verification.md` | 466 | - [ ] **`RunRegistry list` clean** — nothing `running`, nothing stale (§1.1, before every launch). |
+| `docs/datastore-integrity-verification.md` | 546 | PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/datastore-integrity-verification.md` | 547 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store show var/datastores/datastore-integrity-10-<store>.sqlite |
+| `docs/datastore-integrity-verification.md` | 549 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" var/datastores/datastore-int |
+| `docs/datastore-integrity-verification.md` | 550 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store fingerprint [--write] var/datastores/datastore-integrity-1 |
+| `docs/datastore-integrity-verification.md` | 556 | PYTHONPATH=. ./venv/bin/python -c "import RunRegistry; RunRegistry.Run('var/runs/datastore-integrity-10-resume |
+| `docs/datastore-integrity-verification/interrupter_firings.txt` | 3 | 2026-10-01T21:03:02+01:00 liveness alive; pid 1238; stage 'list it with: PYTHONPATH=. ./venv/bin/python -m Run |
+| `docs/datastore-integrity-verification/interrupter_firings.txt` | 12 | 2026-10-01T23:08:13+01:00 liveness alive; pid 6384; stage 'list it with: PYTHONPATH=. ./venv/bin/python -m Run |
+| `docs/dk-and-rpk-migration-verification.md` | 87 | answering `kill -0`, and that `RunRegistry list` showed it, and ended its turn. The orchestrator ran |
+| `docs/dk-and-rpk-migration-verification.md` | 108 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/dk-and-rpk-migration-verification.md` | 110 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store fingerprint --write \ |
+| `docs/dk-and-rpk-migration-verification.md` | 112 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/dk-and-rpk-migration-verification.md` | 123 | - `python -m RunRegistry list` showed nothing `running`: 17 runs before `reference` (15 finished, 2 |
+| `docs/dk-and-rpk-migration-verification.md` | 241 | interrupter's from `RunRegistry.now_iso()`. They bound the delay; they do not measure it. In |
+| `docs/dk-and-rpk-migration-verification.md` | 516 | `RunRegistry.stores.fingerprint_store` does, and it reads the shards from the primary's `shards` |
+| `docs/dk-and-rpk-migration-verification.md` | 716 | \| RunRegistry \| 286 \| OK \| 20.5 \| |
+| `docs/dk-and-rpk-migration-verification.md` | 821 | - `RunRegistry list` showed the run. |
+| `docs/dk-and-rpk-migration-verification.md` | 856 | - **The registry.** `python -m RunRegistry list` showed nothing `running`: 21 runs before |
+| `docs/dk-and-rpk-migration-verification.md` | 871 | - `RunRegistry.package_provenance()` gave the record above. |
+| `docs/dk-and-rpk-migration-verification.md` | 1563 | \| RunRegistry \| 286 \| OK \| 40.5 \| |
+| `docs/dk-and-rpk-migration-verification.md` | 1616 | \| 3 \| The six roots pass \| This prompt's suites at `6861a9f`, whose code is `0c9e2cf`'s: Datastore 320, RunReg |
+| `docs/dk-and-rpk-migration-verification.md` | 1629 | comment in `RunRegistry/tests/test_pipeline_adoption.py`, and that file's `ast` is equal at the two |
+| `docs/dk-and-rpk-migration-verification.md` | 1724 | - `RunRegistry list` showed the run. |
+| `docs/dk-and-rpk-migration-verification.md` | 1761 | - **The registry.** `python -m RunRegistry list` showed nothing `running`: 25 runs before |
+| `docs/dk-and-rpk-migration-verification.md` | 1783 | - `RunRegistry.package_provenance()` gave the record above. |
+| `docs/dk-and-rpk-migration-verification.md` | 2550 | \| RunRegistry \| 286 \| OK \| 19.8 \| |
+| `docs/dk-and-rpk-migration-verification.md` | 2606 | \| 4 \| The six roots pass \| This prompt's suites at `5631f0e`, whose code is `643c3b2`'s but for one test comme |
+| `docs/dk-and-rpk-migration-verification.md` | 2807 | \| RunRegistry \| 286 \| 286 \| OK \| 54.4 \| |
+| `docs/dk-and-rpk-migration-verification.md` | 2822 | `pip check` reports no broken requirements. `RunRegistry.package_provenance()`, saved as |
+| `docs/dk-and-rpk-migration-verification.md` | 2845 | at `:2704`); `RunRegistry.stores.move_store` (`RunRegistry/stores.py:1109-1123`) relays it through |
+| `docs/dk-and-rpk-migration-verification.md` | 2861 | exactly the board's, and **0 after**. `import RunRegistry.stores` in a fresh `python -I` still loads neither |
+| `docs/dk-and-rpk-migration-verification.md` | 2862 | `ray`, `sqlalchemy` nor `datastorekit.store_inventory` (`RunRegistry/stores.py:114`). |
+| `docs/dk-and-rpk-migration-verification.md` | 2895 | \| **G2**: SGK adopted `v0.2.2` or later (U37; `actor-names` U3; `factory-defaults` U5), fingerprint reproduced |
+| `docs/dk-and-rpk-migration-verification.md` | 2913 | \| **G2** \| **holds** 2026-10-12: SGK adopted `v0.2.0`, and its five parts of the checklist's item 8 hold. (1)  |
+| `docs/dk-and-rpk-migration/rehearsal/prelaunch_checks_08.txt` | 127 | RunRegistry/tests/test_pipeline_adoption.py \| 9 +++++---- |
+| `docs/dk-and-rpk-migration/rehearsal/prelaunch_checks_08.txt` | 131 | -- correction 1: ast of RunRegistry/tests/test_pipeline_adoption.py at 643c3b2 vs HEAD |
+| `docs/runregistry-extraction-audit.md` | 1 | # RunRegistry extraction audit — moving the run registry into a package of its own |
+| `docs/runregistry-extraction-audit.md` | 9 | **Why it exists.** `RunRegistry/` was built here, for this repository's long jobs |
+| `docs/runregistry-extraction-audit.md` | 11 | both of their `dk-and-rpk-migration` plans record that they have "no run registry and no |
+| `docs/runregistry-extraction-audit.md` | 16 | audit records the decisions taken on 2026-10-12, measures what in `RunRegistry/` belongs to this |
+| `docs/runregistry-extraction-audit.md` | 30 | \| **D1** — where it goes \| **A repository of its own, `RunRegistryKit`** (package `runregistrykit`), beside Da |
+| `docs/runregistry-extraction-audit.md` | 32 | \| **D3** — the fingerprint \| **Split by layer (§3).** The encoding and the digest algorithm go to DatastoreKit |
+| `docs/runregistry-extraction-audit.md` | 33 | \| **D4** — a client with no fingerprinter \| **None is supported.** The store layer requires a fingerprinter. T |
+| `docs/runregistry-extraction-audit.md` | 45 | ## 1. What `RunRegistry/` is today |
+| `docs/runregistry-extraction-audit.md` | 47 | Measured at `d03a643`. `python -m RunRegistry list` reports 29 runs, 27 finished and 2 `unknown` |
+| `docs/runregistry-extraction-audit.md` | 52 | \| `RunRegistry/__init__.py` \| 710 \| none at module scope; `RunRegistry.stores` lazily, for `Run.finish(fingerp |
+| `docs/runregistry-extraction-audit.md` | 53 | \| `RunRegistry/stores.py` \| 2185 \| `datastorekit.SQL.ShardedPool` (×3) and `datastorekit.store_inventory` (×3) |
+| `docs/runregistry-extraction-audit.md` | 54 | \| `RunRegistry/__main__.py` \| 515 \| none \| the CLI: `list` and the `store` subcommands \| |
+| `docs/runregistry-extraction-audit.md` | 65 | `import RunRegistry` loads neither `ray` nor `sqlalchemy` (the docstring of `fingerprint_store`, |
+| `docs/runregistry-extraction-audit.md` | 101 | \| C5 \| `RECORDED_DISTRIBUTIONS = ("datastorekit", "raypoolkit")`, `:119` \| the packages SGK's `dk-and-rpk-migr |
+| `docs/runregistry-extraction-audit.md` | 107 | **A hazard C1 already has here.** `REPO_ROOT` follows whichever copy of `RunRegistry/` was imported. |
+| `docs/runregistry-extraction-audit.md` | 116 | **`main.py` does not.** It contains no reference to the registry (`grep -ci RunRegistry main.py` is |
+| `docs/runregistry-extraction-audit.md` | 124 | \| `ObjectFactories/tests/test_quadsource_policy_key.py:411` \| `from RunRegistry.stores import fingerprint_of`  |
+| `docs/runregistry-extraction-audit.md` | 125 | \| `docs/a3-v2-readiness/{sigterm_handler_probe,fingerprint_time_probe}.py`, `docs/datastore-integrity-verifica |
+| `docs/runregistry-extraction-audit.md` | 144 | \| **C. Fingerprint** \| SHA-256 over each class's canonical record lines, newline-terminated; the same per dist |
+| `docs/runregistry-extraction-audit.md` | 183 | \| when and where a fingerprint is taken and recorded \| **RunRegistryKit**: refused while a `running` run names |
+| `docs/runregistry-extraction-audit.md` | 185 | RunRegistryKit reads a fingerprint only through `fingerprint_format`, `digest`, and the list of |
+| `docs/runregistry-extraction-audit.md` | 194 | DatastoreKit's own subject; the sidecar is only where RunRegistryKit records it. |
+| `docs/runregistry-extraction-audit.md` | 224 | in `RunRegistry/tests/data/` stops matching, and the author then bumps by hand. With layer A and its |
+| `docs/runregistry-extraction-audit.md` | 237 | `RunRegistry/tests/` holds 286 tests in 14 modules **[agent; the per-module counts sum to the |
+| `docs/runregistry-extraction-audit.md` | 250 | into RunRegistryKit's tests as it is. |
+| `docs/runregistry-extraction-audit.md` | 253 | build a full SGK store from it and fingerprint it, through `stores.py:1494`. In RunRegistryKit |
+| `docs/runregistry-extraction-audit.md` | 256 | no client, so the DatastoreKit release of §6 may offer such a fixture; if not, RunRegistryKit |
+| `docs/runregistry-extraction-audit.md` | 260 | `RunRegistry/tests/` only because that is where registry adoption was tested. They need a test |
+| `docs/runregistry-extraction-audit.md` | 261 | root of their own when `RunRegistry/` is deleted (§8, Q6). `RunRegistry/tests/data/` holds six |
+| `docs/runregistry-extraction-audit.md` | 274 | ## 5. RunRegistryKit |
+| `docs/runregistry-extraction-audit.md` | 279 | with setuptools, `requires-python = ">=3.12"`, the package found by `include = ["runregistrykit*"]` |
+| `docs/runregistry-extraction-audit.md` | 295 | Which file — a `[tool.runregistrykit]` table in a `pyproject.toml`, or a file of its own — is §8 Q2. |
+| `docs/runregistry-extraction-audit.md` | 302 | `runregistrykit[stores]`, needing `datastorekit` **by name and minimum version, not by git URL**. |
+| `docs/runregistry-extraction-audit.md` | 304 | (`requirements.txt:17` here). A git-URL requirement inside RunRegistryKit would conflict with the |
+| `docs/runregistry-extraction-audit.md` | 310 | The six rules in `CLAUDE.md` ("Long-running jobs — the run registry") are as much the product as |
+| `docs/runregistry-extraction-audit.md` | 312 | Their full text, with the five failures of §0 that each one answers, moves to RunRegistryKit's |
+| `docs/runregistry-extraction-audit.md` | 327 | moved from `RunRegistry/stores.py:1164-1390` into a DatastoreKit module beside |
+| `docs/runregistry-extraction-audit.md` | 354 | migration, and both adopt RunRegistryKit after it closes (D4). |
+| `docs/runregistry-extraction-audit.md` | 400 | Neither amendment brings RunRegistryKit into those campaigns' scope. |
+| `docs/runregistry-extraction-audit.md` | 413 | \| **Q1** — names \| Repository `RunRegistryKit`, distribution and package `runregistrykit`, CLI `python -m runr |
+| `docs/runregistry-extraction-audit.md` | 414 | \| **Q2** — the client config \| **A file of its own at the root**, read with the standard library's `tomllib`,  |
+| `docs/runregistry-extraction-audit.md` | 417 | \| **Q5** — the spec-digest guard (§3.5) \| **Build it in SGK's adoption**, in the client fingerprint module's t |
+| `docs/runregistry-extraction-audit.md` | 430 | from RunRegistryKit; RunRegistryKit's store layer needs it. |
+| `docs/runregistry-extraction-audit.md` | 431 | 2. **RunRegistryKit `v0.1.0`: a fresh import** of `RunRegistry/` from a frozen SGK commit, as |
+| `docs/runregistry-extraction-audit.md` | 435 | and the rules in its README. **SGK's `RunRegistry/` is frozen from the import commit until SGK |
+| `docs/runregistry-extraction-audit.md` | 438 | release of step 1, in a commit of its own; `runregistrykit` is pinned at its tag; SGK's |
+| `docs/runregistry-extraction-audit.md` | 440 | live callers of §2.1 are rewritten; the 101 tests get their root; `RunRegistry/` is deleted; |
+| `docs/runregistry-extraction-audit.md` | 469 | `RunRegistry._slug` **[agent]**: the rewrite in step 3 should use a public name. |
+| `docs/runregistry-extraction-verification.md` | 12 | - §3, R2: through both packages, after the RunRegistryKit swap (prompt 08); |
+| `docs/runregistry-extraction-verification.md` | 37 | - `runregistrykit` is not installed. |
+| `docs/runregistry-extraction-verification.md` | 132 | - `RunRegistry list` showed the run. |
+| `docs/runregistry-extraction-verification.md` | 161 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/runregistry-extraction-verification.md` | 163 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store fingerprint --write \ |
+| `docs/runregistry-extraction-verification.md` | 165 | PYTHONPATH=. ./venv/bin/python -m RunRegistry store create --purpose "<one line>" \ |
+| `docs/runregistry-extraction-verification.md` | 179 | - **The registry.** `python -m RunRegistry list` showed nothing `running`: |
+| `docs/runregistry-extraction-verification.md` | 206 | - `pip show runregistrykit` found nothing. `pip check` was clean. |
+| `docs/runregistry-extraction-verification.md` | 207 | - `RunRegistry.package_provenance()` gave the record above. It equals, as JSON, the `packages` of |
+| `docs/runregistry-extraction-verification.md` | 216 | - `import runregistrykit` raises `ModuleNotFoundError`; |
+| `docs/runregistry-extraction-verification.md` | 1000 | `stage`, not those fields. `RunRegistry list` shows `-` under PROGRESS for each. No field R2 |
+| `docs/runregistry-extraction-verification.md` | 1043 | \| RunRegistry \| 286 \| OK \| 29.0 \| |
+| `docs/runregistry-extraction-verification.md` | 1076 | - `RunRegistry list` shows 33 runs: 01's 29, and this rehearsal's four, all finished but the two |
+| `docs/runregistry-extraction-verification.md` | 1132 | - `runregistrykit` is not installed. |
+| `docs/runregistry-extraction-verification.md` | 1232 | - `RunRegistry list` showed the run; |
+| `docs/runregistry-extraction-verification.md` | 1276 | - **The registry.** `python -m RunRegistry list` showed nothing `running`: 33 runs before |
+| `docs/runregistry-extraction-verification.md` | 1296 | - `pip show runregistrykit` found nothing. `pip check` was clean. |
+| `docs/runregistry-extraction-verification.md` | 1297 | - `RunRegistry.package_provenance()` gave the record above, equal as JSON to the expected record, |
+| `docs/runregistry-extraction-verification.md` | 1306 | - `import runregistrykit` raises `ModuleNotFoundError`; |
+| `docs/runregistry-extraction-verification.md` | 1925 | (`docs/gktk-remedial/scoped_pipeline_run.py`, `RunRegistry/__init__.py` `Run.finish`'s docstring), |
+| `docs/runregistry-extraction-verification.md` | 1948 | \| RunRegistry \| 286 \| OK \| 14.2 \| |
+| `docs/runregistry-extraction-verification.md` | 1985 | - `RunRegistry list` shows 37 runs: R0's 33 and this rehearsal's four, all finished but the two |
+| `docs/runregistry-extraction-verification.md` | 1993 | `config.datastore`), takes `sgk = RunRegistry.stores.fingerprint_of(inventory)` and |
+| `docs/runregistry-extraction-verification.md` | 1994 | `pkg = datastorekit.store_fingerprint.fingerprint_of(inventory, RunRegistry.stores.FINGERPRINT_FORMAT)`, |
+| `docs/runregistry-extraction-verification.md` | 2071 | - `RunRegistry/` is gone (06, `740bafc`). `runregistrykit.toml` and `config/fingerprint.py` are |
+| `docs/runregistry-extraction-verification.md` | 2072 | new; `requirements.txt` gains the `runregistrykit[stores]` pin (05, `3dcab1b`). |
+| `docs/runregistry-extraction-verification.md` | 2074 | `runregistrykit.begin`. Its banner's `list it with:` line names `runregistrykit`, and its hash |
+| `docs/runregistry-extraction-verification.md` | 2079 | - The registry is the installed **`runregistrykit` 0.1.0**, at `9f8ebe43…`, not editable. It |
+| `docs/runregistry-extraction-verification.md` | 2086 | `{"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revisio |
+| `docs/runregistry-extraction-verification.md` | 2111 | 1. **R2 reproduces the reference fingerprint through `runregistrykit` 0.1.0 and `datastorekit` |
+| `docs/runregistry-extraction-verification.md` | 2146 | 7. **The one line naming `runregistrykit`** in the twelve build logs is the launcher's banner, |
+| `docs/runregistry-extraction-verification.md` | 2147 | `** list it with: ./venv/bin/python -m runregistrykit list`, one in each `stdout.log` and |
+| `docs/runregistry-extraction-verification.md` | 2148 | launch log, where R1's named `RunRegistry` (06). No line names `datastorekit`, and none holds a |
+| `docs/runregistry-extraction-verification.md` | 2157 | 11. **RunRegistryKit's G2 holds**, each of its checklist item 9's six clauses with its evidence |
+| `docs/runregistry-extraction-verification.md` | 2180 | Each `--purpose` names R2 of this campaign, the tree's commit and its code's, `runregistrykit` 0.1.0 |
+| `docs/runregistry-extraction-verification.md` | 2187 | - `./venv/bin/python -m runregistrykit list` showed the run; |
+| `docs/runregistry-extraction-verification.md` | 2216 | through `runregistrykit` (06's log, §7.8): |
+| `docs/runregistry-extraction-verification.md` | 2219 | ./venv/bin/python -m runregistrykit store create --purpose "<one line>" \ |
+| `docs/runregistry-extraction-verification.md` | 2221 | ./venv/bin/python -m runregistrykit store fingerprint --write \ |
+| `docs/runregistry-extraction-verification.md` | 2223 | ./venv/bin/python -m runregistrykit store create --purpose "<one line>" \ |
+| `docs/runregistry-extraction-verification.md` | 2240 | - **The registry.** `./venv/bin/python -m runregistrykit list` showed nothing `running` or stale: |
+| `docs/runregistry-extraction-verification.md` | 2251 | - Before `reference`, `./venv/bin/python -m runregistrykit store show` on both names gave kind |
+| `docs/runregistry-extraction-verification.md` | 2258 | - `./venv/bin/pip show runregistrykit datastorekit raypoolkit` gave 0.1.0, 0.4.0 and 0.2.0, each |
+| `docs/runregistry-extraction-verification.md` | 2260 | - `runregistrykit.package_provenance(("runregistrykit", "datastorekit", "raypoolkit"))` gave the |
+| `docs/runregistry-extraction-verification.md` | 2265 | `runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0`. |
+| `docs/runregistry-extraction-verification.md` | 2266 | - **The configuration.** `runregistrykit.find_client_root()` from the root read |
+| `docs/runregistry-extraction-verification.md` | 2267 | `runregistrykit.toml`, with `runs_root` `var/runs`, `stores_root` `var/datastores`, |
+| `docs/runregistry-extraction-verification.md` | 2271 | - `runregistrykit.__file__`, `datastorekit.__file__` and `raypoolkit.__file__` are under the |
+| `docs/runregistry-extraction-verification.md` | 2277 | - `import RunRegistry` raises `ModuleNotFoundError`; |
+| `docs/runregistry-extraction-verification.md` | 2336 | - **Each interrupter read its stage from `status.json`**, which `runregistrykit` now writes. Both |
+| `docs/runregistry-extraction-verification.md` | 2463 | - **`packages`** equals, compared as JSON, the record of §3's header: `runregistrykit` 0.1.0 at |
+| `docs/runregistry-extraction-verification.md` | 2493 | \| `DeprecationWarning`, `_timestamp`, **`ConfigError`**, `RunRegistry` (not followed by `Kit`), in any of the  |
+| `docs/runregistry-extraction-verification.md` | 2495 | \| **`runregistrykit`**, anywhere in a line \| 1 in `stdout.log` and 1 in the launch log: the banner's `list it  |
+| `docs/runregistry-extraction-verification.md` | 2505 | ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction-verification.md` | 2508 | where R1's said `** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list`. 06 changed |
+| `docs/runregistry-extraction-verification.md` | 2510 | twelve build logs that names `runregistrykit`, and no line names `datastorekit`, even through a path: |
+| `docs/runregistry-extraction-verification.md` | 2646 | with the runs now registered through `runregistrykit`. Each pruned serial is gone, and none was |
+| `docs/runregistry-extraction-verification.md` | 2772 | No reader log names `runregistrykit` or `datastorekit`, and none holds a `Traceback`, |
+| `docs/runregistry-extraction-verification.md` | 2782 | - **The fingerprint afterwards.** `./venv/bin/python -m runregistrykit store fingerprint` (without |
+| `docs/runregistry-extraction-verification.md` | 2863 | which names `runregistrykit` where R1's named `RunRegistry` (§3.2.5). |
+| `docs/runregistry-extraction-verification.md` | 2905 | `units_total` are R1's in all four, and each `status.json` has R1's keys exactly. `runregistrykit` |
+| `docs/runregistry-extraction-verification.md` | 2906 | read the pool's printed lines as `RunRegistry` did. |
+| `docs/runregistry-extraction-verification.md` | 2922 | - **A line from the swap** but the banner's: a `runregistrykit` or `datastorekit` frame, a |
+| `docs/runregistry-extraction-verification.md` | 2993 | `./venv/bin/python -m runregistrykit list` shows **43 runs**, nothing `running` or stale: 23 |
+| `docs/runregistry-extraction-verification.md` | 3008 | fingerprint through `config.fingerprint.fingerprinter`, the one `runregistrykit` uses, and checks: |
+| `docs/runregistry-extraction-verification.md` | 3049 | - **So `runregistrykit`'s fingerprint, through SGK's fingerprinter and DatastoreKit's |
+| `docs/runregistry-extraction-verification.md` | 3061 | ### 3.11 RunRegistryKit's G2 |
+| `docs/runregistry-extraction-verification.md` | 3063 | RunRegistryKit's SGK checklist, item 9 ("Its acceptance", `docs/adoption/secondarygwkit.md` at |
+| `docs/runregistry-extraction-verification.md` | 3065 | RunRegistryKit's root, with its own venv, at its `HEAD` `caad864` (clean); it reads SGK through git |
+| `docs/runregistry-extraction-verification.md` | 3066 | only, and nothing in RunRegistryKit changed |
+| `docs/runregistry-extraction-verification.md` | 3071 | \| 1 \| No `RunRegistry` import, string literal or `python -m RunRegistry` outside `prompts/` and dated `docs/`  |
+| `docs/runregistry-extraction-verification.md` | 3073 | \| 3 \| `python -m runregistrykit list` gives its 29 runs, with the same states and purposes as its 01's baselin |
+| `docs/runregistry-extraction-verification.md` | 3076 | \| 6 \| `requirements.txt` holds the pin, installed from it, not editable; every new manifest's `packages` names |
+| `docs/runregistry-extraction-verification.md` | 3078 | **Every clause holds, so RunRegistryKit's G2 holds.** It rests on 06 (`740bafc`), 07 (`a9ed928`) |
+| `docs/runregistry-extraction-verification.md` | 3081 | this repository's board; 09 drafts the record for RunRegistryKit's (README §6.2 C11). |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 1 | $ cd /Users/ds283/Documents/Code/RunRegistryKit (HEAD caad86484508a6242b8ed930bfa011456561e94d, clean: yes) |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 7 | - Against `runregistrykit` 0.1.0 and `datastorekit` 0.4.0 as installed; signatures before the move from Second |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 8 | - `requirements.txt`: `datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0` (`:17`); `ray==2.43.0` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 22 | \| … holding `-m RunRegistry` \| 0 \| 0 \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 49 | - `RunDrivers/tests/registry_fixtures.py:45` `runregistrykit.begin(…)`, in `RegistryTestCase.begin` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 50 | - `RunDrivers/tests/test_killed_handler.py:90` `runregistrykit.begin(…)`, in `DriverTestCase.a_real_run` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 51 | - `RunDrivers/tests/test_pipeline_adoption.py:73` `runregistrykit.begin(…)`, in `PipelineAdoptionTestCase.a_ru |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 74 | - `docs/a3-v2-readiness/sigterm_handler_probe.py:159` `runregistrykit.begin(…)`, in `child` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 83 | - `docs/gktk-remedial/scoped_pipeline_run.py:544` `runregistrykit.begin(…)`, in `register` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 84 | - `docs/handover/quadsource_atol_sweep.py:556` `runregistrykit.begin(…)`, in `run_build` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 85 | - `docs/handover/quadsource_atol_sweep.py:767` `runregistrykit.stores.copy_store(…)`, in `prepare` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 86 | - `docs/handover/quadsource_atol_sweep.py:869` `runregistrykit.begin(…)`, in `sweep` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 87 | - `docs/runregistry-extraction/worktree_run_check.py:62` `runregistrykit.begin(…)`, in `main` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 89 | #### 5. String literals naming `RunRegistry`: live code |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 105 | #### 5. String literals naming `RunRegistry`: the staying tests |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 119 | #### 7. Tracked files other than `.py` matching `RunRegistry\|run registry\|runregistrykit` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 121 | Lines by top directory: `CLAUDE.md` 13, `docs` 161, `prompts` 2788, `requirements.txt` 1, `runregistrykit.toml |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 127 | \| `CLAUDE.md` \| 47 \| ## The datastore layer is `datastorekit`; the work queue is `raypoolkit`; the registry is |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 128 | \| `CLAUDE.md` \| 54 \| the `dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 129 | \| `CLAUDE.md` \| 55 \| `runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`, \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 130 | \| `CLAUDE.md` \| 56 \| https://github.com/ds283/RunRegistryKit), pinned at `v0.1.0` with the extra `[stores]`, a |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 131 | \| `CLAUDE.md` \| 72 \| The registry is `import runregistrykit` (`runregistrykit.begin`, `runregistrykit.list_run |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 132 | \| `CLAUDE.md` \| 73 \| and `runregistrykit.stores` for the store layer; its command line is `python -m runregist |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 133 | \| `CLAUDE.md` \| 82 \| 2026-10-15 the registry was this repository's own package `RunRegistry/`; campaign record |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 134 | \| `CLAUDE.md` \| 85 \| ## Long-running jobs — the run registry \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 135 | \| `CLAUDE.md` \| 87 \| A job that takes hours must not be something a conversation owns. `runregistrykit` \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 136 | \| `CLAUDE.md` \| 88 \| (RunRegistryKit, pinned at `v0.1.0`) records that one exists, in \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 137 | \| `CLAUDE.md` \| 89 \| `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`. It is configured by `runregistrykit.t |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 138 | \| `CLAUDE.md` \| 94 \| RunRegistryKit's `README.md`, "The rules", tells each rule with the failure it answers. I |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 139 | \| `CLAUDE.md` \| 99 \| 1. **Discovery.** Run `./venv/bin/python -m runregistrykit list` at the start of a sessio |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 140 | \| `docs/OPEN_ISSUES.md` \| 661 \| ### 1.11 The run registry campaign \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 141 | \| `docs/OPEN_ISSUES.md` \| 666 \| was exercised for the first time and crashed. Prompt 01 landed the `RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 142 | \| `docs/OPEN_ISSUES.md` \| 692 \| Prompt 03 landed the same day: `RunRegistry/stores.py` owns the store sidecar, |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 145 | \| `docs/OPEN_ISSUES.md` \| 893 \| `RunRegistry/` moves to a repository of its own, RunRegistryKit, before the A3 |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 146 | \| `docs/OPEN_ISSUES.md` \| 903 \| RunRegistryKit defect seen in passing, and assigned to prompt 09 to hand over  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 148 | \| `docs/OPEN_ISSUES.md` \| 908 \| \\| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` \\| runreg |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 149 | \| `docs/a3-v2-readiness-audit.md` \| 7 \| baseline, `mode=ro`, through `RunRegistry.stores.fingerprint_store(... |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 150 | \| `docs/a3-v2-readiness-audit.md` \| 293 \| - **The read.** `RunRegistry.stores.fingerprint_store(primary, write |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 151 | \| `docs/a3-v2-readiness-audit.md` \| 295 \| `RunRegistry.begin`, no `store` subcommand, no `ShardedPool`. The fi |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 152 | \| `docs/a3-v2-readiness-verification.md` \| 75 \| `running` with a pid answering `kill -0`, and that `RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 153 | \| `docs/a3-v2-readiness-verification.md` \| 162 \| - `python -m RunRegistry list` showed nothing `running`: 12 r |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 154 | \| `docs/a3-v2-readiness-verification.md` \| 209 \| interrupter's from `RunRegistry.now_iso()`. Equal stamps boun |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 155 | \| `docs/a3-v2-readiness-verification.md` \| 309 \| appeared. The refusal is raised before `RunRegistry.begin` an |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 156 | \| `docs/a3-v2-readiness-verification.md` \| 638 \| **Before the first run** (10:23–10:31): `python -m RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 157 | \| `docs/a3-v2-readiness-verification.md` \| 722 \| - [ ] **The pre-launch checks**, on that machine (§1.3): `Run |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 158 | \| `docs/a3-v2-readiness-verification.md` \| 728 \| with a pid answering `kill -0`, and `RunRegistry list`. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 159 | \| `docs/a3-v2-readiness-verification.md` \| 845 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store create -- |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 160 | \| `docs/a3-v2-readiness-verification.md` \| 847 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store fingerpri |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 161 | \| `docs/a3-v2-readiness-verification.md` \| 849 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store create -- |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 162 | \| `docs/a3-v2-readiness/fingerprint_time_probe.txt` \| 15 \| import RunRegistry.stores: 0.017 s \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 163 | \| `docs/a3-v2-readiness/interrupter_build_dummy_test.sh` \| 6 \| # `argv[0]` is `docs/handover/quadsource_atol_s |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 165 | \| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` \| 9 \| --- PYTHONPATH=. ./venv/bin/python -m RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 166 | \| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` \| 48 \| --- PYTHONPATH=. ./venv/bin/python -m RunRegist |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 167 | \| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` \| 88 \| --- PYTHONPATH=. ./venv/bin/python -m RunRegist |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 168 | \| `docs/a3-v2-readiness/rehearsal/prelaunch_checks.txt` \| 129 \| --- PYTHONPATH=. ./venv/bin/python -m RunRegis |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 169 | \| `docs/datastore-generic-audit.md` \| 183 \| `RunRegistry.stores.copy_store`. **Keep** `_require_bare_name` and |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 170 | \| `docs/datastore-generic-audit.md` \| 230 \| `RunRegistry/` has fallbacks for legacy store **sidecars** (no `si |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 171 | \| `docs/datastore-generic-audit.md` \| 233 \| not stores; the registry never deletes a record, and `python -m Ru |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 172 | \| `docs/datastore-integrity-audit.md` \| 135 \| design. `RunRegistry/tests/test_store_fingerprint.py:60` pins `f |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 173 | \| `docs/datastore-integrity-audit.md` \| 309 \| **[probed]** Nothing was `running` (`python -m RunRegistry list` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 174 | \| `docs/datastore-integrity-verification.md` \| 64 \| `PYTHONPATH=.` is not in the prompt's §1.3 command; the dr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 175 | \| `docs/datastore-integrity-verification.md` \| 68 \| Before each launch: `python -m RunRegistry list` showed no |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 176 | \| `docs/datastore-integrity-verification.md` \| 71 \| `status.json` says `running` with a pid answering `kill -0 |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 177 | \| `docs/datastore-integrity-verification.md` \| 169 \| a person, `RunRegistry.Run(…).finish('killed', exit_code= |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 178 | \| `docs/datastore-integrity-verification.md` \| 466 \| - [ ] **`RunRegistry list` clean** — nothing `running`, n |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 179 | \| `docs/datastore-integrity-verification.md` \| 546 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry list \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 180 | \| `docs/datastore-integrity-verification.md` \| 547 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store show  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 181 | \| `docs/datastore-integrity-verification.md` \| 549 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store creat |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 182 | \| `docs/datastore-integrity-verification.md` \| 550 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store finge |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 183 | \| `docs/datastore-integrity-verification.md` \| 556 \| PYTHONPATH=. ./venv/bin/python -c "import RunRegistry; Ru |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 186 | \| `docs/dk-and-rpk-migration-verification.md` \| 87 \| answering `kill -0`, and that `RunRegistry list` showed i |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 187 | \| `docs/dk-and-rpk-migration-verification.md` \| 108 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store crea |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 188 | \| `docs/dk-and-rpk-migration-verification.md` \| 110 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store fing |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 189 | \| `docs/dk-and-rpk-migration-verification.md` \| 112 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store crea |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 190 | \| `docs/dk-and-rpk-migration-verification.md` \| 123 \| - `python -m RunRegistry list` showed nothing `running`: |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 191 | \| `docs/dk-and-rpk-migration-verification.md` \| 241 \| interrupter's from `RunRegistry.now_iso()`. They bound t |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 192 | \| `docs/dk-and-rpk-migration-verification.md` \| 516 \| `RunRegistry.stores.fingerprint_store` does, and it read |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 193 | \| `docs/dk-and-rpk-migration-verification.md` \| 716 \| \\| RunRegistry \\| 286 \\| OK \\| 20.5 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 194 | \| `docs/dk-and-rpk-migration-verification.md` \| 821 \| - `RunRegistry list` showed the run. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 195 | \| `docs/dk-and-rpk-migration-verification.md` \| 856 \| - **The registry.** `python -m RunRegistry list` showed  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 196 | \| `docs/dk-and-rpk-migration-verification.md` \| 871 \| - `RunRegistry.package_provenance()` gave the record abo |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 197 | \| `docs/dk-and-rpk-migration-verification.md` \| 1563 \| \\| RunRegistry \\| 286 \\| OK \\| 40.5 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 199 | \| `docs/dk-and-rpk-migration-verification.md` \| 1629 \| comment in `RunRegistry/tests/test_pipeline_adoption.py |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 200 | \| `docs/dk-and-rpk-migration-verification.md` \| 1724 \| - `RunRegistry list` showed the run. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 201 | \| `docs/dk-and-rpk-migration-verification.md` \| 1761 \| - **The registry.** `python -m RunRegistry list` showed |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 202 | \| `docs/dk-and-rpk-migration-verification.md` \| 1783 \| - `RunRegistry.package_provenance()` gave the record ab |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 203 | \| `docs/dk-and-rpk-migration-verification.md` \| 2550 \| \\| RunRegistry \\| 286 \\| OK \\| 19.8 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 205 | \| `docs/dk-and-rpk-migration-verification.md` \| 2807 \| \\| RunRegistry \\| 286 \\| 286 \\| OK \\| 54.4 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 206 | \| `docs/dk-and-rpk-migration-verification.md` \| 2822 \| `pip check` reports no broken requirements. `RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 207 | \| `docs/dk-and-rpk-migration-verification.md` \| 2845 \| at `:2704`); `RunRegistry.stores.move_store` (`RunRegis |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 208 | \| `docs/dk-and-rpk-migration-verification.md` \| 2861 \| exactly the board's, and **0 after**. `import RunRegist |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 209 | \| `docs/dk-and-rpk-migration-verification.md` \| 2862 \| `ray`, `sqlalchemy` nor `datastorekit.store_inventory`  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 212 | \| `docs/dk-and-rpk-migration/rehearsal/prelaunch_checks_08.txt` \| 127 \| RunRegistry/tests/test_pipeline_adopti |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 213 | \| `docs/dk-and-rpk-migration/rehearsal/prelaunch_checks_08.txt` \| 131 \| -- correction 1: ast of RunRegistry/te |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 214 | \| `docs/runregistry-extraction-audit.md` \| 1 \| # RunRegistry extraction audit — moving the run registry into a |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 215 | \| `docs/runregistry-extraction-audit.md` \| 9 \| **Why it exists.** `RunRegistry/` was built here, for this repo |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 216 | \| `docs/runregistry-extraction-audit.md` \| 11 \| both of their `dk-and-rpk-migration` plans record that they ha |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 217 | \| `docs/runregistry-extraction-audit.md` \| 16 \| audit records the decisions taken on 2026-10-12, measures what |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 218 | \| `docs/runregistry-extraction-audit.md` \| 30 \| \\| **D1** — where it goes \\| **A repository of its own, `RunRe |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 221 | \| `docs/runregistry-extraction-audit.md` \| 45 \| ## 1. What `RunRegistry/` is today \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 222 | \| `docs/runregistry-extraction-audit.md` \| 47 \| Measured at `d03a643`. `python -m RunRegistry list` reports 29 |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 223 | \| `docs/runregistry-extraction-audit.md` \| 52 \| \\| `RunRegistry/__init__.py` \\| 710 \\| none at module scope; ` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 224 | \| `docs/runregistry-extraction-audit.md` \| 53 \| \\| `RunRegistry/stores.py` \\| 2185 \\| `datastorekit.SQL.Sharde |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 225 | \| `docs/runregistry-extraction-audit.md` \| 54 \| \\| `RunRegistry/__main__.py` \\| 515 \\| none \\| the CLI: `list` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 226 | \| `docs/runregistry-extraction-audit.md` \| 65 \| `import RunRegistry` loads neither `ray` nor `sqlalchemy` (the |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 228 | \| `docs/runregistry-extraction-audit.md` \| 107 \| **A hazard C1 already has here.** `REPO_ROOT` follows whichev |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 229 | \| `docs/runregistry-extraction-audit.md` \| 116 \| **`main.py` does not.** It contains no reference to the regis |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 230 | \| `docs/runregistry-extraction-audit.md` \| 124 \| \\| `ObjectFactories/tests/test_quadsource_policy_key.py:411`  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 233 | \| `docs/runregistry-extraction-audit.md` \| 183 \| \\| when and where a fingerprint is taken and recorded \\| **Ru |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 234 | \| `docs/runregistry-extraction-audit.md` \| 185 \| RunRegistryKit reads a fingerprint only through `fingerprint_ |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 235 | \| `docs/runregistry-extraction-audit.md` \| 194 \| DatastoreKit's own subject; the sidecar is only where RunRegi |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 236 | \| `docs/runregistry-extraction-audit.md` \| 224 \| in `RunRegistry/tests/data/` stops matching, and the author t |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 237 | \| `docs/runregistry-extraction-audit.md` \| 237 \| `RunRegistry/tests/` holds 286 tests in 14 modules **[agent;  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 238 | \| `docs/runregistry-extraction-audit.md` \| 250 \| into RunRegistryKit's tests as it is. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 239 | \| `docs/runregistry-extraction-audit.md` \| 253 \| build a full SGK store from it and fingerprint it, through `s |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 240 | \| `docs/runregistry-extraction-audit.md` \| 256 \| no client, so the DatastoreKit release of §6 may offer such a |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 241 | \| `docs/runregistry-extraction-audit.md` \| 260 \| `RunRegistry/tests/` only because that is where registry adop |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 242 | \| `docs/runregistry-extraction-audit.md` \| 261 \| root of their own when `RunRegistry/` is deleted (§8, Q6). `R |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 243 | \| `docs/runregistry-extraction-audit.md` \| 274 \| ## 5. RunRegistryKit \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 244 | \| `docs/runregistry-extraction-audit.md` \| 279 \| with setuptools, `requires-python = ">=3.12"`, the package fo |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 245 | \| `docs/runregistry-extraction-audit.md` \| 295 \| Which file — a `[tool.runregistrykit]` table in a `pyproject. |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 246 | \| `docs/runregistry-extraction-audit.md` \| 302 \| `runregistrykit[stores]`, needing `datastorekit` **by name an |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 247 | \| `docs/runregistry-extraction-audit.md` \| 304 \| (`requirements.txt:17` here). A git-URL requirement inside Ru |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 248 | \| `docs/runregistry-extraction-audit.md` \| 310 \| The six rules in `CLAUDE.md` ("Long-running jobs — the run re |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 249 | \| `docs/runregistry-extraction-audit.md` \| 312 \| Their full text, with the five failures of §0 that each one a |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 250 | \| `docs/runregistry-extraction-audit.md` \| 327 \| moved from `RunRegistry/stores.py:1164-1390` into a Datastore |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 251 | \| `docs/runregistry-extraction-audit.md` \| 354 \| migration, and both adopt RunRegistryKit after it closes (D4) |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 252 | \| `docs/runregistry-extraction-audit.md` \| 400 \| Neither amendment brings RunRegistryKit into those campaigns' |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 253 | \| `docs/runregistry-extraction-audit.md` \| 413 \| \\| **Q1** — names \\| Repository `RunRegistryKit`, distributio |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 256 | \| `docs/runregistry-extraction-audit.md` \| 430 \| from RunRegistryKit; RunRegistryKit's store layer needs it. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 257 | \| `docs/runregistry-extraction-audit.md` \| 431 \| 2. **RunRegistryKit `v0.1.0`: a fresh import** of `RunRegistr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 258 | \| `docs/runregistry-extraction-audit.md` \| 435 \| and the rules in its README. **SGK's `RunRegistry/` is frozen |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 259 | \| `docs/runregistry-extraction-audit.md` \| 438 \| release of step 1, in a commit of its own; `runregistrykit` i |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 260 | \| `docs/runregistry-extraction-audit.md` \| 440 \| live callers of §2.1 are rewritten; the 101 tests get their r |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 261 | \| `docs/runregistry-extraction-audit.md` \| 469 \| `RunRegistry._slug` **[agent]**: the rewrite in step 3 should |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 262 | \| `docs/runregistry-extraction-verification.md` \| 12 \| - §3, R2: through both packages, after the RunRegistryK |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 263 | \| `docs/runregistry-extraction-verification.md` \| 37 \| - `runregistrykit` is not installed. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 264 | \| `docs/runregistry-extraction-verification.md` \| 132 \| - `RunRegistry list` showed the run. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 265 | \| `docs/runregistry-extraction-verification.md` \| 161 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store cr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 266 | \| `docs/runregistry-extraction-verification.md` \| 163 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store fi |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 267 | \| `docs/runregistry-extraction-verification.md` \| 165 \| PYTHONPATH=. ./venv/bin/python -m RunRegistry store cr |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 268 | \| `docs/runregistry-extraction-verification.md` \| 179 \| - **The registry.** `python -m RunRegistry list` showe |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 269 | \| `docs/runregistry-extraction-verification.md` \| 206 \| - `pip show runregistrykit` found nothing. `pip check` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 270 | \| `docs/runregistry-extraction-verification.md` \| 207 \| - `RunRegistry.package_provenance()` gave the record a |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 271 | \| `docs/runregistry-extraction-verification.md` \| 216 \| - `import runregistrykit` raises `ModuleNotFoundError` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 272 | \| `docs/runregistry-extraction-verification.md` \| 1000 \| `stage`, not those fields. `RunRegistry list` shows ` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 273 | \| `docs/runregistry-extraction-verification.md` \| 1043 \| \\| RunRegistry \\| 286 \\| OK \\| 29.0 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 274 | \| `docs/runregistry-extraction-verification.md` \| 1076 \| - `RunRegistry list` shows 33 runs: 01's 29, and this |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 275 | \| `docs/runregistry-extraction-verification.md` \| 1132 \| - `runregistrykit` is not installed. \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 276 | \| `docs/runregistry-extraction-verification.md` \| 1232 \| - `RunRegistry list` showed the run; \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 277 | \| `docs/runregistry-extraction-verification.md` \| 1276 \| - **The registry.** `python -m RunRegistry list` show |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 278 | \| `docs/runregistry-extraction-verification.md` \| 1296 \| - `pip show runregistrykit` found nothing. `pip check |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 279 | \| `docs/runregistry-extraction-verification.md` \| 1297 \| - `RunRegistry.package_provenance()` gave the record  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 280 | \| `docs/runregistry-extraction-verification.md` \| 1306 \| - `import runregistrykit` raises `ModuleNotFoundError |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 281 | \| `docs/runregistry-extraction-verification.md` \| 1925 \| (`docs/gktk-remedial/scoped_pipeline_run.py`, `RunReg |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 282 | \| `docs/runregistry-extraction-verification.md` \| 1948 \| \\| RunRegistry \\| 286 \\| OK \\| 14.2 \\| \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 283 | \| `docs/runregistry-extraction-verification.md` \| 1985 \| - `RunRegistry list` shows 37 runs: R0's 33 and this  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 284 | \| `docs/runregistry-extraction-verification.md` \| 1993 \| `config.datastore`), takes `sgk = RunRegistry.stores. |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 285 | \| `docs/runregistry-extraction-verification.md` \| 1994 \| `pkg = datastorekit.store_fingerprint.fingerprint_of( |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 286 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` \| 30 \| -- pip show datastorekit raypoolkit r |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 287 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` \| 53 \| WARNING: Package(s) not found: runreg |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 288 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` \| 83 \| runregistrykit -> ModuleNotFoundError |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 289 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` \| 38 \| -- pip show datastorekit raypoolkit r |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 290 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` \| 47 \| WARNING: Package(s) not found: runreg |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 291 | \| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` \| 73 \| runregistrykit -> ModuleNotFoundError |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 292 | \| `docs/store-fingerprint-audit.md` \| 122 \| registry's promise that `import RunRegistry` loads neither `ray` n |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 293 | \| `docs/store-fingerprint-audit.md` \| 123 \| (`RunRegistry/stores.py:45-46`) therefore needs the reader to be i |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 294 | \| `docs/store-retirement-audit.md` \| 13 \| move and fingerprint each go through `RunRegistry.stores` and leave  |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 295 | \| `docs/store-retirement-audit.md` \| 30 \| Measured 2026-09-25 at `42d4910`. `RunRegistry list` shows nothing ` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 296 | \| `docs/store-retirement-audit.md` \| 39 \| `RunRegistry/stores.py:542-573`). **[probed]** \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 297 | \| `docs/store-retirement-audit.md` \| 95 \| that is `None`, and `begin` does not refuse (`RunRegistry/__init__.p |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 298 | \| `docs/store-retirement-audit.md` \| 114 \| `RunRegistry.stores.copy_store` call". Retirement is that reason. ` |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 299 | \| `docs/store-retirement-audit.md` \| 141 \| `RunRegistry/tests/test_store_fingerprint.py` test 12 (`:797-842`), |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 300 | \| `docs/store-retirement-audit.md` \| 165 \| - The `RunRegistry/stores.py` docstring (`:47-49`), and the `RunReg |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 301 | \| `requirements.txt` \| 81 \| runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0 \| |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 302 | \| `runregistrykit.toml` \| 1 \| # This repository's client config for runregistrykit (RunRegistryKit's README.md |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 315 | $ git grep -nP 'RunRegistry(?!Kit)' -- . ':!prompts' ':!docs/*.md' ':!docs/**/*.md' ':!docs/**/*.txt' |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 316 | CLAUDE.md:82:2026-10-15 the registry was this repository's own package `RunRegistry/`; campaign records from |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 317 | config/fingerprint.py:33:# (`RunRegistry/tests/data/full_store_fingerprint*.json`; `test_store_fingerprint.GOL |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 319 | $ PYTHONPATH=. ./venv/bin/python -c 'import RunRegistry' |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 320 | ModuleNotFoundError: No module named 'RunRegistry' |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 321 | $ git ls-tree HEAD RunRegistry |
+| `docs/runregistry-extraction/rehearsal/g2_measure_08.txt` | 324 | ########## G2 item 3: ./venv/bin/python -m runregistrykit store show on each of the 18 tombstone sidecars unde |
+| `docs/runregistry-extraction/rehearsal/interrupter_firings_08.txt` | 11 | 2026-10-16T00:05:43+01:00 sent SIGTERM to pid 83931 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'  |
+| `docs/runregistry-extraction/rehearsal/interrupter_firings_08.txt` | 21 | 2026-10-16T00:08:32+01:00 sent SIGTERM to pid 87907 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%) |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 10 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 13 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 16 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 19 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 24 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 25 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 27 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 28 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 33 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 34 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 36 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 37 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 42 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 45 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 47 | R2 only: ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 50 | R1 only: ** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 66 | RunRegistry (not RunRegistryKit/runregistrykit) [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 67 | runregistrykit (any line) [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 68 | runregistrykit, not the banner's list-it-with line [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 99 | RunRegistry (not RunRegistryKit/runregistrykit) [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 100 | runregistrykit (any line) [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 101 | runregistrykit, not the banner's list-it-with line [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 121 | reference: R2 ['** list it with: ./venv/bin/python -m runregistrykit list'] R1 ['** list it with: PYTHONPATH=. |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 122 | resumed-a: R2 ['** list it with: ./venv/bin/python -m runregistrykit list'] R1 ['** list it with: PYTHONPATH=. |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 123 | resumed-b: R2 ['** list it with: ./venv/bin/python -m runregistrykit list'] R1 ['** list it with: PYTHONPATH=. |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 124 | resumed-c: R2 ['** list it with: ./venv/bin/python -m runregistrykit list'] R1 ['** list it with: PYTHONPATH=. |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 125 | -- lines naming datastorekit or runregistrykit, as normalised kinds, R2 (all twelve files): 1 |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 126 | ** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 127 | -- lines naming datastorekit or runregistrykit, as normalised kinds, R1 (all twelve files): 0 |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 153 | -** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 154 | +** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 175 | -** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 176 | +** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 181 | -** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 182 | +** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 187 | -** list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list |
+| `docs/runregistry-extraction/rehearsal/log_comparison_08.txt` | 188 | +** list it with: ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` | 30 | -- pip show datastorekit raypoolkit runregistrykit |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` | 53 | WARNING: Package(s) not found: runregistrykit |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_02.txt` | 83 | runregistrykit -> ModuleNotFoundError: No module named 'runregistrykit' |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` | 38 | -- pip show datastorekit raypoolkit runregistrykit |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` | 47 | WARNING: Package(s) not found: runregistrykit |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_04.txt` | 73 | runregistrykit -> ModuleNotFoundError: No module named 'runregistrykit' |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 19 | -- runregistrykit list (summary line) |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 26 | -- runregistrykit store show var/datastores/runregistry-extraction-08-reference.sqlite |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 32 | -- runregistrykit store show var/datastores/runregistry-extraction-08-resumed.sqlite |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 42 | -- pip show runregistrykit datastorekit raypoolkit (Name, Version, Location, Editable) |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 43 | Name: runregistrykit |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 58 | -- runregistrykit.package_provenance((runregistrykit, datastorekit, raypoolkit)) (keys sorted) |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 59 | {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 63 | -- runregistrykit.find_client_root() from the root |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 64 | config_file runregistrykit.toml |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 76 | requirements.txt:81:runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0 |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 85 | runregistrykit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/runregist |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 92 | RunRegistry -> ModuleNotFoundError: No module named 'RunRegistry' |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 120 | manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, " |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 129 | runregistry-extraction-08-reference-20261015T235716 running - 21s runregistry-extraction prompt 08, R2 through |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 165 | -- runregistrykit store show var/datastores/runregistry-extraction-08-resumed.sqlite |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 189 | manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, " |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 200 | runregistry-extraction-08-resumed-a-20261016T000342 running - 10s runregistry-extraction prompt 08, R2 through |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 252 | manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, " |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 263 | runregistry-extraction-08-resumed-b-20261016T000708 running - 9s runregistry-extraction prompt 08, R2 through  |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 314 | manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, " |
+| `docs/runregistry-extraction/rehearsal/prelaunch_checks_08.txt` | 323 | runregistry-extraction-08-resumed-c-20261016T000959 running - 4s runregistry-extraction prompt 08, R2 through  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 21 | "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8eb |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 50 | "runregistrykit": { |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 54 | "url": "https://github.com/ds283/RunRegistryKit", |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 59 | "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 115 | "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8eb |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 144 | "runregistrykit": { |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 148 | "url": "https://github.com/ds283/RunRegistryKit", |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 153 | "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 210 | "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8eb |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 239 | "runregistrykit": { |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 243 | "url": "https://github.com/ds283/RunRegistryKit", |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 248 | "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 305 | "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit 0.1.0 9f8eb |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 334 | "runregistrykit": { |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 338 | "url": "https://github.com/ds283/RunRegistryKit", |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 343 | "purpose": "runregistry-extraction prompt 08, R2 through both packages (b9daf44, code a9ed928; runregistrykit  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 386 | ==================== ./venv/bin/python -m runregistrykit list |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 388 | runregistry-extraction-08-resumed-c-20261016T000959 done - 8m runregistry-extraction prompt 08, R2 through bot |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 389 | runregistry-extraction-08-resumed-b-20261016T000708 killed - 11m runregistry-extraction prompt 08, R2 through  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 390 | runregistry-extraction-08-resumed-a-20261016T000342 killed - 14m runregistry-extraction prompt 08, R2 through  |
+| `docs/runregistry-extraction/rehearsal/run_records_08.txt` | 391 | runregistry-extraction-08-reference-20261015T235716 done - 21m runregistry-extraction prompt 08, R2 through bo |
+| `docs/runregistry-extraction/rehearsal/store_sidecars_08.txt` | 2 | $ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/runregistry-extractio |
+| `docs/runregistry-extraction/rehearsal/store_sidecars_08.txt` | 18 | "purpose": "runregistry-extraction prompt 08 (R2): reference rehearsal store built straight through at b9daf44 |
+| `docs/runregistry-extraction/rehearsal/store_sidecars_08.txt` | 23 | $ ./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/runregistry-extraction-08-refer |
+| `docs/runregistry-extraction/rehearsal/store_sidecars_08.txt` | 75 | $ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/runregistry-extractio |
+| `docs/runregistry-extraction/rehearsal/store_sidecars_08.txt` | 91 | "purpose": "runregistry-extraction prompt 08 (R2): resumed rehearsal store (resumed-a killed in GkSource, resu |
+| `docs/store-fingerprint-audit.md` | 122 | registry's promise that `import RunRegistry` loads neither `ray` nor `sqlalchemy` |
+| `docs/store-fingerprint-audit.md` | 123 | (`RunRegistry/stores.py:45-46`) therefore needs the reader to be imported inside the operation, |
+| `docs/store-retirement-audit.md` | 13 | move and fingerprint each go through `RunRegistry.stores` and leave a `history` entry. A plain |
+| `docs/store-retirement-audit.md` | 30 | Measured 2026-09-25 at `42d4910`. `RunRegistry list` shows nothing `running`. **[probed]** |
+| `docs/store-retirement-audit.md` | 39 | `RunRegistry/stores.py:542-573`). **[probed]** |
+| `docs/store-retirement-audit.md` | 95 | that is `None`, and `begin` does not refuse (`RunRegistry/__init__.py:549-553`). **[checked]** Both |
+| `docs/store-retirement-audit.md` | 114 | `RunRegistry.stores.copy_store` call". Retirement is that reason. `copy_store` refuses because the |
+| `docs/store-retirement-audit.md` | 141 | `RunRegistry/tests/test_store_fingerprint.py` test 12 (`:797-842`), and it counts only `run.finish(` |
+| `docs/store-retirement-audit.md` | 165 | - The `RunRegistry/stores.py` docstring (`:47-49`), and the `RunRegistry/__main__.py` docstring |
+| `requirements.txt` | 81 | runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.1.0 |
+| `runregistrykit.toml` | 1 | # This repository's client config for runregistrykit (RunRegistryKit's README.md, "Using it"). |
+
+#### 8. `.gitignore` and the registry
+
+- `.gitignore` ignores `var/`: `:3` `var/`.
+- Module-level registry mappings: `factories` at `config/datastore.py:91` (38 keys).
+- `def inventory_spec`: 21 in 20 files: `ObjectFactories/BackgroundModel.py:881`, `ObjectFactories/GkNumericIntegration.py:634`, `ObjectFactories/GkSource.py:839`, `ObjectFactories/GkSourcePolicy.py:69`, `ObjectFactories/GkSourcePolicyData.py:177`, `ObjectFactories/GkWKBIntegration.py:960`, `ObjectFactories/LambdaCDM.py:93`, `ObjectFactories/OneLoopIntegral.py:341`, `ObjectFactories/QCD_Cosmology.py:128`, `ObjectFactories/QuadSource.py:542`, `ObjectFactories/QuadSourceIntegral.py:965`, `ObjectFactories/QuadSourcePolicy.py:106`, `ObjectFactories/TkNumericIntegration.py:636`, `ObjectFactories/TkWKBIntegration.py:959`, `ObjectFactories/integration_metadata.py:58`, `ObjectFactories/redshift.py:133`, `ObjectFactories/store_tag.py:47`, `ObjectFactories/tolerance.py:56`, `ObjectFactories/version.py:47`, `ObjectFactories/wavenumber.py:126`, `ObjectFactories/wavenumber.py:385`.
+- `Parent(..., types=...)`: `ObjectFactories/BackgroundModel.py:900` (`COSMOLOGY_TYPES`), `ObjectFactories/wavenumber.py:396` (`COSMOLOGY_TYPES`).
+
+$ git grep -nP 'RunRegistry(?!Kit)' -- . ':!prompts' ':!docs/*.md' ':!docs/**/*.md' ':!docs/**/*.txt'   # verification §3.11's, at HEAD
+CLAUDE.md:82:2026-10-15 the registry was this repository's own package `RunRegistry/`; campaign records from
+config/fingerprint.py:33:# (`RunRegistry/tests/data/full_store_fingerprint*.json`; `test_store_fingerprint.GOLDEN` names the
+# exit status: 0
+
+$ git ls-tree HEAD RunRegistry   # empty
+# (end)
+
+$ ./venv/bin/python -c 'import RunRegistry'
+ModuleNotFoundError: No module named 'RunRegistry'

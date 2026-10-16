@@ -8,15 +8,15 @@ change its status when the board closes it. The open-issue column is a snapshot 
 [`docs/OPEN_ISSUES.md`](../docs/OPEN_ISSUES.md) on the date in the header; the section pointer
 is the durable part.
 
-**Last updated:** 2026-10-16 · 26 campaigns: 3 live, 1 seeded, 22 closed or complete.
+**Last updated:** 2026-10-16 · 26 campaigns: 2 live, 1 seeded, 23 closed or complete.
 Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 `datastore-integrity`'s, taken on 2026-10-02, `datastore-generic`'s, taken on 2026-10-06, and
 `datastore-generic-followup`'s, taken on 2026-10-07, `dk-and-rpk-migration`'s, taken on
-2026-10-12, and `runregistry-extraction`'s, taken on 2026-10-15.
+2026-10-12, and `runregistry-extraction`'s, taken on 2026-10-16.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
-| [`runregistry-extraction`](runregistry-extraction/IMPLEMENTATION_STATE.md) | **live** — 10 of 10 written, 9 landed (01, the freeze; 02, R0 holds; 02a, the rehearsal-lock helper; 03, `datastorekit` pinned at `v0.4.0`; 04, R1 holds and the fingerprint both ways; 05, `runregistrykit` pinned at `v0.1.0`; 06, `runregistrykit` adopted and `RunRegistry/` deleted; 07, the fingerprint format guarded by a spec-digest pin; 08, R2 holds through both packages, and RunRegistryKit's G2); E1 and E2 hold (RunRegistryKit `v0.1.0`); 09, the close, written 2026-10-16 | 2026-10-12 → 2026-10-16 | `RunRegistry/` frozen, then replaced by the pinned `runregistrykit`; the fingerprint's encoding versioned in DatastoreKit; SGK's `config/fingerprint.py`; rehearsals R0–R2; the two briefs; `tools/rehearsal_lock.py` | §1.1, §1.21; 3 |
+| [`runregistry-extraction`](runregistry-extraction/IMPLEMENTATION_STATE.md) | closed 10 / 10, 2026-10-16 | 2026-10-12 → 2026-10-16 | `RunRegistry/` frozen, then replaced by the pinned `runregistrykit`; the fingerprint's encoding versioned in DatastoreKit; SGK's `config/fingerprint.py`; rehearsals R0–R2; the two briefs; `tools/rehearsal_lock.py` | §1.1, §1.21; 3 |
 | [`dk-and-rpk-migration`](dk-and-rpk-migration/IMPLEMENTATION_STATE.md) | closed 9 / 9, 2026-10-12 | 2026-10-11 → 2026-10-12 | SGK's adoption of `datastorekit` `v0.2.2` and `raypoolkit` `v0.2.0`, DatastoreKit first; the fingerprint rehearsals R0–R2; each package's gate G2 | §1.20; 2 |
 | [`perturbation-sound-speed`](perturbation-sound-speed/AUDIT.md) | **seeded** — audit and script only, no README or board | 2026-09-29 | the $c_s^2$ the transfer-function sector reads: $dp/d\rho$, not $p/\rho$, on the QCD background | §1.16; 1 |
 | [`datastore-generic-followup`](datastore-generic-followup/IMPLEMENTATION_STATE.md) | closed 3 / 3, 2026-10-07 | 2026-10-06 → 2026-10-07 | the user's decisions on `datastore-generic`'s three open issues: a `--drop` that leaves references refused; `resolve()`'s absent parent as `None`; the closed-store prefix stated once | §1.19; 0 |

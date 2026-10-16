@@ -1,0 +1,19 @@
+# 09-disk.txt — runregistry-extraction prompt 09, 2026-10-16 01:10, at HEAD ef34ed06ab1adc80d0bab51d39fed3125d3c8a82: the volume Ray spills to
+$ df -h / /tmp /private/tmp .
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s1s1  927G  892G   36G  97% /
+/dev/disk3s1s1  927G  892G   36G  97% /
+/dev/disk3s1s1  927G  892G   36G  97% /
+/dev/disk3s1s1  927G  892G   36G  97% /
+
+$ df -k /
+/dev/disk3s1s1 971350180 934502060  36848120  97% /
+
+$ uptime
+ 1:10  up 10 days, 22:55, 1 user, load averages: 27.97 12.47 9.91
+$ RAY_ADDRESS=${RAY_ADDRESS-<unset>}
+RAY_ADDRESS=<unset>
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+# exit status: 0

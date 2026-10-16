@@ -3079,3 +3079,251 @@ only, and nothing in RunRegistryKit changed
 and this prompt's runs `runregistry-extraction-08-reference-20261015T235716` and
 `runregistry-extraction-08-resumed-c-20261016T000959`, both `done` and `39809dca…`. It is recorded on
 this repository's board; 09 drafts the record for RunRegistryKit's (README §6.2 C11).
+
+---
+
+## 4. The close
+
+**§4's tree.** Prompt 09 ran on branch `handover-remedial` at **`ef34ed0`** ("Write the orchestrator note
+for runregistry-extraction prompt 09"), clean. Its code is `a9ed928`'s: `git diff --stat b9daf44 33a7346 --
+. ':!prompts' ':!docs/runregistry-extraction-verification.md' ':!docs/runregistry-extraction'` was empty at
+the orchestrator's check (2026-10-16), and `33a7346`, `c07ab17` and `ef34ed0` touch `prompts/` alone. 09
+changes records only: no code, no test and no script. **Every measurement below that reads the committed
+tree (RunRegistryKit's measure, the `git grep`) therefore measures the tree 09 started from, and 09's own
+commit changes no file either of them reads.** The measurements are saved whole, each with its command,
+under `prompts/runregistry-extraction/measure/out/09-*`.
+
+### 4.1 The three rehearsals, as one table
+
+Twelve runs, each read from its run directory's `manifest.json` and `status.json`
+([`09-runs.txt`](../prompts/runregistry-extraction/measure/out/09-runs.txt), with the full digests). Every
+`git_dirty` is `false`. Every `fingerprint_format` is 6, and every `done` run's overall digest is
+`39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`.
+
+| Rehearsal | Run (`runregistry-extraction-NN-…`) | Dispatch `git_head` (code) | Packages in `packages` | `script_sha256` | Digest | `encoding_format` | End state |
+|---|---|---|---|---|---|---|---|
+| R0 (02, §1) | `02-reference-20261012T091921` | `fe16d8e` (`a45aefc`) | `datastorekit` 0.2.2, `raypoolkit` 0.2.0 | `b7935877…` | `39809dca` | none | `done`, 0 |
+| R0 | `02-resumed-a-20261012T095041` | `fe16d8e` | same | `b7935877…` | `9bb753bd` | none | `killed`, 143 |
+| R0 | `02-resumed-b-20261012T100353` | `fe16d8e` | same | `b7935877…` | `a0d053af` | none | `killed`, 143 |
+| R0 | `02-resumed-c-20261012T101145` | `fe16d8e` | same | `b7935877…` | `39809dca` | none | `done`, 0 |
+| R1 (04, §2) | `04-reference-20261014T154651` | `89ff8b7` (`5b81f2e`) | `datastorekit` 0.4.0, `raypoolkit` 0.2.0 | `b7935877…` | `39809dca` | none | `done`, 0 |
+| R1 | `04-resumed-a-20261014T160226` | `89ff8b7` | same | `b7935877…` | `a410cce0` | none | `killed`, 143 |
+| R1 | `04-resumed-b-20261014T161222` | `89ff8b7` | same | `b7935877…` | `8146dab8` | none | `killed`, 143 |
+| R1 | `04-resumed-c-20261014T161739` | `89ff8b7` | same | `b7935877…` | `39809dca` | none | `done`, 0 |
+| R2 (08, §3) | `08-reference-20261015T235716` | `b9daf44` (`a9ed928`) | `datastorekit` 0.4.0, `raypoolkit` 0.2.0, `runregistrykit` 0.1.0 | `2a985303…` | `39809dca` | 1 | `done`, 0 |
+| R2 | `08-resumed-a-20261016T000342` | `b9daf44` | same | `2a985303…` | `87e55e8f` | 1 | `killed`, 143 |
+| R2 | `08-resumed-b-20261016T000708` | `b9daf44` | same | `2a985303…` | `8978b72e` | 1 | `killed`, 143 |
+| R2 | `08-resumed-c-20261016T000959` | `b9daf44` | same | `2a985303…` | `39809dca` | 1 | `done`, 0 |
+
+- **The packages' commits.** `datastorekit` is `6d8ee9ae…` (0.2.2) at R0 and `c8570e84…` (0.4.0) at R1 and R2;
+  `raypoolkit` is `eaef0ce6…` throughout; `runregistrykit` is `9f8ebe43…` at R2. None is editable.
+- **The pattern is the same in all three.** The three `done` references and the three `resumed-c` runs
+  carry `39809dca…`; each interrupted run's digest differs from it, because it records a store mid-build.
+  The digest does not depend on which of the three registries and datastore layers built the store.
+- **`encoding_format` appears at R2 and not before**, on every R2 fingerprint, `done` or `killed`: the
+  fingerprint was taken through `datastorekit.store_fingerprint` (06). R0's and R1's were taken by
+  SGK's own code and do not carry it, which is `[00-recorded-fingerprints-lack-the-encoding-format]`
+  (closed at 06; board §4).
+- **The launcher's hash changed once**, between R1 and R2, when 06 made it register through
+  `runregistrykit.begin`; it is the same in all four R2 manifests and equals the file's hash now (§4.5).
+- **The code commit, and the dispatch commit beside it**: R0 `a45aefc` (01) at `fe16d8e`; R1 `5b81f2e` (03)
+  at `89ff8b7`; R2 `a9ed928` (07) at `b9daf44`. Each dispatch commit adds records to `prompts/` only.
+
+### 4.2 Z1 — the final measurements
+
+Taken at `ef34ed0`, clean. Each is in a file under `prompts/runregistry-extraction/measure/out/` with the command
+that made it. Where a figure equals the orchestrator's or 08's, it says so.
+
+**The seven roots** ([`09-roots.txt`](../prompts/runregistry-extraction/measure/out/09-roots.txt)), each once, in the
+foreground, serially, against 08's counts:
+
+| Root | Ran | Result | Wall | 08's count |
+|---|---|---|---|---|
+| `AdaptiveLevin/tests` | 32 | OK | 0.05 s | 32 |
+| `CosmologyModels/tests` | 39 | OK | 0.7 s | 39 |
+| `ObjectFactories/tests` | 279 | OK | 13.0 s | 279 |
+| `tools/tests` | 91 | OK | 9.1 s | 91 |
+| `LiouvilleGreen/tests` | 148 | OK (skipped=1) | 23.0 s | 148 (1 skipped) |
+| `RunDrivers/tests` | 99 | OK | 3.1 s | 99 |
+| `ComputeTargets/tests` | 693 | OK | 138.3 s | 693 |
+
+No failure, and none of README §8's four wall-clock tests failed. They ran at one-minute load 8–22, after
+every record edit of 09 and before its commit; 09 changes no code.
+
+**The packages** ([`09-pip.txt`](../prompts/runregistry-extraction/measure/out/09-pip.txt)).
+- `pip freeze` has 101 lines. It equals 05's "before" list (lines 4–103 of `05-pip.txt`, 100 lines) plus
+  the one line 05's own diff adds,
+  `runregistrykit @ git+https://github.com/ds283/RunRegistryKit@9f8ebe431503fb8c79ee1407cc460501f1ca2d92`;
+  the `diff` against the "before" list is that `81a82` line alone, and nothing was installed or
+  removed since.
+- `pip check`: `No broken requirements found.`
+- `runregistrykit.package_provenance(["datastorekit", "raypoolkit", "runregistrykit"])`, as JSON with sorted
+  keys, **equals the `packages` of each of R2's four manifests** (`json.load` equality, four of four):
+  `datastorekit` 0.4.0 at `c8570e84…` (`v0.4.0`), `raypoolkit` 0.2.0 at `eaef0ce6…` (`v0.2.0`),
+  `runregistrykit` 0.1.0 at `9f8ebe43…` (`v0.1.0`), none editable. (`package_provenance` takes the
+  names; called with none it raises `TypeError`.)
+
+**Every `RunRegistry` reference outside `prompts/` and dated `docs/` prose**
+([`09-measure.txt`](../prompts/runregistry-extraction/measure/out/09-measure.txt)):
+- RunRegistryKit's `docs/adoption/measure_client_registry.py sgk --commit ef34ed06…`, run from its root
+  (`caad864`, clean) with its own venv, exit 0: **422** tracked `.py` files parsed; every live-code
+  and staying-test figure is **0** (import statements, those at module level, files importing it, names
+  used, calls bound, string literals naming it, `-m RunRegistry`), the 48 name-alike calls in live code
+  being none the registry's; campaign records: 6 `.py` files import it, 7 name it. It equals the
+  measure at `b9daf44` (§3.11) and the orchestrator's at `33a7346`, but for the commit.
+- `git grep -nP 'RunRegistry(?!Kit)' -- . ':!prompts' ':!docs/*.md' ':!docs/**/*.md' ':!docs/**/*.txt'`
+  prints `CLAUDE.md:82` and `config/fingerprint.py:33` and nothing else: both name the old package's
+  history. `git ls-tree HEAD RunRegistry` is empty and `import RunRegistry` raises `ModuleNotFoundError`.
+
+**The registry and the stores.**
+- `./venv/bin/python -m runregistrykit list`
+  ([`09-list.txt`](../prompts/runregistry-extraction/measure/out/09-list.txt)), exit 0: **43 runs**, 23 `done`,
+  15 `killed`, 3 `failed`, 2 `unknown` (the pre-registry `a3-pilot` pair), **none `running` and none
+  stale**. 01's 29 are all present, each in the state `01-list.txt` recorded (compared by id and state).
+- `store show` on every sidecar under `var/datastores/`
+  ([`09-store-show.txt`](../prompts/runregistry-extraction/measure/out/09-store-show.txt)): **twenty** sidecars, found
+  with `find var/datastores -name '*.manifest.json'` (a glob of the top level finds nineteen, one being
+  in `backup-pre-resume-20260921T091011/`). Each exits 0, kind `registry`, **`problems: none`**: 18 are
+  `retired` (the tombstones) and two are live, R2's `runregistry-extraction-08-reference` and `-resumed`.
+- **The machine** ([`09-disk.txt`](../prompts/runregistry-extraction/measure/out/09-disk.txt)): `/` is **97 % used,
+  36 GB free** (`df -h /`; `/tmp` and the repository are on it), against 96 % and 40–44 GB at R2 and 35 GB at the
+  orchestrator's check. `RAY_ADDRESS` is unset; `tools.rehearsal_lock status` says the lock is free and
+  no Ray process of this repository is up. The load was 10–28 during the measurements (§4.5, "What bears").
+
+### 4.3 Z2 — the two gate records, drafted
+
+Neither is committed in its repository. The user makes those commits, or has a session there make them
+(README §6.2 C11, §6.3). Each is the text to paste, in its board's own form.
+
+#### 4.3.1 RunRegistryKit's G2
+
+RunRegistryKit's `prompts/extraction/IMPLEMENTATION_STATE.md` §2 says a gate is "recorded on this board when
+it holds, in a records commit of its own; nothing else on the board changes for it". So the draft is the
+**status cell of the G2 row**, in E1's and E2's form (`**holds** <date>: …`), keeping the checklist
+pointer. It replaces
+`not yet (SGK adopts `v0.1.0` in its `runregistry-extraction` 05–08); its checklist is …`.
+
+```markdown
+| **G2** | **holds** 2026-10-16: SGK adopted `v0.1.0` in its `runregistry-extraction` 05–08 (05 `3dcab1b` pinned `runregistrykit[stores] @ v0.1.0`; 06 `740bafc` adopted it and deleted `RunRegistry/`, reviewed at `7af17bd`; 07 `a9ed928` guarded the fingerprint format; 08 `957d658` rehearsed through it), and every clause of checklist item 9 holds, each read in SGK's `docs/runregistry-extraction-verification.md` (§3.11 at `957d658`, §4.2 at 09's commit). (1) **No import:** `measure_client_registry.py sgk --commit ef34ed06…` (this repository at `caad864`) reports 0 imports, names, bound calls, string literals and `-m RunRegistry` in live code and in the staying tests, 422 `.py` files parsed, and at `b9daf44` the same; `git grep` prints only the two prose lines naming the old package's history; `RunRegistry/` is gone from the tree; the staying driver tests are `RunDrivers/tests/`. (2) **The roots pass**, `RunDrivers` (99, with the moved driver tests) and `ObjectFactories` (279, with `TestGolden`) among all seven, at 06, 07 and 08, and at 09's commit. (3) **`list` gives its runs**: 06 showed 01's 29 equal to the `RunRegistry` baseline byte for byte, `store show` reading each sidecar as the baseline did; at 09, `list` gives 43 runs, 01's 29 each in its recorded state, none `running`, and `store show` on all 20 sidecars exits 0, kind `registry`, problems none. (4) **A linked-worktree run is recorded in the main checkout**: `runregistry-extraction-06-worktree-check-20261015T224836`, begun from a linked worktree at the probe `ec781383…`, recorded under the main checkout's `var/runs/`, `git_dirty` false, `done`. (5) **A fingerprint through the new path carries `encoding_format`** beside the digest: all four R2 runs' fingerprints and both R2 sidecars carry `encoding_format` 1 beside `39809dca…`, and 06's `TestConfigFingerprint` shows the digest equal to `fingerprint_of`'s on its test store. (6) **The pin is installed, and manifests name all three:** `requirements.txt:81` holds `runregistrykit[stores] @ …@v0.1.0`; `pip freeze` has it at `9f8ebe43…`, not editable, `pip check` clean; all four R2 manifests' `packages` name `runregistrykit` 0.1.0, `datastorekit` 0.4.0 and `raypoolkit` 0.2.0, equal as JSON to `package_provenance`. R2 reproduced SGK's reference fingerprint through `runregistrykit` and `datastorekit` together: `runregistry-extraction-08-reference-20261015T235716` and `-resumed-c-20261016T000959`, both `done`, both `39809dca…`. No defect of this package was met in the rehearsal; SGK's five inherited issues are in its `runregistry-extraction` brief, and the one found in adoption is `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`; its checklist is [`docs/adoption/secondarygwkit.md`](../../docs/adoption/secondarygwkit.md) (07, `aaab408`) |
+```
+
+The checklist's six clauses, each with the SGK evidence the draft names:
+
+| # | Checklist clause (`docs/adoption/secondarygwkit.md` §9 at `aaab408`) | SGK evidence | Where |
+|---|---|---|---|
+| 1 | No `RunRegistry` import, string literal or `-m RunRegistry` outside `prompts/` and dated `docs/` prose; the measure reports 0 imports; the staying tests are not under `RunRegistry/` | the measure and the `git grep` at `ef34ed0` (§4.2) and `b9daf44` (§3.11); `RunRegistry/` gone from the tree; `RunDrivers/tests/` | §3.11 row 1, §4.2 |
+| 2 | Its roots pass, `RunDrivers` and `ObjectFactories` with `TestGolden` | 06, 07, 08 and 09's suites | §3.11 row 2, §4.2 |
+| 3 | `list` gives its 29 runs in 01's states, and `store show` reads each sidecar as the baseline does | 06 (`740bafc`) byte for byte; 09: 43 runs, 01's 29 by id and state; 20 sidecars | §3.11 row 3, §4.2 |
+| 4 | A linked-worktree run is recorded under the main checkout's `var/runs/` | `runregistry-extraction-06-worktree-check-20261015T224836` (06) | §3.11 row 4 |
+| 5 | A fingerprint through the new path carries `encoding_format`, and its digest equals `fingerprint_of`'s on the test store | R2's four fingerprints and two sidecars (08); `TestConfigFingerprint` (06) | §3.11 row 5, §3.10 |
+| 6 | The pin is installed, not editable, and every new manifest's `packages` names the three | `requirements.txt:81`; 09's `pip freeze`, `pip check` and provenance; R2's four manifests | §3.11 row 6, §4.2 |
+
+#### 4.3.2 DatastoreKit's
+
+DatastoreKit's `prompts/fingerprint/IMPLEMENTATION_STATE.md` §2 is one paragraph, with one dated italic note,
+`*(2026-10-14: `v0.4.0` is made … are given to the user for SGK's E1.)*`, and says SGK's R1 result "is recorded
+here when SGK reports it, in a records commit of its own; a difference is a defect of this package, opened in
+§3". So the draft is a **second dated italic note appended to that paragraph**, reporting R1's both-ways
+result first, then what has adopted the release since. "No difference" is the finding; no issue is opened.
+
+```markdown
+*(2026-10-16: SGK's R1 result, and what has adopted `v0.4.0` since. **The fingerprint taken both ways is equal**, so this package's `fingerprint_of` is SGK's on real stores. SGK's `runregistry-extraction` 04 (`ec61569`) read each of four stores, read-only and with no Ray, and took the fingerprint with SGK's own code and with `datastorekit.store_fingerprint.fingerprint_of(inventory, 6)`, on R1's two stores (`runregistry-extraction-04-reference`, `-resumed`, built through `v0.4.0`) and R0's two (built through `v0.2.2`): on each, all 20 checks hold, with the package's `encoding_format` 1 the only extra key. With it removed, the two fingerprints are equal key for key and in order (format 6, overall digest `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`, 21 classes, each class's `count`, `digest` and tag sets), the listings are equal line for line but the first, and the package's `compare_fingerprints(sgk, pkg)` is exactly one entry, of kind `encoding`, as the addendum says it should be. The four stores' files were byte-identical before and after. **Adopted since.** SGK pinned `datastorekit` at `v0.4.0` (03, `5b81f2e`) and rebuilt through it (R1: `runregistry-extraction-04-reference-20261014T154651` and `-resumed-c-20261014T161739`, both `done`, `39809dca…`). SGK's fingerprinter, `config/fingerprint.py`, is RunRegistryKit's `DatastoreKitFingerprinter` over SGK's factories, so every fingerprint SGK takes goes through `datastorekit.store_fingerprint` and records `encoding_format` beside the digest (06, `740bafc`); all four R2 runs' fingerprints and both R2 sidecars carry `encoding_format` 1. SGK's R2 (08, `957d658`; runs `runregistry-extraction-08-reference-20261015T235716` and `-resumed-c-20261016T000959`, both `done`, `39809dca…`) repeated the both-ways check across stores: each R2 store's fingerprint equals each of the four fingerprints SGK recorded for R0 and R1 in every field but `encoding_format` and `taken`, 20 of 20 checks on each, against each record the package's comparison one `encoding` entry, and the stores untouched. 07 (`a9ed928`) pins the digest of every inventory spec so that a spec change without a format bump fails. No difference, and no defect of this package, was found; nothing is opened in §3. Record: SGK's `docs/runregistry-extraction-verification.md` §2.10, §3.10 and §4.)*
+```
+
+### 4.4 Z3 — the registry issues, placed
+
+Each of the four issues `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` names, and the two it
+leaves, was read against `runregistrykit` at `v0.1.0` (`git show v0.1.0:<path>`, RunRegistryKit read with `git`
+only, its `HEAD` `caad864`, whose `git diff --stat v0.1.0 caad864 -- runregistrykit pyproject.toml` is
+empty) and against SGK at `ef34ed0`. Line numbers are the tag's for the package.
+
+| Issue (SGK board, line at `ef34ed0`) | Whose | The code | Still there |
+|---|---|---|---|
+| `[04-runs-do-not-say-which-machine-produced-them]` (`run-registry` `:61`) | the package's; **a decided change**, not a defect | `begin` `runregistrykit/__init__.py:604`; the manifest `:707-723` (`argv` `:712`, `cwd` `:713`), `git_head` `:152`, `packages` `:725`; `pid_alive` `:258`, `liveness` `:294`. `git grep -n -i 'machine\|platform\|node()' v0.1.0 -- runregistrykit` finds one unrelated comment (`stores.py:240`) and one in a test | yes: no `machine`, not built |
+| `[00-a-copy-carries-its-sources-present-tense-fields]` (`store-retirement` `:508`) | the package's | `copy_store` `runregistrykit/stores.py:1138`; docstring "every other field, unknown ones included, is the source's, verbatim"; `fields = _copy.deepcopy(reading.fields)` `:1160`, seven assignments `:1161-1172` | yes |
+| `[01-cross-filesystem-move-advice-says-delete-by-hand]` (`store-retirement` `:525`) | **two halves**: the advice text is DatastoreKit's (`datastorekit/SQL/ShardedPool.py:3029`, in its `docs/OPEN_ISSUES.md` §1.2); **the relaying half is the package's** | `_store_files` `stores.py:1119-1129` (re-raise `:1125-1128`); `move_store` `:1179`, calling `_store_files("move", ShardedPool.move_store, src, dst)` at `:1195` | yes |
+| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` (`a3-v2-readiness` `:1375`) | the package's, though SGK's handler triggers it: nothing in SGK can avoid the shared inode | `write_json_atomic` `__init__.py:242-251`, `tmp = path + ".tmp"` at `:245`; `Run._update` `:398-403` (write at `:402`); `heartbeat` `:405`, `finish` `:424` | yes |
+| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` (this board) | the package's | `sys.stdout.flush()` `runregistrykit/__main__.py:563`, unguarded; `main` `:408` | yes |
+| `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` (`store-retirement` `:471`) | **SGK's** | `terminal_state` `docs/gktk-remedial/scoped_pipeline_run.py:256`, `install_killed_handler` `:412`, `finish_after_exec` `:429`; `git grep -nP "def (terminal_state\|finish_after_exec\|install_killed_handler)\(" v0.1.0` in RunRegistryKit is empty, and the package has no `SIGTERM` or `signal.` outside its tests | n/a |
+| `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` (`a3-v2-readiness` `:1392`) | **SGK's** | the window is between `ray.init` (Ray's handler) and `install_killed_handler` (`:412`), installed after it returns; the package is not involved | n/a |
+
+- **So five are the package's and two are SGK's.** The two SGK's stay where they are, untouched, and the brief
+  names them as SGK's, with these lines, so that RunRegistryKit is not asked for them.
+- **The brief** is
+  [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md):
+  the five, each complete in RunRegistryKit's board-entry form, with a proposed `docs/OPEN_ISSUES.md` row each.
+- **Nothing is transferred.** RunRegistryKit's `docs/OPEN_ISSUES.md` holds its own two and none of these. So each
+  of the four stays in its SGK board's §3 with one line, `**Drafted for RunRegistryKit (2026-10-16,
+  runregistry-extraction prompt 09):**`, giving the package's lines and the brief; this board's two stay,
+  each with a `**Narrowed (2026-10-16, prompt 09):**` line. The four move to their boards' §4 as transferred,
+  and this board's two close, in a records commit after the user has handed the brief over.
+
+### 4.5 Z4 — what A3 v2 inherits
+
+For `handover`, which owns the A3 v2 launch (`a3-v2-readiness` README §1). From the tree at `ef34ed0` and the records.
+
+**The launcher.** `docs/handover/quadsource_atol_sweep.py --build --register <slug> --purpose "<one line>"`.
+- Its SHA-256 at `ef34ed0` is `2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d`
+  (`2a985303…`), **equal to every R2 manifest's `script_sha256`**: it has not changed since R2. Its last commit
+  is `7af17bd`.
+- **The flags R2 ran it with:** `--build --rehearsal [--resume] --database var/datastores/<store>.sqlite
+  --job-name <job> --atol 1e-32 --rtol 1e-7 --cpus 6 --register <slug> --purpose "…" --campaign <campaign>
+  --prompt <NN>`.
+  **A production build drops `--rehearsal`**, which selects a three-wavenumber, `--zend 250` scope that "is not
+  A3 v2" (`--help`; `:989-993`). `--job-name` defaults to `handover-A3-baseline-v2` and `--campaign` to `handover`.
+  `--build` needs `--database`, `--atol` and `--rtol` (`:1031-1037`), and `--register` needs `--purpose`.
+- **It forces `address="local"`** at the `ray.init` it wraps (`:610`), "never another `ray start` cluster this
+  machine may be running", and installs the driver's signal handler after `ray.init` returns. It starts a fresh
+  local Ray instance of `--cpus` CPUs with no dashboard.
+- Launched detached, as R2's were (§3.1): `nohup sh -c '… ; echo "** driver exit status $?"' "<purpose>" >
+  var/runs/<id>.launch.log 2>&1 &` then `disown`, one check that it started, and the turn ends.
+
+**The commands**, as R2 ran them (§3.1, §3.1.3), each in its current spelling:
+```bash
+./venv/bin/python -m runregistrykit list                                    # discovery, before anything
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose "<text>"
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+./venv/bin/python -m runregistrykit store show var/datastores/<store>.sqlite   # absent before the build
+# the launch above, then at once:
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid <driver pid>
+# after the build ends, and its last Ray process is gone:
+./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/<store>.sqlite
+./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/<store>.sqlite
+./venv/bin/python -m runregistrykit store show var/datastores/<store>.sqlite
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+# retiring a store, when it is no longer wanted: a dry run first
+./venv/bin/python -m runregistrykit store retire --dry-run --reason "<text>" var/datastores/<store>.sqlite
+./venv/bin/python -m runregistrykit store retire --reason "<text>" var/datastores/<store>.sqlite
+```
+- **The lock's five commands** are `acquire --purpose`, `set-pid`, `status`, `ray-processes` and `release`. **A held
+  lock (exit 3) means stop and ask the user**: never wait, retry or remove it. Every driver names its address
+  (`local`), and `ray stop` is never run.
+- R2's `store create` ran on the closed primary after the build (§3.1); `resumed-b` and `resumed-c` then each
+  recorded `fingerprint_sidecar: written`. 09 ran only `list` and `store show`.
+
+**Its store.** The A3 v2 store is **the first live store recorded in the new layout that is meant to be kept**.
+- Every sidecar under `var/datastores/` is a tombstone except R2's two (§4.2: 18 `retired`, two live), and R2's two
+  are throwaway: `runregistry-extraction-08-reference` and `-resumed`, retired by the user after this review, or not
+  (README §3, §6.3).
+- It is a new name under `var/datastores/`, and `store show` must say `absent` for it before the first launch.
+
+**What bears on it**, each pointing at its record:
+- **`[00-main-and-the-readers-default-to-ray-address-auto]`** (this board's §3, `:205`; `docs/OPEN_ISSUES.md` §1.1;
+  **assigned to `handover`**): `main.py` and the six `extract_*.py` default to `--ray-address auto`. The launcher
+  forces `local` and `run_readers.sh` passes it, so a build is safe; a reader launched by hand without
+  `--ray-address local` attaches to any Ray instance it finds. Until it is fixed, every run states its address.
+- **`[07-a-killed-builds-ray-agents-outlive-the-driver]`** (`a3-v2-readiness` board `:1439`; index §1.17): after a
+  killed build exits 143 its dashboard and runtime-env agents outlive it by 1–2 minutes, so "no Ray process left"
+  is true only after waiting by pid for every process from the venv. R2 found none to wait for (§3.2.3), at light load.
+- **The disk.** The volume Ray spills to is **97 % used, 36 GB free** (§4.2,
+  [`09-disk.txt`](../prompts/runregistry-extraction/measure/out/09-disk.txt)): past Ray's 95 % threshold, where every
+  raylet warned every 10 s at R2 that "object creation will fail if spilling is required". R2 spilled nothing, and both
+  stores were `39809dca…`. A3 v2 is long and wide and may need to spill. It was recorded at 08's review (board §5.14) and
+  not opened as an issue, at the orchestrator's ruling: it is the machine's, not the code's.
+- **The registry's issues do not block it.** The five handed to RunRegistryKit (§4.4) are all open on their boards:
+  none is a defect a build meets in the normal case. The one a second-machine A3 build meets is
+  `[04-runs-do-not-say-which-machine-produced-them]` (a decided change, not built): until it is, run directories
+  are transferred only when terminal, and `list` is read on the machine that produced them.
+- **The pins** are `datastorekit` v0.4.0, `raypoolkit` v0.2.0 and `runregistrykit[stores]` v0.1.0, tags and never
+  editable (`requirements.txt:17`, `:76`, `:81`); `ray` and `SQLAlchemy` are SGK's own pins.

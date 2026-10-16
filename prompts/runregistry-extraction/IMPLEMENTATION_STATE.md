@@ -1,12 +1,14 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-16 · **Status: IN PROGRESS — 10 of 10 prompts written (01–09 and 02a), 9
-landed (01, 02, 02a, 03, 04, 05, 06, 07, 08); R0, R1 and R2 hold. E1 holds: DatastoreKit
-`v0.4.0` (§5.5), 03 pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways
-(§5.7). E2 holds: RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05
-pinned it (§5.11), 06 adopted it: `RunRegistry/` is gone (§5.12), 07 pinned the spec digests and
-guards the format (§5.13), and 08 rehearsed through both packages: R2 and RunRegistryKit's G2 hold
-(§5.14). 09 is written (2026-10-16), after 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
+**Last updated:** 2026-10-16 · **Status: CLOSED (2026-10-16, by prompt 09) — all 10 prompts written and
+landed (01–09 and 02a); R0, R1 and R2 hold. E1 holds: DatastoreKit `v0.4.0` (§5.5), 03 pinned it (§5.6),
+and 04 rehearsed through it and took the fingerprint both ways (§5.7). E2 holds: RunRegistryKit `v0.1.0`
+with its SGK checklist (§5.10); 05 pinned it (§5.11), 06 adopted it and `RunRegistry/` is gone (§5.12), 07
+pinned the spec digests and guards the format (§5.13), 08 rehearsed through both packages, and R2 and
+RunRegistryKit's G2 hold (§5.14). 09 took the final measurements, drafted the two gate records and the
+hand-over of the registry issues, and wrote what A3 v2 inherits (§5.15). D1–D5, Q1–Q8 and D6 ruled by the
+user. It closes with this campaign's two issues still open (§3), and the user's three decisions pending
+(§5.15).**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -60,7 +62,7 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | `a9ed928` | [log](logs/07-guard-the-fingerprint-format.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15 | ✅ | `957d658` | [log](logs/08-rehearse-through-both-packages.md) |
-| 09 | [Close the campaign](09-close-the-campaign.md) | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ✍️ 2026-10-16 | ⬜ | — | — |
+| 09 | [Close the campaign](09-close-the-campaign.md) | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ✍️ 2026-10-16 | ✅ | this commit | [log](logs/09-close-the-campaign.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -103,7 +105,11 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 | **V1** | 07 | the spec-digest guard and its breakages | ✅ |
 | **L1**–**L4** (R2) | 08 | README §4.1 through both packages; L4 against R1 | ✅ |
 | **G-RRK** | 08 | RunRegistryKit's G2 recorded as holding (§2) | ✅ |
-| **Z1** | 09 | the final measurements; the gate records drafted; the close | ⬜ |
+| **Z1** | 09 | the final measurements at `ef34ed0`: the seven roots, `pip freeze` and provenance, the measure and the `git grep`, `list`, `store show` on twenty sidecars, the disk (verification §4.2) | ✅ |
+| **Z2** | 09 | the two gate records drafted, RunRegistryKit's G2 and DatastoreKit's (verification §4.3) | ✅ drafted; the commits are the user's |
+| **Z3** | 09 | the six registry issues placed (five the package's, two SGK's, one of them split), the brief, one line on each of the four boards' entries (verification §4.4) | ✅ drafted; nothing transferred |
+| **Z4** | 09 | what A3 v2 inherits: launcher, commands, store, and what bears on it (verification §4.5) | ✅ |
+| **Z5** | 09 | the records: verification §4, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ✅ |
 
 ## 2. The gates
 
@@ -118,6 +124,10 @@ used for 02); [`orchestrator/prompt-02a.md`](orchestrator/prompt-02a.md) (2026-1
 
 Recording a gate on RunRegistryKit's or DatastoreKit's own board is a commit in that repository
 (README §6.2 C11).
+
+**2026-10-16, at the close (09):** every gate this board holds, E1, E2, R0, R1, R2 and RunRegistryKit's G2,
+holds. 09 drafted RunRegistryKit's G2 cell and DatastoreKit's `fingerprint` note (verification §4.3), and
+**neither is committed in its repository**: those two commits are the user's (§5.15).
 
 ### 2.1 The frozen tree
 
@@ -183,6 +193,16 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     defect is still there and where, by file and line. It drafts each for RunRegistryKit's
     `docs/OPEN_ISSUES.md`, and the user hands them over (README §6.2 C11). Each SGK board's entry
     then says where its issue went. 06 does not touch them.
+  - **Narrowed (2026-10-16, prompt 09):** 09 placed each of the four against `runregistrykit` at
+    `v0.1.0` (verification §4.4) and found all four in the package, still present (the `machine` field is a
+    decided change, not built; the move entry is the relaying half only, its advice text being DatastoreKit's).
+    It also read the two SIGTERM issues the first names and found both SGK's: they stay on their boards,
+    untouched. It drafted the five for RunRegistryKit in
+    [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md), and added one
+    `**Drafted for RunRegistryKit**` line to each of the four entries, which stay in their boards' §3.
+    **What remains is the user's hand-over** of the brief (§5.15). When RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists them, a records commit here moves the four to their boards' §4 as transferred
+    and closes this entry. The **Assigned** line above is discharged.
 
 - **[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]** *(opened 2026-10-15 in 06's
   review, by the orchestrator, at the user's request; **Assigned (2026-10-15):** to 09, to hand
@@ -201,6 +221,12 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     with the line and the reproduction; the usual remedy is to catch `BrokenPipeError` in `main`
     and point `stdout` at `os.devnull` before exiting. Nothing is changed here (`CLAUDE.md`: a
     package's defect is fixed in its own release).
+  - **Narrowed (2026-10-16, prompt 09):** 09 drafted it for RunRegistryKit, with the line
+    (`runregistrykit/__main__.py:563` at `v0.1.0`, still unguarded, `main` at `:408`), the reproduction and
+    the remedy, in [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md) §2.5, with
+    a proposed row for its `docs/OPEN_ISSUES.md`. **What remains is the user's hand-over** of the brief
+    (§5.15); once RunRegistryKit lists it, a records commit here closes this entry, moving it to §4 as
+    transferred. The **Assigned** line above is discharged.
 
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
@@ -1347,3 +1373,65 @@ fired. **R2 holds, and RunRegistryKit's G2 holds.**
   of 10 landed) and its date.
 - **Handed on.** 09, the close, is next. Its prompt is written after this review (README §2.1). R2's
   two stores stay live until the user decides, after 09's review, whether to retire them.
+
+### 5.15 After prompt 09 (2026-10-16)
+
+[`09`](09-close-the-campaign.md) landed at this commit, with `ef34ed0` as its parent; its log is
+[`logs/09-close-the-campaign.md`](logs/09-close-the-campaign.md), and the record is
+[`docs/runregistry-extraction-verification.md`](../../docs/runregistry-extraction-verification.md) §4. It
+changed no code, no test and no script. It opened and closed no issue, so `docs/OPEN_ISSUES.md` holds
+**106** rows still; it changed six hooks (§1.11 one, §1.14 two, §1.17 one, §1.21 two). **The campaign is
+closed.**
+- **Z1, the measurements** (verification §4.2, `measure/out/09-*`), at `ef34ed0`, clean:
+  - the seven roots at 08's counts (AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 279, tools 91, LiouvilleGreen 148 with 1 skipped, RunDrivers 99, ComputeTargets 693, all OK);
+  - `pip freeze` equals 05's "before" list plus the one `runregistrykit` line it adds, `pip check` is clean, and
+    `package_provenance` of the three equals R2's four manifests' `packages` as JSON;
+  - RunRegistryKit's measure reports 0 in every live-code and staying-test figure (422 `.py` files), and the
+    `git grep` prints `CLAUDE.md:82` and `config/fingerprint.py:33` alone;
+  - `list`: 43 runs, none `running` or stale; `store show` on twenty sidecars, each `problems: none`, 18
+    `retired` and R2's two live. The volume is 97 % used, 36 GB free.
+- **Z2, the gate records** (verification §4.3), drafted: RunRegistryKit's G2 cell, with each of its checklist
+  item 9's six clauses mapped to evidence, and DatastoreKit's dated note on R1's both-ways result and the
+  adoption since. **Neither is committed in its repository.**
+- **Z3, the registry issues** (verification §4.4; [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md)).
+  Five are the package's, found at `v0.1.0` and still present: `[04-runs-do-not-say-which-machine-produced-them]`
+  (`__init__.py:604`, `:258`, `:294`: a decided change, not built), `[00-a-copy-carries-its-sources-present-tense-fields]`
+  (`stores.py:1138`, `:1160`), the relaying half of `[01-cross-filesystem-move-advice-says-delete-by-hand]`
+  (`stores.py:1119-1129`, `:1179`, `:1195`), `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`
+  (`__init__.py:242-251`, `:245`) and `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`
+  (`__main__.py:563`). The two SIGTERM issues are SGK's (`scoped_pipeline_run.py:256`, `:412`, `:429`; the
+  package defines none of the three) and stay untouched.
+- **Z4, what A3 v2 inherits** (verification §4.5): the launcher at `2a985303…`, unchanged since R2; the commands;
+  the store, the first kept one in the new layout; and what bears on it.
+- **Z5, the records:** verification §4, this board, README §2, `prompts/INDEX.md` and `docs/OPEN_ISSUES.md`.
+
+**Every issue this campaign leaves open, and where each stands.** Nothing is transferred and nothing closes here.
+Three of them name this board (`docs/OPEN_ISSUES.md` §1.1, §1.21); the rest stay on the boards that hold them.
+
+| Issue | Board | Where it stands |
+|---|---|---|
+| `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` | here, §3 | narrowed by 09; closes in a records commit after the hand-over |
+| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` | here, §3 | narrowed by 09; drafted (brief §2.5); closes after the hand-over |
+| `[00-main-and-the-readers-default-to-ray-address-auto]` | here, §3 | **assigned to `handover`** (2026-10-12), which owns the A3 v2 launch; its fix lands before A3 v2 or alongside it |
+| `[04-runs-do-not-say-which-machine-produced-them]` | `run-registry` | drafted for RunRegistryKit (brief §2.1); moves to §4 as transferred after the hand-over |
+| `[00-a-copy-carries-its-sources-present-tense-fields]` | `store-retirement` | drafted (brief §2.2); as above |
+| `[01-cross-filesystem-move-advice-says-delete-by-hand]` | `store-retirement` | the relaying half drafted (brief §2.3); the advice text is DatastoreKit's, in its `docs/OPEN_ISSUES.md` §1.2; as above |
+| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` | `a3-v2-readiness` | drafted (brief §2.4); as above |
+| `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` | `store-retirement` | **SGK's**, not handed over; untouched |
+| `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | `a3-v2-readiness` | **SGK's**, not handed over; untouched |
+
+- **Not opened.** The machine's disk (97 % used, past Ray's 95 % threshold) is recorded in verification §4.5 as
+  something A3 v2 inherits, as 08's review ruled; it is the machine's, not the code's. The 40 % hold's thin
+  margin at R2 (08's log, observation 3) is not a defect, and no later rehearsal is planned.
+
+**Left to the user** (README §6.3). None of these is done, and 09 did none of them.
+1. **Retiring R2's two stores, or not**: `var/datastores/runregistry-extraction-08-reference.sqlite` and
+   `-resumed.sqlite`, both throwaway (README §3). `store retire --dry-run` first.
+2. **The two gate commits.** RunRegistryKit's G2 cell and DatastoreKit's `fingerprint` note, each drafted in
+   verification §4.3 and committed in its own repository, by the user or by a session there.
+3. **The issue hand-over.** Giving [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md)
+   to a session in RunRegistryKit. **After it**, a records commit here moves the four entries to their boards' §4
+   as transferred, closes this board's two, and corrects `docs/OPEN_ISSUES.md` and `prompts/INDEX.md`.
+
+**Handed on.** The A3 v2 build (`handover`). It starts with `list`, takes the lock, forces `address="local"`
+and registers its run, and its store is the first live one recorded in the new layout meant to be kept.
