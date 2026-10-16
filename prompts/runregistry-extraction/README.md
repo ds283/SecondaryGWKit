@@ -8,9 +8,9 @@ the audit's §8, accepted as recommended (§6.1).
   [`datastorekit-fingerprint-brief.md`](datastorekit-fingerprint-brief.md) and
   [`runregistrykit-extraction-brief.md`](runregistrykit-extraction-brief.md).
 
-§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01–08 are written**:
-03 and 04 on 2026-10-14 after DatastoreKit's `v0.4.0` (E1), and 05–08 on 2026-10-15 after
-RunRegistryKit's `v0.1.0` and its SGK checklist (E2); 09 follows 08's review (§2.1).
+§0.2 measures the start tree. §2 fixes each prompt's charter and acceptance. **01–09 are written**:
+03 and 04 on 2026-10-14 after DatastoreKit's `v0.4.0` (E1), 05–08 on 2026-10-15 after
+RunRegistryKit's `v0.1.0` and its SGK checklist (E2), and 09 on 2026-10-16 after 08's review (§2.1).
 
 ## 0. Why this campaign exists
 
@@ -135,7 +135,7 @@ all 38 factories, but not a build.
 | 06 | [`06-adopt-runregistrykit.md`](06-adopt-runregistrykit.md) | **The swap**: the config file, `config/fingerprint.py`, the imports, `RunRegistry/` deleted, the 101 tests moved, `CLAUDE.md` | Opus | written 2026-10-15; held: 05 |
 | 07 | [`07-guard-the-fingerprint-format.md`](07-guard-the-fingerprint-format.md) | **Q5**: a test that a spec change without a format bump fails | Sonnet | written 2026-10-15; held: 06 |
 | 08 | [`08-rehearse-through-both-packages.md`](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit's G2** | Opus | written 2026-10-15; held: 07 |
-| 09 | Close the campaign | the records, the gates drafted for the two repositories, the hand-over to A3 v2 | Sonnet | held: 08 |
+| 09 | [`09-close-the-campaign.md`](09-close-the-campaign.md) | The final measurements; the gates drafted for the two repositories; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2; the close | Sonnet | written 2026-10-16 |
 
 ### 2.1 When each prompt file is written
 
@@ -150,7 +150,7 @@ while an earlier step establishes its method):
 - **05–08** are written when E2's release is tagged and its SGK adoption checklist exists: 06 is
   that checklist applied, and its counts and names come from it. (Written 2026-10-15, at
   `14bcac0`, from `v0.1.0` and the checklist at RunRegistryKit's `aaab408`; board §5.10.)
-- **09** follows 08's review.
+- **09** follows 08's review. (Written 2026-10-16, at `33a7346`.)
 
 E1 and E2 run in parallel with 02. Neither waits on R0, but 03 does: a miss at R0 is SGK's to
 explain before any pin moves.

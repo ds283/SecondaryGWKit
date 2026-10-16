@@ -1,12 +1,12 @@
 # runregistry-extraction campaign — implementation state
 
-**Last updated:** 2026-10-16 · **Status: IN PROGRESS — 9 of 10 prompts written (01–08 and 02a), 9
+**Last updated:** 2026-10-16 · **Status: IN PROGRESS — 10 of 10 prompts written (01–09 and 02a), 9
 landed (01, 02, 02a, 03, 04, 05, 06, 07, 08); R0, R1 and R2 hold. E1 holds: DatastoreKit
 `v0.4.0` (§5.5), 03 pinned it (§5.6), and 04 rehearsed through it and took the fingerprint both ways
 (§5.7). E2 holds: RunRegistryKit `v0.1.0` with its SGK checklist (§5.10), so 05–08 are written; 05
 pinned it (§5.11), 06 adopted it: `RunRegistry/` is gone (§5.12), 07 pinned the spec digests and
 guards the format (§5.13), and 08 rehearsed through both packages: R2 and RunRegistryKit's G2 hold
-(§5.14). 09 follows 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
+(§5.14). 09 is written (2026-10-16), after 08's review. D1–D5, Q1–Q8 and D6 ruled by the user.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -60,12 +60,12 @@ The orchestrator's choices of method, C1–C11, are in README §6.2.
 | 06 | [Adopt `runregistrykit`](06-adopt-runregistrykit.md) | the swap; closes the three `00-` issues assigned to it | Opus | ✍️ 2026-10-15 | ✅ | `740bafc` | [log](logs/06-adopt-runregistrykit.md) |
 | 07 | [Guard the fingerprint format](07-guard-the-fingerprint-format.md) | **Q5** | Sonnet | ✍️ 2026-10-15 | ✅ | `a9ed928` | [log](logs/07-guard-the-fingerprint-format.md) |
 | 08 | [Rehearse through both packages (R2)](08-rehearse-through-both-packages.md) | **R2**; **RunRegistryKit G2** | Opus | ✍️ 2026-10-15 | ✅ | `957d658` | [log](logs/08-rehearse-through-both-packages.md) |
-| 09 | Close the campaign | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ⏸ 08 | ⬜ | — | — |
+| 09 | [Close the campaign](09-close-the-campaign.md) | the records; the gates drafted; the registry issues drafted for RunRegistryKit; the hand-over to A3 v2 | Sonnet | ✍️ 2026-10-16 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
 **Written in batches (README §2.1).** 01–02 now; 02a after R0, when the shared lock was adopted; 03–04 when E1's release was tagged (written 2026-10-14); 05–08 when E2's
-release was tagged and its SGK checklist existed (written 2026-10-15); 09 after 08's review. The holds are for **method**,
+release was tagged and its SGK checklist existed (written 2026-10-15); 09 after 08's review (written 2026-10-16). The holds are for **method**,
 not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, so that each
