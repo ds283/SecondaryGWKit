@@ -1372,30 +1372,6 @@ with its closing note; log 03). Both index rows are deleted.
     handle `main.py`'s loop-variable site, or keep excluding it. Prompt 03 edits the extractor, so
     03 must keep `test_quadrature_tolerance_pin.py` passing.
 
-- **[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]** *(opened 2026-10-03
-  by prompt 04, from the orchestrator's reading; read, not measured; does not block A3 v2)*
-  - **The defect.** `write_json_atomic` (`RunRegistry/__init__.py`) writes every update through
-    one fixed `status.json.tmp`. If the driver's signal handler runs while a stdout heartbeat is
-    inside that write's `with open(tmp, "w")`, before its `flush`, the handler's own `finish`:
-    - truncates and rewrites the same file;
-    - renames it to `status.json`;
-    - raises.
-
-    Unwinding then closes the interrupted handle, whose buffered partial JSON is written at
-    offset 0 of the same inode, now `status.json`.
-  - **Impact.** `finish_after_exec`'s second `finish` reads the file as `{}` and rewrites it valid,
-    but without `pid`, `stage` or `units_*`. A `SIGKILL` between the two would leave it
-    unparseable. The window is the microseconds of one `json.dump` every 30 s at most.
-  - **Next step.** In `RunRegistry`: a unique temporary name per write (for example `mkstemp` in
-    the same directory), so that a nested write never shares an inode with the one it interrupts.
-    Not prompt 04's to change (its §6). Not assigned.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
-    `runregistrykit/__init__.py` at `v0.1.0`: `write_json_atomic` is `:242-251`, with the fixed
-    `tmp = path + ".tmp"` at `:245`, and `Run._update` (`:398-403`) writes `status.json` through it for
-    both `heartbeat` and `finish`. Still present. The brief is
-    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
-    §2.4. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
-    `docs/OPEN_ISSUES.md` lists it.
 - **[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]** *(opened 2026-10-03 by prompt
   04; read, not measured; does not block A3 v2)*
   - **The defect.** `ray.init` installs Ray's `sys.exit(signum)` at its start (`worker.py`
@@ -1680,6 +1656,41 @@ with its closing note; log 03). Both index rows are deleted.
     leaves §3. A transfer is not a resolution: the issue is **still open there**, indexed in
     DatastoreKit's `docs/OPEN_ISSUES.md` §1.2, and this entry stays, its text unchanged, as the
     record of its measurement.
+
+- **[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]** *(opened 2026-10-03
+  by prompt 04, from the orchestrator's reading; read, not measured; does not block A3 v2;
+  **transferred 2026-10-16 to RunRegistryKit by runregistry-extraction**)*
+  - **The defect.** `write_json_atomic` (`RunRegistry/__init__.py`) writes every update through
+    one fixed `status.json.tmp`. If the driver's signal handler runs while a stdout heartbeat is
+    inside that write's `with open(tmp, "w")`, before its `flush`, the handler's own `finish`:
+    - truncates and rewrites the same file;
+    - renames it to `status.json`;
+    - raises.
+
+    Unwinding then closes the interrupted handle, whose buffered partial JSON is written at
+    offset 0 of the same inode, now `status.json`.
+  - **Impact.** `finish_after_exec`'s second `finish` reads the file as `{}` and rewrites it valid,
+    but without `pid`, `stage` or `units_*`. A `SIGKILL` between the two would leave it
+    unparseable. The window is the microseconds of one `json.dump` every 30 s at most.
+  - **Next step.** In `RunRegistry`: a unique temporary name per write (for example `mkstemp` in
+    the same directory), so that a nested write never shares an inode with the one it interrupts.
+    Not prompt 04's to change (its §6). Not assigned.
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
+    `runregistrykit/__init__.py` at `v0.1.0`: `write_json_atomic` is `:242-251`, with the fixed
+    `tmp = path + ".tmp"` at `:245`, and `Run._update` (`:398-403`) writes `status.json` through it for
+    both `heartbeat` and `finish`. Still present. The brief is
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.4. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists it.
+  - **Transferred (2026-10-16) by `runregistry-extraction` (README §6.2 C11).** The code this entry
+    describes is `runregistrykit`'s since `v0.1.0` (`runregistry-extraction` 06 deleted
+    `RunRegistry/`), and no longer SGK's, so the entry leaves §3. RunRegistryKit accepted it from
+    that campaign's brief, and holds it on its `inherited-issues` board, indexed in its
+    `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit `62cc1b7`). A transfer is not a resolution: the issue
+    is **still open there**, and this entry stays, its text unchanged, as the record of its
+    measurement. RunRegistryKit corrected the next step on hand-over (only `status.json`'s writes
+    take a unique name, keeping the old mode, since tests and refusals rely on the sidecar's fixed
+    `.tmp`) and widened the impact; where the two differ, its board is right.
 
 ---
 

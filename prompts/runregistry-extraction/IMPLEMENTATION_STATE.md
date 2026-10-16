@@ -7,8 +7,9 @@ with its SGK checklist (§5.10); 05 pinned it (§5.11), 06 adopted it and `RunRe
 pinned the spec digests and guards the format (§5.13), 08 rehearsed through both packages, and R2 and
 RunRegistryKit's G2 hold (§5.14). 09 took the final measurements, drafted the two gate records and the
 hand-over of the registry issues, and wrote what A3 v2 inherits (§5.15). D1–D5, Q1–Q8 and D6 ruled by the
-user. It closes with three issues still open in §3 (the two awaiting the hand-over, and the one assigned
-to `handover`), and two of the user's three decisions pending: R2's stores are retired (§5.16).**
+user. One issue stays open in §3, assigned to `handover`; the other two closed when RunRegistryKit
+accepted the hand-over (§5.17). Of the user's three decisions, R2's stores are retired (§5.16) and the
+issues handed over (§5.17); the two gate commits remain.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -170,65 +171,6 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
 
 ## 3. Active and unresolved issues
 
-- **[00-open-issues-about-the-registry-code-stay-on-sgk-boards]** *(opened 2026-10-15 at E2, by
-  the orchestrator, in writing 05–08; **Assigned (2026-10-15):** to 09, which drafts the hand-over,
-  README §2.2)*
-  - **The defect.** Four open issues on SGK's boards describe a defect or a decided change in code
-    under `RunRegistry/`, which 06 deletes and which is RunRegistryKit's from `v0.1.0`. Neither
-    the brief nor RunRegistryKit's campaign carried them: its `docs/OPEN_ISSUES.md` holds two
-    issues, both about its own test fixtures, and its SGK checklist lists two of the four only as
-    `docs/OPEN_ISSUES.md` lines that name `RunRegistry` (its appendix, item 7). By their hooks:
-    - `[04-runs-do-not-say-which-machine-produced-them]` (`run-registry`): a manifest field and a
-      `list` refusal, decided 2026-09-24 and not built;
-    - `[00-a-copy-carries-its-sources-present-tense-fields]` (`store-retirement`): `copy_store`
-      carries unknown fields verbatim;
-    - `[01-cross-filesystem-move-advice-says-delete-by-hand]` (`store-retirement`), SGK's half:
-      `store move` passes DatastoreKit's advice on (`_store_files`, `move_store`);
-    - `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`
-      (`a3-v2-readiness`): `finish` and the heartbeat share `status.json.tmp`.
-  - **Impact.** After 06 each points at code that is no longer in this repository. By CLAUDE.md a
-    package's defect is fixed there, in a release, so none of them can be fixed here, and
-    RunRegistryKit does not know of them. The decided `machine` field is the one a later campaign
-    would most likely look for. Nothing is wrong in a record today.
-  - **Next step.** 09 checks each of the four against `runregistrykit` at `v0.1.0`: whether the
-    defect is still there and where, by file and line. It drafts each for RunRegistryKit's
-    `docs/OPEN_ISSUES.md`, and the user hands them over (README §6.2 C11). Each SGK board's entry
-    then says where its issue went. 06 does not touch them.
-  - **Narrowed (2026-10-16, prompt 09):** 09 placed each of the four against `runregistrykit` at
-    `v0.1.0` (verification §4.4) and found all four in the package, still present (the `machine` field is a
-    decided change, not built; the move entry is the relaying half only, its advice text being DatastoreKit's).
-    It also read the two SIGTERM issues the first names and found both SGK's: they stay on their boards,
-    untouched. It drafted the five for RunRegistryKit in
-    [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md), and added one
-    `**Drafted for RunRegistryKit**` line to each of the four entries, which stay in their boards' §3.
-    **What remains is the user's hand-over** of the brief (§5.15). When RunRegistryKit's
-    `docs/OPEN_ISSUES.md` lists them, a records commit here moves the four to their boards' §4 as transferred
-    and closes this entry. The **Assigned** line above is discharged.
-
-- **[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]** *(opened 2026-10-15 in 06's
-  review, by the orchestrator, at the user's request; **Assigned (2026-10-15):** to 09, to hand
-  over to RunRegistryKit with the four above)*
-  - **The defect.** `python -m runregistrykit list` flushes `stdout` unguarded after printing the
-    table (`runregistrykit/__main__.py:563` at `v0.1.0`). When the reader closes the pipe first, as
-    `list | head -4` does, the flush raises `BrokenPipeError`: a traceback, then Python's
-    "Exception ignored … BrokenPipeError" on exit. It is a race: 1 of 30 runs of `list | head -4`,
-    on a 17 kB listing, at `7af17bd`. It is inherited: the frozen `RunRegistry/__main__.py:503` at
-    `a45aefc` has the same flush, and RunRegistryKit imported it. Every other `print` there is
-    equally unguarded, so other commands can probably do it too; only `list` was seen.
-  - **Impact.** Nothing is lost or written; the run listing a reader saw is complete up to where it
-    stopped. A shell with `pipefail`, or a script that treats stderr as failure, would read a
-    discovery check (`CLAUDE.md`, run-registry rule 1) as failing. Cosmetic otherwise.
-  - **Next step.** 09 drafts it for RunRegistryKit's `docs/OPEN_ISSUES.md` beside the four above,
-    with the line and the reproduction; the usual remedy is to catch `BrokenPipeError` in `main`
-    and point `stdout` at `os.devnull` before exiting. Nothing is changed here (`CLAUDE.md`: a
-    package's defect is fixed in its own release).
-  - **Narrowed (2026-10-16, prompt 09):** 09 drafted it for RunRegistryKit, with the line
-    (`runregistrykit/__main__.py:563` at `v0.1.0`, still unguarded, `main` at `:408`), the reproduction and
-    the remedy, in [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md) §2.5, with
-    a proposed row for its `docs/OPEN_ISSUES.md`. **What remains is the user's hand-over** of the brief
-    (§5.15); once RunRegistryKit lists it, a records commit here closes this entry, moving it to §4 as
-    transferred. The **Assigned** line above is discharged.
-
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
   **Assigned (2026-10-12):** to `handover`, by the user)*
@@ -361,6 +303,80 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
     fingerprints stay as records; `fingerprint_both_ways.py`, rewritten, compares them field by field with
     `encoding_format` set aside, and on a `09c` record it measures the package's comparison as exactly one
     `encoding` entry (06-both-ways.txt). 08 makes that comparison with R0's and R1's.
+
+- **[00-open-issues-about-the-registry-code-stay-on-sgk-boards]** *(opened 2026-10-15 at E2, by
+  the orchestrator, in writing 05–08; **Assigned (2026-10-15):** to 09, which drafts the hand-over,
+  README §2.2;
+  **closed 2026-10-16, after the hand-over**)*
+  - **The defect.** Four open issues on SGK's boards describe a defect or a decided change in code
+    under `RunRegistry/`, which 06 deletes and which is RunRegistryKit's from `v0.1.0`. Neither
+    the brief nor RunRegistryKit's campaign carried them: its `docs/OPEN_ISSUES.md` holds two
+    issues, both about its own test fixtures, and its SGK checklist lists two of the four only as
+    `docs/OPEN_ISSUES.md` lines that name `RunRegistry` (its appendix, item 7). By their hooks:
+    - `[04-runs-do-not-say-which-machine-produced-them]` (`run-registry`): a manifest field and a
+      `list` refusal, decided 2026-09-24 and not built;
+    - `[00-a-copy-carries-its-sources-present-tense-fields]` (`store-retirement`): `copy_store`
+      carries unknown fields verbatim;
+    - `[01-cross-filesystem-move-advice-says-delete-by-hand]` (`store-retirement`), SGK's half:
+      `store move` passes DatastoreKit's advice on (`_store_files`, `move_store`);
+    - `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`
+      (`a3-v2-readiness`): `finish` and the heartbeat share `status.json.tmp`.
+  - **Impact.** After 06 each points at code that is no longer in this repository. By CLAUDE.md a
+    package's defect is fixed there, in a release, so none of them can be fixed here, and
+    RunRegistryKit does not know of them. The decided `machine` field is the one a later campaign
+    would most likely look for. Nothing is wrong in a record today.
+  - **Next step.** 09 checks each of the four against `runregistrykit` at `v0.1.0`: whether the
+    defect is still there and where, by file and line. It drafts each for RunRegistryKit's
+    `docs/OPEN_ISSUES.md`, and the user hands them over (README §6.2 C11). Each SGK board's entry
+    then says where its issue went. 06 does not touch them.
+  - **Narrowed (2026-10-16, prompt 09):** 09 placed each of the four against `runregistrykit` at
+    `v0.1.0` (verification §4.4) and found all four in the package, still present (the `machine` field is a
+    decided change, not built; the move entry is the relaying half only, its advice text being DatastoreKit's).
+    It also read the two SIGTERM issues the first names and found both SGK's: they stay on their boards,
+    untouched. It drafted the five for RunRegistryKit in
+    [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md), and added one
+    `**Drafted for RunRegistryKit**` line to each of the four entries, which stay in their boards' §3.
+    **What remains is the user's hand-over** of the brief (§5.15). When RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists them, a records commit here moves the four to their boards' §4 as transferred
+    and closes this entry. The **Assigned** line above is discharged.
+  - **Closed (2026-10-16), after the hand-over.** The user handed 09's brief to a session in
+    RunRegistryKit, which accepted all four, declining none, and holds them on its
+    `inherited-issues` board, indexed in its `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit `62cc1b7`).
+    Each SGK entry has moved to its own board's §4 as transferred, still open in RunRegistryKit,
+    with a line saying where it went (`run-registry`, `store-retirement` twice, `a3-v2-readiness`),
+    and its index row is deleted. So no defect in the registry's code is now held only on an SGK
+    board. RunRegistryKit corrected three next steps on hand-over, and added three questions to the
+    `machine` decision; its board is right where the two differ (§5.17).
+
+- **[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]** *(opened 2026-10-15 in 06's
+  review, by the orchestrator, at the user's request; **Assigned (2026-10-15):** to 09, to hand
+  over to RunRegistryKit with the four above;
+  **closed 2026-10-16, transferred to RunRegistryKit**)*
+  - **The defect.** `python -m runregistrykit list` flushes `stdout` unguarded after printing the
+    table (`runregistrykit/__main__.py:563` at `v0.1.0`). When the reader closes the pipe first, as
+    `list | head -4` does, the flush raises `BrokenPipeError`: a traceback, then Python's
+    "Exception ignored … BrokenPipeError" on exit. It is a race: 1 of 30 runs of `list | head -4`,
+    on a 17 kB listing, at `7af17bd`. It is inherited: the frozen `RunRegistry/__main__.py:503` at
+    `a45aefc` has the same flush, and RunRegistryKit imported it. Every other `print` there is
+    equally unguarded, so other commands can probably do it too; only `list` was seen.
+  - **Impact.** Nothing is lost or written; the run listing a reader saw is complete up to where it
+    stopped. A shell with `pipefail`, or a script that treats stderr as failure, would read a
+    discovery check (`CLAUDE.md`, run-registry rule 1) as failing. Cosmetic otherwise.
+  - **Next step.** 09 drafts it for RunRegistryKit's `docs/OPEN_ISSUES.md` beside the four above,
+    with the line and the reproduction; the usual remedy is to catch `BrokenPipeError` in `main`
+    and point `stdout` at `os.devnull` before exiting. Nothing is changed here (`CLAUDE.md`: a
+    package's defect is fixed in its own release).
+  - **Narrowed (2026-10-16, prompt 09):** 09 drafted it for RunRegistryKit, with the line
+    (`runregistrykit/__main__.py:563` at `v0.1.0`, still unguarded, `main` at `:408`), the reproduction and
+    the remedy, in [`runregistrykit-inherited-issues-brief.md`](runregistrykit-inherited-issues-brief.md) §2.5, with
+    a proposed row for its `docs/OPEN_ISSUES.md`. **What remains is the user's hand-over** of the brief
+    (§5.15); once RunRegistryKit lists it, a records commit here closes this entry, moving it to §4 as
+    transferred. The **Assigned** line above is discharged.
+  - **Closed (2026-10-16), transferred.** RunRegistryKit accepted it from 09's brief and holds it on
+    its `inherited-issues` board, indexed in its `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit
+    `62cc1b7`). A transfer is not a resolution: the defect is **still open there**, to be fixed in a
+    release that reaches SGK by a pin move, and this entry stays as the record of its measurement
+    (§5.17).
 
 ## 5. Dispatch record
 
@@ -1511,3 +1527,41 @@ directories stay as the record. The outputs are under `var/runregistry-extractio
 moves, and `docs/OPEN_ISSUES.md` stays at 106. Verification §4.2 and §4.5, which call R2's two live,
 were true at `ef34ed0` and stay as written. **Still the user's:** the two gate commits and the
 hand-over of the brief (§5.15).
+
+### 5.17 The registry issues transferred to RunRegistryKit (2026-10-16)
+
+**The user handed 09's brief to a session in RunRegistryKit**, which accepted all five issues and
+declined none. RunRegistryKit opened an `inherited-issues` board for them, a board with no prompts on
+DatastoreKit's precedent, and indexed them in its `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit
+`62cc1b7`, read here with `git`; at the time of reading it is committed on its `main` and not yet
+pushed). It reads each against the package at `caad864`, whose package files equal `v0.1.0`'s.
+
+**What RunRegistryKit changed on hand-over** (its §3 lead-in and each entry's **Corrected on
+hand-over**; its board is right where the two differ):
+- `[00-a-copy-carries-its-sources-present-tense-fields]`: the next step, now a choice between
+  carrying every unknown field and reporting those that name the source, or letting the client
+  declare per-store fields.
+- `[01-cross-filesystem-move-advice-says-delete-by-hand]`: the next step. DatastoreKit's reword would
+  name `ShardedPool.delete_store`, which also leaves no tombstone, so it does not close this half;
+  `_store_files` must say `store retire` on `EXDEV` whatever DatastoreKit says.
+- `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`: the next step, and a
+  wider impact. Only `status.json`'s writes take a unique temporary name, with the old file mode,
+  since tests and refusals rely on the sidecar's fixed `.tmp`; `write_json_atomic`'s default keeps it.
+- `[04-runs-do-not-say-which-machine-produced-them]`: three questions its decision has to answer,
+  among them that the machine belongs beside the pid in `status.json`.
+- `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`: unchanged in substance.
+
+**Recorded here, in this commit:**
+- The four entries on other boards move from §3 to §4 as transferred, each verbatim, with a
+  heading note and a **Transferred (2026-10-16)** line saying where it went and that it is still open
+  there: `run-registry` (`[04-runs-do-not-say-which-machine-produced-them]`), `store-retirement`
+  (`[00-a-copy-carries-…]` and `[01-cross-filesystem-move-advice-…]`, its §3 lead-in corrected from
+  four open to two) and `a3-v2-readiness` (`[04-a-signal-inside-a-heartbeat-write-…]`).
+- This board's two close on §4: `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]`, its
+  defect answered, and `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`,
+  transferred.
+- `docs/OPEN_ISSUES.md` loses the six rows, **106 → 100**. `prompts/INDEX.md`'s row gives this
+  campaign's open count as 1, the ray-address issue in §1.1.
+
+**Still the user's:** the two gate commits, RunRegistryKit's G2 cell and DatastoreKit's
+`fingerprint` note (verification §4.3).

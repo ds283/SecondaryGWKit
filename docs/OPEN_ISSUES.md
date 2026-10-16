@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-16 · **106 open** across twenty-one campaigns.
+**Last updated:** 2026-10-16 · **100 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -669,11 +669,13 @@ was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/
 `realistic_large_x.py` outside the registry because its provenance hash is load-bearing.
 **Prompt 03 closed the campaign on 2026-09-22 at 3 / 3**, splitting the manifest's overloaded
 `checkpoint` field into a unit ledger and a `results` store.
+On 2026-10-16 `runregistry-extraction` **transferred** `[04-runs-do-not-say-which-machine-produced-them]`
+to RunRegistryKit, whose code it is since `v0.1.0`, and where it stays open (`docs/OPEN_ISSUES.md`
+§1.2 there). Its row is deleted here; the board's §4 keeps the entry as the record.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
-| `[04-runs-do-not-say-which-machine-produced-them]` | run-registry | The manifest records `git_head`, `script_sha256`, `argv` and `cwd`, and nothing saying **where** the job ran. Two consequences, and the second is worse. Provenance: rows computed on different hardware can differ in their last bits, and for a comparator store nothing records that. Liveness: once run directories are rsync'd between machines, `list` evaluates `kill -0 <pid>` against the wrong process table — harmless for a terminal record, a confident wrong answer for one still marked `running`, including a false "alive" on a reused pid. **Decided 2026-09-24:** add `machine` (`platform.node()`/`platform.machine()`), make `list` refuse to interpret liveness for a foreign record, and transfer only terminal-state directories. **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction 09):** the code is `begin`, `pid_alive` and `liveness` in `runregistrykit/__init__.py` at `v0.1.0`, which records no machine; moves to the board's §4 as transferred when RunRegistryKit lists it. |
 | `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
 
 ### 1.12 The datastore portability campaign
@@ -736,14 +738,15 @@ retired `datastore-integrity` prompt 10's two stores. It had **no board row**: t
 a campaign to own it, and its board takes the issue over. **Taken over on 2026-10-02 by
 `prompts/a3-v2-readiness`**, whose board §3.2 now holds it; its row moved to §1.17. On 2026-10-12
 `dk-and-rpk-migration` prompt 09 **narrowed** `[01-cross-filesystem-move-advice-…]`: the advice text
-went to DatastoreKit, and SGK's half stays in the row above.
+went to DatastoreKit, and SGK's half stays in the row above. On 2026-10-16 `runregistry-extraction`
+**transferred** that half and `[00-a-copy-carries-its-sources-present-tense-fields]` to RunRegistryKit,
+whose code they are since `v0.1.0`, and where both stay open (`docs/OPEN_ISSUES.md` §1.2 there). Their
+rows are deleted here, and two rows remain.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` | store-retirement | The 2026-09-23 A3 resume run is recorded `failed`, exit 1. The `handover` board says `killed`, and its launcher log holds a SIGTERM trace. `terminal_state` maps `SystemExit(15)` to `killed`, but this run left through `except BaseException`. One instance. |
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
-| `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction 09):** `runregistrykit/stores.py:1138`, `:1160` at `v0.1.0`, still there; moves to the board's §4 as transferred when RunRegistryKit lists it. |
-| `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | **Narrowed 2026-10-12** by dk-and-rpk-migration 09, to SGK's half: `store move` passes the package's "delete the source by hand" advice on for a registered store (`runregistrykit/stores.py:1119-1129`, `:1195` at `v0.1.0`), against the rule that one is only ever retired. The advice text is DatastoreKit's, listed in its `docs/OPEN_ISSUES.md` §1.2. Unassigned. **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction 09):** the relaying half; moves to the board's §4 as transferred when RunRegistryKit lists it. |
 
 ### 1.15 The datastore integrity campaign
 
@@ -828,14 +831,15 @@ them the same day, the tensor-source reader's, and opened one.
 recorded here for its owner.
 On 2026-10-12 `dk-and-rpk-migration` prompt 09 transferred two of the nine, `[00-a-new-stores-first-open-…]`
 and `[00-a-drop-action-drops-…]`, to DatastoreKit, where both stay open (`docs/OPEN_ISSUES.md` §1.2
-there); their rows are deleted here.
+there); their rows are deleted here. On 2026-10-16 `runregistry-extraction` transferred
+`[04-a-signal-inside-a-heartbeat-write-…]` to RunRegistryKit, whose code it is since `v0.1.0`, and where
+it stays open (`docs/OPEN_ISSUES.md` §1.2 there). Its row is deleted here; the board's §4 keeps the entry as the record.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[07a-the-quadsourceintegral-extractor-reads-a-quadsource-miss-unchecked]` | a3-v2-readiness | `extract_QuadSourceIntegral_data.py` hands a labels-only `QuadSource` miss to `plot_QuadSourceIntegrand` (fails on `source.z_sample.max`, `z_sample` is `None`) and to its own `plot_tensor_source` (fails on `values`), neither naming the pair. Its pairs are in stored order, so only a row truly missing reaches it (read, not measured). Not assigned. |
 | `[07-a-killed-builds-ray-agents-outlive-the-driver]` | a3-v2-readiness | After a killed `--build` exits 143, its Ray dashboard and runtime-env agents are orphaned to pid 1 and exit on their own 1–2 min later (measured at loads 65–123); `pgrep 'gcs_server\|raylet\|ray::'` can miss the runtime-env agent. A3 v2's post-kill check must wait for them by pid. Not assigned. |
 | `[07-stage-counts-cannot-label-a-run-of-any-prompt-but-10]` | a3-v2-readiness | `docs/datastore-integrity-verification/stage_counts.py` labels columns by splitting the run id on `-10-`, so it raises `IndexError` on any other prompt's runs; 07 wrapped its `read`. Verification tool only. Not assigned. |
-| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` | a3-v2-readiness | A handler's `finish` during a heartbeat's `write_json_atomic` shares the fixed `status.json.tmp`; the interrupted handle's partial JSON can land in `status.json`. The driver's second `finish` rewrites it, without `pid`/`stage` (read, not measured). Fix belongs in `runregistrykit` (`write_json_atomic`, `__init__.py:242-251` at `v0.1.0`). Not assigned. **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction 09):** moves to the board's §4 as transferred when RunRegistryKit lists it. |
 | `[04-a-sigterm-during-ray-init-meets-rays-handler-not-the-drivers]` | a3-v2-readiness | A `SIGTERM` during the ~2.3 s of `ray.init` reaches Ray's own handler, before the driver's exists, so it is recorded by `terminal_state`: `killed`/15 or `failed`/1, exit 15 or 1, not 143 (read, not measured). Not assigned. |
 | `[04-the-sweeps-run-child-shares-the-sigterm-and-cluster-address-defects]` | a3-v2-readiness | `quadsource_atol_sweep.run_child`, left unchanged by prompt 04, still calls `ray.init` with no `address` (refused beside a `ray start` cluster) and installs no handler (a `SIGTERM` in a wait is `SystemExit(1)` under absl's alarm). Not A3 v2's path. Not assigned. |
 | `[01-reader-tolerance-agreement-does-not-scan-object-read-batch]` | a3-v2-readiness | `test_main_plumbing.ReaderToleranceAgreementTestCase` reads only `object_get`/`object_get_vectorized`, so a reader's `object_read_batch` of a tolerance-keyed target is never compared with `main.py`. Today's one instance, the `QuadSourceIntegral` extractor, is pinned by `test_quadrature_tolerance_pin.py`. Test gap; does not block A3 v2. |
@@ -904,11 +908,11 @@ RunRegistryKit defect seen in passing, and assigned to prompt 09 to hand over wi
 Prompt 09 closed the campaign on 2026-10-16 and closed none of the rest: it placed the fifth's four and the sixth
 against `runregistrykit` at `v0.1.0`, found all five in the package, and drafted them for RunRegistryKit in a
 brief, so both rows stay until the user has handed it over.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[00-open-issues-about-the-registry-code-stay-on-sgk-boards]` | runregistry-extraction | Four open issues on other SGK boards describe defects or a decided change in `RunRegistry/` code, which is RunRegistryKit's from `v0.1.0`; neither the brief nor RunRegistryKit carried them. **Assigned (2026-10-15):** to 09, which locates each in the package and drafts the hand-over. **Narrowed (2026-10-16, prompt 09):** all four are in the package at `v0.1.0` and still present; the brief is drafted; what remains is the user's hand-over, after which this closes and the four move to their boards' §4. |
-| `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]` | runregistry-extraction | `python -m runregistrykit list` piped into `head` sometimes ends in a `BrokenPipeError` traceback: an unguarded `sys.stdout.flush()` (`__main__.py:563` at `v0.1.0`), inherited from `RunRegistry/`. RunRegistryKit's defect; cosmetic, nothing lost. **Assigned (2026-10-15):** to 09, to hand over with the row above. **Narrowed (2026-10-16, prompt 09):** drafted in the brief (`__main__.py:563` at `v0.1.0`, still unguarded); closes after the user's hand-over. |
+**The user handed the brief over the same day**, and RunRegistryKit accepted all five, declining none
+(its `inherited-issues` board, `docs/OPEN_ISSUES.md` §1.2 there). The fifth closed and the sixth closed
+as transferred, on the board's §4, and the four moved to their own boards' §4 as transferred, each
+still open in RunRegistryKit (§1.11, §1.14, §1.17). **No row remains in this section**; the
+campaign's one open issue is the third, in §1.1.
 
 ---
 

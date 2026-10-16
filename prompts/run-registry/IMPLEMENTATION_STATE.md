@@ -58,38 +58,6 @@ README §0.3 calls worse than nothing.
 
 ## 3. Active and unresolved issues
 
-- **[04-runs-do-not-say-which-machine-produced-them]** *(opened 2026-09-24 from a cross-machine
-  question, not by a prompt; user decision the same day: **do it**)* — the manifest records
-  `git_head`, `git_dirty`, `script_sha256`, `argv` and `cwd`, and nothing that says **where** the
-  job ran. That is now load-bearing in two independent ways.
-
-  **Provenance.** A second machine (`macstudio-tunnel`, M1 Max) is about to run the A3 rebuild, and
-  rows computed on different hardware can differ in their last bits. For a store whose whole
-  purpose is to be a comparator, mixed-provenance rows are a defect that nothing currently records:
-  `git_head` says what code ran, not what executed it.
-
-  **Correctness of the liveness rule, which is worse.** Once run directories are rsync'd between
-  machines, `python -m RunRegistry list` will evaluate `kill -0 <pid>` against **this** machine's
-  process table for a pid that belonged to another. A terminal-state record is harmless; a record
-  still marked `running` yields a confident wrong answer — a false "dead", or a false "alive" if
-  the pid has since been reused locally. That is a new way to get the §0 item 3 failure, from the
-  opposite direction.
-
-  **Next step:** add `machine` to the manifest (`platform.node()` and `platform.machine()`), and
-  make the lister **refuse to interpret liveness for a record whose `machine` is not this one**,
-  reporting it as foreign instead of guessing. Reporting correctly is recording, so this stays
-  inside §0.2's boundary. Pair it with a stated rule that **only terminal-state run directories are
-  transferred**. Indexed at `docs/OPEN_ISSUES.md` §1.11.
-
-  **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit` at
-  `v0.1.0` records no machine: `begin` is `runregistrykit/__init__.py:604`, the manifest `:707-723`,
-  `pid_alive` `:258` and `liveness` `:294`, and `machine` and `platform` appear nowhere in the
-  package's code. The brief is
-  [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
-  §2.1. It is a decided change, not a defect, and whether RunRegistryKit adopts it for every client
-  is its decision. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
-  `docs/OPEN_ISSUES.md` lists it.
-
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing
   saying which run they belong to: `run.out` (23,616 bytes, 2026-09-20T17:08), `run.pid` (6 bytes,
@@ -372,6 +340,48 @@ README §0.3 calls worse than nothing.
   The three real sidecars are fingerprinted by that campaign's prompt 05 (D3). Measurement:
   [`../store-fingerprint/logs/04-the-fingerprint.md`](../store-fingerprint/logs/04-the-fingerprint.md).
   Row deleted from `docs/OPEN_ISSUES.md` §1.13 in the same commit.
+
+- **[04-runs-do-not-say-which-machine-produced-them]** *(opened 2026-09-24 from a cross-machine
+  question, not by a prompt; user decision the same day: **do it**;
+  **transferred 2026-10-16 to RunRegistryKit by runregistry-extraction**)* — the manifest records
+  `git_head`, `git_dirty`, `script_sha256`, `argv` and `cwd`, and nothing that says **where** the
+  job ran. That is now load-bearing in two independent ways.
+
+  **Provenance.** A second machine (`macstudio-tunnel`, M1 Max) is about to run the A3 rebuild, and
+  rows computed on different hardware can differ in their last bits. For a store whose whole
+  purpose is to be a comparator, mixed-provenance rows are a defect that nothing currently records:
+  `git_head` says what code ran, not what executed it.
+
+  **Correctness of the liveness rule, which is worse.** Once run directories are rsync'd between
+  machines, `python -m RunRegistry list` will evaluate `kill -0 <pid>` against **this** machine's
+  process table for a pid that belonged to another. A terminal-state record is harmless; a record
+  still marked `running` yields a confident wrong answer — a false "dead", or a false "alive" if
+  the pid has since been reused locally. That is a new way to get the §0 item 3 failure, from the
+  opposite direction.
+
+  **Next step:** add `machine` to the manifest (`platform.node()` and `platform.machine()`), and
+  make the lister **refuse to interpret liveness for a record whose `machine` is not this one**,
+  reporting it as foreign instead of guessing. Reporting correctly is recording, so this stays
+  inside §0.2's boundary. Pair it with a stated rule that **only terminal-state run directories are
+  transferred**. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+
+  **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** `runregistrykit` at
+  `v0.1.0` records no machine: `begin` is `runregistrykit/__init__.py:604`, the manifest `:707-723`,
+  `pid_alive` `:258` and `liveness` `:294`, and `machine` and `platform` appear nowhere in the
+  package's code. The brief is
+  [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+  §2.1. It is a decided change, not a defect, and whether RunRegistryKit adopts it for every client
+  is its decision. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+  `docs/OPEN_ISSUES.md` lists it.
+
+  **Transferred (2026-10-16) by `runregistry-extraction` (README §6.2 C11).** The code this entry
+  describes is `runregistrykit`'s since `v0.1.0` (`runregistry-extraction` 06 deleted
+  `RunRegistry/`), and no longer SGK's, so the entry leaves §3. RunRegistryKit accepted it from that
+  campaign's brief, and holds it on its `inherited-issues` board, indexed in its
+  `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit `62cc1b7`). A transfer is not a resolution: the issue
+  is **still open there**, and this entry stays, its text unchanged, as the record of its
+  measurement. RunRegistryKit added, on hand-over, three questions its decision has to answer; the
+  decision is now its own, for every client.
 
 The other two issues this campaign opened are still in §3, and that is the honest count rather than
 a failing: both are a **deliberate non-adoption** recorded so its price is known, not work left half

@@ -460,10 +460,12 @@ by count. Log: [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residu
 
 ## 3. Active and unresolved issues
 
-Four remain open, all opened on 2026-09-25: three by the audit
+Two remain open, both opened on 2026-09-25 by the audit
 ([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a
-prompt, and one by prompt 01. None is assigned to a prompt of this campaign, and each is recorded
-here for its owner. The other three — one opened by prompt 03, two by the orchestrator's review
+prompt. Neither is assigned to a prompt of this campaign, and each is recorded here for its owner.
+Two more, one from the audit and one from prompt 01, were transferred to RunRegistryKit on
+2026-10-16 by `runregistry-extraction`, since their code is `runregistrykit`'s; they are on §4
+below, still open there. The other three — one opened by prompt 03, two by the orchestrator's review
 of prompt 04 — were assigned to prompt 06 on 2026-09-26 (README §6.4), which fixed and closed all
 three; they are on §4 below. Two further issues, owned by `datastore-portability`, were assigned
 to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` §1.14.
@@ -504,76 +506,6 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
     that captures a registered child's output should write that capture inside the run directory.
     Not this campaign's: README §1 leaves `var/runs/` out of scope.
   - **Measurement:** audit §2.11. Indexed at `docs/OPEN_ISSUES.md` §1.14.
-
-- **[00-a-copy-carries-its-sources-present-tense-fields]** *(opened 2026-09-25 by the audit)*
-  - **The defect.** `copy_store` replaces seven known fields and carries every unknown field
-    verbatim (`RunRegistry/stores.py:719-733`), by design (`datastore-portability` README §6.5
-    point 1). Some unknown fields make claims about the store they sit in. A copy of the live A3
-    store carries all three of these (`store-fingerprint` log 05 Phase C):
-    - `backup`, whose `"retained": true` describes a backup *of the source*;
-    - `restart.command`, whose `--database` is the **source's** path;
-    - `run_history`, the source's runs.
-  - **Impact.** Nothing reads these fields, so no code misbehaves. A person who followed a copy's
-    `restart` would resume the pipeline **into the source store**. That is the 2026-09-23 accident
-    (`2ebb7b6`), which wrote 54 rows into the live A3 store, by another route. After this
-    campaign's prompt 02, every `--prepare` makes such a copy.
-  - **Next step.** A decision about `copy_store`'s design: carry, drop, or flag such fields. That is
-    for `datastore-portability`'s area, not this campaign's. If D5 is taken, prompt 04's
-    `store amend` is the remedy for a given copy.
-  - **Measurement:** audit §2.12. Indexed at `docs/OPEN_ISSUES.md` §1.14.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
-    `runregistrykit/stores.py` at `v0.1.0`: `copy_store` is `:1138`, its docstring says every other
-    field, "unknown ones included, is the source's, verbatim", and
-    `fields = _copy.deepcopy(reading.fields)` is `:1160`. Still present. The brief is
-    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
-    §2.2. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
-    `docs/OPEN_ISSUES.md` lists it.
-
-- **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01;
-  **narrowed** 2026-10-12 by dk-and-rpk-migration 09)*
-  - **The defect.** When `ShardedPool.move_store` fails with `EXDEV`, `_failure_message` advises
-    "copy it instead, and then delete the source by hand". `RunRegistry.stores.move_store` calls
-    `ShardedPool.move_store` (`RunRegistry/stores.py:753`), so `store move` gives that advice about
-    a registered store.
-  - **Impact.** Low, and only on a failed cross-filesystem move. The advice contradicts decision
-    6.1.1: a registered store is removed by `store retire`, never by hand. A person who followed
-    it would leave the source's sidecar describing nothing, the broken case of audit §2.1, with no
-    tombstone. Nothing acts on the advice automatically.
-  - **Next step.** Reword the advice so that a registered store's source is retired, not deleted
-    by hand. `Datastore/tests/test_copy_move_store.py`'s
-    `test_move_across_filesystems_fails_before_anything_moves` asserts the current text verbatim,
-    so the rewording needs a decision about that test, which this campaign's rule 7 forbids
-    modifying. Prompt 01 was told to leave the text alone. Unassigned.
-  - **Measurement:** log 01, "Observations not acted on", item 1. Indexed at
-    `docs/OPEN_ISSUES.md` §1.14.
-  - **Narrowed (2026-10-12, `dk-and-rpk-migration` prompt 09, at the user's decision).** The text is
-    the package's, and the harm is SGK's rule. Two halves:
-    - **To DatastoreKit.** `ShardedPool._failure_message` appends, on `EXDEV`, "copy it instead,
-      and then delete the source by hand" (installed `datastorekit/SQL/ShardedPool.py:3026-3030`;
-      `move_store`'s docstring says the same at `:2683-2684`). The package has
-      `ShardedPool.delete_store` (`:2704`), so advising a deletion by hand is its own defect. It is
-      indexed in DatastoreKit's `docs/OPEN_ISSUES.md` §1.2. The test that asserted the text,
-      `Datastore/tests/test_copy_move_store.py`, was deleted from SGK by 04 and is the package's
-      (`datastorekit/tests/test_copy_move_store.py`), so the constraint on "Next step" above goes
-      with this half.
-    - **Stays SGK's.** `RunRegistry.stores.move_store` (`RunRegistry/stores.py:1109-1123`) calls
-      `_store_files("move", ShardedPool.move_store, …)` at `:1123`, and `_store_files`
-      (`:1052-1060`) re-raises `f"{e}. No sidecar was written or moved: …"`, the package's message
-      verbatim with the sidecar listing appended. SGK adds and shapes no advice. But a registered
-      store's source is retired with `store retire`, never deleted by hand (decision 6.1.1), and the
-      package cannot know that a store is registered. So `store move` passes on, for a registered
-      store, advice that SGK's own rule forbids. The place to say otherwise is `_store_files` or
-      `move_store`. Unassigned; no test constrains it.
-    - The line numbers of the entry above (`RunRegistry/stores.py:753`) are 2026-09-25's, and the
-      entry's text is left as the record.
-  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** the half that
-    stayed SGK's is the package's now. `runregistrykit/stores.py` at `v0.1.0`: `_store_files` is
-    `:1119-1129` (re-raising the pool's message with the sidecar listing appended, `:1125-1128`),
-    and `move_store` is `:1179`, calling `_store_files("move", ShardedPool.move_store, src, dst)` at
-    `:1195`. Still present. The advice text stays DatastoreKit's. The brief is
-    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
-    §2.3, which hands over the relaying half only. The entry stays in §3, and moves to §4 as
-    transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
 
 ---
 
@@ -664,6 +596,96 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
     value instead of the wrapper (deliberate breakage (iii)) is caught by this test's exact
     marker equality. Log:
     [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residuals-and-close.md).
+
+- **[00-a-copy-carries-its-sources-present-tense-fields]** *(opened 2026-09-25 by the audit;
+  **transferred 2026-10-16 to RunRegistryKit by runregistry-extraction**)*
+  - **The defect.** `copy_store` replaces seven known fields and carries every unknown field
+    verbatim (`RunRegistry/stores.py:719-733`), by design (`datastore-portability` README §6.5
+    point 1). Some unknown fields make claims about the store they sit in. A copy of the live A3
+    store carries all three of these (`store-fingerprint` log 05 Phase C):
+    - `backup`, whose `"retained": true` describes a backup *of the source*;
+    - `restart.command`, whose `--database` is the **source's** path;
+    - `run_history`, the source's runs.
+  - **Impact.** Nothing reads these fields, so no code misbehaves. A person who followed a copy's
+    `restart` would resume the pipeline **into the source store**. That is the 2026-09-23 accident
+    (`2ebb7b6`), which wrote 54 rows into the live A3 store, by another route. After this
+    campaign's prompt 02, every `--prepare` makes such a copy.
+  - **Next step.** A decision about `copy_store`'s design: carry, drop, or flag such fields. That is
+    for `datastore-portability`'s area, not this campaign's. If D5 is taken, prompt 04's
+    `store amend` is the remedy for a given copy.
+  - **Measurement:** audit §2.12. Indexed at `docs/OPEN_ISSUES.md` §1.14.
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):**
+    `runregistrykit/stores.py` at `v0.1.0`: `copy_store` is `:1138`, its docstring says every other
+    field, "unknown ones included, is the source's, verbatim", and
+    `fields = _copy.deepcopy(reading.fields)` is `:1160`. Still present. The brief is
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.2. The entry stays in §3, and moves to §4 as transferred when RunRegistryKit's
+    `docs/OPEN_ISSUES.md` lists it.
+  - **Transferred (2026-10-16) by `runregistry-extraction` (README §6.2 C11).** The code this entry
+    describes is `runregistrykit`'s since `v0.1.0` (`runregistry-extraction` 06 deleted
+    `RunRegistry/`), and no longer SGK's, so the entry leaves §3. RunRegistryKit accepted it from
+    that campaign's brief, and holds it on its `inherited-issues` board, indexed in its
+    `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit `62cc1b7`). A transfer is not a resolution: the issue
+    is **still open there**, and this entry stays, its text unchanged, as the record of its
+    measurement. RunRegistryKit corrected the next step on hand-over (its entry's **Corrected on
+    hand-over**); where the two differ, its board is right.
+
+- **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01;
+  **narrowed** 2026-10-12 by dk-and-rpk-migration 09;
+  **transferred 2026-10-16 to RunRegistryKit by runregistry-extraction**)*
+  - **The defect.** When `ShardedPool.move_store` fails with `EXDEV`, `_failure_message` advises
+    "copy it instead, and then delete the source by hand". `RunRegistry.stores.move_store` calls
+    `ShardedPool.move_store` (`RunRegistry/stores.py:753`), so `store move` gives that advice about
+    a registered store.
+  - **Impact.** Low, and only on a failed cross-filesystem move. The advice contradicts decision
+    6.1.1: a registered store is removed by `store retire`, never by hand. A person who followed
+    it would leave the source's sidecar describing nothing, the broken case of audit §2.1, with no
+    tombstone. Nothing acts on the advice automatically.
+  - **Next step.** Reword the advice so that a registered store's source is retired, not deleted
+    by hand. `Datastore/tests/test_copy_move_store.py`'s
+    `test_move_across_filesystems_fails_before_anything_moves` asserts the current text verbatim,
+    so the rewording needs a decision about that test, which this campaign's rule 7 forbids
+    modifying. Prompt 01 was told to leave the text alone. Unassigned.
+  - **Measurement:** log 01, "Observations not acted on", item 1. Indexed at
+    `docs/OPEN_ISSUES.md` §1.14.
+  - **Narrowed (2026-10-12, `dk-and-rpk-migration` prompt 09, at the user's decision).** The text is
+    the package's, and the harm is SGK's rule. Two halves:
+    - **To DatastoreKit.** `ShardedPool._failure_message` appends, on `EXDEV`, "copy it instead,
+      and then delete the source by hand" (installed `datastorekit/SQL/ShardedPool.py:3026-3030`;
+      `move_store`'s docstring says the same at `:2683-2684`). The package has
+      `ShardedPool.delete_store` (`:2704`), so advising a deletion by hand is its own defect. It is
+      indexed in DatastoreKit's `docs/OPEN_ISSUES.md` §1.2. The test that asserted the text,
+      `Datastore/tests/test_copy_move_store.py`, was deleted from SGK by 04 and is the package's
+      (`datastorekit/tests/test_copy_move_store.py`), so the constraint on "Next step" above goes
+      with this half.
+    - **Stays SGK's.** `RunRegistry.stores.move_store` (`RunRegistry/stores.py:1109-1123`) calls
+      `_store_files("move", ShardedPool.move_store, …)` at `:1123`, and `_store_files`
+      (`:1052-1060`) re-raises `f"{e}. No sidecar was written or moved: …"`, the package's message
+      verbatim with the sidecar listing appended. SGK adds and shapes no advice. But a registered
+      store's source is retired with `store retire`, never deleted by hand (decision 6.1.1), and the
+      package cannot know that a store is registered. So `store move` passes on, for a registered
+      store, advice that SGK's own rule forbids. The place to say otherwise is `_store_files` or
+      `move_store`. Unassigned; no test constrains it.
+    - The line numbers of the entry above (`RunRegistry/stores.py:753`) are 2026-09-25's, and the
+      entry's text is left as the record.
+  - **Drafted for RunRegistryKit (2026-10-16, runregistry-extraction prompt 09):** the half that
+    stayed SGK's is the package's now. `runregistrykit/stores.py` at `v0.1.0`: `_store_files` is
+    `:1119-1129` (re-raising the pool's message with the sidecar listing appended, `:1125-1128`),
+    and `move_store` is `:1179`, calling `_store_files("move", ShardedPool.move_store, src, dst)` at
+    `:1195`. Still present. The advice text stays DatastoreKit's. The brief is
+    [`prompts/runregistry-extraction/runregistrykit-inherited-issues-brief.md`](../runregistry-extraction/runregistrykit-inherited-issues-brief.md)
+    §2.3, which hands over the relaying half only. The entry stays in §3, and moves to §4 as
+    transferred when RunRegistryKit's `docs/OPEN_ISSUES.md` lists it.
+  - **Transferred (2026-10-16) by `runregistry-extraction` (README §6.2 C11).** The code this entry
+    describes is `runregistrykit`'s since `v0.1.0` (`runregistry-extraction` 06 deleted
+    `RunRegistry/`), and no longer SGK's, so the entry leaves §3. RunRegistryKit accepted it from
+    that campaign's brief, and holds it on its `inherited-issues` board, indexed in its
+    `docs/OPEN_ISSUES.md` §1.2 (RunRegistryKit `62cc1b7`). A transfer is not a resolution: the issue
+    is **still open there**, and this entry stays, its text unchanged, as the record of its
+    measurement. The relaying half was the last part that was SGK's; the advice text stays
+    DatastoreKit's (its `docs/OPEN_ISSUES.md` §1.2). RunRegistryKit corrected the next step on
+    hand-over: DatastoreKit's reword does not close this half, since `ShardedPool.delete_store`
+    leaves no tombstone either; where the two differ, its board is right.
 
 ---
 
