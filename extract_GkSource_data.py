@@ -92,7 +92,14 @@ parser.add_argument(
     help="write profiling and performance data to the specified database",
 )
 parser.add_argument(
-    "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
+    "--ray-address",
+    default="local",
+    type=str,
+    help=(
+        "address of the Ray cluster to connect to. The default, 'local', starts a fresh Ray "
+        "instance for this run and never attaches to one already running; pass 'auto' or "
+        "host:port to attach"
+    ),
 )
 parser.add_argument(
     "--output", default="GkSource-out", type=str, help="specify folder for output files"
@@ -105,7 +112,9 @@ if args.database is None:
     parser.print_help()
     sys.exit()
 
-# connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
+# connect to Ray on the supplied address. The default, 'local', starts a fresh instance for this
+# process and never attaches to one already running (handover prompt 05); 'auto' or host:port
+# attaches
 ray.init(address=args.ray_address)
 
 VERSION_LABEL = "2025.1.1"

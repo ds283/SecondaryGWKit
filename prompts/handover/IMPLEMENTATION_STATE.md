@@ -1,6 +1,7 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-09-23 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2).** Prompt
+**Last updated:** 2026-10-16 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
+which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
 01 (A1) has landed the general-$b$ oracle** as `ComputeTargets/tests/domenech.py` with
@@ -12,7 +13,10 @@ clamp term from the representation term** — the measurement
 B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. **Seven** issues are open in §3 — four from
 prompts 01 and 02, and **three opened 2026-09-23 by the A3 baseline run**, which was stopped by the
 user after a read of its cost showed the shipped quadrature tolerance pair unreachable on
-production's squeezed triples; one is closed in §4 on another board.
+production's squeezed triples; one is closed in §4 on another board. **Prompt 05 (2026-10-16)**
+is not seam work: it closed `[00-main-and-the-readers-default-to-ray-address-auto]`, which the
+user assigned here on 2026-10-12 and the `runregistry-extraction` board holds, so a second issue
+is recorded in §4 as closed on another board.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -46,6 +50,7 @@ production's squeezed triples; one is closed in §4 on another board.
 | D2 | The phase as carried producer→consumer | **D2** | — | ⬜ no | ⬜ | — | — |
 | E1 | Re-take the trade-off on the current grid | **E1** | — | ⬜ no | ⬜ | — | — |
 | E2 | Choose the depth | **E2** | — | ⬜ no | ⬜ | — | — |
+| 05 | [The Ray address default](05-ray-address-defaults-to-local.md) | **05** — not seam work; closes `[00-main-and-the-readers-default-to-ray-address-auto]` | Opus 5.5 | ✍️ yes | ✅ 2026-10-16 | *"Start a fresh Ray instance by default in main.py and the readers"* | [`logs/05-…`](logs/05-ray-address-defaults-to-local.md) |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -76,6 +81,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | D2 | **SCOPE QUESTION** | The phase as carried producer→consumer, $\delta\theta\simeq h^4x/384$ growing linearly in $x$, plus the anchoring floor and the storage granularity beneath it. The largest scope question in the campaign — README §7 **D4**. | — | ⬜ **Grouping only.** |
 | E1 | **MEASUREMENT** | Re-take `[06-source-spline-residual-vs-handover]`'s stale trade-off table on the curvature-criterion grid, at $b = 0$ **and** $b \ne 0$ — which A1 has now made scoreable. | — | ⬜ **Grouping only.** |
 | E2 | **DECISION** | Scan $x_T$ against both oracles at large response $x$, at $b = 0$ and $b = 0.2$, with the gap gone and the residue attributed. Move `TkNumericIntegration.py:148-149`'s window, or record on measurement that it stays. | — | ⬜ **Grouping only.** Last, by README §4 item 3. |
+| 05 | **REMEDY** | Make `main.py` and the six `extract_*.py` start their own Ray instance unless told otherwise: `--ray-address` defaults to `local`, not `auto`, which attaches to any Ray instance on the machine. The flag stays optional, because the A3 v2 launcher passes none. Assigned here by the user on 2026-10-12, to land before the A3 v2 launch or with it. | 05 | ✅ **Done, 2026-10-16.** `DEFAULT_RAY_ADDRESS` and the six readers' defaults read `local`, with their help text and the comment above each `ray.init` saying so; `ComputeTargets/tests/test_ray_address_default.py` (7 tests) reads the seven scripts with `ast` and pins Ray's own resolution of `local`. `quadsource_atol_sweep.py` unchanged (SHA-256 `2a985303…`). `ComputeTargets` 693 → **700**; the other six roots unchanged. |
 
 ---
 
@@ -488,6 +494,21 @@ disagree with the prompt that owns them.
 ---
 
 ## 4. Resolved issues
+
+Closed by prompt 05, 2026-10-16:
+
+- **[00-main-and-the-readers-default-to-ray-address-auto]** — *opened 2026-10-12 by the
+  `runregistry-extraction` plan, **held by that board**, and assigned to this campaign by the user
+  on 2026-10-12, since it owns the A3 v2 launch.* `main.py` and the six readers defaulted
+  `--ray-address` to `auto`, which attaches to any Ray instance on the machine.
+
+  **Resolution.** The seven defaults are `local`, which starts a fresh instance and ignores
+  `RAY_ADDRESS`; the flag stays optional, because `quadsource_atol_sweep._main_py_argv` passes
+  none. `ComputeTargets/tests/test_ray_address_default.py` pins the defaults, the single
+  `ray.init(address=args.ray_address)` in each script, and Ray's resolution of `local`. **Closed on
+  the `runregistry-extraction` board's §4**, which holds the resolution in full; the row is deleted
+  from `docs/OPEN_ISSUES.md` §1.1. Record:
+  [`logs/05-ray-address-defaults-to-local.md`](logs/05-ray-address-defaults-to-local.md).
 
 Closed by prompt 01, 2026-09-20:
 

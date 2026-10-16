@@ -7,9 +7,10 @@ with its SGK checklist (§5.10); 05 pinned it (§5.11), 06 adopted it and `RunRe
 pinned the spec digests and guards the format (§5.13), 08 rehearsed through both packages, and R2 and
 RunRegistryKit's G2 hold (§5.14). 09 took the final measurements, drafted the two gate records and the
 hand-over of the registry issues, and wrote what A3 v2 inherits (§5.15). D1–D5, Q1–Q8 and D6 ruled by the
-user. One issue stays open in §3, assigned to `handover`; the other two closed when RunRegistryKit
-accepted the hand-over (§5.17). Of the user's three decisions, R2's stores are retired (§5.16) and the
-issues handed over (§5.17); the two gate commits remain.**
+user. The issue left open in §3, assigned to `handover`, closed there on 2026-10-16 (its prompt 05;
+§4); the other two closed when RunRegistryKit accepted the hand-over (§5.17). Of the user's three
+decisions, R2's stores are retired (§5.16) and the issues handed over (§5.17); the two gate commits
+remain.**
 The plan is [`README.md`](README.md), written on 2026-10-12 at `c8a7f14` from
 [`docs/runregistry-extraction-audit.md`](../../docs/runregistry-extraction-audit.md).
 
@@ -171,6 +172,11 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
 
 ## 3. Active and unresolved issues
 
+None. The last, `[00-main-and-the-readers-default-to-ray-address-auto]`, closed 2026-10-16 in `handover`
+prompt 05; it is in §4.
+
+## 4. Resolved issues
+
 - **[00-main-and-the-readers-default-to-ray-address-auto]** *(opened 2026-10-12 by the plan's
   rehearsal-lock amendment, README §4.1, from SGK's review of SI's rehearsal-lock brief;
   **Assigned (2026-10-12):** to `handover`, by the user)*
@@ -207,8 +213,18 @@ Taken at prompt 01's commit, `a45aefc` (`a45aefc702de643c330372dd6d2d983f38bb8ee
   - **Assigned (2026-10-12):** to `handover`, by the user. That campaign owns the A3 v2 launch
     (`a3-v2-readiness` README §1), the next long build that runs `main.py`. The fix lands there,
     before A3 v2 or with it.
-
-## 4. Resolved issues
+  - **Closed (2026-10-16, `handover` prompt 05).** The default is now `local`: `DEFAULT_RAY_ADDRESS`
+    (`main.py:99`) and each of the six readers' `--ray-address` read `"local"`, and the help text and
+    the comment above each `ray.init` say that it starts a fresh instance and how to attach instead
+    (`--ray-address auto`, or a `host:port`). In Ray 2.43.0 `local` starts a new instance even with
+    another running and ignores `RAY_ADDRESS`, whose override applies only to `None` and `auto`
+    (`ray/_private/worker.py`, `services.canonicalize_bootstrap_address`). The flag is not required,
+    so `quadsource_atol_sweep._main_py_argv` and `RunDrivers/tests/test_prune_on_resume.py` are
+    untouched, and the launcher's SHA-256 is `2a985303…` before and after.
+    `ComputeTargets/tests/test_ray_address_default.py` reads the seven scripts with `ast` (the
+    default, through `DEFAULT_RAY_ADDRESS` for `main.py`; not required; one `ray.init` taking
+    `args.ray_address`) and pins Ray's resolution of `local` against `auto` with `RAY_ADDRESS` set,
+    without starting Ray. Record: `prompts/handover/logs/05-ray-address-defaults-to-local.md`.
 
 - **[00-a-run-launched-from-a-worktree-records-into-the-worktree]** *(opened 2026-10-12 by the
   plan, from audit §2; **Assigned (2026-10-12):** to 06, which closes it with RunRegistryKit's root

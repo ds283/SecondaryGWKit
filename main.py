@@ -96,7 +96,7 @@ from utilities import grouper, format_time, WallclockTimer
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
 DEFAULT_SHARDS = 20
-DEFAULT_RAY_ADDRESS = "auto"
+DEFAULT_RAY_ADDRESS = "local"
 DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
 DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
 DEFAULT_ZEND = 0.1
@@ -252,7 +252,11 @@ parser.add_argument(
     "--ray-address",
     default=DEFAULT_RAY_ADDRESS,
     type=str,
-    help="specify address of Ray cluster",
+    help=(
+        "address of the Ray cluster to connect to. The default, 'local', starts a fresh Ray "
+        "instance for this run and never attaches to one already running; pass 'auto' or "
+        "host:port to attach"
+    ),
 )
 parser.add_argument(
     "--inventory",
@@ -304,7 +308,9 @@ if args.inventory:
     )
     sys.exit(0)
 
-# connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
+# connect to Ray on the supplied address. The default, 'local', starts a fresh instance for this
+# process and never attaches to one already running (handover prompt 05); 'auto' or host:port
+# attaches
 ray.init(address=args.ray_address)
 
 VERSION_LABEL = "2025.1.1"
