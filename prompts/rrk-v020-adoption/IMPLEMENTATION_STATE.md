@@ -1,7 +1,8 @@
 # rrk-v020-adoption campaign — implementation state
 
 **Last updated:** 2026-10-18 · **Status: IN PROGRESS.** 01 landed and reviewed (the pin moved,
-the venv on `v0.2.0`); 02–03 written, not dispatched; 04 held until 03's review (README §2.1).
+the venv on `v0.2.0`); 02 landed, awaiting review; 03 written, not dispatched; 04 held until 03's
+review (README §2.1).
 U1–U3 ruled by the user (README §6.1). One issue assigned here from `handover` (§3).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
@@ -43,7 +44,7 @@ reverse (README §6.3).
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
-| 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ⬜ | — | — |
+| 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | this commit | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ⬜ | — | — |
 | 04 | Close the campaign | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits | Sonnet | ⏸ after 03's review | ⬜ | — | — |
 
@@ -62,9 +63,9 @@ not scope: every charter is fixed in README §2.2.
 |---|---|---|---|
 | **K1** | 01 | `requirements.txt:81` moved to `v0.2.0`; the venv installed from it | ✅ `0a27b0c`: venv `runregistrykit` 0.2.0 at `0bae3a3c…`, not editable; `pip freeze` differs by that line alone |
 | **B1** | 01 | the baselines: `pip freeze`, provenance, `list`, `store show` on the 21 sidecars, the seven roots | ✅ `0a27b0c`: taken before and after; 45 rows and 21 blocks equal; the seven roots at §0.2's counts both times |
-| **A1** | 02 | `CLAUDE.md`: liveness by host and boot; the route after a hard kill; no `Run.finish` by hand | ⬜ |
-| **A2** | 02 | `interrupt_when.py --signal {TERM,KILL}`; the build dummy test's `KILL` case | ⬜ |
-| **A3** | 02 | the driver test: a `SIGKILL`ed run refuses `register`; `end`; `register` accepted | ⬜ |
+| **A1** | 02 | `CLAUDE.md`: liveness by host and boot; the route after a hard kill; no `Run.finish` by hand | ✅ this commit: rule 2 by host and boot; new rule 5; the pointer; `end` in the command list |
+| **A2** | 02 | `interrupt_when.py --signal {TERM,KILL}`; the build dummy test's `KILL` case | ✅ this commit: default output unchanged; case D, child exit 137 |
+| **A3** | 02 | the driver test: a `SIGKILL`ed run refuses `register`; `end`; `register` accepted | ✅ this commit: `test_hard_killed_predecessor.py`, 4 tests; `RunDrivers` 99 → 103 |
 | **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ⬜ |
 | **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ⬜ |
 | **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ⬜ |
@@ -177,3 +178,22 @@ commit. **All seven checks pass**, and no stop condition fired.
   for 01"; README §2's row for 01; README §2.2's correction above; `prompts/INDEX.md`'s row.
 - **What 02 inherits:** the venv on `v0.2.0`; `CLAUDE.md`'s registry rules as they were, now
   describing an older release (02's task); this host's `boot`, `376461AF-…`, for 03.
+
+### 5.2 After prompt 02 (2026-10-18)
+
+Landed at this commit, on `c435666`. A1–A3 pass; no stop condition fired. Log:
+[`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md); measurements:
+`measure/out/02-{roots,dummy-build,dummy-scoped}.txt`.
+- **`CLAUDE.md`.** Rule 2 gains host and boot; a new rule 5 is the route after a hard kill
+  (Durability and Provenance are 6 and 7); the pointer names "Ending a run whose end was never
+  recorded" as rule 5's source; `end` joins the command list (log, deviation 1, sanctioned by the
+  orchestrator under README §6.2 C4).
+- **The interrupter.** `--signal {TERM,KILL}`, default `TERM`; the default's log is as before. The
+  build dummy test's case D: `interrupter exit=0`, `child exit=137`, "sent SIGKILL". Cases A–C of
+  it and A–E of the scoped test give 08's outcomes.
+- **The test.** Four tests: the refusal at `register` (nothing taken over, observed before the
+  helper restores), `end` then the second registration, `end` refused on a `lost` run, `end`
+  refused on a live one (`--unverified` included).
+- **The roots.** Every root at its count; `RunDrivers` 103; no known flake fired.
+- **The mutations,** all five caught (log). No child process left; `var/` untouched.
+- **No issue opened or closed;** `docs/OPEN_ISSUES.md` stays at 100.

@@ -1,4 +1,4 @@
-"""Send one SIGTERM to a registered pipeline run once it reaches a chosen point in a chosen stage.
+"""Send one signal (SIGTERM, or SIGKILL with `--signal KILL`) to a registered run at a chosen stage.
 
 Written for prompt 10 of prompts/datastore-integrity (§1.4), which interrupts a scoped build
 twice and resumes it, to show that the resume recomputes nothing it had stored. It is a one-shot:
@@ -8,7 +8,7 @@ Usage, launched detached right after the build it watches (CLAUDE.md, "Long-runn
 
     nohup ./venv/bin/python -u docs/datastore-integrity-verification/interrupt_when.py \\
         var/runs/<run id> '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT, ' 40 \\
-        > /dev/null 2>&1 &
+        [--signal {TERM,KILL}] > /dev/null 2>&1 &
     disown
 
 Every `--interval` seconds (15) it reads the run's `status.json`, and:
@@ -22,10 +22,15 @@ Every `--interval` seconds (15) it reads the run's `status.json`, and:
   `ps -p <pid> -o command=` names the run's own driver and `--register <slug>`. The driver is the
   basename of the manifest's `argv[0]`, the script the registry recorded as launched
   (`scoped_pipeline_run.py` for a scoped pipeline run, `quadsource_atol_sweep.py` for a `--build`),
-  and the slug is the one after `--register` in the same `argv`. Only then does it send `SIGTERM`
+  and the slug is the one after `--register` in the same `argv`. Only then does it send the signal
   once, log it and exit. If the command line does not name the run, it logs that and exits without
   signalling. A manifest with no `argv[0]`, like one with no slug, makes it log that and exit
   without signalling.
+
+`--signal {TERM,KILL}` (default `TERM`) chooses the signal. A `KILL` runs no handler in the run, so
+its status stays `running` and its end is never recorded: it is ended afterwards with
+`python -m runregistrykit end RUN_ID --reason TEXT` (CLAUDE.md, "Long-running jobs", rule 5). Every
+check before the signal is the same for both, and so is the log, bar the signal's name.
 
 The percentage is the one `scoped_pipeline_run.StageTracker` writes into `stage`,
 `"<title>, <p>% (<n> of <m> work items remaining)"`. A stage that has printed only its banner reads
@@ -140,7 +145,16 @@ def names_the_run(command, slug, driver) -> bool:
     return driver in command and named
 
 
-def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0) -> int:
+def watch(
+    run_dir: Path,
+    pattern,
+    minimum,
+    interval,
+    stale_after,
+    log,
+    hold=0.0,
+    sig=signal.SIGTERM,
+) -> int:
     stage_re = re.compile(pattern)
     slug = run_slug(run_dir)
     driver = run_driver(run_dir)
@@ -200,9 +214,9 @@ def watch(run_dir: Path, pattern, minimum, interval, stale_after, log, hold=0.0)
                         f"{command!r}; exiting without signalling"
                     )
                     return 2
-                os.kill(int(pid), signal.SIGTERM)
+                os.kill(int(pid), sig)
                 log(
-                    f"sent SIGTERM to pid {pid} at stage {stage!r} ({percent:g}% >= {minimum:g}%); "
+                    f"sent {signal.Signals(sig).name} to pid {pid} at stage {stage!r} ({percent:g}% >= {minimum:g}%); "
                     f"command {command!r}; exiting"
                 )
                 return 0
@@ -227,6 +241,13 @@ def main(argv=None) -> int:
         "signalling only if that reading is eligible too (default 0)",
     )
     parser.add_argument(
+        "--signal",
+        choices=["TERM", "KILL"],
+        default="TERM",
+        help="the signal to send (default TERM). KILL runs no handler: the run's end is then "
+        "recorded with `python -m runregistrykit end`",
+    )
+    parser.add_argument(
         "--stale-after", type=float, default=runregistrykit.DEFAULT_STALE_AFTER
     )
     parser.add_argument(
@@ -244,6 +265,7 @@ def main(argv=None) -> int:
         args.stale_after,
         log,
         hold=args.hold,
+        sig=getattr(signal, "SIG" + args.signal),
     )
 
 

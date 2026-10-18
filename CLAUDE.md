@@ -72,7 +72,7 @@ for a production run. This repository keeps its own `ray` and `SQLAlchemy` pins.
 `python -m datastorekit.tools.sharded_store` and `python -m datastorekit.tools.shard_key_audit`.
 The registry is `import runregistrykit` (`runregistrykit.begin`, `runregistrykit.list_runs`, …)
 and `runregistrykit.stores` for the store layer; its command line is `python -m runregistrykit`
-(`list`, and `store show | create | fingerprint | copy | move | retire | amend`).
+(`list`, `end`, and `store show | create | fingerprint | copy | move | retire | amend`).
 
 **This repository's side of the layer changes as usual:** the factories under `ObjectFactories/`,
 `config/datastore.py` and `config/sharding.py`, `tools/inventory_report.py`, the tests in
@@ -92,7 +92,8 @@ the repository root, which names the runs root, the stores root, the distributio
 records and the store fingerprinter, `config/fingerprint.py`'s `fingerprinter`. A run launched from
 a git worktree is recorded in the main checkout's `var/runs/`. `prompts/run-registry/README.md` §0
 lists the five failures in one working session that are the reason for each rule below, and
-RunRegistryKit's `README.md`, "The rules", tells each rule with the failure it answers. It records;
+RunRegistryKit's `README.md`, "The rules", tells each rule with the failure it answers, and its
+section "Ending a run whose end was never recorded" tells rule 5 below. It records;
 it does not schedule, supervise, restart or lock. It deletes nothing but a store's own files, and
 those only through `store retire`, which a person runs and which leaves the store's sidecar behind
 as its record. It never deletes a run directory, a sidecar or any other record.
@@ -103,16 +104,32 @@ as its record. It never deletes a run directory, a sidecar or any other record.
 2. **Liveness.** A run is alive iff its pid answers `kill -0` **and** its heartbeat is inside the
    staleness window. **Never a command-line pattern match**: `pgrep -f <name>` matches other
    pollers waiting on the same job, so the condition can never be satisfied — nineteen poll loops
-   that could not exit, fifteen of them waiting on a job already dead.
+   that could not exit, fifteen of them waiting on a job already dead. The test is made **on the
+   host and boot the run recorded**: a pid names a process only there. A `running` run recorded on
+   another host is `foreign`, and is not tested here. A `running` run from an earlier boot of this
+   host is `stale` whatever its pid answers. A run with no host recorded, which is every run
+   written before `v0.2.0`, is judged as before.
 3. **Launch.** Detached (`nohup`, `disown`; `setsid` is not on macOS), manifest written *first*,
    stdout and stderr into the run directory, pid recorded — the launcher passes a detached child's
    pid to `Run.heartbeat(pid=…)`.
 4. **Do not babysit.** Launch, verify in **one** check that it started, and **end the turn**.
    Polling a long job re-sends an entire context per poll and learns nothing; that, not wall-clock,
    is what makes waiting expensive. Resume once, when it is done.
-5. **Durability.** `var/runs/`, which is gitignored and in the repository. Never a session
+5. **The route after a hard kill.** A run killed by `SIGKILL`, a power loss, a reboot or the OOM
+   killer never records its end, and its status says `running` for ever. `list` shows it `stale`,
+   `!!`, and a resume's `begin` on its store is refused, with nothing created: the registry does not
+   decide that a run is dead. A person checks that it is over, then runs
+   `./venv/bin/python -m runregistrykit end RUN_ID --reason TEXT` **on the host it ran on**. `end`
+   refuses a pid that answers `kill -0`, with no override; `--unverified` is for a run on another
+   host, or one whose status does not say, once checked there. The run is then `lost`, and the
+   resume is begun. **`Run.finish` is never called by hand on a run that is not the caller's**: it
+   checks nothing. The one case `end` refuses that is not a live run is a killed process its parent
+   has not yet reaped, which still answers `kill -0` (RunRegistryKit's
+   `[04-a-killed-process-not-yet-reaped-answers-kill-0]`); a detached launch through `nohup sh -c`
+   is reaped by its `sh`.
+6. **Durability.** `var/runs/`, which is gitignored and in the repository. Never a session
    scratchpad, never `/tmp` — a 462-row census died with a scratchpad and cannot be re-examined.
-6. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record
+7. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record
    whose script hash does not match is discarded and recomputed, never blended and **never
    re-stamped**: re-stamping falsifies the thing the stamp exists to prove.
 

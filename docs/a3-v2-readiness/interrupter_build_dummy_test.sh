@@ -9,6 +9,7 @@
 # Case A: a manifest whose argv[0] is the sweep script, a child named for it (must signal).
 # Case B: the same manifest, a child named for scoped_pipeline_run.py (must refuse, child alive).
 # Case C: a manifest whose argv[0] is empty (must exit without signalling, child alive).
+# Case D: the same as A, the interrupter run with `--signal KILL` (must signal SIGKILL, child exit 137).
 # It polls every 1 s, not 15.
 set -u
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -64,3 +65,14 @@ write_status "$C" $CC "$GK, 45.00% (11 of 20 work items remaining)" 0
 echo "interrupter exit=$?"
 kill -0 $CC && echo "child $CC still alive (not signalled)"; kill $CC; wait $CC 2>/dev/null
 echo "--- $C/interrupter.log"; cat "$C/interrupter.log"
+
+echo "=== case D: as case A, the interrupter run with --signal KILL: signals SIGKILL"
+D=$SCR/case-d; mkdir -p "$D"; write_manifest "$D" "$SWEEP" dummy-build-d
+bash -c 'exec -a "python docs/handover/quadsource_atol_sweep.py --build --register dummy-build-d" sleep 120' &
+CD=$!
+write_status "$D" $CD "$GK, 45.00% (11 of 20 work items remaining)" 0
+"$PY" -u "$INT" "$D" "^$GK, " 40 --interval 1 --signal KILL &
+ID=$!
+wait $ID; echo "interrupter exit=$?"
+wait $CD; echo "child exit=$? (137 = killed by SIGKILL)"
+echo "--- $D/interrupter.log"; cat "$D/interrupter.log"
