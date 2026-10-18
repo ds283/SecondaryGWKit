@@ -1,7 +1,7 @@
 # Log — rrk-v020-adoption prompt 02, adopt the hard-kill route
 
 - **Subject:** [`02-adopt-the-hard-kill-route.md`](../02-adopt-the-hard-kill-route.md), board items A1, A2 and A3.
-- **Commit:** this commit (parent `c435666`).
+- **Commit:** `2818780` (parent `c435666`).
 - **Result:** landed. Acceptance 1–5 pass; no stop condition of the prompt's §4 fired.
 - **Model:** Sonnet 5.5.
 - **Date:** 2026-10-18.
@@ -94,19 +94,19 @@ Each applied to the working tree, run, and reverted; `git diff` shows none left.
 
 1. **`results=None`** in `register`'s `begin`:
    ```diff
-diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
-index 0343b61..c79d3ae 100644
---- a/docs/gktk-remedial/scoped_pipeline_run.py
-+++ b/docs/gktk-remedial/scoped_pipeline_run.py
-@@ -552,7 +552,7 @@ def register(args, main_args, k_sample, database, runs_root=None):
-         # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
-         # ledger and records no units, and a run that named its datastore there would be one
-         # record() call away from appending JSON-Lines to a SQLite file.
--        results=str(database) if database is not None else None,
-+        results=None,
-         scope=scope,
-         heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
-         root=runs_root,
+   diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
+   index 0343b61..c79d3ae 100644
+   --- a/docs/gktk-remedial/scoped_pipeline_run.py
+   +++ b/docs/gktk-remedial/scoped_pipeline_run.py
+   @@ -552,7 +552,7 @@ def register(args, main_args, k_sample, database, runs_root=None):
+            # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
+            # ledger and records no units, and a run that named its datastore there would be one
+            # record() call away from appending JSON-Lines to a SQLite file.
+   -        results=str(database) if database is not None else None,
+   +        results=None,
+            scope=scope,
+            heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
+            root=runs_root,
    ```
    Two failures: `TestTheRefusal.test_register_meets_the_refusal_and_takes_nothing_over`, at
    `self.assertIsInstance(outcome, RuntimeError, "begin was not refused")` ("<Run object> is not an instance of RuntimeError"),
@@ -114,87 +114,87 @@ index 0343b61..c79d3ae 100644
    `assertIsInstance(outcome, RuntimeError)`.
 2. **`begin` wrapped in `try … except RuntimeError: return None`** (the whole call indented under the `try`; diff in full):
    ```diff
-diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
-index 0343b61..9a4f721 100644
---- a/docs/gktk-remedial/scoped_pipeline_run.py
-+++ b/docs/gktk-remedial/scoped_pipeline_run.py
-@@ -541,22 +541,25 @@ def register(args, main_args, k_sample, database, runs_root=None):
-         f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
-         f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
-     )
--    run = runregistrykit.begin(
--        campaign=args.campaign,
--        prompt=args.prompt,
--        slug=args.register,
--        purpose=args.purpose,
--        script=__file__,
--        # README §0.2: this job's results live in its datastore, and `results` is the field that
--        # names the durable thing they live in -- which is what a resume needs. It is deliberately
--        # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
--        # ledger and records no units, and a run that named its datastore there would be one
--        # record() call away from appending JSON-Lines to a SQLite file.
--        results=str(database) if database is not None else None,
--        scope=scope,
--        heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
--        root=runs_root,
--    )
-+    try:
-+        run = runregistrykit.begin(
-+            campaign=args.campaign,
-+            prompt=args.prompt,
-+            slug=args.register,
-+            purpose=args.purpose,
-+            script=__file__,
-+            # README §0.2: this job's results live in its datastore, and `results` is the field that
-+            # names the durable thing they live in -- which is what a resume needs. It is deliberately
-+            # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
-+            # ledger and records no units, and a run that named its datastore there would be one
-+            # record() call away from appending JSON-Lines to a SQLite file.
-+            results=str(database) if database is not None else None,
-+            scope=scope,
-+            heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
-+            root=runs_root,
-+        )
-+    except RuntimeError:
-+        return None
- 
-     def terminal(signum, _frame):
-         """Record the death, then die exactly as the default handler would have."""
+   diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
+   index 0343b61..9a4f721 100644
+   --- a/docs/gktk-remedial/scoped_pipeline_run.py
+   +++ b/docs/gktk-remedial/scoped_pipeline_run.py
+   @@ -541,22 +541,25 @@ def register(args, main_args, k_sample, database, runs_root=None):
+            f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
+            f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
+        )
+   -    run = runregistrykit.begin(
+   -        campaign=args.campaign,
+   -        prompt=args.prompt,
+   -        slug=args.register,
+   -        purpose=args.purpose,
+   -        script=__file__,
+   -        # README §0.2: this job's results live in its datastore, and `results` is the field that
+   -        # names the durable thing they live in -- which is what a resume needs. It is deliberately
+   -        # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
+   -        # ledger and records no units, and a run that named its datastore there would be one
+   -        # record() call away from appending JSON-Lines to a SQLite file.
+   -        results=str(database) if database is not None else None,
+   -        scope=scope,
+   -        heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
+   -        root=runs_root,
+   -    )
+   +    try:
+   +        run = runregistrykit.begin(
+   +            campaign=args.campaign,
+   +            prompt=args.prompt,
+   +            slug=args.register,
+   +            purpose=args.purpose,
+   +            script=__file__,
+   +            # README §0.2: this job's results live in its datastore, and `results` is the field that
+   +            # names the durable thing they live in -- which is what a resume needs. It is deliberately
+   +            # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
+   +            # ledger and records no units, and a run that named its datastore there would be one
+   +            # record() call away from appending JSON-Lines to a SQLite file.
+   +            results=str(database) if database is not None else None,
+   +            scope=scope,
+   +            heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
+   +            root=runs_root,
+   +        )
+   +    except RuntimeError:
+   +        return None
+    
+        def terminal(signum, _frame):
+            """Record the death, then die exactly as the default handler would have."""
    ```
    The same two tests fail at the same assertions ("None is not an instance of RuntimeError").
 3. **`register` takes over `sys.stdout` before `begin`**:
    ```diff
-diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
-index 0343b61..1458386 100644
---- a/docs/gktk-remedial/scoped_pipeline_run.py
-+++ b/docs/gktk-remedial/scoped_pipeline_run.py
-@@ -541,6 +541,7 @@ def register(args, main_args, k_sample, database, runs_root=None):
-         f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
-         f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
-     )
-+    sys.stdout = RegisteredStream(sys.stdout, None, StageTracker())
-     run = runregistrykit.begin(
-         campaign=args.campaign,
-         prompt=args.prompt,
+   diff --git a/docs/gktk-remedial/scoped_pipeline_run.py b/docs/gktk-remedial/scoped_pipeline_run.py
+   index 0343b61..1458386 100644
+   --- a/docs/gktk-remedial/scoped_pipeline_run.py
+   +++ b/docs/gktk-remedial/scoped_pipeline_run.py
+   @@ -541,6 +541,7 @@ def register(args, main_args, k_sample, database, runs_root=None):
+            f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
+            f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
+        )
+   +    sys.stdout = RegisteredStream(sys.stdout, None, StageTracker())
+        run = runregistrykit.begin(
+            campaign=args.campaign,
+            prompt=args.prompt,
    ```
    One failure: `test_register_meets_the_refusal_and_takes_nothing_over`, at its `assertEqual(taken, {"stdout": False, …})`:
    `{'stdout': True, 'stderr': False, 'handlers': False} != {'stdout': False, …}`. The observation is taken inside the helper,
    so the `finally` does not hide it.
 4. **The interrupter sends `signal.SIGTERM` whatever `--signal` says** (`diff` of `interrupt_when.py`):
    ```diff
-217c217
-<                 os.kill(int(pid), sig)
----
->                 os.kill(int(pid), signal.SIGTERM)
+   217c217
+   <                 os.kill(int(pid), sig)
+   ---
+   >                 os.kill(int(pid), signal.SIGTERM)
    ```
    Build dummy test, case D: `interrupter exit=0`, **`child exit=143`** (not 137), and the log still says "sent SIGKILL", the
    disagreement being what the case catches. Cases A–C unchanged.
 5. **The interrupter's `--signal` default becomes `KILL`**:
    ```diff
-246c246
-<         default="TERM",
----
->         default="KILL",
+   246c246
+   <         default="TERM",
+   ---
+   >         default="KILL",
    ```
    Build dummy test, case A: **`child exit=137`** (recorded: 143), its log "sent SIGKILL to pid …" (bash also prints
    "Killed: 9" for the job).
