@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-10-16 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
+**Last updated:** 2026-10-18 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
 which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
@@ -160,6 +160,15 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   RunRegistryKit's choice decides the fix. Until RunRegistryKit's index lists the issue, it stays
   open here. Then it moves to §4 as transferred, and its row leaves `docs/OPEN_ISSUES.md` §1.1.
   A fix reaches SGK by a pin move, in a commit of its own. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Assigned (2026-10-18): [`prompts/rrk-v020-adoption`](../rrk-v020-adoption/README.md).** The
+  user handed the brief over, and RunRegistryKit's `interrupted-runs` campaign answered it: `end`
+  (its prompt 04) and `begin`'s refusal of a store an unfinished run names (05), released as
+  `runregistrykit` `v0.2.0` on 2026-10-18. Its board indexed and closed the issue, so it is not
+  open there to be transferred. The fix reaches SGK by that campaign's pin, its prompt 01. Its
+  prompt 03 closes this entry, once the route of `end` and then the resume has been shown on A3
+  v2's own launcher, a build killed by `SIGKILL` (its README §2.2, 03, acceptance 3). The index
+  row has moved to `docs/OPEN_ISSUES.md` §1.22.
 
 - **[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]** *(opened 2026-09-23
   by the A3 baseline run, not by a prompt)* — on production's **squeezed** triples the source

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-16 · **100 open** across twenty-one campaigns.
+**Last updated:** 2026-10-18 · **100 open** across twenty-one campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -36,6 +36,7 @@ the two disagree, the board is right.
 [`datastore-generic-followup`](../prompts/datastore-generic-followup/IMPLEMENTATION_STATE.md) ·
 [`dk-and-rpk-migration`](../prompts/dk-and-rpk-migration/IMPLEMENTATION_STATE.md) ·
 [`runregistry-extraction`](../prompts/runregistry-extraction/IMPLEMENTATION_STATE.md) ·
+[`rrk-v020-adoption`](../prompts/rrk-v020-adoption/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -47,7 +48,8 @@ day, **three opened 2026-09-23 by its A3 baseline pipeline run**, which is not a
 of that run's cost found the shipped `QuadSourceIntegral` tolerance pair unreachable on production's
 squeezed $(k, q, r)$ triples, and the user stopped the run; and **one opened 2026-10-16 by a
 measurement of a hard-killed run ahead of A3 v2**, a `runregistrykit` defect drafted for
-RunRegistryKit. The
+RunRegistryKit, fixed in its `v0.2.0` and assigned on 2026-10-18 to `rrk-v020-adoption`, whose pin
+brings the fix (§1.22). The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
 created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
@@ -122,7 +124,6 @@ for.
 | `[00-tk-lg-truncation-floor]` | GkTk-remedial | The $T_k$ LG representation is not exact even in radiation: ~$1.4\times10^{-4}$ of the envelope at the production hand-over $x_T\approx15.5$, scaling as $x_i^{-3}$. A later hand-over ($x_T=50$ gives $4\times10^{-6}$), a higher-order LG frequency, or the Bessel exact form are the levers. |
 | `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 | `[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]` | tolerance-convergence | The consumer of the numeric $G_k$ is a cubic `make_interp_spline` in $\log(1+z_{\rm source})$ over the **source-grid** nodes (`GkSourcePolicyData.py:654-680`), and its interpolation error is **1.6e-04 to 1.9e-04** of the envelope three e-folds inside the horizon and up to **9.4e-03** at four, where `main.py:1884` stops building the target — against **2.6e-07** for the solver at the production `(1e-10, 1e-8)`. Measured at 50 $k$ on three models, **version-2 grid at each cosmology's own anchor**, floor uncertainty 0.00 %, probe within 5.6e-12 of the exact $G$ on the control. It confirms review §10.1's inherited 1e-5–1e-4 and shows the "two orders" understates the dominance (×631 to ×37,700). The cause is spacing, not tolerance: the source lattice carries up to **1.24 rad** of $G$'s oscillation per interval there, and the density criterion that sets it is sized for the phase-residual spline, not for $G$. **Assigned 2026-09-17 on the user's D1 acceptance: the source grid's spacing at the hand-over is post-campaign work.** A design decision, not a tuning one — the density criterion gains $G$'s oscillation as a second consumer, the hand-over moves deeper, or `GkSourcePolicyData` splines the LG amplitude and phase instead. |
-| `[a3-v2-a-hard-killed-run-blocks-its-store]` | handover | A run killed by `SIGKILL`, power loss, a reboot or the OOM killer stays `running`, and `runregistrykit` 0.1.0 counts a stale `running` run as in use (`stores.py:998`). The store's fingerprint, copy, move, retire and amend are refused, and a resumed run's `finish(fingerprint=True)` records `fingerprint_error`. No registry command ends the dead run: only a person's `Run.finish` in Python, which checks nothing. **Measured 2026-10-16** on a fixture store. For A3 v2, a hard-killed build can be resumed but not fingerprinted or retired through the registry. Brief drafted for RunRegistryKit (`prompts/handover/runregistrykit-stale-run-brief.md`). |
 | `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
@@ -916,6 +917,18 @@ as transferred, on the board's §4, and the four moved to their own boards' §4 
 still open in RunRegistryKit (§1.11, §1.14, §1.17). **No row remains in this section**; the
 campaign's one open issue was the third, in §1.1, and `handover` prompt 05 closed it on 2026-10-16
 on this campaign's board, §4. **The campaign has no open issue.**
+
+### 1.22 The rrk-v020-adoption campaign
+
+`prompts/rrk-v020-adoption` was planned on 2026-10-18 to move SGK's `runregistrykit` pin from
+`v0.1.0` to `v0.2.0`, RunRegistryKit's `interrupted-runs` release, before the A3 v2 compute run
+([board](../prompts/rrk-v020-adoption/IMPLEMENTATION_STATE.md)). Its plan opened no issue. It was
+assigned the one below from `handover`'s board, which still holds the entry: RunRegistryKit closed
+the defect in its release, and the fix reaches SGK by this campaign's pin.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[a3-v2-a-hard-killed-run-blocks-its-store]` | handover | A run killed by `SIGKILL`, power loss, a reboot or the OOM killer stays `running`, and `runregistrykit` 0.1.0 counts a stale `running` run as in use, so its store cannot be fingerprinted, copied, moved, retired or amended, and no command ends the run. **Measured 2026-10-16** on a fixture store. **Fixed in RunRegistryKit `v0.2.0`** (`end`; `begin` refuses a store an unfinished run names); reaches SGK by this campaign's pin (01), and closes at 03 once the route has been shown on the A3 v2 launcher. **Assigned 2026-10-18.** |
 
 ---
 
