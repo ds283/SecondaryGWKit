@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-18 · **100 open** across twenty-one campaigns.
+**Last updated:** 2026-10-19 · **100 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -43,13 +43,12 @@ the two disagree, the board is right.
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
 `radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
 when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
-that prompt on 2026-09-20 and holds **eight** — two opened by prompt 01, two by prompt 02 the same
-day, **three opened 2026-09-23 by its A3 baseline pipeline run**, which is not a prompt: a read
+that prompt on 2026-09-20 and holds **seven** — two opened by prompt 01, two by prompt 02 the same
+day, and **three opened 2026-09-23 by its A3 baseline pipeline run**, which is not a prompt: a read
 of that run's cost found the shipped `QuadSourceIntegral` tolerance pair unreachable on production's
-squeezed $(k, q, r)$ triples, and the user stopped the run; and **one opened 2026-10-16 by a
-measurement of a hard-killed run ahead of A3 v2**, a `runregistrykit` defect drafted for
-RunRegistryKit, fixed in its `v0.2.0` and assigned on 2026-10-18 to `rrk-v020-adoption`, whose pin
-brings the fix (§1.22). The
+squeezed $(k, q, r)$ triples, and the user stopped the run. An eighth, **opened 2026-10-16 by a
+measurement of a hard-killed run ahead of A3 v2**, a `runregistrykit` defect fixed in RunRegistryKit's
+`v0.2.0`, was closed on 2026-10-19 by `rrk-v020-adoption` prompt 03, on that board's §4. The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
 created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
@@ -923,12 +922,14 @@ on this campaign's board, §4. **The campaign has no open issue.**
 `prompts/rrk-v020-adoption` was planned on 2026-10-18 to move SGK's `runregistrykit` pin from
 `v0.1.0` to `v0.2.0`, RunRegistryKit's `interrupted-runs` release, before the A3 v2 compute run
 ([board](../prompts/rrk-v020-adoption/IMPLEMENTATION_STATE.md)). Its plan opened no issue. It was
-assigned the one below from `handover`'s board, which still holds the entry: RunRegistryKit closed
-the defect in its release, and the fix reaches SGK by this campaign's pin.
+assigned `handover`'s `[a3-v2-a-hard-killed-run-blocks-its-store]`, which its prompt 03 closed on
+2026-10-19 on the `handover` board's §4, once the route of `end` and then the resume had been shown
+on the A3 v2 launcher. The same prompt opened the one below, on this campaign's board, when Ray's GCS
+server outlived the `SIGKILL`ed rehearsal build.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[a3-v2-a-hard-killed-run-blocks-its-store]` | handover | A run killed by `SIGKILL`, power loss, a reboot or the OOM killer stays `running`, and `runregistrykit` 0.1.0 counts a stale `running` run as in use, so its store cannot be fingerprinted, copied, moved, retired or amended, and no command ends the run. **Measured 2026-10-16** on a fixture store. **Fixed in RunRegistryKit `v0.2.0`** (`end`; `begin` refuses a store an unfinished run names); reaches SGK by this campaign's pin (01), and closes at 03 once the route has been shown on the A3 v2 launcher. **Assigned 2026-10-18.** |
+| `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Next step: 04**, which states what A3 v2 inherits. |
 
 ---
 

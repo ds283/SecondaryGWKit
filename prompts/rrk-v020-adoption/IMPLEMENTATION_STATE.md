@@ -1,10 +1,12 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-18 · **Status: IN PROGRESS.** 01 landed and reviewed (the pin moved,
-the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`, the
-interrupter's `--signal`, the driver test); 03 written, not dispatched; 04 held until 03's review
+**Last updated:** 2026-10-19 · **Status: IN PROGRESS — 3 of 4 landed.** 01 landed and reviewed
+(the pin moved, the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`,
+the interrupter's `--signal`, the driver test); 03 landed (R3 holds; the hard-kill route holds; Ray's
+GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 held until 03's review
 (README §2.1).
-U1–U3 ruled by the user (README §6.1). One issue assigned here from `handover` (§3).
+U1–U3 ruled by the user (README §6.1). The issue assigned here from `handover` is closed (§4); one
+is open, opened by 03 (§3).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
 `v0.2.0` release notes and its adoption note for SGK.
@@ -46,7 +48,7 @@ reverse (README §6.3).
 |---|---|---|---|---|---|---|---|
 | 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
-| 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ⬜ | — | — |
+| 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | this commit | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
 | 04 | Close the campaign | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits | Sonnet | ⏸ after 03's review | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
@@ -67,9 +69,9 @@ not scope: every charter is fixed in README §2.2.
 | **A1** | 02 | `CLAUDE.md`: liveness by host and boot; the route after a hard kill; no `Run.finish` by hand | ✅ `2818780`: rule 2 by host and boot; new rule 5; the pointer; `end` in the command list |
 | **A2** | 02 | `interrupt_when.py --signal {TERM,KILL}`; the build dummy test's `KILL` case | ✅ `2818780`: default output unchanged; case D, child exit 137 |
 | **A3** | 02 | the driver test: a `SIGKILL`ed run refuses `register`; `end`; `register` accepted | ✅ `2818780`: `test_hard_killed_predecessor.py`, 4 tests; `RunDrivers` 99 → 103 |
-| **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ⬜ |
-| **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ⬜ |
-| **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ⬜ |
+| **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ✅ this commit: both stores `39809dca…`, `encoding_format` 1, equal to each other, their sidecars and R2's two recorded fingerprints; prune 48 = 48; every L4 count R2's, every statistics block byte-identical to R2's same slug |
+| **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ✅ this commit: 137 with status `running`; `!!`; `begin` refused, nothing created or changed; `end` verified, second refused; `hardkill-b` `done`, sidecar `written`, `39809dca…` |
+| **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ❌ not as stated: the GCS server outlived it 20 m 50 s, until a `SIGKILL` on the user's ruling; opened as `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` (§3) |
 | **Z1** | 04 | the final measurements | ⬜ |
 | **Z2** | 04 | G1 drafted for RunRegistryKit's `interrupted-runs` board | ⬜ |
 | **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed | ⬜ |
@@ -81,22 +83,54 @@ not scope: every charter is fixed in README §2.2.
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | **E** | RunRegistryKit has tagged `v0.2.0` with release notes and an SGK adoption note | — | ✅ holds (2026-10-18): tag object `895e3c70…` on `0bae3a3c…`; `docs/releases/v0.2.0.md` and `docs/adoption/v0.2.0/secondarygwkit.md` in the tag; nothing under `runregistrykit/` or in `pyproject.toml` changed after it (RunRegistryKit `f6d4b80`) |
-| R3 | the four launches through `v0.2.0` reproduce `39809dca…`, equal to R2's recorded fingerprints | 03 | ⬜ |
-| HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ⬜ |
+| R3 | the four launches through `v0.2.0` reproduce `39809dca…`, equal to R2's recorded fingerprints | 03 | ✅ holds (2026-10-18, this commit): both stores `39809dca…`, 0 differences against R2's `reference` and `resumed-c` |
+| HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ✅ the route holds (2026-10-19, this commit), every step as written. **H2 did not hold as written**: Ray's GCS server outlived the killed driver past ten minutes; the prompt's stop fired, and the user ruled a `SIGTERM` (no effect) and then a `SIGKILL` (U3); it is §3's issue |
 | RunRegistryKit G1 | SGK has adopted `v0.2.0` in a campaign of its own, its pin moved in a commit of its own | 01 | ✅ pin moved at `0a27b0c`; the record on RunRegistryKit's board is the user's (README §6.3); 04 drafts it |
 
 ## 3. Active and unresolved issues
 
-- **[a3-v2-a-hard-killed-run-blocks-its-store]** — *opened 2026-10-16 on the
-  [`handover`](../handover/IMPLEMENTATION_STATE.md) board, §3, which holds it. Assigned to this
-  campaign on 2026-10-18 (README §6.2 C6).* RunRegistryKit closed the defect in `v0.2.0`: `end`
-  (its `interrupted-runs` 04) and `begin`'s second-writer refusal (05). It reaches SGK by 01's pin.
-  **Next step:** 03 shows the route on the real launcher (README §2.2, 03, acceptance 3), then
-  closes the entry on the `handover` board's §4, with `docs/OPEN_ISSUES.md` §1.22, in its commit.
+- **[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]** *(opened 2026-10-19 by prompt 03,
+  at R3's hard-kill pair)* — after a `SIGKILL` of a build's driver, Ray's GCS server does not exit.
+  `hardkill-a`'s driver (pid 99903) was killed at 23:49:15. By 23:49:35 every Ray process of its run
+  was gone but one: the GCS server, pid 99918, reparented to pid 1. Its `gcs_server.out` logs
+  `Stopping GCS server.` and "Not sending reply because executor stopped" at 23:49:15, a metrics
+  export failure at 23:49:21, and nothing after. It was alive at 23:59:15, the prompt's ten-minute
+  deadline (correction 10), with no children and no listening socket, and the prompt stopped. On the
+  user's rulings the orchestrator sent it a `SIGTERM` at 00:06:13, which had no effect, then took a
+  read-only stack sample: the main thread, in all 1386 samples, sits in
+  `boost::asio … signal_handler … → ray::gcs::GcsServer::Stop() → ray::rpc::GrpcServer::Shutdown() →
+  grpc::Server::ShutdownInternal(gpr_timespec) → gpr_cv_wait`, a shutdown waiting for in-flight
+  calls that will not complete. A `SIGTERM` goes through the same handler. A `SIGKILL` at 00:10:05,
+  on the user's second ruling, ended it at once. `ray stop` was never run. Record:
+  [`docs/rrk-v020-adoption-verification.md`](../../docs/rrk-v020-adoption-verification.md) §2.3,
+  [`hardkill_03.txt`](../../docs/rrk-v020-adoption/rehearsal/hardkill_03.txt); the sample is
+  `var/rrk-v020-adoption-03/gcs_server_99918_sample.txt` (not committed).
+
+  **Impact on A3 v2.** The route after a hard kill (`CLAUDE.md` rule 5: `end`, then the resume)
+  holds, and the resume does not need the GCS server gone: `hardkill-b` started its own fresh
+  instance. But the dead build's GCS server stays, so `tools.rehearsal_lock ray-processes` is not empty:
+  `release` refuses (`tools/rehearsal_lock.py:376-380`) and a next `acquire` exits 4. After `end`, a person checks `ray-processes`, and may need to `SIGKILL` a listed GCS server by
+  its pid, never by pattern and never with `ray stop`. It is one observation: whether every
+  `SIGKILL` of a driver leaves the GCS server like this, and what signalled it into `Stop()`, are
+  not established. **Next step:** 04 states this among what A3 v2 inherits. Any fix is Ray's or the
+  launcher's (for example a parent-death watch on the GCS server), and is not taken here. Indexed at
+  `docs/OPEN_ISSUES.md` §1.22.
 
 ## 4. Resolved issues
 
-None yet.
+Closed by prompt 03, 2026-10-19:
+
+- **[a3-v2-a-hard-killed-run-blocks-its-store]** — *opened 2026-10-16 on the
+  [`handover`](../handover/IMPLEMENTATION_STATE.md) board, which holds it, and assigned here on
+  2026-10-18 (README §6.2 C6).* After a hard kill, `runregistrykit` 0.1.0 blocked the store, and no
+  registry command ended the dead run.
+
+  **Resolution.** Shown on A3 v2's own launcher with `runregistrykit` `v0.2.0`: `hardkill-a`,
+  `SIGKILL`ed, stayed `running` and `list` marked it `!!`; the resume was refused at `begin` with
+  nothing created and nothing changed; `end` recorded it `lost`, verified; `hardkill-b` then ended
+  `done` with its fingerprint `39809dca…` recorded and the sidecar `written`. **Closed on the
+  `handover` board's §4**, which holds the resolution in full; the row leaves `docs/OPEN_ISSUES.md`
+  §1.22. Record: verification §2, [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md).
 
 ---
 
@@ -246,3 +280,31 @@ after the agent's commit. **All seven checks pass**, and no stop condition fired
   KILL` for `hardkill-a` alone; the refusal's words as the probe and the test pin them (no
   trailing full stop); and the agent's note that a `KILL`ed build's `interrupter.log` is the one
   record of why it died, to be saved before `end`.
+
+### 5.3 After prompt 03 (2026-10-19)
+
+Landed in this commit, on `aab4075`. L1–L4 and H1 pass; H2 does not hold as written, and the prompt's
+§2.3 stop fired. Log: [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md);
+record: [`docs/rrk-v020-adoption-verification.md`](../../docs/rrk-v020-adoption-verification.md) §1–§2;
+outputs: `docs/rrk-v020-adoption/rehearsal/*_03*`.
+- **R3.** Six launches under one lock, each launched detached, checked once, waited on by the
+  orchestrator by pid. `reference` and `resumed-c` `done`/0, `resumed-a` and `resumed-b`
+  `killed`/143. Both stores `39809dca…`, format 6, `encoding_format` 1, equal to each other, their
+  sidecars and R2's two recorded fingerprints. Every manifest: `packages` the note's record,
+  `git_dirty` false, twenty keys with `host`; every status `host` this machine's. No `.tmp` left by
+  either handler's `finish`. `resumed-a` left 168 `GkSource` rows, 48 unvalidated; `resumed-b`'s open
+  pruned exactly those 48; `resumed-c` computed 683 = 864 − 181 QSI rows. Readers, guard, census and
+  soundness clean. L4 is R2's; R2's disk-space warning is gone (93 % used).
+- **The hard-kill pair.** `hardkill-a` killed by `SIGKILL` 30–35 s into QSI (238 rows stored,
+  inferred); exit 137, status `running`, no journal, no `.tmp`. `list` `!!`, stderr naming `end`.
+  The resume refused at `begin` (`RuntimeError … No run directory was created`, exit 1, no Ray
+  started, nothing changed). `end` exit 0, `lost`, verified; the second refused. Sidecar made.
+  `hardkill-b` `done`, `39809dca…`, `fingerprint_sidecar` `written`; it pruned nothing (none was
+  unvalidated) and computed 626 QSI rows.
+- **Ray after the `SIGKILL`.** The GCS server outlived the driver. The prompt stopped at 23:59:15 with
+  the lock held; the user ruled `SIGTERM` (00:06:13, no effect) then `SIGKILL` (00:10:05), carried out
+  by the orchestrator. Opened as `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` (§3).
+- **The issues.** `[a3-v2-a-hard-killed-run-blocks-its-store]` closed on the `handover` board's §4;
+  one opened. `docs/OPEN_ISSUES.md` stays at 100.
+- **The registry:** 51 runs, 49 finished, 2 `unknown`, none `running` or stale. **The lock** released;
+  free. **The roots** at 02's counts.

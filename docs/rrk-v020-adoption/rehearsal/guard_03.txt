@@ -1,0 +1,18 @@
+== 2026-10-18T23:46:05+0100 A3 v2's guard, no --register, lock held
+var/runs entries before: 91
+$ PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1055, in <module>
+    main()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1039, in main
+    run_build(args)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 537, in run_build
+    raise RuntimeError(
+RuntimeError: quadsource_atol_sweep --build: rrk-v020-adoption-03-resumed.sqlite, rrk-v020-adoption-03-resumed-shard0000.sqlite, rrk-v020-adoption-03-resumed-shard0001.sqlite, rrk-v020-adoption-03-resumed-shard0002.sqlite, rrk-v020-adoption-03-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+exit=1 at 23:46:05
+var/runs entries after: 91
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- journals under var/datastores
+(end)
+-- every file of both stores and both sidecars: identical (sha256, size, mtime_ns) before and after

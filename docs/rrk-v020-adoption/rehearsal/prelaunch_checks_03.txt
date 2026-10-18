@@ -1,0 +1,666 @@
+
+== 2026-10-18T23:26:24+0100 pre-launch check before reference
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:26  up 13 days, 21:11, 2 users, load averages: 13.54 12.97 12.29
+-- tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+45 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 43 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  855G   72G  93% /
+
+== 2026-10-18T23:26:24+0100 environment before reference
+-- runregistrykit store show var/datastores/rrk-v020-adoption-03-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- runregistrykit store show var/datastores/rrk-v020-adoption-03-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- runregistrykit store show var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/datastores and var/runs containing rrk-v020
+(end)
+-- pip show runregistrykit datastorekit raypoolkit (Name, Version, Location, Editable)
+Name: runregistrykit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+---
+Name: datastorekit
+Version: 0.4.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+---
+Name: raypoolkit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+rc=0
+-- pip check
+No broken requirements found.
+rc=0
+-- runregistrykit.package_provenance((runregistrykit, datastorekit, raypoolkit)) (keys sorted)
+{"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+equal as JSON to the note's record: True
+datastorekit and raypoolkit equal to R2 reference manifest's: True
+TERMINAL_STATES ('done', 'failed', 'killed', 'lost')
+-- runregistrykit.this_host()
+{"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+id equal to 01's reading 8d2b247824882486: True
+boot equal to 01's reading 376461AF-4985-4F42-8E41-F4E914F5E3E6: True
+-- runregistrykit.find_client_root() from the root
+config_file /Users/ds283/Documents/Code/SecondaryGWKit/runregistrykit.toml
+runs_root /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+stores_root /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores
+distributions ('datastorekit', 'raypoolkit')
+stores {'fingerprinter': 'config.fingerprint:fingerprinter'}
+-- what runs (this process; repository on sys.path)
+runregistrykit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/runregistrykit/__init__.py
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+ObjectFactories.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/__init__.py
+datastorekit.store_fingerprint.ENCODING_FORMAT 1
+config.fingerprint.FINGERPRINT_FORMAT 6
+ray.is_initialized() False
+-- R2's recorded fingerprints
+runregistry-extraction-08-reference-20261015T235716 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1 ; host absent
+runregistry-extraction-08-resumed-c-20261016T000959 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1 ; host absent
+-- shasum -a 256 docs/handover/quadsource_atol_sweep.py
+2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d  docs/handover/quadsource_atol_sweep.py
+-- git log -1 --format=%h docs/handover/quadsource_atol_sweep.py
+7af17bd
+-- requirements.txt package lines
+requirements.txt:17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0
+requirements.txt:76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0
+requirements.txt:81:runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0
+-- git log --oneline 2818780..HEAD
+aab4075 Write the orchestrator note for rrk-v020-adoption prompt 03
+b84c53d Record the review of rrk-v020-adoption prompt 02
+-- git diff --stat 2818780 HEAD -- . ':!prompts' ':!docs'
+(end)
+-- git diff --stat 2818780 HEAD -- docs
+(end)
+-- git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit aab4075 [handover-remedial]
+-- interrupt_when.py, the two dummy-test scripts, docs/dk-and-rpk-migration/rehearsal/: last change
+2818780
+b1774d8
+2818780
+7af17bd
+-- ncpu 10
+-- ls -a ~/ScienceData
+.
+..
+ChamPBH-rehearsals
+
+== 2026-10-18T23:26:46-23:27:12 interrupter dummy tests (into scratchpad agent03/work/dummy-scoped, dummy-build)
+interrupter_dummy_test.sh rc=0 (23:26:46-23:27:11); interrupter_build_dummy_test.sh rc=0 (23:27:11-23:27:12)
+normalised (times, pids, scratch paths): scoped output (40 lines) equal to R2's interrupter_dummy_test_08.txt and to 02's measure/out/02-dummy-scoped.txt: True, True
+normalised: build output (28 lines) equal to 02's measure/out/02-dummy-build.txt: True; its first 20 lines (cases A-C) equal to R2's interrupter_build_dummy_test_08.txt (20 lines), the 8 more lines being case D: True
+case D: interrupter exit=0, child exit=137 (killed by SIGKILL), log "sent SIGKILL to pid ..."
+ps -p 89793,89795,89847,89849,89882,89884,89888,89890,89917,89919,90005,90007,90011,90013,90017,90019,90022,90024 -> none alive (rc=1)
+
+== 2026-10-18T23:28:32+0100 pre-launch check before reference
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:28  up 13 days, 21:13, 2 users, load averages: 5.61 10.26 11.31
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+45 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 43 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  855G   72G  93% /
+
+== 2026-10-18T23:28:38+0100 launch reference (log var/runs/rrk-v020-adoption-03-reference.launch.log)
+git status --short: []
+23:28  up 13 days, 21:13, 2 users, load averages: 5.80 10.22 11.29
+sh pid 90789
+== 2026-10-18T23:28:41+0100 one check after reference launch
+run dirs: ['var/runs/rrk-v020-adoption-03-reference-20261018T232838']
+run dir: var/runs/rrk-v020-adoption-03-reference-20261018T232838
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-reference-20261018T232838 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id None
+manifest results var/datastores/rrk-v020-adoption-03-reference.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: False ; --register reference
+status state running pid 90795 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-18T23:28:40+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 90795 ok
+  PID  PPID STARTED                      COMMAND
+90789     1 Sun Oct 18 23:28:38 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/rrk-v020-adoption-03-reference.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register reference --purpose "$0" --campaign rrk-v020-adoption --prompt 03; \\012  echo "** driver exit status $?" rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0 (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716
+90795 90789 Sun Oct 18 23:28:38 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-reference.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register reference --purpose rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0 (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7) straight through to done; its fingerprint must equal 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03
+   rrk-v020-adoption-03-reference-20261018T232838                     running           -       4s  rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0
+46 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 43 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+23:28  up 13 days, 21:13, 2 users, load averages: 6.38 10.27 11.30
+
+== 2026-10-18T23:33:08+0100 after reference: no Ray process left
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+23:33  up 13 days, 21:18, 2 users, load averages: 7.34 10.22 11.19
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- Ray pids its logs name: 
+-- ps -p 90789,90795,
+  PID TTY           TIME CMD
+rc=1
+   rrk-v020-adoption-03-reference-20261018T232838                     done              -       5m  rrk-v020-a
+46 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 44 finished, 2 unknown; 45 with no host recorded.
+/dev/disk3s1s1  927G  855G   72G  93% /
+-- launch log last line: ** driver exit status 0
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+-- (re-run; the first pid extraction failed) Ray pids its logs name: 90861,90863,90864
+-- ps -p 90789,90795,90861,90863,90864
+  PID TTY           TIME CMD
+rc=1
+
+== 2026-10-18T23:33:43+0100 pre-launch check before resumed-a
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:33  up 13 days, 21:18, 2 users, load averages: 13.01 11.05 11.43
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 90795
+owner pid 90795: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 90789,90795,90861,90863,90864 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+46 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 44 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  855G   72G  93% /
+-- resumed store files: 0
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- points (corrections 2, 3): reference GkSource stage 24.8 s (stdout.log:76); 40 % = 9.92 s -> hold 10 s (rounds to 10 s; the 10 s floor equal, not binding below); QSI 1m 31.4s = 91.4 s (stdout.log:100), a third = 30.47 s -> hold 30 s (<= 250 s)
+
+== 2026-10-18T23:33:56+0100 launch resumed-a (log var/runs/rrk-v020-adoption-03-resumed-a.launch.log)
+git status --short: []
+23:33  up 13 days, 21:18, 2 users, load averages: 18.62 12.49 11.95
+sh pid 93116
+interrupter pid 93128 at 23:33:58: interrupt_when.py var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10 
+== 2026-10-18T23:34:03+0100 one check after resumed-a launch
+run dirs: ['var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357']
+run dir: var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-resumed-a-20261018T233357 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id None
+manifest results var/datastores/rrk-v020-adoption-03-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "ru
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: False ; --register resumed-a
+status state running pid 93122 stage CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE heartbeat 2026-10-18T23:34:02+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 93122 ok
+kill -0 interrupter 93128 ok
+  PID  PPID STARTED                      COMMAND
+93116     1 Sun Oct 18 23:33:56 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/rrk-v020-adoption-03-resumed.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-a --purpose "$0" --campaign rrk-v020-adoption --prompt 03; \\012  echo "** dr
+93122 93116 Sun Oct 18 23:33:57 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose rrk-v020-adoption prompt 03, R3 th
+93128     1 Sun Oct 18 23:33:58 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 ^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$ 0 --interval 5 --hold 10
+   rrk-v020-adoption-03-resumed-a-20261018T233357                     running           -       6s  rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0
+47 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 44 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+2026-10-18T23:33:58+01:00 interrupter pid 93128 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-18T23:33:58+01:00 liveness alive; pid 93122; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:34:03+01:00 liveness alive; pid 93122; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+23:34  up 13 days, 21:19, 2 users, load averages: 17.77 12.42 11.92
+
+== 2026-10-18T23:37:11+0100 after resumed-a: no Ray process left
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+23:37  up 13 days, 21:22, 2 users, load averages: 13.57 17.72 14.68
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- Ray pids its logs name: 93170,93172,93173
+-- ps -p 93116,93122,93128,93170,93172,93173
+  PID TTY           TIME CMD
+rc=1
+   rrk-v020-adoption-03-resumed-a-20261018T233357                     killed            -       3m  rrk-v020-a
+   rrk-v020-adoption-03-reference-20261018T232838                     done              -       9m  rrk-v020-a
+47 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 45 finished, 2 unknown; 45 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: . .. interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-18T23:33:58+01:00 interrupter pid 93128 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-18T23:33:58+01:00 liveness alive; pid 93122; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:34:03+01:00 liveness alive; pid 93122; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-18T23:34:08+01:00 liveness alive; pid 93122; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:34:43+01:00 liveness alive; pid 93122; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:36:03+01:00 liveness alive; pid 93122; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:36:03+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-18T23:36:13+01:00 sent SIGTERM to pid 93122 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0 (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03"; exiting
+-- stderr.log
+** SIGTERM at 2026-10-18 23:36:13 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+
+== 2026-10-18T23:37:32+0100 pre-launch check before resumed-b
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:37  up 13 days, 21:22, 2 users, load averages: 11.93 17.07 14.52
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 93122
+owner pid 93122: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 93116,93122,93128,93170,93172,93173 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+47 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 45 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  857G   70G  93% /
+
+== 2026-10-18T23:37:33+0100 launch resumed-b (log var/runs/rrk-v020-adoption-03-resumed-b.launch.log)
+git status --short: []
+23:37  up 13 days, 21:22, 2 users, load averages: 11.93 17.07 14.52
+sh pid 94702
+interrupter pid 94723 at 23:37:34: interrupt_when.py var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 30 
+== 2026-10-18T23:37:40+0100 one check after resumed-b launch
+run dirs: ['var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734']
+run dir: var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-resumed-b-20261018T233734 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id 86482c5d57f1473297efcaef7bf64909
+manifest results var/datastores/rrk-v020-adoption-03-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: True ; --register resumed-b
+status state running pid 94708 stage CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-18T23:37:40+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 94708 ok
+kill -0 interrupter 94723 ok
+  PID  PPID STARTED                      COMMAND
+94702     1 Sun Oct 18 23:37:33 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/rrk-v020-adoption-03-resumed.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpu
+94708 94702 Sun Oct 18 23:37:33 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-ad
+94723     1 Sun Oct 18 23:37:34 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 ^CALCULATE QUADRATIC SOURCE INTEGRALS 0 
+   rrk-v020-adoption-03-resumed-b-20261018T233734                     running           -       7s  rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0
+48 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 45 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+2026-10-18T23:37:34+01:00 interrupter pid 94723 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 (slug 'resumed-b'); stage regex '^CALCULATE 
+2026-10-18T23:37:34+01:00 liveness alive; pid 94708; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:37:40+01:00 liveness alive; pid 94708; stage 'FOUND EXISTING LambdaCDM BACKGROUND MODEL "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO" (store_id=1)'
+23:37  up 13 days, 21:22, 2 users, load averages: 11.10 16.72 14.42
+
+== 2026-10-18T23:39:22+0100 after resumed-b: no Ray process left
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+23:39  up 13 days, 21:24, 2 users, load averages: 15.07 15.86 14.30
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- Ray pids its logs name: 94755,94757
+-- ps -p 94702,94708,94723,94755,94757
+  PID TTY           TIME CMD
+rc=1
+48 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 46 finished, 2 unknown; 45 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: . .. interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-18T23:37:34+01:00 interrupter pid 94723 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INT
+2026-10-18T23:37:34+01:00 liveness alive; pid 94708; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:37:40+01:00 liveness alive; pid 94708; stage 'FOUND EXISTING LambdaCDM BACKGROUND MODEL "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO" (store_id=1)'
+2026-10-18T23:37:45+01:00 liveness alive; pid 94708; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:37:50+01:00 liveness alive; pid 94708; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:38:10+01:00 liveness alive; pid 94708; stage 'APPLY GKSOURCE POLICIES'
+2026-10-18T23:38:20+01:00 liveness alive; pid 94708; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-18T23:38:20+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-18T23:38:50+01:00 sent SIGTERM to pid 94708 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Py
+-- stderr.log
+** SIGTERM at 2026-10-18 23:38:50 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+
+== 2026-10-18T23:39:39+0100 pre-launch check before resumed-c
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:39  up 13 days, 21:24, 2 users, load averages: 14.57 15.71 14.28
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 94708
+owner pid 94708: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 94702,94708,94723,94755,94757 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+48 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 46 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  858G   70G  93% /
+
+== 2026-10-18T23:39:40+0100 launch resumed-c (log var/runs/rrk-v020-adoption-03-resumed-c.launch.log)
+git status --short: []
+23:39  up 13 days, 21:24, 2 users, load averages: 15.08 15.80 14.31
+sh pid 95843
+== 2026-10-18T23:39:46+0100 one check after resumed-c launch
+run dirs: ['var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941']
+run dir: var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-resumed-c-20261018T233941 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id 86482c5d57f1473297efcaef7bf64909
+manifest results var/datastores/rrk-v020-adoption-03-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: True ; --register resumed-c
+status state running pid 95847 stage BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE heartbeat 2026-10-18T23:39:46+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 95847 ok
+  PID  PPID STARTED                      COMMAND
+95843     1 Sun Oct 18 23:39:40 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/rrk-v020-adoption-03-resumed.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpu
+95847 95843 Sun Oct 18 23:39:40 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-ad
+   rrk-v020-adoption-03-resumed-c-20261018T233941                     running           -       5s  rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0
+49 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 46 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+23:39  up 13 days, 21:24, 2 users, load averages: 15.31 15.84 14.34
+
+== 2026-10-18T23:42:08+0100 after resumed-c: no Ray process left
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+23:42  up 13 days, 21:27, 2 users, load averages: 29.36 20.36 16.30
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- Ray pids its logs name: 95879,95882,96122
+-- ps -p 95843,95847,95879,95882,96122
+  PID TTY           TIME CMD
+rc=1
+49 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 47 finished, 2 unknown; 45 with no host recorded.
+-- launch log last line: ** driver exit status 0
+-- files in run dir: . .. manifest.json status.json stderr.log stdout.log 
+-- stderr.log
+[36m(compute_QuadSource_integral pid=96122)[0m /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+[36m(compute_QuadSource_integral pid=96122)[0m   the requested tolerance from being achieved.  The error may be 
+[36m(compute_QuadSource_integral pid=96122)[0m   underestimated.
+[36m(compute_QuadSource_integral pid=96122)[0m   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+
+== 2026-10-18T23:46:11+0100 pre-launch check before hardkill-a
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:46  up 13 days, 21:31, 2 users, load averages: 62.39 49.72 30.66
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 95847
+owner pid 95847: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 95843,95847,95879,95882,96122 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+49 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 47 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  856G   72G  93% /
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+
+== 2026-10-18T23:46:18+0100 launch hardkill-a (log var/runs/rrk-v020-adoption-03-hardkill-a.launch.log)
+git status --short: []
+23:46  up 13 days, 21:31, 2 users, load averages: 58.83 49.19 30.59
+sh pid 99897
+interrupter pid 99907 at 23:46:19: interrupt_when.py var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 30 --signal KILL
+== 2026-10-18T23:46:26+0100 one check after hardkill-a launch
+run dirs: ['var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619']
+run dir: var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619
+   interrupter.log
+   manifest.json
+   status.json
+   status.json.99903-20-ec2061af.tmp
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-hardkill-a-20261018T234619 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id None
+manifest results var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: False ; --register hardkill-a
+status state running pid 99903 stage BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM heartbeat 2026-10-18T23:46:26+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 99903 ok
+kill -0 interrupter 99907 ok
+  PID  PPID STARTED                      COMMAND
+99897     1 Sun Oct 18 23:46:18 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 \\01
+99903 99897 Sun Oct 18 23:46:18 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-adoption-0
+99907     1 Sun Oct 18 23:46:19 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 ^CALCULATE QUADRATIC SOURCE INTEGRALS 0
+   rrk-v020-adoption-03-hardkill-a-20261018T234619                    running           -       8s  rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, cod
+50 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 47 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+2026-10-18T23:46:19+01:00 interrupter pid 99907 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 (slug 'hardkill-a'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 
+2026-10-18T23:46:19+01:00 liveness alive; pid 99903; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:46:24+01:00 liveness alive; pid 99903; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+23:46  up 13 days, 21:31, 2 users, load averages: 54.88 48.67 30.62
+
+== 2026-10-19T00:10:54+0100 launch hardkill-b (log var/runs/rrk-v020-adoption-03-hardkill-b-refused.launch.log)
+git status --short: []
+ 0:10  up 13 days, 21:55, 2 users, load averages: 8.56 9.22 12.93
+sh pid 10117
+
+== 2026-10-19T00:11:43+0100 pre-launch check before hardkill-b
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+ 0:11  up 13 days, 21:56, 2 users, load averages: 8.77 9.08 12.66
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 99903
+owner pid 99903: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 99897,99903,99907,99918,10117 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+50 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 48 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  853G   75G  92% /
+
+== 2026-10-19T00:11:44+0100 launch hardkill-b (log var/runs/rrk-v020-adoption-03-hardkill-b.launch.log)
+git status --short: []
+ 0:11  up 13 days, 21:56, 2 users, load averages: 8.77 9.08 12.66
+sh pid 10642
+== 2026-10-19T00:11:51+0100 one check after hardkill-b launch
+run dirs: ['var/runs/rrk-v020-adoption-03-hardkill-b-20261019T001145']
+run dir: var/runs/rrk-v020-adoption-03-hardkill-b-20261019T001145
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-hardkill-b-20261019T001145 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id 63ca0315b9404b46a80bc68c6a979db3
+manifest results var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: True ; --register hardkill-b
+status state running pid 10646 stage CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-19T00:11:51+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 10646 ok
+  PID  PPID STARTED                      COMMAND
+10642     1 Mon Oct 19 00:11:44 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cp
+10646 10642 Mon Oct 19 00:11:44 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-a
+   rrk-v020-adoption-03-hardkill-b-20261019T001145                    running           -       7s  rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, cod
+51 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 48 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+ 0:11  up 13 days, 21:56, 2 users, load averages: 8.31 8.98 12.61

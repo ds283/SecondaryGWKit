@@ -1,0 +1,264 @@
+== 2026-10-18T23:27:51+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose rrk-v020-adoption 03 (R3)
+acquired the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock) for SecondaryGWKit: rrk-v020-adoption 03 (R3)
+exit=0
+== 2026-10-18T23:27:51+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+exit=0
+== 2026-10-18T23:28:45+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 90795
+recorded pid 90795 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-18T23:28:45+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 90795
+owner pid 90795: alive
+Ray processes of this repository: 18
+    90823 90795 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    90824 90795 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    90831 90795 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    90832 90795 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    90835 90795 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    90836 90795 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    90846 90835 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    90847 90835 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    90861 90835 ray::Datastore.object_store                   
+    90862 90835 ray::Datastore.object_store                   
+    90863 90835 ray::IDLE                   
+    90864 90835 ray::Datastore                   
+    90865 90835 ray::SerialPoolBroker                   
+    90866 90835 ray::Datastore                   
+    90887 90835 ray::IDLE                   
+    90888 90835 ray::IDLE                   
+    90889 90835 ray::IDLE                   
+    90890 90835 ray::IDLE                   
+exit=0
+== 2026-10-18T23:34:09+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 93122
+recorded pid 93122 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-18T23:34:09+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 93122
+owner pid 93122: alive
+Ray processes of this repository: 21
+    93149 93122 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    93150 93122 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    93151 93122 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    93152 93122 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    93153 93122 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    93154 93122 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    93167 93153 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    93168 93153 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    93169 93153 ray::numeric_with_phase_cut                   
+    93170 93153 ray::Datastore                   
+    93171 93153 ray::SerialPoolBroker                   
+    93172 93153 ray::Datastore                   
+    93173 93153 ray::Datastore                   
+    93174 93153 ray::Datastore                   
+    93190 93153 ray::numeric_with_phase_cut                   
+    93191 93153 ray::numeric_with_phase_cut                   
+    93192 93153 ray::numeric_with_phase_cut                   
+    93193 93153 ray::numeric_with_phase_cut                   
+    93237 93153 ray::numeric_with_phase_cut                   
+    93238 93153 (Python)
+    93239 93153 (Python)
+(note: the record of this status call was cut short by the agent's own display pipe, '| head', which closed tee early; its exit status was not recorded (the listing printed in full up to that point: 'owner pid 93122: alive', Ray processes of this repository: 21); no later call is displayed through head)
+== 2026-10-18T23:37:46+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 94708
+recorded pid 94708 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-18T23:37:46+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 94708
+owner pid 94708: alive
+Ray processes of this repository: 14
+    94734 94708 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    94735 94708 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    94737 94708 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    94738 94708 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    94750 94708 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    94751 94708 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    94752 94750 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    94753 94750 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    94754 94750 ray::Datastore                   
+    94755 94750 ray::Datastore                   
+    94757 94750 ray::Datastore                   
+    94758 94750 ray::Datastore.object_read_batch                   
+    94759 94750 ray::IDLE                   
+    94760 94750 ray::SerialPoolBroker                   
+exit=0
+== 2026-10-18T23:39:52+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 95847
+recorded pid 95847 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-18T23:39:52+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 95847
+owner pid 95847: alive
+Ray processes of this repository: 14
+    95867 95847 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    95868 95847 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    95870 95847 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    95871 95847 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    95873 95847 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    95874 95847 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    95875 95873 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    95876 95873 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    95877 95873 ray::Datastore.object_read_batch                   
+    95878 95873 ray::IDLE                   
+    95879 95873 ray::Datastore                   
+    95880 95873 ray::Datastore                   
+    95881 95873 ray::SerialPoolBroker                   
+    95882 95873 ray::Datastore                   
+exit=0
+== 2026-10-18T23:42:15+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 95847
+owner pid 95847: NOT alive
+Ray processes of this repository: none
+exit=0
+== 2026-10-18T23:46:11+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 95847
+owner pid 95847: NOT alive
+Ray processes of this repository: none
+exit=0
+== 2026-10-18T23:46:27+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 99903
+recorded pid 99903 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-18T23:46:27+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 99903
+owner pid 99903: alive
+Ray processes of this repository: 18
+    99917 99903 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    99918 99903 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    99930 99903 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    99931 99903 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    99932 99903 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    99933 99903 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    99934 99932 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    99935 99932 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    99936 99932 ray::Datastore                   
+    99937 99932 ray::Datastore                   
+    99938 99932 ray::Datastore                   
+    99939 99932 ray::Datastore                   
+    99940 99932 ray::IDLE                   
+    99941 99932 ray::SerialPoolBroker                   
+    99953 99932 ray::IDLE                   
+    99954 99932 ray::numeric_with_phase_cut                   
+    99955 99932 ray::IDLE                   
+    99956 99932 ray::IDLE                   
+exit=0
+== 2026-10-18T23:59:29+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 99903
+owner pid 99903: NOT alive
+Ray processes of this repository: 1
+    99918 1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-1
+exit=0
+== 2026-10-19T00:11:52+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 10646
+recorded pid 10646 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-19T00:11:52+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 10646
+owner pid 10646: alive
+Ray processes of this repository: 14
+    10667 10646 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    10668 10646 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    10669 10646 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    10670 10646 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    10682 10646 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    10683 10646 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    10684 10682 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    10685 10682 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    10686 10682 ray::Datastore.object_get                   
+    10687 10682 ray::SerialPoolBroker                   
+    10688 10682 ray::Datastore.object_get                   
+    10689 10682 ray::IDLE                   
+    10690 10682 ray::Datastore                   
+    10691 10682 ray::Datastore.object_get                   
+exit=0
+== 2026-10-19T00:14:55+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 10646
+owner pid 10646: NOT alive
+Ray processes of this repository: none
+exit=0
+== 2026-10-19T00:14:55+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit=0
+== 2026-10-19T00:14:55+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock)
+exit=0
+== 2026-10-19T00:14:55+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+exit=0
+== 2026-10-19T00:14:55+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit=0

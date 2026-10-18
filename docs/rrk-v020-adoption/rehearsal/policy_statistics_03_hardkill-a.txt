@@ -1,0 +1,14 @@
+** GkSourcePolicyData SUMMARY STATISTICS
+
+     * Policy: policy="maximize-WKB"-Levin-threshold="1.5"
+        Total instances: 291
+
+        >> numeric: 109 instances = 37.46%
+           complete: 109 instances = 100.00% of this type, 37.46% of total
+
+        >> mixed: 26 instances = 8.93%
+           complete: 25 instances = 96.15% of this type, 8.59% of total
+           minimal: 1 instances = 3.85% of this type, 0.34% of total
+
+        >> WKB: 156 instances = 53.61%
+           complete: 156 instances = 100.00% of this type, 53.61% of total

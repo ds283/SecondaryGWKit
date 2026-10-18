@@ -1,0 +1,98 @@
+== reference, 23:33:28
+$ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/rrk-v020-adoption-03-reference.sqlite
+>> create: var/datastores/rrk-v020-adoption-03-reference.manifest.json
+{
+  "created": "2026-10-18T23:33:28+01:00",
+  "datastore": "rrk-v020-adoption-03-reference.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "aab407529576307c9d3c1e64ccc8b2e980ed2d7d",
+      "operation": "create",
+      "to": "var/datastores/rrk-v020-adoption-03-reference.sqlite",
+      "when": "2026-10-18T23:33:28+01:00"
+    }
+  ],
+  "name": "rrk-v020-adoption-03-reference",
+  "purpose": "rrk-v020-adoption prompt 03 (R3): reference rehearsal store built straight through at aab4075 (code 2818780), runregistrykit 0.2.0 (0bae3a3), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0; throwaway, kept for the campaign's review; the user retires it after 04's review, or not",
+  "sidecar_format": 1,
+  "store_id": "21153431c18c4f1daf30210c8dbec2f8"
+}
+create rc=0
+$ ./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/rrk-v020-adoption-03-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-reference.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint rc=0
+
+== resumed, 23:37:26
+$ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/rrk-v020-adoption-03-resumed.sqlite
+>> create: var/datastores/rrk-v020-adoption-03-resumed.manifest.json
+{
+  "created": "2026-10-18T23:37:26+01:00",
+  "datastore": "rrk-v020-adoption-03-resumed.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "aab407529576307c9d3c1e64ccc8b2e980ed2d7d",
+      "operation": "create",
+      "to": "var/datastores/rrk-v020-adoption-03-resumed.sqlite",
+      "when": "2026-10-18T23:37:26+01:00"
+    }
+  ],
+  "name": "rrk-v020-adoption-03-resumed",
+  "purpose": "rrk-v020-adoption prompt 03 (R3): resumed rehearsal store at aab4075 (code 2818780), runregistrykit 0.2.0 (0bae3a3), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0, built by resumed-a (killed by SIGTERM in the GkSource stage), resumed-b and resumed-c; throwaway, kept for the campaign's review; the user retires it after 04's review, or not",
+  "sidecar_format": 1,
+  "store_id": "86482c5d57f1473297efcaef7bf64909"
+}
+create rc=0
+-- the store's five files across store create: identical
+
+== hardkill: store create at 00:11:36, after end on hardkill-a (README §6.2 C8); whole output in hardkill_03.txt §2.7

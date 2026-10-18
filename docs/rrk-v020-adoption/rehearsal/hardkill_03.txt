@@ -1,0 +1,670 @@
+rrk-v020-adoption prompt 03 (R3): the hard-kill pair, every command and its output, in order.
+Recorded by the agent in var/rrk-v020-adoption-03/ while the work ran; copied here after hardkill-b ended.
+Prompt sections: §2.1 the launch; §2.2 after the kill; §2.3 the wait for Ray; the user's rulings; §2.4-§2.9.
+
+######## §2.1 hardkill-a: the pre-launch check, the launch, the interrupter (--signal KILL), the one check
+== 2026-10-18T23:46:11+0100 pre-launch check before hardkill-a
+HEAD aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+git status --short: []
+RAY_ADDRESS=[unset]
+23:46  up 13 days, 21:31, 2 users, load averages: 62.39 49.72 30.66
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rrk-v020-adoption 03 (R3)
+    acquired: 2026-10-18T23:27:51+01:00
+    host: mps026088
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 95847
+owner pid 95847: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide; not the test)
+rc=1
+-- ps -p 95843,95847,95879,95882,96122 (previous run's pids)
+  PID  PPID STARTED                      COMMAND
+rc=1
+-- runregistrykit list (summary line; running/stale rows)
+rc=0
+49 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 47 finished, 2 unknown; 45 with no host recorded.
+running/stale rows: 0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s1s1  927G  856G   72G  93% /
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+
+== 2026-10-18T23:46:18+0100 launch hardkill-a (log var/runs/rrk-v020-adoption-03-hardkill-a.launch.log)
+git status --short: []
+23:46  up 13 days, 21:31, 2 users, load averages: 58.83 49.19 30.59
+sh pid 99897
+interrupter pid 99907 at 23:46:19: interrupt_when.py var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 30 --signal KILL
+== 2026-10-18T23:46:26+0100 one check after hardkill-a launch
+run dirs: ['var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619']
+run dir: var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619
+   interrupter.log
+   manifest.json
+   status.json
+   status.json.99903-20-ec2061af.tmp
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-hardkill-a-20261018T234619 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id None
+manifest results var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: False ; --register hardkill-a
+status state running pid 99903 stage BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM heartbeat 2026-10-18T23:46:26+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 99903 ok
+kill -0 interrupter 99907 ok
+  PID  PPID STARTED                      COMMAND
+99897     1 Sun Oct 18 23:46:18 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 \\01
+99903 99897 Sun Oct 18 23:46:18 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-adoption-0
+99907     1 Sun Oct 18 23:46:19 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 ^CALCULATE QUADRATIC SOURCE INTEGRALS 0
+   rrk-v020-adoption-03-hardkill-a-20261018T234619                    running           -       8s  rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, cod
+50 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 47 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+2026-10-18T23:46:19+01:00 interrupter pid 99907 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 (slug 'hardkill-a'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 
+2026-10-18T23:46:19+01:00 liveness alive; pid 99903; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:46:24+01:00 liveness alive; pid 99903; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+23:46  up 13 days, 21:31, 2 users, load averages: 54.88 48.67 30.62
+
+
+######## §2.2 after the kill
+The orchestrator's wait (one, on the driver's pid) ended 'ENDED running pid gone by 23:49:25' (polled every 30 s; an upper bound);
+the interrupter's stamp is the kill time, 23:49:15. Its verdict quoted the launch log's last lines:
+  ** CALCULATE QUADRATIC SOURCE INTEGRALS
+  <purpose text>: line 5: 99903 Killed: 9               PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py --build ... --register hardkill-a ...
+  ** driver exit status 137
+(the shell names itself by its $0, which is the purpose passed to sh -c). The agent's own reading of the launch log,
+status.json, the interrupter's log, the run directory and the store's files is in the STOP block below (23:59:28),
+taken before anything was changed; kill -0 99903 'no such process' is in the first §2.3 reading.
+
+######## §2.3 the wait for Ray (U3, correction 10)
+== 2026-10-18T23:49:55+0100 §2.3 the wait for Ray (U3): first reading
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+99918 1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-1
+rc=1
+$ ps -axo pid,ppid,lstart,etime,command | (rows naming SecondaryGWKit/venv or ray::)
+  PID  PPID STARTED                          ELAPSED COMMAND
+ 1868 84860 Sun Oct 18 23:49:55 2026           00:00 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1792361824226-ci0kzi.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'uns
+ 1869  1868 Sun Oct 18 23:49:55 2026           00:00 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1792361824226-ci0kzi.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'uns
+ 1896  1869 Sun Oct 18 23:49:55 2026           00:00 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -c \012import sys\012for l in sys.stdin:\012    if 'SecondaryGWKit/venv' in l or 'ray::' in l or 'PID' 
+11627 85599 Sun Oct 18 20:26:22 2026        03:23:33 /Applications/Claude.app/Contents/Helpers/disclaimer --responsible -- /usr/bin/ssh -o Hostname=david-macstudio.tailc6e494.ts.net -o CanonicalDomains=none -o CanonicalizeFallbackLocal=yes -l ds283 -N -T -o Co
+11628 11627 Sun Oct 18 20:26:22 2026        03:23:33 /usr/bin/ssh -o Hostname=david-macstudio.tailc6e494.ts.net -o CanonicalDomains=none -o CanonicalizeFallbackLocal=yes -l ds283 -N -T -o ControlMaster=yes -o ControlPersist=no -p 22 -o BatchMode=yes -o StrictH
+99918     1 Sun Oct 18 23:46:20 2026           03:35 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-18_23-46-20_276571_99903/logs --config_list=eyJvYmplY3Rfc3BpbGx
+$ kill -0 99903
+(eval):kill:4: kill 99903 failed: no such process
+rc=1
+  PID  PPID STARTED                      COMMAND
+99918     1 Sun Oct 18 23:46:20 2026     /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-10-18_23-46-20_276571_99903/logs --config_list=eyJvYmplY3Rfc3BpbGxpbmdfY29uZmlnIjogIntcInR5cGVcIjogXCJmaWxlc3lzdGVtXCIsIFwicGFyYW1zXCI6IHtcImRpcmVjdG9yeV9wYXRoXCI6IFwiL3RtcC9yYXkvc2Vzc2lvbl8yMDI2LTEwLTE4XzIzLTQ2LTIwXzI3NjU3MV85OTkwM1wifX0iLCAiaXNfZXh0ZXJuYWxfc3RvcmFnZV90eXBlX2ZzIjogdHJ1ZX0= --gcs_server_port=64192 --metrics-agent-port=62626 --node-ip-address=127.0.0.1 --session-name=session_2026-10-18_23-46-20_276571_99903 --ray-commit=ecdcdc6a6e63dc4bcd6ea16aae256ce4d32a7e2c --ray_log_filepath=/tmp/ray/session_2026-10-18_23-46-20_276571_99903/logs/gcs_server.out --ray_err_log_filepath=/tmp/ray/session_2026-10-18_23-46-20_276571_99903/logs/gcs_server.err
+== 2026-10-18T23:50:03+01:00 wait by pid (kill -0, every 1 s) for [99918], until 2026-10-18T23:59:15+01:00 (the interrupter's sent-SIGKILL stamp 23:49:15 + 600 s)
+!! STILL ALIVE at the deadline 2026-10-18T23:59:15+01:00: [99918]
+
+== 2026-10-18T23:59:28+0100 STOP (correction 10 / prompt §2.3): a Ray process of this repository is alive at the deadline. Nothing signalled; ray stop not run; lock not released.
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+99918 1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_2026-1
+rc=1
+$ ps -o pid,ppid,lstart,etime,stat,command -p 99918
+  PID  PPID STARTED                      ELAPSED STAT
+99918     1 Sun Oct 18 23:46:20 2026       13:09 S   
+-- children of 99918: 
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide)
+99918 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log
+-- lsof -p 99918 (listening sockets)
+-- run dir files: . .. interrupter.log manifest.json status.json stderr.log stdout.log 
+-- status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-18T23:48:44+01:00",
+  "host": {
+    "boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6",
+    "id": "8d2b247824882486"
+  },
+  "pid": 99903,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+-- interrupter.log
+2026-10-18T23:46:19+01:00 interrupter pid 99907 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 (slug 'hardkill-a'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-18T23:46:19+01:00 liveness alive; pid 99903; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:46:24+01:00 liveness alive; pid 99903; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-18T23:46:29+01:00 liveness alive; pid 99903; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:46:59+01:00 liveness alive; pid 99903; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:48:09+01:00 liveness alive; pid 99903; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:48:35+01:00 liveness alive; pid 99903; stage 'APPLY GKSOURCE POLICIES'
+2026-10-18T23:48:45+01:00 liveness alive; pid 99903; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-18T23:48:45+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-18T23:49:15+01:00 sent SIGKILL to pid 99903 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register hardkill-a --purpose rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch on the hardkill store (reference's scope), to be killed by SIGKILL (interrupt_when.py --signal KILL) in CALCULATE QUADRATIC SOURCE INTEGRALS; its status then stays running and is ended with runregistrykit end; the store must end equal to 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03"; exiting
+-- launch log last 3 lines
+** CALCULATE QUADRATIC SOURCE INTEGRALS
+rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch on the hardkill store (referen
+** driver exit status 137
+-- hardkill store files (sha256 size mtime_ns), journals marked
+977455999b4cccf45ad8405a44141fa42b95219df18af75fed7e2361d0bfd639      22474752  1792363749770262539  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+f8498b68054be290f3dc7bfaeb8c52a8bd105fa8dbae37eecedac44b68538d16      22315008  1792363749746549042  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+e2c5c08a379b038802529f9400a7b50ae522a0f793e445e94220912c572f4339      22384640  1792363749732498328  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+0eea775f9c49cb9434775b05dbb50dddb9b7eb1c741b7f55cb0abe40b13b94ec         36864  1792363586435920886  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(5 files)
+-- gcs_server.err tail
+-- gcs_server.out tail
+[2026-10-18 23:49:15,151 W 99918 59846240] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+[2026-10-18 23:49:15,153 W 99918 59846240] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+[2026-10-18 23:49:15,152 I 99918 59846167] (gcs_server) gcs_server.cc:267: Stopping GCS server.
+[2026-10-18 23:49:15,156 W 99918 59846241] (gcs_server) server_call.h:331: [1] Not sending reply because executor stopped.
+[2026-10-18 23:49:21,390 W 99918 59846210] (gcs_server) metric_exporter.cc:105: [1] Export metrics to agent failed: RpcError: RPC Error message: failed to connect to all addresses; last error: UNKNOWN
+
+
+######## the user's rulings on the stop, carried out by the orchestrator (relayed to the agent; the agent signalled nothing)
+00:00:03  the orchestrator confirmed the stop: 99918 alive, ppid 1, elapsed 13:43, no listening socket; lock HELD, owner 99903 dead;
+          ray-processes listed 99918 alone.
+          The user chose 'Claude sends SIGTERM'.
+00:06:13  the orchestrator sent kill -TERM 99918 once (rc 0). Still alive at 00:07:15, nothing new in gcs_server.out.
+00:07-00:09  a read-only stack sample, 'sample 99918 2', saved as var/rrk-v020-adoption-03/gcs_server_99918_sample.txt
+          (not committed; 30 threads). The main thread, for the whole sample (1386 of 1386 samples):
+        1386 Thread_59846167   DispatchQueue_1: com.apple.main-thread  (serial)
+        + 1386 start  (in dyld) + 6688  [0x194137e80]
+        +   1386 main  (in gcs_server) + 3972  [0x102d567ac]
+        +     1386 boost::asio::io_context::run()  (in gcs_server) + 32  [0x10391bc6c]
+        +       1386 boost::asio::detail::scheduler::run(boost::system::error_code&)  (in gcs_server) + 200  [0x10391bd84]
+        +         1386 boost::asio::detail::scheduler::do_run_one(boost::asio::detail::conditionally_enabled_mutex::scoped_lock&, boost::asio::detail::scheduler_thread_info&, boost::system::error_code con
+        +           1386 boost::asio::detail::signal_handler<main::$_0, boost::asio::any_io_executor>::do_complete(void*, boost::asio::detail::scheduler_operation*, boost::system::error_code const&, unsig
+        +             1386 boost::asio::detail::binder2<main::$_0, boost::system::error_code, int>::operator()()  (in gcs_server) + 156  [0x102d594cc]
+        +               1386 ray::gcs::GcsServer::Stop()  (in gcs_server) + 208  [0x102e23cb8]
+        +                 1386 ray::rpc::GrpcServer::Shutdown()  (in gcs_server) + 76  [0x1031ba1cc]
+        +                   1386 grpc::Server::ShutdownInternal(gpr_timespec)  (in gcs_server) + 280  [0x10332c478]
+        +                     1386 gpr_cv_wait  (in gcs_server) + 168  [0x1038a63ac]
+        +                       1386 _pthread_cond_wait  (in libsystem_pthread.dylib) + 980  [0x19450e1d0]
+        +                         1386 __psynch_cvwait  (in libsystem_kernel.dylib) + 8  [0x1944cc50c]
+          That is GcsServer::Stop() entered from the process's own signal handler, blocked in grpc::Server::ShutdownInternal
+          waiting on a condition variable; gcs_server.out logged 'Stopping GCS server.' and 'Not sending reply because executor
+          stopped' at 23:49:15. SIGTERM goes through the same handler, so it could not end the process.
+          The user chose 'Claude sends SIGKILL'.
+00:10:05  the orchestrator sent kill -KILL 99918 once (rc 0); gone by kill -0 the same second; ray-processes exit 0, none;
+          pgrep -lf 'gcs_server|raylet|ray::' rc 1. ray stop was never run; no other process was signalled.
+
+== 2026-10-19T00:10:29+0100 after the user's rulings (relayed by the orchestrator): 99918 SIGTERM 00:06:13 (no effect), sample 00:07-00:09 (var/rrk-v020-adoption-03/gcs_server_99918_sample.txt), SIGKILL 00:10:05 (gone the same second). Agent's own reading now:
+$ kill -0 99918
+(eval):kill:1: kill 99918 failed: no such process
+rc=1
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide)
+rc=1
+-- journals beside the hardkill store's files
+(end)
+
+== 2026-10-19T00:10:41+0100 §2.4 the evidence before end
+-- every file of the hardkill store (sha256 size mtime_ns), before closed_store_state
+977455999b4cccf45ad8405a44141fa42b95219df18af75fed7e2361d0bfd639      22474752  1792363749770262539  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+f8498b68054be290f3dc7bfaeb8c52a8bd105fa8dbae37eecedac44b68538d16      22315008  1792363749746549042  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+e2c5c08a379b038802529f9400a7b50ae522a0f793e445e94220912c572f4339      22384640  1792363749732498328  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+0eea775f9c49cb9434775b05dbb50dddb9b7eb1c741b7f55cb0abe40b13b94ec         36864  1792363586435920886  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(5 files)
+$ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite   (whole output: var/rrk-v020-adoption-03/state/after-hardkill-a.txt)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: rrk-v020-adoption-03-hardkill.sqlite; version rows None
+-- shard 0: rrk-v020-adoption-03-hardkill-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: rrk-v020-adoption-03-hardkill-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: rrk-v020-adoption-03-hardkill-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: rrk-v020-adoption-03-hardkill-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+rc=0
+-- files across the read: identical
+$ ./venv/bin/python -m runregistrykit list   (rows of this campaign, summary; stdout then stderr)
+rc=0
+!! rrk-v020-adoption-03-hardkill-a-20261018T234619                    running           -      24m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-c-20261018T233941                     done              -      31m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-b-20261018T233734                     killed            -      33m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-a-20261018T233357                     killed            -      37m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-reference-20261018T232838                     done              -      42m  rrk-v020-adoption pr
+50 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 47 finished, 1 stale, 2 unknown; 45 with no host recorded.
+-- stderr:
+!! 1 run(s) say they are running and are not: the pid does not answer kill -0, the heartbeat is older than 900 s, or this machine has rebooted since. Nothing here has killed or cleaned anything — go and look. Once you know one is over, end it with `python -m runregistrykit end RUN_ID --reason TEXT`.
+$ ./venv/bin/python -m runregistrykit store show var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  rrk-v020-adoption-03-hardkill-a-20261018T234619  running   stale     by results
+rc=0
+-- directories under var/runs: 50; entries: 93
+-- every file of the hardkill store, after these reads
+977455999b4cccf45ad8405a44141fa42b95219df18af75fed7e2361d0bfd639      22474752  1792363749770262539  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+f8498b68054be290f3dc7bfaeb8c52a8bd105fa8dbae37eecedac44b68538d16      22315008  1792363749746549042  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+e2c5c08a379b038802529f9400a7b50ae522a0f793e445e94220912c572f4339      22384640  1792363749732498328  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+0eea775f9c49cb9434775b05dbb50dddb9b7eb1c741b7f55cb0abe40b13b94ec         36864  1792363586435920886  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(5 files)
+
+== 2026-10-19T00:10:53+0100 §2.5 the refused resume
+-- no -journal beside the hardkill primary (correction 9): 0
+-- ray-processes: rc=0
+
+== 2026-10-19T00:10:54+0100 launch hardkill-b (log var/runs/rrk-v020-adoption-03-hardkill-b-refused.launch.log)
+git status --short: []
+ 0:10  up 13 days, 21:55, 2 users, load averages: 8.56 9.22 12.93
+sh pid 10117
+== 2026-10-19T00:10:54+01:00 wait by kill -0 on the refused launch's sh, pid 10117, at most 120 s (correction 11)
+   sh 10117 gone at 2026-10-19T00:10:55+01:00, 1.0 s after the wait began
+-- the launch log, whole (var/runs/rrk-v020-adoption-03-hardkill-b-refused.launch.log)
+** quadsource_atol_sweep --build: resuming into rrk-v020-adoption-03-hardkill.sqlite
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1055, in <module>
+    main()
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 1039, in main
+    run_build(args)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/quadsource_atol_sweep.py", line 556, in run_build
+    run = runregistrykit.begin(
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/runregistrykit/__init__.py", line 1119, in begin
+    raise RuntimeError(
+RuntimeError: Cannot begin run rrk-v020-adoption-03-hardkill-b-20261019T001055 with results "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite": run rrk-v020-adoption-03-hardkill-a-20261018T234619 is running (stale, pid 99903) and names this store by its results. A stale run is ended by a person, with `python -m runregistrykit end RUN_ID --reason TEXT`, before another run is begun on its store; the registry does not decide that a run is dead. No run directory was created
+** driver exit status 1
+-- 'bootstrapping a local Ray instance' lines in it: 0
+-- directories under var/runs: 50; entries: 94; any hardkill-b run dir: []
+-- every file of the hardkill store
+977455999b4cccf45ad8405a44141fa42b95219df18af75fed7e2361d0bfd639      22474752  1792363749770262539  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+f8498b68054be290f3dc7bfaeb8c52a8bd105fa8dbae37eecedac44b68538d16      22315008  1792363749746549042  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+e2c5c08a379b038802529f9400a7b50ae522a0f793e445e94220912c572f4339      22384640  1792363749732498328  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+0eea775f9c49cb9434775b05dbb50dddb9b7eb1c741b7f55cb0abe40b13b94ec         36864  1792363586435920886  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(5 files)
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+rc=0
+STORE IDENTICAL to §2.4
+
+== 2026-10-19T00:11:12+0100 §2.6 end
+-- manifest sha256 before: e4442b605545424b8604b358b06d054a3276e76a836ef1dcbfc1e25708e4ce17  var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619/manifest.json
+-- status.json sha256 before: 44bddf3cbef5b886a30de6cfb1290e6dc13ad6f3f90f9996e79872e2cb3a3279  var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619/status.json  (saved as var/rrk-v020-adoption-03/state/hardkill-a-status-before-end.json; interrupter.log saved as var/rrk-v020-adoption-03/state/hardkill-a-interrupter.log)
+$ kill -0 99903
+(eval):kill:1: kill 99903 failed: no such process
+rc=1
+(checked at 00:11:12)
+$ ./venv/bin/python -m runregistrykit end rrk-v020-adoption-03-hardkill-a-20261018T234619 --reason "rrk-v020-adoption 03: SIGKILLed by interrupt_when.py --signal KILL at CALCULATE QUADRATIC SOURCE INTEGRALS; pid 99903 checked gone with kill -0 at 00:11:12"
+>> end: rrk-v020-adoption-03-hardkill-a-20261018T234619 is now lost, verified: its pid 99903 does not answer kill -0 on this host
+exit=0
+-- status.json after
+{
+  "ended": {
+    "at": "2026-10-19T00:11:12+01:00",
+    "by": "ds283",
+    "evidence": {
+      "boot": "this",
+      "heartbeat": "2026-10-18T23:48:44+01:00",
+      "heartbeat_age": 1348.917666,
+      "host": "this",
+      "pid": 99903,
+      "pid_answers": false,
+      "state": "running",
+      "status_readable": true
+    },
+    "git_head": "aab407529576307c9d3c1e64ccc8b2e980ed2d7d",
+    "host": {
+      "boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6",
+      "id": "8d2b247824882486",
+      "name": "mps026088.phys.susx.ac.uk"
+    },
+    "not_verified_because": null,
+    "reason": "rrk-v020-adoption 03: SIGKILLed by interrupt_when.py --signal KILL at CALCULATE QUADRATIC SOURCE INTEGRALS; pid 99903 checked gone with kill -0 at 2026-10-19 00:11:12 +0100",
+    "verified": true
+  },
+  "exit_code": null,
+  "heartbeat": "2026-10-19T00:11:12+01:00",
+  "host": {
+    "boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6",
+    "id": "8d2b247824882486"
+  },
+  "pid": 99903,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS",
+  "state": "lost",
+  "units_done": 0,
+  "units_total": null
+}
+
+-- manifest sha256 after: e4442b605545424b8604b358b06d054a3276e76a836ef1dcbfc1e25708e4ce17  var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619/manifest.json
+(note: the echoed command above abbreviates the --reason's time; the text passed, and recorded in ended.reason, is '... checked gone with kill -0 at 2026-10-19 00:11:12 +0100')
+-- checks on the record (correction 13)
+state lost: True ; exit_code null: True
+ended.verified true: True ; not_verified_because null: True
+evidence host this / boot this / pid_answers false / state running: True True True True
+evidence pid / status_readable / heartbeat / heartbeat_age: 99903 True 2026-10-18T23:48:44+01:00 1348.917666
+ended.git_head is the dispatch HEAD aab4075...: True
+every other key kept with its value: True ['host', 'pid', 'stage', 'units_done', 'units_total']
+keys before: ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+keys after: ['ended', 'exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+heartbeat before/after: 2026-10-18T23:48:44+01:00 / 2026-10-19T00:11:12+01:00
+
+== 2026-10-19T00:11:26+0100 the second end
+-- status.json sha256 before: ec5d8a64af455a79ff1f4cd1a88419a7e275a3087f41964ffa4987ab364542f7
+$ ./venv/bin/python -m runregistrykit end rrk-v020-adoption-03-hardkill-a-20261018T234619 --reason "rrk-v020-adoption 03: second end, expected to be refused"
+!! Cannot end rrk-v020-adoption-03-hardkill-a-20261018T234619: its status says it has already ended, as 'lost'; end records only a run whose end the registry never saw. Nothing was written
+exit=1
+-- status.json sha256 after: ec5d8a64af455a79ff1f4cd1a88419a7e275a3087f41964ffa4987ab364542f7
+status.json byte-identical before and after the second end
+
+$ ./venv/bin/python -m runregistrykit list
+rc=0
+   rrk-v020-adoption-03-hardkill-a-20261018T234619                    lost              -      25m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-c-20261018T233941                     done              -      32m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-b-20261018T233734                     killed            -      34m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-resumed-a-20261018T233357                     killed            -      38m  rrk-v020-adoption pr
+   rrk-v020-adoption-03-reference-20261018T232838                     done              -      43m  rrk-v020-adoption pr
+50 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 48 finished, 2 unknown; 45 with no host recorded.
+
+== 2026-10-19T00:11:36+0100 §2.7 the sidecar
+$ ./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+>> create: var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+{
+  "created": "2026-10-19T00:11:36+01:00",
+  "datastore": "rrk-v020-adoption-03-hardkill.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "aab407529576307c9d3c1e64ccc8b2e980ed2d7d",
+      "operation": "create",
+      "to": "var/datastores/rrk-v020-adoption-03-hardkill.sqlite",
+      "when": "2026-10-19T00:11:36+01:00"
+    }
+  ],
+  "name": "rrk-v020-adoption-03-hardkill",
+  "purpose": "rrk-v020-adoption prompt 03 (R3): hard-kill rehearsal store at aab4075 (code 2818780), runregistrykit 0.2.0 (0bae3a3), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0, built by hardkill-a (SIGKILLed in the QSI stage, ended lost with runregistrykit end) and hardkill-b (the resume); throwaway, kept for the campaign's review; the user retires it after 04's review, or not",
+  "sidecar_format": 1,
+  "store_id": "63ca0315b9404b46a80bc68c6a979db3"
+}
+create rc=0
+$ ./venv/bin/python -m runregistrykit store show var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+kind:     registry
+problems: none
+datastore: 'rrk-v020-adoption-03-hardkill.sqlite'
+fields:
+  {
+    "created": "2026-10-19T00:11:36+01:00",
+    "datastore": "rrk-v020-adoption-03-hardkill.sqlite",
+    "history": [
+      {
+        "from": null,
+        "git_dirty": false,
+        "git_head": "aab407529576307c9d3c1e64ccc8b2e980ed2d7d",
+        "operation": "create",
+        "to": "var/datastores/rrk-v020-adoption-03-hardkill.sqlite",
+        "when": "2026-10-19T00:11:36+01:00"
+      }
+    ],
+    "name": "rrk-v020-adoption-03-hardkill",
+    "purpose": "rrk-v020-adoption prompt 03 (R3): hard-kill rehearsal store at aab4075 (code 2818780), runregistrykit 0.2.0 (0bae3a3), datastorekit 0.4.0 (c8570e8) and raypoolkit 0.2.0, built by hardkill-a (SIGKILLed in the QSI stage, ended lost with runregistrykit end) and hardkill-b (the resume); throwaway, kept for the campaign's review; the user retires it after 04's review, or not",
+    "sidecar_format": 1,
+    "store_id": "63ca0315b9404b46a80bc68c6a979db3"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  rrk-v020-adoption-03-hardkill-a-20261018T234619  lost      finished  by results
+rc=0
+-- every file of the hardkill store, the sidecar now among them
+977455999b4cccf45ad8405a44141fa42b95219df18af75fed7e2361d0bfd639      22474752  1792363749770262539  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+f8498b68054be290f3dc7bfaeb8c52a8bd105fa8dbae37eecedac44b68538d16      22315008  1792363749746549042  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+e2c5c08a379b038802529f9400a7b50ae522a0f793e445e94220912c572f4339      22384640  1792363749732498328  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+95476cef7fec387f1e78201c05a66571b3fc45815ac69819fb45ee865fa21fea           883  1792365096381818755  var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+0eea775f9c49cb9434775b05dbb50dddb9b7eb1c741b7f55cb0abe40b13b94ec         36864  1792363586435920886  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(6 files)
+five store files identical across store create
+
+== 2026-10-19T00:11:44+0100 §2.8 hardkill-b
+-- ray-processes: rc=0
+
+== 2026-10-19T00:11:44+0100 launch hardkill-b (log var/runs/rrk-v020-adoption-03-hardkill-b.launch.log)
+git status --short: []
+ 0:11  up 13 days, 21:56, 2 users, load averages: 8.77 9.08 12.66
+sh pid 10642
+== 2026-10-19T00:11:51+0100 one check after hardkill-b launch
+run dirs: ['var/runs/rrk-v020-adoption-03-hardkill-b-20261019T001145']
+run dir: var/runs/rrk-v020-adoption-03-hardkill-b-20261019T001145
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id rrk-v020-adoption-03-hardkill-b-20261019T001145 git_head aab407529576307c9d3c1e64ccc8b2e980ed2d7d git_dirty False script_sha256 2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d results_store_id 63ca0315b9404b46a80bc68c6a979db3
+manifest results var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+manifest packages {"datastorekit": {"commit": "c8570e849334d09085bbd84876095fc9e22bd005", "editable": false, "requested_revision": "v0.4.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.4.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "r
+packages equal as JSON to the note's record: True
+git_head is HEAD: True ; git_dirty false: True
+script_sha256 is 2a985303...: True
+manifest keys 20; R2's nineteen plus host: True; new ['host']; missing []
+manifest host {"id": "8d2b247824882486", "machine": "arm64", "name": "mps026088.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv has --resume: True ; --register hardkill-b
+status state running pid 10646 stage CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-19T00:11:51+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}
+status host id/boot equal this_host's: True True
+kill -0 10646 ok
+  PID  PPID STARTED                      COMMAND
+10642     1 Mon Oct 19 00:11:44 2026     sh -c PYTHONPATH=. ./venv/bin/python -u docs/handover/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite \\012    --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cp
+10646 10642 Mon Oct 19 00:11:44 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-a
+   rrk-v020-adoption-03-hardkill-b-20261019T001145                    running           -       7s  rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, cod
+51 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 48 finished, 2 unknown; 45 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+ 0:11  up 13 days, 21:56, 2 users, load averages: 8.31 8.98 12.61
+
+== 2026-10-19T00:14:19+0100 after hardkill-b: no Ray process left
+git status --short: []
+ 0:14  up 13 days, 21:59, 2 users, load averages: 13.10 11.67 13.15
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- pgrep -lf 'gcs_server|raylet|ray::' (machine-wide)
+rc=1
+-- Ray pids its logs name: 10686,10690,10902
+  PID TTY           TIME CMD
+ps rc=1
+-- launch log last line: ** driver exit status 0
+-- files in run dir: . .. manifest.json status.json stderr.log stdout.log 
+-- status.json
+{"exit_code": 0, "fingerprint_sidecar": "written", "heartbeat": "2026-10-19T00:13:31+01:00", "host": {"boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6", "id": "8d2b247824882486"}, "pid": 10646, "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete", "state": "done", "units_done": 0, "units_total": null}
+fingerprint: {'digest': '39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2', 'encoding_format': 1, 'fingerprint_format': 6, 'problems': {}, 'taken': {'git_dirty': False, 'git_head': 'aab407529576307c9d3c1e64ccc8b2e980ed2d7d', 'run_id': 'rrk-v020-adoption-03-hardkill-b-20261019T001145', 'when': '2026-10-19T00:13:29+01:00'}} 21 classes
+-- stdout.log lines naming prune / integrity / rolled back / journal / validated
+-- stderr.log
+[36m(compute_QuadSource_integral pid=10902)[0m /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which 
+[36m(compute_QuadSource_integral pid=10902)[0m   the requested tolerance from being achieved.  The error may be 
+[36m(compute_QuadSource_integral pid=10902)[0m   underestimated.
+[36m(compute_QuadSource_integral pid=10902)[0m   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+
+== 2026-10-19T00:14:38+0100 §2.9 the checks, read-only, on the hardkill store
+-- every file of the hardkill store before the checks
+936b3c9ba510aa643d38cc1e031293e5788b3b474c5e1c2e4c6c376b8abfe445      23666688  1792365209206140905  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+32736ff4a4729ea86ceddcfd327ec9ebf11206349c531142d6f6e15ac7b5d36c      23740416  1792365209221098045  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+a9d6f9383eb2237469eab472ca7a4e8b6daa0ec42e45d4c79ef25374361e7544      23408640  1792365209200251341  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+53d2334f26d02c68d5919232879c300f878fa25be9510a77d8db54f9184c6793         10696  1792365211761002125  var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+bccd5351297b291132d6da2ba870c4dbba6018ada9eea03acdf118f4c62ebfbe         36864  1792365111150160519  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(6 files)
+$ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite  (whole: var/rrk-v020-adoption-03/state/after-hardkill-b.txt)
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: rrk-v020-adoption-03-hardkill.sqlite; version rows None
+-- shard 0: rrk-v020-adoption-03-hardkill-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   GkSource: 97 row(s), 0 with validated = 0
+-- shard 1: rrk-v020-adoption-03-hardkill-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   GkSource: 97 row(s), 0 with validated = 0
+-- shard 2: rrk-v020-adoption-03-hardkill-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   GkSource: 0 row(s), 0 with validated = 0
+-- shard 3: rrk-v020-adoption-03-hardkill-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   GkSource: 97 row(s), 0 with validated = 0
+rc=0
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/rrk-v020-adoption-03/state/after-hardkill-a.txt var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+serials listed unvalidated in var/rrk-v020-adoption-03/state/after-hardkill-a.txt
+   none: there is nothing to check
+rc=0
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/rrk-v020-adoption-03/state/after-hardkill-b.txt var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+serials listed unvalidated in var/rrk-v020-adoption-03/state/after-hardkill-b.txt
+   none: there is nothing to check
+rc=0
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite --against var/runs/rrk-v020-adoption-03-reference-20261018T232838 var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941 var/runs/runregistry-extraction-08-reference-20261015T235716 var/runs/runregistry-extraction-08-resumed-c-20261016T000959
+recorded: var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-reference-20261018T232838 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+recorded: var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-resumed-c-20261018T233941 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+recorded: var/runs/runregistry-extraction-08-reference-20261015T235716/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by runregistry-extraction-08-reference-20261015T235716 at b9daf449722f3e443f8dd592c1a890752cbeed6c (git_dirty False)
+recorded: var/runs/runregistry-extraction-08-resumed-c-20261016T000959/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by runregistry-extraction-08-resumed-c-20261016T000959 at b9daf449722f3e443f8dd592c1a890752cbeed6c (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-reference-20261015T235716/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/runregistry-extraction-08-resumed-c-20261016T000959/status.json, store): 0 difference(s)
+
+verdict: equal
+rc=0
+$ PYTHONPATH=. ./venv/bin/python docs/datastore-integrity-verification/compare_stores.py var/datastores/rrk-v020-adoption-03-reference.sqlite var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+reference: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  problems none
+  against its sidecar: 0 difference(s), it matches
+resumed: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  problems none
+  against its sidecar: 0 difference(s), it matches
+
+compare_fingerprints(reference, resumed): 0 difference(s)
+
+  class                 reference    resumed  digests
+  version                       1          1  equal
+  store_tag                    10         10  equal
+  redshift                   1159       1159  equal
+  wavenumber                    3          3  equal
+  tolerance                     7          7  equal
+  LambdaCDM                     1          1  equal
+  QCD_Cosmology                 1          1  equal
+  IntegrationSolver             7          7  equal
+  GkSourcePolicy                2          2  equal
+  QuadSourcePolicy              2          2  equal
+  wavenumber_exit_time          3          3  equal
+  BackgroundModel               1          1  equal
+  TkNumericIntegration          3          3  equal
+  TkWKBIntegration              3          3  equal
+  GkNumericIntegration       1368       1368  equal
+  GkWKBIntegration           3477       3477  equal
+  GkSource                    291        291  equal
+  GkSourcePolicyData          291        291  equal
+  QuadSource                    6          6  equal
+  QuadSourceIntegral          864        864  equal
+  OneLoopIntegral               0          0  equal
+
+verdict: equal
+rc=0
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/store_soundness.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+== rrk-v020-adoption-03-hardkill.sqlite
+  rrk-v020-adoption-03-hardkill.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version no table
+  rrk-v020-adoption-03-hardkill-shard0000.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  rrk-v020-adoption-03-hardkill-shard0001.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  rrk-v020-adoption-03-hardkill-shard0002.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  rrk-v020-adoption-03-hardkill-shard0003.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  read_inventory: shards (0, 1, 2, 3)
+    version                  replicated count      1  problems none
+    store_tag                replicated count     10  problems none
+    redshift                 replicated count   1159  problems none
+    wavenumber               replicated count      3  problems none
+    tolerance                replicated count      7  problems none
+    LambdaCDM                replicated count      1  problems none
+    QCD_Cosmology            replicated count      1  problems none
+    IntegrationSolver        replicated count      7  problems none
+    GkSourcePolicy           replicated count      2  problems none
+    QuadSourcePolicy         replicated count      2  problems none
+    wavenumber_exit_time     replicated count      3  problems none
+    BackgroundModel          replicated count      1  problems none
+    TkNumericIntegration     sharded    count      3  problems none
+    TkWKBIntegration         sharded    count      3  problems none
+    GkNumericIntegration     sharded    count   1368  problems none
+    GkWKBIntegration         sharded    count   3477  problems none
+    GkSource                 sharded    count    291  problems none
+    GkSourcePolicyData       sharded    count    291  problems none
+    QuadSource               sharded    count      6  problems none
+    QuadSourceIntegral       sharded    count    864  problems none
+    OneLoopIntegral          sharded    count      0  problems none
+  problems in any class: 0; of them 'duplicate': 0
+=> clean
+rc=0
+$ PYTHONPATH=. ./venv/bin/python docs/datastore-integrity-audit/replicated_serial_census.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+== var/datastores/rrk-v020-adoption-03-hardkill.sqlite  (4 shards)
+  version                  rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  store_tag                rows/shard=[10, 10, 10, 10]  missing-vs-union=[0, 0, 0, 0]  OK
+  redshift                 rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber               rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber_exit_time     rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  tolerance                rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  LambdaCDM                rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  QCD_Cosmology            rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  IntegrationSolver        rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel          rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModelValue     rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  GkSourcePolicy           rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  QuadSourcePolicy         rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel_tags     rows/shard=[4, 4, 4, 4]  missing-vs-union=[0, 0, 0, 0]  OK
+  => no divergence
+rc=0
+-- every file of the hardkill store after the checks
+936b3c9ba510aa643d38cc1e031293e5788b3b474c5e1c2e4c6c376b8abfe445      23666688  1792365209206140905  var/datastores/rrk-v020-adoption-03-hardkill-shard0000.sqlite
+32736ff4a4729ea86ceddcfd327ec9ebf11206349c531142d6f6e15ac7b5d36c      23740416  1792365209221098045  var/datastores/rrk-v020-adoption-03-hardkill-shard0001.sqlite
+47c03dd4f450de835bc675eab745eeda0a4b134320bccaf47be9b8f0c6e02b74       1077248  1792363586421072878  var/datastores/rrk-v020-adoption-03-hardkill-shard0002.sqlite
+a9d6f9383eb2237469eab472ca7a4e8b6daa0ec42e45d4c79ef25374361e7544      23408640  1792365209200251341  var/datastores/rrk-v020-adoption-03-hardkill-shard0003.sqlite
+53d2334f26d02c68d5919232879c300f878fa25be9510a77d8db54f9184c6793         10696  1792365211761002125  var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+bccd5351297b291132d6da2ba870c4dbba6018ada9eea03acdf118f4c62ebfbe         36864  1792365111150160519  var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+(6 files)
+-- files identical (sha256, size, mtime_ns) across §2.9's checks

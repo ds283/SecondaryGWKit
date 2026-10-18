@@ -1,0 +1,33 @@
+== resumed-a (var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357/interrupter.log)
+2026-10-18T23:33:58+01:00 interrupter pid 93128 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-18T23:33:58+01:00 liveness alive; pid 93122; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:34:03+01:00 liveness alive; pid 93122; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-18T23:34:08+01:00 liveness alive; pid 93122; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:34:43+01:00 liveness alive; pid 93122; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:36:03+01:00 liveness alive; pid 93122; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:36:03+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-18T23:36:13+01:00 sent SIGTERM to pid 93122 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0 (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03"; exiting
+
+== resumed-b (var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734/interrupter.log)
+2026-10-18T23:37:34+01:00 interrupter pid 94723 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-18T23:37:34+01:00 liveness alive; pid 94708; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:37:40+01:00 liveness alive; pid 94708; stage 'FOUND EXISTING LambdaCDM BACKGROUND MODEL "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO" (store_id=1)'
+2026-10-18T23:37:45+01:00 liveness alive; pid 94708; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:37:50+01:00 liveness alive; pid 94708; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:38:10+01:00 liveness alive; pid 94708; stage 'APPLY GKSOURCE POLICIES'
+2026-10-18T23:38:20+01:00 liveness alive; pid 94708; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-18T23:38:20+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-18T23:38:50+01:00 sent SIGTERM to pid 94708 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose rrk-v020-adoption prompt 03, R3 through runregistrykit 0.2.0 (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): second launch of the resumed rehearsal build, with --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03"; exiting
+
+== hardkill-a (var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619/interrupter.log)
+2026-10-18T23:46:19+01:00 interrupter pid 99907 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 (slug 'hardkill-a'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-18T23:46:19+01:00 liveness alive; pid 99903; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-18T23:46:24+01:00 liveness alive; pid 99903; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-18T23:46:29+01:00 liveness alive; pid 99903; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:46:59+01:00 liveness alive; pid 99903; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-18T23:48:09+01:00 liveness alive; pid 99903; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-18T23:48:35+01:00 liveness alive; pid 99903; stage 'APPLY GKSOURCE POLICIES'
+2026-10-18T23:48:45+01:00 liveness alive; pid 99903; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-18T23:48:45+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-18T23:49:15+01:00 sent SIGKILL to pid 99903 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/handover/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/rrk-v020-adoption-03-hardkill.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6 --register hardkill-a --purpose rrk-v020-adoption prompt 03, R3 hard-kill pair (aab4075, code 2818780; runregistrykit 0.2.0 0bae3a3, datastorekit 0.4.0 c8570e8, raypoolkit 0.2.0 eaef0ce6): first launch on the hardkill store (reference's scope), to be killed by SIGKILL (interrupt_when.py --signal KILL) in CALCULATE QUADRATIC SOURCE INTEGRALS; its status then stays running and is ended with runregistrykit end; the store must end equal to 39809dca, recorded by R2's runregistry-extraction-08-reference-20261015T235716 --campaign rrk-v020-adoption --prompt 03"; exiting
+

@@ -1,0 +1,20 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/stage_counts.py var/runs/rrk-v020-adoption-03-reference-20261018T232838 var/runs/rrk-v020-adoption-03-resumed-a-20261018T233357 var/runs/rrk-v020-adoption-03-resumed-b-20261018T233734 var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941 var/runs/rrk-v020-adoption-03-hardkill-a-20261018T234619 var/runs/rrk-v020-adoption-03-hardkill-b-20261019T001145
+lookup/compute/store per stage, from each run's stdout.log
+  reference: rrk-v020-adoption-03-reference-20261018T232838
+  resumed-a: rrk-v020-adoption-03-resumed-a-20261018T233357
+  resumed-b: rrk-v020-adoption-03-resumed-b-20261018T233734
+  resumed-c: rrk-v020-adoption-03-resumed-c-20261018T233941
+  hardkill-a: rrk-v020-adoption-03-hardkill-a-20261018T234619
+  hardkill-b: rrk-v020-adoption-03-hardkill-b-20261019T001145
+  stage                                                         reference       resumed-a           resumed-b           resumed-c    hardkill-a          hardkill-b 
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0        3/3/3               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0        3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0        3/3/3               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0        3/3/3               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0        6/6/6               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0        1368/1368/1368      0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0        3477/3477/3477      0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  171/171/171         0/0/0        291/291/291         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0        291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  683/683/683  (no progress line)  626/626/626
+rc=0

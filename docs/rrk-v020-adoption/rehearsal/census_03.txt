@@ -1,0 +1,54 @@
+$ PYTHONPATH=. ./venv/bin/python docs/datastore-integrity-audit/replicated_serial_census.py var/datastores/rrk-v020-adoption-03-reference.sqlite var/datastores/rrk-v020-adoption-03-resumed.sqlite
+== var/datastores/rrk-v020-adoption-03-reference.sqlite  (4 shards)
+  version                  rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  store_tag                rows/shard=[10, 10, 10, 10]  missing-vs-union=[0, 0, 0, 0]  OK
+  redshift                 rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber               rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber_exit_time     rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  tolerance                rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  LambdaCDM                rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  QCD_Cosmology            rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  IntegrationSolver        rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel          rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModelValue     rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  GkSourcePolicy           rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  QuadSourcePolicy         rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel_tags     rows/shard=[4, 4, 4, 4]  missing-vs-union=[0, 0, 0, 0]  OK
+  => no divergence
+== var/datastores/rrk-v020-adoption-03-resumed.sqlite  (4 shards)
+  version                  rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  store_tag                rows/shard=[10, 10, 10, 10]  missing-vs-union=[0, 0, 0, 0]  OK
+  redshift                 rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber               rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber_exit_time     rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  tolerance                rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  LambdaCDM                rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  QCD_Cosmology            rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  IntegrationSolver        rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel          rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModelValue     rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  GkSourcePolicy           rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  QuadSourcePolicy         rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel_tags     rows/shard=[4, 4, 4, 4]  missing-vs-union=[0, 0, 0, 0]  OK
+  => no divergence
+rc=0
+
+== the hardkill store (§2.9)
+$ PYTHONPATH=. ./venv/bin/python docs/datastore-integrity-audit/replicated_serial_census.py var/datastores/rrk-v020-adoption-03-hardkill.sqlite
+== var/datastores/rrk-v020-adoption-03-hardkill.sqlite  (4 shards)
+  version                  rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  store_tag                rows/shard=[10, 10, 10, 10]  missing-vs-union=[0, 0, 0, 0]  OK
+  redshift                 rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber               rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  wavenumber_exit_time     rows/shard=[3, 3, 3, 3]  missing-vs-union=[0, 0, 0, 0]  OK
+  tolerance                rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  LambdaCDM                rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  QCD_Cosmology            rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  IntegrationSolver        rows/shard=[7, 7, 7, 7]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel          rows/shard=[1, 1, 1, 1]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModelValue     rows/shard=[1159, 1159, 1159, 1159]  missing-vs-union=[0, 0, 0, 0]  OK
+  GkSourcePolicy           rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  QuadSourcePolicy         rows/shard=[2, 2, 2, 2]  missing-vs-union=[0, 0, 0, 0]  OK
+  BackgroundModel_tags     rows/shard=[4, 4, 4, 4]  missing-vs-union=[0, 0, 0, 0]  OK
+  => no divergence
+rc=0

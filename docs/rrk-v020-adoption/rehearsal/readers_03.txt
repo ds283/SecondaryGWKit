@@ -1,0 +1,169 @@
+== 2026-10-18T23:42:21+0100 readers; load: 23:42  up 13 days, 21:27, 2 users, load averages: 31.64 21.33 16.72
+$ bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/rrk-v020-adoption-03-resumed.sqlite var/rrk-v020-adoption-03/extract
+=== extract_Gk_data: 2026-10-18 23:42:22 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_Gk_data/
+exit 0; wall 24 s; files written 468
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 953.6/sec)
+24:      Queue summary: 3 lookup (avg 881.3/sec)
+31:      Queue summary: 116 lookup (avg 536/min)
+=== extract_GkWKB_data: 2026-10-18 23:42:47 +0100: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_GkWKB_data/
+exit 0; wall 56 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+7:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 709.3/sec)
+26:      Queue summary: 3 lookup (avg 725.7/sec)
+33:      Queue summary: 348 lookup (avg 463.8/min)
+=== extract_GkSource_data: 2026-10-18 23:43:44 +0100: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_GkSource_data/
+exit 0; wall 19 s; files written 156
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+7:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+23:      Queue summary: 3 lookup (avg 1051/sec)
+28:      Queue summary: 3 lookup (avg 1734/sec)
+33:      Queue summary: 10 lookup (avg 84.74/min)
+=== extract_TkWKB_data: 2026-10-18 23:44:04 +0100: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_TkWKB_data/
+exit 0; wall 13 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 860.2/sec)
+26:      Queue summary: 3 lookup (avg 70.02/min)
+=== extract_tensor_source_data: 2026-10-18 23:44:17 +0100: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_tensor_source_data/
+exit 0; wall 11 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 1024/sec)
+26:      Queue summary: 6 lookup (avg 141.5/min)
+=== extract_QuadSourceIntegral_data: 2026-10-18 23:44:29 +0100: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local --models LambdaCDM --output var/rrk-v020-adoption-03/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 14 s; files written 70
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 1127/sec)
+24:      Queue summary: 3 lookup (avg 1833/sec)
+31:      Queue summary: 24 lookup (avg 291.8/min)
+run_readers rc=0
+$ bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/rrk-v020-adoption-03-resumed.sqlite var/rrk-v020-adoption-03/extract nomodels extract_Gk_data
+=== extract_Gk_data-no-models: 2026-10-18 23:44:44 +0100: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/rrk-v020-adoption-03-resumed.sqlite --ray-address local  --output var/rrk-v020-adoption-03/extract/extract_Gk_data-no-models/
+exit 0; wall 24 s; files written 378
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  669d7c7be7e6e3fd97c3ad9bf39e3c7c01dd7f0b5553ee5bab6e6043652d658e  2026-10-18T23:39:46 36864 var/datastores/rrk-v020-adoption-03-resumed.sqlite
+  01b5876dbb6a12fd13af8c16bf47c60c0bfa5b9d108c6cf861e5d4a14b835048  2026-10-18T23:41:24 23838720 var/datastores/rrk-v020-adoption-03-resumed-shard0000.sqlite
+  4b658ffa41a22dbe56712e8a16f6a1224873df4634aba5107d009e024c8a45d0  2026-10-18T23:41:24 23810048 var/datastores/rrk-v020-adoption-03-resumed-shard0001.sqlite
+  90446232958514b251039b3266db831d9c621bec4d5189d6f00978fc9eea3cde  2026-10-18T23:34:05 1077248 var/datastores/rrk-v020-adoption-03-resumed-shard0002.sqlite
+  56f13edaf382f3bd467161792bcff4c73d04b271500a2014fb5ab1370a52691b  2026-10-18T23:41:24 23556096 var/datastores/rrk-v020-adoption-03-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 896.2/sec)
+24:      Queue summary: 3 lookup (avg 915.6/sec)
+31:      Queue summary: 116 lookup (avg 533.3/min)
+34:>> RUNNING PIPELINE FOR MODEL QCD_Cosmology
+36:>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it
+run_readers rc=0
+== 2026-10-18T23:45:08+0100 readers done; load: 23:45  up 13 days, 21:30, 2 users, load averages: 74.31 47.28 28.32
+
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/rrk-v020-adoption-03-resumed.sqlite   (23:45:25, after the readers)
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+problems: none
+recorded: matches the fingerprint taken 2026-10-18T23:41:25+01:00 by run rrk-v020-adoption-03-resumed-c-20261018T233941, at aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+rc=0
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/rrk-v020-adoption-03-resumed.sqlite   (23:45:52, after the readers; whole output, re-run because the first capture's rc was the display filter's)
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/rrk-v020-adoption-03-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-18T23:41:25+01:00 by run rrk-v020-adoption-03-resumed-c-20261018T233941, at aab407529576307c9d3c1e64ccc8b2e980ed2d7d
+rc=0
