@@ -168,7 +168,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | [`01-pin-runregistrykit-at-v0.2.0.md`](01-pin-runregistrykit-at-v0.2.0.md) | **The pin**: line 81, one install; the baselines; `CLAUDE.md`'s two pin mentions | Sonnet | written 2026-10-18 |
+| 01 | [`01-pin-runregistrykit-at-v0.2.0.md`](01-pin-runregistrykit-at-v0.2.0.md) | **The pin**: line 81, one install; the baselines; `CLAUDE.md`'s two pin mentions | Sonnet | landed 2026-10-18 (`0a27b0c`) |
 | 02 | [`02-adopt-the-hard-kill-route.md`](02-adopt-the-hard-kill-route.md) | **The adoption**: `CLAUDE.md`'s rules; the interrupter's `--signal`; the driver test of refuse → `end` → accept | Sonnet | written 2026-10-18 |
 | 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | written 2026-10-18 |
 | 04 | `04-close-the-campaign.md` | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits; the close | Sonnet | ⏸ after 03's review |
@@ -201,7 +201,9 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
   2. The seven roots pass at §0.2's counts. The release notes say no count changes.
   3. `list` reads the 45 runs as the baseline does, apart from the new summary clause, "*N* with
      no host recorded", which must count every run with a status. Each `store show` reads its
-     sidecar as the baseline does.
+     sidecar as the baseline does. *(Corrected after 01's review: the clause counts every run
+     whose status has no `host` object, which includes a directory with no status, so it says
+     45: the 43 statuses written under `v0.1.0` and the two `a3-pilot` directories.)*
   4. `requirements.txt` differs from `HEAD` by the one line, and `CLAUDE.md` by the pin's two
      mentions.
 - **Out.** Any other change to `CLAUDE.md` (02). Any code or test. Anything under `var/`.

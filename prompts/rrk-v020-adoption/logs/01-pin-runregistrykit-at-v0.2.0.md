@@ -1,7 +1,7 @@
 # Log — rrk-v020-adoption prompt 01, pin `runregistrykit` at `v0.2.0`
 
 - **Subject:** [`01-pin-runregistrykit-at-v0.2.0.md`](../01-pin-runregistrykit-at-v0.2.0.md), board items K1 and B1.
-- **Commit:** this commit (parent `f0d280a`).
+- **Commit:** `0a27b0c` (parent `f0d280a`).
 - **Result:** landed. K1 and B1 pass; no stop condition of the prompt's §4 fired. All seven roots pass at §0.2's counts
   before and after, and no known flake fired, so none was re-run.
 - **Model:** Sonnet 5.5.

@@ -1,8 +1,8 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-18 · **Status: IN PROGRESS.** 01 landed (the pin moved, the venv on
-`v0.2.0`); 02–03 written, not dispatched; 04 held until 03's review (README §2.1). U1–U3 ruled by the user (README §6.1). One issue assigned here from
-`handover` (§3).
+**Last updated:** 2026-10-18 · **Status: IN PROGRESS.** 01 landed and reviewed (the pin moved,
+the venv on `v0.2.0`); 02–03 written, not dispatched; 04 held until 03's review (README §2.1).
+U1–U3 ruled by the user (README §6.1). One issue assigned here from `handover` (§3).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
 `v0.2.0` release notes and its adoption note for SGK.
@@ -42,7 +42,7 @@ reverse (README §6.3).
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | this commit | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
+| 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ⬜ | — | — |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ⬜ | — | — |
 | 04 | Close the campaign | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits | Sonnet | ⏸ after 03's review | ⬜ | — | — |
@@ -53,14 +53,15 @@ reverse (README §6.3).
 not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, under
-`orchestrator/`.
+`orchestrator/`: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-18, used for
+01).
 
 ### 1.1 Items
 
 | Item | Prompt | What | State |
 |---|---|---|---|
-| **K1** | 01 | `requirements.txt:81` moved to `v0.2.0`; the venv installed from it | ✅ this commit: venv `runregistrykit` 0.2.0 at `0bae3a3c…`, not editable; `pip freeze` differs by that line alone |
-| **B1** | 01 | the baselines: `pip freeze`, provenance, `list`, `store show` on the 21 sidecars, the seven roots | ✅ this commit: taken before and after; 45 rows and 21 blocks equal; the seven roots at §0.2's counts both times |
+| **K1** | 01 | `requirements.txt:81` moved to `v0.2.0`; the venv installed from it | ✅ `0a27b0c`: venv `runregistrykit` 0.2.0 at `0bae3a3c…`, not editable; `pip freeze` differs by that line alone |
+| **B1** | 01 | the baselines: `pip freeze`, provenance, `list`, `store show` on the 21 sidecars, the seven roots | ✅ `0a27b0c`: taken before and after; 45 rows and 21 blocks equal; the seven roots at §0.2's counts both times |
 | **A1** | 02 | `CLAUDE.md`: liveness by host and boot; the route after a hard kill; no `Run.finish` by hand | ⬜ |
 | **A2** | 02 | `interrupt_when.py --signal {TERM,KILL}`; the build dummy test's `KILL` case | ⬜ |
 | **A3** | 02 | the driver test: a `SIGKILL`ed run refuses `register`; `end`; `register` accepted | ⬜ |
@@ -80,7 +81,7 @@ not scope: every charter is fixed in README §2.2.
 | **E** | RunRegistryKit has tagged `v0.2.0` with release notes and an SGK adoption note | — | ✅ holds (2026-10-18): tag object `895e3c70…` on `0bae3a3c…`; `docs/releases/v0.2.0.md` and `docs/adoption/v0.2.0/secondarygwkit.md` in the tag; nothing under `runregistrykit/` or in `pyproject.toml` changed after it (RunRegistryKit `f6d4b80`) |
 | R3 | the four launches through `v0.2.0` reproduce `39809dca…`, equal to R2's recorded fingerprints | 03 | ⬜ |
 | HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ⬜ |
-| RunRegistryKit G1 | SGK has adopted `v0.2.0` in a campaign of its own, its pin moved in a commit of its own | 01 | pin moved at this commit; the record on RunRegistryKit's board is the user's (README §6.3); 04 drafts it |
+| RunRegistryKit G1 | SGK has adopted `v0.2.0` in a campaign of its own, its pin moved in a commit of its own | 01 | ✅ pin moved at `0a27b0c`; the record on RunRegistryKit's board is the user's (README §6.3); 04 drafts it |
 
 ## 3. Active and unresolved issues
 
@@ -116,7 +117,7 @@ line, and the index row moves from `docs/OPEN_ISSUES.md` §1.1 to §1.22.
 
 ### 5.1 After prompt 01 (2026-10-18)
 
-Landed at this commit, on `f0d280a`. K1 and B1 pass; no stop condition fired. Log:
+Landed at `0a27b0c`, on `f0d280a`. K1 and B1 pass; no stop condition fired. Log:
 [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md); measurements:
 `measure/out/01-{pip,list,store-show,roots}.txt`.
 - **The pin.** `requirements.txt:81` is `@v0.2.0`. The dry run said `Would install
@@ -134,3 +135,45 @@ Landed at this commit, on `f0d280a`. K1 and B1 pass; no stop condition fired. Lo
   `376461AF-4985-4F42-8E41-F4E914F5E3E6`. 03 checks its launches against that boot.
 - **No issue opened or closed;** `docs/OPEN_ISSUES.md` stays at 100.
 - **The venv is ahead of `git revert`:** reverting 01 leaves `v0.2.0` installed (README §4.2).
+
+**Orchestrator review of prompt 01** (2026-10-18, against `0a27b0c`, by
+[`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) §3). Dispatched from `f0d280a` to one
+Sonnet subagent, after the seven roots were measured at `8a8cd10`. Nothing landed after the agent's
+commit. **All seven checks pass**, and no stop condition fired.
+1. **Scope.** Eight files: `requirements.txt`, `CLAUDE.md`, the four `measure/out/01-*` files, the
+   log and this board. `requirements.txt`'s diff is line 81 alone. Nothing under `README.md`,
+   `prompts/INDEX.md`, `orchestrator/`, code, tests or `docs/`; the index untouched, at 100.
+2. **`CLAUDE.md`.** `:56`'s pin and `:88`'s say `v0.2.0`; the clause "and moved to `v0.2.0` on
+   2026-10-18 in the `rrk-v020-adoption` campaign" follows the adopting campaign, the sentence
+   re-wrapped over three lines. No other line moved; `v0.1.0` no longer appears.
+3. **The venv, measured here.** `direct_url.json`: `commit_id` `0bae3a3c…`, `requested_revision`
+   `v0.2.0`, no `dir_info`; `pip show -f` lists no `runregistrykit/tests/`. `pip freeze` here
+   equals the agent's after-freeze, and differs from its before-freeze by line 82 alone; `pip check`
+   clean; `pip install --dry-run -r requirements.txt` now installs nothing. `01-pip.txt` has the
+   dry run before the install, and the install's only uninstall is `runregistrykit-0.1.0`.
+4. **The imports and the host.** The `sys.modules` check prints `[]`. `package_provenance(...)`
+   equals the agent's after-reading, and its `datastorekit` and `raypoolkit` entries the
+   before-reading. `TERMINAL_STATES` ends `lost`; `this_host()` gives the note's `id`, `name` and
+   `boot`, as the agent's did.
+5. **The readings.** `01-list.txt`, parsed by a scratch script into `(id, marker, state)`: 45 rows
+   before, 45 after and 45 in a fresh `list` here, all equal; no marker; exit 0 and an empty stderr
+   at each. The after-summary is the note's line exactly, "45 with no host recorded".
+   `01-store-show.txt`: 21 blocks before and 21 after, each ending `exit=0` with `problems: none`,
+   equal block for block; a fresh `store show` on the backup's, `handover-stale-run-probe`'s and
+   `runregistry-extraction-08-resumed`'s equals the after-blocks. The roots, re-run here at
+   `0a27b0c`, serially, load 10–27 from other work: all seven at §0.2's counts, no failure, as in
+   both of the agent's runs.
+6. **Nothing else moved.** `find var -newer <marker>`, the marker set just before dispatch, is
+   empty. `git status --short` was clean after the agent's commit. RunRegistryKit's checkout is
+   unchanged, at `f6d4b80`, clean.
+7. **The records.** The log has every §5.1 heading and classifies its five deviations, none
+   `UNINTENDED DRIFT`; deviation 1 is the summary clause, as the note asked; deliberate breakage
+   "none"; §2.6's check of the adoption note recorded. The commit message is in `CLAUDE.md`'s form.
+- **The prompt's expectation of 43 was the plan's error, not the package's.** `list` counts every
+  run whose status has no `host` object (`__main__.py:659`, `__init__.py:1243` at the tag), and a
+  directory with no status has none. README §2.2 01's acceptance 3 carries a correction.
+- **Residue fixed in the follow-up commit:** "this commit" → `0a27b0c` on this board and in the
+  log; the header re-wrapped (its first two lines ran past 100 columns); this note listed as "used
+  for 01"; README §2's row for 01; README §2.2's correction above; `prompts/INDEX.md`'s row.
+- **What 02 inherits:** the venv on `v0.2.0`; `CLAUDE.md`'s registry rules as they were, now
+  describing an older release (02's task); this host's `boot`, `376461AF-…`, for 03.
