@@ -53,8 +53,9 @@ RayPoolKit (`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/R
 at `v0.2.0`. ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in
 the `dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package
 `runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`,
-https://github.com/ds283/RunRegistryKit), pinned at `v0.1.0` with the extra `[stores]`, adopted in
-the `runregistry-extraction` campaign.
+https://github.com/ds283/RunRegistryKit), pinned at `v0.2.0` with the extra `[stores]`, adopted in
+the `runregistry-extraction` campaign and moved to `v0.2.0` on 2026-10-18 in the
+`rrk-v020-adoption` campaign.
 
 **None of the three is this repository's code.** A defect in one is recorded on the board of the
 campaign that found it, and in `docs/OPEN_ISSUES.md`. It is reported to that package's own
@@ -85,7 +86,7 @@ before then use that name, and are left as written.
 ## Long-running jobs — the run registry
 
 A job that takes hours must not be something a conversation owns. `runregistrykit`
-(RunRegistryKit, pinned at `v0.1.0`) records that one exists, in
+(RunRegistryKit, pinned at `v0.2.0`) records that one exists, in
 `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`. It is configured by `runregistrykit.toml` at
 the repository root, which names the runs root, the stores root, the distributions every manifest
 records and the store fingerprinter, `config/fingerprint.py`'s `fingerprinter`. A run launched from

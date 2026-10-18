@@ -1,0 +1,87 @@
+## roots, before the install (HEAD f0d280a); command and grep per root; full outputs in the agent scratch directory
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <scratch>/roots-before-AdaptiveLevin.out 2>&1   (HEAD f0d280a, before)
+load: 6.03 5.55 5.57
+exit=0
+Ran 32 tests in 0.055s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <scratch>/roots-before-CosmologyModels.out 2>&1   (HEAD f0d280a, before)
+load: 6.03 5.55 5.57
+exit=0
+Ran 39 tests in 0.781s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <scratch>/roots-before-ObjectFactories.out 2>&1   (HEAD f0d280a, before)
+load: 5.70 5.49 5.55
+exit=0
+Ran 279 tests in 15.418s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <scratch>/roots-before-tools.out 2>&1   (HEAD f0d280a, before)
+load: 5.76 5.51 5.56
+exit=0
+Ran 91 tests in 10.687s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <scratch>/roots-before-LiouvilleGreen.out 2>&1   (HEAD f0d280a, before)
+load: 6.99 5.80 5.66
+exit=0
+Ran 148 tests in 26.456s
+OK (skipped=1)
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <scratch>/roots-before-RunDrivers.out 2>&1   (HEAD f0d280a, before)
+load: 5.67 5.57 5.58
+exit=0
+Ran 99 tests in 3.405s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <scratch>/roots-before-ComputeTargets.out 2>&1   (HEAD f0d280a, before)
+load: 5.61 5.56 5.58
+exit=0
+Ran 700 tests in 161.599s
+OK
+
+
+## roots, after the install (HEAD f0d280a)
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <scratch>/roots-after-AdaptiveLevin.out 2>&1   (HEAD f0d280a, after)
+load: 6.85 5.79 5.62
+exit=0
+Ran 32 tests in 0.060s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <scratch>/roots-after-CosmologyModels.out 2>&1   (HEAD f0d280a, after)
+load: 6.85 5.79 5.62
+exit=0
+Ran 39 tests in 0.786s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <scratch>/roots-after-ObjectFactories.out 2>&1   (HEAD f0d280a, after)
+load: 6.46 5.73 5.60
+exit=0
+Ran 279 tests in 15.131s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <scratch>/roots-after-tools.out 2>&1   (HEAD f0d280a, after)
+load: 8.57 6.25 5.78
+exit=0
+Ran 91 tests in 10.544s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <scratch>/roots-after-LiouvilleGreen.out 2>&1   (HEAD f0d280a, after)
+load: 7.24 6.07 5.73
+exit=0
+Ran 148 tests in 26.511s
+OK (skipped=1)
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <scratch>/roots-after-RunDrivers.out 2>&1   (HEAD f0d280a, after)
+load: 6.58 5.99 5.71
+exit=0
+Ran 99 tests in 3.297s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <scratch>/roots-after-ComputeTargets.out 2>&1   (HEAD f0d280a, after)
+load: 6.62 6.00 5.71
+exit=0
+Ran 700 tests in 165.974s
+OK
+

@@ -1,0 +1,375 @@
+## $ ./venv/bin/pip freeze   (HEAD f0d280a, before the install)
+aiohappyeyeballs==2.6.1
+aiohttp==3.11.14
+aiohttp-cors==0.8.0
+aiosignal==1.3.2
+annotated-types==0.7.0
+attrs==25.3.0
+autocommand==2.2.2
+backports.tarfile==1.2.0
+black==25.1.0
+cachetools==5.5.2
+certifi==2025.1.31
+charset-normalizer==3.4.1
+click==8.1.8
+colorful==0.5.6
+contourpy==1.3.1
+cycler==0.12.1
+datastorekit @ git+https://github.com/ds283/DatastoreKit@c8570e849334d09085bbd84876095fc9e22bd005
+distlib==0.3.9
+filelock==3.18.0
+fonttools==4.56.0
+frozenlist==1.5.0
+google-api-core==2.24.2
+google-auth==2.38.0
+googleapis-common-protos==1.69.2
+greenlet==3.1.1
+grpcio==1.71.0
+humanize==4.12.1
+idna==3.10
+importlib_metadata==8.6.1
+inflect==7.5.0
+jaraco.collections==5.1.0
+jaraco.context==6.0.1
+jaraco.functools==4.1.0
+jaraco.text==4.0.0
+Jinja2==3.1.6
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+kiwisolver==1.4.8
+linkify-it-py==2.0.3
+markdown-it-py==3.0.0
+MarkupSafe==3.0.2
+matplotlib==3.10.1
+mdit-py-plugins==0.4.2
+mdurl==0.1.2
+memray==1.16.0
+more-itertools==10.6.0
+mpmath==1.3.0
+msgpack==1.1.0
+multidict==6.2.0
+mypy-extensions==1.0.0
+numpy==2.2.4
+opencensus==0.11.4
+opencensus-context==0.1.3
+packaging==24.2
+pandas==2.2.3
+pathspec==0.12.1
+pillow==11.1.0
+platformdirs==4.3.6
+prometheus_client==0.21.1
+propcache==0.3.0
+proto-plus==1.26.1
+protobuf==6.30.1
+py-spy==0.4.0
+pyarrow==19.0.1
+pyasn1==0.6.1
+pyasn1_modules==0.4.1
+pydantic==2.10.6
+pydantic_core==2.27.2
+Pygments==2.19.1
+pyinstrument==5.0.1
+pyparsing==3.2.1
+python-dateutil==2.9.0.post0
+pytz==2025.1
+PyYAML==6.0.2
+ray==2.43.0
+raypoolkit @ git+https://github.com/ds283/RayPoolKit@eaef0ce60e2fc354bb32f0ad576010e6a83c1976
+referencing==0.36.2
+requests==2.32.3
+rich==13.9.4
+rpds-py==0.23.1
+rsa==4.9
+runregistrykit @ git+https://github.com/ds283/RunRegistryKit@9f8ebe431503fb8c79ee1407cc460501f1ca2d92
+scipy==1.16.3
+seaborn==0.13.2
+setuptools==76.1.0
+six==1.17.0
+smart-open==7.1.0
+SQLAlchemy==2.0.39
+sympy==1.13.3
+textual==2.1.2
+tomli==2.2.1
+typeguard==4.4.2
+typing_extensions==4.12.2
+tzdata==2025.1
+uc-micro-py==1.0.3
+urllib3==2.3.0
+virtualenv==20.29.3
+wheel==0.45.1
+wrapt==1.17.2
+yarl==1.18.3
+zipp==3.21.0
+
+## $ runregistrykit.package_provenance((...))   (HEAD f0d280a, before)
+{
+  "datastorekit": {
+    "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+    "editable": false,
+    "requested_revision": "v0.4.0",
+    "url": "https://github.com/ds283/DatastoreKit",
+    "version": "0.4.0"
+  },
+  "raypoolkit": {
+    "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+    "editable": false,
+    "requested_revision": "v0.2.0",
+    "url": "https://github.com/ds283/RayPoolKit",
+    "version": "0.2.0"
+  },
+  "runregistrykit": {
+    "commit": "9f8ebe431503fb8c79ee1407cc460501f1ca2d92",
+    "editable": false,
+    "requested_revision": "v0.1.0",
+    "url": "https://github.com/ds283/RunRegistryKit",
+    "version": "0.1.0"
+  }
+}
+
+## $ ./venv/bin/pip install --dry-run -r requirements.txt   (HEAD f0d280a, requirements.txt:81 edited; full output except the omission stated)
+Collecting datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0 (from -r requirements.txt (line 17))
+  Cloning https://github.com/ds283/DatastoreKit (to revision v0.4.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/datastorekit_b06c394bda354ce3a3ce995be892faa3
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/DatastoreKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/datastorekit_b06c394bda354ce3a3ce995be892faa3
+  Running command git checkout -q 8e7c1d77b3792b57b98983e84b99fc68ab88cb89
+  Resolved https://github.com/ds283/DatastoreKit to commit 8e7c1d77b3792b57b98983e84b99fc68ab88cb89
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0 (from -r requirements.txt (line 76))
+  Cloning https://github.com/ds283/RayPoolKit (to revision v0.2.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/raypoolkit_5d2c2fbc174e4668a6c86f0f529e9644
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/RayPoolKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/raypoolkit_5d2c2fbc174e4668a6c86f0f529e9644
+  Running command git checkout -q 4e7eb153ca9837c6aa6ec51d702b5fa6ccf08fef
+  Resolved https://github.com/ds283/RayPoolKit to commit 4e7eb153ca9837c6aa6ec51d702b5fa6ccf08fef
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting runregistrykit @ git+https://github.com/ds283/RunRegistryKit@v0.2.0 (from runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0->-r requirements.txt (line 81))
+  Cloning https://github.com/ds283/RunRegistryKit (to revision v0.2.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/runregistrykit_82b11fc994bd4f7d8090d7df22280dc5
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/RunRegistryKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-8gvqeghd/runregistrykit_82b11fc994bd4f7d8090d7df22280dc5
+  Running command git checkout -q 895e3c7013ae4887011d435f3e800b8f1697a1de
+  Resolved https://github.com/ds283/RunRegistryKit to commit 895e3c7013ae4887011d435f3e800b8f1697a1de
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Would install runregistrykit-0.2.0
+exit=0
+(98 'Requirement already satisfied' lines omitted)
+
+## $ ./venv/bin/pip install -r requirements.txt   (HEAD f0d280a; full output except the omission stated)
+Collecting datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.4.0 (from -r requirements.txt (line 17))
+  Cloning https://github.com/ds283/DatastoreKit (to revision v0.4.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/datastorekit_6a2635584094475083d2584c83793403
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/DatastoreKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/datastorekit_6a2635584094475083d2584c83793403
+  Running command git checkout -q 8e7c1d77b3792b57b98983e84b99fc68ab88cb89
+  Resolved https://github.com/ds283/DatastoreKit to commit 8e7c1d77b3792b57b98983e84b99fc68ab88cb89
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0 (from -r requirements.txt (line 76))
+  Cloning https://github.com/ds283/RayPoolKit (to revision v0.2.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/raypoolkit_bf2f9eb931594c06be46464c58a271f1
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/RayPoolKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/raypoolkit_bf2f9eb931594c06be46464c58a271f1
+  Running command git checkout -q 4e7eb153ca9837c6aa6ec51d702b5fa6ccf08fef
+  Resolved https://github.com/ds283/RayPoolKit to commit 4e7eb153ca9837c6aa6ec51d702b5fa6ccf08fef
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting runregistrykit @ git+https://github.com/ds283/RunRegistryKit@v0.2.0 (from runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0->-r requirements.txt (line 81))
+  Cloning https://github.com/ds283/RunRegistryKit (to revision v0.2.0) to /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/runregistrykit_032b570c27c94cf2a159c82707653eb7
+  Running command git clone --filter=blob:none --quiet https://github.com/ds283/RunRegistryKit /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-install-0nazu7km/runregistrykit_032b570c27c94cf2a159c82707653eb7
+  Running command git checkout -q 895e3c7013ae4887011d435f3e800b8f1697a1de
+  Resolved https://github.com/ds283/RunRegistryKit to commit 895e3c7013ae4887011d435f3e800b8f1697a1de
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: runregistrykit
+  Building wheel for runregistrykit (pyproject.toml): started
+  Building wheel for runregistrykit (pyproject.toml): finished with status 'done'
+  Created wheel for runregistrykit: filename=runregistrykit-0.2.0-py3-none-any.whl size=66257 sha256=10abfff70a74774e4f93bcb3e8896c677b2b61a8e5d4428e3987a781fbfe370d
+  Stored in directory: /private/var/folders/tm/y9rd_z8x1ks3m09yhkjc0h7800128f/T/pip-ephem-wheel-cache-sy3akxb5/wheels/e9/5f/28/a26ba2a99a4d2909e3dfa7bf2b15716cc43fe5803d9c77e808
+Successfully built runregistrykit
+Installing collected packages: runregistrykit
+  Attempting uninstall: runregistrykit
+    Found existing installation: runregistrykit 0.1.0
+    Uninstalling runregistrykit-0.1.0:
+      Successfully uninstalled runregistrykit-0.1.0
+Successfully installed runregistrykit-0.2.0
+exit=0
+(98 'Requirement already satisfied' lines omitted)
+
+## $ ./venv/bin/pip freeze   (HEAD f0d280a, after the install)
+aiohappyeyeballs==2.6.1
+aiohttp==3.11.14
+aiohttp-cors==0.8.0
+aiosignal==1.3.2
+annotated-types==0.7.0
+attrs==25.3.0
+autocommand==2.2.2
+backports.tarfile==1.2.0
+black==25.1.0
+cachetools==5.5.2
+certifi==2025.1.31
+charset-normalizer==3.4.1
+click==8.1.8
+colorful==0.5.6
+contourpy==1.3.1
+cycler==0.12.1
+datastorekit @ git+https://github.com/ds283/DatastoreKit@c8570e849334d09085bbd84876095fc9e22bd005
+distlib==0.3.9
+filelock==3.18.0
+fonttools==4.56.0
+frozenlist==1.5.0
+google-api-core==2.24.2
+google-auth==2.38.0
+googleapis-common-protos==1.69.2
+greenlet==3.1.1
+grpcio==1.71.0
+humanize==4.12.1
+idna==3.10
+importlib_metadata==8.6.1
+inflect==7.5.0
+jaraco.collections==5.1.0
+jaraco.context==6.0.1
+jaraco.functools==4.1.0
+jaraco.text==4.0.0
+Jinja2==3.1.6
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+kiwisolver==1.4.8
+linkify-it-py==2.0.3
+markdown-it-py==3.0.0
+MarkupSafe==3.0.2
+matplotlib==3.10.1
+mdit-py-plugins==0.4.2
+mdurl==0.1.2
+memray==1.16.0
+more-itertools==10.6.0
+mpmath==1.3.0
+msgpack==1.1.0
+multidict==6.2.0
+mypy-extensions==1.0.0
+numpy==2.2.4
+opencensus==0.11.4
+opencensus-context==0.1.3
+packaging==24.2
+pandas==2.2.3
+pathspec==0.12.1
+pillow==11.1.0
+platformdirs==4.3.6
+prometheus_client==0.21.1
+propcache==0.3.0
+proto-plus==1.26.1
+protobuf==6.30.1
+py-spy==0.4.0
+pyarrow==19.0.1
+pyasn1==0.6.1
+pyasn1_modules==0.4.1
+pydantic==2.10.6
+pydantic_core==2.27.2
+Pygments==2.19.1
+pyinstrument==5.0.1
+pyparsing==3.2.1
+python-dateutil==2.9.0.post0
+pytz==2025.1
+PyYAML==6.0.2
+ray==2.43.0
+raypoolkit @ git+https://github.com/ds283/RayPoolKit@eaef0ce60e2fc354bb32f0ad576010e6a83c1976
+referencing==0.36.2
+requests==2.32.3
+rich==13.9.4
+rpds-py==0.23.1
+rsa==4.9
+runregistrykit @ git+https://github.com/ds283/RunRegistryKit@0bae3a3c501a8264ee4be5bc24f06422af38720f
+scipy==1.16.3
+seaborn==0.13.2
+setuptools==76.1.0
+six==1.17.0
+smart-open==7.1.0
+SQLAlchemy==2.0.39
+sympy==1.13.3
+textual==2.1.2
+tomli==2.2.1
+typeguard==4.4.2
+typing_extensions==4.12.2
+tzdata==2025.1
+uc-micro-py==1.0.3
+urllib3==2.3.0
+virtualenv==20.29.3
+wheel==0.45.1
+wrapt==1.17.2
+yarl==1.18.3
+zipp==3.21.0
+
+## $ diff <(pip freeze before) <(pip freeze after)
+82c82
+< runregistrykit @ git+https://github.com/ds283/RunRegistryKit@9f8ebe431503fb8c79ee1407cc460501f1ca2d92
+---
+> runregistrykit @ git+https://github.com/ds283/RunRegistryKit@0bae3a3c501a8264ee4be5bc24f06422af38720f
+
+## $ ./venv/bin/pip check
+No broken requirements found.
+exit=0
+
+## $ runregistrykit.package_provenance((...))   (HEAD f0d280a, after)
+{
+  "datastorekit": {
+    "commit": "c8570e849334d09085bbd84876095fc9e22bd005",
+    "editable": false,
+    "requested_revision": "v0.4.0",
+    "url": "https://github.com/ds283/DatastoreKit",
+    "version": "0.4.0"
+  },
+  "raypoolkit": {
+    "commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976",
+    "editable": false,
+    "requested_revision": "v0.2.0",
+    "url": "https://github.com/ds283/RayPoolKit",
+    "version": "0.2.0"
+  },
+  "runregistrykit": {
+    "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+    "editable": false,
+    "requested_revision": "v0.2.0",
+    "url": "https://github.com/ds283/RunRegistryKit",
+    "version": "0.2.0"
+  }
+}
+
+## $ ./venv/bin/pip show runregistrykit
+Name: runregistrykit
+Version: 0.2.0
+Summary: A run registry: run directories, manifests, heartbeats and datastore sidecars for long jobs
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+Requires: 
+Required-by: 
+
+## direct_url.json
+{"url": "https://github.com/ds283/RunRegistryKit", "vcs_info": {"commit_id": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "requested_revision": "v0.2.0", "vcs": "git"}}
+version 0.2.0
+
+## import check
+[]
+
+## TERMINAL_STATES, this_host
+('done', 'failed', 'killed', 'lost')
+{'id': '8d2b247824882486', 'boot': '376461AF-4985-4F42-8E41-F4E914F5E3E6', 'name': 'mps026088.phys.susx.ac.uk', 'machine': 'arm64', 'system': 'Darwin', 'release': '27.0.0', 'python': '3.12.15'}
