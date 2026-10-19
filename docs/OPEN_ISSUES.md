@@ -126,6 +126,7 @@ for.
 | `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
+| `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's. **Assigned 2026-10-19 to `handover`** by the user, which owns the A3 v2 launcher; not yet scheduled. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
@@ -928,13 +929,12 @@ on this campaign's board, §4. **The campaign has no open issue.**
 ([board](../prompts/rrk-v020-adoption/IMPLEMENTATION_STATE.md)). Its plan opened no issue. It was
 assigned `handover`'s `[a3-v2-a-hard-killed-run-blocks-its-store]`, which its prompt 03 closed on
 2026-10-19 on the `handover` board's §4, once the route of `end` and then the resume had been shown
-on the A3 v2 launcher. The same prompt opened the one below, on this campaign's board, when Ray's GCS
-server outlived the `SIGKILL`ed rehearsal build. Its prompt 04 closed the campaign on 2026-10-19 and
-narrowed that issue: what A3 v2 inherits is stated, and what remains has no owner.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's, with no owner. |
+on the A3 v2 launcher. The same prompt opened `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`,
+on this campaign's board, when Ray's GCS server outlived the `SIGKILL`ed rehearsal build. Its prompt
+04 closed the campaign on 2026-10-19 and narrowed that issue: what A3 v2 inherits is stated, and
+what remains is the cause and any fix. The user assigned it to `handover` the same day, after the
+close, and its row is in §1.1; the entry stays on this campaign's board. **No row remains in this
+section.**
 
 ---
 

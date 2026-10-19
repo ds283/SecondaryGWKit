@@ -18,7 +18,9 @@ ahead of A3 v2**, a `runregistrykit` defect drafted for RunRegistryKit, was clos
 `rrk-v020-adoption` prompt 03 and is in §4; one is closed in §4 on another board. **Prompt 05 (2026-10-16)** is not seam work: it closed
 `[00-main-and-the-readers-default-to-ray-address-auto]`, which the user assigned here on
 2026-10-12 and the `runregistry-extraction` board holds, so a second issue is recorded in §4 as
-closed on another board.
+closed on another board. **One more is assigned here (2026-10-19)** and held on another board:
+`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`, on `rrk-v020-adoption`'s (§3 below
+points at it).
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -492,6 +494,22 @@ are **prompt 03's to open**, by that prompt's own scope, and are indexed in
 `docs/OPEN_ISSUES.md` §1.1 as *"none yet"* until it runs. Prompt 01 did not adopt them: they are
 not in its files-may-touch list and opening another prompt's issues early would make this board
 disagree with the prompt that owns them.
+
+**Assigned here, held on another board:**
+
+- **[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]** — *opened 2026-10-19 by
+  `rrk-v020-adoption` prompt 03, narrowed by its prompt 04, **held by that board**
+  ([`../rrk-v020-adoption/IMPLEMENTATION_STATE.md`](../rrk-v020-adoption/IMPLEMENTATION_STATE.md)
+  §3), and assigned to this campaign by the user on 2026-10-19, since it owns the A3 v2 launch.* After
+  a `SIGKILL` of a build's driver, Ray's GCS server can be left reparented to pid 1, stuck in its own
+  shutdown, where a `SIGTERM` cannot end it; until it is gone the rehearsal lock cannot be released.
+  Seen once, at R3's `hardkill-a`. `CLAUDE.md` rule 5 has the manual step (after `end`, a person
+  checks `ray-processes` and ends a GCS server still listed with `kill -KILL <pid>`); A3 v2's
+  inheritance is `docs/rrk-v020-adoption-verification.md` §3.5. **What is left here** is the cause
+  and any fix: for example a parent-death watch on the GCS server in
+  `docs/handover/quadsource_atol_sweep.py`, or a report to Ray. Not yet scheduled; the user may not
+  take it up at once. The entry and its measurements stay on the other board, which is right where
+  the two differ; indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 ---
 

@@ -7,7 +7,8 @@ reviewed (R3 holds; the hard-kill route holds; Ray's GCS server outlived the `SI
 was ruled by the user); 04 landed 2026-10-19 (`34bf4f7`) and reviewed (the final measurements,
 G1 drafted for RunRegistryKit, the index's notes on the two issues RunRegistryKit closed, what A3 v2
 inherits, and `CLAUDE.md` rule 5's GCS step under U4). U1–U4 ruled by the user (README §6.1). The issue assigned here from
-`handover` is closed (§4); one is open, opened by 03 and narrowed by 04, with no owner (§3).
+`handover` is closed (§4); one is open, opened by 03, narrowed by 04 and assigned to `handover`
+by the user after the close (§3). R3's three stores are retired (§5.5).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
 `v0.2.0` release notes and its adoption note for SGK.
@@ -131,6 +132,12 @@ user's.
   pattern and never with `ray stop` (the user's ruling U4). What remains is the cause and any fix,
   which are Ray's or the launcher's. **The issue has no owner.** Whether it is assigned to a campaign,
   `handover`'s launcher being the place a parent-death watch would go, is the user's (README §6.3).
+
+  **Assigned (2026-10-19):** to `handover`, by the user, after 04's review. That campaign owns the
+  A3 v2 launch and its launcher, `docs/handover/quadsource_atol_sweep.py`, where a parent-death
+  watch on the GCS server would go. The user may not take it up at once; until then `CLAUDE.md`
+  rule 5's manual step stands. The entry stays here, its text unchanged; the `handover` board's §3
+  points at it, and its index row moves to `docs/OPEN_ISSUES.md` §1.1.
 
 ## 4. Resolved issues
 
@@ -509,3 +516,29 @@ ten checks pass**, and no stop condition fired.
 - **The campaign is closed.** It leaves `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
   open, narrowed, with no owner. **The user's:** R3's three stores; the G1 row, ready to paste into
   RunRegistryKit's `interrupted-runs` board §2 from verification §3.3; C3; the GCS issue's owner.
+
+### 5.5 After the close: R3's stores retired, the GCS issue assigned (2026-10-19)
+
+Two of the user's decisions left at the close (README §6.3), taken after 04's review.
+
+**R3's three rehearsal stores retired, by the user's instruction.** Each was retired with
+`python -m runregistrykit store retire` at `454c7d8`, clean, after a dry run of each:
+`var/datastores/rrk-v020-adoption-03-{reference,resumed,hardkill}.sqlite`.
+- **The dry runs** exited 0. In each, a fresh read-only fingerprint matched the recorded `39809dca…`,
+  and the only references were the store's own runs: `reference` its one; `resumed` `resumed-a`, `-b`
+  and `-c`; `hardkill` `hardkill-a` (`lost`) and `hardkill-b`. No sidecar named any.
+- **The retirements** exited 0, at 11:26:29, 11:26:42 and 11:26:55. Five files went per store (the
+  primary and four shards), 211 MB in all. Each sidecar stays as its tombstone, with `completed` set,
+  and the six run directories stay as the record. The outputs are under
+  `var/rrk-v020-adoption-04/retire/` (`dry-run-03-*.log`, `retire-03-*.log`).
+- **Afterwards** all 24 sidecars under `var/datastores/` are tombstones, `store show` reads each of
+  R3's three with `problems: none`, and no `.sqlite` file remains there. `list` gives 51 runs, none
+  `running`. Verification §3.2 and §3.5, which call R3's three live, were true at `aa0b57c` and stay
+  as written.
+
+**`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` assigned to `handover`**, by the user,
+who may not take it up at once (§3, its **Assigned** line). The `handover` board's §3 gains a
+pointer to the entry, which stays here; the index row moves from §1.22 to §1.1, and the count stays
+100.
+
+**Still the user's:** the G1 commit in RunRegistryKit, and C3.
