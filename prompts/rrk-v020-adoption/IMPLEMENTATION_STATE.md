@@ -1,12 +1,12 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-19 · **Status: CLOSED — 4 of 4 landed, awaiting the orchestrator's
-review of 04.** 01 landed and reviewed (the pin moved, the venv on `v0.2.0`); 02 landed and reviewed
+**Last updated:** 2026-10-19 · **Status: CLOSED — 4 of 4 landed and reviewed.**
+01 landed and reviewed (the pin moved, the venv on `v0.2.0`); 02 landed and reviewed
 (the hard-kill route in `CLAUDE.md`, the interrupter's `--signal`, the driver test); 03 landed and
 reviewed (R3 holds; the hard-kill route holds; Ray's GCS server outlived the `SIGKILL`, and U3's stop
-was ruled by the user); 04 landed 2026-10-19 (the final measurements, G1 drafted for RunRegistryKit,
-the index's notes on the two issues RunRegistryKit closed, what A3 v2 inherits, and `CLAUDE.md`
-rule 5's GCS step under U4). U1–U4 ruled by the user (README §6.1). The issue assigned here from
+was ruled by the user); 04 landed 2026-10-19 (`34bf4f7`) and reviewed (the final measurements,
+G1 drafted for RunRegistryKit, the index's notes on the two issues RunRegistryKit closed, what A3 v2
+inherits, and `CLAUDE.md` rule 5's GCS step under U4). U1–U4 ruled by the user (README §6.1). The issue assigned here from
 `handover` is closed (§4); one is open, opened by 03 and narrowed by 04, with no owner (§3).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
@@ -51,7 +51,7 @@ reverse (README §6.3).
 | 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | `17916cb` | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
-| 04 | [Close the campaign](04-close-the-campaign.md) | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits; rule 5's GCS step (U4) | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | this commit | [`logs/04-close-the-campaign.md`](logs/04-close-the-campaign.md) |
+| 04 | [Close the campaign](04-close-the-campaign.md) | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits; rule 5's GCS step (U4) | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | `34bf4f7` | [`logs/04-close-the-campaign.md`](logs/04-close-the-campaign.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -62,7 +62,7 @@ not scope: every charter is fixed in README §2.2.
 `orchestrator/`: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-18, used for
 01), [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02),
 [`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03) and
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-19, for 04).
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-19, used for 04).
 
 ### 1.1 Items
 
@@ -76,11 +76,11 @@ not scope: every charter is fixed in README §2.2.
 | **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ✅ `17916cb`: both stores `39809dca…`, `encoding_format` 1, equal to each other, their sidecars and R2's two recorded fingerprints; prune 48 = 48; every L4 count R2's, every statistics block byte-identical to R2's same slug |
 | **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ✅ `17916cb`: 137 with status `running`; `!!`; `begin` refused, nothing created or changed; `end` verified, second refused; `hardkill-b` `done`, sidecar `written`, `39809dca…` |
 | **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ❌ not as stated: the GCS server outlived it 20 m 50 s, until a `SIGKILL` on the user's ruling; opened as `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` (§3) |
-| **Z1** | 04 | the final measurements | ✅ this commit: the seven roots at 02's counts (ComputeTargets' one wall-clock failure, ruling 9); `pip freeze` equal to 01's; provenance equal to R3's six manifests; `list` 51 runs; 24 `store show` blocks, `problems: none`; disk 94 % |
-| **Z2** | 04 | G1 drafted for RunRegistryKit's `interrupted-runs` board | ✅ this commit: the G1 row, `**holds** 2026-10-18`, in verification §3.3 |
-| **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed, and one line on each of their SGK boards | ✅ this commit: the index's §1.11, §1.17 and §1.21 corrected; one dated line on each of the two boards' §4 entries; the other three confirmed still open in RunRegistryKit |
-| **Z4** | 04 | what A3 v2 inherits; `CLAUDE.md` rule 5's GCS step (U4); the GCS issue narrowed | ✅ this commit: verification §3.5; rule 5's two sentences; the GCS issue narrowed |
-| **Z5** | 04 | the records: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ✅ this commit: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` |
+| **Z1** | 04 | the final measurements | ✅ `34bf4f7`: the seven roots at 02's counts (ComputeTargets' one wall-clock failure, ruling 9); `pip freeze` equal to 01's; provenance equal to R3's six manifests; `list` 51 runs; 24 `store show` blocks, `problems: none`; disk 94 % |
+| **Z2** | 04 | G1 drafted for RunRegistryKit's `interrupted-runs` board | ✅ `34bf4f7`: the G1 row, `**holds** 2026-10-18`, in verification §3.3 |
+| **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed, and one line on each of their SGK boards | ✅ `34bf4f7`: the index's §1.11, §1.17 and §1.21 corrected; one dated line on each of the two boards' §4 entries; the other three confirmed still open in RunRegistryKit |
+| **Z4** | 04 | what A3 v2 inherits; `CLAUDE.md` rule 5's GCS step (U4); the GCS issue narrowed | ✅ `34bf4f7`: verification §3.5; rule 5's two sentences; the GCS issue narrowed |
+| **Z5** | 04 | the records: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ✅ `34bf4f7`: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` |
 
 ## 2. The gates
 
@@ -91,7 +91,7 @@ not scope: every charter is fixed in README §2.2.
 | HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ✅ the route holds (2026-10-19, `17916cb`), every step as written. **H2 did not hold as written**: Ray's GCS server outlived the killed driver past ten minutes; the prompt's stop fired, and the user ruled a `SIGTERM` (no effect) and then a `SIGKILL` (U3); it is §3's issue |
 | RunRegistryKit G1 | SGK has adopted `v0.2.0` in a campaign of its own, its pin moved in a commit of its own | 01 | ✅ pin moved at `0a27b0c`; the record on RunRegistryKit's board is the user's (README §6.3); 04 drafts it |
 
-*2026-10-19, at the close (04, this commit):* R3 and HK hold, and G1's draft is in the verification
+*2026-10-19, at the close (04, `34bf4f7`):* R3 and HK hold, and G1's draft is in the verification
 document's §3.3, as `**holds** 2026-10-18`. The commit that records it in RunRegistryKit is the
 user's.
 
@@ -424,7 +424,7 @@ fired** at `hardkill-a` (below), and the user ruled twice. Nothing landed after 
 
 ### 5.4 After prompt 04 (2026-10-19)
 
-Landed at this commit, on `aa0b57c`. Z1–Z5 pass; no stop condition fired. Log:
+Landed at `34bf4f7`, on `aa0b57c`. Z1–Z5 pass; no stop condition fired. Log:
 [`logs/04-close-the-campaign.md`](logs/04-close-the-campaign.md); record:
 [`docs/rrk-v020-adoption-verification.md`](../../docs/rrk-v020-adoption-verification.md) §3;
 measurements: `measure/out/04-{roots,pip,list,store-show,disk}.txt`, taken at `aa0b57c` before any edit.
@@ -453,3 +453,59 @@ measurements: `measure/out/04-{roots,pip,list,store-show,disk}.txt`, taken at `a
   (`rrk-v020-adoption-03-{reference,resumed,hardkill}`, live, `39809dca…`), or not; the G1 commit in
   RunRegistryKit; C3, if the clean error is wanted after all; and whether
   `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` is assigned to a campaign.
+
+**Orchestrator review of prompt 04** (2026-10-19, against `34bf4f7`, by
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) §3). Dispatched from `aa0b57c` to one
+Sonnet subagent, after the roots, the venv, the registry, the 24 `store show`s and RunRegistryKit's
+board were checked at `ebb70a3`. The prompt was written after the user's ruling **U4** (README
+§6.1), which added rule 5's GCS step to its charter. Nothing landed after the agent's commit. **All
+ten checks pass**, and no stop condition fired.
+1. **Scope.** 14 files: six `A` (the log and `measure/out/04-{disk,list,pip,roots,store-show}.txt`)
+   and eight `M`, exactly the note's list. The verification diff is one hunk appending §3, 299 lines,
+   none removed; README's is row 04 alone. No code, test, script, `requirements.txt` or `config/`.
+2. **(V1) The measurements, here at `34bf4f7`.** `pip freeze` equals 01's after-install block;
+   `package_provenance` equals the `packages` of all six R3 manifests; `list` gives 51 runs, "45 with
+   no host recorded", exit 0, stderr empty; `04-store-show.txt` holds the `find` and 24 blocks, each
+   `problems: none`. The 21 tombstones had equalled 01's after-blocks in the orchestrator's own check.
+3. **(V2) The G1 draft,** read whole: the whole row, in the `extraction` board's G2 form (log,
+   deviation 10, which is the better choice: the user pastes one line over one line). Dated
+   2026-10-18 (ruling 1). Each commit and run id it names exists. Its §1–§8 mapping was read against
+   the adoption note at `v0.2.0`: `requirements.txt:17`, `:75`, `:76`, `:88` are `datastorekit`, `ray`,
+   `raypoolkit` and `SQLAlchemy`, as the note's §1 lists them; §3's `interrupt_when.py`, §4's
+   `:556`, §6's `:249-253` and §7's prepare test are the note's own citations. The GCS finding is
+   said to be Ray's, and no defect of the package is claimed.
+4. **(V3) Z3.** RunRegistryKit at `f6d4b80`: `:1597` **Resolved (2026-10-16, by 01, `387c58f`)**,
+   `:1763` **Resolved (2026-10-17, by 02, `2bf9c72`)**; the release notes' §2.1, §2.3 and §2.4 are the
+   sections cited. The index's three paragraphs change their present-tense clauses only; the two
+   boards gain one paragraph each, in place, and nothing else. The three left alone are in its
+   `docs/OPEN_ISSUES.md` §1.2.
+5. **(V4) Z4.** Verification §3.5 against the tree: the launcher's hash `2a985303…`, last commit
+   `7af17bd`, `address="local"` at `:610`, `begin` at `:556`, the defaults at `:1000` and `:1014`; the
+   pins by line; `list`'s markers (`!!` stale, `??` foreign: `__main__.py:643` at the tag); the
+   lock's exits 1 and 4 at the lines given; the route's six steps against §2; the issues closed where
+   it says. The headroom to 95 % is 17 GB by its own figures.
+6. **(V4) `CLAUDE.md`.** One hunk, in rule 5, after the unreaped-process sentence (log, deviation
+   12, a better place than the prompt's). It says what U4 says: check `ray-processes` after `end`;
+   a GCS server may be left, stuck, beyond a `SIGTERM`; a **person** ends one still listed after ten
+   minutes with `kill -KILL <pid>`, by its pid, never by pattern or `ray stop`; the lock waits. It
+   contradicts neither RunRegistryKit's README nor the lock section.
+7. **(V5) The records.** The board, the index (100 by counting; the hook; §1.22's sentence) and
+   `prompts/INDEX.md` (the row closed; 27 = 2 live + 1 seeded + 24, counted from its rows) agree.
+8. **(V5) Verification §3.1** agrees with the run directories, as 03's review read them.
+9. **Nothing else moved.** `find var -newer <marker>` is empty; RunRegistryKit unchanged at
+   `f6d4b80`, clean; the tree clean after the commit; the lock free, `ray-processes` none.
+10. **(V6) The suites**, here at `34bf4f7`, serially, at load 21–45 (Spotlight, `duetexpertd`):
+    AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 279, tools 91, LiouvilleGreen 148
+    (1 skipped), RunDrivers 103 OK; ComputeTargets 700 with the one failure of
+    `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, as at dispatch and in both of the agent's
+    runs (ruling 9). It passed at 03's review at load 4–6, and 04 changed no code.
+- **An observation, not acted on.** `store show` given a sidecar's path answers `kind: absent`,
+  `problems: none` (log, deviation 13): it reads the path as a store whose sidecar would be
+  `….manifest.manifest.json`. That is the package's documented argument, not a defect; not opened.
+- **Residue fixed in the follow-up commit:** "this commit" → `34bf4f7` on this board, in README §2,
+  the log's header and the verification document (the G1 draft included); this board's header
+  re-wrapped and marked reviewed; a stray "each" in `docs/OPEN_ISSUES.md` §1.21's corrected lead-in;
+  this note listed as "used for 04", and one of its lines re-wrapped.
+- **The campaign is closed.** It leaves `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
+  open, narrowed, with no owner. **The user's:** R3's three stores; the G1 row, ready to paste into
+  RunRegistryKit's `interrupted-runs` board §2 from verification §3.3; C3; the GCS issue's owner.

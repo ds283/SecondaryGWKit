@@ -105,8 +105,8 @@ Pass them on; the agent logs each as the classification given.
 **The facts, checked by the orchestrator on 2026-10-19 at `ebb70a3`.** Pass them on.
 - **The tree and the machine.** Branch `handover-remedial`; `git status --short` empty; one
   worktree. `git log 17916cb..ebb70a3` is `ebb70a3` alone, which touches `prompts/` only.
-  `RAY_ADDRESS` unset. Load **22–40** (one-minute and five-minute; a Time Machine backup) from other work on the machine
-  during the baselines; the lock was free. `df -h /`: **927G, 859G used, 69G free, 93 %**.
+  `RAY_ADDRESS` unset. Load **22–40** (one-minute and five-minute; a Time Machine backup) from other
+  work on the machine during the baselines; the lock was free. `df -h /`: **927G, 859G used, 69G free, 93 %**.
 - **The lock and Ray.** `tools.rehearsal_lock status`: `lock: free`, exit 0. `ray-processes`:
   none, exit 0. `~/ScienceData/` holds `ChamPBH-rehearsals/` alone.
 - **The registry.** `list`: exit 0, stderr empty, last line `51 run(s) under …/var/runs: 49

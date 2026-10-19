@@ -915,7 +915,7 @@ against `runregistrykit` at `v0.1.0`, found all five in the package, and drafted
 brief, so both rows stay until the user has handed it over.
 **The user handed the brief over the same day**, and RunRegistryKit accepted all five, declining none
 (its `inherited-issues` board, `docs/OPEN_ISSUES.md` §1.2 there). The fifth closed and the sixth closed
-as transferred, on the board's §4, and the four moved to their own boards' §4 as transferred, each
+as transferred, on the board's §4, and the four moved to their own boards' §4 as transferred,
 two of them still open in RunRegistryKit (§1.14) and two since closed there, released in `v0.2.0` and
 adopted by SGK in `rrk-v020-adoption` 01 (§1.11, §1.17). **No row remains in this section**; the
 campaign's one open issue was the third, in §1.1, and `handover` prompt 05 closed it on 2026-10-16

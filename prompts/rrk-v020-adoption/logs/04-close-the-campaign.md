@@ -1,7 +1,7 @@
 # Log — rrk-v020-adoption prompt 04, close the campaign
 
 - **Subject:** [`04-close-the-campaign.md`](../04-close-the-campaign.md), board items Z1–Z5.
-- **Commit:** this commit (parent `aa0b57c`).
+- **Commit:** `34bf4f7` (parent `aa0b57c`).
 - **Result:** landed. Z1–Z5 pass; no stop condition fired. The one test failure, in `ComputeTargets`, is
   README §8's known wall-clock test, recorded under the orchestrator's ruling 9.
 - **Model:** Sonnet 5.5.
