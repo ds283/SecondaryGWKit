@@ -86,6 +86,16 @@ from pathlib import Path
 
 import numpy as np
 
+
+class Refusal(RuntimeError):
+    """A check that stops this driver before any work starts: an existing store, a path that is
+    not a directory, a store a registered run already names. The `__main__` block prints it as one
+    `!!` line on stderr and exits 1, with no traceback. It is a `RuntimeError` on purpose, so that
+    every caller and test that catches `RuntimeError` still does. A failure during the work, and an
+    internal invariant that does not hold, are plain `RuntimeError`s and keep their traceback.
+    """
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAIN_PY = REPO_ROOT / "main.py"
 
@@ -528,7 +538,7 @@ def register(args, main_args, k_sample, database, runs_root=None):
     try:
         import runregistrykit
     except ImportError as exc:  # pragma: no cover -- an operator-facing message
-        raise RuntimeError(
+        raise Refusal(
             "scoped_pipeline_run: --register needs the runregistrykit package, which is "
             "missing from this venv; install requirements.txt into it "
             "(./venv/bin/pip install -r requirements.txt)"
@@ -541,22 +551,27 @@ def register(args, main_args, k_sample, database, runs_root=None):
         f"{len(k_sample)} log-spaced k over {args.k_min:g}-{args.k_max:g} /Mpc, {models}, "
         f"{args.cpus} cpus; main.py args: {' '.join(main_args)}"
     )
-    run = runregistrykit.begin(
-        campaign=args.campaign,
-        prompt=args.prompt,
-        slug=args.register,
-        purpose=args.purpose,
-        script=__file__,
-        # README §0.2: this job's results live in its datastore, and `results` is the field that
-        # names the durable thing they live in -- which is what a resume needs. It is deliberately
-        # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
-        # ledger and records no units, and a run that named its datastore there would be one
-        # record() call away from appending JSON-Lines to a SQLite file.
-        results=str(database) if database is not None else None,
-        scope=scope,
-        heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
-        root=runs_root,
-    )
+    try:
+        run = runregistrykit.begin(
+            campaign=args.campaign,
+            prompt=args.prompt,
+            slug=args.register,
+            purpose=args.purpose,
+            script=__file__,
+            # README §0.2: this job's results live in its datastore, and `results` is the field that
+            # names the durable thing they live in -- which is what a resume needs. It is deliberately
+            # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
+            # ledger and records no units, and a run that named its datastore there would be one
+            # record() call away from appending JSON-Lines to a SQLite file.
+            results=str(database) if database is not None else None,
+            scope=scope,
+            heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
+            root=runs_root,
+        )
+    except runregistrykit.ConfigError:
+        raise
+    except RuntimeError as e:
+        raise Refusal(str(e)) from e
 
     def terminal(signum, _frame):
         """Record the death, then die exactly as the default handler would have."""
@@ -654,12 +669,12 @@ def main():
     if "--database" in main_args:
         db = Path(main_args[main_args.index("--database") + 1])
         if db.exists() and not args.allow_existing:
-            raise RuntimeError(
+            raise Refusal(
                 f"scoped_pipeline_run: datastore {db} already exists; refusing to reuse, "
                 "overwrite or migrate it. Choose a path that does not exist."
             )
         if not db.parent.is_dir():
-            raise RuntimeError(
+            raise Refusal(
                 f"scoped_pipeline_run: {db.parent} is not a directory, so {db} is not writable"
             )
 
@@ -765,4 +780,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Refusal as exc:
+        sys.stdout.flush()
+        print(f"!! {exc}", file=sys.stderr)
+        sys.exit(1)

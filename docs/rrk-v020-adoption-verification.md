@@ -1454,3 +1454,66 @@ on `end` and the resume and the unreaped process:
 > never by pattern and never with `ray stop`; until then the rehearsal lock cannot be released.
 
 Nothing else in `CLAUDE.md` changes.
+
+## 4. After the close: clean refusals (05)
+
+**The tree.** Prompt 05 ran on branch `handover-remedial` at **`affaf84`**, clean, after the campaign's
+close (§3) and on the user's reversal of README §6.2 **C3** (§6.1 **U5**). It changes the two drivers
+and adds one test module. Nothing above this section changes.
+
+**What changed.** A refusal is a check that stops a driver before any work starts. Each driver now
+defines `Refusal(RuntimeError)`, raises it at the refusal sites below, and prints it from its
+`__main__` block:
+
+```
+!! <the refusal's message, unchanged>
+```
+
+as one line on **stderr** (a multi-line message prints as it is, with `!! ` before its first line
+only), with **no traceback** and exit status **1**, which is the status a traceback gives. Everything
+else keeps its traceback and its type: a failure during the work, and an internal invariant that does
+not hold. `Refusal` is a `RuntimeError`, so every caller and test that catches `RuntimeError` still
+does. `main()` itself still raises.
+
+**The refusal sites** (`raise Refusal(`, by enclosing function):
+
+| Driver | Function | Sites |
+|---|---|---|
+| `docs/handover/quadsource_atol_sweep.py` | `run_build` | 3: the existing store, the not-a-directory, `begin`'s |
+| | `assert_store_is_self_consistent` | 1 |
+| | `prepare` | 2: `--force`, `copy_store`'s |
+| | `sweep` | 1: `begin`'s |
+| `docs/gktk-remedial/scoped_pipeline_run.py` | `main` | 2: the existing datastore, the not-a-directory |
+| | `register` | 2: the missing package, `begin`'s |
+
+**What stays a `RuntimeError`** (a failure or an invariant): in the launcher the case selector, `substitute_main_py`,
+the two model filters and the sweep's child exit (5); in the scoped driver the model filter and the
+`main.py` literal count (2).
+
+**`begin`'s refusals.** At each of the three `runregistrykit.begin(` calls (`run_build`, `sweep`,
+`register`), a `RuntimeError` is re-raised as `Refusal(str(e))` from `e`, **after** a clause
+`except runregistrykit.ConfigError: raise`. `runregistrykit.ConfigError` subclasses `RuntimeError` at
+`v0.2.0` (`client.py:84`) and is not a refusal, so it, an `OSError` and a `FileExistsError` keep their
+tracebacks. Read at the tag, `begin` raises a `RuntimeError` of its own in two places only, both
+before the run directory is created and both ending `No run directory was created`: a retired store
+(`__init__.py:1102`) and a store a run that has not finished names (`:1119`).
+
+**The launcher's SHA-256**, beside §3.5's:
+
+| Script | Before 05 (R3's, §3.5) | After 05 |
+|---|---|---|
+| `docs/handover/quadsource_atol_sweep.py` | `2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d` | `9b40e457f444db10d2b406b749e0b4391d53753e93c928fa431856b4c645e649` |
+| `docs/gktk-remedial/scoped_pipeline_run.py` | `244ad70e7e0901c612bb01eb4f0fec10ee9bbd8e3bb3a17904024e111b6646df` | `d2e38510acf5cff09dc63219e5c59cead2eb28042ba58c770ab8abe90d972c83` |
+
+The launcher's hash is **no longer R3's `2a985303…`**; this is expected, and A3 v2's manifests will
+carry the new one. Nothing R3 measured is changed by it: the change is confined to what runs before
+`begin` returns.
+
+**What a log shows now.** A detached launch that is refused ends its `stdout.log`/`stderr.log` with the
+one `!!` line, where it ended with a traceback's last line. A `--child` of the sweep that meets
+`assert_store_is_self_consistent`'s refusal prints one `!!` line and exits 1, as before; the parent's
+"child … exited 1" `RuntimeError` is unchanged and keeps its traceback. `CLAUDE.md` rule 5's route is
+unchanged.
+
+**The test** is `RunDrivers/tests/test_clean_refusals.py` (12 tests; `RunDrivers` is 103 → 115). Its
+output of the seven roots is `prompts/rrk-v020-adoption/measure/out/05-roots.txt`.

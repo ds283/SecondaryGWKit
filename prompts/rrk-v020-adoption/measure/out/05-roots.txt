@@ -1,0 +1,62 @@
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <scratch>/roots-AdaptiveLevin.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 42.40 63.50 129.79 }
+exit=0
+Ran 32 tests in 0.144s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <scratch>/roots-CosmologyModels.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 42.40 63.50 129.79 }
+exit=0
+Ran 39 tests in 1.358s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <scratch>/roots-ObjectFactories.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 25.47 51.53 117.42 }
+exit=0
+load after: { 27.98 49.26 113.94 }
+Ran 279 tests in 31.686s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <scratch>/roots-tools.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 34.73 60.40 127.14 }
+exit=0
+Ran 91 tests in 20.481s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <scratch>/roots-LiouvilleGreen.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 35.60 58.55 124.54 }
+exit=0
+Ran 148 tests in 49.544s
+OK (skipped=1)
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <scratch>/roots-RunDrivers.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 40.77 62.81 129.16 }
+exit=0
+Ran 115 tests in 12.449s
+OK
+
+## $ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <scratch>/roots-ComputeTargets.out 2>&1   (HEAD affaf84, with prompt 05's edits uncommitted)
+load (1m 5m 15m): { 27.02 48.71 113.36 }
+exit=1
+load after: { 48.45 36.12 85.13 }
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+Ran 700 tests in 339.206s
+FAILED (failures=1)
+
+## the known wall-clock failure, re-run alone twice (README §8)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object
+load: { 51.14 36.89 85.11 }
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+AssertionError: 0.11512333294376731 not less than or equal to 0.06
+Ran 1 test in 0.833s
+FAILED (failures=1)
+exit=1
+
+load: { 53.18 38.03 84.67 }
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+AssertionError: 0.10446970909833908 not less than or equal to 0.06
+Ran 1 test in 0.841s
+FAILED (failures=1)
+exit=1
+
+in the full run: AssertionError: 0.05427929200232029 not less than or equal to 0.05

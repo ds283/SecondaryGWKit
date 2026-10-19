@@ -82,6 +82,16 @@ from pathlib import Path
 
 import numpy as np
 
+
+class Refusal(RuntimeError):
+    """A check that stops this driver before any work starts: an existing store, a path that is
+    not a directory, a store a registered run already names. The `__main__` block prints it as one
+    `!!` line on stderr and exits 1, with no traceback. It is a `RuntimeError` on purpose, so that
+    every caller and test that catches `RuntimeError` still does. A failure during the work, and an
+    internal invariant that does not hold, are plain `RuntimeError`s and keep their traceback.
+    """
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAIN_PY = REPO_ROOT / "main.py"
 SCOPED_DRIVER = REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py"
@@ -534,7 +544,7 @@ def run_build(args):
     k_values, zend, scope_text = build_scope(args)
     present = [pth for pth in [database] + shard_paths(database) if pth.exists()]
     if present and not args.resume:
-        raise RuntimeError(
+        raise Refusal(
             f"quadsource_atol_sweep --build: {', '.join(pth.name for pth in present)} already "
             "exist(s). Refusing to build into an existing store: a comparator that silently "
             "inherited earlier rows is one nobody can interpret. Pass --resume to continue an "
@@ -544,7 +554,7 @@ def run_build(args):
         assert_store_is_self_consistent(database)
         print(f"** quadsource_atol_sweep --build: resuming into {database.name}")
     if not database.parent.is_dir():
-        raise RuntimeError(
+        raise Refusal(
             f"quadsource_atol_sweep --build: {database.parent} is not a directory"
         )
 
@@ -553,23 +563,28 @@ def run_build(args):
     if args.register:
         import runregistrykit
 
-        run = runregistrykit.begin(
-            campaign=args.campaign,
-            prompt=args.prompt,
-            slug=args.register,
-            purpose=args.purpose,
-            script=__file__,
-            results=str(database),
-            scope=scope_text.format(
-                atol=args.atol,
-                rtol=args.rtol,
-                cpus=args.cpus,
-                database=database.name,
-            ),
-            heartbeat_means=scoped.HEARTBEAT_MEANS.format(
-                interval=scoped.BEAT_MIN_INTERVAL
-            ),
-        )
+        try:
+            run = runregistrykit.begin(
+                campaign=args.campaign,
+                prompt=args.prompt,
+                slug=args.register,
+                purpose=args.purpose,
+                script=__file__,
+                results=str(database),
+                scope=scope_text.format(
+                    atol=args.atol,
+                    rtol=args.rtol,
+                    cpus=args.cpus,
+                    database=database.name,
+                ),
+                heartbeat_means=scoped.HEARTBEAT_MEANS.format(
+                    interval=scoped.BEAT_MIN_INTERVAL
+                ),
+            )
+        except runregistrykit.ConfigError:
+            raise
+        except RuntimeError as e:
+            raise Refusal(str(e)) from e
 
         def terminal(signum, _frame):
             run.finish("killed", exit_code=128 + signum)
@@ -733,7 +748,7 @@ def assert_store_is_self_consistent(primary):
             "was not written the way this script expects; choose a different --database or "
             "investigate how this one was made."
         )
-        raise RuntimeError("\n".join(lines))
+        raise Refusal("\n".join(lines))
 
 
 def prepare(force=False, runs_root=None):
@@ -752,7 +767,7 @@ def prepare(force=False, runs_root=None):
     (`var/runs`); a test passes a temporary one.
     """
     if force:
-        raise RuntimeError(
+        raise Refusal(
             'quadsource_atol_sweep --prepare: --force no longer means "replace". '
             "runregistrykit.stores.copy_store never overwrites a destination whose sidecar name is "
             "already taken -- by an existing store or by a retired store's tombstone -- and "
@@ -776,7 +791,7 @@ def prepare(force=False, runs_root=None):
             runs_root=runs_root,
         )
     except RuntimeError as e:
-        raise RuntimeError(f"quadsource_atol_sweep: {e}") from e
+        raise Refusal(f"quadsource_atol_sweep: {e}") from e
     assert_store_is_self_consistent(SWEEP_STORE)
     print(f"** quadsource_atol_sweep: sweep store ready at {SWEEP_STORE}")
 
@@ -866,29 +881,34 @@ def sweep(args):
     if args.register:
         import runregistrykit
 
-        run = runregistrykit.begin(
-            campaign=args.campaign,
-            prompt=args.prompt,
-            slug=args.register,
-            purpose=args.purpose,
-            script=__file__,
-            results=str(SWEEP_STORE),
-            scope=(
-                f"phase {args.phase}: {len(PHASES[args.phase][0])} production "
-                f"QuadSourceIntegral work items x {len(PHASES[args.phase][1])} tolerance pairs, "
-                f"{args.cpus} cpus, on a copy of the A3 baseline store; rtol "
-                f"{min(t[1] for t in PHASES[args.phase][1]):g} to "
-                f"{max(t[1] for t in PHASES[args.phase][1]):g} at atol "
-                f"{min(t[0] for t in PHASES[args.phase][1]):g}"
-            ),
-            heartbeat_means=(
-                "Refreshed by the parent after each tolerance pair's child process exits, and "
-                "the `stage` names the pair just finished. A pair can legitimately take an hour "
-                "at the tight end of the atol axis -- that is the measurement -- so this run "
-                "goes stale while it is working and stale means go and look at the child's "
-                "output in this directory. It does not mean dead."
-            ),
-        )
+        try:
+            run = runregistrykit.begin(
+                campaign=args.campaign,
+                prompt=args.prompt,
+                slug=args.register,
+                purpose=args.purpose,
+                script=__file__,
+                results=str(SWEEP_STORE),
+                scope=(
+                    f"phase {args.phase}: {len(PHASES[args.phase][0])} production "
+                    f"QuadSourceIntegral work items x {len(PHASES[args.phase][1])} tolerance pairs, "
+                    f"{args.cpus} cpus, on a copy of the A3 baseline store; rtol "
+                    f"{min(t[1] for t in PHASES[args.phase][1]):g} to "
+                    f"{max(t[1] for t in PHASES[args.phase][1]):g} at atol "
+                    f"{min(t[0] for t in PHASES[args.phase][1]):g}"
+                ),
+                heartbeat_means=(
+                    "Refreshed by the parent after each tolerance pair's child process exits, and "
+                    "the `stage` names the pair just finished. A pair can legitimately take an hour "
+                    "at the tight end of the atol axis -- that is the measurement -- so this run "
+                    "goes stale while it is working and stale means go and look at the child's "
+                    "output in this directory. It does not mean dead."
+                ),
+            )
+        except runregistrykit.ConfigError:
+            raise
+        except RuntimeError as e:
+            raise Refusal(str(e)) from e
 
         def terminal(signum, _frame):
             run.finish("killed", exit_code=128 + signum)
@@ -1052,4 +1072,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Refusal as exc:
+        sys.stdout.flush()
+        print(f"!! {exc}", file=sys.stderr)
+        sys.exit(1)
