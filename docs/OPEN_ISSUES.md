@@ -672,8 +672,9 @@ was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/
 **Prompt 03 closed the campaign on 2026-09-22 at 3 / 3**, splitting the manifest's overloaded
 `checkpoint` field into a unit ledger and a `results` store.
 On 2026-10-16 `runregistry-extraction` **transferred** `[04-runs-do-not-say-which-machine-produced-them]`
-to RunRegistryKit, whose code it is since `v0.1.0`, and where it stays open (`docs/OPEN_ISSUES.md`
-§1.2 there). Its row is deleted here; the board's §4 keeps the entry as the record.
+to RunRegistryKit, whose code it is since `v0.1.0`. RunRegistryKit closed it there on 2026-10-16
+(`interrupted-runs` 01, `387c58f`), released it in `v0.2.0`, and `rrk-v020-adoption` 01 adopted that
+release on 2026-10-18 (`0a27b0c`). Its row is deleted here; the board's §4 keeps the entry as the record.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -834,8 +835,10 @@ recorded here for its owner.
 On 2026-10-12 `dk-and-rpk-migration` prompt 09 transferred two of the nine, `[00-a-new-stores-first-open-…]`
 and `[00-a-drop-action-drops-…]`, to DatastoreKit, where both stay open (`docs/OPEN_ISSUES.md` §1.2
 there); their rows are deleted here. On 2026-10-16 `runregistry-extraction` transferred
-`[04-a-signal-inside-a-heartbeat-write-…]` to RunRegistryKit, whose code it is since `v0.1.0`, and where
-it stays open (`docs/OPEN_ISSUES.md` §1.2 there). Its row is deleted here; the board's §4 keeps the entry as the record.
+`[04-a-signal-inside-a-heartbeat-write-…]` to RunRegistryKit, whose code it is since `v0.1.0`.
+RunRegistryKit closed it there on 2026-10-17 (`interrupted-runs` 02, `2bf9c72`), released it in
+`v0.2.0`, and `rrk-v020-adoption` 01 adopted that release on 2026-10-18 (`0a27b0c`). Its row is
+deleted here; the board's §4 keeps the entry as the record.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -913,7 +916,8 @@ brief, so both rows stay until the user has handed it over.
 **The user handed the brief over the same day**, and RunRegistryKit accepted all five, declining none
 (its `inherited-issues` board, `docs/OPEN_ISSUES.md` §1.2 there). The fifth closed and the sixth closed
 as transferred, on the board's §4, and the four moved to their own boards' §4 as transferred, each
-still open in RunRegistryKit (§1.11, §1.14, §1.17). **No row remains in this section**; the
+two of them still open in RunRegistryKit (§1.14) and two since closed there, released in `v0.2.0` and
+adopted by SGK in `rrk-v020-adoption` 01 (§1.11, §1.17). **No row remains in this section**; the
 campaign's one open issue was the third, in §1.1, and `handover` prompt 05 closed it on 2026-10-16
 on this campaign's board, §4. **The campaign has no open issue.**
 
@@ -925,11 +929,12 @@ on this campaign's board, §4. **The campaign has no open issue.**
 assigned `handover`'s `[a3-v2-a-hard-killed-run-blocks-its-store]`, which its prompt 03 closed on
 2026-10-19 on the `handover` board's §4, once the route of `end` and then the resume had been shown
 on the A3 v2 launcher. The same prompt opened the one below, on this campaign's board, when Ray's GCS
-server outlived the `SIGKILL`ed rehearsal build.
+server outlived the `SIGKILL`ed rehearsal build. Its prompt 04 closed the campaign on 2026-10-19 and
+narrowed that issue: what A3 v2 inherits is stated, and what remains has no owner.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Next step: 04**, which states what A3 v2 inherits. |
+| `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's, with no owner. |
 
 ---
 

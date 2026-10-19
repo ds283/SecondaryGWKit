@@ -1155,3 +1155,302 @@ and indexed in `docs/OPEN_ISSUES.md` §1.22.
 
 **`[a3-v2-a-hard-killed-run-blocks-its-store]`** closes: acceptance 3 holds (§2.1–§2.9). Its entry
 moves to the `handover` board's §4, and its row leaves `docs/OPEN_ISSUES.md` §1.22.
+
+## 3. The close
+
+**§3's tree.** Prompt 04 ran on branch `handover-remedial` at **`aa0b57c`** ("Write
+rrk-v020-adoption prompt 04 and its orchestrator note"), clean. Its code is `2818780`'s: `aa0b57c`
+differs from `ebb70a3` in `prompts/` alone, and `ebb70a3`, `17916cb` and `aab4075` touch no code, test or
+script after `2818780` (`git diff --stat 2818780 HEAD -- . ':!prompts' ':!docs'` is empty). 04 changes
+records, `CLAUDE.md` rule 5 and nothing else: no code, no test, no script, nothing under `var/`.
+**Every measurement of §3.2 was taken at `aa0b57c` before any edit**, and 04's own commit changes no
+file any of them reads. Each is saved whole, with its command and the `HEAD`, under
+`prompts/rrk-v020-adoption/measure/out/04-*`.
+
+### 3.1 R3's six runs, as one table
+
+Read from each run directory's `manifest.json` and `status.json` under `var/runs/`, at `aa0b57c`.
+Every run has `git_head` `aab407529576307c9d3c1e64ccc8b2e980ed2d7d`, `git_dirty` `false`,
+`script_sha256` `2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d`, twenty manifest
+keys with `host`, and `packages` equal as JSON to `package_provenance` (§3.2): `runregistrykit` 0.2.0,
+`datastorekit` 0.4.0, `raypoolkit` 0.2.0, none editable. Every fingerprint is `fingerprint_format` 6,
+`encoding_format` 1.
+
+| Slug | Run id (`rrk-v020-adoption-03-…`) | `--resume` | End state, exit code | Digest | `fingerprint_sidecar` |
+|---|---|---|---|---|---|
+| `reference` | `reference-20261018T232838` | no | `done`, 0 | `39809dca…` | not written: no sidecar existed yet |
+| `resumed-a` | `resumed-a-20261018T233357` | no | `killed`, 143 | `c60e0d19…` | not written: no sidecar existed yet |
+| `resumed-b` | `resumed-b-20261018T233734` | yes | `killed`, 143 | `7e41cbe2…` | `written` |
+| `resumed-c` | `resumed-c-20261018T233941` | yes | `done`, 0 | `39809dca…` | `written` |
+| `hardkill-a` | `hardkill-a-20261018T234619` | no | `lost`, `null` (by `end`, verified) | none: `finish` never ran | none |
+| `hardkill-b` | `hardkill-b-20261019T001145` | yes | `done`, 0 | `39809dca…` | `written` |
+
+- The full `done` digest is `39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2`, as in
+  §1.2.1. No run has a `fingerprint_error`.
+- Three digests are `39809dca…`, in three different stores' runs (`reference`, `resumed-c`,
+  `hardkill-b`), and the three stores' sidecars carry the same digest (§3.2).
+- The two `not written` rows are what §1.2.1 records: `store create` came after those two runs.
+
+### 3.2 Z1 — the final measurements
+
+Taken at `aa0b57c` before any edit, in the order of the prompt. Each is in a file under
+`prompts/rrk-v020-adoption/measure/out/` with its command and the `HEAD`.
+
+**The seven roots** ([`04-roots.txt`](../prompts/rrk-v020-adoption/measure/out/04-roots.txt)), each
+once, in the foreground, serially, against 02's counts, at one-minute load 11–26 (a Time Machine
+backup was running):
+
+| Root | Ran | Result | Wall | 02's count |
+|---|---|---|---|---|
+| `AdaptiveLevin/tests` | 32 | OK | 0.2 s | 32 |
+| `CosmologyModels/tests` | 39 | OK | 2.2 s | 39 |
+| `ObjectFactories/tests` | 279 | OK | 25.7 s | 279 |
+| `tools/tests` | 91 | OK | 17.6 s | 91 |
+| `LiouvilleGreen/tests` | 148 | OK (skipped=1) | 40.8 s | 148 (1 skipped) |
+| `RunDrivers/tests` | 103 | OK | 7.1 s | 103 |
+| `ComputeTargets/tests` | 700 | FAILED (failures=1) | 303.0 s | 700 |
+
+- **Every count is 02's.** The one failure is `test_tk_wkb_phase.TestCost.test_wall_time_per_object`,
+  the first of README §8's four known wall-clock tests. In the full run it failed on `0.1397 not less
+  than or equal to 0.06` (`COST_COLD_WALL_TIME_LIMIT`). Re-run alone it failed again, `0.0759 not less
+  than or equal to 0.05`, at one-minute load 21.8, with `WindowServer` (72 %), `backupd` (37 %) and
+  `mds_stores` (35 %) the heaviest processes (`ps -Ao pcpu,comm -r`). The orchestrator found the same
+  test failing the same way at load 40 under a backup at `ebb70a3`, and passing at load 4–6 at 03's
+  review. No code has changed since, and 04 changes no code a test reads, so the failure cannot be
+  04's (the orchestrator's ruling 9). No other test failed.
+
+**The packages** ([`04-pip.txt`](../prompts/rrk-v020-adoption/measure/out/04-pip.txt)).
+- `pip freeze` has 101 lines and **equals 01's after-install freeze exactly** (the block headed
+  `pip freeze … after the install` in `01-pip.txt`, blank lines dropped; `diff` exit 0).
+- `pip check`: `No broken requirements found.`
+- `runregistrykit.package_provenance(("runregistrykit", "datastorekit", "raypoolkit"))`, as JSON
+  with sorted keys, **equals the `packages` of each of R3's six manifests** (six of six): `datastorekit`
+  0.4.0 at `c8570e84…` (`v0.4.0`), `raypoolkit` 0.2.0 at `eaef0ce6…` (`v0.2.0`), `runregistrykit` 0.2.0
+  at `0bae3a3c…` (`v0.2.0`), none editable.
+
+**The registry** ([`04-list.txt`](../prompts/rrk-v020-adoption/measure/out/04-list.txt)).
+`./venv/bin/python -m runregistrykit list` exits 0 with **stderr empty**. Its last line reads
+`51 run(s) under …/var/runs: 49 finished, 2 unknown; 45 with no host recorded.` By state the 51 are 27
+`done`, 18 `killed`, 3 `failed`, 1 `lost` and 2 `unknown` (the pre-registry `a3-pilot` pair). None is
+`running`, stale or `foreign`, and no row carries `!!` or `??`.
+
+**The stores** ([`04-store-show.txt`](../prompts/rrk-v020-adoption/measure/out/04-store-show.txt)).
+`find var/datastores -name '*.manifest.json'` gives **24** sidecars (a glob of the top level finds 23,
+one being in `backup-pre-resume-20260921T091011/`). `runregistrykit store show` on each one's store
+exits 0, kind `registry`, **`problems: none`**: 24 of 24.
+- **The 21 tombstones** read `state: retired`, and each reads **line for line as `01-store-show.txt`'s
+  after-block** for the same store (21 of 21 equal, the `exit=` lines aside).
+- **R3's three** (`rrk-v020-adoption-03-{reference,resumed,hardkill}`) read kind `registry`, problems
+  none, live, and each sidecar's fingerprint digest is `39809dca…`. Each lists its runs: `reference`
+  its `reference` run, `resumed` the three, `hardkill` the two.
+
+**The machine** ([`04-disk.txt`](../prompts/rrk-v020-adoption/measure/out/04-disk.txt)). `df -h /`:
+927G, **863G used, 64G free, 94 %**. The orchestrator read 859G used, 69G free and 93 % at `ebb70a3`;
+the 4 GB between the two readings is not 04's, which wrote nothing under `var/`.
+
+### 3.3 Z2 — RunRegistryKit's G1, drafted
+
+Not committed in RunRegistryKit. The user makes that commit, or has a session there make it
+(README §6.3).
+
+RunRegistryKit's `prompts/interrupted-runs/IMPLEMENTATION_STATE.md` §2 (`:1176-1188` at `f6d4b80`) has
+G1's status cell as `not yet (SGK adopts `v0.2.0`)`, and says "After the close, a gate is recorded on
+this board when it holds, in a records commit of its own". The gate's own words are in that
+campaign's `README.md` §7 (`:388-402`): SGK "has adopted `v0.2.0` in a campaign of its own, its pin
+moved in a commit of its own". So the draft is the **row of G1**, in the form of the `extraction`
+board's G2 cell (`prompts/extraction/IMPLEMENTATION_STATE.md:1128`): `**holds** <date>: …`. It
+replaces `| **G1** | not yet (SGK adopts `v0.2.0`) |`. The date is 2026-10-18, the day `0a27b0c`
+moved the pin in a commit of its own, which is when the gate's condition held (the orchestrator's
+ruling 1); the cell says 04 closed the campaign as "this commit", which the orchestrator replaces
+with 04's hash before the user pastes it.
+
+```markdown
+| **G1** | **holds** 2026-10-18: SGK adopted `v0.2.0` in a campaign of its own, `rrk-v020-adoption`, its pin moved in a commit of its own. 01 (`0a27b0c`, 2026-10-18) moved the one line `requirements.txt:81` from `@v0.1.0` to `@v0.2.0`; `pip install --dry-run` said `Would install runregistrykit-0.2.0` and nothing else, and the venv then held `runregistrykit` 0.2.0 at `0bae3a3c…` (`requested_revision` `v0.2.0`, not editable), `datastorekit` 0.4.0 and `raypoolkit` 0.2.0 unmoved, `pip check` clean. 02 (`2818780`, 2026-10-18) adopted the route after a hard kill in SGK's `CLAUDE.md` and tested it: the interrupter gained `--signal {TERM,KILL}`, and a new driver test, `RunDrivers/tests/test_hard_killed_predecessor.py` (4 tests), `SIGKILL`s a real child and shows `scoped_pipeline_run.register` refused, `end` exit 0, and a second registration accepted. 03 (`17916cb`, 2026-10-19) rehearsed it on A3 v2's own launcher, `docs/handover/quadsource_atol_sweep.py` (R3, six runs): `rrk-v020-adoption-03-reference-20261018T232838` and `-resumed-c-20261018T233941` (both `done`, both `39809dca…`, equal to SGK's earlier R2, `runregistry-extraction` 08) through `v0.2.0`, and the hard-kill pair `-hardkill-a-20261018T234619` (`SIGKILL`ed, `lost` by `end`, verified) and `-hardkill-b-20261019T001145` (`done`, `fingerprint_sidecar` `written`, `39809dca…`). 04 (this commit, 2026-10-19) took the final measurements and closed the campaign. Each of the adoption note's sections, [`docs/adoption/v0.2.0/secondarygwkit.md`](../../docs/adoption/v0.2.0/secondarygwkit.md), is answered by SGK's `docs/rrk-v020-adoption-verification.md` (§1–§3) and `prompts/rrk-v020-adoption/measure/out/`: (§1, the pin) as above, `requirements.txt:17`, `:75`, `:76` and `:88` unchanged, `pip freeze` differing from before by the one line (`01-pip.txt`) and equal to it at 04 (`04-pip.txt`), and `package_provenance` equal to the `packages` of all six R3 manifests; (§2, its runs) `list` read SGK's 45 run directories written under `v0.1.0` as before, same rows and states, gaining "45 with no host recorded" (`01-list.txt`), and at 04 gives 51 runs, 49 finished (27 `done`, 18 `killed`, 3 `failed`, 1 `lost`) and 2 `unknown`, nothing `running` or stale, exit 0, stderr empty (`04-list.txt`), with one checkout and no worktree sharing the runs root; (§3, `liveness`'s values) `interrupt_when.py` still waits on `alive` and now takes `--signal`, its dummy tests unchanged for `TERM` and a new `KILL` case exiting 137 (02), and R3 used it three times, `SIGTERM` for `resumed-a` and `resumed-b` and `SIGKILL` for `hardkill-a` (verification §1.1.2, §2.2), `tools/rehearsal_lock.py`'s own `pid_alive` being untouched; (§4, `begin` with `results`) the launcher's `run_build` (`quadsource_atol_sweep.py:556`) refused the resume of `hardkill-a`'s store at `begin` with `RuntimeError`, naming the dead run, `stale` and `python -m runregistrykit end`, ending `No run directory was created`, no run directory added and the store's five files byte-identical (§2.5), then `end` and the resume accepted (§2.6, §2.8); (§5, the handlers' `finish("killed", …)`) `resumed-a` and `resumed-b` each ended `killed`, exit 143, through the new status writer, with a fingerprint recorded and no `status.json.*.tmp` left (§1.2.2); (§6, `TERMINAL_STATES`) `RunDrivers/tests/test_pipeline_adoption.py:249-253` passes with `lost` added, and `lost` is `hardkill-a`'s recorded state; (§7, refusal fragments and two runs on one store) `test_quadsource_atol_sweep_prepare` passes unchanged, and R3's refused resume is the one real second `begin` on a store an unfinished run names; (§8, `pid_alive` and key sets) all seven SGK roots passed at 01, 02 and 03, and at 04 six pass and `ComputeTargets` has one failure, a wall-clock assertion under machine load that does not touch the registry (`test_tk_wkb_phase.TestCost.test_wall_time_per_object`), at the same counts throughout (AdaptiveLevin 32, CosmologyModels 39, ObjectFactories 279, tools 91, LiouvilleGreen 148 with 1 skipped, RunDrivers 99 and then 103 with 02's four tests, ComputeTargets 700), and every R3 manifest has twenty keys with `host` and every status a `host` with `id` and `boot` (§1.2.4). Of §9, the points that bear on the route were each shown on the real launcher in §2: the defect (`hardkill-a` left `running` with its pid dead; `list` marked it stale, `!!`, and named `end` on stderr, §2.4), `end` (exit 0, "now lost, verified", evidence `host` `this`, `boot` `this`, `pid_answers` `false`; a second `end` refused and the status byte-identical, §2.6), `begin`'s refusal (§2.5), and the resumed run's fingerprint (`hardkill-b` `done`, `fingerprint_sidecar` `written`, no `fingerprint_error`, `39809dca…` equal to `reference` and to R2's two recorded fingerprints, §2.8–§2.9), which `v0.1.0` recorded as `fingerprint_error`. **No defect of this package was met.** The one finding of R3, `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`, is Ray's process behaviour after a `SIGKILL` of a driver, not the package's, and is not a report to this repository; neither of this board's two open issues that bear on a long run was met (`[04-a-killed-process-not-yet-reaped-answers-kill-0]`: `hardkill-a`'s driver was reaped by its `sh` and `end` found `pid_answers` `false`; `[03-a-run-whose-manifest-cannot-be-read-names-no-store]`: every manifest was readable). **Read here** 2026-10-19 through `git` only, at RunRegistryKit `f6d4b80` and `v0.2.0`: the adoption note, the release notes and the `interrupted-runs` board's §2–§4, none changed. SGK's record is `docs/rrk-v020-adoption-verification.md` §1 (R3), §2 (the hard-kill route) and §3 (the close) at 04's commit |
+```
+
+Each clause of the draft is read from this repository:
+- **The commits** exist and say what the draft claims (`git show --stat`): `0a27b0c` "Pin
+  runregistrykit at v0.2.0" (`requirements.txt`, one line, with `CLAUDE.md`'s two pin mentions and
+  `measure/out/01-*`); `2818780` "Adopt the hard-kill route in CLAUDE.md, the interrupter and a
+  driver test" (`CLAUDE.md`, `interrupt_when.py`, the dummy test, `test_hard_killed_predecessor.py`);
+  `17916cb` "Rehearse through runregistrykit v0.2.0 and the hard-kill route" (this document's §1–§2).
+- **The adoption note's §1–§8** are each answered by a clause of the draft, as the table below
+  maps; **§9's** four points that bear on the route are answered by §2.4–§2.8 of this document.
+
+| Adoption note (`docs/adoption/v0.2.0/secondarygwkit.md`) | SGK's evidence, in the draft | Where |
+|---|---|---|
+| §1 the pin | `requirements.txt:81`, one line; `:17`, `:75`, `:76`, `:88` unchanged | 01, `01-pip.txt`; `04-pip.txt` |
+| §2 its runs | 45 old runs read as before; 51 now; one checkout | `01-list.txt`; `04-list.txt` |
+| §3 `liveness`'s values | `interrupt_when.py --signal`; three firings in R3 | 02; §1.1.2, §2.2 |
+| §4 `begin` with `results`, after a hard kill | the driver test; the launcher's real refusal, `end`, the resume | 02; §2.5–§2.8 |
+| §5 the handlers' `finish("killed", …)` | `resumed-a`, `resumed-b`; no temporary status file | §1.2.2 |
+| §6 `TERMINAL_STATES` | `test_pipeline_adoption.py:249-253` passes; `lost` recorded | `RunDrivers` 103 at 02, 03, 04 |
+| §7 refusal fragments, two runs on one store | `test_quadsource_atol_sweep_prepare` passes; one real second `begin` | `RunDrivers` 103; §2.5 |
+| §8 `pid_alive` and key sets | all roots at 02's counts; twenty keys with `host` | §1.8, §3.2; §1.2.4 |
+| §9, the defect, `end`, `begin`'s refusal, the resumed fingerprint | each shown on the real launcher | §2.4, §2.6, §2.5, §2.8 |
+
+### 3.4 Z3 — the issues RunRegistryKit has since closed
+
+Read with `git show f6d4b80:<path>` (RunRegistryKit's `HEAD`, clean) and `git show v0.2.0:<path>`.
+
+| Issue (SGK's board entry) | RunRegistryKit's entry (`prompts/interrupted-runs/IMPLEMENTATION_STATE.md` §4 at `f6d4b80`) | `v0.2.0`'s release notes |
+|---|---|---|
+| `[04-runs-do-not-say-which-machine-produced-them]` (`run-registry` §4, `:377`) | `:1523`; **Resolved (2026-10-16, by 01, `387c58f`)** at `:1597` | §2.1, the `host` records (`:33`), and §2.4 (`:112`) |
+| `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]` (`a3-v2-readiness` §4, `:1685`) | `:1641`; **Resolved (2026-10-17, by 02, `2bf9c72`)** at `:1763` | §2.3, `status.json`'s temporary names (`:97`) |
+
+- **Both are resolved on RunRegistryKit's board and released in `v0.2.0`**, which SGK has run since
+  01 (`0a27b0c`). The release notes name each change, and the tag `v0.2.0` (tag object `895e3c70…`, on
+  `0bae3a3c…`) contains both prompts' commits.
+- **Where RunRegistryKit's change differs from the SGK entry's next step.** For the machine: SGK asked
+  for a `machine` field from `platform.node()` and a lister that refuses to judge a foreign record;
+  the package records a `host` (an `id` that is a digest of the OS's identity, a `boot`, and a name for
+  reading) and judges a run on another host `foreign`, one from an earlier boot `stale`. For the
+  heartbeat: the SGK entry's next step was a unique temporary name per write, which RunRegistryKit
+  adopted for `status.json` alone, and it also discards a write that a later one has superseded; its
+  board had already corrected the next step on hand-over. In each case RunRegistryKit's board is right.
+- **The index** (`docs/OPEN_ISSUES.md`) said in §1.11, §1.17 and §1.21's lead-in that both "stay open"
+  or are "still open" in RunRegistryKit. Each sentence now says where and when the issue was closed,
+  that `v0.2.0` released it, and that SGK adopted it at `0a27b0c`; §1.21 says which of the four
+  transferred issues are still open there (§1.14's two) and which closed (§1.11's, §1.17's). The
+  rows were already deleted, and no row is added or deleted now: the index stays at 100.
+- **The two boards** each gain one dated paragraph after their `Transferred (2026-10-16)` paragraph,
+  and nothing else changes (`git diff -U0`: one hunk each).
+- **The three left alone are still open in RunRegistryKit.** Its `docs/OPEN_ISSUES.md` §1.2 at
+  `f6d4b80` (`:28-30`) lists `[00-a-copy-carries-its-sources-present-tense-fields]`,
+  `[01-cross-filesystem-move-advice-says-delete-by-hand]` and
+  `[06-runregistrykit-list-into-a-closed-pipe-ends-in-a-traceback]`, each with owner `none`. Their SGK
+  records are not touched.
+
+### 3.5 Z4 — what A3 v2 inherits
+
+For `handover`, which owns the A3 v2 launch (`a3-v2-readiness` README §1). It starts from
+[`runregistry-extraction-verification.md`](runregistry-extraction-verification.md) §4.5 and states
+what is different, from the tree at `aa0b57c` and the records.
+
+**The launcher, unchanged.** `docs/handover/quadsource_atol_sweep.py --build --register <slug>
+--purpose "<one line>"`.
+- Its SHA-256 at `aa0b57c` is `2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d`,
+  **equal to all six of R3's manifests' `script_sha256`** (checked here against the six run directories)
+  and to R2's. Its last commit is `7af17bd`. Its line numbers in §4.5 are still right.
+- **The flags R3 ran it with:** `--build --rehearsal [--resume] --database
+  var/datastores/<store>.sqlite --job-name rrk-v020-adoption-03 --atol 1e-32 --rtol 1e-7 --cpus 6
+  --register <slug> --purpose "…" --campaign rrk-v020-adoption --prompt 03` (§1.1). **A production
+  build drops `--rehearsal`**, which selects a three-wavenumber, `--zend 250` scope that "is not A3 v2"
+  (`:989-993`); `--job-name` defaults to `handover-A3-baseline-v2` (`:1000`) and `--campaign` to
+  `handover` (`:1014`).
+- **It forces `address="local"`** at the `ray.init` it wraps (`:610`), and `run_build` registers the
+  run with `runregistrykit.begin(…)` at `:556`, after the `--resume` pre-check and before Ray starts, so
+  a refused `begin` ends the launch before any Ray process exists (§2.5).
+
+**The pins,** by line of `requirements.txt`: `datastorekit @ …@v0.4.0` (`:17`), `raypoolkit @ …@v0.2.0`
+(`:76`) and `runregistrykit[stores] @ …@v0.2.0` (`:81`), tags and never editable. `ray==2.43.0` (`:75`) and
+`SQLAlchemy==2.0.39` (`:88`) are SGK's own pins. The only change since §4.5 is `:81`, from `v0.1.0`.
+
+**The commands,** as R3 ran them, in their current spelling:
+```bash
+./venv/bin/python -m runregistrykit list                                    # discovery, before anything
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose "<text>"
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+./venv/bin/python -m runregistrykit store show var/datastores/<store>.sqlite   # absent before the build
+# the launch above, then at once:
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid <driver pid>
+# after a hard kill, once a person has checked that the run is over:
+./venv/bin/python -m runregistrykit end <RUN_ID> --reason "<text>"             # on the host it ran on
+# after the build ends, and its last Ray process is gone:
+./venv/bin/python -m runregistrykit store create --purpose "<one line>" var/datastores/<store>.sqlite
+./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/<store>.sqlite
+./venv/bin/python -m runregistrykit store show var/datastores/<store>.sqlite
+PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+./venv/bin/python -m runregistrykit store retire --dry-run --reason "<text>" var/datastores/<store>.sqlite
+```
+- **What `list` now prints:** `!!` before a run that says `running` and is not (the pid does not answer
+  `kill -0`, the heartbeat is older than 900 s, or this machine has rebooted since), with the
+  explanation on stderr; `??` before a `foreign` run, which is not tested here; and a summary line
+  that ends "*N* with no host recorded", which counts the runs written under `v0.1.0`: 45, for ever.
+- **The lock's five commands** and its rule are as §4.5 says: a held lock (exit 3) means stop and ask
+  the user; never wait, retry or remove it; every driver names its address (`local`); `ray stop` is
+  never run.
+- **A `SIGTERM`'d build** needs none of this: its handler records `killed` through the new writer, with
+  a fingerprint, and leaves no temporary status file (§1.2.2).
+
+**The route after a hard kill, as R3 ran it** (§2, step by step):
+1. `list` shows the run `stale`, with `!!`, and stderr says `!! 1 run(s) say they are running and are
+   not … end it with python -m runregistrykit end RUN_ID --reason TEXT` (§2.4).
+2. The resume's `begin` is **refused**, with `RuntimeError` naming the dead run, `stale` and `python -m
+   runregistrykit end`, ending `No run directory was created`: no run directory is added, Ray is not
+   started and the store's files are byte-identical (§2.5). The launch log is the record.
+3. A person checks that the run is over (`kill -0` on its pid, on that host), and runs `end` **on the host
+   it ran on**: exit 0, "now lost, verified", with the evidence recorded; a second `end` is refused
+   (§2.6).
+4. `tools.rehearsal_lock ray-processes` (below).
+5. `store create`, if the store has no sidecar yet (R3's `hardkill` store had none, README §6.2 C8)
+   (§2.7).
+6. The resume is begun with `--resume --register <slug>`. It is accepted, runs to `done`, and its
+   `finish` records the fingerprint, with `fingerprint_sidecar` `written` (§2.8). Under `v0.1.0` it
+   recorded `fingerprint_error`.
+
+**Ray after a `SIGKILL`,** as R3 found it (§2.3). The raylet, workers, actors and broker were gone
+within 20 s. **The GCS server was not:** it was left reparented to pid 1, inside `GcsServer::Stop()`
+waiting in gRPC's shutdown, which a `SIGTERM` cannot end (it goes through the same handler) and a
+`SIGKILL` did, 20 m 50 s after the driver's death.
+- Until it is gone `ray-processes` is not empty, so the lock's `release` **refuses** (it prints the
+  processes and returns 1, `tools/rehearsal_lock.py:376-380`) and a next `acquire` refuses too (it
+  removes the lock again and returns 4, `:293-299`).
+- It is one observation of one kill. Whether every `SIGKILL` leaves the GCS server so, and what
+  signalled it into `Stop()`, are not established. Hence `CLAUDE.md` rule 5 (below), and the issue
+  `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`, which stays open with no owner.
+
+**Ray after a `SIGTERM`:** `[07-a-killed-builds-ray-agents-outlive-the-driver]` (the `a3-v2-readiness`
+board; index §1.17) is still open: after a killed build exits 143 its dashboard and runtime-env agents
+may outlive it by 1–2 minutes, so "no Ray process left" is true only after waiting by pid. R3's §1.2.3
+found none: nothing outlived either `SIGTERM`'d driver, at load 6–29.
+
+**What the hard kill did not test** (03's log, observation 2). `hardkill-a` was killed in the QSI stage,
+after `GkSource` had completed and been validated; `QuadSourceIntegral` rows carry no `validated`
+column. So no row was left unvalidated and no journal was left: **neither the prune at open nor
+DatastoreKit's journal rollback ran after a `SIGKILL`** (§2.4, §2.8). A kill inside the `GkSource`
+stage, or inside a write, would test them. R3's `resumed-b` exercised the prune after a `SIGTERM`
+(§1.3.2).
+
+**RunRegistryKit's open issues that bear on a long run,** both still open at `f6d4b80` (its
+`docs/OPEN_ISSUES.md` §1.3), both with owner none:
+- **`[04-a-killed-process-not-yet-reaped-answers-kill-0]`.** A killed process its parent has not
+  reaped still answers `kill -0`, so its run is `alive` in `list` and `end` refuses it. A detached
+  launch through `nohup sh -c '…; echo "** driver exit status $?"'` is reaped by its `sh`: `hardkill-a`
+  died with its launch log ending `137`, and `end` found `pid_answers` `false`. A launch that is not
+  reaped by a parent that waits could meet it.
+- **`[03-a-run-whose-manifest-cannot-be-read-names-no-store]`.** A live run whose `manifest.json` is
+  missing or torn names no store, so the store operations proceed on the store it is writing. The
+  manifest is written once, by `begin`, and nothing rewrites it; no known cause tears it.
+
+**The issues that no longer bear on it:**
+- `[a3-v2-a-hard-killed-run-blocks-its-store]`, closed by 03 (the `handover` board's §4);
+- `[00-main-and-the-readers-default-to-ray-address-auto]`, closed by `handover` 05 (`359f3fd`): `main.py`
+  and the readers default to `local`;
+- `[04-runs-do-not-say-which-machine-produced-them]` and
+  `[04-a-signal-inside-a-heartbeat-write-can-leave-status-json-unparseable]`, closed in RunRegistryKit
+  and adopted here (§3.4). A second-machine build is now judged `foreign` rather than by this
+  machine's process table; a handler's terminal state can no longer be lost to a heartbeat.
+
+**Its store.** The A3 v2 store is **the first live store recorded in this layout that is meant to be
+kept**. At `aa0b57c` every sidecar under `var/datastores/` is a tombstone (21 `retired`) but R3's three
+(`rrk-v020-adoption-03-{reference,resumed,hardkill}`, live, `39809dca…`), which are throwaway and the
+user's to retire, or not (README §3, §6.3). It is a new name, and `store show` must say `absent` for it
+before the first launch.
+
+**The disk.** `df -h /` is **94 % used, 64 GB free** (§3.2), against R2's 97 % (36 GB) and R3's 93 %.
+Ray's spilling threshold is 95 %: about 17 GB of headroom on a 927 GB volume. R3's three stores and
+their working files are on it. A3 v2 is long and wide and may spill; it is the machine's, not the
+code's, as at R2.
+
+**`CLAUDE.md` rule 5** (the user's ruling, README §6.1 **U4**) gains two sentences, after its sentence
+on `end` and the resume and the unreaped process:
+
+> After `end`, check `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes`: a
+> `SIGKILL`ed driver's GCS server may be left alive, reparented to pid 1, stuck in its own shutdown
+> where a `SIGTERM` cannot end it (`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`). One
+> still listed ten minutes after the kill is ended **by a person** with `kill -KILL <pid>`, by its pid,
+> never by pattern and never with `ray stop`; until then the rehearsal lock cannot be released.
+
+Nothing else in `CLAUDE.md` changes.

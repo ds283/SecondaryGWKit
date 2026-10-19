@@ -126,7 +126,12 @@ as its record. It never deletes a run directory, a sidecar or any other record.
    checks nothing. The one case `end` refuses that is not a live run is a killed process its parent
    has not yet reaped, which still answers `kill -0` (RunRegistryKit's
    `[04-a-killed-process-not-yet-reaped-answers-kill-0]`); a detached launch through `nohup sh -c`
-   is reaped by its `sh`.
+   is reaped by its `sh`. After `end`, check
+   `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes`: a `SIGKILL`ed driver's GCS
+   server may be left alive, reparented to pid 1, stuck in its own shutdown where a `SIGTERM` cannot
+   end it (`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`). One still listed ten
+   minutes after the kill is ended **by a person** with `kill -KILL <pid>`, by its pid, never by
+   pattern and never with `ray stop`; until then the rehearsal lock cannot be released.
 6. **Durability.** `var/runs/`, which is gitignored and in the repository. Never a session
    scratchpad, never `/tmp` — a 462-row census died with a scratchpad and cannot be re-examined.
 7. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record

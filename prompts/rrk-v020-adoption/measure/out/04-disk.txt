@@ -1,0 +1,3 @@
+## $ df -h /   (HEAD aa0b57c, before any edit of prompt 04)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s1s1  927G  863G   64G  94% /

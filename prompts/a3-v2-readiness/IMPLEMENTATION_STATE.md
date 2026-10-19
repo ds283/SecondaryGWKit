@@ -1691,6 +1691,12 @@ with its closing note; log 03). Both index rows are deleted.
     measurement. RunRegistryKit corrected the next step on hand-over (only `status.json`'s writes
     take a unique name, keeping the old mode, since tests and refusals rely on the sidecar's fixed
     `.tmp`) and widened the impact; where the two differ, its board is right.
+  - **Closed in RunRegistryKit (2026-10-17, by `interrupted-runs` 02, `2bf9c72`):** released in
+    `runregistrykit` `v0.2.0` (2026-10-18; its release notes §2.3 describe `status.json`'s
+    temporary names) and adopted by SGK in `rrk-v020-adoption` 01 (`0a27b0c`, 2026-10-18).
+    RunRegistryKit's change goes beyond this entry's next step: besides the unique name, a write
+    superseded by a later one is discarded, so a handler's terminal state is kept whether the
+    handler raises or returns; where the two differ, its board is right.
 
 ---
 

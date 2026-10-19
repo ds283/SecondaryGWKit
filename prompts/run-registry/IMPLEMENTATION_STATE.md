@@ -383,6 +383,14 @@ README §0.3 calls worse than nothing.
   measurement. RunRegistryKit added, on hand-over, three questions its decision has to answer; the
   decision is now its own, for every client.
 
+  **Closed in RunRegistryKit (2026-10-16, by `interrupted-runs` 01, `387c58f`):** released in
+  `runregistrykit` `v0.2.0` (2026-10-18; its release notes §2.1 and §2.4 list the new `host`
+  records) and adopted by SGK in `rrk-v020-adoption` 01 (`0a27b0c`, 2026-10-18). RunRegistryKit's
+  change differs from this entry's next step: it records a `host` (`id`, `name`, `machine`, `system`,
+  `release`, `python` in the manifest; `id` and `boot` in the status) in place of a `machine` field
+  from `platform.node()`, and `liveness` returns `foreign` for a run on another host and `stale` for
+  one from an earlier boot; where the two differ, its board is right.
+
 The other two issues this campaign opened are still in §3, and that is the honest count rather than
 a failing: both are a **deliberate non-adoption** recorded so its price is known, not work left half
 done.

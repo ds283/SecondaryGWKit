@@ -8,16 +8,16 @@ change its status when the board closes it. The open-issue column is a snapshot 
 [`docs/OPEN_ISSUES.md`](../docs/OPEN_ISSUES.md) on the date in the header; the section pointer
 is the durable part.
 
-**Last updated:** 2026-10-18 · 27 campaigns: 2 live, 1 planned, 1 seeded, 23 closed or complete.
+**Last updated:** 2026-10-19 · 27 campaigns: 2 live, 1 seeded, 24 closed or complete.
 Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 `datastore-integrity`'s, taken on 2026-10-02, `datastore-generic`'s, taken on 2026-10-06, and
 `datastore-generic-followup`'s, taken on 2026-10-07, `dk-and-rpk-migration`'s, taken on
 2026-10-12, `runregistry-extraction`'s, taken on 2026-10-16, and `rrk-v020-adoption`'s, taken on
-2026-10-18.
+2026-10-19.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
-| [`rrk-v020-adoption`](rrk-v020-adoption/IMPLEMENTATION_STATE.md) | **in progress** — 3 of 4 landed; R3 and HK hold; 04 next | 2026-10-19 | SGK's move from `runregistrykit` `v0.1.0` to `v0.2.0`; the route after a hard kill (`end`, then the resume) in `CLAUDE.md`; rehearsal R3 and the hard-kill pair on the A3 v2 launcher | §1.22; 1 (opened by 03; the one assigned from `handover` closed by 03) |
+| [`rrk-v020-adoption`](rrk-v020-adoption/IMPLEMENTATION_STATE.md) | closed 4 / 4, 2026-10-19 | 2026-10-18 → 2026-10-19 | SGK's move from `runregistrykit` `v0.1.0` to `v0.2.0`; the route after a hard kill (`end`, then the resume) in `CLAUDE.md`; rehearsal R3 and the hard-kill pair on the A3 v2 launcher | §1.22; 1 (opened by 03, narrowed by 04, no owner; the one assigned from `handover` closed by 03) |
 | [`runregistry-extraction`](runregistry-extraction/IMPLEMENTATION_STATE.md) | closed 10 / 10, 2026-10-16 | 2026-10-12 → 2026-10-16 | `RunRegistry/` frozen, then replaced by the pinned `runregistrykit`; the fingerprint's encoding versioned in DatastoreKit; SGK's `config/fingerprint.py`; rehearsals R0–R2; the two briefs; `tools/rehearsal_lock.py` | §1.1, §1.21; 1 |
 | [`dk-and-rpk-migration`](dk-and-rpk-migration/IMPLEMENTATION_STATE.md) | closed 9 / 9, 2026-10-12 | 2026-10-11 → 2026-10-12 | SGK's adoption of `datastorekit` `v0.2.2` and `raypoolkit` `v0.2.0`, DatastoreKit first; the fingerprint rehearsals R0–R2; each package's gate G2 | §1.20; 2 |
 | [`perturbation-sound-speed`](perturbation-sound-speed/AUDIT.md) | **seeded** — audit and script only, no README or board | 2026-09-29 | the $c_s^2$ the transfer-function sector reads: $dp/d\rho$, not $p/\rho$, on the QCD background | §1.16; 1 |
