@@ -2,7 +2,7 @@
 
 - **Subject:** [`03-rehearse-through-v0.2.0.md`](../03-rehearse-through-v0.2.0.md), board items L1–L4 (R3), H1 and
   H2; gates R3 and HK.
-- **Commit:** this commit (parent `aab4075`).
+- **Commit:** `17916cb` (parent `aab4075`).
 - **Result:** landed, with one stop.
   - **R3 holds.**
   - **The hard-kill route (H1) holds.** `[a3-v2-a-hard-killed-run-blocks-its-store]` closes.
@@ -358,7 +358,7 @@ None. This prompt adds no code, no test and no script (README §5 rule 8).
 
 - **R3 holds** (board §2), resting on:
   - the dispatch `HEAD` `aab4075`, whose code is `2818780`'s;
-  - this commit;
+  - `17916cb`;
   - the runs `rrk-v020-adoption-03-reference-20261018T232838` and
     `rrk-v020-adoption-03-resumed-c-20261018T233941`, both `done`, both `39809dca…`, equal to R2's.
 - **HK holds for the route** (`begin` refuses, `end` verifies, the resume reproduces `39809dca…` with

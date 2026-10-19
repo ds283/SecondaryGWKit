@@ -580,7 +580,7 @@ Closed by `rrk-v020-adoption` prompt 03, 2026-10-19:
   v2's own launcher, a build killed by `SIGKILL` (its README §2.2, 03, acceptance 3). The index
   row has moved to `docs/OPEN_ISSUES.md` §1.22.
 
-  **Resolution (2026-10-19).** Closed by `rrk-v020-adoption` prompt 03, in this commit: the route
+  **Resolution (2026-10-19).** Closed by `rrk-v020-adoption` prompt 03, at `17916cb`: the route
   of `end` and then the resume was shown on A3 v2's own launcher, `docs/handover/quadsource_atol_sweep.py`,
   with `runregistrykit` `v0.2.0` (`0bae3a3c…`) installed by that campaign's prompt 01. The build
   `rrk-v020-adoption-03-hardkill-a-20261018T234619` was killed by `SIGKILL` in `CALCULATE QUADRATIC

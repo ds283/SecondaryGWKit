@@ -2,9 +2,9 @@
 
 **Last updated:** 2026-10-19 · **Status: IN PROGRESS — 3 of 4 landed.** 01 landed and reviewed
 (the pin moved, the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`,
-the interrupter's `--signal`, the driver test); 03 landed (R3 holds; the hard-kill route holds; Ray's
-GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 held until 03's review
-(README §2.1).
+the interrupter's `--signal`, the driver test); 03 landed and reviewed (R3 holds; the hard-kill route holds;
+Ray's GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 to be written,
+now that 03 is reviewed (README §2.1).
 U1–U3 ruled by the user (README §6.1). The issue assigned here from `handover` is closed (§4); one
 is open, opened by 03 (§3).
 
@@ -48,7 +48,7 @@ reverse (README §6.3).
 |---|---|---|---|---|---|---|---|
 | 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
-| 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | this commit | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
+| 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | `17916cb` | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
 | 04 | Close the campaign | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits | Sonnet | ⏸ after 03's review | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
@@ -58,7 +58,8 @@ not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, under
 `orchestrator/`: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-18, used for
-01) and [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02).
+01), [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02) and
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03).
 
 ### 1.1 Items
 
@@ -69,8 +70,8 @@ not scope: every charter is fixed in README §2.2.
 | **A1** | 02 | `CLAUDE.md`: liveness by host and boot; the route after a hard kill; no `Run.finish` by hand | ✅ `2818780`: rule 2 by host and boot; new rule 5; the pointer; `end` in the command list |
 | **A2** | 02 | `interrupt_when.py --signal {TERM,KILL}`; the build dummy test's `KILL` case | ✅ `2818780`: default output unchanged; case D, child exit 137 |
 | **A3** | 02 | the driver test: a `SIGKILL`ed run refuses `register`; `end`; `register` accepted | ✅ `2818780`: `test_hard_killed_predecessor.py`, 4 tests; `RunDrivers` 99 → 103 |
-| **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ✅ this commit: both stores `39809dca…`, `encoding_format` 1, equal to each other, their sidecars and R2's two recorded fingerprints; prune 48 = 48; every L4 count R2's, every statistics block byte-identical to R2's same slug |
-| **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ✅ this commit: 137 with status `running`; `!!`; `begin` refused, nothing created or changed; `end` verified, second refused; `hardkill-b` `done`, sidecar `written`, `39809dca…` |
+| **L1**–**L4** (R3) | 03 | README §4.1's four launches through `v0.2.0`; L4 against R2 | ✅ `17916cb`: both stores `39809dca…`, `encoding_format` 1, equal to each other, their sidecars and R2's two recorded fingerprints; prune 48 = 48; every L4 count R2's, every statistics block byte-identical to R2's same slug |
+| **H1** | 03 | the hard-kill pair: `hardkill-a` killed, the refused resume, `end`, `hardkill-b` to `done`, `39809dca…` | ✅ `17916cb`: 137 with status `running`; `!!`; `begin` refused, nothing created or changed; `end` verified, second refused; `hardkill-b` `done`, sidecar `written`, `39809dca…` |
 | **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ❌ not as stated: the GCS server outlived it 20 m 50 s, until a `SIGKILL` on the user's ruling; opened as `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` (§3) |
 | **Z1** | 04 | the final measurements | ⬜ |
 | **Z2** | 04 | G1 drafted for RunRegistryKit's `interrupted-runs` board | ⬜ |
@@ -83,8 +84,8 @@ not scope: every charter is fixed in README §2.2.
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | **E** | RunRegistryKit has tagged `v0.2.0` with release notes and an SGK adoption note | — | ✅ holds (2026-10-18): tag object `895e3c70…` on `0bae3a3c…`; `docs/releases/v0.2.0.md` and `docs/adoption/v0.2.0/secondarygwkit.md` in the tag; nothing under `runregistrykit/` or in `pyproject.toml` changed after it (RunRegistryKit `f6d4b80`) |
-| R3 | the four launches through `v0.2.0` reproduce `39809dca…`, equal to R2's recorded fingerprints | 03 | ✅ holds (2026-10-18, this commit): both stores `39809dca…`, 0 differences against R2's `reference` and `resumed-c` |
-| HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ✅ the route holds (2026-10-19, this commit), every step as written. **H2 did not hold as written**: Ray's GCS server outlived the killed driver past ten minutes; the prompt's stop fired, and the user ruled a `SIGTERM` (no effect) and then a `SIGKILL` (U3); it is §3's issue |
+| R3 | the four launches through `v0.2.0` reproduce `39809dca…`, equal to R2's recorded fingerprints | 03 | ✅ holds (2026-10-18, `17916cb`): both stores `39809dca…`, 0 differences against R2's `reference` and `resumed-c` |
+| HK | a `SIGKILL`ed build's resume is refused at `begin`, `end` records the run `lost`, and the resume then reproduces `39809dca…` with its fingerprint recorded | 03 | ✅ the route holds (2026-10-19, `17916cb`), every step as written. **H2 did not hold as written**: Ray's GCS server outlived the killed driver past ten minutes; the prompt's stop fired, and the user ruled a `SIGTERM` (no effect) and then a `SIGKILL` (U3); it is §3's issue |
 | RunRegistryKit G1 | SGK has adopted `v0.2.0` in a campaign of its own, its pin moved in a commit of its own | 01 | ✅ pin moved at `0a27b0c`; the record on RunRegistryKit's board is the user's (README §6.3); 04 drafts it |
 
 ## 3. Active and unresolved issues
@@ -283,7 +284,7 @@ after the agent's commit. **All seven checks pass**, and no stop condition fired
 
 ### 5.3 After prompt 03 (2026-10-19)
 
-Landed in this commit, on `aab4075`. L1–L4 and H1 pass; H2 does not hold as written, and the prompt's
+Landed at `17916cb`, on `aab4075`. L1–L4 and H1 pass; H2 does not hold as written, and the prompt's
 §2.3 stop fired. Log: [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md);
 record: [`docs/rrk-v020-adoption-verification.md`](../../docs/rrk-v020-adoption-verification.md) §1–§2;
 outputs: `docs/rrk-v020-adoption/rehearsal/*_03*`.
@@ -308,3 +309,100 @@ outputs: `docs/rrk-v020-adoption/rehearsal/*_03*`.
   one opened. `docs/OPEN_ISSUES.md` stays at 100.
 - **The registry:** 51 runs, 49 finished, 2 `unknown`, none `running` or stale. **The lock** released;
   free. **The roots** at 02's counts.
+
+**Orchestrator review of prompt 03** (2026-10-19, against `17916cb`, by
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) §3). Dispatched from `aab4075` to one Opus
+subagent, after the seven roots, the venv, the host, the store names and a hot-journal probe were
+checked at `b84c53d`. The agent was resumed with `SendMessage` after each of the six builds, with
+one wait per build ending on the driver pid's death: `ENDED done`, `killed`, `killed`, `done`,
+`running` (`hardkill-a`, as expected) and `done`, heartbeat never stale. **The prompt's §2.3 stop
+fired** at `hardkill-a` (below), and the user ruled twice. Nothing landed after the agent's commit.
+**Every check passes but H2**, which fails as the record says, and the record is right.
+1. **Scope.** 29 files: 26 added (the verification document, the log and 24 `*_03*` outputs) and
+   three modified (this board, the `handover` board and `docs/OPEN_ISSUES.md`). README,
+   `prompts/INDEX.md`, `orchestrator/`, and every code file, test and script are untouched. The
+   `handover` diff moves the one entry from §3 to §4 and corrects its header's count, "Eight" to
+   "Seven".
+2. **The runs**, read from each run directory. `reference`, `resumed-c` and `hardkill-b` are
+   `done`/0 at `39809dca…`; `resumed-a` and `resumed-b` are `killed`/143 at `c60e0d19…` and
+   `7e41cbe2…`; all three of those fingerprints and the two killed ones are format 6,
+   `encoding_format` 1, 21 classes, problems `{}`, with no `fingerprint_error`. `hardkill-a` is
+   `lost`, `exit_code` `null`, with no fingerprint. No `.tmp` in any run directory. Each killed
+   `stderr.log` holds the handler's two lines (`SystemExit(1)` both times); `hardkill-a`'s is empty.
+   The launch logs end 0, 143, 143, 0, 137, 1 (the refused launch) and 0.
+3. **The manifests and statuses.** All six: 20 keys, `packages` equal as JSON to
+   `package_provenance` of the three, `git_head` `aab4075…`, `git_dirty` false, `script_sha256`
+   `2a985303…`, `--resume` on `resumed-b`, `-c` and `hardkill-b` only, the rehearsal `scope`, the
+   right `results`, the manifest `host`'s `id` and `name` this machine's, and every status's `host`
+   `{"id": "8d2b247824882486", "boot": "376461AF-…"}`.
+4. **Nothing stored was recomputed.** `stage_counts.py` on the six runs here equals the committed
+   table. `GkSource` 291 − 168 + 48 = 171; QSI 864 − 181 = 683 on the resumed chain; on the
+   hard-kill chain, `hardkill-b` computed 626 QSI rows and nothing else. The four shards of the
+   `hardkill` store now hold 288 + 288 + 0 + 288 = 864 QSI rows. `hardkill-a`'s 238 is inferred
+   (864 − 626), as the log says: the killed run recorded no fingerprint.
+5. **The prune.** `prune_check_03.txt` gives 48 of 48 absent, 0 reused, twice. The hard-kill pair
+   pruned nothing, and that is correct: `GkSource` had completed, and `QuadSourceIntegral` has no
+   `validated` column: the shard's `pragma_table_info` lists none, and its factory says "No validated
+   flag" (`ObjectFactories/QuadSourceIntegral.py:970`).
+   `hardkill-a` left no journal, so DatastoreKit's rollback at open was not exercised either
+   (log, observation 2).
+6. **The fingerprints, here.** `compare_stores.py`: reference = resumed and reference = hardkill,
+   21 classes equal. `compare_with_recorded.py` on all three primaries against R3's `reference` and
+   `resumed-c` and R2's two: 0 differences in all twelve comparisons, and against each sidecar.
+   `runregistrykit store fingerprint` on each: `39809dca…`, problems none, `recorded: matches`.
+7. **Integrity, here.** `store_soundness.py` on all three: `=> clean`, 0 problems, 0 duplicates.
+   The census: no divergence, three times. No journal under `var/datastores/`. All 18 files of
+   R3's stores are byte-identical across this review's reads.
+8. **The readers.** Recorded in `readers_03.txt`: all seven exit 0, every file identical around
+   each. None was run here.
+9. **L4.** `policy_statistics.py` here on `reference`, `resumed-b`, `resumed-c` and `hardkill-b`: 14
+   lines each, each equal to its committed output, and the first three byte-identical to R2's same
+   slug.
+10. **The printed lines.** As the log records; the only line naming `runregistrykit` is the banner.
+11. **H1, the route.** `hardkill-a`'s `ended`: `verified` `true`, `not_verified_because` `null`;
+    evidence `host` `this`, `boot` `this`, `pid` 99903, `pid_answers` `false`, `state` `running`,
+    `status_readable` `true`, `heartbeat_age` 1348.9 s; `git_head` `aab4075…`; `at` 00:11:12, after
+    the kill. The refused launch's log is the `resuming into` line, the traceback from `:556` into
+    `begin`, the refusal word for word and ending `No run directory was created`, and `** driver
+    exit status 1`, with no `bootstrapping` line. `hardkill-b` is `fingerprint_sidecar` `written`.
+12. **H2, Ray after the `SIGKILL`.** Not met, and recorded truly. The orchestrator's own reading at
+    23:49:35 listed only the GCS server, pid 99918, reparented to pid 1. It was alive at 00:00:03
+    and ignored a `SIGTERM` at 00:06:13. A read-only stack sample
+    (`var/rrk-v020-adoption-03/gcs_server_99918_sample.txt`) shows the main thread, from `main`'s
+    asio `signal_handler`, in `GcsServer::Stop()` → `GrpcServer::Shutdown()` →
+    `grpc::Server::ShutdownInternal` → `gpr_cv_wait`. So the GCS server *was* signalled at the kill:
+    its log says `Stopping GCS server.` at 23:49:15.152. Its shutdown then waited for ever on
+    in-flight calls, and a second signal goes through the same handler. A `SIGKILL` at 00:10:05,
+    on the user's ruling, ended it. `ray stop` was never run.
+13. **The lock.** `lock_03.txt`: `acquire` at 23:27:51, 47 s before `reference`'s manifest;
+    `set-pid` at the six builds with their driver pids (90795, 93122, 94708, 95847, 99903, 10646),
+    none at the refused launch; `release` at 00:14:55, exit 0; one `status` record cut short by the
+    agent's display pipe (log, deviation 17). Now `status`: free; `ray-processes`: none;
+    `~/ScienceData/` holds `ChamPBH-rehearsals/` alone.
+14. **`var/`.** The 21 tombstones hash to `7ad566f4…`, as before dispatch. `find var -newer <marker>`
+    lists only R3's run directories, launch logs, stores, sidecars and working directory. `list`:
+    51 runs, 49 finished, 2 `unknown`, "45 with no host recorded"; no R3 process remains.
+15. **The records.** This board, the `handover` board, the index (100, the closed row gone, the new
+    row in §1.22), the verification document (§1 in R2's §3 shape, §2 with §2.1–§2.10) and the log
+    (every §5.1 heading; 21 deviations classified, three `UNINTENDED DRIFT`, each a record slip
+    annotated where it occurs). The commit message is in `CLAUDE.md`'s form.
+16. **The suites**, here at `17916cb`, serially, load 4–6: AdaptiveLevin 32, CosmologyModels 39,
+    ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers 103, ComputeTargets
+    700, all OK.
+- **The orchestrator's own actions outside the note.** On the user's two rulings under U3: one
+  `kill -TERM 99918` (00:06:13), one read-only `sample 99918 2`, and one `kill -KILL 99918`
+  (00:10:05). Nothing else was signalled.
+- **An observation, not acted on.** The index header's "across twenty-two campaigns" and "Two of
+  these hold no open issue" cannot be reproduced by counting rows: the `Board` column has 21
+  distinct values after this commit, with two of them `*none yet*`. The agent moved the count by
+  this commit's change alone and said so (log, deviation 14). It is left for a later reconciliation
+  of the index, which is not this campaign's.
+- **Residue fixed in the follow-up commit:** "this commit" → `17916cb` on this board, in the log
+  and on the `handover` board; this board's header; this note listed as "used for 03"; README §2's
+  row for 03; `prompts/INDEX.md`'s row.
+- **What 04 inherits:** R3 and HK hold; the route after a hard kill as run here (`list` `!!`, `end`
+  on the host it ran on, then the resume); and
+  `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`: after a hard kill a person checks
+  `ray-processes`, and a GCS server still listed after ten minutes is ended by `SIGKILL` by its
+  pid, never with `ray stop`. 04 states this among what A3 v2 inherits. R3's three stores stay
+  live until the user decides, after 04's review.

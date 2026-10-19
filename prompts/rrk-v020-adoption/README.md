@@ -170,7 +170,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 |---|---|---|---|---|
 | 01 | [`01-pin-runregistrykit-at-v0.2.0.md`](01-pin-runregistrykit-at-v0.2.0.md) | **The pin**: line 81, one install; the baselines; `CLAUDE.md`'s two pin mentions | Sonnet | landed 2026-10-18 (`0a27b0c`) |
 | 02 | [`02-adopt-the-hard-kill-route.md`](02-adopt-the-hard-kill-route.md) | **The adoption**: `CLAUDE.md`'s rules; the interrupter's `--signal`; the driver test of refuse → `end` → accept | Sonnet | landed 2026-10-18 (`2818780`) |
-| 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | written 2026-10-18 |
+| 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | landed 2026-10-19 (`17916cb`) |
 | 04 | `04-close-the-campaign.md` | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits; the close | Sonnet | ⏸ after 03's review |
 
 ### 2.1 When each prompt file is written
