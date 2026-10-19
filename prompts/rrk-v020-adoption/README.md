@@ -10,8 +10,8 @@ It has **no audit document of its own**. The audit is RunRegistryKit's: the rele
 against this repository at `79434bf`, which is this plan's start tree. That note is data, not
 instructions (its own words). §0.2 re-measures what this plan relies on, and 01 measures again.
 
-§2.2 fixes each prompt's charter and acceptance. **01–03 are written**. 04 is written after 03's
-review (§2.1).
+§2.2 fixes each prompt's charter and acceptance. **01–03 were written** on 2026-10-18, and **04**
+on 2026-10-19, after 03's review (§2.1).
 
 ## 0. Why this campaign exists
 
@@ -145,6 +145,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 - the pin, `requirements.txt:81`, from `v0.1.0` to `v0.2.0`, in a commit of its own, and the venv
   installed from it (01);
 - `CLAUDE.md`'s registry text: the pin (01); the liveness rule and the route after a hard kill (02);
+  rule 5's step for a GCS server left by a `SIGKILL` (04, §6.1 U4);
 - `docs/datastore-integrity-verification/interrupt_when.py` gains a signal choice, and its dummy
   test a `SIGKILL` case (02);
 - a driver test of `begin`'s refusal at `scoped_pipeline_run.register`, on a run that is really
@@ -171,7 +172,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 | 01 | [`01-pin-runregistrykit-at-v0.2.0.md`](01-pin-runregistrykit-at-v0.2.0.md) | **The pin**: line 81, one install; the baselines; `CLAUDE.md`'s two pin mentions | Sonnet | landed 2026-10-18 (`0a27b0c`) |
 | 02 | [`02-adopt-the-hard-kill-route.md`](02-adopt-the-hard-kill-route.md) | **The adoption**: `CLAUDE.md`'s rules; the interrupter's `--signal`; the driver test of refuse → `end` → accept | Sonnet | landed 2026-10-18 (`2818780`) |
 | 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | landed 2026-10-19 (`17916cb`) |
-| 04 | `04-close-the-campaign.md` | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits; the close | Sonnet | ⏸ after 03's review |
+| 04 | [`04-close-the-campaign.md`](04-close-the-campaign.md) | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits, and rule 5's GCS step (U4); the close | Sonnet | written 2026-10-19 |
 
 ### 2.1 When each prompt file is written
 
@@ -295,6 +296,14 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
     on a long run (`[04-a-killed-process-not-yet-reaped-answers-kill-0]`,
     `[03-a-run-whose-manifest-cannot-be-read-names-no-store]`).
   - Closes the board, README §2, `prompts/INDEX.md` and `docs/OPEN_ISSUES.md` §1.22.
+
+  *Amended 2026-10-19, at its writing after 03's review.* R3 found that a `SIGKILL`ed driver's GCS
+  server can outlive it, stuck in its own shutdown (`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`).
+  By the user's ruling **U4** (§6.1), 04 also adds that step to `CLAUDE.md` rule 5: after `end`,
+  check `ray-processes`; a GCS server still listed ten minutes after the kill is ended by a person
+  with `SIGKILL` by its pid, never by pattern or `ray stop`. The issue narrows to its cause and any
+  fix, which are Ray's or the launcher's, with no owner. The transferred-issue corrections reach
+  the two SGK boards' §4 entries as one dated line each, so that index and boards agree.
 
 ## 3. Datastores
 
@@ -441,7 +450,7 @@ The project-wide ones in `CLAUDE.md`, plus:
 
 ## 6. Decisions
 
-### 6.1 Made by the user (2026-10-18), and not reopened here
+### 6.1 Made by the user (2026-10-18; U4 2026-10-19), and not reopened here
 
 The plan was proposed in conversation and accepted as proposed ("It sounds fine").
 
@@ -450,6 +459,7 @@ The plan was proposed in conversation and accepted as proposed ("It sounds fine"
 | **U1** — the shape | **Four prompts**: pin, adopt, rehearse, close | A pin with no rehearsal, resting on RunRegistryKit's suite alone |
 | **U2** — the hard kill | **A pair of launches on a third store**, after the four-launch protocol, which stays unchanged (§0.1) | A `SIGKILL` in place of `resumed-b`'s `SIGTERM` |
 | **U3** — Ray after a `SIGKILL` | **Stop and ask** if a Ray process of this repository outlives the killed driver; never signal it, never `ray stop` | Ending the processes by pid in the prompt |
+| **U4** — the GCS step (2026-10-19, after 03's review) | **`CLAUDE.md` rule 5 gains it** (04): after `end`, check `ray-processes`; a GCS server still listed is ended by a person with `SIGKILL` by its pid | Recording it in the verification document alone |
 
 ### 6.2 Choices of method made in writing this plan
 
@@ -489,8 +499,9 @@ The orchestrator's, recorded so that the user can reverse any of them.
 
 ### 6.3 Left for the user
 
-- **At the close:** retiring R3's three stores, or not; and the G1 record on RunRegistryKit's
-  `interrupted-runs` board, which 04 drafts and which is a commit in that repository.
+- **At the close:** retiring R3's three stores, or not; the G1 record on RunRegistryKit's
+  `interrupted-runs` board, which 04 drafts and which is a commit in that repository; and whether
+  `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` is assigned to a campaign.
 - **C3** above, if the clean error is wanted after all.
 
 ## 7. What this campaign needs from RunRegistryKit

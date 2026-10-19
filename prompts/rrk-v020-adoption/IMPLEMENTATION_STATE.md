@@ -3,9 +3,9 @@
 **Last updated:** 2026-10-19 · **Status: IN PROGRESS — 3 of 4 landed.** 01 landed and reviewed
 (the pin moved, the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`,
 the interrupter's `--signal`, the driver test); 03 landed and reviewed (R3 holds; the hard-kill route holds;
-Ray's GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 to be written,
-now that 03 is reviewed (README §2.1).
-U1–U3 ruled by the user (README §6.1). The issue assigned here from `handover` is closed (§4); one
+Ray's GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 written
+2026-10-19, after 03's review (README §2.1), with U4 added to its charter.
+U1–U4 ruled by the user (README §6.1). The issue assigned here from `handover` is closed (§4); one
 is open, opened by 03 (§3).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
@@ -28,13 +28,14 @@ rehearsal, R3, before the A3 v2 compute run depends on it.
 
 ### Decisions
 
-**Made by the user, 2026-10-18 (README §6.1):**
+**Made by the user, 2026-10-18, and U4 2026-10-19 (README §6.1):**
 
 | Decision | Decided |
 |---|---|
 | **U1** — the shape | four prompts: pin, adopt, rehearse, close |
 | **U2** — the hard kill | a pair of launches on a third store, after the unchanged four-launch protocol |
 | **U3** — Ray after a `SIGKILL` | stop and ask if a Ray process of this repository outlives the killed driver |
+| **U4** — the GCS step (2026-10-19) | `CLAUDE.md` rule 5 gains it, in 04: after `end`, check `ray-processes`; a GCS server still listed is ended by a person with `SIGKILL` by its pid |
 
 The orchestrator's choices of method, C1–C8, are in README §6.2. **C3 departs from the plan as
 accepted** (the drivers keep raising `begin`'s refusal with its traceback); it is the user's to
@@ -49,7 +50,7 @@ reverse (README §6.3).
 | 01 | [Pin `runregistrykit` at `v0.2.0`](01-pin-runregistrykit-at-v0.2.0.md) | the pin; the baselines; `CLAUDE.md`'s pin mentions | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `0a27b0c` | [`logs/01-pin-runregistrykit-at-v0.2.0.md`](logs/01-pin-runregistrykit-at-v0.2.0.md) |
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | `17916cb` | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
-| 04 | Close the campaign | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits | Sonnet | ⏸ after 03's review | ⬜ | — | — |
+| 04 | [Close the campaign](04-close-the-campaign.md) | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits; rule 5's GCS step (U4) | Sonnet | ✍️ 2026-10-19 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -58,8 +59,9 @@ not scope: every charter is fixed in README §2.2.
 
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, under
 `orchestrator/`: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-18, used for
-01), [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02) and
-[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03).
+01), [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02),
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03) and
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-19, for 04).
 
 ### 1.1 Items
 
@@ -75,8 +77,8 @@ not scope: every charter is fixed in README §2.2.
 | **H2** | 03 | no Ray process outlives the `SIGKILL`ed driver (U3) | ❌ not as stated: the GCS server outlived it 20 m 50 s, until a `SIGKILL` on the user's ruling; opened as `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` (§3) |
 | **Z1** | 04 | the final measurements | ⬜ |
 | **Z2** | 04 | G1 drafted for RunRegistryKit's `interrupted-runs` board | ⬜ |
-| **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed | ⬜ |
-| **Z4** | 04 | what A3 v2 inherits | ⬜ |
+| **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed, and one line on each of their SGK boards | ⬜ |
+| **Z4** | 04 | what A3 v2 inherits; `CLAUDE.md` rule 5's GCS step (U4); the GCS issue narrowed | ⬜ |
 | **Z5** | 04 | the records: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ⬜ |
 
 ## 2. The gates
