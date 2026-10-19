@@ -19,7 +19,7 @@ What is pinned, and how:
      `Refusal` `from` the error. The order matters: `ConfigError` is a `RuntimeError` at
      `runregistrykit` v0.2.0 and is not a refusal.
   3. **The clean print**, end to end: one subprocess per driver, on a refusal reached before any
-     registration. Exit 1, stderr's first non-warning line begins `!! `, no `Traceback`, and no Ray
+     registration. Exit 1, stderr one line beginning `!! `, no `Traceback`, and no Ray
      started.
   4. **`begin`'s refusal becomes a `Refusal`.** At `register`, against a real `begin` and a live
      run on the same store, in a temporary runs root. At `run_build` and `sweep`, which have no

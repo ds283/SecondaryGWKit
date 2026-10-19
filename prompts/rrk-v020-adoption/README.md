@@ -3,7 +3,8 @@
 **Written:** 2026-10-18 on branch `handover-remedial` at `79434bf`, by Claude Opus 5.5. It moves
 SGK from `runregistrykit` `v0.1.0` to `v0.2.0` before the A3 v2 compute run. The user accepted its
 shape the same day, in conversation (§6.1). It closed at 04 on 2026-10-19 and was **reopened
-the same day for one prompt, 05**, when the user reversed C3 (§6.1 U5, §6.2).
+the same day for one prompt, 05**, when the user reversed C3 (§6.1 U5, §6.2); it closed again at 05
+(`96a168e`).
 
 It has **no audit document of its own**. The audit is RunRegistryKit's: the release notes
 (`docs/releases/v0.2.0.md`) and the adoption note written for this repository
@@ -174,7 +175,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 | 02 | [`02-adopt-the-hard-kill-route.md`](02-adopt-the-hard-kill-route.md) | **The adoption**: `CLAUDE.md`'s rules; the interrupter's `--signal`; the driver test of refuse → `end` → accept | Sonnet | landed 2026-10-18 (`2818780`) |
 | 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | landed 2026-10-19 (`17916cb`) |
 | 04 | [`04-close-the-campaign.md`](04-close-the-campaign.md) | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits, and rule 5's GCS step (U4); the close | Sonnet | landed 2026-10-19 (`34bf4f7`) |
-| 05 | [`05-print-refusals-cleanly.md`](05-print-refusals-cleanly.md) | **C3 reversed (U5)**: every refusal of the two drivers, `begin`'s included, printed as one `!!` line, exit 1, no traceback; failures keep theirs | Sonnet | written 2026-10-19 |
+| 05 | [`05-print-refusals-cleanly.md`](05-print-refusals-cleanly.md) | **C3 reversed (U5)**: every refusal of the two drivers, `begin`'s included, printed as one `!!` line, exit 1, no traceback; failures keep theirs | Sonnet | landed 2026-10-19 (`96a168e`) |
 
 ### 2.1 When each prompt file is written
 

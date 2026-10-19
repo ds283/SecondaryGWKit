@@ -1,17 +1,17 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-19 · **Status: CLOSED again at 05 — 5 of 5 landed.** Closed at 04 on
+**Last updated:** 2026-10-19 · **Status: CLOSED — 5 of 5 landed and reviewed.** Closed at 04 on
 2026-10-19 (`34bf4f7`, reviewed), then reopened the same day for one prompt, 05, when the user
-reversed C3 (README §6.1 U5): the drivers are to print their refusals cleanly. 05 written and landed
-2026-10-19 (this commit; awaiting review). U1–U5 ruled by the user. Before the reopening: 01 landed and reviewed (the pin moved,
-the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`, the
-interrupter's `--signal`, the driver test); 03 landed and reviewed (R3 holds; the hard-kill route
-holds; Ray's GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 landed
-2026-10-19 (`34bf4f7`) and reviewed (the final measurements, G1 drafted for RunRegistryKit, the
-index's notes on the two issues RunRegistryKit closed, what A3 v2 inherits, and `CLAUDE.md` rule
-5's GCS step under U4). The issue assigned here from `handover` is closed (§4); one is open, opened
-by 03, narrowed by 04 and assigned to `handover` by the user after the close (§3). R3's three
-stores are retired (§5.5).
+reversed C3 (README §6.1 U5), and closed again at 05 (`96a168e`, reviewed): the drivers print their
+refusals as one `!!` line. U1–U5 ruled by the user. 01 landed and reviewed (the pin moved, the venv
+on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`, the interrupter's
+`--signal`, the driver test); 03 landed and reviewed (R3 holds; the hard-kill route holds; Ray's GCS
+server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 landed and reviewed (the
+final measurements, G1 drafted for RunRegistryKit, the index's notes on the two issues
+RunRegistryKit closed, what A3 v2 inherits, and `CLAUDE.md` rule 5's GCS step under U4); 05 landed
+and reviewed (`Refusal` in both drivers, `begin`'s refusals included, `ConfigError` excepted). The
+issue assigned here from `handover` is closed (§4); one is open, opened by 03, narrowed by 04 and
+assigned to `handover` by the user after the close (§3). R3's three stores are retired (§5.5).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
 `v0.2.0` release notes and its adoption note for SGK.
@@ -57,7 +57,7 @@ accepted** (the drivers kept raising `begin`'s refusal with its traceback); the 
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | `17916cb` | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
 | 04 | [Close the campaign](04-close-the-campaign.md) | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits; rule 5's GCS step (U4) | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | `34bf4f7` | [`logs/04-close-the-campaign.md`](logs/04-close-the-campaign.md) |
-| 05 | [Print the drivers' refusals cleanly](05-print-refusals-cleanly.md) | C3 reversed (U5): `Refusal`, one `!!` line, exit 1; `begin`'s refusals included | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | this commit | [`logs/05-print-refusals-cleanly.md`](logs/05-print-refusals-cleanly.md) |
+| 05 | [Print the drivers' refusals cleanly](05-print-refusals-cleanly.md) | C3 reversed (U5): `Refusal`, one `!!` line, exit 1; `begin`'s refusals included | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | `96a168e` | [`logs/05-print-refusals-cleanly.md`](logs/05-print-refusals-cleanly.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -67,8 +67,9 @@ not scope: every charter is fixed in README §2.2.
 **Orchestrator notes** are written one prompt at a time, just before its dispatch, under
 `orchestrator/`: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-18, used for
 01), [`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-18, used for 02),
-[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03) and
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-19, used for 04).
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) (2026-10-18, used for 03),
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-19, used for 04) and
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) (2026-10-19, used for 05).
 
 ### 1.1 Items
 
@@ -87,9 +88,9 @@ not scope: every charter is fixed in README §2.2.
 | **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed, and one line on each of their SGK boards | ✅ `34bf4f7`: the index's §1.11, §1.17 and §1.21 corrected; one dated line on each of the two boards' §4 entries; the other three confirmed still open in RunRegistryKit |
 | **Z4** | 04 | what A3 v2 inherits; `CLAUDE.md` rule 5's GCS step (U4); the GCS issue narrowed | ✅ `34bf4f7`: verification §3.5; rule 5's two sentences; the GCS issue narrowed |
 | **Z5** | 04 | the records: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ✅ `34bf4f7`: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` |
-| **P1** | 05 | `Refusal(RuntimeError)` in each driver; the refusal sites and `begin`'s three calls raise it, messages unchanged | ✅ this commit: 7 sites in the launcher, 4 in the scoped driver; `ConfigError` re-raised first (the orchestrator note for 05, ruling 1) |
-| **P2** | 05 | each `__main__` block prints a `Refusal` as one `!!` line on stderr and exits 1; failures keep their tracebacks | ✅ this commit: both drivers, from a subprocess, print one `!!` line, no traceback, exit 1 |
-| **P3** | 05 | `test_clean_refusals.py`; the six breakages; verification §4 with the launcher's new hash | ✅ this commit: 12 tests, `RunDrivers` 103 → 115; seven breakages caught; verification §4; launcher `9b40e457…` |
+| **P1** | 05 | `Refusal(RuntimeError)` in each driver; the refusal sites and `begin`'s three calls raise it, messages unchanged | ✅ `96a168e`: 7 sites in the launcher, 4 in the scoped driver; `ConfigError` re-raised first (the orchestrator note for 05, ruling 1) |
+| **P2** | 05 | each `__main__` block prints a `Refusal` as one `!!` line on stderr and exits 1; failures keep their tracebacks | ✅ `96a168e`: both drivers, from a subprocess, print one `!!` line, no traceback, exit 1 |
+| **P3** | 05 | `test_clean_refusals.py`; the six breakages; verification §4 with the launcher's new hash | ✅ `96a168e`: 12 tests, `RunDrivers` 103 → 115; seven breakages caught; verification §4; launcher `9b40e457…` |
 
 ## 2. The gates
 
@@ -553,7 +554,7 @@ pointer to the entry, which stays here; the index row moves from §1.22 to §1.1
 
 ### 5.6 After prompt 05 (2026-10-19)
 
-Landed at this commit, on `affaf84`. P1–P3 pass; no stop condition fired. Log:
+Landed at `96a168e`, on `affaf84`. P1–P3 pass; no stop condition fired. Log:
 [`logs/05-print-refusals-cleanly.md`](logs/05-print-refusals-cleanly.md); record:
 [`docs/rrk-v020-adoption-verification.md`](../../docs/rrk-v020-adoption-verification.md) §4;
 measurements: `measure/out/05-roots.txt`.
@@ -570,5 +571,59 @@ measurements: `measure/out/05-roots.txt`.
   SHA-256 is `9b40e457f444db10d2b406b749e0b4391d53753e93c928fa431856b4c645e649` (R3's was `2a985303…`);
   the scoped driver's is `d2e38510acf5cff09dc63219e5c59cead2eb28042ba58c770ab8abe90d972c83`.
 - **Opens nothing; closes nothing.** `docs/OPEN_ISSUES.md` is unchanged (100).
-- **Left to the user** (README §6.3): the G1 commit in RunRegistryKit, and whether
-  `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` is taken up by `handover`.
+- **Left to the user:** nothing of this campaign's. *(Corrected by the orchestrator's review: the
+  agent's text named the G1 commit and the GCS issue's owner as still the user's. The G1 record is
+  in RunRegistryKit at `33a2cd2`, the user's commit; the GCS issue was assigned to `handover` in
+  §5.5; and C3 was taken by U5, which this prompt carries.)*
+
+**Orchestrator review of prompt 05** (2026-10-19, against `96a168e`, by
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) §3). Dispatched from `affaf84` to one
+Sonnet subagent, after the prompt's citations were checked against both drivers and against `begin`
+at `v0.2.0`. In writing the note the orchestrator found that `runregistrykit.ConfigError`
+subclasses `RuntimeError` at the tag, which prompt §2.3's bare `except RuntimeError` would have
+made a `Refusal`; ruling 1 settled it before dispatch (`ConfigError` re-raised first, a test case,
+a seventh breakage). Nothing landed after the agent's commit. **All eight checks pass**, and no stop
+condition fired.
+1. **Scope.** Seven files: three `A` (the test module, the log, `05-roots.txt`) and four `M` (the two
+   drivers, the verification document, this board), exactly the note's list. The verification diff
+   is one hunk appending §4, none removed. `docs/OPEN_ISSUES.md` unchanged (100).
+2. **The diffs.** Each driver's diff is the class, the `raise` sites, the three `try` blocks round
+   `begin`, and the `__main__` block. Every string constant of every `raise` at `13d993c` is present
+   at `96a168e`, by an `ast` extraction of the orchestrator's own; the three new raises carry none
+   (`Refusal(str(e))`).
+3. **The counts**, re-counted with that script: the launcher's `raise Refusal(` `run_build` 3,
+   `assert_store_is_self_consistent` 1, `prepare` 2, `sweep` 1; `raise RuntimeError(` 5 in the
+   functions ruling 3 names; the scoped driver's `main` 2 and `register` 2, and 2 `RuntimeError`.
+   Each of the three `begin` calls sits in a `try` whose handlers are `runregistrykit.ConfigError`
+   (bare `raise`) then `RuntimeError` (`raise Refusal(str(e)) from e`).
+4. **The clean print, by hand.** The launcher's `--build` on an existing file, the scoped driver on an
+   existing `--database`, and the launcher's `--prepare --force`: each exit 1, empty stdout, stderr
+   one `!!` line holding the message, no `Traceback`.
+5. **The test module, read whole.** Temporary directories and runs root only; no `ray.init`;
+   `HardKilledPredecessorTestCase` imported alone; `args` from the launcher's own `main()` with the
+   modes stubbed; no seam in either driver. One residue: its docstring described test 3 in ruling 2's
+   relaxed form while the test asserts the strict one; corrected here.
+6. **The breakages**, re-applied in a scratch copy of `96a168e`: 3 (`run_build` lets `begin`'s
+   `RuntimeError` through) fails `test_run_build_makes_begins_refusal_a_refusal` and both
+   `TestTheSites` tests; 5 (the model filter at `run_build._filtered_build` raises `Refusal`) fails
+   `test_the_raise_sites_are_the_expected_ones`; 7 (no `ConfigError` clause in `run_build`) fails
+   `test_a_config_error_from_begin_is_not_a_refusal` and the handler-order test. Each as the log says;
+   the copy green again after each revert.
+7. **Nothing else moved.** `find var -newer <marker>` empty; RunRegistryKit at `33a2cd2`, clean; lock
+   free; `ray-processes` none; `black --check` clean on the three `.py` files.
+8. **The suites** at `96a168e`, serially, at load 8–13: AdaptiveLevin 32, CosmologyModels 39,
+   ObjectFactories 279, tools 91, LiouvilleGreen 148 (1 skipped), RunDrivers **115**, ComputeTargets
+   700, all OK. The known wall-clock test, which failed at the baselines and in the agent's run under
+   an I/O load of 27–430 (a backup, Box, Munki), passed here.
+
+**Residue fixed in the review's commit:** `96a168e` for "this commit" here, in the log's header and
+in README §2's row; this board's header, closed again; §5.6's "Left to the user", corrected above;
+verification §4's hash table, whose "Before 05" column named both hashes R3's (only the launcher's
+is); the test module's docstring; `prompts/INDEX.md`'s row and header; this note listed as used.
+
+**For the user, not opened as an issue** (the log's observation 1): `prepare` makes any
+`RuntimeError` of `copy_store` a `Refusal`, as prompt §2.2 asks, and that includes a `ConfigError`.
+Before 05 it was already re-raised as a plain `RuntimeError` with its cause chained; now it prints as
+one `!!` line, the `ConfigError`'s own text inside it, with no traceback. By ruling 1's reasoning it
+is not a refusal; `prepare` is run by a person at a terminal, and the message names the cause. A
+one-clause change if the user wants it.

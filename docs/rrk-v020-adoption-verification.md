@@ -1500,7 +1500,7 @@ before the run directory is created and both ending `No run directory was create
 
 **The launcher's SHA-256**, beside §3.5's:
 
-| Script | Before 05 (R3's, §3.5) | After 05 |
+| Script | Before 05 (`13d993c`; the launcher's is R3's, §3.5) | After 05 |
 |---|---|---|
 | `docs/handover/quadsource_atol_sweep.py` | `2a98530369f530cfc6f33ae91ff78fb51d3cbc89dea56f8bcfb9cb9ee012676d` | `9b40e457f444db10d2b406b749e0b4391d53753e93c928fa431856b4c645e649` |
 | `docs/gktk-remedial/scoped_pipeline_run.py` | `244ad70e7e0901c612bb01eb4f0fec10ee9bbd8e3bb3a17904024e111b6646df` | `d2e38510acf5cff09dc63219e5c59cead2eb28042ba58c770ab8abe90d972c83` |

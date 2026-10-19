@@ -1,7 +1,7 @@
 # Log — rrk-v020-adoption prompt 05, print the drivers' refusals cleanly
 
 - **Subject:** [`05-print-refusals-cleanly.md`](../05-print-refusals-cleanly.md), board items P1–P3.
-- **Commit:** this commit (parent `affaf84`).
+- **Commit:** `96a168e` (parent `affaf84`).
 - **Result:** landed. P1–P3 pass; no stop condition fired. The one test failure, in `ComputeTargets`, is
   README §8's known wall-clock test, re-run alone twice and recorded.
 - **Model:** Sonnet 5.5.
