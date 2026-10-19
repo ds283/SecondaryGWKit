@@ -2,7 +2,8 @@
 
 **Written:** 2026-10-18 on branch `handover-remedial` at `79434bf`, by Claude Opus 5.5. It moves
 SGK from `runregistrykit` `v0.1.0` to `v0.2.0` before the A3 v2 compute run. The user accepted its
-shape the same day, in conversation (§6.1).
+shape the same day, in conversation (§6.1). It closed at 04 on 2026-10-19 and was **reopened
+the same day for one prompt, 05**, when the user reversed C3 (§6.1 U5, §6.2).
 
 It has **no audit document of its own**. The audit is RunRegistryKit's: the release notes
 (`docs/releases/v0.2.0.md`) and the adoption note written for this repository
@@ -173,6 +174,7 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
 | 02 | [`02-adopt-the-hard-kill-route.md`](02-adopt-the-hard-kill-route.md) | **The adoption**: `CLAUDE.md`'s rules; the interrupter's `--signal`; the driver test of refuse → `end` → accept | Sonnet | landed 2026-10-18 (`2818780`) |
 | 03 | [`03-rehearse-through-v0.2.0.md`](03-rehearse-through-v0.2.0.md) | **R3**: §4.1's four launches, and the hard-kill pair on a third store; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | landed 2026-10-19 (`17916cb`) |
 | 04 | [`04-close-the-campaign.md`](04-close-the-campaign.md) | The final measurements; G1 drafted; the index's transferred-issue notes; what A3 v2 inherits, and rule 5's GCS step (U4); the close | Sonnet | landed 2026-10-19 (`34bf4f7`) |
+| 05 | [`05-print-refusals-cleanly.md`](05-print-refusals-cleanly.md) | **C3 reversed (U5)**: every refusal of the two drivers, `begin`'s included, printed as one `!!` line, exit 1, no traceback; failures keep theirs | Sonnet | written 2026-10-19 |
 
 ### 2.1 When each prompt file is written
 
@@ -304,6 +306,17 @@ default (§0.1). `79434bf` recorded the stale-run measurement.
   with `SIGKILL` by its pid, never by pattern or `ray stop`. The issue narrows to its cause and any
   fix, which are Ray's or the launcher's, with no owner. The transferred-issue corrections reach
   the two SGK boards' §4 entries as one dated line each, so that index and boards agree.
+
+**05 — Print the drivers' refusals cleanly** (Sonnet). Written 2026-10-19, after the close, on the
+user's reversal of C3 (U5).
+- **What it changes.** `quadsource_atol_sweep.py` and `scoped_pipeline_run.py` each gain
+  `Refusal(RuntimeError)`. Each check that stops the driver before any work starts raises it, its
+  message unchanged, and `begin`'s `RuntimeError` is re-raised as one. Each `__main__` block prints
+  a `Refusal` as `!! <message>` on stderr and exits 1. Every other error keeps its traceback.
+- **Acceptance.** Every existing test passes unmodified; a new module pins the sites by `ast`, the
+  clean print end to end in a subprocess, and `begin`'s refusal at all three calls; six deliberate
+  breakages caught; verification §4 records the launcher's new hash for `handover`.
+- **Out.** No message, check or build path after `begin` changes; no rehearsal; no `CLAUDE.md`.
 
 ## 3. Datastores
 
@@ -450,7 +463,7 @@ The project-wide ones in `CLAUDE.md`, plus:
 
 ## 6. Decisions
 
-### 6.1 Made by the user (2026-10-18; U4 2026-10-19), and not reopened here
+### 6.1 Made by the user (2026-10-18; U4 and U5 2026-10-19), and not reopened here
 
 The plan was proposed in conversation and accepted as proposed ("It sounds fine").
 
@@ -460,6 +473,7 @@ The plan was proposed in conversation and accepted as proposed ("It sounds fine"
 | **U2** — the hard kill | **A pair of launches on a third store**, after the four-launch protocol, which stays unchanged (§0.1) | A `SIGKILL` in place of `resumed-b`'s `SIGTERM` |
 | **U3** — Ray after a `SIGKILL` | **Stop and ask** if a Ray process of this repository outlives the killed driver; never signal it, never `ray stop` | Ending the processes by pid in the prompt |
 | **U4** — the GCS step (2026-10-19, after 03's review) | **`CLAUDE.md` rule 5 gains it** (04): after `end`, check `ray-processes`; a GCS server still listed is ended by a person with `SIGKILL` by its pid | Recording it in the verification document alone |
+| **U5** — C3 reversed (2026-10-19, after the close) | **The drivers print their refusals cleanly** (05): one `!!` line on stderr, exit 1, for every refusal, `begin`'s included | The traceback, as C3 had it |
 
 ### 6.2 Choices of method made in writing this plan
 
@@ -479,6 +493,9 @@ The orchestrator's, recorded so that the user can reverse any of them.
   outcome. 02 therefore tests the refusal at `register` and changes neither driver. **If the user
   wants the clean error, it is one charter line in 02, for all of the drivers' refusals or for
   `begin`'s alone.**
+
+  *Reversed by the user on 2026-10-19, after the close (§6.1 U5):* the clean error is wanted, for
+  all of the drivers' refusals, `begin`'s included. It is prompt 05 (§2.2).
 - **C4 — stale prose.** A statement that a prompt's own commit makes false is corrected in that
   commit: `CLAUDE.md`'s pin mentions (01) and its registry rules (02). Dated audits, verification
   records and `prompts/` are left as written.
@@ -502,7 +519,7 @@ The orchestrator's, recorded so that the user can reverse any of them.
 - **At the close:** retiring R3's three stores, or not; the G1 record on RunRegistryKit's
   `interrupted-runs` board, which 04 drafts and which is a commit in that repository; and whether
   `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` is assigned to a campaign.
-- **C3** above, if the clean error is wanted after all.
+- ~~**C3** above, if the clean error is wanted after all.~~ Taken 2026-10-19: wanted (U5, 05).
 
 ## 7. What this campaign needs from RunRegistryKit
 

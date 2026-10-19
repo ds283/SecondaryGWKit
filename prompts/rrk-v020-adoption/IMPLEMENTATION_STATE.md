@@ -1,14 +1,17 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-19 · **Status: CLOSED — 4 of 4 landed and reviewed.**
-01 landed and reviewed (the pin moved, the venv on `v0.2.0`); 02 landed and reviewed
-(the hard-kill route in `CLAUDE.md`, the interrupter's `--signal`, the driver test); 03 landed and
-reviewed (R3 holds; the hard-kill route holds; Ray's GCS server outlived the `SIGKILL`, and U3's stop
-was ruled by the user); 04 landed 2026-10-19 (`34bf4f7`) and reviewed (the final measurements,
-G1 drafted for RunRegistryKit, the index's notes on the two issues RunRegistryKit closed, what A3 v2
-inherits, and `CLAUDE.md` rule 5's GCS step under U4). U1–U4 ruled by the user (README §6.1). The issue assigned here from
-`handover` is closed (§4); one is open, opened by 03, narrowed by 04 and assigned to `handover`
-by the user after the close (§3). R3's three stores are retired (§5.5).
+**Last updated:** 2026-10-19 · **Status: REOPENED for 05 — 4 of 5 landed.** Closed at 04 on
+2026-10-19 (`34bf4f7`, reviewed), then reopened the same day for one prompt, 05, when the user
+reversed C3 (README §6.1 U5): the drivers are to print their refusals cleanly. 05 written
+2026-10-19. U1–U5 ruled by the user. Before the reopening: 01 landed and reviewed (the pin moved,
+the venv on `v0.2.0`); 02 landed and reviewed (the hard-kill route in `CLAUDE.md`, the
+interrupter's `--signal`, the driver test); 03 landed and reviewed (R3 holds; the hard-kill route
+holds; Ray's GCS server outlived the `SIGKILL`, and U3's stop was ruled by the user); 04 landed
+2026-10-19 (`34bf4f7`) and reviewed (the final measurements, G1 drafted for RunRegistryKit, the
+index's notes on the two issues RunRegistryKit closed, what A3 v2 inherits, and `CLAUDE.md` rule
+5's GCS step under U4). The issue assigned here from `handover` is closed (§4); one is open, opened
+by 03, narrowed by 04 and assigned to `handover` by the user after the close (§3). R3's three
+stores are retired (§5.5).
 
 The plan is [`README.md`](README.md), written on 2026-10-18 at `79434bf` from RunRegistryKit's
 `v0.2.0` release notes and its adoption note for SGK.
@@ -30,7 +33,7 @@ rehearsal, R3, before the A3 v2 compute run depends on it.
 
 ### Decisions
 
-**Made by the user, 2026-10-18, and U4 2026-10-19 (README §6.1):**
+**Made by the user, 2026-10-18, and U4 and U5 2026-10-19 (README §6.1):**
 
 | Decision | Decided |
 |---|---|
@@ -38,10 +41,11 @@ rehearsal, R3, before the A3 v2 compute run depends on it.
 | **U2** — the hard kill | a pair of launches on a third store, after the unchanged four-launch protocol |
 | **U3** — Ray after a `SIGKILL` | stop and ask if a Ray process of this repository outlives the killed driver |
 | **U4** — the GCS step (2026-10-19) | `CLAUDE.md` rule 5 gains it, in 04: after `end`, check `ray-processes`; a GCS server still listed is ended by a person with `SIGKILL` by its pid |
+| **U5** — C3 reversed (2026-10-19, after the close) | the drivers print their refusals cleanly, `begin`'s included: prompt 05 |
 
-The orchestrator's choices of method, C1–C8, are in README §6.2. **C3 departs from the plan as
-accepted** (the drivers keep raising `begin`'s refusal with its traceback); it is the user's to
-reverse (README §6.3).
+The orchestrator's choices of method, C1–C8, are in README §6.2. **C3 departed from the plan as
+accepted** (the drivers kept raising `begin`'s refusal with its traceback); the user reversed it on
+2026-10-19 (U5), and 05 carries the reversal.
 
 ---
 
@@ -53,6 +57,7 @@ reverse (README §6.3).
 | 02 | [Adopt the hard-kill route](02-adopt-the-hard-kill-route.md) | `CLAUDE.md`'s rules; `interrupt_when.py --signal`; the driver test | Sonnet | ✍️ 2026-10-18 | ✅ 2026-10-18 | `2818780` | [`logs/02-adopt-the-hard-kill-route.md`](logs/02-adopt-the-hard-kill-route.md) |
 | 03 | [Rehearse through `v0.2.0` (R3)](03-rehearse-through-v0.2.0.md) | **R3**; the hard-kill pair; closes `[a3-v2-a-hard-killed-run-blocks-its-store]` | Opus | ✍️ 2026-10-18 | ✅ 2026-10-19 | `17916cb` | [`logs/03-rehearse-through-v0.2.0.md`](logs/03-rehearse-through-v0.2.0.md) |
 | 04 | [Close the campaign](04-close-the-campaign.md) | the final measurements; G1 drafted; the index's notes; what A3 v2 inherits; rule 5's GCS step (U4) | Sonnet | ✍️ 2026-10-19 | ✅ 2026-10-19 | `34bf4f7` | [`logs/04-close-the-campaign.md`](logs/04-close-the-campaign.md) |
+| 05 | [Print the drivers' refusals cleanly](05-print-refusals-cleanly.md) | C3 reversed (U5): `Refusal`, one `!!` line, exit 1; `begin`'s refusals included | Sonnet | ✍️ 2026-10-19 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -82,6 +87,9 @@ not scope: every charter is fixed in README §2.2.
 | **Z3** | 04 | `docs/OPEN_ISSUES.md`'s notes on the transferred issues `v0.2.0` closed, and one line on each of their SGK boards | ✅ `34bf4f7`: the index's §1.11, §1.17 and §1.21 corrected; one dated line on each of the two boards' §4 entries; the other three confirmed still open in RunRegistryKit |
 | **Z4** | 04 | what A3 v2 inherits; `CLAUDE.md` rule 5's GCS step (U4); the GCS issue narrowed | ✅ `34bf4f7`: verification §3.5; rule 5's two sentences; the GCS issue narrowed |
 | **Z5** | 04 | the records: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` | ✅ `34bf4f7`: verification §3, this board, README §2, `prompts/INDEX.md`, `docs/OPEN_ISSUES.md` |
+| **P1** | 05 | `Refusal(RuntimeError)` in each driver; the refusal sites and `begin`'s three calls raise it, messages unchanged | ⬜ |
+| **P2** | 05 | each `__main__` block prints a `Refusal` as one `!!` line on stderr and exits 1; failures keep their tracebacks | ⬜ |
+| **P3** | 05 | `test_clean_refusals.py`; the six breakages; verification §4 with the launcher's new hash | ⬜ |
 
 ## 2. The gates
 
