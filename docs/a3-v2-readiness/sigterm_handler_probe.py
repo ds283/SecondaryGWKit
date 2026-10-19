@@ -75,8 +75,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
-SCOPED_DRIVER = REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py"
-SWEEP_DRIVER = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
+SCOPED_DRIVER = REPO_ROOT / "RunDrivers" / "scoped_pipeline_run.py"
+SWEEP_DRIVER = REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py"
 DRIVERS = {
     "scoped": (SCOPED_DRIVER, "main"),
     "run_build": (SWEEP_DRIVER, "run_build"),

@@ -98,6 +98,13 @@ it does not schedule, supervise, restart or lock. It deletes nothing but a store
 those only through `store retire`, which a person runs and which leaves the store's sidecar behind
 as its record. It never deletes a run directory, a sidecar or any other record.
 
+This repository's launchers of registered runs live in `RunDrivers/`, next to the tests in
+`RunDrivers/tests/`: `scoped_pipeline_run.py` (a scoped `main.py` pipeline) and
+`quadsource_atol_sweep.py` (the tolerance sweeps and the `--build` A3 v2 runs under). Until
+2026-10-19 they were `docs/gktk-remedial/scoped_pipeline_run.py` and
+`docs/handover/quadsource_atol_sweep.py`; campaign records and dated `docs/` prose from before then
+use those paths, and are left as written.
+
 1. **Discovery.** Run `./venv/bin/python -m runregistrykit list` at the start of a session and
    before launching anything long, and report anything `running` or stale. A job's existence must
    not depend on a conversation remembering it.
@@ -176,7 +183,7 @@ time.
   scripts under `prompts/datastore-generic/` are records, left as written).
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
-  `docs/source-remediation-verification/scoped_pipeline_run.py`; to extract one of its functions
+  `RunDrivers/scoped_pipeline_run.py`; to extract one of its functions
   for a test, use `ComputeTargets/tests/test_main_plumbing.load_main_py_functions`, which reads it
   with `ast` rather than executing it.
 - **Author conventions that are conventions, not defects** — do not "correct" them: $a_0$ is

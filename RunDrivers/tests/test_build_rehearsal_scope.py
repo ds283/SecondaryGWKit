@@ -39,7 +39,7 @@ from unittest import mock
 from RunDrivers.tests.test_prune_on_resume import parsed_arguments
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPT_PATH = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
+SCRIPT_PATH = REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py"
 
 # `Path.resolve()` turns macOS's `/tmp` into `/private/tmp`, and `run_build` resolves the path it
 # is given, so the database passed here is already a resolved path

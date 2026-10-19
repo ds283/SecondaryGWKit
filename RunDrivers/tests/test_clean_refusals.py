@@ -3,7 +3,7 @@
 A refusal is a check that stops a driver before any work starts: an existing store, a path that is
 not a directory, a store a registered run already names. It used to end the process with a Python
 traceback, under which the one line that matters sat last. Each driver
-(`docs/handover/quadsource_atol_sweep.py`, `docs/gktk-remedial/scoped_pipeline_run.py`) now defines
+(`RunDrivers/quadsource_atol_sweep.py`, `RunDrivers/scoped_pipeline_run.py`) now defines
 `Refusal(RuntimeError)`, raises it at exactly the refusal sites, and prints it from its `__main__`
 block as one `!! ` line on stderr with exit status 1. Everything else keeps its traceback.
 
@@ -50,8 +50,8 @@ from RunDrivers.tests.test_hard_killed_predecessor import (
 )
 from RunDrivers.tests.test_quadsource_atol_sweep_prepare import _load_script
 
-LAUNCHER = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
-SCOPED = REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py"
+LAUNCHER = REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py"
+SCOPED = REPO_ROOT / "RunDrivers" / "scoped_pipeline_run.py"
 
 # the functions each driver's `raise Refusal(` and `raise RuntimeError(` sites lie in, by dotted
 # path, with how many in each. A new refusal, or a failure turned into one, fails test 2 until it

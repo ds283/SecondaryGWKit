@@ -12,7 +12,7 @@ The seven scripts call ``ray.init`` at module scope and cannot be imported, so t
 
 - the ``--ray-address`` argument's default is ``"local"`` -- for ``main.py`` through the
   module-level ``DEFAULT_RAY_ADDRESS`` it names -- and the argument is not required, because the
-  A3 v2 launcher (``docs/handover/quadsource_atol_sweep._main_py_argv``) passes none;
+  A3 v2 launcher (``RunDrivers/quadsource_atol_sweep._main_py_argv``) passes none;
 - each script has exactly one ``ray.init``, and its ``address`` is ``args.ray_address``, so the
   default is what reaches Ray.
 

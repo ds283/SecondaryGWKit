@@ -1,4 +1,4 @@
-"""`docs/handover/quadsource_atol_sweep.py` `prepare()` and `assert_store_is_self_consistent()`,
+"""`RunDrivers/quadsource_atol_sweep.py` `prepare()` and `assert_store_is_self_consistent()`,
 for `store-retirement` prompt 02 (**R4**, **R5**).
 
 `prepare()` now makes the sweep store with one `runregistrykit.stores.copy_store` call, so that a
@@ -36,13 +36,13 @@ from StoreFixtures.shard_store_fixtures import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPT_PATH = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
+SCRIPT_PATH = REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py"
 
 # the purpose text `prepare()` passes to `copy_store`, copied verbatim from the script so that a
 # test failure here means the script's text changed, not that this test guessed wrong
 SWEEP_PURPOSE = (
     "Working copy of the A3 baseline store for "
-    "docs/handover/quadsource_atol_sweep.py. Disposable: every row that is not "
+    "RunDrivers/quadsource_atol_sweep.py. Disposable: every row that is not "
     "at the production tolerance pair belongs to a sweep and nothing else reads "
     "it. The comparator is handover-A3-baseline-lambdacdm, not this."
 )

@@ -105,7 +105,7 @@ def add_run_selection_argument(parser) -> None:
 def add_models_argument(parser) -> None:
     """
     Add ``--models LABEL [LABEL ...]`` (prompts/a3-v2-readiness, prompt 03), with
-    ``docs/gktk-remedial/scoped_pipeline_run.py --models``' meaning: read only the models of
+    ``RunDrivers/scoped_pipeline_run.py --models``' meaning: read only the models of
     ``config.model_list.build_model_list`` with these labels. Applied by :func:`select_models`.
     """
     parser.add_argument(

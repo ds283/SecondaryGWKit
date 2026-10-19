@@ -2,7 +2,7 @@
 
 Under `runregistrykit` v0.2.0 a run killed by `SIGKILL` never records its end, so its status says
 `running` for ever, and `begin` on its store is refused until a person has ended it with
-`python -m runregistrykit end`. This driver's `register` (`docs/gktk-remedial/scoped_pipeline_run.py`)
+`python -m runregistrykit end`. This driver's `register` (`RunDrivers/scoped_pipeline_run.py`)
 neither catches that refusal nor works around it (campaign README §6.2, C3). These tests pin that,
 so that a later change to `register` cannot lose the refusal unnoticed:
 

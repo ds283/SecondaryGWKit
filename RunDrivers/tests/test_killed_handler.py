@@ -1,7 +1,7 @@
 """A signal to a pipeline driver is recorded `killed`, and nothing it then does can say otherwise.
 
 `prompts/a3-v2-readiness` prompt 04. The subject is three functions of
-`docs/gktk-remedial/scoped_pipeline_run.py`, which both pipeline drivers share:
+`RunDrivers/scoped_pipeline_run.py`, which both pipeline drivers share:
 
   * `make_killed_handler` / `install_killed_handler`: the handler each driver installs straight
     after `ray.init`, which records `killed`, `128 + signum` at once (prompt §2, K1);
@@ -26,7 +26,7 @@ from unittest import mock
 import runregistrykit
 from RunDrivers.tests.test_pipeline_adoption import DRIVER, REPO_ROOT, load_driver
 
-SWEEP = os.path.join(REPO_ROOT, "docs", "handover", "quadsource_atol_sweep.py")
+SWEEP = os.path.join(REPO_ROOT, "RunDrivers", "quadsource_atol_sweep.py")
 
 SIGTERM = int(signal.SIGTERM)
 SIGINT = int(signal.SIGINT)

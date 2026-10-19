@@ -1,6 +1,6 @@
 """The pipeline driver's side of the registry: what it reports, and what it refuses to claim.
 
-`prompts/run-registry` prompt 02. The subject is `docs/gktk-remedial/scoped_pipeline_run.py`
+`prompts/run-registry` prompt 02. The subject is `RunDrivers/scoped_pipeline_run.py`
 with `--register`, and the two things that can go wrong with it (prompt §3):
 
   * a heartbeat from a Ray-parallel job that means less than it looks like it means, and
@@ -26,7 +26,7 @@ import unittest
 import runregistrykit
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DRIVER = os.path.join(REPO_ROOT, "docs", "gktk-remedial", "scoped_pipeline_run.py")
+DRIVER = os.path.join(REPO_ROOT, "RunDrivers", "scoped_pipeline_run.py")
 
 # Five lines in the vocabulary `RayWorkPool` prints: the banner (`raypoolkit/RayWorkPool.py:206`)
 # and two progress notifications of two lines (`print(msg)` :588); no completion line (:606). They

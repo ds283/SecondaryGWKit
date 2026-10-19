@@ -12,7 +12,9 @@ main.py spells its grids
 so the original script's exact-text match (`..., 50)`) finds zero occurrences and refuses to run.
 That file belongs to the source-remediation campaign and is not edited here; this copy is the
 GkTk-remedial campaign's driver. See prompts/GkTk-remedial/IMPLEMENTATION_STATE.md
-`[13-scoped-run-driver-k-grid-literal]`.
+`[13-scoped-run-driver-k-grid-literal]`. It lived at docs/gktk-remedial/scoped_pipeline_run.py
+until 2026-10-19, when it moved to RunDrivers/ with quadsource_atol_sweep.py; records written
+before then name the old path.
 
 Written for prompt 12 of prompts/source-remediation (Layer 2 of the verification pass). The
 pipeline itself is main.py's: this script does not reimplement any stage. main.py cannot be
@@ -34,7 +36,7 @@ The substitution is textual and exact, and the script prints what it replaced an
 
 Usage (all main.py options after `--` are passed through verbatim):
 
-    PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/scoped_pipeline_run.py \
+    PYTHONPATH=. ./venv/bin/python RunDrivers/scoped_pipeline_run.py \
         --k-min 1e5 --k-max 1e7 --k-count 7 --cpus 10 --models LambdaCDM \
         -- --database /path/to/fresh.sqlite --job-name label --shards 4 \
            --zend 1e4 --source-samples-log10z 100
@@ -96,7 +98,7 @@ class Refusal(RuntimeError):
     """
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 MAIN_PY = REPO_ROOT / "main.py"
 
 # the exact text of both hardcoded wavenumber grids in main.py's driver block (:3094, :3106)

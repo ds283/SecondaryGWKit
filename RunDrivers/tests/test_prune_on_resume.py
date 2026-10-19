@@ -1,4 +1,4 @@
-"""`main.py`'s argv from `docs/handover/quadsource_atol_sweep.py` never disables pruning, for
+"""`main.py`'s argv from `RunDrivers/quadsource_atol_sweep.py` never disables pruning, for
 `a3-v2-readiness` prompt 05 (**P2**).
 
 Pruning unvalidated rows at startup is the designed recovery for a row stored but not validated
@@ -38,10 +38,10 @@ from pathlib import Path
 from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPT_PATH = REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py"
+SCRIPT_PATH = REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py"
 MAIN_PY = REPO_ROOT / "main.py"
 USAGE_DOCSTRINGS = (
-    REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py",
+    REPO_ROOT / "RunDrivers" / "scoped_pipeline_run.py",
     REPO_ROOT / "docs" / "source-remediation-verification" / "scoped_pipeline_run.py",
 )
 

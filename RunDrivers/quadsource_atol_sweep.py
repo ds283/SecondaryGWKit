@@ -2,15 +2,18 @@ r"""Does ``DEFAULT_QUADRATURE_ATOL = 1e-32`` cost two hundred times what it buys
 
 Run from the repository root::
 
-    PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --prepare
-    PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py \
+    PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py --prepare
+    PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py \
         --cpus 6 --register quadsource-atol-sweep \
         --purpose "..." --campaign handover --prompt -
-    PYTHONPATH=. ./venv/bin/python docs/handover/quadsource_atol_sweep.py --report
+    PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py --report
+
+This file lived at ``docs/handover/quadsource_atol_sweep.py`` until 2026-10-19, when it moved to
+``RunDrivers/`` with ``scoped_pipeline_run.py``; records written before then name the old path.
 
 **The question, and why the existing sweep does not answer it.**
 ``prompts/tolerance-convergence`` prompt 06 already swept this constant --
-[`docs/tolerance-convergence/QUADSOURCE-READONLY.md`](../tolerance-convergence/QUADSOURCE-READONLY.md)
+[`docs/tolerance-convergence/QUADSOURCE-READONLY.md`](../docs/tolerance-convergence/QUADSOURCE-READONLY.md)
 §4 -- and found ``atol`` **inert over twenty-eight decades**, with ``rtol`` the binding parameter.
 That measurement is not wrong and is not superseded. It measured **accuracy**, on the eighteen
 offline cases of ``ComputeTargets/tests/test_quadsource_integral.py``, and on those cases the
@@ -40,7 +43,7 @@ fixed production work items** chosen from that measurement -- four severe (depth
 1.5e3 s each), three moderate, two cheap controls -- and reads the stored instrumentation back.
 Nothing is reimplemented: the integrand, the partition, the Levin driver and the storage are
 main.py's, reached through the same
-``docs/gktk-remedial/scoped_pipeline_run.py`` machinery the A3 baseline itself ran under, whose
+``RunDrivers/scoped_pipeline_run.py`` machinery the A3 baseline itself ran under, whose
 ``RegisteredStream``/``StageTracker``/``terminal_state`` this file imports rather than copies.
 
 **Four textual substitutions in main.py**, each exact and each required to match exactly once:
@@ -92,9 +95,9 @@ class Refusal(RuntimeError):
     """
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 MAIN_PY = REPO_ROOT / "main.py"
-SCOPED_DRIVER = REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py"
+SCOPED_DRIVER = REPO_ROOT / "RunDrivers" / "scoped_pipeline_run.py"
 
 BASELINE_STORE = (
     REPO_ROOT / "var" / "datastores" / "handover-A3-baseline-lambdacdm.sqlite"
@@ -277,9 +280,11 @@ BATCH_REPLACEMENT = (
 
 
 def _load_scoped_driver():
-    """Import `docs/gktk-remedial/scoped_pipeline_run.py` by path.
+    """Import `RunDrivers/scoped_pipeline_run.py` by path.
 
-    Its directory name carries a hyphen, so it is not importable as a package. Its
+    It was loaded by path when it lived in `docs/gktk-remedial/`, whose hyphen made it unimportable
+    as a package. Both drivers now sit in `RunDrivers/`, and the by-path load is kept so that the
+    move changed nothing about how it is loaded: each call still gets a fresh module. Its
     `RegisteredStream`, `StageTracker` and `terminal_state` are the run-registry plumbing the A3
     baseline ran under and are imported rather than copied: one copy of that machinery, and a
     sweep that goes stale the same way a pipeline run does.
@@ -524,7 +529,7 @@ def run_build(args):
 
     The sweep's counterpart, not a sweep: the same four substitutions for the grid and the two
     tolerance sites, **no** work-list filter, and a `--database` of its own. It lives here rather
-    than in `docs/gktk-remedial/scoped_pipeline_run.py` for one reason -- that driver cannot move
+    than in `RunDrivers/scoped_pipeline_run.py` for one reason -- that driver cannot move
     the tolerance, and the tolerance is the whole point of rebuilding.
 
     The target must not already exist. A build that resumed into an existing store would silently
@@ -784,7 +789,7 @@ def prepare(force=False, runs_root=None):
             SWEEP_STORE,
             purpose=(
                 "Working copy of the A3 baseline store for "
-                "docs/handover/quadsource_atol_sweep.py. Disposable: every row that is not "
+                "RunDrivers/quadsource_atol_sweep.py. Disposable: every row that is not "
                 "at the production tolerance pair belongs to a sweep and nothing else reads "
                 "it. The comparator is handover-A3-baseline-lambdacdm, not this."
             ),

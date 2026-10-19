@@ -11,8 +11,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DRIVERS = (
-    REPO_ROOT / "docs" / "gktk-remedial" / "scoped_pipeline_run.py",
-    REPO_ROOT / "docs" / "handover" / "quadsource_atol_sweep.py",
+    REPO_ROOT / "RunDrivers" / "scoped_pipeline_run.py",
+    REPO_ROOT / "RunDrivers" / "quadsource_atol_sweep.py",
 )
 
 # The drivers' signal handlers, by name: each driver's `terminal`, installed before `ray.init`,
