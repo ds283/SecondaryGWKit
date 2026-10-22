@@ -45,7 +45,9 @@ that does not break on the next field, is README §6.3.
 **Written with the plan (README §2.1).** There is no later prompt; the review of 01 closes the
 campaign (README §2.2).
 
-**Orchestrator notes** are written just before dispatch, under `orchestrator/`.
+**Orchestrator notes** are written just before dispatch, under `orchestrator/`:
+[`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-22, for 01). The planning commit
+is `99199ca`.
 
 ### 1.1 Items
 
