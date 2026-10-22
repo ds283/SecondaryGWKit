@@ -1,0 +1,243 @@
+== 2026-10-22T21:05:43+0100 prompt 07 §1 pre-launch checks (dispatch SHA b90752dda46e57d588f8107cbd4d4557134fadb2)
+cut: invalid decreasing range
+Try 'cut --help' for more information.
+-- §1.1 (fetch and ff-merge done at the start of the session: 3152af9 -> b90752d, fast-forward)
+$ git log -1 --format=%H
+b90752dda46e57d588f8107cbd4d4557134fadb2
+rc=0
+
+$ git status --short; echo '(end)'
+(end)
+rc=0
+
+$ git diff --stat 3152af9 b90752dda46e57d588f8107cbd4d4557134fadb2 -- . ':!prompts' ':!docs'; echo '(end)'
+(end)
+rc=0
+
+$ git log --oneline 3152af9..HEAD
+b90752d Record prompt 06's commit and write the orchestrator note for 07
+319b14f Record handover prompt 06: R4 holds on the Mac Studio
+rc=0
+
+$ git check-ignore -v venv
+.git/info/exclude:28:venv	venv
+rc=0
+
+-- §1.2 the launcher (06: b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef)
+$ shasum -a 256 RunDrivers/quadsource_atol_sweep.py
+b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef  RunDrivers/quadsource_atol_sweep.py
+rc=0
+
+-- §1.3 the freeze against 06's pip_06.txt (docs/handover/a3-v2/rehearsal/pip_06.txt)
+$ ./venv/bin/pip freeze > var/handover-07/freeze_07.txt; wc -l < var/handover-07/freeze_07.txt; diff var/handover-06/state/freeze_macstudio.txt var/handover-07/freeze_07.txt; echo diff-vs-06-local rc=$?; ls docs/handover/a3-v2/rehearsal/pip_06.txt && awk '/^\$ \.\/venv\/bin\/pip freeze$/{f=1;next} f&&/^$/{exit} f' docs/handover/a3-v2/rehearsal/pip_06.txt | diff - var/handover-07/freeze_07.txt; echo diff-vs-committed-pip_06 rc=$?
+101
+diff-vs-06-local rc=0
+ls: cannot access 'docs/handover/a3-v2/rehearsal/pip_06.txt': No such file or directory
+diff-vs-committed-pip_06 rc=2
+rc=0
+
+-- §1.4
+$ ./venv/bin/python -m runregistrykit list
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-06-resumed-c-20261022T200159  done              -   1h 03m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009  killed            -   1h 05m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718  killed            -   1h 08m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -   1h 13m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+4 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 4 finished; 0 with no host recorded.
+rc=0
+
+-- §1.5
+$ ./venv/bin/python -m runregistrykit store show var/datastores/handover-A3-v2-lambdacdm.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+
+$ ls var/datastores/handover-A3-v2-lambdacdm*
+ls: cannot access 'var/datastores/handover-A3-v2-lambdacdm*': No such file or directory
+rc=2
+
+-- §1.6
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+rc=0
+
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+rc=0
+
+$ echo "${RAY_ADDRESS-unset}"
+unset
+rc=0
+
+-- §1.7
+$ uptime
+21:05  up 15 days, 10:42, 1 user, load averages: 4.19 3.69 3.62
+rc=0
+
+$ sysctl -n hw.ncpu
+10
+rc=0
+
+$ df -h ~
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  807G  121G  88% /
+rc=0
+
+$ pmset -g
+System-wide power settings:
+ DestroyFVKeyOnStandby		0
+Currently in use:
+ standby              0
+ Sleep On Power Button 1
+ autorestartatconnect 0
+ autorestart          0
+ SleepServices        0
+ powernap             0
+ networkoversleep     0
+ disksleep            0
+ sleep                0
+ ttyskeepawake        1
+ displaysleep         10
+ tcpkeepalive         1
+ womp                 1
+rc=0
+
+$ ps -Ao pid,pcpu,etime,comm -r | head -11
+  PID  %CPU     ELAPSED COMM
+53377  84.0 01-03:54:28 /System/Library/PrivateFrameworks/MediaAnalysis.framework/Versions/A/mediaanalysisd
+  742  11.1 15-10:39:41 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores
+ 1298   9.7 15-10:39:20 /Applications/OrbStack.app/Contents/Frameworks/OrbStack Helper.app/Contents/MacOS/OrbStack Helper
+  526   4.5 15-10:39:43 /System/Library/CoreServices/loginwindow.app/Contents/MacOS/loginwindow
+20071   4.3    14:45:10 /usr/libexec/trustd
+  492   4.1 15-10:39:43 /System/Library/CoreServices/launchservicesd
+84035   3.4       00:33 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared
+  521   3.1 15-10:39:43 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+ 1739   3.0 15-10:38:33 /usr/bin/powermetrics
+  490   2.2 15-10:39:43 /usr/libexec/opendirectoryd
+rc=0
+
+-- the Gate: macOS software-update settings (read-only)
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate
+{
+    AutoInstallProductKeys =     (
+    );
+    AutomaticDownload = 1;
+    AutomaticallyInstallMacOSUpdates = 0;
+    ConfigDataInstall = 1;
+    CriticalUpdateInstall = 1;
+    DidSkipBackgroundDownloadLackingDiskSpace = 0;
+    FirstOfferDateDictionary =     {
+        "MSU_UPDATE_24E263_patch_15.4.1_minor" = "2025-04-23 08:12:54 +0000";
+        "MSU_UPDATE_24F74_patch_15.5_minor" = "2025-05-12 17:19:55 +0000";
+        "MSU_UPDATE_24G222_patch_15.7_minor" = "2025-09-15 18:29:54 +0000";
+        "MSU_UPDATE_24G84_patch_15.6_minor" = "2025-07-29 17:49:02 +0000";
+        "MSU_UPDATE_24G90_patch_15.6.1_minor" = "2025-08-20 20:15:58 +0000";
+        "MSU_UPDATE_25A354_patch_26.0_major" = "2025-09-15 18:29:54 +0000";
+        "MSU_UPDATE_25A362_patch_26.0.1_minor" = "2025-09-29 18:06:15 +0000";
+        "MSU_UPDATE_25B78_patch_26.1_minor" = "2025-11-03 22:35:59 +0000";
+        "MSU_UPDATE_25C56_patch_26.2_minor" = "2025-12-12 23:28:49 +0000";
+        "MSU_UPDATE_25D125_patch_26.3_minor" = "2026-02-11 23:58:43 +0000";
+        "MSU_UPDATE_25D2128_patch_26.3.1_minor" = "2026-03-05 10:06:09 +0000";
+        "MSU_UPDATE_25E246_patch_26.4_minor" = "2026-03-25 00:19:41 +0000";
+        "MSU_UPDATE_25E253_patch_26.4.1_minor" = "2026-04-09 21:50:26 +0000";
+        "MSU_UPDATE_25F71_patch_26.5_minor" = "2026-05-11 22:36:25 +0000";
+        "MSU_UPDATE_25F80_patch_26.5.1_minor" = "2026-06-01 23:25:16 +0000";
+        "MSU_UPDATE_25F84_patch_26.5.2_minor" = "2026-06-29 23:19:05 +0000";
+        "MSU_UPDATE_25G229_patch_26.7_minor" = "2026-09-14 18:13:22 +0000";
+        "MSU_UPDATE_25G241_patch_26.7.1_minor" = "2026-09-28 17:57:36 +0000";
+        "MSU_UPDATE_25G72_patch_26.6_minor" = "2026-07-27 23:19:45 +0000";
+        "MSU_UPDATE_25G76_patch_26.6.1_minor" = "2026-08-06 23:19:40 +0000";
+        "MSU_UPDATE_25G83_patch_26.6.2_minor" = "2026-08-17 23:19:36 +0000";
+        "MSU_UPDATE_26A428_patch_27.0_major" = "2026-09-15 18:12:56 +0000";
+        "MSU_UPDATE_26A434_patch_27.0.1_major" = "2026-09-28 17:57:36 +0000";
+    };
+    InstallDateDictionary =     {
+        25C56 = "2026-01-05 10:16:00 +0000";
+        25D125 = "2026-02-24 10:01:42 +0000";
+        26A434 = "2026-10-06 08:08:19 +0000";
+    };
+    LastAttemptBuildVersion = "27.0.1 (26A434)";
+    LastAttemptSystemVersion = "27.0.1 (26A434)";
+    LastBackgroundSuccessfulDate = "2026-10-22 05:20:21 +0000";
+    LastBootBaseBuildVersion = 26A434;
+    LastCollectedLoginCredentialDate = "2026-10-06 07:31:09 +0000";
+    LastExecutedMSUBackgroundActionDate = "2026-10-22 17:20:11 +0000";
+    LastFullSuccessfulDate = "2026-10-22 18:45:31 +0000";
+    LastRecommendedMajorOSBundleIdentifier = "";
+    LastRecommendedUpdatesAvailable = 1;
+    LastResultCode = 2;
+    LastSessionSuccessful = 1;
+    LastSuccessfulBackgroundMSUScanDate = "2026-10-06 05:37:26 +0000";
+    LastSuccessfulDate = "2026-10-22 18:45:31 +0000";
+    LastSuccessfulMSUScanDate = "2026-10-22 18:45:31 +0000";
+    LastUpdatesAvailable = 1;
+    PostSuccessfulMinorUpdatePostLogOutNotification = 0;
+    PrimaryLanguages =     (
+        en,
+        "en-GB"
+    );
+    RecommendedUpdates =     (
+    );
+    SplatEnabled = 1;
+}
+rc=0
+
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates
+0
+rc=0
+
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload
+1
+rc=0
+
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall
+1
+rc=0
+
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall
+1
+rc=0
+
+$ defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled
+Error: Could not find key 'AutomaticCheckEnabled' in domain 'com.apple.SoftwareUpdate'.
+rc=1
+
+-- this_host(), against 06's (id d120d1cf03551e6f, boot C58A0F92-923F-471F-B32E-B1B9F5D0A848)
+$ ./venv/bin/python -c 'import json, runregistrykit; print(json.dumps(runregistrykit.this_host(), sort_keys=True))'
+{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+rc=0
+
+$ ./venv/bin/python -c 'import json, runregistrykit; print(json.dumps(runregistrykit.package_provenance(("datastorekit", "raypoolkit", "runregistrykit")), sort_keys=True))'
+{"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+rc=0
+
+-- §1.7 again, the load re-sampled (the first reading, 4.19, was above 4)
+$ uptime; top -l 2 -n 0 -s 5 | grep -E "^(CPU usage|Load Avg)"
+21:06  up 15 days, 10:42, 1 user, load averages: 3.82 3.64 3.60
+Load Avg: 3.82, 3.64, 3.60 
+CPU usage: 18.32% user, 14.28% sys, 67.39% idle 
+Load Avg: 3.75, 3.63, 3.60 
+CPU usage: 12.67% user, 3.49% sys, 83.82% idle 
+21:06  up 15 days, 10:42, 1 user, load averages: 3.75 3.63 3.60
+
+-- §1.3 against the committed 06 record: docs/handover/a3-v2/rehearsal/out/pip_06.txt
+$ awk (the freeze section of docs/handover/a3-v2/rehearsal/out/pip_06.txt) | diff - var/handover-07/freeze_07.txt
+diff rc=0 (0 = identical)
+
+== 2026-10-22T21:11:54+0100 §2.2 the launch (var/handover-07/launch_07.sh, by bash; approved by the user in chat after the classifier denied the first attempt)
+git status --short: []
+git check-ignore -v venv: .git/info/exclude:28:venv	venv
+21:11  up 15 days, 10:48, 1 user, load averages: 3.57 3.22 3.36
+nohup sh -c 'PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py --build \
+    --database var/datastores/handover-A3-v2-lambdacdm.sqlite \
+    --job-name handover-A3-v2 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register a3-v2 \
+    --purpose "handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h" \
+    --campaign handover --prompt 07; \
+  echo "** driver exit status $?"' \
+  > var/runs/handover-07-a3-v2.launch.log 2>&1 < /dev/null &
+echo "sh pid $!"
+sh pid 84431

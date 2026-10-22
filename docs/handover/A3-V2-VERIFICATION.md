@@ -731,3 +731,124 @@ state: 2 `done` and 2 `killed`.
 - `~/ScienceData/` (made by `acquire`, now empty);
 - `~/handover-06-recorded/`, the orchestrator's staging folder, emptied by the move and left in
   place.
+
+## 2. The launch
+
+**Where the records are.** A path `var/handover-07/…` in this section is that directory on the Mac
+Studio. Its `out/` files, its scripts (`launch_07.sh`, the launch as run; `prelaunch.sh`;
+`launch_check.py`) and `freeze_07.txt` are committed at [`a3-v2/launch/`](a3-v2/launch/), the scripts
+under `scripts/`.
+
+**The tree.** A3 v2 was launched on the Mac Studio (`mps026298`) at the dispatch SHA
+**`b90752dda46e57d588f8107cbd4d4557134fadb2`** on `handover-remedial` ("Record prompt 06's commit and
+write the orchestrator note for 07").
+- `git merge --ff-only origin/handover-remedial` took the checkout from `3152af9` (R4's) to it, by
+  `319b14f` and `b90752d`.
+- `git diff --stat 3152af9 b90752d -- . ':!prompts' ':!docs'` is empty, so A3 v2 builds R4's code.
+- `git status --short` was empty before the launch and in the launch's own command.
+  `git check-ignore -v venv` gave `.git/info/exclude:28:venv`.
+
+### 2.1 The pre-launch checks (prompt §1)
+
+From [`prelaunch_checks_07.txt`](launch/prelaunch_checks_07.txt), from 21:05:43:
+
+| Check | Found | |
+|---|---|---|
+| 1. `HEAD`, tree, the Gate's diff | `b90752dd…`; `git status --short` empty; diff empty | ✅ |
+| 2. The launcher's SHA-256 | `b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef`, 06's | ✅ |
+| 3. `pip freeze` against 06's | 101 lines; identical to `docs/handover/a3-v2/rehearsal/out/pip_06.txt`'s freeze (`diff` rc 0) and to 06's local copy | ✅ |
+| 4. `list` | R4's four runs, "4 finished; 0 with no host recorded"; nothing `running` or stale | ✅ |
+| 5. The store name | `store show var/datastores/handover-A3-v2-lambdacdm.sqlite`: `absent`, problems none, no runs; `ls var/datastores/handover-A3-v2-lambdacdm*` finds nothing | ✅ |
+| 6. Lock, Ray, `RAY_ADDRESS` | `lock: free`; `ray-processes` none; `unset` | ✅ |
+| 7. Load, disk, power, CPU | load **4.19** 3.69 3.62 at 21:05; re-sampled at 21:06: 3.82, then **3.75** 3.63 3.60, with CPU 67 % then 84 % idle (`top -l 2 -s 5`). Disk 121 G free (88 %). `pmset` `sleep 0`. Top CPU: `mediaanalysisd` 84 %, `mds_stores` 11 %, OrbStack 10 % | ✅ recorded |
+
+- **The load.** The first one-minute reading, 4.19, was above prompt §5's "loaded beyond 4 cores".
+  The 5- and 15-minute averages were under 4, and the re-sample a minute later gave 3.75 with about
+  1.6 cores busy. The launch went ahead on the re-sample (log, deviation 2).
+- **The Gate: macOS updates.**
+  - The user confirmed in chat that automatic installation is off.
+  - `defaults read /Library/Preferences/com.apple.SoftwareUpdate` gives
+    **`AutomaticallyInstallMacOSUpdates = 0`**.
+  - It also gives `AutomaticDownload = 1`, **`CriticalUpdateInstall = 1`**, `ConfigDataInstall = 1`
+    and `LastUpdatesAvailable = 1`, with `RecommendedUpdates` empty.
+  - `AutomaticCheckEnabled` is not set.
+- **The host.** `this_host()` is `{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id":
+  "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15",
+  "release": "27.0.0", "system": "Darwin"}`, which is 06's. The machine has not rebooted.
+- **The packages.** `package_provenance` gives the three pins, none editable, equal to R4's
+  manifests'.
+
+### 2.2 The lock and the launch (prompt §2)
+
+From [`lock_07.txt`](launch/lock_07.txt):
+
+| When | Command | Exit | What it said |
+|---|---|---|---|
+| 21:06:24 | `acquire --purpose "SecondaryGWKit handover 07: A3 v2 build, about 40 h"` | 0 | acquired, for SecondaryGWKit |
+| 21:06:24 | `status` | 0 | `HELD`, host `mps026298`; no pid yet; no Ray process |
+| 21:12:00 | `set-pid 84436` | 0 | recorded |
+| 21:12:00 | `status` | 0 | `pid: 84436`, alive; 14 Ray processes |
+
+**The launch.** This is prompt §2.2's command verbatim, with `<SHA>` = `b90752d` and `<hours>` =
+`39-44`, written to `var/handover-07/launch_07.sh` and run by `bash` at 21:11:54:
+
+```bash
+nohup sh -c 'PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py --build \
+    --database var/datastores/handover-A3-v2-lambdacdm.sqlite \
+    --job-name handover-A3-v2 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register a3-v2 \
+    --purpose "handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h" \
+    --campaign handover --prompt 07; \
+  echo "** driver exit status $?"' \
+  > var/runs/handover-07-a3-v2.launch.log 2>&1 < /dev/null &
+disown
+```
+
+- **The pids.** `sh` 84431 (parent 1); driver **84436** (parent 84431).
+- **The first attempt was refused** by the session's permission classifier, as a "production
+  deploy", before anything ran. Between 21:06:24 and the user's approval in chat the lock was held
+  with no pid and no build. The command then ran unchanged.
+- **The estimate, 39–44 h.**
+  - Prompt §0 gives 40–45 wall-hours at 6 CPUs at the laptop's speed (about 250 CPU-hours).
+  - Scaled by R4 against R3, it is about 0.97 of that. QSI dominates A3 v2, and R4's QSI stage took
+    88.7 s against R3's 91.4 s (×0.970). The whole reference build took 3 m 41 s against 3 m 52 s
+    (×0.953), and the other stages were 2–13 % faster.
+  - 40–45 h × 0.97 = 38.8–43.7 h, written as 39–44 h.
+
+### 2.3 The one check (prompt §3)
+
+From [`launch_check_07.txt`](launch/launch_check_07.txt), at 21:12:18, 24 s after the launch:
+- **Run id** `handover-07-a3-v2-20261022T211155`.
+- **`scope`**: `full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32
+  rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc, into
+  handover-A3-v2-lambdacdm.sqlite`. It begins `full build:` and names every item prompt §3 lists.
+- **The manifest.**
+  - `git_dirty` **false**; `git_head` **`b90752dda46e57d588f8107cbd4d4557134fadb2`**, the dispatch
+    SHA.
+  - `host` `id` `d120d1cf03551e6f` with `name` `mps026298.phys.susx.ac.uk`, 06's.
+  - `packages` equal as JSON to R4's: `datastorekit` 0.5.0 `f47b9a2…`, `raypoolkit` 0.2.0
+    `eaef0ce6…` and `runregistrykit` 0.2.0 `0bae3a3c…`, none editable.
+  - `script` `RunDrivers/quadsource_atol_sweep.py`, with `script_sha256` `b2fa4ef1…`, 06's.
+  - No `--rehearsal` and no `--resume` in `argv`. `results_store_id` is `null`, and there are 20
+    keys.
+- **`status.json`.**
+  - `state` **`running`**, pid 84436, stage `CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS`,
+    heartbeat 21:12:07.
+  - `host` `{"boot": "C58A0F92-…", "id": "d120d1cf03551e6f"}`, `this_host()`'s.
+  - `kill -0 84436` ok, and `liveness(status, 900)` is `alive`.
+- **`stdout.log`.**
+  - It has four `replaced 1 occurrence` lines: the two `np.logspace(np.log10(1e5), np.log10(3e8),
+    …)` k grids, `tol=DEFAULT_QUADRATURE_ATOL` and `tol=DEFAULT_QUADRATURE_RTOL`.
+  - Its `main.py argv` is `['--database', '…/var/datastores/handover-A3-v2-lambdacdm.sqlite',
+    '--job-name', 'handover-A3-v2', '--shards', '4', '--zend', '0.1', '--source-samples-log10z',
+    '100']`. That has **`--zend 0.1`** and **no `--no-prune-unvalidated`**.
+  - It shows `bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)`, and the
+    launch log shows `Started a local Ray instance`.
+  - There is no `!!` line and no traceback, and `stderr.log` is empty.
+- **`list`**: 5 runs, "1 alive, 4 finished; 0 with no host recorded". `handover-07-a3-v2-20261022T211155`
+  is `running`.
+- The load right after the check was 4.83 3.53 3.47, the build's six workers starting.
+
+**The session then ended its turn**, with no wait and no poll (`CLAUDE.md` rule 4). The registry
+owns the run. The lock stays held with pid 84436 until prompt 08 releases it. The checkout stays at
+`b90752d`, clean, and is not moved while the build runs.

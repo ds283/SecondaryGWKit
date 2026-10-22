@@ -1,0 +1,48 @@
+== 2026-10-22T21:12:18+01:00 one check after the A3 v2 launch
+run dir var/runs/handover-07-a3-v2-20261022T211155 ; files ['manifest.json', 'status.json', 'stderr.log', 'stdout.log']
+run_id handover-07-a3-v2-20261022T211155
+scope: full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc, into handover-A3-v2-lambdacdm.sqlite
+   scope begins 'full build:': True
+   scope names 'atol=1e-32 rtol=1e-07': True
+   scope names '6 cpus': True
+   scope names 'LambdaCDM': True
+   scope names '8 log-spaced k over 100000-3e+08 /Mpc': True
+   scope names 'handover-A3-v2-lambdacdm.sqlite': True
+git_dirty False ; git_head b90752dda46e57d588f8107cbd4d4557134fadb2 = dispatch: True
+host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"} ; id/name = this_host() and 06's d120d1cf03551e6f: True True
+packages {"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal to R4's manifests' (the pins): True ; any editable: False
+script RunDrivers/quadsource_atol_sweep.py ; script_sha256 b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef = 06's b2fa4ef1...: True
+argv[1:] ['--build', '--database', 'var/datastores/handover-A3-v2-lambdacdm.sqlite', '--job-name', 'handover-A3-v2', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6'] ...; --rehearsal: False ; --resume: False
+purpose: handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h
+results var/datastores/handover-A3-v2-lambdacdm.sqlite ; results_store_id None ; manifest keys 20
+status: state running pid 84436 stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS' heartbeat 2026-10-22T21:12:07+01:00
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"} = this_host(): True
+kill -0 84436: ok
+liveness(status, 900): alive
+stdout.log lines 61 ; 'replaced 1 occurrence' lines: 4
+    ** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+    ** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+    ** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+    ** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+'main.py argv' lines: 1
+    ** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite', '--job-name', 'handover-A3-v2', '--shards', '4', '--zend', '0.1', '--source-samples-log10z', '100']
+   has --zend 0.1: True ; has --no-prune-unvalidated: False
+local Ray bootstrap lines: 1
+    ** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+launch log: 'Started a local Ray instance': True ; a '!!' line: False ; Traceback: False
+stderr.log: ''
+     PID  PPID STARTED                      COMMAND
+   84431     1 Thu Oct 22 21:11:54 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py --build \\012    --database var/datastores/handover-A3-v2-lambdacdm.sqlite \\012    --job-name handover-A3-v2 --atol 1e-32 --rtol 1e-7 --cpus 6
+   84436 84431 Thu Oct 22 21:11:54 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --database var/datastores/handover-A3-v2-lambdacdm.sqlite --job-name
+$ ./venv/bin/python -m runregistrykit list   (rc 0; stderr '')
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-07-a3-v2-20261022T211155      running           -      24s  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+   handover-06-resumed-c-20261022T200159  done              -   1h 10m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009  killed            -   1h 12m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718  killed            -   1h 15m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -   1h 19m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+5 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 4 finished; 0 with no host recorded.
+
+21:12  up 15 days, 10:48, 2 users, load averages: 4.83 3.53 3.47

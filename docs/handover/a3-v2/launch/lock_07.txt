@@ -1,0 +1,44 @@
+== 2026-10-22T21:06:24+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock acquire --purpose SecondaryGWKit handover 07: A3 v2 build, about 40 h
+acquired the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock) for SecondaryGWKit: SecondaryGWKit handover 07: A3 v2 build, about 40 h
+exit=0
+== 2026-10-22T21:06:24+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 07: A3 v2 build, about 40 h
+    acquired: 2026-10-22T21:06:24+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+exit=0
+== 2026-10-22T21:12:00+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock set-pid 84436
+recorded pid 84436 in /Users/ds283/ScienceData/.rehearsal-lock/owner
+exit=0
+== 2026-10-22T21:12:00+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 07: A3 v2 build, about 40 h
+    acquired: 2026-10-22T21:06:24+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 84436
+owner pid 84436: alive
+Ray processes of this repository: 14
+    84447 84436 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    84448 84436 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray/session_20
+    84449 84436 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    84450 84436 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/Second
+    84451 84436 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray/
+    84452 84436 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    84453 84451 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    84454 84451 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/Sec
+    84455 84451 ray::Datastore                   
+    84456 84451 ray::SerialPoolBroker                   
+    84457 84451 ray::Datastore.object_get                   
+    84458 84451 ray::Datastore.object_get                   
+    84459 84451 ray::IDLE                   
+    84460 84451 ray::Datastore.object_get                   
+exit=0
