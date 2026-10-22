@@ -38,7 +38,7 @@ that does not break on the next field, is README §6.3.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ✅ 2026-10-22 | this commit | [log](logs/01-pin-datastorekit-at-v0.5.0.md) |
+| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ✅ 2026-10-22 | `542ddd1` | [log](logs/01-pin-datastorekit-at-v0.5.0.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -94,7 +94,7 @@ which builds a real store, is the check (README §0.1, C7).
 
 ### 5.1 After prompt 01 (2026-10-22)
 
-Landed at this commit, on `62de2c4`. K1, G1 and B1 pass; no stop condition fired. Log:
+Landed at `542ddd1`, on `62de2c4`. K1, G1 and B1 pass; no stop condition fired. Log:
 [`logs/01-pin-datastorekit-at-v0.5.0.md`](logs/01-pin-datastorekit-at-v0.5.0.md); measurements:
 `measure/out/01-{pip,guard,roots}.txt`.
 - **The pin.** `requirements.txt:17` is `@v0.5.0`. The dry run said `Would install datastorekit-0.5.0`

@@ -1,7 +1,7 @@
 # Log — dk-v050-adoption prompt 01, pin `datastorekit` at `v0.5.0`
 
 - **Subject:** [`01-pin-datastorekit-at-v0.5.0.md`](../01-pin-datastorekit-at-v0.5.0.md), board items K1, G1 and B1.
-- **Commit:** this commit (parent `62de2c4`).
+- **Commit:** `542ddd1` (parent `62de2c4`).
 - **Result:** landed. K1, G1 and B1 pass; no stop condition of the prompt's §4 fired. All seven roots pass at README §8's
   counts before, and after with ObjectFactories at 280; no known flake fired, so none was re-run.
 - **Model:** Sonnet 5.5.
