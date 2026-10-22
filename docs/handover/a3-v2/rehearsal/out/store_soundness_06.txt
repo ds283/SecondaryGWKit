@@ -1,0 +1,61 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/store_soundness.py var/datastores/handover-06-reference.sqlite var/datastores/handover-06-resumed.sqlite
+== handover-06-reference.sqlite
+  handover-06-reference.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version no table
+  handover-06-reference-shard0000.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-reference-shard0001.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-reference-shard0002.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-reference-shard0003.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  read_inventory: shards (0, 1, 2, 3)
+    version                  replicated count      1  problems none
+    store_tag                replicated count     10  problems none
+    redshift                 replicated count   1159  problems none
+    wavenumber               replicated count      3  problems none
+    tolerance                replicated count      7  problems none
+    LambdaCDM                replicated count      1  problems none
+    QCD_Cosmology            replicated count      1  problems none
+    IntegrationSolver        replicated count      7  problems none
+    GkSourcePolicy           replicated count      2  problems none
+    QuadSourcePolicy         replicated count      2  problems none
+    wavenumber_exit_time     replicated count      3  problems none
+    BackgroundModel          replicated count      1  problems none
+    TkNumericIntegration     sharded    count      3  problems none
+    TkWKBIntegration         sharded    count      3  problems none
+    GkNumericIntegration     sharded    count   1368  problems none
+    GkWKBIntegration         sharded    count   3477  problems none
+    GkSource                 sharded    count    291  problems none
+    GkSourcePolicyData       sharded    count    291  problems none
+    QuadSource               sharded    count      6  problems none
+    QuadSourceIntegral       sharded    count    864  problems none
+    OneLoopIntegral          sharded    count      0  problems none
+  problems in any class: 0; of them 'duplicate': 0
+== handover-06-resumed.sqlite
+  handover-06-resumed.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version no table
+  handover-06-resumed-shard0000.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-resumed-shard0001.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-resumed-shard0002.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-06-resumed-shard0003.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  read_inventory: shards (0, 1, 2, 3)
+    version                  replicated count      1  problems none
+    store_tag                replicated count     10  problems none
+    redshift                 replicated count   1159  problems none
+    wavenumber               replicated count      3  problems none
+    tolerance                replicated count      7  problems none
+    LambdaCDM                replicated count      1  problems none
+    QCD_Cosmology            replicated count      1  problems none
+    IntegrationSolver        replicated count      7  problems none
+    GkSourcePolicy           replicated count      2  problems none
+    QuadSourcePolicy         replicated count      2  problems none
+    wavenumber_exit_time     replicated count      3  problems none
+    BackgroundModel          replicated count      1  problems none
+    TkNumericIntegration     sharded    count      3  problems none
+    TkWKBIntegration         sharded    count      3  problems none
+    GkNumericIntegration     sharded    count   1368  problems none
+    GkWKBIntegration         sharded    count   3477  problems none
+    GkSource                 sharded    count    291  problems none
+    GkSourcePolicyData       sharded    count    291  problems none
+    QuadSource               sharded    count      6  problems none
+    QuadSourceIntegral       sharded    count    864  problems none
+    OneLoopIntegral          sharded    count      0  problems none
+  problems in any class: 0; of them 'duplicate': 0
+=> clean
+rc=0

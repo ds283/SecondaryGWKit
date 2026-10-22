@@ -1,0 +1,20 @@
+resumed-a (interrupter pid 78556; hold 10 s, regex ^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$)
+2026-10-22T19:57:19+01:00 interrupter pid 78556 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-a-20261022T195718 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-22T19:57:19+01:00 liveness alive; pid 78548; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-22T19:57:24+01:00 liveness alive; pid 78548; stage 'CALCULATING BACKGROUND LambdaCDM MODEL'
+2026-10-22T19:57:29+01:00 liveness alive; pid 78548; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T19:57:49+01:00 liveness alive; pid 78548; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T19:58:54+01:00 liveness alive; pid 78548; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-22T19:58:54+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-22T19:59:04+01:00 sent SIGTERM to pid 78548 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign handover --prompt 06"; exiting
+
+resumed-b (interrupter pid 78964; hold 30 s, regex ^CALCULATE QUADRATIC SOURCE INTEGRALS)
+2026-10-22T20:00:10+01:00 interrupter pid 78964 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-b-20261022T200009 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-22T20:00:10+01:00 liveness alive; pid 78952; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-22T20:00:15+01:00 liveness alive; pid 78952; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T20:00:20+01:00 liveness alive; pid 78952; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-22T20:00:40+01:00 liveness alive; pid 78952; stage 'APPLY GKSOURCE POLICIES'
+2026-10-22T20:00:50+01:00 liveness alive; pid 78952; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-22T20:00:50+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-22T20:01:20+01:00 sent SIGTERM to pid 78952 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign handover --prompt 06"; exiting
+

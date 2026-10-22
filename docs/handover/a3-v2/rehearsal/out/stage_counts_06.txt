@@ -1,0 +1,18 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/stage_counts.py var/runs/handover-06-reference-20261022T195228 var/runs/handover-06-resumed-a-20261022T195718 var/runs/handover-06-resumed-b-20261022T200009 var/runs/handover-06-resumed-c-20261022T200159
+lookup/compute/store per stage, from each run's stdout.log
+  reference: handover-06-reference-20261022T195228
+  resumed-a: handover-06-resumed-a-20261022T195718
+  resumed-b: handover-06-resumed-b-20261022T200009
+  resumed-c: handover-06-resumed-c-20261022T200159
+  stage                                                         reference       resumed-a           resumed-b           resumed-c  
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  170/170/170         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  578/578/578
+rc=0

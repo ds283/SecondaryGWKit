@@ -1,0 +1,37 @@
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: handover-06-resumed.sqlite; version rows None
+-- shard 0: handover-06-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 53 row(s), 8 with validated = 0: serials [238, 244, 246, 249, 250, 251, 252, 253]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: handover-06-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 55 row(s), 23 with validated = 0: serials [522, 533, 538, 546, 547, 548, 549, 550, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: handover-06-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: handover-06-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 56 row(s), 12 with validated = 0: serials [41, 44, 46, 47, 49, 50, 51, 52, 53, 54, 55, 56]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0

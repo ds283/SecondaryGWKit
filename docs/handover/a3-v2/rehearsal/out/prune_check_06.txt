@@ -1,0 +1,113 @@
+== 20:01:51 prune_check after resumed-b
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/handover-06/state/after-resumed-a.txt var/datastores/handover-06-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.sqlite
+serials listed unvalidated in var/handover-06/state/after-resumed-a.txt
+-- shard 0, GkSource: 8 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 238: absent
+   serial 244: absent
+   serial 246: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+-- shard 1, GkSource: 23 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 522: absent
+   serial 533: absent
+   serial 538: absent
+   serial 546: absent
+   serial 547: absent
+   serial 548: absent
+   serial 549: absent
+   serial 550: absent
+   serial 552: absent
+   serial 553: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 559: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+-- shard 3, GkSource: 12 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 41: absent
+   serial 44: absent
+   serial 46: absent
+   serial 47: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+   serial 54: absent
+   serial 55: absent
+   serial 56: absent
+43 serial(s) checked: 43 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 20:03:59 prune_check after resumed-c, against the state after resumed-a
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/handover-06/state/after-resumed-a.txt var/datastores/handover-06-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.sqlite
+serials listed unvalidated in var/handover-06/state/after-resumed-a.txt
+-- shard 0, GkSource: 8 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 238: absent
+   serial 244: absent
+   serial 246: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+-- shard 1, GkSource: 23 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 522: absent
+   serial 533: absent
+   serial 538: absent
+   serial 546: absent
+   serial 547: absent
+   serial 548: absent
+   serial 549: absent
+   serial 550: absent
+   serial 552: absent
+   serial 553: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 559: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+-- shard 3, GkSource: 12 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 41: absent
+   serial 44: absent
+   serial 46: absent
+   serial 47: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+   serial 54: absent
+   serial 55: absent
+   serial 56: absent
+43 serial(s) checked: 43 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 20:03:59 prune_check after resumed-c, against the state after resumed-b
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/handover-06/state/after-resumed-b.txt var/datastores/handover-06-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.sqlite
+serials listed unvalidated in var/handover-06/state/after-resumed-b.txt
+   none: there is nothing to check
+rc=0
+

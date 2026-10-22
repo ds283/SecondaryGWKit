@@ -1,0 +1,178 @@
+== 2026-10-22T19:43:56+0100 §1.1 the machine
+$ hostname
+mps026298.phys.susx.ac.uk
+rc=0
+
+$ sw_vers
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+rc=0
+
+$ sysctl -n hw.ncpu hw.memsize machdep.cpu.brand_string
+10
+34359738368
+Apple M1 Max
+rc=0
+
+$ uptime
+19:43  up 15 days,  9:20, 1 user, load averages: 4.39 3.78 3.37
+rc=0
+
+$ df -h /Users/ds283
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  805G  122G  87% /
+rc=0
+
+$ pmset -g
+System-wide power settings:
+ DestroyFVKeyOnStandby		0
+Currently in use:
+ standby              0
+ Sleep On Power Button 1
+ autorestartatconnect 0
+ autorestart          0
+ SleepServices        0
+ powernap             0
+ networkoversleep     0
+ disksleep            0
+ sleep                0 (sleep prevented by screensharingd)
+ ttyskeepawake        1
+ displaysleep         10
+ tcpkeepalive         1
+ womp                 1
+rc=0
+
+$ ps -Ao pid,pcpu,etime,comm -r | head -11
+  PID  %CPU     ELAPSED COMM
+  856 140.7 15-09:17:50 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/corespotlightd
+85672  66.9 05-06:57:59 /System/Library/PrivateFrameworks/Categories.framework/Versions/A/XPCServices/CategoriesService.xpc/Contents/MacOS/CategoriesService
+75168  29.1       01:42 /Users/ds283/.claude/remote/ccd-cli/2.1.299-597e87956861
+11599  10.0 13-02:39:07 /usr/libexec/spotlightknowledged.updater
+ 1094   9.7 15-09:17:43 /Users/ds283/Library/Application Support/iStat Menus 7 (Setapp)/iStat Menus Menubar.app/Contents/MacOS/iStat Menus Menubar
+ 1298   9.5 15-09:17:32 /Applications/OrbStack.app/Contents/Frameworks/OrbStack Helper.app/Contents/MacOS/OrbStack Helper
+20071   6.9    13:23:22 /usr/libexec/trustd
+  616   4.3 15-09:17:54 /usr/libexec/syspolicyd
+  521   3.9 15-09:17:55 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+75531   2.6       00:00 /bin/zsh
+rc=0
+
+== 2026-10-22T18:42:20Z (19:42:20+0100) §1.2 the checkout (run before var/handover-06/ existed; transcribed from the session's output)
+$ git status --short
+(empty)
+$ git branch --show-current
+main
+$ git log -1 --format='%H %s'
+9678f281541c780beb2b692889e7084297e420a5 Bump scipy and ray pins for macOS update and Python 3.13
+$ git fetch origin
+From https://github.com/ds283/SecondaryGWKit
+   d03a643..3152af9  handover-remedial -> origin/handover-remedial
+$ git switch handover-remedial
+Switched to a new branch 'handover-remedial'
+branch 'handover-remedial' set up to track 'origin/handover-remedial'.
+$ git rev-parse HEAD
+3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+  (= the dispatch SHA 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b: True)
+$ git status --short
+(empty)
+$ git branch --show-current
+handover-remedial
+
+== 19:42 §2 the recorded run directories (staged outside the checkout by the orchestrator; moved in)
+$ git check-ignore -v var/handover-06/x
+.gitignore:3:var/	var/handover-06/x
+$ mkdir -p var/handover-06/out var/handover-06/recorded
+$ mv ~/handover-06-recorded/rrk-v020-adoption-03-reference-20261018T232838 ~/handover-06-recorded/rrk-v020-adoption-03-resumed-c-20261018T233941 var/handover-06/recorded/
+$ ls -la ~/handover-06-recorded/     (left empty, not removed)
+$ shasum -a 256 var/handover-06/recorded/*/*
+13e8fcaa0463c5748712b3622e32e349757e3c6a0b0dbee339cb225354b3e5a4  var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/manifest.json   (laptop 13e8fcaa…: match)
+a64cd267eb01cff51d19dc24ba55132a392cf3ad5a856c1905ab1d28eebaca26  var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/status.json     (laptop a64cd267…: match)
+6a94c54c1dc6677bc7514e8183cd18b53964c38d5ff748f8b2d5343461fd5f4b  var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/stderr.log
+ce8bf3c669fc83909e7a5a6447da07540a103d9c8b7aab33e51cac4802ccd21f  var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/stdout.log
+a0742b5793172cae6622ca6cc34140b31a2736e2dc83cabbb3ef8fe0fa248c21  var/handover-06/recorded/rrk-v020-adoption-03-resumed-c-20261018T233941/manifest.json   (laptop a0742b57…: match)
+3d30a3cf4c5e0dddb58607fbd33137b266c153e65316a19b2c6f0757d03c018e  var/handover-06/recorded/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json     (laptop 3d30a3cf…: match)
+cd922a647760303e59715e834be8f067bb8f9ac96c8d2bbb2860dac69abb9572  var/handover-06/recorded/rrk-v020-adoption-03-resumed-c-20261018T233941/stderr.log
+c96d9cb98dec39605c40b8324b969c406121df1e928a157f204e1492edcd697d  var/handover-06/recorded/rrk-v020-adoption-03-resumed-c-20261018T233941/stdout.log
+$ git status --short
+(empty)
+
+== 2026-10-22T19:44:18+0100 §1.3 the old venv (record: var/handover-06/out/old_venv_06.txt)
+$ ps -Ao pid,ppid,command | grep -F "SecondaryGWKit/venv" | grep -v grep   (nothing should be running from the old venv)
+rc=1
+$ cat venv/pyvenv.cfg; ./venv/bin/pip freeze  -> var/handover-06/out/old_venv_06.txt (111 lines; Python 3.13.16, ray==2.45.0, none of datastorekit/raypoolkit/runregistrykit)
+$ mkdir -p ~/Documents/Code/retired-venvs && mv venv ~/Documents/Code/retired-venvs/SecondaryGWKit-py313-20261022
+rc=0
+$ ls -ld ~/Documents/Code/retired-venvs/SecondaryGWKit-py313-20261022 venv
+ls: cannot access 'venv': No such file or directory
+drwxr-xr-x 8 ds283 staff 256 Oct  6 13:05 /Users/ds283/Documents/Code/retired-venvs/SecondaryGWKit-py313-20261022
+$ git status --short
+
+== 2026-10-22T19:44:33+0100 §1.4 the new venv
+$ /opt/local/bin/python3.12 -m venv venv
+rc=0
+$ ./venv/bin/pip install -r requirements.txt  -> var/handover-06/out/pip_install_06.txt (19:44:4x-19:45:26; rc=0; pip 25.0.1 not upgraded; two 'yanked version' WARNINGs: aiohttp 3.11.14, aiohttp-cors 0.8.0)
+$ git check-ignore -v venv
+rc=1
+$ git status --short
+?? venv/
+(end)
+
+   !! venv is NOT ignored on this branch: check-ignore rc=1 and git status shows "?? venv/".
+   Why: main's .gitignore is empty and .git/info/exclude does not name venv; main's Python 3.13 venv
+   carried its own venv/.gitignore ("# Created by venv ...", "*"), which python3.13 -m venv writes and
+   python3.12 -m venv does not (ls -a of the retired venv shows it; the new venv has none).
+   runregistrykit 0.2.0 stamps git_dirty = bool(git status --porcelain) (__init__.py:163), which counts
+   untracked files, so every R4 manifest would record git_dirty: true (a §5 stop). Nothing launched;
+   the orchestrator was asked how to proceed.
+
+== 2026-10-22T19:47:11+0100 §1.4 (cont.) the orchestrator's ruling: option (b), the laptop's own mechanism (its .git/info/exclude:40 is 'venv')
+$ wc -l .git/info/exclude; tail -c1 .git/info/exclude | xxd -p   (before)
+27 .git/info/exclude
+0a
+$ echo venv >> .git/info/exclude
+rc=0
+$ diff (before) .git/info/exclude
+27a28
+> venv
+$ git check-ignore -v venv
+.git/info/exclude:28:venv	venv
+rc=0
+$ git status --short
+(end)
+
+== 2026-10-22T19:50:39+0100 §1.6 the seven roots -> var/handover-06/out/roots_06.txt (all OK; ObjectFactories 280, RunDrivers skipped=1, both explained there)
+
+== 2026-10-22T19:50:39+0100 §1.7 the registry and the lock
+$ ls -d var/runs var/datastores
+ls: cannot access 'var/runs': No such file or directory
+ls: cannot access 'var/datastores': No such file or directory
+$ ./venv/bin/python -m runregistrykit list
+no runs under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+rc=0
+$ ./venv/bin/python -c "import json, runregistrykit; print(json.dumps(runregistrykit.this_host(), sort_keys=True))"
+{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+rc=0
+$ uptime   (boot reference for this_host()["boot"])
+19:50  up 15 days,  9:27, 1 user, load averages: 7.73 14.29 9.65
+{ sec = 1791365032, usec = 639709 } Wed Oct  7 10:23:52 2026
+$ ls -la ~/ScienceData
+ls: cannot access '/Users/ds283/ScienceData': No such file or directory
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+rc=0
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+rc=0
+$ echo "${RAY_ADDRESS-unset}"
+unset
+$ git status --short
+(end)
+
+== 2026-10-22T20:07:36+0100 after the last step
+$ git status --short
+(end)
+$ git rev-parse HEAD
+3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+$ git check-ignore -v venv var
+.git/info/exclude:28:venv	venv
+.gitignore:3:var/	var

@@ -1,0 +1,52 @@
+== 2026-10-22T19:46:43+0100 the seven roots at HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > var/handover-06/roots/AdaptiveLevin.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/AdaptiveLevin.txt
+   load before: 32.94 14.94 7.86   start 19:46:43
+   exit 0   end 19:46:45
+Ran 32 tests in 0.055s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > var/handover-06/roots/ComputeTargets.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/ComputeTargets.txt
+   load before: 32.94 14.94 7.86   start 19:46:45
+   exit 0   end 19:49:11
+Ran 700 tests in 137.750s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > var/handover-06/roots/CosmologyModels.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/CosmologyModels.txt
+   load before: 18.48 17.50 10.14   start 19:49:11
+   exit 0   end 19:49:13
+Ran 39 tests in 0.643s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > var/handover-06/roots/LiouvilleGreen.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/LiouvilleGreen.txt
+   load before: 17.40 17.29 10.11   start 19:49:13
+   exit 0   end 19:49:41
+Ran 148 tests in 22.280s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > var/handover-06/roots/ObjectFactories.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/ObjectFactories.txt
+   load before: 14.10 16.51 10.04   start 19:49:41
+   exit 0   end 19:49:55
+Ran 280 tests in 12.187s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/handover-06/roots/RunDrivers.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/RunDrivers.txt
+   load before: 12.35 16.01 9.97   start 19:49:55
+   exit 0   end 19:49:59
+Ran 115 tests in 4.328s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > var/handover-06/roots/tools.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/handover-06/roots/tools.txt
+   load before: 11.52 15.78 9.93   start 19:49:59
+   exit 0   end 19:50:09
+Ran 91 tests in 8.628s
+OK
+
+== verdict, against prompts/dk-v050-adoption/measure/out/01-roots.txt
+AdaptiveLevin 32 OK (=32) | ComputeTargets 700 OK (=700; the wall-clock flake did not fire) | CosmologyModels 39 OK (=39)
+LiouvilleGreen 148 OK skipped=1 (=148, skipped=1) | ObjectFactories 280 OK | RunDrivers 115 OK skipped=1 (=115) | tools 91 OK (=91)
+- ObjectFactories 280: the prompt's §1.6 says 279, which is 01-roots.txt's BEFORE section (datastorekit 0.4.0); its AFTER
+  section (0.5.0, 542ddd1's edits) and the dk-v050-adoption board ("ObjectFactories at HEAD: 280") give 280. 280 is the tree's count.
+- RunDrivers skipped=1: RunDrivers/tests/test_pipeline_adoption.py:102,
+  test_the_stage_is_the_hand_written_manifests_own_field skips with "the hand-written A3 manifest is not in this tree":
+  it reads the gitignored var/datastores/handover-A3-baseline-lambdacdm.manifest.json, present on the laptop and absent
+  from this fresh var/ ("gitignored; absent on a fresh clone", :101). The count, 115, is the laptop's; no test failed.

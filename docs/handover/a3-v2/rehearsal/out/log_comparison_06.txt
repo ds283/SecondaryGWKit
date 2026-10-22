@@ -1,0 +1,237 @@
+== 1. searches, count per file (stdout.log / stderr.log / launch log), R4 then [R3]; ! marks a difference
+-- reference (handover-06-reference-20261022T195228)
+   replaced 1 occurrence                                   4    0    4   [R3 (4, 0, 4)]
+   rehearsal scope banner                                  1    0    1   [R3 (1, 0, 1)]
+   main.py argv                                            1    0    1   [R3 (1, 0, 1)]
+   --no-prune-unvalidated                                  0    0    0   [R3 (0, 0, 0)]
+   bootstrapping a local Ray instance                      1    0    1   [R3 (1, 0, 1)]
+   Started a local Ray instance                            0    0    1   [R3 (0, 0, 1)]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R3 (0, 0, 0)]
+   Traceback                                               0    0    0   [R3 (0, 0, 0)]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R3 (0, 0, 0)]
+   pickle/unpickl                                          0    0    0   [R3 (0, 0, 0)]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R3 (0, 0, 0)]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R3 (0, 0, 0)]
+   ValueError                                              0    0    0   [R3 (0, 0, 0)]
+   RuntimeWarning                                          0    0    0   [R3 (0, 0, 0)]
+   did not validate                                        0    0    0   [R3 (0, 0, 0)]
+   DeprecationWarning                                      0    0    0   [R3 (0, 0, 0)]
+   _timestamp                                              0    0    0   [R3 (0, 0, 0)]
+   ConfigError                                             0    0    0   [R3 (0, 0, 0)]
+   RunRegistry (not Kit)                                   0    0    0   [R3 (0, 0, 0)]
+   datastorekit                                            0    0    0   [R3 (0, 0, 0)]
+   runregistrykit                                          1    0    1   [R3 (1, 0, 1)]
+   INTEGRITY WARNING                                       0    0    0   [R3 (0, 0, 0)]
+   file_system_monitor (disk space)                        0    0    0   [R3 (0, 0, 0)]
+   Rolled back the journal                                 0    0    0   [R3 (0, 0, 0)]
+   SystemExit(1)                                           0    0    0   [R3 (0, 0, 0)]
+   SystemExit(143)                                         0    0    0   [R3 (0, 0, 0)]
+   IntegrationWarning                                      0    1    1   [R3 (0, 1, 1)]
+   Killed: 9                                               0    0    0   [R3 (0, 0, 0)]
+   resuming into                                           0    0    0   [R3 (0, 0, 0)]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-a (handover-06-resumed-a-20261022T195718)
+   replaced 1 occurrence                                   4    0    4   [R3 (4, 0, 4)]
+   rehearsal scope banner                                  1    0    1   [R3 (1, 0, 1)]
+   main.py argv                                            1    0    1   [R3 (1, 0, 1)]
+   --no-prune-unvalidated                                  0    0    0   [R3 (0, 0, 0)]
+   bootstrapping a local Ray instance                      1    0    1   [R3 (1, 0, 1)]
+   Started a local Ray instance                            0    0    1   [R3 (0, 0, 1)]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R3 (0, 0, 0)]
+   Traceback                                               0    0    0   [R3 (0, 0, 0)]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R3 (0, 0, 0)]
+   pickle/unpickl                                          0    0    0   [R3 (0, 0, 0)]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R3 (0, 0, 0)]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R3 (0, 0, 0)]
+   ValueError                                              0    0    0   [R3 (0, 0, 0)]
+   RuntimeWarning                                          0    0    0   [R3 (0, 0, 0)]
+   did not validate                                        0    0    0   [R3 (0, 0, 0)]
+   DeprecationWarning                                      0    0    0   [R3 (0, 0, 0)]
+   _timestamp                                              0    0    0   [R3 (0, 0, 0)]
+   ConfigError                                             0    0    0   [R3 (0, 0, 0)]
+   RunRegistry (not Kit)                                   0    0    0   [R3 (0, 0, 0)]
+   datastorekit                                            0    0    0   [R3 (0, 0, 0)]
+   runregistrykit                                          1    0    1   [R3 (1, 0, 1)]
+   INTEGRITY WARNING                                       0    0    0   [R3 (0, 0, 0)]
+   file_system_monitor (disk space)                        0    0    0   [R3 (0, 0, 0)]
+   Rolled back the journal                                 0    0    0   [R3 (0, 0, 0)]
+   SystemExit(1)                                           0    1    1   [R3 (0, 1, 1)]
+   SystemExit(143)                                         0    0    0   [R3 (0, 0, 0)]
+   IntegrationWarning                                      0    0    0   [R3 (0, 0, 0)]
+   Killed: 9                                               0    0    0   [R3 (0, 0, 0)]
+   resuming into                                           0    0    0   [R3 (0, 0, 0)]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-b (handover-06-resumed-b-20261022T200009)
+   replaced 1 occurrence                                   4    0    4   [R3 (4, 0, 4)]
+   rehearsal scope banner                                  1    0    1   [R3 (1, 0, 1)]
+   main.py argv                                            1    0    1   [R3 (1, 0, 1)]
+   --no-prune-unvalidated                                  0    0    0   [R3 (0, 0, 0)]
+   bootstrapping a local Ray instance                      1    0    1   [R3 (1, 0, 1)]
+   Started a local Ray instance                            0    0    1   [R3 (0, 0, 1)]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R3 (0, 0, 0)]
+   Traceback                                               0    0    0   [R3 (0, 0, 0)]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R3 (0, 0, 0)]
+   pickle/unpickl                                          0    0    0   [R3 (0, 0, 0)]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R3 (0, 0, 0)]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R3 (0, 0, 0)]
+   ValueError                                              0    0    0   [R3 (0, 0, 0)]
+   RuntimeWarning                                          0    0    0   [R3 (0, 0, 0)]
+   did not validate                                        0    0    0   [R3 (0, 0, 0)]
+   DeprecationWarning                                      0    0    0   [R3 (0, 0, 0)]
+   _timestamp                                              0    0    0   [R3 (0, 0, 0)]
+   ConfigError                                             0    0    0   [R3 (0, 0, 0)]
+   RunRegistry (not Kit)                                   0    0    0   [R3 (0, 0, 0)]
+   datastorekit                                            0    0    0   [R3 (0, 0, 0)]
+   runregistrykit                                          1    0    1   [R3 (1, 0, 1)]
+   INTEGRITY WARNING                                       2    0    2   [R3 (2, 0, 2)]
+   file_system_monitor (disk space)                        0    0    0   [R3 (0, 0, 0)]
+   Rolled back the journal                                 0    0    0   [R3 (0, 0, 0)]
+   SystemExit(1)                                           0    0    0   [R3 (0, 1, 1)]  !
+   SystemExit(143)                                         0    1    1   [R3 (0, 0, 0)]  !
+   IntegrationWarning                                      0    1    1   [R3 (0, 0, 0)]  !
+   Killed: 9                                               0    0    0   [R3 (0, 0, 0)]
+   resuming into                                           0    0    1   [R3 (0, 0, 1)]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-c (handover-06-resumed-c-20261022T200159)
+   replaced 1 occurrence                                   4    0    4   [R3 (4, 0, 4)]
+   rehearsal scope banner                                  1    0    1   [R3 (1, 0, 1)]
+   main.py argv                                            1    0    1   [R3 (1, 0, 1)]
+   --no-prune-unvalidated                                  0    0    0   [R3 (0, 0, 0)]
+   bootstrapping a local Ray instance                      1    0    1   [R3 (1, 0, 1)]
+   Started a local Ray instance                            0    0    1   [R3 (0, 0, 1)]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R3 (0, 0, 0)]
+   Traceback                                               0    0    0   [R3 (0, 0, 0)]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R3 (0, 0, 0)]
+   pickle/unpickl                                          0    0    0   [R3 (0, 0, 0)]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R3 (0, 0, 0)]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R3 (0, 0, 0)]
+   ValueError                                              0    0    0   [R3 (0, 0, 0)]
+   RuntimeWarning                                          0    0    0   [R3 (0, 0, 0)]
+   did not validate                                        0    0    0   [R3 (0, 0, 0)]
+   DeprecationWarning                                      0    0    0   [R3 (0, 0, 0)]
+   _timestamp                                              0    0    0   [R3 (0, 0, 0)]
+   ConfigError                                             0    0    0   [R3 (0, 0, 0)]
+   RunRegistry (not Kit)                                   0    0    0   [R3 (0, 0, 0)]
+   datastorekit                                            0    0    0   [R3 (0, 0, 0)]
+   runregistrykit                                          1    0    1   [R3 (1, 0, 1)]
+   INTEGRITY WARNING                                       0    0    0   [R3 (0, 0, 0)]
+   file_system_monitor (disk space)                        0    0    0   [R3 (0, 0, 0)]
+   Rolled back the journal                                 0    0    0   [R3 (0, 0, 0)]
+   SystemExit(1)                                           0    0    0   [R3 (0, 0, 0)]
+   SystemExit(143)                                         0    0    0   [R3 (0, 0, 0)]
+   IntegrationWarning                                      0    0    0   [R3 (0, 1, 1)]  !
+   Killed: 9                                               0    0    0   [R3 (0, 0, 0)]
+   resuming into                                           0    0    1   [R3 (0, 0, 1)]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+
+== 2. line kinds against R3's same slug (normalised; set difference; line counts R4/R3); R3's raw logs only for reference and resumed-c
+-- reference stdout.log: 110 lines against 110; R4-only kinds 0, R3-only kinds 0
+-- reference stderr.log: 4 lines against 4; R4-only kinds 0, R3-only kinds 0
+-- resumed-a: R3's logs are not on this machine; compared by section 1's counts and section 3 only
+-- resumed-b: R3's logs are not on this machine; compared by section 1's counts and section 3 only
+-- resumed-c stdout.log: 107 lines against 107; R4-only kinds 0, R3-only kinds 0
+-- resumed-c stderr.log: 0 lines against 4; R4-only kinds 0, R3-only kinds 4
+   R3 only: (compute_QuadSource_integral pid=N)   the requested tolerance from being achieved.  The error may be
+   R3 only: (compute_QuadSource_integral pid=N)   underestimated.
+   R3 only: (compute_QuadSource_integral pid=N)   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=N)
+   R3 only: (compute_QuadSource_integral pid=N) <repo>/Quadrature/simple_quadrature.py:N: IntegrationWarning: The occurrence of roundoff error is detected, which prevents
+
+== 3. '** ' sequences and printed-line counts
+-- reference: counts (** , complete, Queue summary, no-compute, progress, inflight) R4 (26, 10, 10, 1, 0, 0) R3 (26, 10, 10, 1, 0, 0); equal: True
+   '** ' sequence equal to R3's normalised: True; stage banners verbatim equal: True (13/13)
+   banners: BUILD ARRAY OF WAVENUMBERS TO SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE | BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE | BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM | CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS | CALCULATE QUADRATIC SOURCE TERMS | CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS | CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS | CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT | APPLY GKSOURCE POLICIES | CALCULATE QUADRATIC SOURCE INTEGRALS
+-- resumed-a: counts (** , complete, Queue summary, no-compute, progress, inflight) R4 (23, 7, 7, 1, 0, 0) R3 (23, 7, 7, 1, 0, 0); equal: True
+   banners: BUILD ARRAY OF WAVENUMBERS TO SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE | BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE | BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM | CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS | CALCULATE QUADRATIC SOURCE TERMS | CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS | CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS | CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+-- resumed-b: counts (** , complete, Queue summary, no-compute, progress, inflight) R4 (26, 9, 9, 7, 0, 0) R3 (26, 9, 9, 7, 0, 0); equal: True
+   banners: BUILD ARRAY OF WAVENUMBERS TO SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE | BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE | BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM | CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS | CALCULATE QUADRATIC SOURCE TERMS | CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS | CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS | CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT | APPLY GKSOURCE POLICIES | CALCULATE QUADRATIC SOURCE INTEGRALS
+-- resumed-c: counts (** , complete, Queue summary, no-compute, progress, inflight) R4 (26, 10, 10, 9, 0, 0) R3 (26, 10, 10, 9, 0, 0); equal: True
+   '** ' sequence equal to R3's normalised: True; stage banners verbatim equal: True (13/13)
+   banners: BUILD ARRAY OF WAVENUMBERS TO SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE | CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE | BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE | BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM | CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS | CALCULATE QUADRATIC SOURCE TERMS | CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS | CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS | CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT | APPLY GKSOURCE POLICIES | CALCULATE QUADRATIC SOURCE INTEGRALS
+
+== 4. status fields at each run's end
+-- reference: state done exit 0 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-a: state killed exit 143 stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-b: state killed exit 143 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-c: state done exit 0 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+
+== 5. stage times (ALL WORK ITEMS COMPLETE), not compared; R3's beside, from its log_comparison_03.txt section 5
+-- reference
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.688s
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0105s
+   R4 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.653s
+   R4 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.298s
+   R4 CALCULATE QUADRATIC SOURCE TERMS: 0.925s
+   R4 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 22.9s
+   R4 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 4.75s
+   R4 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 22.6s
+   R4 APPLY GKSOURCE POLICIES: 8.77s
+   R4 CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 28.7s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.501s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0118s
+   R3 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.984s
+   R3 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.297s
+   R3 CALCULATE QUADRATIC SOURCE TERMS: 0.942s
+   R3 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 26.2s
+   R3 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 6.82s
+   R3 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 24.8s
+   R3 APPLY GKSOURCE POLICIES: 9.67s
+   R3 CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 31.4s
+-- resumed-a
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.672s
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.00863s
+   R4 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.657s
+   R4 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.292s
+   R4 CALCULATE QUADRATIC SOURCE TERMS: 0.96s
+   R4 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 22.5s
+   R4 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 4.09s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.956s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0121s
+   R3 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.636s
+   R3 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.32s
+   R3 CALCULATE QUADRATIC SOURCE TERMS: 0.996s
+   R3 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 34.3s
+   R3 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 1m 18.6s
+-- resumed-b
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0101s
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.00981s
+   R4 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.0055s
+   R4 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.00884s
+   R4 CALCULATE QUADRATIC SOURCE TERMS: 0.00865s
+   R4 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.54s
+   R4 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.23s
+   R4 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 18.2s
+   R4 APPLY GKSOURCE POLICIES: 8.59s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.013s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0114s
+   R3 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.0063s
+   R3 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.0104s
+   R3 CALCULATE QUADRATIC SOURCE TERMS: 0.0105s
+   R3 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.74s
+   R3 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.64s
+   R3 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 21.4s
+   R3 APPLY GKSOURCE POLICIES: 10.4s
+-- resumed-c
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0105s
+   R4 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.00923s
+   R4 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.0056s
+   R4 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.00851s
+   R4 CALCULATE QUADRATIC SOURCE TERMS: 0.00906s
+   R4 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.55s
+   R4 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.13s
+   R4 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 4.77s
+   R4 APPLY GKSOURCE POLICIES: 4.75s
+   R4 CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 6.87s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE: 0.0158s
+   R3 CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE: 0.0124s
+   R3 CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS: 0.00788s
+   R3 CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS: 0.012s
+   R3 CALCULATE QUADRATIC SOURCE TERMS: 0.0116s
+   R3 CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS: 1.61s
+   R3 CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS: 3.33s
+   R3 CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT: 5.15s
+   R3 APPLY GKSOURCE POLICIES: 4.98s
+   R3 CALCULATE QUADRATIC SOURCE INTEGRALS: 1m 23.4s

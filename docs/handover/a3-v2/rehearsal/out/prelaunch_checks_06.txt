@@ -1,0 +1,502 @@
+== 2026-10-22T19:51:28+0100 interrupter dummy tests (into var/handover-06/work/dummy-scoped, dummy-build)
+$ bash docs/datastore-integrity-verification/interrupter_dummy_test.sh var/handover-06/work/dummy-scoped  -> interrupter_dummy_test_06.txt rc=0 (19:50:48-19:51:13)
+$ bash docs/a3-v2-readiness/interrupter_build_dummy_test.sh var/handover-06/work/dummy-build  -> interrupter_build_dummy_test_06.txt rc=0 (19:51:13-19:51:14)
+normalised (times, pids, work paths): scoped output (40 lines) equal to R3's interrupter_dummy_test_03.txt: True; build output (28 lines, cases A-D) equal to R3's interrupter_build_dummy_test_03.txt: True
+case D: interrupter exit=0, child exit=137 (killed by SIGKILL)
+ps -p (all 17 pids named, and the children 77598,77693,77699,77704) -> none alive (rc=1)
+
+== 2026-10-22T19:51:50+0100 pre-launch check before reference
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+RAY_ADDRESS=[unset]
+19:51  up 15 days,  9:28, 1 user, load averages: 4.78 12.02 9.16
+-- tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- runregistrykit list (whole output; stderr separately)
+no runs under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s3s1  927G  806G  121G  87% /
+
+== 2026-10-22T19:51:50+0100 environment before reference
+-- runregistrykit store show var/datastores/handover-06-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- runregistrykit store show var/datastores/handover-06-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/ containing handover-06 (other than var/handover-06/)
+(end)
+-- pip show runregistrykit datastorekit raypoolkit (Name, Version, Location, Editable)
+Name: runregistrykit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+---
+Name: datastorekit
+Version: 0.5.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+---
+Name: raypoolkit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages
+-- pip check
+No broken requirements found.
+rc=0
+-- runregistrykit.package_provenance((runregistrykit, datastorekit, raypoolkit)) (keys sorted)
+{"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+equal as JSON to the expected record (prompt §1.5 pins): True
+raypoolkit and runregistrykit equal to R3 reference manifest's: True True ; datastorekit R3: 0.4.0 c8570e8
+TERMINAL_STATES ('done', 'failed', 'killed', 'lost')
+-- runregistrykit.this_host()
+{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+id equal to §1.7's reading d120d1cf03551e6f: True ; boot equal to §1.7's C58A0F92-923F-471F-B32E-B1B9F5D0A848: True
+-- runregistrykit.find_client_root() from the root
+config_file /Users/ds283/Documents/Code/SecondaryGWKit/runregistrykit.toml
+runs_root /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+stores_root /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores
+distributions ('datastorekit', 'raypoolkit')
+stores {'fingerprinter': 'config.fingerprint:fingerprinter'}
+-- what runs (this process; repository on sys.path)
+runregistrykit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/runregistrykit/__init__.py
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/datastorekit/__init__.py
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+ObjectFactories.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/__init__.py
+datastorekit.store_fingerprint.ENCODING_FORMAT 1
+config.fingerprint.FINGERPRINT_FORMAT 6
+ray.__version__ 2.43.0 ; ray.is_initialized() False
+-- R3's recorded fingerprints (var/handover-06/recorded/)
+rrk-v020-adoption-03-reference-20261018T232838 done 0 format None 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1 ; host {'boot': '376461AF-4985-4F42-8E41-F4E914F5E3E6', 'id': '8d2b247824882486'}
+rrk-v020-adoption-03-resumed-c-20261018T233941 done 0 format None 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1 ; host {'boot': '376461AF-4985-4F42-8E41-F4E914F5E3E6', 'id': '8d2b247824882486'}
+-- shasum -a 256 RunDrivers/quadsource_atol_sweep.py
+b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef  RunDrivers/quadsource_atol_sweep.py
+-- git log -1 --format=%h RunDrivers/quadsource_atol_sweep.py
+031bcb4
+-- git log --oneline c081eed..HEAD -- RunDrivers/quadsource_atol_sweep.py
+(end)
+-- requirements.txt package lines
+requirements.txt:17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.5.0
+requirements.txt:75:ray==2.43.0
+requirements.txt:76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.2.0
+requirements.txt:81:runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0
+-- git log --oneline c081eed..HEAD
+3152af9 Write the handover orchestrator note for prompt 06
+304960f Write handover prompts 06 and 07 for the A3 v2 launch
+-- git diff --stat c081eed HEAD -- . ':!prompts' ':!docs'
+(end)
+-- git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit 3152af9 [handover-remedial]
+-- interrupt_when.py, the two dummy-test scripts, docs/dk-and-rpk-migration/rehearsal/, closed_store_state.py: last change
+2818780 docs/datastore-integrity-verification/interrupt_when.py
+b1774d8 docs/datastore-integrity-verification/interrupter_dummy_test.sh
+2818780 docs/a3-v2-readiness/interrupter_build_dummy_test.sh
+7af17bd docs/dk-and-rpk-migration/rehearsal
+a6c8f39 docs/a3-v2-readiness/rehearsal/closed_store_state.py
+-- ncpu 10
+-- ls -a ~/ScienceData
+ls: cannot access '/Users/ds283/ScienceData': No such file or directory
+
+-- var/datastores before the first launch (created empty at 19:52, with var/runs): 0 files
+
+== 2026-10-22T19:52:27+0100 pre-launch check before reference
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+RAY_ADDRESS=[unset]
+19:52  up 15 days,  9:29, 1 user, load averages: 4.08 11.07 8.92
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 06 (R4 on the Mac Studio)
+    acquired: 2026-10-22T19:52:00+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- runregistrykit list (whole output; stderr separately)
+no runs under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s3s1  927G  806G  121G  87% /
+
+== 2026-10-22T19:52:28+0100 launch reference (log var/runs/handover-06-reference.launch.log)
+git status --short: []
+19:52  up 15 days,  9:29, 1 user, load averages: 4.15 10.96 8.90
+sh pid 78047
+== 2026-10-22T19:52:33+0100 one check after reference launch
+run dirs: ['var/runs/handover-06-reference-20261022T195228']
+run dir: var/runs/handover-06-reference-20261022T195228
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id handover-06-reference-20261022T195228 git_head 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef results_store_id None
+manifest results var/datastores/handover-06-reference.sqlite
+manifest packages {"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is b2fa4ef1...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: False ; --register reference
+status state running pid 78053 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-22T19:52:29+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 78053 ok
+    PID  PPID STARTED                      COMMAND
+  78047     1 Thu Oct 22 19:52:28 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/handover-06-reference.sqlite \\012    --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register reference --purpose "$0" --campaign handover --prompt 06; \\012  echo "** driver exit status $?" handove
+  78053 78047 Thu Oct 22 19:52:28 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/handover-06-reference.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register reference --purpose handover prompt 06, R4 on the Mac Studio (mps026298; 
+   handover-06-reference-20261022T195228  running           -       6s  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runreg
+1 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+19:52  up 15 days,  9:29, 1 user, load averages: 3.98 10.82 8.86
+
+== 2026-10-22T19:56:40+0100 after reference: no Ray process left
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+19:56  up 15 days,  9:33, 1 user, load averages: 5.76 8.62 8.41
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- Ray pids its logs name: 
+-- ps -p 78047,78053
+  PID TTY           TIME CMD
+rc=1
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-06-reference-20261022T195228  done              -       4m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+1 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 0
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+/dev/disk3s3s1  927G  806G  121G  87% /
+
+-- (re-run; the first pid extraction's pattern was wrong) Ray pids its logs name: 78089,78090,78091,78117
+-- ps -p 78047,78053,78089,78090,78091,78117
+  PID TTY           TIME CMD
+rc=1
+
+== 2026-10-22T19:57:17+0100 pre-launch check before resumed-a
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+RAY_ADDRESS=[unset]
+19:57  up 15 days,  9:33, 1 user, load averages: 4.83 8.06 8.21
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 06 (R4 on the Mac Studio)
+    acquired: 2026-10-22T19:52:00+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-06-reference-20261022T195228  done              -       5m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+1 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s3s1  927G  806G  121G  87% /
+-- ps -p 78047,78053,78089,78090,78091,78117 (previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+-- resumed store files: 0
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- points (R3's reasoning, from R4's own reference stdout.log): GkSource stage 22.6 s (stdout.log:76; R3 24.8 s); 40 % = 9.04 s -> 9 s, under the 10 s floor -> hold 10 s. QSI 1m 28.7s = 88.7 s (stdout.log:100; R3 91.4 s); a third = 29.57 s -> hold 30 s (<= 250 s cap). Both holds equal R3's.
+
+== 2026-10-22T19:57:17+0100 launch resumed-a (log var/runs/handover-06-resumed-a.launch.log)
+git status --short: []
+19:57  up 15 days,  9:33, 1 user, load averages: 4.83 8.06 8.21
+sh pid 78545
+interrupter pid 78556 at 19:57:19: interrupt_when.py var/runs/handover-06-resumed-a-20261022T195718 '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10
+== 2026-10-22T19:57:25+0100 one check after resumed-a launch
+run dirs: ['var/runs/handover-06-resumed-a-20261022T195718']
+run dir: var/runs/handover-06-resumed-a-20261022T195718
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id handover-06-resumed-a-20261022T195718 git_head 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef results_store_id None
+manifest results var/datastores/handover-06-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is b2fa4ef1...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: False ; --register resumed-a
+status state running pid 78548 stage CALCULATE QUADRATIC SOURCE TERMS heartbeat 2026-10-22T19:57:25+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 78548 ok
+kill -0 interrupter 78556 ok
+    PID  PPID STARTED                      COMMAND
+  78545     1 Thu Oct 22 19:57:18 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/handover-06-resumed.sqlite \\012    --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-a --purpose "$0" --campaign handover --prompt 06; \\012  echo "** driver exit status $?" handover 
+  78548 78545 Thu Oct 22 19:57:18 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose handover prompt 06, R4 on the Mac Studio (mps026298; tr
+  78556     1 Thu Oct 22 19:57:19 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/handover-06-resumed-a-20261022T195718 ^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$ 0 --interval 5 --hold 10
+   handover-06-resumed-a-20261022T195718  running           -       8s  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runreg
+2 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 1 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+2026-10-22T19:57:19+01:00 interrupter pid 78556 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-a-20261022T195718 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-22T19:57:19+01:00 liveness alive; pid 78548; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-22T19:57:24+01:00 liveness alive; pid 78548; stage 'CALCULATING BACKGROUND LambdaCDM MODEL'
+19:57  up 15 days,  9:34, 1 user, load averages: 4.32 7.84 8.13
+
+== 2026-10-22T19:59:32+0100 after resumed-a: no Ray process left
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+19:59  up 15 days,  9:36, 1 user, load averages: 4.73 7.13 7.83
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- Ray pids its logs name: 78576,78578
+-- ps -p 78545,78548,78556,78576,78578
+  PID TTY           TIME CMD
+rc=1
+2 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 2 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-22T19:57:19+01:00 interrupter pid 78556 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-a-20261022T195718 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-22T19:57:19+01:00 liveness alive; pid 78548; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-22T19:57:24+01:00 liveness alive; pid 78548; stage 'CALCULATING BACKGROUND LambdaCDM MODEL'
+2026-10-22T19:57:29+01:00 liveness alive; pid 78548; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T19:57:49+01:00 liveness alive; pid 78548; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T19:58:54+01:00 liveness alive; pid 78548; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-22T19:58:54+01:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-22T19:59:04+01:00 sent SIGTERM to pid 78548 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign handover --prompt 06"; exiting
+-- stderr.log
+** SIGTERM at 2026-10-22 19:59:04 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+
+== 2026-10-22T20:00:08+0100 pre-launch check before resumed-b
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+RAY_ADDRESS=[unset]
+20:00  up 15 days,  9:36, 1 user, load averages: 4.26 6.71 7.65
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 06 (R4 on the Mac Studio)
+    acquired: 2026-10-22T19:52:00+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 78548
+owner pid 78548: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-06-resumed-a-20261022T195718  killed            -       3m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -       8m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+2 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 2 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s3s1  927G  806G  121G  87% /
+-- ps -p 78545,78548,78556,78576,78578 (previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+
+== 2026-10-22T20:00:09+0100 launch resumed-b (log var/runs/handover-06-resumed-b.launch.log)
+git status --short: []
+20:00  up 15 days,  9:36, 1 user, load averages: 4.26 6.71 7.65
+sh pid 78950
+interrupter pid 78964 at 20:00:10: interrupt_when.py var/runs/handover-06-resumed-b-20261022T200009 '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 30
+== 2026-10-22T20:00:18+0100 one check after resumed-b launch
+run dirs: ['var/runs/handover-06-resumed-b-20261022T200009']
+run dir: var/runs/handover-06-resumed-b-20261022T200009
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id handover-06-resumed-b-20261022T200009 git_head 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef results_store_id 1c41fb1357b542cc99b5c19cb8684dfb
+manifest results var/datastores/handover-06-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is b2fa4ef1...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: True ; --register resumed-b
+status state running pid 78952 stage CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-22T20:00:15+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 78952 ok
+kill -0 interrupter 78964 ok
+    PID  PPID STARTED                      COMMAND
+  78950     1 Thu Oct 22 20:00:09 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/handover-06-resumed.sqlite \\012    --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-b --purpose "$0" --campaign handover --prompt 06; \\012  echo "** driver exit status $?" 
+  78952 78950 Thu Oct 22 20:00:09 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose handover prompt 06, R4 on the Mac Studio (mps0
+  78964     1 Thu Oct 22 20:00:10 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/handover-06-resumed-b-20261022T200009 ^CALCULATE QUADRATIC SOURCE INTEGRALS 0 --interval 5 --hold 30
+   handover-06-resumed-b-20261022T200009  running           -       9s  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runreg
+3 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 2 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+2026-10-22T20:00:10+01:00 interrupter pid 78964 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-b-20261022T200009 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-22T20:00:10+01:00 liveness alive; pid 78952; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-22T20:00:15+01:00 liveness alive; pid 78952; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+20:00  up 15 days,  9:36, 1 user, load averages: 4.14 6.60 7.60
+
+== 2026-10-22T20:01:41+0100 after resumed-b: no Ray process left
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+20:01  up 15 days,  9:38, 1 user, load averages: 6.17 6.67 7.52
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- Ray pids its logs name: 78981,78984,78985,79021
+-- ps -p 78950,78952,78964,78981,78984,78985,79021
+  PID TTY           TIME CMD
+rc=1
+3 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 3 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-22T20:00:10+01:00 interrupter pid 78964 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-06-resumed-b-20261022T200009 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 30 s
+2026-10-22T20:00:10+01:00 liveness alive; pid 78952; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-22T20:00:15+01:00 liveness alive; pid 78952; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-22T20:00:20+01:00 liveness alive; pid 78952; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-22T20:00:40+01:00 liveness alive; pid 78952; stage 'APPLY GKSOURCE POLICIES'
+2026-10-22T20:00:50+01:00 liveness alive; pid 78952; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-22T20:00:50+01:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 30 s, then reading again
+2026-10-22T20:01:20+01:00 sent SIGTERM to pid 78952 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign handover --prompt 06"; exiting
+-- stderr.log
+[36m(compute_QuadSource_integral pid=79021)[0m /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+[36m(compute_QuadSource_integral pid=79021)[0m   the requested tolerance from being achieved.  The error may be 
+[36m(compute_QuadSource_integral pid=79021)[0m   underestimated.
+[36m(compute_QuadSource_integral pid=79021)[0m   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+** SIGTERM at 2026-10-22 20:01:20 +0100: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(143); recording killed, exit code 143
+/dev/disk3s3s1  927G  806G  121G  87% /
+
+== 2026-10-22T20:01:58+0100 pre-launch check before resumed-c
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+RAY_ADDRESS=[unset]
+20:01  up 15 days,  9:38, 1 user, load averages: 5.62 6.53 7.46
+-- tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 06 (R4 on the Mac Studio)
+    acquired: 2026-10-22T19:52:00+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 78952
+owner pid 78952: NOT alive
+Ray processes of this repository: none
+rc=0
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-06-resumed-b-20261022T200009  killed            -       2m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718  killed            -       5m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -      10m  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+3 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 3 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+/dev/disk3s3s1  927G  806G  121G  87% /
+-- ps -p 78950,78952,78964,78981,78984,78985,79021 (previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+
+== 2026-10-22T20:01:59+0100 launch resumed-c (log var/runs/handover-06-resumed-c.launch.log)
+git status --short: []
+20:01  up 15 days,  9:38, 1 user, load averages: 5.62 6.53 7.46
+sh pid 79203
+== 2026-10-22T20:02:00+0100 one check after resumed-c launch
+run dirs: ['var/runs/handover-06-resumed-c-20261022T200159']
+run dir: var/runs/handover-06-resumed-c-20261022T200159
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id handover-06-resumed-c-20261022T200159 git_head 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 b2fa4ef1bbdbb09fea1780952710eeb53dee401ef6c0febcd385dd98aa0526ef results_store_id 1c41fb1357b542cc99b5c19cb8684dfb
+manifest results var/datastores/handover-06-resumed.sqlite
+manifest packages {"datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "raypoolkit": {"commit": "eaef0ce60e2fc354bb32f0ad576010e6a83c1976", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.2.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is b2fa4ef1...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: True ; --register resumed-c
+status state running pid 79208 stage quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250 heartbeat 2026-10-22T20:01:59+01:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 79208 ok
+    PID  PPID STARTED                      COMMAND
+  79203     1 Thu Oct 22 20:01:59 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/handover-06-resumed.sqlite \\012    --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-c --purpose "$0" --campaign handover --prompt 06; \\012  echo "** driver exit status $?" 
+  79208 79203 Thu Oct 22 20:01:59 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-c --purpose handover prompt 06, R4 on the Mac Studio (mps0
+   handover-06-resumed-c-20261022T200159  running           -       2s  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runreg
+4 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 3 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.12.15", "release": "27.0.0", "system": "Darwin"}
+20:02  up 15 days,  9:38, 1 user, load averages: 5.33 6.45 7.42
+
+== 2026-10-22T20:03:39+0100 after resumed-c: no Ray process left
+HEAD 3152af943a4f8dd5cf5920f7ed6b209f1c7e217b
+git status --short: []
+20:03  up 15 days,  9:40, 1 user, load averages: 5.53 6.26 7.25
+-- tools.rehearsal_lock ray-processes
+rc=0
+-- Ray pids its logs name: 79275
+-- ps -p 79203,79208,79275
+  PID TTY           TIME CMD
+rc=1
+4 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 4 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 0
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+-- stderr.log
+/dev/disk3s3s1  927G  806G  121G  87% /
+

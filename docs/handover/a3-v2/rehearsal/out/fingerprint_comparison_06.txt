@@ -1,0 +1,37 @@
+$ PYTHONPATH=. ./venv/bin/python docs/datastore-integrity-verification/compare_stores.py var/datastores/handover-06-reference.sqlite var/datastores/handover-06-resumed.sqlite
+reference: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  problems none
+  against its sidecar: 0 difference(s), it matches
+resumed: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-06-resumed.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  problems none
+  against its sidecar: 0 difference(s), it matches
+
+compare_fingerprints(reference, resumed): 0 difference(s)
+
+  class                 reference    resumed  digests
+  version                       1          1  equal
+  store_tag                    10         10  equal
+  redshift                   1159       1159  equal
+  wavenumber                    3          3  equal
+  tolerance                     7          7  equal
+  LambdaCDM                     1          1  equal
+  QCD_Cosmology                 1          1  equal
+  IntegrationSolver             7          7  equal
+  GkSourcePolicy                2          2  equal
+  QuadSourcePolicy              2          2  equal
+  wavenumber_exit_time          3          3  equal
+  BackgroundModel               1          1  equal
+  TkNumericIntegration          3          3  equal
+  TkWKBIntegration              3          3  equal
+  GkNumericIntegration       1368       1368  equal
+  GkWKBIntegration           3477       3477  equal
+  GkSource                    291        291  equal
+  GkSourcePolicyData          291        291  equal
+  QuadSource                    6          6  equal
+  QuadSourceIntegral          864        864  equal
+  OneLoopIntegral               0          0  equal
+
+verdict: equal
+rc=0

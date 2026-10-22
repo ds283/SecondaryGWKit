@@ -1,0 +1,6 @@
+................................................................................s..................................
+----------------------------------------------------------------------
+Ran 115 tests in 4.328s
+
+OK (skipped=1)
+** quadsource_atol_sweep: sweep store ready at /private/var/folders/vl/01h0m1j17rs3zhwt9n0720p800128f/T/tmpztob6quw/B/sweep.sqlite

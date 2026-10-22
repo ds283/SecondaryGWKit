@@ -22,8 +22,10 @@ closed on another board. **One more is assigned here (2026-10-19)** and held on 
 `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`, on `rrk-v020-adoption`'s (§3 below
 points at it). **Prompts 06 and 07 were written 2026-10-22** (not seam work): the A3 v2 host, the
 Mac Studio, made ready and rehearsed there (R4), then the launch; 08, after the build, is held. Their
-planning opened one issue, `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`, so §3 holds
-**eight**.
+planning opened one issue, `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`. **06 landed
+2026-10-22: R4 reproduced `39809dca…` on the Mac Studio**, and opened `[06-nothing-tracked-ignores-venv]`,
+so §3 holds **nine**. 07 waits only on the user's confirmation that automatic macOS update
+installation is off there.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -58,8 +60,8 @@ planning opened one issue, `[a3-v2-origin-main-moved-to-python-3.13-without-this
 | E1 | Re-take the trade-off on the current grid | **E1** | — | ⬜ no | ⬜ | — | — |
 | E2 | Choose the depth | **E2** | — | ⬜ no | ⬜ | — | — |
 | 05 | [The Ray address default](05-ray-address-defaults-to-local.md) | **05** — not seam work; closes `[00-main-and-the-readers-default-to-ray-address-auto]` | Opus 5.5 | ✍️ yes | ✅ 2026-10-16 | *"Start a fresh Ray instance by default in main.py and the readers"* | [`logs/05-…`](logs/05-ray-address-defaults-to-local.md) |
-| 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus | ✍️ 2026-10-22 | ⬜ | — | — |
-| 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus | ✍️ 2026-10-22 | ⏸ held on 06 | — | — |
+| 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | *"Record handover prompt 06: R4 holds on the Mac Studio"* | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
+| 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus | ✍️ 2026-10-22 | ⏸ 06 holds; waits on the user's confirmation that automatic macOS update installation is off (its Gate) | — | — |
 | 08 | After the A3 v2 build | **08** — the closed store's checks, its readers and its archive (07 §7) | — | ⬜ held until the build ends | ⬜ | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
@@ -92,7 +94,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | E1 | **MEASUREMENT** | Re-take `[06-source-spline-residual-vs-handover]`'s stale trade-off table on the curvature-criterion grid, at $b = 0$ **and** $b \ne 0$ — which A1 has now made scoreable. | — | ⬜ **Grouping only.** |
 | E2 | **DECISION** | Scan $x_T$ against both oracles at large response $x$, at $b = 0$ and $b = 0.2$, with the gap gone and the residue attributed. Move `TkNumericIntegration.py:148-149`'s window, or record on measurement that it stays. | — | ⬜ **Grouping only.** Last, by README §4 item 3. |
 | 05 | **REMEDY** | Make `main.py` and the six `extract_*.py` start their own Ray instance unless told otherwise: `--ray-address` defaults to `local`, not `auto`, which attaches to any Ray instance on the machine. The flag stays optional, because the A3 v2 launcher passes none. Assigned here by the user on 2026-10-12, to land before the A3 v2 launch or with it. | 05 | ✅ **Done, 2026-10-16.** `DEFAULT_RAY_ADDRESS` and the six readers' defaults read `local`, with their help text and the comment above each `ray.init` saying so; `ComputeTargets/tests/test_ray_address_default.py` (7 tests) reads the seven scripts with `ast` and pins Ray's own resolution of `local`. `quadsource_atol_sweep.py` unchanged (SHA-256 `2a985303…`). `ComputeTargets` 693 → **700**; the other six roots unchanged. |
-| 06 | **SET-UP** | Bring the Mac Studio's checkout to this branch and give it a Python 3.12 venv equal to the laptop's; run R3's four launches there (R4) at the current launcher and `datastorekit` 0.5.0, which no rehearsal build has run. Runs on the Mac Studio; the records are committed on the laptop. | 06 | ⬜ **Written 2026-10-22.** |
+| 06 | **SET-UP** | Bring the Mac Studio's checkout to this branch and give it a Python 3.12 venv equal to the laptop's; run R3's four launches there (R4) at the current launcher and `datastorekit` 0.5.0, which no rehearsal build has run. Runs on the Mac Studio; the records are committed on the laptop. | 06 | ✅ **Done, 2026-10-22. R4 holds on the Mac Studio:** both stores `39809dca…`, equal to each other, their sidecars and R3's recorded `reference` and `resumed-c` (`compare_with_recorded.py` verdict `equal`). The venv is Python 3.12.15 with a `pip freeze` identical to the laptop's (101 lines); the three packages at their pins, none editable; the seven roots pass (`ObjectFactories` 280, the tree's count, where the prompt quoted the pre-`v0.5.0` 279; `RunDrivers` 115 with one skip, a test that reads a laptop-only gitignored manifest). Four manifests: `git_dirty` `false`, `HEAD` `3152af9`, host `d120d1cf03551e6f`, launcher `b2fa4ef1…`. The Mac Studio is 2–13 % faster per stage than the laptop at `--cpus 6`. One stop-and-ask before any launch (the venv not ignored), resolved by `.git/info/exclude`; ten deviations logged, four of them shell slips under zsh. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §1. |
 | 07 | **LAUNCH** | Launch A3 v2 on the Mac Studio by the launcher's production scope at (1e-32, 1e-7), `--cpus 6`, into `var/datastores/handover-A3-v2-lambdacdm.sqlite`; one check; end. | 07 | ⏸ **Written 2026-10-22, held on 06.** |
 | 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | — | ⬜ **Charter in 07 §7; written when the build has ended.** |
 
@@ -509,6 +511,22 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `ray` pin move with its own rehearsal, which `CLAUDE.md` keeps as this repository's to make.
   **Next step:** the user's — "we should move this checkout onto it at some point soon"
   (2026-10-22); not before A3 v2 has ended. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[06-nothing-tracked-ignores-venv]** *(opened 2026-10-22 by prompt 06, on the Mac Studio)* —
+  **nothing this repository tracks ignores `venv/`.** `handover-remedial`'s `.gitignore` holds only
+  `var/` (`main`'s is empty), so a checkout with a venv in it is clean only if something untracked
+  ignores it: on the laptop `.git/info/exclude:40` is `venv`; on the Mac Studio the Python 3.13 venv
+  carried its own `venv/.gitignore` (`*`), which `python3.13 -m venv` writes and `python3.12 -m venv`
+  does not. The new 3.12 venv therefore showed `?? venv/`. **Impact:** `runregistrykit` 0.2.0 stamps
+  `git_dirty = bool(git status --porcelain)`, which counts untracked files, so every manifest of a run
+  launched from such a checkout records `git_dirty: true` — a stop for every rehearsal, and a dirty
+  provenance for A3 v2. No R4 run was affected: 06 stopped before any launch, and on the
+  orchestrator's ruling appended `venv` to the Mac Studio checkout's `.git/info/exclude` (line 28),
+  untracked; all four manifests record `git_dirty: false`. A fresh clone meets it again.
+  **Next step:** add `venv/` to the tracked `.gitignore` in a commit of its own, or record that every
+  checkout must carry the exclude line; not in 06, and not during A3 v2 (the Mac Studio's checkout is
+  frozen while it runs, and a `.gitignore` commit would not be on it). Measurement: `logs/06-…`,
+  deviation 2. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,

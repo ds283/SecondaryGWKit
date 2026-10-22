@@ -1,0 +1,9 @@
+== 2026-10-22T20:07:07+0100 A3 v2's guard, no --register, lock held
+var/runs entries before: 8
+$ PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/handover-06-resumed.sqlite --job-name handover-06 --atol 1e-32 --rtol 1e-7
+!! quadsource_atol_sweep --build: handover-06-resumed.sqlite, handover-06-resumed-shard0000.sqlite, handover-06-resumed-shard0001.sqlite, handover-06-resumed-shard0002.sqlite, handover-06-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+exit=1 at 20:07:08
+every file of both stores and both sidecars: identical before and after (SHA-256, mtime, size)
+var/runs entries after: 8
+journals: []
+ray-processes: []
