@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-10-19 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
+**Last updated:** 2026-10-22 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
 which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
@@ -20,7 +20,10 @@ ahead of A3 v2**, a `runregistrykit` defect drafted for RunRegistryKit, was clos
 2026-10-12 and the `runregistry-extraction` board holds, so a second issue is recorded in §4 as
 closed on another board. **One more is assigned here (2026-10-19)** and held on another board:
 `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`, on `rrk-v020-adoption`'s (§3 below
-points at it).
+points at it). **Prompts 06 and 07 were written 2026-10-22** (not seam work): the A3 v2 host, the
+Mac Studio, made ready and rehearsed there (R4), then the launch; 08, after the build, is held. Their
+planning opened one issue, `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`, so §3 holds
+**eight**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -55,6 +58,9 @@ points at it).
 | E1 | Re-take the trade-off on the current grid | **E1** | — | ⬜ no | ⬜ | — | — |
 | E2 | Choose the depth | **E2** | — | ⬜ no | ⬜ | — | — |
 | 05 | [The Ray address default](05-ray-address-defaults-to-local.md) | **05** — not seam work; closes `[00-main-and-the-readers-default-to-ray-address-auto]` | Opus 5.5 | ✍️ yes | ✅ 2026-10-16 | *"Start a fresh Ray instance by default in main.py and the readers"* | [`logs/05-…`](logs/05-ray-address-defaults-to-local.md) |
+| 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus | ✍️ 2026-10-22 | ⬜ | — | — |
+| 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus | ✍️ 2026-10-22 | ⏸ held on 06 | — | — |
+| 08 | After the A3 v2 build | **08** — the closed store's checks, its readers and its archive (07 §7) | — | ⬜ held until the build ends | ⬜ | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -86,6 +92,9 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | E1 | **MEASUREMENT** | Re-take `[06-source-spline-residual-vs-handover]`'s stale trade-off table on the curvature-criterion grid, at $b = 0$ **and** $b \ne 0$ — which A1 has now made scoreable. | — | ⬜ **Grouping only.** |
 | E2 | **DECISION** | Scan $x_T$ against both oracles at large response $x$, at $b = 0$ and $b = 0.2$, with the gap gone and the residue attributed. Move `TkNumericIntegration.py:148-149`'s window, or record on measurement that it stays. | — | ⬜ **Grouping only.** Last, by README §4 item 3. |
 | 05 | **REMEDY** | Make `main.py` and the six `extract_*.py` start their own Ray instance unless told otherwise: `--ray-address` defaults to `local`, not `auto`, which attaches to any Ray instance on the machine. The flag stays optional, because the A3 v2 launcher passes none. Assigned here by the user on 2026-10-12, to land before the A3 v2 launch or with it. | 05 | ✅ **Done, 2026-10-16.** `DEFAULT_RAY_ADDRESS` and the six readers' defaults read `local`, with their help text and the comment above each `ray.init` saying so; `ComputeTargets/tests/test_ray_address_default.py` (7 tests) reads the seven scripts with `ast` and pins Ray's own resolution of `local`. `quadsource_atol_sweep.py` unchanged (SHA-256 `2a985303…`). `ComputeTargets` 693 → **700**; the other six roots unchanged. |
+| 06 | **SET-UP** | Bring the Mac Studio's checkout to this branch and give it a Python 3.12 venv equal to the laptop's; run R3's four launches there (R4) at the current launcher and `datastorekit` 0.5.0, which no rehearsal build has run. Runs on the Mac Studio; the records are committed on the laptop. | 06 | ⬜ **Written 2026-10-22.** |
+| 07 | **LAUNCH** | Launch A3 v2 on the Mac Studio by the launcher's production scope at (1e-32, 1e-7), `--cpus 6`, into `var/datastores/handover-A3-v2-lambdacdm.sqlite`; one check; end. | 07 | ⏸ **Written 2026-10-22, held on 06.** |
+| 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | — | ⬜ **Charter in 07 §7; written when the build has ended.** |
 
 ---
 
@@ -486,6 +495,20 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   above is still the way to answer it. What has changed is that a null result there no longer
   means the cost curve is safe, and that the experiment should record `max_depth` and the region
   count against `local_atol` rather than against `phase_err` alone.
+
+- **[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]** *(opened 2026-10-22 by the
+  planning of prompts 06 and 07, from a read of the Mac Studio's checkout; not by a prompt)* —
+  `origin/main` carries `9678f28` (2026-10-06, "Bump scipy and ray pins for macOS update and Python
+  3.13"), committed on the Mac Studio, which this branch does not: it moves `ray` from 2.43.0 to
+  2.45.0, the earliest release with a Python 3.13 wheel, and `scipy` to 1.16.3. This branch took the
+  `scipy` half independently (`8abb3da`) and stays on Python 3.12 (MacPorts 3.12.15) with
+  `ray==2.43.0` (`requirements.txt:75`), which every rehearsal R0–R3 ran on. The two branches
+  therefore disagree on the interpreter and on `ray`, and a merge of this branch into `main`
+  conflicts at `requirements.txt:75`. **Impact:** none on A3 v2 — the user decided on 2026-10-22
+  that the Mac Studio's venv is Python 3.12 from this branch's pins (prompt 06 §0.2). It is a
+  `ray` pin move with its own rehearsal, which `CLAUDE.md` keeps as this repository's to make.
+  **Next step:** the user's — "we should move this checkout onto it at some point soon"
+  (2026-10-22); not before A3 v2 has ended. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,

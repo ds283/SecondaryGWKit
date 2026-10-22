@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-19 · **100 open** across twenty-two campaigns.
+**Last updated:** 2026-10-22 · **101 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -48,7 +48,9 @@ day, and **three opened 2026-09-23 by its A3 baseline pipeline run**, which is n
 of that run's cost found the shipped `QuadSourceIntegral` tolerance pair unreachable on production's
 squeezed $(k, q, r)$ triples, and the user stopped the run. An eighth, **opened 2026-10-16 by a
 measurement of a hard-killed run ahead of A3 v2**, a `runregistrykit` defect fixed in RunRegistryKit's
-`v0.2.0`, was closed on 2026-10-19 by `rrk-v020-adoption` prompt 03, on that board's §4. The
+`v0.2.0`, was closed on 2026-10-19 by `rrk-v020-adoption` prompt 03, on that board's §4. A ninth was
+opened on 2026-10-22 by the planning of its prompts 06 and 07, which make the Mac Studio ready for
+A3 v2 and launch it. The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
 created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
@@ -127,6 +129,7 @@ for.
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
 | `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's. **Assigned 2026-10-19 to `handover`** by the user, which owns the A3 v2 launcher; not yet scheduled. |
+| `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` | handover | `origin/main` has `9678f28` (Mac Studio, 2026-10-06): Python 3.13 and `ray` 2.45.0, which this branch lacks; it stays on 3.12 and `ray==2.43.0`, as every rehearsal ran. A merge conflicts at `requirements.txt:75`. No impact on A3 v2, whose venv is 3.12 by the user's decision (2026-10-22); the move is a `ray` pin change with its own rehearsal, after A3 v2. Not assigned. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
