@@ -1,0 +1,50 @@
+## HEAD 62de2c4, guard module UNEDITED, datastorekit 0.5.0
+$ PYTHONPATH=. ./venv/bin/python -m unittest ObjectFactories.tests.test_fingerprint_format_guard
+.F
+======================================================================
+FAIL: test_every_spec_is_pinned_for_the_current_format (ObjectFactories.tests.test_fingerprint_format_guard.TestFormatGuard.test_every_spec_is_pinned_for_the_current_format)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/tests/test_fingerprint_format_guard.py", line 94, in test_every_spec_is_pinned_for_the_current_format
+    self.fail("\n".join(lines))
+AssertionError: the inventory specs no longer match the pin for format 6:
+  spec changed: version
+  spec changed: store_tag
+  spec changed: redshift
+  spec changed: wavenumber
+  spec changed: wavenumber_exit_time
+  spec changed: tolerance
+  spec changed: LambdaCDM
+  spec changed: QCD_Cosmology
+  spec changed: IntegrationSolver
+  spec changed: BackgroundModel
+  spec changed: TkNumericIntegration
+  spec changed: TkWKBIntegration
+  spec changed: GkNumericIntegration
+  spec changed: GkWKBIntegration
+  spec changed: GkSourcePolicy
+  spec changed: GkSourcePolicyData
+  spec changed: GkSource
+  spec changed: QuadSourcePolicy
+  spec changed: QuadSource
+  spec changed: QuadSourceIntegral
+  spec changed: OneLoopIntegral
+A spec changed, so bump FINGERPRINT_FORMAT in config/fingerprint.py and add a new pin to SPEC_DIGESTS and a new golden file beside the old ones, never over them.
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=1)
+exit 1
+
+## HEAD 62de2c4, guard module EDITED (condition, docstrings, import, new test), datastorekit 0.5.0
+$ PYTHONPATH=. ./venv/bin/python -m unittest -v ObjectFactories.tests.test_fingerprint_format_guard
+test_a_key_keeps_its_type (ObjectFactories.tests.test_fingerprint_format_guard.TestFormatGuard.test_a_key_keeps_its_type) ... ok
+test_an_empty_extra_values_is_left_out (ObjectFactories.tests.test_fingerprint_format_guard.TestFormatGuard.test_an_empty_extra_values_is_left_out) ... ok
+test_every_spec_is_pinned_for_the_current_format (ObjectFactories.tests.test_fingerprint_format_guard.TestFormatGuard.test_every_spec_is_pinned_for_the_current_format) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK
+exit 0

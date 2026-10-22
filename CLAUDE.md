@@ -48,10 +48,11 @@ that hold across all of them:
 
 Since 2026-10-11 the generic datastore layer is the package `datastorekit`, from DatastoreKit
 (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit), pinned in
-`requirements.txt` at `v0.4.0`, and the work queue `RayWorkPool` is the package `raypoolkit`, from
-RayPoolKit (`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned
-at `v0.2.0`. ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in
-the `dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package
+`requirements.txt` at `v0.5.0` (moved to it on 2026-10-22 in the `dk-v050-adoption` campaign), and
+the work queue `RayWorkPool` is the package `raypoolkit`, from RayPoolKit
+(`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned at `v0.2.0`.
+ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in the
+`dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package
 `runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`,
 https://github.com/ds283/RunRegistryKit), pinned at `v0.2.0` with the extra `[stores]`, adopted in
 the `runregistry-extraction` campaign and moved to `v0.2.0` on 2026-10-18 in the

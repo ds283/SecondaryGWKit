@@ -1,7 +1,7 @@
 # dk-v050-adoption campaign — implementation state
 
-**Last updated:** 2026-10-22 · **Status: PLANNED — 0 of 1 landed.** 01 is written. U1 and U2 ruled
-by the user.
+**Last updated:** 2026-10-22 · **Status: 01 landed, awaiting review — 1 of 1.** U1 and U2 ruled by the
+user.
 
 The plan is [`README.md`](README.md), written on 2026-10-22 at `031bcb4` from DatastoreKit's
 `v0.5.0` addendum for SGK and RunRegistryKit's amended guard recipe.
@@ -38,7 +38,7 @@ that does not break on the next field, is README §6.3.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ⬜ | — | — |
+| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ✅ 2026-10-22 | this commit | [log](logs/01-pin-datastorekit-at-v0.5.0.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -53,16 +53,16 @@ is `99199ca`.
 
 | Item | Prompt | What | State |
 |---|---|---|---|
-| **K1** | 01 | `requirements.txt:17` moved to `v0.5.0`; the venv installed from it; `CLAUDE.md`'s pin | ⬜ |
-| **G1** | 01 | the guard's `plain` leaves out an empty `extra_values`; its docstrings; `test_an_empty_extra_values_is_left_out`; `SPEC_DIGESTS` and `FINGERPRINT_FORMAT` unchanged | ⬜ |
-| **B1** | 01 | the baselines: `pip freeze`, provenance, the guard unedited and edited, the seven roots | ⬜ |
+| **K1** | 01 | `requirements.txt:17` moved to `v0.5.0`; the venv installed from it; `CLAUDE.md`'s pin | ✅ |
+| **G1** | 01 | the guard's `plain` leaves out an empty `extra_values`; its docstrings; `test_an_empty_extra_values_is_left_out`; `SPEC_DIGESTS` and `FINGERPRINT_FORMAT` unchanged | ✅ |
+| **B1** | 01 | the baselines: `pip freeze`, provenance, the guard unedited and edited, the seven roots | ✅ |
 
 ## 2. The gates
 
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | **E** | DatastoreKit has tagged `v0.5.0` with an SGK addendum, and RunRegistryKit's recipe gives the condition | — | ✅ holds (2026-10-22): tag object `6a6809d5…` on `f47b9a25…`, on GitHub; the addendum in `docs/adoption/secondarygwkit.md` at the tag; RunRegistryKit `70ee1e8`, pushed |
-| **FP** | the golden fingerprint is reproduced unchanged through `v0.5.0` | 01 | ⬜ (README §0.2: held under the scratch overlay) |
+| **FP** | the golden fingerprint is reproduced unchanged through `v0.5.0` | 01 | ✅ holds (2026-10-22): `test_store_fingerprint_golden`, 6 tests, OK under the installed `v0.5.0` |
 
 There is no gate on a DatastoreKit board for this move: the `extra-values` campaign's U5 lets SGK
 stay on `v0.4.0` or move.
@@ -91,3 +91,24 @@ measured at `031bcb4` (README §0.2):
 Writing the plan corrected one thing proposed in conversation: a read-only fingerprint of a real
 store through the new pin is not possible, since no store's primary is on disk. The golden test,
 which builds a real store, is the check (README §0.1, C7).
+
+### 5.1 After prompt 01 (2026-10-22)
+
+Landed at this commit, on `62de2c4`. K1, G1 and B1 pass; no stop condition fired. Log:
+[`logs/01-pin-datastorekit-at-v0.5.0.md`](logs/01-pin-datastorekit-at-v0.5.0.md); measurements:
+`measure/out/01-{pip,guard,roots}.txt`.
+- **The pin.** `requirements.txt:17` is `@v0.5.0`. The dry run said `Would install datastorekit-0.5.0`
+  and nothing else. The venv holds `datastorekit` 0.5.0 at `f47b9a25…`, `requested_revision`
+  `v0.5.0`, not editable; `raypoolkit` and `runregistrykit` unchanged; `pip check` clean; `pip
+  freeze` differs by the one line. `InventorySpec` has seven fields, `ENCODING_FORMAT` is `1`.
+- **The guard.** Unedited under `v0.5.0` it failed with "spec changed" for 21 classes and no other
+  line; with the condition it passes against `SPEC_DIGESTS[6]` as it stands. `FINGERPRINT_FORMAT`,
+  `SPEC_DIGESTS` and `config/fingerprint.py` are untouched. M1 and M2 each fail the tests the prompt
+  names, and were reverted.
+- **The roots**, before and after, serially: AdaptiveLevin 32, ComputeTargets 700, CosmologyModels
+  39, LiouvilleGreen 148 (1 skipped), ObjectFactories 279 then 280, RunDrivers 115, tools 91, all
+  OK; no known flake fired. The six golden-fingerprint tests pass.
+- **The addendum's claims held:** 21 `InventorySpec(...)` calls, none passing `extra_values`; no
+  other file reads `extra_values`, `extra_value_counts`, `as_json` or walks `dataclasses.fields`.
+- **No issue opened or closed;** `docs/OPEN_ISSUES.md` stays at 100.
+- **The venv is ahead of `git revert`:** reverting 01 leaves `v0.5.0` installed (README §4.1).

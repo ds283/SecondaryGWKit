@@ -15,6 +15,12 @@ own JSON, so that the polymorphic `Parent.types` keys of `BackgroundModel` and
 a key that is not a string, and a bare `str(k)` would make the two alike and miss a change of a
 key's type. `test_a_key_keeps_its_type` pins that conversion.
 
+Since DatastoreKit `v0.5.0` the recipe carries one amendment, given in that file's section "The Q5
+guard under DatastoreKit `v0.5.0`" (RunRegistryKit `70ee1e8`): `plain` leaves out an empty
+`extra_values`. With it every pin in `SPEC_DIGESTS[6]` holds under `v0.5.0`, so the new field is not
+a format change, while a spec that comes to declare an extra table moves its digest and is one
+(dk-v050-adoption prompt 01; `test_an_empty_extra_values_is_left_out`).
+
 Nothing is opened: no store, nothing under `var/`, no Ray.
 """
 
@@ -24,7 +30,7 @@ import json
 import unittest
 from collections.abc import Mapping
 
-from datastorekit.store_inventory import canonical_json, inventory_specs
+from datastorekit.store_inventory import InventorySpec, canonical_json, inventory_specs
 
 from config.datastore import factories
 from config.fingerprint import FINGERPRINT_FORMAT, SPEC_DIGESTS
@@ -32,10 +38,14 @@ from config.fingerprint import FINGERPRINT_FORMAT, SPEC_DIGESTS
 
 def plain(value):
     """A spec as JSON: dataclasses as objects, sequences as lists, and every mapping key as the
-    JSON of the key, so that 1 (`1`) and "1" (`"1"`) stay apart."""
+    JSON of the key, so that 1 (`1`) and "1" (`"1"`) stay apart. An empty `extra_values` is left
+    out, so that a spec declaring no extra table is what it was before DatastoreKit `v0.5.0` added
+    the field."""
     if dataclasses.is_dataclass(value):
         return {
-            f.name: plain(getattr(value, f.name)) for f in dataclasses.fields(value)
+            f.name: plain(getattr(value, f.name))
+            for f in dataclasses.fields(value)
+            if not (f.name == "extra_values" and len(getattr(value, f.name)) == 0)
         }
     if isinstance(value, Mapping):
         return {json.dumps(k): plain(v) for k, v in value.items()}
@@ -98,6 +108,13 @@ class TestFormatGuard(unittest.TestCase):
         self.assertNotEqual(
             canonical_json(plain({0: "a"})), canonical_json(plain({"0": "a"}))
         )
+
+    def test_an_empty_extra_values_is_left_out(self):
+        empty = plain(InventorySpec())
+        declared = plain(InventorySpec(extra_values={"t": "c"}))
+        self.assertNotIn("extra_values", empty)
+        self.assertIn("extra_values", declared)
+        self.assertNotEqual(canonical_json(empty), canonical_json(declared))
 
 
 if __name__ == "__main__":

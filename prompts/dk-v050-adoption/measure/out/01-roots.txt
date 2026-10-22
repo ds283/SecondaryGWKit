@@ -1,0 +1,78 @@
+## BEFORE: HEAD 62de2c4, datastorekit 0.4.0, tree clean
+Load averages (1/5/15 min) read just before each root: AdaptiveLevin 16.28 38.36 61.29; CosmologyModels 15.86 37.91 60.99; ObjectFactories 15.86 37.91 60.99; tools 14.97 36.64 60.13; LiouvilleGreen 13.89 35.33 59.26; RunDrivers 18.00 34.56 58.28; ComputeTargets 18.54 34.12 57.85
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 32 tests in 0.060s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 700 tests in 142.463s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 39 tests in 0.708s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 148 tests in 23.549s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 279 tests in 14.776s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 115 tests in 5.633s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 91 tests in 10.436s
+OK
+
+## AFTER: HEAD 62de2c4, datastorekit 0.5.0, working tree carries the 01 edits (uncommitted)
+Load averages (1/5/15 min) read just before each root:
+  AdaptiveLevin load: 15.47 23.96 47.90
+  CosmologyModels load: 15.47 23.96 47.90
+  ObjectFactories load: 17.59 24.26 47.86
+  tools load: 18.48 24.11 47.40
+  LiouvilleGreen load: 23.04 24.82 47.24
+  RunDrivers load: 23.56 24.76 46.57
+  ComputeTargets load: 24.24 24.87 46.35
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 32 tests in 0.081s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 700 tests in 151.787s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 39 tests in 0.713s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 148 tests in 24.458s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 280 tests in 15.344s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 115 tests in 6.978s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 91 tests in 11.132s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest -v ObjectFactories.tests.test_store_fingerprint_golden 2>&1 | grep -E "\.\.\.|^Ran|^OK|FAILED"
+test_the_config_names_the_fingerprinter (ObjectFactories.tests.test_store_fingerprint_golden.TestConfigFingerprint.test_the_config_names_the_fingerprinter) ... ok
+test_the_fingerprinter_takes_the_golden_fingerprint (ObjectFactories.tests.test_store_fingerprint_golden.TestConfigFingerprint.test_the_fingerprinter_takes_the_golden_fingerprint) ... ok
+test_the_new_golden_is_the_old_one_with_its_encoding (ObjectFactories.tests.test_store_fingerprint_golden.TestConfigFingerprint.test_the_new_golden_is_the_old_one_with_its_encoding) ... ok
+test_taken_is_outside_every_digest (ObjectFactories.tests.test_store_fingerprint_golden.TestGolden.test_taken_is_outside_every_digest) ... ok
+test_the_golden_fingerprint (ObjectFactories.tests.test_store_fingerprint_golden.TestGolden.test_the_golden_fingerprint) ... ok
+test_the_shape (ObjectFactories.tests.test_store_fingerprint_golden.TestGolden.test_the_shape) ... ok
+Ran 6 tests in 0.659s
+OK
