@@ -60,7 +60,7 @@ installation is off there.
 | E1 | Re-take the trade-off on the current grid | **E1** | — | ⬜ no | ⬜ | — | — |
 | E2 | Choose the depth | **E2** | — | ⬜ no | ⬜ | — | — |
 | 05 | [The Ray address default](05-ray-address-defaults-to-local.md) | **05** — not seam work; closes `[00-main-and-the-readers-default-to-ray-address-auto]` | Opus 5.5 | ✍️ yes | ✅ 2026-10-16 | *"Start a fresh Ray instance by default in main.py and the readers"* | [`logs/05-…`](logs/05-ray-address-defaults-to-local.md) |
-| 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | *"Record handover prompt 06: R4 holds on the Mac Studio"* | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
+| 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `319b14f` | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus | ✍️ 2026-10-22 | ⏸ 06 holds; waits on the user's confirmation that automatic macOS update installation is off (its Gate) | — | — |
 | 08 | After the A3 v2 build | **08** — the closed store's checks, its readers and its archive (07 §7) | — | ⬜ held until the build ends | ⬜ | — | — |
 
