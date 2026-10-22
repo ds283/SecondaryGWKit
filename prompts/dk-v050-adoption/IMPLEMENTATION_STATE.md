@@ -1,7 +1,7 @@
 # dk-v050-adoption campaign — implementation state
 
-**Last updated:** 2026-10-22 · **Status: 01 landed, awaiting review — 1 of 1.** U1 and U2 ruled by the
-user.
+**Last updated:** 2026-10-22 · **Status: CLOSED — 1 of 1 landed and reviewed** (2026-10-22, §5.2).
+U1 and U2 ruled by the user.
 
 The plan is [`README.md`](README.md), written on 2026-10-22 at `031bcb4` from DatastoreKit's
 `v0.5.0` addendum for SGK and RunRegistryKit's amended guard recipe.
@@ -38,7 +38,7 @@ that does not break on the next field, is README §6.3.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ✅ 2026-10-22 | `542ddd1` | [log](logs/01-pin-datastorekit-at-v0.5.0.md) |
+| 01 | [Pin `datastorekit` at `v0.5.0`](01-pin-datastorekit-at-v0.5.0.md) | the pin; the guard's condition and its test; `CLAUDE.md`'s pin; the baselines | Sonnet | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `542ddd1` | [log](logs/01-pin-datastorekit-at-v0.5.0.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -62,7 +62,7 @@ is `99199ca`.
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | **E** | DatastoreKit has tagged `v0.5.0` with an SGK addendum, and RunRegistryKit's recipe gives the condition | — | ✅ holds (2026-10-22): tag object `6a6809d5…` on `f47b9a25…`, on GitHub; the addendum in `docs/adoption/secondarygwkit.md` at the tag; RunRegistryKit `70ee1e8`, pushed |
-| **FP** | the golden fingerprint is reproduced unchanged through `v0.5.0` | 01 | ✅ holds (2026-10-22): `test_store_fingerprint_golden`, 6 tests, OK under the installed `v0.5.0` |
+| **FP** | the golden fingerprint is reproduced unchanged through `v0.5.0` | 01 | ✅ holds (2026-10-22): `test_store_fingerprint_golden`, 6 tests, OK under the installed `v0.5.0`; confirmed by the review's re-run of ObjectFactories at `6532ec0` (§5.2) |
 
 There is no gate on a DatastoreKit board for this move: the `extra-values` campaign's U5 lets SGK
 stay on `v0.4.0` or move.
@@ -112,3 +112,39 @@ Landed at `542ddd1`, on `62de2c4`. K1, G1 and B1 pass; no stop condition fired. 
   other file reads `extra_values`, `extra_value_counts`, `as_json` or walks `dataclasses.fields`.
 - **No issue opened or closed;** `docs/OPEN_ISSUES.md` stays at 100.
 - **The venv is ahead of `git revert`:** reverting 01 leaves `v0.5.0` installed (README §4.1).
+
+### 5.2 Review and close (2026-10-22)
+
+The orchestrator reviewed `542ddd1` against `orchestrator/prompt-01.md` §2, in the main checkout,
+under the installed `v0.5.0`.
+1. **Scope.** `git show --stat 542ddd1`: `requirements.txt` (line 17 alone), `CLAUDE.md` (the pin
+   sentence, with the clause "moved to it on 2026-10-22 in the `dk-v050-adoption` campaign", the
+   paragraph rewrapped; no other line, and no `v0.4.0` left), the guard module, the three
+   `measure/out/01-*` files, the log and this board. Nothing else.
+2. **What must not move.** `git diff 542ddd1~1 542ddd1 -- config/ ObjectFactories/tests/data/` is
+   empty. The guard module's diff is the condition, the two docstrings, the `InventorySpec` import
+   and the one new test; neither existing test moved.
+3. **The venv, measured here.** `package_provenance`: `datastorekit` 0.5.0 at
+   `f47b9a255e9ad58e0d0eaf85644f53b575884d31`, `requested_revision` `v0.5.0`, not editable;
+   `raypoolkit` 0.2.0 at `eaef0ce6…` and `runregistrykit` 0.2.0 at `0bae3a3c…`, as before. `pip
+   freeze` against the orchestrator's own reading before dispatch differs by the one
+   `datastorekit` line; `pip check` is clean. `find var -newer` a marker touched before dispatch
+   lists nothing.
+4. **ObjectFactories at `HEAD`:** 280, OK (load about 25).
+5. **The mutation record.** M1 and M2 are in the log with their exact diffs, each failing where
+   the prompt says: M1 both the pin test (21 classes) and the new test on `assertNotIn`; M2 the new
+   test alone, on `assertIn`. `01-guard.txt` holds 21 `  spec changed: <class>` lines and no
+   "class added" or "class removed" line unedited, and 3 tests OK edited.
+6. **The addendum.** The log checks each of its claims about SGK against what was measured; none
+   was false.
+
+The log's five deviations are classified and sound. One thing the review notes and does not
+correct: 01's commit subject is 79 characters, over `CLAUDE.md`'s ~72. It is not amended (rule 1
+of `CLAUDE.md`'s campaign conventions).
+
+**Residue**, fixed in `6532ec0`: "this commit" replaced by `542ddd1` in the §1 row, §5.1 and the
+log.
+
+**Closed.** No issue opened or closed; `docs/OPEN_ISSUES.md` stays at 100. README §6.3, a guard
+that does not break on the next defaulted field of `InventorySpec`, remains the user's to take up;
+it is not tracked as an issue. The venv holds `v0.5.0` for every later session.
