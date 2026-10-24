@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **102 open** across twenty-two campaigns.
+**Last updated:** 2026-10-25 · **101 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -130,7 +130,6 @@ for.
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
 | `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's. **Assigned 2026-10-19 to `handover`** by the user, which owns the A3 v2 launcher; not yet scheduled. |
 | `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` | handover | `origin/main` has `9678f28` (Mac Studio, 2026-10-06): Python 3.13 and `ray` 2.45.0, which this branch lacks; it stays on 3.12 and `ray==2.43.0`, as every rehearsal ran. A merge conflicts at `requirements.txt:75`. No impact on A3 v2, whose venv is 3.12 by the user's decision (2026-10-22); the move is a `ray` pin change with its own rehearsal, after A3 v2. Not assigned. |
-| `[06-nothing-tracked-ignores-venv]` | handover | Nothing tracked ignores `venv/` (`.gitignore` has only `var/`); the laptop relies on `.git/info/exclude`, the old 3.13 venv on its own `venv/.gitignore`, which a 3.12 venv does not write. `runregistrykit` counts untracked files in `git_dirty`, so a fresh checkout's runs record `git_dirty: true`. Worked around on the Mac Studio by `.git/info/exclude` (06). Not assigned. |
 | `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]` | handover | `extract_GkWKB_data.py` on the A3 v2 store exits 1 after 344 files: `OverflowError` in matplotlib's tick formatter saving the full-range plot for $k = 10^5$, $z_{\rm source} = 1.3633\times10^{16}$ (presumably a 0/inf/nan on a log axis; not confirmed). The store is not implicated. The GkWKB read-back of A3 v2 is incomplete. Not assigned. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign

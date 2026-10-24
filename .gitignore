@@ -1,3 +1,7 @@
 
 # scratch space for long-running measurement scripts (docs/handover/realistic_large_x.py)
 var/
+
+# the virtual environment; a checkout's venv must not make it dirty, since runregistrykit
+# stamps git_dirty from `git status --porcelain`, which counts untracked files
+venv/

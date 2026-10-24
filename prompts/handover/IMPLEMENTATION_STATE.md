@@ -31,7 +31,8 @@ verified on the Mac Studio, the lock released, and its depth census shows the de
 at `rtol = 1e-7`.** 08 opened `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`,
 so §3 held **ten**; the review closed
 `[a3-baseline-quadsource-integrals-are-1680-short]` and narrowed the other two `a3-baseline` issues
-(2026-10-25), so it holds **nine**.
+(2026-10-25), so it held **nine**; `[06-nothing-tracked-ignores-venv]` closed the same day with a
+`.gitignore` line, so it holds **eight**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -474,22 +475,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   **Next step:** the user's — "we should move this checkout onto it at some point soon"
   (2026-10-22); not before A3 v2 has ended. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[06-nothing-tracked-ignores-venv]** *(opened 2026-10-22 by prompt 06, on the Mac Studio)* —
-  **nothing this repository tracks ignores `venv/`.** `handover-remedial`'s `.gitignore` holds only
-  `var/` (`main`'s is empty), so a checkout with a venv in it is clean only if something untracked
-  ignores it: on the laptop `.git/info/exclude:40` is `venv`; on the Mac Studio the Python 3.13 venv
-  carried its own `venv/.gitignore` (`*`), which `python3.13 -m venv` writes and `python3.12 -m venv`
-  does not. The new 3.12 venv therefore showed `?? venv/`. **Impact:** `runregistrykit` 0.2.0 stamps
-  `git_dirty = bool(git status --porcelain)`, which counts untracked files, so every manifest of a run
-  launched from such a checkout records `git_dirty: true` — a stop for every rehearsal, and a dirty
-  provenance for A3 v2. No R4 run was affected: 06 stopped before any launch, and on the
-  orchestrator's ruling appended `venv` to the Mac Studio checkout's `.git/info/exclude` (line 28),
-  untracked; all four manifests record `git_dirty: false`. A fresh clone meets it again.
-  **Next step:** add `venv/` to the tracked `.gitignore` in a commit of its own, or record that every
-  checkout must carry the exclude line; not in 06, and not during A3 v2 (the Mac Studio's checkout is
-  frozen while it runs, and a `.gitignore` commit would not be on it). Measurement: `logs/06-…`,
-  deviation 2. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
-
 - **[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]** *(opened
   2026-10-25 by prompt 08, on the Mac Studio; it stopped the prompt at §3, under §8)*.
   `extract_GkWKB_data.py --database var/datastores/handover-A3-v2-lambdacdm.sqlite --ray-address local
@@ -554,6 +539,30 @@ disagree with the prompt that owns them.
 ---
 
 ## 4. Resolved issues
+
+Closed on the user's decision, 2026-10-25 (a `.gitignore` line):
+
+- **[06-nothing-tracked-ignores-venv]** *(opened 2026-10-22 by prompt 06, on the Mac Studio)* —
+  **nothing this repository tracks ignores `venv/`.** `handover-remedial`'s `.gitignore` holds only
+  `var/` (`main`'s is empty), so a checkout with a venv in it is clean only if something untracked
+  ignores it: on the laptop `.git/info/exclude:40` is `venv`; on the Mac Studio the Python 3.13 venv
+  carried its own `venv/.gitignore` (`*`), which `python3.13 -m venv` writes and `python3.12 -m venv`
+  does not. The new 3.12 venv therefore showed `?? venv/`. **Impact:** `runregistrykit` 0.2.0 stamps
+  `git_dirty = bool(git status --porcelain)`, which counts untracked files, so every manifest of a run
+  launched from such a checkout records `git_dirty: true` — a stop for every rehearsal, and a dirty
+  provenance for A3 v2. No R4 run was affected: 06 stopped before any launch, and on the
+  orchestrator's ruling appended `venv` to the Mac Studio checkout's `.git/info/exclude` (line 28),
+  untracked; all four manifests record `git_dirty: false`. A fresh clone meets it again.
+  **Next step:** add `venv/` to the tracked `.gitignore` in a commit of its own, or record that every
+  checkout must carry the exclude line; not in 06, and not during A3 v2 (the Mac Studio's checkout is
+  frozen while it runs, and a `.gitignore` commit would not be on it). Measurement: `logs/06-…`,
+  deviation 2. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Closed 2026-10-25, on the user's decision the same day:** `.gitignore` now names `venv/`, with a
+  comment saying why, so a checkout with a venv in it is clean whatever wrote the venv and whatever
+  its `.git/info/exclude` holds. The laptop's and the Mac Studio's exclude lines are harmless and
+  stay. Checked: `git check-ignore -v venv` resolves through `.gitignore` before
+  `.git/info/exclude`.
 
 Closed by prompt 08's review, 2026-10-25:
 
