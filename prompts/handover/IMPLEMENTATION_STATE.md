@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-10-22 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
+**Last updated:** 2026-10-25 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2), and prompt 05,
 which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
@@ -25,7 +25,8 @@ Mac Studio, made ready and rehearsed there (R4), then the launch; 08, after the 
 planning opened one issue, `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`. **06 landed
 2026-10-22: R4 reproduced `39809dca…` on the Mac Studio**, and opened `[06-nothing-tracked-ignores-venv]`,
 so §3 holds **nine**. **07 launched A3 v2 on 2026-10-22 at 21:11:54**
-(`handover-07-a3-v2-20261022T211155`, estimated 39–44 h); 08 is written when it ends.
+(`handover-07-a3-v2-20261022T211155`, estimated 39–44 h). **It ended `done` on 2026-10-24 at
+21:56 (about 48 h 45 m), fingerprint `0e32f24a…`; 08 was written 2026-10-25.**
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -62,7 +63,7 @@ so §3 holds **nine**. **07 launched A3 v2 on 2026-10-22 at 21:11:54**
 | 05 | [The Ray address default](05-ray-address-defaults-to-local.md) | **05** — not seam work; closes `[00-main-and-the-readers-default-to-ray-address-auto]` | Opus 5.5 | ✍️ yes | ✅ 2026-10-16 | *"Start a fresh Ray instance by default in main.py and the readers"* | [`logs/05-…`](logs/05-ray-address-defaults-to-local.md) |
 | 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `319b14f` | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, launched and reviewed; the build runs | `a6902b1` | [`logs/07-…`](logs/07-launch-a3-v2.md) |
-| 08 | After the A3 v2 build | **08** — the closed store's checks, its readers and its archive (07 §7) | — | ⬜ held until the build ends | ⬜ | — | — |
+| 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -96,7 +97,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | 05 | **REMEDY** | Make `main.py` and the six `extract_*.py` start their own Ray instance unless told otherwise: `--ray-address` defaults to `local`, not `auto`, which attaches to any Ray instance on the machine. The flag stays optional, because the A3 v2 launcher passes none. Assigned here by the user on 2026-10-12, to land before the A3 v2 launch or with it. | 05 | ✅ **Done, 2026-10-16.** `DEFAULT_RAY_ADDRESS` and the six readers' defaults read `local`, with their help text and the comment above each `ray.init` saying so; `ComputeTargets/tests/test_ray_address_default.py` (7 tests) reads the seven scripts with `ast` and pins Ray's own resolution of `local`. `quadsource_atol_sweep.py` unchanged (SHA-256 `2a985303…`). `ComputeTargets` 693 → **700**; the other six roots unchanged. |
 | 06 | **SET-UP** | Bring the Mac Studio's checkout to this branch and give it a Python 3.12 venv equal to the laptop's; run R3's four launches there (R4) at the current launcher and `datastorekit` 0.5.0, which no rehearsal build has run. Runs on the Mac Studio; the records are committed on the laptop. | 06 | ✅ **Done, 2026-10-22. R4 holds on the Mac Studio:** both stores `39809dca…`, equal to each other, their sidecars and R3's recorded `reference` and `resumed-c` (`compare_with_recorded.py` verdict `equal`). The venv is Python 3.12.15 with a `pip freeze` identical to the laptop's (101 lines); the three packages at their pins, none editable; the seven roots pass (`ObjectFactories` 280, the tree's count, where the prompt quoted the pre-`v0.5.0` 279; `RunDrivers` 115 with one skip, a test that reads a laptop-only gitignored manifest). Four manifests: `git_dirty` `false`, `HEAD` `3152af9`, host `d120d1cf03551e6f`, launcher `b2fa4ef1…`. The Mac Studio is 2–13 % faster per stage than the laptop at `--cpus 6`. One stop-and-ask before any launch (the venv not ignored), resolved by `.git/info/exclude`; ten deviations logged, four of them shell slips under zsh. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §1. |
 | 07 | **LAUNCH** | Launch A3 v2 on the Mac Studio by the launcher's production scope at (1e-32, 1e-7), `--cpus 6`, into `var/datastores/handover-A3-v2-lambdacdm.sqlite`; one check; end. | 07 | ✅ **Launched 2026-10-22 21:11:54 BST** as `handover-07-a3-v2-20261022T211155` (driver pid 84436, the lock's owner), at `b90752d`, clean, on host `d120d1cf03551e6f`. Scope `full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc`; four `replaced 1 occurrence`, `--zend 0.1`, no `--no-prune-unvalidated`, local Ray. Estimate **39–44 h** (R4's QSI stage ×0.97 of R3's). The session's permission classifier refused the first launch attempt; the user approved it. **The build is running; the Mac Studio's checkout stays at `b90752d` until 08.** Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §2. |
-| 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | — | ⬜ **Charter in 07 §7; written when the build has ended.** |
+| 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | 08 | ⬜ **Written 2026-10-25**, after the build ended `done` (exit 0, 2026-10-24 21:56, ~48 h 45 m; fingerprint `0e32f24a…`, `QuadSourceIntegral` 9280). Archive: the Mac Studio (user, 2026-10-25). |
 
 ---
 
