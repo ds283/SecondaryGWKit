@@ -29,7 +29,9 @@ so §3 holds **nine**. **07 launched A3 v2 on 2026-10-22 at 21:11:54**
 21:56 (about 48 h 45 m), fingerprint `0e32f24a…`. 08 landed 2026-10-25: the store is kept and
 verified on the Mac Studio, the lock released, and its depth census shows the depth-20 cliff survives
 at `rtol = 1e-7`.** 08 opened `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`,
-so §3 holds **ten**.
+so §3 held **ten**; the review closed
+`[a3-baseline-quadsource-integrals-are-1680-short]` and narrowed the other two `a3-baseline` issues
+(2026-10-25), so it holds **nine**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -283,6 +285,21 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   and `DEFAULT_LEVIN_MAX_DEPTH` is owned by nobody. This board measures and hands over. Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
 
+  **Narrowed 2026-10-25 by prompt 08 (the user's decision the same day): the cliff survives at
+  `rtol = 1e-7`.** A3 v2, the store regenerated at `(1e-32, 1e-7)`, holds all 9280 rows, and prompt
+  08's depth census (the method of the table above, reproduced as
+  `docs/handover/a3-v2/after/scripts/depth_census.py` and re-counted by the orchestrator with
+  `sqlite3` `mode=ro`) gives: NULL 2489 rows, depth 0 99, 1–19 4427, **depth 20: 2265 rows at a mean
+  454 s, 1179 of them unconverged (52.1 %)**; **286.3 CPU-hours, 285.8 of them at depth 20**, 249 in
+  the low band ($z < 9$) the baseline never reached; up to 966,508 regions. The most expensive rows
+  have this entry's `r == k ≫ q` geometry. So `rtol = 1e-8` was not the cause: the length-share
+  `local_atol` mechanism above, on squeezed triples, is, and it persists one decade looser. **What
+  stands:** the sweep's finding that `rtol = 1e-7` is converged *in value* in every band; it does not
+  relieve the *cost*, and the low band is representation-limited (D1/D2). **What remains:** the
+  remedy, owned as before by `levin-refactor` / `qsi-phase-groups`, with `DEFAULT_LEVIN_MAX_DEPTH`
+  owned by nobody. The comparison is not like-for-like (the pair differs, the baseline lacked 1680
+  items, no per-band baseline figure exists): `docs/handover/A3-V2-VERIFICATION.md` §3.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -310,73 +327,14 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   *not* move, the right shape is probably a filter at the consumer and a `--require-converged`
   gate, not a deletion. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[a3-baseline-quadsource-integrals-are-1680-short]** *(opened 2026-09-23 by the A3 baseline run,
-  not by a prompt)* — the LambdaCDM baseline store holds **7600 of the 9280**
-  `QuadSourceIntegral` objects its own geometry defines, and the run that was filling it was
-  **stopped by the user on 2026-09-23** rather than allowed to finish. The count is exact and is
-  set arithmetic on store serials, not on floats: 145 response redshifts × 64 triangle-closing
-  `(k, q, r)` triples = 9280; the store holds 7600; **1680 are missing**. (A first pass over
-  round-tripped CSV floats gave 2581 and was wrong — `redshift.z` does not survive a CSV round
-  trip, and 901 rows appeared to be off-grid when they were not.)
-
-  **What is missing is the expensive end, entirely.** All 1680 are at `z_response ≤ 174.1`, and
-  **1024 of them at `z_response ≤ 6.32` have no row at all** — that block has never been attempted.
-  Its $\eta_R$ runs out to **13,728** at $z = 0.1$ (main.py's own "latest tau" line) against a
-  largest *measured* $\eta_R$ of **4936** at $z = 8.33$, so the untouched block is a factor 2.8
-  beyond anything the cost model above is fitted on. Two independent projections of the remainder
-  at the shipped settings: a per-triple power law in $\eta_R$, extrapolated and capped at 4× each
-  triple's largest measured cost, gives **1021 CPU-hr ≈ 8.2 wall-days** at the 5.2 effective CPUs
-  the run achieved; the flat rate from the run's own last session (48 items in 6 h 55 m at a mean
-  of 2710 s) gives **~10.1 wall-days**, and that is a *lower* bound because that session only
-  reached $z \ge 8.3$. About **300 of the 1680** — the squeezed triples at
-  $k = 3.1\times10^6$, $9.7\times10^6$ and $3.0\times10^7$ — carry roughly **90 %** of it.
-
-  **Impact.** **E1** and **B2**, which need this store as the comparator for the hand-over change,
-  and **A3** itself, whose policy rows are complete but whose integral outcomes are not. The store
-  is *usable* — 7600 rows over the full $k$ grid and the whole high-$z$ range — but it is **not a
-  complete response-redshift grid** and nothing that assumes one may be run against it.
-
-  **Superseded 2026-09-23 by a user decision: the store is to be regenerated from scratch** at
-  the tolerance pair the sweep above settles, rather than finished at the shipped one. That closes
-  three things at once — the 1680, the 889 unconverged rows of the issue above, and **54 rows the
-  first run of the sweep wrote into this store in error** (a copied `ShardedPool` primary still
-  names the *source* store's shard files, fixed in `2ebb7b6`; the rows are at six non-production
-  pairs and the production population was left at exactly 7600, so nothing was lost). Rebuilding
-  costs **~16 minutes** for everything upstream of the integral — measured from this store's own
-  timestamps, 21:02:30 to the first `QuadSourceIntegral` row at 21:18:24, covering the background
-  model, both $T_k$ sectors, both $G_k$ sectors, `GkSource` and the policies — so there is no case
-  for reusing any of it.
-
-  **Note (2026-09-26): the sweep store has been retired.** `var/datastores/handover-atol-sweep`,
-  the working copy whose first run wrote the 54 rows above, was retired by the user with
-  `store retire` on 2026-09-25 (completed `23:35:57`), under
-  [`store-retirement`](../store-retirement/IMPLEMENTATION_STATE.md) prompt 05. Its four shards and
-  its primary are gone. Its sidecar stays as the tombstone, recording when, why and the
-  fingerprint of what it held. The four sweep runs still name its path, and following them now
-  lands on that tombstone. So `docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md:15-17`, which says the
-  store was "**deleted after this document was written**", is now true. It was written in
-  anticipation, and it was not edited. The 54 rows in the live A3 store are unaffected, and so is
-  that store. Record:
-  [`../store-retirement/logs/05-retire-the-two-stores.md`](../store-retirement/logs/05-retire-the-two-stores.md).
-
-  **Note (2026-10-04): the A3 baseline has been retired too.** `var/datastores/handover-A3-baseline-lambdacdm`
-  was retired by the user with `store retire` on 2026-10-04 (completed `21:31:59`). The registry
-  ran at `81c0a9a`, because at `HEAD` its format-1 fingerprint could not be compared and its rows
-  could no longer be read; at `81c0a9a` a fresh fingerprint matched, digest `433b7fc3…`. Its four
-  shards and its primary are gone; its sidecar is the tombstone. The measurements in the three
-  `a3-baseline-*` entries were taken from it and stand; nothing can re-take them, and the
-  regeneration (A3 v2) is what they point to. Recorded in
-  [`../datastore-generic/IMPLEMENTATION_STATE.md`](../datastore-generic/IMPLEMENTATION_STATE.md)
-  §3, the fallbacks issue.
-
-  **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
-  issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
-  1680 are moot, and if it does not, the 8–10 days is the honest price and is a decision for
-  whoever owns E1. The run itself is recorded at
-  `var/runs/handover-03-a3-baseline-resume-20260923T024847` (state `killed`, stage
-  "CALCULATE QUADRATIC SOURCE INTEGRALS, 92.31%" — that percentage counts **batches of 750
-  dispatched**, not integrals completed, which is what made the remaining work look small). All
-  four shards pass `PRAGMA quick_check` after the stop. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+  **Narrowed 2026-10-25 by prompt 08 (the user's decision the same day): live again.** The pair
+  moved, and the regeneration made the rows above cease to exist, as the subsumption said. But its
+  condition holds — the adopted pair, `(1e-32, 1e-7)`, **still reaches the depth cap** — so the
+  design question survives on the new store: A3 v2 stores **2262** rows with `total_converged = 0`,
+  **1179** of them at depth 20, and `total_phase_limited = 1` on 525, each keyed and served like any
+  converged row, with nothing reading either flag and no defined route to remove one. The shape
+  suggested above — a filter at the consumer and a `--require-converged` gate, not a deletion — is
+  now the live question. Counts: `docs/handover/a3-v2/after/out/depth_census_08.txt`.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation
@@ -596,6 +554,85 @@ disagree with the prompt that owns them.
 ---
 
 ## 4. Resolved issues
+
+Closed by prompt 08's review, 2026-10-25:
+
+- **[a3-baseline-quadsource-integrals-are-1680-short]** *(opened 2026-09-23 by the A3 baseline run,
+  not by a prompt)* — the LambdaCDM baseline store holds **7600 of the 9280**
+  `QuadSourceIntegral` objects its own geometry defines, and the run that was filling it was
+  **stopped by the user on 2026-09-23** rather than allowed to finish. The count is exact and is
+  set arithmetic on store serials, not on floats: 145 response redshifts × 64 triangle-closing
+  `(k, q, r)` triples = 9280; the store holds 7600; **1680 are missing**. (A first pass over
+  round-tripped CSV floats gave 2581 and was wrong — `redshift.z` does not survive a CSV round
+  trip, and 901 rows appeared to be off-grid when they were not.)
+
+  **What is missing is the expensive end, entirely.** All 1680 are at `z_response ≤ 174.1`, and
+  **1024 of them at `z_response ≤ 6.32` have no row at all** — that block has never been attempted.
+  Its $\eta_R$ runs out to **13,728** at $z = 0.1$ (main.py's own "latest tau" line) against a
+  largest *measured* $\eta_R$ of **4936** at $z = 8.33$, so the untouched block is a factor 2.8
+  beyond anything the cost model above is fitted on. Two independent projections of the remainder
+  at the shipped settings: a per-triple power law in $\eta_R$, extrapolated and capped at 4× each
+  triple's largest measured cost, gives **1021 CPU-hr ≈ 8.2 wall-days** at the 5.2 effective CPUs
+  the run achieved; the flat rate from the run's own last session (48 items in 6 h 55 m at a mean
+  of 2710 s) gives **~10.1 wall-days**, and that is a *lower* bound because that session only
+  reached $z \ge 8.3$. About **300 of the 1680** — the squeezed triples at
+  $k = 3.1\times10^6$, $9.7\times10^6$ and $3.0\times10^7$ — carry roughly **90 %** of it.
+
+  **Impact.** **E1** and **B2**, which need this store as the comparator for the hand-over change,
+  and **A3** itself, whose policy rows are complete but whose integral outcomes are not. The store
+  is *usable* — 7600 rows over the full $k$ grid and the whole high-$z$ range — but it is **not a
+  complete response-redshift grid** and nothing that assumes one may be run against it.
+
+  **Superseded 2026-09-23 by a user decision: the store is to be regenerated from scratch** at
+  the tolerance pair the sweep above settles, rather than finished at the shipped one. That closes
+  three things at once — the 1680, the 889 unconverged rows of the issue above, and **54 rows the
+  first run of the sweep wrote into this store in error** (a copied `ShardedPool` primary still
+  names the *source* store's shard files, fixed in `2ebb7b6`; the rows are at six non-production
+  pairs and the production population was left at exactly 7600, so nothing was lost). Rebuilding
+  costs **~16 minutes** for everything upstream of the integral — measured from this store's own
+  timestamps, 21:02:30 to the first `QuadSourceIntegral` row at 21:18:24, covering the background
+  model, both $T_k$ sectors, both $G_k$ sectors, `GkSource` and the policies — so there is no case
+  for reusing any of it.
+
+  **Note (2026-09-26): the sweep store has been retired.** `var/datastores/handover-atol-sweep`,
+  the working copy whose first run wrote the 54 rows above, was retired by the user with
+  `store retire` on 2026-09-25 (completed `23:35:57`), under
+  [`store-retirement`](../store-retirement/IMPLEMENTATION_STATE.md) prompt 05. Its four shards and
+  its primary are gone. Its sidecar stays as the tombstone, recording when, why and the
+  fingerprint of what it held. The four sweep runs still name its path, and following them now
+  lands on that tombstone. So `docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md:15-17`, which says the
+  store was "**deleted after this document was written**", is now true. It was written in
+  anticipation, and it was not edited. The 54 rows in the live A3 store are unaffected, and so is
+  that store. Record:
+  [`../store-retirement/logs/05-retire-the-two-stores.md`](../store-retirement/logs/05-retire-the-two-stores.md).
+
+  **Note (2026-10-04): the A3 baseline has been retired too.** `var/datastores/handover-A3-baseline-lambdacdm`
+  was retired by the user with `store retire` on 2026-10-04 (completed `21:31:59`). The registry
+  ran at `81c0a9a`, because at `HEAD` its format-1 fingerprint could not be compared and its rows
+  could no longer be read; at `81c0a9a` a fresh fingerprint matched, digest `433b7fc3…`. Its four
+  shards and its primary are gone; its sidecar is the tombstone. The measurements in the three
+  `a3-baseline-*` entries were taken from it and stand; nothing can re-take them, and the
+  regeneration (A3 v2) is what they point to. Recorded in
+  [`../datastore-generic/IMPLEMENTATION_STATE.md`](../datastore-generic/IMPLEMENTATION_STATE.md)
+  §3, the fallbacks issue.
+
+  **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
+  issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
+  1680 are moot, and if it does not, the 8–10 days is the honest price and is a decision for
+  whoever owns E1. The run itself is recorded at
+  `var/runs/handover-03-a3-baseline-resume-20260923T024847` (state `killed`, stage
+  "CALCULATE QUADRATIC SOURCE INTEGRALS, 92.31%" — that percentage counts **batches of 750
+  dispatched**, not integrals completed, which is what made the remaining work look small). All
+  four shards pass `PRAGMA quick_check` after the stop. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Closed 2026-10-25 by prompt 08's review, on the user's decision the same day.** The
+  regeneration this entry's next step called for was made: A3 v2
+  (`var/datastores/handover-A3-v2-lambdacdm.sqlite` on the Mac Studio, built by
+  `handover-07-a3-v2-20261022T211155` at `b90752d`, fingerprint `0e32f24a…`) holds **all 9280**
+  `QuadSourceIntegral` rows at `(1e-32, 1e-7)`, 2320 on each shard, among them every one of the 1088
+  low-band items ($z_{\rm response} < 9$), the 1024 at $z \le 6.32$ included. The price was 48.74
+  wall-hours and 286.3 CPU-hours, against this entry's 8–10 wall-days at the shipped pair.
+  Record: `docs/handover/A3-V2-VERIFICATION.md` §3; `logs/08-after-the-a3-v2-build.md`.
 
 Closed by `rrk-v020-adoption` prompt 03, 2026-10-19:
 
