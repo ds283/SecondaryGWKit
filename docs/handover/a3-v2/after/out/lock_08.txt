@@ -1,0 +1,32 @@
+== 2026-10-25T00:40:41+0100 §6 NOT RUN: prompt §8 stop (extract_GkWKB_data.py exited 1); the lock is left held, as found
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: HELD (/Users/ds283/ScienceData/.rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 07: A3 v2 build, about 40 h
+    acquired: 2026-10-22T21:06:24+01:00
+    host: mps026298
+    ray_temp_dir: in-process
+    ray_address: in-process
+    pid: 84436
+owner pid 84436: NOT alive
+Ray processes of this repository: none
+exit=0
+$ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit=0
+
+== 2026-10-25T00:51:03+0100 §6 run on the user's ruling of 2026-10-25, relayed by the orchestrator: "Release the lock, close 08"
+== 2026-10-25T00:51:03+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit=0
+== 2026-10-25T00:51:03+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock release
+released the rehearsal lock (/Users/ds283/ScienceData/.rehearsal-lock)
+exit=0
+== 2026-10-25T00:51:03+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+exit=0
+== 2026-10-25T00:51:03+0100 $ PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes
+exit=0
+== $ ls -la ~/ScienceData
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 25 00:51 .
+drwxr-x--- 158 ds283 staff 5056 Oct 25 00:45 ..

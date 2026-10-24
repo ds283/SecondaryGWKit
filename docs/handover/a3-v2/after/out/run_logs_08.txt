@@ -1,0 +1,75 @@
+== 1. The tail of CALCULATE QUADRATIC SOURCE INTEGRALS (stdout.log, from line 105)
+stage end line: -- ALL WORK ITEMS COMPLETE in time 2d 33m 16.8s
+stage start (first progress line minus its running time): 2026-10-22 21:22:59
+36 progress lines. Batches remaining / inflight (lookup, compute, store) / completed (lookup, compute, store):
+  2026-10-22 21:28:02 (5m 2.7s) 4/13 batches; inflight (0, 1054, 42); completed (6750, 5696, 5654)
+  2026-10-22 21:33:24 (10m 24.8s) 2/13 batches; inflight (0, 1253, 44); completed (8250, 6997, 6953)
+  2026-10-22 21:38:34 (15m 35.4s) 1/13 batches; inflight (656, 1047, 38); completed (8344, 7297, 7259)
+  2026-10-22 21:45:47 (22m 47.7s) 1/13 batches; inflight (0, 1492, 16); completed (9000, 7508, 7492)
+  2026-10-22 23:01:48 (1h 38m 48.7s) 1/13 batches; inflight (0, 1408, 84); completed (9000, 7592, 7508)
+  2026-10-22 23:27:03 (2h 4m 4.08s) 1/13 batches; inflight (0, 1392, 16); completed (9000, 7608, 7592)
+  2026-10-23 00:12:59 (2h 49m 59.9s) 1/13 batches; inflight (0, 1308, 84); completed (9000, 7692, 7608)
+  2026-10-23 01:00:49 (3h 37m 49.6s) 1/13 batches; inflight (0, 1208, 84); completed (9000, 7792, 7708)
+  2026-10-23 01:46:01 (4h 23m 1.98s) 1/13 batches; inflight (0, 1108, 84); completed (9000, 7892, 7808)
+  2026-10-23 02:03:02 (4h 40m 2.82s) 1/13 batches; inflight (0, 1092, 16); completed (9000, 7908, 7892)
+  2026-10-23 02:25:32 (5h 2m 32.5s) 1/13 batches; inflight (0, 1008, 84); completed (9000, 7992, 7908)
+  2026-10-23 02:54:47 (5h 31m 48.2s) 1/13 batches; inflight (0, 992, 16); completed (9000, 8008, 7992)
+  2026-10-23 03:31:57 (6h 8m 58.1s) 1/13 batches; inflight (0, 908, 84); completed (9000, 8092, 8008)
+  2026-10-23 03:57:52 (6h 34m 53.1s) 0/13 batches; inflight (0, 1152, 36); completed (9280, 8128, 8092)
+  2026-10-23 04:25:18 (7h 2m 18.5s) 0/13 batches; inflight (0, 1088, 64); completed (9280, 8192, 8128)
+  2026-10-23 04:47:06 (7h 24m 6.76s) 0/13 batches; inflight (0, 1052, 36); completed (9280, 8228, 8192)
+  2026-10-23 06:45:25 (9h 22m 26.3s) 0/13 batches; inflight (0, 988, 64); completed (9280, 8292, 8228)
+  2026-10-23 08:19:11 (10h 56m 12.1s) 0/13 batches; inflight (0, 952, 36); completed (9280, 8328, 8292)
+  2026-10-23 10:54:02 (13h 31m 3.4s) 0/13 batches; inflight (0, 888, 64); completed (9280, 8392, 8328)
+  2026-10-23 15:14:40 (17h 51m 41s) 0/13 batches; inflight (0, 788, 64); completed (9280, 8492, 8428)
+  2026-10-23 15:21:10 (17h 58m 10.5s) 0/13 batches; inflight (0, 752, 36); completed (9280, 8528, 8492)
+  2026-10-23 19:16:17 (21h 53m 18.2s) 0/13 batches; inflight (0, 688, 64); completed (9280, 8592, 8528)
+  2026-10-23 19:25:16 (22h 2m 17.4s) 0/13 batches; inflight (0, 652, 36); completed (9280, 8628, 8592)
+  2026-10-23 23:41:37 (1d 2h 18m 38s) 0/13 batches; inflight (0, 588, 64); completed (9280, 8692, 8628)
+  2026-10-24 00:06:19 (1d 2h 43m 20.3s) 0/13 batches; inflight (0, 552, 36); completed (9280, 8728, 8692)
+  2026-10-24 03:08:11 (1d 5h 45m 11.9s) 0/13 batches; inflight (0, 488, 64); completed (9280, 8792, 8728)
+  2026-10-24 03:59:17 (1d 6h 36m 18.3s) 0/13 batches; inflight (0, 452, 36); completed (9280, 8828, 8792)
+  2026-10-24 06:02:16 (1d 8h 39m 16.8s) 0/13 batches; inflight (0, 388, 64); completed (9280, 8892, 8828)
+  2026-10-24 08:57:47 (1d 11h 34m 47.7s) 0/13 batches; inflight (0, 352, 36); completed (9280, 8928, 8892)
+  2026-10-24 09:24:23 (1d 12h 1m 23.9s) 0/13 batches; inflight (0, 288, 64); completed (9280, 8992, 8928)
+  2026-10-24 09:34:50 (1d 12h 11m 51.5s) 0/13 batches; inflight (0, 252, 36); completed (9280, 9028, 8992)
+  2026-10-24 13:25:57 (1d 16h 2m 58.6s) 0/13 batches; inflight (0, 188, 64); completed (9280, 9092, 9028)
+  2026-10-24 16:32:11 (1d 19h 9m 11.7s) 0/13 batches; inflight (0, 152, 36); completed (9280, 9128, 9092)
+  2026-10-24 18:39:00 (1d 21h 16m 1.2s) 0/13 batches; inflight (0, 88, 64); completed (9280, 9192, 9128)
+  2026-10-24 19:25:17 (1d 22h 2m 18.4s) 0/13 batches; inflight (0, 52, 36); completed (9280, 9228, 9192)
+  2026-10-24 21:56:15 (2d 33m 16.6s) 0/13 batches; inflight (0, 0, 52); completed (9280, 9280, 9228)
+
+stage wall time: 10-22 21:22:59 -> 10-24 21:56:16 = 2 days, 0:33:16.700000 (48.55 h); the log's own figure: '2d 33m 16.8s'
+last progress line with >= 6 compute items in flight: 10-24 19:25:17: compute 52, store 36
+the next and final progress line: 10-24 21:56:15: compute 0, store 52 (every item computed, the last store batch pending); the stage ended at 21:56:16.
+No progress line shows between 1 and 5 compute items in flight: none was printed between those two.
+Bounds on the tail (fewer than six items in flight, i.e. some of the six workers idle):
+  - it began after 19:25:17 (52 in flight) and before 21:48:xx, when the session's one ps snapshot (2026-10-24,
+    'Can we do another check?') found five workers ray::IDLE and one (pid 84484) at 99 % CPU;
+  - so it lasted at most 2:30:59 (2.52 h) = 5.2 % of the stage, and at least the ~8 min from 21:48 to 21:56.
+  - the longest-running of the last 52 items (stored together at 21:56:16) took 6580.6 s (1 h 49.7 m): (k, q, r) =
+    (3.0455e7, 3.0917e6, 3.0455e7) /Mpc at z_response 0.1738, shard 0 serial 39197; from compute_time alone it began
+    no later than ~20:06:35, so it overlapped the others; which item ran alone last is not recorded.
+  => the serial tail is under 10 % of the stage's wall time by the upper bound; not opened.
+  After 2026-10-23 03:57:52 (6 h 34 m 53 s in) every batch had been handed out (0/13): the remaining ~42 h were
+  the six workers draining the in-flight items, mostly at full occupancy (the session's ps snapshots at 2026-10-23 09:34 and 2026-10-24 01:40: six workers at 84-100 %).
+
+== 2. IntegrationWarnings in stderr.log
+stderr.log: 51 lines; mtime 2026-10-22 21:24:37 (the QSI stage began 21:22:59, so every warning came in its first ~1.6 min)
+  stderr.log:1: compute_QuadSource_integral, worker pid 84481, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'maximum number of subdivisions (100)'
+  stderr.log:8: compute_QuadSource_integral, worker pid 84485, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'probably divergent, or slowly convergent'
+  stderr.log:9: compute_QuadSource_integral, worker pid 84483, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'maximum number of subdivisions (100)'
+  stderr.log:16: compute_QuadSource_integral, worker pid 84480, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'probably divergent, or slowly convergent'
+  stderr.log:17: compute_QuadSource_integral, worker pid 84485, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'maximum number of subdivisions (100)'
+  stderr.log:23: compute_QuadSource_integral, worker pid 84459, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'probably divergent, or slowly convergent'
+  stderr.log:25: compute_QuadSource_integral, worker pid 84480, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'maximum number of subdivisions (100)' x2 (Ray's dedup: [repeated 2x across cluster], pids not given)
+  stderr.log:31: compute_QuadSource_integral, worker pid 84483, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'probably divergent, or slowly convergent' x2 (Ray's dedup: [repeated 2x across cluster], pids not given)
+  stderr.log:33: compute_QuadSource_integral, worker pid 84484, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'maximum number of subdivisions (100)'
+  stderr.log:39: compute_QuadSource_integral, worker pid 84484, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'probably divergent, or slowly convergent'
+  stderr.log:40: compute_QuadSource_integral, worker pid 84459, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'roundoff error'
+  stderr.log:45: compute_QuadSource_integral, worker pid 84485, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'roundoff error'
+  stderr.log:48: compute_QuadSource_integral, worker pid 84480, /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: 'roundoff error'
+counts: {'maximum number of subdivisions (100)': 6, 'probably divergent, or slowly convergent': 6, 'roundoff error': 3} ; total 15
+Every warning is SciPy quad's, raised at Quadrature/simple_quadrature.py:92 (quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol,
+limit=100)) inside a compute_QuadSource_integral Ray task, in the QSI stage. The log names a worker pid, never a row,
+a (k, q, r) or a z: no warning can be tied to a stored QuadSourceIntegral or QuadSource row from the log. Nothing recomputed.

@@ -1,0 +1,32 @@
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/store_soundness.py var/datastores/handover-A3-v2-lambdacdm.sqlite
+== handover-A3-v2-lambdacdm.sqlite
+  handover-A3-v2-lambdacdm.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version no table
+  handover-A3-v2-lambdacdm-shard0000.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-A3-v2-lambdacdm-shard0001.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-A3-v2-lambdacdm-shard0002.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  handover-A3-v2-lambdacdm-shard0003.sqlite: integrity_check ['ok']; foreign_key_check 0 row(s); version [(1, '2025.1.1')]
+  read_inventory: shards (0, 1, 2, 3)
+    version                  replicated count      1  problems none
+    store_tag                replicated count     10  problems none
+    redshift                 replicated count   1740  problems none
+    wavenumber               replicated count      8  problems none
+    tolerance                replicated count      7  problems none
+    LambdaCDM                replicated count      1  problems none
+    QCD_Cosmology            replicated count      1  problems none
+    IntegrationSolver        replicated count      7  problems none
+    GkSourcePolicy           replicated count      2  problems none
+    QuadSourcePolicy         replicated count      2  problems none
+    wavenumber_exit_time     replicated count      8  problems none
+    BackgroundModel          replicated count      1  problems none
+    TkNumericIntegration     sharded    count      8  problems none
+    TkWKBIntegration         sharded    count      8  problems none
+    GkNumericIntegration     sharded    count   4549  problems none
+    GkWKBIntegration         sharded    count  13920  problems none
+    GkSource                 sharded    count   1160  problems none
+    GkSourcePolicyData       sharded    count   1160  problems none
+    QuadSource               sharded    count     36  problems none
+    QuadSourceIntegral       sharded    count   9280  problems none
+    OneLoopIntegral          sharded    count      0  problems none
+  problems in any class: 0; of them 'duplicate': 0
+=> clean
+rc=0

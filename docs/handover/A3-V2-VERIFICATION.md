@@ -852,3 +852,166 @@ From [`launch_check_07.txt`](launch/launch_check_07.txt), at 21:12:18, 24 s afte
 **The session then ended its turn**, with no wait and no poll (`CLAUDE.md` rule 4). The registry
 owns the run. The lock stays held with pid 84436 until prompt 08 releases it. The checkout stays at
 `b90752d`, clean, and is not moved while the build runs.
+
+## 3. After the build
+
+**Where the records are.** A path `var/handover-08/…` in this section is that directory on the Mac
+Studio. Its `out/`, `scripts/` and `state/` are committed at [`a3-v2/after/`](a3-v2/after/); its
+`extract/` (360 MB of reader output, with `extract_GkWKB_data.log`) stays on the Mac Studio, beside
+the store, which is kept there (the user, 2026-10-25).
+
+**§3 hit a §8 stop**: `extract_GkWKB_data.py` exited 1. The user ruled, on 2026-10-25, **"Release
+the lock, close 08"**. The failure stays an open issue, to be fixed when the reader is re-run, and §6
+was then run (§3.8). Every other step is complete.
+
+**The tree.** Dispatch SHA `087d420b222740221450819cb74dedcb0cf3cde2`, read with `git show`. The
+checkout stayed at **`b90752d`**, clean; `git diff --stat b90752d 087d420 -- . ':!prompts' ':!docs'`
+is empty.
+
+### 3.1 Before anything ([`prechecks_08.txt`](after/prechecks_08.txt))
+
+Every Gate item is as stated:
+- **The run.** `handover-07-a3-v2-20261022T211155` is `done`, exit 0, and the launch log ends
+  `** driver exit status 0`. `kill -0 84436` gives no such process, and the final heartbeat was
+  21:56:27.
+- **The fingerprint.** Format 6, `encoding_format` 1, `0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`,
+  21 classes, problems `{}`, taken at `b90752d` with `git_dirty` false. QSI 9280, `GkSource` 1160,
+  `QuadSource` 36. `fingerprint_sidecar` is "not written … (there is none)".
+- **The store.** Four shards of 105.8–107.6 MB, last written 2026-10-24T21:56:16, and a 36,864-byte
+  primary. No journal.
+- **The registry, lock and Ray.** `list` shows 5 runs, all finished. The lock is held, with owner
+  84436 not alive. There is no Ray process and `RAY_ADDRESS` is unset.
+- **The store files' hashes** are in `state/store_files_before.txt`, and every later comparison is
+  against them.
+
+### 3.2 The store's record ([`store_record_08.txt`](after/store_record_08.txt))
+
+- `store create` exited 0, with the prompt's purpose; sidecar `handover-A3-v2-lambdacdm.manifest.json`.
+- `store fingerprint --write` gave **`0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`**,
+  format 6, problems none, "it replaced none". `compare_fingerprints` between the run's recorded
+  fingerprint and the sidecar's finds **0 differences** (`datastorekit.store_fingerprint`).
+- `store show`: kind `registry`, problems none, and the run named
+  (`handover-07-a3-v2-20261022T211155 done finished by results`).
+- **Every store file is unchanged** (SHA-256, size, mtime) by `store create` and `fingerprint --write`.
+
+### 3.3 The after-build checks (one store)
+
+| Check | Result |
+|---|---|
+| `closed_store_state.py` ([`closed_store_state_08.txt`](after/closed_store_state_08.txt)) | one `version` row `(1, '2025.1.1')` per shard; none on the primary; no journal, WAL or shm; `replication_in_flight` 0 rows; no row `validated = 0` |
+| `replicated_serial_census.py` ([`census_08.txt`](after/census_08.txt)) | **`no divergence`**; 14 tables `OK`; rc 0 |
+| `store_soundness.py` ([`store_soundness_08.txt`](after/store_soundness_08.txt)) | **`=> clean`**: `integrity_check ['ok']` and `foreign_key_check` 0 rows on the primary and all four shards; `read_inventory` over shards 0–3, 0 problems, 0 `duplicate`; counts equal the run's fingerprint in all 21 classes (`redshift` 1740, `wavenumber` 8, `GkNumericIntegration` 4549, `GkWKBIntegration` 13920, `GkSource` 1160, `GkSourcePolicyData` 1160, `QuadSource` 36, `QuadSourceIntegral` 9280, …) |
+| store files before and after | identical (`state/store_files_after_checks.txt`) |
+
+### 3.4 The readers ([`readers_08.txt`](after/readers_08.txt))
+
+`run_readers.sh` was run on the A3 v2 primary into `var/handover-08/extract`: the six readers, then
+`extract_Gk_data` with `nomodels`, as R4 ran them. They ran 00:35:23–00:39:48, with the lock held.
+
+| Script | Exit | Wall | Lookups (last queue) | Files | Size | Traceback | Store files after |
+|---|---|---|---|---|---|---|---|
+| `extract_Gk_data.py` | 0 | 57 s | 522 | 1593 | 100.5 MB | none | identical |
+| `extract_GkWKB_data.py` | **1** | 24 s | 8 | 344 | 18.2 MB | **`OverflowError` in `ray::plot_Gk()`** | identical |
+| `extract_GkSource_data.py` | 0 | 33 s | 45 | 873 | 70.6 MB | none | identical |
+| `extract_TkWKB_data.py` | 0 | 19 s | 8 | 72 | 6.8 MB | none | identical |
+| `extract_tensor_source_data.py` | 0 | 22 s | 36 | 172 | 7.5 MB | none | identical |
+| `extract_QuadSourceIntegral_data.py` | 0 | 33 s | 240 | 681 | 56.1 MB | none | identical |
+| `extract_Gk_data.py`, **no `--models`** | 0 | 56 s | 522; then `>> SKIPPING MODEL QCD_Cosmology: …` | 1593 | 100.5 MB | none | identical |
+
+- **The output was 360 MB in all**, far under the 20 GB limit; R4's was 208 MB.
+- No `ReadOnlyMiss` or `ReadOnlyWrite` appeared, and no Ray process was left after any reader.
+- **`store fingerprint` afterwards** (no `--write`) found problems none and "matches the fingerprint
+  taken 2026-10-25T00:34:14+01:00 by a person, at b90752d…".
+- **The failure** (`issues.md`) came from plotting: the full-range PDF of `k = 1e5`, `z_source = 1.3633e16`
+  (serial 19) was left as a 1,039-byte fragment with no PNG or CSV. A plotted value there is presumably
+  `0`, `inf` or `nan` on a log axis; that was not confirmed against the data. The store is not implicated.
+
+### 3.5 The depth census ([`depth_census_08.txt`](after/depth_census_08.txt))
+
+**The script** is `scripts/depth_census.py`: read-only, no Ray, every file `mode=ro`, following
+`report()`. It reads `DEFAULT_LEVIN_MAX_DEPTH = 20` from `AdaptiveLevin/levin_quadrature.py:154`.
+**Its test on R4's reference store** ([`depth_census_r4_08.txt`](after/depth_census_r4_08.txt))
+counted 864 rows, all at (1e-32, 1e-7), and left every file identical.
+
+**The population.** **9280** rows at (1e-32, 1e-7), 2320 per shard. There are 0 rows at any other
+pair, and every store file is unchanged by the census.
+
+| Bin (`WKB_Levin_max_depth`) | A3 v2 rows | mean `compute_time` | CPU-hr | unconverged | Baseline (rtol 1e-8; 7600 rows) |
+|---|---|---|---|---|---|
+| NULL (no Levin call) | 2489 | 0.035 s | 0.024 | 0 | 2489 at 0.062 s |
+| 0 (not in the baseline's bins) | 99 | 0.121 s | 0.003 | 65 | — |
+| 1–19 | 4427 | 0.421 s | 0.517 | 1018 | 3054 at 0.776 s |
+| **20** | **2265** | **454.2 s** | **285.78** | **1179 (52.1 %)** | **2057 at 170.6 s; 97.5 CPU-hr; 889 unconverged (43.2 %)** |
+| **store** | **9280** | — | **286.33** | **2262** | **7600; 98.2 CPU-hr** |
+
+- **`rtol = 1e-7` did not remove the depth-20 cliff.** The depth-20 rows carry 285.8 of the store's
+  286.3 CPU-hours (99.8 %; the baseline's 99.3 %). Their mean cost is 454 s, against 0.4 s for
+  depth 1–19, and 52.1 % of them are stored unconverged.
+- **Rows over 60 s:** 679, of which 524 (77.2 %) are unconverged. The baseline had 195, at 74.4 %.
+- **Totals.** `total_phase_limited = 1` on 525 rows. The maximum `WKB_Levin_num_regions` is
+  966,508 (baseline: 1,530,190). `SUM(WKB_Levin_elapsed)` is 1,029,462 s of 1,030,782 s of
+  `compute_time`, against 2.6 s of `numeric_quad_compute_time`.
+
+**By band:**
+
+| Band | rows | CPU-hr | depth-20 rows (mean) | unconverged at depth 20 | rows > 60 s (unconverged) |
+|---|---|---|---|---|---|
+| seam, $z > 10^5$ | 6080 | 0.47 | 594 (0.68 s) | 191 | 0 |
+| mid, $9 \le z \le 10^5$ | 2112 | 36.73 | 945 (139.4 s) | 456 | 185 (76.2 %) |
+| low, $z < 9$ | 1088 | **249.13** | 726 (**1235 s**) | 532 (73.3 %) | 494 (77.5 %) |
+| $z > 174.1$ (both stores hold it all) | 7552 | 2.50 | 1153 (6.3 s) | 415 | 31 (64.5 %) |
+
+- **The 20 most expensive rows** took 6,251–7,559 s each. All are at depth 20 and unconverged, with
+  822k–967k regions. Every one has the baseline's geometry, `r == k ≫ q`, with `k` = 9.70e6 or
+  3.05e7 /Mpc and `z_response` 0.1–2.09. The worst is `(9.7035e6, 9.8506e5, 9.7035e6)` at
+  $z = 0.302$: 7,558.6 s, `abserr/|total|` 3.6e-5.
+- **Not like-for-like.**
+  - The pair differs, which is the change under test.
+  - The baseline lacked 1680 items, all at $z \le 174.1$, including the whole low band.
+  - No per-band baseline figure exists.
+  - At $z > 174.1$ (7552 rows) v2 costs 2.50 CPU-hr, with 1153 rows at depth 20 averaging 6.3 s.
+    There is no baseline number for that set. The baseline's 7600 rows were these 7552 plus 48 of
+    the 64 at $z = 132.08$.
+
+### 3.6 From the run's logs ([`run_logs_08.txt`](after/run_logs_08.txt))
+
+- **The tail.**
+  - The QSI stage ran 21:22:59 Thu → 21:56:16 Sat, **48.55 h** (the log says `2d 33m 16.8s`).
+  - Every batch had been handed out after 6 h 35 m. The rest was the six workers draining the
+    in-flight items, at full occupancy in the session's snapshots.
+  - The last progress line with six or more items in flight was 19:25:17 (52 compute). The next,
+    and final, line is 21:56:15, with 0 compute and 52 store.
+  - The five-workers-idle state therefore began after 19:25:17 and before 21:48, when a `ps`
+    snapshot found five `ray::IDLE` and one at 99 %. So it lasted **at most 2.52 h (5.2 % of the
+    stage)**, under §4's 10 %.
+  - The last 52 items were stored together at 21:56:16, so the store's timestamps cannot order
+    them. The longest of them is `(3.0455e7, 3.0917e6, 3.0455e7)` at $z = 0.174$, 6,580.6 s.
+- **The `IntegrationWarning`s.** There are 15 events: 6 "maximum number of subdivisions (100)", 6
+  "probably divergent, or slowly convergent" and 3 roundoff. All are SciPy `quad`'s at
+  `Quadrature/simple_quadrature.py:92`, in `compute_QuadSource_integral` tasks on six worker pids,
+  all within the QSI stage's first 1.6 min (`stderr.log` was last written at 21:24:37). The
+  orchestrator's 13 did not count Ray's two `[repeated 2x across cluster]` lines. **No warning names
+  a row**, so none can be tied to a stored `QuadSource` row.
+
+### 3.7 The run's work ([`run_record_08.txt`](after/run_record_08.txt))
+
+- **Wall time:** `created` 2026-10-22T21:11:55 → final heartbeat 2026-10-24T21:56:27, **48.74 h**,
+  against 39–44 h estimated.
+- **CPU:** **286.33 CPU-hr** of `compute_time`, against the ~250 projection (×1.145). By band: low
+  249.13 (projected ~233), mid 36.73 (~16), seam 0.47 (~1).
+- **Occupancy:** at 6 CPUs, 286.33 CPU-hr is 47.7 h fully occupied, against the 48.74 h it took.
+- `list` shows 5 runs, all finished.
+
+### 3.8 The lock ([`lock_08.txt`](after/lock_08.txt))
+
+- **At the stop** (00:40:41) the lock was left as found: held by SecondaryGWKit, purpose "… 07: A3 v2
+  build …", owner pid 84436 (not alive), with `ray-processes` empty.
+- **On the user's ruling**, at 00:51:03:
+  - `ray-processes`: empty, exit 0;
+  - **`release`: "released the rehearsal lock", exit 0**;
+  - `status`: **`lock: free`** (`/Users/ds283/ScienceData/.rehearsal-lock does not exist`), "Ray
+    processes of this repository: none";
+  - `ray-processes`: empty.
+- `~/ScienceData/` remains, empty.
+- **The freeze on the checkout ends here.** It stays at `b90752d`, clean, and is not moved by this
+  prompt.

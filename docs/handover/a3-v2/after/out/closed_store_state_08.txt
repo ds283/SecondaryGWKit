@@ -1,0 +1,39 @@
+$ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/handover-A3-v2-lambdacdm.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: handover-A3-v2-lambdacdm.sqlite; version rows None
+-- shard 0: handover-A3-v2-lambdacdm-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 1188 row(s), 0 with validated = 0
+   GkSource: 290 row(s), 0 with validated = 0
+   GkWKBIntegration: 3480 row(s), 0 with validated = 0
+   QuadSource: 10 row(s), 0 with validated = 0
+   TkNumericIntegration: 2 row(s), 0 with validated = 0
+   TkWKBIntegration: 2 row(s), 0 with validated = 0
+-- shard 1: handover-A3-v2-lambdacdm-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 1089 row(s), 0 with validated = 0
+   GkSource: 290 row(s), 0 with validated = 0
+   GkWKBIntegration: 3480 row(s), 0 with validated = 0
+   QuadSource: 8 row(s), 0 with validated = 0
+   TkNumericIntegration: 2 row(s), 0 with validated = 0
+   TkWKBIntegration: 2 row(s), 0 with validated = 0
+-- shard 2: handover-A3-v2-lambdacdm-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 985 row(s), 0 with validated = 0
+   GkSource: 290 row(s), 0 with validated = 0
+   GkWKBIntegration: 3480 row(s), 0 with validated = 0
+   QuadSource: 6 row(s), 0 with validated = 0
+   TkNumericIntegration: 2 row(s), 0 with validated = 0
+   TkWKBIntegration: 2 row(s), 0 with validated = 0
+-- shard 3: handover-A3-v2-lambdacdm-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 1287 row(s), 0 with validated = 0
+   GkSource: 290 row(s), 0 with validated = 0
+   GkWKBIntegration: 3480 row(s), 0 with validated = 0
+   QuadSource: 12 row(s), 0 with validated = 0
+   TkNumericIntegration: 2 row(s), 0 with validated = 0
+   TkWKBIntegration: 2 row(s), 0 with validated = 0
+rc=0
