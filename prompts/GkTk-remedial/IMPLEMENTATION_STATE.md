@@ -2,7 +2,9 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-29 — `[03-integrationsolver-stepping-minimum-lookup]` is **CLOSED** (§4)
+**Last updated:** 2026-10-25 — `[00-consumer-anchoring-floor]` narrowed by an analysis of the
+`handover` A3 v2 store (§3): the floor is the proposed cause of the depth-20 cost cliff.
+Previously 2026-09-29 — `[03-integrationsolver-stepping-minimum-lookup]` is **CLOSED** (§4)
 by `prompts/datastore-integrity` prompt 03: `sqla_IntegrationSolver_factory.build` now matches
 `stepping ==` the request and raises `MultipleResultsFound` on a duplicate rather than serving a
 higher-order row that happened to satisfy `>=`. Previously 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opened `[10-table-8-3-measures-the-removed-wrap-theta-loop]`, now also **CLOSED** (§4): `large_x.py` generated Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so §8 was regenerated — Table 8.3 reads 0 error and ~0.3 µs per call, Table 8.1's `fixture set-up` column collapses from 50.0 s at $x=1.6\times10^8$ to 0.0 s at every row (`f961fa6`'s doing, not this fix's), every physics column is unchanged, and item 5 is rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
@@ -478,6 +480,20 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   so everything above the floor has been removed and re-anchoring is the only remaining lever.
   **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
   and a Levin-side hook, if the verification in 13 shows the floor matters.
+  **Narrowed 2026-10-25 by an analysis of the `handover` A3 v2 store, not a prompt: the floor
+  probably matters, for cost.** This is a hypothesis.
+  - **The finding.** On A3 v2's 2265 depth-20 `QuadSourceIntegral` rows, which carry 285.8 of
+    286.3 CPU-hours, the declared `total_abserr/|total|` tracks $\varepsilon k\eta(z_{\rm response})$:
+    slope 0.84, median ratio 2.2.
+  - **The proposed mechanism.** Separately reduced remainders whose large terms should cancel in a
+    slow phase group leave jitter at this floor. The Levin driver cannot resolve it, and
+    `phase_limited` cannot see it, so bisection runs to `DEFAULT_LEVIN_MAX_DEPTH`.
+  - **The fix's shape changes.** The proposal is to compose the leading terms of a *phase group*
+    before reducing, not only to anchor a factor. That removes the floor exactly where a cancelling
+    pair exists, and the driver is told the floor elsewhere.
+  - **Owner: none**, since this campaign is closed.
+  - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2, with the test
+    that would decide it at §2.6.
 
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that

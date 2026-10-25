@@ -35,6 +35,11 @@ so §3 held **ten**; the review closed
 `.gitignore` line, so it holds **eight**. **09 and 10 were written 2026-10-25** for the GkWKB
 failure, on the user's decision to fix both the column and the readers; their planning opened
 `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]`, so §3 holds **nine**.
+**An analysis of A3 v2 (2026-10-25, not a prompt)** is
+[`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md). It proposes a
+phase-precision floor as the cause of the depth-20 cliff, says what A3 v2 makes measurable at the
+seam, recommends README §7 D1 (b), and sets out a workplan. It narrowed three §3 entries; the
+count is unchanged.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -307,6 +312,24 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   owned by nobody. The comparison is not like-for-like (the pair differs, the baseline lacked 1680
   items, no per-band baseline figure exists): `docs/handover/A3-V2-VERIFICATION.md` §3.
 
+  **Narrowed 2026-10-25 by an analysis of A3 v2, not a prompt — a hypothesis, not yet a
+  measurement.** [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
+  - **The finding.** On the depth-20 rows, the declared `total_abserr/|total|` tracks
+    $\varepsilon k\eta(z_{\rm response})$, the double-precision floor of the phase the driver is
+    handed: log–log slope 0.84 over 1666 mid- and low-band rows, median ratio 2.2
+    (`docs/handover/a3-v2/findings/depth20_floor.txt`). `gktk-remedial` Layer 1 measured the phase
+    delivered at exactly that floor.
+  - **The proposed mechanism.** On `r == k`, the slow phase group is a sum of separately reduced
+    remainders whose large $\tau_s$ terms should cancel. What is left is non-smooth jitter at the
+    floor, which no subdivision resolves. Only `depth_max` can end the bisection: the
+    length-share `local_atol` above is dead, and `phase_limited`'s eq. (151) floor has no term for
+    error in the input phase.
+  - **The refinement.** The length-share mechanism is the reason no exit exists; the floor is what
+    drives the bisection to the cap.
+  - **What would decide it.** Findings §2.6 is the test, read-only or offline, and §2.7 is a
+    three-layer remedy.
+  - **Owner: still none.** The findings document is written to plan a campaign from.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -342,6 +365,18 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   converged row, with nothing reading either flag and no defined route to remove one. The shape
   suggested above — a filter at the consumer and a `--require-converged` gate, not a deletion — is
   now the live question. Counts: `docs/handover/a3-v2/after/out/depth_census_08.txt`.
+
+  **Narrowed 2026-10-25 by an analysis of A3 v2, not a prompt: the flag is the wrong thing to gate
+  on.** `total_converged` ANDs per-group flags, and each Levin call checks `rtol` against its
+  **own** group's value (`ComputeTargets/QuadSourceIntegral.py:1080`), while the groups cancel in
+  `total`. So the flag says little about `total_abserr/|total|`:
+  - of the 1086 depth-20 rows flagged converged, 257 declare above 1e-6 and 132 above 1e-4;
+  - the largest is **5.0e-2**.
+
+  A `--require-converged` gate on the flag would admit those rows, so any gate belongs on
+  `total_abserr/|total|`. Five depth-20 rows store a declared error of +inf (see `levin-refactor`'s
+  `[04-roundoff-floor-can-be-infinite]`). Measurement:
+  [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.5.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation
@@ -466,6 +501,18 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   above is still the way to answer it. What has changed is that a null result there no longer
   means the cost curve is safe, and that the experiment should record `max_depth` and the region
   count against `local_atol` rather than against `phase_err` alone.
+
+  **Narrowed 2026-10-25 by an analysis of A3 v2, not a prompt.** A3 v2 reaches 966,508 regions
+  with production's `PrimitivePhase` $G$. The proposed mechanism in
+  [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2 is a phase floor
+  $\varepsilon k\eta$ that `phase_limited` cannot see, and a candidate third explanation for the
+  realistic flavour's growth in $x$. The harness's $T$ half carries that floor too, so it does not
+  need the stale $G$ phase. The harness runs at `REF_RTOL = 1e-12`
+  (`realistic_large_x.py:122`), and $\varepsilon x_{\rm resp}$ exceeds that from
+  $x_{\rm resp} \approx 4.5\times10^3$, so on nearly every rung. This does not explain why the exact
+  flavour stays flat, unless its composed phases are exact where the realistic flavour's are not;
+  that is not checked. The one-cell experiment above stands, and it should also
+  record which group carries the deepest regions (findings §2.6 item 1).
 
 - **[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]** *(opened 2026-10-22 by the
   planning of prompts 06 and 07, from a read of the Mac Studio's checkout; not by a prompt)* —

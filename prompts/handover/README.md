@@ -581,6 +581,9 @@ analogue of prompt 03's padding, which additionally makes the followup §1.4 con
 possible; (c) a first-order Taylor extension of the LG phase and amplitude across the gap inside
 `QuadSourceIntegral`'s clamp adapter, estimated ~100× smaller error. (b) is the only one that also
 yields a stored diagnostic; (c) is the only one confined to one file.
+*Recommendation recorded 2026-10-25:* (b), with the reasons, in
+[`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §3.4. The decision
+remains the user's.
 
 **D2 — is the depth scan run at large $x$ only?** §2 (i)/(j): the depth decision needs
 $\lesssim10^{-6}$, no oracle delivers that at the fixtures' $x$ of 4.33–1556, and both deliver it

@@ -2,7 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 10 (test matrix and campaign verification) complete with
+**Last updated:** 2026-10-25 — `[04-roundoff-floor-can-be-infinite]` narrowed by an analysis of
+the `handover` A3 v2 store (§3). Previously 2026-09-04 — prompt 10 (test matrix and campaign verification) complete with
 deviations. **The campaign is complete: 10 of 10 prompts landed.**
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
@@ -136,6 +137,14 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   ratio involving `used_interval.total_err`/`.abserr_roundoff` across many regions (prompt 07's
   diagnostics rewrite is the obvious candidate) must not assume finiteness. **Next step:** prompt
   07 should audit `_write_progress_data` and any new diagnostics for this before shipping.
+  **Narrowed 2026-10-25 by an analysis of the `handover` A3 v2 store, not a prompt: it presumably
+  reaches stored data.**
+  - Five of A3 v2's depth-20 `QuadSourceIntegral` rows have `total_abserr/|total|` = +inf. The
+    census writes `nan`, not `inf`, for a zero `total`, so presumably `total_abserr` = +inf.
+  - All five have $q = r = 9.56\times10^7$/Mpc, and each cost under 2 s.
+  - `total_abserr` is the linear sum this entry warns about, and it is persisted.
+  - Not confirmed against the store.
+  - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.5.
 - **[04-theta-abserr-cc-branch-proxy]** *(opened by prompt 04, 2026-09-04)* — the declared-
   `theta_abserr` endpoint term (recommendation 5.2) is exact per-endpoint on a Levin region (true
   `p_endpoint_l1` split by side) but an even 50/50 split of a lumped `f_scale * width` proxy on a
