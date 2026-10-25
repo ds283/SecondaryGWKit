@@ -90,7 +90,9 @@ The numeric→Liouville–Green seam of $T_k$ and $G_k$. The first eight are **o
 attacked together — prompt 12 of `source-remediation` could not separate their contributions by
 measurement alone at production $x$. (`[11-stop-point-root-tolerance]` joined them 2026-09-12: the
 numeric stop point $z_{\rm init}$ is a `root_scalar` root, so where the seam sits and how precisely
-it is located are the same decision.) Background reading:
+it is located are the same decision. `[08-handover-clamp-error]` and
+`[12-handover-clamp-error-in-production]` closed 2026-10-25 with `handover` B1, so fewer than eight
+remain.) Background reading:
 [`docs/lg-phase-and-handover-followup-2026-09.md`](lg-phase-and-handover-followup-2026-09.md).
 
 **Planned 2026-09-19 as [`prompts/handover/`](../prompts/handover/README.md)** — five workstreams.

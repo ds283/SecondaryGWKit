@@ -104,7 +104,7 @@ on; its store is to be retired.
 | A1 | [The Domènech general-$b$ oracle](01-domenech-general-b-oracle.md) | **A1** | Opus 5 | ✍️ yes | ✅ 2026-09-20 | *"Land the Domenech general-b oracle with its tests"* | [`logs/01-…`](logs/01-domenech-general-b-oracle.md) |
 | A2 | [The realistic-flavour large-$x$ harness](02-realistic-flavour-large-x-harness.md) | **A2** | Opus 5 | ✍️ yes | ✅ 2026-09-20 | *"Separate the hand-over clamp from the representation floor"* | [`logs/02-…`](logs/02-realistic-flavour-large-x-harness.md) |
 | A3 | [The policy-geometry census](03-policy-geometry-census.md) | **A3** | — | ✍️ yes | ⬜ not run | — | — |
-| B1 | [Remove the $T_k$ gap, by overlap](12-remove-the-tk-gap.md) (prompt 12) | **B1** — README §7 D1 (b), decided 2026-10-25; the code on the laptop, rehearsal R8 on the Mac Studio | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25: code reviewed 8/8 in its worktree; R8 on the Mac Studio reviewed 7/7, check 3 on the user's ruling | `049c7c8` (code, rebased from `73f4c4d`); records: this commit | [`logs/12-…`](logs/12-remove-the-tk-gap.md) |
+| B1 | [Remove the $T_k$ gap, by overlap](12-remove-the-tk-gap.md) (prompt 12) | **B1** — README §7 D1 (b), decided 2026-10-25; the code on the laptop, rehearsal R8 on the Mac Studio | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25: code reviewed 8/8 in its worktree; R8 on the Mac Studio reviewed 7/7, check 3 on the user's ruling | `049c7c8` (code, rebased from `73f4c4d`); records: `ad23a29` | [`logs/12-…`](logs/12-remove-the-tk-gap.md) |
 | B2 | Score the unmasked residue | **B2** | — | ⬜ no | ⬜ | — | — |
 | B3 | Give the seam a contract | **B3** | — | ⬜ no | ⬜ | — | — |
 | B4 | Make `incomplete` unreachable | **B4** | — | ⬜ no | ⬜ | — | — |
