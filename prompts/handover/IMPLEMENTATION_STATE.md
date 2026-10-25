@@ -72,7 +72,7 @@ failure, on the user's decision to fix both the column and the readers; their pl
 | 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `319b14f` | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, launched and reviewed; the build runs | `a6902b1` | [`logs/07-…`](logs/07-launch-a3-v2.md) |
 | 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed; closed on a §8 stop by the user's ruling | `9ef8a19` | [`logs/08-…`](logs/08-after-the-a3-v2-build.md) |
-| 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
+| 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus | ✍️ 2026-10-25 | ⏸ held on `rpk-v030-adoption` 01 | — | — |
 | 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus | ✍️ 2026-10-25 | ⏸ held on 09 | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed

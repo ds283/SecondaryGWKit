@@ -4,6 +4,9 @@
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Written:** 2026-10-25 at `6591a8e`, on the user's decision of the same day (§0.2).
 **Where it runs:** on the laptop, in a fresh-context subagent, as prompts 01–05 did.
+**Held** until `rpk-v030-adoption` 01 has landed and been reviewed (added 2026-10-25). From then the
+rehearsal lock is `raypoolkit.rehearsal_lock`, with the commands and SGK's values `CLAUDE.md`
+gives. They replace R3's `tools.rehearsal_lock` commands wherever §4.2 follows R3.
 **Closes:** `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`
 **in code** (prompt 10 closes it by re-reading A3 v2), and
 `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]`.

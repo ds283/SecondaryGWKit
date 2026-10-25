@@ -15,7 +15,10 @@ when acceptance 2 holds.
   `ObjectFactories/`, `config/` or `main.py`**: `git diff --stat b90752d <dispatch SHA> --
   ObjectFactories config main.py` is empty. A3 v2 was built at `b90752d`, and an old store is read
   at its own SHA unless the schema it was written with is unchanged (`CLAUDE.md`; this condition is
-  what makes reading it at the dispatch SHA sound);
+  what makes reading it at the dispatch SHA sound). *Amended 2026-10-25 for `rpk-v030-adoption`
+  01:* that commit's diff in these paths is allowed, and is the only one: the new
+  `config/ray_local.py` and `main.py`'s `ray.init` gaining `_temp_dir`. Neither touches a schema;
+  check that the diff is no more than that;
 - on the Mac Studio: `runregistrykit list` shows nothing `running` or stale; the rehearsal lock is
   free; the checkout's `git status --short` is empty.
 
@@ -38,7 +41,11 @@ arguments through `bash`.
    `git status --short` empty; the Gate's `git diff --stat` empty. **The checkout moves for the first
    time since A3 v2's launch**: this is allowed now, since nothing runs from it.
 2. `./venv/bin/pip freeze` equals `docs/handover/a3-v2/rehearsal/out/pip_06.txt`'s (09 changes no
-   pin).
+   pin). *Amended 2026-10-25:* `rpk-v030-adoption` 01 moved `raypoolkit` to `v0.3.0`. First
+   `./venv/bin/pip install --dry-run -r requirements.txt` (it must add `raypoolkit-0.3.0` alone),
+   then the install; `pip freeze` then equals `pip_06.txt`'s but for the one `raypoolkit` line, at
+   `67a75b97…`. `RayWorkPool` is unchanged by that release. From here the lock commands are
+   `CLAUDE.md`'s `raypoolkit.rehearsal_lock` ones, at `~/.raypoolkit/rehearsal-lock`.
 3. `./venv/bin/python -m runregistrykit store show var/datastores/handover-A3-v2-lambdacdm.sqlite`:
    live, fingerprint `0e32f24a…`. The SHA-256, size and mtime of every store file:
    `state/store_files_before.txt`.
