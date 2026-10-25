@@ -955,7 +955,7 @@ board; the orchestrator closed one after the review, the undisposed test engine.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` | py313-venv | Ray 2.59.0 turns on token auth for a local cluster: a `WARNING … Token authentication is enabled` line in every build and reader log, and `~/.ray/auth_token` (mode 644) written outside the checkout at the first start. Nothing stored changes. Not assigned. |
+| `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` | py313-venv | Ray 2.59.0 turns on token auth for a local cluster: a `WARNING … Token authentication is enabled` line in every build and reader log, and `~/.ray/auth_token` (mode 644) written outside the checkout at the first start. Nothing stored changes. **Narrowed 2026-10-25:** the user chose explicit token mode; `config/ray_local.py` sets `RAY_AUTH_MODE=token` and the token is kept mode 600. Prompt 02's R7 is the real-Ray check that closes it. |
 
 ---
 

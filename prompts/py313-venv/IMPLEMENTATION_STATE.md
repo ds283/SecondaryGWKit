@@ -98,8 +98,25 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
   affected was not measured. **Next step:** decide whether this repository's `local` instances
   should run with `RAY_AUTH_MODE=disabled` (a launcher and `config/` change, a campaign's) or keep
   the default and record the token file as expected. Measured in
-  [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1.2.5. Not assigned.
-  Indexed at `docs/OPEN_ISSUES.md` §1.23.
+  [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1.2.5. Indexed at
+  `docs/OPEN_ISSUES.md` §1.23.
+
+  **Narrowed 2026-10-25, on the user's decision the same day: keep token authentication, and name
+  it.** Three changes:
+  - `config/ray_local.py` now sets `RAY_AUTH_MODE=token` at import unless the environment already
+    holds a value. Every Ray start imports that module before its `ray.init`, and Ray logs no
+    warning when the mode is set explicitly (`authentication_token_setup.py`,
+    `enable_token_auth_by_default`). An attach to an explicit `host:port` now sends the token too:
+    Ray turns token mode on by itself only for `auto`.
+  - `RunDrivers/tests/test_ray_auth_mode.py` (4 tests) guards it. Two deliberate breakages are each
+    caught by a named test: the `setdefault` removed, and `extract_Gk_data.py` defining the
+    constant itself instead of importing the module.
+  - `CLAUDE.md`'s lock section states the rule. The laptop's `~/.ray/auth_token` is now mode 600.
+
+  **Not yet shown under real Ray.** The laptop smoke test was not run, because StochasticInstantons
+  held the shared lock (`acquire` exit 3, 2026-10-25 16:13). **What is left:** prompt 02's R7 on the
+  Mac Studio is the real-Ray check. It needs no warning line in any launch log, token mode in
+  force, and the token file mode 600. R7 closes this entry. Assigned to 02.
 
 **Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
 (the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray

@@ -170,6 +170,10 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   exists: a project not yet moved to `v0.3.0` holds it, or it is stale.
 - **The lock finds an instance by its temp dir.** Every Ray start here gives Ray `_temp_dir`
   (`RunDrivers/tests/test_ray_temp_dir.py`); one that does not is invisible to the lock.
+- **Every Ray start runs with token authentication.** `config/ray_local.py` sets
+  `RAY_AUTH_MODE=token` at import unless the environment already holds a value
+  (`RunDrivers/tests/test_ray_auth_mode.py`). The token is `~/.ray/auth_token`, which Ray writes if
+  it is missing. Keep it mode 600 on each host (`chmod 600`): Ray writes it readable by all.
 - **Each lock command is a shell command of its own**, never the one that launches a build, and the
   only process that command starts: output by `>>` redirection, never a pipe such as `| tee`. A
   shell whose command line names `/tmp/ray-sgk` makes the lock list everything else it started.
