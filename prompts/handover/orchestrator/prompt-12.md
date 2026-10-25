@@ -240,6 +240,44 @@ Its §6.5 analysis scripts go under `var/handover-12/scripts/`, and its records 
 
 The continuity residuals are recorded, not judged (prompt §6).
 
+### B.5 Addendum, 2026-10-25 21:00 GMT: R8's dispatch
+
+**Part A's review** passed all eight checks of §A.3 in the worktree. In particular, the laptop's
+own re-run of the roots gave ComputeTargets 742 OK (737 + 7 − 2), with the other six equal to the
+baselines. **Landing (§A.4) was decided by the user:** `levin-phase-floor` 02 will not land, because
+it was superseded and part of its work moves to that campaign's 04. Its records commits
+(`87813ed`, `aa6dd83`) are on the branch, and no 02 run is alive. B1 was rebased onto `aa6dd83`;
+the one conflict was `docs/OPEN_ISSUES.md`'s count, resolved to 109 by counting the rows. The
+rebase brought no `.py` file outside `docs/`. B1 landed as **`049c7c8`**, pushed. This addendum's
+commit is R8's dispatch SHA.
+
+**§B.0 re-checked on the Mac Studio at 21:00 GMT**, read-only over `ssh macstudio-tunnel`:
+- `levin-phase-floor` 03's orchestrator has ended. Its records are committed (`d5f5a2b`).
+- The checkout is at `98e68d3`, and `git status --short` is empty.
+- The registry has 11 runs, all finished. The lock is free: `~/.raypoolkit/` is empty and
+  `~/ScienceData/.rehearsal-lock` does not exist.
+- There is no `handover-12` store, and no `var/handover-12/`.
+- R3's two recorded runs are at `var/handover-06/recorded/`.
+- `~/.ray/auth_token` is mode 600. 117 GiB free; load about 4.5 on 10 cores.
+
+**The laptop fast-forwards the checkout to this commit** before starting the orchestrator, so the
+roots and R8 run on B1's code. The orchestrator re-reads this state as its Gate, does not fetch,
+and stops if anything differs.
+
+**The roots, at the laptop's review, for §B.1's comparison:** `ComputeTargets` 742, `ObjectFactories`
+280.
+
+**What R8 should show, from Part A's report** (prompt §6.5 measures it; a different count is
+reported, not a stop):
+- each `QuadSource` row gains about `HANDOVER_OVERLAP_NODES` + 1 = 3 nodes, and its values at the
+  nodes R3 already had are unchanged;
+- each `QuadSourceIntegral` row's `partition` has `handover`, and neither `clamp_gaps_log1pz` nor
+  `max_clamp_gap_log1pz`.
+
+**For the R8 agent:** at `HEAD`, `docs/handover/realistic_large_x.py` and
+`docs/levin-phase-floor/noise_injection.py` no longer run, by design. They are records, and that is
+`[12-realistic-large-x-reads-the-retired-clamp-records]`. Neither is part of R8.
+
 ### B.4 After the review — on the laptop
 
 The laptop copies `var/handover-12/` back (no CSV, no store) and makes B1's **records commit**:

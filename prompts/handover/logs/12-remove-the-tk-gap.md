@@ -3,8 +3,9 @@
 **Prompt:** [`prompts/handover/12-remove-the-tk-gap.md`](../12-remove-the-tk-gap.md), Part A
 (§1–§5, the code). §6, rehearsal R8, runs later on the Mac Studio, and its record is appended below
 by the orchestrator.
-**Commit:** the commit on branch `handover-12-b1` that adds this log — "Switch the T_k hand-over at
-the first grid node below z_init" (its SHA cannot be embedded in itself)
+**Commit:** `049c7c8`, "Switch the T_k hand-over at the first grid node below z_init", written on branch
+`handover-12-b1` as `73f4c4d` and rebased onto `handover-remedial` at `aa6dd83` (one conflict, the
+index's count, resolved to 109 by counting)
 **Model:** Claude Opus 5.5, in a fresh-context subagent on the laptop, dispatched at `98e68d3`
 **Date:** 2026-10-25
 **Result:** COMPLETE WITH DEVIATIONS (Part A). §1–§3 are implemented as written, tests (a)–(g) pass,
