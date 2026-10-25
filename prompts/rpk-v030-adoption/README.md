@@ -6,11 +6,15 @@ SGK from `raypoolkit` `v0.2.0` to `v0.3.0` and replaces SGK's own rehearsal lock
 piece of code shared by every project that uses it. The user asked for the move on 2026-10-25,
 before `handover` prompt 09 runs, landing directly on `handover-remedial` (§6.1).
 
-It has **no audit document of its own**. The audit is RayPoolKit's, at the tag `v0.3.0`
-(`67a75b97a656accb98195a4bda93f64e6a5f3fb2`):
-- the contract, `docs/rehearsal-lock.md` ("contract §N" below);
+It has **no audit document of its own**. The audit is RayPoolKit's:
+- the contract, `docs/rehearsal-lock.md` ("contract §N" below), at the tag `v0.3.0`
+  (`67a75b97a656accb98195a4bda93f64e6a5f3fb2`);
 - the checklist for this repository, `docs/adoption/rehearsal-lock/secondarygwkit.md` ("the
   checklist"), measured read-only at SGK `216e44d`. Its own words: it is data, not instructions.
+  **It is not in the tag**: it was written after the release, in RayPoolKit `127b2b4`, and is read
+  at `feae4e5`, where the contract and `raypoolkit/` are the tag's. (Corrected 2026-10-25 in the
+  review of 01, whose log records the reading as deviation 1; as first written, this paragraph put
+  both documents at the tag, and prompt 01's "Read first" 3 still does.)
 
 §0.2 reconciles it with `c0fa7ea`. 01 measures again before acting, and its numbers govern.
 
@@ -94,7 +98,7 @@ Measured by the orchestrator on 2026-10-25 while writing this plan.
 
 | # | Prompt | Covers | Model | Status |
 |---|---|---|---|---|
-| 01 | [`01-switch-to-the-raypoolkit-rehearsal-lock.md`](01-switch-to-the-raypoolkit-rehearsal-lock.md) | the pin; the helper deleted; the temp dir at the ten starts and its test; `CLAUDE.md`; a rehearsal and the readers under the new lock | Opus | written 2026-10-25 |
+| 01 | [`01-switch-to-the-raypoolkit-rehearsal-lock.md`](01-switch-to-the-raypoolkit-rehearsal-lock.md) | the pin; the helper deleted; the temp dir at the ten starts and its test; `CLAUDE.md`; a rehearsal and the readers under the new lock | Opus | landed `40d10b1`, reviewed 2026-10-25 |
 
 There is no close prompt. The orchestrator's review of 01, in its own commit, closes the campaign:
 the board's header and §1, and the campaign's line in `prompts/INDEX.md`. Residue the review finds

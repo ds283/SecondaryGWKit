@@ -170,8 +170,9 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   exists: a project not yet moved to `v0.3.0` holds it, or it is stale.
 - **The lock finds an instance by its temp dir.** Every Ray start here gives Ray `_temp_dir`
   (`RunDrivers/tests/test_ray_temp_dir.py`); one that does not is invisible to the lock.
-- **Each lock command is a shell command of its own**, never the one that launches a build: a shell
-  whose command line names `/tmp/ray-sgk` makes the lock list everything else it started.
+- **Each lock command is a shell command of its own**, never the one that launches a build, and the
+  only process that command starts: output by `>>` redirection, never a pipe such as `| tee`. A
+  shell whose command line names `/tmp/ray-sgk` makes the lock list everything else it started.
 - Every Ray driver names its address (`local` for this repository's), never `auto`, and `ray stop`
   is never run: it stops every project's Ray processes.
 

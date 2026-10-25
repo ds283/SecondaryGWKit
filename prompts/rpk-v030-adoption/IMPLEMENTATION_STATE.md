@@ -41,7 +41,7 @@ The orchestrator's choices of method, C1–C7, are in README §6.2.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Switch to the `raypoolkit` rehearsal lock](01-switch-to-the-raypoolkit-rehearsal-lock.md) | the pin; the helper deleted; the temp dir at the ten Ray starts and its test; `CLAUDE.md`; a rehearsal and the readers under the new lock | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 | this row's commit | [log](logs/01-switch-to-the-raypoolkit-rehearsal-lock.md) |
+| 01 | [Switch to the `raypoolkit` rehearsal lock](01-switch-to-the-raypoolkit-rehearsal-lock.md) | the pin; the helper deleted; the temp dir at the ten Ray starts and its test; `CLAUDE.md`; a rehearsal and the readers under the new lock | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 | `40d10b1` | [log](logs/01-switch-to-the-raypoolkit-rehearsal-lock.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
