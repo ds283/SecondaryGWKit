@@ -47,6 +47,10 @@ The orchestrator's choices of method, C1–C7, are in README §6.2.
 
 The review of 01 closes the campaign (README §2).
 
+**Orchestrator notes** are written just before dispatch, under `orchestrator/`:
+[`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-25, for 01). The planning commit
+is `2b27509`.
+
 ### 1.1 Items
 
 | Item | Prompt | What | State |
