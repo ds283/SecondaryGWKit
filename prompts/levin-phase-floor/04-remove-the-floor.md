@@ -325,3 +325,61 @@ on the board and the narrowings on the boards that hold them, and commits. Gate 
 - E1, E2 or M0 fails.
 - Any store file changes.
 - The run would need Ray, a lock, or a change to production code, a test file or `AdaptiveLevin/`.
+
+## 8. The resume after the stop at step 5 (added 2026-10-25)
+
+The first dispatch, at `c8ca155`, stopped at step 5. **E1 (c) and E2 failed by round-off**, at
+4e-16 to 6.5e-14 rad, against an $F$ of 1.7e-6 to 9.2e-5. Nothing was launched. The records are
+`var/levin-phase-floor-04/` (`out/phases_04.txt`, `out/diag_abscissa_rounding_04.txt`,
+`issues.md` I1–I5, and the orchestrator's `review.md`).
+
+**Why they failed.** The bounds in §4 step 5 and §5 left out two real round-off terms. The agent
+identified both, and its diagnostic predicts X's residual from the first at a correlation of
+0.94–1.00:
+- **the abscissa.** `PrimitivePhase._get_x` forms $z = {\rm expm1}(x)$ as a double. Its rounding
+  enters every arm's phase as about $\varepsilon\,|d\theta_i/du|$. It is common to all arms at the
+  same abscissa, so it cancels in E1, but it is jitter in E2;
+- **the remainder's own granularity.** Arm A's $\rho^A_G = {\rm rem} + c_G$ is left in
+  $(-4\pi, 0]$, as §2 says, where a double's ulp is $2^{-49} \approx 1.8\times10^{-15}$. A composed
+  group remainder of up to three such terms lies within $8\pi$, where the ulp is
+  $2^{-48} \approx 3.6\times10^{-15}$. E1 (c)'s additive $10^{-15}$ is below one such ulp.
+
+Everything the gates exist to protect held: E1 (a) and (b) held everywhere; X is the correctly
+rounded exact remainder at all 80,000 abscissae; P reproduces 03's medians in all 29 groups; and
+under X the composed jitter is at most $4\times10^{-8}F$.
+
+**The user's decision (2026-10-25): amend the two gates, then run.** The amendment is made after the
+failure, and it says so. It changes **gates only**, which check the construction. The scored
+predictions R1, A1, N4 and R2, $F^{\rm arm}_g$, and A1's coverage rule are **unchanged**, and no
+re-run has been made, so none of them has been seen.
+
+**The amended gates**, replacing those of §4 step 5 and §5:
+- **E1 (c):** $|{\rm wrap}(\rho^A - \rho^X)| \le 4\varepsilon\Phi^A_G(z) + 4\times2^{-49}$, for
+  $G$. E1 (a) and (b) are unchanged.
+- **E2:** in every scored group, under each of P, A and X, the median $\sigma_\theta$ over 03's
+  sampled regions is at most
+  $$\varepsilon\sum_i \Phi^{\rm arm}_i + \varepsilon\sum_i \Big|\frac{d\theta_i}{du}\Big| + 2^{-48},$$
+  each term a median at the same regions' midpoints. $d\theta_i/du$ is
+  `theta_deriv(x, x_is_log=True, log_derivative=True)`. Under X, the median is also at most
+  $10^{-2}F$, unchanged.
+
+**The provenance at launch (the user's decision, 2026-10-25).** `runregistrykit.begin` records
+`git_head` from the script's directory (`issues.md` I4), and the scripts live in the main
+checkout's `var/`. So step 7's run:
+- is begun with `script=` the launched script's path in the main checkout, so that the registry
+  stamps its SHA-256 on every checkpoint. The manifest records the main checkout's `HEAD`;
+- names the worktree and `98e68d3` in its purpose text;
+- writes the worktree's `HEAD` and its `git status --short` (empty) into **every checkpoint
+  payload**, beside the output headers that already carry it.
+
+**The resume.** The main checkout is **not** moved: `handover` A3 is running in it, at `c8ca155`.
+This section reaches the agent through the orchestrator, and the commit that adds it is named in the
+log.
+1. Steps 1–4 stand as the first dispatch made them. Check the store against
+   `state/store_files_before.txt` once more.
+2. **Step 5 again**, with the amended gates, into `out/phases_04.txt`. Keep the first dispatch's
+   output beside it as `out/phases_04_first.txt`. If either gate fails again, that is a stop.
+3. **Steps 6–10**, as written, with the provenance above.
+4. **`issues.md` I5** (a `black` cache written under `~/Library/Caches/`) is recorded as
+   UNINTENDED DRIFT and is not a stop. `black` is not run again; formatting is the laptop's on
+   committing, and these scripts are committed unformatted anyway.

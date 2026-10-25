@@ -202,3 +202,24 @@ records are committed and the user agrees.
 Relay verbatim; do not adjudicate. Stop on the prompt's §7 conditions, or on any failed check in §3
 here: report it, do not repair it. **Never write to the store**, and never run a git command that
 writes.
+
+## 6. The resume after the stop at step 5 (added 2026-10-25)
+
+The first dispatch stopped at step 5, on E1 (c) and E2 failing by round-off. Your `review.md` of
+that stop is right and stands. Prompt §8 records the user's two decisions: amend the two gates, then
+run; and keep the registry's script hash, carrying `98e68d3` in the purpose and every checkpoint
+payload. **The main checkout is not moved**, since `handover` A3 runs in it at `c8ca155`. You have
+§8's text from the laptop's message, together with the commit that adds it. Pass it to the agent
+verbatim, and resume the agent with it.
+
+**The review changes:**
+- **Check 3:** the manifest records the main checkout's `HEAD` (`c8ca155`), with `git_dirty: false`,
+  and the registry's script hash. The purpose text names the worktree and `98e68d3`. Every
+  checkpoint payload records the worktree's `HEAD` (`98e68d3`) and its empty `git status --short`.
+- **Check 5:** E1 and E2 are checked against prompt §8's amended bounds. `out/phases_04_first.txt`
+  is the first dispatch's output, kept unchanged.
+- **Check 6:** `state/predictions.md`'s mtime is later than the **new** `out/phases_04.txt`.
+- **Check 1:** `~/Library/Caches/black/` from the first dispatch is the recorded drift of
+  `issues.md` I5, and is not a stop. Any other write outside the allowed area still is.
+
+Append the resume's review to `review.md` under a new heading. Do not rewrite the first.
