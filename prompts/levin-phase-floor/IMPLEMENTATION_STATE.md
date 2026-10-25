@@ -3,8 +3,8 @@
 **Last updated:** 2026-10-25 · **Status: STARTED — 1 of 4 measurement prompts landed.** 01 ran on
 the Mac Studio on 2026-10-25, in parallel with `handover` 11. Its review stopped at check 9, a
 records defect, and was corrected on committing by the user's decision. **H-cancel fails P1 and P2;
-H-anchor holds P1–P3** (§2.1). 01 opened two issues (§3). 02 is written. 03 is released by 01 and
-not yet written, and 04 is held on 03. The remedy prompts are not written until gate G1.
+H-anchor holds P1–P3** (§2.1). 01 opened two issues (§3). 02 is written. 03 is written (2026-10-25),
+and 04 is held on 03. The remedy prompts are not written until gate G1.
 
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
@@ -45,7 +45,7 @@ Q1–Q4, are in README §6.3.
 |---|---|---|---|---|---|---|---|---|
 | 01 | [The phase-group census of A3 v2](01-phase-group-census.md) | cost, regions and declared error per group; P1–P3; findings §2.5 on the store; the candidates for 03 | Mac Studio, read-only, no Ray | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 on the Mac Studio, reviewed there; checks 1–8 pass, check 9 (records) failed and was corrected on committing, by the user's decision; shares and $S$ re-checked from the laptop | records in the bookkeeping commit | [log](logs/01-phase-group-census.md) |
 | 02 | [Phase-noise injection](02-phase-noise-injection.md) | findings §2.6 item 2 on A2's fixtures, three arms; N1–N4 | laptop, offline, no Ray | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
-| 03 | instrument | findings §2.6 item 1 on rows 01 picks: depth per group, the parent–child discrepancy against the floor | Mac Studio | — | ⬜ released by 01 (`docs/levin-phase-floor/01/out/candidates_01.txt`: 8 `G+r`, 8 `G-r`, 3 lone `G`, 8 `Gqr`); not yet written | ⬜ | — | — |
+| 03 | [Instrument seven depth-20 rows](03-instrument-depth-20-rows.md) | findings §2.6 item 1 on seven of 01's candidates: depth per group by branch; the jitter in the composed phase; the discrepancy along a region's ancestry, real and with the jitter removed; what the driver can see; how far `G+r` cancels. M0 (bit-identity) gates M1–M5 | Mac Studio; Ray-free if a stand-in read-only pool works, else under the lock | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
 | 04 | remove | findings §2.6 item 3 in a harness: $k\tau_R$ out of $G$'s phase and/or the group composed before reduction; 03's rows again | Mac Studio | — | ⏸ held on 03 (which construction to test) | ⬜ | — | — |
 | 05+ | remedy | §2.7 layers 1–2, as G1 decides | laptop | — | ⏸ held on G1 | ⬜ | — | — |
 
