@@ -1,0 +1,31 @@
+** noise_injection probe worker: run levin-phase-floor-02-noise-probe-20261025T183809, pid 70545
+** script docs/levin-phase-floor/noise_injection.py sha256 6ddaaeca85976b2d5f58af12d03ed703d02caa91784fd976d568da8f042656a7
+** git HEAD 3f28791f434c2debb3f5c5bb72ce16f280e0f5f6 (tree not clean)
+** Python 3.13.16, numpy 2.2.4, scipy 1.16.3, host mps026088.phys.susx.ac.uk
+** atol 1e-45, rtol 1e-07 (DEFAULT_QUADRATURE_RTOL), depth cap 20 (DEFAULT_LEVIN_MAX_DEPTH)
+** input docs/handover/realistic_large_x.py sha256 c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3
+** input ComputeTargets/tests/test_quadsource_integral.py sha256 04ea4fa9d31a4f378ac367fa6e6f0da62d04e330627aace80ffe5c4965a0c554
+** input ComputeTargets/tests/test_tk_source_functions.py sha256 cc10cfb9ffd1184baf5c9b7ff39440eb10217381a375483f7dd76878e4ad0897
+** input ComputeTargets/tests/test_phase_groups.py sha256 fcb6faf88bee4ece729b82fb7a326182a03aceee4da7914a5261b9ce8b1b6fea
+** input ComputeTargets/phase_groups.py sha256 795a011997a5f1a40bdcecba58203d69b2b1ec74a1be95617fe05cb2445cd77f
+** input ComputeTargets/QuadSourceIntegral.py sha256 b6b2e3fa7640094168b48534db970bd8600ff42afcdc8a8c787f71863be762c0
+** input AdaptiveLevin/levin_quadrature.py sha256 bc402243b9fb71a4c503608cafade066cbd6df9bad23bd08540d46aebec1cec3
+** input config/defaults.py sha256 5e94278877d7075484071400d6b2cae3844363faf9c51c3a9fe02220f8ff4322
+** uptime at start: 18:38  up 20 days, 17:23, 1 user, load averages: 28.76 41.76 43.10
+** 0 unit(s) already in the ledger
+[       1 s] probe|unwrapped|exact|together|980|0: max_depth 0 regions 7 wall 0.5 s cpu 0.5 s load 28.8
+[       1 s] probe|wrapped|exact|together|980|0: max_depth 0 regions 7 wall 0.4 s cpu 0.4 s load 28.8
+[       2 s] probe|unwrapped|exact|together|10000|0: max_depth 0 regions 7 wall 0.6 s cpu 0.6 s load 28.8
+[       3 s] probe|wrapped|exact|together|10000|0: max_depth 0 regions 7 wall 0.8 s cpu 0.7 s load 28.8
+[       3 s] probe|unwrapped|exact|q-smooth|980|0: max_depth 1 regions 5 wall 0.4 s cpu 0.4 s load 28.8
+[       4 s] probe|wrapped|exact|q-smooth|980|0: max_depth 1 regions 5 wall 0.4 s cpu 0.4 s load 28.8
+[       4 s] probe|unwrapped|exact|q-smooth|10000|0: max_depth 2 regions 12 wall 0.4 s cpu 0.4 s load 27.8
+[       5 s] probe|wrapped|exact|q-smooth|10000|0: max_depth 2 regions 12 wall 0.5 s cpu 0.4 s load 27.8
+[       8 s] probe|unwrapped|realistic|together|980|0: max_depth 6 regions 69 wall 3.4 s cpu 2.4 s load 27.8
+[      11 s] probe|wrapped|realistic|together|980|0: max_depth 6 regions 69 wall 3.0 s cpu 2.6 s load 28.4
+[      14 s] probe|unwrapped|realistic|together|10000|0: max_depth 8 regions 70 wall 2.7 s cpu 2.6 s load 30.3
+[      18 s] probe|wrapped|realistic|together|10000|0: max_depth 8 regions 70 wall 4.2 s cpu 3.7 s load 30.3
+[      19 s] probe|unwrapped|realistic|q-smooth|980|0: max_depth 7 regions 31 wall 0.9 s cpu 0.9 s load 29.2
+[      20 s] probe|wrapped|realistic|q-smooth|980|0: max_depth 7 regions 31 wall 0.7 s cpu 0.7 s load 29.2
+[      22 s] probe|unwrapped|realistic|q-smooth|10000|0: max_depth 8 regions 87 wall 2.0 s cpu 2.0 s load 29.2
+[      25 s] probe|wrapped|realistic|q-smooth|10000|0: max_depth 8 regions 87 wall 2.5 s cpu 2.5 s load 28.0

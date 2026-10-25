@@ -1,13 +1,17 @@
 # levin-phase-floor campaign — implementation state
 
-**Last updated:** 2026-10-25 · **Status: STARTED — 2 of 4 measurement prompts landed.** 01 ran on
-the Mac Studio on 2026-10-25, in parallel with `handover` 11. Its review stopped at check 9, a
-records defect, and was corrected on committing by the user's decision. **H-cancel fails P1 and P2;
-H-anchor holds P1–P3** (§2.1). 01 opened two issues (§3). 03 ran on the Mac Studio the same day,
-Ray-free, and its review passed 9/9. **M1, M2, M4 and M5 hold; M3 fails on its slope clause, so the
-mechanism as written does not hold**, and G1 decides how that is read (§2.2). H-anchor holds in
-every scored group. 03 opened three issues (§3). 02 is written, and 04 is held on 03. The remedy
-prompts are not written until gate G1.
+**Last updated:** 2026-10-25 · **Status: STARTED — 3 of 4 measurement prompts closed: 01 and 03
+landed, 02 stopped and superseded.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+`handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
+the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
+issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
+M4 and M5 hold; M3 fails on its slope clause, so the mechanism as written does not hold**, and G1
+decides how that is read (§2.2). H-anchor holds in every scored group. 03 opened three issues (§3).
+**02 stopped at step 3 and is superseded by 03** (user, 2026-10-25):
+- its noise sweep was infeasible and is not run in any form;
+- N1–N4 are not scored, and N4 moves to 04.
+
+04 is held on 03. The remedy prompts are not written until gate G1.
 
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
@@ -47,7 +51,7 @@ Q1–Q4, are in README §6.3.
 | # | Prompt | Covers | Where | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|---|
 | 01 | [The phase-group census of A3 v2](01-phase-group-census.md) | cost, regions and declared error per group; P1–P3; findings §2.5 on the store; the candidates for 03 | Mac Studio, read-only, no Ray | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 on the Mac Studio, reviewed there; checks 1–8 pass, check 9 (records) failed and was corrected on committing, by the user's decision; shares and $S$ re-checked from the laptop | records in the bookkeeping commit | [log](logs/01-phase-group-census.md) |
-| 02 | [Phase-noise injection](02-phase-noise-injection.md) | findings §2.6 item 2 on A2's fixtures, three arms; N1–N4 | laptop, offline, no Ray | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
+| 02 | [Phase-noise injection](02-phase-noise-injection.md) | findings §2.6 item 2 on A2's fixtures, three arms; N1–N4 | laptop, offline, no Ray | Opus | ✍️ 2026-10-25 | ⛔ stopped at step 3, superseded by 03 (user, 2026-10-25). Step 2's bit-identity at δ = 0 held on all eight cases; the δ = 1e-4 check never ran; the probe `levin-phase-floor-02-noise-probe-20261025T183809` was stopped by SIGTERM, `killed` at 16/19, after its first noised cell ran ~69 min unfinished; the sweep was never launched; N1–N4 not scored (N1, N3 answered by 03; N4 to 04; N2 dropped) | this commit | [log](logs/02-phase-noise-injection.md) |
 | 03 | [Instrument seven depth-20 rows](03-instrument-depth-20-rows.md) | findings §2.6 item 1 on seven of 01's candidates: depth per group by branch; the jitter in the composed phase; the discrepancy along a region's ancestry, real and with the jitter removed; what the driver can see; how far `G+r` cancels. M0 (bit-identity) gates M1–M5 | Mac Studio; Ray-free if a stand-in read-only pool works, else under the lock | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-03-instrument-20261025T194950`; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`; reviewed there, 9/9 pass, three readings for the user (`elapsed` not gated, M5 inapplicable on R7, the pid in `status.json`); R1 re-checked from the laptop: stored and re-run agree in `float.hex` on `total` (`-0x1.631c5efe83a46p-78`), `total_abserr` (`0x1.2f222e3d4dd6dp-95`), `WKB_Levin` and `numeric_quad` (`0x0.0p+0`), `total_converged` 0 / False | `d5f5a2b` (records) | [log](logs/03-instrument-depth-20-rows.md) |
 | 04 | remove | findings §2.6 item 3 in a harness: $k\tau_R$ out of $G$'s phase and/or the group composed before reduction; 03's rows again | Mac Studio | — | ⏸ held on 03 (which construction to test) | ⬜ | — | — |
 | 05+ | remedy | §2.7 layers 1–2, as G1 decides | laptop | — | ⏸ held on G1 | ⬜ | — | — |

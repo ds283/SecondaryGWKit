@@ -1,0 +1,82 @@
+{
+  "argv": [
+    "docs/levin-phase-floor/noise_injection.py",
+    "--probe"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-02-noise-probe-20261025T183809/checkpoint.jsonl",
+  "created": "2026-10-25T18:38:09+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_units": 19,
+  "git_dirty": true,
+  "git_head": "3f28791f434c2debb3f5c5bb72ce16f280e0f5f6",
+  "heartbeat_means": "Refreshed when a cell starts (the stage names it) and when it is recorded. One noised cell at the depth cap can take a long time, so a stale heartbeat means look at stdout.txt in this directory, not that the worker is dead.",
+  "host": {
+    "id": "8d2b247824882486",
+    "machine": "arm64",
+    "name": "mps026088.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "02",
+  "purpose": "levin-phase-floor prompt 02, steps 2-3: the wrapper's bit-identity at delta = 0 on all eight cases and its effect at delta = 1e-4, and the timing probe (exact/together/980 and realistic/q-smooth/1e4 at delta = 0 and 1e-5) the sweep's projection is taken from. No Ray, no store.",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-02-noise-probe-20261025T183809",
+  "scope": "19 cells: 8 cases x (unwrapped, wrapped) at delta = 0; 2 timing cells at delta = 1e-5; 1 cell at delta = 1e-4",
+  "script": "docs/levin-phase-floor/noise_injection.py",
+  "script_sha256": "6ddaaeca85976b2d5f58af12d03ed703d02caa91784fd976d568da8f042656a7",
+  "unit": "cell"
+}

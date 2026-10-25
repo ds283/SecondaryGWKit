@@ -1,0 +1,13 @@
+{
+  "exit_code": 143,
+  "heartbeat": "2026-10-25T19:47:59+00:00",
+  "host": {
+    "boot": "376461AF-4985-4F42-8E41-F4E914F5E3E6",
+    "id": "8d2b247824882486"
+  },
+  "pid": 70545,
+  "stage": "running probe|timing|exact|together|980|1e-05",
+  "state": "killed",
+  "units_done": 16,
+  "units_total": 19
+}

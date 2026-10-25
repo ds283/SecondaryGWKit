@@ -227,7 +227,80 @@ strongly P3 and P2 discriminate, and the code reading on how far `G+r` actually 
 The `G+r`, `G−r` and `Gqr` lists were thinned to spread over $k$. Every class had mid-band rows, so
 no class needed the low-band fallback.
 
-§2 is reserved for prompt 02, which has not landed.
+## 2. Phase-noise injection — stopped at the probe
+
+**Prompt 02, run 2026-10-25 on the laptop** (mps026088) from dispatch SHA `3f75bbf`, with no Ray,
+no lock and no store. **The sweep was never run.** The prompt stopped at its step 3, and the user
+decided the same day that it is superseded by prompt 03.
+
+- **Script:** [`noise_injection.py`](noise_injection.py), SHA-256
+  `6ddaaeca85976b2d5f58af12d03ed703d02caa91784fd976d568da8f042656a7`. Every probe record carries
+  this hash. The script was uncommitted when the probe ran, so every record says `git_dirty: true`
+  at HEAD `3f28791`, the HEAD at launch; another session had committed it while 02 worked.
+- **The run:** `levin-phase-floor-02-noise-probe-20261025T183809`, registered and detached.
+  - It began at 18:38:09Z.
+  - It ended **`killed`, exit 143**, at 19:47:59Z, after 16 of its 19 units, stopped by SIGTERM
+    on the user's decision.
+  - Its records are copied to [`02/state/`](02/state/) (`checkpoint.jsonl`, `manifest.json`,
+    `status.json`, `stdout.log`, `stderr.log`). The run directory stays in `var/runs/`.
+- **The report:** [`02/out/probe_02.txt`](02/out/probe_02.txt), written by `--probe-report` from
+  the copied ledger alone (SHA-256 `37e01a26…`).
+- **Load:** the one-minute load average was 27.8–30.3 during the δ = 0 cells, on 10 cores.
+
+### 2.1 Step 2: the wrapper at δ = 0 is bit-identical to no wrapper
+
+Each of the eight cases was run twice at δ = 0:
+- once **unwrapped**;
+- once **wrapped**: through the noising wrapper on `QSI.build_phase_groups`, white noise at
+  δ = 0, and the pass-through observer on `QSI.adaptive_levin_sincos`.
+
+The cases are {`exact`, `realistic`} × {`together`, `q-smooth`} × $x_{\rm resp}$ ∈ {980, 1e4},
+with b = 0 and the seam closed, at atol 1e-45 and rtol `DEFAULT_QUADRATURE_RTOL`.
+
+**On all eight cases the two runs agree exactly**, by `repr` of every float, in:
+- `total`, `total_abserr`, `numeric_quad`, `WKB_Levin` and `analytic_rad`;
+- `max_depth`, `num_regions`, `num_simple_regions` and `evaluations`;
+- `total_converged` and `total_phase_limited`;
+- every per-group record of every Levin sub-interval except its wall-clock `elapsed`. That is 48
+  group records over 22 sub-intervals.
+
+Two checks made this, and they agree:
+- the script's own comparison, in `probe_02.txt`;
+- a field-by-field re-check read from the checkpoint while writing this section.
+
+**No δ = 0 cell reached the cap.** `max_depth` was 0–2 in the exact flavour and 6–8 in the
+realistic one, so the §5 stop on the baseline did not fire.
+
+**The δ = 1e-4 check never ran.** It was the probe's last unit, so the evidence that the injection
+changes `total` was never taken.
+
+### 2.2 Step 3: the timing probe, and why the sweep is infeasible
+
+The first noised cell was `exact`/`together`/980 with white noise at δ = 1e-5. Its δ = 0 cell
+takes 0.4 s, with 7 regions.
+- It had run **about 69 minutes**, from the last recorded unit at 18:38:39Z to the SIGTERM at
+  19:47:59Z, with CPU about equal to wall, without finishing.
+- An earlier scratch timing of the same cell had also not finished in 540 s.
+- The realistic timing cell and the δ = 1e-4 cell never started.
+- There is therefore no projection in `probe_02.txt`.
+
+**The user's reading, on stopping it.** The noise is width-independent and larger than `rtol`, so
+no region can pass the driver's per-region relative test. Every Levin call therefore bisects the
+full depth-20 tree. On the order of a hundred noised cells, each at that cost, put the sweep at
+weeks to months on either machine.
+
+### 2.3 Superseded by 03
+
+The user decided on 2026-10-25 that 02's injection sweep is not run in any form. Prompt 03 (§3)
+measured the mechanism directly on seven A3 v2 rows:
+- it found the jitter in every scored group, cancelling or not;
+- it found a discrepancy that is flat with depth;
+- it found the discrepancy at round-off once the jitter is removed.
+
+The prompt's predictions now stand as follows:
+- **N1 and N3** are answered by 03 on real rows.
+- **N4** moves to prompt 04, whose jitter-removed re-run gives a reference `total` per row.
+- **N2's original form** is not tested. The user judged that this does not matter.
 
 ## 3. Seven rows, instrumented
 
