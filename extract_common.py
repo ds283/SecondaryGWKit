@@ -32,7 +32,7 @@ than returning a mixture. ``describe_background_generation`` below renders what 
 """
 
 import itertools
-from math import fabs
+from math import fabs, isfinite
 from typing import Iterable, List, NamedTuple, Optional, Sequence, Tuple
 
 import ray
@@ -401,6 +401,54 @@ def safe_fabs(x: Optional[float]) -> Optional[float]:
         return None
 
     return fabs(x)
+
+
+# How far above the function it is compared with a comparison curve is still drawn, in decades.
+# This is a plotting choice, not a physical bound: a comparison curve more than three decades above
+# the function it is compared with carries no information on a shared log axis, and one far enough
+# above it (the constant-w form outside its domain reached 7.57e+243 in A3 v2) breaks the axis
+# itself (prompts/handover, [08-the-gkwkb-reader-fails-plotting-…]).
+ANALYTIC_PLOT_DECADES = 3
+
+
+def sensible_log_points(
+    points: Iterable[Tuple[float, Optional[float]]],
+    reference_values: Iterable[Optional[float]],
+    decades: float = ANALYTIC_PLOT_DECADES,
+    signed: bool = False,
+) -> List[Tuple[float, float]]:
+    """
+    The points of a comparison curve that are sensible to plot beside the function it is compared
+    with (prompts/handover prompt 09 §2).
+
+    A point ``(x, y)`` is kept when ``y`` is not None, is finite, is non-zero, and ``|y|`` is no more
+    than ``10**decades`` times the largest finite non-zero ``|value|`` in ``reference_values`` (the
+    quantity being compared against, ``|G|`` on the same plot). With an empty or all-None reference,
+    every finite non-zero point is kept. The order of ``points`` is kept.
+
+    The kept points are returned as ``(x, |y|)`` for a log axis, or as ``(x, y)`` with their sign
+    when ``signed`` is True, for a linear one. The rule deciding which points are kept is the same
+    in both forms; the boundary is applied to ``|y|``.
+    """
+    reference = [
+        fabs(value)
+        for value in reference_values
+        if value is not None and isfinite(value) and value != 0.0
+    ]
+    ceiling = max(reference) * 10.0 ** decades if len(reference) > 0 else None
+
+    kept = []
+    for x, y in points:
+        if y is None or not isfinite(y) or y == 0.0:
+            continue
+
+        abs_y = fabs(y)
+        if ceiling is not None and abs_y > ceiling:
+            continue
+
+        kept.append((x, y if signed else abs_y))
+
+    return kept
 
 
 def safe_div(x: Optional[float], y: float) -> Optional[float]:

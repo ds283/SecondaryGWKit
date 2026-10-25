@@ -61,6 +61,8 @@ from extract_common import (
     add_zexit_lines,
     set_loglog_axes,
     add_simple_plot_labels,
+    safe_fabs,
+    sensible_log_points,
     LOOSE_DASHED,
 )
 
@@ -156,7 +158,8 @@ def plot_Gk(
     type_column = []
 
     analytic_rad_points = []
-    analytic_w_points = []
+    # analytic_G_w as stored, from both branches; filtered against this plot's |G| below
+    analytic_w_raw_points = []
 
     if not Gk_numeric.available and not Gk_WKB.available:
         print(
@@ -169,10 +172,10 @@ def plot_Gk(
 
         numeric_points = [(value.z.z, fabs(value.G)) for value in values]
         analytic_rad_points.extend(
-            [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
+            [(value.z.z, safe_fabs(value.analytic_G_rad)) for value in values]
         )
-        analytic_w_points.extend(
-            [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        analytic_w_raw_points.extend(
+            [(value.z.z, value.analytic_G_w) for value in values]
         )
 
         numeric_x, numeric_y = zip(*numeric_points)
@@ -190,9 +193,13 @@ def plot_Gk(
         G_column.extend(value.G for value in values)
         abs_G_column.extend(fabs(value.G) for value in values)
         analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
-        abs_analytic_G_rad_column.extend(fabs(value.analytic_G_rad) for value in values)
+        abs_analytic_G_rad_column.extend(
+            safe_fabs(value.analytic_G_rad) for value in values
+        )
         analytic_G_w_column.extend(value.analytic_G_w for value in values)
-        abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
+        abs_analytic_G_w_column.extend(
+            safe_fabs(value.analytic_G_w) for value in values
+        )
         theta_column.extend(None for _ in range(len(values)))
         H_ratio_column.extend(None for _ in range(len(values)))
         omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -206,10 +213,10 @@ def plot_Gk(
 
         numeric_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
         analytic_rad_points.extend(
-            [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
+            [(value.z.z, safe_fabs(value.analytic_G_rad)) for value in values]
         )
-        analytic_w_points.extend(
-            [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        analytic_w_raw_points.extend(
+            [(value.z.z, value.analytic_G_w) for value in values]
         )
         theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
@@ -229,9 +236,13 @@ def plot_Gk(
         G_column.extend(value.G_WKB for value in values)
         abs_G_column.extend(fabs(value.G_WKB) for value in values)
         analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
-        abs_analytic_G_rad_column.extend(fabs(value.analytic_G_rad) for value in values)
+        abs_analytic_G_rad_column.extend(
+            safe_fabs(value.analytic_G_rad) for value in values
+        )
         analytic_G_w_column.extend(value.analytic_G_w for value in values)
-        abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
+        abs_analytic_G_w_column.extend(
+            safe_fabs(value.analytic_G_w) for value in values
+        )
         theta_column.extend(value.theta for value in values)
         H_ratio_column.extend(value.H_ratio for value in values)
         omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -252,6 +263,10 @@ def plot_Gk(
                 color="y",
                 linestyle=LOOSE_DASHED,
             )
+
+    # the constant-w form only where it is finite and within ANALYTIC_PLOT_DECADES of |G|: outside
+    # 1 + 3w > 0 it is astronomically large and breaks the log axis (prompts/handover prompt 09)
+    analytic_w_points = sensible_log_points(analytic_w_raw_points, abs_G_column)
 
     if len(analytic_w_points) > 0:
         analytic_w_points.sort(key=lambda x: x[0])

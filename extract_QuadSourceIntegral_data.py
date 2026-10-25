@@ -69,6 +69,7 @@ from extract_common import (
     resolve_run_selection,
     add_zexit_lines,
     safe_fabs,
+    sensible_log_points,
     set_loglog_axes,
     safe_div,
     add_k_labels,
@@ -705,22 +706,30 @@ def plot_Gk(
         )
         for value in values
     ]
-    abs_analytic_G_w_points = [
-        (
-            value.z_source.z,
-            safe_div(
-                safe_fabs(value.analytic_G_w),
-                (1.0 + value.z_source.z)
-                * model.functions.Hubble(value.z_source.z) ** 2,
-            ),
-        )
-        for value in values
-    ]
+    # the constant-w form only where it is finite and within ANALYTIC_PLOT_DECADES of this plot's
+    # |G|: outside 1 + 3w > 0 it is astronomically large and breaks the log axis (prompts/handover
+    # prompt 09)
+    abs_analytic_G_w_points = sensible_log_points(
+        [
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(value.analytic_G_w),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
+                ),
+            )
+            for value in values
+        ],
+        [y for _, y in abs_G_points] + [y for _, y in abs_G_WKB_points],
+    )
 
     abs_G_x, abs_G_y = zip(*abs_G_points)
     abs_G_WKB_x, abs_G_WKB_y = zip(*abs_G_WKB_points)
     abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
-    abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
+    abs_analytic_G_w_x, abs_analytic_G_w_y = (
+        zip(*abs_analytic_G_w_points) if len(abs_analytic_G_w_points) > 0 else ([], [])
+    )
 
     abs_G_spline_x, abs_G_spline_y = (
         zip(*abs_G_spline_points) if len(abs_G_spline_points) > 0 else ([], [])

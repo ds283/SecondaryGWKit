@@ -59,6 +59,7 @@ from extract_common import (
     set_loglog_axes,
     set_loglinear_axes,
     safe_fabs,
+    sensible_log_points,
     add_simple_plot_labels,
     LOOSE_DASHED,
 )
@@ -143,21 +144,33 @@ def plot_Gk(model_label: str, Gk: GkNumericIntegration):
     abs_analytic_G_rad_points = [
         (value.z, safe_fabs(value.analytic_G_rad)) for value in values
     ]
-    abs_analytic_G_w_points = [
-        (value.z, safe_fabs(value.analytic_G_w)) for value in values
-    ]
+    # the constant-w form only where it is finite and within ANALYTIC_PLOT_DECADES of |G|: outside
+    # 1 + 3w > 0 it is astronomically large and breaks the log axis (prompts/handover prompt 09)
+    abs_analytic_G_w_points = sensible_log_points(
+        [(value.z, value.analytic_G_w) for value in values],
+        [value.G for value in values],
+    )
 
     G_points = [(value.z, value.G) for value in values]
     analytic_G_rad_points = [(value.z, value.analytic_G_rad) for value in values]
-    analytic_G_w_points = [(value.z, value.analytic_G_w) for value in values]
+    # the same points of it, with their sign, for the linear-y plot
+    analytic_G_w_points = sensible_log_points(
+        [(value.z, value.analytic_G_w) for value in values],
+        [value.G for value in values],
+        signed=True,
+    )
 
     abs_G_x, abs_G_y = zip(*abs_G_points)
     abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
-    abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
+    abs_analytic_G_w_x, abs_analytic_G_w_y = (
+        zip(*abs_analytic_G_w_points) if len(abs_analytic_G_w_points) > 0 else ([], [])
+    )
 
     G_x, G_y = zip(*G_points)
     analytic_G_rad_x, analytic_G_rad_y = zip(*analytic_G_rad_points)
-    analytic_G_w_x, analytic_G_w_y = zip(*analytic_G_w_points)
+    analytic_G_w_x, analytic_G_w_y = (
+        zip(*analytic_G_w_points) if len(analytic_G_w_points) > 0 else ([], [])
+    )
 
     k_exit = Gk._k_exit
     z_source = Gk.z_source
@@ -283,8 +296,8 @@ def plot_Gk(model_label: str, Gk: GkNumericIntegration):
     Gprime_column = [value.Gprime for value in values]
     analytic_G_rad_column = [value.analytic_G_rad for value in values]
     analytic_Gprime_rad_column = [value.analytic_Gprime_rad for value in values]
-    analytic_G_w_column = [value.analytic_G_rad for value in values]
-    analytic_Gprime_w_column = [value.analytic_Gprime_rad for value in values]
+    analytic_G_w_column = [value.analytic_G_w for value in values]
+    analytic_Gprime_w_column = [value.analytic_Gprime_w for value in values]
     omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
     WKB_criterion_column = [value.WKB_criterion for value in values]
 
