@@ -585,8 +585,10 @@ guards against a changed producer held throughout: no class outside the two diff
   rehearsal reference from here on**, recorded by the run directory
   `handover-12-r8-reference-20261025T210551` on the Mac Studio. It certifies `QuadSourceIntegral`'s
   identities and counts, not its values (`[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]`).
-- R8's store is to be retired after the records commit, `ad23a29` (ruling 3). Until then it is
-  `var/datastores/handover-12-reference*.sqlite` on the Mac Studio, with no sidecar.
+- R8's store was retired after the records commit, `ad23a29` (ruling 3), at 21:33 GMT. It had no
+  sidecar, so `store create` and `store fingerprint --write` (`1b332ffa…`) came first. The dry run
+  matched the fingerprint and found only R8's own run naming the store. The five files went, and the
+  sidecar stays as the `retired` record (`docs/handover/b1/r8/out/retire_r8.txt`).
 - The lock is free, no Ray process of `/tmp/ray-sgk` is left, and the registry shows 12 runs, all
   finished.
 - `var/handover-12/` on the Mac Studio still holds `extract/` (the readers' output and CSVs), which

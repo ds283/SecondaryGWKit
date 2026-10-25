@@ -427,6 +427,7 @@ with `partition.handover`, none with a clamp key; the `QuadSource` node counts 3
 428, 428, 478 against R4's 368, 368, 368, 425, 425, 475), and found the store's hashes unchanged
 by its own reads.
 
-**R8's store is to be retired** after the records commit, on the user's decision. The run
+**R8's store was retired** after the records commit, on the user's decision, at 21:33 GMT on
+2026-10-25 ([`b1/r8/out/retire_r8.txt`](b1/r8/out/retire_r8.txt)). The run
 directory `handover-12-r8-reference-20261025T210551` on the Mac Studio keeps R8's fingerprint,
 `1b332ffa…`, as the rehearsal reference from here on.

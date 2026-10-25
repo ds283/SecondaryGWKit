@@ -1,0 +1,52 @@
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-12-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-12-reference.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    handover-12-r8-reference-20261025T210551  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/handover-12-reference-shard0000.sqlite
+  var/datastores/handover-12-reference-shard0001.sqlite
+  var/datastores/handover-12-reference-shard0002.sqlite
+  var/datastores/handover-12-reference-shard0003.sqlite
+  var/datastores/handover-12-reference.sqlite
+tombstone:
+  {
+    "completed": "2026-10-25T21:33:57+00:00",
+    "files": [
+      "var/datastores/handover-12-reference-shard0000.sqlite",
+      "var/datastores/handover-12-reference-shard0001.sqlite",
+      "var/datastores/handover-12-reference-shard0002.sqlite",
+      "var/datastores/handover-12-reference-shard0003.sqlite",
+      "var/datastores/handover-12-reference.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "8a02f0c421b1d65efd529456bb1f20fa8d4539e8",
+    "reason": "handover 12: R8 throwaway rehearsal store, 1b332ffa, retired after B1 records commit ad23a29 on the user decision (2026-10-25)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "handover-12-r8-reference-20261025T210551",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-10-25T21:33:57+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-12-reference.manifest.json
