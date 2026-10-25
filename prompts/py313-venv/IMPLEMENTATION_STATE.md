@@ -101,6 +101,12 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
   [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1.2.5. Not assigned.
   Indexed at `docs/OPEN_ISSUES.md` §1.23.
 
+**Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
+(the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
+2.59.0 (verification §1.10.3).
+
+## 4. Resolved issues
+
 - **[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]** *(opened 2026-10-25 by prompt 01,
   from the warnings of §2.7; not acted on, by README §5 rule 1)* — under Python 3.13 the
   ObjectFactories root prints one `ResourceWarning: unclosed database in <sqlite3.Connection …>`
@@ -112,13 +118,13 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
   `test_a_class_not_yet_built_is_an_error_not_a_silent_miss` expects `_read` to raise, and the
   raise skips the call. 3.12 prints nothing there. **Impact:** none on any store or result: it is a
   test's in-memory engine, and the root passes at its count. It is noise in the suite under 3.13.
-  **Next step:** a `try`/`finally` around `_read`'s body, so that `dispose()` runs on the raise. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.23.
+  **Next step** was a `try`/`finally` around `_read`'s body, so that `dispose()` runs on the raise.
 
-**Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
-(the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
-2.59.0 (verification §1.10.3).
-
-## 4. Resolved issues
+  **Closed 2026-10-25 by the orchestrator, after the review of 01** (housekeeping, in a commit of
+  its own). `_read` now wraps its body in `try`/`finally`, so `engine.dispose()` runs on the raise
+  too. Under 3.13 with `-W default`, `test_quadsource_parent_key` printed the warning without the
+  fix and prints none with it, and the ObjectFactories root prints no `ResourceWarning` at all. The
+  root is still 280 OK. Its row left `docs/OPEN_ISSUES.md` §1.23.
 
 **Closed on another board:**
 

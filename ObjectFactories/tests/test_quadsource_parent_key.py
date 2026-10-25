@@ -441,18 +441,20 @@ class TestCrossShardParentUnit(unittest.TestCase):
             sqla.Column("parent_serial", sqla.Integer),
         )
         engine = sqla.create_engine("sqlite://", future=True)
-        metadata.create_all(engine)
-        with engine.begin() as conn:
-            conn.execute(sqla.insert(table), [{"serial": 1, "parent_serial": 7}])
-            context = ShardContext(
-                shard=0,
-                keys={},
-                digests=digests,
-                all_digests=all_digests,
-            )
-            out = read_records(conn, table, {}, context, parents={"p": parent})
-        engine.dispose()
-        return out
+        try:
+            metadata.create_all(engine)
+            with engine.begin() as conn:
+                conn.execute(sqla.insert(table), [{"serial": 1, "parent_serial": 7}])
+                context = ShardContext(
+                    shard=0,
+                    keys={},
+                    digests=digests,
+                    all_digests=all_digests,
+                )
+                return read_records(conn, table, {}, context, parents={"p": parent})
+        finally:
+            # also on the test that expects read_records to raise
+            engine.dispose()
 
     def test_it_resolves_against_another_shards_record(self):
         read = self._read(

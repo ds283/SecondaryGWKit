@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **104 open** across twenty-three campaigns.
+**Last updated:** 2026-10-25 · **103 open** across twenty-three campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -951,12 +951,11 @@ jobs queued behind `handover` 10 ([board](../prompts/py313-venv/IMPLEMENTATION_S
 plan opened no issue. It was assigned `handover`'s
 `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`, which its prompt 01 closed on
 2026-10-25 on the `handover` board's §4. The same prompt opened two issues on this campaign's
-board.
+board; the orchestrator closed one after the review, the undisposed test engine.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` | py313-venv | Ray 2.59.0 turns on token auth for a local cluster: a `WARNING … Token authentication is enabled` line in every build and reader log, and `~/.ray/auth_token` (mode 644) written outside the checkout at the first start. Nothing stored changes. Not assigned. |
-| `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` | py313-venv | Under Python 3.13, ObjectFactories prints one `ResourceWarning: unclosed database`, from `test_quadsource_parent_key.py:443-444`'s `create_engine("sqlite://")`, whose `dispose()` the one test that expects `_read` to raise skips. Test noise only. Not assigned. |
 
 ---
 
