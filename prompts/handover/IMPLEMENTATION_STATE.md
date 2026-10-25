@@ -55,6 +55,11 @@ them), and the store is byte-identical, fingerprint `0e32f24a…`. It closed
 closed the same day by a direct commit, on the user's decision, so §3 holds **ten**. **`py313-venv` 01
 (2026-10-25)** moved this branch to Python 3.13.16 with `ray` 2.59.0 and closed
 `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` (§4), so §3 holds **nine**.
+**On 2026-10-25 the user opened [`prompts/levin-phase-floor`](../levin-phase-floor/README.md)**
+from the findings' §2. Three §3 entries were assigned to it the same day, and stay here: the two
+`a3-baseline` entries on the quadrature tolerance and the unconverged rows, and
+`[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]`. **11 was written the same day**: A3 v2's
+seam record, read-only on the Mac Studio. The count is unchanged at **nine**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -94,6 +99,7 @@ closed the same day by a direct commit, on the user's decision, so §3 holds **t
 | 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed; closed on a §8 stop by the user's ruling | `9ef8a19` | [`logs/08-…`](logs/08-after-the-a3-v2-build.md) |
 | 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed (orchestrator's baselines at `4a3e848` and re-run at `1c19998` equal the agent's; fingerprint `39809dca…` recomputed) | `1c19998` | [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md) |
 | 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed on the Mac Studio by a remote orchestrator; check 9 (link form) failed and was corrected on committing, by the user's decision | `423aefd` | [`logs/10-…`](logs/10-reread-a3-v2.md) |
+| 11 | [A3 v2's seam record](11-a3-v2-seam-record.md) | **11** — the policy summary block against the table; the clamp-gap census on all 9280 rows; the gap's effect against `analytic_rad` in the seam band | Sonnet, on the Mac Studio | ✍️ 2026-10-25 | ⬜ | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -130,6 +136,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | 08 | ✅ **Done, 2026-10-25.** The sidecar's fingerprint is `0e32f24a…`, the run's; every store file byte-identical from before `store create` to after the last reader. Census `no divergence`, soundness `clean` (integrity `ok`, no foreign-key row, inventory without problem), one `version` row per shard, no journal or in-flight row. Readers: five of six and `extract_Gk_data` without `--models` exit 0; **`extract_GkWKB_data` exits 1** in a plot (`[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`), a §8 stop the user resolved: "Release the lock, close 08". **Depth census** (the baseline's method, reproduced as `depth_census.py`, tested on R4's 864 rows; re-counted by the orchestrator with `sqlite3` `mode=ro`, equal in every bin): 9280 rows at (1e-32, 1e-7); NULL 2489, depth 0 99, 1–19 4427, **20: 2265 at mean 454 s, 1179 unconverged (52.1 %)**; **286.3 CPU-hr, 285.8 at depth 20**, 249 of them in the low band; up to 966,508 regions. **`rtol = 1e-7` did not remove the depth-20 cliff.** The run took 48.74 h wall; the serial tail was ≤ 2.52 h (5.2 %); 15 `IntegrationWarning`s, none tied to a row. The lock was released 00:51:03; the Mac Studio's checkout is free. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §3. |
 | 09 | **REMEDY** | `compute_analytic_G`/`Gprime` return `None` where $1+3w\le0$ (spec 02 R2's domain) or on overflow; one reader helper plots only finite points within three decades of $|G|$; `safe_fabs` in the GkWKB reader; `extract_Gk_data`'s CSV columns. A laptop rehearsal must stay `39809dca…`. | 09 | ✅ **Done, 2026-10-25.** `constant_w_form_applies(w)` (`1 + 3w > 0`, no band) gates both functions before any Bessel call, and a non-finite value is `None`; inside the domain every value is **bit-identical** to the old expression (tested to the bit at $w = 1/3, 0, 0.9, -1/3+10^{-3}$). `extract_common.sensible_log_points` (`ANALYTIC_PLOT_DECADES = 3`, a `signed` form for `extract_Gk_data`'s linear-$y$ plot) filters every `analytic_G_w` plot series in the four readers against that plot's $|G|$; `extract_GkWKB_data` uses `safe_fabs` for every analytic column; `extract_Gk_data`'s CSV `analytic_G_w`/`analytic_Gprime_w` hold the $w(z)$ form. 32 new tests in three modules; all six deliberate breakages caught by named tests. `ComputeTargets` 700 → **732**, the other six roots unchanged (the known wall-clock flake failed before and after). **Rehearsal R5** (`handover-09-r5-reference-20261025T094215`, `git_dirty` true at `1739e0d`): `done` in 18 m 55 s, fingerprint **`39809dca…`**, `compare_with_recorded.py` `equal` against R3's `reference`; no `NULL` in any `analytic_G_w`/`analytic_Gprime_w` row; the six readers exit 0 with the store unchanged. **R5's store was retired on 2026-10-25** (user's decision) with `store retire` at `bacbab6`, after a dry run in which a fresh fingerprint matched `39809dca…` and only R5's own run named it: the five store files went, the sidecar stays as a `retired` tombstone, and R5's run directory, its launch log and the text records in `var/handover-09/` stay as the record; the readers' output, `var/handover-09/extract/` (183 MB), was deleted. Log: [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md). |
 | 10 | **MEASUREMENT** | Every reader on A3 v2 at 09's tree, on the Mac Studio; the GkWKB read-back complete; the store unchanged. | 10 | ✅ **Done, 2026-10-25**, at `57f67a9` on the Mac Studio, whose checkout moved from `b90752d` for the first time since the launch; `raypoolkit` moved to `v0.3.0` (`67a75b97…`), the one line of `pip freeze` that differs from `pip_06.txt`. **All seven readers exit 0** (six with `--models LambdaCDM`, `extract_Gk_data` without), 10:50–10:57 GMT, 879 MB; every store file identical after each, and `store fingerprint` afterwards matches the sidecar's `0e32f24a…`. **The GkWKB read-back is complete:** 1392 full-range PDFs, 1392 PNGs and 1392 CSVs, equal to each other and to the reader's work list (8 k × 174 sampled `z_source`, its log's `Queue summary: 1392 lookup`), counted by the agent, the remote orchestrator and the laptop. The pair 08 died on, $k = 10^5$, $z_{\rm source} = 1.3633\times10^{16}$, has a 30,366 B PDF (08: a 1,039 B fragment), its PNG and its CSV; `sensible_log_points` drops 35 of its 154 `analytic_G_w` points, the largest 7.57e+243, and 5162 of 109,594 over this run's 1392 pairs. **That pair was in the sample by chance** (about 1 in 10): the readers draw unseeded (`[10-the-readers-draw-their-work-lists-unseeded]`). The lock (`v0.3.0`, at `~/.raypoolkit/rehearsal-lock`) was taken and released, `ray-processes` empty. Review check 9 failed on `verification.md`'s links (`reread/…`, copied from §3's equally broken `after/…`); corrected to `a3-v2/reread/…` on committing, by the user's decision. The note's expectation that `status` exits 3 while held with no pid was the note's misreading of RayPoolKit's layout table, not a package defect. Records: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §4, [`docs/handover/a3-v2/reread/`](../../docs/handover/a3-v2/reread/). |
+| 11 | **MEASUREMENT** | Findings §3.3 items 2–3 on A3 v2, read-only and Ray-free on the Mac Studio. First, the `GkSourcePolicyData` summary block from the build's `stdout.log`, checked against a count of the table. Then the measured clamp gaps (`partition.subintervals[].clamp_gaps_log1pz`; findings §3.3 named the allowance `max_clamp_gap_log1pz` instead) for `Tq`, `Tr` and the source spline on all 9280 rows, set beside the 2026-09 one-run figures. Last, $|{\rm total}/{\tt analytic\_rad}-1|$ by clamped-factor count in the seam band. The input to A3 (03) and to **D1**. | 11 | ⬜ **Written 2026-10-25, not run.** The orchestrator's reconnaissance of `stdout.log`: 1160 instances, no `fail` or `incomplete`, one `mixed`/`minimal`. |
 
 ---
 
@@ -345,6 +352,17 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
     three-layer remedy.
   - **Owner: still none.** The findings document is written to plan a campaign from.
 
+  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md), opened
+  that day from findings §2 on the user's decision. It owns the cliff's cause and remedy (§2.7
+  layers 1–3); this entry stays here and is narrowed or closed here. Its planning reconnaissance
+  (that README §0.2) refines "the slow group" above. Over the 629 depth-20 rows of more than
+  100 s:
+  - the slow `G+r` on `r == k` carries 52.7 % of the per-group Levin time;
+  - the fast `G-r` carries 33.5 %, and the lone `G` 6.3 %.
+
+  So the campaign carries a second hypothesis beside this one: $G$'s own remainder carries the floor
+  into every group containing $G$.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -392,6 +410,11 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `total_abserr/|total|`. Five depth-20 rows store a declared error of +inf (see `levin-refactor`'s
   `[04-roundoff-floor-can-be-infinite]`). Measurement:
   [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.5.
+
+  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md). What
+  `total_converged` should mean, and whether a consumer gate reads `total_abserr/|total|`, is that
+  campaign's layer 3, decided by the user at its gate G2 (its README §6.3 Q4). Its prompt 01
+  re-counts §2.5's figures on the store, at group level too. This entry stays here.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation
@@ -528,6 +551,12 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   flavour stays flat, unless its composed phases are exact where the realistic flavour's are not;
   that is not checked. The one-cell experiment above stands, and it should also
   record which group carries the deepest regions (findings §2.6 item 1).
+
+  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md). Its
+  prompt 02 injects deterministic phase noise into A2's fixtures, the exact flavour included, at
+  production's `rtol`. Its prediction N2 asks whether noise alone makes the exact flavour grow as
+  the realistic one does. If it does, that answers this entry by sufficiency, and the entry is
+  narrowed rather than closed. It stays here.
 
 - **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
   on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its

@@ -2,7 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-10-25 — `[00-consumer-anchoring-floor]` narrowed by an analysis of the
+**Last updated:** 2026-10-25 — `[00-consumer-anchoring-floor]` **assigned** to
+`prompts/levin-phase-floor` (§3). Earlier the same day it was narrowed by an analysis of the
 `handover` A3 v2 store (§3): the floor is the proposed cause of the depth-20 cost cliff.
 Previously 2026-09-29 — `[03-integrationsolver-stepping-minimum-lookup]` is **CLOSED** (§4)
 by `prompts/datastore-integrity` prompt 03: `sqla_IntegrationSolver_factory.build` now matches
@@ -494,6 +495,15 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   - **Owner: none**, since this campaign is closed.
   - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2, with the test
     that would decide it at §2.6.
+
+  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md),
+  opened that day on the user's decision. This floor at the consumer, where the Levin driver meets
+  it, is that campaign's hypothesis **H-anchor** (its README §0.2). On it, $G$'s phase
+  $k\Delta\tau$, reduced against $z_{\rm response}$, carries $\varepsilon k\eta_R$ into every group
+  containing $G$, cancelling or not. Its planning reconnaissance found at least 40 % of A3 v2's
+  slow-row Levin time in groups with no cancelling pair. Whether the remedy changes
+  `PrimitivePhase` itself, and so whether it lands there or as `handover`'s D2, is that campaign's
+  gate G1 (README §6.3 Q3). This entry stays here.
 
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that

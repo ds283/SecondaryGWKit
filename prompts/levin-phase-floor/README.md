@@ -1,0 +1,304 @@
+# Campaign — levin-phase-floor
+
+**Written:** 2026-10-25 on branch `handover-remedial` at `effba46`, by Claude Opus 5.5, on the
+user's decision the same day to open it. It owns the **depth-20 cost cliff** of the
+`QuadSourceIntegral` Levin integration: on A3 v2, 2265 of 9280 rows run to
+`DEFAULT_LEVIN_MAX_DEPTH = 20`, carry 285.8 of the store's 286.3 CPU-hours, and 1179 of them are
+stored with `total_converged = 0`.
+
+**Its audit is [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2**,
+written the same day at `71962f6`. That section measured that the declared error on depth-20 rows
+tracks $\varepsilon k\eta(z_{\rm response})$, the double-precision floor of a phase of size
+$k\eta$. It proposed a mechanism, a three-part test (§2.6) and a three-layer remedy (§2.7). This
+campaign runs the test, and then the remedy that the test supports.
+
+## 0. What this campaign is
+
+**Correctness, not cost.** The cliff is a cost, but the cost signals something wrong. The driver
+is asked for a tolerance its input cannot deliver, nothing tells it so, and it stores a flag that
+says little about the answer (findings §2.5). The campaign makes the integrator's answer honest:
+the phase is good to what it is declared to be good to, and the stored error and convergence say
+what is true of `total`. Lower cost should follow, but it is not the goal, and no argument below
+rests on it.
+
+### 0.1 What this campaign is not
+
+- **Not the hand-over seam.** The $T_k$ and $G_k$ seam is `handover`'s. Its error, a few percent
+  of `total` (findings §3.2), is larger than this floor, and the two are independent: the seam
+  sits at $x_T \approx 15$, the floor at late response times. Nothing here waits for `handover`,
+  and nothing there waits for this.
+- **Not the Clenshaw–Curtis fallback.** OPEN_ISSUES §1.3 holds it, `[10-levin-wholesale-cc-fallback]`
+  among it. This campaign may touch `AdaptiveLevin/`, but only to tell the driver about its input
+  (§2.7 layer 2).
+- **Not a rebuild.** Prompts 01–04 read A3 v2 or run offline. The next production build is whoever
+  runs it after both this campaign's remedy and `handover`'s have landed.
+- **Not `handover`'s D2 as a whole.** D2 is the phase carried from producer to consumer: the
+  $h^4x/384$ term, the anchoring floor and the storage granularity, and `handover` README §7 D4
+  asks whether it belongs there. This campaign takes only the anchoring floor
+  (`[00-consumer-anchoring-floor]`), and only at the consumer, where the Levin driver meets it. If
+  §2.7 layer 1 has to change what `PrimitivePhase` stores, that is a decision for the user at gate
+  **G1** (§6.3).
+
+### 0.2 Reconciliation against `effba46`, and what it changes
+
+Measured by the orchestrator on 2026-10-25 while writing this plan.
+
+- **The tree.** `handover-remedial` at `effba46`, clean. Since A3 v2 was built at `b90752d`, the
+  code that computes a `QuadSourceIntegral` row has changed in one file: `ComputeTargets/analytic_Gk.py`
+  (handover 09: `None` outside $1+3w>0$). It does not touch the Levin path. Neither does
+  `config/ray_local.py` or `main.py`'s `ray.init`. `AdaptiveLevin/`, `phase_groups.py` and
+  `QuadSourceIntegral.py` are byte-identical to `b90752d`.
+- **The Mac Studio.** Its checkout is at `c9026af`, clean; py313-venv 02 left it there. The
+  registry shows nothing `running` or stale, and `~/.raypoolkit/` is empty, so the lock is free.
+  The store is in `var/datastores/handover-A3-v2-lambdacdm{,-shard000[0-3]}.sqlite`.
+- **What a row stores about its groups.** `phase_group_Levin_integral` returns one record per
+  phase group per Levin sub-interval, with `label`, `value`, `abserr`, `converged`,
+  `phase_limited`, `regions`, `simple_regions`, `evaluations` and `elapsed`
+  (`QuadSourceIntegral.py:1076-1096`). Every row stores them in
+  `metadata["WKB_Levin"]["subintervals"][i]["groups"]`. The census of findings §2.1 did not read
+  them, and §2.4 says *"which group carries the depth-20 regions is not recorded"*. **The
+  per-group cost is recorded. The per-group depth is not**, since a row stores only the maximum
+  over its groups.
+
+**The reconnaissance.** One read of those records over the 629 depth-20 rows that took more than
+100 s. It ran read-only and Ray-free on the Mac Studio:
+[`measure/recon_groups.py`](measure/recon_groups.py), output at
+[`measure/out/recon_groups.txt`](measure/out/recon_groups.txt).
+
+| (regime, group) | Levin CPU-hr | share | regions |
+|---|---|---|---|
+| `Gr`, `G+r` (slow on `r == k`) | 149.02 | 52.7 % | 71,528,183 |
+| `Gr`, `G-r` (fast) | 94.68 | 33.5 % | 45,184,170 |
+| `G`, `G` | 17.70 | 6.3 % | 20,069,867 |
+| `Gqr`, four groups | 21.47 | 7.6 % | 6,661,356 |
+
+The most expensive group of each row:
+- `G+r` in 367 rows, all `r == k`;
+- `G-r` in 90;
+- the lone `G` in 62 (35 of them `r == k`);
+- a `Gqr` group in the remaining 110.
+
+Most of the cost is in the low band: 229.7 of the 282.9 CPU-hours.
+
+**Which label is the slow group.** In the code's conventions $\theta_G$ decreases with $z'$ while
+$\theta_q$ and $\theta_r$ increase (`source-remediation` log 07, note 4). So the slowly varying
+group is the one where $G$ and a transfer factor carry the **same** sign. On `r == k` that is
+`G+r`, where the $\tau_s$ terms of $G$ and $T_r$ cancel. `G-r` is the fast group, at about $2k$.
+That note also warns to check `theta_deriv` rather than assume this. 01 checks it in the code, and
+03 checks it numerically.
+
+**What it changes.**
+
+- **Findings §2.2 is supported where it points.** The slow, cancelling group `G+r` carries 52.7 %
+  of the cost, and it is the most expensive group in 367 of the 629 rows.
+- **It is not the whole story.** At least 40 % of the cost is in groups with no cancelling pair:
+  - the fast `G-r` on the same `r == k` rows, 33.5 %;
+  - the lone `G`, 6.3 %;
+  - part of the `Gqr` share; the split by geometry is 01's.
+- **§2.6's refutation clause does not decide a split like this.** It says the hypothesis is wrong
+  *"if item 1 finds the depth-20 regions in a group with no cancelling pair"*. Here they are in
+  both.
+- **A wider form would account for the rest.** `PrimitivePhase` reduces $G$'s phase $k\Delta\tau$
+  against its anchor at $z_{\rm response}$ (`[00-consumer-anchoring-floor]`). For a source time
+  well before the response, $|\Delta\tau| \approx \eta_R$, so **$G$'s own remainder** carries
+  jitter of about $\varepsilon k\eta_R$. That jitter enters **every group that contains an
+  oscillatory $G$**: sum, difference or alone, cancelling or not. This is the floor findings §2.1
+  measured, $\varepsilon k\eta(z_{\rm response})$. It needs no cancellation.
+- **This is not established.** The reconnaissance is descriptive: no depth per group, no
+  parent–child discrepancy, no check of the error per group against the floor. Prompt 01 measures
+  it properly, and prompt 03 tests the mechanism directly. Until then the campaign carries **two
+  named hypotheses**, which are not exclusive:
+  - **H-cancel**: findings §2.2 as written, the floor confined to failed cancellations;
+  - **H-anchor**: the floor carried by $G$'s remainder into every group containing $G$.
+
+  Both can hold: a floor everywhere, made worse where a cancellation leaves a slow group. Their
+  predictions are written into 01 and 02 before either runs (§5 rule 3).
+- **Which hypotheses stand decides the remedy's shape.** §2.7 layer 1 has two parts:
+  1. take the constant response phase $k\tau_R$ out of the integrand;
+  2. compose a group's leading terms before reducing.
+
+  Under H-anchor, part 1 is needed in every group. Under H-cancel, part 2 does the work where a
+  cancelling pair exists. The remedy prompts are not written until **G1** (§2), so the plan
+  commits to neither.
+
+## 1. Scope
+
+**In scope:**
+- the §2.6 test, as prompts 01–04;
+- after gate **G1**, the remedy §2.7 calls layers 1 and 2, re-measured on A3 v2's rows offline;
+- after **G2**, layer 3: the depth cap, the per-region acceptance test with its dead `local_atol`
+  branch, and what `total_converged` means.
+
+**Four issues are assigned here** on 2026-10-25 (§6.2 C5). Each stays on its own board:
+- `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` (`handover`);
+- `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` (`handover`);
+- `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` (`handover`);
+- `[00-consumer-anchoring-floor]` (`GkTk-remedial`).
+
+**Out of scope:** §0.1, and:
+- `[04-roundoff-floor-can-be-infinite]`. It stays in OPEN_ISSUES §1.3. 01 confirms whether it
+  reaches A3 v2 (findings §2.5 item 2) and narrows it there.
+- **Every `extract_*` reader.**
+- **Any store write.** A3 v2 is read, never written: byte-identical before and after, fingerprint
+  `0e32f24a…`.
+
+## 2. Prompts and gates
+
+| # | Prompt | Covers | Where | Model | Status |
+|---|---|---|---|---|---|
+| 01 | [`01-phase-group-census.md`](01-phase-group-census.md) | every group record in A3 v2: cost, regions and declared error per group against $\varepsilon k\eta_R$; H-cancel against H-anchor on the store; findings §2.5 confirmed on the store; the candidate rows for 03 | Mac Studio, read-only, no Ray | Opus | written |
+| 02 | [`02-phase-noise-injection.md`](02-phase-noise-injection.md) | findings §2.6 item 2: deterministic phase noise of amplitude $\delta$ added to the composed `theta_mod_2pi` on A2's fixtures, by group; depth and regions against $\delta$ | laptop, offline, no Ray, no store | Opus | written |
+| 03 | instrument | findings §2.6 item 1: six or so A3 v2 rows from 01's list, re-run in-process; depth per group, and the parent–child discrepancy at the deepest regions against the floor | Mac Studio, reads A3 v2 | — | ⏸ held on 01 |
+| 04 | remove | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows | Mac Studio, reads A3 v2 | — | ⏸ held on 03 |
+| **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | ⬜ |
+| 05+ | remedy | §2.7 layers 1–2 as G1 decides, each with its own tests and an offline re-measurement of 03's rows | laptop | — | ⬜ not written |
+| **G2** | gate | the user decides layer 3 (§6.3 Q4) | — | — | ⬜ |
+
+**Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
+anything still to be measured: 01 reads what is stored, and 02 runs on fixtures. 03's rows and the
+groups it instruments come from 01. 04's construction depends on which hypothesis 01–03 leave
+standing. Each held prompt's charter is fixed in the table above. Only its method waits.
+
+**01 and 02 can run at the same time.** 01 runs on the Mac Studio and 02 on the laptop. Neither
+uses Ray (§5 rule 6), so neither takes a lock, and ChamPBH or StochasticInstantons holding the
+laptop's lock does not block 02.
+
+## 3. Datastores
+
+- **01, 03 and 04 read A3 v2** (`var/datastores/handover-A3-v2-lambdacdm.sqlite`, `0e32f24a…`)
+  on the Mac Studio. Each records the SHA-256 of every store file before and after, and they must
+  be equal.
+- **02 uses no store.**
+- **No prompt creates a store.** If 03 or 04 needs Ray to deserialise a row's inputs, it takes the
+  Mac Studio's lock and creates nothing.
+
+## 4. The interfaces
+
+### 4.1 Where a Mac Studio prompt writes, and who commits
+
+As `handover` 10: a Claude session on the Mac Studio, started from a laptop session over the saved
+SSH connection, commits nothing. It writes under `var/levin-phase-floor-NN/{out,scripts,state}`,
+with `log.md`, `verification.md` and `issues.md` beside them. The laptop orchestrator copies all of
+it except bulk output to `docs/levin-phase-floor/NN/`, and makes the prompt's one commit:
+- the copied records;
+- the log in `logs/`;
+- this campaign's board;
+- `docs/OPEN_ISSUES.md`.
+
+The verification document is [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md).
+Prompt NN writes its §NN, and nothing else in it. **01 creates the file.**
+
+### 4.2 Rollback
+
+Every prompt is one commit, undone by `git revert`. 01–04 add only `docs/` scripts and records, so
+reverting one leaves no state behind. A3 v2 is never written.
+
+### 4.3 What 01 hands to 03
+
+A table of candidate rows, at least two per class:
+- `G+r` (slow, cancelling) dominant on `r == k`;
+- `G-r` (fast) dominant on `r == k`;
+- lone `G` dominant;
+- a `Gqr` group dominant.
+
+Each row is given by `(shard, serial)` and its $(k, q, r, z_{\rm response})$, with its per-group
+records. Rows of 100–800 s are preferred, in the mid band where one exists. The orchestrator picks
+03's rows from that table.
+
+## 5. The rules this campaign runs under
+
+The project-wide ones in `CLAUDE.md`, and:
+
+1. **01–04 change no production code.** Nothing under `AdaptiveLevin/`, `ComputeTargets/` (outside
+   `tests/`), `LiouvilleGreen/`, `CosmologyModels/`, `ObjectFactories/`, `config/` or `main.py`
+   changes. Instrumentation is done in the harness's own process:
+   - by wrapping a function at the module attribute that production code calls it through, e.g.
+     `ComputeTargets.QuadSourceIntegral.build_phase_groups`;
+   - or by calling `adaptive_levin_sincos` directly with production's arguments.
+
+   No test file is edited.
+2. **A3 v2 is read-only.** Every shard is opened `mode=ro` where SQLite is used directly. Every
+   store file is hashed before and after, and the hashes must match.
+3. **Predictions come before measurements.** Each prompt states what H-cancel and H-anchor predict,
+   with a decision rule, before it runs. The log records each verdict as **holds**, **fails** or
+   **undecided**, against the rule as written. A rule that turns out badly posed is recorded as
+   such. It is not re-posed after the numbers are in.
+4. **Correctness is the only objective** (the user's standing rule). A finding about cost is
+   evidence about what the driver is being asked to do. It is never an argument by itself for a
+   remedy, an order or a tolerance.
+5. **Provenance.** Every script writes into its output header:
+   - the SHA-256 of itself and of each input it reads;
+   - the `git HEAD` it ran at;
+   - the store's fingerprint where it reads one.
+
+   A record from a script whose hash has changed is recomputed, never re-stamped (`CLAUDE.md`
+   rule 7).
+6. **Ray.** 01 and 02 do not use it. 03 and 04 use it only if deserialising a row's inputs needs
+   it, and then only under the Mac Studio's lock, with `--ray-address local` and `/tmp/ray-sgk`.
+7. **Long runs.** Anything that may exceed about ten minutes is registered with `runregistrykit`
+   and launched detached, and the turn ends (`CLAUDE.md`).
+
+### 5.1 The log template
+
+- the subject, commit (or "records committed by the orchestrator") and result;
+- **What shipped**;
+- **Predictions and verdicts**: each rule as the prompt wrote it, the number it was scored on, and
+  holds, fails or undecided;
+- **Deviations from the prompt**, each classified `STRUCTURALLY REQUIRED`, `IMPLEMENTATION CHOICE`
+  or `UNINTENDED DRIFT`;
+- **Verification performed**;
+- **Observations not acted on**;
+- **State handed on**.
+
+## 6. Decisions
+
+### 6.1 Made by the user (2026-10-25)
+
+| | Decided |
+|---|---|
+| **U1** | Open this campaign, from findings §2, on the plan proposed the same day: the §2.6 test first, then the remedy |
+| **U2** | A3 v2 analysis runs on the Mac Studio, where the store is; the laptop's Ray is left to ChamPBH and StochasticInstantons |
+
+### 6.2 Choices of method made in writing this plan
+
+These are the orchestrator's choices, and the user can reverse any of them.
+- **C1 — the name** `levin-phase-floor`.
+- **C2 — a census first.** The per-group records were already stored, and the reconnaissance
+  (§0.2) shows they can move the hypothesis. So the first prompt reads all of them, before any row
+  is re-run. Findings §2.6 item 1 becomes 03, and is aimed by 01.
+- **C3 — two hypotheses, not one.** H-anchor is added beside findings §2.2's mechanism and
+  pre-registered with it. §2.6's clause cannot decide a split in which both kinds of group carry
+  depth-20 cost, and the reconnaissance shows that split.
+- **C4 — 02 injects in the exact flavour too.** The exact flavour's composed phases are closed
+  forms, and A2 found its cost flat in $x$. If noise alone makes it grow, then
+  `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` is answered by sufficiency: phase noise
+  is enough to produce the realistic flavour's growth.
+- **C5 — the four issues assigned here** (§1). Findings §2.7 says nothing owns them:
+  `levin-refactor` and `GkTk-remedial` are closed, and `handover` README §0.3 excludes
+  `AdaptiveLevin/`. `[04-roundoff-floor-can-be-infinite]` already sits under §1.3's
+  campaign-to-be, so it is not moved.
+- **C6 — no remedy prompt before G1.** The batching rule: a prompt is written once its task is
+  determined, and the remedy's task is what G1 decides.
+
+### 6.3 Open, for the user at the gates
+
+- **Q1 (G1): which hypothesis stands.** H-cancel, H-anchor, both or neither.
+- **Q2 (G1): which layer 1 is wanted.**
+  - (a) $k\tau_R$ taken out of $G$'s phase at the consumer;
+  - (b) a group composed from its leading terms before reduction;
+  - (c) both;
+  - (d) neither, with layer 2 alone.
+- **Q3 (G1): whether layer 1 changes `PrimitivePhase`.** If it does, layer 1 changes what
+  `PrimitivePhase` exposes, and possibly what `TkWKBIntegration`/`GkSourcePolicyData` store. Then
+  the user decides whether it lands here or as `handover`'s D2 (README §7 D4).
+- **Q4 (G2): layer 3.**
+  - `DEFAULT_LEVIN_MAX_DEPTH`, which was never chosen;
+  - the per-region acceptance test and its dead length-share `local_atol` branch;
+  - what `total_converged` means, and whether a consumer gate reads `total_abserr/|total|`
+    (findings §2.5).
+
+## 7. Baselines
+
+01–04 change no code, so they re-run no test root. Each records `git status --short` before and
+after, and the only additions are under `var/` (on the Mac Studio) or `docs/levin-phase-floor/`
+(on the laptop). The remedy prompts' baselines are set when they are written.

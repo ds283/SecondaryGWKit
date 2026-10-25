@@ -8,16 +8,17 @@ change its status when the board closes it. The open-issue column is a snapshot 
 [`docs/OPEN_ISSUES.md`](../docs/OPEN_ISSUES.md) on the date in the header; the section pointer
 is the durable part.
 
-**Last updated:** 2026-10-25 · 30 campaigns: 2 live, 1 seeded, 27 closed or complete.
+**Last updated:** 2026-10-25 · 31 campaigns: 3 live, 1 seeded, 27 closed or complete.
 Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 `datastore-integrity`'s, taken on 2026-10-02, `datastore-generic`'s, taken on 2026-10-06, and
 `datastore-generic-followup`'s, taken on 2026-10-07, `dk-and-rpk-migration`'s, taken on
 2026-10-12, `runregistry-extraction`'s, taken on 2026-10-16, `rrk-v020-adoption`'s, taken on
-2026-10-19, `dk-v050-adoption`'s, taken on 2026-10-22, and `rpk-v030-adoption`'s and `py313-venv`'s,
-taken on 2026-10-25.
+2026-10-19, `dk-v050-adoption`'s, taken on 2026-10-22, and `rpk-v030-adoption`'s, `py313-venv`'s and
+`levin-phase-floor`'s, taken on 2026-10-25.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
+| [`levin-phase-floor`](levin-phase-floor/IMPLEMENTATION_STATE.md) | **live** — planned; 01 (A3 v2 phase-group census, Mac Studio) and 02 (phase-noise injection, laptop) written; 03–04 held; remedy after gate G1 | 2026-10-25 | A3 v2's depth-20 Levin cost cliff and the honesty of a `QuadSourceIntegral` row's stored error and convergence; findings §2.6's test as two hypotheses (H-cancel, H-anchor), then §2.7's remedy | §1.24; 0 of its own (4 assigned from `handover` and `GkTk-remedial`, held there) |
 | [`py313-venv`](py313-venv/IMPLEMENTATION_STATE.md) | closed 2 / 2, 2026-10-25 | 2026-10-25 | the venv on the laptop and the Mac Studio moved from Python 3.12.15 to 3.13.16, `ray` 2.43.0 → 2.59.0, `SQLAlchemy` 2.0.39 → 2.0.55; rehearsals R6 (with the hard-kill pair) and R7; A3 v2 read under the new venv | §1.23; 0 (the one assigned from `handover` closed by 01; the three opened closed) |
 | [`rpk-v030-adoption`](rpk-v030-adoption/IMPLEMENTATION_STATE.md) | closed 1 / 1, 2026-10-25 | 2026-10-25 | SGK's move from `raypoolkit` `v0.2.0` to `v0.3.0`: the package's `rehearsal_lock` replaces `tools/rehearsal_lock.py`; every Ray start given `/tmp/ray-sgk` | —; 0 |
 | [`dk-v050-adoption`](dk-v050-adoption/IMPLEMENTATION_STATE.md) | closed 1 / 1, 2026-10-22 | 2026-10-22 | SGK's move from `datastorekit` `v0.4.0` to `v0.5.0`; the spec guard's condition for an empty `extra_values` | —; 0 |
@@ -29,7 +30,7 @@ taken on 2026-10-25.
 | [`datastore-generic`](datastore-generic/IMPLEMENTATION_STATE.md) | closed 9 / 9, 2026-10-06 | 2026-10-04 → 2026-10-07 | the datastore layer made generic again (no project table named in the layer, guarded by `test_layer_is_generic`); every old-store fallback deleted | §1.18, §1.19; 0 |
 | [`a3-v2-readiness`](a3-v2-readiness/IMPLEMENTATION_STATE.md) | closed 10 / 10, 2026-10-04 | 2026-10-02 → 2026-10-04 | the seven defects a build or a reader of the A3 v2 store would meet; `DEFAULT_QUADRATURE_RTOL = 1e-7` | §1.17; 2 |
 | [`datastore-integrity`](datastore-integrity/IMPLEMENTATION_STATE.md) | closed 12 / 12, 2026-10-02 | 2026-09-25 → 2026-10-02 | every known datastore-integrity defect, before the A3 v2 store is built | §1.15, §1.17; 12 |
-| [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 3 of 10 groupings landed, and 05; 06 (A3 v2 host, R4) landed 2026-10-22, R4 holds on the Mac Studio; 07 launched A3 v2, which ended `done` 2026-10-24; 08 landed 2026-10-25: A3 v2 kept and verified on the Mac Studio | 2026-09-20 → 2026-10-25 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle; the A3 v2 launch on the Mac Studio | §1.1; 10 |
+| [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 3 of 10 groupings landed, and 05; 06 (A3 v2 host, R4) landed 2026-10-22, R4 holds on the Mac Studio; 07 launched A3 v2, which ended `done` 2026-10-24; 08 landed 2026-10-25: A3 v2 kept and verified on the Mac Studio; 09–10 landed 2026-10-25; 11 (A3 v2 seam record) written 2026-10-25; three §3 issues assigned to `levin-phase-floor` | 2026-09-20 → 2026-10-25 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle; the A3 v2 launch on the Mac Studio | §1.1; 10 |
 | [`datastore-readback`](datastore-readback/IMPLEMENTATION_STATE.md) | **live** — 1 of 1 written landed, resumable A3 run is the user's | 2026-09-22 → 2026-09-26 | the read-back guard and the audit of every object factory | §1.10; 0 |
 | [`store-fingerprint`](store-fingerprint/IMPLEMENTATION_STATE.md) | complete 5 / 5, closed 2026-09-25 | 2026-09-24 → 2026-09-29 | read-only store reader, structured inventory, content fingerprint in the sidecar | §1.13; 1 |
 | [`store-retirement`](store-retirement/IMPLEMENTATION_STATE.md) | complete 5 / 5 | 2026-09-25 → 2026-09-26 | `store retire`: a store's own files go, its sidecar stays | §1.14; 4 |
