@@ -1,0 +1,48 @@
+### 2026-10-25T22:53:45Z on mps026298
+$ diff var/handover-03/state/store_files_before.txt var/handover-03/state/store_files_after.txt; echo "diff rc $?"
+diff rc 0
+[exit 0]
+
+### 2026-10-25T22:53:45Z on mps026298
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/handover-A3-v2-lambdacdm.sqlite | grep -v "^   \|^  [A-Za-z]"
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite
+digest:   0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+format:   6
+classes:  (count, digest; then each tag set)
+problems: none
+recorded: matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752dda46e57d588f8107cbd4d4557134fadb2
+[exit 0]
+
+### 2026-10-25T22:53:57Z on mps026298
+$ ./venv/bin/python -m runregistrykit list | tail -2 | cut -c1-140; git rev-parse HEAD; git status --short; echo "status rc $?"; git diff --stat; ls var
+
+12 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 12 finished; 0 with no host recorded.
+c8ca1559fcc53fdb88998f170257635431fb85ca
+status rc 0
+datastores
+handover-03
+handover-06
+handover-07
+handover-08
+handover-10
+handover-11
+handover-12
+levin-phase-floor-01
+levin-phase-floor-03
+levin-phase-floor-04
+py313-venv-02
+runs
+[exit 0]
+
+### 2026-10-25T22:55:56Z on mps026298
+$ echo "--- final check, after step_check.py and the document assembly"; diff var/handover-03/state/store_files_before.txt var/handover-03/state/store_files_after.txt; echo "diff rc $?"; ./venv/bin/python -m runregistrykit store fingerprint var/datastores/handover-A3-v2-lambdacdm.sqlite | grep "^digest\|^problems\|^recorded"; git rev-parse HEAD; git status --short; echo "status rc $?"; ./venv/bin/python -m runregistrykit list | tail -1
+--- final check, after step_check.py and the document assembly
+diff rc 0
+digest:   0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+problems: none
+recorded: matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752dda46e57d588f8107cbd4d4557134fadb2
+c8ca1559fcc53fdb88998f170257635431fb85ca
+status rc 0
+12 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 12 finished; 0 with no host recorded.
+[exit 0]
+

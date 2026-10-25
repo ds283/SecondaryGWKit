@@ -1,0 +1,6 @@
+### 2026-10-25T22:47:37Z on mps026298
+$ ./venv/bin/python -m black --check --diff var/handover-03/scripts/policy_geometry.py var/handover-03/scripts/exploration/explore.py var/handover-03/scripts/exploration/explore2.py
+All done! ✨ 🍰 ✨
+3 files would be left unchanged.
+[exit 0]
+

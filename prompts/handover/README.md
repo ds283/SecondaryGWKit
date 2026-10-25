@@ -643,7 +643,10 @@ but it is inseparable from the seam by measurement, which is why §1.1 has carri
 `[12-phase-spline-error-grows-with-x]` alongside the clamp since 2026-09-10. Splitting it out is
 defensible; doing so before A2 has separated the two terms is not.
 
-**D5 — the $G_k$ overlap width. ASSIGNED 2026-09-19 to A3** ([`03-policy-geometry-census.md`](03-policy-geometry-census.md)),
+**D5 — the $G_k$ overlap width. ANSWERED 2026-10-25 by A3**, in
+[`POLICY-GEOMETRY.md`](../../docs/handover/POLICY-GEOMETRY.md) §0. On A3 v2, every `mixed` row but the one `minimal` row has
+`crossover_z` at least two grid intervals inside both regions: 301–664 numeric and 82 WKB. On all 71 `complete` rows the crossover is
+one super-horizon node (`[03-the-g-crossover-is-one-super-horizon-node-on-every-complete-row]`). *As first written:* **ASSIGNED 2026-09-19 to A3** ([`03-policy-geometry-census.md`](03-policy-geometry-census.md)),
 which exists to answer it; no decision remains here, and the entry stays for the reader who asks
 why A3 is in workstream A. §2 (f): the followup §3 item 1 asks whether `crossover_z` is at least
 two grid intervals inside both regions on real rows, and it has still not been measured. If it is

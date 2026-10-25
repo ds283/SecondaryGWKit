@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **108 open** across twenty-two campaigns.
+**Last updated:** 2026-10-25 · **110 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -69,12 +69,9 @@ prompt 01 closed one of them on 2026-09-25, on that board's §4, and its prompt 
 same day. Its prompt 03 closed two the same day: `[00-inventory-run-prunes-unvalidated-rows-by-default]`
 on its own §4, and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`
 on that board's §4. Its prompt 04 closed `run-registry`'s
-`[04-a-runs-product-is-named-but-never-fingerprinted]` the same day, on that board's §4. Of the 90
-above, 87 are spread across the boards and
-**three still have no board row** — the last three `handover` rows in §1.1, opened by a document
-review on 2026-09-19, whose content lives in
-[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
-campaign's **prompt 03** opens formally on its board when it runs. The `levin-phase-floor` board
+`[04-a-runs-product-is-named-but-never-fingerprinted]` the same day, on that board's §4. Every row
+above is on a board. The three `handover` rows a document review indexed on 2026-09-19 without one
+were opened on that board on 2026-10-25 by its prompt 03 (A3), which opened two more of its own. The `levin-phase-floor` board
 (2026-10-25) holds five issues of its own, two opened by its prompt 01 and three by its prompt 03.
 The four other rows of §1.24 were assigned to it from other boards and stay on them.
 
@@ -107,14 +104,11 @@ exists. Every row below still closes on the board named in its own line. The pla
 because none has changed status — except the last, which **prompt 01 closed on 2026-09-20**, on the
 `radiation-oracle` board that owns it, emptying §1.9.
 
-**Three rows added 2026-09-19 have no board row yet.** The last three below were found by a review
-of the campaign documents, not by a prompt. The campaign's `IMPLEMENTATION_STATE.md` has existed
-since prompt 01 landed on 2026-09-20, but that prompt deliberately did **not** adopt them: they are
-not in its scope and **prompt 03 opens them formally**. Their content lives in
-[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) — which is the
-loss-proof place for it, and is what these rows point at. Workstream **C2** owns the first and
-third, **B3** the second. They are indexed now rather than later because that is what this file is
-for.
+**Three rows were indexed on 2026-09-19 before they had a board row**, from a review of the
+campaign documents (README §2 (o) and (p)). Prompt 03 (A3) opened them on the board on 2026-10-25,
+with two of its own. Workstream **C2** owns `[03-gksource-policy-accepts-a-value-that-raises]` and
+`[03-quadsource-policy-vocabulary-differs]`, and **B3** owns
+`[03-gk-classification-is-diagnosed-and-ignored]`.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -127,9 +121,11 @@ for.
 | `[00-tk-lg-truncation-floor]` | GkTk-remedial | The $T_k$ LG representation is not exact even in radiation: ~$1.4\times10^{-4}$ of the envelope at the production hand-over $x_T\approx15.5$, scaling as $x_i^{-3}$. A later hand-over ($x_T=50$ gives $4\times10^{-6}$), a higher-order LG frequency, or the Bessel exact form are the levers. |
 | `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 | `[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]` | tolerance-convergence | The consumer of the numeric $G_k$ is a cubic `make_interp_spline` in $\log(1+z_{\rm source})$ over the **source-grid** nodes (`GkSourcePolicyData.py:654-680`), and its interpolation error is **1.6e-04 to 1.9e-04** of the envelope three e-folds inside the horizon and up to **9.4e-03** at four, where `main.py:1884` stops building the target — against **2.6e-07** for the solver at the production `(1e-10, 1e-8)`. Measured at 50 $k$ on three models, **version-2 grid at each cosmology's own anchor**, floor uncertainty 0.00 %, probe within 5.6e-12 of the exact $G$ on the control. It confirms review §10.1's inherited 1e-5–1e-4 and shows the "two orders" understates the dominance (×631 to ×37,700). The cause is spacing, not tolerance: the source lattice carries up to **1.24 rad** of $G$'s oscillation per interval there, and the density criterion that sets it is sized for the phase-residual spline, not for $G$. **Assigned 2026-09-17 on the user's D1 acceptance: the source grid's spacing at the hand-over is post-campaign work.** A design decision, not a tuning one — the density criterion gains $G$'s oscillation as a second consumer, the hand-over moves deeper, or `GkSourcePolicyData` splines the LG amplitude and phase instead. |
-| `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
-| `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. **Narrowed 2026-10-25** by `handover` 11: A3 v2's shipping grid has no `fail` or `incomplete` row (one `minimal`) — not exercised, still unenforced. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
-| `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
+| `[03-gksource-policy-accepts-a-value-that-raises]` | handover — owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
+| `[03-gk-classification-is-diagnosed-and-ignored]` | handover — owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. **Narrowed 2026-10-25** by `handover` 11: A3 v2's shipping grid has no `fail` or `incomplete` row (one `minimal`) — not exercised, still unenforced. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
+| `[03-quadsource-policy-vocabulary-differs]` | handover — owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
+| `[03-the-g-crossover-is-one-super-horizon-node-on-every-complete-row]` | handover | On all 71 `mixed`/`complete` rows of A3 v2, `crossover_z` is one node, $3.12\times10^{15}$, super-horizon at every $k$, and the overlap is 8.8–17 e-folds, not README §2 (q)'s half e-fold. The seam that ships is not where B4 and D1 assume it is. For the user's ruling before B4 or D1 is written. |
+| `[03-gksource-wkb-holes-above-the-primary-run]` | handover | 12 of 1160 `GkSource` rows have a WKB hole above $z_{e4}$; one is what makes A3 v2's single `minimal` row. Small. |
 | `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's. **Assigned 2026-10-19 to `handover`** by the user, which owns the A3 v2 launcher; not yet scheduled. **Narrowed 2026-10-25** by `py313-venv` 01 under Ray 2.59.0: the same stack frame for frame, alive about 1 h 56 m until a person's `SIGKILL` on the user's ruling (sample, then kill); 2.59.0 logs the `SIGTERM` it received. |
 | `[09-two-readers-plot-the-radiation-form-under-the-w-label]` | handover | `extract_GkSource_data.py` and `extract_QuadSourceIntegral_data.py` draw the radiation form twice, once under the label "$w=w(z)$"; `GkSource` stores no `analytic_G_w` column, so the $w(z)$ form is not available to them from a store. Not assigned. |
 | `[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]` | handover | `extract_Gk_data.py:294` writes `value.z`, a `redshift` object, into its CSV column `z_response`, so every cell is an object repr and the CSVs cannot be read back against $z$; the other readers write `value.z.z`. Not assigned. |

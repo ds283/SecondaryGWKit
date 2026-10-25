@@ -1,0 +1,8 @@
+### 2026-10-25T22:47:44Z on mps026298
+$ git rev-parse HEAD; git status --short; ./venv/bin/python -m runregistrykit list | tail -3 | cut -c1-160
+c8ca1559fcc53fdb88998f170257635431fb85ca
+   handover-06-reference-20261022T195228            done              -   3d 03h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastoreki
+
+12 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 12 finished; 0 with no host recorded.
+[exit 0]
+
