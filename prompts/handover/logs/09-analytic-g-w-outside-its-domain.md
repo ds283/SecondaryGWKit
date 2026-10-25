@@ -2,7 +2,7 @@
 
 **Prompt:** [`prompts/handover/09-analytic-g-w-outside-its-domain.md`](../09-analytic-g-w-outside-its-domain.md),
 including the dated addendum after §2's item 5
-**Commit:** *(this commit)* — "Return None from the constant-w Green's function outside its domain"
+**Commit:** `1c19998` — "Return None from the constant-w Green's function outside its domain"
 **Model:** Claude Opus 5.5, in a fresh-context subagent on the laptop, dispatched at `1739e0d`
 **Date:** 2026-10-25 (09:14–10:30 GMT)
 **Result:** COMPLETE WITH DEVIATIONS. Every acceptance item of prompt §6 holds, and no §7 stop condition
@@ -381,7 +381,7 @@ The script exited 0 (`readers.txt`):
 
 ## State handed to the next step
 
-- **For prompt 10** (the fixed readers on A3 v2, on the Mac Studio): the tree is this commit.
+- **For prompt 10** (the fixed readers on A3 v2, on the Mac Studio): the tree is `1c19998`.
   - On A3 v2, `extract_GkWKB_data.py` will drop the `analytic_G_w` points more than three decades
     above $|G|$, including all 293 above 1e200, from its full-range plots.
   - `extract_Gk_data.py`'s CSVs now carry the stored $w(z)$ values, astronomically large ones

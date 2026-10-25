@@ -83,7 +83,7 @@ issue to prompt 10's re-read, and opened
 | 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `319b14f` | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, launched and reviewed; the build runs | `a6902b1` | [`logs/07-…`](logs/07-launch-a3-v2.md) |
 | 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed; closed on a §8 stop by the user's ruling | `9ef8a19` | [`logs/08-…`](logs/08-after-the-a3-v2-build.md) |
-| 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25 | *"Return None from the constant-w Green's function outside its domain"* | [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md) |
+| 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed (orchestrator's baselines at `4a3e848` and re-run at `1c19998` equal the agent's; fingerprint `39809dca…` recomputed) | `1c19998` | [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md) |
 | 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus | ✍️ 2026-10-25 | ⬜ not run; 09, which held it, landed 2026-10-25 | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
@@ -606,7 +606,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   argument not to make a useful fix." **Assigned to prompt 09** (the code) **and prompt 10** (the
   re-read of A3 v2 on the Mac Studio, which closes it).
   (`var/handover-08/extract/` is on the Mac Studio; it was not copied.)
-  **Narrowed 2026-10-25 by prompt 09: fixed in code at prompt 09's commit; closes when prompt 10 has
+  **Narrowed 2026-10-25 by prompt 09: fixed in code at `1c19998`; closes when prompt 10 has
   re-read A3 v2.** `compute_analytic_G`/`Gprime` now return `None` outside $1+3w>0$ and on a value
   that is not finite, so new stores hold `NULL` there; every plotted `analytic_G_w` series in the four
   readers goes through `extract_common.sensible_log_points`, which drops `None`, non-finite and zero
