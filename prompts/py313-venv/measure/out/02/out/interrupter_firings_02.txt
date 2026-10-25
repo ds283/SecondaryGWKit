@@ -1,0 +1,10 @@
+# interrupter_firings_02.txt — py313-venv prompt 02 (resume, c9026af), R7: the interruption points, and each interrupter's log.
+
+== The points, from R7's own reference stdout.log (var/runs/py313-venv-02-reference-20261025T164631/stdout.log), by R3's/R4's/R6's reasoning
+resumed-a: CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT took 22 s (stdout.log:76; R3 24.8 s, R4 22.6 s, R6 82.5 s).
+           40 % of 22 s is 8.8 s, under the 10 s floor: hold 10 s, from the banner (R4's hold).
+           -> '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10
+resumed-b: CALCULATE QUADRATIC SOURCE INTEGRALS took 1m 19.8s = 79.8 s (stdout.log:100; R3 91.4 s, R4 88.7 s, R6 351.6 s).
+           A third is 26.6 s, rounded to 27 s, under the 250 s cap: hold 27 s, from the banner (R4 held 30 s).
+           -> '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 27
+The hard-kill pair is not run (README §6.2 C4).

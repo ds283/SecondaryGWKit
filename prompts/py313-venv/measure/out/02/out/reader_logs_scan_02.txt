@@ -1,0 +1,79 @@
+== 2026-10-25T17:09:43+0000 reader logs scan: this run (var/py313-venv-02/extract) against handover 10's (var/handover-10/extract), counts per log
+extract_GkSource_data.log                Traceback                              R7-02    0   h10    0
+extract_GkSource_data.log                Token authentication is enabled        R7-02    0   h10    0
+extract_GkSource_data.log                Generated new authentication token     R7-02    0   h10    0
+extract_GkSource_data.log                InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_GkSource_data.log                DeprecationWarning                     R7-02    4   h10    4
+extract_GkSource_data.log                FutureWarning                          R7-02    0   h10    0
+extract_GkSource_data.log                ResourceWarning                        R7-02    0   h10    0
+extract_GkSource_data.log                RuntimeWarning                         R7-02    0   h10    0
+extract_GkSource_data.log                IntegrationWarning                     R7-02    0   h10    0
+extract_GkSource_data.log                Warning                                R7-02    4   h10    4
+extract_GkWKB_data.log                   Traceback                              R7-02    0   h10    0
+extract_GkWKB_data.log                   Token authentication is enabled        R7-02    0   h10    0
+extract_GkWKB_data.log                   Generated new authentication token     R7-02    0   h10    0
+extract_GkWKB_data.log                   InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_GkWKB_data.log                   DeprecationWarning                     R7-02    0   h10    0
+extract_GkWKB_data.log                   FutureWarning                          R7-02    0   h10    0
+extract_GkWKB_data.log                   ResourceWarning                        R7-02    0   h10    0
+extract_GkWKB_data.log                   RuntimeWarning                         R7-02    0   h10    2
+extract_GkWKB_data.log                   IntegrationWarning                     R7-02    0   h10    0
+extract_GkWKB_data.log                   Warning                                R7-02    0   h10    2
+extract_Gk_data-no-models.log            Traceback                              R7-02    0   h10    0
+extract_Gk_data-no-models.log            Token authentication is enabled        R7-02    0   h10    0
+extract_Gk_data-no-models.log            Generated new authentication token     R7-02    0   h10    0
+extract_Gk_data-no-models.log            InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_Gk_data-no-models.log            DeprecationWarning                     R7-02    0   h10    0
+extract_Gk_data-no-models.log            FutureWarning                          R7-02    0   h10    0
+extract_Gk_data-no-models.log            ResourceWarning                        R7-02    0   h10    0
+extract_Gk_data-no-models.log            RuntimeWarning                         R7-02    0   h10    0
+extract_Gk_data-no-models.log            IntegrationWarning                     R7-02    0   h10    0
+extract_Gk_data-no-models.log            Warning                                R7-02    0   h10    0
+extract_Gk_data.log                      Traceback                              R7-02    0   h10    0
+extract_Gk_data.log                      Token authentication is enabled        R7-02    0   h10    0
+extract_Gk_data.log                      Generated new authentication token     R7-02    0   h10    0
+extract_Gk_data.log                      InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_Gk_data.log                      DeprecationWarning                     R7-02    0   h10    0
+extract_Gk_data.log                      FutureWarning                          R7-02    0   h10    0
+extract_Gk_data.log                      ResourceWarning                        R7-02    0   h10    0
+extract_Gk_data.log                      RuntimeWarning                         R7-02    0   h10    0
+extract_Gk_data.log                      IntegrationWarning                     R7-02    0   h10    0
+extract_Gk_data.log                      Warning                                R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      Traceback                              R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      Token authentication is enabled        R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      Generated new authentication token     R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      DeprecationWarning                     R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      FutureWarning                          R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      ResourceWarning                        R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      RuntimeWarning                         R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      IntegrationWarning                     R7-02    0   h10    0
+extract_QuadSourceIntegral_data.log      Warning                                R7-02    0   h10    0
+extract_TkWKB_data.log                   Traceback                              R7-02    0   h10    0
+extract_TkWKB_data.log                   Token authentication is enabled        R7-02    0   h10    0
+extract_TkWKB_data.log                   Generated new authentication token     R7-02    0   h10    0
+extract_TkWKB_data.log                   InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_TkWKB_data.log                   DeprecationWarning                     R7-02    0   h10    0
+extract_TkWKB_data.log                   FutureWarning                          R7-02    0   h10    0
+extract_TkWKB_data.log                   ResourceWarning                        R7-02    0   h10    0
+extract_TkWKB_data.log                   RuntimeWarning                         R7-02    0   h10    0
+extract_TkWKB_data.log                   IntegrationWarning                     R7-02    0   h10    0
+extract_TkWKB_data.log                   Warning                                R7-02    0   h10    0
+extract_tensor_source_data.log           Traceback                              R7-02    0   h10    0
+extract_tensor_source_data.log           Token authentication is enabled        R7-02    0   h10    0
+extract_tensor_source_data.log           Generated new authentication token     R7-02    0   h10    0
+extract_tensor_source_data.log           InvalidAuthToken|AuthenticationError   R7-02    0   h10    0
+extract_tensor_source_data.log           DeprecationWarning                     R7-02    0   h10    0
+extract_tensor_source_data.log           FutureWarning                          R7-02    0   h10    0
+extract_tensor_source_data.log           ResourceWarning                        R7-02    0   h10    0
+extract_tensor_source_data.log           RuntimeWarning                         R7-02    0   h10    0
+extract_tensor_source_data.log           IntegrationWarning                     R7-02    0   h10    0
+extract_tensor_source_data.log           Warning                                R7-02    0   h10    0
+-- warning kinds per log (grep -oE '[A-Za-z]+Warning' | sort | uniq -c)
+extract_GkSource_data.log: R7-02 [ 4 MatplotlibDeprecationWarning;] h10 [ 4 MatplotlibDeprecationWarning;]
+extract_GkWKB_data.log: R7-02 [] h10 [ 2 RuntimeWarning;]
+extract_Gk_data-no-models.log: R7-02 [] h10 []
+extract_Gk_data.log: R7-02 [] h10 []
+extract_QuadSourceIntegral_data.log: R7-02 [] h10 []
+extract_TkWKB_data.log: R7-02 [] h10 []
+extract_tensor_source_data.log: R7-02 [] h10 []

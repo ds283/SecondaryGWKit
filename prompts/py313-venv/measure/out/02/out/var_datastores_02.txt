@@ -1,0 +1,54 @@
+== before the first resumed launch (16:46, from prelaunch_checks_02.txt; 8 files)
+6da687de696ad5cc832bac511d8f9761de65eb442e074d406e0a08f370140d71        12089 1792886332019272076  var/datastores/handover-06-reference.manifest.json
+9a0343a17d63d438d8c695676a3acc54f80cb9ec31b6d59b0abc7c8c688041b4        12517 1792886335012521800  var/datastores/handover-06-resumed.manifest.json
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5    106340352 1792875376155767739  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e    107569152 1792875376181522969  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6    107429888 1792875376101702570  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1    105791488 1792875376127589134  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6        10519 1792884865850625524  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522        36864 1792699923608529810  var/datastores/handover-A3-v2-lambdacdm.sqlite
+== after the last step (2026-10-25T17:10:45+0000, 20 files)
+6da687de696ad5cc832bac511d8f9761de65eb442e074d406e0a08f370140d71        12089 1792886332019272076  var/datastores/handover-06-reference.manifest.json
+9a0343a17d63d438d8c695676a3acc54f80cb9ec31b6d59b0abc7c8c688041b4        12517 1792886335012521800  var/datastores/handover-06-resumed.manifest.json
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5    106340352 1792875376155767739  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e    107569152 1792875376181522969  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6    107429888 1792875376101702570  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1    105791488 1792875376127589134  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6        10519 1792884865850625524  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522        36864 1792699923608529810  var/datastores/handover-A3-v2-lambdacdm.sqlite
+109836e59d5ec847d4a4f6a28e3b24cf463d80abc80ae7b1954daac6bf27c804     23793664 1792947001050104169  var/datastores/py313-venv-02-reference-shard0000.sqlite
+a5e11bddb86b9c8d9c404c824054864611f44d6bbcc6f69e50ffabb3ea1e10c3     23732224 1792947001052674708  var/datastores/py313-venv-02-reference-shard0001.sqlite
+ab86ff602953d9f07a762d728c4a7b69409f254a9d89dd5b351699f9e004085d      1077248 1792946802620156363  var/datastores/py313-venv-02-reference-shard0002.sqlite
+63114f4ed03b91c48520a686b256d9cd09e0be35987629dd96cec96ccc260470     23248896 1792947001033088315  var/datastores/py313-venv-02-reference-shard0003.sqlite
+adb903b500b63b6d6717da6a141270edbca9431cc8631474c10ff86fee15706f        10474 1792947050402250030  var/datastores/py313-venv-02-reference.manifest.json
+0cf210b99526fe4376047706cb679d0cfedea5a54c025b1f1257b6b0ea21ea02        36864 1792946802635262720  var/datastores/py313-venv-02-reference.sqlite
+459e17bfb034833a58ecf76c12ec18ce4af0851a4b1186002b26a79685c1519d     23744512 1792947430062552303  var/datastores/py313-venv-02-resumed-shard0000.sqlite
+c3fa4eef5169a070f9329361ca3f29b2006e219601bd4db12b4f3dc6d9b35578     23904256 1792947430060971053  var/datastores/py313-venv-02-resumed-shard0001.sqlite
+b4935c88a7c3bca701fdcb7fb07b715e2232febf599b3118674af8aa6b8cefc6      1077248 1792947083585467781  var/datastores/py313-venv-02-resumed-shard0002.sqlite
+a33448947e3a50590b40bbf20ad49a1d091dbac0edd6f9583eca82fca8b13e29     23707648 1792947430048055932  var/datastores/py313-venv-02-resumed-shard0003.sqlite
+1b34c2e085f387c48353c20bf15fd4125172a059a2da5a336b817135dba7efa9        10518 1792947431873345535  var/datastores/py313-venv-02-resumed.manifest.json
+fc2949a4f8e25334b5f0f8b331cafaf6cd5514b21f3fbb96dc52a99e1e7fa5e0        36864 1792947355863913105  var/datastores/py313-venv-02-resumed.sqlite
+== the files of the first listing, in the second: unchanged (sha256, size, mtime_ns)?
+unchanged  var/datastores/handover-06-reference.manifest.json
+unchanged  var/datastores/handover-06-resumed.manifest.json
+unchanged  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+unchanged  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+unchanged  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+unchanged  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+unchanged  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+unchanged  var/datastores/handover-A3-v2-lambdacdm.sqlite
+== new files
+var/datastores/py313-venv-02-reference-shard0000.sqlite
+var/datastores/py313-venv-02-reference-shard0001.sqlite
+var/datastores/py313-venv-02-reference-shard0002.sqlite
+var/datastores/py313-venv-02-reference-shard0003.sqlite
+var/datastores/py313-venv-02-reference.manifest.json
+var/datastores/py313-venv-02-reference.sqlite
+var/datastores/py313-venv-02-resumed-shard0000.sqlite
+var/datastores/py313-venv-02-resumed-shard0001.sqlite
+var/datastores/py313-venv-02-resumed-shard0002.sqlite
+var/datastores/py313-venv-02-resumed-shard0003.sqlite
+var/datastores/py313-venv-02-resumed.manifest.json
+var/datastores/py313-venv-02-resumed.sqlite
+== journals
+(end)

@@ -1,0 +1,430 @@
+== 2026-10-25T16:27:05+0000 step 6: the A3 v2 store, before (Python 3.13.16)
+$ ./venv/bin/python -m runregistrykit store show var/datastores/handover-A3-v2-lambdacdm.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.manifest.json
+kind:     registry
+problems: none
+datastore: 'handover-A3-v2-lambdacdm.sqlite'
+fields:
+  {
+    "created": "2026-10-25T00:34:11+01:00",
+    "datastore": "handover-A3-v2-lambdacdm.sqlite",
+    "fingerprint": {
+      "classes": {
+        "BackgroundModel": {
+          "count": 1,
+          "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2"
+              ]
+            }
+          ]
+        },
+        "GkNumericIntegration": {
+          "count": 4549,
+          "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+          "tag_sets": [
+            {
+              "count": 4549,
+              "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "GkSource": {
+          "count": 1160,
+          "digest": "d4826c22a7756eeb7784eee12bec07fb21f4d0af18eab7d394314fd7dfb21e13",
+          "tag_sets": [
+            {
+              "count": 1160,
+              "digest": "d4826c22a7756eeb7784eee12bec07fb21f4d0af18eab7d394314fd7dfb21e13",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "GkSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "GkSourcePolicyData": {
+          "count": 1160,
+          "digest": "95597c5bbddc5aff39c15f17e2a473713e579e3cdedc25de70153895b8f39d1f",
+          "tag_sets": [
+            {
+              "count": 1160,
+              "digest": "95597c5bbddc5aff39c15f17e2a473713e579e3cdedc25de70153895b8f39d1f",
+              "tags": []
+            }
+          ]
+        },
+        "GkWKBIntegration": {
+          "count": 13920,
+          "digest": "7dec4350b90ce6518a80f48bd9d5cd2d22f0fcb17225a28cdb3f8c79b296a60a",
+          "tag_sets": [
+            {
+              "count": 13920,
+              "digest": "7dec4350b90ce6518a80f48bd9d5cd2d22f0fcb17225a28cdb3f8c79b296a60a",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "IntegrationSolver": {
+          "count": 7,
+          "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+              "tags": []
+            }
+          ]
+        },
+        "LambdaCDM": {
+          "count": 1,
+          "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+              "tags": []
+            }
+          ]
+        },
+        "OneLoopIntegral": {
+          "count": 0,
+          "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tag_sets": []
+        },
+        "QCD_Cosmology": {
+          "count": 1,
+          "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+              "tags": []
+            }
+          ]
+        },
+        "QuadSource": {
+          "count": 36,
+          "digest": "7e6b5a68b3e09d991d6b9cbd35a38e701d28ca24780c09237982134eb08bde14",
+          "tag_sets": [
+            {
+              "count": 36,
+              "digest": "7e6b5a68b3e09d991d6b9cbd35a38e701d28ca24780c09237982134eb08bde14",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourceIntegral": {
+          "count": 9280,
+          "digest": "1ae722d5fbcbfb7cc062b0c396355c41ee4386284faf02a57022b3653198efa7",
+          "tag_sets": [
+            {
+              "count": 9280,
+              "digest": "1ae722d5fbcbfb7cc062b0c396355c41ee4386284faf02a57022b3653198efa7",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "TkNumericIntegration": {
+          "count": 8,
+          "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "TkWKBIntegration": {
+          "count": 8,
+          "digest": "eeb4f2f07e7bc3fb3006c3d7ad186ca7ea97a14790ee7c757cf712cf68d67008",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "eeb4f2f07e7bc3fb3006c3d7ad186ca7ea97a14790ee7c757cf712cf68d67008",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "redshift": {
+          "count": 1740,
+          "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+          "tag_sets": [
+            {
+              "count": 1740,
+              "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+              "tags": []
+            }
+          ]
+        },
+        "store_tag": {
+          "count": 10,
+          "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+          "tag_sets": [
+            {
+              "count": 10,
+              "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+              "tags": []
+            }
+          ]
+        },
+        "tolerance": {
+          "count": 7,
+          "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+              "tags": []
+            }
+          ]
+        },
+        "version": {
+          "count": 1,
+          "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber": {
+          "count": 8,
+          "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber_exit_time": {
+          "count": 8,
+          "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+              "tags": []
+            }
+          ]
+        }
+      },
+      "digest": "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56",
+      "encoding_format": 1,
+      "fingerprint_format": 6,
+      "problems": {},
+      "taken": {
+        "git_dirty": false,
+        "git_head": "b90752dda46e57d588f8107cbd4d4557134fadb2",
+        "run_id": null,
+        "when": "2026-10-25T00:34:14+01:00"
+      }
+    },
+    "history": [
+      {
+        "from": null,
+        "git_dirty": false,
+        "git_head": "b90752dda46e57d588f8107cbd4d4557134fadb2",
+        "operation": "create",
+        "to": "var/datastores/handover-A3-v2-lambdacdm.sqlite",
+        "when": "2026-10-25T00:34:11+01:00"
+      }
+    ],
+    "name": "handover-A3-v2-lambdacdm",
+    "purpose": "A3 v2: the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7, 9280 items, 8 k over 1e5-3e8/Mpc, zend 0.1; built by handover-07-a3-v2-20261022T211155 at b90752d on the Mac Studio. Kept; archive on the Mac Studio.",
+    "sidecar_format": 1,
+    "store_id": "03fa76de40cb4753af668352413de049"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  handover-07-a3-v2-20261022T211155  done      finished  by results
+[exit 0]
+
+$ bash docs/handover/a3-v2/reread/scripts/storefiles.sh
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864 1792699923 2026-10-22T21:12:03 var/datastores/handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+SIDECAR 3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519 1792884865 2026-10-25T00:34:25 var/datastores/handover-A3-v2-lambdacdm.manifest.json
+[exit 0]
+
+$ diff docs/handover/a3-v2/reread/state/store_files_after.txt var/py313-venv-02/state/store_files_before.txt   # handover 10 after its readers, against now
+[exit 0]
+
+
+== resume (c9026af) — §7 step 3: A3 v2's files against state/store_files_before.txt, 2026-10-25T16:45:05+0000
+$ bash docs/handover/a3-v2/reread/scripts/storefiles.sh > var/py313-venv-02/state/store_files_resume_check.txt; cat var/py313-venv-02/state/store_files_resume_check.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864 1792699923 2026-10-22T21:12:03 var/datastores/handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+SIDECAR 3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519 1792884865 2026-10-25T00:34:25 var/datastores/handover-A3-v2-lambdacdm.manifest.json
+[exit 0]
+
+$ diff var/py313-venv-02/state/store_files_before.txt var/py313-venv-02/state/store_files_resume_check.txt
+[exit 0]
+
+
+== resume (c9026af) 2026-10-25T17:09:54+0000 step 10: the A3 v2 store, after (Python 3.13.16)
+$ bash docs/handover/a3-v2/reread/scripts/storefiles.sh > var/py313-venv-02/state/store_files_after.txt; cat var/py313-venv-02/state/store_files_after.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864 1792699923 2026-10-22T21:12:03 var/datastores/handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+SIDECAR 3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519 1792884865 2026-10-25T00:34:25 var/datastores/handover-A3-v2-lambdacdm.manifest.json
+[exit 0]
+
+$ diff var/py313-venv-02/state/store_files_before.txt var/py313-venv-02/state/store_files_after.txt
+[exit 0]
+
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/handover-A3-v2-lambdacdm.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite
+digest:   0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752dda46e57d588f8107cbd4d4557134fadb2
+[exit 0]
+
+$ ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet' | grep -v grep
+[exit 1]
+
+$ bash docs/handover/a3-v2/reread/scripts/storefiles.sh | diff var/py313-venv-02/state/store_files_before.txt -   # once more, after the fingerprint
+[exit 0]
+

@@ -1,0 +1,150 @@
+== 2026-10-25T16:21:23+0000 the seven roots under Python 3.12.15 at HEAD aac52bc28b2c825ccdf4500d25fb9d9b1776ca13; git status --short: []
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > var/py313-venv-02/roots/312/AdaptiveLevin.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/AdaptiveLevin.txt
+   load before: 4.09 4.33 4.00   start 16:21:23
+   exit 0   end 16:21:24   wall 1 s
+Ran 32 tests in 0.052s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > var/py313-venv-02/roots/312/ComputeTargets.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/ComputeTargets.txt
+   load before: 4.00 4.31 3.99   start 16:21:24
+   exit 0   end 16:23:42   wall 138 s
+Ran 737 tests in 135.590s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > var/py313-venv-02/roots/312/CosmologyModels.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/CosmologyModels.txt
+   load before: 4.58 4.41 4.07   start 16:23:42
+   exit 0   end 16:23:43   wall 1 s
+Ran 39 tests in 0.645s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > var/py313-venv-02/roots/312/LiouvilleGreen.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/LiouvilleGreen.txt
+   load before: 4.58 4.41 4.07   start 16:23:43
+   exit 0   end 16:24:08   wall 25 s
+Ran 148 tests in 22.606s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > var/py313-venv-02/roots/312/ObjectFactories.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/ObjectFactories.txt
+   load before: 5.96 4.72 4.19   start 16:24:08
+   exit 0   end 16:24:22   wall 14 s
+Ran 280 tests in 12.907s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/py313-venv-02/roots/312/RunDrivers.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/RunDrivers.txt
+   load before: 6.04 4.80 4.23   start 16:24:22
+   exit 0   end 16:24:28   wall 6 s
+Ran 124 tests in 5.304s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > var/py313-venv-02/roots/312/tools.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/312/tools.txt
+   load before: 5.88 4.78 4.23   start 16:24:28
+   exit 0   end 16:24:38   wall 10 s
+Ran 49 tests in 8.579s
+OK
+
+-- note: RunDrivers' one skip here is the host's, as at R4 (115, skipped=1 in roots_06.txt). The -v run names it:
+`var/datastores/handover-A3-baseline-lambdacdm.manifest.json` carried this string as ... skipped 'the hand-written A3 manifest is not in this tree'
+   (var/datastores/handover-A3-baseline-lambdacdm.manifest.json is on the laptop only: ls: cannot access 'var/datastores/handover-A3-baseline-lambdacdm.manifest.json': No such file or directory)
+
+== 2026-10-25T16:26:58+0000 the seven roots under Python 3.13.16 at HEAD aac52bc28b2c825ccdf4500d25fb9d9b1776ca13; git status --short: []
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > var/py313-venv-02/roots/313/AdaptiveLevin.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/AdaptiveLevin.txt
+   load before: 17.50 8.57 5.75   start 16:26:59
+   exit 0   end 16:27:00   wall 1 s
+Ran 32 tests in 0.052s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > var/py313-venv-02/roots/313/ComputeTargets.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/ComputeTargets.txt
+   load before: 17.86 8.79 5.84   start 16:27:00
+   exit 0   end 16:29:26   wall 146 s
+Ran 737 tests in 135.464s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > var/py313-venv-02/roots/313/CosmologyModels.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/CosmologyModels.txt
+   load before: 20.00 16.13 9.51   start 16:29:26
+   exit 0   end 16:29:29   wall 3 s
+Ran 39 tests in 0.662s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > var/py313-venv-02/roots/313/LiouvilleGreen.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/LiouvilleGreen.txt
+   load before: 20.00 16.13 9.51   start 16:29:29
+   exit 0   end 16:29:55   wall 26 s
+Ran 148 tests in 22.975s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > var/py313-venv-02/roots/313/ObjectFactories.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/ObjectFactories.txt
+   load before: 20.94 16.69 9.94   start 16:29:55
+   exit 0   end 16:30:10   wall 15 s
+Ran 280 tests in 13.384s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/py313-venv-02/roots/313/RunDrivers.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/RunDrivers.txt
+   load before: 22.76 17.29 10.27   start 16:30:10
+   exit 0   end 16:30:17   wall 7 s
+Ran 124 tests in 5.877s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > var/py313-venv-02/roots/313/tools.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313/tools.txt
+   load before: 23.98 17.64 10.43   start 16:30:17
+   exit 0   end 16:30:30   wall 13 s
+Ran 49 tests in 10.797s
+OK
+
+== 2026-10-25T16:30:48+0000 extras under 3.13
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_ray_address_default
+Ran 7 tests in 0.076s
+
+OK
+-- warnings by kind per root, 3.12 then 3.13 (grep -c over the full outputs)
+AdaptiveLevin    312  Deprecation 0  Future 0  Resource 0  Integration 0
+AdaptiveLevin    313  Deprecation 0  Future 0  Resource 0  Integration 0
+ComputeTargets   312  Deprecation 4  Future 0  Resource 0  Integration 6
+ComputeTargets   313  Deprecation 4  Future 0  Resource 0  Integration 6
+CosmologyModels  312  Deprecation 0  Future 0  Resource 0  Integration 0
+CosmologyModels  313  Deprecation 0  Future 0  Resource 0  Integration 0
+LiouvilleGreen   312  Deprecation 0  Future 0  Resource 0  Integration 0
+LiouvilleGreen   313  Deprecation 0  Future 0  Resource 0  Integration 0
+ObjectFactories  312  Deprecation 0  Future 0  Resource 0  Integration 0
+ObjectFactories  313  Deprecation 0  Future 0  Resource 0  Integration 0
+RunDrivers       312  Deprecation 0  Future 0  Resource 0  Integration 0
+RunDrivers       313  Deprecation 0  Future 0  Resource 0  Integration 0
+tools            312  Deprecation 0  Future 0  Resource 0  Integration 0
+tools            313  Deprecation 0  Future 0  Resource 0  Integration 0
+-- ps, top CPU now
+  PID  %CPU     ELAPSED COMM
+  865  30.2 18-07:04:45 /System/Library/PrivateFrameworks/FileProvider.framework/Support/fileproviderd
+ 1130  29.3 18-07:04:38 /Applications/ChronoSync.app/Contents/Library/LoginItems/ChronoSync Scheduler.app/Contents/MacOS/ChronoSync Scheduler
+20071  28.3 03-11:10:17 /usr/libexec/trustd
+  742  28.2 18-07:04:48 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores
+  521  27.0 18-07:04:50 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+ 1298  21.2 18-07:04:27 /Applications/OrbStack.app/Contents/Frameworks/OrbStack Helper.app/Contents/MacOS/OrbStack Helper
+  622  13.2 18-07:04:49 /System/Library/CoreServices/TimeMachine/backupd
+16:30  up 18 days,  7:07, 2 users, load averages: 21.51 17.78 10.78
+
+
+== resume (c9026af) — §7 step 2: the RunDrivers root again under Python 3.13.16 at HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7; git status --short: []
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/py313-venv-02/roots/313-resume/RunDrivers.txt 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-02/roots/313-resume/RunDrivers.txt
+   load before: 3.98 5.15 7.06   start 16:44:42
+   exit 0   end 16:44:51   wall 9 s
+Ran 127 tests in 7.860s
+OK (skipped=1)
+-- warnings by kind: Deprecation 0 Future 0 Resource 0
+$ PYTHONPATH=. ./venv/bin/python -m unittest -v RunDrivers.tests.test_ray_auth_mode
+test_each_file_that_starts_ray_imports_config_ray_local (RunDrivers.tests.test_ray_auth_mode.TestEveryRayStartImportsIt.test_each_file_that_starts_ray_imports_config_ray_local)
+A start whose file does not import the module would run in Ray's default mode. ... ok
+test_the_wrappers_import_it_before_they_call_ray_init (RunDrivers.tests.test_ray_auth_mode.TestEveryRayStartImportsIt.test_the_wrappers_import_it_before_they_call_ray_init)
+In the drivers the import is inside the function that wraps ``ray.init``. ... ok
+test_a_mode_already_set_is_what_ray_sees (RunDrivers.tests.test_ray_auth_mode.TestRaySeesTheMode.test_a_mode_already_set_is_what_ray_sees)
+With ``disabled`` already set, Ray sees ``disabled`` whatever the order. ... ok
+test_ray_imported_first (RunDrivers.tests.test_ray_auth_mode.TestRaySeesTheMode.test_ray_imported_first)
+The order of ``main.py`` and the drivers: ``ray``, then ``config.ray_local``. ... ok
+test_the_module_imported_first (RunDrivers.tests.test_ray_auth_mode.TestRaySeesTheMode.test_the_module_imported_first) ... ok
+test_a_mode_already_set_is_left_as_it_is (RunDrivers.tests.test_ray_auth_mode.TestTheModuleSetsTheMode.test_a_mode_already_set_is_left_as_it_is)
+A person's explicit choice in the environment wins over this repository's. ... ok
+test_an_unset_mode_becomes_token (RunDrivers.tests.test_ray_auth_mode.TestTheModuleSetsTheMode.test_an_unset_mode_becomes_token)
+With nothing set, Ray would choose token mode itself and warn in every log. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.251s
+
+OK
+[exit 0]
+(the other six roots stand at step 5's counts)

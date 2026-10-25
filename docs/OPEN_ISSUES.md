@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **103 open** across twenty-three campaigns.
+**Last updated:** 2026-10-25 · **102 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -950,12 +950,9 @@ from Python 3.12.15 to 3.13.16, with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, befor
 jobs queued behind `handover` 10 ([board](../prompts/py313-venv/IMPLEMENTATION_STATE.md)). Its
 plan opened no issue. It was assigned `handover`'s
 `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`, which its prompt 01 closed on
-2026-10-25 on the `handover` board's §4. The same prompt opened two issues on this campaign's
-board; the orchestrator closed one after the review, the undisposed test engine.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` | py313-venv | Ray 2.59.0 turns on token auth for a local cluster: a `WARNING … Token authentication is enabled` line in every build and reader log, and `~/.ray/auth_token` (mode 644) written outside the checkout at the first start. Nothing stored changes. **Narrowed 2026-10-25:** the user chose explicit token mode; `config/ray_local.py` sets `RAY_AUTH_MODE=token` and the token is kept mode 600. Prompt 02's R7 is the real-Ray check that closes it. |
+2026-10-25 on the `handover` board's §4. Prompt 01 opened two issues and prompt 02 one; all three
+were closed the same day, on the campaign's board, §4. The campaign closed on 2026-10-25. **No row
+remains in this section.**
 
 ---
 

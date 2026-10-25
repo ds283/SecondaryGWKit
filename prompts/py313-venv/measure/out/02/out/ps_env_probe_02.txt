@@ -1,0 +1,19 @@
+== 2026-10-25T16:22:06+0000 what ps -E shows of a variable a process sets in itself after exec, and of one its child inherits (no Ray; the variable is a dummy, PS_E_PROBE)
+parent pid 86508 child pid 86510
+$ ps -E -ww -p 86508 -o command= | tr ' ' '
+' | grep '^PS_E_PROBE='   (the setting process)
+[exit 1]
+$ ps -E -ww -p pid -o command= | tr ' ' '
+' | grep '^PS_E_PROBE='   (its child, started after the setdefault)
+ps: Invalid process id: pid
+[exit 1]
+
+== 2026-10-25T16:22:19+0000 again: the first run read the child's pid from the wrong field
+parent pid 86607 child pid 86609
+$ ps -E -ww -p 86607 -o command= | tr ' ' '
+' | grep '^PS_E_PROBE='   (the setting process)
+[exit 1]
+$ ps -E -ww -p 86609 -o command= | tr ' ' '
+' | grep '^PS_E_PROBE='   (its child, started after the setdefault)
+PS_E_PROBE=set-after-exec
+[exit 0]

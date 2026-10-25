@@ -1,0 +1,29 @@
+var/py313-venv-02/out/interrupter_dummy_test_02.txt 40 lines; against var/handover-06/out/interrupter_dummy_test_06.txt 40 lines; normalised equal: False ; differing lines 5
+  line 4 
+   R7: --- var<work>/dummy-scoped/case-a/interrupter.log 
+   R4: --- <work>/dummy-scoped/case-a/interrupter.log
+  line 13 
+   R7: --- var<work>/dummy-scoped/case-b/interrupter.log 
+   R4: --- <work>/dummy-scoped/case-b/interrupter.log
+  line 20 
+   R7: --- var<work>/dummy-scoped/case-c/interrupter.log 
+   R4: --- <work>/dummy-scoped/case-c/interrupter.log
+  line 27 
+   R7: --- var<work>/dummy-scoped/case-d/interrupter.log 
+   R4: --- <work>/dummy-scoped/case-d/interrupter.log
+  line 35 
+   R7: --- var<work>/dummy-scoped/case-e/interrupter.log 
+   R4: --- <work>/dummy-scoped/case-e/interrupter.log
+var/py313-venv-02/out/interrupter_build_dummy_test_02.txt 28 lines; against var/handover-06/out/interrupter_build_dummy_test_06.txt 28 lines; normalised equal: False ; differing lines 4
+  line 4 
+   R7: --- var<work>/dummy-build/case-a/interrupter.log 
+   R4: --- <work>/dummy-build/case-a/interrupter.log
+  line 11 
+   R7: --- var<work>/dummy-build/case-b/interrupter.log 
+   R4: --- <work>/dummy-build/case-b/interrupter.log
+  line 18 
+   R7: --- var<work>/dummy-build/case-c/interrupter.log 
+   R4: --- <work>/dummy-build/case-c/interrupter.log
+  line 25 
+   R7: --- var<work>/dummy-build/case-d/interrupter.log 
+   R4: --- <work>/dummy-build/case-d/interrupter.log

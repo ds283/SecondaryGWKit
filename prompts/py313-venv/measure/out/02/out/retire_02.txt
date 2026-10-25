@@ -1,0 +1,1092 @@
+== 2026-10-25T17:19:34Z $ ./venv/bin/python -m runregistrykit store retire --dry-run --reason "py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)" var/datastores/py313-venv-02-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+dry run:  nothing was written or deleted
+references:
+  runs naming it, under var/runs: 2
+    py313-venv-02-reference-20261025T164631  done      by results
+    py313-venv-02-reference-20261025T163202  failed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+files to be deleted:
+  var/datastores/py313-venv-02-reference-shard0000.sqlite
+  var/datastores/py313-venv-02-reference-shard0001.sqlite
+  var/datastores/py313-venv-02-reference-shard0002.sqlite
+  var/datastores/py313-venv-02-reference-shard0003.sqlite
+  var/datastores/py313-venv-02-reference.sqlite
+tombstone:
+  {
+    "completed": null,
+    "files": [
+      "var/datastores/py313-venv-02-reference-shard0000.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0001.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0002.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0003.sqlite",
+      "var/datastores/py313-venv-02-reference.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+    },
+    "git_dirty": false,
+    "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+    "reason": "py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "py313-venv-02-reference-20261025T164631",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        },
+        {
+          "id": "py313-venv-02-reference-20261025T163202",
+          "matched_by": [
+            "results"
+          ],
+          "state": "failed"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retiring",
+    "when": "2026-10-25T17:19:38+00:00"
+  }
+[exit 0]
+
+== 2026-10-25T17:19:38Z $ ./venv/bin/python -m runregistrykit store retire --dry-run --reason "py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)" var/datastores/py313-venv-02-resumed.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+dry run:  nothing was written or deleted
+references:
+  runs naming it, under var/runs: 3
+    py313-venv-02-resumed-c-20261025T165549  done      by results and results_store_id
+    py313-venv-02-resumed-b-20261025T165402  killed    by results and results_store_id
+    py313-venv-02-resumed-a-20261025T165114  killed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+files to be deleted:
+  var/datastores/py313-venv-02-resumed-shard0000.sqlite
+  var/datastores/py313-venv-02-resumed-shard0001.sqlite
+  var/datastores/py313-venv-02-resumed-shard0002.sqlite
+  var/datastores/py313-venv-02-resumed-shard0003.sqlite
+  var/datastores/py313-venv-02-resumed.sqlite
+tombstone:
+  {
+    "completed": null,
+    "files": [
+      "var/datastores/py313-venv-02-resumed-shard0000.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0001.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0002.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0003.sqlite",
+      "var/datastores/py313-venv-02-resumed.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+    },
+    "git_dirty": false,
+    "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+    "reason": "py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "py313-venv-02-resumed-c-20261025T165549",
+          "matched_by": [
+            "results",
+            "results_store_id"
+          ],
+          "state": "done"
+        },
+        {
+          "id": "py313-venv-02-resumed-b-20261025T165402",
+          "matched_by": [
+            "results",
+            "results_store_id"
+          ],
+          "state": "killed"
+        },
+        {
+          "id": "py313-venv-02-resumed-a-20261025T165114",
+          "matched_by": [
+            "results"
+          ],
+          "state": "killed"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retiring",
+    "when": "2026-10-25T17:19:41+00:00"
+  }
+[exit 0]
+
+== 2026-10-25T17:19:50Z $ ./venv/bin/python -m runregistrykit store retire --reason "py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)" var/datastores/py313-venv-02-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+references:
+  runs naming it, under var/runs: 2
+    py313-venv-02-reference-20261025T164631  done      by results
+    py313-venv-02-reference-20261025T163202  failed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+files deleted:
+  var/datastores/py313-venv-02-reference-shard0000.sqlite
+  var/datastores/py313-venv-02-reference-shard0001.sqlite
+  var/datastores/py313-venv-02-reference-shard0002.sqlite
+  var/datastores/py313-venv-02-reference-shard0003.sqlite
+  var/datastores/py313-venv-02-reference.sqlite
+tombstone:
+  {
+    "completed": "2026-10-25T17:19:53+00:00",
+    "files": [
+      "var/datastores/py313-venv-02-reference-shard0000.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0001.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0002.sqlite",
+      "var/datastores/py313-venv-02-reference-shard0003.sqlite",
+      "var/datastores/py313-venv-02-reference.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+    },
+    "git_dirty": false,
+    "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+    "reason": "py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "py313-venv-02-reference-20261025T164631",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        },
+        {
+          "id": "py313-venv-02-reference-20261025T163202",
+          "matched_by": [
+            "results"
+          ],
+          "state": "failed"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-10-25T17:19:53+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+[exit 0]
+
+== $ ./venv/bin/python -m runregistrykit store show var/datastores/py313-venv-02-reference.sqlite
+retirement:
+  state:     retired
+  when:      2026-10-25T17:19:53+00:00 at c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+  reason:    py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)
+  completed: 2026-10-25T17:19:53+00:00
+  fingerprint:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  files (every file of the store):
+    var/datastores/py313-venv-02-reference-shard0000.sqlite
+    var/datastores/py313-venv-02-reference-shard0001.sqlite
+    var/datastores/py313-venv-02-reference-shard0002.sqlite
+    var/datastores/py313-venv-02-reference-shard0003.sqlite
+    var/datastores/py313-venv-02-reference.sqlite
+  references, when it was retired:
+  runs naming it, under var/runs: 2
+    py313-venv-02-reference-20261025T164631  done      by results
+    py313-venv-02-reference-20261025T163202  failed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+kind:     registry
+problems: none
+datastore: 'py313-venv-02-reference.sqlite'
+fields:
+  {
+    "created": "2026-10-25T16:50:47+00:00",
+    "datastore": "py313-venv-02-reference.sqlite",
+    "fingerprint": {
+      "classes": {
+        "BackgroundModel": {
+          "count": 1,
+          "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2"
+              ]
+            }
+          ]
+        },
+        "GkNumericIntegration": {
+          "count": 1368,
+          "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+          "tag_sets": [
+            {
+              "count": 1368,
+              "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSource": {
+          "count": 291,
+          "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "GkSourcePolicyData": {
+          "count": 291,
+          "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+              "tags": []
+            }
+          ]
+        },
+        "GkWKBIntegration": {
+          "count": 3477,
+          "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+          "tag_sets": [
+            {
+              "count": 3477,
+              "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "IntegrationSolver": {
+          "count": 7,
+          "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+              "tags": []
+            }
+          ]
+        },
+        "LambdaCDM": {
+          "count": 1,
+          "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+              "tags": []
+            }
+          ]
+        },
+        "OneLoopIntegral": {
+          "count": 0,
+          "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tag_sets": []
+        },
+        "QCD_Cosmology": {
+          "count": 1,
+          "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+              "tags": []
+            }
+          ]
+        },
+        "QuadSource": {
+          "count": 6,
+          "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+          "tag_sets": [
+            {
+              "count": 6,
+              "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourceIntegral": {
+          "count": 864,
+          "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+          "tag_sets": [
+            {
+              "count": 864,
+              "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "TkNumericIntegration": {
+          "count": 3,
+          "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "TkWKBIntegration": {
+          "count": 3,
+          "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "redshift": {
+          "count": 1159,
+          "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+          "tag_sets": [
+            {
+              "count": 1159,
+              "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+              "tags": []
+            }
+          ]
+        },
+        "store_tag": {
+          "count": 10,
+          "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+          "tag_sets": [
+            {
+              "count": 10,
+              "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+              "tags": []
+            }
+          ]
+        },
+        "tolerance": {
+          "count": 7,
+          "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+              "tags": []
+            }
+          ]
+        },
+        "version": {
+          "count": 1,
+          "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber": {
+          "count": 3,
+          "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber_exit_time": {
+          "count": 3,
+          "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+              "tags": []
+            }
+          ]
+        }
+      },
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+      "encoding_format": 1,
+      "fingerprint_format": 6,
+      "problems": {},
+      "taken": {
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "run_id": null,
+        "when": "2026-10-25T16:50:48+00:00"
+      }
+    },
+    "history": [
+      {
+        "from": null,
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "operation": "create",
+        "to": "var/datastores/py313-venv-02-reference.sqlite",
+        "when": "2026-10-25T16:50:47+00:00"
+      },
+      {
+        "from": "var/datastores/py313-venv-02-reference.sqlite",
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "operation": "retire",
+        "to": null,
+        "when": "2026-10-25T17:19:53+00:00"
+      }
+    ],
+    "name": "py313-venv-02-reference",
+    "purpose": "py313-venv prompt 02 R7 reference store on the Mac Studio (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by py313-venv-02-reference-20261025T164631; throwaway, the orchestrator's to retire after the review",
+    "retired": {
+      "completed": "2026-10-25T17:19:53+00:00",
+      "files": [
+        "var/datastores/py313-venv-02-reference-shard0000.sqlite",
+        "var/datastores/py313-venv-02-reference-shard0001.sqlite",
+        "var/datastores/py313-venv-02-reference-shard0002.sqlite",
+        "var/datastores/py313-venv-02-reference-shard0003.sqlite",
+        "var/datastores/py313-venv-02-reference.sqlite"
+      ],
+      "files_present_only": false,
+      "fingerprint": {
+        "condition": "matched",
+        "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+      },
+      "git_dirty": false,
+      "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+      "reason": "py313-venv 02: R7's throwaway reference store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+      "references": {
+        "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+        "runs": [
+          {
+            "id": "py313-venv-02-reference-20261025T164631",
+            "matched_by": [
+              "results"
+            ],
+            "state": "done"
+          },
+          {
+            "id": "py313-venv-02-reference-20261025T163202",
+            "matched_by": [
+              "results"
+            ],
+            "state": "failed"
+          }
+        ],
+        "runs_root": "var/runs",
+        "sidecars": [],
+        "stores_root": "var/datastores"
+      },
+      "state": "retired",
+      "when": "2026-10-25T17:19:53+00:00"
+    },
+    "sidecar_format": 1,
+    "store_id": "c85d2c25805f40a490a47ca5147a119c"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  py313-venv-02-reference-20261025T164631  done      finished  by results
+  py313-venv-02-reference-20261025T163202  failed    finished  by results
+[exit 0]
+
+== 2026-10-25T17:19:53Z $ ./venv/bin/python -m runregistrykit store retire --reason "py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)" var/datastores/py313-venv-02-resumed.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+references:
+  runs naming it, under var/runs: 3
+    py313-venv-02-resumed-c-20261025T165549  done      by results and results_store_id
+    py313-venv-02-resumed-b-20261025T165402  killed    by results and results_store_id
+    py313-venv-02-resumed-a-20261025T165114  killed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+files deleted:
+  var/datastores/py313-venv-02-resumed-shard0000.sqlite
+  var/datastores/py313-venv-02-resumed-shard0001.sqlite
+  var/datastores/py313-venv-02-resumed-shard0002.sqlite
+  var/datastores/py313-venv-02-resumed-shard0003.sqlite
+  var/datastores/py313-venv-02-resumed.sqlite
+tombstone:
+  {
+    "completed": "2026-10-25T17:19:56+00:00",
+    "files": [
+      "var/datastores/py313-venv-02-resumed-shard0000.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0001.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0002.sqlite",
+      "var/datastores/py313-venv-02-resumed-shard0003.sqlite",
+      "var/datastores/py313-venv-02-resumed.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+    },
+    "git_dirty": false,
+    "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+    "reason": "py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "py313-venv-02-resumed-c-20261025T165549",
+          "matched_by": [
+            "results",
+            "results_store_id"
+          ],
+          "state": "done"
+        },
+        {
+          "id": "py313-venv-02-resumed-b-20261025T165402",
+          "matched_by": [
+            "results",
+            "results_store_id"
+          ],
+          "state": "killed"
+        },
+        {
+          "id": "py313-venv-02-resumed-a-20261025T165114",
+          "matched_by": [
+            "results"
+          ],
+          "state": "killed"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-10-25T17:19:56+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+[exit 0]
+
+== $ ./venv/bin/python -m runregistrykit store show var/datastores/py313-venv-02-resumed.sqlite
+retirement:
+  state:     retired
+  when:      2026-10-25T17:19:56+00:00 at c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+  reason:    py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)
+  completed: 2026-10-25T17:19:56+00:00
+  fingerprint:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+  files (every file of the store):
+    var/datastores/py313-venv-02-resumed-shard0000.sqlite
+    var/datastores/py313-venv-02-resumed-shard0001.sqlite
+    var/datastores/py313-venv-02-resumed-shard0002.sqlite
+    var/datastores/py313-venv-02-resumed-shard0003.sqlite
+    var/datastores/py313-venv-02-resumed.sqlite
+  references, when it was retired:
+  runs naming it, under var/runs: 3
+    py313-venv-02-resumed-c-20261025T165549  done      by results and results_store_id
+    py313-venv-02-resumed-b-20261025T165402  killed    by results and results_store_id
+    py313-venv-02-resumed-a-20261025T165114  killed    by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+kind:     registry
+problems: none
+datastore: 'py313-venv-02-resumed.sqlite'
+fields:
+  {
+    "created": "2026-10-25T16:53:53+00:00",
+    "datastore": "py313-venv-02-resumed.sqlite",
+    "fingerprint": {
+      "classes": {
+        "BackgroundModel": {
+          "count": 1,
+          "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2"
+              ]
+            }
+          ]
+        },
+        "GkNumericIntegration": {
+          "count": 1368,
+          "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+          "tag_sets": [
+            {
+              "count": 1368,
+              "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSource": {
+          "count": 291,
+          "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "GkSourcePolicyData": {
+          "count": 291,
+          "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+              "tags": []
+            }
+          ]
+        },
+        "GkWKBIntegration": {
+          "count": 3477,
+          "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+          "tag_sets": [
+            {
+              "count": 3477,
+              "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "IntegrationSolver": {
+          "count": 7,
+          "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+              "tags": []
+            }
+          ]
+        },
+        "LambdaCDM": {
+          "count": 1,
+          "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+              "tags": []
+            }
+          ]
+        },
+        "OneLoopIntegral": {
+          "count": 0,
+          "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tag_sets": []
+        },
+        "QCD_Cosmology": {
+          "count": 1,
+          "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+              "tags": []
+            }
+          ]
+        },
+        "QuadSource": {
+          "count": 6,
+          "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+          "tag_sets": [
+            {
+              "count": 6,
+              "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourceIntegral": {
+          "count": 864,
+          "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+          "tag_sets": [
+            {
+              "count": 864,
+              "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "TkNumericIntegration": {
+          "count": 3,
+          "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "TkWKBIntegration": {
+          "count": 3,
+          "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "redshift": {
+          "count": 1159,
+          "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+          "tag_sets": [
+            {
+              "count": 1159,
+              "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+              "tags": []
+            }
+          ]
+        },
+        "store_tag": {
+          "count": 10,
+          "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+          "tag_sets": [
+            {
+              "count": 10,
+              "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+              "tags": []
+            }
+          ]
+        },
+        "tolerance": {
+          "count": 7,
+          "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+              "tags": []
+            }
+          ]
+        },
+        "version": {
+          "count": 1,
+          "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber": {
+          "count": 3,
+          "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber_exit_time": {
+          "count": 3,
+          "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+              "tags": []
+            }
+          ]
+        }
+      },
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+      "encoding_format": 1,
+      "fingerprint_format": 6,
+      "problems": {},
+      "taken": {
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "run_id": "py313-venv-02-resumed-c-20261025T165549",
+        "when": "2026-10-25T16:57:10+00:00"
+      }
+    },
+    "history": [
+      {
+        "from": null,
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "operation": "create",
+        "to": "var/datastores/py313-venv-02-resumed.sqlite",
+        "when": "2026-10-25T16:53:53+00:00"
+      },
+      {
+        "from": "var/datastores/py313-venv-02-resumed.sqlite",
+        "git_dirty": false,
+        "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+        "operation": "retire",
+        "to": null,
+        "when": "2026-10-25T17:19:56+00:00"
+      }
+    ],
+    "name": "py313-venv-02-resumed",
+    "purpose": "py313-venv prompt 02 R7 resumed store on the Mac Studio (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by resumed-a (SIGTERM), resumed-b (SIGTERM) and resumed-c; throwaway, the orchestrator's to retire after the review",
+    "retired": {
+      "completed": "2026-10-25T17:19:56+00:00",
+      "files": [
+        "var/datastores/py313-venv-02-resumed-shard0000.sqlite",
+        "var/datastores/py313-venv-02-resumed-shard0001.sqlite",
+        "var/datastores/py313-venv-02-resumed-shard0002.sqlite",
+        "var/datastores/py313-venv-02-resumed-shard0003.sqlite",
+        "var/datastores/py313-venv-02-resumed.sqlite"
+      ],
+      "files_present_only": false,
+      "fingerprint": {
+        "condition": "matched",
+        "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2"
+      },
+      "git_dirty": false,
+      "git_head": "c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7",
+      "reason": "py313-venv 02: R7's throwaway resumed store, 39809dca, retired after 02's review on the user's decision (2026-10-25)",
+      "references": {
+        "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+        "runs": [
+          {
+            "id": "py313-venv-02-resumed-c-20261025T165549",
+            "matched_by": [
+              "results",
+              "results_store_id"
+            ],
+            "state": "done"
+          },
+          {
+            "id": "py313-venv-02-resumed-b-20261025T165402",
+            "matched_by": [
+              "results",
+              "results_store_id"
+            ],
+            "state": "killed"
+          },
+          {
+            "id": "py313-venv-02-resumed-a-20261025T165114",
+            "matched_by": [
+              "results"
+            ],
+            "state": "killed"
+          }
+        ],
+        "runs_root": "var/runs",
+        "sidecars": [],
+        "stores_root": "var/datastores"
+      },
+      "state": "retired",
+      "when": "2026-10-25T17:19:56+00:00"
+    },
+    "sidecar_format": 1,
+    "store_id": "55c9d1425a1d404b82a5a966585b9dbc"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  py313-venv-02-resumed-c-20261025T165549  done      finished  by results and results_store_id
+  py313-venv-02-resumed-b-20261025T165402  killed    finished  by results and results_store_id
+  py313-venv-02-resumed-a-20261025T165114  killed    finished  by results
+[exit 0]
+
+== $ ls var/datastores | grep py313-venv-02
+py313-venv-02-reference.manifest.json
+py313-venv-02-resumed.manifest.json

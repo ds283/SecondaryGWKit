@@ -1,0 +1,125 @@
+== 16:55:42 prune_check after resumed-b, against the state after resumed-a (resume, c9026af)
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-02/state/after-resumed-a.txt var/datastores/py313-venv-02-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+serials listed unvalidated in var/py313-venv-02/state/after-resumed-a.txt
+-- shard 0, GkSource: 16 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 213: absent
+   serial 217: absent
+   serial 232: absent
+   serial 233: absent
+   serial 241: absent
+   serial 243: absent
+   serial 244: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 254: absent
+   serial 255: absent
+   serial 256: absent
+   serial 257: absent
+-- shard 1, GkSource: 17 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 529: absent
+   serial 539: absent
+   serial 548: absent
+   serial 551: absent
+   serial 552: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+-- shard 3, GkSource: 16 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 11: absent
+   serial 22: absent
+   serial 34: absent
+   serial 38: absent
+   serial 40: absent
+   serial 41: absent
+   serial 43: absent
+   serial 44: absent
+   serial 47: absent
+   serial 48: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+   serial 54: absent
+49 serial(s) checked: 49 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 16:57:40 prune_check after resumed-c, against the state after resumed-a
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-02/state/after-resumed-a.txt var/datastores/py313-venv-02-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+serials listed unvalidated in var/py313-venv-02/state/after-resumed-a.txt
+-- shard 0, GkSource: 16 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 213: absent
+   serial 217: absent
+   serial 232: absent
+   serial 233: absent
+   serial 241: absent
+   serial 243: absent
+   serial 244: absent
+   serial 249: absent
+   serial 250: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 254: absent
+   serial 255: absent
+   serial 256: absent
+   serial 257: absent
+-- shard 1, GkSource: 17 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 529: absent
+   serial 539: absent
+   serial 548: absent
+   serial 551: absent
+   serial 552: absent
+   serial 554: absent
+   serial 555: absent
+   serial 556: absent
+   serial 557: absent
+   serial 558: absent
+   serial 560: absent
+   serial 561: absent
+   serial 562: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+-- shard 3, GkSource: 16 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 11: absent
+   serial 22: absent
+   serial 34: absent
+   serial 38: absent
+   serial 40: absent
+   serial 41: absent
+   serial 43: absent
+   serial 44: absent
+   serial 47: absent
+   serial 48: absent
+   serial 49: absent
+   serial 50: absent
+   serial 51: absent
+   serial 52: absent
+   serial 53: absent
+   serial 54: absent
+49 serial(s) checked: 49 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 16:57:40 prune_check after resumed-c, against the state after resumed-b
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-02/state/after-resumed-b.txt var/datastores/py313-venv-02-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+serials listed unvalidated in var/py313-venv-02/state/after-resumed-b.txt
+   none: there is nothing to check
+rc=0
+

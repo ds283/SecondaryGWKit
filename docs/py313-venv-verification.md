@@ -892,6 +892,617 @@ launcher's.
 **`[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]`** closes on the `handover` board
 (§4): this branch is now on 3.13.16 with `ray` 2.59.0.
 
-## 2. R7 — the Mac Studio
+## 2. R7 — the Mac Studio on Python 3.13, and A3 v2 read under it
 
-Written by prompt 02.
+Written by **prompt 02**, on the Mac Studio (`mps026298`), in the main checkout, on
+`handover-remedial`. It ran in two dispatches:
+- **The first**, at **`aac52bc`** ("Write the py313-venv orchestrator note for prompt 02"), 16:18–16:36
+  GMT. It made steps 1–6. Its `reference` failed at `ray.init` (§2.1.4), and it stopped at step 8.
+- **The resume**, at **`c9026af`** ("Amend py313-venv prompt 02 for its resume from step 7"), 16:44–17:11
+  GMT. It ran under the prompt's §7: the fix `14ada2f`, then steps 7–11.
+
+This section has §1's shape and compares R7 with R6 (§1), with R4 (`handover` 06, this host, 3.12.15
+and `ray` 2.43.0, whose raw logs are on this machine) and with R3's recorded fingerprints. The saved
+outputs are under `prompts/py313-venv/measure/out/02/` (the orchestrator's copy of
+`var/py313-venv-02/out/` and `state/`). The resume's blocks in files the first dispatch had begun
+are headed `== resume (c9026af)`. Times are GMT.
+
+### 2.0 The venv
+
+| | Before | After |
+|---|---|---|
+| Interpreter | MacPorts Python **3.12.15** | MacPorts Python **3.13.16** (`/opt/local/bin/python3.13 -m venv venv`) |
+| `ray` | 2.43.0 | **2.59.0** |
+| `SQLAlchemy` | 2.0.39 | **2.0.55** |
+| SQLite | 3.53.4 | **3.53.4**, unchanged |
+| `pip freeze` | 101 lines, equal to the laptop's 3.12 freeze | 101 lines, **identical to the laptop's last freeze** (`diff` exit 0); against 3.12, exactly the `ray` and `SQLAlchemy` lines |
+
+(`02/pip_02.txt`)
+- **The old venv was moved, not deleted**, to
+  **`~/Documents/Code/retired-venvs/SecondaryGWKit-py312-20261025`** (817 MB). `SecondaryGWKit-py313-20261022`,
+  beside it, is as it was.
+- **The install.** `pip install -r requirements.txt` used the venv's own pip, 26.2.1, not upgraded.
+  `pip check` is clean. `package_provenance` of the seven distributions equals the laptop's 3.13
+  record as JSON: `datastorekit` 0.5.0 `f47b9a25…`, `raypoolkit` 0.3.0 `67a75b97…`, `runregistrykit`
+  0.2.0 `0bae3a3c…`, none editable.
+- **The token, before any Ray start** (`02/token_02.txt`).
+  - `~/.ray/` held no `auth_token`.
+  - `./venv/bin/ray get-auth-token --generate > /dev/null` made it, then `chmod 600`.
+  - It is `-rw-------`, 64 bytes, and has never been printed.
+- **`this_host()`** is `id` `d120d1cf03551e6f` and `boot` `C58A0F92-…`, both R4's, with `python`
+  `3.13.16`.
+
+### 2.0.1 The suites, under 3.12 and 3.13
+
+(`02/roots_02.txt`) Each root ran serially, in the foreground, at a one-minute load of 10–24
+(Time Machine, Spotlight).
+
+| Root | 3.12 Ran | 3.12 wall | 3.13 Ran | 3.13 wall | Result |
+|---|---|---|---|---|---|
+| AdaptiveLevin | 32 | 1 s | 32 | 1 s | OK |
+| ComputeTargets | 737 | 138 s | 737 | 146 s | OK |
+| CosmologyModels | 39 | 1 s | 39 | 3 s | OK |
+| LiouvilleGreen | 148 | 25 s | 148 | 26 s | OK (skipped=1) |
+| ObjectFactories | 280 | 14 s | 280 | 15 s | OK |
+| RunDrivers | 124 | 6 s | 124 | 7 s | OK (skipped=1) |
+| tools | 49 | 10 s | 49 | 13 s | OK |
+| **RunDrivers, the resume (`c9026af`)** | — | — | **127** | 9 s | OK (skipped=1) |
+
+- **Every count is 01's under 3.13, with RunDrivers excepted.** RunDrivers is 124 at `aac52bc`,
+  with `d833ee7`'s 4 `test_ray_auth_mode` tests, and **127 at `c9026af`**, with `14ada2f`'s
+  `TestRaySeesTheMode` (3). Its 7 tests pass alone.
+- **No known wall-clock test failed**, including `test_wall_time_per_object`, which failed on the
+  laptop under both interpreters.
+- `test_ray_address_default` alone: 7 OK.
+- **Warnings by kind are equal under 3.12 and 3.13** in every root:
+  - ComputeTargets has 4 `DeprecationWarning` (the repository's own `bessel_phase`) and 6
+    `IntegrationWarning`;
+  - ObjectFactories has **0 `ResourceWarning`**, where the laptop's 3.13 had 1, since `28f94c7`
+    disposed of that test's engine.
+
+### 2.0.2 The tree and the manifests
+
+- **The Gate.** `git diff --stat b90752d c9026af -- ObjectFactories config main.py` lists
+  `ObjectFactories/tests/test_quadsource_parent_key.py`, `config/ray_local.py` and `main.py`, and
+  nothing else.
+  - `git log aac52bc..c9026af` is `14ada2f` and `c9026af`.
+  - Neither touches the launcher (`RunDrivers/quadsource_atol_sweep.py`, `5b984c75…`, last changed
+    in `40d10b1`), the interrupter or the rehearsal scripts.
+- **The tree was clean at every launch** and after the last. `var/` is ignored, so **every manifest
+  records `git_dirty: false`**, as R3's did, where R6's said true.
+- **Every manifest has R3's twenty keys.**
+  - `packages` names the seven distributions, equal as JSON to the record taken after the install.
+  - `host.python` is **`3.13.16`**, and every status's `host` `id` and `boot` are this machine's
+    (`02/run_records_02.txt`).
+
+### 2.1 How each was launched
+
+R6's command (§1.1), with `py313-venv-02`, `--campaign py313-venv --prompt 02` and this prompt's
+store names, detached. The launch logs are `var/runs/py313-venv-02-<slug>-resume.launch.log` (§7):
+
+```bash
+nohup sh -c "PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal [--resume] \
+    --database var/datastores/py313-venv-02-<store>.sqlite \
+    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register <slug> --purpose \"\$0\" --campaign py313-venv --prompt 02; \
+  echo \"** driver exit status \$?\"" "<one line>" \
+  > var/runs/py313-venv-02-<slug>-resume.launch.log 2>&1 &
+disown
+```
+
+Each `--purpose` names:
+- R7 of `py313-venv` prompt 02 on the Mac Studio, and the tree, `c9026af`;
+- Python 3.13.16, `ray` 2.59.0 and `SQLAlchemy` 2.0.55, the three packages and the launcher;
+- the fingerprint to equal, `39809dca`, and R3's run that recorded it.
+
+None names the temp dir.
+
+**One check per launch, and the waits were the orchestrator's.** After each launch the agent made
+one check and ended its turn, reporting the driver's pid, the `sh` pid, the run id, the
+interrupter's pid and the lock's owner file. The orchestrator waited on the pid in the background
+and resumed the agent with the final `status.json`. Nobody polled, and nobody ran `pgrep -f`.
+
+| Slug | Run id | Store | `--resume` | Python pid (`sh`) | State | Exit | Driver exit status | Wall time | Load at launch |
+|---|---|---|---|---|---|---|---|---|---|
+| `reference` | `py313-venv-02-reference-20261025T164631` | reference | no | 929 (922) | `done` | 0 | 0 | **3 m 32 s** (16:46:30–16:50:02) | 6.7 |
+| `resumed-a` | `py313-venv-02-resumed-a-20261025T165114` | resumed | no | 3417 (3412) | `killed` | 143 | 143 | 1 m 50 s (16:51:13–16:53:03) | 6.1 |
+| `resumed-b` | `py313-venv-02-resumed-b-20261025T165402` | resumed | yes | 5005 (5000) | `killed` | 143 | 143 | 1 m 13 s (16:54:01–16:55:14) | 5.6 |
+| `resumed-c` | `py313-venv-02-resumed-c-20261025T165549` | resumed | yes | 6029 (6024) | `done` | 0 | 0 | 1 m 23 s (16:55:48–16:57:11) | 6.1 |
+
+R3's wall times were 3 m 52 s, 2 m 18 s, 1 m 19 s and 1 m 46 s, and R6's `reference` took 16 m 33 s
+under another project's load. **R7 ran at R4's pace** (§2.5.5).
+
+**The sidecars** (`02/store_sidecars_02.txt`):
+- **The reference store.** `store create` (store_id `c85d2c25805f40a490a47ca5147a119c`) ran after
+  `reference`, then `store fingerprint --write`: `39809dca…`, problems none, "it replaced none".
+- **The resumed store.** `store create` (store_id `55c9d1425a1d404b82a5a966585b9dbc`) ran after
+  `resumed-a`.
+- The store files were identical across each.
+
+#### 2.1.1 The pre-launch checks
+
+(`02/prelaunch_checks_02.txt`)
+- **The tree.** `HEAD` was `c9026af3…` and `git worktree list` showed this checkout alone.
+  `git status --short` was empty.
+- **The environment.** `RAY_ADDRESS` and `RAY_AUTH_MODE` were unset in the launching shell. The
+  machine has 10 CPUs.
+- **The registry.** Before `reference`, `list` showed 6 runs, all finished: the first dispatch's
+  `failed` run and handover's five. Nothing was `running` or stale before any launch.
+- **No Ray process.** Before each launch none ran by name. `ps -p` found none of the previous run's
+  pids alive: the `sh`, the driver, the interrupter, the `gcs_server` and every Ray pid its logs
+  name.
+- **The store names.** Both were `absent` to `store show`. The reference store's listing named the
+  first dispatch's `failed` run, which created no file. There was no journal under
+  `var/datastores/`.
+- **The configuration.**
+  - `find_client_root()` reads the six `distributions`, and `pip show` puts all seven in this
+    venv's `site-packages`.
+  - `ENCODING_FORMAT` is 1 and `FINGERPRINT_FORMAT` is 6.
+  - `config.ray_local` sets `RAY_AUTH_MODE` to `token` from unset, and `ray.is_initialized()` is
+    false.
+- **R3's recorded fingerprints** (`var/handover-06/recorded/`): `reference` and `resumed-c`, each
+  `done`/0, format 6, `39809dca…`, 21 classes, problems `{}`.
+- **`~/.ray/auth_token`** was `-rw-------`, 64 bytes, at every check. The disk was 88 % used, with
+  117 GB free.
+
+#### 2.1.2 The interrupter
+
+**The dummy tests** ran under 3.13 in the first dispatch (16:30:57–16:31:23, into
+`var/py313-venv-02/work/`), both rc 0 (`02/interrupter_dummy_test_02.txt`,
+`02/interrupter_build_dummy_test_02.txt`). With paths normalised, they equal R4's. They were not run
+again in the resume, since neither the venv nor the scripts had changed.
+
+**The points, from R7's own `reference` `stdout.log`, by R3's and R4's reasoning**
+(`02/interrupter_firings_02.txt`):
+- **`resumed-a`.** `CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT` took **22 s** (`stdout.log:76`;
+  R3 24.8 s, R4 22.6 s). 40 % of that is 8.8 s, under the 10 s floor, so the hold was 10 s, R4's
+  own: `'^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10`.
+- **`resumed-b`.** `CALCULATE QUADRATIC SOURCE INTEGRALS` took **79.8 s** (`stdout.log:100`; R3
+  91.4 s, R4 88.7 s). A third is 26.6 s: `'^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5
+  --hold 27`. R4 held 30 s.
+
+Each interrupter was started by a separate command, 3 s after its launch, with no loop.
+
+**The firings:**
+
+```
+resumed-a (interrupter pid 3468)
+16:52:51 liveness alive; pid 3417; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+16:52:51 eligible …; holding 10 s, then reading again
+16:53:01 sent SIGTERM to pid 3417 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); …
+
+resumed-b (interrupter pid 5057)
+16:54:44 liveness alive; pid 5005; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+16:54:44 eligible …; holding 27 s, then reading again
+16:55:11 sent SIGTERM to pid 5005 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); …
+```
+
+Each signal came at its hold, and each interrupter checked the pid's command line first, then
+exited.
+
+#### 2.1.3 The lock
+
+(`02/lock_02.txt`) Every lock command was a **shell command of its own** and the only process it
+started. The header was zsh's builtin `print -P`, naming the temp dir as `<the temp dir>`. Output went
+by `>> … 2>&1`, and the exit was recorded with the builtin `echo`.
+
+| When | Command | Exit | What it said |
+|---|---|---|---|
+| 16:20:48–49 | `status`, `ray-processes` (first dispatch, the Gate) | 0, 0 | `lock: free`; none |
+| 16:31:52 | `acquire` (first dispatch) | 0 | acquired |
+| 16:32:15–16:34:09 | `set-pid 93203`; `ray-processes` ×2; `status` ×2 | 0; 1, 0; 0 | `gcs_server` 93233 alone, then none (§2.1.4) |
+| 16:36:46 | `release` (the orchestrator, on the user's ruling) | 0 | released |
+| 16:46:12–13 | `status`, `ray-processes` (the resume, before `acquire`) | 0, 0 | `lock: free`; none |
+| 16:46:19 | `acquire --purpose "SecondaryGWKit py313-venv 02 (R7 and the A3 v2 read)"` | 0 | acquired, for SecondaryGWKit |
+| 16:46:23 | `status` | 0 | `HELD`, `ray_temp_dir: /tmp/ray-sgk`; no pid yet; none |
+| 16:46:38 | `set-pid 929` (`reference`) | 0 | recorded |
+| 16:46:42 | `ray-processes` | **1** | **the 2.59.0 instance, 18 lines: `gcs_server` 960 and `raylet` 1008 among them**, with `ray::DashboardAgent`, `ray::RuntimeEnvAgent`, 4 `ray::Datastore` and `ray::SerialPoolBroker` |
+| 16:46:46 | `status` | 0 | `pid: 929`, alive; 18 Ray processes of `/tmp/ray-sgk` |
+| 16:50:37 | `ray-processes` (after `reference`) | 0 | none |
+| 16:51:20, 16:51:25 | `set-pid 3417` (`resumed-a`); `status` | 0, 0 | recorded; alive, 17 |
+| 16:53:43 | `ray-processes` | 0 | none |
+| 16:54:08, 16:54:13 | `set-pid 5005` (`resumed-b`); `status` | 0, 0 | recorded; alive, 13 |
+| 16:55:34 | `ray-processes` | 0 | none |
+| 16:55:52, 16:55:56 | `set-pid 6029` (`resumed-c`); `status` | 0, 0 | recorded; alive, 13 |
+| 16:57:33 | `ray-processes` | 0 | none |
+| 17:10:14 | `ray-processes` (after the A3 v2 readers) | 0 | none |
+| 17:10:19 | `release` | 0 | released |
+| 17:10:23 | `status` | 0 | `lock: free` |
+| 17:10:28 | `ray-processes` | 0 | none |
+
+- **The lock sees the 2.59.0 instance by its temp dir**, as on the laptop.
+- The owner file named `project: SecondaryGWKit`, the purpose above, `host: mps026298`,
+  `ray_temp_dir: /tmp/ray-sgk` and `ray_address: in-process` throughout.
+- **`set-pid` ran for every launch.** Between launches and through the readers, the recorded pid was
+  the previous driver's, dead. That is the protocol, not a stale lock.
+- After the release, `~/.raypoolkit/` is empty and `~/ScienceData/.rehearsal-lock` does not exist.
+
+#### 2.1.4 The first dispatch's `reference`, and the fix
+
+**The failure.** The first dispatch launched `reference` at 16:32:01 (`sh` 93198, driver 93203). It
+ended **`failed`/1 in 23 s** (`var/runs/py313-venv-02-reference-20261025T163202`, launch log
+`var/runs/py313-venv-02-reference.launch.log`; both kept as records).
+- The driver logged `InvalidAuthToken` repeatedly: 22 lines match
+  `InvalidAuthToken|AuthenticationError` across its three logs. The GCS server logged `Missing
+  authorization header`.
+- Then came `RuntimeError: Failed to start GCS … RAY_AUTH_MODE is currently 'disabled' (not
+  'token')`. No store file was created.
+
+**The cause.** `d833ee7` set `RAY_AUTH_MODE` in `config/ray_local.py`, but Ray 2.59.0 reads the mode
+into its config when `ray` is imported, and the launcher and `main.py` import `ray` first. Without
+starting Ray, `02/auth_mode_probe_02.txt` shows the cached mode by import order: 0 (disabled) with
+`ray` first, and 1 (token) with `config.ray_local` first.
+
+**The record.** The issue `[02-the-token-mode-setting-comes-after-import-ray-so-every-ray-start-fails]`
+was opened by the first dispatch and **closed on the laptop by `14ada2f`**:
+`Config.initialize("")` after setting the variable, and `TestRaySeesTheMode`. It is on the board's
+§4 (§2.7).
+
+**Why the check names the `gcs_server`.** `02/ps_env_probe_02.txt` (no Ray) shows that macOS
+`ps -E` gives a process's environment as it was at `exec`. A variable that the process sets in
+itself is invisible there, while a child started afterwards carries it. So §7 names the
+`gcs_server`'s pid for check 3, not the driver's.
+
+### 2.2 L1 — every launch ends as recorded
+
+#### 2.2.1 The states
+
+| Slug | `state` | `exit_code` | `fingerprint` | `fingerprint_sidecar` | Launch log ends |
+|---|---|---|---|---|---|
+| `reference` | `done` | 0 | format 6, `encoding_format` 1, **`39809dca…`**, problems `{}` | not written: "…py313-venv-02-reference.manifest.json is not a problem-free registry sidecar (there is none)" | `** driver exit status 0` |
+| `resumed-a` | `killed` | 143 | format 6, `encoding_format` 1, `f62d7710…`, problems `{}` | not written: "… (there is none)" | `** driver exit status 143` |
+| `resumed-b` | `killed` | 143 | format 6, `encoding_format` 1, `a51f9657…`, problems `{}` | `written` | `** driver exit status 143` |
+| `resumed-c` | `done` | 0 | format 6, `encoding_format` 1, **`39809dca…`**, problems `{}` | `written` | `** driver exit status 0` |
+
+- Each fingerprint holds 21 classes. Each `taken` names its run, `git_head` `c9026af3…` and
+  `git_dirty` false.
+- The intermediate digests are `resumed-a`
+  `f62d77100f54cbdebd4b272015fe86e147688238cbf0ab2ec61256fe0a7e32c1` and `resumed-b`
+  `a51f96571bfae9c681e4da68a4bf703294c2a4fabe5bfb772cc357bede5e7cbb`. Each differs from R3's, R4's
+  and R6's, as it must, since each store was killed at a different point.
+  - `resumed-a`'s store held `GkSource` 166, `GkSourcePolicyData` 0 and QSI 0.
+  - `resumed-b`'s held 291, 291 and 332.
+
+#### 2.2.2 Each killed launch
+
+| | `resumed-a` | `resumed-b` |
+|---|---|---|
+| Interrupter's `sent SIGTERM` | 16:53:01 | 16:55:11 |
+| Handler's line | `** SIGTERM at 2026-10-25 16:53:02 +0000: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143` | `** SIGTERM at 2026-10-25 16:55:12 +0000: recorded killed, exit code 143; …` |
+| `stderr.log`'s handler line | `… the pipeline ended with SystemExit(1); …` | `… the pipeline ended with SystemExit(1); …` |
+| Python traceback | none | none |
+| `status.json.*.tmp` left | none | none |
+| Stage at the signal | `GkSource`, 10 s in (**166 of 291 stored, 49 unvalidated**) | QSI, 27 s in (**332** of 864 stored) |
+| Driver gone (the orchestrator's wait) | by 16:53:19 | by 16:55:18 |
+| Ray processes gone (by name and by pid) | by 16:53:32, **≤ 31 s after the signal** | by 16:55:30, **≤ 19 s** |
+
+- R4 had `SystemExit(1)` and `SystemExit(143)`, and R6 had 143 and 1. Which one appears depends on
+  where the signal lands. The record is `killed`/143 either way.
+- **No Ray process outlived either `SIGTERM`ed driver**, as at R0–R6, so the orchestrator had no
+  extra pid to wait on.
+
+#### 2.2.3 No Ray process of this repository left
+
+After each launch, no `gcs_server` or `raylet` ran by name, `ray-processes` exited 0, and `ps -p`
+found none of these alive:
+- the `sh`, the driver and the interrupter;
+- the Ray pids the logs name: `reference` 1055, 1056 and 1112; `resumed-a` 3507, 3508 and 3510;
+  `resumed-b` 5103, 5106, 5107 and 5206; `resumed-c` 6120.
+
+#### 2.2.4 The manifests and the hosts
+
+As §2.0.2 says, for all four runs (`02/run_records_02.txt`):
+- `git_head` is `c9026af…` and `git_dirty` is false;
+- `packages` is the seven-distribution record, equal as JSON;
+- `script` is `RunDrivers/quadsource_atol_sweep.py`, `5b984c75…`;
+- there are twenty keys, and `host` is this machine's, with `python` `3.13.16`;
+- `argv` holds `--resume` in `resumed-b` and `resumed-c` only;
+- `results_store_id` is null for `reference` and `resumed-a`, and the store's sidecar id for the
+  resumes.
+
+#### 2.2.5 Every launch's logs, and what is new in them
+
+(`02/log_comparison_02.txt`, against R4's same slug, whose raw logs are on this machine, with R6's
+counts beside.) **No line kind in any R7 log is new against R4's** (section 2: `R7-only kinds 0` in
+every file). Section 1's counts equal R4's for every search, slug and file, with one exception:
+`SystemExit(1)`/`SystemExit(143)` in `resumed-b` (§2.2.2).
+
+Zero in every log, as at R4:
+- `Traceback`, `ModuleNotFoundError`, `ImportError`, `AttributeError`, `pickle`, `Datastore.SQL`;
+- the actor errors, `ValueError`, `RuntimeWarning`, `did not validate`;
+- `DeprecationWarning`, `FutureWarning`, `ResourceWarning`, `ConfigError`, `RunRegistry` (not
+  `Kit`), `datastorekit`, the disk-space line;
+- **`Token authentication is enabled`, `Generated new authentication token`,
+  `InvalidAuthToken|AuthenticationError`, and `auth_token|RAY_AUTH_MODE|authentication`**.
+
+`runregistrykit` appears once, in the banner, and `INTEGRITY WARNING` twice in `resumed-b`, as at
+R4. The `IntegrationWarning` is in `reference` and `resumed-b`, as at R4 and R6.
+
+**The line counts, normalised as R4's and R6's were** (section 2):
+
+| Slug | `stdout.log` | `stderr.log` | launch log |
+|---|---|---|---|
+| `reference` | 110 against 110 | 4 against 4 | 116 against 116 |
+| `resumed-a` | 84 against 84 | 2 against 2 | 88 against 88 |
+| `resumed-b` | **145 against 129**; no kind differs | 6 against 6 | **154 against 138**; no kind differs |
+| `resumed-c` | 107 against 107; one R4-only kind | 0 against 0 | 110 against 110; one R4-only kind |
+
+**Every difference, explained:**
+1. **R6's token-auth lines are gone.** R6 had the `Token authentication is enabled` warning in every
+   launch log, and `Generated new …` in its first. R7 has neither, and no authentication error.
+   This is `d833ee7` with `14ada2f`'s refresh: with the mode set by name, Ray logs nothing (§2.6).
+2. **`resumed-b`'s 16 extra lines** are the `INTEGRITY WARNING`'s per-row listing of unvalidated
+   `GkSource` rows (`-- "<row>" … contains N z-sample values | expected=N`), 16 of each kind
+   against R4's 8. Its length follows how many rows `resumed-a`'s kill left (49 against R4's 43).
+3. **`resumed-c`'s "R4-only kind"** is `ALL WORK ITEMS COMPLETE in time Nm Ns`: R7's QSI took
+   60.4 s and printed as seconds, where R4's took 1 m 6.87 s.
+4. **`SystemExit(1)` in `resumed-b`** (§2.2.2).
+
+No new line names `runregistrykit`, `datastorekit` or `raypoolkit`.
+
+### 2.3 L2 — the resume is the reference
+
+#### 2.3.1 Nothing stored is recomputed
+
+(`02/stage_counts_02.txt`, lookup / compute / store)
+
+| Stage | `reference` | `resumed-a` | `resumed-b` | `resumed-c` |
+|---|---|---|---|---|
+| HORIZON EXIT TIMES, SOURCE K-SAMPLE | 3/3/3 | 3/3/3 | 3/0/0 | 3/0/0 |
+| HORIZON EXIT TIMES, RESPONSE K-SAMPLE | 3/0/0 | 3/0/0 | 3/0/0 | 3/0/0 |
+| NUMERICAL PART OF MATTER TRANSFER FUNCTIONS | 3/3/3 | 3/3/3 | 0/0/0 | 0/0/0 |
+| WKB PART OF MATTER TRANSFER FUNCTIONS | 3/3/3 | 3/3/3 | 0/0/0 | 0/0/0 |
+| QUADRATIC SOURCE TERMS | 6/6/6 | 6/6/6 | 0/0/0 | 0/0/0 |
+| NUMERICAL PART OF TENSOR GREEN FUNCTIONS | 1368/1368/1368 | 1368/1368/1368 | 0/0/0 | 0/0/0 |
+| WKB PART OF TENSOR GREEN FUNCTIONS | 3477/3477/3477 | 3477/3477/3477 | 0/0/0 | 0/0/0 |
+| GREENS FUNCTIONS FOR SOURCE REDSHIFT | 291/291/291 | (no progress line) | **174/174/174** | 0/0/0 |
+| APPLY GKSOURCE POLICIES | 291/291/291 | — | 291/291/291 | 0/0/0 |
+| QUADRATIC SOURCE INTEGRALS | 864/864/864 | — | (no progress line) | **532/532/532** |
+
+- Every stage that finished before an interruption computed zero on the next launch.
+- **`GkSource`.** `resumed-a` stored **166** (57 + 55 + 0 + 54), **49** of them unvalidated
+  (16 + 17 + 0 + 16). `resumed-b` pruned those 49 at open and computed **174 = 291 − 166 + 49**.
+- **QSI.** `resumed-b` stored **332**, and `resumed-c` computed **532 = 864 − 332**.
+- The `reference` and `resumed-a` columns equal R4's stage by stage.
+
+#### 2.3.2 The prune at startup
+
+(`02/closed_store_state_02.txt`, `02/prune_check_02.txt`) The closed store was read `mode=ro` after
+each launch:
+
+| After | journal | `replication_in_flight` | Rows `validated = 0` |
+|---|---|---|---|
+| `reference` | none | 0 | none |
+| `resumed-a` | none | 0 | **`GkSource` 16 + 17 + 0 + 16 = 49**, of 166, each listed by serial |
+| `resumed-b` | none | 0 | none (`GkSource` 97 + 97 + 0 + 97) |
+| `resumed-c` | none | 0 | none |
+
+- `prune_check.py` against the state after `resumed-a` gave `49 serial(s) checked: 49 absent, 0
+  reused by a validated row, 0 still unvalidated`, after `resumed-b` and again after `resumed-c`,
+  exit 0. Against the state after `resumed-b` it gave `none: there is nothing to check`.
+- **So the prune at open removed exactly the rows `resumed-a` left unvalidated, and no validated
+  row.** (R3 left 48, R4 43 and R6 42.)
+
+#### 2.3.3 The version row
+
+Each shard of each store has exactly one row, `(1, '2025.1.1')`. The primary has no `version` table.
+
+#### 2.3.4 The comparison
+
+**The two stores**, by `compare_stores.py` (`02/fingerprint_comparison_02.txt`): both are format 6,
+`39809dca…`, problems none, and each has 0 differences against its sidecar.
+`compare_fingerprints(reference, resumed): 0 difference(s)`, every class `equal`, verdict `equal`,
+exit 0.
+
+**Against R3's recorded fingerprints**, by `compare_with_recorded.py`, through `bash`
+(`02/fingerprint_against_recorded_02.txt`):
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py \
+    var/datastores/py313-venv-02-reference.sqlite var/datastores/py313-venv-02-resumed.sqlite \
+    --against var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838 \
+    var/handover-06/recorded/rrk-v020-adoption-03-resumed-c-20261018T233941
+```
+
+Exit 0, verdict `equal`. Each store has 0 differences against its sidecar and against **R3's
+`reference` and `resumed-c`**.
+
+**FP6 holds on the Mac Studio, as on the laptop: Python 3.13.16, `ray` 2.59.0, `SQLAlchemy` 2.0.55
+and token mode change nothing a build writes or a fingerprint reads.** The store files and the
+sidecars were identical before and after all of §2.3's reads.
+
+#### 2.3.5 Integrity, both stores, read-only
+
+- **The census** (`02/census_02.txt`): every table is `OK` on both stores, `no divergence`, exit 0.
+- **`store_soundness.py`** (`02/store_soundness_02.txt`): `integrity_check` is `['ok']` and
+  `foreign_key_check` returns 0 rows on every file. `read_inventory` reports 0 problems and 0
+  `duplicate`. `=> clean`, exit 0.
+
+### 2.4 L3 — every reader, read-only, on the resumed store
+
+Through `run_readers.sh`, unchanged, with R3's two commands, output in `var/py313-venv-02/extract-r7/`,
+with the lock held (`02/readers_r7_02.txt`). Both invocations exited 0 (16:58:35–17:01:16).
+
+| Script | Exit | Wall | Lookups (last queue) | Files written (R6; R3) | Traceback | Store files after |
+|---|---|---|---|---|---|---|
+| `extract_Gk_data.py` | 0 | 24 s | 116 | 441 (540; 468) | none | identical |
+| `extract_GkWKB_data.py` | 0 | 44 s | 348 | 2436 (2436; 2436) | none | identical |
+| `extract_GkSource_data.py` | 0 | 19 s | 10 | 180 (186; 156) | none | identical |
+| `extract_TkWKB_data.py` | 0 | 15 s | 3 | 27 (27; 27) | none | identical |
+| `extract_tensor_source_data.py` | 0 | 13 s | 6 | 27 (27; 27) | none | identical |
+| `extract_QuadSourceIntegral_data.py` | 0 | 16 s | 24 | 73 (69; 70) | none | identical |
+| `extract_Gk_data.py`, no `--models` | 0 | 24 s | 116; then `>> SKIPPING MODEL QCD_Cosmology …` | 360 (405; 378) | none | identical |
+
+- **The lookups equal R3's.** The file counts differ where a reader draws an unseeded subsample.
+- After each reader, 0 Ray processes of this checkout's venv are left.
+- No log holds a token-mode line or an authentication error. `extract_GkSource_data`'s has 2
+  `MatplotlibDeprecationWarning` from its own code; the count follows the subsample.
+- **The fingerprint afterwards:** `39809dca…`, "matches the fingerprint taken
+  2026-10-25T16:57:10+00:00 by run py313-venv-02-resumed-c-20261025T165549, at c9026af3…".
+
+**A3 v2's guard** (`02/guard_02.txt`) ran in the foreground, with no `--register` and the lock held.
+It exited 1 within a second with the clean refusal `!! quadsource_atol_sweep --build:
+py313-venv-02-resumed.sqlite, … already exist(s). Refusing to build into an existing store: …`, and
+no traceback. R7's store and sidecar files were identical, and `var/runs/` held 20 entries before
+and after.
+
+### 2.5 L4 — equal to R3, and to R4
+
+#### 2.5.1 The statistics block
+
+`policy_statistics.py` exited 0 on every run but `resumed-a`, which has no block (rc 1), as at R3
+(`02/policy_statistics_02_*.txt`). Every count is R3's, R4's and R6's: 291 instances; numeric 109
+(109 complete); mixed 26 (25 complete, 1 minimal); WKB 156 (156 complete).
+- `reference` and `resumed-c` are byte-identical to R4's same slug.
+- `resumed-b` differs from R4's only in line order, and is equal when sorted
+  (`[02-the-policy-statistics-block-orders-its-lines-by-completion]`).
+
+#### 2.5.2 The reference stage counts
+
+The `reference` column of §2.3.1 equals R3's, R4's and R6's in every stage.
+
+#### 2.5.3 The resumed chain, by identity
+
+| Identity | R3 | R4 | R6 | R7 | Holds |
+|---|---|---|---|---|---|
+| A stage finished before a kill computes 0 on the next launch | yes | yes | yes | yes | ✅ |
+| `GkSource` pruned at `resumed-b`'s open = left unvalidated by `resumed-a` | 48 = 48 | 43 = 43 | 42 = 42 | **49 = 49**, all absent, none reused | ✅ |
+| `resumed-b` computes 291 − stored + pruned | 171 | 170 | 153 | **174 = 291 − 166 + 49** | ✅ |
+| `resumed-c` computes 864 − stored by `resumed-b` | 683 | 578 | 323 | **532 = 864 − 332** | ✅ |
+| Totals per class equal the reference's | 291; 864 | 291; 864 | 291; 864 | 166 + 174 − 49 = 291; 332 + 532 = 864 | ✅ |
+
+#### 2.5.4 The stage sequence and the printed lines
+
+From section 3 of `02/log_comparison_02.txt`:
+- In all four runs the `** ` sequence, normalised, equals R4's in order, and the stage banners equal
+  R4's verbatim (13/13, and 11/11 in `resumed-a`).
+- The line counts (`** `, `ALL WORK ITEMS COMPLETE`, `Queue summary`, no-compute, progress,
+  `inflight`) are R4's in every run: `reference` (26, 10, 10, 1, 0, 0), `resumed-a` (23, 7, 7, 1, 0,
+  0), `resumed-b` (26, 9, 9, 7, 0, 0) and `resumed-c` (26, 10, 10, 9, 0, 0).
+- R6's `reference` had 2 progress and 2 `inflight` lines from its load. R7 has none.
+
+#### 2.5.5 The stage times
+
+These are not compared. R4's are in brackets.
+
+| Stage | `reference` | `resumed-a` | `resumed-b` | `resumed-c` |
+|---|---|---|---|---|
+| NUMERICAL PART OF TENSOR GREEN FUNCTIONS | 23.8 s (22.9 s) | 23.2 s (22.5 s) | 1.44 s (1.54 s) | 1.51 s (1.55 s) |
+| WKB PART OF TENSOR GREEN FUNCTIONS | 1 m 2.04 s (1 m 4.75 s) | 1 m 2.23 s (1 m 4.09 s) | 2.99 s (3.23 s) | 2.93 s (3.13 s) |
+| GREENS FUNCTIONS FOR SOURCE REDSHIFT | 22 s (22.6 s) | killed | 18.4 s (18.2 s) | 4.62 s (4.77 s) |
+| APPLY GKSOURCE POLICIES | 8.43 s (8.77 s) | — | 8.53 s (8.59 s) | 4.72 s (4.75 s) |
+| QUADRATIC SOURCE INTEGRALS | 1 m 19.8 s (1 m 28.7 s) | — | killed | 60.4 s (1 m 6.87 s) |
+
+At a load of about 6, R7 ran every stage within about 10 % of R4's. Under 3.13 and Ray 2.59.0 the
+QSI stage was the faster.
+
+#### 2.5.6 The registry's fields at each run's end
+
+These are R3's. `reference` and `resumed-c` end `done` at `CALCULATE QUADRATIC SOURCE INTEGRALS,
+all work items complete`. `resumed-a` ends `killed` at `CALCULATE GREENS FUNCTIONS FOR SOURCE
+REDSHIFT`, and `resumed-b` ends `killed` at `CALCULATE QUADRATIC SOURCE INTEGRALS`. `units_done` is
+0 and `units_total` is `null` in every run.
+
+### 2.6 Token mode — the real-Ray check of `d833ee7` and `14ada2f`
+
+(`02/token_02.txt`) This is acceptance 5a, which closes
+`[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]`. All five checks hold.
+
+| # | Check | Result |
+|---|---|---|
+| 1 | No launch log, `stdout.log` or `stderr.log` of R7 holds `Token authentication is enabled` (R6's all did) | **0** in each of the twelve logs of the four resumed launches, and in every reader log of §2.4 and §2.8 |
+| 2 | No log line says `Generated new authentication token` | **0** in the same logs. The one such line is step 4's own record of the generation, in `token_02.txt`, which is not an R7 log |
+| 3 | During `reference`'s one check, the **`gcs_server`'s** environment holds `RAY_AUTH_MODE=token` (§7) | `ps -E -ww -p 960 -o command= \| tr ' ' '\n' \| grep '^RAY_AUTH_MODE='` → **`RAY_AUTH_MODE=token`**. The raylet (1008) shows the same |
+| 4 | `~/.ray/auth_token` is still mode 600, 64 bytes, after the last launch | **`-rw-------`, 64 bytes**, after `resumed-c`, after the readers and at the end |
+| 5 | No R7 log holds `InvalidAuthToken` or `AuthenticationError` (§7) | **0** in the twelve logs and in every reader log |
+
+- **Ray in token mode starts, runs and shuts down as before:** four launches, two `SIGTERM`s, fourteen
+  reader runs.
+- **The first dispatch's failed run** (§2.1.4) holds 22 `InvalidAuthToken|AuthenticationError`
+  lines. It is the record of the defect `14ada2f` fixed, not one of R7's launches.
+- **The token never reached a saved output.** It was only ever listed with `ls -l` and counted with
+  `wc -c`.
+
+### 2.7 Issues
+
+- **`[02-the-token-mode-setting-comes-after-import-ray-so-every-ray-start-fails]`** was opened by the
+  first dispatch (§2.1.4) and **closed on the laptop by `14ada2f`**. The board's §4 holds it, so it
+  adds no row to `docs/OPEN_ISSUES.md`. The resume showed the fix on this host (§2.6).
+- **The resume opened nothing.** Every difference from R4 is explained by:
+  - where the signals fell: §2.3's counts, `SystemExit`, and the length of the `INTEGRITY WARNING`
+    listing;
+  - the readers' unseeded subsamples;
+  - formatting.
+
+### 2.8 A3 v2, read under 3.13
+
+The A3 v2 store is `var/datastores/handover-A3-v2-lambdacdm.sqlite`, built at `b90752d` under
+3.12.15 and `ray` 2.43.0 by `handover-07-a3-v2-20261022T211155`.
+
+**Before** (step 6 in the first dispatch, `02/store_02.txt`, `02/state/store_files_before.txt`):
+`store show` gives registry, problems none, `0e32f24a…`. The primary, its four shards and the
+sidecar equal handover 10's after-state. §7 step 3 (16:45:05) checked them again: unchanged.
+
+**The readers** (step 9, `02/readers_02.txt`), as handover 10 ran them, with the lock held,
+17:02:39–17:09:27. Handover 10's values are in brackets:
+
+| Reader | Exit | Wall | Lookups (last queue) | Files written | Size (kB) | Store files after |
+|---|---|---|---|---|---|---|
+| `extract_Gk_data` | 0 | 60 s (54) | 522 (522) | 1791 (1251) | 114852 (78616) | identical |
+| `extract_GkWKB_data` | 0 | 145 s (171) | 1392 (1392) | 9744 (9744) | 555440 (551064) | identical |
+| `extract_GkSource_data` | 0 | 41 s (34) | 45 (45) | 877 (847) | 73428 (69684) | identical |
+| `extract_TkWKB_data` | 0 | 23 s (19) | 8 (8) | 72 (72) | 6936 (6936) | identical |
+| `extract_tensor_source_data` | 0 | 25 s (22) | 36 (36) | 172 (172) | 7672 (7672) | identical |
+| `extract_QuadSourceIntegral_data` | 0 | 34 s (31) | 240 (240) | 691 (687) | 60812 (58512) | identical |
+| `extract_Gk_data`, `nomodels` | 0 | 58 s (58) | 522 (522) | 1458 (1980) | 92248 (127032) | identical |
+
+- **Every reader exits 0, and every lookup count equals 10's.** The file counts differ only in the
+  readers that draw an unseeded subsample (`[10-the-readers-draw-their-work-lists-unseeded]`). The
+  output totals 891 MB against 879 MB.
+- After each reader, 0 Ray processes of this checkout's venv are left.
+- **The reader logs** (`02/reader_logs_scan_02.txt`, against `var/handover-10/extract/`):
+  - none holds `Token authentication is enabled`, `Generated new …`, `InvalidAuthToken`,
+    `AuthenticationError` or a traceback;
+  - **no warning kind is new.** `extract_GkSource_data` has 4 `MatplotlibDeprecationWarning`, as
+    at 10. 10's 2 `RuntimeWarning` in `extract_GkWKB_data` are absent here, which follows the
+    subsample.
+
+**After** (step 10, `02/store_02.txt`, `02/state/store_files_after.txt`):
+- **every store file is byte-identical.** `diff` against `store_files_before.txt` exits 0 on the
+  SHA-256, size and mtime of the primary, the four shards and the sidecar, and again after the
+  fingerprint. There is no journal.
+- **`store fingerprint`, without `--write`, computed under Python 3.13.16, `ray` 2.59.0 and
+  `SQLAlchemy` 2.0.55, gives `0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`**,
+  format 6, problems none: "matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at
+  b90752d…".
+- No `gcs_server` or `raylet` is left.
+
+**So A3 v2, written under 3.12, reads the same under 3.13.**
+
+### 2.9 What stays under `var/` on the Mac Studio
+
+- **Runs:**
+  - `var/runs/py313-venv-02-{reference-20261025T164631,resumed-a-20261025T165114,resumed-b-20261025T165402,resumed-c-20261025T165549}/`,
+    with their four `-resume` launch logs;
+  - the first dispatch's `py313-venv-02-reference-20261025T163202/` (`failed`) and
+    `py313-venv-02-reference.launch.log`, kept as records.
+- **Stores:** `var/datastores/py313-venv-02-{reference,resumed}.sqlite`, each with four shards and a
+  sidecar. They are the orchestrator's to retire after the review.
+- **`var/py313-venv-02/`:**
+  - `out/`, `state/` and `scripts/` (the first dispatch's helpers, plus the resume's `*_resume`
+    copies);
+  - `roots/`, the suites' full outputs;
+  - `work/`, the dummy tests;
+  - `extract/`, A3 v2's reader output (891 MB);
+  - `extract-r7/`, L3's.
+- **Nothing else moved** (`02/var_datastores_02.txt`). The 8 files in `var/datastores/` before the
+  resume are unchanged in SHA-256, size and `mtime_ns`, A3 v2's five and its sidecar among them.
+  The 12 new files are R7's two stores and sidecars. There is no journal.
+- **The registry after R7** (`02/run_records_02.txt`): 10 runs, "10 finished; 0 with no host
+  recorded"; nothing `running` or stale. By state: 5 `done` (A3 v2's build among them), 4
+  `killed` and 1 `failed`.
+- **Outside the checkout:**
+  - `~/Documents/Code/retired-venvs/SecondaryGWKit-py312-20261025`, the old venv, moved;
+  - `~/.ray/auth_token`, made in step 4, mode 600;
+  - `~/.raypoolkit/`, empty.

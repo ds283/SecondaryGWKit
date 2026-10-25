@@ -1,0 +1,14 @@
+== 2026-10-25T16:33:55+0000 the cached auth mode in a process, by import order (no Ray start; RAY_AUTH_MODE unset in the shell)
+$ PYTHONPATH=. ./venv/bin/python -c "import ray; import config.ray_local, os; from ray._raylet import get_authentication_mode; print(os.environ[\"RAY_AUTH_MODE\"], get_authentication_mode())"   # ray first, as quadsource_atol_sweep.py:552-554 and main.py:12/84
+token 0
+[exit 0]
+$ PYTHONPATH=. ./venv/bin/python -c "import config.ray_local; import ray, os; from ray._raylet import get_authentication_mode; print(os.environ[\"RAY_AUTH_MODE\"], get_authentication_mode())"   # config.ray_local first
+token 1
+[exit 0]
+-- the import order at the two Ray starts the launcher makes
+RunDrivers/quadsource_atol_sweep.py:478:    import ray
+RunDrivers/quadsource_atol_sweep.py:480:    from config.ray_local import RAY_TEMP_DIR
+RunDrivers/quadsource_atol_sweep.py:552:    import ray
+RunDrivers/quadsource_atol_sweep.py:554:    from config.ray_local import RAY_TEMP_DIR
+main.py:12:import ray
+main.py:84:from config.ray_local import RAY_TEMP_DIR

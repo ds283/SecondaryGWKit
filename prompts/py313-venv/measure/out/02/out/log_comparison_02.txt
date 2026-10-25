@@ -1,0 +1,232 @@
+# R7's logs against R4's same slug (raw, on this machine) and R6's (section 1 and 3 counts, from 01-log_comparison.txt)
+== 1. searches, count per file (stdout.log / stderr.log / launch log), R7 then [R4] [R6]; ! marks a difference from R4, ? from R6
+-- reference (py313-venv-02-reference-20261025T164631 against handover-06-reference-20261022T195228)
+   replaced 1 occurrence                                   4    0    4   [R4 4 0 4] [R6 4 0 4]
+   rehearsal scope banner                                  1    0    1   [R4 1 0 1] [R6 1 0 1]
+   main.py argv                                            1    0    1   [R4 1 0 1] [R6 1 0 1]
+   --no-prune-unvalidated                                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   bootstrapping a local Ray instance                      1    0    1   [R4 1 0 1] [R6 1 0 1]
+   Started a local Ray instance                            0    0    1   [R4 0 0 1] [R6 0 0 1]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Traceback                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   pickle/unpickl                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ValueError                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RuntimeWarning                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   did not validate                                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   DeprecationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   FutureWarning                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ResourceWarning                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   _timestamp                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ConfigError                                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RunRegistry (not Kit)                                   0    0    0   [R4 0 0 0] [R6 0 0 0]
+   datastorekit                                            0    0    0   [R4 0 0 0] [R6 0 0 0]
+   runregistrykit                                          1    0    1   [R4 1 0 1] [R6 1 0 1]
+   INTEGRITY WARNING                                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   file_system_monitor (disk space)                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Rolled back the journal                                 0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(1)                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(143)                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   IntegrationWarning                                      0    1    1   [R4 0 1 1] [R6 0 1 1]
+   Killed: 9                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   resuming into                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   python3.12 | python3.13 in a path                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   InvalidAuthToken | AuthenticationError                  0    0    0   [R4 0 0 0] [R6 -]
+   Token authentication is enabled                         0    0    0   [R4 0 0 0] [R6 -]
+   Generated new authentication token                      0    0    0   [R4 0 0 0] [R6 -]
+   auth_token | RAY_AUTH_MODE | authentication (i)         0    0    0   [R4 0 0 0] [R6 -]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-a (py313-venv-02-resumed-a-20261025T165114 against handover-06-resumed-a-20261022T195718)
+   replaced 1 occurrence                                   4    0    4   [R4 4 0 4] [R6 4 0 4]
+   rehearsal scope banner                                  1    0    1   [R4 1 0 1] [R6 1 0 1]
+   main.py argv                                            1    0    1   [R4 1 0 1] [R6 1 0 1]
+   --no-prune-unvalidated                                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   bootstrapping a local Ray instance                      1    0    1   [R4 1 0 1] [R6 1 0 1]
+   Started a local Ray instance                            0    0    1   [R4 0 0 1] [R6 0 0 1]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Traceback                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   pickle/unpickl                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ValueError                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RuntimeWarning                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   did not validate                                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   DeprecationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   FutureWarning                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ResourceWarning                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   _timestamp                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ConfigError                                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RunRegistry (not Kit)                                   0    0    0   [R4 0 0 0] [R6 0 0 0]
+   datastorekit                                            0    0    0   [R4 0 0 0] [R6 0 0 0]
+   runregistrykit                                          1    0    1   [R4 1 0 1] [R6 1 0 1]
+   INTEGRITY WARNING                                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   file_system_monitor (disk space)                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Rolled back the journal                                 0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(1)                                           0    1    1   [R4 0 1 1] [R6 0 0 0]  ?
+   SystemExit(143)                                         0    0    0   [R4 0 0 0] [R6 0 1 1]  ?
+   IntegrationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Killed: 9                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   resuming into                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   python3.12 | python3.13 in a path                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   InvalidAuthToken | AuthenticationError                  0    0    0   [R4 0 0 0] [R6 -]
+   Token authentication is enabled                         0    0    0   [R4 0 0 0] [R6 -]
+   Generated new authentication token                      0    0    0   [R4 0 0 0] [R6 -]
+   auth_token | RAY_AUTH_MODE | authentication (i)         0    0    0   [R4 0 0 0] [R6 -]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-b (py313-venv-02-resumed-b-20261025T165402 against handover-06-resumed-b-20261022T200009)
+   replaced 1 occurrence                                   4    0    4   [R4 4 0 4] [R6 4 0 4]
+   rehearsal scope banner                                  1    0    1   [R4 1 0 1] [R6 1 0 1]
+   main.py argv                                            1    0    1   [R4 1 0 1] [R6 1 0 1]
+   --no-prune-unvalidated                                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   bootstrapping a local Ray instance                      1    0    1   [R4 1 0 1] [R6 1 0 1]
+   Started a local Ray instance                            0    0    1   [R4 0 0 1] [R6 0 0 1]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Traceback                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   pickle/unpickl                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ValueError                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RuntimeWarning                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   did not validate                                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   DeprecationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   FutureWarning                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ResourceWarning                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   _timestamp                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ConfigError                                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RunRegistry (not Kit)                                   0    0    0   [R4 0 0 0] [R6 0 0 0]
+   datastorekit                                            0    0    0   [R4 0 0 0] [R6 0 0 0]
+   runregistrykit                                          1    0    1   [R4 1 0 1] [R6 1 0 1]
+   INTEGRITY WARNING                                       2    0    2   [R4 2 0 2] [R6 2 0 2]
+   file_system_monitor (disk space)                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Rolled back the journal                                 0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(1)                                           0    1    1   [R4 0 0 0] [R6 0 1 1]  !
+   SystemExit(143)                                         0    0    0   [R4 0 1 1] [R6 0 0 0]  !
+   IntegrationWarning                                      0    1    1   [R4 0 1 1] [R6 0 1 1]
+   Killed: 9                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   resuming into                                           0    0    1   [R4 0 0 1] [R6 0 0 1]
+   python3.12 | python3.13 in a path                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   InvalidAuthToken | AuthenticationError                  0    0    0   [R4 0 0 0] [R6 -]
+   Token authentication is enabled                         0    0    0   [R4 0 0 0] [R6 -]
+   Generated new authentication token                      0    0    0   [R4 0 0 0] [R6 -]
+   auth_token | RAY_AUTH_MODE | authentication (i)         0    0    0   [R4 0 0 0] [R6 -]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+-- resumed-c (py313-venv-02-resumed-c-20261025T165549 against handover-06-resumed-c-20261022T200159)
+   replaced 1 occurrence                                   4    0    4   [R4 4 0 4] [R6 4 0 4]
+   rehearsal scope banner                                  1    0    1   [R4 1 0 1] [R6 1 0 1]
+   main.py argv                                            1    0    1   [R4 1 0 1] [R6 1 0 1]
+   --no-prune-unvalidated                                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   bootstrapping a local Ray instance                      1    0    1   [R4 1 0 1] [R6 1 0 1]
+   Started a local Ray instance                            0    0    1   [R4 0 0 1] [R6 0 0 1]
+   reconcil|repair|in.flight|replicat (i)                  0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Traceback                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ModuleNotFoundError|ImportError|AttributeError          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   pickle/unpickl                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Datastore.SQL|Datastore/SQL                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ray.kill|killed actor|ActorDiedError|RayActorError      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ValueError                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RuntimeWarning                                          0    0    0   [R4 0 0 0] [R6 0 0 0]
+   did not validate                                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   DeprecationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   FutureWarning                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ResourceWarning                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   _timestamp                                              0    0    0   [R4 0 0 0] [R6 0 0 0]
+   ConfigError                                             0    0    0   [R4 0 0 0] [R6 0 0 0]
+   RunRegistry (not Kit)                                   0    0    0   [R4 0 0 0] [R6 0 0 0]
+   datastorekit                                            0    0    0   [R4 0 0 0] [R6 0 0 0]
+   runregistrykit                                          1    0    1   [R4 1 0 1] [R6 1 0 1]
+   INTEGRITY WARNING                                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   file_system_monitor (disk space)                        0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Rolled back the journal                                 0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(1)                                           0    0    0   [R4 0 0 0] [R6 0 0 0]
+   SystemExit(143)                                         0    0    0   [R4 0 0 0] [R6 0 0 0]
+   IntegrationWarning                                      0    0    0   [R4 0 0 0] [R6 0 0 0]
+   Killed: 9                                               0    0    0   [R4 0 0 0] [R6 0 0 0]
+   resuming into                                           0    0    1   [R4 0 0 1] [R6 0 0 1]
+   python3.12 | python3.13 in a path                       0    0    0   [R4 0 0 0] [R6 0 0 0]
+   InvalidAuthToken | AuthenticationError                  0    0    0   [R4 0 0 0] [R6 -]
+   Token authentication is enabled                         0    0    0   [R4 0 0 0] [R6 -]
+   Generated new authentication token                      0    0    0   [R4 0 0 0] [R6 -]
+   auth_token | RAY_AUTH_MODE | authentication (i)         0    0    0   [R4 0 0 0] [R6 -]
+   [stdout.log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+   [launch log] names a package: **   list it with: ./venv/bin/python -m runregistrykit list
+
+== 2. line kinds against R4's same slug (normalised; set difference; line counts R7/R4)
+-- reference stdout.log: 110 lines against 110; R7-only kinds 0, R4-only kinds 0
+-- reference stderr.log: 4 lines against 4; R7-only kinds 0, R4-only kinds 0
+-- reference launch log: 116 lines against 116; R7-only kinds 0, R4-only kinds 0
+-- resumed-a stdout.log: 84 lines against 84; R7-only kinds 0, R4-only kinds 0
+-- resumed-a stderr.log: 2 lines against 2; R7-only kinds 0, R4-only kinds 0
+-- resumed-a launch log: 88 lines against 88; R7-only kinds 0, R4-only kinds 0
+-- resumed-b stdout.log: 145 lines against 129; R7-only kinds 0, R4-only kinds 0
+-- resumed-b stderr.log: 6 lines against 6; R7-only kinds 0, R4-only kinds 0
+-- resumed-b launch log: 154 lines against 138; R7-only kinds 0, R4-only kinds 0
+-- resumed-c stdout.log: 107 lines against 107; R7-only kinds 0, R4-only kinds 1
+   R4 only: -- ALL WORK ITEMS COMPLETE in time Nm Ns
+-- resumed-c stderr.log: 0 lines against 0; R7-only kinds 0, R4-only kinds 0
+-- resumed-c launch log: 110 lines against 110; R7-only kinds 0, R4-only kinds 1
+   R4 only: -- ALL WORK ITEMS COMPLETE in time Nm Ns
+
+== 3. '** ' sequences and printed-line counts (**, complete, Queue summary, no-compute, progress, inflight)
+-- reference: R7 (26, 10, 10, 1, 0, 0) R4 (26, 10, 10, 1, 0, 0) R6 (26, 10, 10, 1, 2, 2); equal to R4: True; equal to R6: False
+   '** ' sequence equal to R4's normalised: True; stage banners verbatim equal: True (13/13)
+-- resumed-a: R7 (23, 7, 7, 1, 0, 0) R4 (23, 7, 7, 1, 0, 0) R6 (23, 7, 7, 1, 0, 0); equal to R4: True; equal to R6: True
+   '** ' sequence equal to R4's normalised: True; stage banners verbatim equal: True (11/11)
+-- resumed-b: R7 (26, 9, 9, 7, 0, 0) R4 (26, 9, 9, 7, 0, 0) R6 (26, 9, 9, 7, 0, 0); equal to R4: True; equal to R6: True
+   '** ' sequence equal to R4's normalised: True; stage banners verbatim equal: True (13/13)
+-- resumed-c: R7 (26, 10, 10, 9, 0, 0) R4 (26, 10, 10, 9, 0, 0) R6 (26, 10, 10, 9, 0, 0); equal to R4: True; equal to R6: True
+   '** ' sequence equal to R4's normalised: True; stage banners verbatim equal: True (13/13)
+
+== 4. status fields at each run's end
+-- reference: state done exit 0 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-a: state killed exit 143 stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-b: state killed exit 143 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+-- resumed-c: state done exit 0 stage 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete' units 0/None; keys ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+
+== 5. stage times (ALL WORK ITEMS COMPLETE), not compared; R4's beside
+-- reference
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE     R7       0.555s   R4       0.688s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE   R7      0.0237s   R4      0.0105s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS          R7        1.05s   R4       0.653s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS                R7       0.291s   R4       0.298s
+   CALCULATE QUADRATIC SOURCE TERMS                               R7       0.945s   R4       0.925s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS             R7        23.8s   R4        22.9s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                   R7     1m 2.04s   R4     1m 4.75s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                 R7          22s   R4        22.6s
+   APPLY GKSOURCE POLICIES                                        R7        8.43s   R4        8.77s
+   CALCULATE QUADRATIC SOURCE INTEGRALS                           R7     1m 19.8s   R4     1m 28.7s
+-- resumed-a
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE     R7       0.475s   R4       0.672s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE   R7       0.014s   R4     0.00863s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS          R7       0.983s   R4       0.657s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS                R7       0.284s   R4       0.292s
+   CALCULATE QUADRATIC SOURCE TERMS                               R7       0.951s   R4        0.96s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS             R7        23.2s   R4        22.5s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                   R7     1m 2.23s   R4     1m 4.09s
+-- resumed-b
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE     R7      0.0138s   R4      0.0101s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE   R7      0.0114s   R4     0.00981s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS          R7     0.00557s   R4      0.0055s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS                R7     0.00887s   R4     0.00884s
+   CALCULATE QUADRATIC SOURCE TERMS                               R7     0.00847s   R4     0.00865s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS             R7        1.44s   R4        1.54s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                   R7        2.99s   R4        3.23s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                 R7        18.4s   R4        18.2s
+   APPLY GKSOURCE POLICIES                                        R7        8.53s   R4        8.59s
+-- resumed-c
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE     R7      0.0114s   R4      0.0105s
+   CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE   R7     0.00983s   R4     0.00923s
+   CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS          R7     0.00595s   R4      0.0056s
+   CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS                R7     0.00878s   R4     0.00851s
+   CALCULATE QUADRATIC SOURCE TERMS                               R7     0.00924s   R4     0.00906s
+   CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS             R7        1.51s   R4        1.55s
+   CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                   R7        2.93s   R4        3.13s
+   CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                 R7        4.62s   R4        4.77s
+   APPLY GKSOURCE POLICIES                                        R7        4.72s   R4        4.75s
+   CALCULATE QUADRATIC SOURCE INTEGRALS                           R7        60.4s   R4     1m 6.87s

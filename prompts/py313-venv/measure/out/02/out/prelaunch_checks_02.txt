@@ -1,0 +1,835 @@
+== 2026-10-25T16:31:38+0000 interrupter dummy tests under Python 3.13.16 (into var/py313-venv-02/work/dummy-scoped, dummy-build)
+$ bash docs/datastore-integrity-verification/interrupter_dummy_test.sh var/py313-venv-02/work/dummy-scoped  -> interrupter_dummy_test_02.txt rc=0 (16:30:57-16:31:22)
+$ bash docs/a3-v2-readiness/interrupter_build_dummy_test.sh var/py313-venv-02/work/dummy-build  -> interrupter_build_dummy_test_02.txt rc=0 (16:31:22-16:31:23)
+   var/py313-venv-02/out/interrupter_dummy_test_02.txt 40 lines; against var/handover-06/out/interrupter_dummy_test_06.txt 40 lines; normalised equal: False ; differing lines 5
+     line 4 
+      R7: --- var<work>/dummy-scoped/case-a/interrupter.log 
+      R4: --- <work>/dummy-scoped/case-a/interrupter.log
+     line 13 
+      R7: --- var<work>/dummy-scoped/case-b/interrupter.log 
+      R4: --- <work>/dummy-scoped/case-b/interrupter.log
+     line 20 
+      R7: --- var<work>/dummy-scoped/case-c/interrupter.log 
+      R4: --- <work>/dummy-scoped/case-c/interrupter.log
+     line 27 
+      R7: --- var<work>/dummy-scoped/case-d/interrupter.log 
+      R4: --- <work>/dummy-scoped/case-d/interrupter.log
+     line 35 
+      R7: --- var<work>/dummy-scoped/case-e/interrupter.log 
+      R4: --- <work>/dummy-scoped/case-e/interrupter.log
+   var/py313-venv-02/out/interrupter_build_dummy_test_02.txt 28 lines; against var/handover-06/out/interrupter_build_dummy_test_06.txt 28 lines; normalised equal: False ; differing lines 4
+     line 4 
+      R7: --- var<work>/dummy-build/case-a/interrupter.log 
+      R4: --- <work>/dummy-build/case-a/interrupter.log
+     line 11 
+      R7: --- var<work>/dummy-build/case-b/interrupter.log 
+      R4: --- <work>/dummy-build/case-b/interrupter.log
+     line 18 
+      R7: --- var<work>/dummy-build/case-c/interrupter.log 
+      R4: --- <work>/dummy-build/case-c/interrupter.log
+     line 25 
+      R7: --- var<work>/dummy-build/case-d/interrupter.log 
+      R4: --- <work>/dummy-build/case-d/interrupter.log
+   => normalised, the only differences from R4's are the work path's spelling (given relative here, absolute at R4): scoped 40 lines, build 28 lines (cases A-D), otherwise equal
+   case D: interrupter exit=0, child exit=137 (killed by SIGKILL)
+   ps -p on all 18 pids named -> none alive (rc=1)
+
+== 2026-10-25T16:31:38+0000 environment before reference
+-- runregistrykit store show var/datastores/py313-venv-02-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- runregistrykit store show var/datastores/py313-venv-02-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/ containing py313-venv-02 (other than var/py313-venv-02/)
+(end)
+-- names under var/ containing py313-venv (any)
+(end)
+-- pip show (Name, Version, Location, Editable) of the seven
+Name: runregistrykit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: datastorekit
+Version: 0.5.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: raypoolkit
+Version: 0.3.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: ray
+Version: 2.59.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: SQLAlchemy
+Version: 2.0.55
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: numpy
+Version: 2.2.4
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: scipy
+Version: 1.16.3
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+-- pip check
+No broken requirements found.
+rc=0
+-- package_provenance of the seven (keys sorted)
+{"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+equal as JSON to the record taken after the install: True
+TERMINAL_STATES ('done', 'failed', 'killed', 'lost')
+-- runregistrykit.this_host()
+{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+id equal to R4's d120d1cf03551e6f: True ; boot equal to R4's C58A0F92-923F-471F-B32E-B1B9F5D0A848: True ; python 3.13.16
+-- runregistrykit.find_client_root() from the root
+config_file /Users/ds283/Documents/Code/SecondaryGWKit/runregistrykit.toml
+runs_root /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+stores_root /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores
+distributions ('datastorekit', 'raypoolkit', 'ray', 'SQLAlchemy', 'numpy', 'scipy')
+stores {'fingerprinter': 'config.fingerprint:fingerprinter'}
+-- what runs
+runregistrykit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__init__.py
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/__init__.py
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+ObjectFactories.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/__init__.py
+datastorekit.store_fingerprint.ENCODING_FORMAT 1
+config.fingerprint.FINGERPRINT_FORMAT 6
+RAY_AUTH_MODE before importing config.ray_local: None
+config.ray_local: RAY_TEMP_DIR /tmp/ray-sgk ; RAY_AUTH_MODE token ; os.environ after import token
+ray.__version__ 2.59.0 ; ray.is_initialized() False
+-- R3's recorded fingerprints (var/handover-06/recorded/)
+rrk-v020-adoption-03-reference-20261018T232838 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1
+rrk-v020-adoption-03-resumed-c-20261018T233941 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1
+-- shasum -a 256 RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  RunDrivers/quadsource_atol_sweep.py
+-- git log -1 --format=%h RunDrivers/quadsource_atol_sweep.py
+40d10b1
+-- requirements.txt package lines
+17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.5.0
+75:ray==2.59.0
+76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.3.0
+81:runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0
+88:SQLAlchemy==2.0.55
+-- git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit aac52bc [handover-remedial]
+-- interrupt_when.py, the two dummy-test scripts, docs/dk-and-rpk-migration/rehearsal/, closed_store_state.py: last change
+2818780 docs/datastore-integrity-verification/interrupt_when.py
+b1774d8 docs/datastore-integrity-verification/interrupter_dummy_test.sh
+2818780 docs/a3-v2-readiness/interrupter_build_dummy_test.sh
+7af17bd docs/dk-and-rpk-migration/rehearsal
+a6c8f39 docs/a3-v2-readiness/rehearsal/closed_store_state.py
+-- ncpu 10
+-- var/datastores (sha256 size mtime_ns path) before the first launch
+6da687de696ad5cc832bac511d8f9761de65eb442e074d406e0a08f370140d71        12089 1792886332019272076  var/datastores/handover-06-reference.manifest.json
+9a0343a17d63d438d8c695676a3acc54f80cb9ec31b6d59b0abc7c8c688041b4        12517 1792886335012521800  var/datastores/handover-06-resumed.manifest.json
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5    106340352 1792875376155767739  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e    107569152 1792875376181522969  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6    107429888 1792875376101702570  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1    105791488 1792875376127589134  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6        10519 1792884865850625524  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522        36864 1792699923608529810  var/datastores/handover-A3-v2-lambdacdm.sqlite
+
+== 2026-10-25T16:31:44+0000 pre-launch check before reference (before acquire)
+HEAD aac52bc28b2c825ccdf4500d25fb9d9b1776ca13
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:31  up 18 days,  7:08, 2 users, load averages: 15.08 16.56 10.72
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-07-a3-v2-20261022T211155      done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k ove
+   handover-06-resumed-c-20261022T200159  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-resumed-b-20261022T200009  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-resumed-a-20261022T195718  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-reference-20261022T195228  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+
+5 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 5 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+== 2026-10-25T16:32:01+0000 pre-launch check before reference
+HEAD aac52bc28b2c825ccdf4500d25fb9d9b1776ca13
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:32  up 18 days,  7:08, 2 users, load averages: 13.02 16.00 10.66
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-07-a3-v2-20261022T211155      done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k ove
+   handover-06-resumed-c-20261022T200159  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-resumed-b-20261022T200009  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-resumed-a-20261022T195718  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+   handover-06-reference-20261022T195228  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3
+
+5 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 5 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+== 2026-10-25T16:32:01+0000 launch reference (log var/runs/py313-venv-02-reference.launch.log)
+git status --short: []
+16:32  up 18 days,  7:08, 2 users, load averages: 13.02 16.00 10.66
+sh pid 93198
+run dir after launch: [var/runs/py313-venv-02-reference-20261025T163202]
+
+== 2026-10-25T16:32:07+0000 one check after reference launch
+run dirs: ['var/runs/py313-venv-02-reference-20261025T163202']
+run dir: var/runs/py313-venv-02-reference-20261025T163202
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id py313-venv-02-reference-20261025T163202 git_head aac52bc28b2c825ccdf4500d25fb9d9b1776ca13 git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b results_store_id None
+manifest results var/datastores/py313-venv-02-reference.sqlite
+manifest packages {"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is 5b984c75...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; host.python is 3.13.16: True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: False ; --register reference
+status state running pid 93203 stage quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False) heartbeat 2026-10-25T16:32:03+00:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 93203 ok
+    PID  PPID STARTED                      COMMAND
+  93198     1 Sun Oct 25 16:32:01 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/py313-venv-02-reference.sqlite \\012    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register reference --purpose "$0" --campaign py313-venv --prompt 02; \\012  echo "** driver exit status $?" p
+  93203 93198 Sun Oct 25 16:32:01 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-02-reference.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register reference --purpose py313-venv prompt 02, R7 on the Mac Studio (mps02
+   py313-venv-02-reference-20261025T163202  running           -       5s  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorek
+6 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 5 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+-- launch log so far: 14 lines
+16:32  up 18 days,  7:08, 2 users, load averages: 12.46 15.84 10.63
+
+== 2026-10-25T16:33:43+0000 after reference: no Ray process left
+HEAD aac52bc28b2c825ccdf4500d25fb9d9b1776ca13
+git status --short: []
+16:33  up 18 days,  7:10, 2 users, load averages: 6.88 13.17 10.15
+-- Ray processes by name
+(end)
+-- Ray pids its logs name: 
+-- ps -p 93198,93203
+  PID TTY           TIME CMD
+rc=1
+6 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 6 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+-- stderr.log
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/quadsource_atol_sweep.py", line 1090, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/quadsource_atol_sweep.py", line 1073, in main
+    run_build(args)
+    ~~~~~~~~~^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/quadsource_atol_sweep.py", line 679, in run_build
+    exec(compile(source, str(MAIN_PY), "exec"), namespace)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/main.py", line 317, in <module>
+    ray.init(
+    ~~~~~~~~^
+        address=args.ray_address,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/quadsource_atol_sweep.py", line 637, in _local_ray_init
+    context = _real_ray_init(
+        address="local",
+    ...<3 lines>...
+        _temp_dir=RAY_TEMP_DIR,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/client_mode_hook.py", line 134, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/worker.py", line 1922, in init
+    _global_node = ray._private.node.Node(
+        ray_params=ray_params,
+    ...<3 lines>...
+        ray_init_cluster=True,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/node.py", line 416, in __init__
+    self.start_head_processes()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/node.py", line 1651, in start_head_processes
+    assert self.get_gcs_client() is not None
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/node.py", line 952, in get_gcs_client
+    self._init_gcs_client()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/node.py", line 1025, in _init_gcs_client
+    raise RuntimeError(
+    ...<5 lines>...
+    )
+RuntimeError: Failed to start GCS.  Last 0 lines of error files:
+
+.Please check /tmp/ray-sgk/session_2026-10-25_16-32-03_858951_93203/logs/gcs_server.out for details. Last connection error: Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/_private/node.py", line 996, in _init_gcs_client
+    client = GcsClient(
+        address=gcs_address,
+        cluster_id=self._ray_params.cluster_id,  # Hex string
+    )
+  File "python/ray/_raylet.pyx", line 3200, in ray._raylet.GcsClient.__cinit__
+  File "python/ray/includes/gcs_client.pxi", line 74, in ray._raylet.InnerGcsClient.standalone
+  File "python/ray/includes/common.pxi", line 146, in ray._raylet.check_status_timeout_as_rpc_error
+  File "python/ray/includes/common.pxi", line 119, in ray._raylet.check_status
+ray.exceptions.AuthenticationError: RPC error: InvalidAuthToken: Authentication token is missing or incorrect. Note: RAY_AUTH_MODE is currently 'disabled' (not 'token'). Ensure that the token for the cluster is available in a local file (e.g., ~/.ray/auth_token or via RAY_AUTH_TOKEN_PATH) or as the `RAY_AUTH_TOKEN` environment variable. To generate a token for local development, use `ray get-auth-token --generate` For remote clusters, ensure that the token is propagated to all nodes of the cluster when token authentication is enabled. For more information, see: https://docs.ray.io/en/latest/ray-security/token-auth.html
+
+-- status.json
+{'exit_code': 1, 'fingerprint_error': 'RuntimeError: Cannot read sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite": the primary "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite" does not exist. Nothing was read or repaired', 'heartbeat': '2026-10-25T16:32:25+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 93203, 'stage': 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)', 'state': 'failed', 'units_done': 0, 'units_total': None}
+fingerprint None None None 0 None None
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+
+######## resume (c9026af), 2026-10-25T16:46:00+0000: §7 step 4, steps 7-11. The helpers are the first dispatch's, in *_resume copies (dispatch SHA c9026af; launch logs -resume; the failed first reference excluded from every run-directory glob). The interrupter dummy tests stand from the first dispatch (same venv, scripts unchanged since aac52bc).
+-- git log --oneline aac52bc..HEAD -- docs/datastore-integrity-verification docs/a3-v2-readiness docs/dk-and-rpk-migration RunDrivers/quadsource_atol_sweep.py: []
+== 2026-10-25T16:46:00+0000 environment before reference
+-- runregistrykit store show var/datastores/py313-venv-02-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  py313-venv-02-reference-20261025T163202  failed    finished  by results
+rc=0
+-- runregistrykit store show var/datastores/py313-venv-02-resumed.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json
+kind:     absent
+problems: none
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: none
+rc=0
+-- names under var/ containing py313-venv-02 (other than var/py313-venv-02/)
+var/runs/py313-venv-02-reference.launch.log
+var/runs/py313-venv-02-reference-20261025T163202
+(end)
+-- names under var/ containing py313-venv (any)
+var/runs/py313-venv-02-reference.launch.log
+var/runs/py313-venv-02-reference-20261025T163202
+(end)
+-- pip show (Name, Version, Location, Editable) of the seven
+Name: runregistrykit
+Version: 0.2.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: datastorekit
+Version: 0.5.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: raypoolkit
+Version: 0.3.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: ray
+Version: 2.59.0
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: SQLAlchemy
+Version: 2.0.55
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: numpy
+Version: 2.2.4
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+---
+Name: scipy
+Version: 1.16.3
+Location: /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages
+-- pip check
+No broken requirements found.
+rc=0
+-- package_provenance of the seven (keys sorted)
+{"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+equal as JSON to the record taken after the install: True
+TERMINAL_STATES ('done', 'failed', 'killed', 'lost')
+-- runregistrykit.this_host()
+{"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+id equal to R4's d120d1cf03551e6f: True ; boot equal to R4's C58A0F92-923F-471F-B32E-B1B9F5D0A848: True ; python 3.13.16
+-- runregistrykit.find_client_root() from the root
+config_file /Users/ds283/Documents/Code/SecondaryGWKit/runregistrykit.toml
+runs_root /Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+stores_root /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores
+distributions ('datastorekit', 'raypoolkit', 'ray', 'SQLAlchemy', 'numpy', 'scipy')
+stores {'fingerprinter': 'config.fingerprint:fingerprinter'}
+-- what runs
+runregistrykit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__init__.py
+datastorekit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/__init__.py
+raypoolkit.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/raypoolkit/__init__.py
+RayWorkPool.__module__ raypoolkit.RayWorkPool
+ObjectFactories.__file__ /Users/ds283/Documents/Code/SecondaryGWKit/ObjectFactories/__init__.py
+datastorekit.store_fingerprint.ENCODING_FORMAT 1
+config.fingerprint.FINGERPRINT_FORMAT 6
+RAY_AUTH_MODE before importing config.ray_local: None
+config.ray_local: RAY_TEMP_DIR /tmp/ray-sgk ; RAY_AUTH_MODE token ; os.environ after import token
+ray.__version__ 2.59.0 ; ray.is_initialized() False
+-- R3's recorded fingerprints (var/handover-06/recorded/)
+rrk-v020-adoption-03-reference-20261018T232838 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1
+rrk-v020-adoption-03-resumed-c-20261018T233941 done 0 format 6 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 classes; problems {} ; encoding_format 1
+-- shasum -a 256 RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  RunDrivers/quadsource_atol_sweep.py
+-- git log -1 --format=%h RunDrivers/quadsource_atol_sweep.py
+40d10b1
+-- requirements.txt package lines
+17:datastorekit @ git+https://github.com/ds283/DatastoreKit@v0.5.0
+75:ray==2.59.0
+76:raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.3.0
+81:runregistrykit[stores] @ git+https://github.com/ds283/RunRegistryKit@v0.2.0
+88:SQLAlchemy==2.0.55
+-- git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit c9026af [handover-remedial]
+-- interrupt_when.py, the two dummy-test scripts, docs/dk-and-rpk-migration/rehearsal/, closed_store_state.py: last change
+2818780 docs/datastore-integrity-verification/interrupt_when.py
+b1774d8 docs/datastore-integrity-verification/interrupter_dummy_test.sh
+2818780 docs/a3-v2-readiness/interrupter_build_dummy_test.sh
+7af17bd docs/dk-and-rpk-migration/rehearsal
+a6c8f39 docs/a3-v2-readiness/rehearsal/closed_store_state.py
+-- ncpu 10
+-- var/datastores (sha256 size mtime_ns path) before the first launch
+6da687de696ad5cc832bac511d8f9761de65eb442e074d406e0a08f370140d71        12089 1792886332019272076  var/datastores/handover-06-reference.manifest.json
+9a0343a17d63d438d8c695676a3acc54f80cb9ec31b6d59b0abc7c8c688041b4        12517 1792886335012521800  var/datastores/handover-06-resumed.manifest.json
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5    106340352 1792875376155767739  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e    107569152 1792875376181522969  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6    107429888 1792875376101702570  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1    105791488 1792875376127589134  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6        10519 1792884865850625524  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522        36864 1792699923608529810  var/datastores/handover-A3-v2-lambdacdm.sqlite
+
+== 2026-10-25T16:46:05+0000 pre-launch check before reference (resume, before acquire)
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:46  up 18 days,  7:22, 2 users, load averages: 5.24 5.33 6.96
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-reference-20261025T163202  failed            -      14m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   handover-07-a3-v2-20261022T211155        done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k o
+   handover-06-resumed-c-20261022T200159    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-b-20261022T200009    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-a-20261022T195718    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-reference-20261022T195228    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+
+6 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 6 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+== 2026-10-25T16:46:30+0000 pre-launch check before reference
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:46  up 18 days,  7:23, 2 users, load averages: 6.66 5.68 7.04
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- ps -p 93198,93203,93233 (the previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-reference-20261025T163202  failed            -      14m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   handover-07-a3-v2-20261022T211155        done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k o
+   handover-06-resumed-c-20261022T200159    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-b-20261022T200009    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-a-20261022T195718    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-reference-20261022T195228    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+
+6 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 6 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+== 2026-10-25T16:46:30+0000 launch reference (log var/runs/py313-venv-02-reference-resume.launch.log)
+git status --short: []
+16:46  up 18 days,  7:23, 2 users, load averages: 6.66 5.68 7.04
+sh pid 922
+
+== 2026-10-25T16:47:03+0000 one check after reference launch
+run dirs: ['var/runs/py313-venv-02-reference-20261025T164631']
+run dir: var/runs/py313-venv-02-reference-20261025T164631
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id py313-venv-02-reference-20261025T164631 git_head c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7 git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b results_store_id None
+manifest results var/datastores/py313-venv-02-reference.sqlite
+manifest packages {"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is 5b984c75...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; host.python is 3.13.16: True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: False ; --register reference
+status state running pid 929 stage CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-25T16:46:44+00:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 929 ok
+    PID  PPID STARTED                      COMMAND
+    922     1 Sun Oct 25 16:46:30 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/py313-venv-02-reference.sqlite \\012    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register reference --purpose "$0" --campaign py313-venv --prompt 02; \\012  echo "** driver exit status $?" p
+    929   922 Sun Oct 25 16:46:30 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-02-reference.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register reference --purpose py313-venv prompt 02, R7 on the Mac Studio (mps02
+   py313-venv-02-reference-20261025T164631  running           -      33s  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorek
+7 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 6 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+-- launch log so far: 63 lines
+16:47  up 18 days,  7:23, 2 users, load averages: 10.95 6.78 7.38
+
+== 2026-10-25T16:50:32+0000 after reference: no Ray process left
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+16:50  up 18 days,  7:27, 2 users, load averages: 7.24 7.25 7.46
+-- Ray processes by name
+(end)
+-- Ray pids its logs name: 1055,1056,1112
+-- ps -p 922,929,1055,1056,1112
+  PID TTY           TIME CMD
+rc=1
+7 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 7 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 0
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+-- stderr.log
+[36m(compute_QuadSource_integral pid=1112)[0m /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+[36m(compute_QuadSource_integral pid=1112)[0m   the requested tolerance from being achieved.  The error may be 
+[36m(compute_QuadSource_integral pid=1112)[0m   underestimated.
+[36m(compute_QuadSource_integral pid=1112)[0m   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+-- status.json
+{'exit_code': 0, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-10-25T16:50:02+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 929, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+fingerprint 6 1 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 {} {'git_dirty': False, 'git_head': 'c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7', 'run_id': 'py313-venv-02-reference-20261025T164631', 'when': '2026-10-25T16:50:01+00:00'}
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+== 2026-10-25T16:51:12+0000 pre-launch check before resumed-a
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:51  up 18 days,  7:27, 2 users, load averages: 6.07 6.96 7.34
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- ps -p 922,929,960,1008,1055,1056,1112 (the previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-reference-20261025T164631  done              -       5m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-reference-20261025T163202  failed            -      19m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   handover-07-a3-v2-20261022T211155        done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k o
+   handover-06-resumed-c-20261022T200159    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-b-20261022T200009    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-a-20261022T195718    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-reference-20261022T195228    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+
+7 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 7 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+== 2026-10-25T16:51:13+0000 launch resumed-a (log var/runs/py313-venv-02-resumed-a-resume.launch.log)
+git status --short: []
+16:51  up 18 days,  7:27, 2 users, load averages: 6.07 6.96 7.34
+sh pid 3412
+
+run dir after launch: [var/runs/py313-venv-02-resumed-a-20261025T165114]
+interrupter pid 3468 at 16:51:16: interrupt_when.py var/runs/py313-venv-02-resumed-a-20261025T165114 '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 10
+
+== 2026-10-25T16:51:30+0000 one check after resumed-a launch
+run dirs: ['var/runs/py313-venv-02-resumed-a-20261025T165114']
+run dir: var/runs/py313-venv-02-resumed-a-20261025T165114
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id py313-venv-02-resumed-a-20261025T165114 git_head c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7 git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b results_store_id None
+manifest results var/datastores/py313-venv-02-resumed.sqlite
+manifest packages {"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is 5b984c75...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; host.python is 3.13.16: True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: False ; --register resumed-a
+status state running pid 3417 stage CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS heartbeat 2026-10-25T16:51:25+00:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 3417 ok
+kill -0 interrupter 3468 ok
+    PID  PPID STARTED                      COMMAND
+   3412     1 Sun Oct 25 16:51:13 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal \\012    --database var/datastores/py313-venv-02-resumed.sqlite \\012    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-a --purpose "$0" --campaign py313-venv --prompt 02; \\012  echo "** driver exit status $?" py3
+   3417  3412 Sun Oct 25 16:51:13 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose py313-venv prompt 02, R7 on the Mac Studio (mps0262
+   3468     1 Sun Oct 25 16:51:16 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/py313-venv-02-resumed-a-20261025T165114 ^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$ 0 --interval 5 --hold 10
+   py313-venv-02-resumed-a-20261025T165114  running           -      17s  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorek
+8 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 7 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+-- interrupter.log
+2026-10-25T16:51:16+00:00 interrupter pid 3468 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-02-resumed-a-20261025T165114 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-25T16:51:16+00:00 liveness alive; pid 3417; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T16:51:21+00:00 liveness alive; pid 3417; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-25T16:51:26+00:00 liveness alive; pid 3417; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+-- launch log so far: 63 lines
+16:51  up 18 days,  7:28, 2 users, load averages: 7.14 7.14 7.39
+
+== 2026-10-25T16:53:32+0000 after resumed-a: no Ray process left
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+16:53  up 18 days,  7:30, 2 users, load averages: 6.86 7.81 7.69
+-- Ray processes by name
+(end)
+-- Ray pids its logs name: 3507,3508,3510
+-- ps -p 3412,3417,3468,3507,3508,3510
+  PID TTY           TIME CMD
+rc=1
+8 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 8 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-25T16:51:16+00:00 interrupter pid 3468 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-02-resumed-a-20261025T165114 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 10 s
+2026-10-25T16:51:16+00:00 liveness alive; pid 3417; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T16:51:21+00:00 liveness alive; pid 3417; stage 'CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE'
+2026-10-25T16:51:26+00:00 liveness alive; pid 3417; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T16:51:51+00:00 liveness alive; pid 3417; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T16:52:51+00:00 liveness alive; pid 3417; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-25T16:52:51+00:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 10 s, then reading again
+2026-10-25T16:53:01+00:00 sent SIGTERM to pid 3417 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign py313-venv --prompt 02"; exiting
+-- stderr.log
+** SIGTERM at 2026-10-25 16:53:02 +0000: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+-- status.json
+{'exit_code': 143, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-10-25T16:53:03+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 3417, 'stage': 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT', 'state': 'killed', 'units_done': 0, 'units_total': None}
+fingerprint 6 1 f62d77100f54cbdebd4b272015fe86e147688238cbf0ab2ec61256fe0a7e32c1 21 {} {'git_dirty': False, 'git_head': 'c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7', 'run_id': 'py313-venv-02-resumed-a-20261025T165114', 'when': '2026-10-25T16:53:02+00:00'}
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+== 2026-10-25T16:54:01+0000 pre-launch check before resumed-b
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:54  up 18 days,  7:30, 2 users, load averages: 5.61 7.43 7.55
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- ps -p 3412,3417,3468,3440,3441,3507,3508,3510 (the previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-resumed-a-20261025T165114  killed            -       3m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-reference-20261025T164631  done              -       8m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-reference-20261025T163202  failed            -      22m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   handover-07-a3-v2-20261022T211155        done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k o
+   handover-06-resumed-c-20261022T200159    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-b-20261022T200009    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-a-20261022T195718    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-reference-20261022T195228    done              -   2d 22h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+
+8 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 8 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+== 2026-10-25T16:54:01+0000 launch resumed-b (log var/runs/py313-venv-02-resumed-b-resume.launch.log)
+git status --short: []
+16:54  up 18 days,  7:30, 2 users, load averages: 5.61 7.43 7.55
+sh pid 5000
+
+run dir after launch: [var/runs/py313-venv-02-resumed-b-20261025T165402]
+interrupter pid 5057 at 16:54:04: interrupt_when.py var/runs/py313-venv-02-resumed-b-20261025T165402 '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 27
+
+== 2026-10-25T16:54:17+0000 one check after resumed-b launch
+run dirs: ['var/runs/py313-venv-02-resumed-b-20261025T165402']
+run dir: var/runs/py313-venv-02-resumed-b-20261025T165402
+   interrupter.log
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id py313-venv-02-resumed-b-20261025T165402 git_head c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7 git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b results_store_id 55c9d1425a1d404b82a5a966585b9dbc
+manifest results var/datastores/py313-venv-02-resumed.sqlite
+manifest packages {"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is 5b984c75...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; host.python is 3.13.16: True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: True ; --register resumed-b
+status state running pid 5005 stage CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT heartbeat 2026-10-25T16:54:14+00:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 5005 ok
+kill -0 interrupter 5057 ok
+    PID  PPID STARTED                      COMMAND
+   5000     1 Sun Oct 25 16:54:01 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/py313-venv-02-resumed.sqlite \\012    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-b --purpose "$0" --campaign py313-venv --prompt 02; \\012  echo "** driver exit statu
+   5005  5000 Sun Oct 25 16:54:01 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose py313-venv prompt 02, R7 on the Mac Studio
+   5057     1 Sun Oct 25 16:54:04 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u docs/datastore-integrity-verification/interrupt_when.py var/runs/py313-venv-02-resumed-b-20261025T165402 ^CALCULATE QUADRATIC SOURCE INTEGRALS 0 --interval 5 --hold 27
+   py313-venv-02-resumed-b-20261025T165402  running           -      16s  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorek
+9 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 8 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+-- interrupter.log
+2026-10-25T16:54:04+00:00 interrupter pid 5057 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-02-resumed-b-20261025T165402 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 27 s
+2026-10-25T16:54:04+00:00 liveness alive; pid 5005; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T16:54:09+00:00 liveness alive; pid 5005; stage 'Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite" with 4 shards'
+2026-10-25T16:54:14+00:00 liveness alive; pid 5005; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+-- launch log so far: 111 lines
+16:54  up 18 days,  7:30, 2 users, load averages: 8.85 8.02 7.76
+
+== 2026-10-25T16:55:30+0000 after resumed-b: no Ray process left
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+16:55  up 18 days,  7:32, 2 users, load averages: 7.52 7.79 7.69
+-- Ray processes by name
+(end)
+-- Ray pids its logs name: 5103,5106,5107,5206
+-- ps -p 5000,5005,5057,5103,5106,5107,5206
+  PID TTY           TIME CMD
+rc=1
+9 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 9 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 143
+-- files in run dir: interrupter.log manifest.json status.json stderr.log stdout.log 
+-- interrupter.log
+2026-10-25T16:54:04+00:00 interrupter pid 5057 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-02-resumed-b-20261025T165402 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 27 s
+2026-10-25T16:54:04+00:00 liveness alive; pid 5005; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T16:54:09+00:00 liveness alive; pid 5005; stage 'Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite" with 4 shards'
+2026-10-25T16:54:14+00:00 liveness alive; pid 5005; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T16:54:19+00:00 liveness alive; pid 5005; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-25T16:54:34+00:00 liveness alive; pid 5005; stage 'APPLY GKSOURCE POLICIES'
+2026-10-25T16:54:44+00:00 liveness alive; pid 5005; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-25T16:54:44+00:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 27 s, then reading again
+2026-10-25T16:55:11+00:00 sent SIGTERM to pid 5005 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign py313-venv --prompt 02"; exiting
+-- stderr.log
+[36m(compute_QuadSource_integral pid=5206)[0m /Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+[36m(compute_QuadSource_integral pid=5206)[0m   the requested tolerance from being achieved.  The error may be 
+[36m(compute_QuadSource_integral pid=5206)[0m   underestimated.
+[36m(compute_QuadSource_integral pid=5206)[0m   value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+** SIGTERM at 2026-10-25 16:55:12 +0000: recorded killed, exit code 143; stopping the pipeline; the process will exit with status 143
+** SIGTERM: the pipeline ended with SystemExit(1); recording killed, exit code 143
+-- status.json
+{'exit_code': 143, 'fingerprint_sidecar': 'written', 'heartbeat': '2026-10-25T16:55:14+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 5005, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS', 'state': 'killed', 'units_done': 0, 'units_total': None}
+fingerprint 6 1 a51f96571bfae9c681e4da68a4bf703294c2a4fabe5bfb772cc357bede5e7cbb 21 {} {'git_dirty': False, 'git_head': 'c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7', 'run_id': 'py313-venv-02-resumed-b-20261025T165402', 'when': '2026-10-25T16:55:12+00:00'}
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+
+== 2026-10-25T16:55:48+0000 pre-launch check before resumed-c
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+RAY_ADDRESS=[unset] RAY_AUTH_MODE in the launching shell=[unset]
+16:55  up 18 days,  7:32, 2 users, load averages: 6.53 7.56 7.61
+-- Ray processes by name (ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet')
+(end)
+-- ps -p 5000,5005,5057,5103,5106,5107,5206 (the previous run's pids)
+  PID TTY           TIME CMD
+rc=1
+-- runregistrykit list (whole output; stderr separately)
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-resumed-b-20261025T165402  killed            -       2m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-resumed-a-20261025T165114  killed            -       5m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-reference-20261025T164631  done              -       9m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   py313-venv-02-reference-20261025T163202  failed            -      24m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, ra
+   handover-07-a3-v2-20261022T211155        done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k o
+   handover-06-resumed-c-20261022T200159    done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-b-20261022T200009    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-resumed-a-20261022T195718    killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+   handover-06-reference-20261022T195228    done              -   2d 22h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0ba
+
+9 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 9 finished; 0 with no host recorded.
+rc=0
+stderr: []
+-- journals under var/datastores
+(end)
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+== 2026-10-25T16:55:48+0000 launch resumed-c (log var/runs/py313-venv-02-resumed-c-resume.launch.log)
+git status --short: []
+16:55  up 18 days,  7:32, 2 users, load averages: 6.08 7.45 7.57
+sh pid 6024
+
+== 2026-10-25T16:56:01+0000 one check after resumed-c launch
+run dirs: ['var/runs/py313-venv-02-resumed-c-20261025T165549']
+run dir: var/runs/py313-venv-02-resumed-c-20261025T165549
+   manifest.json
+   status.json
+   stderr.log
+   stdout.log
+manifest run_id py313-venv-02-resumed-c-20261025T165549 git_head c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7 git_dirty False script RunDrivers/quadsource_atol_sweep.py script_sha256 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b results_store_id 55c9d1425a1d404b82a5a966585b9dbc
+manifest results var/datastores/py313-venv-02-resumed.sqlite
+manifest packages {"SQLAlchemy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.0.55"}, "datastorekit": {"commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31", "editable": false, "requested_revision": "v0.5.0", "url": "https://github.com/ds283/DatastoreKit", "version": "0.5.0"}, "numpy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.2.4"}, "ray": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "2.59.0"}, "raypoolkit": {"commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2", "editable": false, "requested_revision": "v0.3.0", "url": "https://github.com/ds283/RayPoolKit", "version": "0.3.0"}, "runregistrykit": {"commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f", "editable": false, "requested_revision": "v0.2.0", "url": "https://github.com/ds283/RunRegistryKit", "version": "0.2.0"}, "scipy": {"commit": null, "editable": false, "requested_revision": null, "url": null, "version": "1.16.3"}}
+packages equal as JSON to the expected record: True
+git_head is the dispatch SHA: True ; git_dirty false: True
+script_sha256 is 5b984c75...: True
+manifest keys 20; equal to R3's reference manifest's keys: True; new []; missing []
+manifest host {"id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+manifest host id/name equal this_host's: True True ; host.python is 3.13.16: True ; keys ['id', 'machine', 'name', 'python', 'release', 'system']
+argv[0] RunDrivers/quadsource_atol_sweep.py ; argv has --resume: True ; --register resumed-c
+status state running pid 6029 stage CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT heartbeat 2026-10-25T16:56:00+00:00
+status keys ['exit_code', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+status host {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f"}
+status host id/boot equal this_host's: True True
+kill -0 6029 ok
+    PID  PPID STARTED                      COMMAND
+   6024     1 Sun Oct 25 16:55:48 2026     sh -c PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \\012    --build --rehearsal --resume \\012    --database var/datastores/py313-venv-02-resumed.sqlite \\012    --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 \\012    --register resumed-c --purpose "$0" --campaign py313-venv --prompt 02; \\012  echo "** driver exit statu
+   6029  6024 Sun Oct 25 16:55:48 2026     /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-c --purpose py313-venv prompt 02, R7 on the Mac Studio
+   py313-venv-02-resumed-c-20261025T165549  running           -      12s  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorek
+10 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 9 finished; 0 with no host recorded.
+list rc 0 stderr: ''
+liveness(status, 900): alive
+this_host() {"boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848", "id": "d120d1cf03551e6f", "machine": "arm64", "name": "mps026298.phys.susx.ac.uk", "python": "3.13.16", "release": "27.0.0", "system": "Darwin"}
+-- launch log so far: 81 lines
+16:56  up 18 days,  7:32, 2 users, load averages: 6.59 7.51 7.59
+
+== 2026-10-25T16:57:28+0000 after resumed-c: no Ray process left
+HEAD c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7
+git status --short: []
+16:57  up 18 days,  7:34, 2 users, load averages: 7.92 7.89 7.74
+-- Ray processes by name
+(end)
+-- Ray pids its logs name: 6120
+-- ps -p 6024,6029,6120
+  PID TTY           TIME CMD
+rc=1
+10 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 10 finished; 0 with no host recorded.
+-- launch log last line: ** driver exit status 0
+-- files in run dir: manifest.json status.json stderr.log stdout.log 
+-- stderr.log
+-- status.json
+{'exit_code': 0, 'fingerprint_sidecar': 'written', 'heartbeat': '2026-10-25T16:57:11+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 6029, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+fingerprint 6 1 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2 21 {} {'git_dirty': False, 'git_head': 'c9026af3a9f1dd38f2ecbbd9bd6908bf3fd887c7', 'run_id': 'py313-venv-02-resumed-c-20261025T165549', 'when': '2026-10-25T16:57:10+00:00'}
+-- ~/.ray/auth_token: -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes
+/dev/disk3s3s1  927G  810G  117G  88% /
+

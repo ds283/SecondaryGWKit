@@ -1,0 +1,100 @@
+== 2026-10-25T16:26:49+0000 step 4: the token, before any Ray start (the token itself is never printed: get-auth-token's stdout goes to /dev/null)
+$ ls -l ~/.ray/
+total 4
+-rw-r--r-- 1 ds283 staff 21 Apr 11  2024 config.json
+[exit 0]
+
+$ ps -Ao pid,ppid,command | grep -E "gcs_server|raylet" | grep -v grep
+[exit 1]
+
+$ ./venv/bin/ray get-auth-token --generate > /dev/null
+Generating new authentication token...
+2026-10-25 16:26:52,449	INFO authentication_token_setup.py:50 -- Generated new authentication token and saved to /Users/ds283/.ray/auth_token
+
+[exit 0]
+
+$ ls -l ~/.ray/
+total 8
+-rw-r--r-- 1 ds283 staff 64 Oct 25 16:26 auth_token
+-rw-r--r-- 1 ds283 staff 21 Apr 11  2024 config.json
+[exit 0]
+
+$ chmod 600 ~/.ray/auth_token
+[exit 0]
+
+$ ls -l ~/.ray/auth_token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+[exit 0]
+
+$ wc -c < ~/.ray/auth_token
+64
+[exit 0]
+
+$ stat -f "%Sp %z %Sm %N" ~/.ray/auth_token
+stat: cannot read file system information for '%Sp %z %Sm %N': No such file or directory
+  File: /Users/ds283/.ray/auth_token
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30586593   Available: 30586593
+Inodes: Total: 1230151265 Free: 1223463720
+[exit 1]
+
+$ ps -Ao pid,ppid,command | grep -E "gcs_server|raylet" | grep -v grep
+[exit 1]
+
+
+== resume (c9026af) 2026-10-25T16:46:57+0000 token check 3, during reference's one check: the gcs_server's exec-time environment, filtered to RAY_AUTH_MODE= alone (§7: the gcs_server's pid, not the driver's)
+$ ps -o pid,ppid,command -p 960 | cut -c1-160
+  PID  PPID COMMAND
+  960   929 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-
+$ ps -E -ww -p 960 -o command= | tr ' ' '
+' | grep '^RAY_AUTH_MODE='
+RAY_AUTH_MODE=token
+[exit 0]
+$ ps -E -ww -p 1008 -o command= | tr ' ' '
+' | grep '^RAY_AUTH_MODE='   (the raylet, beside it)
+RAY_AUTH_MODE=token
+[exit 0]
+
+== resume (c9026af) 2026-10-25T17:02:27+0000 token checks 1, 2 and 5 over R7's twelve logs (the four resumed launches: launch log, stdout.log, stderr.log), after the last launch
+$ grep -cE "Token authentication is enabled" <the twelve logs>
+var/runs/py313-venv-02-reference-resume.launch.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stdout.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stderr.log:0
+var/runs/py313-venv-02-resumed-a-resume.launch.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stdout.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stderr.log:0
+var/runs/py313-venv-02-resumed-b-resume.launch.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stdout.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stderr.log:0
+var/runs/py313-venv-02-resumed-c-resume.launch.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stdout.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stderr.log:0
+$ grep -cE "Generated new authentication token" <the twelve logs>
+var/runs/py313-venv-02-reference-resume.launch.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stdout.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stderr.log:0
+var/runs/py313-venv-02-resumed-a-resume.launch.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stdout.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stderr.log:0
+var/runs/py313-venv-02-resumed-b-resume.launch.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stdout.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stderr.log:0
+var/runs/py313-venv-02-resumed-c-resume.launch.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stdout.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stderr.log:0
+$ grep -cE "InvalidAuthToken|AuthenticationError" <the twelve logs>
+var/runs/py313-venv-02-reference-resume.launch.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stdout.log:0
+var/runs/py313-venv-02-reference-20261025T164631/stderr.log:0
+var/runs/py313-venv-02-resumed-a-resume.launch.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stdout.log:0
+var/runs/py313-venv-02-resumed-a-20261025T165114/stderr.log:0
+var/runs/py313-venv-02-resumed-b-resume.launch.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stdout.log:0
+var/runs/py313-venv-02-resumed-b-20261025T165402/stderr.log:0
+var/runs/py313-venv-02-resumed-c-resume.launch.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stdout.log:0
+var/runs/py313-venv-02-resumed-c-20261025T165549/stderr.log:0
+-- for the record, the first dispatch's failed reference (not one of R7's resumed launches): InvalidAuthToken|AuthenticationError lines = 22; Token authentication is enabled = 0
+-- token check 4 (after the last launch): -rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token; 64 bytes

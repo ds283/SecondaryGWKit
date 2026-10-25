@@ -1,0 +1,156 @@
+== after reference (resume, c9026af): $ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/py313-venv-02-reference.sqlite   (also var/py313-venv-02/state/after-reference.txt)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: py313-venv-02-reference.sqlite; version rows None
+-- shard 0: py313-venv-02-reference-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: py313-venv-02-reference-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: py313-venv-02-reference-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: py313-venv-02-reference-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+== after resumed-a (resume, c9026af): $ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/py313-venv-02-resumed.sqlite   (also var/py313-venv-02/state/after-resumed-a.txt)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: py313-venv-02-resumed.sqlite; version rows None
+-- shard 0: py313-venv-02-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 57 row(s), 16 with validated = 0: serials [213, 217, 232, 233, 241, 243, 244, 249, 250, 251, 252, 253, 254, 255, 256, 257]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: py313-venv-02-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 55 row(s), 17 with validated = 0: serials [529, 539, 548, 551, 552, 554, 555, 556, 557, 558, 560, 561, 562, 563, 564, 565, 566]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: py313-venv-02-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: py313-venv-02-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 54 row(s), 16 with validated = 0: serials [11, 22, 34, 38, 40, 41, 43, 44, 47, 48, 49, 50, 51, 52, 53, 54]
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+== after resumed-b (resume, c9026af): $ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/py313-venv-02-resumed.sqlite   (also var/py313-venv-02/state/after-resumed-b.txt)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: py313-venv-02-resumed.sqlite; version rows None
+-- shard 0: py313-venv-02-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: py313-venv-02-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: py313-venv-02-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: py313-venv-02-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+
+== after resumed-c: $ PYTHONPATH=. ./venv/bin/python docs/a3-v2-readiness/rehearsal/closed_store_state.py var/datastores/py313-venv-02-resumed.sqlite   (also var/py313-venv-02/state/after-resumed-c.txt)
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-resumed.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: py313-venv-02-resumed.sqlite; version rows None
+-- shard 0: py313-venv-02-resumed-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: py313-venv-02-resumed-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: py313-venv-02-resumed-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: py313-venv-02-resumed-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+

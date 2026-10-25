@@ -1,9 +1,10 @@
 # py313-venv campaign — implementation state
 
-**Last updated:** 2026-10-25 · **Status: STARTED — 1 of 2 landed and reviewed** (01 at `d4e5504`,
-reviewed 2026-10-25, §5.2). The laptop's venv is Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy`
-2.0.55, and R6's three stores are `39809dca…` (FP6 holds). 02 is written and released by 01's
-review; its orchestrator note is still to be written. U1–U4 were ruled by the user.
+**Last updated:** 2026-10-25 · **Status: CLOSED — 2 of 2 landed and reviewed** (01 at `d4e5504`,
+§5.2; 02 on the Mac Studio, recorded in the closing commit, §5.4–§5.5). Both hosts' venvs are
+Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy` 2.0.55. R6 and R7 stored `39809dca…` (FP6, FP7),
+and A3 v2 reads `0e32f24a…` under the new venv (A3). Every Ray start runs in token mode by name.
+U1–U4 were ruled by the user.
 
 The plan is [`README.md`](README.md), written on 2026-10-25 at `ebfae11`.
 
@@ -43,7 +44,7 @@ The orchestrator's choices of method, C1–C7, are in README §6.2.
 | # | Prompt | Covers | Where | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|---|
 | 01 | [Move the laptop's venv to Python 3.13](01-move-the-laptop-venv-to-python-3.13.md) | the two pins; the venv; `distributions`; `CLAUDE.md`; the roots; R6 with the hard-kill pair | laptop | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed 2026-10-25 (§5.2) | `d4e5504` | [log](logs/01-move-the-laptop-venv-to-python-3.13.md) |
-| 02 | [Move the Mac Studio's venv to Python 3.13](02-move-the-mac-studio-venv-to-python-3.13.md) | the checkout and venv there; the roots; R7; A3 v2 read under 3.13 | Mac Studio | Opus | ✍️ 2026-10-25 · released by 01's review (§5.2) | ⬜ | — | — |
+| 02 | [Move the Mac Studio's venv to Python 3.13](02-move-the-mac-studio-venv-to-python-3.13.md) | the checkout and venv there; the roots; R7; A3 v2 read under 3.13 | Mac Studio | Opus | ✍️ 2026-10-25 · released by 01's review (§5.2) | ✅ 2026-10-25 on the Mac Studio (two dispatches: `aac52bc`, then the resume at `c9026af`), reviewed there | records in the closing commit (it commits nothing on the Mac Studio) | [log](logs/02-move-the-mac-studio-venv-to-python-3.13.md) |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -72,22 +73,30 @@ mode (acceptance 5a).
 | **S1** | 01 | the seven roots under 3.13 at 3.12's counts; `test_ray_address_default` passes; `black` clean; warnings recorded | ✅ every count 3.12's; the one failure, the known wall-clock test, fails under both (3.13 faster); `test_ray_address_default` 7 OK; `black` 369 clean; one new `ResourceWarning` (§3) |
 | **R6** | 01 | R3's four launches on the laptop under 3.13: both stores `39809dca…`; the lock lists a 2.59.0 instance by its temp dir; the readers exit 0 | ✅ `done`/`killed`/`killed`/`done`; both stores `39809dca…`, 0 differences against R3's recorded; `ray-processes` exit 1 listing `gcs_server` and `raylet`; the readers exit 0, store unchanged; one new log line from Ray (§3) |
 | **K1** | 01 | R3's hard-kill pair under Ray 2.59.0: the route holds; how long the GCS server outlives the `SIGKILL` | ✅ the route holds, `hardkill` store `39809dca…`; ❌ H2: the GCS server deadlocked as at R3 (same stack), alive ~1 h 56 m until the user's `kill -KILL`; narrows `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` |
-| **M1** | 02 | the Mac Studio's checkout fast-forwarded; its venv on 3.13.16, with a freeze identical to the laptop's | ⬜ |
-| **M2** | 02 | the seven roots there at 01's counts | ⬜ |
-| **R7** | 02 | R6's four launches on the Mac Studio: both stores `39809dca…` | ⬜ |
-| **A1** | 02 | A3 v2 under 3.13: every reader exits 0, the files are byte-identical, the fingerprint is `0e32f24a…` | ⬜ |
+| **M1** | 02 | the Mac Studio's checkout fast-forwarded; its venv on 3.13.16, with a freeze identical to the laptop's | ✅ 02: 101-line freeze, no diff against `01-pip.txt`'s last; `pip check` clean; 3.12 venv in `retired-venvs/` |
+| **M2** | 02 | the seven roots there at 01's counts | ✅ 02: 32/737/39/148/280/49 and RunDrivers 127 (1 skip there only), all OK |
+| **R7** | 02 | R6's four launches on the Mac Studio: both stores `39809dca…` | ✅ 02, at the resume: `done`/`killed`/`killed`/`done`; both `39809dca…`, equal to R3's recorded; `git_dirty` false; token mode shown (5 checks); the first dispatch's `reference` failed, §4 |
+| **A1** | 02 | A3 v2 under 3.13: every reader exits 0, the files are byte-identical, the fingerprint is `0e32f24a…` | ✅ 02: seven reader runs exit 0; files byte-identical; `0e32f24a…`, recomputed again from the laptop in the close |
 
 ## 2. The gates
 
 | Gate | Holds when | Prompt | State |
 |---|---|---|---|
 | **FP6** | R6's three stores are `39809dca…` under Python 3.13.16, `ray` 2.59.0 and `SQLAlchemy` 2.0.55 | 01 | ✅ holds (2026-10-25): reference, resumed and hardkill all `39809dca…`, 0 differences against R3's `reference` and `resumed-c` |
-| **FP7** | R7's two stores are `39809dca…` on the Mac Studio | 02 | ⬜ |
-| **A3** | A3 v2's fingerprint, computed under the new venv, is `0e32f24a…` | 02 | ⬜ |
+| **FP7** | R7's two stores are `39809dca…` on the Mac Studio | 02 | ✅ holds (2026-10-25): both `39809dca…`, 0 differences against R3's `reference` and `resumed-c` |
+| **A3** | A3 v2's fingerprint, computed under the new venv, is `0e32f24a…` | 02 | ✅ holds (2026-10-25): `0e32f24a…`, matching the sidecar taken at `b90752d` |
 
 If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
 
 ## 3. Active and unresolved issues
+
+None open.
+
+**Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
+(the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
+2.59.0 (verification §1.10.3).
+
+## 4. Resolved issues
 
 - **[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]** *(opened 2026-10-25 by prompt
   01, from R6's logs; not acted on, by `CLAUDE.md` rule 4)* — Ray 2.59.0 turns on token
@@ -131,11 +140,14 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
     authentication error. The token file is mode 600;
   - R7 is still the build-scale check, and it closes this entry.
 
-**Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
-(the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
-2.59.0 (verification §1.10.3).
+  **Closed 2026-10-25 by prompt 02's R7** (acceptance 5a), at the resume SHA `c9026af`:
+  - no R7 log, and no reader log, holds `Token authentication is enabled` or `Generated new
+    authentication token`;
+  - R7's `gcs_server` and raylet run with `RAY_AUTH_MODE=token` in their environment;
+  - no R7 log holds `InvalidAuthToken` or `AuthenticationError`;
+  - the Mac Studio's `~/.ray/auth_token` is mode 600, 64 bytes, and was made before any Ray start.
 
-## 4. Resolved issues
+  Its row left `docs/OPEN_ISSUES.md` §1.23.
 
 - **[02-the-token-mode-setting-comes-after-import-ray-so-every-ray-start-fails]** *(opened
   2026-10-25 by prompt 02 on the Mac Studio, at R7's first launch; closed the same day)*.
@@ -299,3 +311,53 @@ All of this was done on the user's decisions of the same day.
     directories and launch logs stay as the record.
   - R6's reader output, `var/py313-venv-01/extract/` (211 MB), is kept: it is not a store, and it
     is the user's to delete.
+
+### 5.4 After prompt 02 (2026-10-25)
+
+02 ran on the Mac Studio, orchestrated there, in two dispatches.
+- **The first dispatch**, at `aac52bc`, completed steps 1–6:
+  - the checkout was fast-forwarded and the venv rebuilt on 3.13.16, with a freeze identical to the
+    laptop's;
+  - the token was made and set to mode 600 before any Ray start;
+  - the roots and A3 v2's "before" state were recorded.
+
+  R7's `reference` then failed at `ray.init`, because the token mode was set after `import ray`
+  (§4). The lock was released at 16:36:46, and no store was built.
+- **The resume**, at `c9026af`, after the fix `14ada2f`, ran steps 7–11:
+  - R7's four launches. Both stores are `39809dca…` (FP7), and the resumed chain removed exactly
+    the 49 rows `resumed-a` left unvalidated;
+  - token mode, shown by five checks (§4);
+  - A3 v2's six readers and `extract_Gk_data` with `nomodels`, all exit 0. The store's files are
+    byte-identical, and its fingerprint under 3.13 is `0e32f24a…` (A3).
+- **The review** was made on the Mac Studio by its orchestrator, which re-ran the roots (RunDrivers
+  127) and recomputed the fingerprints.
+  - The log classifies 15 deviations: five `STRUCTURALLY REQUIRED`, seven `IMPLEMENTATION CHOICE`
+    and three `UNINTENDED DRIFT`. The drift is two record slips, a direct `merge --ff-only`, and a
+    zsh word-splitting slip, each re-run.
+  - R7's two stores were then retired, each after a dry run. Their sidecars stay as tombstones.
+- **Records:**
+  - `measure/out/02/` (`out/`, `state/`, `issues_02.md`);
+  - [`logs/02-move-the-mac-studio-venv-to-python-3.13.md`](logs/02-move-the-mac-studio-venv-to-python-3.13.md);
+  - [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §2.
+
+  The readers' output, `var/py313-venv-02/extract/` and `extract-r7/`, stays on the Mac Studio for
+  the user.
+
+### 5.5 Close (2026-10-25)
+
+The laptop orchestrator closed the campaign after checking 02's records against its report:
+- R7's comparison with R3 is `equal`;
+- A3 v2's file list is identical before and after;
+- the freeze is identical to the laptop's, and the roots are as M2;
+- each token check holds, and each retirement shows `retired`;
+- no copied record contains the Mac Studio's token (`grep -F -f`, run there);
+- A3 v2's fingerprint was recomputed once more on the Mac Studio from the laptop: `0e32f24a…`,
+  problems none.
+
+**Left for the user:**
+- the two 3.12 venvs, one in each host's `retired-venvs/`;
+- the readers' output in `var/py313-venv-01/extract/` (laptop) and `var/py313-venv-02/` (Mac
+  Studio).
+
+**Handed on:** both hosts are ready for the queued analysis jobs on the new venv.
+

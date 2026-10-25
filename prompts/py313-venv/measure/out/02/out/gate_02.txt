@@ -1,0 +1,82 @@
+$ date
+Sun Oct 25 16:20:41 GMT 2026
+[exit 0]
+$ git rev-parse HEAD
+aac52bc28b2c825ccdf4500d25fb9d9b1776ca13
+[exit 0]
+$ git status --short
+[exit 0]
+$ ./venv/bin/python --version
+Python 3.12.15
+[exit 0]
+$ /opt/local/bin/python3.13 --version
+Python 3.13.16
+[exit 0]
+$ ls -la /Users/ds283/Documents/Code/retired-venvs/
+total 0
+drwxr-xr-x  3 ds283 staff   96 Oct 22 19:44 .
+drwxr-xr-x 66 ds283 staff 2112 Oct 22 19:44 ..
+drwxr-xr-x  8 ds283 staff  256 Oct  6 13:05 SecondaryGWKit-py313-20261022
+[exit 0]
+$ ls -d /Users/ds283/Documents/Code/retired-venvs/SecondaryGWKit-py312-20261025
+ls: cannot access '/Users/ds283/Documents/Code/retired-venvs/SecondaryGWKit-py312-20261025': No such file or directory
+[exit 2]
+$ ./venv/bin/python -m runregistrykit list
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-07-a3-v2-20261022T211155      done              -   2d 20h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-c-20261022T200159  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718  killed            -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -   2d 21h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+5 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 5 finished; 0 with no host recorded.
+[exit 0]
+$ ps -Ao pid,ppid,command | grep -E 'gcs_server|raylet' | grep -v grep
+[exit 1]
+$ ls -la /Users/ds283/.ray/
+total 4
+drwxr-xr-x   3 ds283 staff   96 Apr 11  2024 .
+drwxr-x--- 159 ds283 staff 5088 Oct 25 16:17 ..
+-rw-r--r--   1 ds283 staff   21 Apr 11  2024 config.json
+[exit 0]
+$ ls -la /Users/ds283/.raypoolkit/ /Users/ds283/ScienceData/.rehearsal-lock
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+/Users/ds283/.raypoolkit/:
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 25 10:57 .
+drwxr-x--- 159 ds283 staff 5088 Oct 25 16:17 ..
+[exit 2]
+$ ls var/datastores/
+handover-06-reference.manifest.json
+handover-06-resumed.manifest.json
+handover-A3-v2-lambdacdm-shard0000.sqlite
+handover-A3-v2-lambdacdm-shard0001.sqlite
+handover-A3-v2-lambdacdm-shard0002.sqlite
+handover-A3-v2-lambdacdm-shard0003.sqlite
+handover-A3-v2-lambdacdm.manifest.json
+handover-A3-v2-lambdacdm.sqlite
+[exit 0]
+$ ls var/runs/
+handover-06-reference-20261022T195228
+handover-06-reference.launch.log
+handover-06-resumed-a-20261022T195718
+handover-06-resumed-a.launch.log
+handover-06-resumed-b-20261022T200009
+handover-06-resumed-b.launch.log
+handover-06-resumed-c-20261022T200159
+handover-06-resumed-c.launch.log
+handover-07-a3-v2-20261022T211155
+handover-07-a3-v2.launch.log
+[exit 0]
+$ git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit aac52bc [handover-remedial]
+[exit 0]
+$ echo RAY_ADDRESS=${RAY_ADDRESS-unset} RAY_AUTH_MODE=${RAY_AUTH_MODE-unset}
+RAY_ADDRESS=unset RAY_AUTH_MODE=unset
+[exit 0]
+$ sysctl -n hw.ncpu
+10
+[exit 0]
+$ uptime
+16:20  up 18 days,  6:57, 2 users, load averages: 4.41 4.43 4.02
+[exit 0]

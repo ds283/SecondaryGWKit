@@ -1,0 +1,51 @@
+{
+  "SQLAlchemy": {
+    "commit": null,
+    "editable": false,
+    "requested_revision": null,
+    "url": null,
+    "version": "2.0.55"
+  },
+  "datastorekit": {
+    "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+    "editable": false,
+    "requested_revision": "v0.5.0",
+    "url": "https://github.com/ds283/DatastoreKit",
+    "version": "0.5.0"
+  },
+  "numpy": {
+    "commit": null,
+    "editable": false,
+    "requested_revision": null,
+    "url": null,
+    "version": "2.2.4"
+  },
+  "ray": {
+    "commit": null,
+    "editable": false,
+    "requested_revision": null,
+    "url": null,
+    "version": "2.59.0"
+  },
+  "raypoolkit": {
+    "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+    "editable": false,
+    "requested_revision": "v0.3.0",
+    "url": "https://github.com/ds283/RayPoolKit",
+    "version": "0.3.0"
+  },
+  "runregistrykit": {
+    "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+    "editable": false,
+    "requested_revision": "v0.2.0",
+    "url": "https://github.com/ds283/RunRegistryKit",
+    "version": "0.2.0"
+  },
+  "scipy": {
+    "commit": null,
+    "editable": false,
+    "requested_revision": null,
+    "url": null,
+    "version": "1.16.3"
+  }
+}

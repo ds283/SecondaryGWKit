@@ -1,0 +1,6 @@
+== 2026-10-25T17:01:41+0000 (resume, c9026af); var/runs entries 20
+$ PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-02-resumed.sqlite --job-name py313-venv-02 --atol 1e-32 --rtol 1e-7
+!! quadsource_atol_sweep --build: py313-venv-02-resumed.sqlite, py313-venv-02-resumed-shard0000.sqlite, py313-venv-02-resumed-shard0001.sqlite, py313-venv-02-resumed-shard0002.sqlite, py313-venv-02-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+rc=1
+== 2026-10-25T17:01:42+0000 after; var/runs entries 20
+R7 store and sidecar files: identical before and after

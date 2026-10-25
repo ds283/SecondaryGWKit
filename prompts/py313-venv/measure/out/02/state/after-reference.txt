@@ -1,0 +1,37 @@
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-02-reference.sqlite
+-- journal, WAL and shared-memory files beside the store's files:
+   none
+-- primary's replication_in_flight (operation, class_name, controller_shard, store_id, started): 0 row(s)
+-- primary: py313-venv-02-reference.sqlite; version rows None
+-- shard 0: py313-venv-02-reference-shard0000.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 456 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 2 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 1: py313-venv-02-reference-shard0001.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 406 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 1 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
+-- shard 2: py313-venv-02-reference-shard0002.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 0 row(s), 0 with validated = 0
+   GkSource: 0 row(s), 0 with validated = 0
+   GkWKBIntegration: 0 row(s), 0 with validated = 0
+   QuadSource: 0 row(s), 0 with validated = 0
+   TkNumericIntegration: 0 row(s), 0 with validated = 0
+   TkWKBIntegration: 0 row(s), 0 with validated = 0
+-- shard 3: py313-venv-02-reference-shard0003.sqlite; version rows [(1, '2025.1.1')]
+   BackgroundModel: 1 row(s), 0 with validated = 0
+   GkNumericIntegration: 506 row(s), 0 with validated = 0
+   GkSource: 97 row(s), 0 with validated = 0
+   GkWKBIntegration: 1159 row(s), 0 with validated = 0
+   QuadSource: 3 row(s), 0 with validated = 0
+   TkNumericIntegration: 1 row(s), 0 with validated = 0
+   TkWKBIntegration: 1 row(s), 0 with validated = 0
