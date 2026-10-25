@@ -123,11 +123,44 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
   Mac Studio is the real-Ray check. It needs no warning line in any launch log, token mode in
   force, and the token file mode 600. R7 closes this entry. Assigned to 02.
 
+  **Narrowed again 2026-10-25, after R7's first launch failed** (the defect below):
+  - the refresh is in `config/ray_local.py`;
+  - the laptop smoke test ran once the lock was free. It imported `ray` first, as `main.py` does,
+    started one local instance under the lock, and ran one task. Ray's mode was token before the
+    init, the worker saw `RAY_AUTH_MODE=token`, and the output had no warning and no
+    authentication error. The token file is mode 600;
+  - R7 is still the build-scale check, and it closes this entry.
+
 **Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
 (the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
 2.59.0 (verification §1.10.3).
 
 ## 4. Resolved issues
+
+- **[02-the-token-mode-setting-comes-after-import-ray-so-every-ray-start-fails]** *(opened
+  2026-10-25 by prompt 02 on the Mac Studio, at R7's first launch; closed the same day)*.
+  **The failure.** `d833ee7` set `RAY_AUTH_MODE=token` in `config/ray_local.py`. Ray 2.59 reads
+  the mode into its config once, when `ray` is imported, and `main.py:12` and the two drivers
+  import `ray` before that module.
+  - R7's `reference` driver therefore kept `disabled`. The GCS server it started inherited `token`
+    from the environment and refused it.
+  - The launch log holds 21 `InvalidAuthToken` lines, then `AuthenticationError … RAY_AUTH_MODE is
+    currently 'disabled' (not 'token')`. The run ended `failed`, exit 1, at 16:32:25.
+  - The failure is the orchestrator's. `test_ray_auth_mode` checked that the import comes before
+    `ray.init`, not before `import ray`, and the laptop smoke test that would have shown it could
+    not run.
+
+  **The impact.** No store was built, and A3 v2 was not touched. The run is recorded in
+  `var/py313-venv-02/` on the Mac Studio.
+
+  **Closed 2026-10-25, on the user's choice of route:**
+  - `config/ray_local.py` calls `ray._raylet.Config.initialize("")` after setting the variable,
+    when `ray` is already imported. That is the refresh Ray's own `_enable_token_auth` makes.
+  - `TestRaySeesTheMode` (3 tests, no Ray instance) reads Ray's own mode in a fresh interpreter,
+    with either import order, and with `disabled` preset. Run on `d833ee7`'s module,
+    `test_ray_imported_first` fails.
+  - The laptop smoke test, in `main.py`'s order, passed (above).
+  - RunDrivers goes from 124 to 127.
 
 - **[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]** *(opened 2026-10-25 by prompt 01,
   from the warnings of §2.7; not acted on, by README §5 rule 1)* — under Python 3.13 the
