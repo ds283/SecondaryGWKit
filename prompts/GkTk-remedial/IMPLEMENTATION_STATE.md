@@ -522,6 +522,19 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   a slope clause as written; its gate G1 decides how that is read.
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
 
+  **Narrowed (2026-10-25, levin-phase-floor 04): removing this floor removes the cliff.** On the
+  seven depth-20 rows of that campaign's 03:
+  - **every remainder reduced exactly** (arm X): the region count fell to 0.20–0.49 % of
+    production's, and no scored group reached depth 20 at `rtol = 1e-7`;
+  - **$k\tau_R$ alone taken out of $G$'s phase** (arm A: $G$ re-anchored at the top of its range, the
+    constant reduced once in extended precision): the same as X region for region, with totals
+    agreeing to 1.2e-12. That is a change to $G$'s anchor in `PrimitivePhase`/`GkSourcePolicyData`,
+    with no Levin-side hook.
+
+  So on those rows the per-region anchoring this entry's next step names is not needed; the $G$-side
+  re-anchor is. Whether the remedy lands there, or as `handover`'s D2, is that campaign's G1 Q3.
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
+
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
   `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and

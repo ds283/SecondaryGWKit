@@ -1,0 +1,15 @@
+$ (cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c <module origins, below>
+ComputeTargets.primitive_phase /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/ComputeTargets/primitive_phase.py
+ComputeTargets.QuadSourceIntegral /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/ComputeTargets/QuadSourceIntegral.py
+ComputeTargets.phase_groups /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/ComputeTargets/phase_groups.py
+ComputeTargets.cumulative_table /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/ComputeTargets/cumulative_table.py
+AdaptiveLevin.levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/AdaptiveLevin/levin_quadrature.py
+StoreFixtures.standin_pool /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/StoreFixtures/standin_pool.py
+ComputeTargets.tests.test_main_plumbing /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/ComputeTargets/tests/test_main_plumbing.py
+datastorekit /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/__init__.py
+raypoolkit /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/raypoolkit/__init__.py
+runregistrykit /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__init__.py
+mpmath /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/mpmath/__init__.py
+MAIN_PY /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3/main.py
+mpmath backend python
+ray initialised False

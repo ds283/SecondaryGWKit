@@ -1,0 +1,463 @@
+# levin-phase-floor prompt 04 step 5, resumed under prompt section 8 (d170e6d; amended E1 (c) and E2): phases_04 (E1, E2 gates; descriptive F^arm, sigma_phi, modulus)
+# written 2026-10-25T23:08:56Z on mps026298.phys.susx.ac.uk
+# script check_phases.py sha256 d10d396548a977dc59442b1f49499f390dae380a21051d131bf4e10070e433b2
+# code: worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 HEAD 98e68d3e1b60e6de4378b7d9aded3a120d6088a9 (clean)
+# records: main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD c8ca1559fcc53fdb88998f170257635431fb85ca (clean)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/phases.py sha256 9f0461576e27ff4cd3c7febd58cb3f6f4b1536b65a55a97ea771d1257a4ccb61
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/harness.py sha256 a2692689810d9a8efc9b7625ccafd948f847bda09f0374637b7536cb92e9f8df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/rebuild.py sha256 ee47bc5057d0b7b93873eb7f63265b80deaf7f1634f023e3ca1e3bf0001b5d6d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/prov.py sha256 f8dc879eca61503e065e30669b27a4974ea99f0fc0cd77161706a94f249324ba
+# input /Users/ds283/Documents/Code/SecondaryGWKit/docs/handover/a3-v2/findings/depth20_floor.py sha256 c82f72b0c7bda8174e1b01b3989929651f0e2156b7d2e9f02951206935d0e746
+# input /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/03/out/instrument_03.txt sha256 780268f5ef26ea31fd0979a522e9e2df768593545a6859885d1eb62aafe6cdf3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R1.pkl sha256 a5432107bd0209db0a4938a5363fbd2cad9cd184e8bdbdf09f92adc1e3ac28f3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R2.pkl sha256 0d05646c20d77b21825679dc3ec21a66bd120403b9e8399d130a8185bc479a8b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R3.pkl sha256 3ff6e76d2a299e811855894868ffc736048bb4b28ea6492110357570aed8457f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R4.pkl sha256 b79da787e6246da3713c639c53f66d883b1cd16e3a3df9c4b0a90edc47418f58
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R5.pkl sha256 77e5309ce44f348aaa7a983688011f0329a5a1727549dd8de72001e7873d0680
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R6.pkl sha256 4a6a0d4e76004a623e4e2756471214fe3763996476972a88c1fdf451eed7d9f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/row_R7.pkl sha256 fd26218a27f507ea882db2d057d04c8edff8793fe05bd553644b51fe304fd55e
+# store fingerprint (sidecar, read only) 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+# EPS = 2.220446049250313e-16; mpmath prec 512 bits; TWO_PI = 6.283185307179586
+# definitions: module docstrings of check_phases.py and phases.py; Ray never initialised; no Levin call
+
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+== rows
+   R1 k=3.092e+06 q=1e+05 r=3.092e+06 z_response=33.16 F=1.69e-06; Levin sub-intervals [('G', (24.699679, 37.335513)), ('Gr', (21.268378, 24.699679)), ('Gqr', (3.53119, 21.268378))]; worker 41 s
+   R2 k=3.045e+07 q=3.092e+06 r=3.045e+07 z_response=302.6 F=4.599e-06; Levin sub-intervals [('G', (26.987212, 37.335513)), ('Gr', (24.699679, 26.987212)), ('Gqr', (5.715855, 24.699679))]; worker 43 s
+   R3 k=9.558e+07 q=9.851e+05 r=9.558e+07 z_response=10.98 F=9.192e-05; Levin sub-intervals [('G', (28.130979, 37.335513)), ('Gr', (23.555912, 28.130979)), ('Gqr', (2.48312, 23.555912))]; worker 46 s
+   R4 k=3.092e+06 q=1e+05 r=3.092e+06 z_response=14.47 F=2.595e-06; Levin sub-intervals [('G', (24.699679, 37.335513)), ('Gr', (21.268378, 24.699679)), ('Gqr', (2.739139, 21.268378))]; worker 66 s
+   R5 k=3.045e+07 q=3.092e+06 r=3.045e+07 z_response=174.1 F=6.492e-06; Levin sub-intervals [('G', (26.987212, 37.335513)), ('Gr', (24.699679, 26.987212)), ('Gqr', (5.165514, 24.699679))]; worker 40 s
+   R6 k=3.092e+06 q=3.092e+06 r=3.092e+06 z_response=25.16 F=1.956e-06; Levin sub-intervals [('G', (24.699679, 37.335513)), ('Gqr', (3.264081, 24.699679))]; worker 31 s
+   R7 k=3.092e+06 q=3.092e+06 r=3.092e+06 z_response=14.47 F=2.595e-06; Levin sub-intervals [('G', (24.699679, 37.335513)), ('Gqr', (2.739139, 24.699679))]; worker 34 s
+
+== E1: the arms compute the same phase (2000 abscissae per factor per Levin sub-interval)
+   (a) |float(Delta^ext) - delta()| <= 2 ulp(delta());  (b) |wrap(rho^X - rho^P)| <= 4 EPS Phi^P + 1e-15;  (c) G: |wrap(rho^A - rho^X)| <= 4 EPS Phi^A + 4 x 2^-49 (amended, prompt section 8)
+   worst = largest lhs/rhs over the abscissae (<= 1 passes); fails = abscissae over the bound; wrap is evaluated exactly (fractions) on the two doubles
+   R1 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.293 fails 0; (c) worst 0.261 fails 0; max Phi^P 7.604e+09; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-5.2053041270302636 anchor=33.1646 -> ok
+   R1 sub1  Gr G (G): (a) worst 0.500 fails 0; (b) worst 0.273 fails 0; (c) worst 0.316 fails 0; max Phi^P 7.604e+09; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-5.2053041270302636 anchor=33.1646 -> ok
+   R1 sub1  Gr r (T): (a) worst 1.000 fails 0; (b) worst 0.739 fails 0; (c) n/a; max Phi^P 462.4; anchor=5.33254e+10 -> ok
+   R1 sub2 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.291 fails 0; (c) worst 0.327 fails 0; max Phi^P 7.604e+09; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-5.2053041270302636 anchor=33.1646 -> ok
+   R1 sub2 Gqr q (T): (a) worst 1.000 fails 0; (b) worst 0.806 fails 0; (c) n/a; max Phi^P 3.625e+07; anchor=1.7248e+09 -> ok
+   R1 sub2 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.386 fails 0; (c) n/a; max Phi^P 1.121e+09; anchor=5.33254e+10 -> ok
+   R1 exactness (reported, not a gate), against fractions: Delta^ext exact at 12000 of 12000 abscissae; rho^X equal to the correctly rounded exact remainder at 12000 of 12000
+   R2 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.321 fails 0; (c) worst 0.250 fails 0; max Phi^P 2.069e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-4.526469858631935 anchor=302.644 -> ok
+   R2 sub1  Gr G (G): (a) worst 0.500 fails 0; (b) worst 0.333 fails 0; (c) worst 0.335 fails 0; max Phi^P 2.069e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-4.526469858631935 anchor=302.644 -> ok
+   R2 sub1  Gr r (T): (a) worst 0.500 fails 0; (b) worst 0.790 fails 0; (c) n/a; max Phi^P 135.6; anchor=5.25288e+11 -> ok
+   R2 sub2 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.283 fails 0; (c) worst 0.351 fails 0; max Phi^P 2.069e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-4.526469858631935 anchor=302.644 -> ok
+   R2 sub2 Gqr q (T): (a) worst 0.500 fails 0; (b) worst 0.623 fails 0; (c) n/a; max Phi^P 6.082e+08; anchor=5.33254e+10 -> ok
+   R2 sub2 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.397 fails 0; (c) n/a; max Phi^P 5.991e+09; anchor=5.25288e+11 -> ok
+   R2 exactness (reported, not a gate), against fractions: Delta^ext exact at 12000 of 12000 abscissae; rho^X equal to the correctly rounded exact remainder at 12000 of 12000
+   R3 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.399 fails 0; (c) worst 0.295 fails 0; max Phi^P 4.135e+11; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-1.41496251233645 anchor=10.9786 -> ok
+   R3 sub1  Gr G (G): (a) worst 0.500 fails 0; (b) worst 0.318 fails 0; (c) worst 0.356 fails 0; max Phi^P 4.135e+11; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-1.41496251233645 anchor=10.9786 -> ok
+   R3 sub1  Gr r (T): (a) worst 0.500 fails 0; (b) worst 0.870 fails 0; (c) n/a; max Phi^P 1488; anchor=1.64865e+12 -> ok
+   R3 sub2 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.331 fails 0; (c) worst 0.328 fails 0; max Phi^P 4.135e+11; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-1.41496251233645 anchor=10.9786 -> ok
+   R3 sub2 Gqr q (T): (a) worst 1.000 fails 0; (b) worst 0.682 fails 0; (c) n/a; max Phi^P 4.377e+08; anchor=1.69904e+10 -> ok
+   R3 sub2 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.356 fails 0; (c) n/a; max Phi^P 4.248e+10; anchor=1.64865e+12 -> ok
+   R3 exactness (reported, not a gate), against fractions: Delta^ext exact at 12000 of 12000 abscissae; rho^X equal to the correctly rounded exact remainder at 12000 of 12000
+   R4 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.296 fails 0; (c) worst 0.257 fails 0; max Phi^P 1.167e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-6.2693927053394622 anchor=14.4737 -> ok
+   R4 sub1  Gr G (G): (a) worst 0.500 fails 0; (b) worst 0.277 fails 0; (c) worst 0.318 fails 0; max Phi^P 1.167e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-6.2693927053394622 anchor=14.4737 -> ok
+   R4 sub1  Gr r (T): (a) worst 1.000 fails 0; (b) worst 0.739 fails 0; (c) n/a; max Phi^P 462.4; anchor=5.33254e+10 -> ok
+   R4 sub2 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.274 fails 0; (c) worst 0.319 fails 0; max Phi^P 1.167e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-6.2693927053394622 anchor=14.4737 -> ok
+   R4 sub2 Gqr q (T): (a) worst 1.000 fails 0; (b) worst 0.755 fails 0; (c) n/a; max Phi^P 4.243e+07; anchor=1.7248e+09 -> ok
+   R4 sub2 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.371 fails 0; (c) n/a; max Phi^P 1.312e+09; anchor=5.33254e+10 -> ok
+   R4 exactness (reported, not a gate), against fractions: Delta^ext exact at 12000 of 12000 abscissae; rho^X equal to the correctly rounded exact remainder at 12000 of 12000
+   R5 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.288 fails 0; (c) worst 0.267 fails 0; max Phi^P 2.92e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-3.5882124015017691 anchor=174.127 -> ok
+   R5 sub1  Gr G (G): (a) worst 0.500 fails 0; (b) worst 0.248 fails 0; (c) worst 0.329 fails 0; max Phi^P 2.92e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-3.5882124015017691 anchor=174.127 -> ok
+   R5 sub1  Gr r (T): (a) worst 0.500 fails 0; (b) worst 0.790 fails 0; (c) n/a; max Phi^P 135.6; anchor=5.25288e+11 -> ok
+   R5 sub2 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.290 fails 0; (c) worst 0.379 fails 0; max Phi^P 2.92e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-3.5882124015017691 anchor=174.127 -> ok
+   R5 sub2 Gqr q (T): (a) worst 1.000 fails 0; (b) worst 0.578 fails 0; (c) n/a; max Phi^P 7.333e+08; anchor=5.33254e+10 -> ok
+   R5 sub2 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.395 fails 0; (c) n/a; max Phi^P 7.224e+09; anchor=5.25288e+11 -> ok
+   R5 exactness (reported, not a gate), against fractions: Delta^ext exact at 12000 of 12000 abscissae; rho^X equal to the correctly rounded exact remainder at 12000 of 12000
+   R6 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.357 fails 0; (c) worst 0.292 fails 0; max Phi^P 8.799e+09; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-4.7631810416233433 anchor=25.1561 -> ok
+   R6 sub1 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.326 fails 0; (c) worst 0.340 fails 0; max Phi^P 8.799e+09; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-4.7631810416233433 anchor=25.1561 -> ok
+   R6 sub1 Gqr q (T): (a) worst 0.500 fails 0; (b) worst 0.794 fails 0; (c) n/a; max Phi^P 1.185e+09; anchor=5.33254e+10 -> ok
+   R6 sub1 Gqr r (T): (a) worst 0.500 fails 0; (b) worst 0.794 fails 0; (c) n/a; max Phi^P 1.185e+09; anchor=5.33254e+10 -> ok
+   R6 exactness (reported, not a gate), against fractions: Delta^ext exact at 8000 of 8000 abscissae; rho^X equal to the correctly rounded exact remainder at 8000 of 8000
+   R7 sub0   G G (G): (a) worst 0.500 fails 0; (b) worst 0.296 fails 0; (c) worst 0.257 fails 0; max Phi^P 1.167e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-6.2693927053394622 anchor=14.4737 -> ok
+   R7 sub1 Gqr G (G): (a) worst 0.500 fails 0; (b) worst 0.303 fails 0; (c) worst 0.353 fails 0; max Phi^P 1.167e+10; z_top=2.06364e+16 (max_x=2.06364e+16) c_G=-6.2693927053394622 anchor=14.4737 -> ok
+   R7 sub1 Gqr q (T): (a) worst 1.000 fails 0; (b) worst 0.367 fails 0; (c) n/a; max Phi^P 1.312e+09; anchor=5.33254e+10 -> ok
+   R7 sub1 Gqr r (T): (a) worst 1.000 fails 0; (b) worst 0.367 fails 0; (c) n/a; max Phi^P 1.312e+09; anchor=5.33254e+10 -> ok
+   R7 exactness (reported, not a gate), against fractions: Delta^ext exact at 8000 of 8000 abscissae; rho^X equal to the correctly rounded exact remainder at 8000 of 8000
+   E1 HOLDS
+
+== reproduction of 03's printed medians under P (all depth-20 regions of each group; 03's format)
+   R1    G G      median sigma 4.74e-07 (03: 4.74e-07); sigma/F 0.281 (03: 0.281); M1's sigma/F 0.2807 (03: 0.2807) -> same
+   R1   Gr G+r    median sigma 4.8e-07 (03: 4.8e-07); sigma/F 0.284 (03: 0.284); M1's sigma/F 0.284 (03: 0.284) -> same
+   R1   Gr G-r    median sigma 4.77e-07 (03: 4.77e-07); sigma/F 0.282 (03: 0.282); M1's sigma/F 0.2824 (03: 0.2824) -> same
+   R1  Gqr G+q+r  median sigma 4.84e-07 (03: 4.84e-07); sigma/F 0.286 (03: 0.286); M1's sigma/F 0.2861 (03: 0.2861) -> same
+   R1  Gqr G-q+r  median sigma 4.75e-07 (03: 4.75e-07); sigma/F 0.281 (03: 0.281); M1's sigma/F 0.2812 (03: 0.2812) -> same
+   R2   Gr G+r    median sigma 1.44e-06 (03: 1.44e-06); sigma/F 0.314 (03: 0.314); M1's sigma/F 0.3141 (03: 0.3141) -> same
+   R2   Gr G-r    median sigma 1.47e-06 (03: 1.47e-06); sigma/F 0.319 (03: 0.319); M1's sigma/F 0.3189 (03: 0.3189) -> same
+   R2  Gqr G-q+r  median sigma 1.46e-06 (03: 1.46e-06); sigma/F 0.317 (03: 0.317); M1's sigma/F 0.3169 (03: 0.3169) -> same
+   R3   Gr G+r    median sigma 2.63e-05 (03: 2.63e-05); sigma/F 0.286 (03: 0.286); M1's sigma/F 0.2865 (03: 0.2865) -> same
+   R3   Gr G-r    median sigma 2.41e-05 (03: 2.41e-05); sigma/F 0.262 (03: 0.262); M1's sigma/F 0.2623 (03: 0.2623) -> same
+   R4    G G      median sigma 6.67e-07 (03: 6.67e-07); sigma/F 0.257 (03: 0.257); M1's sigma/F 0.2569 (03: 0.2569) -> same
+   R4   Gr G+r    median sigma 6.61e-07 (03: 6.61e-07); sigma/F 0.255 (03: 0.255); M1's sigma/F 0.2549 (03: 0.2549) -> same
+   R4   Gr G-r    median sigma 6.64e-07 (03: 6.64e-07); sigma/F 0.256 (03: 0.256); M1's sigma/F 0.2558 (03: 0.2558) -> same
+   R4  Gqr G+q+r  median sigma 6.59e-07 (03: 6.59e-07); sigma/F 0.254 (03: 0.254); M1's sigma/F 0.254 (03: 0.254) -> same
+   R4  Gqr G-q+r  median sigma 6.68e-07 (03: 6.68e-07); sigma/F 0.257 (03: 0.257); M1's sigma/F 0.2573 (03: 0.2573) -> same
+   R5   Gr G+r    median sigma 1.46e-06 (03: 1.46e-06); sigma/F 0.225 (03: 0.225); M1's sigma/F 0.2249 (03: 0.2249) -> same
+   R5   Gr G-r    median sigma 1.46e-06 (03: 1.46e-06); sigma/F 0.225 (03: 0.225); M1's sigma/F 0.2251 (03: 0.2251) -> same
+   R5  Gqr G+q+r  median sigma 1.46e-06 (03: 1.46e-06); sigma/F 0.225 (03: 0.225); M1's sigma/F 0.225 (03: 0.225) -> same
+   R5  Gqr G-q+r  median sigma 1.46e-06 (03: 1.46e-06); sigma/F 0.224 (03: 0.224); M1's sigma/F 0.2243 (03: 0.2243) -> same
+   R6    G G      median sigma 6.59e-07 (03: 6.59e-07); sigma/F 0.337 (03: 0.337); M1's sigma/F 0.337 (03: 0.337) -> same
+   R6  Gqr G+q+r  median sigma 6.68e-07 (03: 6.68e-07); sigma/F 0.341 (03: 0.341); M1's sigma/F 0.3412 (03: 0.3412) -> same
+   R6  Gqr G+q-r  median sigma 6.59e-07 (03: 6.59e-07); sigma/F 0.337 (03: 0.337); M1's sigma/F 0.3371 (03: 0.3371) -> same
+   R6  Gqr G-q+r  median sigma 6.59e-07 (03: 6.59e-07); sigma/F 0.337 (03: 0.337); M1's sigma/F 0.3371 (03: 0.3371) -> same
+   R6  Gqr G-q-r  median sigma 6.69e-07 (03: 6.69e-07); sigma/F 0.342 (03: 0.342); M1's sigma/F 0.3419 (03: 0.3419) -> same
+   R7    G G      median sigma 6.7e-07 (03: 6.7e-07); sigma/F 0.258 (03: 0.258); M1's sigma/F 0.2582 (03: 0.2582) -> same
+   R7  Gqr G+q+r  median sigma 6.63e-07 (03: 6.63e-07); sigma/F 0.255 (03: 0.255); M1's sigma/F 0.2553 (03: 0.2553) -> same
+   R7  Gqr G+q-r  median sigma 6.72e-07 (03: 6.72e-07); sigma/F 0.259 (03: 0.259); M1's sigma/F 0.2588 (03: 0.2588) -> same
+   R7  Gqr G-q+r  median sigma 6.72e-07 (03: 6.72e-07); sigma/F 0.259 (03: 0.259); M1's sigma/F 0.2588 (03: 0.2588) -> same
+   R7  Gqr G-q-r  median sigma 6.65e-07 (03: 6.65e-07); sigma/F 0.256 (03: 0.256); M1's sigma/F 0.2561 (03: 0.2561) -> same
+   reproduction HOLDS
+
+== E2 (amended, prompt section 8, d170e6d): scored groups; median sigma_theta over 03's sampled depth-20 regions vs bound = EPS x median sum_i Phi^arm_i + EPS x median sum_i |d theta_i/du| + 2^-48 (medians at the regions' midpoints); under X also <= 1e-2 F
+   R1    G G      n=20  P: sigma 4.72e-07 vs bound 1.69e-06 (EPS.Phi 1.69e-06; ratio 0.28); A: sigma 1.88e-15 vs bound 4.53e-15 (EPS.Phi 4.87e-16; ratio 0.415); X: sigma 8.56e-16 vs bound 5.44e-15 (EPS.Phi 1.4e-15; ratio 0.157), vs 1e-2 F 1.69e-08 -> ok
+      EPS x median sum|d theta_i/du| 4.87e-16; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.15 A 9.35 X 3.15
+   R1   Gr G+r    n=20  P: sigma 4.8e-07 vs bound 1.69e-06 (EPS.Phi 1.69e-06; ratio 0.284); A: sigma 6.01e-15 vs bound 4.2e-14 (EPS.Phi 1.73e-14; ratio 0.143); X: sigma 2.93e-15 vs bound 2.76e-14 (EPS.Phi 2.93e-15; ratio 0.106), vs 1e-2 F 1.69e-08 -> ok
+      EPS x median sum|d theta_i/du| 2.11e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 6.35 A 9.46 X 6.35
+   R1   Gr G-r    n=20  P: sigma 4.68e-07 vs bound 1.69e-06 (EPS.Phi 1.69e-06; ratio 0.277); A: sigma 1.85e-14 vs bound 1.15e-13 (EPS.Phi 5.38e-14; ratio 0.161); X: sigma 1.23e-14 vs bound 6.42e-14 (EPS.Phi 3.01e-15; ratio 0.192), vs 1e-2 F 1.69e-08 -> ok
+      EPS x median sum|d theta_i/du| 5.77e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 0.146 A 5.83 X 0.146
+   R1  Gqr G+q+r  n=20  P: sigma 4.85e-07 vs bound 1.69e-06 (EPS.Phi 1.69e-06; ratio 0.287); A: sigma 6.75e-14 vs bound 6.17e-13 (EPS.Phi 3.03e-13; ratio 0.109); X: sigma 1.62e-14 vs bound 3.21e-13 (EPS.Phi 6.44e-15; ratio 0.0505), vs 1e-2 F 1.69e-08 -> ok
+      EPS x median sum|d theta_i/du| 3.11e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 12.4 A 15.5 X 12.4
+   R1  Gqr G-q+r  n=20  P: sigma 4.72e-07 vs bound 1.69e-06 (EPS.Phi 1.69e-06; ratio 0.28); A: sigma 6.45e-14 vs bound 6.2e-13 (EPS.Phi 3.05e-13; ratio 0.104); X: sigma 1.52e-14 vs bound 3.21e-13 (EPS.Phi 5.33e-15; ratio 0.0473), vs 1e-2 F 1.69e-08 -> ok
+      EPS x median sum|d theta_i/du| 3.12e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 0.106 A 6.34 X 0.106
+   R2   Gr G+r    n=20  P: sigma 1.44e-06 vs bound 4.59e-06 (EPS.Phi 4.59e-06; ratio 0.313); A: sigma 1.05e-14 vs bound 8.78e-14 (EPS.Phi 4.02e-14; ratio 0.12); X: sigma 3.93e-15 vs bound 5.06e-14 (EPS.Phi 3e-15; ratio 0.0776), vs 1e-2 F 4.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 4.4e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 8.86 A 9.83 X 8.86
+   R2   Gr G-r    n=20  P: sigma 1.48e-06 vs bound 4.59e-06 (EPS.Phi 4.59e-06; ratio 0.323); A: sigma 1.67e-14 vs bound 1.11e-13 (EPS.Phi 5.19e-14; ratio 0.15); X: sigma 1.12e-14 vs bound 6.25e-14 (EPS.Phi 3.15e-15; ratio 0.179), vs 1e-2 F 4.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 5.58e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 2.75 A 4.7 X 2.75
+   R2  Gqr G-q+r  n=20  P: sigma 1.45e-06 vs bound 4.59e-06 (EPS.Phi 4.59e-06; ratio 0.315); A: sigma 2.61e-14 vs bound 2.07e-13 (EPS.Phi 9.78e-14; ratio 0.126); X: sigma 6.51e-15 vs bound 1.14e-13 (EPS.Phi 5.1e-15; ratio 0.0571), vs 1e-2 F 4.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.05e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.03 A 9.31 X 3.03
+   R3   Gr G+r    n=20  P: sigma 2.78e-05 vs bound 9.18e-05 (EPS.Phi 9.18e-05; ratio 0.303); A: sigma 6.62e-15 vs bound 5.37e-14 (EPS.Phi 2.32e-14; ratio 0.123); X: sigma 4.51e-15 vs bound 3.35e-14 (EPS.Phi 2.96e-15; ratio 0.135), vs 1e-2 F 9.19e-07 -> ok
+      EPS x median sum|d theta_i/du| 2.7e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 6.59 A 9.1 X 6.59
+   R3   Gr G-r    n=20  P: sigma 2.47e-05 vs bound 9.18e-05 (EPS.Phi 9.18e-05; ratio 0.269); A: sigma 1.08e-13 vs bound 9.13e-13 (EPS.Phi 4.53e-13; ratio 0.118); X: sigma 6.53e-14 vs bound 4.63e-13 (EPS.Phi 3.05e-15; ratio 0.141), vs 1e-2 F 9.19e-07 -> ok
+      EPS x median sum|d theta_i/du| 4.57e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 2.17 A 2.91 X 2.17
+   R4    G G      n=20  P: sigma 6.8e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.262); A: sigma 3.83e-15 vs bound 4.96e-15 (EPS.Phi 7.02e-16; ratio 0.772); X: sigma 9.07e-16 vs bound 5.66e-15 (EPS.Phi 1.4e-15; ratio 0.16), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 7.02e-16; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.14 A 9.42 X 3.14
+   R4   Gr G+r    n=20  P: sigma 6.6e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.255); A: sigma 1.27e-14 vs bound 1.14e-13 (EPS.Phi 5.34e-14; ratio 0.111); X: sigma 4.81e-15 vs bound 6.4e-14 (EPS.Phi 3.21e-15; ratio 0.0752), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 5.72e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 6.4 A 12.7 X 6.4
+   R4   Gr G-r    n=20  P: sigma 6.62e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.255); A: sigma 2.47e-14 vs bound 1.68e-13 (EPS.Phi 8.02e-14; ratio 0.147); X: sigma 1.43e-14 vs bound 9.06e-14 (EPS.Phi 3.01e-15; ratio 0.157), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 8.41e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 0.5 A 6.24 X 0.5
+   R4  Gqr G+q+r  n=20  P: sigma 6.58e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.254); A: sigma 7.1e-14 vs bound 6.47e-13 (EPS.Phi 3.18e-13; ratio 0.11); X: sigma 1.54e-14 vs bound 3.35e-13 (EPS.Phi 6.26e-15; ratio 0.0459), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 3.25e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 9.39 A 15.7 X 9.39
+   R4  Gqr G-q+r  n=20  P: sigma 6.7e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.259); A: sigma 6.91e-14 vs bound 6.21e-13 (EPS.Phi 3.05e-13; ratio 0.111); X: sigma 1.59e-14 vs bound 3.21e-13 (EPS.Phi 5.22e-15; ratio 0.0494), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 3.13e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 1.84 A 8.12 X 1.84
+   R5   Gr G+r    n=20  P: sigma 1.45e-06 vs bound 6.48e-06 (EPS.Phi 6.48e-06; ratio 0.224); A: sigma 1.35e-14 vs bound 1.25e-13 (EPS.Phi 5.91e-14; ratio 0.108); X: sigma 4.19e-15 vs bound 6.95e-14 (EPS.Phi 3.09e-15; ratio 0.0602), vs 1e-2 F 6.49e-08 -> ok
+      EPS x median sum|d theta_i/du| 6.29e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 6.27 A 9.24 X 6.27
+   R5   Gr G-r    n=20  P: sigma 1.45e-06 vs bound 6.48e-06 (EPS.Phi 6.48e-06; ratio 0.224); A: sigma 2.01e-14 vs bound 1.3e-13 (EPS.Phi 6.15e-14; ratio 0.154); X: sigma 1.3e-14 vs bound 7.2e-14 (EPS.Phi 3.11e-15; ratio 0.18), vs 1e-2 F 6.49e-08 -> ok
+      EPS x median sum|d theta_i/du| 6.54e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 2.74 A 3.02 X 2.74
+   R5  Gqr G+q+r  n=20  P: sigma 1.45e-06 vs bound 6.48e-06 (EPS.Phi 6.48e-06; ratio 0.224); A: sigma 2.63e-14 vs bound 1.99e-13 (EPS.Phi 9.39e-14; ratio 0.132); X: sigma 6.53e-15 vs bound 1.09e-13 (EPS.Phi 4.71e-15; ratio 0.0596), vs 1e-2 F 6.49e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.01e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 12.2 A 15.5 X 12.2
+   R5  Gqr G-q+r  n=20  P: sigma 1.45e-06 vs bound 6.48e-06 (EPS.Phi 6.48e-06; ratio 0.224); A: sigma 2.48e-14 vs bound 2.15e-13 (EPS.Phi 1.02e-13; ratio 0.115); X: sigma 7.09e-15 vs bound 1.18e-13 (EPS.Phi 4.64e-15; ratio 0.0601), vs 1e-2 F 6.49e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.1e-13; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.31 A 6.92 X 3.31
+   R6    G G      n=20  P: sigma 6.5e-07 vs bound 1.95e-06 (EPS.Phi 1.95e-06; ratio 0.333); A: sigma 2.43e-15 vs bound 4.29e-15 (EPS.Phi 3.69e-16; ratio 0.566); X: sigma 6.9e-16 vs bound 5.32e-15 (EPS.Phi 1.4e-15; ratio 0.13), vs 1e-2 F 1.96e-08 -> ok
+      EPS x median sum|d theta_i/du| 3.69e-16; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.16 A 9.4 X 3.16
+   R6  Gqr G+q+r  n=20  P: sigma 6.59e-07 vs bound 1.95e-06 (EPS.Phi 1.95e-06; ratio 0.337); A: sigma 8.53e-15 vs bound 2.39e-14 (EPS.Phi 6.68e-15; ratio 0.357); X: sigma 4.03e-15 vs bound 2.15e-14 (EPS.Phi 4.29e-15; ratio 0.187), vs 1e-2 F 1.96e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.37e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 12.4 A 18.7 X 12.4
+   R6  Gqr G+q-r  n=20  P: sigma 6.51e-07 vs bound 1.95e-06 (EPS.Phi 1.95e-06; ratio 0.333); A: sigma 5.16e-15 vs bound 3.66e-14 (EPS.Phi 1.27e-14; ratio 0.141); X: sigma 2.63e-15 vs bound 2.82e-14 (EPS.Phi 4.3e-15; ratio 0.0931), vs 1e-2 F 1.96e-08 -> ok
+      EPS x median sum|d theta_i/du| 2.03e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.16 A 9.22 X 3.16
+   R6  Gqr G-q+r  n=20  P: sigma 6.51e-07 vs bound 1.95e-06 (EPS.Phi 1.95e-06; ratio 0.333); A: sigma 5.16e-15 vs bound 3.66e-14 (EPS.Phi 1.27e-14; ratio 0.141); X: sigma 2.63e-15 vs bound 2.82e-14 (EPS.Phi 4.3e-15; ratio 0.0931), vs 1e-2 F 1.96e-08 -> ok
+      EPS x median sum|d theta_i/du| 2.03e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.16 A 9.22 X 3.16
+   R6  Gqr G-q-r  n=20  P: sigma 6.67e-07 vs bound 1.95e-06 (EPS.Phi 1.95e-06; ratio 0.341); A: sigma 5.74e-15 vs bound 3.29e-14 (EPS.Phi 1.08e-14; ratio 0.175); X: sigma 5.34e-15 vs bound 2.64e-14 (EPS.Phi 4.34e-15; ratio 0.203), vs 1e-2 F 1.96e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.85e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.19 A 3.01 X 3.19
+   R7    G G      n=20  P: sigma 6.66e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.257); A: sigma 2.68e-15 vs bound 5.63e-15 (EPS.Phi 1.04e-15; ratio 0.475); X: sigma 7.7e-16 vs bound 5.99e-15 (EPS.Phi 1.4e-15; ratio 0.129), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.04e-15; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.14 A 9.42 X 3.14
+   R7  Gqr G+q+r  n=20  P: sigma 6.45e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.249); A: sigma 1.41e-14 vs bound 5.37e-14 (EPS.Phi 2.12e-14; ratio 0.262); X: sigma 5.49e-15 vs bound 3.68e-14 (EPS.Phi 4.35e-15; ratio 0.149), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 2.89e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 12.5 A 18.8 X 12.5
+   R7  Gqr G+q-r  n=20  P: sigma 6.75e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.26); A: sigma 5.21e-15 vs bound 2.57e-14 (EPS.Phi 7.28e-15; ratio 0.202); X: sigma 1.82e-15 vs bound 2.27e-14 (EPS.Phi 4.27e-15; ratio 0.0803), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.49e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.11 A 9.39 X 3.11
+   R7  Gqr G-q+r  n=20  P: sigma 6.75e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.26); A: sigma 5.21e-15 vs bound 2.57e-14 (EPS.Phi 7.28e-15; ratio 0.202); X: sigma 1.82e-15 vs bound 2.27e-14 (EPS.Phi 4.27e-15; ratio 0.0803), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 1.49e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.11 A 9.39 X 3.11
+   R7  Gqr G-q-r  n=20  P: sigma 6.68e-07 vs bound 2.59e-06 (EPS.Phi 2.59e-06; ratio 0.258); A: sigma 4.76e-15 vs bound 3.9e-14 (EPS.Phi 1.39e-14; ratio 0.122); X: sigma 3.67e-15 vs bound 2.94e-14 (EPS.Phi 4.29e-15; ratio 0.125), vs 1e-2 F 2.6e-08 -> ok
+      EPS x median sum|d theta_i/du| 2.16e-14; 2^-48 3.55e-15; descriptive: median |composed theta_mod_2pi| P 3.05 A 3.23 X 3.05
+   E2 HOLDS
+
+== every group: scored status (03's rule), regions, and F^P_g, F^A_g, F^X_g beside 03's F (descriptive)
+-- R1 (F = 1.69e-06)
+      G G      canc=False factors G   regions  11599 depth>=18  11206 scored True  F^P 1.688e-06 F^A 5.967e-15 F^X 1.460e-15  (F^P/F 0.999; F^A/F 3.53e-09)
+     Gr G+r    canc=True  factors Gr  regions  14960 depth>=18  14107 scored True  F^P 1.688e-06 F^A 2.871e-13 F^X 5.893e-15  (F^P/F 0.999; F^A/F 1.7e-07)
+     Gr G-r    canc=False factors Gr  regions   7211 depth>=18   6459 scored True  F^P 1.688e-06 F^A 2.871e-13 F^X 5.893e-15  (F^P/F 0.999; F^A/F 1.7e-07)
+    Gqr G+q+r  canc=True  factors Gqr regions    237 depth>=18    187 scored True  F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09  (F^P/F 0.999; F^A/F 1.15)
+    Gqr G+q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09  (F^P/F 0.999; F^A/F 1.15)
+    Gqr G-q+r  canc=True  factors Gqr regions    138 depth>=18     95 scored True  F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09  (F^P/F 0.999; F^A/F 1.15)
+    Gqr G-q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09  (F^P/F 0.999; F^A/F 1.15)
+-- R2 (F = 4.599e-06)
+      G G      canc=False factors G   regions     44 depth>=18      0 scored False F^P 4.593e-06 F^A 5.967e-15 F^X 1.461e-15  (F^P/F 0.999; F^A/F 1.3e-09)
+     Gr G+r    canc=True  factors Gr  regions  15535 depth>=18  14344 scored True  F^P 4.593e-06 F^A 8.888e-14 F^X 3.840e-15  (F^P/F 0.999; F^A/F 1.93e-08)
+     Gr G-r    canc=False factors Gr  regions  12852 depth>=18  11798 scored True  F^P 4.593e-06 F^A 8.888e-14 F^X 3.840e-15  (F^P/F 0.999; F^A/F 1.93e-08)
+    Gqr G+q+r  canc=True  factors Gqr regions      1 depth>=18      0 scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08  (F^P/F 0.999; F^A/F 1.32)
+    Gqr G+q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08  (F^P/F 0.999; F^A/F 1.32)
+    Gqr G-q+r  canc=True  factors Gqr regions   1348 depth>=18   1218 scored True  F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08  (F^P/F 0.999; F^A/F 1.32)
+    Gqr G-q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08  (F^P/F 0.999; F^A/F 1.32)
+-- R3 (F = 9.192e-05)
+      G G      canc=False factors G   regions     10 depth>=18      0 scored False F^P 9.181e-05 F^A 5.966e-15 F^X 1.454e-15  (F^P/F 0.999; F^A/F 6.49e-11)
+     Gr G+r    canc=True  factors Gr  regions  29238 depth>=18  27626 scored True  F^P 9.181e-05 F^A 9.094e-13 F^X 1.278e-14  (F^P/F 0.999; F^A/F 9.89e-09)
+     Gr G-r    canc=False factors Gr  regions   4062 depth>=18   3673 scored True  F^P 9.181e-05 F^A 9.094e-13 F^X 1.278e-14  (F^P/F 0.999; F^A/F 9.89e-09)
+    Gqr G+q+r  canc=True  factors Gqr regions      1 depth>=18      0 scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07  (F^P/F 0.999; F^A/F 1.1)
+    Gqr G+q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07  (F^P/F 0.999; F^A/F 1.1)
+    Gqr G-q+r  canc=True  factors Gqr regions      1 depth>=18      0 scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07  (F^P/F 0.999; F^A/F 1.1)
+    Gqr G-q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07  (F^P/F 0.999; F^A/F 1.1)
+-- R4 (F = 2.595e-06)
+      G G      canc=False factors G   regions   7902 depth>=18   7676 scored True  F^P 2.592e-06 F^A 5.967e-15 F^X 1.460e-15  (F^P/F 0.999; F^A/F 2.3e-09)
+     Gr G+r    canc=True  factors Gr  regions  21889 depth>=18  20887 scored True  F^P 2.592e-06 F^A 2.871e-13 F^X 5.893e-15  (F^P/F 0.999; F^A/F 1.11e-07)
+     Gr G-r    canc=False factors Gr  regions  22152 depth>=18  20666 scored True  F^P 2.592e-06 F^A 2.871e-13 F^X 5.893e-15  (F^P/F 0.999; F^A/F 1.11e-07)
+    Gqr G+q+r  canc=True  factors Gqr regions    496 depth>=18    426 scored True  F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08  (F^P/F 0.999; F^A/F 1.11)
+    Gqr G+q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08  (F^P/F 0.999; F^A/F 1.11)
+    Gqr G-q+r  canc=True  factors Gqr regions    468 depth>=18    401 scored True  F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08  (F^P/F 0.999; F^A/F 1.11)
+    Gqr G-q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08  (F^P/F 0.999; F^A/F 1.11)
+-- R5 (F = 6.492e-06)
+      G G      canc=False factors G   regions     17 depth>=18      0 scored False F^P 6.484e-06 F^A 5.967e-15 F^X 1.461e-15  (F^P/F 0.999; F^A/F 9.19e-10)
+     Gr G+r    canc=True  factors Gr  regions   9498 depth>=18   8775 scored True  F^P 6.484e-06 F^A 8.888e-14 F^X 3.840e-15  (F^P/F 0.999; F^A/F 1.37e-08)
+     Gr G-r    canc=False factors Gr  regions  13719 depth>=18  12557 scored True  F^P 6.484e-06 F^A 8.888e-14 F^X 3.840e-15  (F^P/F 0.999; F^A/F 1.37e-08)
+    Gqr G+q+r  canc=True  factors Gqr regions   1127 depth>=18   1033 scored True  F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08  (F^P/F 0.999; F^A/F 1.27)
+    Gqr G+q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08  (F^P/F 0.999; F^A/F 1.27)
+    Gqr G-q+r  canc=True  factors Gqr regions   1910 depth>=18   1753 scored True  F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08  (F^P/F 0.999; F^A/F 1.27)
+    Gqr G-q-r  canc=False factors Gqr regions      1 depth>=18      0 scored False F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08  (F^P/F 0.999; F^A/F 1.27)
+-- R6 (F = 1.956e-06)
+      G G      canc=False factors G   regions  13903 depth>=18  13436 scored True  F^P 1.954e-06 F^A 5.967e-15 F^X 1.460e-15  (F^P/F 0.999; F^A/F 3.05e-09)
+    Gqr G+q+r  canc=True  factors Gqr regions   3563 depth>=18   3421 scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08  (F^P/F 1; F^A/F 1.27)
+    Gqr G+q-r  canc=True  factors Gqr regions   1907 depth>=18   1749 scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08  (F^P/F 1; F^A/F 1.27)
+    Gqr G-q+r  canc=True  factors Gqr regions   1907 depth>=18   1749 scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08  (F^P/F 1; F^A/F 1.27)
+    Gqr G-q-r  canc=False factors Gqr regions    867 depth>=18    765 scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08  (F^P/F 1; F^A/F 1.27)
+-- R7 (F = 2.595e-06)
+      G G      canc=False factors G   regions  13613 depth>=18  13205 scored True  F^P 2.592e-06 F^A 5.967e-15 F^X 1.460e-15  (F^P/F 0.999; F^A/F 2.3e-09)
+    Gqr G+q+r  canc=True  factors Gqr regions   6742 depth>=18   6444 scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09  (F^P/F 1; F^A/F 1.22)
+    Gqr G+q-r  canc=True  factors Gqr regions   1166 depth>=18   1089 scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09  (F^P/F 1; F^A/F 1.22)
+    Gqr G-q+r  canc=True  factors Gqr regions   1166 depth>=18   1089 scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09  (F^P/F 1; F^A/F 1.22)
+    Gqr G-q-r  canc=False factors Gqr regions    651 depth>=18    585 scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09  (F^P/F 1; F^A/F 1.22)
+
+== A1's covered groups: scored groups with F^A_g <= 0.1 x 1e-7
+   R1 G G  F^A = 5.967e-15
+   R1 Gr G+r  F^A = 2.871e-13
+   R1 Gr G-r  F^A = 2.871e-13
+   R2 Gr G+r  F^A = 8.888e-14
+   R2 Gr G-r  F^A = 8.888e-14
+   R3 Gr G+r  F^A = 9.094e-13
+   R3 Gr G-r  F^A = 9.094e-13
+   R4 G G  F^A = 5.967e-15
+   R4 Gr G+r  F^A = 2.871e-13
+   R4 Gr G-r  F^A = 2.871e-13
+   R5 Gr G+r  F^A = 8.888e-14
+   R5 Gr G-r  F^A = 8.888e-14
+   R6 G G  F^A = 5.967e-15
+   R7 G G  F^A = 5.967e-15
+   14 groups
+
+== sigma_phi: RMS residual of phi about a degree-4 fit in u over each window of 9 consecutive samples (descriptive)
+   'prod' = production's phi samples (build_phi_samples, double); 'mp' = rebuilt in mpmath from the stored div/mod and Delta^ext
+   'all' = every window; 'levin' = windows centred inside the factor's oscillatory Levin sub-intervals; each: median / 90% / max over windows
+   R1 G (G): 1488 samples, max|phi| 1.91e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 1.74e-06
+      prod all 0 / 5.78e-07 / 9.87e-07 (n=1480); levin 0 / 5.77e-07 / 9.87e-07 (n=1474)
+      mp   all 3.02e-07 / 4.44e-07 / 6.19e-07 (n=1480); levin 3.03e-07 / 4.44e-07 / 6.19e-07 (n=1474)
+      F = 1.69e-06; prod levin median/F 0
+   R1 q (T): 1024 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 1.57e-08
+      prod all 1.08e-10 / 1.65e-09 / 3.35e-09 (n=1016); levin 2.44e-11 / 9.13e-10 / 2.23e-09 (n=768)
+      mp   all 1.21e-10 / 2.81e-09 / 4.82e-09 (n=1016); levin 3.05e-11 / 1.15e-09 / 2.87e-09 (n=768)
+      F = 1.69e-06; prod levin median/F 1.44e-05
+   R1 r (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.2e-11 / 2.99e-08 / 6.6e-08 (n=925)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 5.73e-11 / 2.6e-08 / 7.11e-08 (n=925)
+      F = 1.69e-06; prod levin median/F 2.48e-05
+   R2 G (G): 1392 samples, max|phi| 7.63e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.59e-06
+      prod all 0 / 1.71e-06 / 3.31e-06 (n=1384); levin 0 / 1.71e-06 / 3.31e-06 (n=1378)
+      mp   all 9.29e-07 / 1.34e-06 / 2.12e-06 (n=1384); levin 9.27e-07 / 1.34e-06 / 2.12e-06 (n=1378)
+      F = 4.6e-06; prod levin median/F 0
+   R2 q (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 2.41e-11 / 7.49e-09 / 5.13e-08 (n=829)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 2.78e-11 / 9.71e-09 / 4.78e-08 (n=829)
+      F = 4.6e-06; prod levin median/F 5.23e-06
+   R2 r (T): 1280 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 7.98e-06
+      prod all 5.22e-11 / 5.11e-07 / 1.79e-06 (n=1272); levin 4.23e-11 / 4.16e-08 / 2.55e-07 (n=928)
+      mp   all 1.5e-09 / 7.16e-07 / 1.65e-06 (n=1272); levin 6.45e-11 / 7.92e-08 / 3.39e-07 (n=928)
+      F = 4.6e-06; prod levin median/F 9.2e-06
+   R3 G (G): 1536 samples, max|phi| 0.000122, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 0.000113
+      prod all 0 / 2.88e-05 / 5.29e-05 (n=1528); levin 0 / 2.88e-05 / 5.29e-05 (n=1522)
+      mp   all 1.83e-05 / 2.76e-05 / 4e-05 (n=1528); levin 1.83e-05 / 2.76e-05 / 4e-05 (n=1522)
+      F = 9.19e-05; prod levin median/F 0
+   R3 q (T): 1127 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 1.78e-07
+      prod all 1.38e-10 / 3e-08 / 5.4e-08 (n=1119); levin 5.19e-11 / 1.19e-08 / 2.39e-08 (n=919)
+      mp   all 2.55e-10 / 2.75e-08 / 5.28e-08 (n=1119); levin 5.68e-11 / 1.17e-08 / 2.31e-08 (n=919)
+      F = 9.19e-05; prod levin median/F 5.64e-07
+   R3 r (T): 1330 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 1.14e-05
+      prod all 4.81e-10 / 2.11e-06 / 3.59e-06 (n=1322); levin 6.92e-11 / 1.14e-06 / 2.53e-06 (n=1122)
+      mp   all 2.73e-09 / 2e-06 / 4.16e-06 (n=1322); levin 3.14e-10 / 9.49e-07 / 2.64e-06 (n=1122)
+      F = 9.19e-05; prod levin median/F 7.53e-07
+   R4 G (G): 1524 samples, max|phi| 3.81e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 3.19e-06
+      prod all 0 / 7.95e-07 / 1.38e-06 (n=1516); levin 0 / 7.9e-07 / 1.38e-06 (n=1510)
+      mp   all 4.32e-07 / 6.32e-07 / 9.8e-07 (n=1516); levin 4.32e-07 / 6.33e-07 / 9.8e-07 (n=1510)
+      F = 2.6e-06; prod levin median/F 0
+   R4 q (T): 1024 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 1.57e-08
+      prod all 1.08e-10 / 1.65e-09 / 3.35e-09 (n=1016); levin 3.29e-11 / 1.29e-09 / 2.23e-09 (n=804)
+      mp   all 1.21e-10 / 2.81e-09 / 4.82e-09 (n=1016); levin 3.59e-11 / 1.52e-09 / 3.48e-09 (n=804)
+      F = 2.6e-06; prod levin median/F 1.27e-05
+   R4 r (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.36e-11 / 3.55e-08 / 9.05e-08 (n=961)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 6.95e-11 / 2.93e-08 / 7.43e-08 (n=961)
+      F = 2.6e-06; prod levin median/F 1.68e-05
+   R5 G (G): 1416 samples, max|phi| 7.63e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.78e-06
+      prod all 0 / 1.61e-06 / 2.97e-06 (n=1408); levin 0 / 1.61e-06 / 2.97e-06 (n=1402)
+      mp   all 9.57e-07 / 1.4e-06 / 2.06e-06 (n=1408); levin 9.57e-07 / 1.41e-06 / 2.06e-06 (n=1402)
+      F = 6.49e-06; prod levin median/F 0
+   R5 q (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 2.63e-11 / 9.41e-09 / 5.13e-08 (n=853)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 3.15e-11 / 1.24e-08 / 4.78e-08 (n=853)
+      F = 6.49e-06; prod levin median/F 4.05e-06
+   R5 r (T): 1280 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 7.98e-06
+      prod all 5.22e-11 / 5.11e-07 / 1.79e-06 (n=1272); levin 4.71e-11 / 5.93e-08 / 3.73e-07 (n=952)
+      mp   all 1.5e-09 / 7.16e-07 / 1.65e-06 (n=1272); levin 7.73e-11 / 9.82e-08 / 3.93e-07 (n=952)
+      F = 6.49e-06; prod levin median/F 7.25e-06
+   R6 G (G): 1500 samples, max|phi| 3.81e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 3.17e-06
+      prod all 0 / 8.06e-07 / 1.53e-06 (n=1492); levin 0 / 8.07e-07 / 1.53e-06 (n=1486)
+      mp   all 4.2e-07 / 6.05e-07 / 9.8e-07 (n=1492); levin 4.2e-07 / 6.05e-07 / 9.8e-07 (n=1486)
+      F = 1.96e-06; prod levin median/F 0
+   R6 q (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.2e-11 / 3.11e-08 / 6.6e-08 (n=937)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 6.18e-11 / 2.77e-08 / 7.43e-08 (n=937)
+      F = 1.96e-06; prod levin median/F 2.15e-05
+   R6 r (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.2e-11 / 3.11e-08 / 6.6e-08 (n=937)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 6.18e-11 / 2.77e-08 / 7.43e-08 (n=937)
+      F = 1.96e-06; prod levin median/F 2.15e-05
+   R7 G (G): 1524 samples, max|phi| 3.81e-06, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 3.19e-06
+      prod all 0 / 7.95e-07 / 1.38e-06 (n=1516); levin 0 / 7.9e-07 / 1.38e-06 (n=1510)
+      mp   all 4.32e-07 / 6.32e-07 / 9.8e-07 (n=1516); levin 4.32e-07 / 6.33e-07 / 9.8e-07 (n=1510)
+      F = 2.6e-06; prod levin median/F 0
+   R7 q (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.36e-11 / 3.55e-08 / 9.05e-08 (n=961)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 6.95e-11 / 2.93e-08 / 7.43e-08 (n=961)
+      F = 2.6e-06; prod levin median/F 1.68e-05
+   R7 r (T): 1181 samples, max|phi| 1.76, phi_prod==build_phi_samples True, max|phi_prod - phi_mp| 6.19e-07
+      prod all 9.46e-11 / 6.21e-08 / 1.09e-07 (n=1173); levin 4.36e-11 / 3.55e-08 / 9.05e-08 (n=961)
+      mp   all 5.09e-10 / 7.15e-08 / 1.3e-07 (n=1173); levin 6.95e-11 / 2.93e-08 / 7.43e-08 (n=961)
+      F = 2.6e-06; prod levin median/F 1.68e-05
+
+== the modulus: max |theta_i| / TWO_PI x (2 pi - TWO_PI) over the factor's sub-intervals, against F (descriptive)
+   R1 G (G): max|theta| 7.604e+09 rad; modulus error 2.96e-07 rad; /F 0.175
+   R1 q (T): max|theta| 3.625e+07 rad; modulus error 1.41e-09 rad; /F 0.000836
+   R1 r (T): max|theta| 1.121e+09 rad; modulus error 4.37e-08 rad; /F 0.0258
+   R2 G (G): max|theta| 2.069e+10 rad; modulus error 8.06e-07 rad; /F 0.175
+   R2 q (T): max|theta| 6.082e+08 rad; modulus error 2.37e-08 rad; /F 0.00515
+   R2 r (T): max|theta| 5.991e+09 rad; modulus error 2.34e-07 rad; /F 0.0508
+   R3 G (G): max|theta| 4.135e+11 rad; modulus error 1.61e-05 rad; /F 0.175
+   R3 q (T): max|theta| 4.377e+08 rad; modulus error 1.71e-08 rad; /F 0.000186
+   R3 r (T): max|theta| 4.248e+10 rad; modulus error 1.66e-06 rad; /F 0.018
+   R4 G (G): max|theta| 1.167e+10 rad; modulus error 4.55e-07 rad; /F 0.175
+   R4 q (T): max|theta| 4.243e+07 rad; modulus error 1.65e-09 rad; /F 0.000637
+   R4 r (T): max|theta| 1.312e+09 rad; modulus error 5.11e-08 rad; /F 0.0197
+   R5 G (G): max|theta| 2.92e+10 rad; modulus error 1.14e-06 rad; /F 0.175
+   R5 q (T): max|theta| 7.333e+08 rad; modulus error 2.86e-08 rad; /F 0.0044
+   R5 r (T): max|theta| 7.224e+09 rad; modulus error 2.82e-07 rad; /F 0.0434
+   R6 G (G): max|theta| 8.799e+09 rad; modulus error 3.43e-07 rad; /F 0.175
+   R6 q (T): max|theta| 1.185e+09 rad; modulus error 4.62e-08 rad; /F 0.0236
+   R6 r (T): max|theta| 1.185e+09 rad; modulus error 4.62e-08 rad; /F 0.0236
+   R7 G (G): max|theta| 1.167e+10 rad; modulus error 4.55e-07 rad; /F 0.175
+   R7 q (T): max|theta| 1.312e+09 rad; modulus error 5.11e-08 rad; /F 0.0197
+   R7 r (T): max|theta| 1.312e+09 rad; modulus error 5.11e-08 rad; /F 0.0197
+
+== summary: E1 holds; E2 holds; reproduction of 03's medians holds; A1 covers 14 groups; wall 66 s
+# wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/state/phases_04.json sha256 058d53d297313ea1e85e39720d5a49f00f3d48d016e9e888c657f462207b78e8

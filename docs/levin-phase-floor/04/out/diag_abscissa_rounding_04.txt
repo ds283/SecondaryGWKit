@@ -1,0 +1,20 @@
+$ (cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04) OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/diag_abscissa_rounding.py
+# abscissa-rounding diagnostic
+# written 2026-10-25T22:53:02Z on mps026298.phys.susx.ac.uk
+# script diag_abscissa_rounding.py sha256 942f1e7a3091d6e3d0ec90f14048c490bcaf967c4224feb4969217579c14793e
+# code: worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 HEAD 98e68d3e1b60e6de4378b7d9aded3a120d6088a9 (clean)
+# records: main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD c8ca1559fcc53fdb88998f170257635431fb85ca (clean)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/phases.py sha256 10585aa9cb890d42bd40b92c194750205704aef478c2e42f69331aaf893e99c5
+R3 Gr G-r region 0: x 23.555982; RMS resid X 1.29e-13; predicted from z rounding 1.29e-13; corr 0.9998; RMS(X - predicted) 3.29e-15
+R3 Gr G-r region 149: x 23.558194; RMS resid X 1.42e-13; predicted from z rounding 1.43e-13; corr 0.9999; RMS(X - predicted) 1.79e-15
+R3 Gr G-r region 298: x 23.560135; RMS resid X 1.33e-13; predicted from z rounding 1.32e-13; corr 1.0000; RMS(X - predicted) 1.19e-15
+R1 Gqr G+q+r region 0: x 21.196926; RMS resid X 1.68e-14; predicted from z rounding 1.57e-14; corr 0.9666; RMS(X - predicted) 4.93e-15
+R1 Gqr G+q+r region 9: x 21.197079; RMS resid X 1.66e-14; predicted from z rounding 1.57e-14; corr 0.9646; RMS(X - predicted) 5.61e-15
+R1 Gqr G+q+r region 17: x 21.197248; RMS resid X 1.43e-14; predicted from z rounding 1.3e-14; corr 0.9356; RMS(X - predicted) 5.87e-15
+R4 Gr G-r region 0: x 21.271768; RMS resid X 5.28e-14; predicted from z rounding 5.27e-14; corr 0.9996; RMS(X - predicted) 1.53e-15
+R4 Gr G-r region 989: x 21.306576; RMS resid X 4.92e-14; predicted from z rounding 4.91e-14; corr 1.0000; RMS(X - predicted) 3.86e-16
+R4 Gr G-r region 1977: x 21.370818; RMS resid X 4.48e-14; predicted from z rounding 4.49e-14; corr 0.9999; RMS(X - predicted) 7.98e-16
+R6 G G region 0: x 24.699775; RMS resid X 1.37e-15; predicted from z rounding 1e-15; corr 0.9237; RMS(X - predicted) 9.75e-16
+R6 G G region 665: x 24.710464; RMS resid X 1.18e-15; predicted from z rounding 9.34e-16; corr 0.9370; RMS(X - predicted) 7.52e-16
+R6 G G region 1329: x 26.403820; RMS resid X 2.42e-15; predicted from z rounding 2.88e-16; corr 0.2063; RMS(X - predicted) 2.4e-15
+exit 0

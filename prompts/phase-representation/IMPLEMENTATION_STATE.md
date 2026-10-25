@@ -97,6 +97,21 @@ Two opened by prompt 02:
   [`logs/02-primitive-phase-break-point-knots.md`](logs/02-primitive-phase-break-point-knots.md)
   §4.
 
+  **Narrowed (2026-10-25, `levin-phase-floor` 04, its I2): on A3 v2's ΛCDM $G_k$ the stored samples
+  carry the noise too.**
+  - **Production.** On seven depth-20 rows, production's $\varphi_G$ is quantised to
+    ${\rm ulp}(\theta_G)$: exactly zero in over half its 9-sample windows, and 0.46–0.78 $F$ RMS in its
+    worst window, with $F = \varepsilon k\eta_R$.
+  - **Rebuilt in `mpmath`** from the stored `theta_div_2pi`/`theta_mod_2pi`, it still carries
+    0.15–0.21 $F$ at the median. So most of the noise is in the stored samples, not only in the
+    consumer's subtraction.
+  - **$T$'s $\varphi$** is far quieter: at most 3e-5 $F$ at the median in the Levin windows.
+
+  **What it means.** The spline carries the noise smoothly, so it limits accuracy and not cost:
+  every arm of that prompt shares it, the jitter-free one included. It bears on that campaign's G1
+  Q3, whether layer 1 must change what is stored.
+  [`docs/levin-phase-floor/04/issues.md`](../../docs/levin-phase-floor/04/issues.md) I2.
+
 - **[02-verify-script-builds-its-own-Gk-consumer]** *(opened by prompt 02, 2026-09-13; not this
   campaign's file)* — `docs/gktk-remedial/verify_production_path.py` constructs `PrimitivePhase`
   directly at `:557` (the §3.5 $G_k$ consumer) and `:1173` (the §5 throughput section), rather than

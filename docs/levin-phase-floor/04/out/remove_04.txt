@@ -1,0 +1,375 @@
+# levin-phase-floor prompt 04 step 8: remove_04
+# written 2026-10-25T23:36:31Z on mps026298.phys.susx.ac.uk
+# script analyse.py sha256 e6a3bc48ace1e959252521a422841f613800410b413faaa35f06bb17183db6ae
+# code: worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 HEAD 98e68d3e1b60e6de4378b7d9aded3a120d6088a9 (clean)
+# records: main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD c8ca1559fcc53fdb88998f170257635431fb85ca (clean)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110/checkpoint.jsonl sha256 5ce838a2e418ccbf8920babbb4f3766e7c5ac30ad43d845b78a9ebe8adf7643a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110/manifest.json sha256 19d954dd36f656133e2edb4c02caaa537c437a5683d73e8aed0d8d56ed7b2a55
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110/status.json sha256 49f417ccf9904da02146a71891262b31445e97894db9e644289cf5e2e9b60af0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/state/phases_04.json sha256 058d53d297313ea1e85e39720d5a49f00f3d48d016e9e888c657f462207b78e8
+# store fingerprint (sidecar, read only) 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+# run directory /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110
+# definitions: module docstring of analyse.py; prompt section 5 (scores), section 8 (gates)
+
+== the run
+   run levin-phase-floor-04-remove-20261025T231110; state done, exit 0, units 28/28
+   manifest git_head c8ca1559fcc53fdb88998f170257635431fb85ca (main checkout; section 8), script_sha256 3c43db3f51ccd8a59fd3237067a17875eaf42dc56b8f29c2de1b5753b9280da7
+   every record: worktree (HEAD, status --short) in [('98e68d3e1b60e6de4378b7d9aded3a120d6088a9', '')]; registry script_sha256 in ['3c43db3f51ccd8a59fd3237067a17875eaf42dc56b8f29c2de1b5753b9280da7']
+   28 records; units present: 28/28; order: True
+   units over budget: none
+
+== M0: P at rtol 1e-7 equals the stored row (the run's own comparison, per unit)
+   R1: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (7); analytic_rad EQUAL
+   R2: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (7); analytic_rad EQUAL
+   R3: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (7); analytic_rad EQUAL
+   R4: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (7); analytic_rad EQUAL
+   R5: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (7); analytic_rad EQUAL
+   R6: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (5); analytic_rad EQUAL
+   R7: M0 holds; gated fields differing 0; ungated differing: ['elapsed'] (5); analytic_rad EQUAL
+   M0 HOLDS on all seven rows
+
+== per row, arm and rung: total, total_abserr, total_converged, total_phase_limited, regions, max depth, evaluations, elapsed
+-- R1 (F = 1.69e-06)
+   P 1e-7: total  -4.5896998332991325e-24  abserr 2.989127e-29  converged False phase_limited True  regions  34147 max depth 20 evaluations  68335 wall   181.8 s (compute_time 181.8 s; budget n/a)
+   X 1e-7: total   -4.589710508019672e-24  abserr 6.074983e-30  converged False phase_limited True  regions    133 max depth 17 evaluations    349 wall     1.5 s (compute_time 1.5 s; budget 545.5)
+   A 1e-7: total   -4.589710508020094e-24  abserr 6.074983e-30  converged False phase_limited True  regions    133 max depth 17 evaluations    349 wall     0.8 s (compute_time 0.8 s; budget 545.5)
+   X 1e-8: total  -4.5897129699340254e-24  abserr 3.498731e-30  converged False phase_limited True  regions    226 max depth 20 evaluations    541 wall     2.8 s (compute_time 2.8 s; budget 545.5)
+-- R2 (F = 4.599e-06)
+   P 1e-7: total   -4.757170253764701e-26  abserr 7.540839e-31  converged True  phase_limited False regions  29782 max depth 20 evaluations  59581 wall   196.9 s (compute_time 196.8 s; budget n/a)
+   X 1e-7: total  -4.7571642708601714e-26  abserr 7.095388e-31  converged True  phase_limited False regions     89 max depth 16 evaluations    215 wall     1.2 s (compute_time 1.1 s; budget 590.6)
+   A 1e-7: total   -4.757164270860128e-26  abserr 7.095388e-31  converged True  phase_limited False regions     89 max depth 16 evaluations    215 wall     0.6 s (compute_time 0.6 s; budget 590.6)
+   X 1e-8: total  -4.7571642558531327e-26  abserr 7.089683e-31  converged True  phase_limited False regions     91 max depth 16 evaluations    219 wall     1.2 s (compute_time 1.2 s; budget 590.6)
+-- R3 (F = 9.192e-05)
+   P 1e-7: total    7.026853300557323e-29  abserr 1.638422e-32  converged True  phase_limited False regions  33314 max depth 20 evaluations  66659 wall   219.7 s (compute_time 219.7 s; budget n/a)
+   X 1e-7: total    7.024951258016924e-29  abserr 1.185842e-32  converged True  phase_limited False regions     66 max depth 17 evaluations    169 wall     0.8 s (compute_time 0.7 s; budget 659.2)
+   A 1e-7: total    7.024951258017206e-29  abserr 1.185842e-32  converged True  phase_limited False regions     66 max depth 17 evaluations    169 wall     0.4 s (compute_time 0.4 s; budget 659.2)
+   X 1e-8: total    7.024951258016924e-29  abserr 1.185842e-32  converged True  phase_limited False regions     66 max depth 17 evaluations    169 wall     0.8 s (compute_time 0.7 s; budget 659.2)
+-- R4 (F = 2.595e-06)
+   P 1e-7: total   -1.407565217006096e-25  abserr 1.709236e-29  converged False phase_limited True  regions  52909 max depth 20 evaluations 105859 wall   321.6 s (compute_time 321.5 s; budget n/a)
+   X 1e-7: total  -1.4075139219238373e-25  abserr 3.110951e-30  converged False phase_limited True  regions    167 max depth 18 evaluations    443 wall     2.1 s (compute_time 2.1 s; budget 964.7)
+   A 1e-7: total   -1.407513921922191e-25  abserr 3.110950e-30  converged False phase_limited True  regions    167 max depth 18 evaluations    443 wall     1.1 s (compute_time 1.0 s; budget 964.7)
+   X 1e-8: total  -1.4075233938162345e-25  abserr 2.276844e-30  converged False phase_limited True  regions    234 max depth 20 evaluations    561 wall     3.0 s (compute_time 2.9 s; budget 964.7)
+-- R5 (F = 6.492e-06)
+   P 1e-7: total  -1.1219887655180737e-26  abserr 2.044228e-31  converged True  phase_limited False regions  26273 max depth 20 evaluations  52573 wall   181.0 s (compute_time 181.0 s; budget n/a)
+   X 1e-7: total  -1.1219978684302841e-26  abserr 1.784338e-31  converged True  phase_limited False regions    130 max depth 19 evaluations    305 wall     1.9 s (compute_time 1.7 s; budget 543.1)
+   A 1e-7: total  -1.1219978684303227e-26  abserr 1.784338e-31  converged True  phase_limited False regions    130 max depth 19 evaluations    305 wall     0.9 s (compute_time 0.8 s; budget 543.1)
+   X 1e-8: total  -1.1219978684461491e-26  abserr 1.784323e-31  converged True  phase_limited False regions    132 max depth 20 evaluations    309 wall     1.8 s (compute_time 1.8 s; budget 543.1)
+-- R6 (F = 1.956e-06)
+   P 1e-7: total   4.9262748942211906e-24  abserr 2.121719e-30  converged False phase_limited True  regions  22147 max depth 20 evaluations  44321 wall   124.3 s (compute_time 124.2 s; budget n/a)
+   X 1e-7: total   4.9262712373466785e-24  abserr 8.532399e-31  converged False phase_limited False regions     89 max depth 19 evaluations    215 wall     1.4 s (compute_time 1.4 s; budget 372.8)
+   A 1e-7: total    4.926271237346681e-24  abserr 8.532399e-31  converged False phase_limited False regions     89 max depth 19 evaluations    215 wall     0.8 s (compute_time 0.8 s; budget 372.8)
+   X 1e-8: total      4.9262716419434e-24  abserr 5.185205e-32  converged True  phase_limited False regions    118 max depth 20 evaluations    277 wall     1.8 s (compute_time 1.8 s; budget 372.8)
+-- R7 (F = 2.595e-06)
+   P 1e-7: total    3.042195843665141e-24  abserr 1.138736e-30  converged False phase_limited True  regions  23338 max depth 20 evaluations  46709 wall   136.5 s (compute_time 136.4 s; budget n/a)
+   X 1e-7: total   3.0421936333872716e-24  abserr 3.664159e-31  converged True  phase_limited False regions     88 max depth 19 evaluations    213 wall     1.4 s (compute_time 1.4 s; budget 409.4)
+   A 1e-7: total    3.042193633387275e-24  abserr 3.664159e-31  converged True  phase_limited False regions     88 max depth 19 evaluations    213 wall     0.8 s (compute_time 0.8 s; budget 409.4)
+   X 1e-8: total   3.0421936324630134e-24  abserr 3.836011e-32  converged True  phase_limited False regions    107 max depth 20 evaluations    253 wall     1.7 s (compute_time 1.6 s; budget 409.4)
+
+== per group: regions, depth histogram by type (depth:Levin/CC), count at depth >= 18, value and abserr, beside F^arm_g
+-- R1
+      G G      scored True  F^P 1.688e-06 F^A 5.967e-15 F^X 1.460e-15
+      P 1e-7: regions  11599 depth>=18  11206 max 20 value -1.423682e-25 abserr 5.731e-32 conv False plim True  | 1:0/1 2:0/1 5:0/4 6:0/2 7:0/2 8:0/6 9:0/8 10:0/10 11:0/12 12:0/11 13:0/25 14:0/34 15:0/52 16:0/70 17:0/155 18:0/265 19:0/359 20:0/10582
+      X 1e-7: regions     21 depth>=18      0 max 17 value -1.423681e-25 abserr 1.944e-32 conv False plim False | 1:0/1 2:0/1 3:0/1 5:0/2 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      A 1e-7: regions     21 depth>=18      0 max 17 value -1.423681e-25 abserr 1.944e-32 conv False plim False | 1:0/1 2:0/1 3:0/1 5:0/2 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      X 1e-8: regions     29 depth>=18      4 max 20 value -1.423681e-25 abserr 6.434e-33 conv False plim False | 1:0/1 3:0/2 5:0/5 6:0/4 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+     Gr G+r    scored True  F^P 1.688e-06 F^A 2.871e-13 F^X 5.893e-15
+      P 1e-7: regions  14960 depth>=18  14107 max 20 value +3.296877e-26 abserr 4.204e-31 conv False plim True  | 4:0/1 5:0/6 6:0/13 7:0/34 8:0/29 9:0/42 10:0/31 11:0/31 12:0/35 13:0/34 14:0/78 15:0/113 16:0/153 17:0/253 18:0/441 19:0/674 20:0/12992
+      X 1e-7: regions     38 depth>=18      0 max 13 value +3.296840e-26 abserr 5.184e-32 conv False plim False | 2:1/0 3:1/1 4:1/1 5:0/3 6:0/16 7:0/2 8:0/2 9:0/2 10:0/2 11:0/3 12:0/1 13:0/2
+      A 1e-7: regions     38 depth>=18      0 max 13 value +3.296840e-26 abserr 5.184e-32 conv False plim False | 2:1/0 3:1/1 4:1/1 5:0/3 6:0/16 7:0/2 8:0/2 9:0/2 10:0/2 11:0/3 12:0/1 13:0/2
+      X 1e-8: regions     62 depth>=18      4 max 20 value +3.296840e-26 abserr 3.599e-33 conv False plim False | 3:0/2 4:0/4 5:0/4 6:0/16 7:0/14 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/3 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+     Gr G-r    scored True  F^P 1.688e-06 F^A 2.871e-13 F^X 5.893e-15
+      P 1e-7: regions   7211 depth>=18   6459 max 20 value -2.531797e-26 abserr 2.622e-31 conv False plim False | 2:1/0 4:1/0 5:4/0 6:2/5 7:0/18 8:0/20 9:0/44 10:0/81 11:0/71 12:0/51 13:0/55 14:0/46 15:0/83 16:0/109 17:0/161 18:0/251 19:0/412 20:0/5796
+      X 1e-7: regions     43 depth>=18      0 max 13 value -2.531796e-26 abserr 1.182e-32 conv False plim False | 2:1/0 3:1/0 4:1/1 5:8/1 6:6/1 7:7/3 8:0/7 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      A 1e-7: regions     43 depth>=18      0 max 13 value -2.531796e-26 abserr 1.182e-32 conv False plim False | 2:1/0 3:1/0 4:1/1 5:8/1 6:6/1 7:7/3 8:0/7 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      X 1e-8: regions     89 depth>=18      4 max 20 value -2.531793e-26 abserr 8.805e-34 conv False plim False | 3:1/0 4:1/1 5:3/4 6:8/8 7:15/12 8:0/16 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/3 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q+r  scored True  F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09
+      P 1e-7: regions    237 depth>=18    187 max 20 value +1.997656e-26 abserr 2.346e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 11:0/9 12:0/8 13:0/7 14:0/1 15:0/8 16:0/1 17:0/9 18:0/11 19:0/12 20:0/164
+      X 1e-7: regions     17 depth>=18      0 max 16 value +1.997656e-26 abserr 2.362e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/2
+      A 1e-7: regions     17 depth>=18      0 max 16 value +1.997656e-26 abserr 2.363e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value +1.997656e-26 abserr 2.172e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q-r  scored False F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09
+      P 1e-7: regions      1 depth>=18      0 max  0 value +8.933818e-28 abserr 4.608e-32 conv False plim True  | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +8.933863e-28 abserr 4.608e-32 conv False plim True  | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +8.933863e-28 abserr 4.608e-32 conv False plim True  | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +8.933863e-28 abserr 4.608e-32 conv False plim True  | 0:1/0
+    Gqr G-q+r  scored True  F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09
+      P 1e-7: regions    138 depth>=18     95 max 20 value -2.052405e-26 abserr 2.028e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 11:0/10 12:0/9 13:0/1 14:0/6 15:0/2 16:0/3 17:0/5 19:0/9 20:0/86
+      X 1e-7: regions     12 depth>=18      0 max 11 value -2.052405e-26 abserr 3.278e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/2
+      A 1e-7: regions     12 depth>=18      0 max 11 value -2.052405e-26 abserr 3.278e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/2
+      X 1e-8: regions     23 depth>=18      4 max 20 value -2.052414e-26 abserr 7.316e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 7:2/0 8:3/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G-q-r  scored False F^P 1.688e-06 F^A 1.945e-06 F^X 9.944e-09
+      P 1e-7: regions      1 depth>=18      0 max  0 value +3.062908e-29 abserr 4.513e-32 conv False plim True  | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +3.062459e-29 abserr 4.513e-32 conv False plim True  | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +3.062459e-29 abserr 4.513e-32 conv False plim True  | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +3.062459e-29 abserr 4.513e-32 conv False plim True  | 0:1/0
+-- R2
+      G G      scored False F^P 4.593e-06 F^A 5.967e-15 F^X 1.461e-15
+      P 1e-7: regions     44 depth>=18      0 max 14 value -1.342812e-28 abserr 3.218e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 6:0/1 7:0/2 8:0/6 10:0/2 11:0/5 12:0/8 13:0/8 14:0/8
+      X 1e-7: regions     15 depth>=18      0 max 13 value -1.342809e-28 abserr 4.335e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 6:0/3 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      A 1e-7: regions     15 depth>=18      0 max 13 value -1.342809e-28 abserr 4.335e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 6:0/3 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      X 1e-8: regions     15 depth>=18      0 max 13 value -1.342809e-28 abserr 4.335e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 6:0/3 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+     Gr G+r    scored True  F^P 4.593e-06 F^A 8.888e-14 F^X 3.840e-15
+      P 1e-7: regions  15535 depth>=18  14344 max 20 value -3.112257e-29 abserr 2.156e-34 conv True  plim False | 3:0/2 4:0/3 5:0/5 6:0/7 7:0/14 8:0/14 9:0/23 10:0/18 11:0/30 12:0/53 13:0/66 14:0/104 15:0/157 16:0/260 17:0/435 18:0/601 19:0/885 20:0/12858
+      X 1e-7: regions     32 depth>=18      0 max 16 value -3.112289e-29 abserr 1.339e-34 conv True  plim False | 2:1/1 3:0/1 4:0/4 5:0/2 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      A 1e-7: regions     32 depth>=18      0 max 16 value -3.112289e-29 abserr 1.339e-34 conv True  plim False | 2:1/1 3:0/1 4:0/4 5:0/2 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      X 1e-8: regions     32 depth>=18      0 max 16 value -3.112289e-29 abserr 1.339e-34 conv True  plim False | 2:1/1 3:0/1 4:0/4 5:0/2 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+     Gr G-r    scored True  F^P 4.593e-06 F^A 8.888e-14 F^X 3.840e-15
+      P 1e-7: regions  12852 depth>=18  11798 max 20 value +2.885519e-30 abserr 2.164e-34 conv True  plim False | 2:1/0 3:0/1 4:1/1 5:1/4 6:0/3 7:0/4 8:0/16 9:0/52 10:0/38 11:0/31 12:0/59 13:0/56 14:0/70 15:0/136 16:0/219 17:0/361 18:0/550 19:0/768 20:0/10480
+      X 1e-7: regions     27 depth>=18      0 max 13 value +2.885745e-30 abserr 6.831e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/3 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      A 1e-7: regions     27 depth>=18      0 max 13 value +2.885745e-30 abserr 6.831e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/3 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+      X 1e-8: regions     27 depth>=18      0 max 13 value +2.885745e-30 abserr 6.831e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/3 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G+q+r  scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value +2.383566e-29 abserr 1.324e-33 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +2.383566e-29 abserr 1.324e-33 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +2.383566e-29 abserr 1.324e-33 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +2.383566e-29 abserr 1.324e-33 conv True  plim False | 0:1/0
+    Gqr G+q-r  scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value +1.091032e-30 abserr 1.994e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +1.091032e-30 abserr 1.994e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +1.091032e-30 abserr 1.994e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +1.091032e-30 abserr 1.994e-34 conv True  plim False | 0:1/0
+    Gqr G-q+r  scored True  F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08
+      P 1e-7: regions   1348 depth>=18   1218 max 20 value -1.890192e-29 abserr 3.123e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 8:0/1 10:0/2 11:0/6 12:0/9 13:0/7 14:0/19 15:0/15 16:0/31 17:0/34 18:0/59 19:0/109 20:0/1050
+      X 1e-7: regions     12 depth>=18      0 max 11 value -1.890190e-29 abserr 2.698e-36 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/2
+      A 1e-7: regions     12 depth>=18      0 max 11 value -1.890190e-29 abserr 2.698e-36 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/2
+      X 1e-8: regions     14 depth>=18      0 max 13 value -1.890190e-29 abserr 8.195e-37 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G-q-r  scored False F^P 4.593e-06 F^A 6.059e-06 F^X 3.780e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value -1.760203e-31 abserr 1.750e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value -1.760203e-31 abserr 1.750e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value -1.760203e-31 abserr 1.750e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value -1.760203e-31 abserr 1.750e-34 conv True  plim False | 0:1/0
+-- R3
+      G G      scored False F^P 9.181e-05 F^A 5.966e-15 F^X 1.454e-15
+      P 1e-7: regions     10 depth>=18      0 max  8 value +2.091763e-30 abserr 2.699e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 5:0/3 6:0/1 7:0/1 8:0/2
+      X 1e-7: regions      9 depth>=18      0 max  8 value +2.091527e-30 abserr 1.410e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/2
+      A 1e-7: regions      9 depth>=18      0 max  8 value +2.091527e-30 abserr 1.410e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/2
+      X 1e-8: regions      9 depth>=18      0 max  8 value +2.091527e-30 abserr 1.410e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/2
+     Gr G+r    scored True  F^P 9.181e-05 F^A 9.094e-13 F^X 1.278e-14
+      P 1e-7: regions  29238 depth>=18  27626 max 20 value +3.881828e-30 abserr 2.072e-34 conv True  plim False | 2:2/0 3:1/0 4:1/0 5:1/0 6:1/4 7:0/4 8:0/6 9:0/17 10:0/23 11:0/34 12:0/46 13:0/68 14:0/131 15:0/213 16:0/377 17:0/683 18:0/973 19:0/2151 20:0/24502
+      X 1e-7: regions     27 depth>=18      0 max 17 value +3.880678e-30 abserr 6.156e-36 conv True  plim False | 2:2/0 3:1/1 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:0/2 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      A 1e-7: regions     27 depth>=18      0 max 17 value +3.880678e-30 abserr 6.156e-36 conv True  plim False | 2:2/0 3:1/1 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:0/2 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      X 1e-8: regions     27 depth>=18      0 max 17 value +3.880678e-30 abserr 6.156e-36 conv True  plim False | 2:2/0 3:1/1 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:0/2 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+     Gr G-r    scored True  F^P 9.181e-05 F^A 9.094e-13 F^X 1.278e-14
+      P 1e-7: regions   4062 depth>=18   3673 max 20 value -3.151695e-31 abserr 4.875e-35 conv True  plim False | 2:2/0 3:2/0 4:1/0 5:1/0 6:1/1 7:1/4 8:1/8 9:0/10 10:0/7 11:0/15 12:0/17 13:0/22 14:0/27 15:0/42 16:0/83 17:0/144 18:0/342 19:0/501 20:0/2830
+      X 1e-7: regions     26 depth>=18      0 max 16 value -3.153851e-31 abserr 9.079e-37 conv True  plim False | 2:2/0 3:2/0 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:1/1 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/2
+      A 1e-7: regions     26 depth>=18      0 max 16 value -3.153851e-31 abserr 9.079e-37 conv True  plim False | 2:2/0 3:2/0 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:1/1 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/2
+      X 1e-8: regions     26 depth>=18      0 max 16 value -3.153851e-31 abserr 9.079e-37 conv True  plim False | 2:2/0 3:2/0 4:1/1 5:1/1 6:1/1 7:1/1 8:1/1 9:1/1 10:0/3 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/2
+    Gqr G+q+r  scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07
+      P 1e-7: regions      1 depth>=18      0 max  0 value +4.654952e-31 abserr 3.317e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +4.654483e-31 abserr 3.317e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +4.654483e-31 abserr 3.317e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +4.654483e-31 abserr 3.317e-34 conv True  plim False | 0:1/0
+    Gqr G+q-r  scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07
+      P 1e-7: regions      1 depth>=18      0 max  0 value +1.088815e-31 abserr 9.418e-35 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +1.088948e-31 abserr 9.418e-35 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +1.088948e-31 abserr 9.418e-35 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +1.088948e-31 abserr 9.418e-35 conv True  plim False | 0:1/0
+    Gqr G-q+r  scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07
+      P 1e-7: regions      1 depth>=18      0 max  0 value -2.047437e-31 abserr 3.225e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value -2.046876e-31 abserr 3.225e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value -2.046876e-31 abserr 3.225e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value -2.046876e-31 abserr 3.225e-34 conv True  plim False | 0:1/0
+    Gqr G-q-r  scored False F^P 9.181e-05 F^A 1.013e-04 F^X 4.171e-07
+      P 1e-7: regions      1 depth>=18      0 max  0 value -1.618718e-31 abserr 9.350e-35 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value -1.618807e-31 abserr 9.350e-35 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value -1.618807e-31 abserr 9.350e-35 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value -1.618807e-31 abserr 9.350e-35 conv True  plim False | 0:1/0
+-- R4
+      G G      scored True  F^P 2.592e-06 F^A 5.967e-15 F^X 1.460e-15
+      P 1e-7: regions   7902 depth>=18   7676 max 20 value -1.335224e-25 abserr 4.560e-32 conv False plim True  | 1:0/1 2:0/1 4:0/2 5:0/2 6:0/1 7:0/2 8:0/1 9:0/3 10:0/2 11:0/7 12:0/12 13:0/14 14:0/21 15:0/29 16:0/46 17:0/82 18:0/163 19:0/203 20:0/7310
+      X 1e-7: regions     24 depth>=18      0 max 17 value -1.335222e-25 abserr 3.390e-32 conv False plim False | 1:0/1 3:0/1 4:0/4 5:0/2 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      A 1e-7: regions     24 depth>=18      0 max 17 value -1.335222e-25 abserr 3.390e-32 conv False plim False | 1:0/1 3:0/1 4:0/4 5:0/2 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      X 1e-8: regions     35 depth>=18      4 max 20 value -1.335222e-25 abserr 3.922e-33 conv False plim False | 1:0/1 3:0/1 4:0/2 5:0/3 6:0/5 7:0/9 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+     Gr G+r    scored True  F^P 2.592e-06 F^A 2.871e-13 F^X 5.893e-15
+      P 1e-7: regions  21889 depth>=18  20887 max 20 value +1.835078e-25 abserr 4.611e-31 conv False plim True  | 3:0/1 4:0/1 5:0/3 6:0/12 7:0/24 8:0/47 9:0/28 10:0/35 11:0/34 12:0/40 13:0/67 14:0/78 15:0/153 16:0/170 17:0/309 18:0/545 19:0/926 20:0/19416
+      X 1e-7: regions     42 depth>=18      0 max 16 value +1.835082e-25 abserr 1.939e-32 conv False plim False | 3:2/2 4:0/1 5:2/6 6:0/10 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/3 14:0/1 15:0/1 16:0/2
+      A 1e-7: regions     42 depth>=18      0 max 16 value +1.835082e-25 abserr 1.939e-32 conv False plim False | 3:2/2 4:0/1 5:2/6 6:0/10 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/3 14:0/1 15:0/1 16:0/2
+      X 1e-8: regions     70 depth>=18      4 max 20 value +1.835082e-25 abserr 2.235e-33 conv False plim False | 3:0/1 4:0/4 5:0/8 6:0/14 7:0/17 8:0/4 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/2 16:0/3 17:0/1 18:0/1 19:0/1 20:0/2
+     Gr G-r    scored True  F^P 2.592e-06 F^A 2.871e-13 F^X 5.893e-15
+      P 1e-7: regions  22152 depth>=18  20666 max 20 value -5.579570e-26 abserr 4.057e-31 conv False plim False | 3:1/0 4:0/1 5:3/2 6:4/5 7:0/11 8:0/16 9:0/58 10:0/116 11:0/110 12:0/133 13:0/97 14:0/127 15:0/166 16:0/259 17:0/377 18:0/763 19:0/1117 20:0/18786
+      X 1e-7: regions     61 depth>=18      0 max 16 value -5.579584e-26 abserr 8.170e-33 conv False plim False | 3:2/0 4:1/1 5:8/1 6:13/1 7:12/1 8:0/4 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      A 1e-7: regions     61 depth>=18      0 max 16 value -5.579584e-26 abserr 8.170e-33 conv False plim False | 3:2/0 4:1/1 5:8/1 6:13/1 7:12/1 8:0/4 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      X 1e-8: regions     85 depth>=18      4 max 20 value -5.579583e-26 abserr 1.429e-33 conv False plim False | 3:1/0 4:2/1 5:5/2 6:9/4 7:15/12 8:0/12 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/2 16:0/3 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q+r  scored True  F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08
+      P 1e-7: regions    496 depth>=18    426 max 20 value +1.444829e-26 abserr 2.910e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 10:0/1 11:0/6 12:0/7 13:0/7 14:0/5 15:0/7 16:0/13 17:0/17 18:0/20 19:0/34 20:0/372
+      X 1e-7: regions     19 depth>=18      2 max 18 value +1.444825e-26 abserr 8.348e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/2
+      A 1e-7: regions     19 depth>=18      2 max 18 value +1.444825e-26 abserr 8.348e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value +1.444825e-26 abserr 7.268e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q-r  scored False F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value +5.519836e-27 abserr 7.047e-32 conv False plim True  | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +5.519836e-27 abserr 7.047e-32 conv False plim True  | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +5.519836e-27 abserr 7.047e-32 conv False plim True  | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +5.519836e-27 abserr 7.047e-32 conv False plim True  | 0:1/0
+    Gqr G-q+r  scored True  F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08
+      P 1e-7: regions    468 depth>=18    401 max 20 value -1.824774e-26 abserr 2.372e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 9:0/1 11:0/5 12:0/5 13:0/7 14:0/4 15:0/12 16:0/10 17:0/16 18:0/17 19:0/28 20:0/356
+      X 1e-7: regions     19 depth>=18      2 max 18 value -1.824776e-26 abserr 8.675e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/2
+      A 1e-7: regions     19 depth>=18      2 max 18 value -1.824776e-26 abserr 8.674e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value -1.824776e-26 abserr 7.472e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:1/0 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G-q-r  scored False F^P 2.592e-06 F^A 2.893e-06 F^X 1.343e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value -5.006688e-27 abserr 6.894e-32 conv False plim True  | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value -5.006689e-27 abserr 6.894e-32 conv False plim True  | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value -5.006689e-27 abserr 6.894e-32 conv False plim True  | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value -5.006689e-27 abserr 6.894e-32 conv False plim True  | 0:1/0
+-- R5
+      G G      scored False F^P 6.484e-06 F^A 5.967e-15 F^X 1.461e-15
+      P 1e-7: regions     17 depth>=18      0 max 13 value -1.008099e-29 abserr 2.051e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 9:0/1 10:0/5 11:0/1 12:0/1 13:0/2
+      X 1e-7: regions     15 depth>=18      0 max 14 value -1.008074e-29 abserr 4.255e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/2
+      A 1e-7: regions     15 depth>=18      0 max 14 value -1.008074e-29 abserr 4.255e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/2
+      X 1e-8: regions     15 depth>=18      0 max 14 value -1.008074e-29 abserr 4.255e-34 conv True  plim False | 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/2
+     Gr G+r    scored True  F^P 6.484e-06 F^A 8.888e-14 F^X 3.840e-15
+      P 1e-7: regions   9498 depth>=18   8775 max 20 value -7.541124e-29 abserr 1.917e-34 conv True  plim False | 2:0/1 4:0/5 5:0/3 6:0/12 7:0/5 8:0/9 9:0/14 10:0/13 11:0/16 12:0/28 13:0/49 14:0/65 15:0/98 16:0/150 17:0/255 18:0/395 19:0/704 20:0/7676
+      X 1e-7: regions     36 depth>=18      0 max 16 value -7.541232e-29 abserr 3.616e-35 conv True  plim False | 2:0/1 3:0/1 4:0/7 5:0/4 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      A 1e-7: regions     36 depth>=18      0 max 16 value -7.541232e-29 abserr 3.616e-35 conv True  plim False | 2:0/1 3:0/1 4:0/7 5:0/4 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      X 1e-8: regions     36 depth>=18      0 max 16 value -7.541232e-29 abserr 3.616e-35 conv True  plim False | 2:0/1 3:0/1 4:0/7 5:0/4 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+     Gr G-r    scored True  F^P 6.484e-06 F^A 8.888e-14 F^X 3.840e-15
+      P 1e-7: regions  13719 depth>=18  12557 max 20 value +2.269948e-29 abserr 2.221e-34 conv True  plim False | 2:1/0 4:1/2 5:1/5 6:0/7 7:0/8 8:0/18 9:0/22 10:0/23 11:0/36 12:0/27 13:0/85 14:0/98 15:0/168 16:0/238 17:0/422 18:0/642 19:0/1117 20:0/10798
+      X 1e-7: regions     37 depth>=18      0 max 16 value +2.269985e-29 abserr 7.658e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      A 1e-7: regions     37 depth>=18      0 max 16 value +2.269985e-29 abserr 7.658e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+      X 1e-8: regions     37 depth>=18      0 max 16 value +2.269985e-29 abserr 7.658e-35 conv True  plim False | 2:1/0 3:0/1 4:5/1 5:5/1 6:0/2 7:0/2 8:0/2 9:0/2 10:0/2 11:0/2 12:0/2 13:0/2 14:0/2 15:0/3 16:0/2
+    Gqr G+q+r  scored True  F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08
+      P 1e-7: regions   1127 depth>=18   1033 max 20 value +1.726974e-30 abserr 3.065e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 8:0/1 9:0/1 10:0/2 11:0/5 12:0/8 13:0/5 14:0/10 15:0/19 16:0/16 17:0/21 18:0/55 19:0/74 20:0/904
+      X 1e-7: regions     20 depth>=18      3 max 19 value +1.726951e-30 abserr 1.689e-36 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     20 depth>=18      3 max 19 value +1.726951e-30 abserr 1.689e-36 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value +1.726951e-30 abserr 1.685e-36 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q-r  scored False F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value -4.379299e-30 abserr 2.456e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value -4.379301e-30 abserr 2.456e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value -4.379301e-30 abserr 2.456e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value -4.379301e-30 abserr 2.456e-34 conv True  plim False | 0:1/0
+    Gqr G-q+r  scored True  F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08
+      P 1e-7: regions   1910 depth>=18   1753 max 20 value -3.239898e-30 abserr 3.925e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 10:0/4 11:0/6 12:0/10 13:0/15 14:0/14 15:0/27 16:0/31 17:0/44 18:0/85 19:0/120 20:0/1548
+      X 1e-7: regions     20 depth>=18      3 max 19 value -3.239927e-30 abserr 5.047e-37 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     20 depth>=18      3 max 19 value -3.239927e-30 abserr 5.047e-37 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value -3.239927e-30 abserr 5.001e-37 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G-q-r  scored False F^P 6.484e-06 F^A 8.250e-06 F^X 4.407e-08
+      P 1e-7: regions      1 depth>=18      0 max  0 value +4.618004e-30 abserr 2.328e-34 conv True  plim False | 0:1/0
+      X 1e-7: regions      1 depth>=18      0 max  0 value +4.618006e-30 abserr 2.328e-34 conv True  plim False | 0:1/0
+      A 1e-7: regions      1 depth>=18      0 max  0 value +4.618006e-30 abserr 2.328e-34 conv True  plim False | 0:1/0
+      X 1e-8: regions      1 depth>=18      0 max  0 value +4.618006e-30 abserr 2.328e-34 conv True  plim False | 0:1/0
+-- R6
+      G G      scored True  F^P 1.954e-06 F^A 5.967e-15 F^X 1.460e-15
+      P 1e-7: regions  13903 depth>=18  13436 max 20 value +2.539828e-25 abserr 4.603e-32 conv False plim True  | 1:0/1 3:0/1 4:0/2 5:0/4 6:0/2 7:0/2 8:0/7 9:0/6 10:0/6 11:0/13 12:0/14 13:0/20 14:0/35 15:0/56 16:0/109 17:0/189 18:0/242 19:0/566 20:0/12628
+      X 1e-7: regions     25 depth>=18      0 max 17 value +2.539827e-25 abserr 3.059e-32 conv False plim False | 1:0/1 3:0/1 4:0/3 5:0/4 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      A 1e-7: regions     25 depth>=18      0 max 17 value +2.539827e-25 abserr 3.059e-32 conv False plim False | 1:0/1 3:0/1 4:0/3 5:0/4 6:0/2 7:0/3 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      X 1e-8: regions     40 depth>=18      4 max 20 value +2.539827e-25 abserr 1.236e-33 conv True  plim False | 1:0/1 3:0/1 5:0/7 6:0/6 7:0/3 8:0/9 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q+r  scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08
+      P 1e-7: regions   3563 depth>=18   3421 max 20 value -5.176348e-26 abserr 1.237e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 6:0/3 7:0/4 8:0/6 9:0/4 10:0/4 11:0/7 12:0/9 13:0/5 14:0/14 15:0/14 16:0/23 17:0/46 18:0/45 19:0/124 20:0/3252
+      X 1e-7: regions     24 depth>=18      3 max 19 value -5.176342e-26 abserr 2.807e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 5:0/2 6:0/1 7:0/5 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     24 depth>=18      3 max 19 value -5.176342e-26 abserr 2.807e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 5:0/2 6:0/1 7:0/5 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     25 depth>=18      4 max 20 value -5.176342e-26 abserr 2.810e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 5:0/2 6:0/1 7:0/5 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q-r  scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08
+      P 1e-7: regions   1907 depth>=18   1749 max 20 value -9.196986e-27 abserr 9.219e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 8:0/2 9:0/14 10:0/18 11:0/6 12:0/8 13:0/7 14:0/14 15:0/15 16:0/27 17:0/43 18:0/69 19:0/116 20:0/1564
+      X 1e-7: regions     10 depth>=18      0 max  8 value -9.197004e-27 abserr 8.411e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/2
+      A 1e-7: regions     10 depth>=18      0 max  8 value -9.197004e-27 abserr 8.411e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/2
+      X 1e-8: regions     15 depth>=18      0 max 13 value -9.197004e-27 abserr 2.178e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G-q+r  scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08
+      P 1e-7: regions   1907 depth>=18   1749 max 20 value -9.196986e-27 abserr 9.219e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 8:0/2 9:0/14 10:0/18 11:0/6 12:0/8 13:0/7 14:0/14 15:0/15 16:0/27 17:0/43 18:0/69 19:0/116 20:0/1564
+      X 1e-7: regions     10 depth>=18      0 max  8 value -9.197004e-27 abserr 8.411e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/2
+      A 1e-7: regions     10 depth>=18      0 max  8 value -9.197004e-27 abserr 8.411e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/2
+      X 1e-8: regions     15 depth>=18      0 max 13 value -9.197004e-27 abserr 2.178e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G-q-r  scored True  F^P 1.956e-06 F^A 2.480e-06 F^X 1.117e-08
+      P 1e-7: regions    867 depth>=18    765 max 20 value +4.516312e-27 abserr 4.275e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 8:0/1 9:0/3 10:0/11 11:0/12 12:0/9 13:0/5 14:0/9 15:0/6 16:0/19 17:0/22 18:0/31 19:0/70 20:0/664
+      X 1e-7: regions     20 depth>=18      3 max 19 value +4.516311e-27 abserr 6.918e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     20 depth>=18      3 max 19 value +4.516311e-27 abserr 6.918e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     23 depth>=18      4 max 20 value +4.516311e-27 abserr 2.961e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/0 7:2/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+-- R7
+      G G      scored True  F^P 2.592e-06 F^A 5.967e-15 F^X 1.460e-15
+      P 1e-7: regions  13613 depth>=18  13205 max 20 value +2.288082e-25 abserr 4.414e-32 conv False plim True  | 1:0/1 2:0/1 4:0/1 5:0/1 6:0/3 7:0/6 8:0/3 9:0/6 10:0/5 11:0/13 12:0/17 13:0/28 14:0/35 15:0/65 16:0/75 17:0/148 18:0/300 19:0/439 20:0/12466
+      X 1e-7: regions     25 depth>=18      0 max 17 value +2.288080e-25 abserr 2.251e-32 conv True  plim False | 1:0/1 3:0/1 4:0/3 5:0/3 6:0/5 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      A 1e-7: regions     25 depth>=18      0 max 17 value +2.288080e-25 abserr 2.251e-32 conv True  plim False | 1:0/1 3:0/1 4:0/3 5:0/3 6:0/5 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/2
+      X 1e-8: regions     35 depth>=18      4 max 20 value +2.288080e-25 abserr 1.981e-33 conv True  plim False | 1:0/1 3:0/1 4:0/2 5:0/4 6:0/3 7:0/8 8:0/3 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q+r  scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09
+      P 1e-7: regions   6742 depth>=18   6444 max 20 value -2.979259e-26 abserr 1.899e-32 conv False plim False | 1:1/0 2:1/0 3:1/0 6:0/1 7:0/3 8:0/7 9:0/14 10:0/11 11:0/7 12:0/13 13:0/21 14:0/33 15:0/31 16:0/54 17:0/100 18:0/142 19:0/266 20:0/6036
+      X 1e-7: regions     20 depth>=18      3 max 19 value -2.979258e-26 abserr 2.485e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     20 depth>=18      3 max 19 value -2.979258e-26 abserr 2.485e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     21 depth>=18      4 max 20 value -2.979258e-26 abserr 2.485e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:0/1 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+    Gqr G+q-r  scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09
+      P 1e-7: regions   1166 depth>=18   1089 max 20 value -1.330022e-27 abserr 3.063e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 8:0/1 9:0/2 10:0/3 11:0/3 12:0/3 13:0/4 14:0/5 15:0/8 16:0/14 17:0/28 18:0/41 19:0/68 20:0/980
+      X 1e-7: regions     11 depth>=18      0 max 10 value -1.330020e-27 abserr 4.252e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/2
+      A 1e-7: regions     11 depth>=18      0 max 10 value -1.330020e-27 abserr 4.252e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/2
+      X 1e-8: regions     14 depth>=18      0 max 13 value -1.330020e-27 abserr 1.134e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G-q+r  scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09
+      P 1e-7: regions   1166 depth>=18   1089 max 20 value -1.330022e-27 abserr 3.063e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 8:0/1 9:0/2 10:0/3 11:0/3 12:0/3 13:0/4 14:0/5 15:0/8 16:0/14 17:0/28 18:0/41 19:0/68 20:0/980
+      X 1e-7: regions     11 depth>=18      0 max 10 value -1.330020e-27 abserr 4.252e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/2
+      A 1e-7: regions     11 depth>=18      0 max 10 value -1.330020e-27 abserr 4.252e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/2
+      X 1e-8: regions     14 depth>=18      0 max 13 value -1.330020e-27 abserr 1.134e-34 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/2
+    Gqr G-q-r  scored True  F^P 2.594e-06 F^A 3.175e-06 F^X 9.426e-09
+      P 1e-7: regions    651 depth>=18    585 max 20 value +2.493357e-28 abserr 4.337e-33 conv False plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/0 7:0/1 9:0/7 10:0/5 11:0/5 12:0/4 13:0/2 14:0/3 15:0/5 16:0/9 17:0/19 18:0/9 19:0/20 20:0/556
+      X 1e-7: regions     21 depth>=18      3 max 19 value +2.493401e-28 abserr 6.878e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:3/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      A 1e-7: regions     21 depth>=18      3 max 19 value +2.493401e-28 abserr 6.878e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:3/0 7:0/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/2
+      X 1e-8: regions     23 depth>=18      4 max 20 value +2.493402e-28 abserr 2.301e-35 conv True  plim False | 1:1/0 2:1/0 3:1/0 4:1/0 6:2/0 7:2/1 8:0/1 9:0/1 10:0/1 11:0/1 12:0/1 13:0/1 14:0/1 15:0/1 16:0/1 17:0/1 18:0/1 19:0/1 20:0/2
+
+== R1: under X at 1e-7, every scored group has < 10 regions at depth >= 18, and the row's region count <= P's / 10; holds on >= 6 of 7 rows
+   R1: scored groups 5, largest count at depth>=18 under X 0 (<10 in all); regions X 133 / P 34147 = 0.003895 (<=0.1) -> true
+   R2: scored groups 3, largest count at depth>=18 under X 0 (<10 in all); regions X 89 / P 29782 = 0.002988 (<=0.1) -> true
+   R3: scored groups 2, largest count at depth>=18 under X 0 (<10 in all); regions X 66 / P 33314 = 0.001981 (<=0.1) -> true
+   R4: scored groups 5, largest count at depth>=18 under X 2 (<10 in all); regions X 167 / P 52909 = 0.003156 (<=0.1) -> true
+   R5: scored groups 4, largest count at depth>=18 under X 3 (<10 in all); regions X 130 / P 26273 = 0.004948 (<=0.1) -> true
+   R6: scored groups 5, largest count at depth>=18 under X 3 (<10 in all); regions X 89 / P 22147 = 0.004019 (<=0.1) -> true
+   R7: scored groups 5, largest count at depth>=18 under X 3 (<10 in all); regions X 88 / P 23338 = 0.003771 (<=0.1) -> true
+   R1 true on 7 of 7 rows: HOLDS
+
+== A1: under A at 1e-7, every scored group with F^A_g <= 1e-8 has < 10 regions at depth >= 18; holds if in every such group
+   R1    G G      F^A 5.967e-15: depth>=18 under A 0 (regions 21, max depth 17) -> true
+   R1   Gr G+r    F^A 2.871e-13: depth>=18 under A 0 (regions 38, max depth 13) -> true
+   R1   Gr G-r    F^A 2.871e-13: depth>=18 under A 0 (regions 43, max depth 13) -> true
+   R2   Gr G+r    F^A 8.888e-14: depth>=18 under A 0 (regions 32, max depth 16) -> true
+   R2   Gr G-r    F^A 8.888e-14: depth>=18 under A 0 (regions 27, max depth 13) -> true
+   R3   Gr G+r    F^A 9.094e-13: depth>=18 under A 0 (regions 27, max depth 17) -> true
+   R3   Gr G-r    F^A 9.094e-13: depth>=18 under A 0 (regions 26, max depth 16) -> true
+   R4    G G      F^A 5.967e-15: depth>=18 under A 0 (regions 24, max depth 17) -> true
+   R4   Gr G+r    F^A 2.871e-13: depth>=18 under A 0 (regions 42, max depth 16) -> true
+   R4   Gr G-r    F^A 2.871e-13: depth>=18 under A 0 (regions 61, max depth 16) -> true
+   R5   Gr G+r    F^A 8.888e-14: depth>=18 under A 0 (regions 36, max depth 16) -> true
+   R5   Gr G-r    F^A 8.888e-14: depth>=18 under A 0 (regions 37, max depth 16) -> true
+   R6    G G      F^A 5.967e-15: depth>=18 under A 0 (regions 25, max depth 17) -> true
+   R7    G G      F^A 5.967e-15: depth>=18 under A 0 (regions 25, max depth 17) -> true
+   A1 over 14 covered groups: HOLDS
+   the other scored groups (unscored here): depth under A beside X's, and F^A_g
+   R1  Gqr G+q+r  F^A 1.945e-06 (F^A/F 1.15): A depth>=18 0 regions 17 max 16; X depth>=18 0 regions 17 max 16
+   R1  Gqr G-q+r  F^A 1.945e-06 (F^A/F 1.15): A depth>=18 0 regions 12 max 11; X depth>=18 0 regions 12 max 11
+   R2  Gqr G-q+r  F^A 6.059e-06 (F^A/F 1.32): A depth>=18 0 regions 12 max 11; X depth>=18 0 regions 12 max 11
+   R4  Gqr G+q+r  F^A 2.893e-06 (F^A/F 1.11): A depth>=18 2 regions 19 max 18; X depth>=18 2 regions 19 max 18
+   R4  Gqr G-q+r  F^A 2.893e-06 (F^A/F 1.11): A depth>=18 2 regions 19 max 18; X depth>=18 2 regions 19 max 18
+   R5  Gqr G+q+r  F^A 8.250e-06 (F^A/F 1.27): A depth>=18 3 regions 20 max 19; X depth>=18 3 regions 20 max 19
+   R5  Gqr G-q+r  F^A 8.250e-06 (F^A/F 1.27): A depth>=18 3 regions 20 max 19; X depth>=18 3 regions 20 max 19
+   R6  Gqr G+q+r  F^A 2.480e-06 (F^A/F 1.27): A depth>=18 3 regions 24 max 19; X depth>=18 3 regions 24 max 19
+   R6  Gqr G+q-r  F^A 2.480e-06 (F^A/F 1.27): A depth>=18 0 regions 10 max 8; X depth>=18 0 regions 10 max 8
+   R6  Gqr G-q+r  F^A 2.480e-06 (F^A/F 1.27): A depth>=18 0 regions 10 max 8; X depth>=18 0 regions 10 max 8
+   R6  Gqr G-q-r  F^A 2.480e-06 (F^A/F 1.27): A depth>=18 3 regions 20 max 19; X depth>=18 3 regions 20 max 19
+   R7  Gqr G+q+r  F^A 3.175e-06 (F^A/F 1.22): A depth>=18 3 regions 20 max 19; X depth>=18 3 regions 20 max 19
+   R7  Gqr G+q-r  F^A 3.175e-06 (F^A/F 1.22): A depth>=18 0 regions 11 max 10; X depth>=18 0 regions 11 max 10
+   R7  Gqr G-q+r  F^A 3.175e-06 (F^A/F 1.22): A depth>=18 0 regions 11 max 10; X depth>=18 0 regions 11 max 10
+   R7  Gqr G-q-r  F^A 3.175e-06 (F^A/F 1.22): A depth>=18 3 regions 21 max 19; X depth>=18 3 regions 21 max 19
+
+== N4: |total_P - total_ref| <= total_abserr_P, total_ref from X at 1e-8 (X at 1e-7 if that was over budget); holds if on all seven
+   R1: |P - ref| = 1.3137e-29  total_abserr_P 2.9891e-29  ratio 0.4395  |P - ref|/|ref| 2.862e-06  (ref X 1e-8) -> true
+   R2: |P - ref| = 5.9979e-32  total_abserr_P 7.5408e-31  ratio 0.07954  |P - ref|/|ref| 1.261e-06  (ref X 1e-8) -> true
+   R3: |P - ref| = 1.9020e-32  total_abserr_P 1.6384e-32  ratio 1.161  |P - ref|/|ref| 2.708e-04  (ref X 1e-8) -> FALSE
+   R4: |P - ref| = 4.1823e-30  total_abserr_P 1.7092e-29  ratio 0.2447  |P - ref|/|ref| 2.971e-05  (ref X 1e-8) -> true
+   R5: |P - ref| = 9.1029e-32  total_abserr_P 2.0442e-31  ratio 0.4453  |P - ref|/|ref| 8.113e-06  (ref X 1e-8) -> true
+   R6: |P - ref| = 3.2523e-30  total_abserr_P 2.1217e-30  ratio 1.533  |P - ref|/|ref| 6.602e-07  (ref X 1e-8) -> FALSE
+   R7: |P - ref| = 2.2112e-30  total_abserr_P 1.1387e-30  ratio 1.942  |P - ref|/|ref| 7.268e-07  (ref X 1e-8) -> FALSE
+   N4: FAILS; failing rows (ratio |P - ref| / total_abserr_P): [('R3', 1.1609), ('R6', 1.5329), ('R7', 1.9418)]
+
+== R2: |total_X(1e-7) - total_X(1e-8)| <= total_abserr_X(1e-7); holds if on all seven; Q5's number on every row
+   R1: |X7 - X8| = 2.4619e-30  total_abserr_X7 6.0750e-30  ratio 0.4053 -> true;  Q5 |X7 - X8|/|X8| = 5.364e-07  (abserr_X7/|X8| 1.324e-06; abserr_X8/|X8| 7.623e-07)
+   R2: |X7 - X8| = 1.5007e-34  total_abserr_X7 7.0954e-31  ratio 0.0002115 -> true;  Q5 |X7 - X8|/|X8| = 3.155e-09  (abserr_X7/|X8| 1.492e-05; abserr_X8/|X8| 1.490e-05)
+   R3: |X7 - X8| = 0.0000e+00  total_abserr_X7 1.1858e-32  ratio 0 -> true;  Q5 |X7 - X8|/|X8| = 0.000e+00  (abserr_X7/|X8| 1.688e-04; abserr_X8/|X8| 1.688e-04)
+   R4: |X7 - X8| = 9.4719e-31  total_abserr_X7 3.1110e-30  ratio 0.3045 -> true;  Q5 |X7 - X8|/|X8| = 6.729e-06  (abserr_X7/|X8| 2.210e-05; abserr_X8/|X8| 1.618e-05)
+   R5: |X7 - X8| = 1.5865e-37  total_abserr_X7 1.7843e-31  ratio 8.891e-07 -> true;  Q5 |X7 - X8|/|X8| = 1.414e-11  (abserr_X7/|X8| 1.590e-05; abserr_X8/|X8| 1.590e-05)
+   R6: |X7 - X8| = 4.0460e-31  total_abserr_X7 8.5324e-31  ratio 0.4742 -> true;  Q5 |X7 - X8|/|X8| = 8.213e-08  (abserr_X7/|X8| 1.732e-07; abserr_X8/|X8| 1.053e-08)
+   R7: |X7 - X8| = 9.2426e-34  total_abserr_X7 3.6642e-31  ratio 0.002522 -> true;  Q5 |X7 - X8|/|X8| = 3.038e-10  (abserr_X7/|X8| 1.204e-07; abserr_X8/|X8| 1.261e-08)
+   R2: HOLDS
+   the 2026-09 sweep, for comparison: {'mid band': 1.9e-06, 'low': 2.84e-06, 'seam': 8.3e-07}
+
+== descriptive: how far each arm's total moved from P's, relative to P's declared error
+   R1: X 1e-7: |d|/abserr_P 0.357, |d|/|P| 2.326e-06; A 1e-7: |d|/abserr_P 0.357, |d|/|P| 2.326e-06; X 1e-8: |d|/abserr_P 0.439, |d|/|P| 2.862e-06; |X7 - A7|/|X7| 9.188e-14; abserr_P/|P| 6.513e-06
+   R2: X 1e-7: |d|/abserr_P 0.0793, |d|/|P| 1.258e-06; A 1e-7: |d|/abserr_P 0.0793, |d|/|P| 1.258e-06; X 1e-8: |d|/abserr_P 0.0795, |d|/|P| 1.261e-06; |X7 - A7|/|X7| 9.170e-15; abserr_P/|P| 1.585e-05
+   R3: X 1e-7: |d|/abserr_P 1.16, |d|/|P| 2.707e-04; A 1e-7: |d|/abserr_P 1.16, |d|/|P| 2.707e-04; X 1e-8: |d|/abserr_P 1.16, |d|/|P| 2.707e-04; |X7 - A7|/|X7| 4.021e-14; abserr_P/|P| 2.332e-04
+   R4: X 1e-7: |d|/abserr_P 0.3, |d|/|P| 3.644e-05; A 1e-7: |d|/abserr_P 0.3, |d|/|P| 3.644e-05; X 1e-8: |d|/abserr_P 0.245, |d|/|P| 2.971e-05; |X7 - A7|/|X7| 1.170e-12; abserr_P/|P| 1.214e-04
+   R5: X 1e-7: |d|/abserr_P 0.445, |d|/|P| 8.113e-06; A 1e-7: |d|/abserr_P 0.445, |d|/|P| 8.113e-06; X 1e-8: |d|/abserr_P 0.445, |d|/|P| 8.113e-06; |X7 - A7|/|X7| 3.440e-14; abserr_P/|P| 1.822e-05
+   R6: X 1e-7: |d|/abserr_P 1.72, |d|/|P| 7.423e-07; A 1e-7: |d|/abserr_P 1.72, |d|/|P| 7.423e-07; X 1e-8: |d|/abserr_P 1.53, |d|/|P| 6.602e-07; |X7 - A7|/|X7| 4.474e-16; abserr_P/|P| 4.307e-07
+   R7: X 1e-7: |d|/abserr_P 1.94, |d|/|P| 7.265e-07; A 1e-7: |d|/abserr_P 1.94, |d|/|P| 7.265e-07; X 1e-8: |d|/abserr_P 1.94, |d|/|P| 7.268e-07; |X7 - A7|/|X7| 1.087e-15; abserr_P/|P| 3.743e-07
+
+== summary: M0 holds; R1 holds (7/7); A1 holds (14 groups); N4 fails; R2 holds; over budget: none

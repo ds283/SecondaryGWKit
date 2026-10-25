@@ -207,8 +207,9 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   scripts under `prompts/datastore-generic/` are records, left as written). The scripts a
   Mac Studio prompt copies back as records are also left unformatted:
   `docs/handover/a3-v2/seam/scripts/`, `docs/levin-phase-floor/01/scripts/`,
-  `docs/levin-phase-floor/03/scripts/` and `docs/handover/b1/r8/scripts/`. Each is byte-identical
-  to the run it records; the first three runs' outputs record its SHA-256.
+  `docs/levin-phase-floor/03/scripts/`, `docs/levin-phase-floor/04/scripts/` and
+  `docs/handover/b1/r8/scripts/`. Each is byte-identical to the run it records; the first four
+  runs' outputs record its SHA-256.
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
   `RunDrivers/scoped_pipeline_run.py`; to extract one of its functions

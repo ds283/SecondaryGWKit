@@ -1,0 +1,31 @@
+# step 1: check the trees (read-only git only)
+2026-10-25T22:33:49Z
+mps026298.phys.susx.ac.uk
+## main checkout
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit rev-parse HEAD
+c8ca1559fcc53fdb88998f170257635431fb85ca
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit rev-parse --abbrev-ref HEAD
+handover-remedial
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit rev-parse origin/handover-remedial
+c8ca1559fcc53fdb88998f170257635431fb85ca
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit status --short  (between markers)
+<<<
+>>>
+dispatch SHA expected: c8ca1559fcc53fdb88998f170257635431fb85ca
+## worktree
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 rev-parse HEAD
+98e68d3e1b60e6de4378b7d9aded3a120d6088a9
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 status --short  (between markers)
+<<<
+>>>
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit               c8ca155 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 98e68d3 (detached HEAD)
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit merge-base --is-ancestor 98e68d3 HEAD; echo $?
+0
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit log -1 --format=%H d5f5a2b
+d5f5a2bfd254876bd8eeb6b1a9234b028dab31b6 Record levin-phase-floor prompt 03: seven rows instrumented
+$ git -C /Users/ds283/Documents/Code/SecondaryGWKit merge-base --is-ancestor d5f5a2b HEAD; echo $?
+0
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python --version
+Python 3.13.16

@@ -1,0 +1,22 @@
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+(True, False, False) G bad counts [delta, theta, n integer, range] [0, 0, 0, 0]
+G 11.939117601363987 [True, False, False, True] d_mp 2843.143103347393620794480995073172380216 d_fr 2843.1431033473937 diff 0.0 p_a -0.023773849432408498 p_b 0.0 bc 66
+G 11.960563922804313 [True, False, False, True] d_mp 2843.206625839794876694360814539663806499 d_fr 2843.206625839795 diff 0.0 p_a -0.01859534358189131 p_b 0.0 bc 70
+G 11.971287083524475 [True, False, False, True] d_mp 2843.237885233298753686476123547777206113 d_fr 2843.2378852332986 diff 0.0 p_a 0.0172986102221379 p_b 0.0 bc 70
+(True, True, True) G bad counts [delta, theta, n integer, range] [0, 734, 734, 0]
+(True, True, True) q bad counts [delta, theta, n integer, range] [0, 0, 0, 0]
+(True, True, True) r bad counts [delta, theta, n integer, range] [0, 0, 0, 0]

@@ -1,0 +1,9 @@
+2026-10-25T23:11:10.243957000Z
+$ (cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04) PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch.py
+run id      levin-phase-floor-04-remove-20261025T231110
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-04-remove-20261025T231110/manifest.json
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/run_remove.py sha256 3c43db3f51ccd8a59fd3237067a17875eaf42dc56b8f29c2de1b5753b9280da7
+child pid   79510 (nohup execs python in the same process; no sh)
+launcher    pid 79505, exiting without waiting
+launcher exit 0

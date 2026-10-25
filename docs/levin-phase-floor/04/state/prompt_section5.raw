@@ -1,0 +1,49 @@
+## 5. Predictions, fixed before the run (README §5 rule 3)
+
+Copy these into the log unchanged, and score them there. The gates come first. A gate that fails is
+a stop, not a verdict.
+
+**Gates:**
+- **E1 — the arms compute the same phase.** Every bound of §4 step 5 holds at every abscissa.
+- **E2 — the floor model is right.** In every scored group, under each of P, A and X, the median
+  $\sigma_\theta$ over 03's sampled regions is at most $\varepsilon \sum_i \Phi^{\rm arm}_i$, taken
+  as a median at the same regions' midpoints. Under X it is also at most $10^{-2} F$.
+- **M0 — P is production.** On all seven rows, the P unit equals the stored row **bit for bit**, by
+  `==` and by IEEE-754 bit pattern. The fields are 03's: `total`, `total_abserr`,
+  `total_converged`, `WKB_Levin`, `numeric_quad`, `WKB_Levin_data.max_depth` and `num_regions`, and
+  every field of every group and sub-interval record of `metadata["WKB_Levin"]["subintervals"]`
+  except `elapsed`. `analytic_rad` is compared and reported, but not gated.
+
+**Scored:**
+- **R1 — remove the floor and the cap goes** (findings §2.6 item 3).
+  - **The rule:** under X at `rtol = 1e-7`, every one of the row's scored groups has fewer than 10
+    regions at depth 18 or more, and the row's region count is at most a tenth of its P unit's.
+  - **Holds** if true on at least six of the seven rows. An over-budget X unit counts as false on
+    its row.
+  - If R1 fails, findings §2.6's own clause fires: *"item 3 leaves the depth at 20"*, so the
+    hypothesis is wrong.
+- **A1 — layer 1(a) is enough where $G$'s anchor is the floor** (H-anchor's prediction).
+  - **The rule:** under A at `rtol = 1e-7`, every scored group with $F^A_g \le 0.1 \times 10^{-7}$
+    has fewer than 10 regions at depth 18 or more.
+  - **Holds** if true in every such group. **Undecided** if there is no such group. An over-budget
+    A unit counts as false for each such group on its row.
+  - Report the other scored groups too, unscored: their depth beside X's, and their $F^A_g$.
+- **N4 — the stored error is honest about the jitter.**
+  - **The rule:** $|{\rm total}_P - {\rm total}_{\rm ref}| \le$ `total_abserr`$_P$, with
+    ${\rm total}_{\rm ref}$ from X at `rtol = 1e-8`. If that unit was over budget, use X at `1e-7`
+    and say so. If both were, the row is undecided.
+  - **Holds** if true on all seven rows. Otherwise list each failing row with the ratio of the two
+    sides. Each such row is one whose stored error understates the jitter's effect.
+- **R2 — with the floor gone, the declared error is honest.**
+  - **The rule:** $|{\rm total}_X(10^{-7}) - {\rm total}_X(10^{-8})| \le$ `total_abserr`$_X(10^{-7})$.
+  - **Holds** if true on all seven rows. A row with either unit over budget is undecided.
+  - **Q5's number,** reported on every row whichever way R2 goes:
+    $|{\rm total}_X(10^{-7}) - {\rm total}_X(10^{-8})| / |{\rm total}_X(10^{-8})|$. Set it beside
+    the 2026-09 sweep's 1.9e-6 (mid band), 2.84e-6 (low) and 8.3e-7 (seam).
+
+**Not scored, and why.** H-cancel is not re-scored. 03 showed that its condition holds in the
+non-cancelling groups as well, so it fails as the whole account. Both hypotheses predict R1, and
+neither A nor X can tell them apart. Nothing here predicts which groups still reach depth 20 under A
+when $F^A_g$ is large. In P, 16 of 45 groups were left unscored although their rows' $F$ was the
+same, so a large floor is not enough to send a group to the cap. Those groups are descriptive.
+

@@ -1,0 +1,18 @@
+# step 3: 03 scripts copied from the dispatch SHA c8ca155 (git show), as scripts/03_<name> (untouched originals)
+a36caa6e906b91483b5da008e1bd120dde39a46685465de2c26cf06cc77d86b8  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_analyse.py
+b9fdf8c21ee0d62ea160f7fc31ff9e766f38ac9db751b4c1264d424c2e61811f  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_fixture_proof.py
+1ac9a75fad373f3a268ba4e667ab9f9be26d74905770a0577c9e620404bd6553  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_harness.py
+7adea4334eaa81be5d35a8a3d515174d58a419d0741cdf8705ed528740eb90d9  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_hash_store.py
+2f1011a5b2eb063bf67d74343ff37185d47adfad100ec9f2e892692c7b33c32c  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_launch.py
+10e38ad4215c856269d2079ea8d459192383ad9c5179b7cd85c4a53026bd250b  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_rebuild.py
+f3052aafcf36d32c61d33a6a981503ef7e1d4a277881374aceebebc2dd8fd0ae  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_run_instrument.py
+3f257c1e41abef206c46913ba96c88927b1d26406245c0087a1224ec89478e35  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/03_smoke_check_pickle.py
+# compare with working tree copies:
+a36caa6e906b91483b5da008e1bd120dde39a46685465de2c26cf06cc77d86b8  docs/levin-phase-floor/03/scripts/analyse.py
+b9fdf8c21ee0d62ea160f7fc31ff9e766f38ac9db751b4c1264d424c2e61811f  docs/levin-phase-floor/03/scripts/fixture_proof.py
+1ac9a75fad373f3a268ba4e667ab9f9be26d74905770a0577c9e620404bd6553  docs/levin-phase-floor/03/scripts/harness.py
+7adea4334eaa81be5d35a8a3d515174d58a419d0741cdf8705ed528740eb90d9  docs/levin-phase-floor/03/scripts/hash_store.py
+2f1011a5b2eb063bf67d74343ff37185d47adfad100ec9f2e892692c7b33c32c  docs/levin-phase-floor/03/scripts/launch.py
+10e38ad4215c856269d2079ea8d459192383ad9c5179b7cd85c4a53026bd250b  docs/levin-phase-floor/03/scripts/rebuild.py
+f3052aafcf36d32c61d33a6a981503ef7e1d4a277881374aceebebc2dd8fd0ae  docs/levin-phase-floor/03/scripts/run_instrument.py
+3f257c1e41abef206c46913ba96c88927b1d26406245c0087a1224ec89478e35  docs/levin-phase-floor/03/scripts/smoke_check_pickle.py

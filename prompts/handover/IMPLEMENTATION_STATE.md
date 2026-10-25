@@ -427,6 +427,17 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
 
+  **Narrowed (2026-10-25, `levin-phase-floor` 04):** on 03's seven depth-20 rows the cap is the
+  phase floor's.
+  - **With it removed,** whether by exact remainders or by taking $k\tau_R$ out of $G$'s phase
+    alone, the rows need 66–167 regions instead of 22,147–52,909, and none reaches depth 20 at
+    `rtol = 1e-7`. The `1e-7` pair is then reachable on them.
+  - **At `1e-8`** a single short chain per group still reaches the cap
+    (`[04-x-at-1e-8-still-reaches-depth-20]`). The jitter-free totals at `1e-7` and `1e-8` differ by
+    at most 6.7e-6 relative.
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -488,6 +499,17 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
     `[04-roundoff-floor-can-be-infinite]`).
 
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
+
+  **Narrowed (2026-10-25, `levin-phase-floor` 04, N4): the stored error can also be understated.**
+  - **On 3 of 7 depth-20 rows** (R3, R6 and R7), $|{\rm total}_{\rm stored} - {\rm total}_X|$ is
+    1.16–1.94× the stored `total_abserr`. That is 2.7e-4 relative on R3's cancelling total and
+    6.6–7.3e-7 on R6 and R7.
+  - **On R6 and R7** the stored row is unconverged, while the jitter-free re-run at `1e-8` converges
+    with a declared error 30–41× smaller.
+  - **The caveat.** $X$ keeps $\varphi$'s sample noise and the `TWO_PI` modulus, so it is the
+    jitter-free limit, not the truth.
+
+  [`docs/levin-phase-floor/04/issues.md`](../../docs/levin-phase-floor/04/issues.md) I8.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation

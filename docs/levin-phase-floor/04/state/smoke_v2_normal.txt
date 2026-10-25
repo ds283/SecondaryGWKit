@@ -1,0 +1,37 @@
+$ (cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04) OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_remove.py --out-dir state/smoke_v2_normal --units X-1e-7-R6,A-1e-7-R6,X-1e-8-R6 --budget-override 120
+2026-10-25T23:10:22Z
+# run_remove header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04/scripts/run_remove.py", "script_sha256": "3c43db3f51ccd8a59fd3237067a17875eaf42dc56b8f29c2de1b5753b9280da7", "scripts_sha256": {"run_remove.py": "3c43db3f51ccd8a59fd3237067a17875eaf42dc56b8f29c2de1b5753b9280da7", "phases.py": "9f0461576e27ff4cd3c7febd58cb3f6f4b1536b65a55a97ea771d1257a4ccb61", "harness.py": "a2692689810d9a8efc9b7625ccafd948f847bda09f0374637b7536cb92e9f8df", "rebuild.py": "ee47bc5057d0b7b93873eb7f63265b80deaf7f1634f023e3ca1e3bf0001b5d6d", "run_instrument.py": "ecc0e0aecb388256de1ede654bbbfa0e3ad2ad396c7fb1129a65a8f71b5741b9", "prov.py": "f8dc879eca61503e065e30669b27a4974ea99f0fc0cd77161706a94f249324ba"}, "main_py_sha256": "06b7646ecfa82724d0ac5f08eb6a050b4363873a08a06d3ab3ce9951e0bf82b3", "worktree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3", "worktree_head": "98e68d3e1b60e6de4378b7d9aded3a120d6088a9", "worktree_status_short": "", "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 79073, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-04", "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3", "OMP_NUM_THREADS": "1", "started": "2026-10-25T23:10:24.284808+00:00", "units": ["X-1e-7-R6", "A-1e-7-R6", "X-1e-8-R6"], "budget_factor": 3.0, "budget_override": 120.0}
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1740_8d1d43b6, response grid ResponseRedshiftGrid_145_c51d43ac
+   rebuild: largest source k = 3e+08/Mpc, latest tau = 13728 (for z=0.1), largest x=4.1184e+12, largest x +7.5% clearance=4.4273e+12
+** context built; checks [('one LambdaCDM model', True, '1'), ('exit times available', True, ''), ('rebuilt redshifts equal stored z exactly', True, '[]'), ('background model available', True, '1')]; rtol 1e-7 store_id 3 tol 1e-07; rtol 1e-8 store_id 6 tol 1e-08
+
+== unit X-1e-7-R6 (shard 2, serial 34728)
+unit X-1e-7-R6: done; wall 1.4 s; budget 120.0; counts {'G': 12744, 'T': 16832, 'other': 0}; total np.float64(4.9262712373466785e-24) abserr np.float64(8.532398682955795e-31) regions 89 max depth 19
+
+== unit A-1e-7-R6 (shard 2, serial 34728)
+unit A-1e-7-R6: done; wall 0.8 s; budget 120.0; counts {'G': 12744, 'T': 16832, 'other': 0}; total np.float64(4.926271237346681e-24) abserr np.float64(8.532398702300216e-31) regions 89 max depth 19
+
+== unit X-1e-8-R6 (shard 2, serial 34728)
+unit X-1e-8-R6: done; wall 1.8 s; budget 120.0; counts {'G': 18320, 'T': 22224, 'other': 0}; total np.float64(4.9262716419434e-24) abserr np.float64(5.185205457972399e-32) regions 118 max depth 20
+
+
+== run ends; all M0 hold and no stop: True
+exit 0
+2026-10-25T23:10:29Z
