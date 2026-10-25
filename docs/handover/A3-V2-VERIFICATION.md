@@ -1199,7 +1199,7 @@ both invocations returned rc 0. Sizes are `du -sk` in KiB.
 
 **Where the records are.** A path `var/handover-11/…` in this section is that directory on the Mac
 Studio. Its `out/`, `scripts/` and `state/` are committed at [`a3-v2/seam/`](a3-v2/seam/), with its
-`issues.md`. `out/subintervals_11.csv` (5.05 MB) is committed as it is.
+`issues.md`. `out/subintervals_11.csv` (5.05 MB, SHA-256 in `seam_census_11.txt`) is **not** committed, because this checkout's `.git/info/exclude` excludes every `*.csv`. It stays at `var/handover-11/out/` on the Mac Studio. *(Corrected on committing, by the laptop orchestrator.)*
 
 **Result: complete, with no stop.** The `GkSourcePolicyData` block of the build's `stdout.log` agrees
 with the table in every cell: 1160 rows, no `fail` and no `incomplete`, and one `minimal`. The clamp-gap
@@ -1279,7 +1279,7 @@ block's one policy, `policy="maximize-WKB"-Levin-threshold="1.5"`. Decoded by
 This is the answer to `[03-gk-classification-is-diagnosed-and-ignored]`'s question on the shipping
 grid: no `fail` and no `incomplete` row exists in A3 v2. One `minimal` row does.
 
-### 5.4 The population and the sub-intervals ([`seam_census_11.txt`](a3-v2/seam/out/seam_census_11.txt), [`subintervals_11.csv`](a3-v2/seam/out/subintervals_11.csv))
+### 5.4 The population and the sub-intervals ([`seam_census_11.txt`](a3-v2/seam/out/seam_census_11.txt), `subintervals_11.csv`, on the Mac Studio only)
 
 - **Script** [`seam_census.py`](a3-v2/seam/scripts/seam_census.py), SHA-256
   `240cc0638500048808deb81d3884c0855e5215dd0668edfb9d0a633aa9c4dcae`, run at `HEAD`

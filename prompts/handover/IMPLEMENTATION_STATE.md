@@ -615,7 +615,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   Prompt 11 tabulated them and did not look further (its `issues.md` item 5). **Impact:** unknown
   until the rows are identified. If they are near-zero oracles, it is none; otherwise they are the
   worst stored `total`s on the grid. **Next step:** list the top rows from
-  `docs/handover/a3-v2/seam/out/subintervals_11.csv` with $|{\tt analytic\_rad}|$ against its
+  `var/handover-11/out/subintervals_11.csv` on the Mac Studio (not committed; `*.csv` is excluded) with $|{\tt analytic\_rad}|$ against its
   neighbours in $(k, q, r)$, read-only. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
