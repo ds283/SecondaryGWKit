@@ -207,3 +207,20 @@ The orchestrator's review of 01 (`40d10b1`), by the eight checks of
 tolerance sweep's child was in scope (log, observation 7).
 
 **The campaign is closed.** No issue was opened, so `docs/OPEN_ISSUES.md` is unchanged.
+
+### 5.3 The rehearsal store retired (2026-10-25)
+
+At the user's request, after the close, by the orchestrator.
+- **The store.** `./venv/bin/python -m runregistrykit store retire` ran first with `--dry-run`, then
+  for real, on `var/datastores/rpk-v030-adoption-01-reference.sqlite`. Its reason names this
+  campaign's 01, the fingerprint and the close (`88742d4`). Both runs found one reference, 01's own
+  run `rpk-v030-adoption-01-reference-20261025T010358` (`done`), and no other sidecar. A fresh
+  read-only fingerprint matched the recorded `39809dca…`.
+- **The deletion.** It deleted the primary and its four shards. The sidecar stays as the store's
+  record, now `retired`, completed 2026-10-25T01:40:31+00:00, problems none. The run directory
+  stays too.
+- **The readers' output**, `var/rpk-v030-adoption-01/extract/` (177 MB: six readers' logs and
+  output files), was removed.
+- **Kept:** the agent's small transcripts beside it, `prelaunch.txt`, `readers.txt`,
+  `readers.meta` and the two `state-*.txt`. `readers.txt` is the record that each reader exited 0
+  and left the store unchanged.
