@@ -8,8 +8,8 @@ reviews its commit against fixed criteria, and either hands back or stops and re
 | 00 | Domènech reconnaissance | — | n/a | **Already landed** (`ab5c0ed`), executed outside this flow on a separate account. Read-and-report; no orchestration |
 | 01 | The Domènech general-$b$ oracle | [`prompt-01.md`](prompt-01.md) | **yes** | One new module and its tests; **no production file is modified**. Like `radiation-oracle` prompt 01, the review is about whether the tests *would fail*: the source paper's own kernel is mis-signed, and a faithful transcription is wrong by an overall sign while looking entirely plausible. Turns on the deliberate-breakage record and on test 5, the only comparison with an object this campaign did not write |
 | 02 | The realistic-flavour large-$x$ harness | [`prompt-02.md`](prompt-02.md) | **yes** | A `docs/` measurement script and a document; **no production file and no test**. Suite counts must be *unchanged*, not risen. The review turns on the control cell reproducing KT §8 Table 8.1 and on whether the attribution of the two terms is honest about its own error |
-| 03 | The policy-geometry census | — | **not yet** | A `docs/` census script and a document; **no production file and no test**. Unlike 01 and 02 it **needs a datastore**, so its dispatch has to name one and record which source-grid construction its rows carry. The review turns on the type/quality census matching `source-remediation-verification.md` §5.5's **shape** — a like-for-like comparison is impossible and prompt 03 §2.2 says why — on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, and on the agent having opened the two §2 (o) issues **without fixing them** |
-| 04 | The $G_k$ phase decision test | [`prompt-04.md`](prompt-04.md) | **yes** | A `docs/` script and a short memo; **no production file and no test**. Added after A2 landed, because A2's fixture turned out to carry a $G$ phase one campaign behind production. It decides whether A2's numbers stand. The review turns on one thing a green suite cannot see: whether the threshold for "material" was fixed **before** the numbers were seen — so the prompt fixes it and the dispatch restates it |
+| 03 | The policy-geometry census | [`prompt-03.md`](prompt-03.md) | **yes** (2026-10-25) | **Refreshed 2026-10-25, not run; dispatchable.** A `docs/` census script and a document; **no production file and no test**. Re-pointed from the A3 baseline store to **A3 v2 on the Mac Studio** (`0e32f24a…`, `SourceGridConstruction_2`), read-only and Ray-free at `HEAD`, orchestrated there as 10 and 11, in parallel with `levin-phase-floor` 04 and A4; it commits nothing there. It checks 11's policy count rather than re-taking it. The review turns on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, on three rows recounted by hand, on the §5.5 comparison being one of **shape** (prompt 03 §2.2 says why), and on the agent having drafted the three §2 (o)/(p) issues **without fixing them** |
+| 04 | The $G_k$ phase decision test | [`prompt-04.md`](prompt-04.md) | **yes**; refreshed 2026-10-25 | **Refreshed 2026-10-25, not run; dispatchable.** A `docs/` script and a short memo; **no production file and no test**. Added after A2 landed, because A2's fixture turned out to carry a $G$ phase one campaign behind production. It decides whether A2's numbers stand, and is now the only planned answer to `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]`. **On the laptop, in a worktree at `98e68d3`**: its harness raises at `HEAD` since B1. Lands by rebase, as B1 did. The review turns on one thing a green suite cannot see: whether the threshold for "material" was fixed **before** the numbers were seen — so the prompt fixes it and the dispatch restates it |
 | 05 | The Ray address default | [`prompt-05.md`](prompt-05.md) | **yes** | Added 2026-10-16 for an issue the user assigned here on 2026-10-12; **not seam work** and independent of every other prompt. Seven `--ray-address` defaults go from `auto` to `local`, plus one `ast` test module. The review turns on the A3 v2 launcher, `quadsource_atol_sweep.py`, being byte-identical, and on the test reading the scripts rather than restating them. Lands before the A3 v2 launch or with it |
 | 06 | The A3 v2 host and R4 | [`prompt-06.md`](prompt-06.md) | **yes** | Added 2026-10-22; **not seam work**. **Runs on the Mac Studio**, in a Claude Code session over the saved `MacStudio` SSH connection, and **commits nothing there**: everything it writes is under `var/handover-06/`, which the orchestrator copies back, reviews and commits here. Before dispatch the orchestrator pushes the dispatch commit and copies R3's two recorded run directories to the Mac Studio. The review turns on the venv's `pip freeze` equalling the laptop's and on both R4 stores reproducing `39809dca…` |
 | 07 | Launch A3 v2 | [`prompt-07.md`](prompt-07.md) | **yes** | Added 2026-10-22, held on 06. One launch on the Mac Studio, one check, end. Its gate includes the user's confirmation that automatic macOS update installs are off there. Its records are committed here while the build runs; **the Mac Studio's checkout is not moved until 08** |
@@ -23,11 +23,25 @@ reviews its commit against fixed criteria, and either hands back or stops and re
 
 > Read `prompts/handover/orchestrator/prompt-04.md` and follow it.
 
-**01 and 02 have landed** (`c414451`, `0d7c05c`). **04 comes next, before 03.**
+and, in the Mac Studio session,
+
+> Read `prompts/handover/orchestrator/prompt-03.md` and follow it.
+
+**01 and 02 have landed** (`c414451`, `0d7c05c`). **03 and 04 were refreshed on 2026-10-25 and
+run in parallel, on different hosts** (the user, 2026-10-25): 03 on the Mac Studio, read-only on
+A3 v2 at `HEAD` ([`prompt-03.md`](prompt-03.md)); 04 on the laptop, in a worktree at `98e68d3`
+([`prompt-04.md`](prompt-04.md)). `levin-phase-floor` 04 runs on the Mac Studio at the same time.
+They share no file but the board and `docs/OPEN_ISSUES.md`; whichever lands second resolves the
+conflict there by reading both sides. After them: B2 (after A4), a fix for
+`[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]`, then `levin-phase-floor`'s G1.
 
 **05 is outside that order** (added 2026-10-16). It shares no file with 01–04 and depends on none of
 them; its only constraint is to land before the A3 v2 launch or with it. Run it whenever that
 launch is near, serialised with the others only because they all update the board.
+
+*(Until 2026-10-25 this file said "04 comes next, before 03", serialised on one host. The
+paragraphs below are why 04 was put first; the refresh made the two independent of each other in
+files and hosts, so they now run together.)*
 
 That ordering is not the one this file originally carried, and the reason it changed is worth
 stating: 04 did not exist when the campaign was planned. It exists because A2, on landing, was
@@ -39,13 +53,15 @@ either way; it reads stored rows and does not touch A2's results.
 The original three were independent work — campaign README §4 says A1, A2 and A3 have no
 prerequisites and no dependency on each other — but **01 created `IMPLEMENTATION_STATE.md`**, which
 the others update. Running any two concurrently in separate worktrees means conflicting on the
-board and on `docs/OPEN_ISSUES.md`. Serialise them.
+board and on `docs/OPEN_ISSUES.md`. Serialise them. *(03 and 04 are the exception the user made on
+2026-10-25: their commits are made apart, and the second to land resolves the board and the index.)*
 
 **03 has a precondition the others do not**: a datastore written on the current source grid, i.e.
 after `qcd-background-audit` prompt 15 replaced the base density with the measured curvature
 criterion. A census on the superseded grid answers a question nobody asked, and prompt 03 §7 makes
 that a stop. Establish which datastore you are dispatching against **before** you dispatch, not
-after.
+after. **Established 2026-10-25:** A3 v2, whose `GkSource` rows carry
+`SourceGridConstruction_2`.
 
 **Take the baselines before dispatching anything.** They cannot be reconstructed after the fact, and
 prompt 01 is one that *raises* `ComputeTargets` — so "did not fall" is not enough; the rise must

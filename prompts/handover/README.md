@@ -353,8 +353,9 @@ itself; E is the one genuine optimisation and depends on all of them.
 
 **Landed: prompt 00, A1 (`c414451`) and A2 (`0d7c05c`). Written, not run: A3 and A4.** B1, B2, C1,
 C2, D1, D2, E1 and E2 are groupings only — scope, issues and ordering, no prompt file.
-Orchestration is [`orchestrator/`](orchestrator/README.md); **A4 next, before A3**, and that file
-says why.
+Orchestration is [`orchestrator/`](orchestrator/README.md). **A3 and A4 were refreshed on
+2026-10-25 and run in parallel**, A3 on the Mac Studio on A3 v2 and A4 on the laptop at `98e68d3`;
+that file says why (until then it read "A4 next, before A3").
 
 **A4 was added after A2 landed** and is not in the original plan. A2's realistic fixture builds the
 Green's-function phase as a raw `phase_spline`, the construction `GkSourcePolicyData._build_phase`
