@@ -1,0 +1,20 @@
+........................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 280 tests in 11.979s
+
+OK
+!! GkSource.build(): multiple results found when querying for GkSource
+!! GkSourceValue.build(): multiple results found when querying for GkSourceValue
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! QuadSource.build(): multiple results found when querying for QuadSource (q=1e+05/Mpc, store_id=11 | r=1e+05/Mpc, store_id=12)
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration
+!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration
+!! Warning (TkNumericIntegration) k=1e+05/Mpc, log10_atol=-10.0, log10_rtol=-9.0
+|    Initial redshift z_init=5e+09 is later than the 3-efold superhorizon time z_e3=1.2346e+12.
+|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.
+|    used for the matter transfer function integration apply only on sufficiently superhorizon scales.
+exit 0

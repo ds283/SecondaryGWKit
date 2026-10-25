@@ -1,0 +1,57 @@
+== 1. QuadSourceIntegral rows
+rows: 864; with partition.handover (Tq and Tr, each with handover_continuity): 864
+rows with any metadata key containing 'clamp': 0
+
+== 2. handover_continuity, by k and node (identical in every row that carries the k)
+k = 1e+05/Mpc: z_init = 1724800979.6868515, z_switch = 1712616453.6720948; z_switch is the first source-grid node below z_init: True; source-grid nodes strictly between: 0; nodes recorded: 3
+  node 0: z =     1712616453.6720948  dT_rel = -3.153510e-07  dTprime_rel =  5.674049e-06
+  node 1: z =     1673600269.6012518  dT_rel = -5.545501e-06  dTprime_rel =  2.165710e-05
+  node 2: z =     1635472937.5650687  dT_rel = -1.603827e-05  dTprime_rel =  3.079759e-05
+k = 3.1623e+05/Mpc: z_init = 5454303327.635345, z_switch = 5420993175.39622; z_switch is the first source-grid node below z_init: True; source-grid nodes strictly between: 0; nodes recorded: 3
+  node 0: z =       5420993175.39622  dT_rel = -2.354245e-07  dTprime_rel =  4.915088e-06
+  node 1: z =      5297494147.272005  dT_rel = -5.207091e-06  dTprime_rel =  2.110052e-05
+  node 2: z =      5176808627.568508  dT_rel = -1.552583e-05  dTprime_rel =  3.059522e-05
+k = 1e+06/Mpc: z_init = 17248025285.92749, z_switch = 17159222629.609928; z_switch is the first source-grid node below z_init: True; source-grid nodes strictly between: 0; nodes recorded: 3
+  node 0: z =     17159222629.609928  dT_rel = -1.672076e-07  dTprime_rel =  4.151410e-06
+  node 1: z =      16768307671.85978  dT_rel = -4.878320e-06  dTprime_rel =  2.053187e-05
+  node 2: z =     16386298391.685555  dT_rel = -1.501807e-05  dTprime_rel =  3.037574e-05
+summary by node, over k:
+  node 0 (3 k): |dT_rel| min 1.672e-07 max 3.154e-07; |dTprime_rel| min 4.151e-06 max 5.674e-06
+  node 1 (3 k): |dT_rel| min 4.878e-06 max 5.546e-06; |dTprime_rel| min 2.053e-05 max 2.166e-05
+  node 2 (3 k): |dT_rel| min 1.502e-05 max 1.604e-05; |dTprime_rel| min 3.038e-05 max 3.080e-05
+
+== 3. QuadSource rows: R8 against R4's extract (R3-equal fingerprint 39809dca)
+q=3.1623e+05-r=3.1623e+05 (shard 0, serial 201, validated True): R8 428 nodes (z_samples 428), z 68787986538016.445 .. 5176808627.568508
+  R4 425 nodes, z 68787986538016.445 .. 5547371302.491309; added 3, removed 0; common 425, of which differing in any column: 0
+    added z = 5420993175.39622  (Tq: in [z_switch, z_init); Tr: in [z_switch, z_init))
+    added z = 5297494147.272005  (Tq: below z_switch; Tr: below z_switch)
+    added z = 5176808627.568508  (Tq: below z_switch; Tr: below z_switch)
+q=3.1623e+05-r=1e+06 (shard 0, serial 202, validated True): R8 371 nodes (z_samples 371), z 68787986538016.445 .. 16386298391.685555
+  R4 368 nodes, z 68787986538016.445 .. 17559250880.554787; added 3, removed 0; common 368, of which differing in any column: 0
+    added z = 17159222629.609928  (Tq: at or above z_init; Tr: in [z_switch, z_init))
+    added z = 16768307671.85978  (Tq: at or above z_init; Tr: below z_switch)
+    added z = 16386298391.685555  (Tq: at or above z_init; Tr: below z_switch)
+q=1e+06-r=1e+06 (shard 1, serial 512, validated True): R8 371 nodes (z_samples 371), z 68787986538016.445 .. 16386298391.685555
+  R4 368 nodes, z 68787986538016.445 .. 17559250880.554787; added 3, removed 0; common 368, of which differing in any column: 0
+    added z = 17159222629.609928  (Tq: in [z_switch, z_init); Tr: in [z_switch, z_init))
+    added z = 16768307671.85978  (Tq: below z_switch; Tr: below z_switch)
+    added z = 16386298391.685555  (Tq: below z_switch; Tr: below z_switch)
+q=1e+05-r=1e+05 (shard 3, serial 1, validated True): R8 478 nodes (z_samples 478), z 68787986538016.445 .. 1635472937.5650687
+  R4 475 nodes, z 68787986538016.445 .. 1752542211.3413053; added 3, removed 0; common 475, of which differing in any column: 0
+    added z = 1712616453.6720948  (Tq: in [z_switch, z_init); Tr: in [z_switch, z_init))
+    added z = 1673600269.6012518  (Tq: below z_switch; Tr: below z_switch)
+    added z = 1635472937.5650687  (Tq: below z_switch; Tr: below z_switch)
+q=1e+05-r=3.1623e+05 (shard 3, serial 2, validated True): R8 428 nodes (z_samples 428), z 68787986538016.445 .. 5176808627.568508
+  R4 425 nodes, z 68787986538016.445 .. 5547371302.491309; added 3, removed 0; common 425, of which differing in any column: 0
+    added z = 5420993175.39622  (Tq: at or above z_init; Tr: in [z_switch, z_init))
+    added z = 5297494147.272005  (Tq: at or above z_init; Tr: below z_switch)
+    added z = 5176808627.568508  (Tq: at or above z_init; Tr: below z_switch)
+q=1e+05-r=1e+06 (shard 3, serial 3, validated True): R8 371 nodes (z_samples 371), z 68787986538016.445 .. 16386298391.685555
+  R4 368 nodes, z 68787986538016.445 .. 17559250880.554787; added 3, removed 0; common 368, of which differing in any column: 0
+    added z = 17159222629.609928  (Tq: at or above z_init; Tr: in [z_switch, z_init))
+    added z = 16768307671.85978  (Tq: at or above z_init; Tr: below z_switch)
+    added z = 16386298391.685555  (Tq: at or above z_init; Tr: below z_switch)
+nodes added over all rows: 18
+
+problems: 0
+exit 0

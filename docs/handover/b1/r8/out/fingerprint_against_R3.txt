@@ -1,0 +1,11 @@
+recorded: var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-reference-20261018T232838 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-12-reference.sqlite
+  format 6, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7, 21 classes, problems none
+  against its sidecar: no fingerprint recorded
+  compare_fingerprints(var/handover-06/recorded/rrk-v020-adoption-03-reference-20261018T232838/status.json, store): 1 difference(s)
+    QuadSource: tag set [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity] differs: 6 recorded, 6 now
+
+verdict: DIFFERENT
+exit 1

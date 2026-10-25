@@ -13,8 +13,8 @@ Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 `datastore-integrity`'s, taken on 2026-10-02, `datastore-generic`'s, taken on 2026-10-06, and
 `datastore-generic-followup`'s, taken on 2026-10-07, `dk-and-rpk-migration`'s, taken on
 2026-10-12, `runregistry-extraction`'s, taken on 2026-10-16, `rrk-v020-adoption`'s, taken on
-2026-10-19, `dk-v050-adoption`'s, taken on 2026-10-22, and `rpk-v030-adoption`'s, `py313-venv`'s and
-`levin-phase-floor`'s, taken on 2026-10-25.
+2026-10-19, `dk-v050-adoption`'s, taken on 2026-10-22, and `rpk-v030-adoption`'s, `py313-venv`'s,
+`levin-phase-floor`'s, `handover`'s and `source-remediation`'s, taken on 2026-10-25.
 
 | Campaign | Status | Opened → last board update | Owns | Open issues (§ of `OPEN_ISSUES.md`; rows naming its board) |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 | [`datastore-generic`](datastore-generic/IMPLEMENTATION_STATE.md) | closed 9 / 9, 2026-10-06 | 2026-10-04 → 2026-10-07 | the datastore layer made generic again (no project table named in the layer, guarded by `test_layer_is_generic`); every old-store fallback deleted | §1.18, §1.19; 0 |
 | [`a3-v2-readiness`](a3-v2-readiness/IMPLEMENTATION_STATE.md) | closed 10 / 10, 2026-10-04 | 2026-10-02 → 2026-10-04 | the seven defects a build or a reader of the A3 v2 store would meet; `DEFAULT_QUADRATURE_RTOL = 1e-7` | §1.17; 2 |
 | [`datastore-integrity`](datastore-integrity/IMPLEMENTATION_STATE.md) | closed 12 / 12, 2026-10-02 | 2026-09-25 → 2026-10-02 | every known datastore-integrity defect, before the A3 v2 store is built | §1.15, §1.17; 12 |
-| [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 3 of 10 groupings landed, and 05; 06 (A3 v2 host, R4) landed 2026-10-22, R4 holds on the Mac Studio; 07 launched A3 v2, which ended `done` 2026-10-24; 08 landed 2026-10-25: A3 v2 kept and verified on the Mac Studio; 09–10 landed 2026-10-25; 11 (A3 v2 seam record) landed 2026-10-25; D1 decided (b) and B1 written as prompt 12; three §3 issues assigned to `levin-phase-floor` | 2026-09-20 → 2026-10-25 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle; the A3 v2 launch on the Mac Studio | §1.1; 10 |
+| [`handover`](handover/IMPLEMENTATION_STATE.md) | **live** — 4 of 10 groupings landed (B1 the fourth), and 05; 06 (A3 v2 host, R4) landed 2026-10-22, R4 holds on the Mac Studio; 07 launched A3 v2, which ended `done` 2026-10-24; 08 landed 2026-10-25: A3 v2 kept and verified on the Mac Studio; 09–10 landed 2026-10-25; 11 (A3 v2 seam record) landed 2026-10-25; D1 decided (b) and B1 written as prompt 12; B1 (prompt 12) landed 2026-10-25, the code `049c7c8` and rehearsal R8 on the Mac Studio (fingerprint `1b332ffa…`, the rehearsal reference from here on); three §3 issues assigned to `levin-phase-floor` | 2026-09-20 → 2026-10-25 | the numeric → Liouville–Green seam of $T_k$ and $G_k$; the Domènech kernel reconnaissance; the general-$b$ oracle; the A3 v2 launch on the Mac Studio | §1.1; 12 |
 | [`datastore-readback`](datastore-readback/IMPLEMENTATION_STATE.md) | **live** — 1 of 1 written landed, resumable A3 run is the user's | 2026-09-22 → 2026-09-26 | the read-back guard and the audit of every object factory | §1.10; 0 |
 | [`store-fingerprint`](store-fingerprint/IMPLEMENTATION_STATE.md) | complete 5 / 5, closed 2026-09-25 | 2026-09-24 → 2026-09-29 | read-only store reader, structured inventory, content fingerprint in the sidecar | §1.13; 1 |
 | [`store-retirement`](store-retirement/IMPLEMENTATION_STATE.md) | complete 5 / 5 | 2026-09-25 → 2026-09-26 | `store retire`: a store's own files go, its sidecar stays | §1.14; 4 |
@@ -45,7 +45,7 @@ Open-issue counts were last taken on 2026-09-29, except `a3-v2-readiness`'s and
 | [`GkTk-remedial`](GkTk-remedial/IMPLEMENTATION_STATE.md) | closed, 20 prompts | 2026-09-09 → 2026-09-29 | the shared conformal-time primitive, the $\tau$ tables, the phase residual; the $G_k$/$T_k$ WKB sectors | §1.4; 17 |
 | [`transfer-remedial`](transfer-remedial/IMPLEMENTATION_STATE.md) | complete | 2026-09 → 2026-09-19 | the Bessel amplitude and phase construction, `LiouvilleGreen/bessel_phase.py` | —; 8 |
 | [`qsi-phase-groups`](qsi-phase-groups/IMPLEMENTATION_STATE.md) | complete 1 / 1 | 2026-09-11 | the phase-group Levin integration in `QuadSourceIntegral` | §1.2; 2 |
-| [`source-remediation`](source-remediation/IMPLEMENTATION_STATE.md) | complete 13 / 13 | 2026-09 → 2026-09-14 | sound speed, source term, source time integral; `ComputeTargets/phase_groups.py` | —; 10 |
+| [`source-remediation`](source-remediation/IMPLEMENTATION_STATE.md) | complete 13 / 13 | 2026-09 → 2026-10-25 | sound speed, source term, source time integral; `ComputeTargets/phase_groups.py` | —; 8 (two closed 2026-10-25 by `handover` 12) |
 | [`spec-transcription`](spec-transcription/README.md) | complete; all spec files signed off 2026-09-07 | 2026-09-07 | `docs/spec/`, the transcribed derivation | —; 0 |
 | [`levin-refactor`](levin-refactor/IMPLEMENTATION_STATE.md) | complete 10 / 10 | 2026-09 → 2026-09-04 | `AdaptiveLevin/levin_quadrature.py` | §1.3; 7 |
 | [`backport-modules`](backport-modules/IMPLEMENTATION_STATE.md) | complete 10 / 10 | 2026-09 → 2026-09-04 | the shared Ray and Datastore infrastructure modules | —; 2 |

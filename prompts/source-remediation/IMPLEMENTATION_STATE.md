@@ -2,14 +2,18 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-14 — `[01-genericeos-tz-spline-floor]` closed by
-`prompts/qcd-background-audit/` prompt 06 (moved to §4). Previously: 2026-09-10, prompt 13 complete, plus a post-campaign tidy-up commit
+**Last updated:** 2026-10-25 — `[08-handover-clamp-error]` and
+`[12-handover-clamp-error-in-production]` closed by `prompts/handover` prompt 12 (board item B1,
+the $T_k$ hand-over by overlap; moved to §4), and `[05-numeric-region-is-now-the-accuracy-floor]`
+and `[06-source-spline-residual-vs-handover]` narrowed by it. Previously: 2026-09-14 —
+`[01-genericeos-tz-spline-floor]` closed by `prompts/qcd-background-audit/` prompt 06 (moved to
+§4). Previously: 2026-09-10, prompt 13 complete, plus a post-campaign tidy-up commit
 (`[10-classify-levin-keyerror]` closed; the three `analyse_*.py` scripts re-run over the complete
 3185-row run, verification document §5.1.2) and a triage pass over §3.
-**Ten issues remain open in §3**, all now assigned or classified — six to the **hand-over
-campaign** (`[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]`,
-`[12-phase-spline-error-grows-with-x]`, `[05-…]`, `[06-…]`, `[07-lg-derivative-truncation-…]`,
-which are one seam and cannot be separated by measurement), one to the **`AdaptiveLevin`
+**Eight issues remain open in §3** (ten until 2026-10-25), all now assigned or classified — four
+to the **hand-over campaign** (`[12-phase-spline-error-grows-with-x]`, `[05-…]`, `[06-…]`,
+`[07-lg-derivative-truncation-…]`, which are one seam and cannot be separated by measurement; the
+two clamp issues that were with them closed on 2026-10-25), one to the **`AdaptiveLevin`
 Clenshaw–Curtis fallback** campaign, two error-bound completeness items awaiting that work, and
 two inert floors recorded so a later reader does not misread a residual. They are indexed
 project-wide in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md).
@@ -25,7 +29,7 @@ same defect that it was masking), and `main.py`'s `--quad-source-integral-queue`
 and stores all 3185 work items of that configuration (verification document §5.1.1). The two
 accuracy items — `[12-atol-too-loose-for-the-source-integral]` and
 `[12-handover-clamp-error-in-production]` — **remain open** and may not be fixed inside this
-campaign.
+campaign. (The second closed on 2026-10-25, by `prompts/handover` prompt 12.)
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -167,6 +171,23 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   error grows linearly with $x$. See `docs/source-remediation-verification.md` §5.5 and
   `[12-handover-clamp-error-in-production]`.
   **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
+  **Narrowed 2026-10-25 by `prompts/handover` prompt 12 (board item B1): the $T_k$ hand-over part
+  is gone, and the entry stays open for the rest.** The numeric grid no longer *ends* at the
+  hand-over. `TkSourceFunctions`' numeric spline now runs `HANDOVER_OVERLAP_NODES = 2` nodes past
+  the switch node, the point below which the Liouville–Green branch is used. So the interval the
+  numeric branch is evaluated on is no longer its spline's end interval. On this entry's own
+  measure, `TestNumericRegion.test_reproduces_exact_solution` between grid points, the numeric
+  branch moves:
+  - at $w=1/3$, from 7.4e-06 to **8.6e-07** in $T$ and from 2.7e-04 to **6.5e-05** in $dT/dz$;
+  - at $w=0.2$, from 1.3e-06 to **1.6e-07** and from 2.7e-04 to **3.2e-05**.
+
+  Source: [`docs/handover/HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §4. **What stays
+  open is not the $T_k$ hand-over:**
+  - the numeric branch's interior floor: it is still a spline through stored samples, and
+    `source_samples_per_log10z` is still the only lever;
+  - the Liouville–Green side, which B1 did not change: its row still begins at the switch node, and
+    B1 measured nothing there beyond the continuity record;
+  - the production-$x$ note above, which is `[12-phase-spline-error-grows-with-x]`'s.
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -201,6 +222,19 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   above than the last, and the spline is not the limiting error inside the both-numeric region.
   See `docs/source-remediation-verification.md` §5.7.
   **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
+  **Narrowed 2026-10-25 by `prompts/handover` prompt 12 (board item B1): the source spline no
+  longer ends at the hand-over.** `QuadSource` now stores $f$ down to the earlier switch node and
+  `HANDOVER_OVERLAP_NODES = 2` nodes below it, so the spline is not evaluated in an end interval at
+  the seam. On rehearsal R8 each production-shaped `QuadSource` row gained exactly 3 nodes, with
+  the values at the old nodes bit-identical. On A2's realistic fixture at $x_{\rm resp}=980$ that
+  end interval was a large part of what A2 called the representation term. The source overlap
+  alone moves $N+9/8$ by +5.1e-03 (`together`) and −3.6e-04 (T-first), and not at all in `q-smooth`,
+  whose all-smooth sub-interval ends above the $T$ seam
+  ([`docs/handover/HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §2.2). **What stays open:**
+  $f$ still oscillates at twice the transfer-function phase, so the interior residual above (1.4e-05
+  to 1.4e-04 of envelope on real rows) and its growth to $O(1)$ for a hand-over at the bottom of the
+  search window are unchanged. `together`'s 3.5e-03 after B1, larger than A2's representation term
+  there, is not attributed; that is `handover` B2's.
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -320,51 +354,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   Clenshaw-Curtis fallback. Nothing in this repository's source-integral layer should change
   for it.
 
-- **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09)* — in production the WKB grid
-  of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
-  `TkWKBIntegration` stores no sample at `z_init`), so `TkSourceFunctions.WKB_region[0]` sits up
-  to one grid step below `crossover_z` and no accessor of that factor is evaluable in between
-  (§5 note 6). `QuadSourceIntegral` partitions at `crossover_z` and, as note 6 prescribes, clamps
-  the LG accessors to `WKB_region[0]` across the gap (allowed up to
-  `HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5` mean grid steps; the gap is recorded in
-  `metadata["partition"]`). Measured on the production-shaped fixture
-  (`Fixture(drop_first_WKB_sample=True)`, $b=0$, $x_{\rm resp}=100$): a one-step gap
-  (2.3e-2 in $\log(1+z)$) changes `total` by **5.1e-3** — at $x\approx19$ the held phase is
-  wrong by up to 0.44 rad over the gap. The error scales as gap$^2$, so a uniformly distributed
-  gap averages ~1/3 of this. **This is now the largest single error term in the chain**, an order
-  of magnitude above the spline and LG floors (`[06-source-spline-residual-vs-handover]`,
-  `[07-lg-derivative-truncation-at-handover]`). **Impact:** every production
-  `QuadSourceIntegral`; prompt 12 must expect residuals of this size against `analytic_rad`
-  and should report the recorded `clamp_gaps_log1pz`. **Next step:** the user's choice among
-  (a) an LG sample at `z_init` (main.py / TkWKBIntegration — but `z_init` is not a stored
-  `redshift`), (b) the overlap of `docs/lg-phase-and-handover-followup-2026-09.md` §1.4, or
-  (c) a first-order Taylor extension of the LG phase and amplitude across the gap using the
-  closed-form `omega`/`dlnM_dz` inside `QuadSourceIntegral`'s clamp adapter (estimated ~100×
-  smaller error; log 08 deviation 2). None is in prompts 09–10's scope.
-  **Confirmed and enlarged by prompt 12 (2026-09-09):** the gap is present on essentially every
-  production row (median 1.2e-02, max 2.2e-02 in $\log(1+z)$) and costs one to two orders more
-  than the 5.1e-03 measured here. Superseded for magnitude by
-  `[12-handover-clamp-error-in-production]`; the three remedies above are unchanged and are now
-  the campaign's main outstanding accuracy decision.
-  **Narrowed by `prompts/handover` prompt 02 (2026-09-20), on that campaign's board and in
-  [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md):** the clamp
-  term is now **separated from the representation floor it was entangled with**, scored against
-  Kohri–Terada eq. (22) and the head at 50 digits, on a $2\times2\times$(shape $\times$
-  $x_{\rm resp}$) factorial. The clamp term is **3.91e-03 to 9.12e-01** and the representation term
-  **4.08e-05 to 2.68e-03** — a ratio of **11.6 to 1034**, which confirms the hand-over campaign
-  README §2 (b)'s "two to four orders" with the low end widened to one order on the shape where the
-  clamp is weakest. Two qualifications travel with the number. **(i) The gap measured is
-  production's maximum, not its typical one:** it is 1.00 of the fixture's own WKB grid step and
-  1.00 of the mean source-grid step, which is **1.92×** the production median of 1.2e-02 and
-  **1.05×** the production maximum of 2.2e-02. On this entry's own gap$^2$ scaling a median-gap row
-  would show $(1.2/2.30)^2 = 0.27$ of the figures above. **(ii) The clamp term is
-  $x_{\rm resp}$-independent** (fitted slopes −0.07/+0.03/+0.03 over five decades), because the
-  fixture pins the hand-over at $x_T = 19.1$ for every $k$ and the held phase is therefore
-  0.44 rad at every rung — so these figures are one depth, not a depth scan. The three remedies are
-  unchanged, and the measurement adds one fact about choosing between them: the $2\times2$ is
-  **additive** (interaction ≤ 2.82e-05 of the clamp term), so removing the gap should recover the
-  clamp term in full whichever representation it is applied to.
-
 - **[09-abserr-is-a-quadrature-bound]** *(opened by prompt 09, 2026-09-09)* — the new
   `total_abserr` column is the linear sum of the sub-intervals' quadrature error estimates
   (scipy's, and the Levin driver's), and that is **all** it is: it measures 1.3e-11 to 1.5e-7 of
@@ -434,8 +423,93 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   > half of this entry that a fixture cannot answer. The production *decision* the entry asks for
   > has been made.
 
+> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
+> could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
+> to work around, a measured cost that changes a later prompt's decision. Format:
+>
+> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
+>   affected. **Next step:** what would close it.
+>
+> Move closed entries to §4 rather than deleting them.
+
+---
+
+## 4. Resolved issues
+
+- **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09; **closed 2026-10-25** by
+  `prompts/handover` prompt 12, board item B1 — the closure is the last paragraph of this entry)* — in production the WKB grid
+  of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
+  `TkWKBIntegration` stores no sample at `z_init`), so `TkSourceFunctions.WKB_region[0]` sits up
+  to one grid step below `crossover_z` and no accessor of that factor is evaluable in between
+  (§5 note 6). `QuadSourceIntegral` partitions at `crossover_z` and, as note 6 prescribes, clamps
+  the LG accessors to `WKB_region[0]` across the gap (allowed up to
+  `HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5` mean grid steps; the gap is recorded in
+  `metadata["partition"]`). Measured on the production-shaped fixture
+  (`Fixture(drop_first_WKB_sample=True)`, $b=0$, $x_{\rm resp}=100$): a one-step gap
+  (2.3e-2 in $\log(1+z)$) changes `total` by **5.1e-3** — at $x\approx19$ the held phase is
+  wrong by up to 0.44 rad over the gap. The error scales as gap$^2$, so a uniformly distributed
+  gap averages ~1/3 of this. **This is now the largest single error term in the chain**, an order
+  of magnitude above the spline and LG floors (`[06-source-spline-residual-vs-handover]`,
+  `[07-lg-derivative-truncation-at-handover]`). **Impact:** every production
+  `QuadSourceIntegral`; prompt 12 must expect residuals of this size against `analytic_rad`
+  and should report the recorded `clamp_gaps_log1pz`. **Next step:** the user's choice among
+  (a) an LG sample at `z_init` (main.py / TkWKBIntegration — but `z_init` is not a stored
+  `redshift`), (b) the overlap of `docs/lg-phase-and-handover-followup-2026-09.md` §1.4, or
+  (c) a first-order Taylor extension of the LG phase and amplitude across the gap using the
+  closed-form `omega`/`dlnM_dz` inside `QuadSourceIntegral`'s clamp adapter (estimated ~100×
+  smaller error; log 08 deviation 2). None is in prompts 09–10's scope.
+  **Confirmed and enlarged by prompt 12 (2026-09-09):** the gap is present on essentially every
+  production row (median 1.2e-02, max 2.2e-02 in $\log(1+z)$) and costs one to two orders more
+  than the 5.1e-03 measured here. Superseded for magnitude by
+  `[12-handover-clamp-error-in-production]`; the three remedies above are unchanged and are now
+  the campaign's main outstanding accuracy decision.
+  **Narrowed by `prompts/handover` prompt 02 (2026-09-20), on that campaign's board and in
+  [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md):** the clamp
+  term is now **separated from the representation floor it was entangled with**, scored against
+  Kohri–Terada eq. (22) and the head at 50 digits, on a $2\times2\times$(shape $\times$
+  $x_{\rm resp}$) factorial. The clamp term is **3.91e-03 to 9.12e-01** and the representation term
+  **4.08e-05 to 2.68e-03** — a ratio of **11.6 to 1034**, which confirms the hand-over campaign
+  README §2 (b)'s "two to four orders" with the low end widened to one order on the shape where the
+  clamp is weakest. Two qualifications travel with the number. **(i) The gap measured is
+  production's maximum, not its typical one:** it is 1.00 of the fixture's own WKB grid step and
+  1.00 of the mean source-grid step, which is **1.92×** the production median of 1.2e-02 and
+  **1.05×** the production maximum of 2.2e-02. On this entry's own gap$^2$ scaling a median-gap row
+  would show $(1.2/2.30)^2 = 0.27$ of the figures above. **(ii) The clamp term is
+  $x_{\rm resp}$-independent** (fitted slopes −0.07/+0.03/+0.03 over five decades), because the
+  fixture pins the hand-over at $x_T = 19.1$ for every $k$ and the held phase is therefore
+  0.44 rad at every rung — so these figures are one depth, not a depth scan. The three remedies are
+  unchanged, and the measurement adds one fact about choosing between them: the $2\times2$ is
+  **additive** (interaction ≤ 2.82e-05 of the clamp term), so removing the gap should recover the
+  clamp term in full whichever representation it is applied to.
+  **Closed 2026-10-25 by `prompts/handover` prompt 12 (board item B1), by remedy (b), the
+  overlap.** The user decided `handover` README §7 D1 as (b), with the Liouville–Green
+  initialisation kept at the phase extremum. The consumers now switch representation at the
+  **switch node**, the largest source-grid node strictly below $z_{\rm init}$ and the
+  Liouville–Green row's first sample, matched by redshift identity. They keep
+  `HANDOVER_OVERLAP_NODES = 2` numeric nodes below it, in the $T_k$ numeric spline and in the stored
+  `QuadSource` values (`ComputeTargets/handover.py`). Both representations are stored at the switch
+  and overlap nodes, so there is no gap to bridge:
+  - `HANDOVER_CLAMP_MAX_GRID_STEPS`, `_ClampedTk`, `_ClampedSource` and the clamp's helpers are
+    removed;
+  - every representation gets `_check_region_covers`, with no tolerance;
+  - `metadata["partition"]` records `handover` ($z_{\rm init}$, $z_{\rm sw}$ and the continuity
+    residuals at the shared nodes) in place of `clamp_gaps_log1pz` and `max_clamp_gap_log1pz`.
+
+  No producer, grid or schema changed: the numeric samples below $z_{\rm init}$ were always stored.
+  **Verified** offline by prompt 12 §4.2's tests (a)–(g), with both deliberate breakages caught
+  (`ComputeTargets` 737 → 742). End to end on A2's realistic fixture at $x_{\rm resp}=980$, T-first
+  gives $N+9/8 = -6.0\times10^{-5}$, against A2's $+3.4\times10^{-4}$ with the gap closed by hand
+  and $-3.6\times10^{-3}$ clamped. **Rehearsal R8** on the Mac Studio
+  (`handover-12-r8-reference-20261025T210551`, 2026-10-25), a production-shaped store built at B1's
+  tree: all 864 `QuadSourceIntegral` rows carry `partition.handover` and none records a clamp.
+  Its fingerprint, `1b332ffa…`, differs from R3's in `QuadSource` only, which the user ruled is
+  what B1 should show. Measurement:
+  [`docs/handover/HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md);
+  log: [`prompts/handover/logs/12-remove-the-tk-gap.md`](../handover/logs/12-remove-the-tk-gap.md).
+
 - **[12-handover-clamp-error-in-production]** *(opened by prompt 12, 2026-09-09; supersedes the
-  magnitude estimate in `[08-handover-clamp-error]`)* — the hand-over clamp is present on
+  magnitude estimate in `[08-handover-clamp-error]`; **closed 2026-10-25** by `prompts/handover`
+  prompt 12, board item B1 — the closure is the last paragraph of this entry)* — the hand-over clamp is present on
   essentially every production row, and it costs one to two orders of magnitude more than prompt
   08's single-factor fixture predicted. Measured gaps in $\log(1+z)$: `Tq` on 1666 sub-intervals
   and `Tr` on 1798, median **1.2e-02**, max **2.2e-02** (≈ 1.0 mean source-grid step, against the
@@ -499,18 +573,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   02's, on fixtures. The next step is unchanged: `handover` README §7 D1. Measurement:
   [`docs/handover/A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §5.
 
-> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
-> could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
-> to work around, a measured cost that changes a later prompt's decision. Format:
->
-> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
->   affected. **Next step:** what would close it.
->
-> Move closed entries to §4 rather than deleting them.
-
----
-
-## 4. Resolved issues
+  **Closed 2026-10-25 by `prompts/handover` prompt 12 (board item B1), with
+  `[08-handover-clamp-error]` above, whose closing paragraph says how.** The clamp this entry
+  measured on production rows no longer exists at B1's tree. R8, a production-shaped rehearsal
+  store built there, has 864 of 864 `QuadSourceIntegral` rows with `partition.handover` and none
+  with a clamp gap. Three things this entry touches stay open elsewhere:
+  - A3 v2's stored rows were built before B1 and keep their clamp; a store is read at its own SHA.
+  - The seam-band rows of A3 v2 that deviate from the oracle by up to two orders are the `handover`
+    board's `[11-seam-band-rows-deviate-from-the-oracle-by-up-to-two-orders]`.
+  - The residue after the gap is `handover` B2's to score. On A2's three shapes at
+    $x_{\rm resp}=980$ B1 leaves $N+9/8$ at $-6.0\times10^{-5}$ (T-first), $-5.4\times10^{-5}$
+    (q-smooth) and $+3.5\times10^{-3}$ (together), the last larger than A2's representation term
+    there ([`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §2.2).
 
 - **[01-genericeos-tz-spline-floor]** *(opened by prompt 01, 2026-09-08; **closed 2026-09-14** by `prompts/qcd-background-audit/` prompt 06 — the closure is the last paragraph of this entry)* — every quantity a
   `LambdaCDM_GenericEOS`/QCD model returns inherits the interpolation error of the 500-point

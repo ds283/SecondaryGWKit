@@ -1,0 +1,89 @@
+=== extract_Gk_data: 2026-10-25 21:12:47 +0000: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_Gk_data/
+exit 0; wall 26 s; files written 531
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 832.1/sec)
+24:      Queue summary: 3 lookup (avg 876/sec)
+31:      Queue summary: 116 lookup (avg 549.8/min)
+=== extract_GkWKB_data: 2026-10-25 21:13:13 +0000: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_GkWKB_data/
+exit 0; wall 44 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 1202/sec)
+24:      Queue summary: 3 lookup (avg 1166/sec)
+31:      Queue summary: 348 lookup (avg 11.07/sec)
+=== extract_GkSource_data: 2026-10-25 21:13:58 +0000: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_GkSource_data/
+exit 0; wall 18 s; files written 160
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+7:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+23:      Queue summary: 3 lookup (avg 1134/sec)
+28:      Queue summary: 3 lookup (avg 1433/sec)
+33:      Queue summary: 10 lookup (avg 107.1/min)
+=== extract_TkWKB_data: 2026-10-25 21:14:17 +0000: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_TkWKB_data/
+exit 0; wall 15 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 931.6/sec)
+26:      Queue summary: 3 lookup (avg 79.7/min)
+=== extract_tensor_source_data: 2026-10-25 21:14:33 +0000: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_tensor_source_data/
+exit 0; wall 13 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 863.6/sec)
+26:      Queue summary: 6 lookup (avg 166.7/min)
+=== extract_QuadSourceIntegral_data: 2026-10-25 21:14:46 +0000: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/handover-12-reference.sqlite --ray-address local --models LambdaCDM --output var/handover-12/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 16 s; files written 76
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  531073a9940233ee260f7fb0bb9289fa1ceea15e0bbfcaa8c142646ebd5d3759  2026-10-25T21:06:01 36864 var/datastores/handover-12-reference.sqlite
+  c8cb8d7c07936bf384474d68f470256fa9e6ae3fc50ab454ec28b99f7ba3c8d5  2026-10-25T21:08:41 24096768 var/datastores/handover-12-reference-shard0000.sqlite
+  836df59f6067688fba9f37e4444fdd8722605e809279a244ce6a0957507d5b78  2026-10-25T21:08:41 24207360 var/datastores/handover-12-reference-shard0001.sqlite
+  82119003fb3d2b834c1660b2899442697e884fc21282cde2d6766aed4df7ea74  2026-10-25T21:06:01 1077248 var/datastores/handover-12-reference-shard0002.sqlite
+  fdf375f5c674d21056dac8cb6cd018fb83f7e4f03e4d37403c120a5326ff6d59  2026-10-25T21:08:41 23633920 var/datastores/handover-12-reference-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+27:      Queue summary: 3 lookup (avg 773.4/sec)
+32:      Queue summary: 3 lookup (avg 1008/sec)
+37:      Queue summary: 24 lookup (avg 344.9/min)
+exit 0

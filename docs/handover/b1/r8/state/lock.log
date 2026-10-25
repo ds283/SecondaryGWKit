@@ -1,0 +1,14 @@
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: handover prompt 12, rehearsal R8 on the Mac Studio (mps026298), tree 8a02f0c (B1's code 049c7c8)
+exit 0
+recorded pid 21718 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+usage: python -m raypoolkit.rehearsal_lock [-h]
+                                           {acquire,set-pid,release,status,ray-processes} ...
+python -m raypoolkit.rehearsal_lock: error: unrecognized arguments: --project SecondaryGWKit
+exit 2
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0

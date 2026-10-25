@@ -1,0 +1,25 @@
+R4 triples with integral_data: 3; R8: 4; common: 1
+k=3.1623e+05-q=1e+05-r=3.1623e+05: R4 rows 96, R8 rows 96, common z_response 96
+          total: bit-identical 33/96; largest |rel diff| 7.993e-01 at z_response 47846.42586643397
+    max |value| over z_response: 1.189468e-11
+    z_response      5297494147.272005: R4  8.8057354166e-14  R8  6.6458399927e-14  |diff|/max|value| 1.816e-03
+    z_response     1329131612.3012946: R4 -1.0751503552e-13  R8 -1.1706862736e-13  |diff|/max|value| 8.032e-04
+    z_response      2310835265.753073: R4  1.2781608619e-13  R8  1.3625905359e-13  |diff|/max|value| 7.098e-04
+    z_response     3046979177.3866296: R4 -3.9104997755e-13  R8 -3.9845373508e-13  |diff|/max|value| 6.224e-04
+    z_response     4017630440.8276954: R4 -9.9930498885e-13  R8 -9.9224925662e-13  |diff|/max|value| 5.932e-04
+   numeric_quad: bit-identical 93/96; largest |rel diff| 2.238e-01 at z_response 5297494147.272005
+    max |value| over z_response: 1.189468e-11
+    z_response      5297494147.272005: R4  1.0047191779e-13  R8  7.7986562854e-14  |diff|/max|value| 1.890e-03
+    z_response     4017630440.8276954: R4 -4.7615782109e-13  R8 -4.6899613478e-13  |diff|/max|value| 6.021e-04
+    z_response      6985073578.494601: R4  6.1808202665e-13  R8  6.1808202665e-13  |diff|/max|value| 3.017e-13
+    z_response      45431999214511.16: R4 -1.9643247490e-18  R8 -1.9643247490e-18  |diff|/max|value| 0.000e+00
+    z_response      34455721508607.04: R4 -1.3951020297e-17  R8 -1.3951020297e-17  |diff|/max|value| 0.000e+00
+      WKB_Levin: bit-identical 34/96; largest |rel diff| 7.993e-01 at z_response 47846.42586643397
+    max |value| over z_response: 5.232531e-13
+    z_response     1329131612.3012946: R4 -1.0751726184e-13  R8 -1.1707085368e-13  |diff|/max|value| 1.826e-02
+    z_response      2310835265.753073: R4  1.2782310584e-13  R8  1.3626607324e-13  |diff|/max|value| 1.614e-02
+    z_response     3046979177.3866296: R4 -3.9106377197e-13  R8 -3.9846752950e-13  |diff|/max|value| 1.415e-02
+    z_response     1008016144.4251784: R4  1.0158759377e-13  R8  1.0862558337e-13  |diff|/max|value| 1.345e-02
+    z_response      764481514.1086781: R4 -8.8927351800e-15  R8 -1.3934338598e-14  |diff|/max|value| 9.635e-03
+   analytic_rad: bit-identical 96/96
+exit 0

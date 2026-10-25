@@ -1,16 +1,23 @@
 # Log 12 — B1: remove the $T_k$ seam gap, by overlap
 
 **Prompt:** [`prompts/handover/12-remove-the-tk-gap.md`](../12-remove-the-tk-gap.md), Part A
-(§1–§5, the code). §6, rehearsal R8, runs later on the Mac Studio, and its record is appended below
-by the orchestrator.
+(§1–§5, the code). §6, rehearsal R8, ran on the Mac Studio the same day, and its record is appended
+below.
 **Commit:** `049c7c8`, "Switch the T_k hand-over at the first grid node below z_init", written on branch
 `handover-12-b1` as `73f4c4d` and rebased onto `handover-remedial` at `aa6dd83` (one conflict, the
-index's count, resolved to 109 by counting)
+index's count, resolved to 109 by counting). R8's records: B1's records commit, "Record handover
+prompt 12: B1 rehearsal R8".
 **Model:** Claude Opus 5.5, in a fresh-context subagent on the laptop, dispatched at `98e68d3`
 **Date:** 2026-10-25
-**Result:** COMPLETE WITH DEVIATIONS (Part A). §1–§3 are implemented as written, tests (a)–(g) pass,
-both breakages are caught, and the seven roots rise only by the tests added. No §8 stop condition
-fired. R8 is to come.
+**Result:** COMPLETE WITH DEVIATIONS, both parts.
+- **Part A:** §1–§3 are implemented as written, tests (a)–(g) pass, both breakages are caught, and
+  the seven roots rise only by the tests added. Its review passed 8 of 8.
+- **§6, R8:** `done`, exit 0. Its fingerprint, `1b332ffa…`, differs from R3's in `QuadSource`
+  only; every `QuadSourceIntegral` row carries `partition.handover` and none a clamp; each
+  `QuadSource` row gained 3 nodes; the readers exit 0 on an unchanged store; the lock was released.
+  Its review passed 7 of 7, check 3 on the user's ruling that a `QuadSource`-only difference meets
+  §6.4 and §7.3, because `QuadSourceIntegral`'s fingerprint cannot see its values.
+- No §8 stop condition fired in either part.
 
 The measurements are in [`docs/handover/HANDOVER-B1.md`](../../../docs/handover/HANDOVER-B1.md).
 Suite logs, the breakage outputs and the probe scripts went to the session scratchpad.
@@ -382,4 +389,211 @@ which asserts the key's absence. Every other hit is under `docs/`:
 
 ## §6 — rehearsal R8 on the Mac Studio
 
-*To be appended by the orchestrator after R8 runs.*
+**Prompt:** [`prompts/handover/12-remove-the-tk-gap.md`](../12-remove-the-tk-gap.md) §6, under
+the orchestrator's [`prompt-12.md`](../orchestrator/prompt-12.md) §B.1 and §B.5.
+**Host:** mps026298 (Mac Studio), checkout at the dispatch SHA `8a02f0c` (B1's code `049c7c8`).
+**Model:** Claude Opus 5.5, as a subagent of the Mac Studio orchestrator, in two turns: §6.1–§6.3
+and launch; then §6.4–§6.7 after the orchestrator reported the run's end.
+**Date:** 2026-10-25, 21:02–21:20 UTC.
+**Commit:** none on the Mac Studio. The records were copied back to the laptop without the
+readers' `extract/` output, the CSVs or the store, and are committed in B1's records commit,
+"Record handover prompt 12: B1 rehearsal R8", as [`docs/handover/b1/r8/`](../../../docs/handover/b1/r8/). Paths
+`out/…`, `scripts/…` and `state/…` below are under that directory.
+**Result:** COMPLETE WITH DEVIATIONS. **The orchestrator's review passed 7 of 7, check 3 on the
+user's ruling** (below).
+- R8 ran to `done`, exit 0.
+- Its fingerprint, `1b332ffa…`, differs from R3's `39809dca…` in `QuadSource` alone.
+- All 864 `QuadSourceIntegral` rows carry `partition.handover`, and none records a clamp.
+- Each `QuadSource` row gained 3 nodes, and its values at R3's nodes are bit-identical.
+- The six readers exited 0 and left the store byte-identical.
+- The lock was released.
+- No §8 stop condition fired.
+
+The dispatch expected `QuadSourceIntegral` to differ in the fingerprint too, and it does not. That
+is explained by the fingerprint's design, not by the build (deviation 7). It is put to the
+orchestrator as a question, and the user ruled on it (below).
+
+The measurements are in [`docs/handover/HANDOVER-B1.md`](../../../docs/handover/HANDOVER-B1.md)
+§5. The agent's own record, as written on the Mac Studio, is [`log.md`](../../../docs/handover/b1/r8/log.md), and its
+measurements as first written are [`verification.md`](../../../docs/handover/b1/r8/verification.md).
+
+### What was done
+
+1. **§6.1.** Re-checked §B.5's facts read-only. All matched; the laptop had already moved the
+   checkout to `8a02f0c`. Then ran the `ComputeTargets` and `ObjectFactories` roots: 742 OK and
+   280 OK, equal to the laptop's counts.
+2. **§6.2.** `acquire`, exit 0.
+3. **§6.3.** Launched §B.1's command verbatim (`sh` 21715). Found the driver as the child of the
+   `sh` (`pgrep -P 21715`): 21718. Ran `set-pid 21718`, exit 0. One check: the registry showed the
+   run `running` with pid 21718, and the launch log had no traceback. The turn then ended. The
+   orchestrator waited on the pid. The driver exited 0 at about 21:09:24 UTC; the run took about
+   3.5 minutes.
+4. **§6.4.** Hashed the store's five files. Ran `compare_with_recorded.py` against R3's recorded
+   reference: exit 1, one difference, `QuadSource`'s tag set ("6 recorded, 6 now", the value
+   count). Recorded R8's digest as the rehearsal reference.
+5. **§6.5.**
+   - `scripts/r8_rows.py`, `mode=ro`: 864/864 rows have `partition.handover`, and 0 rows have any
+     key containing `clamp`. The continuity table is by $k$ and node. `z_switch` is the first
+     source-grid node below `z_init` for all three $k$. Each `QuadSource` row gained 3 nodes against
+     R4's (R3-equal) extract, 0 were removed, and the values at common nodes are identical.
+   - Supplement, `scripts/compare_qsi_extract.py`: R8's and R4's `QuadSourceIntegral` values on
+     the one common extracted triple.
+6. **§6.6.** `run_readers.sh`, six readers, every exit 0. Every reader left the store identical.
+   The store's SHA-256 after all reads equals the hash taken before §6.4.
+7. **§6.7.** `ray-processes` empty (exit 0), `release` exit 0, `status`: free, no Ray processes.
+
+### Deviations from the prompt
+
+#### 1. The checkout was not fast-forwarded by this agent — STRUCTURALLY REQUIRED
+
+§6.1 says "Fast-forward to the code commit". The dispatch forbids any git write. §B.5 says the
+laptop fast-forwards the checkout before the orchestrator starts. It was at `8a02f0c` with a clean
+status, so this agent checked it and did not move it.
+
+#### 2. "R3's extent" is R4's extract — STRUCTURALLY REQUIRED
+
+R3's store is retired; only its run directory and fingerprint remain. §6.5's `QuadSource`
+comparison uses the CSVs `extract_tensor_source_data` wrote from handover 06's resumed store, R4,
+whose fingerprint equalled R3's. That fingerprint covers identities and value counts, not values.
+So "values unchanged at R3's nodes" means unchanged against R4's values, which were written as
+`repr` floats and so compare bit-for-bit.
+
+#### 3. A supplementary integral comparison — IMPLEMENTATION CHOICE
+
+§6.5 does not ask for `QuadSourceIntegral` values. They were compared, from the readers' CSVs only,
+because §6.4's result left open whether the integrals had changed at all. Only one triple is common
+to both extracts, because the readers' triples are unseeded. 63 of 96 `total`s differ, by at most
+1.8e-03 of max|total|. Recorded, not judged.
+
+#### 4. A `ray-processes` look made through a pipe — UNINTENDED DRIFT
+
+After the readers, `ray-processes --ray-temp-dir /tmp/ray-sgk` was first run inside a compound
+command piped to `tail`. `CLAUDE.md` forbids that. It listed that shell's own two processes (27267,
+27336), not Ray. The look was repeated correctly, on its own and by `>>` into `state/lock.log`,
+where it listed nothing. No lock state was changed by the first one; it is not in the transcript.
+
+#### 5. A mistyped `status` in the lock transcript — UNINTENDED DRIFT
+
+`status --project SecondaryGWKit …` exited 2 with a usage error: `status` takes no `--project`. It
+was re-run as `status --ray-temp-dir /tmp/ray-sgk`, exit 0. Both are in `state/lock.log`, lines
+8–14. It was a look after `release`, not a lock operation.
+
+#### 6. One scratch file written to `/tmp` — UNINTENDED DRIFT
+
+A listing command redirected to `/tmp/x`, outside the dispatch's writable paths. It held directory
+names of the two extracts, nothing else. It was deleted in the next command. No other path outside
+the dispatch's list was written. `find -newer` after §6.7 lists only the store's five files, the
+run directory's four files, the launch log and `var/handover-12/`. A3 v2's files keep their mtimes
+of 24–25 October.
+
+#### 7. `QuadSourceIntegral` does not differ in the fingerprint — IMPLEMENTATION CHOICE (a question)
+
+The launch's `--purpose`, §B.1, Part A's "State handed to the next step" and the prompt's §6.4 all
+expected R8 to differ from R3 in `QuadSource` **and** `QuadSourceIntegral`. It differs in
+`QuadSource` only. This agent judged it not a §8 stop, because §8 stops on a difference in "any
+table other than" those two, and none differs.
+
+The cause is in the code, read only:
+- `QuadSourceIntegral`'s format-6 `inventory_spec()` has no value table, so it does not see
+  `total`, `metadata` or the partition.
+- Its `source` parent resolves to the `QuadSource` row's `reference_digest(key, tags)`, which
+  excludes the value count.
+- The supplement (deviation 3) shows the integrals did change.
+
+Having that explanation, the agent went on with the remaining read-only steps (§6.5, §6.6) and the
+lock's release (§6.7), rather than stopping with the lock held. **The orchestrator should confirm
+that reading.** If it does not, nothing done since is irreversible except the lock's release, and a
+re-run would re-acquire it. Proposed as `[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]`
+in `issues.md`.
+
+### Verification performed
+
+| check | result | where |
+|---|---|---|
+| roots, ComputeTargets / ObjectFactories | 742 OK / 280 OK | `out/roots_*.txt` |
+| R8 run | `done`, exit 0, pid 21718, `git_dirty` false, `8a02f0c` | `var/runs/handover-12-r8-reference-20261025T210551/` |
+| fingerprint vs R3 | exit 1; differs in `QuadSource` only | `out/fingerprint_against_R3.txt` |
+| `partition.handover` / clamp keys | 864/864 / 0 | `out/r8_rows.txt` |
+| `QuadSource` nodes | +3 per row, 18 total, 0 removed, common values identical | `out/r8_rows.txt` |
+| readers | 6 × exit 0; store identical | `out/readers.txt`, `extract/` |
+| store hash before §6.4 vs after §6.6 | identical | `state/store_sha256_*.txt` |
+| lock transcript | acquire 0, set-pid 0, ray-processes 0, release 0, status 2 (usage), status 0 | `state/lock.log` |
+
+### Observations not acted on
+
+- The fingerprint is blind to `QuadSourceIntegral` values (deviation 7; proposed issue).
+- The readers' file counts follow their unseeded subsample (`[10-the-readers-draw-their-work-lists-unseeded]`).
+- At $z_{\rm resp}$ = 6.985e9, above both $z_{\rm init}$, `numeric_quad` moved by 3.0e-13 of
+  max|value|. That is consistent with the source spline's coefficients changing a little above the
+  added nodes; not traced.
+- R8's store has no sidecar. `quadsource_atol_sweep.py --build` does not create one; the
+  fingerprint is in `status.json`. The store is the user's to keep or retire (§B.4).
+
+### The orchestrator's review
+
+Against `orchestrator/prompt-12.md` §B.3, on the Mac Studio, 2026-10-25, at `8a02f0c`:
+[`review.md`](../../../docs/handover/b1/r8/review.md).
+
+**Verdict: PASS, 7 of 7, check 3 on the user's ruling.** As first written, the verdict was "6 of 7
+checks hold; check 3 does not hold as written": the fingerprint differs from R3's in `QuadSource`
+only, where the check expected `QuadSource` and `QuadSourceIntegral`. The half of the check that
+guards against a changed producer held throughout: no class outside the two differs.
+
+| check | result |
+|---|---|
+| 1. Scope | holds. `HEAD` `8a02f0c`, `git status --short` empty; `find var -newer <marker>` lists only R8's five store files, its run directory, its launch log and `var/handover-12/`; A3 v2's six files have the same SHA-256 before dispatch and after the review; deviation 6's `/tmp/x` no longer exists |
+| 2. The run | holds. `done`, exit 0, pid 21718; the manifest names `handover`, `12`, `r8-reference`, `git_dirty` false, `8a02f0c`, Python 3.13.16, launcher SHA-256 `5b984c75…`; the argv is §B.1's verbatim |
+| 3. The fingerprint | **holds on the user's ruling.** `store fingerprint`, run by the orchestrator: `1b332ffa…`, equal to `status.json`'s. `compare_with_recorded.py` against R3's `reference`: exit 1, one difference, `QuadSource`; the other 20 classes have R3's digest, `QuadSourceIntegral` among them (`8913eda5ce7b` in both) |
+| 4. The rows | holds. By the orchestrator's own `mode=ro` reader: 864 of 864 `QuadSourceIntegral` rows have `partition.handover`, none a clamp key; the `QuadSource` rows have 371, 371, 371, 428, 428, 478 nodes against R4's 368, 368, 368, 425, 425, 475, each +3 |
+| 5. The readers | holds. Six exit 0; the store's five SHA-256 values are identical before and after the agent's reads and the orchestrator's |
+| 6. The lock | holds. `acquire` 0, `set-pid 21718` 0, `ray-processes` empty 0, `release` 0; `ray-processes` and `status` run by the orchestrator show nothing and free |
+| 7. The records | hold. Seven deviations, each classified: two `STRUCTURALLY REQUIRED`, two `IMPLEMENTATION CHOICE`, three `UNINTENDED DRIFT`; `issues.md` proposes one issue |
+
+### The user's rulings (2026-10-25)
+
+1. **Check 3 is accepted as met.** R8's fingerprint
+   `1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7` differs from R3's
+   `39809dca…` in `QuadSource` only. `QuadSourceIntegral`'s `inventory_spec`
+   (`ObjectFactories/QuadSourceIntegral.py:965`) records identity and tags only, so B1's change to
+   its values and `partition` cannot reach the digest. Check 4's row read shows that change: all
+   864 rows carry `partition.handover` and no clamp key. **Prompt §6.4 and §7.3, Part A's "State
+   handed to the next step", the orchestrator note's §B.1 and §B.3 check 3, and the launch's
+   `--purpose` all assumed that the fingerprint could see `QuadSourceIntegral`'s values. That was
+   their misreading, corrected by this ruling.** What §6.4 guards, a difference in any other class,
+   did not occur. The ruling also answers deviation 7's question: nothing is redone.
+2. **`[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]` is opened** on the `handover`
+   board's §3, not assigned, and indexed in `docs/OPEN_ISSUES.md` §1.1.
+3. **R8's store is retired after the records commit**, by the orchestrator, with `store retire`
+   after a dry run. The run directory `handover-12-r8-reference-20261025T210551` on the Mac Studio
+   keeps R8's fingerprint as the rehearsal reference from here on.
+
+### The review's "For the user", as resolved
+
+1. Whether a `QuadSource`-only difference meets §B.3 check 3 and prompt §6.4 / §7.3: **yes**,
+   ruling 1.
+2. The agent's question, whether a `QuadSource`-only difference meets §6.4 / §7.3, and whether
+   anything must be redone: **yes, and nothing is redone**, ruling 1.
+3. The agent carried on past the unexpected comparison rather than stopping with the lock held
+   (deviation 7): no §8 condition fired and every later step was read-only, so **nothing is undone**;
+   ruling 1 accepts the reading it acted on.
+4. The proposed issue: **opened on `handover`**, ruling 2.
+5. R8's store: **retired after the records commit**, ruling 3.
+
+### State handed to the next step
+
+- **R8's fingerprint `1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7` is the
+  rehearsal reference from here on**, recorded by the run directory
+  `handover-12-r8-reference-20261025T210551` on the Mac Studio. It certifies `QuadSourceIntegral`'s
+  identities and counts, not its values (`[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]`).
+- R8's store is to be retired after this commit (ruling 3). Until then it is
+  `var/datastores/handover-12-reference*.sqlite` on the Mac Studio, with no sidecar.
+- The lock is free, no Ray process of `/tmp/ray-sgk` is left, and the registry shows 12 runs, all
+  finished.
+- `var/handover-12/` on the Mac Studio still holds `extract/` (the readers' output and CSVs), which
+  was not copied back.
+- **The header's issues, in the records commit.** On the `source-remediation` board,
+  `[08-handover-clamp-error]` and `[12-handover-clamp-error-in-production]` are closed and moved to
+  §4. `[05-numeric-region-is-now-the-accuracy-floor]` is **narrowed, not closed**: its $T_k$
+  hand-over part (the numeric spline ending at the seam) is gone, and it keeps the parts that are
+  not the hand-over. `[06-source-spline-residual-vs-handover]` is narrowed: the source spline no
+  longer ends at the hand-over.
