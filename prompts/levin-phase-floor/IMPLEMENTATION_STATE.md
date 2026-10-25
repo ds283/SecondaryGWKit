@@ -73,7 +73,9 @@ Studio, orchestrated there, alone in its checkout. It ran the same day; its reco
 (`[03-storefixtures-standin-pickle-and-exit-rows]`) and its `PhaseGroup` reducer (03's I4, a harness
 note, not opened as an issue). 04 takes 03's scripts and runs their code from a worktree at
 `98e68d3`. The laptop makes the worktree on the Mac Studio before dispatch; the records stay in the
-main checkout's `var/`.
+main checkout's `var/`. [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) (2026-10-25)
+dispatches 04 on the Mac Studio, orchestrated there, with the code in the worktree
+`SecondaryGWKit-lpf04-98e68d3`; `handover` A3 may share the main checkout, read-only.
 
 ## 2. The gates
 
