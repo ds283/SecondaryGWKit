@@ -477,6 +477,28 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md) §4, and
   `prompts/handover/logs/02-realistic-flavour-large-x-harness.md`.
 
+  **Narrowed 2026-10-25 by `prompts/handover` prompt 11, on all of A3 v2.** A3 v2 is the
+  production-shaped store at `(1e-32, 1e-7)`, 9280 rows. Read from each sub-interval's
+  `clamp_gaps_log1pz`:
+  - **The gap is on 6791 rows** (73 %): every row with a Levin sub-interval, and none of the 2489
+    rows without one. `Tq` is clamped in 6440 rows and `Tr` in 6791.
+  - **Its size is this entry's.** The median is 1.15e-02 and the maximum 2.26e-02 in
+    $\log(1+z)$. The maximum is 0.98 mean source-grid step, which is the "≈ 1.0" above, against
+    the 1.5-step allowance. No gap is within 1 % of the allowance.
+  - **The `QuadSource` spline is clamped on 423 sub-intervals**, all in the seam band.
+
+  Against `analytic_rad` in the seam band ($z_{\rm response} > 10^5$, 6080 rows):
+  - rows with no clamp agree to a median of 4.98e-06;
+  - rows with one of `Tq`, `Tr` clamped give a median of 6.6e-02;
+  - rows with both clamped give 5.5e-03;
+  - the maxima run to 96.9 (`handover` board, `[11-seam-band-rows-deviate-from-the-oracle-by-up-to-two-orders]`).
+
+  The strata are tied to $z_{\rm response}$: the unclamped rows exist only at $\ge10^9$. So this
+  confirms the clamp's presence and size at full coverage, but does **not** separate its error from
+  the oracle's own deficit or the representation term. That separation is still `handover` prompt
+  02's, on fixtures. The next step is unchanged: `handover` README §7 D1. Measurement:
+  [`docs/handover/A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §5.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:

@@ -1,0 +1,16 @@
+### 2026-10-25T18:13:01Z on mps026298
+$ git rev-parse HEAD; git status --short; echo "(step 1 is a check: parallel dispatch, no fetch/merge)"; ./venv/bin/python --version; git diff --stat b90752d 757ef01 -- ComputeTargets/QuadSourceIntegral.py ObjectFactories | tail -3
+757ef016fc37be996c342d162c05f17b3c430e4d
+(step 1 is a check: parallel dispatch, no fetch/merge)
+Python 3.13.16
+ .../tests/test_quadsource_parent_key.py            | 26 ++++++++++++----------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+[exit 0]
+
+### 2026-10-25T18:13:02Z on mps026298
+$ git log --oneline -3
+757ef01 Write the dispatch notes for levin-phase-floor 01 and handover 11
+6af798f Plan levin-phase-floor and write handover prompt 11
+effba46 Record the deletion of the py313-venv rehearsals' reader output
+[exit 0]
+

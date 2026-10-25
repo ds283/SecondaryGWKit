@@ -1,0 +1,38 @@
+### 2026-10-25T18:13:37Z on mps026298
+$ ./venv/bin/python -I var/handover-11/scripts/policy_11.py var/datastores/handover-A3-v2-lambdacdm.sqlite var/runs/handover-07-a3-v2-20261022T211155/stdout.log
+== stdout.log lines 89-102, verbatim
+   89: ** GkSourcePolicyData SUMMARY STATISTICS
+   90: 
+   91:      * Policy: policy="maximize-WKB"-Levin-threshold="1.5"
+   92:         Total instances: 1160
+   93: 
+   94:         >> numeric: 363 instances = 31.29%
+   95:            complete: 363 instances = 100.00% of this type, 31.29% of total
+   96: 
+   97:         >> mixed: 72 instances = 6.21%
+   98:            complete: 71 instances = 98.61% of this type, 6.12% of total
+   99:            minimal: 1 instances = 1.39% of this type, 0.09% of total
+  100: 
+  101:         >> WKB: 725 instances = 62.50%
+  102:            complete: 725 instances = 100.00% of this type, 62.50% of total
+
+== GkSourcePolicyData rows read from the shards (mode=ro): 1160; by shard [290, 290, 290, 290]
+   policy_serial values: {1: 1160}
+
+== cell by cell: log block vs table
+       type    quality    log  table  agree
+        WKB   complete    725    725  True
+      mixed   complete     71     71  True
+      mixed    minimal      1      1  True
+    numeric   complete    363    363  True
+   total: log header 1160, sum of log cells 1160, table 1160
+
+EVERY CELL AGREES: True
+
+== rows that are not 'complete' (or are 'fail'): 1
+   shard  serial       k /Mpc     z_response     type    quality    crossover_z
+       2     460 3.091682e+06   3.963729e+10    mixed    minimal  4.2472907e+10
+
+'fail' or 'incomplete' rows: 0
+[exit 0]
+

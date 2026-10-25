@@ -1,0 +1,258 @@
+### 2026-10-25T18:15:05Z on mps026298
+$ ./venv/bin/python -I var/handover-11/scripts/seam_census.py var/datastores/handover-A3-v2-lambdacdm.sqlite --expect 9280
+SEAM CENSUS (handover prompt 11)
+script           /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-11/scripts/seam_census.py
+script sha256    240cc0638500048808deb81d3884c0855e5215dd0668edfb9d0a633aa9c4dcae
+git HEAD         757ef016fc37be996c342d162c05f17b3c430e4d
+store            /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite
+  1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  handover-A3-v2-lambdacdm.sqlite
+  b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  handover-A3-v2-lambdacdm-shard0000.sqlite
+  c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  handover-A3-v2-lambdacdm-shard0001.sqlite
+  175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  handover-A3-v2-lambdacdm-shard0002.sqlite
+  76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  handover-A3-v2-lambdacdm-shard0003.sqlite
+  3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  handover-A3-v2-lambdacdm.manifest.json
+store fingerprint (sidecar's) 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+HANDOVER_CLAMP_MAX_GRID_STEPS (read from ComputeTargets/QuadSourceIntegral.py) = 1.5
+
+====================================================================================================
+(a) THE POPULATION
+QuadSourceIntegral rows at (atol, rtol) = (1e-32, 1e-07): 9280
+  rows at any other pair: 0
+  expected 9280: True
+  rows whose metadata['partition'] does not parse (or has no subintervals): 0
+  by shard: [2320, 2320, 2320, 2320]
+  by band:  {'mid': 2112, 'low': 1088, 'seam': 6080}
+  by k:     {100000.0: 1160, 313856.84721559234: 1160, 985061.2054411147: 1160, 3091682.0425413917: 1160, 9703455.784651041: 1160, 30454960.396664713: 1160, 95584978.52172911: 1160, 300000000.0000001: 1160}
+  distinct b values: [0.0]
+  sub-intervals in all: 19289; per row Counter({2: 3624, 3: 3116, 1: 2489, 4: 51})
+  methods: {'Levin': 15809, 'quad': 3480}
+  allowance (max_clamp_gap_log1pz) over rows: min 3.4132e-02, median 3.4548e-02, max 3.4548e-02; implied mean source-grid step: min 2.2755e-02, max 2.3032e-02
+  distinct allowances: 8
+
+====================================================================================================
+(b) ONE RECORD PER SUB-INTERVAL
+written /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-11/out/subintervals_11.csv: 19289 records, 5050755 bytes, sha256 21b19e86aee1e2b2f30d8140cc3a45448cf470901ade85bb5b22873529794469
+gaps above the row's allowance (stop condition): 0
+
+====================================================================================================
+(c) THE GAP CENSUS
+Field: partition['subintervals'][i]['clamp_gaps_log1pz'][factor]: the shortfall, in log(1+z), of the
+factor's representation against the sub-interval end; 0.0 where there is none. 'present' = the factor has
+an entry on that sub-interval (Tq and Tr on every sub-interval; 'source' only on all-smooth, quad ones).
+'steps' = gap / (the row's allowance / HANDOVER_CLAMP_MAX_GRID_STEPS) = in mean source-grid steps.
+'near' = gap >= 0.99 x the row's allowance (at or within 1 % of it).
+
+
+-- ALL ROWS: 9280 rows, 19289 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq    19289    12880     6440 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5024  0.9810 | 0
+       Tr    19289    13582     6791 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5057  0.9810 | 0
+   source     3480      423      423 | 6.456e-03  1.429e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 6791 of 9280
+   rows with any 'skipped' breakpoint: 3798 of 9280
+
+== ALL ROWS, the number of non-zero gaps per sub-interval, and clamped factors per row
+   sub-intervals by number of clamped factors (0..3): {0: 3065, 1: 5955, 2: 9877, 3: 392}
+   rows by number of clamped factors in the row (any sub-interval; of Tq, Tr, source): {0: 2489, 1: 320, 2: 6079, 3: 392}
+   rows by number of clamped factors among Tq, Tr alone: {0: 2489, 1: 351, 2: 6440}
+   rows by which factors are clamped: {('Tq', 'Tr'): 6048, (): 2489, ('Tq', 'Tr', 'source'): 392, ('Tr',): 320, ('Tr', 'source'): 31}
+
+== THE SKIPPED BREAKPOINTS (rows with any 'skipped' entry)
+   rows: 3798 of 9280; entries by (factor, reason):
+       3798  factor=Tq  hand-over within MIN_SUBINTERVAL_LOG_WIDTH of the sub-interval above it
+   rows with a skipped entry, by band: {'mid': 1188, 'low': 612, 'seam': 1998}
+   largest skipped log_width: 0.0
+
+== THE 2026-09 FIGURES, for comparison (prompts/source-remediation board [12-handover-clamp-error-in-production])
+   one production run: Tq non-zero on 1666 sub-intervals, Tr on 1798; median gap 1.2e-02, max 2.2e-02
+   (about 1.0 mean source-grid step against the 1.5-step allowance); the QuadSource spline clamped on 108.
+   A3 v2 is the whole 9280-row store, so the counts are not like-for-like; the medians and maxima are.
+
+== BY BAND
+
+-- band low: 1088 rows, 2652 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2652     2176     1088 | 4.387e-04  6.808e-03  1.152e-02  1.622e-02  2.259e-02 |  0.5024  0.9810 | 0
+       Tr     2652     2176     1088 | 4.387e-04  6.808e-03  1.152e-02  1.622e-02  2.259e-02 |  0.5057  0.9810 | 0
+   source        0        0        0 | - | - | 0
+   rows with at least one non-zero gap (any of the three): 1088 of 1088
+   rows with any 'skipped' breakpoint: 612 of 1088
+
+-- band mid: 2112 rows, 5148 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     5148     4224     2112 | 4.387e-04  6.808e-03  1.152e-02  1.622e-02  2.259e-02 |  0.5024  0.9810 | 0
+       Tr     5148     4224     2112 | 4.387e-04  6.808e-03  1.152e-02  1.622e-02  2.259e-02 |  0.5057  0.9810 | 0
+   source        0        0        0 | - | - | 0
+   rows with at least one non-zero gap (any of the three): 2112 of 2112
+   rows with any 'skipped' breakpoint: 1188 of 2112
+
+-- band seam: 6080 rows, 11489 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq    11489     6480     3240 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5024  0.9810 | 0
+       Tr    11489     7182     3591 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5057  0.9810 | 0
+   source     3480      423      423 | 6.456e-03  1.429e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 3591 of 6080
+   rows with any 'skipped' breakpoint: 1998 of 6080
+
+== BY k
+
+-- k = 1.000000e+05 /Mpc: 1160 rows, 2037 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2037     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5057  0.9810 | 0
+       Tr     2037     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5057  0.9810 | 0
+   source      552      125      125 | 6.456e-03  1.382e-02  1.476e-02  2.212e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 805 of 1160
+   rows with any 'skipped' breakpoint: 805 of 1160
+
+-- k = 3.138568e+05 /Mpc: 1160 rows, 2127 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2127     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5061  0.9810 | 0
+       Tr     2127     1618      809 | 4.387e-04  6.456e-03  1.152e-02  1.658e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      520       97       97 | 6.456e-03  1.429e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 809 of 1160
+   rows with any 'skipped' breakpoint: 719 of 1160
+
+-- k = 9.850612e+05 /Mpc: 1160 rows, 2225 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2225     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5033  0.9810 | 0
+       Tr     2225     1634      817 | 4.387e-04  6.456e-03  1.152e-02  1.658e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      488       73       73 | 6.456e-03  1.429e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 817 of 1160
+   rows with any 'skipped' breakpoint: 629 of 1160
+
+-- k = 3.091682e+06 /Mpc: 1160 rows, 2342 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2342     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+       Tr     2342     1664      832 | 4.387e-04  8.273e-03  1.152e-02  1.476e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      456       56       56 | 6.925e-03  1.429e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 832 of 1160
+   rows with any 'skipped' breakpoint: 535 of 1160
+
+-- k = 9.703456e+06 /Mpc: 1160 rows, 2449 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2449     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+       Tr     2449     1696      848 | 4.387e-04  9.086e-04  1.152e-02  2.212e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      416       32       32 | 6.925e-03  1.476e-02  2.212e-02  2.259e-02  2.259e-02 |  0.9606  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 848 of 1160
+   rows with any 'skipped' breakpoint: 436 of 1160
+
+-- k = 3.045496e+07 /Mpc: 1160 rows, 2572 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2572     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+       Tr     2572     1736      868 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      384       20       20 | 6.925e-03  6.925e-03  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 868 of 1160
+   rows with any 'skipped' breakpoint: 333 of 1160
+
+-- k = 9.558498e+07 /Mpc: 1160 rows, 2703 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2703     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+       Tr     2703     1784      892 | 4.387e-04  8.273e-03  1.152e-02  1.476e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      352       12       12 | 1.476e-02  1.476e-02  1.476e-02  2.259e-02  2.259e-02 |  0.6408  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 892 of 1160
+   rows with any 'skipped' breakpoint: 226 of 1160
+
+-- k = 3.000000e+08 /Mpc: 1160 rows, 2834 sub-intervals
+   factor  present  nonzero  rows>=1 | quartiles of the non-zero gap in log(1+z): min / Q1 / median / Q3 / max   | in steps: median / max | near-allowance
+       Tq     2834     1610      805 | 4.387e-04  6.925e-03  1.152e-02  1.611e-02  2.259e-02 |  0.5000  0.9810 | 0
+       Tr     2834     1840      920 | 4.387e-04  4.387e-04  1.152e-02  2.259e-02  2.259e-02 |  0.5000  0.9810 | 0
+   source      312        8        8 | 2.259e-02  2.259e-02  2.259e-02  2.259e-02  2.259e-02 |  0.9810  0.9810 | 0
+   rows with at least one non-zero gap (any of the three): 920 of 1160
+   rows with any 'skipped' breakpoint: 115 of 1160
+
+====================================================================================================
+(d) THE GAP'S EFFECT ON total, AGAINST analytic_rad
+WHAT THIS DOES NOT SEPARATE. analytic_rad is a constant-w oracle built at b = 0. Its own deficit on
+LambdaCDM grows towards matter-radiation equality, so |total/analytic_rad - 1| is the clamp's effect
+PLUS the oracle's own error, and the second cannot be told from the first here. The 2026-09 comparison
+was taken at z_response = 7.63e9 and 1.45e9 for that reason. Decades below about 1e8 are REPORTED below
+(marked '*') but are NOT read as the clamp's error. The measure also contains the seam's other term
+(the LG phase representation, 4.08e-05 - 2.68e-03 in the 2x2 of prompt 02), which this does not isolate,
+and the quadrature's own error. Strata are tabulated, not fitted, and nothing here is causal.
+Population: seam-band rows, z_response > 1e5 (radiation-dominated). Rows with analytic_rad zero or
+non-finite (or total non-finite) are counted and excluded.
+seam-band rows: 6080; used: 6080; excluded (analytic_rad zero/non-finite or total non-finite): 0
+all used rows: median 5.314e-04, max 9.694e+01
+distinct z_response values in the seam band: 95; min 1.0037e+05, max 1.6018e+16
+
+-- Stratum 1: clamped factors in the row (any sub-interval; of Tq, Tr, source)
+       decade |    [0] n    median       max |    [1] n    median       max |    [2] n    median       max |    [3] n    median       max |
+          1e5*|        0         -         - |        0         -         - |      576  8.49e-03  1.93e+00 |        0         -         - |
+          1e6*|        0         -         - |        0         -         - |      512  7.83e-03  1.29e+00 |        0         -         - |
+          1e7*|        0         -         - |        0         -         - |      512  7.64e-03  3.55e+00 |        0         -         - |
+          1e8 |        0         -         - |        0         -         - |      576  9.50e-03  2.05e+01 |        0         -         - |
+          1e9 |       12  1.28e-05  1.15e-03 |       51  1.31e-01  1.21e+00 |      382  8.90e-03  1.15e+01 |       67  1.12e-03  3.33e+00 |
+         1e10 |       85  5.12e-06  4.33e-04 |      123  1.24e-01  1.78e+01 |      221  7.40e-03  9.69e+01 |      147  7.61e-04  6.50e-01 |
+         1e11 |      204  5.12e-06  5.67e-04 |      107  4.70e-02  1.56e+00 |       78  1.04e-02  3.92e-01 |      123  5.97e-04  4.49e-02 |
+         1e12 |      460  5.12e-06  6.43e-03 |       39  8.15e-02  7.58e-01 |       22  5.18e-02  3.35e-01 |       55  9.37e-04  2.50e-01 |
+         1e13 |      512  5.04e-06  1.10e-05 |        0         -         - |        0         -         - |        0         -         - |
+         1e14 |      512  3.14e-06  5.30e-06 |        0         -         - |        0         -         - |        0         -         - |
+         1e15 |      576  7.74e-07  5.28e-06 |        0         -         - |        0         -         - |        0         -         - |
+         1e16 |      128  6.02e-06  1.20e-05 |        0         -         - |        0         -         - |        0         -         - |
+          all |     2489  4.98e-06  6.43e-03 |      320  7.00e-02  1.78e+01 |     2879  8.37e-03  9.69e+01 |      392  7.79e-04  3.33e+00 |
+   ('*' = decade below 1e8, where the oracle's own deficit is not negligible: reported, not read as the clamp's error)
+
+-- Stratum 1b: clamped factors among Tq and Tr alone
+       decade |    [0] n    median       max |    [1] n    median       max |    [2] n    median       max |
+          1e5*|        0         -         - |        0         -         - |      576  8.49e-03  1.93e+00 |
+          1e6*|        0         -         - |        0         -         - |      512  7.83e-03  1.29e+00 |
+          1e7*|        0         -         - |        0         -         - |      512  7.64e-03  3.55e+00 |
+          1e8 |        0         -         - |        0         -         - |      576  9.50e-03  2.05e+01 |
+          1e9 |       12  1.28e-05  1.15e-03 |       52  1.28e-01  1.21e+00 |      448  5.19e-03  1.15e+01 |
+         1e10 |       85  5.12e-06  4.33e-04 |      131  8.40e-02  1.78e+01 |      360  1.87e-03  9.69e+01 |
+         1e11 |      204  5.12e-06  5.67e-04 |      116  4.67e-02  1.56e+00 |      192  9.57e-04  3.92e-01 |
+         1e12 |      460  5.12e-06  6.43e-03 |       52  7.31e-02  7.58e-01 |       64  1.06e-03  3.35e-01 |
+         1e13 |      512  5.04e-06  1.10e-05 |        0         -         - |        0         -         - |
+         1e14 |      512  3.14e-06  5.30e-06 |        0         -         - |        0         -         - |
+         1e15 |      576  7.74e-07  5.28e-06 |        0         -         - |        0         -         - |
+         1e16 |      128  6.02e-06  1.20e-05 |        0         -         - |        0         -         - |
+          all |     2489  4.98e-06  6.43e-03 |      351  6.57e-02  1.78e+01 |     3240  5.50e-03  9.69e+01 |
+   ('*' = decade below 1e8, where the oracle's own deficit is not negligible: reported, not read as the clamp's error)
+
+-- Stratum 2: oscillatory factors in the row's last Levin sub-interval (0 = the row has no Levin sub-interval)
+       decade |    [0] n    median       max |    [1] n    median       max |    [2] n    median       max |    [3] n    median       max |
+          1e5*|        0         -         - |        0         -         - |        0         -         - |      576  8.49e-03  1.93e+00 |
+          1e6*|        0         -         - |        0         -         - |        0         -         - |      512  7.83e-03  1.29e+00 |
+          1e7*|        0         -         - |        0         -         - |        0         -         - |      512  7.64e-03  3.55e+00 |
+          1e8 |        0         -         - |        0         -         - |        0         -         - |      576  9.50e-03  2.05e+01 |
+          1e9 |       12  1.28e-05  1.15e-03 |        1  1.65e-02  1.65e-02 |      118  6.78e-03  3.33e+00 |      381  8.87e-03  1.15e+01 |
+         1e10 |       85  5.12e-06  4.33e-04 |        5  5.13e-04  3.24e-02 |      268  4.38e-03  1.78e+01 |      218  7.54e-03  9.69e+01 |
+         1e11 |      204  5.12e-06  5.67e-04 |        9  4.22e-02  1.52e-01 |      230  1.79e-03  1.56e+00 |       69  7.86e-03  3.92e-01 |
+         1e12 |      460  5.12e-06  6.43e-03 |       13  6.89e-02  2.98e-01 |       94  3.51e-03  7.58e-01 |        9  1.60e-02  3.35e-01 |
+         1e13 |      512  5.04e-06  1.10e-05 |        0         -         - |        0         -         - |        0         -         - |
+         1e14 |      512  3.14e-06  5.30e-06 |        0         -         - |        0         -         - |        0         -         - |
+         1e15 |      576  7.74e-07  5.28e-06 |        0         -         - |        0         -         - |        0         -         - |
+         1e16 |      128  6.02e-06  1.20e-05 |        0         -         - |        0         -         - |        0         -         - |
+          all |     2489  4.98e-06  6.43e-03 |       28  4.62e-02  2.98e-01 |      710  4.19e-03  1.78e+01 |     2853  8.19e-03  9.69e+01 |
+   ('*' = decade below 1e8, where the oracle's own deficit is not negligible: reported, not read as the clamp's error)
+
+-- The two strata crossed (all seam-band decades together; n / median / max)
+   clamped=0 osc_last_Levin=0: n= 2489 median 4.98e-06 max 6.43e-03
+   clamped=1 osc_last_Levin=2: n=  320 median 7.00e-02 max 1.78e+01
+   clamped=2 osc_last_Levin=1: n=   28 median 4.62e-02 max 2.98e-01
+   clamped=2 osc_last_Levin=2: n=    3 median 1.20e-03 max 1.30e-03
+   clamped=2 osc_last_Levin=3: n= 2848 median 8.29e-03 max 9.69e+01
+   clamped=3 osc_last_Levin=2: n=  387 median 7.84e-04 max 3.33e+00
+   clamped=3 osc_last_Levin=3: n=    5 median 6.33e-04 max 5.12e-02
+
+-- At the response redshifts nearest the two 2026-09 comparison points (7.63e9 and 1.45e9), by clamped factors in the row
+   z_response = 8.37381e+09 (nearest to 7.63e+09): 64 rows
+      clamped=0: n=   4 median 9.62e-06 max 2.90e-05 min 4.74e-06
+      clamped=1: n=  12 median 1.64e-01 max 1.09e+00 min 3.81e-05
+      clamped=2: n=  36 median 9.04e-03 max 1.22e+00 min 1.63e-04
+      clamped=3: n=  12 median 6.28e-04 max 6.76e-03 min 6.96e-05
+      osc_last_Levin=0: n=   4 median 9.62e-06 max 2.90e-05 min 4.74e-06
+      osc_last_Levin=2: n=  24 median 3.09e-03 max 1.09e+00 min 3.81e-05
+      osc_last_Levin=3: n=  36 median 9.04e-03 max 1.22e+00 min 1.63e-04
+   z_response = 1.59489e+09 (nearest to 1.45e+09): 64 rows
+      clamped=2: n=  56 median 1.38e-02 max 3.89e+00 min 4.53e-05
+      clamped=3: n=   8 median 4.57e-03 max 3.33e+00 min 1.58e-04
+      osc_last_Levin=2: n=   8 median 4.57e-03 max 3.33e+00 min 1.58e-04
+      osc_last_Levin=3: n=  56 median 1.38e-02 max 3.89e+00 min 4.53e-05
+
+   2026-09 for reference (z_response = 7.63e9): rows with no clamp gap 6.2e-05; with a gap 6.6e-02 - 4.6e-01;
+   by regime 0 / 2 / 3 oscillatory factors 6.2e-05 / 7.8e-03 / 2.7e-01.
+
+POPULATION 9280; partitions parsed 9280; gaps over allowance 0; OK=True
+[exit 0]
+

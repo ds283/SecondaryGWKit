@@ -1194,3 +1194,239 @@ both invocations returned rc 0. Sizes are `du -sk` in KiB.
 | 2 | GkWKB read-back complete, failing pair included | **holds**: 1392 = 1392 = 1392 = work list 1392; the pair's PDF (30,366 B), PNG and CSV present |
 | 3 | Lock taken and released | **holds**: `acquire` 0 at 10:49:36Z, `release` 0 at 10:57:50Z, then `status` free |
 | 4 | Records under `var/handover-10/` | `out/`, `state/`, `scripts/`, `log.md`, this file, `issues.md` |
+
+## 5. The seam record
+
+**Where the records are.** A path `var/handover-11/…` in this section is that directory on the Mac
+Studio. Its `out/`, `scripts/` and `state/` are committed at [`a3-v2/seam/`](a3-v2/seam/), with its
+`issues.md`. `out/subintervals_11.csv` (5.05 MB) is committed as it is.
+
+**Result: complete, with no stop.** The `GkSourcePolicyData` block of the build's `stdout.log` agrees
+with the table in every cell: 1160 rows, no `fail` and no `incomplete`, and one `minimal`. The clamp-gap
+census covers all 9280 `QuadSourceIntegral` rows and 19,289 sub-intervals, and every `partition`
+parses. No gap exceeds its row's allowance. The store, its four shards, its sidecar and `stdout.log` are
+byte-identical before and after, and the fingerprint is the sidecar's `0e32f24a…`. Nothing here used
+Ray, the lock or the pipeline.
+
+**The tree.** Dispatch SHA `757ef016fc37be996c342d162c05f17b3c430e4d` on `handover-remedial`
+("Write the dispatch notes for levin-phase-floor 01 and handover 11"). It is a **check, not a move**:
+the checkout was fast-forwarded to it by the laptop orchestrator before the session started, and a
+second session (`levin-phase-floor` 01) ran at the same time in the same checkout, so no git command
+that writes was run. `HEAD` is the dispatch SHA and `git status --short` is empty at the start, after
+the census and at the end. The venv's Python is 3.13.16.
+
+**Clock.** The Mac Studio is on GMT; every time below is UTC. The session ran 18:12–18:16 on
+2026-10-25, on **`mps026298`**.
+
+### 5.1 The Gate ([`gate_11.txt`](a3-v2/seam/out/gate_11.txt), [`step1_checkout.txt`](a3-v2/seam/out/step1_checkout.txt))
+
+- **10 is reviewed.** The board's row 10 reads "✅ 2026-10-25, reviewed on the Mac Studio by a remote
+  orchestrator …", at `423aefd`.
+- **The dispatch commit is pushed.** Checked without fetching: the local remote-tracking ref
+  `origin/handover-remedial` is `757ef01…`, `git branch -r --contains 757ef01` lists it, and
+  `git ls-remote origin refs/heads/handover-remedial` (a read of the remote) returns the same SHA.
+- **The registry:** `runregistrykit list` gives 10 runs, 10 finished, nothing `running` or stale.
+- **`git status --short`** is empty.
+- **`store show`:** kind `registry`, problems none, fingerprint
+  `0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`, the one run naming it
+  `handover-07-a3-v2-20261022T211155` (`done`).
+- **`pip freeze`** was taken once, [`freeze_11.txt`](a3-v2/seam/state/freeze_11.txt) (101 lines).
+  It differs from 10's `freeze_after.txt` on `ray` (2.43.0 → 2.59.0) and `SQLAlchemy` (2.0.39 →
+  2.0.55) alone ([`freeze_vs_10_after.txt`](a3-v2/seam/out/freeze_vs_10_after.txt)); the
+  `py313-venv` campaign moved the venv between the two.
+
+### 5.2 The store before and after ([`store_after_11.txt`](a3-v2/seam/out/store_after_11.txt), `state/store_files_before.txt`, `state/store_files_after.txt`)
+
+| File | SHA-256 (first 16) | Bytes |
+|---|---|---|
+| primary `handover-A3-v2-lambdacdm.sqlite` | `1542e05c02571e10` | 36,864 |
+| `…-shard0000.sqlite` | `b311698f9ce296ab` | 106,340,352 |
+| `…-shard0001.sqlite` | `c5e341ce1937ea94` | 107,569,152 |
+| `…-shard0002.sqlite` | `175a67318801af90` | 107,429,888 |
+| `…-shard0003.sqlite` | `76b83fb360e24498` | 105,791,488 |
+| sidecar `…manifest.json` | `3201f6a588f89723` | 10,519 |
+| `var/runs/handover-07-…/stdout.log` | `4926b6fc78c1529d` | 19,545 |
+
+- The before and after files are identical (`diff` rc 0), and a third hash after the extra
+  `skipped_check.py` read is identical to the first.
+- `runregistrykit store fingerprint` (no `--write`): digest `0e32f24a2dc2f4c9…`, problems none,
+  "matches the fingerprint taken 2026-10-25T00:34:14+01:00 … at b90752d".
+- Every store open was `mode=ro`.
+
+### 5.3 The policy summary ([`policy_11.txt`](a3-v2/seam/out/policy_11.txt))
+
+The block is `stdout.log` lines 89–102, transcribed verbatim in the file with its line numbers. The
+shards hold 1160 `GkSourcePolicyData` rows (290 in each), all under `policy_serial` 1, which is the
+block's one policy, `policy="maximize-WKB"-Levin-threshold="1.5"`. Decoded by
+`ObjectFactories/GkSourcePolicyData.py:13-41`:
+
+| `type` | `quality` | `stdout.log` | table | agree |
+|---|---|---:|---:|:-:|
+| numeric | complete | 363 | 363 | yes |
+| mixed | complete | 71 | 71 | yes |
+| mixed | **minimal** | **1** | **1** | yes |
+| WKB | complete | 725 | 725 | yes |
+| | **total** | **1160** | **1160** | |
+
+**Every cell agrees**, and so does the total.
+
+**`fail` or `incomplete` rows: none.** The one row that is not `complete`:
+
+| shard | serial | $k$ (/Mpc) | $z_{\rm response}$ | `type` | `quality` | `crossover_z` |
+|---:|---:|---:|---:|---|---|---:|
+| 2 | 460 | 3.091682e+06 | 3.963729e+10 | mixed | minimal | 4.2472907e+10 |
+
+This is the answer to `[03-gk-classification-is-diagnosed-and-ignored]`'s question on the shipping
+grid: no `fail` and no `incomplete` row exists in A3 v2. One `minimal` row does.
+
+### 5.4 The population and the sub-intervals ([`seam_census_11.txt`](a3-v2/seam/out/seam_census_11.txt), [`subintervals_11.csv`](a3-v2/seam/out/subintervals_11.csv))
+
+- **Script** [`seam_census.py`](a3-v2/seam/scripts/seam_census.py), SHA-256
+  `240cc0638500048808deb81d3884c0855e5215dd0668edfb9d0a633aa9c4dcae`, run at `HEAD`
+  `757ef01…`. It took 1.4 s. Its header records each store file's SHA-256, the sidecar's
+  fingerprint and `HEAD`.
+- **9280 rows** at `(atol, rtol) = (1e-32, 1e-7)`, 2320 in each shard, none at any other pair. Every
+  `metadata["partition"]` parses. By band: low 1088, mid 2112, seam 6080 (the 1088 / 2112 / 6080 the
+  work list is built from). `b = 0` on every row.
+- **19,289 sub-intervals**: 2489 rows have 1, 3624 have 2, 3116 have 3 and 51 have 4. Methods: 15,809
+  `Levin`, 3480 `quad`. The CSV has one record for each, with the row's `shard`/`serial`, $k$, $q$,
+  $r$, $z_{\rm response}$, band, the sub-interval's `z_max`, `z_min`, regime and method, its three gaps,
+  the row's allowance and the mean source-grid step it implies, and `total` and `analytic_rad`.
+- **`HANDOVER_CLAMP_MAX_GRID_STEPS` = 1.5**, read from
+  `ComputeTargets/QuadSourceIntegral.py` by the script. The allowance `max_clamp_gap_log1pz` takes 8
+  distinct values (3.4132e-02 to 3.4548e-02); the mean source-grid step it implies is
+  2.2755e-02 to 2.3032e-02 in $\log(1+z)$.
+- **Gaps above the allowance: 0.** The stop condition did not arise.
+
+### 5.5 The gap census, set beside 2026-09
+
+The field read is `partition["subintervals"][i]["clamp_gaps_log1pz"]`, not
+`max_clamp_gap_log1pz`, which is the allowance. A gap is a shortfall in $\log(1+z)$, `0.0` when there
+is none. `Tq` and `Tr` have an entry on every sub-interval; `source` only on the 3480 all-smooth
+(`quad`) ones.
+
+| Factor | Sub-intervals with an entry | Non-zero gap | Rows with $\ge1$ | Min | Q1 | **Median** | Q3 | **Max** | Median / max, in steps | At or within 1 % of allowance |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `Tq` | 19,289 | **12,880** | 6440 | 4.387e-04 | 6.925e-03 | **1.152e-02** | 1.611e-02 | **2.259e-02** | 0.502 / 0.981 | 0 |
+| `Tr` | 19,289 | **13,582** | 6791 | 4.387e-04 | 6.925e-03 | **1.152e-02** | 1.611e-02 | **2.259e-02** | 0.506 / 0.981 | 0 |
+| `source` | 3480 | **423** | 423 | 6.456e-03 | 1.429e-02 | **1.476e-02** | 2.259e-02 | **2.259e-02** | 0.641 / 0.981 | 0 |
+
+**Beside the 2026-09 figures**
+(`[12-handover-clamp-error-in-production]`, one run):
+
+| | 2026-09 | A3 v2 |
+|---|---|---|
+| `Tq` non-zero | 1666 sub-intervals | 12,880 sub-intervals in 6440 rows |
+| `Tr` non-zero | 1798 sub-intervals | 13,582 sub-intervals in 6791 rows |
+| `source` clamped | 108 | 423 sub-intervals in 423 rows |
+| median gap, $\log(1+z)$ | 1.2e-02 | `Tq` and `Tr` 1.152e-02; `source` 1.476e-02 |
+| max gap | 2.2e-02 | 2.259e-02 (0.981 mean grid step) |
+| "about 1.0 mean grid step" | yes | median about 0.5, max 0.981 |
+
+The counts are not like-for-like (one run's 1666 / 1798 sub-intervals against the whole 9280-row store);
+the median and maximum are.
+
+- **Rows.** 6791 of 9280 rows have at least one non-zero gap, and 2489 have none. The 2489 are exactly
+  the one-sub-interval rows. Rows by the factors clamped: `Tq`+`Tr` 6048, none 2489, `Tq`+`Tr`+`source`
+  392, `Tr` alone 320, `Tr`+`source` 31. By the number of clamped factors in the row (0, 1, 2, 3):
+  2489, 320, 6079, 392. Among `Tq` and `Tr` alone (0, 1, 2): 2489, 351, 6440.
+- **Sub-intervals** by the number of non-zero gaps (0, 1, 2, 3): 3065, 5955, 9877, 392.
+- **By band** (non-zero `Tq` / `Tr` / `source`): low 2176 / 2176 / 0; mid 4224 / 4224 / 0; seam 6480 /
+  7182 / 423. Every low- and mid-band row (3200) has both a `Tq` and a `Tr` gap. In the seam band,
+  3591 of 6080 rows have one.
+- **By $k$.** `Tq` is non-zero on 1610 sub-intervals, in 805 rows, at every $k$. `Tr` rises with
+  $k$, from 1610 at $k = 10^5$/Mpc to 1840 at $3\times10^8$/Mpc, and `source` falls from 125 to 8. The
+  medians barely move (`Tq`, `Tr` 1.152e-02 at every $k$). The tables by $k$ and by band are in
+  `seam_census_11.txt`.
+- **Skipped breakpoints.** 3798 rows have a `skipped` entry, each exactly one, each for `Tq`, each
+  with `log_width` 0.0 and the reason "hand-over within `MIN_SUBINTERVAL_LOG_WIDTH` of the
+  sub-interval above it". Every one of those rows has $q = r$ and equal `Tq` and `Tr` hand-over
+  redshifts ([`skipped_check_11.txt`](a3-v2/seam/out/skipped_check_11.txt)); of the 5220 $q = r$ rows,
+  the other 1422 have none.
+
+### 5.6 The gap's effect against the oracle
+
+**What this does not separate.** `analytic_rad` is a constant-$w$ oracle built at $b = 0$. Its own deficit
+on LambdaCDM grows towards matter–radiation equality, so $|{\rm total}/{\tt analytic\_rad} - 1|$ is the
+clamp's effect plus the oracle's own error, and the second cannot be told from the first here. The
+2026-09 comparison was taken at $z_{\rm response} = 7.63\times10^9$ and $1.45\times10^9$ for that reason.
+**Decades below about $10^8$ are reported, marked `*`, and not read as the clamp's error.** The measure
+also contains the seam's other term (the LG phase representation, 4.08e-05 to 2.68e-03 in prompt 02's
+$2\times2$) and the quadrature's own error. The strata are tabulated and nothing is fitted. **The strata
+are not independent of $z_{\rm response}$**: the 2489 rows with no clamped factor and no Levin
+sub-interval occur only at $z_{\rm response}\ge10^9$, and 2188 of them at $\ge10^{12}$ (below).
+
+**Population.** The 6080 seam-band rows ($z_{\rm response} > 10^5$); 95 distinct $z_{\rm response}$.
+**Excluded: none** (no `analytic_rad` is zero or non-finite, and no `total` is non-finite). Over all
+6080: median **5.314e-04**, maximum **96.94**.
+
+**Stratum 1: clamped factors in the row** (any sub-interval; of `Tq`, `Tr`, `source`), by decade; each cell
+is $n$, median, maximum of $|{\rm total}/{\tt analytic\_rad} - 1|$:
+
+| decade | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| 1e5* | – | – | 576, 8.49e-03, 1.93 | – |
+| 1e6* | – | – | 512, 7.83e-03, 1.29 | – |
+| 1e7* | – | – | 512, 7.64e-03, 3.55 | – |
+| 1e8 | – | – | 576, 9.50e-03, 20.5 | – |
+| 1e9 | 12, 1.28e-05, 1.15e-03 | 51, 1.31e-01, 1.21 | 382, 8.90e-03, 11.5 | 67, 1.12e-03, 3.33 |
+| 1e10 | 85, 5.12e-06, 4.33e-04 | 123, 1.24e-01, 17.8 | 221, 7.40e-03, 96.9 | 147, 7.61e-04, 0.650 |
+| 1e11 | 204, 5.12e-06, 5.67e-04 | 107, 4.70e-02, 1.56 | 78, 1.04e-02, 0.392 | 123, 5.97e-04, 4.49e-02 |
+| 1e12 | 460, 5.12e-06, 6.43e-03 | 39, 8.15e-02, 0.758 | 22, 5.18e-02, 0.335 | 55, 9.37e-04, 0.250 |
+| 1e13 | 512, 5.04e-06, 1.10e-05 | – | – | – |
+| 1e14 | 512, 3.14e-06, 5.30e-06 | – | – | – |
+| 1e15 | 576, 7.74e-07, 5.28e-06 | – | – | – |
+| 1e16 | 128, 6.02e-06, 1.20e-05 | – | – | – |
+| **all** | **2489, 4.98e-06, 6.43e-03** | **320, 7.00e-02, 17.8** | **2879, 8.37e-03, 96.9** | **392, 7.79e-04, 3.33** |
+
+(A "clamped factor" here includes `source`; the table among `Tq` and `Tr` alone, Stratum 1b, is in
+`seam_census_11.txt`: 2489, 351 and 3240 rows, with the same 0 column and medians 6.57e-02 and
+5.50e-03 for 1 and 2.)
+
+**Stratum 2: oscillatory factors in the row's last Levin sub-interval**, by decade ("0" is a row with
+no Levin sub-interval, every factor smooth):
+
+| decade | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| 1e5* | – | – | – | 576, 8.49e-03, 1.93 |
+| 1e6* | – | – | – | 512, 7.83e-03, 1.29 |
+| 1e7* | – | – | – | 512, 7.64e-03, 3.55 |
+| 1e8 | – | – | – | 576, 9.50e-03, 20.5 |
+| 1e9 | 12, 1.28e-05, 1.15e-03 | 1, 1.65e-02, 1.65e-02 | 118, 6.78e-03, 3.33 | 381, 8.87e-03, 11.5 |
+| 1e10 | 85, 5.12e-06, 4.33e-04 | 5, 5.13e-04, 3.24e-02 | 268, 4.38e-03, 17.8 | 218, 7.54e-03, 96.9 |
+| 1e11 | 204, 5.12e-06, 5.67e-04 | 9, 4.22e-02, 0.152 | 230, 1.79e-03, 1.56 | 69, 7.86e-03, 0.392 |
+| 1e12 | 460, 5.12e-06, 6.43e-03 | 13, 6.89e-02, 0.298 | 94, 3.51e-03, 0.758 | 9, 1.60e-02, 0.335 |
+| 1e13–1e16 | 1728, 7.74e-07 to 5.04e-06, ≤ 1.20e-05 | – | – | – |
+| **all** | **2489, 4.98e-06, 6.43e-03** | **28, 4.62e-02, 0.298** | **710, 4.19e-03, 17.8** | **2853, 8.19e-03, 96.9** |
+
+**Beside the 2026-09 figures** (at $z_{\rm response} = 7.63\times10^9$: no clamp gap 6.2e-05, with a gap
+6.6e-02 to 4.6e-01; by regime 0 / 2 / 3 oscillatory factors 6.2e-05 / 7.8e-03 / 2.7e-01), the nearest
+grid values are $8.374\times10^9$ (64 rows) and $1.595\times10^9$ (64 rows):
+
+| $z_{\rm response}$ | clamped factors 0 | 1 | 2 | 3 | osc. 0 | 1 | 2 | 3 |
+|---|---|---|---|---|---|---|---|---|
+| 8.374e9, median (max), $n$ | 9.62e-06 (2.90e-05), 4 | 1.64e-01 (1.09), 12 | 9.04e-03 (1.22), 36 | 6.28e-04 (6.76e-03), 12 | 9.62e-06 (2.90e-05), 4 | – | 3.09e-03 (1.09), 24 | 9.04e-03 (1.22), 36 |
+| 1.595e9, median (max), $n$ | – | – | 1.38e-02 (3.89), 56 | 4.57e-03 (3.33), 8 | – | – | 4.57e-03 (3.33), 8 | 1.38e-02 (3.89), 56 |
+
+**What the table shows, and no more.** The rows with no clamped factor, which are the rows with no
+Levin sub-interval, agree with the oracle to a median 4.98e-06 (maximum 6.43e-03). The medians of the
+rows with one clamped factor are 4.7e-02 to 1.3e-01 at $10^9$–$10^{12}$. The medians with two or three are
+lower than that, and the maxima are large in every stratum with a clamp (up to 96.9, at $10^{10}$). These
+medians and maxima carry the oracle's own deficit, the phase-representation term and the
+quadrature's error, and they are not separated from the gap's effect here. In particular, the 2026-09
+ordering of the error with the number of oscillatory factors is not reproduced as a monotone ordering by
+these medians (osc. 2: 4.19e-03; osc. 3: 8.19e-03), and this record does not say why: the strata differ in
+$z_{\rm response}$ as well as in regime.
+
+### 5.7 What this settles, and what it does not
+
+- **Settled by measurement, on A3 v2.** (a) The shipping grid has no `fail` or `incomplete`
+  $G_k$; one `minimal`. (b) The clamp is on 6791 of 9280 rows (73 %): every row that has a
+  Levin sub-interval, and none of the 2489 that do not. `Tq` is clamped in 6440 rows and `Tr` in 6791. Its size in $\log(1+z)$ is the 2026-09
+  one, median 1.15e-02, maximum 2.26e-02 (0.98 mean grid step against the 1.5-step allowance), and no gap
+  is near the allowance. (c) The `source` spline is clamped on 423 sub-intervals, all in the seam band,
+  where 2026-09 had 108.
+- **Not settled.** The stored `total`s' accuracy. The oracle comparison above cannot separate the
+  gap's error from the oracle's own deficit or the representation term, and the rows are not a factorial
+  design: a row's number of clamped factors and its $z_{\rm response}$ are tied together. Separating them
+  is what prompt 02's $2\times2$ did, on fixtures, and a rebuild with the gap closed would do on A3 v2.

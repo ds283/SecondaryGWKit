@@ -288,6 +288,12 @@ Ray task dies of `TypeError` unobserved (`main.py:2524-2527`).
 **Owner: workstream B3 (the contract) and B4 (the invariant).** See §4 item 5 for why B3 does not
 wait on anything and B4 does.
 
+**Measured 2026-10-25 by prompt 11, on A3 v2's shipping grid:** none of the 1160 `GkSourcePolicyData`
+rows is `fail` or `incomplete`. One is `mixed`/`minimal` ($k = 3.09\times10^6$/Mpc,
+$z_{\rm response} = 3.96\times10^{10}$). So the fail-late contract has not been exercised on the
+grid that ships. It is still unenforced, and B3 still owns it.
+([`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §5.3.)
+
 **(q) What sizes the $G_k$ overlap, and the seven levers that move it.** There are **two**
 `GkWKBIntegration` creation sites, and the difference between them is why an overlap exists at all.
 `main.py:2149` branches on $z_{\rm source}$ against $\sqrt{z_{e3}z_{e4}}$, the geometric mean, i.e.

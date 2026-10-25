@@ -1,0 +1,8 @@
+### 2026-10-25T18:16:02Z on mps026298
+$ ./venv/bin/python -I var/handover-11/scripts/skipped_check.py var/datastores/handover-A3-v2-lambdacdm.sqlite
+4060 ('q!=r', 'no skipped')
+1422 ('q==r', 'no skipped')
+3798 ('q==r', 'skipped')
+3798 ('skipped factors', ('Tq',), 'crossover_z_q==crossover_z_r', True)
+[exit 0]
+
