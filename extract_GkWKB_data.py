@@ -342,6 +342,8 @@ def plot_Gk(
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))
 
+        plt.close()
+
     csv_path = (
         base_path
         / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.csv"

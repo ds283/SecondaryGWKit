@@ -51,7 +51,8 @@ reader exits 0 on A3 v2, the GkWKB read-back is complete (1392 pairs, the one 08
 them), and the store is byte-identical, fingerprint `0e32f24a…`. It closed
 `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`, and its review opened
 `[10-the-readers-draw-their-work-lists-unseeded]` and
-`[10-extract-gkwkb-data-never-closes-its-theta-figure]`, so §3 holds **eleven**.
+`[10-extract-gkwkb-data-never-closes-its-theta-figure]`, so §3 holds **eleven**. The second was
+closed the same day by a direct commit, on the user's decision, so §3 holds **ten**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -580,15 +581,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   for the sample, not the store. **Next step:** a `--seed`, or a mode that plots a named pair or the
   full grid. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[10-extract-gkwkb-data-never-closes-its-theta-figure]** *(opened 2026-10-25 by prompt 10's
-  review, from the agent's `issues.md` item 3; not acted on, by `CLAUDE.md` rule 4)* — `plot_Gk` in
-  `extract_GkWKB_data.py` closes its main figure (`plt.close()`, `:319`) and then opens a second for
-  the theta plot (`:322`), which is never closed. Each plotting worker keeps one figure per pair, and
-  matplotlib's "More than 20 figures have been opened" `RuntimeWarning` appears twice in prompt 10's
-  GkWKB log; 08's run died before any worker reached 20. **Impact:** memory in the plotting workers
-  only; all 1392 pairs were written. Pre-existing, not 09's. **Next step:** close the theta figure.
-  Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
-
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,
 `[03-quadsource-policy-vocabulary-differs]` and `[03-gk-classification-is-diagnosed-and-ignored]` —
@@ -616,6 +608,26 @@ disagree with the prompt that owns them.
 ---
 
 ## 4. Resolved issues
+
+Closed by a direct commit, 2026-10-25:
+
+- **[10-extract-gkwkb-data-never-closes-its-theta-figure]** *(opened 2026-10-25 by prompt 10's
+  review, from the agent's `issues.md` item 3; not acted on, by `CLAUDE.md` rule 4)* — `plot_Gk` in
+  `extract_GkWKB_data.py` closes its main figure (`plt.close()`, `:319`) and then opens a second for
+  the theta plot (`:322`), which is never closed. Each plotting worker keeps one figure per pair, and
+  matplotlib's "More than 20 figures have been opened" `RuntimeWarning` appears twice in prompt 10's
+  GkWKB log; 08's run died before any worker reached 20. **Impact:** memory in the plotting workers
+  only; all 1392 pairs were written. Pre-existing, not 09's. **Next step:** close the theta figure.
+  Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Closed 2026-10-25 by a direct commit, outside the campaign's prompts (user's decision):**
+  `plot_Gk` now calls `plt.close()` after saving the theta figure. `extract_TkWKB_data.py` had the
+  same defect twice, its theta and friction figures, and both are closed the same way.
+  `ComputeTargets/tests/test_readers_close_their_figures.py` reads every `extract_*_data.py` with
+  `ast` and requires each `fig = plt.figure()` to be followed by a `plt.close()` in its block or an
+  enclosing one, not past a loop. On the old readers it fails at exactly the three lines
+  (`extract_GkWKB_data.py:322`, `extract_TkWKB_data.py:308` and `:330`). `ComputeTargets` 732 → 737;
+  the known wall-clock flake failed with and without the change. Not re-run on A3 v2.
 
 Closed by prompt 10, 2026-10-25:
 

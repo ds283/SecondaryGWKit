@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **104 open** across twenty-two campaigns.
+**Last updated:** 2026-10-25 · **103 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -134,7 +134,6 @@ for.
 | `[09-two-readers-plot-the-radiation-form-under-the-w-label]` | handover | `extract_GkSource_data.py` and `extract_QuadSourceIntegral_data.py` draw the radiation form twice, once under the label "$w=w(z)$"; `GkSource` stores no `analytic_G_w` column, so the $w(z)$ form is not available to them from a store. Not assigned. |
 | `[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]` | handover | `extract_Gk_data.py:294` writes `value.z`, a `redshift` object, into its CSV column `z_response`, so every cell is an object repr and the CSVs cannot be read back against $z$; the other readers write `value.z.z`. Not assigned. |
 | `[10-the-readers-draw-their-work-lists-unseeded]` | handover | Every `extract_*` reader draws its `k`/`z_source` subsample with an unseeded `random.sample` (GkWKB: 174 of ~1740 source redshifts), so outputs differ run to run, a check naming a pair passes only if the draw includes it (prompt 10's held at ~1 in 10), and a "complete" read-back covers the sample, not the store. Not assigned. |
-| `[10-extract-gkwkb-data-never-closes-its-theta-figure]` | handover | `plot_Gk` in `extract_GkWKB_data.py` closes its main figure (`:319`) then opens the theta figure (`:322`) and never closes it; each plotting worker keeps one figure per pair (matplotlib's "more than 20 figures" warning). Memory only; all pairs written. Not assigned. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 

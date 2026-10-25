@@ -326,6 +326,8 @@ def plot_Tk(
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))
 
+        plt.close()
+
     if friction_x is not None and friction_y is not None:
         fig = plt.figure()
         ax = plt.gca()
@@ -347,6 +349,8 @@ def plot_Tk(
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))
+
+        plt.close()
 
     csv_path = (
         base_path / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.csv"
