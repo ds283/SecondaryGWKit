@@ -2,7 +2,7 @@
 
 > **Written on the Mac Studio, committed on the laptop** by the orchestrator (README §4.1).
 >
-> **Commit:** this commit, the records commit for prompt 03.
+> **Commit:** `d5f5a2b`, the records commit for prompt 03.
 >
 > A path `scripts/…`, `out/…` or `state/…` below is under `var/levin-phase-floor-03/` there, and is
 > committed at `docs/levin-phase-floor/03/`, except for what stays on the Mac Studio:
