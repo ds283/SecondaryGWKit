@@ -14,7 +14,11 @@ saved `MacStudio` SSH connection, in `/Users/ds283/Documents/Code/SecondaryGWKit
   `rpk-v030-adoption` 01's `config/ray_local.py` and `main.py`'s `ray.init`, which is `handover` 10's
   Gate restated. A3 v2 was built at `b90752d`, and this is what makes reading it at the dispatch
   SHA sound (`CLAUDE.md`). `git diff --stat b90752d <dispatch SHA> -- ObjectFactories config
-  main.py` shows that commit's two files and no other;
+  main.py` shows that commit's two files and no other. *Amended 2026-10-25 before dispatch:* two
+  later commits are allowed too, and are the only others. `28f94c7` changes one test,
+  `ObjectFactories/tests/test_quadsource_parent_key.py`. `d833ee7` changes `config/ray_local.py`
+  (`RAY_AUTH_MODE=token` at import). Neither touches a schema, and the diff must show no more than
+  `config/ray_local.py`, `main.py` and that test;
 - on the laptop, `./venv/bin/python -m runregistrykit list` shows nothing `running` or stale;
 - on the Mac Studio, `runregistrykit list` shows nothing `running` or stale, the rehearsal lock is
   free, `git status --short` is empty, the venv is 3.12.15, and `/opt/local/bin/python3.13
@@ -67,7 +71,15 @@ Make `var/py313-venv-02/{out,state}` first. Save every command and its output, i
    check`, `package_provenance`, and the `ray`/`sqlalchemy`/`sqlite3` versions line of 01 §2.4.
    **`pip freeze` is identical to the laptop's**, the last freeze in
    `prompts/py313-venv/measure/out/01-pip.txt`. `git status --short` stays empty.
-5. **The roots, under 3.13** (`out/roots_02.txt`). Every count equals 01's under 3.13, all OK. A
+   *Added 2026-10-25 before dispatch:* **the token, before any Ray start.**
+   - `ls -l ~/.ray/` shows no `auth_token` (none existed on 2026-10-25).
+   - `./venv/bin/ray get-auth-token --generate > /dev/null`. It prints the token to stdout, so the
+     token must never reach a saved output.
+   - `chmod 600 ~/.ray/auth_token`, then `ls -l` on it: mode `-rw-------`, 64 bytes.
+   - `CLAUDE.md`'s lock section gives the rule.
+5. **The roots, under 3.13** (`out/roots_02.txt`). Every count equals 01's under 3.13, all OK,
+   except RunDrivers. That root is **124**, not 120, since `d833ee7` added
+   `test_ray_auth_mode`'s 4 tests (amended before dispatch). Step 2's 3.12 count is 124 too. A
    failure among README §7's four known tests is re-run alone and recorded. Record the wall times
    beside step 2's.
 6. **The A3 v2 store, before** (`state/store_files_before.txt`, `out/store_02.txt`). `store show
@@ -87,6 +99,16 @@ Make `var/py313-venv-02/{out,state}` first. Save every command and its output, i
    `reference`'s check, `ray-processes` lists the instance. Interruption points are chosen as R6's
    were. **The hard-kill pair is not run** (README §6.2 C4). Then run 01 §2.10, L1–L4, against R6
    and R4. Both stores are `39809dca…`.
+
+   **Token mode** (added before dispatch). This is the real-Ray check of `d833ee7`, which the
+   laptop could not run. Check each of these:
+   - no launch log, `stdout.log` or `stderr.log` of R7 holds `Token authentication is enabled`.
+     R6's all did;
+   - no log line says `Generated new authentication token`, because step 4 made the token;
+   - during `reference`'s one check, the driver's environment holds `RAY_AUTH_MODE=token`. Use
+     `ps -E -ww -p <driver pid> -o command= | tr ' ' '\n' | grep '^RAY_AUTH_MODE='`, which records
+     that one variable and nothing else of the environment;
+   - `~/.ray/auth_token` is still mode 600, 64 bytes, after the last launch.
 9. **The A3 v2 readers** (`out/readers_02.txt`). `bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh
    var/datastores/handover-A3-v2-lambdacdm.sqlite var/py313-venv-02/extract`, all six, then
    `extract_Gk_data` with `nomodels`, as 10 ran them. Record each one's exit, wall time, files
@@ -112,7 +134,9 @@ Make `var/py313-venv-02/{out,state}` first. Save every command and its output, i
    fingerprints. Every manifest records `host.python` 3.13.16 and the seven distributions, with
    `git_dirty` false.
 5. **A3 v2** reads under 3.13. Every reader exits 0, every store file is byte-identical, and its
-   fingerprint, computed under 3.13, is `0e32f24a…`.
+   fingerprint, computed under 3.13, is `0e32f24a…`. No reader log holds the token-mode warning.
+5a. **Token mode** (added before dispatch). Step 8's four checks hold. This closes
+    `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]`.
 6. **The lock** was taken and released.
 7. **The records of §6** are complete.
 

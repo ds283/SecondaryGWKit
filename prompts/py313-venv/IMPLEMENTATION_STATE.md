@@ -54,6 +54,11 @@ The review of 02 closes the campaign (README §2).
 is `1fd1c36`. The commit that adds the note also corrects prompt 01's §2.10 and §4. The plan had
 R6's manifests at `git_dirty: false`, which cannot hold while the prompt's edits are uncommitted.
 The stop is now a dirty `.py` file.
+[`orchestrator/prompt-02.md`](orchestrator/prompt-02.md) (2026-10-25, for 02) is the first note
+for an orchestrator on the Mac Studio. The commit that adds it also amends prompt 02 for the three
+commits since it was written: the Gate allows `28f94c7`'s test and `d833ee7`'s `config/ray_local.py`;
+RunDrivers is 124; the token is made and set to mode 600 before any Ray start; and R7 checks token
+mode (acceptance 5a).
 
 ### 1.1 Items
 
@@ -242,3 +247,22 @@ raise, and the raise skips the call. The entry and its next step are corrected t
   `~/.ray/auth_token` on the Mac Studio.
 
 **02 is released.** Its orchestrator note is written next.
+
+### 5.3 After the review of 01 (2026-10-25)
+
+All of this was done on the user's decisions of the same day.
+- **`28f94c7`.** `test_quadsource_parent_key`'s `_read` disposes of its engine in `finally`. This
+  closes `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` (§4).
+- **`d833ee7`.** Every Ray start runs with `RAY_AUTH_MODE=token`, set by `config/ray_local.py`,
+  with `RunDrivers/tests/test_ray_auth_mode.py` (4 tests) and `CLAUDE.md`'s rule. The laptop's
+  `~/.ray/auth_token` is mode 600.
+  - The real-Ray smoke test was not run, because StochasticInstantons held the shared lock
+    (`acquire` exit 3).
+  - `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` is narrowed and assigned to
+    02, whose R7 is that check.
+- **R6's three stores were retired** with `store retire`, each after a dry run.
+  - Every fresh fingerprint matched `39809dca…`, and only R6's own runs named each store.
+  - The 15 store files went. The three sidecars stay as `retired` tombstones, and R6's run
+    directories and launch logs stay as the record.
+  - R6's reader output, `var/py313-venv-01/extract/` (211 MB), is kept: it is not a store, and it
+    is the user's to delete.
