@@ -750,7 +750,7 @@ write the orchestrator note for 07").
 
 ### 2.1 The pre-launch checks (prompt §1)
 
-From [`prelaunch_checks_07.txt`](launch/prelaunch_checks_07.txt), from 21:05:43:
+From [`prelaunch_checks_07.txt`](a3-v2/launch/prelaunch_checks_07.txt), from 21:05:43:
 
 | Check | Found | |
 |---|---|---|
@@ -780,7 +780,7 @@ From [`prelaunch_checks_07.txt`](launch/prelaunch_checks_07.txt), from 21:05:43:
 
 ### 2.2 The lock and the launch (prompt §2)
 
-From [`lock_07.txt`](launch/lock_07.txt):
+From [`lock_07.txt`](a3-v2/launch/lock_07.txt):
 
 | When | Command | Exit | What it said |
 |---|---|---|---|
@@ -817,7 +817,7 @@ disown
 
 ### 2.3 The one check (prompt §3)
 
-From [`launch_check_07.txt`](launch/launch_check_07.txt), at 21:12:18, 24 s after the launch:
+From [`launch_check_07.txt`](a3-v2/launch/launch_check_07.txt), at 21:12:18, 24 s after the launch:
 - **Run id** `handover-07-a3-v2-20261022T211155`.
 - **`scope`**: `full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32
   rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc, into
@@ -868,7 +868,7 @@ was then run (§3.8). Every other step is complete.
 checkout stayed at **`b90752d`**, clean; `git diff --stat b90752d 087d420 -- . ':!prompts' ':!docs'`
 is empty.
 
-### 3.1 Before anything ([`prechecks_08.txt`](after/prechecks_08.txt))
+### 3.1 Before anything ([`prechecks_08.txt`](a3-v2/after/out/prechecks_08.txt))
 
 Every Gate item is as stated:
 - **The run.** `handover-07-a3-v2-20261022T211155` is `done`, exit 0, and the launch log ends
@@ -884,7 +884,7 @@ Every Gate item is as stated:
 - **The store files' hashes** are in `state/store_files_before.txt`, and every later comparison is
   against them.
 
-### 3.2 The store's record ([`store_record_08.txt`](after/store_record_08.txt))
+### 3.2 The store's record ([`store_record_08.txt`](a3-v2/after/out/store_record_08.txt))
 
 - `store create` exited 0, with the prompt's purpose; sidecar `handover-A3-v2-lambdacdm.manifest.json`.
 - `store fingerprint --write` gave **`0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`**,
@@ -898,12 +898,12 @@ Every Gate item is as stated:
 
 | Check | Result |
 |---|---|
-| `closed_store_state.py` ([`closed_store_state_08.txt`](after/closed_store_state_08.txt)) | one `version` row `(1, '2025.1.1')` per shard; none on the primary; no journal, WAL or shm; `replication_in_flight` 0 rows; no row `validated = 0` |
-| `replicated_serial_census.py` ([`census_08.txt`](after/census_08.txt)) | **`no divergence`**; 14 tables `OK`; rc 0 |
-| `store_soundness.py` ([`store_soundness_08.txt`](after/store_soundness_08.txt)) | **`=> clean`**: `integrity_check ['ok']` and `foreign_key_check` 0 rows on the primary and all four shards; `read_inventory` over shards 0–3, 0 problems, 0 `duplicate`; counts equal the run's fingerprint in all 21 classes (`redshift` 1740, `wavenumber` 8, `GkNumericIntegration` 4549, `GkWKBIntegration` 13920, `GkSource` 1160, `GkSourcePolicyData` 1160, `QuadSource` 36, `QuadSourceIntegral` 9280, …) |
+| `closed_store_state.py` ([`closed_store_state_08.txt`](a3-v2/after/out/closed_store_state_08.txt)) | one `version` row `(1, '2025.1.1')` per shard; none on the primary; no journal, WAL or shm; `replication_in_flight` 0 rows; no row `validated = 0` |
+| `replicated_serial_census.py` ([`census_08.txt`](a3-v2/after/out/census_08.txt)) | **`no divergence`**; 14 tables `OK`; rc 0 |
+| `store_soundness.py` ([`store_soundness_08.txt`](a3-v2/after/out/store_soundness_08.txt)) | **`=> clean`**: `integrity_check ['ok']` and `foreign_key_check` 0 rows on the primary and all four shards; `read_inventory` over shards 0–3, 0 problems, 0 `duplicate`; counts equal the run's fingerprint in all 21 classes (`redshift` 1740, `wavenumber` 8, `GkNumericIntegration` 4549, `GkWKBIntegration` 13920, `GkSource` 1160, `GkSourcePolicyData` 1160, `QuadSource` 36, `QuadSourceIntegral` 9280, …) |
 | store files before and after | identical (`state/store_files_after_checks.txt`) |
 
-### 3.4 The readers ([`readers_08.txt`](after/readers_08.txt))
+### 3.4 The readers ([`readers_08.txt`](a3-v2/after/out/readers_08.txt))
 
 `run_readers.sh` was run on the A3 v2 primary into `var/handover-08/extract`: the six readers, then
 `extract_Gk_data` with `nomodels`, as R4 ran them. They ran 00:35:23–00:39:48, with the lock held.
@@ -926,11 +926,11 @@ Every Gate item is as stated:
   (serial 19) was left as a 1,039-byte fragment with no PNG or CSV. A plotted value there is presumably
   `0`, `inf` or `nan` on a log axis; that was not confirmed against the data. The store is not implicated.
 
-### 3.5 The depth census ([`depth_census_08.txt`](after/depth_census_08.txt))
+### 3.5 The depth census ([`depth_census_08.txt`](a3-v2/after/out/depth_census_08.txt))
 
 **The script** is `scripts/depth_census.py`: read-only, no Ray, every file `mode=ro`, following
 `report()`. It reads `DEFAULT_LEVIN_MAX_DEPTH = 20` from `AdaptiveLevin/levin_quadrature.py:154`.
-**Its test on R4's reference store** ([`depth_census_r4_08.txt`](after/depth_census_r4_08.txt))
+**Its test on R4's reference store** ([`depth_census_r4_08.txt`](a3-v2/after/out/depth_census_r4_08.txt))
 counted 864 rows, all at (1e-32, 1e-7), and left every file identical.
 
 **The population.** **9280** rows at (1e-32, 1e-7), 2320 per shard. There are 0 rows at any other
@@ -973,7 +973,7 @@ pair, and every store file is unchanged by the census.
     There is no baseline number for that set. The baseline's 7600 rows were these 7552 plus 48 of
     the 64 at $z = 132.08$.
 
-### 3.6 From the run's logs ([`run_logs_08.txt`](after/run_logs_08.txt))
+### 3.6 From the run's logs ([`run_logs_08.txt`](a3-v2/after/out/run_logs_08.txt))
 
 - **The tail.**
   - The QSI stage ran 21:22:59 Thu → 21:56:16 Sat, **48.55 h** (the log says `2d 33m 16.8s`).
@@ -993,7 +993,7 @@ pair, and every store file is unchanged by the census.
   orchestrator's 13 did not count Ray's two `[repeated 2x across cluster]` lines. **No warning names
   a row**, so none can be tied to a stored `QuadSource` row.
 
-### 3.7 The run's work ([`run_record_08.txt`](after/run_record_08.txt))
+### 3.7 The run's work ([`run_record_08.txt`](a3-v2/after/out/run_record_08.txt))
 
 - **Wall time:** `created` 2026-10-22T21:11:55 → final heartbeat 2026-10-24T21:56:27, **48.74 h**,
   against 39–44 h estimated.
@@ -1002,7 +1002,7 @@ pair, and every store file is unchanged by the census.
 - **Occupancy:** at 6 CPUs, 286.33 CPU-hr is 47.7 h fully occupied, against the 48.74 h it took.
 - `list` shows 5 runs, all finished.
 
-### 3.8 The lock ([`lock_08.txt`](after/lock_08.txt))
+### 3.8 The lock ([`lock_08.txt`](a3-v2/after/out/lock_08.txt))
 
 - **At the stop** (00:40:41) the lock was left as found: held by SecondaryGWKit, purpose "… 07: A3 v2
   build …", owner pid 84436 (not alive), with `ray-processes` empty.
