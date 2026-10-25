@@ -1,0 +1,45 @@
+== 2026-10-25T19:49:56Z one check that the run started
+$ kill -0 87581
+pid 87581 answers
+$ ps -o pid,ppid,pgid,stat,etime,command -p 87581
+  PID  PPID  PGID STAT ELAPSED COMMAND
+87581     1 87581 Rs     00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-03/scripts/run_instrument.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950
+$ cat status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-25T19:49:53+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 87581,
+  "stage": "row R1 (2, 37527) starting",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 7
+}
+
+$ ls run dir
+total 12
+drwxr-xr-x  6 ds283 staff  192 Oct 25 19:49 .
+drwxr-xr-x 23 ds283 staff  736 Oct 25 19:49 ..
+-rw-r--r--  1 ds283 staff 3169 Oct 25 19:49 manifest.json
+-rw-r--r--  1 ds283 staff  284 Oct 25 19:49 status.json
+-rw-r--r--  1 ds283 staff    0 Oct 25 19:49 stderr.log
+-rw-r--r--  1 ds283 staff 3648 Oct 25 19:49 stdout.log
+$ grep -v header stdout.log | head -20
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+   rebuild: source grid SourceRedshiftGrid_1740_8d1d43b6, response grid ResponseRedshiftGrid_145_c51d43ac
+   rebuild: largest source k = 3e+08/Mpc, latest tau = 13728 (for z=0.1), largest x=4.1184e+12, largest x +7.5% clearance=4.4273e+12
+** context built in 0.7 s; checks: [('one LambdaCDM model', True, '1'), ('exit times available', True, ''), ('rebuilt redshifts equal stored z exactly', True, '[]'), ('background model available', True, '1')]
+
+== R1 (shard 2, serial 37527)
+   rebuilt in 0.2 s; checks: [('k store_id 2 found once', True, '1'), ('q store_id 1 found once', True, '1'), ('r store_id 2 found once', True, '1'), ('z_response store_id 1423 found once', True, '1'), ('z_source_max serial', True, '11 vs 11'), ('(q, r) is a combinations_with_replacement pair', True, ''), ('closes_triangle', True, ''), ('model serial', True, ''), ('atol serial', True, ''), ('rtol serial', True, ''), ('policy serial', True, ''), ('quad_policy serial', True, ''), ('GkSource (serial-only) available', True, ''), ('all six parents found', True, "{'source_serial': 5, 'data_serial': 1169, 'Tq_numeric_serial': 1, 'Tq_WKB_serial': 1, 'Tr_numeric_serial': 601, 'Tr_WKB_serial': 601}"), ("parent source_serial equals the stored row's", True, '5 vs 5'), ("parent data_serial equals the stored row's", True, '1169 vs 1169'), ("parent Tq_numeric_serial equals the stored row's", True, '1 vs 1'), ("parent Tq_WKB_serial equals the stored row's", True, '1 vs 1'), ("parent Tr_numeric_serial equals the stored row's", True, '601 vs 601'), ("parent Tr_WKB_serial equals the stored row's", True, '601 vs 601'), ('existence query finds the stored row', True, '37527')]
+$ stderr.log
+$ checkpoint.jsonl
+(no ledger record yet)
+$ runregistrykit list
+   RUN                                              STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-03-instrument-20261025T194950  running         0/7       7s  levin-phase-floor prompt 03 on the Mac Studio (mps026298; tree 98e68d3; Python 3.13.16): re-run the seven depth-20 A3 v2 QuadSourceIntegral rows R1-R7 of prompt section 1 in-process, Ray-free on a read-only stand-in ShardedPool, with transparent wrappers on adaptive_levin_sincos and build_phase_groups; M0 bit-identity per row; per-row pickles in this run directory; about 25-30 min  · row R1 (2, 37527) starting
+   py313-venv-02-resumed-c-20261025T165549          done              -   2h 54m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete

@@ -1,0 +1,375 @@
+# levin-phase-floor prompt 03 step 7: instrument_03
+# analyse.py sha256 a36caa6e906b91483b5da008e1bd120dde39a46685465de2c26cf06cc77d86b8
+# harness.py sha256 1ac9a75fad373f3a268ba4e667ab9f9be26d74905770a0577c9e620404bd6553 (load_record)
+# depth20_floor.py sha256 c82f72b0c7bda8174e1b01b3989929651f0e2156b7d2e9f02951206935d0e746 (eta(z), EPS imported from it)
+# git HEAD 98e68d3e1b60e6de4378b7d9aded3a120d6088a9
+# store fingerprint (sidecar, read only) 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+# run directory var/runs/levin-phase-floor-03-instrument-20261025T194950
+# pickle row_R1.pkl sha256 a5432107bd0209db0a4938a5363fbd2cad9cd184e8bdbdf09f92adc1e3ac28f3
+# pickle row_R2.pkl sha256 0d05646c20d77b21825679dc3ec21a66bd120403b9e8399d130a8185bc479a8b
+# pickle row_R3.pkl sha256 3ff6e76d2a299e811855894868ffc736048bb4b28ea6492110357570aed8457f
+# pickle row_R4.pkl sha256 b79da787e6246da3713c639c53f66d883b1cd16e3a3df9c4b0a90edc47418f58
+# pickle row_R5.pkl sha256 77e5309ce44f348aaa7a983688011f0329a5a1727549dd8de72001e7873d0680
+# pickle row_R6.pkl sha256 4a6a0d4e76004a623e4e2756471214fe3763996476972a88c1fdf451eed7d9f1
+# pickle row_R7.pkl sha256 fd26218a27f507ea882db2d057d04c8edff8793fe05bd553644b51fe304fd55e
+# definitions: see the module docstring of analyse.py; EPS = np.float64(2.220446049250313e-16)
+
+== rows
+   row shard serial          k          q          r    z_resp F (01 method)  F table F (stored eta)
+   R1      2  37527  3.092e+06      1e+05  3.092e+06     33.16      1.69e-06 1.69e-06      1.688e-06
+   R2      0   1797  3.045e+07  3.092e+06  3.045e+07     302.6     4.599e-06  4.6e-06      4.593e-06
+   R3      1  37670  9.558e+07  9.851e+05  9.558e+07     10.98     9.192e-05 9.19e-05      9.181e-05
+   R4      2  37720  3.092e+06      1e+05  3.092e+06     14.47     2.595e-06  2.6e-06      2.592e-06
+   R5      0  37966  3.045e+07  3.092e+06  3.045e+07     174.1     6.492e-06 6.49e-06      6.484e-06
+   R6      2  34728  3.092e+06  3.092e+06  3.092e+06     25.16     1.956e-06 1.96e-06      1.954e-06
+   R7      2  34820  3.092e+06  3.092e+06  3.092e+06     14.47     2.595e-06  2.6e-06      2.592e-06
+
+== every group: regions, scored, depth histogram by type (depth: Levin/CC), jitter, D
+   (sigma/F, D/sigma: medians over the group's depth-20 regions; 'unwrap?' counts depth-20 regions where max|theta'| h/64 > pi/2)
+-- R1 (top group G+r; F = 1.69e-06)
+      G G      canc=False regions  11599 depth>=18  11206 scored True  depth20  10582 (CC 10582)
+        hist 1:0/1 2:0/1 5:0/4 6:0/2 7:0/2 8:0/6 9:0/8 10:0/10 11:0/12 12:0/11 13:0/25 14:0/34 15:0/52 16:0/70 17:0/155 18:0/265 19:0/359 20:0/10582
+        median sigma 4.74e-07 rad (deg-8 4.63e-07); sigma/F 0.281; sigma/F 10-90% 0.273-0.292; unwrap? 0
+        median D(depth 20) 6.88e-08; median D/sigma 0.145; phase_err>=abserr 179/10582
+        ancestry (20 regions): slope real 0.015 (D=0 excluded: 0), control 0.168 (D=0 excluded: 1); median D20 real 1.15e-07, control 4.23e-16, ratio 2.71e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 4.97e-07 rad, max unwrapped step 7.53e-05 rad
+     Gr G+r    canc=True  regions  14960 depth>=18  14107 scored True  depth20  12992 (CC 12992)
+        hist 4:0/1 5:0/6 6:0/13 7:0/34 8:0/29 9:0/42 10:0/31 11:0/31 12:0/35 13:0/34 14:0/78 15:0/113 16:0/153 17:0/253 18:0/441 19:0/674 20:0/12992
+        median sigma 4.8e-07 rad (deg-8 4.67e-07); sigma/F 0.284; sigma/F 10-90% 0.266-0.297; unwrap? 0
+        median D(depth 20) 4.53e-08; median D/sigma 0.0951; phase_err>=abserr 143/12992
+        ancestry (20 regions): slope real 0.0603 (D=0 excluded: 0), control -0.0751 (D=0 excluded: 1); median D20 real 4.08e-08, control 2.43e-15, ratio 1.68e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 4.91e-07 rad, max unwrapped step 0.000288 rad
+     Gr G-r    canc=False regions   7211 depth>=18   6459 scored True  depth20   5796 (CC 5796)
+        hist 2:1/0 4:1/0 5:4/0 6:2/5 7:0/18 8:0/20 9:0/44 10:0/81 11:0/71 12:0/51 13:0/55 14:0/46 15:0/83 16:0/109 17:0/161 18:0/251 19:0/412 20:0/5796
+        median sigma 4.77e-07 rad (deg-8 4.61e-07); sigma/F 0.282; sigma/F 10-90% 0.247-0.298; unwrap? 0
+        median D(depth 20) 4.63e-08; median D/sigma 0.1; phase_err>=abserr 18/5796
+        ancestry (20 regions): slope real 0.0587 (D=0 excluded: 0), control -0.189 (D=0 excluded: 1); median D20 real 5.19e-08, control 1.69e-14, ratio 3.07e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 4.89e-07 rad, max unwrapped step 0.00107 rad
+    Gqr G+q+r  canc=True  regions    237 depth>=18    187 scored True  depth20    164 (CC 164)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 11:0/9 12:0/8 13:0/7 14:0/1 15:0/8 16:0/1 17:0/9 18:0/11 19:0/12 20:0/164
+        median sigma 4.84e-07 rad (deg-8 4.75e-07); sigma/F 0.286; sigma/F 10-90% 0.273-0.298; unwrap? 0
+        median D(depth 20) 5.4e-08; median D/sigma 0.112; phase_err>=abserr 1/164
+        ancestry (20 regions): slope real 0.0334 (D=0 excluded: 0), control 0.08 (D=0 excluded: 0); median D20 real 5.42e-08, control 3.06e-14, ratio 1.77e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 4.87e-07 rad, max unwrapped step 0.00155 rad
+    Gqr G+q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q+r  canc=True  regions    138 depth>=18     95 scored True  depth20     86 (CC 86)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 11:0/10 12:0/9 13:0/1 14:0/6 15:0/2 16:0/3 17:0/5 19:0/9 20:0/86
+        median sigma 4.75e-07 rad (deg-8 4.51e-07); sigma/F 0.281; sigma/F 10-90% 0.25-0.299; unwrap? 0
+        median D(depth 20) 6.53e-08; median D/sigma 0.148; phase_err>=abserr 0/86
+        ancestry (20 regions): slope real 0.11 (D=0 excluded: 0), control 0.0681 (D=0 excluded: 0); median D20 real 6.73e-08, control 3.57e-14, ratio 1.88e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 4.89e-07 rad, max unwrapped step 0.00178 rad
+    Gqr G-q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+-- R2 (top group G+r; F = 4.599e-06)
+      G G      canc=False regions     44 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 1:0/1 2:0/1 3:0/1 4:0/1 6:0/1 7:0/2 8:0/6 10:0/2 11:0/5 12:0/8 13:0/8 14:0/8
+     Gr G+r    canc=True  regions  15535 depth>=18  14344 scored True  depth20  12858 (CC 12858)
+        hist 3:0/2 4:0/3 5:0/5 6:0/7 7:0/14 8:0/14 9:0/23 10:0/18 11:0/30 12:0/53 13:0/66 14:0/104 15:0/157 16:0/260 17:0/435 18:0/601 19:0/885 20:0/12858
+        median sigma 1.44e-06 rad (deg-8 1.4e-06); sigma/F 0.314; sigma/F 10-90% 0.295-0.336; unwrap? 0
+        median D(depth 20) 1.34e-07; median D/sigma 0.0927; phase_err>=abserr 46/12858
+        ancestry (20 regions): slope real 0.067 (D=0 excluded: 0), control 0.255 (D=0 excluded: 1); median D20 real 1.28e-07, control 3.27e-15, ratio 3.9e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 1.49e-06 rad, max unwrapped step 6.67e-05 rad
+     Gr G-r    canc=False regions  12852 depth>=18  11798 scored True  depth20  10480 (CC 10480)
+        hist 2:1/0 3:0/1 4:1/1 5:1/4 6:0/3 7:0/4 8:0/16 9:0/52 10:0/38 11:0/31 12:0/59 13:0/56 14:0/70 15:0/136 16:0/219 17:0/361 18:0/550 19:0/768 20:0/10480
+        median sigma 1.47e-06 rad (deg-8 1.44e-06); sigma/F 0.319; sigma/F 10-90% 0.291-0.342; unwrap? 0
+        median D(depth 20) 1.33e-07; median D/sigma 0.0917; phase_err>=abserr 42/10480
+        ancestry (20 regions): slope real 0.0768 (D=0 excluded: 0), control -0.0201 (D=0 excluded: 1); median D20 real 8.4e-08, control 2.57e-14, ratio 3.27e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 1.48e-06 rad, max unwrapped step 0.000232 rad
+    Gqr G+q+r  canc=True  regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G+q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q+r  canc=True  regions   1348 depth>=18   1218 scored True  depth20   1050 (CC 1050)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 8:0/1 10:0/2 11:0/6 12:0/9 13:0/7 14:0/19 15:0/15 16:0/31 17:0/34 18:0/59 19:0/109 20:0/1050
+        median sigma 1.46e-06 rad (deg-8 1.42e-06); sigma/F 0.317; sigma/F 10-90% 0.279-0.346; unwrap? 0
+        median D(depth 20) 1.52e-07; median D/sigma 0.107; phase_err>=abserr 1/1050
+        ancestry (20 regions): slope real 0.0398 (D=0 excluded: 0), control -0.116 (D=0 excluded: 0); median D20 real 1.49e-07, control 1.7e-14, ratio 8.8e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 1.5e-06 rad, max unwrapped step 0.000725 rad
+    Gqr G-q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+-- R3 (top group G+r; F = 9.192e-05)
+      G G      canc=False regions     10 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 1:0/1 2:0/1 3:0/1 5:0/3 6:0/1 7:0/1 8:0/2
+     Gr G+r    canc=True  regions  29238 depth>=18  27626 scored True  depth20  24502 (CC 24502)
+        hist 2:2/0 3:1/0 4:1/0 5:1/0 6:1/4 7:0/4 8:0/6 9:0/17 10:0/23 11:0/34 12:0/46 13:0/68 14:0/131 15:0/213 16:0/377 17:0/683 18:0/973 19:0/2151 20:0/24502
+        median sigma 2.63e-05 rad (deg-8 2.2e-05); sigma/F 0.286; sigma/F 10-90% 0.242-0.328; unwrap? 0
+        median D(depth 20) 1.67e-06; median D/sigma 0.0659; phase_err>=abserr 70/24502
+        ancestry (20 regions): slope real 0.124 (D=0 excluded: 0), control 0.106 (D=0 excluded: 1); median D20 real 1.02e-06, control 3.94e-15, ratio 2.58e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 3.07e-05 rad, max unwrapped step 0.0013 rad
+     Gr G-r    canc=False regions   4062 depth>=18   3673 scored True  depth20   2830 (CC 2830)
+        hist 2:2/0 3:2/0 4:1/0 5:1/0 6:1/1 7:1/4 8:1/8 9:0/10 10:0/7 11:0/15 12:0/17 13:0/22 14:0/27 15:0/42 16:0/83 17:0/144 18:0/342 19:0/501 20:0/2830
+        median sigma 2.41e-05 rad (deg-8 1.78e-05); sigma/F 0.262; sigma/F 10-90% 0.193-0.311; unwrap? 0
+        median D(depth 20) 2.05e-06; median D/sigma 0.0899; phase_err>=abserr 1/2830
+        ancestry (20 regions): slope real 0.0533 (D=0 excluded: 0), control 0.0309 (D=0 excluded: 4); median D20 real 2.16e-06, control 1.02e-14, ratio 2.12e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 3.07e-05 rad, max unwrapped step 0.00457 rad
+    Gqr G+q+r  canc=True  regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G+q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q+r  canc=True  regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+-- R4 (top group G-r; F = 2.595e-06)
+      G G      canc=False regions   7902 depth>=18   7676 scored True  depth20   7310 (CC 7310)
+        hist 1:0/1 2:0/1 4:0/2 5:0/2 6:0/1 7:0/2 8:0/1 9:0/3 10:0/2 11:0/7 12:0/12 13:0/14 14:0/21 15:0/29 16:0/46 17:0/82 18:0/163 19:0/203 20:0/7310
+        median sigma 6.67e-07 rad (deg-8 6.49e-07); sigma/F 0.257; sigma/F 10-90% 0.247-0.268; unwrap? 0
+        median D(depth 20) 5.99e-08; median D/sigma 0.0898; phase_err>=abserr 125/7310
+        ancestry (20 regions): slope real 0.0415 (D=0 excluded: 0), control 0.148 (D=0 excluded: 1); median D20 real 5.34e-08, control 4.22e-16, ratio 1.27e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 6.89e-07 rad, max unwrapped step 7.82e-05 rad
+     Gr G+r    canc=True  regions  21889 depth>=18  20887 scored True  depth20  19416 (CC 19416)
+        hist 3:0/1 4:0/1 5:0/3 6:0/12 7:0/24 8:0/47 9:0/28 10:0/35 11:0/34 12:0/40 13:0/67 14:0/78 15:0/153 16:0/170 17:0/309 18:0/545 19:0/926 20:0/19416
+        median sigma 6.61e-07 rad (deg-8 6.43e-07); sigma/F 0.255; sigma/F 10-90% 0.222-0.273; unwrap? 0
+        median D(depth 20) 6.49e-08; median D/sigma 0.0994; phase_err>=abserr 187/19416
+        ancestry (20 regions): slope real 0.0538 (D=0 excluded: 0), control -0.126 (D=0 excluded: 0); median D20 real 7.29e-08, control 1.04e-14, ratio 7e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.84e-07 rad, max unwrapped step 0.00029 rad
+     Gr G-r    canc=False regions  22152 depth>=18  20666 scored True  depth20  18786 (CC 18786)
+        hist 3:1/0 4:0/1 5:3/2 6:4/5 7:0/11 8:0/16 9:0/58 10:0/116 11:0/110 12:0/133 13:0/97 14:0/127 15:0/166 16:0/259 17:0/377 18:0/763 19:0/1117 20:0/18786
+        median sigma 6.64e-07 rad (deg-8 6.42e-07); sigma/F 0.256; sigma/F 10-90% 0.223-0.275; unwrap? 0
+        median D(depth 20) 7.8e-08; median D/sigma 0.119; phase_err>=abserr 65/18786
+        ancestry (20 regions): slope real 0.0298 (D=0 excluded: 0), control -0.0954 (D=0 excluded: 2); median D20 real 1.1e-07, control 1.9e-14, ratio 5.78e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.81e-07 rad, max unwrapped step 0.00107 rad
+    Gqr G+q+r  canc=True  regions    496 depth>=18    426 scored True  depth20    372 (CC 372)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 10:0/1 11:0/6 12:0/7 13:0/7 14:0/5 15:0/7 16:0/13 17:0/17 18:0/20 19:0/34 20:0/372
+        median sigma 6.59e-07 rad (deg-8 6.44e-07); sigma/F 0.254; sigma/F 10-90% 0.21-0.273; unwrap? 0
+        median D(depth 20) 6.58e-08; median D/sigma 0.103; phase_err>=abserr 2/372
+        ancestry (20 regions): slope real 0.0996 (D=0 excluded: 0), control 0.256 (D=0 excluded: 1); median D20 real 6.3e-08, control 5.82e-14, ratio 1.08e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.88e-07 rad, max unwrapped step 0.00172 rad
+    Gqr G+q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q+r  canc=True  regions    468 depth>=18    401 scored True  depth20    356 (CC 356)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 7:1/0 9:0/1 11:0/5 12:0/5 13:0/7 14:0/4 15:0/12 16:0/10 17:0/16 18:0/17 19:0/28 20:0/356
+        median sigma 6.68e-07 rad (deg-8 6.55e-07); sigma/F 0.257; sigma/F 10-90% 0.234-0.275; unwrap? 0
+        median D(depth 20) 6.08e-08; median D/sigma 0.0962; phase_err>=abserr 1/356
+        ancestry (20 regions): slope real 0.174 (D=0 excluded: 0), control 0.54 (D=0 excluded: 1); median D20 real 8.97e-08, control 8.09e-14, ratio 1.11e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.84e-07 rad, max unwrapped step 0.00181 rad
+    Gqr G-q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+-- R5 (top group G-r; F = 6.492e-06)
+      G G      canc=False regions     17 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 1:0/1 2:0/1 3:0/1 4:0/1 5:0/1 6:0/1 7:0/1 9:0/1 10:0/5 11:0/1 12:0/1 13:0/2
+     Gr G+r    canc=True  regions   9498 depth>=18   8775 scored True  depth20   7676 (CC 7676)
+        hist 2:0/1 4:0/5 5:0/3 6:0/12 7:0/5 8:0/9 9:0/14 10:0/13 11:0/16 12:0/28 13:0/49 14:0/65 15:0/98 16:0/150 17:0/255 18:0/395 19:0/704 20:0/7676
+        median sigma 1.46e-06 rad (deg-8 1.43e-06); sigma/F 0.225; sigma/F 10-90% 0.207-0.243; unwrap? 0
+        median D(depth 20) 1.39e-07; median D/sigma 0.0951; phase_err>=abserr 50/7676
+        ancestry (20 regions): slope real 0.114 (D=0 excluded: 0), control 0.0338 (D=0 excluded: 4); median D20 real 1.22e-07, control 3.95e-15, ratio 3.08e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 1.49e-06 rad, max unwrapped step 6.38e-05 rad
+     Gr G-r    canc=False regions  13719 depth>=18  12557 scored True  depth20  10798 (CC 10798)
+        hist 2:1/0 4:1/2 5:1/5 6:0/7 7:0/8 8:0/18 9:0/22 10:0/23 11:0/36 12:0/27 13:0/85 14:0/98 15:0/168 16:0/238 17:0/422 18:0/642 19:0/1117 20:0/10798
+        median sigma 1.46e-06 rad (deg-8 1.43e-06); sigma/F 0.225; sigma/F 10-90% 0.21-0.241; unwrap? 0
+        median D(depth 20) 1.3e-07; median D/sigma 0.0888; phase_err>=abserr 37/10798
+        ancestry (20 regions): slope real 0.0493 (D=0 excluded: 0), control 0.223 (D=0 excluded: 4); median D20 real 1.31e-07, control 1.57e-14, ratio 8.37e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 1.49e-06 rad, max unwrapped step 0.00022 rad
+    Gqr G+q+r  canc=True  regions   1127 depth>=18   1033 scored True  depth20    904 (CC 904)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 8:0/1 9:0/1 10:0/2 11:0/5 12:0/8 13:0/5 14:0/10 15:0/19 16:0/16 17:0/21 18:0/55 19:0/74 20:0/904
+        median sigma 1.46e-06 rad (deg-8 1.43e-06); sigma/F 0.225; sigma/F 10-90% 0.211-0.238; unwrap? 0
+        median D(depth 20) 1.94e-07; median D/sigma 0.132; phase_err>=abserr 2/904
+        ancestry (20 regions): slope real 0.0535 (D=0 excluded: 0), control -0.0372 (D=0 excluded: 0); median D20 real 1.62e-07, control 1.23e-14, ratio 1.32e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 1.51e-06 rad, max unwrapped step 0.000549 rad
+    Gqr G+q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+    Gqr G-q+r  canc=True  regions   1910 depth>=18   1753 scored True  depth20   1548 (CC 1548)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:1/0 10:0/4 11:0/6 12:0/10 13:0/15 14:0/14 15:0/27 16:0/31 17:0/44 18:0/85 19:0/120 20:0/1548
+        median sigma 1.46e-06 rad (deg-8 1.42e-06); sigma/F 0.224; sigma/F 10-90% 0.199-0.241; unwrap? 0
+        median D(depth 20) 1.49e-07; median D/sigma 0.104; phase_err>=abserr 3/1548
+        ancestry (20 regions): slope real 0.0246 (D=0 excluded: 0), control -0.0962 (D=0 excluded: 0); median D20 real 1.34e-07, control 1.53e-14, ratio 8.75e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 1.5e-06 rad, max unwrapped step 0.000811 rad
+    Gqr G-q-r  canc=False regions      1 depth>=18      0 scored False depth20      0 (CC 0)
+        hist 0:1/0
+-- R6 (top group G; F = 1.956e-06)
+      G G      canc=False regions  13903 depth>=18  13436 scored True  depth20  12628 (CC 12628)
+        hist 1:0/1 3:0/1 4:0/2 5:0/4 6:0/2 7:0/2 8:0/7 9:0/6 10:0/6 11:0/13 12:0/14 13:0/20 14:0/35 15:0/56 16:0/109 17:0/189 18:0/242 19:0/566 20:0/12628
+        median sigma 6.59e-07 rad (deg-8 6.18e-07); sigma/F 0.337; sigma/F 10-90% 0.322-0.352; unwrap? 0
+        median D(depth 20) 5.34e-08; median D/sigma 0.082; phase_err>=abserr 361/12628
+        ancestry (20 regions): slope real -0.000187 (D=0 excluded: 0), control 0.177 (D=0 excluded: 2); median D20 real 5.43e-08, control 2.92e-16, ratio 1.86e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 6.86e-07 rad, max unwrapped step 8.39e-05 rad
+    Gqr G+q+r  canc=True  regions   3563 depth>=18   3421 scored True  depth20   3252 (CC 3252)
+        hist 1:1/0 2:1/0 3:1/0 6:0/3 7:0/4 8:0/6 9:0/4 10:0/4 11:0/7 12:0/9 13:0/5 14:0/14 15:0/14 16:0/23 17:0/46 18:0/45 19:0/124 20:0/3252
+        median sigma 6.68e-07 rad (deg-8 6.51e-07); sigma/F 0.341; sigma/F 10-90% 0.316-0.363; unwrap? 0
+        median D(depth 20) 7.38e-08; median D/sigma 0.112; phase_err>=abserr 28/3252
+        ancestry (20 regions): slope real -0.00525 (D=0 excluded: 0), control 0.0141 (D=0 excluded: 2); median D20 real 9.16e-08, control 5.89e-16, ratio 1.55e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 6.9e-07 rad, max unwrapped step 0.000139 rad
+    Gqr G+q-r  canc=True  regions   1907 depth>=18   1749 scored True  depth20   1564 (CC 1564)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 8:0/2 9:0/14 10:0/18 11:0/6 12:0/8 13:0/7 14:0/14 15:0/15 16:0/27 17:0/43 18:0/69 19:0/116 20:0/1564
+        median sigma 6.59e-07 rad (deg-8 6.3e-07); sigma/F 0.337; sigma/F 10-90% 0.283-0.364; unwrap? 0
+        median D(depth 20) 7.21e-08; median D/sigma 0.115; phase_err>=abserr 9/1564
+        ancestry (20 regions): slope real 0.0268 (D=0 excluded: 0), control 0.0234 (D=0 excluded: 1); median D20 real 8.43e-08, control 4.13e-15, ratio 2.04e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 6.83e-07 rad, max unwrapped step 0.000494 rad
+    Gqr G-q+r  canc=True  regions   1907 depth>=18   1749 scored True  depth20   1564 (CC 1564)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 8:0/2 9:0/14 10:0/18 11:0/6 12:0/8 13:0/7 14:0/14 15:0/15 16:0/27 17:0/43 18:0/69 19:0/116 20:0/1564
+        median sigma 6.59e-07 rad (deg-8 6.3e-07); sigma/F 0.337; sigma/F 10-90% 0.283-0.364; unwrap? 0
+        median D(depth 20) 7.21e-08; median D/sigma 0.115; phase_err>=abserr 9/1564
+        ancestry (20 regions): slope real 0.0268 (D=0 excluded: 0), control 0.0234 (D=0 excluded: 1); median D20 real 8.43e-08, control 4.13e-15, ratio 2.04e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 6.83e-07 rad, max unwrapped step 0.000494 rad
+    Gqr G-q-r  canc=False regions    867 depth>=18    765 scored True  depth20    664 (CC 664)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 8:0/1 9:0/3 10:0/11 11:0/12 12:0/9 13:0/5 14:0/9 15:0/6 16:0/19 17:0/22 18:0/31 19:0/70 20:0/664
+        median sigma 6.69e-07 rad (deg-8 6.55e-07); sigma/F 0.342; sigma/F 10-90% 0.311-0.37; unwrap? 0
+        median D(depth 20) 7.63e-08; median D/sigma 0.113; phase_err>=abserr 4/664
+        ancestry (20 regions): slope real 0.172 (D=0 excluded: 0), control 0.112 (D=0 excluded: 1); median D20 real 4.88e-08, control 5.25e-15, ratio 9.29e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.87e-07 rad, max unwrapped step 0.000578 rad
+-- R7 (top group G+q+r; F = 2.595e-06)
+      G G      canc=False regions  13613 depth>=18  13205 scored True  depth20  12466 (CC 12466)
+        hist 1:0/1 2:0/1 4:0/1 5:0/1 6:0/3 7:0/6 8:0/3 9:0/6 10:0/5 11:0/13 12:0/17 13:0/28 14:0/35 15:0/65 16:0/75 17:0/148 18:0/300 19:0/439 20:0/12466
+        median sigma 6.7e-07 rad (deg-8 6.53e-07); sigma/F 0.258; sigma/F 10-90% 0.247-0.27; unwrap? 0
+        median D(depth 20) 6.84e-08; median D/sigma 0.102; phase_err>=abserr 179/12466
+        ancestry (20 regions): slope real 0.0303 (D=0 excluded: 0), control 0.333 (D=0 excluded: 1); median D20 real 7.77e-08, control 4.06e-16, ratio 1.92e+08; span types changed by control 0; control fit: median N 4097, median fit RMS 6.95e-07 rad, max unwrapped step 8.2e-05 rad
+    Gqr G+q+r  canc=True  regions   6742 depth>=18   6444 scored True  depth20   6036 (CC 6036)
+        hist 1:1/0 2:1/0 3:1/0 6:0/1 7:0/3 8:0/7 9:0/14 10:0/11 11:0/7 12:0/13 13:0/21 14:0/33 15:0/31 16:0/54 17:0/100 18:0/142 19:0/266 20:0/6036
+        median sigma 6.63e-07 rad (deg-8 6.42e-07); sigma/F 0.255; sigma/F 10-90% 0.232-0.272; unwrap? 0
+        median D(depth 20) 7.31e-08; median D/sigma 0.112; phase_err>=abserr 37/6036
+        ancestry (20 regions): slope real -0.0109 (D=0 excluded: 0), control -0.0167 (D=0 excluded: 3); median D20 real 8.56e-08, control 1.85e-15, ratio 4.63e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 6.79e-07 rad, max unwrapped step 0.000334 rad
+    Gqr G+q-r  canc=True  regions   1166 depth>=18   1089 scored True  depth20    980 (CC 980)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 8:0/1 9:0/2 10:0/3 11:0/3 12:0/3 13:0/4 14:0/5 15:0/8 16:0/14 17:0/28 18:0/41 19:0/68 20:0/980
+        median sigma 6.72e-07 rad (deg-8 6.55e-07); sigma/F 0.259; sigma/F 10-90% 0.246-0.274; unwrap? 0
+        median D(depth 20) 7.08e-08; median D/sigma 0.106; phase_err>=abserr 4/980
+        ancestry (20 regions): slope real 0.0731 (D=0 excluded: 0), control -0.0188 (D=0 excluded: 1); median D20 real 5.09e-08, control 5.04e-15, ratio 1.01e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 7.09e-07 rad, max unwrapped step 0.000168 rad
+    Gqr G-q+r  canc=True  regions   1166 depth>=18   1089 scored True  depth20    980 (CC 980)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 5:1/0 6:0/1 8:0/1 9:0/2 10:0/3 11:0/3 12:0/3 13:0/4 14:0/5 15:0/8 16:0/14 17:0/28 18:0/41 19:0/68 20:0/980
+        median sigma 6.72e-07 rad (deg-8 6.55e-07); sigma/F 0.259; sigma/F 10-90% 0.246-0.274; unwrap? 0
+        median D(depth 20) 7.08e-08; median D/sigma 0.106; phase_err>=abserr 4/980
+        ancestry (20 regions): slope real 0.0731 (D=0 excluded: 0), control -0.0188 (D=0 excluded: 1); median D20 real 5.09e-08, control 5.04e-15, ratio 1.01e+07; span types changed by control 0; control fit: median N 4097, median fit RMS 7.09e-07 rad, max unwrapped step 0.000168 rad
+    Gqr G-q-r  canc=False regions    651 depth>=18    585 scored True  depth20    556 (CC 556)
+        hist 1:1/0 2:1/0 3:1/0 4:1/0 6:2/0 7:0/1 9:0/7 10:0/5 11:0/5 12:0/4 13:0/2 14:0/3 15:0/5 16:0/9 17:0/19 18:0/9 19:0/20 20:0/556
+        median sigma 6.65e-07 rad (deg-8 6.45e-07); sigma/F 0.256; sigma/F 10-90% 0.23-0.278; unwrap? 0
+        median D(depth 20) 7e-08; median D/sigma 0.108; phase_err>=abserr 3/556
+        ancestry (20 regions): slope real 0.0485 (D=0 excluded: 0), control 0.0664 (D=0 excluded: 0); median D20 real 5.52e-08, control 2.12e-14, ratio 2.6e+06; span types changed by control 0; control fit: median N 4097, median fit RMS 6.81e-07 rad, max unwrapped step 0.000529 rad
+
+== ancestry, median D over the sampled regions at each depth (real | control), scored groups
+   R1 G      10:6.8e-08|4.4e-16[d] 11:5.6e-08|3.5e-16[d] 12:4.9e-08|1e-15[d] 13:8.2e-08|5.5e-16[d] 14:4.7e-08|7.2e-16[d] 15:6.3e-08|3.4e-16[d] 16:3.3e-08|4.1e-16[d] 17:6e-08|5.7e-16[d] 18:7.3e-08|4.5e-16[d] 19:4e-08|2.2e-16[d] 20:1.1e-07|4.2e-16[d]
+   R1 G+r    10:7.7e-08|3.1e-15[d] 11:6.5e-08|1.4e-15[d] 12:5.4e-08|1.5e-15[d] 13:5.6e-08|2.3e-15[d] 14:5e-08|2.4e-15[d] 15:4e-08|2.2e-15[d] 16:6.4e-08|3.7e-15[d] 17:3.7e-08|3.6e-15[d] 18:5e-08|1.6e-15[d] 19:5e-08|2.4e-15[d] 20:4.1e-08|2.4e-15[d]
+   R1 G-r    10:8.4e-08|2.1e-14[d] 11:1e-07|1.6e-14[d] 12:6.9e-08|5.5e-15[d] 13:5.7e-08|1.3e-14[d] 14:6.6e-08|2.4e-14[d] 15:8.7e-08|7.7e-15[d] 16:6.4e-08|3e-14[d] 17:5.8e-08|1.9e-14[d] 18:8.3e-08|4.9e-15[d] 19:6.1e-08|2.5e-14[d] 20:5.2e-08|1.7e-14[d]
+   R1 G+q+r  10:4.7e-08|9.5e-14[d] 11:6e-08|9.3e-14[d] 12:4.1e-08|8e-15[d] 13:5.3e-08|5.5e-14[d] 14:6.9e-08|6.9e-15[d] 15:3.3e-08|4.8e-14[d] 16:9.1e-08|9.3e-14[d] 17:5e-08|1.8e-14[d] 18:7.3e-08|3e-14[d] 19:5.2e-08|3.4e-14[d] 20:5.4e-08|3.1e-14[d]
+   R1 G-q+r  10:1.1e-07|1e-13[d] 11:9e-08|5.6e-14[d] 12:6.1e-08|1.7e-14[d] 13:7.3e-08|6.2e-14[d] 14:1.1e-07|7.4e-15[d] 15:4.7e-08|5.5e-14[d] 16:5.4e-08|8.8e-14[d] 17:7e-08|4.3e-14[d] 18:5.1e-08|3.4e-14[d] 19:4.8e-08|3.1e-14[d] 20:6.7e-08|3.6e-14[d]
+   R2 G+r    10:1.9e-07|5.1e-15[d] 11:1.7e-07|1.1e-14[d] 12:2.5e-07|5.7e-15[d] 13:1.9e-07|4e-15[d] 14:1.7e-07|7.8e-15[d] 15:1.5e-07|5.9e-15[d] 16:2e-07|5.6e-15[d] 17:1.6e-07|7.3e-15[d] 18:2.7e-07|7.4e-15[d] 19:3e-07|4.6e-15[d] 20:1.3e-07|3.3e-15[d]
+   R2 G-r    10:1.6e-07|4.4e-14[d] 11:1.6e-07|2.5e-14[d] 12:1.8e-07|3e-14[d] 13:1.7e-07|1.7e-14[d] 14:2e-07|2.8e-14[d] 15:1.6e-07|3e-14[d] 16:2.1e-07|3.2e-14[d] 17:1.8e-07|3.5e-14[d] 18:2e-07|2.7e-14[d] 19:1.9e-07|1.9e-14[d] 20:8.4e-08|2.6e-14[d]
+   R2 G-q+r  10:2.1e-07|2e-14[d] 11:1.5e-07|1.1e-14[d] 12:1.7e-07|9.8e-15[d] 13:1.7e-07|1.6e-14[d] 14:1.1e-07|2e-14[d] 15:2.4e-07|1.5e-14[d] 16:1.9e-07|2.8e-14[d] 17:1.4e-07|3.3e-14[d] 18:2.2e-07|2.3e-14[d] 19:1.3e-07|1.8e-14[d] 20:1.5e-07|1.7e-14[d]
+   R3 G+r    10:3.4e-06|2.8e-15[d] 11:4.1e-06|7.1e-15[d] 12:3.3e-06|4.5e-15[d] 13:2.7e-06|3.3e-15[d] 14:2.9e-06|7.4e-15[d] 15:2.5e-06|4.2e-15[d] 16:3.6e-06|4.3e-15[d] 17:2.9e-06|2.5e-15[d] 18:2.7e-06|2.7e-15[d] 19:3.1e-06|3.4e-15[d] 20:1e-06|3.9e-15[d]
+   R3 G-r    10:5.5e-06|1.1e-13[d] 11:4e-06|6.4e-14[d] 12:3.3e-06|8e-14[d] 13:3e-06|2e-14[d] 14:2.2e-06|7.3e-14[d] 15:4.2e-06|8.3e-14[d] 16:3e-06|6e-14[d] 17:2.6e-06|2.4e-14[d] 18:4e-06|2e-14[d] 19:2.2e-06|3.1e-14[d] 20:2.2e-06|1e-14[d]
+   R4 G      10:1.1e-07|7.7e-16[d] 11:3.8e-08|6.7e-16[d] 12:8.6e-08|9.2e-16[d] 13:8.2e-08|4.2e-16[d] 14:7.2e-08|7.4e-16[d] 15:8.8e-08|7.6e-16[d] 16:9.8e-08|6.4e-16[d] 17:8.4e-08|6.6e-16[d] 18:7.8e-08|5.7e-16[d] 19:1.2e-07|3.1e-16[d] 20:5.3e-08|4.2e-16[d]
+   R4 G+r    10:9.5e-08|6.9e-15[d] 11:8.9e-08|4.1e-15[d] 12:8.4e-08|1.7e-15[d] 13:9.8e-08|5.9e-15[d] 14:8.1e-08|1.1e-14[d] 15:8e-08|3.2e-15[d] 16:7.9e-08|1.1e-14[d] 17:9.2e-08|8.6e-15[d] 18:9.5e-08|2.5e-15[d] 19:7.3e-08|6.8e-15[d] 20:7.3e-08|1e-14[d]
+   R4 G-r    10:8.3e-08|2.8e-14[d] 11:8.3e-08|2.1e-14[d] 12:1.1e-07|1.6e-14[d] 13:9.7e-08|2.7e-14[d] 14:6.8e-08|1.3e-14[d] 15:5.5e-08|2.5e-14[d] 16:8.7e-08|7.3e-14[d] 17:7.8e-08|2.6e-14[d] 18:7.6e-08|1.6e-14[d] 19:6e-08|5.1e-14[d] 20:1.1e-07|1.9e-14[d]
+   R4 G+q+r  10:7.3e-08|6.7e-14[d] 11:8.8e-08|7.2e-14[d] 12:9.9e-08|7.7e-15[d] 13:6.7e-08|4e-14[d] 14:1.3e-07|5.5e-14[d] 15:8.4e-08|8.4e-14[d] 16:8.2e-08|9.1e-14[d] 17:5.2e-08|6.3e-14[d] 18:8.3e-08|1.6e-14[d] 19:5.5e-08|1.1e-14[d] 20:6.3e-08|5.8e-14[d]
+   R4 G-q+r  10:7e-08|8.6e-14[d] 11:1.4e-07|8.9e-14[d] 12:2.1e-07|4.3e-14[d] 13:8.8e-08|1e-13[d] 14:9.7e-08|5.4e-14[d] 15:7.8e-08|8.4e-14[d] 16:7.9e-08|1e-13[d] 17:9.7e-08|5.8e-14[d] 18:1e-07|5.6e-15[d] 19:8.6e-08|2.4e-14[d] 20:9e-08|8.1e-14[d]
+   R5 G+r    10:2.4e-07|8.4e-15[d] 11:1.5e-07|8.4e-15[d] 12:1.8e-07|9.6e-15[d] 13:2.6e-07|5.9e-15[d] 14:2.8e-07|7.2e-15[d] 15:1.4e-07|6.4e-15[d] 16:1.8e-07|6.4e-15[d] 17:2.2e-07|1.1e-14[d] 18:1.5e-07|4.6e-15[d] 19:2.3e-07|8.9e-15[d] 20:1.2e-07|3.9e-15[d]
+   R5 G-r    10:2.4e-07|3.5e-14[d] 11:1.8e-07|2.6e-14[d] 12:2e-07|5.7e-14[d] 13:2.6e-07|1.6e-14[d] 14:1.8e-07|2.6e-14[d] 15:2e-07|2.3e-14[d] 16:1.6e-07|2.1e-14[d] 17:2.1e-07|3.7e-14[d] 18:2.1e-07|4.8e-14[d] 19:2.2e-07|1.3e-14[d] 20:1.3e-07|1.6e-14[d]
+   R5 G+q+r  10:1.5e-07|1.1e-14[d] 11:3.2e-07|1.9e-14[d] 12:1.8e-07|2e-14[d] 13:2e-07|1e-14[d] 14:1.8e-07|1.5e-14[d] 15:1.8e-07|1.2e-14[d] 16:1.4e-07|1.1e-14[d] 17:1.7e-07|1.1e-14[d] 18:1.8e-07|3.4e-14[d] 19:2.5e-07|3e-14[d] 20:1.6e-07|1.2e-14[d]
+   R5 G-q+r  10:1.6e-07|1.8e-14[d] 11:2.4e-07|2.3e-14[d] 12:1.1e-07|1.8e-14[d] 13:2e-07|1.1e-14[d] 14:1.7e-07|2.6e-14[d] 15:1.4e-07|2e-14[d] 16:2.4e-07|1.2e-14[d] 17:1.8e-07|1.2e-14[d] 18:1.5e-07|5.2e-14[d] 19:1.7e-07|3.2e-14[d] 20:1.3e-07|1.5e-14[d]
+   R6 G      10:7.3e-08|2e-16[d] 11:7.2e-08|4.2e-16[d] 12:8e-08|7.8e-16[d] 13:5.9e-08|4.2e-16[d] 14:6.3e-08|5.9e-16[d] 15:6.9e-08|4.5e-16[d] 16:7.9e-08|2.7e-16[d] 17:7.8e-08|4.3e-16[d] 18:1.3e-07|2.9e-16[d] 19:8.2e-08|1.7e-16[d] 20:5.4e-08|2.9e-16[d]
+   R6 G+q+r  10:1.1e-07|1.6e-15[d] 11:1.1e-07|1.9e-15[d] 12:8.2e-08|7.6e-16[d] 13:9.1e-08|1e-15[d] 14:9.8e-08|4.4e-16[d] 15:8.6e-08|1.4e-15[d] 16:5.8e-08|5.3e-16[d] 17:9.6e-08|6.6e-16[d] 18:9.4e-08|7.8e-16[d] 19:9.4e-08|5.8e-16[d] 20:9.2e-08|5.9e-16[d]
+   R6 G+q-r  10:1e-07|9.8e-15[d] 11:1.9e-07|1.5e-14[d] 12:1.1e-07|4.9e-15[d] 13:7.8e-08|4.5e-15[d] 14:8.6e-08|5.2e-15[d] 15:1e-07|7.1e-15[d] 16:7.6e-08|4.7e-15[d] 17:8.7e-08|4.1e-15[d] 18:6.6e-08|4.8e-15[d] 19:8.9e-08|8.4e-15[d] 20:8.4e-08|4.1e-15[d]
+   R6 G-q+r  10:1e-07|9.8e-15[d] 11:1.9e-07|1.5e-14[d] 12:1.1e-07|4.9e-15[d] 13:7.8e-08|4.5e-15[d] 14:8.6e-08|5.2e-15[d] 15:1e-07|7.1e-15[d] 16:7.6e-08|4.7e-15[d] 17:8.7e-08|4.1e-15[d] 18:6.6e-08|4.8e-15[d] 19:8.9e-08|8.4e-15[d] 20:8.4e-08|4.1e-15[d]
+   R6 G-q-r  10:1.4e-07|7.5e-15[d] 11:1.5e-07|2.4e-14[d] 12:1.4e-07|7.1e-15[d] 13:8.4e-08|5.2e-15[d] 14:1.1e-07|1e-14[d] 15:7.5e-08|9.3e-15[d] 16:6.9e-08|1.3e-14[d] 17:7.6e-08|7.6e-15[d] 18:6.2e-08|2.2e-14[d] 19:5.3e-08|1.3e-14[d] 20:4.9e-08|5.2e-15[d]
+   R7 G      10:1.1e-07|8.1e-16[d] 11:6.5e-08|7.1e-16[d] 12:8.1e-08|1.3e-15[d] 13:9.2e-08|7.7e-16[d] 14:6.5e-08|1.2e-15[d] 15:7.9e-08|8.1e-16[d] 16:8.9e-08|3.8e-16[d] 17:7.3e-08|7.8e-16[d] 18:6.6e-08|3.2e-16[d] 19:1.1e-07|5.7e-16[d] 20:7.8e-08|4.1e-16[d]
+   R7 G+q+r  10:4.9e-08|2.8e-15[d] 11:5e-08|2.5e-15[d] 12:6.4e-08|3.1e-15[d] 13:7e-08|6e-16[d] 14:8.7e-08|1.3e-15[d] 15:7.7e-08|1.7e-15[d] 16:1.1e-07|1.1e-15[d] 17:8e-08|8.6e-16[d] 18:1e-07|1.6e-15[d] 19:6.8e-08|1.5e-15[d] 20:8.6e-08|1.8e-15[d]
+   R7 G+q-r  10:1.3e-07|3.8e-15[d] 11:5.6e-08|3.5e-15[d] 12:1.6e-07|1e-14[d] 13:9.3e-08|7.8e-15[d] 14:1.2e-07|3.1e-15[d] 15:8e-08|5.1e-15[d] 16:6.4e-08|2.3e-15[d] 17:7.8e-08|1.8e-15[d] 18:7.8e-08|4.8e-15[d] 19:1e-07|4.3e-15[d] 20:5.1e-08|5e-15[d]
+   R7 G-q+r  10:1.3e-07|3.8e-15[d] 11:5.6e-08|3.5e-15[d] 12:1.6e-07|1e-14[d] 13:9.3e-08|7.8e-15[d] 14:1.2e-07|3.1e-15[d] 15:8e-08|5.1e-15[d] 16:6.4e-08|2.3e-15[d] 17:7.8e-08|1.8e-15[d] 18:7.8e-08|4.8e-15[d] 19:1e-07|4.3e-15[d] 20:5.1e-08|5e-15[d]
+   R7 G-q-r  10:6.7e-08|4e-15[d] 11:2.2e-07|1.5e-14[d] 12:8.3e-08|4.8e-14[d] 13:6.7e-08|1.8e-14[d] 14:1.5e-07|9.7e-15[d] 15:1.1e-07|1.8e-14[d] 16:8.1e-08|8.9e-15[d] 17:6.5e-08|5e-15[d] 18:9.7e-08|1.1e-14[d] 19:8e-08|1.1e-14[d] 20:5.5e-08|2.1e-14[d]
+   harness check: recomputed real discrepancy == recorded region.abserr (and type) at 580 of 580 sampled depth-20 regions
+
+== M1: median sigma(depth 20)/F in [0.1, 10] in every scored group of every row
+   R1 G      canc=False   0.2807 in
+   R1 G+r    canc=True     0.284 in
+   R1 G-r    canc=False   0.2824 in
+   R1 G+q+r  canc=True    0.2861 in
+   R1 G-q+r  canc=True    0.2812 in
+   R2 G+r    canc=True    0.3141 in
+   R2 G-r    canc=False   0.3189 in
+   R2 G-q+r  canc=True    0.3169 in
+   R3 G+r    canc=True    0.2865 in
+   R3 G-r    canc=False   0.2623 in
+   R4 G      canc=False   0.2569 in
+   R4 G+r    canc=True    0.2549 in
+   R4 G-r    canc=False   0.2558 in
+   R4 G+q+r  canc=True     0.254 in
+   R4 G-q+r  canc=True    0.2573 in
+   R5 G+r    canc=True    0.2249 in
+   R5 G-r    canc=False   0.2251 in
+   R5 G+q+r  canc=True     0.225 in
+   R5 G-q+r  canc=True    0.2243 in
+   R6 G      canc=False    0.337 in
+   R6 G+q+r  canc=True    0.3412 in
+   R6 G+q-r  canc=True    0.3371 in
+   R6 G-q+r  canc=True    0.3371 in
+   R6 G-q-r  canc=False   0.3419 in
+   R7 G      canc=False   0.2582 in
+   R7 G+q+r  canc=True    0.2553 in
+   R7 G+q-r  canc=True    0.2588 in
+   R7 G-q+r  canc=True    0.2588 in
+   R7 G-q-r  canc=False   0.2561 in
+   M1 HOLDS
+
+== M2: per row, median over scored groups of the real-phase slope in [-0.5, 0.5] (part 1) and of median D/sigma at depth 20 in [0.01, 10] (part 2); holds if both on >= 6 of 7 rows
+   R1: scored groups ['G', 'G+r', 'G-r', 'G+q+r', 'G-q+r']; median slope 0.05868 (in); median D/sigma 0.1124 (in) -> both
+   R2: scored groups ['G+r', 'G-r', 'G-q+r']; median slope 0.06702 (in); median D/sigma 0.09271 (in) -> both
+   R3: scored groups ['G+r', 'G-r']; median slope 0.08855 (in); median D/sigma 0.07792 (in) -> both
+   R4: scored groups ['G', 'G+r', 'G-r', 'G+q+r', 'G-q+r']; median slope 0.05383 (in); median D/sigma 0.09937 (in) -> both
+   R5: scored groups ['G+r', 'G-r', 'G+q+r', 'G-q+r']; median slope 0.05139 (in); median D/sigma 0.09953 (in) -> both
+   R6: scored groups ['G', 'G+q+r', 'G+q-r', 'G-q+r', 'G-q-r']; median slope 0.02684 (in); median D/sigma 0.1133 (in) -> both
+   R7: scored groups ['G', 'G+q+r', 'G+q-r', 'G-q+r', 'G-q-r']; median slope 0.04854 (in); median D/sigma 0.1058 (in) -> both
+   M2 holds on 7 of 7 rows: HOLDS
+
+== M3: control, per row median over scored groups of slope >= 2 and of median-D20 ratio real/control >= 100; holds if on >= 6 of 7 rows
+   R1: median control slope 0.06807 (<2); median ratio 3.067e+06 (>=100) -> false
+   R2: median control slope -0.02013 (<2); median ratio 8.804e+06 (>=100) -> false
+   R3: median control slope 0.06861 (<2); median ratio 2.351e+08 (>=100) -> false
+   R4: median control slope 0.1478 (<2); median ratio 5.777e+06 (>=100) -> false
+   R5: median control slope -0.001702 (<2); median ratio 1.098e+07 (>=100) -> false
+   R6: median control slope 0.02343 (<2); median ratio 2.042e+07 (>=100) -> false
+   R7: median control slope -0.01667 (<2); median ratio 1.011e+07 (>=100) -> false
+   M3 true on 0 of 7 rows: FAILS
+
+== M4: among depth-20 regions of scored groups, share with phase_err >= abserr below 0.1; also the share that is Clenshaw-Curtis
+   R1: 341/29620 = 0.01151 phase_err>=abserr; CC 29620/29620 = 1
+   R2: 89/24388 = 0.003649 phase_err>=abserr; CC 24388/24388 = 1
+   R3: 71/27332 = 0.002598 phase_err>=abserr; CC 27332/27332 = 1
+   R4: 380/46240 = 0.008218 phase_err>=abserr; CC 46240/46240 = 1
+   R5: 92/20926 = 0.004396 phase_err>=abserr; CC 20926/20926 = 1
+   R6: 411/19672 = 0.02089 phase_err>=abserr; CC 19672/19672 = 1
+   R7: 227/21018 = 0.0108 phase_err>=abserr; CC 21018/21018 = 1
+   pooled: 1611/189196 = 0.008515; CC share 189196/189196 = 1
+   M4 HOLDS
+
+== M5: |theta'_{G+r}|/|theta'_{G-r}| against (1-c_s)/(1+c_s) at five abscissae of the Gr sub-interval, within 5% at all five; rows R1-R5 and R7
+   R1: within 5% at all five
+      x=21.8403 ratio=0.267956 pred=0.267949 c_s^2=0.333333 dev=+2.36e-05
+      x=22.4121 ratio=0.267969 pred=0.267949 c_s^2=0.333333 dev=+7.42e-05
+      x=22.9840 ratio=0.268012 pred=0.267949 c_s^2=0.333333 dev=+2.33e-04
+      x=23.5559 ratio=0.268145 pred=0.267949 c_s^2=0.333333 dev=+7.31e-04
+      x=24.1278 ratio=0.268564 pred=0.267949 c_s^2=0.333333 dev=+2.30e-03
+   R2: within 5% at all five
+      x=25.0809 ratio=0.267992 pred=0.267949 c_s^2=0.333333 dev=+1.59e-04
+      x=25.4622 ratio=0.268041 pred=0.267949 c_s^2=0.333333 dev=+3.41e-04
+      x=25.8434 ratio=0.268145 pred=0.267949 c_s^2=0.333333 dev=+7.31e-04
+      x=26.2247 ratio=0.268369 pred=0.267949 c_s^2=0.333333 dev=+1.57e-03
+      x=26.6060 ratio=0.268850 pred=0.267949 c_s^2=0.333333 dev=+3.36e-03
+   R3: within 5% at all five
+      x=24.3184 ratio=0.267950 pred=0.267949 c_s^2=0.333333 dev=+3.51e-06
+      x=25.0809 ratio=0.267954 pred=0.267949 c_s^2=0.333333 dev=+1.61e-05
+      x=25.8434 ratio=0.267969 pred=0.267949 c_s^2=0.333333 dev=+7.42e-05
+      x=26.6060 ratio=0.268041 pred=0.267949 c_s^2=0.333333 dev=+3.41e-04
+      x=27.3685 ratio=0.268369 pred=0.267949 c_s^2=0.333333 dev=+1.57e-03
+   R4: within 5% at all five
+      x=21.8403 ratio=0.267956 pred=0.267949 c_s^2=0.333333 dev=+2.36e-05
+      x=22.4121 ratio=0.267969 pred=0.267949 c_s^2=0.333333 dev=+7.42e-05
+      x=22.9840 ratio=0.268012 pred=0.267949 c_s^2=0.333333 dev=+2.33e-04
+      x=23.5559 ratio=0.268145 pred=0.267949 c_s^2=0.333333 dev=+7.31e-04
+      x=24.1278 ratio=0.268564 pred=0.267949 c_s^2=0.333333 dev=+2.30e-03
+   R5: within 5% at all five
+      x=25.0809 ratio=0.267992 pred=0.267949 c_s^2=0.333333 dev=+1.59e-04
+      x=25.4622 ratio=0.268041 pred=0.267949 c_s^2=0.333333 dev=+3.41e-04
+      x=25.8434 ratio=0.268145 pred=0.267949 c_s^2=0.333333 dev=+7.31e-04
+      x=26.2247 ratio=0.268369 pred=0.267949 c_s^2=0.333333 dev=+1.57e-03
+      x=26.6060 ratio=0.268850 pred=0.267949 c_s^2=0.333333 dev=+3.36e-03
+   R6: no Gr sub-interval (regimes ['G', 'Gqr']); the rule cannot be applied
+   R7: no Gr sub-interval (regimes ['G', 'Gqr']); the rule cannot be applied
+   M5 on the 5 rows it applies to: HOLDS
+
+== H-anchor / H-cancel, group by group (scored groups): M1, M2 part 1 (own slope), M2 part 2 (own D/sigma)
+   R1    G G      canc=False top=False M1 True  slope    0.015 True  D/sigma    0.145 True 
+   R1   Gr G+r    canc=True  top=True  M1 True  slope   0.0603 True  D/sigma   0.0951 True 
+   R1   Gr G-r    canc=False top=False M1 True  slope   0.0587 True  D/sigma      0.1 True 
+   R1  Gqr G+q+r  canc=True  top=False M1 True  slope   0.0334 True  D/sigma    0.112 True 
+   R1  Gqr G-q+r  canc=True  top=False M1 True  slope     0.11 True  D/sigma    0.148 True 
+   R2   Gr G+r    canc=True  top=True  M1 True  slope    0.067 True  D/sigma   0.0927 True 
+   R2   Gr G-r    canc=False top=False M1 True  slope   0.0768 True  D/sigma   0.0917 True 
+   R2  Gqr G-q+r  canc=True  top=False M1 True  slope   0.0398 True  D/sigma    0.107 True 
+   R3   Gr G+r    canc=True  top=True  M1 True  slope    0.124 True  D/sigma   0.0659 True 
+   R3   Gr G-r    canc=False top=False M1 True  slope   0.0533 True  D/sigma   0.0899 True 
+   R4    G G      canc=False top=False M1 True  slope   0.0415 True  D/sigma   0.0898 True 
+   R4   Gr G+r    canc=True  top=False M1 True  slope   0.0538 True  D/sigma   0.0994 True 
+   R4   Gr G-r    canc=False top=True  M1 True  slope   0.0298 True  D/sigma    0.119 True 
+   R4  Gqr G+q+r  canc=True  top=False M1 True  slope   0.0996 True  D/sigma    0.103 True 
+   R4  Gqr G-q+r  canc=True  top=False M1 True  slope    0.174 True  D/sigma   0.0962 True 
+   R5   Gr G+r    canc=True  top=False M1 True  slope    0.114 True  D/sigma   0.0951 True 
+   R5   Gr G-r    canc=False top=True  M1 True  slope   0.0493 True  D/sigma   0.0888 True 
+   R5  Gqr G+q+r  canc=True  top=False M1 True  slope   0.0535 True  D/sigma    0.132 True 
+   R5  Gqr G-q+r  canc=True  top=False M1 True  slope   0.0246 True  D/sigma    0.104 True 
+   R6    G G      canc=False top=True  M1 True  slope -0.000187 True  D/sigma    0.082 True 
+   R6  Gqr G+q+r  canc=True  top=False M1 True  slope -0.00525 True  D/sigma    0.112 True 
+   R6  Gqr G+q-r  canc=True  top=False M1 True  slope   0.0268 True  D/sigma    0.115 True 
+   R6  Gqr G-q+r  canc=True  top=False M1 True  slope   0.0268 True  D/sigma    0.115 True 
+   R6  Gqr G-q-r  canc=False top=False M1 True  slope    0.172 True  D/sigma    0.113 True 
+   R7    G G      canc=False top=False M1 True  slope   0.0303 True  D/sigma    0.102 True 
+   R7  Gqr G+q+r  canc=True  top=True  M1 True  slope  -0.0109 True  D/sigma    0.112 True 
+   R7  Gqr G+q-r  canc=True  top=False M1 True  slope   0.0731 True  D/sigma    0.106 True 
+   R7  Gqr G-q+r  canc=True  top=False M1 True  slope   0.0731 True  D/sigma    0.106 True 
+   R7  Gqr G-q-r  canc=False top=False M1 True  slope   0.0485 True  D/sigma    0.108 True 
+
+== summary: M1 holds; M2 holds (7/7); M3 fails (0/7); M4 holds (0.008515); M5 holds on 5 rows

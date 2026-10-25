@@ -1,0 +1,245 @@
+# run_instrument header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-03/scripts/run_instrument.py", "script_sha256": "f3052aafcf36d32c61d33a6a981503ef7e1d4a277881374aceebebc2dd8fd0ae", "harness_sha256": "1ac9a75fad373f3a268ba4e667ab9f9be26d74905770a0577c9e620404bd6553", "rebuild_sha256": "10e38ad4215c856269d2079ea8d459192383ad9c5179b7cd85c4a53026bd250b", "main_py_sha256": "06b7646ecfa82724d0ac5f08eb6a050b4363873a08a06d3ab3ce9951e0bf82b3", "git_head": "98e68d3e1b60e6de4378b7d9aded3a120d6088a9", "git_status_short": "", "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 87443, "OMP_NUM_THREADS": "1", "PYTHONHASHSEED": null, "started": "2026-10-25T19:49:36.491069+00:00", "rows": [["X1:1844", [1, 1844]], ["X2:21681", [2, 21681]]]}
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1740_8d1d43b6, response grid ResponseRedshiftGrid_145_c51d43ac
+   rebuild: largest source k = 3e+08/Mpc, latest tau = 13728 (for z=0.1), largest x=4.1184e+12, largest x +7.5% clearance=4.4273e+12
+** context built in 0.7 s; checks: [('one LambdaCDM model', True, '1'), ('exit times available', True, ''), ('rebuilt redshifts equal stored z exactly', True, '[]'), ('background model available', True, '1')]
+
+== X1:1844 (shard 1, serial 1844)
+   rebuilt in 0.3 s; checks: [('k store_id 301 found once', True, '1'), ('q store_id 102 found once', True, '1'), ('r store_id 301 found once', True, '1'), ('z_response store_id 1368 found once', True, '1'), ('z_source_max serial', True, '11 vs 11'), ('(q, r) is a combinations_with_replacement pair', True, ''), ('closes_triangle', True, ''), ('model serial', True, ''), ('atol serial', True, ''), ('rtol serial', True, ''), ('policy serial', True, ''), ('quad_policy serial', True, ''), ('GkSource (serial-only) available', True, ''), ('all six parents found', True, "{'source_serial': 512, 'data_serial': 917, 'Tq_numeric_serial': 512, 'Tq_WKB_serial': 512, 'Tr_numeric_serial': 513, 'Tr_WKB_serial': 513}"), ("parent source_serial equals the stored row's", True, '512 vs 512'), ("parent data_serial equals the stored row's", True, '917 vs 917'), ("parent Tq_numeric_serial equals the stored row's", True, '512 vs 512'), ("parent Tq_WKB_serial equals the stored row's", True, '512 vs 512'), ("parent Tr_numeric_serial equals the stored row's", True, '513 vs 513'), ("parent Tr_WKB_serial equals the stored row's", True, '513 vs 513'), ('existence query finds the stored row', True, '1844')]
+M0 X1:1844 (shard 1, serial 1844): HOLDS ; compute wall 0.7 s, stored compute_time 0.7 s
+    total                                                      EQUAL                [== and bits] computed=np.float64(-2.8315802541365595e-27) stored=-2.8315802541365595e-27
+    total_abserr                                               EQUAL                [== and bits] computed=np.float64(2.4543476771673488e-31) stored=2.4543476771673488e-31
+    total_converged                                            EQUAL                [==] computed=True stored=True
+    WKB_Levin                                                  EQUAL                [== and bits] computed=np.float64(-2.8315802541365595e-27) stored=-2.8315802541365595e-27
+    numeric_quad                                               EQUAL                [== and bits] computed=0.0 stored=0.0
+    WKB_Levin_data.max_depth                                   EQUAL                [==] computed=20 stored=20
+    WKB_Levin_data.num_regions                                 EQUAL                [==] computed=109 stored=109
+    WKB_Levin_data.evaluations                                 EQUAL (not gated)    [==] computed=239 stored=239
+    WKB_Levin_data.num_simple_regions                          EQUAL (not gated)    [==] computed=95 stored=95
+    WKB_Levin_data.num_SVD_errors                              EQUAL (not gated)    [==] computed=0 stored=0
+    WKB_Levin_data.num_order_changes                           EQUAL (not gated)    [==] computed=0 stored=0
+    WKB_Levin_data.chebyshev_min_order                         EQUAL (not gated)    [==] computed=24 stored=24
+    analytic_rad                                               EQUAL (not gated)    [== and bits] computed=-5.187054815022398e-27 stored=-5.187054815022398e-27
+    total_phase_limited                                        EQUAL (not gated)    [==] computed=False stored=False
+    b                                                          EQUAL (not gated)    [== and bits] computed=0.0 stored=0.0
+    len(subintervals)                                          EQUAL                [==] computed=3 stored=3
+    sub[0].z_max                                               EQUAL                [== and bits] computed=1.6391061605324044e+16 stored=1.6391061605324044e+16
+    sub[0].z_min                                               EQUAL                [== and bits] computed=1648652289281.4983 stored=1648652289281.4983
+    sub[0].regime                                              EQUAL                [==] computed=[True, False, False] stored=[True, False, False]
+    sub[0].value                                               EQUAL                [== and bits] computed=np.float64(-2.2185464694625405e-27) stored=-2.2185464694625405e-27
+    sub[0].abserr                                              EQUAL                [== and bits] computed=np.float64(2.2709532712127696e-32) stored=2.2709532712127696e-32
+    sub[0].converged                                           EQUAL                [==] computed=True stored=True
+    sub[0].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[0] len(groups)                                         EQUAL                [==] computed=1 stored=1
+    sub[0].groups[0](G).label                                  EQUAL                [==] computed='G' stored='G'
+    sub[0].groups[0](G).value                                  EQUAL                [== and bits] computed=np.float64(-2.2185464694625405e-27) stored=-2.2185464694625405e-27
+    sub[0].groups[0](G).abserr                                 EQUAL                [== and bits] computed=np.float64(2.2709532712127696e-32) stored=2.2709532712127696e-32
+    sub[0].groups[0](G).converged                              EQUAL                [==] computed=True stored=True
+    sub[0].groups[0](G).phase_limited                          EQUAL                [==] computed=False stored=False
+    sub[0].groups[0](G).regions                                EQUAL                [==] computed=12 stored=12
+    sub[0].groups[0](G).simple_regions                         EQUAL                [==] computed=12 stored=12
+    sub[0].groups[0](G).evaluations                            EQUAL                [==] computed=23 stored=23
+    sub[0].groups[0](G).elapsed                                DIFFER (not gated)   [== and bits] computed=0.029028499964624643 stored=0.02947216690517962
+    sub[1].z_max                                               EQUAL                [== and bits] computed=1648652289281.4983 stored=1648652289281.4983
+    sub[1].z_min                                               EQUAL                [== and bits] computed=16990360553.926273 stored=16990360553.926273
+    sub[1].regime                                              EQUAL                [==] computed=[True, False, True] stored=[True, False, True]
+    sub[1].value                                               EQUAL                [== and bits] computed=np.float64(-5.558533084013813e-28) stored=-5.558533084013813e-28
+    sub[1].abserr                                              EQUAL                [== and bits] computed=np.float64(1.7687805829515247e-31) stored=1.7687805829515247e-31
+    sub[1].converged                                           EQUAL                [==] computed=True stored=True
+    sub[1].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[1] len(groups)                                         EQUAL                [==] computed=2 stored=2
+    sub[1].groups[0](G+r).label                                EQUAL                [==] computed='G+r' stored='G+r'
+    sub[1].groups[0](G+r).value                                EQUAL                [== and bits] computed=np.float64(-2.2198290443333367e-28) stored=-2.2198290443333367e-28
+    sub[1].groups[0](G+r).abserr                               EQUAL                [== and bits] computed=np.float64(1.972267291602549e-32) stored=1.972267291602549e-32
+    sub[1].groups[0](G+r).converged                            EQUAL                [==] computed=True stored=True
+    sub[1].groups[0](G+r).phase_limited                        EQUAL                [==] computed=False stored=False
+    sub[1].groups[0](G+r).regions                              EQUAL                [==] computed=86 stored=86
+    sub[1].groups[0](G+r).simple_regions                       EQUAL                [==] computed=79 stored=79
+    sub[1].groups[0](G+r).evaluations                          EQUAL                [==] computed=185 stored=185
+    sub[1].groups[0](G+r).elapsed                              DIFFER (not gated)   [== and bits] computed=0.4786094999872148 stored=0.5746525418944657
+    sub[1].groups[1](G-r).label                                EQUAL                [==] computed='G-r' stored='G-r'
+    sub[1].groups[1](G-r).value                                EQUAL                [== and bits] computed=np.float64(-3.338704039680476e-28) stored=-3.338704039680476e-28
+    sub[1].groups[1](G-r).abserr                               EQUAL                [== and bits] computed=np.float64(1.57155385379127e-31) stored=1.57155385379127e-31
+    sub[1].groups[1](G-r).converged                            EQUAL                [==] computed=True stored=True
+    sub[1].groups[1](G-r).phase_limited                        EQUAL                [==] computed=False stored=False
+    sub[1].groups[1](G-r).regions                              EQUAL                [==] computed=7 stored=7
+    sub[1].groups[1](G-r).simple_regions                       EQUAL                [==] computed=4 stored=4
+    sub[1].groups[1](G-r).evaluations                          EQUAL                [==] computed=19 stored=19
+    sub[1].groups[1](G-r).elapsed                              DIFFER (not gated)   [== and bits] computed=0.016340209171175957 stored=0.019106291001662612
+    sub[2].z_max                                               EQUAL                [== and bits] computed=16990360553.926273 stored=16990360553.926273
+    sub[2].z_min                                               EQUAL                [== and bits] computed=526.0122236573703 stored=526.0122236573703
+    sub[2].regime                                              EQUAL                [==] computed=[True, True, True] stored=[True, True, True]
+    sub[2].value                                               EQUAL                [== and bits] computed=np.float64(-5.718047627263772e-29) stored=-5.718047627263772e-29
+    sub[2].abserr                                              EQUAL                [== and bits] computed=np.float64(4.5847176709454715e-32) stored=4.5847176709454715e-32
+    sub[2].converged                                           EQUAL                [==] computed=True stored=True
+    sub[2].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[2] len(groups)                                         EQUAL                [==] computed=4 stored=4
+    sub[2].groups[0](G+q+r).label                              EQUAL                [==] computed='G+q+r' stored='G+q+r'
+    sub[2].groups[0](G+q+r).value                              EQUAL                [== and bits] computed=np.float64(-3.5822663865577124e-28) stored=-3.5822663865577124e-28
+    sub[2].groups[0](G+q+r).abserr                             EQUAL                [== and bits] computed=np.float64(1.6429349724769145e-32) stored=1.6429349724769145e-32
+    sub[2].groups[0](G+q+r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[0](G+q+r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[0](G+q+r).regions                            EQUAL                [==] computed=1 stored=1
+    sub[2].groups[0](G+q+r).simple_regions                     EQUAL                [==] computed=0 stored=0
+    sub[2].groups[0](G+q+r).evaluations                        EQUAL                [==] computed=3 stored=3
+    sub[2].groups[0](G+q+r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.0035466249100863934 stored=0.00451687490567565
+    sub[2].groups[1](G+q-r).label                              EQUAL                [==] computed='G+q-r' stored='G+q-r'
+    sub[2].groups[1](G+q-r).value                              EQUAL                [== and bits] computed=np.float64(-1.1374919025784826e-29) stored=-1.1374919025784826e-29
+    sub[2].groups[1](G+q-r).abserr                             EQUAL                [== and bits] computed=np.float64(6.697906693795514e-33) stored=6.697906693795514e-33
+    sub[2].groups[1](G+q-r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[1](G+q-r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[1](G+q-r).regions                            EQUAL                [==] computed=1 stored=1
+    sub[2].groups[1](G+q-r).simple_regions                     EQUAL                [==] computed=0 stored=0
+    sub[2].groups[1](G+q-r).evaluations                        EQUAL                [==] computed=3 stored=3
+    sub[2].groups[1](G+q-r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.0009165001101791859 stored=0.001116165891289711
+    sub[2].groups[2](G-q+r).label                              EQUAL                [==] computed='G-q+r' stored='G-q+r'
+    sub[2].groups[2](G-q+r).value                              EQUAL                [== and bits] computed=np.float64(2.6311867064411984e-28) stored=2.6311867064411984e-28
+    sub[2].groups[2](G-q+r).abserr                             EQUAL                [== and bits] computed=np.float64(1.6050993242142978e-32) stored=1.6050993242142978e-32
+    sub[2].groups[2](G-q+r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[2](G-q+r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[2](G-q+r).regions                            EQUAL                [==] computed=1 stored=1
+    sub[2].groups[2](G-q+r).simple_regions                     EQUAL                [==] computed=0 stored=0
+    sub[2].groups[2](G-q+r).evaluations                        EQUAL                [==] computed=3 stored=3
+    sub[2].groups[2](G-q+r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.0009036250412464142 stored=0.001109458040446043
+    sub[2].groups[3](G-q-r).label                              EQUAL                [==] computed='G-q-r' stored='G-q-r'
+    sub[2].groups[3](G-q-r).value                              EQUAL                [== and bits] computed=np.float64(4.93024107647985e-29) stored=4.93024107647985e-29
+    sub[2].groups[3](G-q-r).abserr                             EQUAL                [== and bits] computed=np.float64(6.668927048747079e-33) stored=6.668927048747079e-33
+    sub[2].groups[3](G-q-r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[3](G-q-r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[3](G-q-r).regions                            EQUAL                [==] computed=1 stored=1
+    sub[2].groups[3](G-q-r).simple_regions                     EQUAL                [==] computed=0 stored=0
+    sub[2].groups[3](G-q-r).evaluations                        EQUAL                [==] computed=3 stored=3
+    sub[2].groups[3](G-q-r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.0008901248220354319 stored=0.0011054999195039272
+    wrapper records: 3 build_phase_groups calls, 23 adaptive_levin_sincos calls (7 group calls for 7 stored group records); every group call matched by (regime, label) and identity: True
+   pickled row_X1_1844.pkl: 1825792 bytes, sha256 9e8c3b3cbb2401ed6e2567d7f3c2044fd15f58cfe0bd88fe10aaf5f0513748a1
+
+== X2:21681 (shard 2, serial 21681)
+   rebuilt in 0.3 s; checks: [('k store_id 2 found once', True, '1'), ('q store_id 101 found once', True, '1'), ('r store_id 2 found once', True, '1'), ('z_response store_id 792 found once', True, '1'), ('z_source_max serial', True, '11 vs 11'), ('(q, r) is a combinations_with_replacement pair', True, ''), ('closes_triangle', True, ''), ('model serial', True, ''), ('atol serial', True, ''), ('rtol serial', True, ''), ('policy serial', True, ''), ('quad_policy serial', True, ''), ('GkSource (serial-only) available', True, ''), ('all six parents found', True, "{'source_serial': 208, 'data_serial': 654, 'Tq_numeric_serial': 201, 'Tq_WKB_serial': 201, 'Tr_numeric_serial': 601, 'Tr_WKB_serial': 601}"), ("parent source_serial equals the stored row's", True, '208 vs 208'), ("parent data_serial equals the stored row's", True, '654 vs 654'), ("parent Tq_numeric_serial equals the stored row's", True, '201 vs 201'), ("parent Tq_WKB_serial equals the stored row's", True, '201 vs 201'), ("parent Tr_numeric_serial equals the stored row's", True, '601 vs 601'), ("parent Tr_WKB_serial equals the stored row's", True, '601 vs 601'), ('existence query finds the stored row', True, '21681')]
+M0 X2:21681 (shard 2, serial 21681): HOLDS ; compute wall 0.7 s, stored compute_time 0.9 s
+    total                                                      EQUAL                [== and bits] computed=np.float64(-4.4745632803056543e-17) stored=-4.4745632803056543e-17
+    total_abserr                                               EQUAL                [== and bits] computed=np.float64(1.1659132669941887e-23) stored=1.1659132669941887e-23
+    total_converged                                            EQUAL                [==] computed=False stored=False
+    WKB_Levin                                                  EQUAL                [== and bits] computed=np.float64(-4.4745632803056543e-17) stored=-4.4745632803056543e-17
+    numeric_quad                                               EQUAL                [== and bits] computed=0.0 stored=0.0
+    WKB_Levin_data.max_depth                                   EQUAL                [==] computed=17 stored=17
+    WKB_Levin_data.num_regions                                 EQUAL                [==] computed=135 stored=135
+    WKB_Levin_data.evaluations                                 EQUAL (not gated)    [==] computed=319 stored=319
+    WKB_Levin_data.num_simple_regions                          EQUAL (not gated)    [==] computed=107 stored=107
+    WKB_Levin_data.num_SVD_errors                              EQUAL (not gated)    [==] computed=0 stored=0
+    WKB_Levin_data.num_order_changes                           EQUAL (not gated)    [==] computed=0 stored=0
+    WKB_Levin_data.chebyshev_min_order                         EQUAL (not gated)    [==] computed=24 stored=24
+    analytic_rad                                               EQUAL (not gated)    [== and bits] computed=-4.9291655168524417e-17 stored=-4.9291655168524417e-17
+    total_phase_limited                                        EQUAL (not gated)    [==] computed=False stored=False
+    b                                                          EQUAL (not gated)    [== and bits] computed=0.0 stored=0.0
+    len(subintervals)                                          EQUAL                [==] computed=3 stored=3
+    sub[0].z_max                                               EQUAL                [== and bits] computed=1.6391061605324044e+16 stored=1.6391061605324044e+16
+    sub[0].z_min                                               EQUAL                [== and bits] computed=53325413645.46924 stored=53325413645.46924
+    sub[0].regime                                              EQUAL                [==] computed=[True, False, False] stored=[True, False, False]
+    sub[0].value                                               EQUAL                [== and bits] computed=np.float64(-4.55856435829972e-17) stored=-4.55856435829972e-17
+    sub[0].abserr                                              EQUAL                [== and bits] computed=np.float64(2.4853710762864433e-24) stored=2.4853710762864433e-24
+    sub[0].converged                                           EQUAL                [==] computed=True stored=True
+    sub[0].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[0] len(groups)                                         EQUAL                [==] computed=1 stored=1
+    sub[0].groups[0](G).label                                  EQUAL                [==] computed='G' stored='G'
+    sub[0].groups[0](G).value                                  EQUAL                [== and bits] computed=np.float64(-4.55856435829972e-17) stored=-4.55856435829972e-17
+    sub[0].groups[0](G).abserr                                 EQUAL                [== and bits] computed=np.float64(2.4853710762864433e-24) stored=2.4853710762864433e-24
+    sub[0].groups[0](G).converged                              EQUAL                [==] computed=True stored=True
+    sub[0].groups[0](G).phase_limited                          EQUAL                [==] computed=False stored=False
+    sub[0].groups[0](G).regions                                EQUAL                [==] computed=20 stored=20
+    sub[0].groups[0](G).simple_regions                         EQUAL                [==] computed=20 stored=20
+    sub[0].groups[0](G).evaluations                            EQUAL                [==] computed=39 stored=39
+    sub[0].groups[0](G).elapsed                                DIFFER (not gated)   [== and bits] computed=0.04654970788396895 stored=0.05400525010190904
+    sub[1].z_max                                               EQUAL                [== and bits] computed=53325413645.46924 stored=53325413645.46924
+    sub[1].z_min                                               EQUAL                [== and bits] computed=5413409656.063422 stored=5413409656.063422
+    sub[1].regime                                              EQUAL                [==] computed=[True, False, True] stored=[True, False, True]
+    sub[1].value                                               EQUAL                [== and bits] computed=np.float64(-6.33129436001376e-19) stored=-6.33129436001376e-19
+    sub[1].abserr                                              EQUAL                [== and bits] computed=np.float64(8.361482704953029e-24) stored=8.361482704953029e-24
+    sub[1].converged                                           EQUAL                [==] computed=False stored=False
+    sub[1].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[1] len(groups)                                         EQUAL                [==] computed=2 stored=2
+    sub[1].groups[0](G+r).label                                EQUAL                [==] computed='G+r' stored='G+r'
+    sub[1].groups[0](G+r).value                                EQUAL                [== and bits] computed=np.float64(1.267596449756658e-18) stored=1.267596449756658e-18
+    sub[1].groups[0](G+r).abserr                               EQUAL                [== and bits] computed=np.float64(6.196931524255268e-24) stored=6.196931524255268e-24
+    sub[1].groups[0](G+r).converged                            EQUAL                [==] computed=False stored=False
+    sub[1].groups[0](G+r).phase_limited                        EQUAL                [==] computed=False stored=False
+    sub[1].groups[0](G+r).regions                              EQUAL                [==] computed=36 stored=36
+    sub[1].groups[0](G+r).simple_regions                       EQUAL                [==] computed=35 stored=35
+    sub[1].groups[0](G+r).evaluations                          EQUAL                [==] computed=73 stored=73
+    sub[1].groups[0](G+r).elapsed                              DIFFER (not gated)   [== and bits] computed=0.1972302079666406 stored=0.2407609592191875
+    sub[1].groups[1](G-r).label                                EQUAL                [==] computed='G-r' stored='G-r'
+    sub[1].groups[1](G-r).value                                EQUAL                [== and bits] computed=np.float64(-1.900725885758034e-18) stored=-1.900725885758034e-18
+    sub[1].groups[1](G-r).abserr                               EQUAL                [== and bits] computed=np.float64(2.16455118069776e-24) stored=2.16455118069776e-24
+    sub[1].groups[1](G-r).converged                            EQUAL                [==] computed=False stored=False
+    sub[1].groups[1](G-r).phase_limited                        EQUAL                [==] computed=False stored=False
+    sub[1].groups[1](G-r).regions                              EQUAL                [==] computed=32 stored=32
+    sub[1].groups[1](G-r).simple_regions                       EQUAL                [==] computed=25 stored=25
+    sub[1].groups[1](G-r).evaluations                          EQUAL                [==] computed=77 stored=77
+    sub[1].groups[1](G-r).elapsed                              DIFFER (not gated)   [== and bits] computed=0.1279535829089582 stored=0.15469329105690122
+    sub[2].z_max                                               EQUAL                [== and bits] computed=5413409656.063422 stored=5413409656.063422
+    sub[2].z_min                                               EQUAL                [== and bits] computed=303765030.9993826 stored=303765030.9993826
+    sub[2].regime                                              EQUAL                [==] computed=[True, True, True] stored=[True, True, True]
+    sub[2].value                                               EQUAL                [== and bits] computed=np.float64(1.4731402159420277e-18) stored=1.4731402159420277e-18
+    sub[2].abserr                                              EQUAL                [== and bits] computed=np.float64(8.122788887024144e-25) stored=8.122788887024144e-25
+    sub[2].converged                                           EQUAL                [==] computed=False stored=False
+    sub[2].phase_limited                                       EQUAL                [==] computed=False stored=False
+    sub[2] len(groups)                                         EQUAL                [==] computed=4 stored=4
+    sub[2].groups[0](G+q+r).label                              EQUAL                [==] computed='G+q+r' stored='G+q+r'
+    sub[2].groups[0](G+q+r).value                              EQUAL                [== and bits] computed=np.float64(7.094543005119137e-18) stored=7.094543005119137e-18
+    sub[2].groups[0](G+q+r).abserr                             EQUAL                [== and bits] computed=np.float64(1.3757145145507099e-25) stored=1.3757145145507099e-25
+    sub[2].groups[0](G+q+r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[0](G+q+r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[0](G+q+r).regions                            EQUAL                [==] computed=14 stored=14
+    sub[2].groups[0](G+q+r).simple_regions                     EQUAL                [==] computed=10 stored=10
+    sub[2].groups[0](G+q+r).evaluations                        EQUAL                [==] computed=35 stored=35
+    sub[2].groups[0](G+q+r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.10525120794773102 stored=0.13551774993538857
+    sub[2].groups[1](G+q-r).label                              EQUAL                [==] computed='G+q-r' stored='G+q-r'
+    sub[2].groups[1](G+q-r).value                              EQUAL                [== and bits] computed=np.float64(8.932182215539877e-19) stored=8.932182215539877e-19
+    sub[2].groups[1](G+q-r).abserr                             EQUAL                [== and bits] computed=np.float64(3.6584402368117066e-26) stored=3.6584402368117066e-26
+    sub[2].groups[1](G+q-r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[1](G+q-r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[1](G+q-r).regions                            EQUAL                [==] computed=12 stored=12
+    sub[2].groups[1](G+q-r).simple_regions                     EQUAL                [==] computed=6 stored=6
+    sub[2].groups[1](G+q-r).evaluations                        EQUAL                [==] computed=35 stored=35
+    sub[2].groups[1](G+q-r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.048656709026545286 stored=0.06039574998430908
+    sub[2].groups[2](G-q+r).label                              EQUAL                [==] computed='G-q+r' stored='G-q+r'
+    sub[2].groups[2](G-q+r).value                              EQUAL                [== and bits] computed=np.float64(-5.4886587250843726e-18) stored=-5.4886587250843726e-18
+    sub[2].groups[2](G-q+r).abserr                             EQUAL                [== and bits] computed=np.float64(6.027206550833616e-25) stored=6.027206550833616e-25
+    sub[2].groups[2](G-q+r).converged                          EQUAL                [==] computed=False stored=False
+    sub[2].groups[2](G-q+r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[2](G-q+r).regions                            EQUAL                [==] computed=9 stored=9
+    sub[2].groups[2](G-q+r).simple_regions                     EQUAL                [==] computed=5 stored=5
+    sub[2].groups[2](G-q+r).evaluations                        EQUAL                [==] computed=25 stored=25
+    sub[2].groups[2](G-q+r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.0326579581014812 stored=0.040619874838739634
+    sub[2].groups[3](G-q-r).label                              EQUAL                [==] computed='G-q-r' stored='G-q-r'
+    sub[2].groups[3](G-q-r).value                              EQUAL                [== and bits] computed=np.float64(-1.025962285646724e-18) stored=-1.025962285646724e-18
+    sub[2].groups[3](G-q-r).abserr                             EQUAL                [== and bits] computed=np.float64(3.540237979586476e-26) stored=3.540237979586476e-26
+    sub[2].groups[3](G-q-r).converged                          EQUAL                [==] computed=True stored=True
+    sub[2].groups[3](G-q-r).phase_limited                      EQUAL                [==] computed=False stored=False
+    sub[2].groups[3](G-q-r).regions                            EQUAL                [==] computed=12 stored=12
+    sub[2].groups[3](G-q-r).simple_regions                     EQUAL                [==] computed=6 stored=6
+    sub[2].groups[3](G-q-r).evaluations                        EQUAL                [==] computed=35 stored=35
+    sub[2].groups[3](G-q-r).elapsed                            DIFFER (not gated)   [== and bits] computed=0.04101937497034669 stored=0.05030016717500985
+    wrapper records: 3 build_phase_groups calls, 23 adaptive_levin_sincos calls (7 group calls for 7 stored group records); every group call matched by (regime, label) and identity: True
+   pickled row_X2_21681.pkl: 1777456 bytes, sha256 ac2db262dff8099c460412494edf1013113ae4e5e2edc4c93ce83f18dac7cd54
+
+
+== summary
+   X1:1844 (1, 1844): M0 holds; calls matched True; 0.7 s
+   X2:21681 (2, 21681): M0 holds; calls matched True; 0.7 s
+   all rows M0 holds: True

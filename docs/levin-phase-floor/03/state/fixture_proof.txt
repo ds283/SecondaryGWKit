@@ -1,0 +1,25 @@
+# fixture_proof.py sha256 b0b8e769188a05b586ab737bc3a5ad8baef7630bd9bb4c6948ea3968ed3c0432
+# harness.py sha256 a70d62d221170122ba59e5dc84c26bc0fa9e7bd9ac576e103da3e17fb3dffb96
+built fixture store: primary /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-03/state/fixture_proof_store/fixture-store.sqlite
+  before  4f33e3ed4398d82cf2b0b7f68f8a05eee5f4309b5705c7ae78834e0e32b2cc20    774144  1792957304749049126  fixture-store-shard0000.sqlite
+  before  5de37ad751323b3ffa2ba57782c576bce5dac2882943f7c9e19d5348814a5cc9    774144  1792957304861096779  fixture-store-shard0001.sqlite
+  before  8572229f78308c1737ff09fc622be5981861044b3d61fd4b982b3e60496eaa29     36864  1792957304867338778  fixture-store.sqlite
+pool constructor printed: !! WARNING: number of shards read from database (=2) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-03/state/fixture_proof_store/fixture-store.sqlite" read-only with 2 shards (version label "2025.1.1", serial 1)
+pool._read_only = True
+tolerance: atol store_id=1 tol=1e-05; rtol store_id=2 tol=1e-07
+wavenumber: store_id=1 k_inv_Mpc=0.1
+store_tag: [(1, 'Run_fixture'), (2, 'grid-A')]
+wavenumber_exit_time: store_id=1 available=True z_exit=30000.0
+TkNumericIntegration: store_id=1 available=True values=[(1, 1.0, -0.5), (2, 0.5, -0.25), (3, 0.3333333333333333, -0.16666666666666666)]
+read_table(redshift, is_source=True): [(2, 10.0), (1, 100000.0)]
+object_store refused: ReadOnlyWrite: Datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-03/state/fixture_proof_store/fixture-store.sqlite" was opened read-only, and object_store of "TkNumericIntegration" would write to it. Nothing was written
+tolerance miss refused: ReadOnlyMiss: Datastore "shard0000-store" was opened read-only, and a lookup of "tolerance" matched no row; a read-write store would have inserted one with payload {'log10_tol': -3.0}. Nothing was written
+pool close printed: 
+actor calls made: 15; methods ['__exit__', 'object_get', 'read_only_state', 'read_table', 'set_lookup_version']
+  after   4f33e3ed4398d82cf2b0b7f68f8a05eee5f4309b5705c7ae78834e0e32b2cc20    774144  1792957304749049126  fixture-store-shard0000.sqlite
+  after   5de37ad751323b3ffa2ba57782c576bce5dac2882943f7c9e19d5348814a5cc9    774144  1792957304861096779  fixture-store-shard0001.sqlite
+  after   8572229f78308c1737ff09fc622be5981861044b3d61fd4b982b3e60496eaa29     36864  1792957304867338778  fixture-store.sqlite
+ray.is_initialized() = False
+FIXTURE PROOF PASSED: opens read-only, object_get returns a QuadSourceIntegral input, files byte-identical
+exit 0

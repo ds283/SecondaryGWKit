@@ -1,0 +1,30 @@
+
+### Verdicts
+
+Scored against the text above, as written, from [`out/instrument_03.txt`](out/instrument_03.txt). The operational choices the text leaves open were fixed in `scripts/analyse.py`'s docstring before anything was computed (deviation 13). Every group is reported there, scored or not: Of 45 groups, 29 are scored and 16 are not. Every unscored group has fewer than 10 regions at depth ≥ 18 and none at depth 20; 13 of them have one region.
+
+| | Rule (prompt §3) | Number | Verdict |
+|---|---|---|---|
+| **M0** (§2 step 5) | bit-identity on the listed fields | 7 of 7 rows equal under `==` and IEEE-754 bit pattern; `analytic_rad` equal on all 7; only the 45 wall-clock `elapsed` fields differ (deviation 6) | **holds** |
+| **M1** | median σ_θ(depth 20)/F in [0.1, 10] in every scored group of every row | 29 of 29 scored groups in range; values 0.224–0.342 (medians: cancelling 0.270, n = 18; non-cancelling 0.262, n = 11; ratio 1.03) | **holds** |
+| **M2** part 1 | median over scored groups of the real-phase slope of ln D on ln h, depths 12–20, in [−0.5, 0.5] | per row 0.027 (R6) to 0.089 (R3); every group's own slope lies in [−0.005, 0.174] | in range on 7/7 rows |
+| **M2** part 2 | median D/σ_θ at depth 20 in [0.01, 10] | per row 0.078 (R3) to 0.113 (R6); groups 0.066–0.148 | in range on 7/7 rows |
+| **M2** | both parts on ≥ 6 of 7 rows | 7 of 7 | **holds** |
+| **M3** | control slope ≥ 2 **and** median D(depth 20) real/control ≥ 100, on ≥ 6 of 7 rows | slope, per row: −0.020 to 0.148, so < 2 on 7/7 rows. Ratio, per row: 3.1e6 to 2.4e8, so ≥ 100 on 7/7 rows. Both together: 0/7 | **fails**, on the slope clause alone. See note (a): the clause is badly posed. It is recorded as such and not re-posed |
+| **M4** | among depth-20 regions of scored groups, the share with `phase_err` ≥ `abserr` below 0.1 | pooled 1611 / 189,196 = **0.0085**; per row 0.0026 (R3) to 0.021 (R6) | **holds** |
+| M4, descriptive | the share of depth-20 regions that are Clenshaw–Curtis | **189,196 / 189,196 = 1.000**, in every scored group of every row | — |
+| **M5** | on R1–R5 and R7, \|θ'_{G+r}\|/\|θ'_{G−r}\| matches (1−c_s)/(1+c_s) within 5 % at all five abscissae | R1–R5: 0.26795–0.26885 against 0.267949 (c_s² = 0.333333), worst deviation +0.34 %. R7 has no `Gr` sub-interval, so the rule cannot be applied there (deviation 7) | **holds** on the five rows it applies to; inapplicable on R7. The issue stands as written. The ratio is not near 0, so the cancellation is not exact |
+
+**The mechanism verdict**, as written: "holds if M1, M2, M3 and M4 hold". **M3 fails, so the verdict as written is that it does not hold.** The prompt's own clause also applies by its letter: "If M2 holds and M3 fails, the discrepancy is not the jitter's, and the floor mechanism is **refuted**." I record both as the rule gives them. Note (a) says why I take the slope clause to be badly posed. Whether the clause stands is for the orchestrator and the user; I do not re-score it.
+
+**(a) Why the M3 slope clause cannot be met here.** All 6380 ancestry spans are Clenshaw–Curtis spans, under both the real and the control phase. They are 580 sampled depth-20 regions, each with its 11 aligned spans at depths 10–20. With the jitter removed, the nested-pair discrepancy is already at round-off at depth 10: the median D is about 2e-16 to 1e-13 at every depth 10–20 in every scored group (the ancestry table in `instrument_03.txt`). A discrepancy at the round-off floor at every depth cannot fall with h at any slope. So "slope ≥ 2" tests something that is already settled before depth 12. It cannot separate "converges once the jitter is removed" from "does not converge". The clause assumes algebraic convergence above a floor. A 24/47-point nested Clenshaw–Curtis pair on a smooth integrand over these spans is spectrally converged by depth 10.
+
+The ratio clause carries the comparison the prompt intends. Removing the jitter, and nothing else, lowers the depth-20 discrepancy by a factor of 3e6 to 2e8 on every row. The control's degree-12 fit residual is 0.5e-6 to 3e-5 rad, the same size as σ_θ, so the control removes exactly the non-smooth part and leaves the rest unchanged. The Levin/Clenshaw–Curtis routing is unchanged on all 6380 spans. This is evidence *for* the discrepancy being the jitter's, which is the opposite of what the literal clause concludes. Recorded as `issues.md` I1.
+
+**H-anchor and H-cancel, group by group** (the last table of `instrument_03.txt`). M1 and both parts of M2 hold in **every** scored group:
+- in the cancelling groups (18): `G+r` on R1–R5, `G±q+r` on R1, R2, R4 and R5, and `G+q+r`, `G+q−r` and `G−q+r` on R6 and R7;
+- in the non-cancelling groups (11): the lone `G` on R1, R4, R6 and R7, `G−r` on R1–R5, and `G−q−r` on R6 and R7.
+
+The verdicts that follow:
+- **H-anchor needs M1 in `G−r` (R4, R5), the lone `G` (R6) and `G+r`: holds.** R4 `G−r` 0.256, R5 `G−r` 0.225, R6 `G` 0.337, `G+r` 0.225–0.314. M2 holds in each of them too.
+- **H-cancel needs M1 only in the cancelling groups. Its condition is met**, since it holds there. But it is met equally in every non-cancelling group. The jitter is the same size in both classes: median σ_θ/F 0.270 against 0.262, a ratio of 1.03, and within a row the groups agree to a few per cent. So the cancellation adds no jitter beyond what every group containing G carries. **H-cancel does not account for the non-cancelling groups**, which carry the same floor at the same depth. As 01 found, it fails as the whole account.

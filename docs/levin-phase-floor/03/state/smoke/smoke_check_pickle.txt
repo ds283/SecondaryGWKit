@@ -1,0 +1,37 @@
+var/levin-phase-floor-03/state/smoke/row_X1_1844.pkl: X1:1844 M0 True; 23 Levin calls
+      G G      depth 11 direct recorded 6.025994962334743e-38 recomputed 6.025994962334743e-38 (direct) EQUAL
+      G G      depth 11 direct recorded 3.5860556253440336e-37 recomputed 3.5860556253440336e-37 (direct) EQUAL
+      G G      depth 10 direct recorded 3.4613542876070195e-37 recomputed 3.4613542876070195e-37 (direct) EQUAL
+     Gr G+r    depth 20 direct recorded 2.0951050780839622e-39 recomputed 2.0951050780839622e-39 (direct) EQUAL
+     Gr G+r    depth 20 direct recorded 4.4442244063181937e-39 recomputed 4.4442244063181937e-39 (direct) EQUAL
+     Gr G+r    depth 20 direct recorded 1.6454270154919597e-39 recomputed 1.6454270154919597e-39 (direct) EQUAL
+     Gr G-r    depth  6 direct recorded 6.7937341794656735e-37 recomputed 6.7937341794656735e-37 (direct) EQUAL
+     Gr G-r    depth  6 direct recorded 1.0617787082576181e-35 recomputed 1.0617787082576181e-35 (direct) EQUAL
+     Gr G-r    depth  5 direct recorded 4.005608303462018e-36 recomputed 4.005608303462018e-36 (direct) EQUAL
+    Gqr G+q+r  depth  0 Levin  recorded np.float64(3.416866615407937e-36) recomputed 3.416866615407937e-36 (Levin) EQUAL
+    Gqr G+q-r  depth  0 Levin  recorded np.float64(1.827180336490708e-37) recomputed 1.827180336490708e-37 (Levin) EQUAL
+    Gqr G-q+r  depth  0 Levin  recorded np.float64(4.118752458782975e-36) recomputed 4.118752458782975e-36 (Levin) EQUAL
+    Gqr G-q-r  depth  0 Levin  recorded np.float64(3.176672822398508e-38) recomputed 3.176672822398508e-38 (Levin) EQUAL
+var/levin-phase-floor-03/state/smoke/row_X2_21681.pkl: X2:21681 M0 True; 23 Levin calls
+      G G      depth 17 direct recorded 8.527349122509587e-37 recomputed 8.527349122509587e-37 (direct) EQUAL
+      G G      depth 17 direct recorded 4.67473167698759e-42 recomputed 4.67473167698759e-42 (direct) EQUAL
+      G G      depth 16 direct recorded 1.753304638563211e-41 recomputed 1.753304638563211e-41 (direct) EQUAL
+     Gr G+r    depth 17 direct recorded 2.0498700645668124e-36 recomputed 2.0498700645668124e-36 (direct) EQUAL
+     Gr G+r    depth 17 direct recorded 1.1518673376749996e-42 recomputed 1.1518673376749996e-42 (direct) EQUAL
+     Gr G+r    depth 16 direct recorded 2.802596928649634e-42 recomputed 2.802596928649634e-42 (direct) EQUAL
+     Gr G-r    depth 12 direct recorded 1.438710330725361e-36 recomputed 1.438710330725361e-36 (direct) EQUAL
+     Gr G-r    depth 12 direct recorded 4.21510578068905e-42 recomputed 4.21510578068905e-42 (direct) EQUAL
+     Gr G-r    depth 11 direct recorded 3.318274763521167e-42 recomputed 3.318274763521167e-42 (direct) EQUAL
+    Gqr G+q+r  depth 13 direct recorded 2.277091529808874e-35 recomputed 2.277091529808874e-35 (direct) EQUAL
+    Gqr G+q+r  depth 13 direct recorded 5.380986103007298e-41 recomputed 5.380986103007298e-41 (direct) EQUAL
+    Gqr G+q+r  depth 12 direct recorded 1.5506208286832696e-40 recomputed 1.5506208286832696e-40 (direct) EQUAL
+    Gqr G+q-r  depth 11 direct recorded 1.1084831372195033e-40 recomputed 1.1084831372195033e-40 (direct) EQUAL
+    Gqr G+q-r  depth 11 direct recorded 1.075037488952595e-34 recomputed 1.075037488952595e-34 (direct) EQUAL
+    Gqr G+q-r  depth 10 direct recorded 2.848335310525196e-40 recomputed 2.848335310525196e-40 (direct) EQUAL
+    Gqr G-q+r  depth  8 direct recorded 1.3258749757809981e-39 recomputed 1.3258749757809981e-39 (direct) EQUAL
+    Gqr G-q+r  depth  8 direct recorded 1.7114820189288927e-33 recomputed 1.7114820189288927e-33 (direct) EQUAL
+    Gqr G-q+r  depth  7 direct recorded 4.741007489156296e-39 recomputed 4.741007489156296e-39 (direct) EQUAL
+    Gqr G-q-r  depth 11 direct recorded 1.1730549704555909e-40 recomputed 1.1730549704555909e-40 (direct) EQUAL
+    Gqr G-q-r  depth 11 direct recorded 2.546289511605265e-35 recomputed 2.546289511605265e-35 (direct) EQUAL
+    Gqr G-q-r  depth 10 direct recorded 2.7765888291517655e-40 recomputed 2.7765888291517655e-40 (direct) EQUAL
+ALL EQUAL

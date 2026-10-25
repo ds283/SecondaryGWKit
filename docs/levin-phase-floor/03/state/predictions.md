@@ -1,0 +1,46 @@
+# levin-phase-floor 03 — predictions, fixed before the re-runs
+
+Copied unchanged, word for word, from `prompts/levin-phase-floor/03-instrument-depth-20-rows.md` §3 (lines 181-219 at `98e68d3`), before step 6's launch. The text between the two rules below is the prompt's, byte for byte (`state/predictions_section3.raw`, SHA-256 970e5e74624b0479020f7484b71319375cbb33c9fd9a8823a7810598f134e19a).
+
+---
+
+## 3. Predictions, fixed before the re-runs (README §5 rule 3)
+
+Copy these into the log unchanged, and score them there.
+
+**The groups scored.** A group is **scored** if it has at least 10 regions at depth 18 or more.
+Report every group, scored or not.
+
+- **M1 — the jitter is there, at the floor.**
+  - **The rule:** in every scored group of every row, the median $\sigma_\theta$ over its depth-20
+    regions, divided by the row's $F$, lies in $[0.1, 10]$.
+  - **H-anchor** needs M1 in the `G-r` groups (R4, R5) and the lone `G` (R6) as well as in `G+r`.
+  - **H-cancel** needs it only in the cancelling groups.
+- **M2 — the discrepancy does not fall with refinement.**
+  - **The rule, part 1:** over the ancestry spans at depths 12 to 20, the least-squares slope of
+    $\log D$ on $\log h$, real phase, lies in $[-0.5, 0.5]$ for the median scored group of each row.
+  - **The rule, part 2:** at depth 20, the median $D/\sigma_\theta$ lies in $[0.01, 10]$.
+  - **Holds** if both parts hold on at least six of the seven rows.
+- **M3 — remove the jitter and it converges.**
+  - **The rule:** in the jitter-removed control, the same slope is **at least 2**, and the median
+    $D$ at depth 20 is at least 100 times smaller than with the real phase.
+  - **Holds** if true on at least six of the seven rows.
+  - If M2 holds and M3 fails, the discrepancy is not the jitter's, and the floor mechanism is
+    **refuted**.
+- **M4 — the driver cannot see it.**
+  - **The rule:** among depth-20 regions of scored groups, the share with
+    `phase_err` $\ge$ `abserr`, so that the region would have been accepted as `phase_limited`, is
+    below 0.1.
+  - **Also report, descriptive:** the share of depth-20 regions that are Clenshaw–Curtis. §2.7
+    layer 2 must reach whichever branch carries them.
+- **M5 — how far `G+r` cancels** (`[01-slow-group-leading-terms-do-not-cancel]`).
+  - **The rule:** on R1–R5 and R7, $|\theta'_{G+r}|/|\theta'_{G-r}|$ matches $(1-c_s)/(1+c_s)$ to
+    within 5 % at all five abscissae.
+  - If it holds, the issue stands as written. If the ratio is near 0 instead, the cancellation is
+    exact and the issue is wrong.
+
+**The verdict for the mechanism.** "A non-smooth phase floor, invisible to the driver, drives the
+bisection to the cap" **holds** if M1, M2, M3 and M4 hold. Score H-anchor and H-cancel from M1–M2
+group by group, as the rules above say.
+
+---

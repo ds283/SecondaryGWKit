@@ -1,0 +1,372 @@
+# Gate checks, prompt 03, 2026-10-25T19:33:29Z, host mps026298.phys.susx.ac.uk
+$ git rev-parse HEAD
+98e68d3e1b60e6de4378b7d9aded3a120d6088a9
+$ git status --short (empty below = clean)
+[end status]
+$ git log --oneline -3
+98e68d3 Write orchestrator notes for levin-phase-floor 03 and handover 12
+f88a39e Decide handover D1 as overlap and write B1 as prompt 12
+23b9dd7 Write levin-phase-floor prompt 03: instrument seven depth-20 rows
+$ git merge-base --is-ancestor 3f28791 HEAD
+01 landed: 3f28791 is an ancestor
+$ git branch -vv (read-only)
+* handover-remedial 98e68d3 [origin/handover-remedial] Write orchestrator notes for levin-phase-floor 03 and handover 12
+$ git rev-parse origin/handover-remedial
+98e68d3e1b60e6de4378b7d9aded3a120d6088a9
+$ ./venv/bin/python --version
+Python 3.13.16
+$ ./venv/bin/python -m runregistrykit list
+   RUN                                      STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-resumed-c-20261025T165549  done              -   2h 37m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   py313-venv-02-resumed-b-20261025T165402  killed            -   2h 39m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   py313-venv-02-resumed-a-20261025T165114  killed            -   2h 42m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   py313-venv-02-reference-20261025T164631  done              -   2h 46m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   py313-venv-02-reference-20261025T163202  failed            -   3h 01m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_c
+   handover-07-a3-v2-20261022T211155        done              -   2d 23h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-c-20261022T200159    done              -   3d 00h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009    killed            -   3d 00h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718    killed            -   3d 00h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228    done              -   3d 00h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+10 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 10 finished; 0 with no host recorded.
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+exit 0
+$ ls -la ~/.raypoolkit/
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 25 17:10 .
+drwxr-x--- 159 ds283 staff 5088 Oct 25 19:31 ..
+$ ls ~/ScienceData/.rehearsal-lock
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+$ ./venv/bin/python -m runregistrykit store show var/datastores/handover-A3-v2-lambdacdm.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.manifest.json
+kind:     registry
+problems: none
+datastore: 'handover-A3-v2-lambdacdm.sqlite'
+fields:
+  {
+    "created": "2026-10-25T00:34:11+01:00",
+    "datastore": "handover-A3-v2-lambdacdm.sqlite",
+    "fingerprint": {
+      "classes": {
+        "BackgroundModel": {
+          "count": 1,
+          "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2"
+              ]
+            }
+          ]
+        },
+        "GkNumericIntegration": {
+          "count": 4549,
+          "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+          "tag_sets": [
+            {
+              "count": 4549,
+              "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "GkSource": {
+          "count": 1160,
+          "digest": "d4826c22a7756eeb7784eee12bec07fb21f4d0af18eab7d394314fd7dfb21e13",
+          "tag_sets": [
+            {
+              "count": 1160,
+              "digest": "d4826c22a7756eeb7784eee12bec07fb21f4d0af18eab7d394314fd7dfb21e13",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "GkSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "GkSourcePolicyData": {
+          "count": 1160,
+          "digest": "95597c5bbddc5aff39c15f17e2a473713e579e3cdedc25de70153895b8f39d1f",
+          "tag_sets": [
+            {
+              "count": 1160,
+              "digest": "95597c5bbddc5aff39c15f17e2a473713e579e3cdedc25de70153895b8f39d1f",
+              "tags": []
+            }
+          ]
+        },
+        "GkWKBIntegration": {
+          "count": 13920,
+          "digest": "7dec4350b90ce6518a80f48bd9d5cd2d22f0fcb17225a28cdb3f8c79b296a60a",
+          "tag_sets": [
+            {
+              "count": 13920,
+              "digest": "7dec4350b90ce6518a80f48bd9d5cd2d22f0fcb17225a28cdb3f8c79b296a60a",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6"
+              ]
+            }
+          ]
+        },
+        "IntegrationSolver": {
+          "count": 7,
+          "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+              "tags": []
+            }
+          ]
+        },
+        "LambdaCDM": {
+          "count": 1,
+          "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+              "tags": []
+            }
+          ]
+        },
+        "OneLoopIntegral": {
+          "count": 0,
+          "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tag_sets": []
+        },
+        "QCD_Cosmology": {
+          "count": 1,
+          "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+              "tags": []
+            }
+          ]
+        },
+        "QuadSource": {
+          "count": 36,
+          "digest": "7e6b5a68b3e09d991d6b9cbd35a38e701d28ca24780c09237982134eb08bde14",
+          "tag_sets": [
+            {
+              "count": 36,
+              "digest": "7e6b5a68b3e09d991d6b9cbd35a38e701d28ca24780c09237982134eb08bde14",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourceIntegral": {
+          "count": 9280,
+          "digest": "1ae722d5fbcbfb7cc062b0c396355c41ee4386284faf02a57022b3653198efa7",
+          "tag_sets": [
+            {
+              "count": 9280,
+              "digest": "1ae722d5fbcbfb7cc062b0c396355c41ee4386284faf02a57022b3653198efa7",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_2.0636e+16",
+                "ResponseRedshiftGrid_145_c51d43ac",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "TkNumericIntegration": {
+          "count": 8,
+          "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "TkWKBIntegration": {
+          "count": 8,
+          "digest": "eeb4f2f07e7bc3fb3006c3d7ad186ca7ea97a14790ee7c757cf712cf68d67008",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "eeb4f2f07e7bc3fb3006c3d7ad186ca7ea97a14790ee7c757cf712cf68d67008",
+              "tags": [
+                "LargestSourceRedshift_2.0636e+16",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_0.1",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1740_8d1d43b6",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "redshift": {
+          "count": 1740,
+          "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+          "tag_sets": [
+            {
+              "count": 1740,
+              "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+              "tags": []
+            }
+          ]
+        },
+        "store_tag": {
+          "count": 10,
+          "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+          "tag_sets": [
+            {
+              "count": 10,
+              "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+              "tags": []
+            }
+          ]
+        },
+        "tolerance": {
+          "count": 7,
+          "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+              "tags": []
+            }
+          ]
+        },
+        "version": {
+          "count": 1,
+          "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber": {
+          "count": 8,
+          "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber_exit_time": {
+          "count": 8,
+          "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+          "tag_sets": [
+            {
+              "count": 8,
+              "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+              "tags": []
+            }
+          ]
+        }
+      },
+      "digest": "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56",
+      "encoding_format": 1,
+      "fingerprint_format": 6,
+      "problems": {},
+      "taken": {
+        "git_dirty": false,
+        "git_head": "b90752dda46e57d588f8107cbd4d4557134fadb2",
+        "run_id": null,
+        "when": "2026-10-25T00:34:14+01:00"
+      }
+    },
+    "history": [
+      {
+        "from": null,
+        "git_dirty": false,
+        "git_head": "b90752dda46e57d588f8107cbd4d4557134fadb2",
+        "operation": "create",
+        "to": "var/datastores/handover-A3-v2-lambdacdm.sqlite",
+        "when": "2026-10-25T00:34:11+01:00"
+      }
+    ],
+    "name": "handover-A3-v2-lambdacdm",
+    "purpose": "A3 v2: the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7, 9280 items, 8 k over 1e5-3e8/Mpc, zend 0.1; built by handover-07-a3-v2-20261022T211155 at b90752d on the Mac Studio. Kept; archive on the Mac Studio.",
+    "sidecar_format": 1,
+    "store_id": "03fa76de40cb4753af668352413de049"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  handover-07-a3-v2-20261022T211155  done      finished  by results

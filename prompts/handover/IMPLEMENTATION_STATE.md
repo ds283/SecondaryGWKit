@@ -383,6 +383,20 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 
   The cost still sits where the floor exceeds `rtol`. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
 
+  **Narrowed (2026-10-25, levin-phase-floor 03):** seven depth-20 rows re-run bit-identically and
+  instrumented.
+  - **Every depth-20 region is a Clenshaw–Curtis fallback region**, 189,196 of 189,196, so the
+    bisection to the cap is in `_adaptive_levin`'s `is_direct` branch (that campaign's
+    `[03-depth20-regions-are-all-clenshaw-curtis]`).
+  - **The discrepancy that drives it does not fall with refinement:** flat in $h$ from depth 10 to
+    20 (slopes 0.027–0.089), at $D/\sigma_\theta$ 0.078–0.113.
+  - **Removing the phase jitter alone lowers it by 3.1e6–2.4e8**, to round-off; and `phase_err`
+    reaches `abserr` in only 0.85 % of the depth-20 regions.
+  - Prompt 03's M3 fails on its slope clause as written, so the mechanism verdict as written does
+    not hold; that campaign's gate G1 decides how it is read.
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap

@@ -1,0 +1,7 @@
+2026-10-25T19:49:50.300694000Z
+run id      levin-phase-floor-03-instrument-20261025T194950
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-03-instrument-20261025T194950/manifest.json
+child pid   87581 (nohup execs python in the same process)
+launcher    pid 87577, exiting without waiting
+launcher exit 0

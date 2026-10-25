@@ -515,6 +515,13 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **consistent with** that floor driving the cliff, but does not prove it: the group-level depth
   and the parent–child discrepancy are that campaign's prompt 03. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
 
+  **Narrowed (2026-10-25, levin-phase-floor 03):** the floor is in the composed phase as
+  non-smooth jitter, at $\sigma_\theta/F$ 0.224–0.342 in every one of 29 scored groups on seven
+  depth-20 rows, cancelling or not (medians 0.270 and 0.262). Replacing `theta_mod_2pi` by a smooth
+  fit, and nothing else, lowers the depth-20 discrepancy by 3.1e6–2.4e8. Its prompt 03's M3 fails on
+  a slope clause as written; its gate G1 decides how that is read.
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
+
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
   `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and

@@ -1,0 +1,5 @@
+   RUN                                              STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-03-instrument-20261025T194950  done            7/7      25m  levin-phase-floor prompt 03 on the Mac Studio (mps026298; tree 98e68d3; Python 3.13.16): re-run the seven depth-20 A3 
+   py313-venv-02-resumed-c-20261025T165549          done              -   3h 19m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; da
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
