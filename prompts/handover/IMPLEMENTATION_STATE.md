@@ -32,7 +32,9 @@ at `rtol = 1e-7`.** 08 opened `[08-the-gkwkb-reader-fails-plotting-a-full-range-
 so §3 held **ten**; the review closed
 `[a3-baseline-quadsource-integrals-are-1680-short]` and narrowed the other two `a3-baseline` issues
 (2026-10-25), so it held **nine**; `[06-nothing-tracked-ignores-venv]` closed the same day with a
-`.gitignore` line, so it holds **eight**.
+`.gitignore` line, so it holds **eight**. **09 and 10 were written 2026-10-25** for the GkWKB
+failure, on the user's decision to fix both the column and the readers; their planning opened
+`[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]`, so §3 holds **nine**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -70,6 +72,8 @@ so §3 held **ten**; the review closed
 | 06 | [The A3 v2 host and R4](06-a3-v2-host-and-rehearsal.md) | **06** — not seam work; the Mac Studio's checkout and venv, and rehearsal R4 there | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, reviewed | `319b14f` | [`logs/06-…`](logs/06-a3-v2-host-and-rehearsal.md) |
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, launched and reviewed; the build runs | `a6902b1` | [`logs/07-…`](logs/07-launch-a3-v2.md) |
 | 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed; closed on a §8 stop by the user's ruling | `9ef8a19` | [`logs/08-…`](logs/08-after-the-a3-v2-build.md) |
+| 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus | ✍️ 2026-10-25 | ⬜ | — | — |
+| 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus | ✍️ 2026-10-25 | ⏸ held on 09 | — | — |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -104,6 +108,8 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | 06 | **SET-UP** | Bring the Mac Studio's checkout to this branch and give it a Python 3.12 venv equal to the laptop's; run R3's four launches there (R4) at the current launcher and `datastorekit` 0.5.0, which no rehearsal build has run. Runs on the Mac Studio; the records are committed on the laptop. | 06 | ✅ **Done, 2026-10-22. R4 holds on the Mac Studio:** both stores `39809dca…`, equal to each other, their sidecars and R3's recorded `reference` and `resumed-c` (`compare_with_recorded.py` verdict `equal`). The venv is Python 3.12.15 with a `pip freeze` identical to the laptop's (101 lines); the three packages at their pins, none editable; the seven roots pass (`ObjectFactories` 280, the tree's count, where the prompt quoted the pre-`v0.5.0` 279; `RunDrivers` 115 with one skip, a test that reads a laptop-only gitignored manifest). Four manifests: `git_dirty` `false`, `HEAD` `3152af9`, host `d120d1cf03551e6f`, launcher `b2fa4ef1…`. The Mac Studio is 2–13 % faster per stage than the laptop at `--cpus 6`. One stop-and-ask before any launch (the venv not ignored), resolved by `.git/info/exclude`; ten deviations logged, four of them shell slips under zsh. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §1. **R4's two stores were retired on 2026-10-25** (user's decision) with `store retire` at `b90752d`, each after a dry run in which a fresh fingerprint matched `39809dca…` and only R4's own runs named it: ten files went, the two sidecars stay as `retired` tombstones and R4's four run directories as the record; the 06 archive `var/handover-06.tar.gz` was deleted. |
 | 07 | **LAUNCH** | Launch A3 v2 on the Mac Studio by the launcher's production scope at (1e-32, 1e-7), `--cpus 6`, into `var/datastores/handover-A3-v2-lambdacdm.sqlite`; one check; end. | 07 | ✅ **Launched 2026-10-22 21:11:54 BST** as `handover-07-a3-v2-20261022T211155` (driver pid 84436, the lock's owner), at `b90752d`, clean, on host `d120d1cf03551e6f`. Scope `full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc`; four `replaced 1 occurrence`, `--zend 0.1`, no `--no-prune-unvalidated`, local Ray. Estimate **39–44 h** (R4's QSI stage ×0.97 of R3's). The session's permission classifier refused the first launch attempt; the user approved it. **The build is running; the Mac Studio's checkout stays at `b90752d` until 08.** Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §2. |
 | 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | 08 | ✅ **Done, 2026-10-25.** The sidecar's fingerprint is `0e32f24a…`, the run's; every store file byte-identical from before `store create` to after the last reader. Census `no divergence`, soundness `clean` (integrity `ok`, no foreign-key row, inventory without problem), one `version` row per shard, no journal or in-flight row. Readers: five of six and `extract_Gk_data` without `--models` exit 0; **`extract_GkWKB_data` exits 1** in a plot (`[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`), a §8 stop the user resolved: "Release the lock, close 08". **Depth census** (the baseline's method, reproduced as `depth_census.py`, tested on R4's 864 rows; re-counted by the orchestrator with `sqlite3` `mode=ro`, equal in every bin): 9280 rows at (1e-32, 1e-7); NULL 2489, depth 0 99, 1–19 4427, **20: 2265 at mean 454 s, 1179 unconverged (52.1 %)**; **286.3 CPU-hr, 285.8 at depth 20**, 249 of them in the low band; up to 966,508 regions. **`rtol = 1e-7` did not remove the depth-20 cliff.** The run took 48.74 h wall; the serial tail was ≤ 2.52 h (5.2 %); 15 `IntegrationWarning`s, none tied to a row. The lock was released 00:51:03; the Mac Studio's checkout is free. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §3. |
+| 09 | **REMEDY** | `compute_analytic_G`/`Gprime` return `None` where $1+3w\le0$ (spec 02 R2's domain) or on overflow; one reader helper plots only finite points within three decades of $|G|$; `safe_fabs` in the GkWKB reader; `extract_Gk_data`'s CSV columns. A laptop rehearsal must stay `39809dca…`. | 09 | ⬜ **Written 2026-10-25.** |
+| 10 | **MEASUREMENT** | Every reader on A3 v2 at 09's tree, on the Mac Studio; the GkWKB read-back complete; the store unchanged. | 10 | ⏸ **Written 2026-10-25, held on 09.** |
 
 ---
 
@@ -535,16 +541,28 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   - **What it touches.** `analytic_G_w` feeds no computation: it is stored, copied into `GkSource`
     values (`GkSource.py:498-506`) and plotted or written to CSV by four readers. `G_WKB`, `G` and
     `QuadSourceIntegral` do not read it. **Not a defect of the store's science content.**
-  - **Seen in passing, not part of this issue:** `extract_Gk_data.py:282-283` fills its CSV columns
-    `analytic_G_w` and `analytic_Gprime_w` from `analytic_G_rad` and `analytic_Gprime_rad`, so that
-    reader's CSV mislabels the radiation form as the $w(z)$ form.
+  - **Seen in passing, not part of this issue:** opened as
+    `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]`, below.
   - **Next step**, narrowed. Two decisions, either sufficient for the reader: (a) **reader-side**, plot
     `analytic_G_w` only where it is finite and within some decades of $|G|$, or where $|1+3w|$ is not
     small (no store change); or (b) **compute-side**, store `analytic_G_w` (nullable) as `NULL`
     outside the constant-$w$ form's domain, which changes new stores' payloads and their
     fingerprints, and leaves A3 v2 as it is. (a) is the fix for A3 v2's read-back in any case.
+  **The user decided both (2026-10-25):** "plot only where the value is sensible, but also store
+  `NULL` in future runs outside the valid range. Changing new store's fingerprints can never be an
+  argument not to make a useful fix." **Assigned to prompt 09** (the code) **and prompt 10** (the
+  re-read of A3 v2 on the Mac Studio, which closes it).
   (`var/handover-08/extract/` is on the Mac Studio; it was not copied.) Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
+
+- **[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]** *(opened 2026-10-25 by the
+  orchestrator's diagnosis of the issue above, read-only; not by a prompt)* —
+  `extract_Gk_data.py:282-283` builds its CSV columns `analytic_G_w` and `analytic_Gprime_w` from
+  `value.analytic_G_rad` and `value.analytic_Gprime_rad`, so every `extract_Gk_data` CSV labels the
+  radiation form as the $w(z)$ form, and the $w(z)$ form is never written. The plots in the same
+  reader (`:142-240`) use the right attribute. **Impact:** any reading of those CSVs that compares
+  the two forms sees them identical. **Assigned to prompt 09** (2026-10-25), which closes it.
+  Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,
