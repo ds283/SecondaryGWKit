@@ -1,0 +1,10 @@
+# 01-guard.txt — py313-venv prompt 01, R6: A3 v2's guard, after the readers, in the foreground, no --register, the lock held.
+
+== 2026-10-25T13:29:02+0000
+$ PYTHONPATH=. ./venv/bin/python RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-01-resumed.sqlite --job-name py313-venv-01 --atol 1e-32 --rtol 1e-7
+!! quadsource_atol_sweep --build: py313-venv-01-resumed.sqlite, py313-venv-01-resumed-shard0000.sqlite, py313-venv-01-resumed-shard0001.sqlite, py313-venv-01-resumed-shard0002.sqlite, py313-venv-01-resumed-shard0003.sqlite already exist(s). Refusing to build into an existing store: a comparator that silently inherited earlier rows is one nobody can interpret. Pass --resume to continue an interrupted build at the SAME tolerance pair, or choose a path that does not exist.
+rc=1
+== 2026-10-25T13:29:03+0000 after
+every file of R6's stores and sidecars identical before and after (SHA-256, mtime, size): True
+var/runs entries before 108, after 108
+no journal

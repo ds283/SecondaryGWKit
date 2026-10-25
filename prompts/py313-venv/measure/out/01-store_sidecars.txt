@@ -1,0 +1,456 @@
+# 01-store_sidecars.txt — py313-venv prompt 01, R6: the sidecars, made as R3's were.
+
+== reference, 2026-10-25T13:09:10+0000, after reference
+-- store files before (sha256, mtime, size, name)
+14e5fe871847823a408374498fd6da1a73d9cf03b7b66ffeca679b99e22d3569  1792933662 23638016 var/datastores/py313-venv-01-reference-shard0000.sqlite
+fd5f39acec31c948f2a9a769599acf10173ef7263fbb57b9221fb11c9c5251fe  1792933662 23658496 var/datastores/py313-venv-01-reference-shard0001.sqlite
+8af732aafe379395070f070f804c942da026acbd3af65ae3af0278f94ade5793  1792932698 1077248 var/datastores/py313-venv-01-reference-shard0002.sqlite
+15aaaf79aec6a42edb9f3f5e9b5ae0ea912b5d0b5c9658f4109f9cf06fbf9362  1792933662 23629824 var/datastores/py313-venv-01-reference-shard0003.sqlite
+1db175259aa9544534c58ff0187e19f36005b55fbfb97c4995802e69b3eba146  1792932698 36864 var/datastores/py313-venv-01-reference.sqlite
+$ ./venv/bin/python -m runregistrykit store create --purpose "py313-venv prompt 01 R6 reference store (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by py313-venv-01-reference-20261025T125115; throwaway, the user's to retire" var/datastores/py313-venv-01-reference.sqlite
+>> create: var/datastores/py313-venv-01-reference.manifest.json
+{
+  "created": "2026-10-25T13:09:10+00:00",
+  "datastore": "py313-venv-01-reference.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": true,
+      "git_head": "55c6a547db490794cf7e3f0cb478c7b9d29aa744",
+      "operation": "create",
+      "to": "var/datastores/py313-venv-01-reference.sqlite",
+      "when": "2026-10-25T13:09:11+00:00"
+    }
+  ],
+  "name": "py313-venv-01-reference",
+  "purpose": "py313-venv prompt 01 R6 reference store (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by py313-venv-01-reference-20261025T125115; throwaway, the user's to retire",
+  "sidecar_format": 1,
+  "store_id": "7fc02cda82be4c8c9a67f012139ccf51"
+}
+rc=0
+$ ./venv/bin/python -m runregistrykit store fingerprint --write var/datastores/py313-venv-01-reference.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-reference.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  edf2317113bf
+                              6  edf2317113bf  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+rc=0
+$ ./venv/bin/python -m runregistrykit store show var/datastores/py313-venv-01-reference.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-reference.manifest.json
+kind:     registry
+problems: none
+datastore: 'py313-venv-01-reference.sqlite'
+fields:
+  {
+    "created": "2026-10-25T13:09:10+00:00",
+    "datastore": "py313-venv-01-reference.sqlite",
+    "fingerprint": {
+      "classes": {
+        "BackgroundModel": {
+          "count": 1,
+          "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2"
+              ]
+            }
+          ]
+        },
+        "GkNumericIntegration": {
+          "count": 1368,
+          "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+          "tag_sets": [
+            {
+              "count": 1368,
+              "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSource": {
+          "count": 291,
+          "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "GkSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "GkSourcePolicyData": {
+          "count": 291,
+          "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+          "tag_sets": [
+            {
+              "count": 291,
+              "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+              "tags": []
+            }
+          ]
+        },
+        "GkWKBIntegration": {
+          "count": 3477,
+          "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+          "tag_sets": [
+            {
+              "count": 3477,
+              "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c"
+              ]
+            }
+          ]
+        },
+        "IntegrationSolver": {
+          "count": 7,
+          "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+              "tags": []
+            }
+          ]
+        },
+        "LambdaCDM": {
+          "count": 1,
+          "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+              "tags": []
+            }
+          ]
+        },
+        "OneLoopIntegral": {
+          "count": 0,
+          "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tag_sets": []
+        },
+        "QCD_Cosmology": {
+          "count": 1,
+          "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+              "tags": []
+            }
+          ]
+        },
+        "QuadSource": {
+          "count": 6,
+          "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+          "tag_sets": [
+            {
+              "count": 6,
+              "digest": "edf2317113bfd5c40bd7c24c87acc01c9c88fe56d3f82c0a2625969d98a6da0e",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourceIntegral": {
+          "count": 864,
+          "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+          "tag_sets": [
+            {
+              "count": 864,
+              "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+              "tags": [
+                "GkOneLoopDensity",
+                "LargestSourceRedshift_6.8788e+13",
+                "ResponseRedshiftGrid_97_d128e5d7",
+                "ResponseSparsenessZ_12",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "QuadSourcePolicy": {
+          "count": 2,
+          "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+          "tag_sets": [
+            {
+              "count": 2,
+              "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+              "tags": []
+            }
+          ]
+        },
+        "TkNumericIntegration": {
+          "count": 3,
+          "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "TkWKBIntegration": {
+          "count": 3,
+          "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+              "tags": [
+                "LargestSourceRedshift_6.8788e+13",
+                "OutsideHorizonEfolds_e3",
+                "Run_default",
+                "SmallestSourceRedshift_250",
+                "SourceGridConstruction_2",
+                "SourceRedshiftGrid_1159_7139cb9c",
+                "TkOneLoopDensity"
+              ]
+            }
+          ]
+        },
+        "redshift": {
+          "count": 1159,
+          "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+          "tag_sets": [
+            {
+              "count": 1159,
+              "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+              "tags": []
+            }
+          ]
+        },
+        "store_tag": {
+          "count": 10,
+          "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+          "tag_sets": [
+            {
+              "count": 10,
+              "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+              "tags": []
+            }
+          ]
+        },
+        "tolerance": {
+          "count": 7,
+          "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+          "tag_sets": [
+            {
+              "count": 7,
+              "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+              "tags": []
+            }
+          ]
+        },
+        "version": {
+          "count": 1,
+          "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+          "tag_sets": [
+            {
+              "count": 1,
+              "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber": {
+          "count": 3,
+          "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+              "tags": []
+            }
+          ]
+        },
+        "wavenumber_exit_time": {
+          "count": 3,
+          "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+          "tag_sets": [
+            {
+              "count": 3,
+              "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+              "tags": []
+            }
+          ]
+        }
+      },
+      "digest": "39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2",
+      "encoding_format": 1,
+      "fingerprint_format": 6,
+      "problems": {},
+      "taken": {
+        "git_dirty": true,
+        "git_head": "55c6a547db490794cf7e3f0cb478c7b9d29aa744",
+        "run_id": null,
+        "when": "2026-10-25T13:09:16+00:00"
+      }
+    },
+    "history": [
+      {
+        "from": null,
+        "git_dirty": true,
+        "git_head": "55c6a547db490794cf7e3f0cb478c7b9d29aa744",
+        "operation": "create",
+        "to": "var/datastores/py313-venv-01-reference.sqlite",
+        "when": "2026-10-25T13:09:11+00:00"
+      }
+    ],
+    "name": "py313-venv-01-reference",
+    "purpose": "py313-venv prompt 01 R6 reference store (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by py313-venv-01-reference-20261025T125115; throwaway, the user's to retire",
+    "sidecar_format": 1,
+    "store_id": "7fc02cda82be4c8c9a67f012139ccf51"
+  }
+runs naming this store, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs:
+  py313-venv-01-reference-20261025T125115  done      finished  by results
+rc=0
+-- store files after
+14e5fe871847823a408374498fd6da1a73d9cf03b7b66ffeca679b99e22d3569  1792933662 23638016 var/datastores/py313-venv-01-reference-shard0000.sqlite
+fd5f39acec31c948f2a9a769599acf10173ef7263fbb57b9221fb11c9c5251fe  1792933662 23658496 var/datastores/py313-venv-01-reference-shard0001.sqlite
+8af732aafe379395070f070f804c942da026acbd3af65ae3af0278f94ade5793  1792932698 1077248 var/datastores/py313-venv-01-reference-shard0002.sqlite
+15aaaf79aec6a42edb9f3f5e9b5ae0ea912b5d0b5c9658f4109f9cf06fbf9362  1792933662 23629824 var/datastores/py313-venv-01-reference-shard0003.sqlite
+1db175259aa9544534c58ff0187e19f36005b55fbfb97c4995802e69b3eba146  1792932698 36864 var/datastores/py313-venv-01-reference.sqlite
+store files identical across the sidecar's making: True
+
+== resumed, 2026-10-25T13:14:57+0000, after resumed-a
+-- store files before
+4b00b986102cd9ffff03d20d45e2ee812bb327a8ed6d86e10539593e3af399a6  1792934053 14778368 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+539654791028fc438525e21e9f57b9c3ddc98f5ea799f410c6576aa1f4ac0df7  1792934053 14843904 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  1792933840 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+ca72a29522d1a684a9a47213bca4657e896512bdb122877bc4cd8bb61e1706bd  1792934053 14893056 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+71c6820c6d7cd52aeb7e46e91a1d74836cd99caf58229d4f5343c591c556d333  1792933840 36864 var/datastores/py313-venv-01-resumed.sqlite
+$ ./venv/bin/python -m runregistrykit store create --purpose "py313-venv prompt 01 R6 resumed store (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by resumed-a (SIGTERM), resumed-b (SIGTERM) and resumed-c; throwaway, the user's to retire" var/datastores/py313-venv-01-resumed.sqlite
+>> create: var/datastores/py313-venv-01-resumed.manifest.json
+{
+  "created": "2026-10-25T13:14:58+00:00",
+  "datastore": "py313-venv-01-resumed.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": true,
+      "git_head": "55c6a547db490794cf7e3f0cb478c7b9d29aa744",
+      "operation": "create",
+      "to": "var/datastores/py313-venv-01-resumed.sqlite",
+      "when": "2026-10-25T13:14:58+00:00"
+    }
+  ],
+  "name": "py313-venv-01-resumed",
+  "purpose": "py313-venv prompt 01 R6 resumed store (Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55), built by resumed-a (SIGTERM), resumed-b (SIGTERM) and resumed-c; throwaway, the user's to retire",
+  "sidecar_format": 1,
+  "store_id": "23b16cdbf76c43c1878558ab46f7f8cc"
+}
+rc=0
+-- store files after
+4b00b986102cd9ffff03d20d45e2ee812bb327a8ed6d86e10539593e3af399a6  1792934053 14778368 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+539654791028fc438525e21e9f57b9c3ddc98f5ea799f410c6576aa1f4ac0df7  1792934053 14843904 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  1792933840 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+ca72a29522d1a684a9a47213bca4657e896512bdb122877bc4cd8bb61e1706bd  1792934053 14893056 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+71c6820c6d7cd52aeb7e46e91a1d74836cd99caf58229d4f5343c591c556d333  1792933840 36864 var/datastores/py313-venv-01-resumed.sqlite
+store files identical across the sidecar's making: True
+

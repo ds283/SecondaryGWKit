@@ -1,0 +1,39 @@
+# 01-interrupter_firings.txt — py313-venv prompt 01, R6: the interruption points, and each interrupter's log.
+
+== The points, from R6's own reference stdout.log (var/runs/py313-venv-01-reference-20261025T125115/stdout.log), by R3's/R4's reasoning
+resumed-a: CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT took 1m 22.5s = 82.5 s (stdout.log:78; R3 24.8 s, R4 22.6 s).
+           40 % of 82.5 s is 33.0 s, over the 10 s floor: hold 33 s, from the banner.
+           -> '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 33
+resumed-b: CALCULATE QUADRATIC SOURCE INTEGRALS took 5m 51.6s = 351.6 s (stdout.log:104; R3 91.4 s, R4 88.7 s).
+           A third is 117.2 s, rounded to 117 s, under the 250 s cap: hold 117 s, from the banner.
+           -> '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 117
+hardkill-a: resumed-b's point, with --signal KILL (R3 §2.1).
+The holds are longer than R3's and R4's because R6's reference ran each stage 3-4 times slower, at a 1-minute load of 12-40 on
+10 CPUs (another project's test suite running beside it); the reasoning is R3's.
+
+== resumed-a (interrupter pid 91499; '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' 0 --interval 5 --hold 33)
+2026-10-25T13:10:24+00:00 interrupter pid 91499 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-01-resumed-a-20261025T131024 (slug 'resumed-a'); stage regex '^CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT$' at >= 0.0%; every 5 s; stale after 900 s; hold 33 s
+2026-10-25T13:10:24+00:00 liveness alive; pid 91483; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-25T13:10:29+00:00 liveness alive; pid 91483; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T13:10:34+00:00 liveness alive; pid 91483; stage 'Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite" with 4 shards'
+2026-10-25T13:10:39+00:00 liveness alive; pid 91483; stage 'CALCULATING BACKGROUND LambdaCDM MODEL'
+2026-10-25T13:10:44+00:00 liveness alive; pid 91483; stage 'CALCULATE QUADRATIC SOURCE TERMS'
+2026-10-25T13:10:49+00:00 liveness alive; pid 91483; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T13:11:44+00:00 liveness alive; pid 91483; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T13:13:40+00:00 liveness alive; pid 91483; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-25T13:13:40+00:00 eligible at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'; holding 33 s, then reading again
+2026-10-25T13:14:13+00:00 sent SIGTERM to pid 91483 at stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --database var/datastores/py313-venv-01-resumed.sqlite --job-name py313-venv-01 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-a --purpose py313-venv prompt 01, R6 on the laptop (mps026088) at 55c6a54: Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55 (datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3); resumed-a: first launch on the resumed store, to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the chain must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign py313-venv --prompt 01"; exiting
+
+== resumed-b (interrupter pid 92656; '^CALCULATE QUADRATIC SOURCE INTEGRALS' 0 --interval 5 --hold 117)
+2026-10-25T13:15:14+00:00 interrupter pid 92656 watching /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/py313-venv-01-resumed-b-20261025T131514 (slug 'resumed-b'); stage regex '^CALCULATE QUADRATIC SOURCE INTEGRALS' at >= 0.0%; every 5 s; stale after 900 s; hold 117 s
+2026-10-25T13:15:14+00:00 liveness alive; pid 92639; stage 'quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250'
+2026-10-25T13:15:19+00:00 liveness alive; pid 92639; stage 'quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)'
+2026-10-25T13:15:24+00:00 liveness alive; pid 92639; stage 'Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite" with 4 shards'
+2026-10-25T13:15:29+00:00 liveness alive; pid 92639; stage 'CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T13:15:34+00:00 liveness alive; pid 92639; stage 'CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS'
+2026-10-25T13:15:39+00:00 liveness alive; pid 92639; stage 'CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT'
+2026-10-25T13:16:14+00:00 liveness alive; pid 92639; stage 'APPLY GKSOURCE POLICIES'
+2026-10-25T13:16:29+00:00 liveness alive; pid 92639; stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'
+2026-10-25T13:16:29+00:00 eligible at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS'; holding 117 s, then reading again
+2026-10-25T13:18:26+00:00 sent SIGTERM to pid 92639 at stage 'CALCULATE QUADRATIC SOURCE INTEGRALS' (0% >= 0%); command "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal --resume --database var/datastores/py313-venv-01-resumed.sqlite --job-name py313-venv-01 --atol 1e-32 --rtol 1e-7 --cpus 6 --register resumed-b --purpose py313-venv prompt 01, R6 on the laptop (mps026088) at 55c6a54: Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55 (datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3); resumed-b: --resume on the resumed store after resumed-a, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the chain must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838 --campaign py313-venv --prompt 01"; exiting
+

@@ -1,0 +1,329 @@
+# 01-lock.txt — py313-venv prompt 01: every rehearsal-lock command, its output and its exit status.
+# Each was run from the repository root as a shell command of its own (the Bash tool's zsh), the lock
+# command the only process that command started: the header line is zsh's builtin `print -P`, output
+# is appended with >> ... 2>&1, and the exit is recorded with the builtin `echo`. No pipe.
+# Times are the laptop's local time (GMT since 02:00 on 2026-10-25, when BST ended).
+
+== 2026-10-25T12:12:53+0000 (gate) status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+== 2026-10-25T12:13:00+0000 (gate) ray-processes
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T12:51:03+0000 (1) take the lock, before reference
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "SecondaryGWKit py313-venv 01 (R6)" --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: SecondaryGWKit py313-venv 01 (R6)
+[exit 0]
+
+== 2026-10-25T12:51:06+0000 (1) status after acquire
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+== 2026-10-25T12:51:41+0000 (2) reference: set-pid with the driver's Python pid, 87658 (sh 87651)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 87658
+recorded pid 87658 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T12:51:43+0000 (2) reference: ray-processes (expected exit 1, listing the 2.59.0 instance, gcs_server and raylet among the lines)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+87699 87658 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+87700 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+87709 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+87744 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+87745 87658 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+87753 87745 ray::DashboardAgent                       
+87754 87745 ray::RuntimeEnvAgent                
+87773 87745 ray::Datastore                   
+87774 87745 ray::Datastore                   
+87775 87745 ray::Datastore                   
+87776 87745 ray::Datastore                   
+87777 87745 ray::SerialPoolBroker                   
+87778 87745 ray::numeric_with_phase_cut                   
+87812 87745 ray::numeric_with_phase_cut                   
+87813 87745 ray::IDLE                   
+87814 87745 ray::numeric_with_phase_cut                   
+87815 87745 ray::numeric_with_phase_cut                   
+87864 87745 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+87865 87745 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+87866 87745 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+87867 87745 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+87869 87745 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+[exit 1]
+
+== 2026-10-25T12:51:46+0000 (2) reference: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 87658
+owner pid 87658: alive
+Ray processes of /tmp/ray-sgk: 22
+    87699 87658 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    87700 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    87709 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    87744 87658 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    87745 87658 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    87753 87745 ray::DashboardAgent                       
+    87754 87745 ray::RuntimeEnvAgent                
+    87773 87745 ray::Datastore                   
+    87774 87745 ray::Datastore                   
+    87775 87745 ray::Datastore                   
+    87776 87745 ray::Datastore                   
+    87777 87745 ray::SerialPoolBroker                   
+    87778 87745 ray::numeric_with_phase_cut                   
+    87812 87745 ray::numeric_with_phase_cut                   
+    87813 87745 ray::numeric_with_phase_cut                   
+    87814 87745 ray::numeric_with_phase_cut                   
+    87815 87745 ray::numeric_with_phase_cut                   
+    87864 87745 ray::IDLE                   
+    87866 87745 (Python)
+    87867 87745 (Python)
+    87869 87745 (Python)
+    87871 87745 (Python)
+[exit 0]
+
+== 2026-10-25T13:08:43+0000 (3) after reference's driver 87658 died (13:08:04, the orchestrator's wait): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:10:21+0000 (4) before resumed-a: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:10:32+0000 (4) resumed-a: set-pid with the driver's Python pid, 91483 (sh 91477; interrupter 91499)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 91483
+recorded pid 91483 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T13:10:34+0000 (4) resumed-a: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 91483
+owner pid 91483: alive
+Ray processes of /tmp/ray-sgk: 13
+    91521 91483 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    91523 91483 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    91524 91483 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    91540 91483 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    91541 91483 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    91542 91541 ray::DashboardAgent                       
+    91543 91541 ray::RuntimeEnvAgent                
+    91555 91541 ray::Datastore.object_get                   
+    91556 91541 ray::Datastore                   
+    91557 91541 ray::Datastore.object_get                   
+    91558 91541 ray::IDLE                   
+    91559 91541 ray::SerialPoolBroker                   
+    91560 91541 ray::Datastore.object_get                   
+[exit 0]
+
+== 2026-10-25T13:14:43+0000 (5) after resumed-a's driver 91483 died (13:14:24, the orchestrator's wait; SIGTERM): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:15:11+0000 (6) before resumed-b: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:15:22+0000 (6) resumed-b: set-pid with the driver's Python pid, 92639 (sh 92634; interrupter 92656)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 92639
+recorded pid 92639 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T13:15:24+0000 (6) resumed-b: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 92639
+owner pid 92639: alive
+Ray processes of /tmp/ray-sgk: 13
+    92679 92639 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    92680 92639 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    92681 92639 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    92696 92639 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    92697 92639 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    92698 92697 ray::DashboardAgent                       
+    92699 92697 ray::RuntimeEnvAgent                
+    92709 92697 ray::IDLE                   
+    92710 92697 ray::Datastore                   
+    92711 92697 ray::Datastore.object_get                   
+    92712 92697 ray::Datastore                   
+    92713 92697 ray::Datastore                   
+    92714 92697 ray::SerialPoolBroker                   
+[exit 0]
+
+== 2026-10-25T13:18:58+0000 (7) after resumed-b's driver 92639 died (13:18:40, the orchestrator's wait; SIGTERM): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:19:31+0000 (8) before resumed-c: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:19:54+0000 (8) resumed-c: set-pid with the driver's Python pid, 94127 (sh 94121)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 94127
+recorded pid 94127 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T13:19:57+0000 (8) resumed-c: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 94127
+owner pid 94127: alive
+Ray processes of /tmp/ray-sgk: 13
+    94167 94127 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    94176 94127 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    94177 94127 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    94217 94127 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    94219 94127 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    94220 94219 ray::DashboardAgent                       
+    94221 94219 ray::RuntimeEnvAgent                
+    94247 94219 ray::IDLE                   
+    94248 94219 ray::Datastore.object_get                   
+    94249 94219 ray::Datastore                   
+    94250 94219 ray::SerialPoolBroker                   
+    94251 94219 ray::Datastore.object_get                   
+    94252 94219 ray::Datastore.object_get                   
+[exit 0]
+
+== 2026-10-25T13:22:30+0000 (9) after resumed-c's driver 94127 died (13:22:10, the orchestrator's wait): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T13:23:29+0000 (10) status before the readers
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 94127
+owner pid 94127: NOT alive
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+== 2026-10-25T13:29:14+0000 (11) after the readers and the guard, before hardkill-a: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 94127
+owner pid 94127: NOT alive
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+== 2026-10-25T13:29:37+0000 (12) hardkill-a: set-pid with the driver's Python pid, 98329 (sh 98325; interrupter 98353, --signal KILL)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 98329
+recorded pid 98329 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T13:29:40+0000 (12) hardkill-a: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit py313-venv 01 (R6)
+    acquired: 2026-10-25T12:51:05+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 98329
+owner pid 98329: alive
+Ray processes of /tmp/ray-sgk: 17
+    98369 98329 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    98370 98329 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    98374 98329 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    98391 98329 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    98392 98329 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    98393 98392 ray::DashboardAgent                       
+    98394 98392 ray::RuntimeEnvAgent                
+    98405 98392 ray::Datastore                   
+    98406 98392 ray::SerialPoolBroker                   
+    98407 98392 ray::Datastore                   
+    98408 98392 ray::IDLE                   
+    98409 98392 ray::Datastore                   
+    98410 98392 ray::Datastore                   
+    98428 98392 ray::IDLE                   
+    98429 98392 ray::IDLE                   
+    98430 98392 ray::IDLE                   
+    98431 98392 ray::IDLE                   
+[exit 0]
+
+== 2026-10-25T13:35:50+0000 (13) after hardkill-a's driver 98329 died (13:35:23, the orchestrator's wait; SIGKILL): ray-processes
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+98369 1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+[exit 1]
+
+== 2026-10-25T15:31:32+0000 (14) after the user's kill -KILL 98369 (by 15:31:14): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T15:31:55+0000 (15) before the refused resume: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T15:32:34+0000 (16) after the refused resume (sh 14973 gone): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T15:33:02+0000 (17) before hardkill-b: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T15:35:46+0000 (18) after hardkill-b (driver 15262, sh 15257, ended done before set-pid could be run: the agent's slip, not back-filled): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T15:37:08+0000 (19) release, after the hard-kill pair's checks, no Ray process left (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+[exit 0]
+
+== 2026-10-25T15:37:09+0000 (19) status after release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+== 2026-10-25T15:37:10+0000 (19) ray-processes after release (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]

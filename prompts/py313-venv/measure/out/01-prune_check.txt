@@ -1,0 +1,113 @@
+# 01-prune_check.txt — py313-venv prompt 01, R6: prune_check.py, unchanged.
+
+== 13:19:13 prune_check after resumed-b, against the state after resumed-a
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-01/state/after-resumed-a.txt var/datastores/py313-venv-01-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite
+serials listed unvalidated in var/py313-venv-01/state/after-resumed-a.txt
+-- shard 0, GkSource: 15 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 239: absent
+   serial 241: absent
+   serial 242: absent
+   serial 243: absent
+   serial 244: absent
+   serial 246: absent
+   serial 247: absent
+   serial 249: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 256: absent
+   serial 257: absent
+   serial 258: absent
+   serial 259: absent
+-- shard 1, GkSource: 14 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 550: absent
+   serial 552: absent
+   serial 554: absent
+   serial 559: absent
+   serial 560: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+   serial 567: absent
+   serial 568: absent
+   serial 569: absent
+   serial 570: absent
+   serial 571: absent
+-- shard 3, GkSource: 13 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 18: absent
+   serial 36: absent
+   serial 45: absent
+   serial 47: absent
+   serial 50: absent
+   serial 51: absent
+   serial 54: absent
+   serial 55: absent
+   serial 57: absent
+   serial 58: absent
+   serial 59: absent
+   serial 60: absent
+   serial 61: absent
+42 serial(s) checked: 42 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 13:22:56 prune_check after resumed-c, against the state after resumed-a
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-01/state/after-resumed-a.txt var/datastores/py313-venv-01-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite
+serials listed unvalidated in var/py313-venv-01/state/after-resumed-a.txt
+-- shard 0, GkSource: 15 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 239: absent
+   serial 241: absent
+   serial 242: absent
+   serial 243: absent
+   serial 244: absent
+   serial 246: absent
+   serial 247: absent
+   serial 249: absent
+   serial 251: absent
+   serial 252: absent
+   serial 253: absent
+   serial 256: absent
+   serial 257: absent
+   serial 258: absent
+   serial 259: absent
+-- shard 1, GkSource: 14 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 550: absent
+   serial 552: absent
+   serial 554: absent
+   serial 559: absent
+   serial 560: absent
+   serial 563: absent
+   serial 564: absent
+   serial 565: absent
+   serial 566: absent
+   serial 567: absent
+   serial 568: absent
+   serial 569: absent
+   serial 570: absent
+   serial 571: absent
+-- shard 3, GkSource: 13 serial(s) listed; 0 row(s) with validated = 0 now
+   serial 18: absent
+   serial 36: absent
+   serial 45: absent
+   serial 47: absent
+   serial 50: absent
+   serial 51: absent
+   serial 54: absent
+   serial 55: absent
+   serial 57: absent
+   serial 58: absent
+   serial 59: absent
+   serial 60: absent
+   serial 61: absent
+42 serial(s) checked: 42 absent, 0 reused by a validated row, 0 still unvalidated
+rc=0
+
+== 13:22:56 prune_check after resumed-c, against the state after resumed-b
+$ ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/prune_check.py var/py313-venv-01/state/after-resumed-b.txt var/datastores/py313-venv-01-resumed.sqlite
+store /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite
+serials listed unvalidated in var/py313-venv-01/state/after-resumed-b.txt
+   none: there is nothing to check
+rc=0
+

@@ -52,7 +52,9 @@ them), and the store is byte-identical, fingerprint `0e32f24a…`. It closed
 `[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`, and its review opened
 `[10-the-readers-draw-their-work-lists-unseeded]` and
 `[10-extract-gkwkb-data-never-closes-its-theta-figure]`, so §3 holds **eleven**. The second was
-closed the same day by a direct commit, on the user's decision, so §3 holds **ten**.
+closed the same day by a direct commit, on the user's decision, so §3 holds **ten**. **`py313-venv` 01
+(2026-10-25)** moved this branch to Python 3.13.16 with `ray` 2.59.0 and closed
+`[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` (§4), so §3 holds **nine**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -527,25 +529,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   that is not checked. The one-cell experiment above stands, and it should also
   record which group carries the deepest regions (findings §2.6 item 1).
 
-- **[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]** *(opened 2026-10-22 by the
-  planning of prompts 06 and 07, from a read of the Mac Studio's checkout; not by a prompt)* —
-  `origin/main` carries `9678f28` (2026-10-06, "Bump scipy and ray pins for macOS update and Python
-  3.13"), committed on the Mac Studio, which this branch does not: it moves `ray` from 2.43.0 to
-  2.45.0, the earliest release with a Python 3.13 wheel, and `scipy` to 1.16.3. This branch took the
-  `scipy` half independently (`8abb3da`) and stays on Python 3.12 (MacPorts 3.12.15) with
-  `ray==2.43.0` (`requirements.txt:75`), which every rehearsal R0–R3 ran on. The two branches
-  therefore disagree on the interpreter and on `ray`, and a merge of this branch into `main`
-  conflicts at `requirements.txt:75`. **Impact:** none on A3 v2 — the user decided on 2026-10-22
-  that the Mac Studio's venv is Python 3.12 from this branch's pins (prompt 06 §0.2). It is a
-  `ray` pin move with its own rehearsal, which `CLAUDE.md` keeps as this repository's to make.
-  **Next step:** the user's — "we should move this checkout onto it at some point soon"
-  (2026-10-22); not before A3 v2 has ended. Indexed at `docs/OPEN_ISSUES.md` §1.23.
-
-  **Assigned (2026-10-25):** to [`py313-venv`](../py313-venv/README.md), planned the same day
-  after A3 v2 and prompt 10, on the user's decision to move both hosts before the queued analysis
-  jobs. It moves both venvs to Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, rehearsed
-  on each host (R6, R7). Its prompt 01 closes this entry.
-
 - **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
   on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its
   log–log $G_k$ plot, `plot_Gk`) and `extract_QuadSourceIntegral_data.py` (`plot_Gk`, its `GkSource.pdf`)
@@ -602,7 +585,9 @@ disagree with the prompt that owns them.
   §3), and assigned to this campaign by the user on 2026-10-19, since it owns the A3 v2 launch.* After
   a `SIGKILL` of a build's driver, Ray's GCS server can be left reparented to pid 1, stuck in its own
   shutdown, where a `SIGTERM` cannot end it; until it is gone the rehearsal lock cannot be released.
-  Seen once, at R3's `hardkill-a`. `CLAUDE.md` rule 5 has the manual step (after `end`, a person
+  Seen at R3's `hardkill-a` (Ray 2.43.0), and again on 2026-10-25 at `py313-venv` 01's (Ray 2.59.0,
+  the same stack, alive about 1 h 56 m until a person's `SIGKILL`); the other board holds both
+  measurements. `CLAUDE.md` rule 5 has the manual step (after `end`, a person
   checks `ray-processes` and ends a GCS server still listed with `kill -KILL <pid>`); A3 v2's
   inheritance is `docs/rrk-v020-adoption-verification.md` §3.5. **What is left here** is the cause
   and any fix: for example a parent-death watch on the GCS server in
@@ -613,6 +598,38 @@ disagree with the prompt that owns them.
 ---
 
 ## 4. Resolved issues
+
+Closed by `py313-venv` prompt 01, 2026-10-25:
+
+- **[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]** *(opened 2026-10-22 by the
+  planning of prompts 06 and 07, from a read of the Mac Studio's checkout; not by a prompt)* —
+  `origin/main` carries `9678f28` (2026-10-06, "Bump scipy and ray pins for macOS update and Python
+  3.13"), committed on the Mac Studio, which this branch does not: it moves `ray` from 2.43.0 to
+  2.45.0, the earliest release with a Python 3.13 wheel, and `scipy` to 1.16.3. This branch took the
+  `scipy` half independently (`8abb3da`) and stays on Python 3.12 (MacPorts 3.12.15) with
+  `ray==2.43.0` (`requirements.txt:75`), which every rehearsal R0–R3 ran on. The two branches
+  therefore disagree on the interpreter and on `ray`, and a merge of this branch into `main`
+  conflicts at `requirements.txt:75`. **Impact:** none on A3 v2 — the user decided on 2026-10-22
+  that the Mac Studio's venv is Python 3.12 from this branch's pins (prompt 06 §0.2). It is a
+  `ray` pin move with its own rehearsal, which `CLAUDE.md` keeps as this repository's to make.
+  **Next step:** the user's — "we should move this checkout onto it at some point soon"
+  (2026-10-22); not before A3 v2 has ended. Indexed at `docs/OPEN_ISSUES.md` §1.23.
+
+  **Assigned (2026-10-25):** to [`py313-venv`](../py313-venv/README.md), planned the same day
+  after A3 v2 and prompt 10, on the user's decision to move both hosts before the queued analysis
+  jobs. It moves both venvs to Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, rehearsed
+  on each host (R6, R7). Its prompt 01 closes this entry.
+
+  **Closed 2026-10-25 by py313-venv 01:** this branch is now on Python 3.13.16 (MacPorts), with
+  `ray` **2.59.0**, later than `main`'s 2.45.0, and `SQLAlchemy` 2.0.55. The laptop's venv was
+  rebuilt from `requirements.txt` and its freeze differs from 3.12's in those two lines only. R6
+  reproduced `39809dca…` on all three of its stores, through the four launches and the hard-kill
+  pair, equal to R3's recorded fingerprints. A merge of this branch into `main` resolves
+  `requirements.txt:75` to this branch's line, `ray==2.59.0`. The Mac Studio's venv follows in
+  py313-venv 02. Record:
+  [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1;
+  [`../py313-venv/logs/01-move-the-laptop-venv-to-python-3.13.md`](../py313-venv/logs/01-move-the-laptop-venv-to-python-3.13.md).
+  Its row left `docs/OPEN_ISSUES.md` §1.23.
 
 Closed by a direct commit, 2026-10-25:
 

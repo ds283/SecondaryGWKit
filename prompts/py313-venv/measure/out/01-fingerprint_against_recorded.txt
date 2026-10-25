@@ -1,0 +1,40 @@
+# 01-fingerprint_against_recorded.txt — py313-venv prompt 01, R6: compare_with_recorded.py, as it stands, run through bash.
+
+== 2026-10-25T13:09:39+0000 after reference: the reference store against R3s recorded fingerprints
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py var/datastores/py313-venv-01-reference.sqlite --against var/runs/rrk-v020-adoption-03-reference-20261018T232838 var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941
+recorded: var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-reference-20261018T232838 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+recorded: var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-resumed-c-20261018T233941 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json, store): 0 difference(s)
+
+verdict: equal
+rc=0
+
+== 2026-10-25T13:23:02+0000 after resumed-c: both four-launch stores against R3's recorded fingerprints
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/compare_with_recorded.py var/datastores/py313-venv-01-reference.sqlite var/datastores/py313-venv-01-resumed.sqlite --against var/runs/rrk-v020-adoption-03-reference-20261018T232838 var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941
+recorded: var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-reference-20261018T232838 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+recorded: var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none; taken by rrk-v020-adoption-03-resumed-c-20261018T233941 at aab407529576307c9d3c1e64ccc8b2e980ed2d7d (git_dirty False)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-reference.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json, store): 0 difference(s)
+
+store: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite
+  format 6, digest 39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2, 21 classes, problems none
+  against its sidecar: 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-reference-20261018T232838/status.json, store): 0 difference(s)
+  compare_fingerprints(var/runs/rrk-v020-adoption-03-resumed-c-20261018T233941/status.json, store): 0 difference(s)
+
+verdict: equal
+rc=0
+

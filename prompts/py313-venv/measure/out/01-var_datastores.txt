@@ -1,0 +1,100 @@
+# 01-var_datastores.txt — py313-venv prompt 01, R6: every file under var/datastores/ (sha256, size, mtime_ns), before the first launch and after the last step.
+
+== before the first launch (2026-10-25T12:50, 26 files; digest over the listing 3e4ebfda4ee24d5c89c0a3ef204d5b4e0cc76d3d43e6bd1f9f27a291caf0dad2)
+03ba60187b25a3ff2a6f94abed4776ad460c044c3b1be476db8ee52f705a7372         12216  1791111797282581799  var/datastores/a3-v2-readiness-07-reference.manifest.json
+c6efe688e21de0ca7f595b136a9ca737cd174d1a0acc0e2393332024212087e1         12720  1791111817438845786  var/datastores/a3-v2-readiness-07-resumed.manifest.json
+d76258854ae57d3f08fa8295ac12f100b5d002f1900cdb8e03d08725189a872a         14927  1790375815169136727  var/datastores/backup-pre-resume-20260921T091011/handover-A3-baseline-lambdacdm.manifest.json
+0fb525671ca159e5823e2118f7cb7b4101f247a5e88492625713d7733dc17e31         12215  1791314482945892376  var/datastores/datastore-generic-09-rehearsal.manifest.json
+e85d16ba83ebd0e92d32e11a428fbe17abaedc2e685205f84467bf539382f3bc         12660  1790900389476369529  var/datastores/datastore-integrity-10-reference.manifest.json
+3302f5003bc038720e8850b3f62661717aa8cd1f7c28882b0154e0868c15d942         13512  1790900398317591942  var/datastores/datastore-integrity-10-resumed.manifest.json
+cc3b7ad0ec251a1a733427e7022ad9661fb6ac087ac96a1ae2dd2532ab3bb479         12293  1791762141836436657  var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+8d9b34216ca38bc5ae7e7bcdb85d88fce8ef0c035e8f6a5d5970d211eb1dad5c         12790  1791762148013674296  var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+b76c359ca5f2af9e700c80f62be1353802e8884bca60f6d584ac94a77c9b6232         12291  1791762154296405497  var/datastores/dk-and-rpk-migration-05-reference.manifest.json
+2b57ff6fb806b43307de3ec3211dc70cff52a8007f0ba6e56d2fc9d31eb0f43f         12840  1791762160138199449  var/datastores/dk-and-rpk-migration-05-resumed.manifest.json
+c65cc44726a739159e750c1fbf7f87209eeba7debb092ec9bfac709c5ee664fe         12290  1791762165799803236  var/datastores/dk-and-rpk-migration-08-reference.manifest.json
+f47f83d5afc1f85d1bb72c10a63cc1c7d91c7808c15358e782a352144d55c498         12814  1791762174141900499  var/datastores/dk-and-rpk-migration-08-resumed.manifest.json
+d8c9691c538b8d083820052316afd2055d900ecf1f816223aa6bc0ec96cb0c30         12178  1792924211682523605  var/datastores/handover-09-reference.manifest.json
+237e3a370160b6bcbf9d668e14c4613ba300c22c7dbf65f46d90c98e5c7392e7         17892  1791145919818063745  var/datastores/handover-A3-baseline-lambdacdm.manifest.json
+1a4984677a673b54bdfd46ec5169b5968b25503fcc60ceb6969c9a688f1f678a         12976  1790375757460021032  var/datastores/handover-atol-sweep.manifest.json
+1f3d27db602b897dda10bb96304561f9fe936dfd43afd3d9d347810f8b33bee3          8003  1792145485780667577  var/datastores/handover-stale-run-probe.manifest.json
+3603cf02d725a80918b40d0e86786491c50fed425e4633d595576c384b9ab8c9         12241  1792892431749017226  var/datastores/rpk-v030-adoption-01-reference.manifest.json
+60896ad742849d66e6dd2b75af32b61ebefbdc623abb5d9ae4f86f9ee7dc1956         12649  1792405614936530635  var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+641f9d7f0af13c722e6323f4cb7bb03224ef349473607c978d52ee274a4cfd07         12314  1792405588753193515  var/datastores/rrk-v020-adoption-03-reference.manifest.json
+741fd779d981a3fa15216ed27123d711c03fe958426046f98f07556bdcf9e58a         12818  1792405601995567298  var/datastores/rrk-v020-adoption-03-resumed.manifest.json
+80bfa8e57f9c74e08c591f0180bb6c2342c70f42da36d3e60f648a74e80fa476         12358  1791993565781098981  var/datastores/runregistry-extraction-02-reference.manifest.json
+4d8df0a32cc9651de6ee099c9e8a880a5433e6287440fcfdf8337b551dd48574         12902  1791993570150076620  var/datastores/runregistry-extraction-02-resumed.manifest.json
+a23e8ba6d7ea76f2e6197d2b00df0e875b06fe97530c6c792ba7680b8c7cb234         12343  1791993575328699521  var/datastores/runregistry-extraction-04-reference.manifest.json
+2a81d6ff5e347c62624539a49c9bbb5b81b81d5e6619a4f73f5f33dfc671ab57         12887  1791993579392544556  var/datastores/runregistry-extraction-04-resumed.manifest.json
+8cee05df3f74acb8b6513e18b4b5178127d4f2cf8092377a2d719bac28a9092a         12392  1792112105650437732  var/datastores/runregistry-extraction-08-reference.manifest.json
+3c2a9bac94e8d842d15c079326418bc672d840f7b81a996ad48848748287f0fe         12899  1792112109477576900  var/datastores/runregistry-extraction-08-resumed.manifest.json
+
+== after the last step (2026-10-25T15:38:58+0000, 44 files)
+03ba60187b25a3ff2a6f94abed4776ad460c044c3b1be476db8ee52f705a7372         12216  1791111797282581799  var/datastores/a3-v2-readiness-07-reference.manifest.json
+c6efe688e21de0ca7f595b136a9ca737cd174d1a0acc0e2393332024212087e1         12720  1791111817438845786  var/datastores/a3-v2-readiness-07-resumed.manifest.json
+d76258854ae57d3f08fa8295ac12f100b5d002f1900cdb8e03d08725189a872a         14927  1790375815169136727  var/datastores/backup-pre-resume-20260921T091011/handover-A3-baseline-lambdacdm.manifest.json
+0fb525671ca159e5823e2118f7cb7b4101f247a5e88492625713d7733dc17e31         12215  1791314482945892376  var/datastores/datastore-generic-09-rehearsal.manifest.json
+e85d16ba83ebd0e92d32e11a428fbe17abaedc2e685205f84467bf539382f3bc         12660  1790900389476369529  var/datastores/datastore-integrity-10-reference.manifest.json
+3302f5003bc038720e8850b3f62661717aa8cd1f7c28882b0154e0868c15d942         13512  1790900398317591942  var/datastores/datastore-integrity-10-resumed.manifest.json
+cc3b7ad0ec251a1a733427e7022ad9661fb6ac087ac96a1ae2dd2532ab3bb479         12293  1791762141836436657  var/datastores/dk-and-rpk-migration-02-reference.manifest.json
+8d9b34216ca38bc5ae7e7bcdb85d88fce8ef0c035e8f6a5d5970d211eb1dad5c         12790  1791762148013674296  var/datastores/dk-and-rpk-migration-02-resumed.manifest.json
+b76c359ca5f2af9e700c80f62be1353802e8884bca60f6d584ac94a77c9b6232         12291  1791762154296405497  var/datastores/dk-and-rpk-migration-05-reference.manifest.json
+2b57ff6fb806b43307de3ec3211dc70cff52a8007f0ba6e56d2fc9d31eb0f43f         12840  1791762160138199449  var/datastores/dk-and-rpk-migration-05-resumed.manifest.json
+c65cc44726a739159e750c1fbf7f87209eeba7debb092ec9bfac709c5ee664fe         12290  1791762165799803236  var/datastores/dk-and-rpk-migration-08-reference.manifest.json
+f47f83d5afc1f85d1bb72c10a63cc1c7d91c7808c15358e782a352144d55c498         12814  1791762174141900499  var/datastores/dk-and-rpk-migration-08-resumed.manifest.json
+d8c9691c538b8d083820052316afd2055d900ecf1f816223aa6bc0ec96cb0c30         12178  1792924211682523605  var/datastores/handover-09-reference.manifest.json
+237e3a370160b6bcbf9d668e14c4613ba300c22c7dbf65f46d90c98e5c7392e7         17892  1791145919818063745  var/datastores/handover-A3-baseline-lambdacdm.manifest.json
+1a4984677a673b54bdfd46ec5169b5968b25503fcc60ceb6969c9a688f1f678a         12976  1790375757460021032  var/datastores/handover-atol-sweep.manifest.json
+1f3d27db602b897dda10bb96304561f9fe936dfd43afd3d9d347810f8b33bee3          8003  1792145485780667577  var/datastores/handover-stale-run-probe.manifest.json
+c9973395ae83666d54a164440c95d6de285940c0b3008ff7ccffcee1be9a2cb5      23707648  1792942486209719839  var/datastores/py313-venv-01-hardkill-shard0000.sqlite
+fcd5143f730946d0b31b39179efb70fbd5918ca3ba328d58af32505c8ba74986      23695360  1792942486204515994  var/datastores/py313-venv-01-hardkill-shard0001.sqlite
+292280dd3c2b58873ec8cf13be676a467871dba349915f310c7e7c54011a6329       1077248  1792934981270617558  var/datastores/py313-venv-01-hardkill-shard0002.sqlite
+9202ca0db7e6af39f148b88811f7495bf4a194a19497c23cbfad14091cd0b730      23203840  1792942486183181366  var/datastores/py313-venv-01-hardkill-shard0003.sqlite
+26794f072bab11584c148cd848cc91152d16a00bf73685d30c0e00e8eff531aa         10478  1792942489206135318  var/datastores/py313-venv-01-hardkill.manifest.json
+643a350140b61530ae62a2af21ed3374beca64ac61473c08e805243e1a25f807         36864  1792942393185298204  var/datastores/py313-venv-01-hardkill.sqlite
+14e5fe871847823a408374498fd6da1a73d9cf03b7b66ffeca679b99e22d3569      23638016  1792933662688824154  var/datastores/py313-venv-01-reference-shard0000.sqlite
+fd5f39acec31c948f2a9a769599acf10173ef7263fbb57b9221fb11c9c5251fe      23658496  1792933662730533204  var/datastores/py313-venv-01-reference-shard0001.sqlite
+8af732aafe379395070f070f804c942da026acbd3af65ae3af0278f94ade5793       1077248  1792932698723164174  var/datastores/py313-venv-01-reference-shard0002.sqlite
+15aaaf79aec6a42edb9f3f5e9b5ae0ea912b5d0b5c9658f4109f9cf06fbf9362      23629824  1792933662674002217  var/datastores/py313-venv-01-reference-shard0003.sqlite
+30487a10e59db1852dea847fd33d2826d94cd2bd622c498bc8d4c7795c68a5c4         10429  1792933759639611799  var/datastores/py313-venv-01-reference.manifest.json
+1db175259aa9544534c58ff0187e19f36005b55fbfb97c4995802e69b3eba146         36864  1792932698774573348  var/datastores/py313-venv-01-reference.sqlite
+fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db      23851008  1792934521935106776  var/datastores/py313-venv-01-resumed-shard0000.sqlite
+dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af      23764992  1792934521961754435  var/datastores/py313-venv-01-resumed-shard0001.sqlite
+65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89       1077248  1792933840653579887  var/datastores/py313-venv-01-resumed-shard0002.sqlite
+d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a      23584768  1792934521926529238  var/datastores/py313-venv-01-resumed-shard0003.sqlite
+b4e78df486a23f30bc67cf035d3b730df33e97453a2b54802806b15353e014d7         10473  1792934524884553731  var/datastores/py313-venv-01-resumed.manifest.json
+f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3         36864  1792934392009003482  var/datastores/py313-venv-01-resumed.sqlite
+3603cf02d725a80918b40d0e86786491c50fed425e4633d595576c384b9ab8c9         12241  1792892431749017226  var/datastores/rpk-v030-adoption-01-reference.manifest.json
+60896ad742849d66e6dd2b75af32b61ebefbdc623abb5d9ae4f86f9ee7dc1956         12649  1792405614936530635  var/datastores/rrk-v020-adoption-03-hardkill.manifest.json
+641f9d7f0af13c722e6323f4cb7bb03224ef349473607c978d52ee274a4cfd07         12314  1792405588753193515  var/datastores/rrk-v020-adoption-03-reference.manifest.json
+741fd779d981a3fa15216ed27123d711c03fe958426046f98f07556bdcf9e58a         12818  1792405601995567298  var/datastores/rrk-v020-adoption-03-resumed.manifest.json
+80bfa8e57f9c74e08c591f0180bb6c2342c70f42da36d3e60f648a74e80fa476         12358  1791993565781098981  var/datastores/runregistry-extraction-02-reference.manifest.json
+4d8df0a32cc9651de6ee099c9e8a880a5433e6287440fcfdf8337b551dd48574         12902  1791993570150076620  var/datastores/runregistry-extraction-02-resumed.manifest.json
+a23e8ba6d7ea76f2e6197d2b00df0e875b06fe97530c6c792ba7680b8c7cb234         12343  1791993575328699521  var/datastores/runregistry-extraction-04-reference.manifest.json
+2a81d6ff5e347c62624539a49c9bbb5b81b81d5e6619a4f73f5f33dfc671ab57         12887  1791993579392544556  var/datastores/runregistry-extraction-04-resumed.manifest.json
+8cee05df3f74acb8b6513e18b4b5178127d4f2cf8092377a2d719bac28a9092a         12392  1792112105650437732  var/datastores/runregistry-extraction-08-reference.manifest.json
+3c2a9bac94e8d842d15c079326418bc672d840f7b81a996ad48848748287f0fe         12899  1792112109477576900  var/datastores/runregistry-extraction-08-resumed.manifest.json
+
+== the files of the first listing, in the second: unchanged (sha256, size, mtime_ns)?
+lines of the first listing absent from the second: 0
+== new files
+var/datastores/py313-venv-01-reference-shard0000.sqlite
+var/datastores/py313-venv-01-reference-shard0003.sqlite
+var/datastores/py313-venv-01-reference.sqlite
+var/datastores/py313-venv-01-hardkill.manifest.json
+var/datastores/py313-venv-01-hardkill-shard0002.sqlite
+var/datastores/py313-venv-01-reference.manifest.json
+var/datastores/py313-venv-01-hardkill.sqlite
+var/datastores/py313-venv-01-resumed-shard0002.sqlite
+var/datastores/py313-venv-01-reference-shard0002.sqlite
+var/datastores/py313-venv-01-hardkill-shard0003.sqlite
+var/datastores/py313-venv-01-resumed.manifest.json
+var/datastores/py313-venv-01-hardkill-shard0000.sqlite
+var/datastores/py313-venv-01-resumed-shard0003.sqlite
+var/datastores/py313-venv-01-resumed-shard0001.sqlite
+var/datastores/py313-venv-01-resumed.sqlite
+var/datastores/py313-venv-01-resumed-shard0000.sqlite
+var/datastores/py313-venv-01-hardkill-shard0001.sqlite
+var/datastores/py313-venv-01-reference-shard0001.sqlite
+-- -journal, -wal, -shm under var/datastores: []
+-- var/runs: 59 directories, 113 entries (before: 53 directories, 100 entries)
+-- outside the checkout: ~/Documents/Code/retired-venvs/SecondaryGWKit-py312-20261025 (the old venv, moved); ~/.ray/auth_token (64 bytes, mode 644, written 12:51 by ray 2.59.0 at reference's Ray start); ~/.raypoolkit/ (empty after release)

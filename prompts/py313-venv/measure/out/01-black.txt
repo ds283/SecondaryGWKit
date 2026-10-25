@@ -1,0 +1,26 @@
+# 01-black.txt — py313-venv prompt 01: black --check outside prompts/, before (3.12) and after (3.13).
+
+################ §2.1 BEFORE: the 3.12 venv — 2026-10-25T12:21:18+0000, HEAD 55c6a547db490794cf7e3f0cb478c7b9d29aa744
+$ ./venv/bin/python -m black --version
+python -m black, 25.1.0 (compiled: yes)
+Python (CPython) 3.12.15
+$ ./venv/bin/python -m black --check --extend-exclude '^/prompts/' .
+All done! ✨ 🍰 ✨
+369 files would be left unchanged.
+[exit 0]
+
+################ §2.7 AFTER: the 3.13 venv — 2026-10-25T12:37:19+0000, HEAD 55c6a547db490794cf7e3f0cb478c7b9d29aa744
+$ ./venv/bin/python -m black --version
+python -m black, 25.1.0 (compiled: yes)
+Python (CPython) 3.13.16
+$ ./venv/bin/python -m black --check --extend-exclude '^/prompts/' .
+All done! ✨ 🍰 ✨
+369 files would be left unchanged.
+[exit 0]
+
+################ §6 before committing — 2026-10-25T15:39:05+0000, HEAD 55c6a547db490794cf7e3f0cb478c7b9d29aa744, the 3.13 venv
+$ ./venv/bin/python -m black --check --extend-exclude '^/prompts/' .
+All done! ✨ 🍰 ✨
+369 files would be left unchanged.
+[exit 0]
+

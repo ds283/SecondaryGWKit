@@ -1,6 +1,6 @@
 # rrk-v020-adoption campaign — implementation state
 
-**Last updated:** 2026-10-19 · **Status: CLOSED — 5 of 5 landed and reviewed.** Closed at 04 on
+**Last updated:** 2026-10-25 (§3 narrowed by `py313-venv` 01) · **Status: CLOSED — 5 of 5 landed and reviewed.** Closed at 04 on
 2026-10-19 (`34bf4f7`, reviewed), then reopened the same day for one prompt, 05, when the user
 reversed C3 (README §6.1 U5), and closed again at 05 (`96a168e`, reviewed): the drivers print their
 refusals as one `!!` line. U1–U5 ruled by the user. 01 landed and reviewed (the pin moved, the venv
@@ -147,6 +147,30 @@ user's.
   watch on the GCS server would go. The user may not take it up at once; until then `CLAUDE.md`
   rule 5's manual step stands. The entry stays here, its text unchanged; the `handover` board's §3
   points at it, and its index row moves to `docs/OPEN_ISSUES.md` §1.1.
+
+  **Narrowed (2026-10-25, by `py313-venv` prompt 01, R3's hard-kill pair run again under Ray
+  2.59.0 and Python 3.13.16).** It is not Ray 2.43.0's alone. `py313-venv-01-hardkill-a`'s driver
+  (pid 98329) was `SIGKILL`ed at 13:35:14. Within about 15 s every Ray process of its run was gone
+  but the GCS server, pid 98369, reparented to pid 1.
+  - Its `gcs_server.out` now names the signal:
+    `gcs_server_main.cc:247: GCS server received SIGTERM, shutting down...` and `Stopping GCS
+    server.`, both in the second of the kill, then node-unregister lines and nothing after. The
+    sender of that `SIGTERM` is still not recorded.
+  - It was alive at the ten-minute deadline, so `py313-venv` 01 §2.9's stop fired. The user ruled:
+    sample it, then the user kills it.
+  - A read-only `sample 98369 10` at 15:28:43 shows the main thread, in every sample, in R3's stack
+    **frame for frame**:
+    `signal_handler<main::$_1,…>::do_complete → GcsServer::Stop() → GrpcServer::Shutdown() →
+    grpc::Server::ShutdownInternal → gpr_cv_wait`. The server's `server.poll0`/`poll1` threads wait
+    in `PollEventsFromCompletionQueue`, and the rest are idle.
+  - The user's `kill -KILL 98369` ended it **by 15:31:14, about 1 h 56 m after the `SIGKILL`**.
+    R3's lived 20 m 50 s. Both lifetimes are only how long it took a person to rule.
+
+  The route after a hard kill held otherwise, every step as at R3, and `hardkill-b` reproduced
+  `39809dca…`. What A3 v2 inherits is unchanged. What remains is still the cause and any fix,
+  Ray's or the launcher's. Sixteen minor releases of Ray did not fix it. Record:
+  [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1.10.3;
+  `prompts/py313-venv/measure/out/01-hardkill.txt` and `01-gcs-sample.txt`.
 
 ## 4. Resolved issues
 

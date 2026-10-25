@@ -1,0 +1,122 @@
+# 01-readers.txt — py313-venv prompt 01, R6 (L3): every reader, read-only, on the closed resumed store, the lock held, through run_readers.sh unchanged.
+
+== 2026-10-25T13:23:30+0000 readers; load: 13:23  up 20 days, 12:08, 1 user, load averages: 9.46 13.84 19.69
+$ bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/py313-venv-01-resumed.sqlite var/py313-venv-01/extract
+=== extract_Gk_data: 2026-10-25 13:23:31 +0000: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_Gk_data/
+exit 0; wall 39 s; files written 540
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 848.2/sec)
+25:      Queue summary: 3 lookup (avg 759.3/sec)
+32:      Queue summary: 116 lookup (avg 294.8/min)
+=== extract_GkWKB_data: 2026-10-25 13:24:11 +0000: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_GkWKB_data/
+exit 0; wall 94 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 890/sec)
+25:      Queue summary: 3 lookup (avg 1380/sec)
+34:      Queue summary: 348 lookup (avg 269.4/min)
+=== extract_GkSource_data: 2026-10-25 13:25:47 +0000: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_GkSource_data/
+exit 0; wall 42 s; files written 186
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+10:** reading run "default", the only run in this datastore (no --run-label given)
+19:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+26:      Queue summary: 3 lookup (avg 609.7/sec)
+31:      Queue summary: 3 lookup (avg 713.3/sec)
+36:      Queue summary: 10 lookup (avg 33.88/min)
+=== extract_TkWKB_data: 2026-10-25 13:26:30 +0000: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_TkWKB_data/
+exit 0; wall 24 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 653.8/sec)
+27:      Queue summary: 3 lookup (avg 37.59/min)
+=== extract_tensor_source_data: 2026-10-25 13:26:55 +0000: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_tensor_source_data/
+exit 0; wall 23 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 676.4/sec)
+27:      Queue summary: 6 lookup (avg 58.26/min)
+=== extract_QuadSourceIntegral_data: 2026-10-25 13:27:20 +0000: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local --models LambdaCDM --output var/py313-venv-01/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 28 s; files written 69
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 829/sec)
+25:      Queue summary: 3 lookup (avg 1075/sec)
+32:      Queue summary: 24 lookup (avg 131/min)
+rc=0
+
+$ bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/py313-venv-01-resumed.sqlite var/py313-venv-01/extract nomodels extract_Gk_data
+=== extract_Gk_data-no-models: 2026-10-25 13:27:57 +0000: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/py313-venv-01-resumed.sqlite --ray-address local  --output var/py313-venv-01/extract/extract_Gk_data-no-models/
+exit 0; wall 39 s; files written 405
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  f3e12dbcdefc822eae819fee907b9b59ff40530c1bdc9caf18c8afa6302cf2e3  2026-10-25T13:19:52 36864 var/datastores/py313-venv-01-resumed.sqlite
+  fadeb4cbb6ddfd05dcfc7a70d4e00aaf5e79330054a7b4a83b2bdef79e1d43db  2026-10-25T13:22:01 23851008 var/datastores/py313-venv-01-resumed-shard0000.sqlite
+  dbe8106820ad4479e5ae50e5f92a9e7bd34623978ef00e1c72bf2009df3e74af  2026-10-25T13:22:01 23764992 var/datastores/py313-venv-01-resumed-shard0001.sqlite
+  65afdd6a44bd6cb717db390230f100bea3370078653573148036675914feab89  2026-10-25T13:10:40 1077248 var/datastores/py313-venv-01-resumed-shard0002.sqlite
+  d8fa61149d63ea936d87a21ef9d55228b9a47fb645d3d655df24e4208c09636a  2026-10-25T13:22:01 23584768 var/datastores/py313-venv-01-resumed-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+6:** reading run "default", the only run in this datastore (no --run-label given)
+15:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+20:      Queue summary: 3 lookup (avg 1027/sec)
+25:      Queue summary: 3 lookup (avg 1183/sec)
+32:      Queue summary: 116 lookup (avg 299.2/min)
+35:>> RUNNING PIPELINE FOR MODEL QCD_Cosmology
+37:>> SKIPPING MODEL QCD_Cosmology: the datastore holds no background model for it
+rc=0
+== 2026-10-25T13:28:37+0000 readers done; load: 13:28  up 20 days, 12:13, 1 user, load averages: 30.26 33.22 27.70
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/py313-venv-01-resumed.sqlite   (after the readers)
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/py313-venv-01-resumed.sqlite
+digest:   39809dcac5c7b231c6b4468f9ea6cc48a4ad9c3a52d469f18f43291f781b55d2
+format:   6
+classes:  (count, digest; then each tag set)
+problems: none
+recorded: matches the fingerprint taken 2026-10-25T13:22:02+00:00 by run py313-venv-01-resumed-c-20261025T131935, at 55c6a547db490794cf7e3f0cb478c7b9d29aa744 (dirty)
+rc=0

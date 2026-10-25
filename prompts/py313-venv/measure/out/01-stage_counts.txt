@@ -1,0 +1,22 @@
+# 01-stage_counts.txt — py313-venv prompt 01, R6: stage_counts.py, as it stands, on R6s six run directories.
+
+$ PYTHONPATH=. ./venv/bin/python docs/dk-and-rpk-migration/rehearsal/stage_counts.py var/runs/py313-venv-01-reference-20261025T125115 var/runs/py313-venv-01-resumed-a-20261025T131024 var/runs/py313-venv-01-resumed-b-20261025T131514 var/runs/py313-venv-01-resumed-c-20261025T131935 var/runs/py313-venv-01-hardkill-a-20261025T132927 var/runs/py313-venv-01-hardkill-b-20261025T153304 
+lookup/compute/store per stage, from each run's stdout.log
+  reference: py313-venv-01-reference-20261025T125115
+  resumed-a: py313-venv-01-resumed-a-20261025T131024
+  resumed-b: py313-venv-01-resumed-b-20261025T131514
+  resumed-c: py313-venv-01-resumed-c-20261025T131935
+  hardkill-a: py313-venv-01-hardkill-a-20261025T132927
+  hardkill-b: py313-venv-01-hardkill-b-20261025T153304
+  stage                                                         reference       resumed-a           resumed-b           resumed-c    hardkill-a          hardkill-b 
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE    3/3/3           3/3/3               3/0/0               3/0/0        3/3/3               3/0/0      
+  CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE  3/0/0           3/0/0               3/0/0               3/0/0        3/0/0               3/0/0      
+  CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS         3/3/3           3/3/3               0/0/0               0/0/0        3/3/3               0/0/0      
+  CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS               3/3/3           3/3/3               0/0/0               0/0/0        3/3/3               0/0/0      
+  CALCULATE QUADRATIC SOURCE TERMS                              6/6/6           6/6/6               0/0/0               0/0/0        6/6/6               0/0/0      
+  CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS            1368/1368/1368  1368/1368/1368      0/0/0               0/0/0        1368/1368/1368      0/0/0      
+  CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS                  3477/3477/3477  3477/3477/3477      0/0/0               0/0/0        3477/3477/3477      0/0/0      
+  CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT                291/291/291     (no progress line)  153/153/153         0/0/0        291/291/291         0/0/0      
+  APPLY GKSOURCE POLICIES                                       291/291/291     -                   291/291/291         0/0/0        291/291/291         0/0/0      
+  CALCULATE QUADRATIC SOURCE INTEGRALS                          864/864/864     -                   (no progress line)  323/323/323  (no progress line)  328/328/328
+rc=0

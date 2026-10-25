@@ -72,7 +72,7 @@ pyparsing==3.2.1
 python-dateutil==2.9.0.post0
 pytz==2025.1
 PyYAML==6.0.2
-ray==2.43.0
+ray==2.59.0
 raypoolkit @ git+https://github.com/ds283/RayPoolKit@v0.3.0
 referencing==0.36.2
 requests==2.32.3
@@ -85,7 +85,7 @@ seaborn==0.13.2
 setuptools==76.1.0
 six==1.17.0
 smart-open==7.1.0
-SQLAlchemy==2.0.39
+SQLAlchemy==2.0.55
 sympy==1.13.3
 textual==2.1.2
 tomli==2.2.1

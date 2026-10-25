@@ -1,7 +1,8 @@
 # This repository's client config for runregistrykit (RunRegistryKit's README.md, "Using it").
 runs_root = "var/runs"
 stores_root = "var/datastores"
-distributions = ["datastorekit", "raypoolkit"]
+# The last four are here so that a manifest says which venv wrote a store.
+distributions = ["datastorekit", "raypoolkit", "ray", "SQLAlchemy", "numpy", "scipy"]
 
 [stores]
 fingerprinter = "config.fingerprint:fingerprinter"

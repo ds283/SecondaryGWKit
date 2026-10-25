@@ -178,6 +178,10 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
 
 ## Repository mechanics
 
+- **The venv** is Python 3.13, MacPorts' 3.13.16, on the laptop and on the Mac Studio. It is
+  built with `/opt/local/bin/python3.13 -m venv venv` and then
+  `./venv/bin/pip install -r requirements.txt`, never by hand. It moved from 3.12.15 on
+  2026-10-25 in the `py313-venv` campaign (the laptop in its prompt 01, the Mac Studio in 02).
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root. There
   are seven roots, each run by its own command:
   ```bash

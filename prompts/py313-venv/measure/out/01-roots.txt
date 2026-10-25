@@ -1,0 +1,198 @@
+# 01-roots.txt — py313-venv prompt 01: the seven roots under Python 3.12.15 (§2.1, before) and 3.13.16 (§2.7, after).
+# Each root by README §7 command, serially, in the foreground, at the dispatch HEAD; full outputs under var/py313-venv-01/roots/.
+
+################ §2.1 BEFORE: the 3.12 venv — 2026-10-25T12:13:25+0000, HEAD 55c6a547db490794cf7e3f0cb478c7b9d29aa744, git status --short: [?? prompts/py313-venv/measure/]
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > var/py313-venv-01/roots/py312/AdaptiveLevin.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/AdaptiveLevin.txt
+   [py312] Python 3.12.15; load before: 16.59 29.60 21.09; start 12:13:26
+   exit 0; end 12:13:27; wall 1 s
+   Ran 32 tests in 0.162s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > var/py313-venv-01/roots/py312/CosmologyModels.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/CosmologyModels.txt
+   [py312] Python 3.12.15; load before: 16.59 29.60 21.09; start 12:13:27
+   exit 0; end 12:13:34; wall 7 s
+   Ran 39 tests in 1.681s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > var/py313-venv-01/roots/py312/LiouvilleGreen.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/LiouvilleGreen.txt
+   [py312] Python 3.12.15; load before: 15.74 29.21 21.00; start 12:13:34
+   exit 0; end 12:14:33; wall 59 s
+   Ran 148 tests in 54.298s
+   OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > var/py313-venv-01/roots/py312/ObjectFactories.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/ObjectFactories.txt
+   [py312] Python 3.12.15; load before: 11.54 25.54 20.18; start 12:14:33
+   exit 0; end 12:15:08; wall 35 s
+   Ran 280 tests in 30.867s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/py313-venv-01/roots/py312/RunDrivers.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/RunDrivers.txt
+   [py312] Python 3.12.15; load before: 9.78 23.53 19.66; start 12:15:08
+   exit 0; end 12:15:24; wall 16 s
+   Ran 120 tests in 13.906s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > var/py313-venv-01/roots/py312/tools.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/tools.txt
+   [py312] Python 3.12.15; load before: 8.49 22.57 19.39; start 12:15:24
+   exit 0; end 12:15:55; wall 31 s
+   Ran 49 tests in 26.633s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > var/py313-venv-01/roots/py312/ComputeTargets.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py312/ComputeTargets.txt
+   [py312] Python 3.12.15; load before: 8.16 20.93 18.92; start 12:15:59
+   exit 1; end 12:20:32; wall 272 s
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   Ran 737 tests in 268.519s
+   FAILED (failures=1)
+
+   The one failure is README §7's known wall-clock test; re-run alone:
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > var/py313-venv-01/roots/py312/rerun-test_wall_time_per_object.txt 2>&1
+   load before: 7.65 12.78 15.71; start 12:20:39
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.11356654204428196 not less than or equal to 0.06
+   Ran 1 test in 1.221s
+   FAILED (failures=1)
+
+   re-run 2 alone, load before: 7.45 12.48 15.55; start 12:20:52
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.12442037486471236 not less than or equal to 0.06
+   Ran 1 test in 0.990s
+   FAILED (failures=1)
+   re-run 3 alone, load before: 7.58 12.43 15.51; start 12:20:58
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.05405145790427923 not less than or equal to 0.05
+   Ran 1 test in 1.030s
+   FAILED (failures=1)
+
+   Context: the load is not this repository's. A ChamPBH agent's suite (pid 79546, cwd /Users/ds283/Documents/Code/ChamPBH, MacPorts Python 3.13) was running at ~99 % CPU at 12:20, beside spotlightknowledged (~119 %).
+
+################ §2.7 AFTER: the 3.13 venv — 2026-10-25T12:26:12+0000, HEAD 55c6a547db490794cf7e3f0cb478c7b9d29aa744, git status --short: [ M CLAUDE.md; M requirements.txt; M runregistrykit.toml;?? prompts/py313-venv/measure/;]
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > var/py313-venv-01/roots/py313/AdaptiveLevin.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/AdaptiveLevin.txt
+   [py313] Python 3.13.16; load before: 54.42 42.73 28.10; start 12:26:13
+   exit 0; end 12:26:17; wall 4 s
+   Ran 32 tests in 0.147s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > var/py313-venv-01/roots/py313/CosmologyModels.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/CosmologyModels.txt
+   [py313] Python 3.13.16; load before: 52.14 42.45 28.09; start 12:26:17
+   exit 0; end 12:26:38; wall 20 s
+   Ran 39 tests in 3.235s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > var/py313-venv-01/roots/py313/LiouvilleGreen.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/LiouvilleGreen.txt
+   [py313] Python 3.13.16; load before: 46.16 41.71 28.16; start 12:26:39
+   exit 0; end 12:28:29; wall 110 s
+   Ran 148 tests in 94.988s
+   OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > var/py313-venv-01/roots/py313/ObjectFactories.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/ObjectFactories.txt
+   [py313] Python 3.13.16; load before: 35.03 40.01 29.20; start 12:28:29
+   exit 0; end 12:29:30; wall 61 s
+   Ran 280 tests in 47.266s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > var/py313-venv-01/roots/py313/RunDrivers.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/RunDrivers.txt
+   [py313] Python 3.13.16; load before: 38.89 40.72 30.30; start 12:29:31
+   exit 0; end 12:29:59; wall 27 s
+   Ran 120 tests in 23.424s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > var/py313-venv-01/roots/py313/tools.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/tools.txt
+   [py313] Python 3.13.16; load before: 38.31 40.44 30.50; start 12:29:59
+   exit 0; end 12:30:45; wall 46 s
+   Ran 49 tests in 37.854s
+   OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > var/py313-venv-01/roots/py313/ComputeTargets.txt 2>&1
+$ grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' var/py313-venv-01/roots/py313/ComputeTargets.txt
+   [py313] Python 3.13.16; load before: 42.21 40.63 31.26; start 12:31:01
+   exit 1; end 12:36:31; wall 330 s
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   Ran 737 tests in 321.768s
+   FAILED (failures=1)
+
+   The one failure is README §7's known wall-clock test, as under 3.12; re-run alone:
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > var/py313-venv-01/roots/py313/rerun1-test_wall_time_per_object.txt 2>&1
+   re-run 1 alone, load before: 16.60 26.40 27.58; start 12:36:43
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.07779791695065796 not less than or equal to 0.06
+   Ran 1 test in 0.586s
+   FAILED (failures=1)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > var/py313-venv-01/roots/py313/rerun2-test_wall_time_per_object.txt 2>&1
+   re-run 2 alone, load before: 16.15 26.15 27.49; start 12:36:49
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.07800125004723668 not less than or equal to 0.06
+   Ran 1 test in 0.568s
+   FAILED (failures=1)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > var/py313-venv-01/roots/py313/rerun3-test_wall_time_per_object.txt 2>&1
+   re-run 3 alone, load before: 15.10 25.76 27.34; start 12:36:53
+   exit 1
+   FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+   AssertionError: 0.08432941697537899 not less than or equal to 0.06
+   Ran 1 test in 0.620s
+   FAILED (failures=1)
+
+   test_ray_address_default on its own (the evidence that address="local" still means a fresh instance under ray 2.59.0):
+$ PYTHONPATH=. ./venv/bin/python -m unittest -v ComputeTargets.tests.test_ray_address_default > var/py313-venv-01/roots/py313/test_ray_address_default.txt 2>&1
+   exit 0
+   test_auto_follows_RAY_ADDRESS (ComputeTargets.tests.test_ray_address_default.TestRayResolvesLocalToANewInstance.test_auto_follows_RAY_ADDRESS) ... ok
+   test_local_ignores_RAY_ADDRESS (ComputeTargets.tests.test_ray_address_default.TestRayResolvesLocalToANewInstance.test_local_ignores_RAY_ADDRESS) ... ok
+   test_each_ray_init_takes_the_flag (ComputeTargets.tests.test_ray_address_default.TestTheDefaultIsLocal.test_each_ray_init_takes_the_flag) ... ok
+   test_each_reader_defaults_to_local (ComputeTargets.tests.test_ray_address_default.TestTheDefaultIsLocal.test_each_reader_defaults_to_local) ... ok
+   test_main_py_argument_defaults_to_the_constant (ComputeTargets.tests.test_ray_address_default.TestTheDefaultIsLocal.test_main_py_argument_defaults_to_the_constant) ... ok
+   test_main_py_constant_is_local (ComputeTargets.tests.test_ray_address_default.TestTheDefaultIsLocal.test_main_py_constant_is_local) ... ok
+   test_no_script_requires_the_flag (ComputeTargets.tests.test_ray_address_default.TestTheDefaultIsLocal.test_no_script_requires_the_flag) ... ok
+   
+   ----------------------------------------------------------------------
+   Ran 7 tests in 0.185s
+   
+   OK
+
+   The wall-clock test's own printed timings ("[Tk cost] ... best of 3 <cold> s with the residual table built, <warm> s with it cached";
+   limits COST_COLD_WALL_TIME_LIMIT = 0.06 s, COST_WALL_TIME_LIMIT = 0.05 s, test_tk_wkb_phase.py:152-153):
+     3.12  in the root 0.1170 / 0.0446; alone 0.1136 / 0.0385, 0.1244 / 0.0463, 0.1480 / 0.0541
+     3.13  in the root 0.0779 / 0.0276; alone 0.0778 / 0.0277, 0.0780 / 0.0274, 0.0843 / 0.0289
+   It fails under both interpreters, at the same machine load (a ChamPBH suite running beside it), on the cold limit; 3.13 is
+   faster, not slower. So it is not a finding against 3.13 (README §7).
+
+################ §2.7 Warnings: ComputeTargets once more with -W default
+$ PYTHONPATH=. ./venv/bin/python -W default -m unittest discover -s ComputeTargets/tests -t . > var/py313-venv-01/roots/py313/ComputeTargets-Wdefault.txt 2>&1
+   load before: 18.50 25.34 27.12; start 12:37:34
+   exit 0; wall 211 s
+   Ran 737 tests in 206.351s
+   OK
+   Warnings, -W default, ComputeTargets under 3.13 (full output var/py313-venv-01/roots/py313/ComputeTargets-Wdefault.txt):
+     DeprecationWarning 4 lines, all naming this repository's own ComputeTargets/tests/test_quadsource_integral.py:497-498
+       ("bessel_phase: atol, rtol is deprecated and has no effect ..."), this repository's own deprecation, raised by its own
+       test; IntegrationWarning 6 (scipy, from ComputeTargets/tests/domenech.py:680, kohri_terada.py:461 and
+       Quadrature/simple_quadrature.py:92); FutureWarning 0; no warning names a file under site-packages (third-party
+       internals: 0). The same counts, kind by kind, as the 3.12 and 3.13 ComputeTargets runs without the flag.
+   Warnings across all seven roots, by kind, 3.12 against 3.13 (grep -oE '[A-Za-z]*Warning' on each root's output):
+     every root equal, but ObjectFactories: 3.13 has one ResourceWarning that 3.12 does not:
+       .../venv/lib/python3.13/site-packages/sqlalchemy/sql/selectable.py:4765: ResourceWarning: unclosed database in <sqlite3.Connection ...>
+     Python 3.13 newly warns when a sqlite3.Connection is garbage-collected unclosed. Run again with PYTHONTRACEMALLOC=40
+     (var/py313-venv-01/roots/py313/ObjectFactories-tracemalloc.txt, stopped once the trace was printed), the connection
+     was opened by ObjectFactories/tests/test_quadsource_parent_key.py:443-444 (_read: sqla.create_engine("sqlite://") then
+     metadata.create_all(engine), never disposed). A test's in-memory engine, not a package's and not a store's. Recorded,
+     not acted on (README §5 rule 1; CLAUDE.md rule 4).
+
