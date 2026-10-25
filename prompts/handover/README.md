@@ -98,6 +98,20 @@ WKB grid at the largest source-grid point **below** `z_init`; `TkWKBIntegration`
 evaluable in between**. `QuadSourceIntegral` bridges it by clamping the LG accessors to
 `WKB_region[0]`, allowed up to `HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5` mean grid steps.
 
+*Corrected 2026-10-25, measured on A3 v2 by the orchestrator while writing B1:* the numeric side
+**is** evaluable in between. The data already exist, and only the consumer discards them.
+- **What the integrator does.** In `mode="stop"`, `numeric_with_phase_cut` integrates to the end
+  of the search window, $z_{\rm exit,subh,e6}$, sampling every grid node on the way. It finds the
+  extremum afterwards (`Quadrature/integrators/numeric_with_phase_cut.py:649-660`, `:758-776`).
+- **What the store holds.** Every A3 v2 `TkNumericIntegration` row stores 118–126 samples below
+  $z_{\rm init}$, the Liouville–Green row's first node among them.
+- **What the consumers do.** `TkSourceFunctions._build_numeric` drops every sample below the
+  hand-over, *"absent (mode="stop") or superseded"*. `QuadSource` walks only nodes above
+  $\max(z_{\rm init,q}, z_{\rm init,r})$, *"the numeric grids themselves stop at the hand-over"*.
+
+So the gap is the consumer switching at $z_{\rm init}$, a point neither spline samples. The
+producer never fell short. §7 D1.
+
 **(b) The gap masks everything else at the seam, by two to four orders.** On real rows: gaps of
 median **1.2e-02**, max **2.2e-02** in $\log(1+z)$ on 1666 ($T_q$) and 1798 ($T_r$) sub-intervals;
 rows with **no** gap agree with `analytic_rad` to **6.2e-05**, rows with a gap give **6.6e-02 –
@@ -590,6 +604,22 @@ yields a stored diagnostic; (c) is the only one confined to one file.
 *Recommendation recorded 2026-10-25:* (b), with the reasons, in
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §3.4. The decision
 remains the user's.
+
+**DECIDED 2026-10-25 by the user: (b), overlap by construction, with the Liouville–Green
+initialisation kept at the phase extremum.** The decision has three parts:
+- $z_{\rm init}$ stays the extremum `find_phase_extremum` returns, and `TkWKBIntegration` is
+  unchanged;
+- only the consumer's switch point moves, to the first source-grid node below $z_{\rm init}$;
+- the numeric representation extends at least two nodes beyond that node.
+
+The user asked whether leaving the extremum would bring in a cos term. It would not. Both WKB
+`store()` methods rotate arbitrary $(T, T')$ into $B\sin(\theta+\Delta\theta)$
+(`TkWKBIntegration.py:497-523`), and `find_phase_extremum`'s docstring (`:34-37`) says nothing
+depends on which extremum is used. The initialisation stays where it is all the same: moving it
+would touch $G_k$'s cycle-count rectifier and the split of the matching error between amplitude
+and phase, and those questions belong to C1 and E2. **What made (b) cheap:** the numeric samples
+past $z_{\rm init}$ already exist (the correction to §2 (a) below). Prompt
+[`12-remove-the-tk-gap.md`](12-remove-the-tk-gap.md), item **B1**, implements it.
 
 **D2 — is the depth scan run at large $x$ only?** §2 (i)/(j): the depth decision needs
 $\lesssim10^{-6}$, no oracle delivers that at the fixtures' $x$ of 4.33–1556, and both deliver it
