@@ -2,7 +2,7 @@
 
 This document is the `handover` campaign's record of the A3 v2 build: the host made ready and
 rehearsed there (§1, prompt 06), the launch (§2, prompt 07), and the checks on the closed store
-(§3, prompt 08). Each section is written by its prompt and is additive (`CLAUDE.md`, campaign
+(§3, prompt 08), and the re-read with the fixed readers (§4, prompt 10). Each section is written by its prompt and is additive (`CLAUDE.md`, campaign
 conventions, rule 6).
 
 **Where the records are.** The prompts run on the Mac Studio and commit nothing there; each writes
@@ -1015,3 +1015,182 @@ pair, and every store file is unchanged by the census.
 - `~/ScienceData/` remains, empty.
 - **The freeze on the checkout ends here.** It stays at `b90752d`, clean, and is not moved by this
   prompt.
+
+## 4. Re-read with the fixed readers
+
+**Where the records are.** A path `var/handover-10/…` in this section is that directory on the Mac
+Studio. Its `out/`, `scripts/` and `state/` are committed at [`a3-v2/reread/`](a3-v2/reread/), with its
+`issues.md` and the orchestrator's `review.md`. Its `extract/`
+(879 MB of reader output, with each reader's `.log`) stays on the Mac Studio, beside the store.
+
+**Result: complete, with no stop.** Every reader exited 0. The GkWKB read-back is complete: 1392
+full-range PDFs, 1392 PNGs and 1392 CSVs, equal to each other and to the reader's 1392-pair work
+list. The pair 08 died on has all three files. The store is byte-identical and its fingerprint is
+the sidecar's. The lock was taken and released.
+
+**The tree.** Dispatch SHA `57f67a9a5b44eeca55d5ecd17f2fbd34480298a6`. Step 1 fast-forwarded the
+checkout from `b90752d` to it. This is the first move of the checkout since A3 v2's launch.
+`git status --short` was empty before the move, after it, and at the end.
+
+**Clock.** The Mac Studio was on GMT on 2026-10-25, after BST ended, so every time below is UTC.
+08's times were BST.
+
+### 4.1 The Gate ([`gate_10.txt`](a3-v2/reread/out/gate_10.txt), [`step1_checkout.txt`](a3-v2/reread/out/step1_checkout.txt))
+
+- **09 landed and was reviewed.** At the dispatch SHA, the board's row 09 reads "✅ 2026-10-25,
+  reviewed …; fingerprint `39809dca…` recomputed", at commit `1c19998`.
+- **The dispatch commit is later than 09's records commit.** `git log b90752d..57f67a9` lists 21
+  commits, ending at `57f67a9`, and `bacbab6` (09's records) is among them. `origin/handover-remedial`
+  is `57f67a9`, so the commit is pushed.
+- **`git diff --stat b90752d 57f67a9 -- ObjectFactories config main.py`** lists
+  `config/ray_local.py` (new, 7 lines, `RAY_TEMP_DIR = "/tmp/ray-sgk"` plus a comment) and
+  `main.py` (+8 −2). The `main.py` change is the import, and `ray.init` gaining
+  `_temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None`. The full diff is saved. That is
+  exactly the amendment's allowance, and no factory or schema is touched. After the move,
+  `git diff --stat b90752d HEAD -- …` gives the same two files.
+- **The Mac Studio.**
+  - `runregistrykit list`: 5 runs, all finished, nothing `running` or stale.
+  - Neither `~/.raypoolkit/rehearsal-lock` nor `~/ScienceData/.rehearsal-lock` exists.
+    `tools.rehearsal_lock status` at `b90752d` reports "lock: free", "Ray processes of this
+    repository: none".
+  - `/tmp/ray-sgk` does not exist.
+  - `git status --short` is empty.
+
+### 4.2 The venv ([`pip_10.txt`](a3-v2/reread/out/pip_10.txt))
+
+- **Before:** `pip freeze` (101 lines) equals the freeze recorded in `pip_06.txt` (that file's lines
+  7–107): diff rc 0.
+- **`pip install --dry-run -r requirements.txt`** reports **"Would install raypoolkit-0.3.0"**, and
+  only that. Its "Resolved … to commit" lines name tag-object SHAs (`6a6809d…`, `caf00765…`,
+  `895e3c70…`). These are the same three as the laptop's in `rpk-v030-adoption`
+  `measure/out/01-pip.txt`.
+- **The install** reports "Successfully uninstalled raypoolkit-0.2.0" and "Successfully installed
+  raypoolkit-0.3.0".
+- **After:** `pip freeze` is 101 lines. It differs from `pip_06.txt`'s on the one `raypoolkit` line
+  alone: `eaef0ce6…` → **`67a75b97a656accb98195a4bda93f64e6a5f3fb2`**. `pip check` is clean.
+  `package_provenance` gives `datastorekit` 0.5.0 `f47b9a25…`, `raypoolkit` 0.3.0 `67a75b97…` and
+  `runregistrykit` 0.2.0 `0bae3a3c…`, none of them editable.
+
+### 4.3 The store before ([`store_10.txt`](a3-v2/reread/out/store_10.txt), `state/store_files_before.txt`)
+
+- **`store show`:**
+  - kind `registry`, problems none;
+  - `store_id` `03fa76de40cb4753af668352413de049`;
+  - fingerprint `0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`, taken
+    2026-10-25T00:34:14+01:00 at `b90752d`;
+  - the one run naming the store is `handover-07-a3-v2-20261022T211155`, `done`.
+- **`store fingerprint`** (no `--write`), before the readers: digest `0e32f24a…`, problems none,
+  "matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752d…".
+- **The store files.** The primary (36,864 B, 2026-10-22T21:12:03) and four shards (105.8–107.6 MB,
+  2026-10-24T21:56:16), with no journal. They are identical, hash for hash, to 08's
+  `state/store_files_before.txt`. The sidecar line (`3201f6a5…`, 10,519 B, 2026-10-25T00:34:25) is
+  recorded too.
+
+### 4.4 The lock ([`lock_10.txt`](a3-v2/reread/out/lock_10.txt))
+
+- **Before:** `status --ray-temp-dir /tmp/ray-sgk` gave "lock: free (… does not exist)", "Ray
+  processes of /tmp/ray-sgk: none", exit 0.
+- **`acquire`** (`--project SecondaryGWKit`, purpose "SecondaryGWKit handover 10: re-read A3 v2",
+  `--ray-temp-dir /tmp/ray-sgk`, `--ray-address in-process`): exit 0, at 10:49:36Z.
+- **`status`, while held:** "lock: HELD", host `mps026298`, `pid: -`, "owner pid: - (no pid recorded
+  yet)", no processes, **exit 0**. The orchestrator's note expected exit 3 in this state. This is
+  recorded in `issues.md`, and it is not a stop.
+
+  > **Orchestrator's note, 2026-10-25, on committing this section.** Exit 0 is correct. RayPoolKit
+  > `docs/rehearsal-lock.md` §7 at `v0.3.0` says `status` exits **0, always**; the "3" the note
+  > cited is the row number of §8's layout table, not an exit status. The error was the note's, not
+  > the package's, and no issue is opened.
+- **After the readers** (step 8):
+  - `ray-processes`: empty, exit 0;
+  - **`release`: "released the rehearsal lock", exit 0**, at 10:57:50Z;
+  - `status`: **"lock: free"**, "Ray processes of /tmp/ray-sgk: none", exit 0;
+  - `ray-processes`: empty, exit 0.
+- `~/.raypoolkit/` remains, empty. `~/ScienceData/.rehearsal-lock` does not exist.
+
+### 4.5 The readers ([`readers_10.txt`](a3-v2/reread/out/readers_10.txt))
+
+`run_readers.sh` was run on the A3 v2 primary into `var/handover-10/extract`: the six readers, then
+`extract_Gk_data` with `nomodels`, as in 08. They ran 10:50:06–10:56:57Z with the lock held, and
+both invocations returned rc 0. Sizes are `du -sk` in KiB.
+
+| Script | Exit | Wall (08) | Last queue | Files (08) | Size KiB (08) | Store files after |
+|---|---|---|---|---|---|---|
+| `extract_Gk_data.py` | 0 | 54 s (57 s) | 522 | 1251 (1593) | 78,616 (102,080) | identical |
+| `extract_GkWKB_data.py` | **0** (08: **1**) | 171 s (24 s) | **1392** (8) | **9744** (344) | **551,064** (18,680) | identical |
+| `extract_GkSource_data.py` | 0 | 34 s (33 s) | 45 | 847 (873) | 69,684 (72,268) | identical |
+| `extract_TkWKB_data.py` | 0 | 19 s (19 s) | 8 | 72 (72) | 6,936 (6,936) | identical |
+| `extract_tensor_source_data.py` | 0 | 22 s (22 s) | 36 | 172 (172) | 7,672 (7,672) | identical |
+| `extract_QuadSourceIntegral_data.py` | 0 | 31 s (33 s) | 240 | 687 (681) | 58,512 (57,444) | identical |
+| `extract_Gk_data.py`, **no `--models`** | 0 | 58 s (56 s) | 522; then `>> SKIPPING MODEL QCD_Cosmology: …` | 1980 (1593) | 127,032 (102,944) | identical |
+
+- **879 MB in all**, against 08's 360 MB. Almost all of the increase is the GkWKB reader, which now
+  completes.
+- **No reader log** has a `Traceback`, `ReadOnlyMiss`, `ReadOnlyWrite`, `FATAL` or `Error`
+  ([`reader_logs_scan_10.txt`](a3-v2/reread/out/reader_logs_scan_10.txt)). After each reader, no Ray
+  process from this checkout's venv was left.
+- **Each reader started its Ray under `/tmp/ray-sgk`**: seven `session_2026-10-25_10-5x-…`
+  directories are there.
+- **Why the other counts differ from 08's.**
+  - The readers draw their `k` and `z_source` subsamples with an unseeded `random.sample`, so
+    the counts vary between runs: `extract_Gk_data` with and without `--models` made 1251 and 1980
+    files from the same 522 lookups.
+  - 09 also filtered the `analytic_G_w` series.
+  - The prompt asks for a difference here to be recorded, not treated as a stop.
+
+### 4.6 The GkWKB read-back ([`gkwkb_readback_10.txt`](a3-v2/reread/out/gkwkb_readback_10.txt))
+
+**The script** is `scripts/gkwkb_readback.py`. It reads only the reader's output and log.
+
+- **The counts.**
+  - Under `plots/full-range/` there are 1392 PDFs and 1392 PNGs; under `csv/` there are 1392 CSVs.
+  - The three sets of `(k, z_source)` pairs, taken from the file names, are equal.
+  - `zoom-matching` and `theta` each also hold 1392 PDFs and 1392 PNGs: 9744 files in all, 7 × 1392.
+  - The pairs cover 8 distinct `k` and 174 distinct `z_source`.
+- **The work list holds 1392 pairs.**
+  - **From the reader's log:** line 31 is `** GENERATING GkNumeric/GkWKB DATA PRODUCTS`; line 32
+    reads `792/1392 work items remaining`; line 34 reads `252/1392 work items remaining`; line 37
+    is `Queue summary: 1392 lookup (avg 538.6/min)`.
+  - **From the code:** `extract_GkWKB_data.py:509` builds `work_grid = product(k_subsample,
+    z_subsample)`. `k_subsample` is all 8 response `k`, since `:458` samples only above 20.
+    `z_subsample` is `int(round(0.10 × N + 0.5))` = 174 source redshifts (`:472`). 8 × 174 = 1392.
+  - **Every pair given was plotted.** The count of each output kind is 1392, there is no `FATAL`
+    ("Neither numeric or WKB data available …") line, and there is no `Traceback`.
+- **The pair 08 died on**, `k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19`, is in this run's
+  sample, and all three files are present:
+  - full-range **PDF 30,366 B** (08: a 1,039-byte fragment);
+  - full-range **PNG 128,806 B**;
+  - **CSV 34,150 B**, 154 rows.
+  - Its zoom-matching PDF and PNG and its theta PDF are present too.
+- **The `analytic_G_w` points `sensible_log_points` dropped.** The reader does not report this, so
+  it is not store-wide. The script calls `extract_common.sensible_log_points` itself, on each
+  CSV's `(redshift, analytic_G_w)` against its `abs_G`. These are the two lists `plot_Gk` passes it
+  at `extract_GkWKB_data.py:269`.
+  - **The pair: 35 of 154 dropped**, all of them above the ceiling. Max $|G|$ is 4.0099e+21, so
+    the ceiling is 4.0099e+24. The largest stored $|$`analytic_G_w`$|$ is **7.5709e+243**, the
+    value 08 died on. None of the pair's points is `None`, non-finite or zero.
+  - **Summed over all 1392 CSVs this run wrote** (this run's random sample, not the store): 5162 of
+    109,594 points dropped. 5034 are above the ceiling and 128 are exact zeros; none is `None` or
+    non-finite. 518 of the 1392 pairs lose at least one point.
+
+### 4.7 The store after ([`store_after_10.txt`](a3-v2/reread/out/store_after_10.txt), `state/store_files_after.txt`)
+
+- **The store files** after the readers are identical to `state/store_files_before.txt`, with diff
+  rc 0. That covers every SHA-256, size and mtime, the sidecar line, and the absence of any journal.
+- **`store fingerprint`** (no `--write`): digest
+  **`0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56`**, problems none, "matches
+  the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752d…". Its counts are as
+  before, including QSI 9280, `GkWKBIntegration` 13920 and `GkNumericIntegration` 4549. The store
+  files are unchanged by the fingerprint too.
+- **No Ray process is left.** A `ps` match on `ray::`, `raylet`, `gcs_server`, `ray/_private` and
+  `dashboard` finds none, and `ray-processes --ray-temp-dir /tmp/ray-sgk` is empty.
+- `runregistrykit list` afterwards shows 5 runs, all finished
+  ([`registry_after_10.txt`](a3-v2/reread/out/registry_after_10.txt)).
+
+### 4.8 Acceptance
+
+| # | Criterion | Result |
+|---|---|---|
+| 1 | Every reader exits 0; store byte-identical; fingerprint the sidecar's | **holds**: 7 of 7 exit 0; store files identical; `0e32f24a…` matches |
+| 2 | GkWKB read-back complete, failing pair included | **holds**: 1392 = 1392 = 1392 = work list 1392; the pair's PDF (30,366 B), PNG and CSV present |
+| 3 | Lock taken and released | **holds**: `acquire` 0 at 10:49:36Z, `release` 0 at 10:57:50Z, then `status` free |
+| 4 | Records under `var/handover-10/` | `out/`, `state/`, `scripts/`, `log.md`, this file, `issues.md` |

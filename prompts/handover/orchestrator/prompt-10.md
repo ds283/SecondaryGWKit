@@ -55,6 +55,9 @@ first time the `v0.3.0` lock is used there.
   `set-pid`, and the readers launch no registered run, so the owner file's `pid` stays `-`: `status`
   then exits 3 with `owner pid: - (no pid recorded yet)` while the lock is held. That is expected
   and not a stop (RayPoolKit `docs/rehearsal-lock.md` §4 and its `status` table, at `v0.3.0`).
+  **Corrected 2026-10-25, after the run:** `status` exits **0, always** (`docs/rehearsal-lock.md`
+  §7); the "3" above was the row number of §8's layout table, misread as an exit status. The
+  agent saw exit 0 and recorded the difference; it was the note's error, not the package's.
   `release` refuses while a process under `/tmp/ray-sgk` is alive; it lists them.
 - **Lock commands: one per shell command, no pipe.** `>> file 2>&1`, then `echo $?` in the next
   command. Never `| tee`, never in the shell command that runs the readers. `--purpose` names no

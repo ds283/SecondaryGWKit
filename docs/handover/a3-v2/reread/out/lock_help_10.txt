@@ -1,0 +1,57 @@
+usage: python -m raypoolkit.rehearsal_lock [-h]
+                                           {acquire,set-pid,release,status,ray-processes}
+                                           ...
+
+The shared rehearsal lock. Never breaks, waits for or retries a lock; a held
+lock means stop and ask the user.
+
+positional arguments:
+  {acquire,set-pid,release,status,ray-processes}
+    acquire             take the lock (exit 3 if held or the old location
+                        exists, 4 if a process is alive)
+    set-pid             record a live pid in the caller's lock
+    release             release the caller's lock (exit 1 if refused)
+    status              the lock, its owner, the old location, and the
+                        processes
+    ray-processes       the processes of a temp dir (exit 1 if any)
+
+options:
+  -h, --help            show this help message and exit
+### acquire --help
+usage: python -m raypoolkit.rehearsal_lock acquire [-h] --project PROJECT
+                                                   --purpose PURPOSE
+                                                   --ray-temp-dir RAY_TEMP_DIR
+                                                   --ray-address RAY_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  --project PROJECT
+  --purpose PURPOSE
+  --ray-temp-dir RAY_TEMP_DIR
+  --ray-address RAY_ADDRESS
+### status --help
+usage: python -m raypoolkit.rehearsal_lock status [-h]
+                                                  [--ray-temp-dir RAY_TEMP_DIR]
+                                                  [--ray-address RAY_ADDRESS]
+
+options:
+  -h, --help            show this help message and exit
+  --ray-temp-dir RAY_TEMP_DIR
+  --ray-address RAY_ADDRESS
+### ray-processes --help
+usage: python -m raypoolkit.rehearsal_lock ray-processes [-h] --ray-temp-dir
+                                                         RAY_TEMP_DIR
+                                                         [--ray-address RAY_ADDRESS]
+
+options:
+  -h, --help            show this help message and exit
+  --ray-temp-dir RAY_TEMP_DIR
+  --ray-address RAY_ADDRESS
+### release --help
+usage: python -m raypoolkit.rehearsal_lock release [-h] --project PROJECT
+                                                   --ray-temp-dir RAY_TEMP_DIR
+
+options:
+  -h, --help            show this help message and exit
+  --project PROJECT
+  --ray-temp-dir RAY_TEMP_DIR

@@ -1,0 +1,52 @@
+$ grep -c -E "Traceback|ReadOnlyMiss|ReadOnlyWrite|FATAL|Error" var/handover-10/extract/*.log
+var/handover-10/extract/extract_GkSource_data.log: 0
+var/handover-10/extract/extract_GkWKB_data.log: 0
+var/handover-10/extract/extract_Gk_data-no-models.log: 0
+var/handover-10/extract/extract_Gk_data.log: 0
+var/handover-10/extract/extract_QuadSourceIntegral_data.log: 0
+var/handover-10/extract/extract_TkWKB_data.log: 0
+var/handover-10/extract/extract_tensor_source_data.log: 0
+
+$ grep -n -iE warn var/handover-10/extract/*.log (ANSI stripped, cut at 300)
+var/handover-10/extract/extract_GkSource_data.log:2:(plot_Gk pid=48292) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as float was deprecated in Matplotlib 3.10 and will be removed in 3.12. Use int(x) instead.
+var/handover-10/extract/extract_GkSource_data.log:4:(plot_Gk pid=48290) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as float was deprecated in Matplotlib 3.10 and will be removed in 3.12. Use int(x) instead. [repeated 18x acr
+var/handover-10/extract/extract_GkSource_data.log:6:(plot_Gk pid=48287) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as float was deprecated in Matplotlib 3.10 and will be removed in 3.12. Use int(x) instead. [repeated 15x acr
+var/handover-10/extract/extract_GkSource_data.log:8:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_GkSource_data.log:39:(plot_Gk pid=48292) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as float was deprecated in Matplotlib 3.10 and will be removed in 3.12. Use int(x) instead. [repeated 2x acr
+var/handover-10/extract/extract_Gk_data.log:2:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_Gk_data-no-models.log:2:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_GkWKB_data.log:2:(plot_Gk pid=46727) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkWKB_data.py:144: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly cl
+var/handover-10/extract/extract_GkWKB_data.log:4:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_GkWKB_data.log:39:(plot_Gk pid=46860) /Users/ds283/Documents/Code/SecondaryGWKit/extract_GkWKB_data.py:322: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly c
+var/handover-10/extract/extract_tensor_source_data.log:2:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_QuadSourceIntegral_data.log:2:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+var/handover-10/extract/extract_TkWKB_data.log:2:!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+
+$ (file kinds per reader)
+var/handover-10/extract/extract_GkSource_data/
+     45 csv
+    802 plots
+var/handover-10/extract/extract_GkWKB_data/
+   1392 csv
+   8352 plots
+var/handover-10/extract/extract_Gk_data-no-models/
+    220 csv
+   1760 plots
+var/handover-10/extract/extract_Gk_data/
+    139 csv
+   1112 plots
+var/handover-10/extract/extract_QuadSourceIntegral_data/
+    206 csv
+    481 plots
+var/handover-10/extract/extract_TkWKB_data/
+      8 csv
+     64 plots
+var/handover-10/extract/extract_tensor_source_data/
+     36 csv
+     36 plots/full
+     36 plots/parts
+     36 plots/q-zoom
+     28 plots/r-zoom
+
+$ git rev-parse HEAD; git status --short
+57f67a9a5b44eeca55d5ecd17f2fbd34480298a6

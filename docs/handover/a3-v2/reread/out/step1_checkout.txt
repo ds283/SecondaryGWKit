@@ -1,0 +1,165 @@
+### 2026-10-25T10:47:18Z on mps026298
+$ git fetch origin
+[exit 0]
+
+### 2026-10-25T10:47:19Z on mps026298
+$ git merge --ff-only origin/handover-remedial
+Updating b90752d..57f67a9
+Fast-forward
+ .gitignore                                         |    4 +
+ CLAUDE.md                                          |   57 +-
+ ComputeTargets/analytic_Gk.py                      |   71 +-
+ ComputeTargets/tests/test_analytic_g_w_readers.py  |  268 +++
+ ComputeTargets/tests/test_analytic_gk_domain.py    |  255 +++
+ ComputeTargets/tests/test_sensible_log_points.py   |  167 ++
+ RunDrivers/quadsource_atol_sweep.py                |   13 +-
+ RunDrivers/scoped_pipeline_run.py                  |    3 +
+ RunDrivers/tests/test_ray_temp_dir.py              |  217 ++
+ config/ray_local.py                                |    7 +
+ docs/OPEN_ISSUES.md                                |   21 +-
+ docs/handover/A3-V2-FINDINGS.md                    |  304 +++
+ docs/handover/A3-V2-VERIFICATION.md                |  284 +++
+ docs/handover/a3-v2/after/out/census_08.txt        |   18 +
+ .../a3-v2/after/out/closed_store_state_08.txt      |   39 +
+ docs/handover/a3-v2/after/out/depth_census_08.txt  | 2373 ++++++++++++++++++++
+ .../a3-v2/after/out/depth_census_r4_08.txt         |  383 ++++
+ docs/handover/a3-v2/after/out/lock_08.txt          |   32 +
+ docs/handover/a3-v2/after/out/prechecks_08.txt     |   95 +
+ docs/handover/a3-v2/after/out/readers_08.txt       |  169 ++
+ docs/handover/a3-v2/after/out/run_logs_08.txt      |   75 +
+ docs/handover/a3-v2/after/out/run_record_08.txt    |   15 +
+ docs/handover/a3-v2/after/out/store_record_08.txt  |  424 ++++
+ .../a3-v2/after/out/store_soundness_08.txt         |   32 +
+ docs/handover/a3-v2/after/scripts/checks.sh        |   10 +
+ docs/handover/a3-v2/after/scripts/depth_census.py  |  271 +++
+ docs/handover/a3-v2/after/scripts/prechecks.sh     |   24 +
+ docs/handover/a3-v2/after/scripts/run_logs.py      |  159 ++
+ docs/handover/a3-v2/after/scripts/store_record.sh  |   31 +
+ docs/handover/a3-v2/after/scripts/storefiles.sh    |    8 +
+ .../a3-v2/after/state/store_files_after_checks.txt |    5 +
+ .../after/state/store_files_after_readers.txt      |    5 +
+ .../a3-v2/after/state/store_files_after_record.txt |    5 +
+ .../a3-v2/after/state/store_files_before.txt       |    5 +
+ .../after/state/store_files_before_checks.txt      |    5 +
+ docs/handover/a3-v2/findings/depth20_floor.py      |  186 ++
+ docs/handover/a3-v2/findings/depth20_floor.txt     |   52 +
+ docs/handover/a3-v2/launch/freeze_07.txt           |  101 +
+ docs/handover/a3-v2/launch/launch_check_07.txt     |   48 +
+ docs/handover/a3-v2/launch/lock_07.txt             |   44 +
+ docs/handover/a3-v2/launch/prelaunch_checks_07.txt |  243 ++
+ docs/handover/a3-v2/launch/scripts/launch_07.sh    |   12 +
+ docs/handover/a3-v2/launch/scripts/launch_check.py |  147 ++
+ docs/handover/a3-v2/launch/scripts/prelaunch.sh    |   35 +
+ extract_GkSource_data.py                           |   39 +-
+ extract_GkWKB_data.py                              |   43 +-
+ extract_Gk_data.py                                 |   35 +-
+ extract_QuadSourceIntegral_data.py                 |   39 +-
+ extract_TkWKB_data.py                              |    6 +-
+ extract_common.py                                  |   50 +-
+ extract_tensor_source_data.py                      |    6 +-
+ main.py                                            |   10 +-
+ prompts/GkTk-remedial/IMPLEMENTATION_STATE.md      |   18 +-
+ prompts/INDEX.md                                   |    8 +-
+ prompts/handover/08-after-the-a3-v2-build.md       |  220 ++
+ .../handover/09-analytic-g-w-outside-its-domain.md |  206 ++
+ prompts/handover/10-reread-a3-v2.md                |   84 +
+ prompts/handover/IMPLEMENTATION_STATE.md           |  414 +++-
+ prompts/handover/README.md                         |    3 +
+ prompts/handover/logs/07-launch-a3-v2.md           |   94 +
+ prompts/handover/logs/08-after-the-a3-v2-build.md  |  120 +
+ .../logs/09-analytic-g-w-outside-its-domain.md     |  394 ++++
+ prompts/handover/orchestrator/README.md            |    3 +
+ prompts/handover/orchestrator/prompt-08.md         |   61 +
+ prompts/handover/orchestrator/prompt-09.md         |  134 ++
+ prompts/handover/orchestrator/prompt-10.md         |  161 ++
+ prompts/levin-refactor/IMPLEMENTATION_STATE.md     |   11 +-
+ .../01-switch-to-the-raypoolkit-rehearsal-lock.md  |  270 +++
+ prompts/rpk-v030-adoption/IMPLEMENTATION_STATE.md  |  226 ++
+ prompts/rpk-v030-adoption/README.md                |  201 ++
+ .../01-switch-to-the-raypoolkit-rehearsal-lock.md  |  400 ++++
+ prompts/rpk-v030-adoption/measure/out/01-guard.txt |  196 ++
+ prompts/rpk-v030-adoption/measure/out/01-lock.txt  |  103 +
+ prompts/rpk-v030-adoption/measure/out/01-pip.txt   |  588 +++++
+ .../rpk-v030-adoption/measure/out/01-rehearsal.txt |  712 ++++++
+ prompts/rpk-v030-adoption/measure/out/01-roots.txt |  119 +
+ .../rpk-v030-adoption/orchestrator/prompt-01.md    |  181 ++
+ requirements.txt                                   |    2 +-
+ tools/rehearsal_lock.py                            |  475 ----
+ tools/tests/test_rehearsal_lock.py                 |  474 ----
+ 80 files changed, 11694 insertions(+), 1134 deletions(-)
+ create mode 100644 ComputeTargets/tests/test_analytic_g_w_readers.py
+ create mode 100644 ComputeTargets/tests/test_analytic_gk_domain.py
+ create mode 100644 ComputeTargets/tests/test_sensible_log_points.py
+ create mode 100644 RunDrivers/tests/test_ray_temp_dir.py
+ create mode 100644 config/ray_local.py
+ create mode 100644 docs/handover/A3-V2-FINDINGS.md
+ create mode 100644 docs/handover/a3-v2/after/out/census_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/closed_store_state_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/depth_census_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/depth_census_r4_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/lock_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/prechecks_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/readers_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/run_logs_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/run_record_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/store_record_08.txt
+ create mode 100644 docs/handover/a3-v2/after/out/store_soundness_08.txt
+ create mode 100644 docs/handover/a3-v2/after/scripts/checks.sh
+ create mode 100644 docs/handover/a3-v2/after/scripts/depth_census.py
+ create mode 100644 docs/handover/a3-v2/after/scripts/prechecks.sh
+ create mode 100644 docs/handover/a3-v2/after/scripts/run_logs.py
+ create mode 100644 docs/handover/a3-v2/after/scripts/store_record.sh
+ create mode 100644 docs/handover/a3-v2/after/scripts/storefiles.sh
+ create mode 100644 docs/handover/a3-v2/after/state/store_files_after_checks.txt
+ create mode 100644 docs/handover/a3-v2/after/state/store_files_after_readers.txt
+ create mode 100644 docs/handover/a3-v2/after/state/store_files_after_record.txt
+ create mode 100644 docs/handover/a3-v2/after/state/store_files_before.txt
+ create mode 100644 docs/handover/a3-v2/after/state/store_files_before_checks.txt
+ create mode 100644 docs/handover/a3-v2/findings/depth20_floor.py
+ create mode 100644 docs/handover/a3-v2/findings/depth20_floor.txt
+ create mode 100644 docs/handover/a3-v2/launch/freeze_07.txt
+ create mode 100644 docs/handover/a3-v2/launch/launch_check_07.txt
+ create mode 100644 docs/handover/a3-v2/launch/lock_07.txt
+ create mode 100644 docs/handover/a3-v2/launch/prelaunch_checks_07.txt
+ create mode 100644 docs/handover/a3-v2/launch/scripts/launch_07.sh
+ create mode 100644 docs/handover/a3-v2/launch/scripts/launch_check.py
+ create mode 100644 docs/handover/a3-v2/launch/scripts/prelaunch.sh
+ create mode 100644 prompts/handover/08-after-the-a3-v2-build.md
+ create mode 100644 prompts/handover/09-analytic-g-w-outside-its-domain.md
+ create mode 100644 prompts/handover/10-reread-a3-v2.md
+ create mode 100644 prompts/handover/logs/07-launch-a3-v2.md
+ create mode 100644 prompts/handover/logs/08-after-the-a3-v2-build.md
+ create mode 100644 prompts/handover/logs/09-analytic-g-w-outside-its-domain.md
+ create mode 100644 prompts/handover/orchestrator/prompt-08.md
+ create mode 100644 prompts/handover/orchestrator/prompt-09.md
+ create mode 100644 prompts/handover/orchestrator/prompt-10.md
+ create mode 100644 prompts/rpk-v030-adoption/01-switch-to-the-raypoolkit-rehearsal-lock.md
+ create mode 100644 prompts/rpk-v030-adoption/IMPLEMENTATION_STATE.md
+ create mode 100644 prompts/rpk-v030-adoption/README.md
+ create mode 100644 prompts/rpk-v030-adoption/logs/01-switch-to-the-raypoolkit-rehearsal-lock.md
+ create mode 100644 prompts/rpk-v030-adoption/measure/out/01-guard.txt
+ create mode 100644 prompts/rpk-v030-adoption/measure/out/01-lock.txt
+ create mode 100644 prompts/rpk-v030-adoption/measure/out/01-pip.txt
+ create mode 100644 prompts/rpk-v030-adoption/measure/out/01-rehearsal.txt
+ create mode 100644 prompts/rpk-v030-adoption/measure/out/01-roots.txt
+ create mode 100644 prompts/rpk-v030-adoption/orchestrator/prompt-01.md
+ delete mode 100644 tools/rehearsal_lock.py
+ delete mode 100644 tools/tests/test_rehearsal_lock.py
+[exit 0]
+
+### 2026-10-25T10:47:19Z on mps026298
+$ git rev-parse HEAD
+57f67a9a5b44eeca55d5ecd17f2fbd34480298a6
+[exit 0]
+
+### 2026-10-25T10:47:19Z on mps026298
+$ git status --short
+[exit 0]
+
+### 2026-10-25T10:47:19Z on mps026298
+$ git diff --stat b90752d HEAD -- ObjectFactories config main.py
+ config/ray_local.py |  7 +++++++
+ main.py             | 10 ++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+[exit 0]
+

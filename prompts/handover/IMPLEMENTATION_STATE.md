@@ -46,6 +46,12 @@ closed `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]`, narr
 issue to prompt 10's re-read, and opened
 `[09-two-readers-plot-the-radiation-form-under-the-w-label]` and
 `[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]`, so §3 holds **ten**.
+**10 ran 2026-10-25 on the Mac Studio, orchestrated there for the first time:** at 09's tree every
+reader exits 0 on A3 v2, the GkWKB read-back is complete (1392 pairs, the one 08 died on among
+them), and the store is byte-identical, fingerprint `0e32f24a…`. It closed
+`[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`, and its review opened
+`[10-the-readers-draw-their-work-lists-unseeded]` and
+`[10-extract-gkwkb-data-never-closes-its-theta-figure]`, so §3 holds **eleven**.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -84,7 +90,7 @@ issue to prompt 10's re-read, and opened
 | 07 | [Launch A3 v2](07-launch-a3-v2.md) | **07** — not seam work; the A3 v2 launch on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-22 | ✅ 2026-10-22, launched and reviewed; the build runs | `a6902b1` | [`logs/07-…`](logs/07-launch-a3-v2.md) |
 | 08 | [After the A3 v2 build](08-after-the-a3-v2-build.md) | **08** — the store's sidecar and fingerprint, the after-build checks, the readers, the depth census against the A3 baseline, the lock's release | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed; closed on a §8 stop by the user's ruling | `9ef8a19` | [`logs/08-…`](logs/08-after-the-a3-v2-build.md) |
 | 09 | [`analytic_G_w` outside its domain](09-analytic-g-w-outside-its-domain.md) | **09** — `NULL` outside $1+3w>0$ and on overflow; readers plot only sensible points; the `extract_Gk_data` CSV columns | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed (orchestrator's baselines at `4a3e848` and re-run at `1c19998` equal the agent's; fingerprint `39809dca…` recomputed) | `1c19998` | [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md) |
-| 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus | ✍️ 2026-10-25 | ⬜ not run; 09, which held it, landed 2026-10-25 | — | — |
+| 10 | [Re-read A3 v2](10-reread-a3-v2.md) | **10** — the fixed readers on A3 v2, on the Mac Studio | Opus 5.5, on the Mac Studio | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed on the Mac Studio by a remote orchestrator; check 9 (link form) failed and was corrected on committing, by the user's decision | *this commit* | [`logs/10-…`](logs/10-reread-a3-v2.md) |
 
 `README.md` §3 groups B into four (B1, B2, B3, B4) where the orchestration prompt's §8 listed
 three; §4 item 5 of that README is the argument for splitting the contract (B3) from the invariant
@@ -120,7 +126,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | 07 | **LAUNCH** | Launch A3 v2 on the Mac Studio by the launcher's production scope at (1e-32, 1e-7), `--cpus 6`, into `var/datastores/handover-A3-v2-lambdacdm.sqlite`; one check; end. | 07 | ✅ **Launched 2026-10-22 21:11:54 BST** as `handover-07-a3-v2-20261022T211155` (driver pid 84436, the lock's owner), at `b90752d`, clean, on host `d120d1cf03551e6f`. Scope `full build: main.py's own 9280-item QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 8 log-spaced k over 100000-3e+08 /Mpc`; four `replaced 1 occurrence`, `--zend 0.1`, no `--no-prune-unvalidated`, local Ray. Estimate **39–44 h** (R4's QSI stage ×0.97 of R3's). The session's permission classifier refused the first launch attempt; the user approved it. **The build is running; the Mac Studio's checkout stays at `b90752d` until 08.** Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §2. |
 | 08 | **MEASUREMENT** | After the build: the sidecar and fingerprint, the after-build checklist, the readers, the depth-cap census against the A3 baseline's, the archive. | 08 | ✅ **Done, 2026-10-25.** The sidecar's fingerprint is `0e32f24a…`, the run's; every store file byte-identical from before `store create` to after the last reader. Census `no divergence`, soundness `clean` (integrity `ok`, no foreign-key row, inventory without problem), one `version` row per shard, no journal or in-flight row. Readers: five of six and `extract_Gk_data` without `--models` exit 0; **`extract_GkWKB_data` exits 1** in a plot (`[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]`), a §8 stop the user resolved: "Release the lock, close 08". **Depth census** (the baseline's method, reproduced as `depth_census.py`, tested on R4's 864 rows; re-counted by the orchestrator with `sqlite3` `mode=ro`, equal in every bin): 9280 rows at (1e-32, 1e-7); NULL 2489, depth 0 99, 1–19 4427, **20: 2265 at mean 454 s, 1179 unconverged (52.1 %)**; **286.3 CPU-hr, 285.8 at depth 20**, 249 of them in the low band; up to 966,508 regions. **`rtol = 1e-7` did not remove the depth-20 cliff.** The run took 48.74 h wall; the serial tail was ≤ 2.52 h (5.2 %); 15 `IntegrationWarning`s, none tied to a row. The lock was released 00:51:03; the Mac Studio's checkout is free. Record: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §3. |
 | 09 | **REMEDY** | `compute_analytic_G`/`Gprime` return `None` where $1+3w\le0$ (spec 02 R2's domain) or on overflow; one reader helper plots only finite points within three decades of $|G|$; `safe_fabs` in the GkWKB reader; `extract_Gk_data`'s CSV columns. A laptop rehearsal must stay `39809dca…`. | 09 | ✅ **Done, 2026-10-25.** `constant_w_form_applies(w)` (`1 + 3w > 0`, no band) gates both functions before any Bessel call, and a non-finite value is `None`; inside the domain every value is **bit-identical** to the old expression (tested to the bit at $w = 1/3, 0, 0.9, -1/3+10^{-3}$). `extract_common.sensible_log_points` (`ANALYTIC_PLOT_DECADES = 3`, a `signed` form for `extract_Gk_data`'s linear-$y$ plot) filters every `analytic_G_w` plot series in the four readers against that plot's $|G|$; `extract_GkWKB_data` uses `safe_fabs` for every analytic column; `extract_Gk_data`'s CSV `analytic_G_w`/`analytic_Gprime_w` hold the $w(z)$ form. 32 new tests in three modules; all six deliberate breakages caught by named tests. `ComputeTargets` 700 → **732**, the other six roots unchanged (the known wall-clock flake failed before and after). **Rehearsal R5** (`handover-09-r5-reference-20261025T094215`, `git_dirty` true at `1739e0d`): `done` in 18 m 55 s, fingerprint **`39809dca…`**, `compare_with_recorded.py` `equal` against R3's `reference`; no `NULL` in any `analytic_G_w`/`analytic_Gprime_w` row; the six readers exit 0 with the store unchanged. **R5's store was retired on 2026-10-25** (user's decision) with `store retire` at `bacbab6`, after a dry run in which a fresh fingerprint matched `39809dca…` and only R5's own run named it: the five store files went, the sidecar stays as a `retired` tombstone, and R5's run directory, its launch log and the text records in `var/handover-09/` stay as the record; the readers' output, `var/handover-09/extract/` (183 MB), was deleted. Log: [`logs/09-…`](logs/09-analytic-g-w-outside-its-domain.md). |
-| 10 | **MEASUREMENT** | Every reader on A3 v2 at 09's tree, on the Mac Studio; the GkWKB read-back complete; the store unchanged. | 10 | ⬜ **Written 2026-10-25; not run.** It was held on 09, which landed 2026-10-25. |
+| 10 | **MEASUREMENT** | Every reader on A3 v2 at 09's tree, on the Mac Studio; the GkWKB read-back complete; the store unchanged. | 10 | ✅ **Done, 2026-10-25**, at `57f67a9` on the Mac Studio, whose checkout moved from `b90752d` for the first time since the launch; `raypoolkit` moved to `v0.3.0` (`67a75b97…`), the one line of `pip freeze` that differs from `pip_06.txt`. **All seven readers exit 0** (six with `--models LambdaCDM`, `extract_Gk_data` without), 10:50–10:57 GMT, 879 MB; every store file identical after each, and `store fingerprint` afterwards matches the sidecar's `0e32f24a…`. **The GkWKB read-back is complete:** 1392 full-range PDFs, 1392 PNGs and 1392 CSVs, equal to each other and to the reader's work list (8 k × 174 sampled `z_source`, its log's `Queue summary: 1392 lookup`), counted by the agent, the remote orchestrator and the laptop. The pair 08 died on, $k = 10^5$, $z_{\rm source} = 1.3633\times10^{16}$, has a 30,366 B PDF (08: a 1,039 B fragment), its PNG and its CSV; `sensible_log_points` drops 35 of its 154 `analytic_G_w` points, the largest 7.57e+243, and 5162 of 109,594 over this run's 1392 pairs. **That pair was in the sample by chance** (about 1 in 10): the readers draw unseeded (`[10-the-readers-draw-their-work-lists-unseeded]`). The lock (`v0.3.0`, at `~/.raypoolkit/rehearsal-lock`) was taken and released, `ray-processes` empty. Review check 9 failed on `verification.md`'s links (`reread/…`, copied from §3's equally broken `after/…`); corrected to `a3-v2/reread/…` on committing, by the user's decision. The note's expectation that `status` exits 3 while held with no pid was the note's misreading of RayPoolKit's layout table, not a package defect. Records: [`A3-V2-VERIFICATION.md`](../../docs/handover/A3-V2-VERIFICATION.md) §4, [`docs/handover/a3-v2/reread/`](../../docs/handover/a3-v2/reread/). |
 
 ---
 
@@ -534,6 +540,85 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   **Next step:** the user's — "we should move this checkout onto it at some point soon"
   (2026-10-22); not before A3 v2 has ended. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
+- **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
+  on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its
+  log–log $G_k$ plot, `plot_Gk`) and `extract_QuadSourceIntegral_data.py` (`plot_Gk`, its `GkSource.pdf`)
+  each draw a curve labelled "Analytic $G_k$ [$w=w(z)$]" from `abs_analytic_G_rad_x`/`_y`, the
+  **radiation** form, plotted twice under two labels. Their `abs_analytic_G_w_points` are built (and,
+  since prompt 09, filtered through `sensible_log_points`) but used only in the plot's `if`. In
+  any case the `GkSource` value table stores no `analytic_G_w` column (`ObjectFactories/GkSource.py`
+  holds the two `_rad` columns only), so a `GkSource` read back from a store carries
+  `analytic_G_w = None`. **Impact:** a reader of either plot sees the radiation form twice and takes
+  one of them for the $w(z)$ form; no computation reads it. The same kind of mislabel as
+  `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]` (closed, §4). **Next step:**
+  decide whether these plots should show the $w(z)$ form at all. If they should, `GkSource` must
+  store it (a schema change) and each plot must draw `abs_analytic_G_w_x`/`_y`, through the helper.
+  If not, the second curve and its label go. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]** *(opened 2026-10-25 by
+  prompt 09, seen while checking the `analytic_G_w` CSV columns on the rehearsal store; not acted
+  on, by `CLAUDE.md` rule 4)* — `extract_Gk_data.py:294` builds `z_response_column` as
+  `[value.z for value in values]`, and `GkNumericValue.z` is a `CosmologyConcepts.redshift` object,
+  so every `z_response` cell of every `extract_Gk_data` CSV reads
+  `<CosmologyConcepts.redshift.redshift object at 0x…>`. Seen in all 52 CSVs that reader wrote on
+  `handover-09-reference` (`var/handover-09/gk-csv-check.txt`). The `sort_values(by="z_response")`
+  then orders by the objects' own comparison. **Impact:** the CSVs cannot be read back against
+  response redshift; their other columns are right, and the plots are unaffected. The other readers
+  write `value.z.z`. **Next step:** `value.z.z`, as the other readers do, with a test like
+  `test_analytic_g_w_readers`'s CSV test. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[10-the-readers-draw-their-work-lists-unseeded]** *(opened 2026-10-25 by prompt 10's review,
+  from the agent's `issues.md` item 1; not acted on, by `CLAUDE.md` rule 4)* — every reader draws
+  its `k` and `z_source` subsamples with an unseeded `random.sample`: `extract_GkWKB_data.py:472`
+  takes 174 of A3 v2's ~1740 source redshifts, and `extract_Gk_data.py:416` and `:432`,
+  `extract_GkSource_data`, `extract_TkWKB_data`, `extract_tensor_source_data` and
+  `extract_QuadSourceIntegral_data` draw the same way. **Impact:** a reader's output is a different
+  sample on every run, so a re-run cannot be compared count for count with an earlier one
+  (`extract_Gk_data` wrote 1251 files with `--models` and 1980 without, from the same 522 lookups,
+  against 08's 1593 and 1593); a check that names a pair passes only when the draw includes it
+  (prompt 10's acceptance 2 held at odds of about 1 in 10); and a "complete" read-back is complete
+  for the sample, not the store. **Next step:** a `--seed`, or a mode that plots a named pair or the
+  full grid. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[10-extract-gkwkb-data-never-closes-its-theta-figure]** *(opened 2026-10-25 by prompt 10's
+  review, from the agent's `issues.md` item 3; not acted on, by `CLAUDE.md` rule 4)* — `plot_Gk` in
+  `extract_GkWKB_data.py` closes its main figure (`plt.close()`, `:319`) and then opens a second for
+  the theta plot (`:322`), which is never closed. Each plotting worker keeps one figure per pair, and
+  matplotlib's "More than 20 figures have been opened" `RuntimeWarning` appears twice in prompt 10's
+  GkWKB log; 08's run died before any worker reached 20. **Impact:** memory in the plotting workers
+  only; all 1392 pairs were written. Pre-existing, not 09's. **Next step:** close the theta figure.
+  Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+**Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
+`[03-gksource-policy-accepts-a-value-that-raises]`,
+`[03-quadsource-policy-vocabulary-differs]` and `[03-gk-classification-is-diagnosed-and-ignored]` —
+are **prompt 03's to open**, by that prompt's own scope, and are indexed in
+`docs/OPEN_ISSUES.md` §1.1 as *"none yet"* until it runs. Prompt 01 did not adopt them: they are
+not in its files-may-touch list and opening another prompt's issues early would make this board
+disagree with the prompt that owns them.
+
+**Assigned here, held on another board:**
+
+- **[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]** — *opened 2026-10-19 by
+  `rrk-v020-adoption` prompt 03, narrowed by its prompt 04, **held by that board**
+  ([`../rrk-v020-adoption/IMPLEMENTATION_STATE.md`](../rrk-v020-adoption/IMPLEMENTATION_STATE.md)
+  §3), and assigned to this campaign by the user on 2026-10-19, since it owns the A3 v2 launch.* After
+  a `SIGKILL` of a build's driver, Ray's GCS server can be left reparented to pid 1, stuck in its own
+  shutdown, where a `SIGTERM` cannot end it; until it is gone the rehearsal lock cannot be released.
+  Seen once, at R3's `hardkill-a`. `CLAUDE.md` rule 5 has the manual step (after `end`, a person
+  checks `ray-processes` and ends a GCS server still listed with `kill -KILL <pid>`); A3 v2's
+  inheritance is `docs/rrk-v020-adoption-verification.md` §3.5. **What is left here** is the cause
+  and any fix: for example a parent-death watch on the GCS server in
+  `docs/handover/quadsource_atol_sweep.py`, or a report to Ray. Not yet scheduled; the user may not
+  take it up at once. The entry and its measurements stay on the other board, which is right where
+  the two differ; indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+---
+
+## 4. Resolved issues
+
+Closed by prompt 10, 2026-10-25:
+
 - **[08-the-gkwkb-reader-fails-plotting-a-full-range-green-function-on-the-a3-v2-store]** *(opened
   2026-10-25 by prompt 08, on the Mac Studio; it stopped the prompt at §3, under §8)*.
   `extract_GkWKB_data.py --database var/datastores/handover-A3-v2-lambdacdm.sqlite --ray-address local
@@ -614,60 +699,13 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `safe_fabs`, not `fabs`, to every analytic column. A3 v2 keeps what it stores; the reader fix is
   what reads it, and has not yet been run on it. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
-  on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its
-  log–log $G_k$ plot, `plot_Gk`) and `extract_QuadSourceIntegral_data.py` (`plot_Gk`, its `GkSource.pdf`)
-  each draw a curve labelled "Analytic $G_k$ [$w=w(z)$]" from `abs_analytic_G_rad_x`/`_y`, the
-  **radiation** form, plotted twice under two labels. Their `abs_analytic_G_w_points` are built (and,
-  since prompt 09, filtered through `sensible_log_points`) but used only in the plot's `if`. In
-  any case the `GkSource` value table stores no `analytic_G_w` column (`ObjectFactories/GkSource.py`
-  holds the two `_rad` columns only), so a `GkSource` read back from a store carries
-  `analytic_G_w = None`. **Impact:** a reader of either plot sees the radiation form twice and takes
-  one of them for the $w(z)$ form; no computation reads it. The same kind of mislabel as
-  `[08-extract-gk-data-writes-the-radiation-form-into-its-w-columns]` (closed, §4). **Next step:**
-  decide whether these plots should show the $w(z)$ form at all. If they should, `GkSource` must
-  store it (a schema change) and each plot must draw `abs_analytic_G_w_x`/`_y`, through the helper.
-  If not, the second curve and its label go. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
-
-- **[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]** *(opened 2026-10-25 by
-  prompt 09, seen while checking the `analytic_G_w` CSV columns on the rehearsal store; not acted
-  on, by `CLAUDE.md` rule 4)* — `extract_Gk_data.py:294` builds `z_response_column` as
-  `[value.z for value in values]`, and `GkNumericValue.z` is a `CosmologyConcepts.redshift` object,
-  so every `z_response` cell of every `extract_Gk_data` CSV reads
-  `<CosmologyConcepts.redshift.redshift object at 0x…>`. Seen in all 52 CSVs that reader wrote on
-  `handover-09-reference` (`var/handover-09/gk-csv-check.txt`). The `sort_values(by="z_response")`
-  then orders by the objects' own comparison. **Impact:** the CSVs cannot be read back against
-  response redshift; their other columns are right, and the plots are unaffected. The other readers
-  write `value.z.z`. **Next step:** `value.z.z`, as the other readers do, with a test like
-  `test_analytic_g_w_readers`'s CSV test. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
-
-**Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
-`[03-gksource-policy-accepts-a-value-that-raises]`,
-`[03-quadsource-policy-vocabulary-differs]` and `[03-gk-classification-is-diagnosed-and-ignored]` —
-are **prompt 03's to open**, by that prompt's own scope, and are indexed in
-`docs/OPEN_ISSUES.md` §1.1 as *"none yet"* until it runs. Prompt 01 did not adopt them: they are
-not in its files-may-touch list and opening another prompt's issues early would make this board
-disagree with the prompt that owns them.
-
-**Assigned here, held on another board:**
-
-- **[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]** — *opened 2026-10-19 by
-  `rrk-v020-adoption` prompt 03, narrowed by its prompt 04, **held by that board**
-  ([`../rrk-v020-adoption/IMPLEMENTATION_STATE.md`](../rrk-v020-adoption/IMPLEMENTATION_STATE.md)
-  §3), and assigned to this campaign by the user on 2026-10-19, since it owns the A3 v2 launch.* After
-  a `SIGKILL` of a build's driver, Ray's GCS server can be left reparented to pid 1, stuck in its own
-  shutdown, where a `SIGTERM` cannot end it; until it is gone the rehearsal lock cannot be released.
-  Seen once, at R3's `hardkill-a`. `CLAUDE.md` rule 5 has the manual step (after `end`, a person
-  checks `ray-processes` and ends a GCS server still listed with `kill -KILL <pid>`); A3 v2's
-  inheritance is `docs/rrk-v020-adoption-verification.md` §3.5. **What is left here** is the cause
-  and any fix: for example a parent-death watch on the GCS server in
-  `docs/handover/quadsource_atol_sweep.py`, or a report to Ray. Not yet scheduled; the user may not
-  take it up at once. The entry and its measurements stay on the other board, which is right where
-  the two differ; indexed at `docs/OPEN_ISSUES.md` §1.1.
-
----
-
-## 4. Resolved issues
+  **Closed 2026-10-25 by prompt 10**, on the Mac Studio at `57f67a9`: `extract_GkWKB_data.py` on
+  the A3 v2 store exits 0 after 171 s and 9744 files, and its read-back is complete: 1392
+  full-range PDFs, PNGs and CSVs, equal to its work list. The pair above has a 30,366 B PDF, its PNG
+  and its CSV, with 35 of 154 `analytic_G_w` points dropped by `sensible_log_points`. The store's
+  files are unchanged and its fingerprint is the sidecar's. Whether the pair is drawn at all is a
+  matter of chance, which is `[10-the-readers-draw-their-work-lists-unseeded]` (§3). Record:
+  `docs/handover/A3-V2-VERIFICATION.md` §4; log: `logs/10-…`.
 
 Closed by prompt 09, 2026-10-25:
 

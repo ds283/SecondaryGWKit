@@ -1,0 +1,47 @@
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+^ (10:49Z) $ ./venv/bin/python -m raypoolkit.rehearsal_lock status   -- exit status not recorded (see log deviation); the tool reported success
+
+### 2026-10-25T10:49:25Z step 4, before acquire
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir <temp dir>
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+### 2026-10-25T10:49:33Z step 4, acquire
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "SecondaryGWKit handover 10: re-read A3 v2" --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: SecondaryGWKit handover 10: re-read A3 v2
+[exit 0]
+
+### 2026-10-25T10:49:41Z step 4, status after acquire
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: SecondaryGWKit handover 10: re-read A3 v2
+    acquired: 2026-10-25T10:49:36+00:00
+    host: mps026298
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: -
+owner pid: - (no pid recorded yet)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+### 2026-10-25T10:57:46Z step 8, before release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+### 2026-10-25T10:57:50Z step 8, release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+[exit 0]
+
+### 2026-10-25T10:57:55Z step 8, status after release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]
+
+### 2026-10-25T10:58:00Z step 8, ray-processes after release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]

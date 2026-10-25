@@ -1,0 +1,92 @@
+### 2026-10-25T10:57:24Z on mps026298
+$ bash -c bash\ var/handover-10/scripts/storefiles.sh\ \>\ var/handover-10/state/store_files_after.txt\;\ cat\ var/handover-10/state/store_files_after.txt\;\ diff\ var/handover-10/state/store_files_before.txt\ var/handover-10/state/store_files_after.txt\;\ echo\ \"diff\ before/after\ rc=\$\?\ \(0\ =\ identical\)\"
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864 1792699923 2026-10-22T21:12:03 var/datastores/handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488 1792875376 2026-10-24T21:56:16 var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+SIDECAR 3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519 1792884865 2026-10-25T00:34:25 var/datastores/handover-A3-v2-lambdacdm.manifest.json
+diff before/after rc=0 (0 = identical)
+[exit 0]
+
+### 2026-10-25T10:57:26Z on mps026298
+$ ./venv/bin/python -m runregistrykit store fingerprint var/datastores/handover-A3-v2-lambdacdm.sqlite
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite
+digest:   0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: matches the fingerprint taken 2026-10-25T00:34:14+01:00 by a person, at b90752dda46e57d588f8107cbd4d4557134fadb2
+[exit 0]
+
+### 2026-10-25T10:57:36Z on mps026298
+$ bash -c bash\ var/handover-10/scripts/storefiles.sh\ \|\ diff\ var/handover-10/state/store_files_before.txt\ -\;\ echo\ \"diff\ before\ /\ after\ the\ fingerprint\ rc=\$\?\"
+diff before / after the fingerprint rc=0
+[exit 0]
+
+### 2026-10-25T10:57:38Z on mps026298
+$ bash -c ps\ -axo\ pid=\,ppid=\,command=\ \|\ grep\ -E\ \'ray::\|raylet\|gcs_server\|ray/_private\|dashboard\'\ \|\ grep\ -v\ grep\;\ echo\ \"ray-like\ processes:\ \$\?\ \ \(1\ =\ none\ matched\)\"
+ray-like processes: 1  (1 = none matched)
+[exit 0]
+
+### 2026-10-25T10:57:38Z on mps026298
+$ ls -la /tmp/ray-sgk
+total 4
+drwxrwxrwx  11 ds283 wheel   352 Oct 25 10:56 .
+drwxrwxrwt 489 root  wheel 15648 Oct 25 10:57 ..
+-rw-r--r--   1 ds283 wheel    98 Oct 25 10:56 prom_metrics_service_discovery.json
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:50 session_2026-10-25_10-50-09_138224_46020
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:53 session_2026-10-25_10-51-06_087475_46672
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:54 session_2026-10-25_10-54-01_339900_48224
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:54 session_2026-10-25_10-54-38_261201_48682
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:55 session_2026-10-25_10-55-00_205981_49005
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:55 session_2026-10-25_10-55-25_352870_49358
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:56 session_2026-10-25_10-55-59_418072_49775
+lrwxr-xr-x   1 ds283 wheel    53 Oct 25 10:56 session_latest -> /tmp/ray-sgk/session_2026-10-25_10-55-59_418072_49775
+[exit 0]
+
+### 2026-10-25T10:57:38Z on mps026298
+$ git status --short
+[exit 0]
+

@@ -1,0 +1,45 @@
+### 2026-10-25T10:57:06Z on mps026298
+$ ./venv/bin/python var/handover-10/scripts/gkwkb_readback.py
+output root: var/handover-10/extract/extract_GkWKB_data
+files under it, by top-level kind and suffix:
+  csv                      .csv  1392
+  plots/full-range         .pdf  1392
+  plots/full-range         .png  1392
+  plots/theta              .pdf  1392
+  plots/theta              .png  1392
+  plots/zoom-matching      .pdf  1392
+  plots/zoom-matching      .png  1392
+  total files: 9744
+
+full-range PDFs: 1392
+full-range PNGs: 1392
+CSVs:            1392
+PDF pairs == PNG pairs: True; PDF pairs == CSV pairs: True
+distinct k in the full-range PDFs: 8: ['k=1e+05-k-serial=1', 'k=3.0455e+07-k-serial=202', 'k=3.0917e+06-k-serial=2', 'k=3.1386e+05-k-serial=101', 'k=3e+08-k-serial=302', 'k=9.5585e+07-k-serial=301', 'k=9.7035e+06-k-serial=201', 'k=9.8506e+05-k-serial=102']
+distinct z_source in the full-range PDFs: 174
+
+the reader's log, var/handover-10/extract/extract_GkWKB_data.log: its work-list lines (ANSI stripped)
+  9: >> RUNNING PIPELINE FOR MODEL LambdaCDM
+  23:       Queue summary: 8 lookup (avg 1762/sec)
+  24:       (no compute items were evaluated - all assets read from datastore)
+  28:       Queue summary: 8 lookup (avg 2302/sec)
+  29:       (no compute items were evaluated - all assets read from datastore)
+  31: ** GENERATING GkNumeric/GkWKB DATA PRODUCTS
+  32:    -- 2026-10-25 10:52:18 (60.8s running): 792/1392 work items remaining = 43.10% complete
+  34:    -- 2026-10-25 10:53:19 (2m 1.66s running): 252/1392 work items remaining = 81.90% complete
+  37:       Queue summary: 1392 lookup (avg 538.6/min)
+  38:       (no compute items were evaluated - all assets read from datastore)
+
+the pair 08 died on: k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19
+  full-range PDF     present, 30366 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/plots/full-range/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.pdf
+  full-range PNG     present, 128806 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/plots/full-range/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.png
+  zoom-matching PDF  present, 28741 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/plots/zoom-matching/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.pdf
+  zoom-matching PNG  present, 98234 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/plots/zoom-matching/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.png
+  theta PDF          present, 24504 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/plots/theta/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.pdf
+  CSV                present, 34150 bytes  var/handover-10/extract/extract_GkWKB_data/LambdaCDM/csv/k=1e+05-k-serial=1/zsource=1.3633e+16-z-serial=19.csv
+
+analytic_G_w points sensible_log_points drops (decades = 3), from the CSVs
+  the pair: {'rows': 154, 'kept': 119, 'dropped': 35, 'none': 0, 'nonfinite': 0, 'zero': 0, 'above_ceiling': 35, 'ceiling': 4.009850600556028e+24, 'max_abs_G': 4.009850600556028e+21, 'max_abs_analytic_G_w': 7.570852377707179e+243}
+  every CSV this run wrote (1392 pairs, this run's random sample, not the whole store): {'rows': 109594, 'kept': 104432, 'dropped': 5162, 'none': 0, 'nonfinite': 0, 'zero': 128, 'above_ceiling': 5034}; pairs with at least one point dropped: 518
+[exit 0]
+

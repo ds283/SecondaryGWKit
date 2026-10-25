@@ -1,0 +1,126 @@
+### 2026-10-25T10:47:03Z on mps026298
+$ git log --oneline b90752d..57f67a9
+57f67a9 Write the handover orchestrator note for prompt 10
+6d32683 Record the retirement of handover prompt 09's rehearsal store
+bacbab6 Record handover prompt 09's commit hash and its review
+1c19998 Return None from the constant-w Green's function outside its domain
+1739e0d Write the handover orchestrator note for prompt 09
+4a3e848 Record what A3 v2 shows and the workplan that follows
+71962f6 Record the retirement of rpk-v030-adoption 01's rehearsal store
+88742d4 Review rpk-v030-adoption prompt 01 and close the campaign
+a04ef11 Record rpk-v030-adoption 01's commit and correct the checklist's revision
+40d10b1 Switch to the raypoolkit v0.3.0 rehearsal lock
+5add52d Write the rpk-v030-adoption orchestrator note for prompt 01
+2b27509 Plan the move to raypoolkit v0.3.0 and its rehearsal lock
+c0fa7ea Write handover prompts 09 and 10 for the analytic_G_w failure
+6591a8e Diagnose the GkWKB reader failure and record R4's retirement
+7e2dce0 Ignore venv/ in the tracked .gitignore
+23956ac Close the A3 baseline's 1680-short issue and narrow the other two
+3180f6f Record handover prompt 08's commit hash
+9ef8a19 Record handover prompt 08: A3 v2 is a kept, verified store
+087d420 Write handover prompt 08 and its orchestrator note
+216e44d Record handover prompt 07's commit hash
+a6902b1 Record handover prompt 07: A3 v2 launched on the Mac Studio
+[exit 0]
+
+### 2026-10-25T10:47:03Z on mps026298
+$ git diff --stat b90752d 57f67a9 -- ObjectFactories config main.py
+ config/ray_local.py |  7 +++++++
+ main.py             | 10 ++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+[exit 0]
+
+### 2026-10-25T10:47:03Z on mps026298
+$ git diff b90752d 57f67a9 -- ObjectFactories config main.py
+diff --git a/config/ray_local.py b/config/ray_local.py
+new file mode 100644
+index 0000000..11dcf02
+--- /dev/null
++++ b/config/ray_local.py
+@@ -0,0 +1,7 @@
++# The temp dir every Ray instance this repository starts with `address="local"` is given
++# (`ray.init(..., _temp_dir=RAY_TEMP_DIR)`): main.py, the six extract_*_data.py readers and the
++# drivers under RunDrivers/. The shared rehearsal lock, `raypoolkit.rehearsal_lock`, finds an
++# instance by its temp dir, so an instance started without it is invisible to the lock. The lock
++# compares the string as given, so it is spelled exactly so everywhere, and on the lock's command
++# line as `--ray-temp-dir /tmp/ray-sgk`. It is short because Ray's Unix sockets live under it.
++RAY_TEMP_DIR = "/tmp/ray-sgk"
+diff --git a/main.py b/main.py
+index 34204db..0040ff7 100644
+--- a/main.py
++++ b/main.py
+@@ -81,6 +81,7 @@ from config.datastore import (
+     tables_to_drop,
+ )
+ from config.model_list import build_model_list
++from config.ray_local import RAY_TEMP_DIR
+ from config.sharding import (
+     replicated_tables,
+     sharded_tables,
+@@ -310,8 +311,13 @@ if args.inventory:
+ 
+ # connect to Ray on the supplied address. The default, 'local', starts a fresh instance for this
+ # process and never attaches to one already running (handover prompt 05); 'auto' or host:port
+-# attaches
+-ray.init(address=args.ray_address)
++# attaches. The temp dir (config/ray_local.py), which lets the shared rehearsal lock see this
++# instance, is given only with 'local': with 'auto' it would change which cluster Ray finds, and
++# with host:port it would split this driver's files from the cluster's
++ray.init(
++    address=args.ray_address,
++    _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
++)
+ 
+ VERSION_LABEL = "2025.1.1"
+ 
+[exit 0]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ git rev-parse HEAD origin/handover-remedial
+b90752dda46e57d588f8107cbd4d4557134fadb2
+57f67a9a5b44eeca55d5ecd17f2fbd34480298a6
+[exit 0]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ git branch --contains bacbab6 -r
+  origin/handover-remedial
+[exit 0]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ git status --short
+[exit 0]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ ./venv/bin/python -m runregistrykit list
+   RUN                                    STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-07-a3-v2-20261022T211155      done              -   2d 14h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-c-20261022T200159  done              -   2d 15h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009  killed            -   2d 15h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718  killed            -   2d 15h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228  done              -   2d 15h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+5 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 5 finished; 0 with no host recorded.
+[exit 0]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ ls -la /Users/ds283/.raypoolkit/rehearsal-lock /Users/ds283/ScienceData/.rehearsal-lock
+ls: cannot access '/Users/ds283/.raypoolkit/rehearsal-lock': No such file or directory
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+[exit 2]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ ls -la /Users/ds283/.raypoolkit
+ls: cannot access '/Users/ds283/.raypoolkit': No such file or directory
+[exit 2]
+
+### 2026-10-25T10:47:11Z on mps026298
+$ ls /tmp/ray-sgk
+ls: cannot access '/tmp/ray-sgk': No such file or directory
+[exit 2]
+
+### 2026-10-25T10:47:15Z on mps026298
+$ ./venv/bin/python -m tools.rehearsal_lock status
+lock: free (/Users/ds283/ScienceData/.rehearsal-lock does not exist)
+Ray processes of this repository: none
+[exit 0]
+
