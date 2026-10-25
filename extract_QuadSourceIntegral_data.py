@@ -51,6 +51,7 @@ from config.defaults import (
 )
 from config.datastore import factories
 from config.model_list import build_model_list
+from config.ray_local import RAY_TEMP_DIR
 from config.sharding import (
     replicated_tables,
     sharded_tables,
@@ -127,7 +128,10 @@ if args.database is None:
 # connect to Ray on the supplied address. The default, 'local', starts a fresh instance for this
 # process and never attaches to one already running (handover prompt 05); 'auto' or host:port
 # attaches
-ray.init(address=args.ray_address)
+ray.init(
+    address=args.ray_address,
+    _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
+)
 
 VERSION_LABEL = "2025.1.1"
 

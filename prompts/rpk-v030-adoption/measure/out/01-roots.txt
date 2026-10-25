@@ -1,0 +1,119 @@
+## BEFORE: HEAD 5add52d, raypoolkit 0.2.0 (eaef0ce), tree clean; serial, foreground; 2026-10-25 01:41-01:48 BST
+Load averages (1/5/15 min): 15.74 17.66 19.16 before the first root; 32.46 25.24 22.16 after the last (unrelated desktop processes)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 32 tests in 0.129s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+Ran 700 tests in 205.152s
+FAILED (failures=1)
+  (AssertionError: 0.06138079217635095 not less than or equal to 0.06)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 39 tests in 1.211s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 148 tests in 45.026s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 280 tests in 32.375s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 115 tests in 9.657s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 91 tests in 21.907s
+OK
+
+README §7's known wall-clock test, re-run alone four times (load ~33 1-min):
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 1
+AssertionError: 0.08341137482784688 not less than or equal to 0.06
+Ran 1 test in 0.645s
+FAILED (failures=1)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 2
+Ran 1 test in 0.369s
+OK
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 3
+AssertionError: 0.08134812512435019 not less than or equal to 0.06
+Ran 1 test in 0.614s
+FAILED (failures=1)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 4
+AssertionError: 0.06500566704198718 not less than or equal to 0.06
+Ran 1 test in 0.478s
+FAILED (failures=1)
+=> a wall-clock failure (0.061-0.083 s against the 0.06 s threshold) at load 32-34, passing once alone at 0.369 s wall;
+   the other 699 tests of the root pass. ComputeTargets counts 700 tests, as the orchestrator's baseline.
+
+## AFTER: HEAD 5add52d, raypoolkit 0.3.0 (67a75b9), working tree carries the 01 edits (uncommitted; the helper and its tests git rm'd); serial, foreground; 2026-10-25 about 01:53 BST to 01:02 GMT (the clocks went back at 02:00 BST, between)
+Load averages (1/5/15 min) read just before each root:
+  AdaptiveLevin load: 17.07 19.05 20.29
+  CosmologyModels load: 17.07 19.05 20.29
+  ObjectFactories load: 16.90 18.99 20.26
+  tools load: 41.55 24.90 22.35
+  LiouvilleGreen load: 33.84 24.40 22.24
+  RunDrivers load: 27.81 24.19 22.27
+  ComputeTargets load: 76.65 35.55 26.44
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s AdaptiveLevin/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 32 tests in 0.079s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+FAIL: test_wall_time_per_object (ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object)
+Ran 700 tests in 375.307s
+FAILED (failures=1)
+  (AssertionError: 0.10253733396530151 not less than or equal to 0.06)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 39 tests in 1.275s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 148 tests in 39.501s
+OK (skipped=1)
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ObjectFactories/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 280 tests in 37.309s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s RunDrivers/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 120 tests in 34.828s
+OK
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest discover -s tools/tests -t . > <file> 2>&1; grep -E '^(Ran|OK|FAILED)|^(FAIL|ERROR):' <file>
+Ran 49 tests in 17.677s
+OK
+
+README §7's known wall-clock test, re-run alone three times:
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 1, load 14.94 28.76 27.44
+Ran 1 test in 0.474s
+OK
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 2, load 14.23 28.38 27.31
+AssertionError: 0.0809536250308156 not less than or equal to 0.06
+Ran 1 test in 0.576s
+FAILED (failures=1)
+$ PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object > <file> 2>&1  # re-run 3, load 14.23 28.38 27.31
+AssertionError: 0.10791545803658664 not less than or equal to 0.06
+Ran 1 test in 0.772s
+FAILED (failures=1)
+=> the same wall-clock failure as BEFORE (0.081-0.108 s against 0.06 s), passing once alone; the other 699 pass.
+
+## The counts, BEFORE -> AFTER
+  AdaptiveLevin    32 -> 32   (0)
+  CosmologyModels  39 -> 39   (0)
+  ObjectFactories 280 -> 280  (0)
+  tools            91 -> 49   (-42: tools/tests/test_rehearsal_lock.py deleted, 42 tests)
+  LiouvilleGreen  148 -> 148  (0; skipped=1 both)
+  RunDrivers      115 -> 120  (+5: RunDrivers/tests/test_ray_temp_dir.py, 5 tests)
+  ComputeTargets  700 -> 700  (0; test_wall_time_per_object fails on wall clock under load both times, passes alone)
+
+$ ./venv/bin/python -m black --check config/ray_local.py main.py extract_GkSource_data.py extract_GkWKB_data.py extract_Gk_data.py extract_QuadSourceIntegral_data.py extract_TkWKB_data.py extract_tensor_source_data.py RunDrivers/quadsource_atol_sweep.py RunDrivers/scoped_pipeline_run.py RunDrivers/tests/test_ray_temp_dir.py
+All done! ✨ 🍰 ✨
+11 files would be left unchanged.
+[exit 0]

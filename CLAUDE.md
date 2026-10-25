@@ -50,13 +50,14 @@ Since 2026-10-11 the generic datastore layer is the package `datastorekit`, from
 (`/Users/ds283/Documents/Code/DatastoreKit`, https://github.com/ds283/DatastoreKit), pinned in
 `requirements.txt` at `v0.5.0` (moved to it on 2026-10-22 in the `dk-v050-adoption` campaign), and
 the work queue `RayWorkPool` is the package `raypoolkit`, from RayPoolKit
-(`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned at `v0.2.0`.
-ChamPBH and StochasticInstantons use DatastoreKit too; this repository adopted both in the
-`dk-and-rpk-migration` campaign. Since 2026-10-15 the run registry is the package
-`runregistrykit`, from RunRegistryKit (`/Users/ds283/Documents/Code/RunRegistryKit`,
-https://github.com/ds283/RunRegistryKit), pinned at `v0.2.0` with the extra `[stores]`, adopted in
-the `runregistry-extraction` campaign and moved to `v0.2.0` on 2026-10-18 in the
-`rrk-v020-adoption` campaign.
+(`/Users/ds283/Documents/Code/RayPoolKit`, https://github.com/ds283/RayPoolKit), pinned at `v0.3.0`
+(moved to it on 2026-10-25 in the `rpk-v030-adoption` campaign, which made its
+`raypoolkit.rehearsal_lock` this repository's rehearsal lock). ChamPBH and StochasticInstantons use
+DatastoreKit too; this repository adopted both in the `dk-and-rpk-migration` campaign. Since
+2026-10-15 the run registry is the package `runregistrykit`, from RunRegistryKit
+(`/Users/ds283/Documents/Code/RunRegistryKit`, https://github.com/ds283/RunRegistryKit), pinned at
+`v0.2.0` with the extra `[stores]`, adopted in the `runregistry-extraction` campaign and moved to
+`v0.2.0` on 2026-10-18 in the `rrk-v020-adoption` campaign.
 
 **None of the three is this repository's code.** A defect in one is recorded on the board of the
 campaign that found it, and in `docs/OPEN_ISSUES.md`. It is reported to that package's own
@@ -135,11 +136,12 @@ use those paths, and are left as written.
    has not yet reaped, which still answers `kill -0` (RunRegistryKit's
    `[04-a-killed-process-not-yet-reaped-answers-kill-0]`); a detached launch through `nohup sh -c`
    is reaped by its `sh`. After `end`, check
-   `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock ray-processes`: a `SIGKILL`ed driver's GCS
-   server may be left alive, reparented to pid 1, stuck in its own shutdown where a `SIGTERM` cannot
-   end it (`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`). One still listed ten
-   minutes after the kill is ended **by a person** with `kill -KILL <pid>`, by its pid, never by
-   pattern and never with `ray stop`; until then the rehearsal lock cannot be released.
+   `./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk`: a
+   `SIGKILL`ed driver's GCS server may be left alive, reparented to pid 1, stuck in its own shutdown
+   where a `SIGTERM` cannot end it (`[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`).
+   One still listed ten minutes after the kill is ended **by a person** with `kill -KILL <pid>`, by
+   its pid, never by pattern and never with `ray stop`; until then the rehearsal lock cannot be
+   released.
 6. **Durability.** `var/runs/`, which is gitignored and in the repository. Never a session
    scratchpad, never `/tmp` — a 462-row census died with a scratchpad and cannot be re-examined.
 7. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record
@@ -149,17 +151,29 @@ use those paths, and are left as written.
 ## The shared rehearsal lock
 
 Three projects on this machine (this one, ChamPBH and StochasticInstantons) run Ray builds. One
-lock, the directory `~/ScienceData/.rehearsal-lock`, lets only one rehearsal or long build run at a
-time.
+lock, the directory `~/.raypoolkit/rehearsal-lock`, lets only one rehearsal or long build run at a
+time. It is the module `raypoolkit.rehearsal_lock` of the pinned `raypoolkit`, whose contract is
+RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
+`--project SecondaryGWKit`, `--ray-temp-dir /tmp/ray-sgk` (`config/ray_local.py`) and
+`--ray-address in-process`.
 
-- A rehearsal or long build takes it with `PYTHONPATH=. ./venv/bin/python -m tools.rehearsal_lock
-  acquire --purpose "<text>"`, records the pid at each launch with `set-pid`, and releases it with
-  `release` once its last Ray process is gone. **A held lock (exit 3) means stop and ask the user.**
-  Never wait, retry or remove it. The helper has no option to do so.
+- **The protocol.** `acquire` before the first launch; `set-pid` with the driver's pid at each
+  launch; held through the readers; `release` after them, once no Ray process is left. `status` and
+  `ray-processes` only look.
+  ```bash
+  ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "<text>" --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+  ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk <pid>
+  ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+  ```
+- **A held lock (exit 3) means stop and ask the user.** Never wait, retry or remove it; the module
+  has no option to. Exit 3 also comes while the old location `~/ScienceData/.rehearsal-lock`
+  exists: a project not yet moved to `v0.3.0` holds it, or it is stale.
+- **The lock finds an instance by its temp dir.** Every Ray start here gives Ray `_temp_dir`
+  (`RunDrivers/tests/test_ray_temp_dir.py`); one that does not is invisible to the lock.
+- **Each lock command is a shell command of its own**, never the one that launches a build: a shell
+  whose command line names `/tmp/ray-sgk` makes the lock list everything else it started.
 - Every Ray driver names its address (`local` for this repository's), never `auto`, and `ray stop`
   is never run: it stops every project's Ray processes.
-- The contract is StochasticInstantons' `rehearsal-lock-brief.md` at its `d6d550b`;
-  `prompts/runregistry-extraction/README.md` §4.1 is this repository's protocol.
 
 ## Repository mechanics
 

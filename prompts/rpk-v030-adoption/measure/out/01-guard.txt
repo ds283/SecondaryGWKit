@@ -1,0 +1,196 @@
+# 01-guard.txt — rpk-v030-adoption prompt 01, §2.4 and §3.1. Each block is headed by its command.
+# 2026-10-25T01:51:27+0100, HEAD 5add52d with the 01 edits in the working tree
+
+## The guard test, on the edited tree
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir -v
+test_each_script_gives_the_temp_dir_with_local_only (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_script_gives_the_temp_dir_with_local_only)
+A script whose ``ray.init`` has no ``_temp_dir`` starts, with ``--ray-address local``, ... ok
+test_each_start_takes_the_temp_dir_from_config (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_start_takes_the_temp_dir_from_config)
+Each file with a start imports ``RAY_TEMP_DIR`` from ``config.ray_local`` and binds no ... ok
+test_each_wrapper_starts_a_local_instance_in_the_temp_dir (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_wrapper_starts_a_local_instance_in_the_temp_dir)
+A wrapper whose real ``ray.init`` has no ``_temp_dir`` starts an SGK Ray instance the ... ok
+test_the_ray_starts_are_the_ten (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_the_ray_starts_are_the_ten)
+A Ray start anywhere in the live tree that is not one of the ten, or a second start ... ok
+test_the_temp_dir_is_the_constant (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_the_temp_dir_is_the_constant)
+The one spelling of the temp dir. The lock compares it as a string (contract §5), so a ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.100s
+
+OK
+[exit 0]
+
+## The deliberate breakage (§3.1): each mutation applied, the module run, the mutation reverted
+
+### M1
+
+$ diff -u <original> extract_Gk_data.py   # the mutation, exactly as applied
+--- a/extract_Gk_data.py
++++ b/extract_Gk_data.py
+@@ -109,7 +109,6 @@
+ # attaches
+ ray.init(
+     address=args.ray_address,
+-    _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
+ )
+ 
+ VERSION_LABEL = "2025.1.1"
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+F....
+======================================================================
+FAIL: test_each_script_gives_the_temp_dir_with_local_only (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_script_gives_the_temp_dir_with_local_only) (start=('extract_Gk_data.py', '<module>'))
+A script whose ``ray.init`` has no ``_temp_dir`` starts, with ``--ray-address local``,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/tests/test_ray_temp_dir.py", line 184, in test_each_script_gives_the_temp_dir_with_local_only
+    self.assertIn("_temp_dir", kw, "ray.init passes no temp dir")
+AssertionError: '_temp_dir' not found in {'address': <ast.Attribute object at 0x106538810>} : ray.init passes no temp dir
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.907s
+
+FAILED (failures=1)
+[exit 1]
+(M1 reverted: extract_Gk_data.py restored byte-identical)
+
+### M2
+
+$ diff -u <original> RunDrivers/quadsource_atol_sweep.py   # the mutation, exactly as applied
+--- a/RunDrivers/quadsource_atol_sweep.py
++++ b/RunDrivers/quadsource_atol_sweep.py
+@@ -487,7 +487,6 @@
+             f"(address=local, num_cpus={args.cpus}, include_dashboard=False)"
+         )
+         return _real_ray_init(
+-            address="local",
+             num_cpus=args.cpus,
+             include_dashboard=False,
+             ignore_reinit_error=True,
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+..F..
+======================================================================
+FAIL: test_each_wrapper_starts_a_local_instance_in_the_temp_dir (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_wrapper_starts_a_local_instance_in_the_temp_dir) (start=('RunDrivers/quadsource_atol_sweep.py', 'run_child._local_ray_init'))
+A wrapper whose real ``ray.init`` has no ``_temp_dir`` starts an SGK Ray instance the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/tests/test_ray_temp_dir.py", line 167, in test_each_wrapper_starts_a_local_instance_in_the_temp_dir
+    self.assertIn("address", kw, "the real ray.init passes no address")
+AssertionError: 'address' not found in {'num_cpus': <ast.Attribute object at 0x1092b0410>, 'include_dashboard': <ast.Constant object at 0x1092b0290>, 'ignore_reinit_error': <ast.Constant object at 0x1092b0190>, '_temp_dir': <ast.Name object at 0x1092b0090>} : the real ray.init passes no address
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.746s
+
+FAILED (failures=1)
+[exit 1]
+(M2 reverted: RunDrivers/quadsource_atol_sweep.py restored byte-identical)
+
+### M3
+
+$ diff -u <original> main.py   # the mutation, exactly as applied
+--- a/main.py
++++ b/main.py
+@@ -316,7 +316,7 @@
+ # with host:port it would split this driver's files from the cluster's
+ ray.init(
+     address=args.ray_address,
+-    _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
++    _temp_dir=RAY_TEMP_DIR,
+ )
+ 
+ VERSION_LABEL = "2025.1.1"
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+F....
+======================================================================
+FAIL: test_each_script_gives_the_temp_dir_with_local_only (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_each_script_gives_the_temp_dir_with_local_only) (start=('main.py', '<module>'))
+A script whose ``ray.init`` has no ``_temp_dir`` starts, with ``--ray-address local``,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/tests/test_ray_temp_dir.py", line 185, in test_each_script_gives_the_temp_dir_with_local_only
+    self.assertEqual(ast.unparse(kw["_temp_dir"]), SCRIPT_TEMP_DIR)
+AssertionError: 'RAY_TEMP_DIR' != "RAY_TEMP_DIR if args.ray_address == 'local' else None"
+- RAY_TEMP_DIR
++ RAY_TEMP_DIR if args.ray_address == 'local' else None
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.791s
+
+FAILED (failures=1)
+[exit 1]
+(M3 reverted: main.py restored byte-identical)
+
+### M4
+
+$ diff -u <original> tools/_probe.py   # the mutation, exactly as applied
+--- /dev/null
++++ b/tools/_probe.py
+@@ -0,0 +1,3 @@
++import ray
++
++ray.init(address="local")
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+...F.
+======================================================================
+FAIL: test_the_ray_starts_are_the_ten (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_the_ray_starts_are_the_ten)
+A Ray start anywhere in the live tree that is not one of the ten, or a second start
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/tests/test_ray_temp_dir.py", line 153, in test_the_ray_starts_are_the_ten
+    self.assertEqual(len(found), len(STARTS), found)
+AssertionError: 11 != 10 : [('RunDrivers/quadsource_atol_sweep.py', 'run_build._local_ray_init'), ('RunDrivers/quadsource_atol_sweep.py', 'run_child._local_ray_init'), ('RunDrivers/scoped_pipeline_run.py', 'main._local_ray_init'), ('extract_GkSource_data.py', '<module>'), ('extract_GkWKB_data.py', '<module>'), ('extract_Gk_data.py', '<module>'), ('extract_QuadSourceIntegral_data.py', '<module>'), ('extract_TkWKB_data.py', '<module>'), ('extract_tensor_source_data.py', '<module>'), ('main.py', '<module>'), ('tools/_probe.py', '<module>')]
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.018s
+
+FAILED (failures=1)
+[exit 1]
+(M4 reverted: tools/_probe.py removed)
+
+### M5
+
+$ diff -u <original> config/ray_local.py   # the mutation, exactly as applied
+--- a/config/ray_local.py
++++ b/config/ray_local.py
+@@ -4,4 +4,4 @@
+ # instance by its temp dir, so an instance started without it is invisible to the lock. The lock
+ # compares the string as given, so it is spelled exactly so everywhere, and on the lock's command
+ # line as `--ray-temp-dir /tmp/ray-sgk`. It is short because Ray's Unix sockets live under it.
+-RAY_TEMP_DIR = "/tmp/ray-sgk"
++RAY_TEMP_DIR = "/tmp/ray-sgk/"
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+....F
+======================================================================
+FAIL: test_the_temp_dir_is_the_constant (RunDrivers.tests.test_ray_temp_dir.TestRayTempDir.test_the_temp_dir_is_the_constant)
+The one spelling of the temp dir. The lock compares it as a string (contract §5), so a
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/tests/test_ray_temp_dir.py", line 146, in test_the_temp_dir_is_the_constant
+    self.assertEqual(values[0].value, TEMP_DIR)
+AssertionError: '/tmp/ray-sgk/' != '/tmp/ray-sgk'
+- /tmp/ray-sgk/
+?             -
++ /tmp/ray-sgk
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.462s
+
+FAILED (failures=1)
+[exit 1]
+(M5 reverted: config/ray_local.py restored byte-identical)
+
+## After the five reverts
+
+$ PYTHONPATH=. ./venv/bin/python -m unittest RunDrivers.tests.test_ray_temp_dir
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.835s
+
+OK
+[exit 0]

@@ -698,6 +698,8 @@ def main():
     #     the run is registered.
     import ray
 
+    from config.ray_local import RAY_TEMP_DIR
+
     _real_ray_init = ray.init
     latch = SignalLatch()
 
@@ -711,6 +713,7 @@ def main():
             num_cpus=args.cpus,
             include_dashboard=False,
             ignore_reinit_error=True,
+            _temp_dir=RAY_TEMP_DIR,
         )
         install_killed_handler(run, latch)
         return context

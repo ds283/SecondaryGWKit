@@ -1,0 +1,103 @@
+# 01-lock.txt — rpk-v030-adoption prompt 01, §2.8: every lock command, its output and its exit status.
+# Each was run from the repository root as a shell command of its own, redirected with >> and its exit recorded with the builtin echo; no pipe.
+
+== 2026-10-25T01:03:47+0000 (1) take the lock
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "rpk-v030-adoption 01: rehearsal under the new lock" --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: rpk-v030-adoption 01: rehearsal under the new lock
+[exit 0]
+
+== 2026-10-25T01:04:36+0000 (3) the one check: set-pid with the driver's Python pid, 73154 (sh 73146)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 73154
+recorded pid 73154 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+[exit 0]
+
+== 2026-10-25T01:04:44+0000 (3) the one check: ray-processes (expected exit 1, listing the instance)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+73180 73154 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+73196 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+73197 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+73217 73154 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+73218 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+73220 73217 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+73221 73217 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+73222 73217 ray::SerialPoolBroker                   
+73223 73217 ray::Datastore                   
+73224 73217 ray::Datastore                   
+73225 73217 ray::Datastore                   
+73226 73217 ray::numeric_with_phase_cut                   
+73227 73217 ray::Datastore                   
+73268 73217 ray::numeric_with_phase_cut                   
+73269 73217 ray::numeric_with_phase_cut                   
+73270 73217 ray::numeric_with_phase_cut                   
+73271 73217 ray::numeric_with_phase_cut                   
+73277 73217 ray::numeric_with_phase_cut                   
+[exit 1]
+
+== 2026-10-25T01:04:51+0000 (3) the one check: release while the driver runs (expected exit 1)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+release: the recorded pid 73154 is alive; not releasing
+[exit 1]
+
+== 2026-10-25T01:05:00+0000 (3) the one check: a second acquire with the same values (expected exit 3)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "rpk-v030-adoption 01: rehearsal under the new lock" --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+the rehearsal lock is held (/Users/ds283/.raypoolkit/rehearsal-lock); its owner file:
+    project: SecondaryGWKit
+    purpose: rpk-v030-adoption 01: rehearsal under the new lock
+    acquired: 2026-10-25T01:03:48+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 73154
+stop and ask the user; nothing here waits on, retries or breaks the lock
+[exit 3]
+
+== 2026-10-25T01:05:07+0000 (3) the one check: status
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: rpk-v030-adoption 01: rehearsal under the new lock
+    acquired: 2026-10-25T01:03:48+00:00
+    host: mps026088
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 73154
+owner pid 73154: alive
+Ray processes of /tmp/ray-sgk: 18
+    73180 73154 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/gcs/gcs_server --log_dir=/tmp/ray-sgk/session_2026-10-25
+    73196 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    73197 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/ds283/Documents/Code/SecondaryGWKit/ven
+    73217 73154 /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.12/site-packages/ray/core/src/ray/raylet/raylet --raylet_socket_name=/tmp/ray-sgk/session_
+    73218 73154 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    73220 73217 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    73221 73217 /opt/local/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u /Users/ds283/Documents/Code/SecondaryGWKit/
+    73222 73217 ray::SerialPoolBroker                   
+    73223 73217 ray::Datastore                   
+    73224 73217 ray::Datastore                   
+    73225 73217 ray::Datastore.object_store                   
+    73226 73217 ray::numeric_with_phase_cut                   
+    73227 73217 ray::Datastore                   
+    73268 73217 ray::numeric_with_phase_cut                   
+    73269 73217 ray::numeric_with_phase_cut                   
+    73270 73217 ray::numeric_with_phase_cut                   
+    73271 73217 ray::numeric_with_phase_cut                   
+    73277 73217 ray::numeric_with_phase_cut                   
+[exit 0]
+
+== 2026-10-25T01:19:06+0000 (4) after the driver's pid 73154 died: ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T01:27:50+0000 (6) after the readers (01:19:38-01:27:29): ray-processes (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+[exit 0]
+
+== 2026-10-25T01:27:58+0000 (7) release (expected exit 0)
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+[exit 0]
+
+== 2026-10-25T01:28:03+0000 (7) status after release
+$ ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+[exit 0]

@@ -81,6 +81,7 @@ from config.datastore import (
     tables_to_drop,
 )
 from config.model_list import build_model_list
+from config.ray_local import RAY_TEMP_DIR
 from config.sharding import (
     replicated_tables,
     sharded_tables,
@@ -310,8 +311,13 @@ if args.inventory:
 
 # connect to Ray on the supplied address. The default, 'local', starts a fresh instance for this
 # process and never attaches to one already running (handover prompt 05); 'auto' or host:port
-# attaches
-ray.init(address=args.ray_address)
+# attaches. The temp dir (config/ray_local.py), which lets the shared rehearsal lock see this
+# instance, is given only with 'local': with 'auto' it would change which cluster Ray finds, and
+# with host:port it would split this driver's files from the cluster's
+ray.init(
+    address=args.ray_address,
+    _temp_dir=RAY_TEMP_DIR if args.ray_address == "local" else None,
+)
 
 VERSION_LABEL = "2025.1.1"
 

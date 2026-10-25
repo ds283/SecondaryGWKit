@@ -477,15 +477,21 @@ def run_child(args):
 
     import ray
 
+    from config.ray_local import RAY_TEMP_DIR
+
     _real_ray_init = ray.init
 
     def _local_ray_init(*_a, **_kw):
         print(
             f"** quadsource_atol_sweep: bootstrapping a local Ray instance "
-            f"(num_cpus={args.cpus}, include_dashboard=False)"
+            f"(address=local, num_cpus={args.cpus}, include_dashboard=False)"
         )
         return _real_ray_init(
-            num_cpus=args.cpus, include_dashboard=False, ignore_reinit_error=True
+            address="local",
+            num_cpus=args.cpus,
+            include_dashboard=False,
+            ignore_reinit_error=True,
+            _temp_dir=RAY_TEMP_DIR,
         )
 
     ray.init = _local_ray_init
@@ -544,6 +550,8 @@ def run_build(args):
     which ran. `build_scope` decides the grid, `--zend` and that text together.
     """
     import ray
+
+    from config.ray_local import RAY_TEMP_DIR
 
     database = Path(args.database).resolve()
     k_values, zend, scope_text = build_scope(args)
@@ -631,6 +639,7 @@ def run_build(args):
             num_cpus=args.cpus,
             include_dashboard=False,
             ignore_reinit_error=True,
+            _temp_dir=RAY_TEMP_DIR,
         )
         scoped.install_killed_handler(run, latch)
         return context
