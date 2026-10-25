@@ -105,6 +105,18 @@ change accordingly. That is intended (§0.2).
    from `value.analytic_G_w` and `value.analytic_Gprime_w`.
 5. Nothing else in the readers changes: no axis, label, file name or other column.
 
+**Added 2026-10-25 at dispatch, on the user's ruling.** Item 2 missed one series. Besides its
+log–log $|G|$ plot, `extract_Gk_data.py` plots `analytic_G_w` **signed**, on log-$x$ and linear-$y$
+axes (`plots/Gk-linear/`, `set_loglinear_axes`, `:232-262` at `4a3e848`). It is the only signed
+`analytic_G_w` series in the four readers, and none of them plots `analytic_Gprime_w`. The user
+ruled: **filter it as well, and keep its sign.** That series keeps the points the item 1 rule keeps:
+not `None`, finite, non-zero, and $|y|$ at most `10**decades` times the largest finite non-zero
+$|G|$ on that plot. They are plotted as signed $(x, y)$ pairs. Give the helper a keyword, for
+example `signed=False`, or add a sibling beside it. Either way there is one rule, written once, and
+§3's helper tests cover the signed form too: a negative value keeps its sign, and the
+three-decade boundary is applied to its modulus. §3's `ast` test covers this series. Item 5 still
+holds for everything else on that plot.
+
 ---
 
 ## 3. Tests
