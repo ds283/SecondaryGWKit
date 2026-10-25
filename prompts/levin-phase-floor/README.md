@@ -152,7 +152,7 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | 01 | [`01-phase-group-census.md`](01-phase-group-census.md) | every group record in A3 v2: cost, regions and declared error per group against $\varepsilon k\eta_R$; H-cancel against H-anchor on the store; findings §2.5 confirmed on the store; the candidate rows for 03 | Mac Studio, read-only, no Ray | Opus | written |
 | 02 | [`02-phase-noise-injection.md`](02-phase-noise-injection.md) | findings §2.6 item 2: deterministic phase noise of amplitude $\delta$ added to the composed `theta_mod_2pi` on A2's fixtures, by group; depth and regions against $\delta$ | laptop, offline, no Ray, no store | Opus | ⛔ stopped at step 3 and superseded by 03 (user, 2026-10-25); N4 moves to 04 |
 | 03 | [`03-instrument-depth-20-rows.md`](03-instrument-depth-20-rows.md) | findings §2.6 item 1: seven A3 v2 rows from 01's list, re-run in-process and bit-identical to the store; depth per group, the jitter, and the discrepancy along a region's ancestry against the floor, with a jitter-removed control | Mac Studio, reads A3 v2 | Opus | written 2026-10-25, after 01 |
-| 04 | remove | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows; and, from 02's N4, whether each row's stored `total_abserr` covers $|{\rm total} - {\rm total}_{\rm jitter\ removed}|$ | Mac Studio, reads A3 v2 | — | ⏸ held on 03 |
+| 04 | [`04-remove-the-floor.md`](04-remove-the-floor.md) | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows; and, from 02's N4, whether each row's stored `total_abserr` covers $|{\rm total} - {\rm total}_{\rm jitter\ removed}|$ | Mac Studio, reads A3 v2, at the pre-B1 tree `98e68d3` | Opus | written 2026-10-25, after 03: arms A (layer 1(a)) and X (every remainder exact); C7 |
 | **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | ⬜ |
 | 05+ | remedy | §2.7 layers 1–2 as G1 decides, each with its own tests and an offline re-measurement of 03's rows | laptop | — | ⬜ not written |
 | **G2** | gate | the user decides layer 3 (§6.3 Q4) and the `rtol` question (Q5) | — | — | ⬜ |
@@ -291,6 +291,18 @@ These are the orchestrator's choices, and the user can reverse any of them.
   campaign-to-be, so it is not moved.
 - **C6 — no remedy prompt before G1.** The batching rule: a prompt is written once its task is
   determined, and the remedy's task is what G1 decides.
+- **C7 — 04 runs layer 1(a) and an exact limit, not layer 1(b)** (added 2026-10-25, writing 04).
+  03 found the floor in every scored group, cancelling or not, and
+  `[01-slow-group-leading-terms-do-not-cancel]` shows that a composition of leading terms cannot
+  reach a zero coefficient. So 04's arms are:
+  - **A**, $k\tau_R$ out of $G$'s phase, which production could build without touching
+    `AdaptiveLevin/`;
+  - **X**, every factor's remainder reduced exactly. That is the limit any phase layer reaches,
+    (b) and per-region anchoring included, and the reference for N4.
+
+  Both are reduced against the double `TWO_PI`, as production's `fmod` is. So X differs from
+  production by the jitter alone, and the modulus's own smooth error (about
+  $0.18\,\varepsilon|\theta|$) is reported, not removed.
 
 ### 6.3 Open, for the user at the gates
 
@@ -316,7 +328,8 @@ These are the orchestrator's choices, and the user can reverse any of them.
   - What stays open is the accuracy lost against `1e-8`. The sweep measured it at 1.9e-6 (mid band),
     2.84e-6 (low) and 8.3e-7 (seam), on 25 work items only. On depth-20 rows, where the floor exceeds
     both rungs, it is unmeasured.
-  - 04 re-runs real A3 v2 rows anyway; running them at both rungs would measure it there.
+  - 04 re-runs real A3 v2 rows anyway; running them at both rungs would measure it there. *(04
+    does, with arm X at `1e-7` and `1e-8`: its R2 and Q5's number.)*
   - Cost is not an argument either way (§5 rule 4).
 
 ## 7. Baselines
