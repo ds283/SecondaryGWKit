@@ -204,9 +204,10 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   store, no Ray) and `standin_pool` (a real `ShardedPool` on stand-in actors).
 - **Formatting** is `black`, with no configuration. Run `./venv/bin/python -m black <files>` before
   committing; the tree outside `prompts/` is clean under `--check` (49 orchestrator measure
-  scripts under `prompts/datastore-generic/` are records, left as written). The one exception is
-  three scripts under `docs/handover/a3-v2/seam/scripts/`. They are records too, byte-identical to
-  the run whose outputs record their SHA-256, so they are left unformatted.
+  scripts under `prompts/datastore-generic/` are records, left as written). The scripts a
+  Mac Studio prompt copies back as records are also left unformatted:
+  `docs/handover/a3-v2/seam/scripts/` and `docs/levin-phase-floor/01/scripts/`. Each is
+  byte-identical to the run whose outputs record its SHA-256.
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
   `RunDrivers/scoped_pipeline_run.py`; to extract one of its functions

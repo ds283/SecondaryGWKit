@@ -505,6 +505,16 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `PrimitivePhase` itself, and so whether it lands there or as `handover`'s D2, is that campaign's
   gate G1 (README §6.3 Q3). This entry stays here.
 
+  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01: H-anchor holds on A3 v2.** Its
+  prediction P2 asked whether groups with and without a cancelling pair both track
+  $F = \varepsilon k\eta_R$:
+  - cancelling: slope 0.968, median $e_g/F$ 2.12;
+  - non-cancelling: slope 0.822, median $e_g/F$ 1.49.
+
+  So both do. The floor this entry names is carried into every group containing $G$. It is
+  **consistent with** that floor driving the cliff, but does not prove it: the group-level depth
+  and the parent–child discrepancy are that campaign's prompt 03. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
+
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
   `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and

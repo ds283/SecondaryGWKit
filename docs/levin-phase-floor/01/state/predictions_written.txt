@@ -1,0 +1,4 @@
+2026-10-25T18:14:25Z
+log.md predictions written; sha256 of prompt §1 lines 56-101:
+cfa625d27fbb9c60be85d737ddd40e1b533010e4c178a6e4973fcfc7de6b4bf8  -
+group_census.py exists: no

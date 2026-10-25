@@ -1,0 +1,300 @@
+# group_census.py sha256 aac0b4ed90d3b2913f07a21ad05cdfde9e97759f41dde086381c31ef5af92eab
+# docs/handover/a3-v2/findings/depth20_floor.py sha256 c82f72b0c7bda8174e1b01b3989929651f0e2156b7d2e9f02951206935d0e746 (eta(z), EPS imported from it)
+# git HEAD 757ef016fc37be996c342d162c05f17b3c430e4d
+# store fingerprint (runregistrykit store show) 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56; problems: none
+# store file sha256 1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  handover-A3-v2-lambdacdm.sqlite (= step 2)
+# store file sha256 b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  handover-A3-v2-lambdacdm-shard0000.sqlite (= step 2)
+# store file sha256 c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  handover-A3-v2-lambdacdm-shard0001.sqlite (= step 2)
+# store file sha256 175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  handover-A3-v2-lambdacdm-shard0002.sqlite (= step 2)
+# store file sha256 76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  handover-A3-v2-lambdacdm-shard0003.sqlite (= step 2)
+# store file sha256 3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  handover-A3-v2-lambdacdm.manifest.json (= step 2)
+# EPS = 2.220446049250313e-16; RTOL = 1e-07; population pair (1e-32, 1e-07)
+# candidate rows for prompt 03 (README 4.3): top group by per-group elapsed, depth-20 rows
+# preference: compute_time in [100, 800] s, mid band; low band [100, 800] s where the mid band has none
+
+== G+r (slow, cancelling) top on r == k
+   mid band 100-800 s: 67; low band 100-800 s: 85; all depth-20 rows with this top group: 665; thinned to 8 spread over k
+
+   (shard, serial) = (2, 37527); k 3.091682e+06 q 1.000000e+05 r 3.091682e+06 /Mpc; z_response 33.16458742602617 (mid); geometry r==k,q<r; compute_time 199.86 s; depth 20; total -4.589700e-24; total_abserr/|total| 6.513e-06; total_converged 0; F 1.690e-06
+     top group Gr G+r (sub-interval 1), 108.07 s of the row's 199.74 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G        -4.86395e-24   1.958e-30  4.025e-07    0    1     11599     11599      23197      35.33 False
+       1  5.33254e+10  1.72480e+09 Gr     G+r       1.12636e-24   1.436e-29  1.275e-05    0    1     14960     14960      29919     108.07  True
+       1  5.33254e+10  1.72480e+09 Gr     G-r      -8.64978e-25   8.959e-30  1.036e-05    0    0      7211      7203      14437      52.28 False
+       2  1.72480e+09  3.31646e+01 Gqr    G+q+r     6.82491e-25   8.014e-31  1.174e-06    0    0       237       230        487       2.63  True
+       2  1.72480e+09  3.31646e+01 Gqr    G+q-r     3.05220e-26   1.574e-30  5.158e-05    0    1         1         0          3       0.00 False
+       2  1.72480e+09  3.31646e+01 Gqr    G-q+r    -7.01196e-25   6.927e-31  9.879e-07    0    0       138       131        289       1.42  True
+       2  1.72480e+09  3.31646e+01 Gqr    G-q-r     1.04643e-27   1.542e-30  1.473e-03    0    1         1         0          3       0.00 False
+
+   (shard, serial) = (2, 34662); k 3.091682e+06 q 3.138568e+05 r 3.091682e+06 /Mpc; z_response 43.7226748014895 (mid); geometry r==k,q<r; compute_time 228.59 s; depth 20; total 6.350878e-24; total_abserr/|total| 3.106e-06; total_converged 0; F 1.456e-06
+     top group Gr G+r (sub-interval 1), 100.77 s of the row's 228.42 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G         6.78166e-24   1.320e-30  1.946e-07    0    1      6125      6125      12249      18.21 False
+       1  5.33254e+10  5.41341e+09 Gr     G+r      -5.69636e-25   6.778e-30  1.190e-05    0    1     14029     14029      28057     100.77  True
+       1  5.33254e+10  5.41341e+09 Gr     G-r       4.01704e-25   5.499e-30  1.369e-05    0    0     12481     12481      24961      90.65 False
+       2  5.41341e+09  4.37227e+01 Gqr    G+q+r    -1.12113e-24   1.542e-30  1.375e-06    0    0      1300      1295       2609      14.45  True
+       2  5.41341e+09  4.37227e+01 Gqr    G+q-r    -1.51388e-25   1.944e-30  1.284e-05    0    1         1         0          3       0.00 False
+       2  5.41341e+09  4.37227e+01 Gqr    G-q+r     8.52115e-25   8.163e-31  9.580e-07    0    0       398       392        807       4.34  True
+       2  5.41341e+09  4.37227e+01 Gqr    G-q-r     1.57555e-25   1.826e-30  1.159e-05    0    1         1         0          3       0.00 False
+
+   (shard, serial) = (3, 34689); k 9.703456e+06 q 3.091682e+06 r 9.703456e+06 /Mpc; z_response 174.12749067735447 (mid); geometry r==k,q<r; compute_time 467.13 s; depth 20; total -1.049280e-24; total_abserr/|total| 9.036e-07; total_converged 0; F 2.068e-06
+     top group Gr G+r (sub-interval 1), 220.14 s of the row's 466.92 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G        -9.32519e-25   4.144e-31  4.444e-07    1    0      4336      4336       8671      12.69 False
+       1  1.67365e+11  5.33254e+10 Gr     G+r      -2.36126e-25   1.559e-31  6.603e-07    0    0     30530     30530      61059     220.14  True
+       1  1.67365e+11  5.33254e+10 Gr     G-r       5.32745e-27   1.380e-31  2.591e-05    0    0     26233     26233      52465     189.24 False
+       2  5.33254e+10  1.74127e+02 Gqr    G+q+r     1.81125e-25   1.048e-31  5.788e-07    1    0      1733      1729       3473      19.39  True
+       2  5.33254e+10  1.74127e+02 Gqr    G+q-r     3.15083e-26   3.048e-32  9.673e-07    1    0       895       889       1801       9.95 False
+       2  5.33254e+10  1.74127e+02 Gqr    G-q+r    -7.10440e-26   7.787e-32  1.096e-06    1    0      1073      1068       2155      12.04  True
+       2  5.33254e+10  1.74127e+02 Gqr    G-q-r    -2.75516e-26   2.655e-32  9.636e-07    1    0       313       307        637       3.48 False
+
+   (shard, serial) = (3, 38018); k 9.703456e+06 q 3.138568e+05 r 9.703456e+06 /Mpc; z_response 132.07943965145856 (mid); geometry r==k,q<r; compute_time 467.24 s; depth 20; total 4.962072e-25; total_abserr/|total| 1.501e-05; total_converged 0; F 2.441e-06
+     top group Gr G+r (sub-interval 1), 249.79 s of the row's 467.10 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         6.24976e-25   4.159e-31  6.655e-07    1    0      9419      9419      18837      28.19 False
+       1  1.67365e+11  5.41341e+09 Gr     G+r      -2.53507e-25   2.893e-30  1.141e-05    0    0     34932     34932      69863     249.79  True
+       1  1.67365e+11  5.41341e+09 Gr     G-r       1.29059e-25   1.593e-30  1.235e-05    0    0     26261     26255      52533     189.10 False
+       2  5.41341e+09  1.32079e+02 Gqr    G+q+r    -9.44709e-26   9.923e-31  1.050e-05    0    0         1         0          3       0.00  True
+       2  5.41341e+09  1.32079e+02 Gqr    G+q-r    -4.21425e-27   3.224e-31  7.651e-05    0    0         1         0          3       0.00 False
+       2  5.41341e+09  1.32079e+02 Gqr    G-q+r     8.81814e-26   9.162e-31  1.039e-05    0    0         1         0          3       0.00  True
+       2  5.41341e+09  1.32079e+02 Gqr    G-q-r     6.18336e-27   3.169e-31  5.125e-05    0    0         1         0          3       0.00 False
+
+   (shard, serial) = (0, 1797); k 3.045496e+07 q 3.091682e+06 r 3.045496e+07 /Mpc; z_response 302.64366600190533 (mid); geometry r==k,q<r; compute_time 220.41 s; depth 20; total -4.757170e-26; total_abserr/|total| 1.585e-05; total_converged 1; F 4.599e-06
+     top group Gr G+r (sub-interval 1), 113.03 s of the row's 220.28 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.25288e+11 G      G        -4.07736e-26   9.772e-32  2.397e-06    1    0        44        44         87       0.13 False
+       1  5.25288e+11  5.33254e+10 Gr     G+r      -9.45017e-27   6.547e-32  6.928e-06    1    0     15535     15535      31069     113.03  True
+       1  5.25288e+11  5.33254e+10 Gr     G-r       8.76169e-28   6.570e-32  7.499e-05    1    0     12852     12849      25709      92.09 False
+       2  5.33254e+10  3.02644e+02 Gqr    G+q+r     7.23755e-27   4.020e-31  5.555e-05    1    0         1         0          3       0.00  True
+       2  5.33254e+10  3.02644e+02 Gqr    G+q-r     3.31285e-28   6.055e-32  1.828e-04    1    0         1         0          3       0.00 False
+       2  5.33254e+10  3.02644e+02 Gqr    G-q+r    -5.73945e-27   9.482e-33  1.652e-06    1    0      1348      1342       2707      15.02  True
+       2  5.33254e+10  3.02644e+02 Gqr    G-q-r    -5.34475e-29   5.312e-32  9.940e-04    1    0         1         0          3       0.00 False
+
+   (shard, serial) = (0, 1857); k 3.045496e+07 q 9.850612e+05 r 3.045496e+07 /Mpc; z_response 302.64366600190533 (mid); geometry r==k,q<r; compute_time 221.59 s; depth 20; total -4.460496e-26; total_abserr/|total| 1.018e-05; total_converged 1; F 4.599e-06
+     top group Gr G+r (sub-interval 1), 142.69 s of the row's 221.47 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.25288e+11 G      G        -2.01860e-26   1.048e-31  5.191e-06    1    0       352       352        703       1.08 False
+       1  5.25288e+11  1.69904e+10 Gr     G+r      -3.14590e-26   1.588e-31  5.048e-06    1    0     19700     19699      39401     142.69  True
+       1  5.25288e+11  1.69904e+10 Gr     G-r       3.78482e-27   4.665e-32  1.233e-05    1    0      8767      8761      17545      63.04 False
+       2  1.69904e+10  3.02644e+02 Gqr    G+q+r     4.85537e-27   2.410e-32  4.963e-06    1    0         3         0         11       0.02  True
+       2  1.69904e+10  3.02644e+02 Gqr    G+q-r    -7.45738e-28   5.148e-32  6.903e-05    1    0         1         0          3       0.00 False
+       2  1.69904e+10  3.02644e+02 Gqr    G-q+r    -2.16098e-27   1.778e-32  8.227e-06    1    0      1322      1315       2657      14.63  True
+       2  1.69904e+10  3.02644e+02 Gqr    G-q-r     1.30661e-27   5.068e-32  3.879e-05    1    0         1         0          3       0.00 False
+
+   (shard, serial) = (1, 37670); k 9.558498e+07 q 9.850612e+05 r 9.558498e+07 /Mpc; z_response 10.978578306965865 (mid); geometry r==k,q<r; compute_time 239.79 s; depth 20; total 7.026853e-29; total_abserr/|total| 2.332e-04; total_converged 1; F 9.192e-05
+     top group Gr G+r (sub-interval 1), 210.32 s of the row's 239.66 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.64865e+12 G      G         2.50563e-29   3.233e-33  1.290e-04    1    0        10        10         19       0.02 False
+       1  1.64865e+12  1.69904e+10 Gr     G+r       4.64988e-29   2.482e-33  5.339e-05    1    0     29238     29232      58487     210.32  True
+       1  1.64865e+12  1.69904e+10 Gr     G-r      -3.77528e-30   5.839e-34  1.547e-04    1    0      4062      4053       8141      29.30 False
+       2  1.69904e+10  1.09786e+01 Gqr    G+q+r     5.57597e-30   3.973e-33  7.126e-04    1    0         1         0          3       0.00  True
+       2  1.69904e+10  1.09786e+01 Gqr    G+q-r     1.30425e-30   1.128e-33  8.650e-04    1    0         1         0          3       0.00 False
+       2  1.69904e+10  1.09786e+01 Gqr    G-q+r    -2.45254e-30   3.863e-33  1.575e-03    1    0         1         0          3       0.00  True
+       2  1.69904e+10  1.09786e+01 Gqr    G-q-r    -1.93899e-30   1.120e-33  5.776e-04    1    0         1         0          3       0.00 False
+
+   (shard, serial) = (1, 34735); k 9.558498e+07 q 1.000000e+05 r 9.558498e+07 /Mpc; z_response 10.978578306965865 (mid); geometry r==k,q<r; compute_time 263.24 s; depth 20; total 6.365835e-29; total_abserr/|total| 2.927e-04; total_converged 1; F 9.192e-05
+     top group Gr G+r (sub-interval 1), 240.12 s of the row's 263.08 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.64865e+12 G      G         2.47120e-29   3.238e-33  1.310e-04    1    0        10        10         19       0.02 False
+       1  1.64865e+12  1.72480e+09 Gr     G+r       4.26084e-29   5.480e-33  1.286e-04    1    0     32969     32967      65941     240.12  True
+       1  1.64865e+12  1.72480e+09 Gr     G-r      -3.11766e-30   9.243e-34  2.965e-04    1    0      3144      3141       6293      22.92 False
+       2  1.72480e+09  1.09786e+01 Gqr    G+q+r    -8.29286e-30   3.497e-33  4.217e-04    1    0         1         0          3       0.00  True
+       2  1.72480e+09  1.09786e+01 Gqr    G+q-r    -2.30619e-30   1.002e-33  4.346e-04    1    0         1         0          3       0.00 False
+       2  1.72480e+09  1.09786e+01 Gqr    G-q+r     7.70219e-30   3.487e-33  4.528e-04    1    0         1         0          3       0.00  True
+       2  1.72480e+09  1.09786e+01 Gqr    G-q-r     2.35244e-30   1.002e-33  4.258e-04    1    0         1         0          3       0.00 False
+
+== G-r (fast) top on r == k
+   mid band 100-800 s: 14; low band 100-800 s: 7; all depth-20 rows with this top group: 163; thinned to 8 spread over k
+
+   (shard, serial) = (2, 37720); k 3.091682e+06 q 1.000000e+05 r 3.091682e+06 /Mpc; z_response 14.47365537619991 (mid); geometry r==k,q<r; compute_time 355.24 s; depth 20; total -1.407565e-25; total_abserr/|total| 1.214e-04; total_converged 0; F 2.595e-06
+     top group Gr G-r (sub-interval 1), 161.17 s of the row's 355.11 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G        -2.06608e-24   7.056e-31  3.415e-07    0    1      7902      7902      15803      24.09 False
+       1  5.33254e+10  1.72480e+09 Gr     G+r       2.83954e-24   7.135e-30  2.513e-06    0    1     21889     21889      43777     159.04  True
+       1  5.33254e+10  1.72480e+09 Gr     G-r      -8.63363e-25   6.277e-30  7.270e-06    0    0     22152     22144      44319     161.17 False
+       2  1.72480e+09  1.44737e+01 Gqr    G+q+r     2.23568e-25   4.502e-31  2.014e-06    0    0       496       489       1005       5.54  True
+       2  1.72480e+09  1.44737e+01 Gqr    G+q-r     8.54120e-26   1.090e-30  1.277e-05    0    1         1         0          3       0.00 False
+       2  1.72480e+09  1.44737e+01 Gqr    G-q+r    -2.82359e-25   3.671e-31  1.300e-06    0    0       468       461        949       5.26  True
+       2  1.72480e+09  1.44737e+01 Gqr    G-q-r    -7.74718e-26   1.067e-30  1.377e-05    0    1         1         0          3       0.00 False
+
+   (shard, serial) = (2, 34730); k 3.091682e+06 q 9.850612e+05 r 3.091682e+06 /Mpc; z_response 14.47365537619991 (mid); geometry r==k,q<r; compute_time 383.41 s; depth 20; total -8.336420e-26; total_abserr/|total| 2.979e-05; total_converged 0; F 2.595e-06
+     top group Gr G-r (sub-interval 1), 250.21 s of the row's 383.20 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G         1.39544e-24   8.566e-31  6.139e-07    0    1     11844     11844      23687      35.60 False
+       1  5.33254e+10  1.69904e+10 Gr     G+r      -1.80199e-24   3.780e-31  2.097e-07    0    0      4582      4582       9163      33.08  True
+       1  5.33254e+10  1.69904e+10 Gr     G-r       4.65330e-25   4.790e-31  1.029e-06    0    1     34730     34730      69459     250.21 False
+       2  1.69904e+10  1.44737e+01 Gqr    G+q+r    -2.67053e-25   2.994e-31  1.121e-06    0    0      1957      1953       3921      21.84  True
+       2  1.69904e+10  1.44737e+01 Gqr    G+q-r    -4.15618e-26   1.178e-31  2.834e-06    0    0       758       752       1527       8.39 False
+       2  1.69904e+10  1.44737e+01 Gqr    G-q+r     1.36407e-25   2.164e-31  1.586e-06    0    0      1654      1649       3317      18.44  True
+       2  1.69904e+10  1.44737e+01 Gqr    G-q-r     3.00601e-26   1.363e-31  4.535e-06    0    0      1411      1405       2833      15.65 False
+
+   (shard, serial) = (2, 34666); k 3.091682e+06 q 1.000000e+05 r 3.091682e+06 /Mpc; z_response 19.081405086493035 (mid); geometry r==k,q<r; compute_time 393.79 s; depth 20; total 6.816224e-26; total_abserr/|total| 3.461e-04; total_converged 0; F 2.257e-06
+     top group Gr G-r (sub-interval 1), 188.49 s of the row's 393.65 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G        -2.52250e-24   1.556e-30  6.169e-07    0    0      4383      4383       8765      13.06 False
+       1  5.33254e+10  1.72480e+09 Gr     G+r       3.78012e-24   9.816e-30  2.597e-06    0    1     25418     25418      50835     184.33  True
+       1  5.33254e+10  1.72480e+09 Gr     G-r      -1.11990e-24   8.912e-30  7.958e-06    0    0     25994     25987      52001     188.49 False
+       2  1.72480e+09  1.90814e+01 Gqr    G+q+r     2.64155e-25   5.230e-31  1.980e-06    0    0       455       448        923       5.07  True
+       2  1.72480e+09  1.90814e+01 Gqr    G+q-r     1.13894e-25   1.230e-30  1.080e-05    0    1         1         0          3       0.00 False
+       2  1.72480e+09  1.90814e+01 Gqr    G-q+r    -3.42681e-25   3.493e-31  1.019e-06    0    0       248       241        509       2.69  True
+       2  1.72480e+09  1.90814e+01 Gqr    G-q-r    -1.04925e-25   1.204e-30  1.147e-05    0    1         1         0          3       0.00 False
+
+   (shard, serial) = (3, 37317); k 9.703456e+06 q 9.850612e+05 r 9.703456e+06 /Mpc; z_response 398.99156348158704 (mid); geometry r==k,q<r; compute_time 108.43 s; depth 20; total -2.056421e-24; total_abserr/|total| 2.091e-06; total_converged 0; F 1.224e-06
+     top group Gr G-r (sub-interval 1), 53.67 s of the row's 108.26 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G        -1.56231e-24   5.375e-31  3.440e-07    1    0       595       595       1189       1.82 False
+       1  1.67365e+11  1.69904e+10 Gr     G+r      -5.58387e-25   1.737e-30  3.110e-06    0    0      6690      6690      13379      48.25  True
+       1  1.67365e+11  1.69904e+10 Gr     G-r       3.55096e-26   1.407e-30  3.961e-05    0    0      7503      7502      15007      53.67 False
+       2  1.69904e+10  3.98992e+02 Gqr    G+q+r     2.26906e-25   3.122e-31  1.376e-06    1    0        45        40         99       0.45  True
+       2  1.69904e+10  3.98992e+02 Gqr    G+q-r     1.32278e-26   8.971e-32  6.782e-06    1    0       212       205        437       2.22 False
+       2  1.69904e+10  3.98992e+02 Gqr    G-q+r    -2.23758e-25   1.403e-31  6.269e-07    1    0        98        92        207       0.93  True
+       2  1.69904e+10  3.98992e+02 Gqr    G-q-r     1.23860e-26   7.610e-32  6.144e-06    1    0       116       109        245       0.91 False
+
+   (shard, serial) = (3, 34691); k 9.703456e+06 q 3.091682e+06 r 9.703456e+06 /Mpc; z_response 132.07943965145856 (mid); geometry r==k,q<r; compute_time 487.86 s; depth 20; total 6.807908e-25; total_abserr/|total| 9.760e-07; total_converged 0; F 2.441e-06
+     top group Gr G-r (sub-interval 1), 286.42 s of the row's 487.64 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         3.63551e-25   2.807e-31  7.722e-07    1    0      6972      6972      13943      20.62 False
+       1  1.67365e+11  5.33254e+10 Gr     G+r       4.28121e-25   1.113e-31  2.599e-07    0    0     17429     17429      34857     125.70  True
+       1  1.67365e+11  5.33254e+10 Gr     G-r      -7.01517e-26   1.245e-31  1.774e-06    0    0     39101     39101      78201     286.42 False
+       2  5.33254e+10  1.32079e+02 Gqr    G+q+r    -6.77054e-26   1.001e-31  1.479e-06    1    0      3113      3109       6233      35.48  True
+       2  5.33254e+10  1.32079e+02 Gqr    G+q-r    -1.34772e-26   1.792e-32  1.330e-06    1    0       797       790       1607       8.99 False
+       2  5.33254e+10  1.32079e+02 Gqr    G-q+r     2.96819e-26   3.325e-33  1.120e-07    1    0         4         0         15       0.02  True
+       2  5.33254e+10  1.32079e+02 Gqr    G-q-r     1.07714e-26   2.661e-32  2.470e-06    1    0       931       925       1873      10.41 False
+
+   (shard, serial) = (3, 1909); k 9.703456e+06 q 3.091682e+06 r 9.703456e+06 /Mpc; z_response 75.99254165932112 (mid); geometry r==k,q<r; compute_time 530.85 s; depth 20; total 3.482206e-25; total_abserr/|total| 1.321e-06; total_converged 0; F 3.363e-06
+     top group Gr G-r (sub-interval 1), 228.62 s of the row's 530.63 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         1.44611e-25   1.655e-31  1.144e-06    1    0      5309      5309      10617      15.84 False
+       1  1.67365e+11  5.33254e+10 Gr     G+r       2.72295e-25   8.278e-32  3.040e-07    0    0     24924     24924      49847     181.23  True
+       1  1.67365e+11  5.33254e+10 Gr     G-r      -4.85661e-26   7.243e-32  1.491e-06    0    0     31106     31106      62211     228.62 False
+       2  5.33254e+10  7.59925e+01 Gqr    G+q+r    -2.60491e-26   6.757e-32  2.594e-06    1    0      4642      4638       9291      52.99  True
+       2  5.33254e+10  7.59925e+01 Gqr    G+q-r    -5.72311e-27   2.387e-32  4.170e-06    1    0      1370      1364       2751      15.59 False
+       2  5.33254e+10  7.59925e+01 Gqr    G-q+r     7.35839e-27   2.595e-32  3.526e-06    1    0      1952      1947       3913      22.16  True
+       2  5.33254e+10  7.59925e+01 Gqr    G-q-r     4.29377e-27   2.179e-32  5.075e-06    1    0      1248      1242       2507      14.20 False
+
+   (shard, serial) = (0, 37966); k 3.045496e+07 q 3.091682e+06 r 3.045496e+07 /Mpc; z_response 174.12749067735447 (mid); geometry r==k,q<r; compute_time 199.72 s; depth 20; total -1.121989e-26; total_abserr/|total| 1.822e-05; total_converged 1; F 6.492e-06
+     top group Gr G-r (sub-interval 1), 98.26 s of the row's 199.59 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.25288e+11 G      G        -1.76546e-27   3.592e-32  2.035e-05    1    0        17        17         33       0.04 False
+       1  5.25288e+11  5.33254e+10 Gr     G+r      -1.32066e-26   3.358e-32  2.542e-06    1    0      9498      9498      18995      67.57  True
+       1  5.25288e+11  5.33254e+10 Gr     G-r       3.97530e-27   3.890e-32  9.786e-06    1    0     13719     13716      27443      98.26 False
+       2  5.33254e+10  1.74127e+02 Gqr    G+q+r     3.02441e-28   5.367e-33  1.775e-05    1    0      1127      1121       2265      12.49  True
+       2  5.33254e+10  1.74127e+02 Gqr    G+q-r    -7.66936e-28   4.301e-32  5.608e-05    1    0         1         0          3       0.00 False
+       2  5.33254e+10  1.74127e+02 Gqr    G-q+r    -5.67395e-28   6.874e-33  1.212e-05    1    0      1910      1904       3831      21.22  True
+       2  5.33254e+10  1.74127e+02 Gqr    G-q-r     8.08739e-28   4.078e-32  5.042e-05    1    0         1         0          3       0.00 False
+
+   (shard, serial) = (0, 14050); k 3.045496e+07 q 9.703456e+06 r 3.045496e+07 /Mpc; z_response 43.7226748014895 (mid); geometry r==k,q<r; compute_time 614.78 s; depth 20; total -8.544777e-27; total_abserr/|total| 1.034e-05; total_converged 1; F 1.435e-05
+     top group Gr G-r (sub-interval 1), 221.45 s of the row's 614.54 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.25288e+11 G      G        -7.77113e-27   2.604e-32  3.351e-06    1    0      1963      1963       3925       5.86 False
+       1  5.25288e+11  1.67365e+11 Gr     G+r      -1.76453e-27   4.392e-33  2.489e-06    1    0     29305     29305      58609     211.80  True
+       1  5.25288e+11  1.67365e+11 Gr     G-r      -3.71396e-29   3.476e-33  9.360e-05    1    0     30680     30680      61359     221.45 False
+       2  1.67365e+11  4.37227e+01 Gqr    G+q+r     1.53404e-27   5.689e-33  3.708e-06    1    0     11757     11753      23521     132.59  True
+       2  1.67365e+11  4.37227e+01 Gqr    G+q-r     2.81905e-28   2.555e-32  9.063e-05    1    0         1         0          3       0.00 False
+       2  1.67365e+11  4.37227e+01 Gqr    G-q+r    -5.76487e-28   2.213e-33  3.839e-06    1    0      3810      3805       7629      42.83  True
+       2  1.67365e+11  4.37227e+01 Gqr    G-q-r    -2.11431e-28   2.098e-32  9.922e-05    1    0         1         0          3       0.00 False
+
+== lone G top
+   mid band 100-800 s: 3; low band 100-800 s: 55; all depth-20 rows with this top group: 177
+
+   (shard, serial) = (2, 2088); k 3.091682e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 25.156051502618933 (mid); geometry other; compute_time 127.61 s; depth 20; total 1.364179e-25; total_abserr/|total| 1.850e-06; total_converged 0; F 1.956e-06
+     top group G G (sub-interval 0), 39.99 s of the row's 127.40 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         2.71072e-25   1.615e-31  5.959e-07    0    0     13417     13417      26833      39.99 False
+       1  1.67365e+11  2.51561e+01 Gqr    G+q+r    -1.96861e-26   2.239e-32  1.138e-06    1    0      3332      3328       6671      37.18 False
+       1  1.67365e+11  2.51561e+01 Gqr    G+q-r    -6.47020e-26   2.388e-32  3.691e-07    1    0      1422      1418       2851      15.82 False
+       1  1.67365e+11  2.51561e+01 Gqr    G-q+r    -6.47020e-26   2.388e-32  3.691e-07    1    0      1422      1418       2851      15.88 False
+       1  1.67365e+11  2.51561e+01 Gqr    G-q-r     1.44362e-26   2.072e-32  1.435e-06    1    0      1666      1662       3339      18.54 False
+
+   (shard, serial) = (2, 34728); k 3.091682e+06 q 3.091682e+06 r 3.091682e+06 /Mpc; z_response 25.156051502618933 (mid); geometry q==r==k; compute_time 134.40 s; depth 20; total 4.926275e-24; total_abserr/|total| 4.307e-07; total_converged 0; F 1.956e-06
+     top group G G (sub-interval 0), 42.00 s of the row's 134.09 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G         6.64319e-24   1.204e-30  1.813e-07    0    1     13903     13903      27805      42.00 False
+       1  5.33254e+10  2.51561e+01 Gqr    G+q+r    -1.35393e-24   3.236e-31  2.390e-07    0    0      3563      3560       7131      39.93  True
+       1  5.33254e+10  2.51561e+01 Gqr    G+q-r    -2.40557e-25   2.411e-31  1.002e-06    0    0      1907      1903       3821      21.29  True
+       1  5.33254e+10  2.51561e+01 Gqr    G-q+r    -2.40557e-25   2.411e-31  1.002e-06    0    0      1907      1903       3821      21.27  True
+       1  5.33254e+10  2.51561e+01 Gqr    G-q-r     1.18129e-25   1.118e-31  9.465e-07    0    0       867       862       1743       9.60 False
+
+   (shard, serial) = (3, 14094); k 9.703456e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 14.47365537619991 (mid); geometry q==r==k; compute_time 322.41 s; depth 20; total 1.289857e-25; total_abserr/|total| 3.766e-06; total_converged 0; F 8.145e-06
+     top group G G (sub-interval 0), 129.19 s of the row's 322.04 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         1.64354e-25   4.784e-32  2.911e-07    1    0     42608     42608      85215     129.19 False
+       1  1.67365e+11  1.44737e+01 Gqr    G+q+r    -2.88991e-26   1.331e-32  4.607e-07    1    0     10130     10126      20267     116.92  True
+       1  1.67365e+11  1.44737e+01 Gqr    G+q-r    -4.12713e-27   2.090e-31  5.064e-05    0    1         1         0          3       0.00  True
+       1  1.67365e+11  1.44737e+01 Gqr    G-q+r    -4.12713e-27   2.090e-31  5.064e-05    0    1         1         0          3       0.00  True
+       1  1.67365e+11  1.44737e+01 Gqr    G-q-r     1.78487e-27   6.642e-33  3.721e-06    1    0      6490      6485      12989      75.92 False
+
+== a Gqr group top
+   mid band 100-800 s: 15; low band 100-800 s: 80; all depth-20 rows with this top group: 1260; thinned to 8 spread over k
+
+   (shard, serial) = (2, 34708); k 3.091682e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 14.47365537619991 (mid); geometry other; compute_time 134.14 s; depth 20; total 8.767554e-25; total_abserr/|total| 1.765e-07; total_converged 0; F 2.595e-06
+     top group Gqr G+q+r (sub-interval 1), 36.66 s of the row's 133.93 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         9.36108e-25   1.030e-31  1.101e-07    0    0      3295      3295       6589       9.80 False
+       1  1.67365e+11  1.44737e+01 Gqr    G+q+r    -1.34374e-26   1.478e-32  1.100e-06    1    0      3303      3299       6613      36.66 False
+       1  1.67365e+11  1.44737e+01 Gqr    G+q-r    -2.55868e-26   1.151e-32  4.497e-07    1    0      2729      2725       5465      30.67 False
+       1  1.67365e+11  1.44737e+01 Gqr    G-q+r    -2.55868e-26   1.151e-32  4.497e-07    1    0      2729      2725       5465      30.55 False
+       1  1.67365e+11  1.44737e+01 Gqr    G-q-r     5.25845e-27   1.397e-32  2.656e-06    1    0      2335      2331       4677      26.25 False
+
+   (shard, serial) = (2, 34820); k 3.091682e+06 q 3.091682e+06 r 3.091682e+06 /Mpc; z_response 14.47365537619991 (mid); geometry q==r==k; compute_time 149.83 s; depth 20; total 3.042196e-24; total_abserr/|total| 3.743e-07; total_converged 0; F 2.595e-06
+     top group Gqr G+q+r (sub-interval 1), 75.35 s of the row's 149.49 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G         3.54050e-24   6.830e-31  1.929e-07    0    1     13613     13613      27225      40.80 False
+       1  5.33254e+10  1.44737e+01 Gqr    G+q+r    -4.61000e-25   2.939e-31  6.374e-07    0    0      6742      6739      13489      75.35  True
+       1  5.33254e+10  1.44737e+01 Gqr    G+q-r    -2.05803e-26   4.740e-32  2.303e-06    0    0      1166      1161       2341      13.02  True
+       1  5.33254e+10  1.44737e+01 Gqr    G-q+r    -2.05803e-26   4.740e-32  2.303e-06    0    0      1166      1161       2341      13.07  True
+       1  5.33254e+10  1.44737e+01 Gqr    G-q-r     3.85813e-27   6.711e-32  1.739e-05    0    0       651       645       1313       7.25 False
+
+   (shard, serial) = (2, 2093); k 3.091682e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 10.978578306965865 (mid); geometry other; compute_time 152.46 s; depth 20; total 5.675314e-25; total_abserr/|total| 2.225e-06; total_converged 0; F 2.973e-06
+     top group Gqr G+q+r (sub-interval 1), 57.28 s of the row's 152.25 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         6.38862e-25   7.025e-32  1.100e-07    0    0     12949     12949      25897      38.83 False
+       1  1.67365e+11  1.09786e+01 Gqr    G+q+r    -1.33151e-26   1.212e-32  9.105e-07    1    0      5124      5119      10257      57.28 False
+       1  1.67365e+11  1.09786e+01 Gqr    G+q-r    -3.24961e-26   5.836e-31  1.796e-05    0    1         1         0          3       0.00 False
+       1  1.67365e+11  1.09786e+01 Gqr    G-q+r    -3.24961e-26   5.836e-31  1.796e-05    0    1         1         0          3       0.00 False
+       1  1.67365e+11  1.09786e+01 Gqr    G-q-r     6.97713e-27   1.352e-32  1.938e-06    1    0      4994      4990       9995      56.13 False
+
+   (shard, serial) = (2, 2092); k 3.091682e+06 q 3.091682e+06 r 3.091682e+06 /Mpc; z_response 10.978578306965865 (mid); geometry q==r==k; compute_time 197.72 s; depth 20; total 3.137664e-24; total_abserr/|total| 2.887e-07; total_converged 0; F 2.973e-06
+     top group Gqr G+q+r (sub-interval 1), 72.05 s of the row's 197.38 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.33254e+10 G      G         3.89038e-24   5.154e-31  1.325e-07    0    0      7688      7688      15375      22.84 False
+       1  5.33254e+10  1.09786e+01 Gqr    G+q+r    -6.34851e-25   1.883e-31  2.966e-07    0    0      6448      6444      12903      72.05  True
+       1  5.33254e+10  1.09786e+01 Gqr    G+q-r    -7.56022e-26   6.901e-32  9.128e-07    0    0      2860      2855       5729      32.35  True
+       1  5.33254e+10  1.09786e+01 Gqr    G-q+r    -7.56022e-26   6.901e-32  9.128e-07    0    0      2860      2855       5729      32.04  True
+       1  5.33254e+10  1.09786e+01 Gqr    G-q-r     3.33367e-26   6.415e-32  1.924e-06    0    0      3391      3386       6791      38.09 False
+
+   (shard, serial) = (3, 37358); k 9.703456e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 100.1850903081552 (mid); geometry q==r==k; compute_time 142.11 s; depth 20; total 8.552170e-25; total_abserr/|total| 3.000e-07; total_converged 1; F 2.870e-06
+     top group Gqr G+q+r (sub-interval 1), 51.61 s of the row's 141.76 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         1.08371e-24   1.612e-31  1.488e-07    1    0     10072     10072      20143      30.53 False
+       1  1.67365e+11  1.00185e+02 Gqr    G+q+r    -1.87625e-25   5.267e-32  2.807e-07    1    0      4624      4621       9253      51.61  True
+       1  1.67365e+11  1.00185e+02 Gqr    G+q-r    -2.59996e-26   1.274e-32  4.899e-07    1    0      1886      1881       3781      21.11  True
+       1  1.67365e+11  1.00185e+02 Gqr    G-q+r    -2.59996e-26   1.274e-32  4.899e-07    1    0      1886      1881       3781      21.05  True
+       1  1.67365e+11  1.00185e+02 Gqr    G-q-r     1.11311e-26   1.718e-32  1.543e-06    1    0      1564      1559       3137      17.46 False
+
+   (shard, serial) = (3, 34804); k 9.703456e+06 q 3.045496e+07 r 3.045496e+07 /Mpc; z_response 14.47365537619991 (mid); geometry other; compute_time 153.71 s; depth 20; total 1.688202e-26; total_abserr/|total| 4.987e-07; total_converged 1; F 8.145e-06
+     top group Gqr G+q+r (sub-interval 1), 40.39 s of the row's 153.52 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  5.25288e+11 G      G         1.99997e-26   4.247e-33  2.123e-07    1    0      2033      2033       4065       6.09 False
+       1  5.25288e+11  1.44737e+01 Gqr    G+q+r    -5.85147e-28   1.020e-33  1.743e-06    1    0      3608      3604       7223      40.39 False
+       1  5.25288e+11  1.44737e+01 Gqr    G+q-r    -1.44712e-27   1.146e-33  7.916e-07    1    0      3067      3063       6141      34.38 False
+       1  5.25288e+11  1.44737e+01 Gqr    G-q+r    -1.44712e-27   1.146e-33  7.916e-07    1    0      3067      3063       6141      34.62 False
+       1  5.25288e+11  1.44737e+01 Gqr    G-q-r     3.61740e-28   8.617e-34  2.382e-06    1    0      3376      3371       6761      38.04 False
+
+   (shard, serial) = (3, 13807); k 9.703456e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 25.156051502618933 (mid); geometry q==r==k; compute_time 274.98 s; depth 20; total 2.240054e-25; total_abserr/|total| 2.777e-06; total_converged 0; F 6.140e-06
+     top group Gqr G+q+r (sub-interval 1), 140.71 s of the row's 274.61 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G         2.80899e-25   6.144e-32  2.187e-07    1    0     27909     27909      55817      84.05 False
+       1  1.67365e+11  2.51561e+01 Gqr    G+q+r    -4.71853e-26   2.292e-32  4.857e-07    1    0     12552     12549      25109     140.71  True
+       1  1.67365e+11  2.51561e+01 Gqr    G+q-r    -6.13904e-27   2.652e-31  4.320e-05    0    1         1         0          3       0.00  True
+       1  1.67365e+11  2.51561e+01 Gqr    G-q+r    -6.13904e-27   2.652e-31  4.320e-05    0    1         1         0          3       0.00  True
+       1  1.67365e+11  2.51561e+01 Gqr    G-q-r     2.56973e-27   7.263e-33  2.827e-06    1    0      4414      4409       8837      49.84 False
+
+   (shard, serial) = (3, 13834); k 9.703456e+06 q 9.703456e+06 r 9.703456e+06 /Mpc; z_response 19.081405086493035 (mid); geometry q==r==k; compute_time 291.30 s; depth 20; total -7.780027e-26; total_abserr/|total| 8.441e-06; total_converged 0; F 7.083e-06
+     top group Gqr G+q+r (sub-interval 1), 215.04 s of the row's 290.93 s Levin elapsed
+     sub        z_max        z_min regime label           value      abserr        e_g conv plim   regions    simple      evals  elapsed s  canc
+       0  1.63911e+16  1.67365e+11 G      G        -1.12487e-25   4.305e-32  3.827e-07    1    0     24959     24959      49917      75.89 False
+       1  1.67365e+11  1.90814e+01 Gqr    G+q+r     2.62664e-26   2.516e-32  9.577e-07    1    0     19161     19158      38327     215.04  True
+       1  1.67365e+11  1.90814e+01 Gqr    G+q-r     5.51387e-27   2.353e-31  4.267e-05    0    0         1         0          3       0.00  True
+       1  1.67365e+11  1.90814e+01 Gqr    G-q+r     5.51387e-27   2.353e-31  4.267e-05    0    0         1         0          3       0.00  True
+       1  1.67365e+11  1.90814e+01 Gqr    G-q-r    -2.60704e-27   1.180e-31  4.526e-05    0    1         1         0          3       0.00 False

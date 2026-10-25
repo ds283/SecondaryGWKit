@@ -367,6 +367,20 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   So the campaign carries a second hypothesis beside this one: $G$'s own remainder carries the floor
   into every group containing $G$.
 
+  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01**, a census of every per-group record in
+  A3 v2:
+  - **The floor is not confined to cancelling groups.** 43.9 % of the depth-20 Levin time is on
+    groups with no cancelling pair ($S = 0.4385$).
+  - **Both classes track $\varepsilon k\eta_R$.** Cancelling groups have a slope of 0.968 and a
+    median $e_g/F$ of 2.12; the rest have 0.822 and 1.49.
+  - **So H-cancel fails as the whole account, and H-anchor holds** (P1–P2).
+  - **The "slow group" above does not cancel exactly** (that campaign's
+    `[01-slow-group-leading-terms-do-not-cancel]`). $G$'s phase runs at $k/H$ and $T$'s at
+    $c_s k/H$, so on `r == k` the slow group `G+r` is about 3.7 times slower than `G-r`, not
+    stationary. The "cancel identically" of the second bullet above is overstated.
+
+  The cost still sits where the floor exceeds `rtol`. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -419,6 +433,15 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `total_converged` should mean, and whether a consumer gate reads `total_abserr/|total|`, is that
   campaign's layer 3, decided by the user at its gate G2 (its README §6.3 Q4). Its prompt 01
   re-counts §2.5's figures on the store, at group level too. This entry stays here.
+
+  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01.** §2.5's counts reproduce exactly:
+  1086 / 257 / 132, largest 5.03e-2. The census also found:
+  - **At group level**, 2541 of the depth-20 rows' converged group records declare $e_g > 10^{-6}$.
+  - **558 rows store `total_abserr = +inf`**, not five, and all are unconverged. A gate on
+    `total_abserr/|total|` would reject all of them, which may or may not be right (`levin-refactor`
+    `[04-roundoff-floor-can-be-infinite]`).
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation

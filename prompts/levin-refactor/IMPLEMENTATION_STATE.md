@@ -2,8 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-10-25 — `[04-roundoff-floor-can-be-infinite]` narrowed by an analysis of
-the `handover` A3 v2 store (§3). Previously 2026-09-04 — prompt 10 (test matrix and campaign verification) complete with
+**Last updated:** 2026-10-25 — `[04-roundoff-floor-can-be-infinite]` narrowed twice: by an analysis
+of the `handover` A3 v2 store, then by `levin-phase-floor` 01 (558 rows, §3). Previously 2026-09-04 — prompt 10 (test matrix and campaign verification) complete with
 deviations. **The campaign is complete: 10 of 10 prompts landed.**
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
@@ -145,6 +145,18 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   - `total_abserr` is the linear sum this entry warns about, and it is persisted.
   - Not confirmed against the store.
   - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.5.
+
+  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01: confirmed on the store, and far wider.**
+  - **558 of A3 v2's 9280 rows** store `total_abserr = +inf`: SQLite `Inf`, JSON `Infinity`.
+    5 are at depth 20 and 553 at depth 1–19. By band: 392 seam, 44 mid, 122 low. All are
+    unconverged.
+  - **803 group records** carry `abserr = inf`, each with a finite non-zero `value`. 631 of them
+    have one region.
+    - 392 are `qr`/`q−r` records on $q = r$, where the $q-r$ phase is identically zero.
+    - 411 are `Gqr` records, mostly on $q = r$.
+  - **The cause is not established.** One candidate is `_roundoff_floor` with $\theta' = 0$.
+    Reading one record of each kind in process would settle it.
+  - [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.7.
 - **[04-theta-abserr-cc-branch-proxy]** *(opened by prompt 04, 2026-09-04)* — the declared-
   `theta_abserr` endpoint term (recommendation 5.2) is exact per-endpoint on a Levin region (true
   `p_endpoint_l1` split by side) but an even 50/50 split of a lumped `f_scale * width` proxy on a

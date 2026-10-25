@@ -1,0 +1,57 @@
+# hash_store.sh, run 2026-10-25T18:14:05Z on mps026298.phys.susx.ac.uk; script sha256 d44be915fde113142ac478288b7d970dfa0b8bb5d66a3ef02968570fba773f5a
+# sha256  size_bytes  mtime(UTC, stat -f %Sm)  path
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522    File: var/datastores/handover-A3-v2-lambdacdm.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30637538   Available: 30637538
+Inodes: Total: 1232162623 Free: 1225501520  var/datastores/handover-A3-v2-lambdacdm.sqlite 100000d0000001a ? 1a 4096 4096 242837545 30637260 30637260 1232151504 1225490400  var/datastores/handover-A3-v2-lambdacdm.sqlite
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5    File: var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30638236   Available: 30638236
+Inodes: Total: 1232190542 Free: 1225529440  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite 100000d0000001a ? 1a 4096 4096 242837545 30637766 30637766 1232171743 1225510640  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e    File: var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30638790   Available: 30638790
+Inodes: Total: 1232212701 Free: 1225551600  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite 100000d0000001a ? 1a 4096 4096 242837545 30638489 30638489 1232200661 1225539560  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6    File: var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30636504   Available: 30636504
+Inodes: Total: 1232121265 Free: 1225460160  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite 100000d0000001a ? 1a 4096 4096 242837545 30636145 30636145 1232106906 1225445800  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1    File: var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30639002   Available: 30639002
+Inodes: Total: 1232221178 Free: 1225560080  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite 100000d0000001a ? 1a 4096 4096 242837545 30639032 30639032 1232222378 1225561280  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+stat: cannot read file system information for '%z': No such file or directory
+stat: cannot read file system information for '%Sm': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6    File: var/datastores/handover-A3-v2-lambdacdm.manifest.json
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 30639030   Available: 30639030
+Inodes: Total: 1232222298 Free: 1225561200  var/datastores/handover-A3-v2-lambdacdm.manifest.json 100000d0000001a ? 1a 4096 4096 242837545 30639030 30639030 1232222298 1225561200  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+# other files matching the store's name (wal/shm/journal would show here):
+-rw-r--r--  1 ds283 staff 106340352 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0000.sqlite
+-rw-r--r--  1 ds283 staff 107569152 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0001.sqlite
+-rw-r--r--  1 ds283 staff 107429888 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0002.sqlite
+-rw-r--r--  1 ds283 staff 105791488 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     10519 Oct 25 00:34 handover-A3-v2-lambdacdm.manifest.json
+-rw-r--r--  1 ds283 staff     36864 Oct 22 21:12 handover-A3-v2-lambdacdm.sqlite

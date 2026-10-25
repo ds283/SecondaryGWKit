@@ -1,0 +1,46 @@
+# recon_check.py sha256 f168f7ed0027e98e8ead20b39c62a67fbf29603890b3fbfe482f3f7ce37ee851
+# input var/levin-phase-floor-01/out/groups_01.csv sha256 a8eacc91e1bef0be91c0dec596369b664ff366b8c9a97080edec4b1fbbb186d2
+# git HEAD 757ef016fc37be996c342d162c05f17b3c430e4d
+store handover-A3-v2-lambdacdm; depth-20 rows with compute_time > 100 s: 629
+sum of their compute_time: 282.93 CPU-hr
+sum of per-group Levin elapsed: 282.88 CPU-hr
+
+per-group Levin elapsed, summed over the population: (regime, group) CPU-hr share regions
+   ('Gr', 'G+r')            149.02   52.7%   71,528,183
+   ('Gr', 'G-r')             94.68   33.5%   45,184,170
+   ('G', 'G')                17.70    6.3%   20,069,867
+   ('Gqr', 'G+q+r')           9.87    3.5%    3,065,331
+   ('Gqr', 'G-q+r')           4.60    1.6%    1,427,554
+   ('Gqr', 'G-q-r')           3.73    1.3%    1,153,074
+   ('Gqr', 'G+q-r')           3.27    1.2%    1,015,397
+
+the most expensive group of each row: (geometry, (regime, group)) rows
+   ('r==k', ('Gr', 'G+r'))                367
+   ('r==k', ('Gr', 'G-r'))                 90
+   ('r==k', ('Gqr', 'G+q+r'))              42
+   ('r==k', ('G', 'G'))                    35
+   ('r!=k', ('G', 'G'))                    27
+   ('r!=k', ('Gqr', 'G+q-r'))              19
+   ('r!=k', ('Gqr', 'G+q+r'))              19
+   ('r!=k', ('Gqr', 'G-q-r'))              16
+   ('r!=k', ('Gqr', 'G-q+r'))              13
+   ('r==k', ('Gqr', 'G-q-r'))               1
+
+per-group Levin elapsed by z_response band: (band, (regime, group)) CPU-hr
+   ('low', ('Gr', 'G+r'))                 129.69
+   ('low', ('Gr', 'G-r'))                  82.68
+   ('low', ('G', 'G'))                     16.30
+   ('low', ('Gqr', 'G+q+r'))                8.56
+   ('low', ('Gqr', 'G-q+r'))                4.10
+   ('low', ('Gqr', 'G-q-r'))                3.44
+   ('low', ('Gqr', 'G+q-r'))                3.11
+   ('mid', ('Gr', 'G+r'))                  19.33
+   ('mid', ('Gr', 'G-r'))                  11.99
+   ('mid', ('G', 'G'))                      1.40
+   ('mid', ('Gqr', 'G+q+r'))                1.32
+   ('mid', ('Gqr', 'G-q+r'))                0.49
+   ('mid', ('Gqr', 'G-q-r'))                0.29
+   ('mid', ('Gqr', 'G+q-r'))                0.16
+
+README 0.2 families: G+r: 52.7%; G-r: 33.5%; Gqr (four groups): 7.6%; G: 6.3%
+low band share of CPU-hr: 247.88 of 282.88

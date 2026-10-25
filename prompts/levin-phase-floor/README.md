@@ -78,12 +78,15 @@ The most expensive group of each row:
 - the lone `G` in 62 (35 of them `r == k`);
 - a `Gqr` group in the remaining 110.
 
-Most of the cost is in the low band: 229.7 of the 282.9 CPU-hours.
+Most of the cost is in the low band: 229.7 of the 282.9 CPU-hours. *(Corrected 2026-10-25: 247.9, by prompt 01's re-derivation, its I3. The 229.7 was an arithmetic slip in writing this plan; the recon output was right.)*
 
 **Which label is the slow group.** In the code's conventions $\theta_G$ decreases with $z'$ while
 $\theta_q$ and $\theta_r$ increase (`source-remediation` log 07, note 4). So the slowly varying
 group is the one where $G$ and a transfer factor carry the **same** sign. On `r == k` that is
 `G+r`, where the $\tau_s$ terms of $G$ and $T_r$ cancel. `G-r` is the fast group, at about $2k$.
+*(Corrected 2026-10-25 by prompt 01, its I1: they cancel only in part. $T$'s phase runs on the sound
+horizon, at $c_s k/H$, so `G+r` oscillates at about $(1-c_s)k/H$ and `G-r` at $(1+c_s)k/H$.
+`[01-slow-group-leading-terms-do-not-cancel]`.)*
 That note also warns to check `theta_deriv` rather than assume this. 01 checks it in the code, and
 03 checks it numerically.
 

@@ -1,0 +1,8 @@
+# eta_check.py sha256 8dc32e00f60b99dcac8ad3b6232e1a14cfdd4f1d9049c10da33ee89c3a3cf680
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-01/scripts/eta_check.py", line 9, in <module>
+    Fneg = sum(1 for r in csv.DictReader(body) if float(r["F"]) <= 0)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-01/scripts/eta_check.py", line 9, in <genexpr>
+    Fneg = sum(1 for r in csv.DictReader(body) if float(r["F"]) <= 0)
+                                                  ~~~~~^^^^^^^^
+ValueError: could not convert string to float: 'np.float64(3.2896344760967117e-08)'
