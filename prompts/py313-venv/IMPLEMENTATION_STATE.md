@@ -48,7 +48,11 @@ The orchestrator's choices of method, C1–C7, are in README §6.2.
 
 The review of 02 closes the campaign (README §2).
 
-**Orchestrator notes** are written just before dispatch, under `orchestrator/`.
+**Orchestrator notes** are written just before dispatch, under `orchestrator/`:
+[`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-25, for 01). The planning commit
+is `1fd1c36`. The commit that adds the note also corrects prompt 01's §2.10 and §4. The plan had
+R6's manifests at `git_dirty: false`, which cannot hold while the prompt's edits are uncommitted.
+The stop is now a dirty `.py` file.
 
 ### 1.1 Items
 

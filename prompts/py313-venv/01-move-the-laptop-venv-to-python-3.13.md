@@ -164,8 +164,11 @@ decides. Whatever happens, record how long the GCS server took to go, beside R3'
 
 **2.10 What to verify.** R3's §3, L1–L4, on R6's three stores and six runs, with the substitutions
 above. In particular:
-- every manifest's `git_dirty` is `false`, its `git_head` is the dispatch `HEAD`, and its
-  `packages` and `host.python` are as above;
+- every manifest's `git_head` is the dispatch `HEAD`, and its `packages` and `host.python` are as
+  above. Its `git_dirty` is `true`: the pin edits, `runregistrykit.toml` and the records are
+  uncommitted until the prompt's one commit, as in `rpk-v030-adoption` 01 and `handover` 09. No
+  `.py` file is among the dirty paths. Record `git status --short` at each launch to show it;
+  *corrected 2026-10-25 before dispatch, where the plan had `false`*;
 - **every store is format 6, `39809dca…`, 21 classes, `encoding_format` 1**, equal to its sidecar;
 - `compare_with_recorded.py` on each primary against R3's `reference` and `resumed-c` run
   directories: every comparison empty;
@@ -216,7 +219,8 @@ single line saying so.
 - **An R6 store's fingerprint differs from `39809dca…`.** Record both fingerprints and
   `compare_fingerprints`, change nothing and relaunch nothing. The bisection of README §4.3 is the
   user's call.
-- A manifest's `packages` or `host.python` is not as §2.8 says, or a `git_dirty` is `true`.
+- A manifest's `packages` or `host.python` is not as §2.8 says, or a `.py` file is dirty at a
+  launch.
 - **The lock does not list the running instance**, `acquire` exits 3 or 4, or `release` refuses.
   Anything that suggests a defect in `raypoolkit`, `datastorekit` or `runregistrykit` is recorded
   on the board and in `docs/OPEN_ISSUES.md`, and not worked around here.
