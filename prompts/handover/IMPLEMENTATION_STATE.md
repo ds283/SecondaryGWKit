@@ -539,7 +539,12 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   that the Mac Studio's venv is Python 3.12 from this branch's pins (prompt 06 §0.2). It is a
   `ray` pin move with its own rehearsal, which `CLAUDE.md` keeps as this repository's to make.
   **Next step:** the user's — "we should move this checkout onto it at some point soon"
-  (2026-10-22); not before A3 v2 has ended. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+  (2026-10-22); not before A3 v2 has ended. Indexed at `docs/OPEN_ISSUES.md` §1.23.
+
+  **Assigned (2026-10-25):** to [`py313-venv`](../py313-venv/README.md), planned the same day
+  after A3 v2 and prompt 10, on the user's decision to move both hosts before the queued analysis
+  jobs. It moves both venvs to Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, rehearsed
+  on each host (R6, R7). Its prompt 01 closes this entry.
 
 - **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
   on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its

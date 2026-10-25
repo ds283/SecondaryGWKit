@@ -37,6 +37,7 @@ the two disagree, the board is right.
 [`dk-and-rpk-migration`](../prompts/dk-and-rpk-migration/IMPLEMENTATION_STATE.md) ·
 [`runregistry-extraction`](../prompts/runregistry-extraction/IMPLEMENTATION_STATE.md) ·
 [`rrk-v020-adoption`](../prompts/rrk-v020-adoption/IMPLEMENTATION_STATE.md) ·
+[`py313-venv`](../prompts/py313-venv/IMPLEMENTATION_STATE.md) ·
 [`perturbation-sound-speed`](../prompts/perturbation-sound-speed/AUDIT.md) (audit only; no board yet)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
@@ -130,7 +131,6 @@ for.
 | `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
 | `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
 | `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]` | rrk-v020-adoption | After a `SIGKILL` of a build's driver, Ray's GCS server is left reparented to pid 1, stuck in its own shutdown (`GcsServer::Stop()` waiting in gRPC's `Shutdown`), and does not exit; a `SIGTERM` cannot end it, a `SIGKILL` does. **Measured 2026-10-18/19** at R3's `hardkill-a`: alive 20 m 50 s, until a `SIGKILL` on the user's ruling. Bears on A3 v2's route after a hard kill: after `end`, check `ray-processes`. **Narrowed 2026-10-19** by prompt 04: what A3 v2 inherits is stated (`CLAUDE.md` rule 5, verification §3.5); what remains is the cause and any fix, which are Ray's or the launcher's. **Assigned 2026-10-19 to `handover`** by the user, which owns the A3 v2 launcher; not yet scheduled. |
-| `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` | handover | `origin/main` has `9678f28` (Mac Studio, 2026-10-06): Python 3.13 and `ray` 2.45.0, which this branch lacks; it stays on 3.12 and `ray==2.43.0`, as every rehearsal ran. A merge conflicts at `requirements.txt:75`. No impact on A3 v2, whose venv is 3.12 by the user's decision (2026-10-22); the move is a `ray` pin change with its own rehearsal, after A3 v2. Not assigned. |
 | `[09-two-readers-plot-the-radiation-form-under-the-w-label]` | handover | `extract_GkSource_data.py` and `extract_QuadSourceIntegral_data.py` draw the radiation form twice, once under the label "$w=w(z)$"; `GkSource` stores no `analytic_G_w` column, so the $w(z)$ form is not available to them from a store. Not assigned. |
 | `[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]` | handover | `extract_Gk_data.py:294` writes `value.z`, a `redshift` object, into its CSV column `z_response`, so every cell is an object repr and the CSVs cannot be read back against $z$; the other readers write `value.z.z`. Not assigned. |
 | `[10-the-readers-draw-their-work-lists-unseeded]` | handover | Every `extract_*` reader draws its `k`/`z_source` subsample with an unseeded `random.sample` (GkWKB: 174 of ~1740 source redshifts), so outputs differ run to run, a check naming a pair passes only if the draw includes it (prompt 10's held at ~1 in 10), and a "complete" read-back covers the sample, not the store. Not assigned. |
@@ -942,6 +942,17 @@ on this campaign's board, when Ray's GCS server outlived the `SIGKILL`ed rehears
 what remains is the cause and any fix. The user assigned it to `handover` the same day, after the
 close, and its row is in §1.1; the entry stays on this campaign's board. **No row remains in this
 section.**
+
+### 1.23 The py313-venv campaign
+
+`prompts/py313-venv` was planned on 2026-10-25 to move the venv on the laptop and the Mac Studio
+from Python 3.12.15 to 3.13.16, with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, before the analysis
+jobs queued behind `handover` 10 ([board](../prompts/py313-venv/IMPLEMENTATION_STATE.md)). Its
+plan opened no issue. It was assigned one from `handover`, whose entry stays on that board.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[a3-v2-origin-main-moved-to-python-3.13-without-this-branch]` | handover | `origin/main` has `9678f28` (Mac Studio, 2026-10-06): Python 3.13 and `ray` 2.45.0, which this branch lacks; it stays on 3.12 and `ray==2.43.0`, as every rehearsal ran. A merge conflicts at `requirements.txt:75`. **Assigned 2026-10-25 to `py313-venv`**, whose prompt 01 moves this branch to 3.13.16 with `ray` 2.59.0 and closes it. |
 
 ---
 
