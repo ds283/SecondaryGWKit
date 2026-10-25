@@ -359,5 +359,11 @@ The laptop orchestrator closed the campaign after checking 02's records against 
 - the readers' output in `var/py313-venv-01/extract/` (laptop) and `var/py313-venv-02/` (Mac
   Studio).
 
+**The rehearsals' reader output was deleted on 2026-10-25, on the user's decision:** R6's
+`var/py313-venv-01/extract/` on the laptop (211 MB) and R7's `var/py313-venv-02/extract-r7/` on the
+Mac Studio (204 MB). The readers' summaries stay in `measure/out/`. **A3 v2's reader output under
+3.13**, `var/py313-venv-02/extract/` on the Mac Studio (890 MB), **is kept** for the queued
+analysis, also on the user's decision.
+
 **Handed on:** both hosts are ready for the queued analysis jobs on the new venv.
 
