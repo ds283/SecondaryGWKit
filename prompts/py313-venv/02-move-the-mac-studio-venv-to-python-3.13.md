@@ -180,3 +180,31 @@ the log to `logs/02-move-the-mac-studio-venv-to-python-3.13.md`, and `verificati
 `docs/py313-venv-verification.md` §2. It reviews them, updates this board and
 `docs/OPEN_ISSUES.md`, and makes **one commit** in `CLAUDE.md`'s form. The reader output,
 `extract/`, stays on the Mac Studio.
+
+## 7. The resume after R7's first launch (added 2026-10-25)
+
+The first dispatch, at `aac52bc`, stopped at step 8. R7's `reference`
+(`py313-venv-02-reference-20261025T163202`) failed at its first `ray.init`:
+`d833ee7` set `RAY_AUTH_MODE` after `import ray`. That is board §4
+`[02-the-token-mode-setting-comes-after-import-ray-so-every-ray-start-fails]`, fixed in `14ada2f`.
+Steps 1–6 stand as the first dispatch made them: the venv, its freeze, the token at mode 600, the
+roots and A3 v2's "before" state. The lock was released at 16:36:46. No R7 store exists.
+
+**The resume, from the resume SHA (the commit that adds this section, or later, pushed):**
+1. `git fetch origin && git merge --ff-only origin/handover-remedial`, with `git status --short`
+   empty. The Gate's `git diff --stat` still shows `config/ray_local.py`, `main.py` and the one
+   `ObjectFactories` test, and nothing else.
+2. **The RunDrivers root**, the one root the fix touches, is run again into `out/roots_02.txt`.
+   It must be **127**, all OK. The other six stand at step 5's counts.
+3. **A3 v2's files** are checked against `state/store_files_before.txt` once more. They must be
+   unchanged.
+4. **Steps 7–11**, as written, with these changes:
+   - **The failed run stays as it is.** It is a record: its run directory, and its launch log
+     `var/runs/py313-venv-02-reference.launch.log`. The resumed launches write their launch logs to
+     `var/runs/py313-venv-02-<slug>-resume.launch.log`. Their run ids differ by their timestamps.
+   - **Step 8's environment check** names the **`gcs_server`'s** pid, not the driver's. On macOS
+     `ps -E` shows a process's environment as it was at `exec`. The driver sets the variable after
+     it starts, but the GCS server is started after that, so it shows it.
+   - **Step 8 adds a fifth token check:** no R7 log holds `InvalidAuthToken` or
+     `AuthenticationError`.
+   - The `Generated new authentication token` check stands: step 4 made the token.
