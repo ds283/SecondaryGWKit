@@ -265,7 +265,8 @@ Recorded in [`issues.md`](../../../docs/levin-phase-floor/03/issues.md) for the 
 [`docs/levin-phase-floor/03/review.md`](../../../docs/levin-phase-floor/03/review.md). It wrote no
 code, repaired nothing and ran no git command that writes.
 
-Three checks pass on a reading the user is asked to confirm:
+Three checks pass on a reading the user was asked to confirm. **Confirmed by the user, 2026-10-25:**
+the three readings are fine and affect nothing significant.
 - **Check 5 (M0): `elapsed` is not gated.** It is each group record's wall-clock time, which no
   re-run reproduces. The agent said so before the launch (deviation 6). All 45 values differ; the
   re-run took 0.76–0.96 of the stored time. Every other field is gated and bit-equal.
