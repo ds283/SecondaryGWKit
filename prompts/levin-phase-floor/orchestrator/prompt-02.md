@@ -151,3 +151,44 @@ leaves for 03.
 
 Relay verbatim; do not adjudicate. The prompt's §5 conditions, or any failed check in §3: report
 it, do not repair it.
+
+## 6. What happened (2026-10-25)
+
+**The user's decisions, in order:**
+1. **A projection anywhere near 24 hours runs on the Mac Studio**, not the laptop: it is faster,
+   has more memory, and does not sleep or move. It became moot.
+2. **Stop the probe.** The agent made the probe a registered run of its own
+   (`levin-phase-floor-02-noise-probe-20261025T183809`), because one noised cell had already run
+   more than nine minutes in a scratch test. Its first noised cell, `exact`/`together`/980 at white
+   δ = 1e-5, ran ~69 minutes without finishing. Noise that does not shrink with region width
+   defeats the driver's per-region relative test at every depth once it exceeds `rtol`, so each
+   Levin call bisects the full depth-20 tree, and the sweep would have taken weeks on either
+   machine. SIGTERM at 19:47:59Z; the registry records it `killed`, exit 143, 16/19 units.
+3. **02 is superseded by 03** (`d5f5a2b`), which measured the mechanism on A3 v2's rows directly.
+   N1 and N3 are answered there; N4 moves to 04; N2's original form is not tested, which the user
+   judged does not matter.
+
+**The review of the records commit `87813ed`.** The §3 checks were written for a completed sweep;
+those that apply to a stopped one were run, and pass:
+- **Scope:** ten paths, all under `docs/levin-phase-floor/` and this campaign's log and board.
+  `docs/OPEN_ISSUES.md`, the `handover` board and `realistic_large_x.py` unchanged. The one edit to
+  `VERIFICATION.md` outside §2 replaces 01's "§2 is reserved" placeholder (the log's deviation 8).
+- **The construction, read:** noise on `theta_mod_2pi` only, by `dataclasses.replace`; white $\xi$
+  from blake2b of `label + pack('<d', x)`; `rtol` imported, `atol = 1e-45`; wrappers restored in
+  `finally`.
+- **Step 2, re-checked here** from the run's own ledger before the commit: on all eight cases the
+  wrapped and unwrapped δ = 0 cells agree in every scalar field and every group record, `elapsed`
+  excepted. No δ = 0 cell came near the cap (depth 0–2 exact, 6–8 realistic). The δ = 1e-4 check
+  never ran.
+- **Provenance:** the committed script hashes to `6ddaaeca…`, the hash all 16 ledger records carry;
+  `black --check` clean. The five files in `02/state/` are byte-identical to the run directory's.
+- **The records:** the log has §5.1's headings, prompt §4 verbatim (checked by substring), N1–N4
+  each "not scored" with where it now stands, and every deviation classified. The board's 02 row
+  and status line are updated. The commit message follows `CLAUDE.md`'s form.
+- **Not applicable:** coverage and the re-scoring of N1–N4 (no sweep), and `--report`
+  reproduction (the probe report was written from the copied ledger).
+
+**Residue, in the orchestrator's follow-up commit:** `87813ed` into the board and the log; the
+board's legend gains ⛔, and H-anchor's "Scored by" drops 02 N3; README §2 marks 02 superseded and
+gives 04 N4; README §6.3 gains **Q5**, whether `rtol = 1e-7` is right for accuracy, at the user's
+request.

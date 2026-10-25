@@ -150,12 +150,12 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | # | Prompt | Covers | Where | Model | Status |
 |---|---|---|---|---|---|
 | 01 | [`01-phase-group-census.md`](01-phase-group-census.md) | every group record in A3 v2: cost, regions and declared error per group against $\varepsilon k\eta_R$; H-cancel against H-anchor on the store; findings §2.5 confirmed on the store; the candidate rows for 03 | Mac Studio, read-only, no Ray | Opus | written |
-| 02 | [`02-phase-noise-injection.md`](02-phase-noise-injection.md) | findings §2.6 item 2: deterministic phase noise of amplitude $\delta$ added to the composed `theta_mod_2pi` on A2's fixtures, by group; depth and regions against $\delta$ | laptop, offline, no Ray, no store | Opus | written |
+| 02 | [`02-phase-noise-injection.md`](02-phase-noise-injection.md) | findings §2.6 item 2: deterministic phase noise of amplitude $\delta$ added to the composed `theta_mod_2pi` on A2's fixtures, by group; depth and regions against $\delta$ | laptop, offline, no Ray, no store | Opus | ⛔ stopped at step 3 and superseded by 03 (user, 2026-10-25); N4 moves to 04 |
 | 03 | [`03-instrument-depth-20-rows.md`](03-instrument-depth-20-rows.md) | findings §2.6 item 1: seven A3 v2 rows from 01's list, re-run in-process and bit-identical to the store; depth per group, the jitter, and the discrepancy along a region's ancestry against the floor, with a jitter-removed control | Mac Studio, reads A3 v2 | Opus | written 2026-10-25, after 01 |
-| 04 | remove | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows | Mac Studio, reads A3 v2 | — | ⏸ held on 03 |
+| 04 | remove | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows; and, from 02's N4, whether each row's stored `total_abserr` covers $|{\rm total} - {\rm total}_{\rm jitter\ removed}|$ | Mac Studio, reads A3 v2 | — | ⏸ held on 03 |
 | **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | ⬜ |
 | 05+ | remedy | §2.7 layers 1–2 as G1 decides, each with its own tests and an offline re-measurement of 03's rows | laptop | — | ⬜ not written |
-| **G2** | gate | the user decides layer 3 (§6.3 Q4) | — | — | ⬜ |
+| **G2** | gate | the user decides layer 3 (§6.3 Q4) and the `rtol` question (Q5) | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
 anything still to be measured: 01 reads what is stored, and 02 runs on fixtures. 03's rows and the
@@ -165,6 +165,15 @@ standing. Each held prompt's charter is fixed in the table above. Only its metho
 **01 and 02 can run at the same time.** 01 runs on the Mac Studio and 02 on the laptop. Neither
 uses Ray (§5 rule 6), so neither takes a lock, and ChamPBH or StochasticInstantons holding the
 laptop's lock does not block 02.
+
+**02 was stopped and superseded (user, 2026-10-25).** Its first noised probe cell ran ~69 minutes
+without finishing. Phase noise whose size does not shrink with region width defeats the driver's
+per-region relative test at every depth once it exceeds `rtol`, so every Levin call bisects the
+full depth-20 tree, and the sweep would have taken weeks. 03 then measured the mechanism on A3 v2's
+own rows, removing the jitter and nothing else. That answers N1 and N3 more directly than injection
+on fixtures could. N4, whether the declared error covers the true one, moves to 04, where the
+jitter-removed re-run gives each real row a reference `total`. N2's original form is not tested;
+the user judged that it does not matter. The records are 02's log and `VERIFICATION.md` §2.
 
 ## 3. Datastores
 
@@ -299,6 +308,16 @@ These are the orchestrator's choices, and the user can reverse any of them.
   - the per-region acceptance test and its dead length-share `local_atol` branch;
   - what `total_converged` means, and whether a consumer gate reads `total_abserr/|total|`
     (findings §2.5).
+- **Q5 (G2): whether `rtol = 1e-7` is right for accuracy.** Added 2026-10-25 at the user's request.
+  - `a3-v2-readiness` prompt 01 (D1, D2) moved `DEFAULT_QUADRATURE_RTOL` from `1e-8` to `1e-7` as
+    the loosest rung the 2026-09 tolerance sweep found self-converged, partly on cost.
+  - A3 v2 removed the cost case: at `1e-7`, 2265 rows still reach depth 20 and carry 285.8 of the
+    store's 286.3 CPU-hours (findings §1).
+  - What stays open is the accuracy lost against `1e-8`. The sweep measured it at 1.9e-6 (mid band),
+    2.84e-6 (low) and 8.3e-7 (seam), on 25 work items only. On depth-20 rows, where the floor exceeds
+    both rungs, it is unmeasured.
+  - 04 re-runs real A3 v2 rows anyway; running them at both rungs would measure it there.
+  - Cost is not an argument either way (§5 rule 4).
 
 ## 7. Baselines
 

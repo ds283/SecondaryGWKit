@@ -4,7 +4,7 @@
 from the dispatch SHA `3f75bbf`, with no Ray, no lock and no store. **It stopped at step 3**, and
 the user decided on 2026-10-25 that it is superseded by prompt 03.
 
-**Commit:** this one, the records commit for prompt 02, made on the laptop.
+**Commit:** `87813ed`, the records commit for prompt 02, made on the laptop.
 
 **Result:**
 - **Step 2's bit-identity holds** on all eight cases: at δ = 0 the instrumented integral equals the
@@ -212,3 +212,12 @@ to a measurement.
 - **Nothing changes in `docs/OPEN_ISSUES.md` or on the `handover` board.**
   `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` and
   `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` are not narrowed by 02.
+
+## Orchestrator's review
+
+**PASS on every check that applies to a stopped prompt** (`orchestrator/prompt-02.md` §6), on the
+laptop, 2026-10-25. The scope is the ten paths of `87813ed`; the script's SHA-256 equals the one
+every ledger record carries; the copied ledger, manifest, status and logs are byte-identical to the
+run directory's; step 2's bit-identity was re-checked from the ledger independently; prompt §4 is
+in this log verbatim. The checks for a completed sweep (coverage, re-scoring N1–N4, `--report`
+reproduction) do not apply.
