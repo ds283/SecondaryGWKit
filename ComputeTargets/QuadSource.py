@@ -10,6 +10,7 @@ from ComputeTargets.TkNumericIntegration import (
     TkNumericIntegration,
     TkNumericValue,
 )
+from ComputeTargets.handover import HANDOVER_OVERLAP_NODES, handover_switch_node
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_exit_time
 from CosmologyModels.base import check_cosmology
@@ -21,26 +22,31 @@ from utilities import WallclockTimer
 # QuadSourceFunctions carries the dense-output representation of the *smooth part* of the
 # source term. "numeric_region" is the (z_max, z_min) pair over which the spline is defined:
 # the region where both Tq and Tr are described by their numeric representation (together
-# with the exactly-known super-horizon region above it). A consumer must not evaluate the
-# spline outside this range; below z_min at least one transfer function is oscillatory and
-# has to be handled from its Liouville-Green representation instead (see
+# with the exactly-known super-horizon region above it), down to the switch node of the factor
+# that hands over earlier, plus HANDOVER_OVERLAP_NODES nodes below it (ComputeTargets/handover.py).
+# A consumer may evaluate the spline only down to that switch node: the overlap nodes exist so
+# that the switch node is not in the spline's end interval. Below the switch node at least one
+# transfer function is handled from its Liouville-Green representation instead (see
 # ComputeTargets/TkSourceFunctions.py).
 QuadSourceFunctions = namedtuple("QuadSourceFunctions", ["source", "numeric_region"])
 
 
-def numeric_crossover_z(Tk: TkNumericIntegration) -> Optional[float]:
+def numeric_z_init(Tk: TkNumericIntegration) -> Optional[float]:
     """
-    Compute the redshift at which a TkNumericIntegration hands over to its
-    Liouville-Green (WKB) continuation. This is defined exactly as main.py:694 defines the
-    initial redshift of the matching TkWKBIntegration,
+    The Liouville-Green initialisation redshift z_init of a TkNumericIntegration: the phase
+    extremum at which its matching TkWKBIntegration starts. This is defined exactly as main.py
+    defines the initial redshift of that TkWKBIntegration,
 
-        z_crossover = k_exit.z_exit - Tk.stop_deltaz_subh
+        z_init = k_exit.z_exit - Tk.stop_deltaz_subh
 
-    (and identically to ComputeTargets/TkSourceFunctions.py, which validates the same
-    identity against TkWKBIntegration.z_init).
+    (and identically to ComputeTargets/TkSourceFunctions.py, which validates the same identity
+    against TkWKBIntegration.z_init).
 
-    Returns None if the integration was not run in "stop" mode, so that no hand-over
-    redshift is defined for it.
+    z_init is a root, not a grid node, and it is not where the consumers switch representation:
+    that is the switch node, `handover_switch_node(z_init, grid)` (ComputeTargets/handover.py).
+
+    Returns None if the integration was not run in "stop" mode, so that no hand-over is defined
+    for it.
     """
     try:
         stop_deltaz_subh = Tk.stop_deltaz_subh
@@ -51,6 +57,11 @@ def numeric_crossover_z(Tk: TkNumericIntegration) -> Optional[float]:
         return None
 
     return float(Tk.z_exit) - float(stop_deltaz_subh)
+
+
+# The name this function had before prompts/handover prompt 12, when z_init and the switch node
+# were not told apart. ComputeTargets/tests/test_quadsource.py still imports it by this name.
+numeric_crossover_z = numeric_z_init
 
 
 def _z_above(z: float, limit: float) -> bool:
@@ -120,30 +131,52 @@ def compute_quad_source(
     Tr_z_min = min(v.z.z for v in Tr.values)
 
     # The source term is smooth, and therefore representable by a spline in z, only where
-    # *both* transfer functions are still described by their numeric representation. Below the
-    # larger of the two hand-over redshifts at least one factor is oscillatory, and the
-    # sampled-and-splined representation of f breaks down (audit A2). Meanwhile the numeric
-    # grids themselves stop at the hand-over (audit A3), so walking the full source grid runs
-    # off the end of the Tk data.
-    crossover_z_q = numeric_crossover_z(Tq)
-    crossover_z_r = numeric_crossover_z(Tr)
+    # *both* transfer functions are still described by their numeric representation (audit A2).
+    # That region ends at the switch node of the factor that hands over *earlier*: the largest
+    # source-grid node strictly below the larger of the two z_init (ComputeTargets/handover.py).
+    # Below it at least one factor is oscillatory, and the sampled-and-splined representation of
+    # f breaks down.
+    #
+    # The numeric grids do *not* stop at the hand-over. In mode="stop" each numeric solve runs to
+    # the end of its search window and stores every grid node on the way (118-126 nodes below
+    # z_init on A3 v2), so the walk continues HANDOVER_OVERLAP_NODES nodes past the switch node.
+    # Those nodes keep the switch node out of the spline's end interval; a consumer evaluates the
+    # spline only above the switch node. Every node walked must be present in both factors'
+    # stored values, and _lookup raises if one is not.
+    z_init_q = numeric_z_init(Tq)
+    z_init_r = numeric_z_init(Tr)
 
-    # The hand-over redshift is found by a root search inside a window whose lower end is the
-    # same place the integration terminates, so it can fall up to one grid step *below* the
-    # last stored sample. Clamp the region to the sampled coverage as well, so that the region
-    # we walk is always one on which both factors are genuinely available.
-    z_floor = max(Tq_z_min, Tr_z_min)
-    for crossover in (crossover_z_q, crossover_z_r):
-        if crossover is not None and crossover > z_floor:
-            z_floor = crossover
+    grid = sorted(z_sample, key=lambda z: z.z, reverse=True)
+    z_inits = [z for z in (z_init_q, z_init_r) if z is not None]
 
-    region = [z for z in z_sample if _z_above(z.z, z_floor)]
+    if len(z_inits) > 0:
+        z_init_earlier = max(z_inits)
+        switch = handover_switch_node(z_init_earlier, grid)
+        if switch is None:
+            raise RuntimeError(
+                f"QuadSource: no source-grid node lies below the earlier hand-over "
+                f"z_init={z_init_earlier:.8g} (source grid spans z={grid[0].z:.5g} to "
+                f"z={grid[-1].z:.5g}; z_init_q={z_init_q}, z_init_r={z_init_r})"
+            )
+        i_switch = next(i for i, z in enumerate(grid) if z is switch)
+        i_floor = i_switch + HANDOVER_OVERLAP_NODES
+        if i_floor >= len(grid):
+            raise RuntimeError(
+                f"QuadSource: the source grid ends {len(grid) - 1 - i_switch} node(s) below the "
+                f"switch node z_sw={switch.z:.8g} (z_init={z_init_earlier:.8g}), but the "
+                f"region must extend {HANDOVER_OVERLAP_NODES} nodes below it"
+            )
+        region = grid[: i_floor + 1]
+    else:
+        # neither factor hands over: walk the coverage both factors share
+        z_floor = max(Tq_z_min, Tr_z_min)
+        region = [z for z in grid if _z_above(z.z, z_floor)]
 
     if len(region) == 0:
         raise RuntimeError(
-            f"QuadSource: the both-numeric region is empty (z_floor={z_floor:.5g}, "
-            f"source grid spans z={z_sample.max.z:.5g} to z={z_sample.min.z:.5g}; "
-            f"crossover_z_q={crossover_z_q}, crossover_z_r={crossover_z_r})"
+            f"QuadSource: the both-numeric region is empty (source grid spans "
+            f"z={z_sample.max.z:.5g} to z={z_sample.min.z:.5g}; z_init_q={z_init_q}, "
+            f"z_init_r={z_init_r})"
         )
 
     source = []
@@ -255,8 +288,8 @@ def compute_quad_source(
     return {
         "compute_time": timer.elapsed,
         "z_store_ids": [z.store_id for z in region],
-        "crossover_z_q": crossover_z_q,
-        "crossover_z_r": crossover_z_r,
+        "crossover_z_q": z_init_q,
+        "crossover_z_r": z_init_r,
         "source": source,
         "undiff": undiff,
         "diff": diff,
@@ -281,6 +314,17 @@ class QuadSource(DatastoreObject):
     ``labels_only=True`` is the reader's parentless miss, which a lookup that names no parents
     (``labels_only`` in the factory's ``build()``) returns when nothing matches: it reports
     absence and cannot be computed.
+
+    **What the stored values cover** (prompts/handover prompt 12). The source is stored on the
+    source grid from its top down to the *switch node* of the factor that hands over earlier --
+    the largest grid node strictly below the larger of the two Liouville-Green initialisation
+    redshifts z_init -- and ``HANDOVER_OVERLAP_NODES`` nodes below it
+    (``ComputeTargets/handover.py``). Before prompt 12 the region stopped at the last node at or
+    above that z_init, so a row computed since then holds ``HANDOVER_OVERLAP_NODES`` + 1 nodes or
+    so more, and its ``numeric_region`` reaches correspondingly lower. That is a change of stored
+    values, not of schema. **A consumer may evaluate the spline only down to the switch node**;
+    the nodes below it exist for the spline's end intervals, and below the switch node at least
+    one factor is taken from its Liouville-Green representation instead.
     """
 
     def __init__(
@@ -340,9 +384,10 @@ class QuadSource(DatastoreObject):
 
         self._functions = None
 
-        # hand-over redshifts of the two transfer functions. These are recomputable from the
-        # Tq/Tr TkNumericIntegration objects, and are therefore not persisted; they are None
-        # on an object recovered from the datastore. See the numeric_region property.
+        # Liouville-Green initialisation redshifts z_init of the two transfer functions (not
+        # their switch nodes). These are recomputable from the Tq/Tr TkNumericIntegration
+        # objects, and are therefore not persisted; they are None on an object recovered from
+        # the datastore. See the numeric_region property.
         self._crossover_z_q = None
         self._crossover_z_r = None
 
@@ -385,17 +430,20 @@ class QuadSource(DatastoreObject):
     @property
     def crossover_z_q(self) -> Optional[float]:
         """
-        Hand-over redshift of the Tq transfer function, i.e. the redshift below which Tq is
-        described by its Liouville-Green representation rather than by its sampled numeric
-        values. None on an object recovered from the datastore (it is not persisted, but is
-        recomputable with numeric_crossover_z() from the Tq object).
+        The Liouville-Green initialisation redshift z_init of the Tq transfer function: the phase
+        extremum its TkWKBIntegration starts at. It is *not* the switch node, the grid node below
+        which consumers use Tq's Liouville-Green representation; that is
+        handover_switch_node(z_init, grid) (ComputeTargets/handover.py). None on an object
+        recovered from the datastore (it is not persisted, but is recomputable with
+        numeric_z_init() from the Tq object).
         """
         return self._crossover_z_q
 
     @property
     def crossover_z_r(self) -> Optional[float]:
         """
-        Hand-over redshift of the Tr transfer function. See crossover_z_q.
+        The Liouville-Green initialisation redshift z_init of the Tr transfer function. See
+        crossover_z_q.
         """
         return self._crossover_z_r
 
@@ -404,9 +452,10 @@ class QuadSource(DatastoreObject):
         """
         The (z_max, z_min) region over which the stored values (and hence the dense-output
         spline) are defined: the region where both Tq and Tr are in their numeric
-        representation, together with the exactly-known super-horizon region above it.
-        Unlike crossover_z_q/crossover_z_r this *is* recoverable after a datastore
-        round-trip, because the stored value list determines it.
+        representation, together with the exactly-known super-horizon region above it, down to
+        the earlier switch node and HANDOVER_OVERLAP_NODES grid nodes below it. Unlike
+        crossover_z_q/crossover_z_r this *is* recoverable after a datastore round-trip, because
+        the stored value list determines it.
         """
         if self._z_sample is None:
             return None
@@ -452,8 +501,9 @@ class QuadSource(DatastoreObject):
         source_x_data, source_y_data = zip(*source_data)
         source_spline = make_interp_spline(source_x_data, source_y_data)
 
-        # the spline covers exactly the region spanned by the stored values, which is the
-        # both-numeric region: the only region in which a spline of f is valid (audit A2)
+        # the spline covers exactly the region spanned by the stored values: the both-numeric
+        # region, the only region in which a spline of f is valid (audit A2), plus the overlap
+        # nodes below the earlier switch node that keep the switch node out of the end interval
         z_max = self._z_sample.max.z
         z_min = self._z_sample.min.z
 
@@ -544,8 +594,8 @@ class QuadSource(DatastoreObject):
         self._crossover_z_q = data["crossover_z_q"]
         self._crossover_z_r = data["crossover_z_r"]
 
-        # compute_quad_source() only walks the both-numeric region of the source grid, so the
-        # value list is shorter than the grid we were constructed with. Cut our own z_sample
+        # compute_quad_source() only walks the both-numeric region of the source grid and its
+        # overlap, so the value list is shorter than the grid we were constructed with. Cut our own z_sample
         # down to the region that was actually used, so that z_sample, values and the
         # dense-output spline all describe the same range.
         z_store_ids = data["z_store_ids"]

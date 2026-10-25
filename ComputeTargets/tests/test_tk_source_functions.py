@@ -59,6 +59,7 @@ from scipy.special import jv
 
 from ComputeTargets.BackgroundModel import ModelFunctions
 from ComputeTargets.TkSourceFunctions import TkSourceFunctions
+from ComputeTargets.handover import HANDOVER_OVERLAP_NODES, handover_switch_node
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from ComputeTargets.tests.wkb_reference import ClosedFormPrimitive
@@ -76,6 +77,19 @@ REFINED_SAMPLES_PER_LOG10Z = 300
 
 # the two equations of state exercised: b = 0 and b = 0.25
 W_VALUES = (1.0 / 3.0, 0.2)
+
+# How many numeric samples the fixtures store below z_init. Production's mode="stop" solve runs
+# to the end of its search window and stores every grid node on the way -- 118-126 nodes below
+# z_init on A3 v2 (prompts/handover README section 2 (a), corrected 2026-10-25) -- so a fixture
+# shaped like production carries numeric samples past the hand-over. Prompt 12 section 4.1 asks
+# for at least HANDOVER_OVERLAP_NODES + 3; that many is enough for the overlap whether or not the
+# first Liouville-Green sample is dropped.
+NUMERIC_NODES_BELOW_INIT = HANDOVER_OVERLAP_NODES + 3
+
+# README section 7 D1, decided 2026-10-25: "the numeric representation extends at least two nodes
+# beyond that node". The tests of the overlap assert this number, not the module constant, so that
+# a change to the constant is caught rather than followed.
+DECIDED_OVERLAP_NODES = 2
 
 
 class FakeModel:
@@ -201,6 +215,14 @@ class Fixture:
     The numeric region runs from `efolds_suph` e-folds outside the horizon down to a hand-over
     `efolds_subh` e-folds inside it; the WKB region runs from the hand-over down to the redshift
     at which x = k c_s a0 tau reaches `x_max`.
+
+    Production's shape (prompts/handover prompt 12): the numeric samples continue
+    `numeric_nodes_below_init` nodes past the hand-over, on the WKB grid's own nodes, exactly as
+    the mode="stop" solve stores the source-grid nodes below z_init. `z_numeric` keeps its
+    meaning -- the numeric grid down to the hand-over -- and `z_numeric_below` holds the extra
+    nodes; `Tk_numeric` carries both. `crossover_z` is the fixture's z_init, as before, and
+    `z_switch` the first stored Liouville-Green sample (equal to z_init unless
+    `drop_first_WKB_sample`).
     """
 
     def __init__(
@@ -213,6 +235,7 @@ class Fixture:
         numeric_samples=PRODUCTION_SAMPLES_PER_LOG10Z,
         WKB_samples=PRODUCTION_SAMPLES_PER_LOG10Z,
         drop_first_WKB_sample=False,
+        numeric_nodes_below_init=NUMERIC_NODES_BELOW_INIT,
     ):
         self.w = w
         self.k = k
@@ -242,13 +265,21 @@ class Fixture:
         )
 
         self.crossover_z = z_WKB[0]
+
+        # production shape: the numeric solve stores the grid nodes below z_init too. They are
+        # the WKB grid's own nodes, as the same float, so that the switch node is the same
+        # stored redshift in both rows.
+        z_numeric_below = z_WKB[1 : 1 + numeric_nodes_below_init]
+
         if drop_first_WKB_sample:
             # production shape: main.py truncates the WKB grid to the largest grid point at or
             # below z_init, so the first WKB sample can sit one grid step below the hand-over
             z_WKB = z_WKB[1:]
 
         self.z_numeric = z_numeric
+        self.z_numeric_below = z_numeric_below
         self.z_WKB = z_WKB
+        self.z_switch = z_WKB[0]
 
         self.k_object = FakeWavenumber(k, self.z_exit)
         self.Tk_numeric = FakeTkNumeric(
@@ -258,7 +289,7 @@ class Fixture:
                     self.T_exact(z),
                     self.Tprime_exact(z),
                 )
-                for z in z_numeric
+                for z in z_numeric + z_numeric_below
             ],
             z_exit=self.z_exit,
             stop_deltaz_subh=self.z_exit - self.crossover_z,
@@ -493,6 +524,9 @@ class AnalyticRadiationFixture:
         )
         self.crossover_z = self.z_WKB[0]
 
+        # production shape, as in Fixture: numeric samples continue past the hand-over
+        self.z_numeric_below = self.z_WKB[1 : 1 + NUMERIC_NODES_BELOW_INIT]
+
         self.k_object = FakeWavenumber(k, self.z_exit)
         self.Tk_numeric = FakeTkNumeric(
             [
@@ -503,7 +537,7 @@ class AnalyticRadiationFixture:
                         self.k, self.w, self.model.tau(z), self.model.Hubble(z)
                     ),
                 )
-                for z in self.z_numeric
+                for z in self.z_numeric + self.z_numeric_below
             ],
             z_exit=self.z_exit,
             stop_deltaz_subh=self.z_exit - self.crossover_z,
@@ -610,8 +644,12 @@ class TestNumericRegion(unittest.TestCase):
                 self.assertAlmostEqual(
                     functions.numeric_region[0], f.z_numeric[0], delta=1.0e-9
                 )
-                self.assertAlmostEqual(
-                    functions.numeric_region[1], f.crossover_z, delta=1.0e-9
+                # prompts/handover prompt 12: the numeric spline runs the overlap's nodes past
+                # the switch node, which on this fixture (a Liouville-Green sample at z_init)
+                # is z_init itself
+                self.assertEqual(
+                    functions.numeric_region[1],
+                    f.z_numeric_below[DECIDED_OVERLAP_NODES - 1],
                 )
                 self.assertAlmostEqual(
                     functions.crossover_z, f.crossover_z, delta=1.0e-9
@@ -902,9 +940,11 @@ class TestConsistencyChecks(unittest.TestCase):
         f = Fixture(1.0 / 3.0)
         functions = f.exact_functions()  # the consistent case must build
 
+        # the cross-check is on z_init, the Liouville-Green initialisation point (prompt 12);
+        # on this fixture the switch node crossover_z happens to coincide with it
         self.assertAlmostEqual(
             f.z_exit - f.Tk_numeric.stop_deltaz_subh,
-            functions.crossover_z,
+            functions.z_init,
             delta=1.0e-9,
         )
 
@@ -937,14 +977,19 @@ class TestConsistencyChecks(unittest.TestCase):
     def test_WKB_grid_starting_below_the_hand_over(self):
         """
         In production the WKB grid is the source grid truncated at z_init, so its largest sample
-        can sit up to one grid step below the hand-over. The object must build, must report the
-        sampled range (not the nominal hand-over) as its WKB region, and must refuse to be
-        evaluated above it -- `phase_spline` cannot be extrapolated.
+        can sit up to one grid step below z_init. The object must build, must report the sampled
+        range as its WKB region, and must refuse to be evaluated above it -- the phase cannot be
+        extrapolated.
+
+        Since prompts/handover prompt 12 that first sample *is* the hand-over the consumers use:
+        `crossover_z` is the switch node, so it equals `WKB_region[0]` and lies below `z_init`,
+        and the numeric region reaches below it rather than stopping at z_init.
         """
         f = Fixture(1.0 / 3.0, drop_first_WKB_sample=True)
         functions = f.exact_functions()
 
-        self.assertLess(functions.WKB_region[0], functions.crossover_z)
+        self.assertEqual(functions.WKB_region[0], functions.crossover_z)
+        self.assertLess(functions.crossover_z, functions.z_init)
         self.assertAlmostEqual(functions.WKB_region[0], f.z_WKB[0], delta=1.0e-9)
 
         # evaluation at the top of the sampled range is fine
@@ -952,12 +997,158 @@ class TestConsistencyChecks(unittest.TestCase):
         self.assertTrue(np.isfinite(functions.M(functions.WKB_region[0])))
 
         with self.assertRaises(RuntimeError):
-            functions.T_WKB(functions.crossover_z)
+            functions.T_WKB(functions.z_init)
 
-        # the numeric region still reaches down to the hand-over
-        self.assertAlmostEqual(
-            functions.numeric_region[1], functions.crossover_z, delta=1.0e-9
+        # the numeric region reaches below the switch node
+        self.assertLess(functions.numeric_region[1], functions.crossover_z)
+
+
+class TestHandOverSwitch(unittest.TestCase):
+    """
+    prompts/handover prompt 12 (B1), section 4.2 tests (a)-(d): z_init, the switch node and the
+    overlap are three things, and the two representations are compared where both are stored.
+
+    Production's shape throughout: `drop_first_WKB_sample=True` (the Liouville-Green row starts
+    at the largest grid node below z_init) and numeric samples past z_init (`Fixture`'s
+    `numeric_nodes_below_init`).
+    """
+
+    def test_a_z_init_is_the_initialisation_point_and_is_cross_checked(self):
+        """(a) z_init is TkWKBIntegration.z_init, unchanged, and still cross-checked."""
+        for w in W_VALUES:
+            with self.subTest(w=w):
+                f = Fixture(w, drop_first_WKB_sample=True)
+                functions = f.exact_functions()
+
+                # exactly the value the Liouville-Green row was initialised at
+                self.assertEqual(functions.z_init, f.crossover_z)
+                self.assertAlmostEqual(
+                    functions.z_init,
+                    f.z_exit - f.Tk_numeric.stop_deltaz_subh,
+                    delta=1.0e-9 * (1.0 + functions.z_init),
+                )
+                # ... which is not where the consumers switch
+                self.assertLess(functions.crossover_z, functions.z_init)
+
+                # the cross-check fires on a perturbed stop_deltaz_subh
+                f.Tk_numeric.stop_deltaz_subh = 1.001 * f.Tk_numeric.stop_deltaz_subh
+                with self.assertRaises(RuntimeError) as caught:
+                    f.exact_functions()
+                self.assertIn("z_init", str(caught.exception))
+
+    def test_b_crossover_is_the_first_LG_sample_and_the_switch_node(self):
+        """
+        (b) crossover_z is the Liouville-Green row's first sample, and it is the node
+        handover_switch_node names on the numeric grid; a row that skips a node is refused.
+        """
+        for w in W_VALUES:
+            with self.subTest(w=w):
+                f = Fixture(w, drop_first_WKB_sample=True)
+                functions = f.exact_functions()
+
+                numeric_grid = [v.z.z for v in f.Tk_numeric.values]
+                switch = handover_switch_node(functions.z_init, numeric_grid)
+
+                self.assertEqual(functions.crossover_z, f.z_WKB[0])
+                self.assertEqual(functions.crossover_z, functions.WKB_region[0])
+                self.assertEqual(functions.crossover_z, switch)
+                self.assertEqual(functions.crossover_z, f.z_numeric_below[0])
+
+                # a Liouville-Green row stored *at* z_init (the fixture's default shape) has no
+                # gap: that sample is the switch
+                f_default = Fixture(w)
+                self.assertEqual(
+                    f_default.exact_functions().crossover_z, f_default.crossover_z
+                )
+
+        # a Liouville-Green row that starts one node further down has skipped the switch node
+        f = Fixture(1.0 / 3.0, drop_first_WKB_sample=True)
+        f.z_WKB = f.z_WKB[1:]
+        with self.assertRaises(RuntimeError) as caught:
+            f.exact_functions()
+        self.assertIn(
+            "largest numeric grid node strictly below z_init", str(caught.exception)
         )
+
+    def test_c_numeric_spline_reaches_exactly_the_overlap(self):
+        """
+        (c) The numeric spline reaches exactly DECIDED_OVERLAP_NODES nodes below the switch
+        node, and construction raises when one node fewer is stored.
+        """
+        for w in W_VALUES:
+            with self.subTest(w=w):
+                f = Fixture(w, drop_first_WKB_sample=True)
+                functions = f.exact_functions()
+
+                # the switch node is z_numeric_below[0]; the overlap is the next two
+                expected_bottom = f.z_numeric_below[DECIDED_OVERLAP_NODES]
+                self.assertEqual(functions.numeric_region[1], expected_bottom)
+                self.assertLess(functions.numeric_region[1], functions.crossover_z)
+
+                # the spline is the data at every overlap node ...
+                for z in f.z_numeric_below[: DECIDED_OVERLAP_NODES + 1]:
+                    self.assertLess(
+                        abs(functions.T(z) - f.T_exact(z)),
+                        1.0e-12 * max(abs(f.T_exact(zz)) for zz in f.z_numeric),
+                    )
+                # ... and is not evaluable at the next stored node below it
+                with self.assertRaises(RuntimeError):
+                    functions.T(f.z_numeric_below[DECIDED_OVERLAP_NODES + 1])
+
+                # one node fewer below the switch node: refused, saying how many were found
+                short = Fixture(
+                    w,
+                    drop_first_WKB_sample=True,
+                    numeric_nodes_below_init=DECIDED_OVERLAP_NODES,
+                )
+                with self.assertRaises(RuntimeError) as caught:
+                    short.exact_functions()
+                self.assertIn(
+                    f"only {DECIDED_OVERLAP_NODES - 1} numeric sample(s) lie below it",
+                    str(caught.exception),
+                )
+
+    # (d)'s bounds, from this module's own tolerance comments.
+    #
+    # dT_rel: at a node both sides are the exact T. The numeric side is compute_analytic_T; the
+    # Liouville-Green side is M sin(theta) with no re-spline at a stored node, so what is left is
+    # bessel_phase's declared phase error, 5e-12 rad (module docstring, "the Bessel oracle"), and
+    # the amplitude path, asserted below 1e-12 in test_amplitude_and_reconstruction. 1e-11 is their
+    # sum with a factor 1.7 of margin.
+    CONTINUITY_DT_BOUND = 1.0e-11
+    # dTprime_rel: the Liouville-Green derivative is assembled from the closed forms omega_eff and
+    # d ln M/dz, which on the exact fixture differ from the exact phase and envelope by the LG
+    # truncation: d theta/dz against omega_eff to 1.1e-5 (w = 1/3) and 1.9e-4 (w = 0.2) relative
+    # (Fixture.theta_exact's docstring), and d ln M/dz by ~1e-5 (module docstring). Both enter
+    # dTprime_rel additively at the same order, hence twice the omega_eff figure.
+    CONTINUITY_DTPRIME_BOUND = {1.0 / 3.0: 2.2e-5, 0.2: 3.8e-4}
+
+    def test_d_handover_continuity_is_at_the_representation_floor(self):
+        """
+        (d) On the exact fixture, the continuity record covers the switch node and the overlap
+        nodes, and the residuals sit at the fixture's own representation floor.
+        """
+        for w in W_VALUES:
+            with self.subTest(w=w):
+                f = Fixture(w, drop_first_WKB_sample=True)
+                functions = f.exact_functions()
+                record = functions.handover_continuity
+
+                self.assertEqual(
+                    [r["z"] for r in record],
+                    f.z_numeric_below[: DECIDED_OVERLAP_NODES + 1],
+                )
+                self.assertEqual(record[0]["z"], functions.crossover_z)
+
+                worst_T = max(abs(r["dT_rel"]) for r in record)
+                worst_Tprime = max(abs(r["dTprime_rel"]) for r in record)
+                print(
+                    f"\n[hand-over continuity, exact fixture, w={w:.5g}] at z_sw and "
+                    f"{len(record) - 1} overlap node(s): max |dT_rel| = {worst_T:.3e}, "
+                    f"max |dTprime_rel| = {worst_Tprime:.3e}"
+                )
+                self.assertLess(worst_T, self.CONTINUITY_DT_BOUND)
+                self.assertLess(worst_Tprime, self.CONTINUITY_DTPRIME_BOUND[w])
 
 
 class TestPrimitivePhaseConsumer(unittest.TestCase):

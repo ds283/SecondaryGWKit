@@ -24,8 +24,10 @@ from ComputeTargets.QuadSource import (
     QuadSource,
     compute_quad_source,
     numeric_crossover_z,
+    numeric_z_init,
     source_function,
 )
+from ComputeTargets.handover import HANDOVER_OVERLAP_NODES
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import redshift, redshift_array
 
@@ -33,6 +35,15 @@ from CosmologyConcepts import redshift, redshift_array
 compute_quad_source_fn = compute_quad_source._function
 
 H0 = 1.0
+
+# Production's shape (prompts/handover prompt 12): a mode="stop" TkNumericIntegration stores the
+# grid nodes below z_init too, down to the end of its search window -- 118-126 of them on A3 v2.
+# The fixtures here carry this many, enough for the switch node and its overlap.
+NUMERIC_NODES_BELOW_INIT = HANDOVER_OVERLAP_NODES + 3
+
+# README section 7 D1, decided 2026-10-25; asserted as a number so that a change to
+# HANDOVER_OVERLAP_NODES is caught rather than followed
+DECIDED_OVERLAP_NODES = 2
 
 
 # ---------------------------------------------------------------------------------------
@@ -209,8 +220,14 @@ class TestQuadSourceKernel(unittest.TestCase):
 class TestQuadSourceRegion(unittest.TestCase):
     """
     A3 regression: the source grid is walked only over the both-numeric region, and the Tk
-    grids -- truncated at BOTH ends, exactly as main.py:505-507 with mode='stop' builds them
-    -- no longer run out underneath it.
+    grids -- truncated at BOTH ends, exactly as main.py with mode='stop' builds them -- no longer
+    run out underneath it.
+
+    Production's shape since prompts/handover prompt 12: each factor's z_init is a root lying
+    strictly between two grid nodes, grid[i_stop] > z_init > grid[i_stop + 1], and its stored
+    numeric values continue NUMERIC_NODES_BELOW_INIT nodes past it. The region runs to the
+    switch node of the factor that hands over earlier (Tr), grid[i_stop_r + 1], and
+    HANDOVER_OVERLAP_NODES nodes further.
     """
 
     W = 1.0 / 3.0
@@ -221,9 +238,14 @@ class TestQuadSourceRegion(unittest.TestCase):
         self.n = len(self.grid)
 
         # Tr carries the larger wavenumber (main.py schedules q.k <= r.k), so it both starts
-        # its numeric integration earlier (higher z) and hands over to WKB earlier
+        # its numeric integration earlier (higher z) and hands over to WKB earlier. i_stop is
+        # the last grid node above z_init.
         self.i_start_r, self.i_stop_r = 20, 180
         self.i_start_q, self.i_stop_q = 60, 240
+
+        # Tr's switch node, and the last node of the region: the overlap below it
+        self.i_switch_r = self.i_stop_r + 1
+        self.i_floor_r = self.i_switch_r + DECIDED_OVERLAP_NODES
 
         self.q_k, self.r_k = 3.0, 11.0
 
@@ -233,44 +255,59 @@ class TestQuadSourceRegion(unittest.TestCase):
         self.model_proxy = FakeModelProxy(self.W)
         self.z_sample = redshift_array(self.grid)
 
-    def build_Tk(self, i_start: int, i_stop: int, k: float) -> FakeTk:
-        # choose z_exit / stop_deltaz_subh so that the hand-over redshift
-        # z_exit - stop_deltaz_subh lands exactly on grid[i_stop]
-        z_stop = self.grid[i_stop].z
+    def z_init(self, i_stop: int) -> float:
+        """A root between grid[i_stop] and grid[i_stop + 1]: their log-midpoint."""
+        a, b = self.grid[i_stop].z, self.grid[i_stop + 1].z
+        return exp(0.5 * (np.log1p(a) + np.log1p(b))) - 1.0
+
+    def build_Tk(
+        self,
+        i_start: int,
+        i_stop: int,
+        k: float,
+        below: int = NUMERIC_NODES_BELOW_INIT,
+    ) -> FakeTk:
+        # choose z_exit / stop_deltaz_subh so that z_init = z_exit - stop_deltaz_subh falls
+        # between grid[i_stop] and grid[i_stop + 1], and store `below` nodes past it
+        z_init = self.z_init(i_stop)
         return FakeTk(
-            self.grid[i_start : i_stop + 1],
+            self.grid[i_start : i_stop + 1 + below],
             k,
             self.W,
-            z_exit=3.0 * z_stop,
-            stop_deltaz_subh=2.0 * z_stop,
+            z_exit=3.0 * z_init,
+            stop_deltaz_subh=2.0 * z_init,
         )
 
     def test_crossover_helper(self):
+        # the helper returns z_init, under its new name and its old one
+        self.assertIs(numeric_crossover_z, numeric_z_init)
         self.assertAlmostEqual(
-            numeric_crossover_z(self.Tq), self.grid[self.i_stop_q].z, places=10
+            numeric_z_init(self.Tq), self.z_init(self.i_stop_q), places=10
         )
         self.assertAlmostEqual(
-            numeric_crossover_z(self.Tr), self.grid[self.i_stop_r].z, places=10
+            numeric_z_init(self.Tr), self.z_init(self.i_stop_r), places=10
         )
-        # a Tk with no "stop" hand-over has no crossover redshift
+        # a Tk with no "stop" hand-over has no initialisation redshift
         no_stop = FakeTk(
             self.grid[10:50], 1.0, self.W, z_exit=1.0, stop_deltaz_subh=None
         )
-        self.assertIsNone(numeric_crossover_z(no_stop))
+        self.assertIsNone(numeric_z_init(no_stop))
 
     def test_A3_regression_region_and_defaults(self):
         out = compute_quad_source_fn(self.model_proxy, self.z_sample, self.Tq, self.Tr)
 
-        # the value list ends at max(z^X_q, z^X_r) = z^X_r
-        self.assertEqual(len(out["source"]), self.i_stop_r + 1)
-        self.assertEqual(len(out["z_store_ids"]), self.i_stop_r + 1)
+        # the value list ends HANDOVER_OVERLAP_NODES nodes below the switch node of
+        # max(z_init_q, z_init_r) = z_init_r
+        self.assertEqual(len(out["source"]), self.i_floor_r + 1)
+        self.assertEqual(len(out["z_store_ids"]), self.i_floor_r + 1)
         self.assertEqual(out["z_store_ids"][0], self.grid[0].store_id)
-        self.assertEqual(out["z_store_ids"][-1], self.grid[self.i_stop_r].store_id)
+        self.assertEqual(out["z_store_ids"][-1], self.grid[self.i_floor_r].store_id)
+        # what is recorded is z_init, not the switch node
         self.assertAlmostEqual(
-            out["crossover_z_r"], self.grid[self.i_stop_r].z, places=10
+            out["crossover_z_r"], self.z_init(self.i_stop_r), places=10
         )
         self.assertAlmostEqual(
-            out["crossover_z_q"], self.grid[self.i_stop_q].z, places=10
+            out["crossover_z_q"], self.z_init(self.i_stop_q), places=10
         )
 
         # the leading samples, above the start of *both* numeric grids, use the exact
@@ -298,11 +335,13 @@ class TestQuadSourceRegion(unittest.TestCase):
         )["source"]
         self.assertAlmostEqual(out["source"][i], expected, delta=1e-13 * abs(expected))
 
-        # and inside both grids the stored samples are used
-        i = self.i_stop_r
-        z = self.grid[i].z
-        expected = f_exact(z, self.q_k, self.r_k, self.W)
-        self.assertAlmostEqual(out["source"][i], expected, delta=1e-13 * abs(expected))
+        # and inside both grids the stored samples are used, down through the overlap
+        for i in (self.i_stop_r, self.i_switch_r, self.i_floor_r):
+            z = self.grid[i].z
+            expected = f_exact(z, self.q_k, self.r_k, self.W)
+            self.assertAlmostEqual(
+                out["source"][i], expected, delta=1e-13 * abs(expected)
+            )
 
     def test_A3_regression_pre_commit_code_would_have_raised(self):
         """
@@ -342,23 +381,46 @@ class TestQuadSourceRegion(unittest.TestCase):
             compute_quad_source_fn(self.model_proxy, self.z_sample, self.Tq, Tr)
         self.assertIn("Tr", str(ctx.exception))
 
-    def test_region_is_clamped_to_the_sampled_coverage(self):
+    def test_e_region_reaches_the_overlap_below_the_earlier_switch_node(self):
         """
-        The hand-over redshift is found by a root search whose window bottom is where the
-        integration terminates, so it can fall up to one grid step *below* the last stored
-        sample. The region must then stop at the last stored sample, not at the hand-over.
+        prompts/handover prompt 12 (B1), section 4.2 test (e). The region reaches the switch node
+        of the factor that hands over earlier -- the largest grid node strictly below the larger
+        z_init -- and DECIDED_OVERLAP_NODES nodes below it, every one of them read from both
+        factors' stored values. A factor whose stored values stop one node short of that raises,
+        naming the factor and the missing node.
         """
-        # move Tr's nominal hand-over two grid steps below its last stored sample
-        z_below = self.grid[self.i_stop_r + 2].z
-        Tr = FakeTk(
-            self.grid[self.i_start_r : self.i_stop_r + 1],
-            self.r_k,
-            self.W,
-            z_exit=3.0 * z_below,
-            stop_deltaz_subh=2.0 * z_below,
+        out = compute_quad_source_fn(self.model_proxy, self.z_sample, self.Tq, self.Tr)
+
+        z_init_r = self.z_init(self.i_stop_r)
+        self.assertGreater(z_init_r, self.z_init(self.i_stop_q))
+        self.assertGreater(self.grid[self.i_stop_r].z, z_init_r)
+        self.assertLess(self.grid[self.i_switch_r].z, z_init_r)
+
+        self.assertEqual(
+            out["z_store_ids"][-(DECIDED_OVERLAP_NODES + 1) :],
+            [self.grid[i].store_id for i in range(self.i_switch_r, self.i_floor_r + 1)],
         )
-        out = compute_quad_source_fn(self.model_proxy, self.z_sample, self.Tq, Tr)
-        self.assertEqual(len(out["source"]), self.i_stop_r + 1)
+
+        # the earlier factor's stored values stop one node short of the overlap
+        Tr = self.build_Tk(
+            self.i_start_r, self.i_stop_r, self.r_k, below=DECIDED_OVERLAP_NODES
+        )
+        self.assertEqual(
+            Tr.values[-1].z.store_id, self.grid[self.i_floor_r - 1].store_id
+        )
+        with self.assertRaises(RuntimeError) as ctx:
+            compute_quad_source_fn(self.model_proxy, self.z_sample, self.Tq, Tr)
+        self.assertIn("Tr", str(ctx.exception))
+        self.assertIn(str(self.grid[self.i_floor_r].store_id), str(ctx.exception))
+
+        # ... and a hole at an overlap node of the other factor is refused just the same
+        Tq = self.build_Tk(self.i_start_q, self.i_stop_q, self.q_k)
+        Tq.values = [
+            v for v in Tq.values if v.z.store_id != self.grid[self.i_floor_r].store_id
+        ]
+        with self.assertRaises(RuntimeError) as ctx:
+            compute_quad_source_fn(self.model_proxy, self.z_sample, Tq, self.Tr)
+        self.assertIn("Tq", str(ctx.exception))
 
     def test_store_truncates_z_sample_and_the_spline_range(self):
         """
@@ -386,28 +448,28 @@ class TestQuadSourceRegion(unittest.TestCase):
         with mock.patch("ComputeTargets.QuadSource.ray", fake_ray):
             self.assertTrue(obj.store())
 
-        z_min = self.grid[self.i_stop_r].z
+        z_min = self.grid[self.i_floor_r].z
         z_max = self.grid[0].z
 
-        self.assertEqual(len(obj.values), self.i_stop_r + 1)
-        self.assertEqual(len(obj.z_sample), self.i_stop_r + 1)
+        self.assertEqual(len(obj.values), self.i_floor_r + 1)
+        self.assertEqual(len(obj.z_sample), self.i_floor_r + 1)
         self.assertAlmostEqual(obj.z_sample.min.z, z_min, places=10)
         self.assertAlmostEqual(obj.z_sample.max.z, z_max, places=10)
         self.assertAlmostEqual(obj.numeric_region[0], z_max, places=10)
         self.assertAlmostEqual(obj.numeric_region[1], z_min, places=10)
-        self.assertAlmostEqual(obj.crossover_z_r, z_min, places=10)
-        self.assertAlmostEqual(obj.crossover_z_q, self.grid[self.i_stop_q].z, places=10)
+        self.assertAlmostEqual(obj.crossover_z_r, self.z_init(self.i_stop_r), places=10)
+        self.assertAlmostEqual(obj.crossover_z_q, self.z_init(self.i_stop_q), places=10)
 
         # values are attached to the right redshifts, in descending order
         self.assertEqual(obj.values[0].z.store_id, self.grid[0].store_id)
-        self.assertEqual(obj.values[-1].z.store_id, self.grid[self.i_stop_r].store_id)
+        self.assertEqual(obj.values[-1].z.store_id, self.grid[self.i_floor_r].store_id)
 
         functions = obj.functions
         self.assertAlmostEqual(functions.numeric_region[0], z_max, places=10)
         self.assertAlmostEqual(functions.numeric_region[1], z_min, places=10)
 
         # the spline reproduces its nodes, and refuses to be evaluated well below the region
-        mid = self.i_stop_r // 2
+        mid = self.i_floor_r // 2
         self.assertAlmostEqual(
             functions.source(self.grid[mid].z),
             obj.values[mid].source,
@@ -451,12 +513,12 @@ class TestQuadSourceRegion(unittest.TestCase):
         self.assertEqual(len(obj.z_sample), len(obj.values))
         self.assertEqual(len(obj.values), len(payload["z_store_ids"]))
         self.assertAlmostEqual(
-            obj.numeric_region[1], self.grid[self.i_stop_r].z, places=10
+            obj.numeric_region[1], self.grid[self.i_floor_r].z, places=10
         )
         self.assertIsNone(obj.crossover_z_q)
         self.assertIsNone(obj.crossover_z_r)
         self.assertAlmostEqual(
-            obj.functions.numeric_region[1], self.grid[self.i_stop_r].z, places=10
+            obj.functions.numeric_region[1], self.grid[self.i_floor_r].z, places=10
         )
 
 

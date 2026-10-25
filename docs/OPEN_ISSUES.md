@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **108 open** across twenty-two campaigns.
+**Last updated:** 2026-10-25 · **109 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -135,6 +135,7 @@ for.
 | `[09-extract-gk-data-writes-redshift-objects-into-its-z-response-column]` | handover | `extract_Gk_data.py:294` writes `value.z`, a `redshift` object, into its CSV column `z_response`, so every cell is an object repr and the CSVs cannot be read back against $z$; the other readers write `value.z.z`. Not assigned. |
 | `[10-the-readers-draw-their-work-lists-unseeded]` | handover | Every `extract_*` reader draws its `k`/`z_source` subsample with an unseeded `random.sample` (GkWKB: 174 of ~1740 source redshifts), so outputs differ run to run, a check naming a pair passes only if the draw includes it (prompt 10's held at ~1 in 10), and a "complete" read-back covers the sample, not the store. Not assigned. |
 | `[11-seam-band-rows-deviate-from-the-oracle-by-up-to-two-orders]` | handover | In A3 v2's seam band $|{\rm total}/{\tt analytic\_rad}-1|$ has median 5.3e-04 but max **96.9** (20.5 at $10^8$); A2 bounded the clamp term at 0.91. Near-zero oracles, or the worst stored `total`s on the grid — not yet identified. Not assigned. |
+| `[12-realistic-large-x-reads-the-retired-clamp-records]` | handover | B1 removed the partition's clamp-gap keys; A2's `realistic_large_x.py` reads them (`:332`, `:356`, `:666`) and raises `KeyError` at `HEAD`. Also stale clamp mentions in `primitive_phase.py`, `main.py`, and pre-B1 `QuadSource` rows refused by B1's strict check. Owner **B2**. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 

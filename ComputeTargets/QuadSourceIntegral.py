@@ -101,14 +101,18 @@ BESSEL_ORDER_CHECK_TOL = 1e-3
 # "theta_deriv decision"): see that log for the numbers behind this setting.
 LEVIN_USE_THETA_DERIV = True
 
-# A transfer function's hand-over redshift (TkSourceFunctions.crossover_z) need not be a grid
-# point: main.py truncates the WKB grid to the largest source-grid point at or below z_init, so
-# TkSourceFunctions.WKB_region[0] can sit up to one grid step below crossover_z, and no accessor
-# of that factor is evaluable in between (IMPLEMENTATION_STATE.md section 5 note 6). The
-# partition is made at crossover_z, and inside that gap the factor's accessors are evaluated at
-# the nearest end of their own range ("clamped"). The gap is allowed to be at most this many
-# mean source-grid steps (in log(1+z)) wide; anything larger is a data problem and raises.
-HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5
+# THERE IS NO CLAMP AT THE TRANSFER-FUNCTION HAND-OVER. Until prompts/handover prompt 12 the
+# partition broke each T_k at its Liouville-Green initialisation point z_init, which is a root and
+# not a grid node; the Liouville-Green row's first sample sat up to one grid step below it and
+# the numeric spline stopped at it, so neither representation covered the interval between, and
+# the Liouville-Green accessors were held ("clamped") at their first sample across it, up to a
+# retired tolerance of 1.5 mean source-grid steps. Handover 11 measured the gap at a
+# median 0.5 and a maximum 0.98 grid step on every A3 v2 row with a Levin sub-interval. Prompt 12
+# moved the break to the switch node (ComputeTargets/handover.py), the Liouville-Green row's first
+# sample, and kept HANDOVER_OVERLAP_NODES numeric nodes below it in both the T_k and the source
+# splines. Both representations then cover their sub-intervals by construction, every factor is
+# checked with the strict _check_region_covers the Green's function always had, and a shortfall
+# raises: a gap is a defect to report, not to bridge.
 
 # A sub-interval narrower than this in log(1+z') is treated as empty (two breakpoints that
 # coincide, e.g. q = r, or a breakpoint landing on an end of the range). This is audit B11's
@@ -150,114 +154,6 @@ def get_z(z):
     return float(z)
 
 
-def _log1p_z(z) -> float:
-    return log(1.0 + get_z(z))
-
-
-# ------------------------------------------------------------------------------------------
-# clamping adapters
-#
-# phase_groups' factor adapters call the TkSourceFunctions accessors with log(1+z') and do not
-# clamp (logs/07 "State handed to the next prompt" item 1). Each sub-interval therefore wraps
-# its transfer functions in one of these, which pins the abscissa into the evaluable range of
-# the representation the regime selects. The permitted overhang is checked when the partition
-# is built (_check_gap), not here.
-
-
-class _ClampedPhase:
-    """phase_spline protocol (raw_theta, theta_mod_2pi, theta_deriv) with the abscissa clamped."""
-
-    def __init__(self, phase, clamp: Callable[[float], float]):
-        self._phase = phase
-        self._clamp = clamp
-
-    def raw_theta(self, x: float, x_is_log: bool = False) -> float:
-        return self._phase.raw_theta(self._clamp(_as_log(x, x_is_log)), x_is_log=True)
-
-    def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
-        return self._phase.theta_mod_2pi(
-            self._clamp(_as_log(x, x_is_log)), x_is_log=True
-        )
-
-    def theta_deriv(
-        self, x: float, x_is_log: bool = False, log_derivative: bool = False
-    ) -> float:
-        return self._phase.theta_deriv(
-            self._clamp(_as_log(x, x_is_log)),
-            x_is_log=True,
-            log_derivative=log_derivative,
-        )
-
-
-def _as_log(x: float, is_log: bool) -> float:
-    return x if is_log else log(1.0 + x)
-
-
-class _ClampedTk:
-    """
-    The TkSourceFunctions protocol phase_groups reads (T, dT_dz for a smooth factor; M, dlnM_dz,
-    omega, phase for an oscillatory one), with log(1+z') clamped into the evaluable range of
-    the representation in use: numeric_region for a smooth factor (open above, because T = 1
-    exactly above the numeric samples), WKB_region for an oscillatory one.
-    """
-
-    def __init__(self, functions, oscillatory: bool):
-        self._f = functions
-        self.oscillatory = oscillatory
-        if oscillatory:
-            z_max, z_min = functions.WKB_region
-            self._log_hi = log(1.0 + z_max)
-            self._log_lo = log(1.0 + z_min)
-            self.phase = _ClampedPhase(functions.phase, self._clamp)
-        else:
-            z_max, z_min = functions.numeric_region
-            self._log_hi = inf
-            self._log_lo = log(1.0 + z_min)
-            self.phase = None
-
-    def _clamp(self, log_z: float) -> float:
-        if log_z < self._log_lo:
-            return self._log_lo
-        if log_z > self._log_hi:
-            return self._log_hi
-        return log_z
-
-    # smooth protocol
-    def T(self, x: float, z_is_log: bool = False) -> float:
-        return self._f.T(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
-
-    def dT_dz(self, x: float, z_is_log: bool = False) -> float:
-        return self._f.dT_dz(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
-
-    # oscillatory protocol
-    def M(self, x: float, z_is_log: bool = False) -> float:
-        return self._f.M(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
-
-    def dlnM_dz(self, x: float, z_is_log: bool = False) -> float:
-        return self._f.dlnM_dz(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
-
-    def omega(self, x: float, z_is_log: bool = False) -> float:
-        return self._f.omega(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
-
-
-class _ClampedSource:
-    """The QuadSource dense-output spline f(z') with log(1+z') clamped into its numeric_region."""
-
-    def __init__(self, source_f: Callable, numeric_region: Tuple[float, float]):
-        self._f = source_f
-        z_max, z_min = numeric_region
-        self._log_hi = log(1.0 + z_max)
-        self._log_lo = log(1.0 + z_min)
-
-    def __call__(self, x: float, z_is_log: bool = False) -> float:
-        log_z = _as_log(x, z_is_log)
-        if log_z < self._log_lo:
-            log_z = self._log_lo
-        elif log_z > self._log_hi:
-            log_z = self._log_hi
-        return self._f(log_z, z_is_log=True)
-
-
 # ------------------------------------------------------------------------------------------
 # the partition
 
@@ -288,42 +184,6 @@ def _factor_breakpoint(
     return "split", record
 
 
-def _check_gap(
-    label: str,
-    gap: float,
-    max_gap: float,
-    z_max: float,
-    z_min: float,
-    detail: str,
-) -> float:
-    """
-    A representation is allowed to fall short of a sub-interval end by at most max_gap in
-    log(1+z) (see HANDOVER_CLAMP_MAX_GRID_STEPS); that shortfall is bridged by clamping.
-    Returns the (non-negative) gap, or raises if it is too large.
-    """
-    if gap <= 0.0:
-        return 0.0
-    if gap > max_gap:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: {label} is not evaluable over the whole sub-interval "
-            f"z in ({z_max:.5g}, {z_min:.5g}): {detail}; the shortfall is {gap:.3e} in log(1+z), "
-            f"but at most {max_gap:.3e} ({HANDOVER_CLAMP_MAX_GRID_STEPS:g} mean source-grid steps) "
-            f"can be bridged by clamping"
-        )
-    return gap
-
-
-def _mean_source_grid_step(source: QuadSource) -> float:
-    """Mean spacing of the source redshift grid in log(1+z)."""
-    z_sample = source.z_sample
-    n = len(z_sample)
-    if n < 2:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: QuadSource (store_id={source.store_id}) has fewer than two sampled redshifts"
-        )
-    return (_log1p_z(z_sample.max) - _log1p_z(z_sample.min)) / (n - 1)
-
-
 def build_partition(
     GkPolicy: GkSourcePolicyData,
     Tq_f,
@@ -343,12 +203,20 @@ def build_partition(
         T_q      Tq_f.T, Tq_f.dT_dz (T = 1 above its grid)   Tq_f.M, dlnM_dz, omega, phase   Tq_f.crossover_z
         T_r      likewise                                     likewise                        Tr_f.crossover_z
 
-    Each sub-interval carries a regime (G_osc, q_osc, r_osc) and, for every factor, the
-    representation it uses is checked to be evaluable over the sub-interval up to a clamp gap
-    of at most HANDOVER_CLAMP_MAX_GRID_STEPS source-grid steps (see _ClampedTk).
+    A transfer function's breakpoint is its *switch node*, `crossover_z`: the Liouville-Green
+    row's first sample, the largest source-grid node strictly below its initialisation point
+    z_init (ComputeTargets/handover.py). Both of its representations are stored there, and its
+    numeric spline and the QuadSource spline of f continue HANDOVER_OVERLAP_NODES nodes below
+    it, so each sub-interval is covered by the representation its regime selects, with no gap.
+
+    Each sub-interval carries a regime (G_osc, q_osc, r_osc), and for every factor -- and for the
+    QuadSource spline on an all-smooth sub-interval -- the representation it uses is checked to
+    cover the sub-interval strictly (_check_region_covers). A representation that falls short
+    raises, naming the factor, the sub-interval and the region. There is no clamp and no
+    tolerance beyond MIN_SUBINTERVAL_LOG_WIDTH.
 
     :return: dict with "subintervals" (list of dicts, descending in z, each with z_max, z_min,
-        regime, method, clamp gaps and the clamped factor objects) and "metadata" (the JSON-able
+        regime, method and the two transfer-function objects) and "metadata" (the JSON-able
         record stored as metadata["partition"]).
     """
     Gk_f: GkSourceFunctions = GkPolicy.functions
@@ -435,8 +303,6 @@ def build_partition(
         )
         edges[-1] = log_bottom
 
-    max_gap = HANDOVER_CLAMP_MAX_GRID_STEPS * _mean_source_grid_step(source)
-
     source_region = source.numeric_region
     if source_region is None:
         raise RuntimeError(
@@ -456,10 +322,9 @@ def build_partition(
             r_log_break >= log_hi - MIN_SUBINTERVAL_LOG_WIDTH,
         )
         G_osc, q_osc, r_osc = regime
-        gaps = {}
 
         # Green's function: GkSourcePolicyData guarantees its regions cover the crossover with
-        # clearance, so no clamping is offered -- the checks are strict, as they were before.
+        # clearance; the checks are strict.
         if G_osc:
             if (
                 Gk_f.sin_amplitude is None
@@ -479,8 +344,9 @@ def build_partition(
                 "Gk numeric", Gk_f.numeric_region, log_hi, log_lo, z_hi, z_lo
             )
 
-        # transfer functions: partition on crossover_z, clamp to the evaluable range
-        factors = {}
+        # transfer functions: partitioned at their switch nodes, and now checked as strictly as
+        # G. Both representations are stored at the switch node and the numeric spline runs
+        # HANDOVER_OVERLAP_NODES nodes past it, so coverage holds by construction.
         for label, functions, osc in (("Tq", Tq_f, q_osc), ("Tr", Tr_f, r_osc)):
             if osc:
                 region_max, region_min = functions.WKB_region
@@ -488,40 +354,35 @@ def build_partition(
                     raise RuntimeError(
                         f"compute_QuadSource_integral: z_response={z_response:.5g} (sub-interval bottom z={z_lo:.5g}) lies below the lowest Liouville-Green sample z={region_min:.5g} of {label} (WKB region = ({region_max:.5g}, {region_min:.5g}))"
                     )
-                gaps[label] = _check_gap(
-                    f"the Liouville-Green representation of {label}",
-                    log_hi - log(1.0 + region_max),
-                    max_gap,
+                _check_region_covers(
+                    f"Liouville-Green representation of {label} (switch node z={functions.crossover_z:.8g}, z_init={functions.z_init:.8g})",
+                    functions.WKB_region,
+                    log_hi,
+                    log_lo,
                     z_hi,
                     z_lo,
-                    f"WKB region = ({region_max:.5g}, {region_min:.5g}), hand-over z={functions.crossover_z:.5g}",
                 )
             else:
+                # open above: T = 1 and dT/dz = 0 exactly above the numeric samples
                 region_max, region_min = functions.numeric_region
-                gaps[label] = _check_gap(
-                    f"the numeric representation of {label}",
-                    log(1.0 + region_min) - log_lo,
-                    max_gap,
+                _check_region_covers(
+                    f"numeric representation of {label} (switch node z={functions.crossover_z:.8g}, z_init={functions.z_init:.8g})",
+                    (inf, region_min),
+                    log_hi,
+                    log_lo,
                     z_hi,
                     z_lo,
-                    f"numeric region = ({region_max:.5g}, {region_min:.5g}), hand-over z={functions.crossover_z:.5g}",
                 )
-            factors[label] = _ClampedTk(functions, osc)
 
         if not any(regime):
             # ordinary quadrature of the QuadSource spline of f, valid on source.numeric_region
-            source_max, source_min = source_region
-            if log(1.0 + source_max) < log_hi - DEFAULT_FLOAT_PRECISION:
-                raise RuntimeError(
-                    f"compute_QuadSource_integral: all-smooth sub-interval z in ({z_hi:.5g}, {z_lo:.5g}) starts above the QuadSource spline range ({source_max:.5g}, {source_min:.5g})"
-                )
-            gaps["source"] = _check_gap(
-                "the QuadSource spline of f",
-                log(1.0 + source_min) - log_lo,
-                max_gap,
+            _check_region_covers(
+                "QuadSource spline of f",
+                source_region,
+                log_hi,
+                log_lo,
                 z_hi,
                 z_lo,
-                f"QuadSource numeric region = ({source_max:.5g}, {source_min:.5g})",
             )
             method = "quad"
         else:
@@ -534,9 +395,8 @@ def build_partition(
                 "log_width": log_hi - log_lo,
                 "regime": regime,
                 "method": method,
-                "gaps": gaps,
-                "Tq": factors["Tq"],
-                "Tr": factors["Tr"],
+                "Tq": Tq_f,
+                "Tr": Tr_f,
             }
         )
         records.append(
@@ -545,15 +405,26 @@ def build_partition(
                 "z_min": z_lo,
                 "regime": list(regime),
                 "method": method,
-                "clamp_gaps_log1pz": gaps,
             }
         )
+
+    # where each transfer function hands over, and how well its two representations agree at
+    # the switch node and the overlap nodes, where both are stored
+    handover = {
+        label: {
+            "z_init": float(functions.z_init),
+            "z_switch": float(functions.crossover_z),
+            "handover_continuity": functions.handover_continuity,
+        }
+        for label, functions in (("Tq", Tq_f), ("Tr", Tr_f))
+    }
 
     metadata = {
         "z_source_max": float(z_source_max),
         "z_response": float(z_response),
         "G_type": G_type,
         "breakpoints": [r for r in (G_record, q_record, r_record) if r is not None],
+        # the transfer functions' breakpoints: their switch nodes (not z_init; see "handover")
         "crossover_z_q": Tq_f.crossover_z,
         "crossover_z_r": Tr_f.crossover_z,
         # persisted by GkSourcePolicyData, read here for the record only; not used (see the
@@ -561,9 +432,9 @@ def build_partition(
         "Levin_z_unused": (
             get_z(GkPolicy.Levin_z) if GkPolicy.Levin_z is not None else None
         ),
-        "max_clamp_gap_log1pz": max_gap,
         "min_subinterval_log_width": MIN_SUBINTERVAL_LOG_WIDTH,
         "skipped": skipped,
+        "handover": handover,
         "subintervals": records,
     }
 
@@ -779,15 +650,18 @@ def evaluate_QuadSource_integral(
         Tq_f = Tk_functions_builder(model, q.k, Tq_numeric, Tq_WKB)
         Tr_f = Tk_functions_builder(model, r.k, Tr_numeric, Tr_WKB)
 
+        # like with like: the Liouville-Green initialisation point z_init from the supplied Tk
+        # objects against the z_init QuadSource recorded when it walked its region (its
+        # crossover_z_q/crossover_z_r are numeric_z_init(), not switch nodes)
         for label, functions, recorded in (
             ("q", Tq_f, source.crossover_z_q),
             ("r", Tr_f, source.crossover_z_r),
         ):
             if recorded is not None and abs(
-                functions.crossover_z - recorded
+                functions.z_init - recorded
             ) > DEFAULT_FLOAT_PRECISION * max(1.0, abs(recorded)):
                 raise RuntimeError(
-                    f"compute_QuadSource_integral: hand-over redshift of T_{label} from the supplied Tk objects is z={functions.crossover_z:.8g}, but the QuadSource (store_id={source.store_id}) records z={recorded:.8g}"
+                    f"compute_QuadSource_integral: Liouville-Green initialisation redshift z_init of T_{label} from the supplied Tk objects is z={functions.z_init:.8g}, but the QuadSource (store_id={source.store_id}) records z_init={recorded:.8g}"
                 )
 
         z_resp = get_z(z_response)
@@ -797,7 +671,7 @@ def evaluate_QuadSource_integral(
         subintervals = partition["subintervals"]
         total_log_width = sum(item["log_width"] for item in subintervals)
 
-        source_f = _ClampedSource(source.functions.source, source.numeric_region)
+        source_f = source.functions.source
 
         numeric_quad: float = 0.0
         numeric_quad_abserr: float = 0.0
@@ -1033,8 +907,9 @@ def phase_group_Levin_integral(
     that the linear sum of the groups' error bounds is bounded by atol. rtol is passed to every
     group unchanged (a relative tolerance has no additive share).
 
-    :param Tq_f, Tr_f: TkSourceFunctions-protocol objects (normally _ClampedTk wrappers) whose
-        numeric accessors are read if the factor is smooth in `regime`, WKB accessors if not
+    :param Tq_f, Tr_f: TkSourceFunctions-protocol objects whose numeric accessors are read if
+        the factor is smooth in `regime`, WKB accessors if not. build_partition has checked that
+        the representation each regime selects covers the sub-interval; nothing is clamped
     :return: dict with "value", "abserr", "converged", "phase_limited", "groups" (per-group
         metadata, values scaled by (1 + z_response) like "value") and "Levin_results" (the raw
         driver result dicts, for aggregation into LevinData)
@@ -1657,8 +1532,7 @@ def numeric_quad_integral(
     """
     (1 + z_response) int_{log(1+min_z)}^{log(1+max_z)} G f / H^2 d log(1+z') by scipy.quad, on a
     sub-interval where every factor is smooth: G from Gk_f.numeric_Gk and f from the QuadSource
-    dense-output spline (or `source_f`, a callable f(log(1+z'), z_is_log=True) standing in for it,
-    e.g. the clamped wrapper evaluate_QuadSource_integral builds). The measure is spec 03 R28 /
+    dense-output spline (or `source_f`, a callable f(log(1+z'), z_is_log=True) standing in for it). The measure is spec 03 R28 /
     spec 04 R1 (audit QI-2): d log(1+z') supplies the 1/(1+z'), the post-multiplication the (1+z).
 
     :return: dict with "value", "abserr" (scipy's estimate, scaled like "value") and "data"
@@ -1931,7 +1805,8 @@ class QuadSourceIntegral(DatastoreObject):
         not turn this into a relative error by dividing by |total|.
 
         It does *not* include the error of the ingredients -- the QuadSource spline of f, the
-        Liouville-Green closed forms, the re-splined phases, the hand-over clamp -- which is
+        Liouville-Green closed forms, the re-splined phases, the two representations' mismatch
+        at the hand-over (metadata["partition"]["handover"]) -- which is
         four to five orders larger at production settings and is recorded on the campaign's
         status board (prompts/source-remediation/IMPLEMENTATION_STATE.md section 3, issue
         [09-abserr-is-a-quadrature-bound]).

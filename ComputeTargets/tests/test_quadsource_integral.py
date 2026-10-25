@@ -44,14 +44,13 @@ from ComputeTargets.QuadSourceIntegral import (
     evaluate_QuadSource_integral,
     phase_group_Levin_integral,
     build_partition,
-    _ClampedTk,
     _check_region_covers,
     numeric_quad_integral,
     LEVIN_USE_THETA_DERIV,
-    HANDOVER_CLAMP_MAX_GRID_STEPS,
     MIN_SUBINTERVAL_LOG_WIDTH,
     BESSEL_ORDER_CHECK_TOL,
 )
+from ComputeTargets.handover import HANDOVER_OVERLAP_NODES
 from ComputeTargets.analytic_Gk import compute_analytic_G
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from ComputeTargets.phase_groups import (
@@ -62,10 +61,12 @@ from ComputeTargets.phase_groups import (
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from config.defaults import DEFAULT_FLOAT_PRECISION
 import ComputeTargets.tests.test_tk_source_functions as tk_fixtures
+from ComputeTargets.tests import kohri_terada as KT
 from ComputeTargets.tests.test_tk_source_functions import (
     Fixture,
     FakeModel,
     log_grid,
+    DECIDED_OVERLAP_NODES,
     PRODUCTION_SAMPLES_PER_LOG10Z,
 )
 from ComputeTargets.tests.test_phase_groups import ExactTk, ExactGk, BesselPhaseGk
@@ -273,12 +274,15 @@ class ExactTkFunctions(ExactTk):
     """
     ExactTk (exact amplitude-phase decomposition of the analytic T, valid at every z) with the
     region bookkeeping TkSourceFunctions exposes, so that it can be injected through
-    evaluate_QuadSource_integral's Tk_functions_builder. Its regions never bind.
+    evaluate_QuadSource_integral's Tk_functions_builder. Its regions never bind. It has no
+    sampled seam, so its z_init and switch node coincide and its continuity record is empty.
     """
 
     def __init__(self, k, w, model, crossover_z):
         super().__init__(k, w, model)
         self.crossover_z = crossover_z
+        self.z_init = crossover_z
+        self.handover_continuity = []
         self.numeric_region = (inf, crossover_z)
         self.WKB_region = (crossover_z, 0.0)
 
@@ -422,11 +426,20 @@ class Case:
                 envelope_models[float(k)], k, Tn, Tw
             )
 
-        # source: the exact f, splined on the production grid over the both-numeric region
+        # source: the exact f, splined on the production grid over the both-numeric region.
+        # Production's shape since prompts/handover prompt 12: QuadSource stores the source down
+        # to the earlier factor's switch node -- at most one grid step below the earlier z_init
+        # -- and HANDOVER_OVERLAP_NODES nodes further, so the grid continues that many steps
+        # plus one past z_floor at its own spacing.
         z_floor = max(self.Fq.crossover_z, self.Fr.crossover_z)
         z_grid = log_grid(
             1.0 + z_source_max, 1.0 + z_floor, PRODUCTION_SAMPLES_PER_LOG10Z
         )
+        step = log(1.0 + z_grid[-2]) - log(1.0 + z_grid[-1])
+        z_grid = z_grid + [
+            exp(log(1.0 + z_floor) - j * step) - 1.0
+            for j in range(1, HANDOVER_OVERLAP_NODES + 2)
+        ]
         self.source = FakeQuadSource(
             self.q.k,
             self.r.k,
@@ -844,8 +857,8 @@ class TestSeams(unittest.TestCase):
                     case.r.k,
                     (True, True, True),
                     case.GkPolicy.functions,
-                    _ClampedTk(Tq_f, True),
-                    _ClampedTk(Tr_f, True),
+                    Tq_f,
+                    Tr_f,
                     FakeZ(case.z_resp),
                     max_z=a,
                     min_z=c,
@@ -888,12 +901,13 @@ class TestSeams(unittest.TestCase):
                 groups = build_phase_groups(
                     (False, False, True),
                     Gk=case.GkPolicy.functions.numeric_Gk,
-                    Tq=_ClampedTk(Tq_f, False),
-                    Tr=_ClampedTk(Tr_f, True),
+                    Tq=Tq_f,
+                    Tr=Tr_f,
                     model_functions=case.model.functions,
                     w_background=case.model.functions.wBackground,
                 )
-                # both representations are evaluated AT the hand-over (the spline's last node and
+                # both representations are evaluated AT the hand-over (a node of the source spline
+                # -- its last before prompts/handover prompt 12 added the overlap below it -- and
                 # the LG region's first sample), so the difference is the seam alone
                 log_c = log(1.0 + z_cross)
                 H_c = case.model.Hubble(z_cross)
@@ -913,65 +927,249 @@ class TestSeams(unittest.TestCase):
 
 
 # =============================================================================================
-# hand-over gap (production grid shape) and its clamp
+# the hand-over seam in production's shape: no gap, no clamp (prompts/handover prompt 12, B1)
 # =============================================================================================
 
 
-class TestHandOverClamp(unittest.TestCase):
+def production_seam_inputs(w: float, k: float, x_max: float = 1.0e3):
     """
-    In production the first WKB sample sits up to one grid step below the hand-over
-    (Fixture(drop_first_WKB_sample=True) reproduces this), so TkSourceFunctions.WKB_region[0] <
-    crossover_z and no accessor is evaluable in between. The integral clamps the LG accessors
-    to WKB_region[0] across that gap (board section 5 note 6) and records the gap; the effect on
-    the total is measured here against the same case with the gap closed: 5.1e-3 for a
-    one-step gap, the largest single error term in the chain (board issue
-    [08-handover-clamp-error]).
+    The (Tk_numeric, Tk_WKB) of a production-shaped Fixture: the Liouville-Green row starts at
+    the largest grid node below z_init (`drop_first_WKB_sample=True`), and the numeric samples
+    continue past z_init (Fixture's default since prompt 12).
+    """
+    return exact_Tk_inputs(Fixture(w, k=k, x_max=x_max, drop_first_WKB_sample=True))
+
+
+class _ShortenedLG:
+    """A TkSourceFunctions whose Liouville-Green region is declared to start at `z_top`."""
+
+    def __init__(self, functions, z_top: float):
+        self._functions = functions
+        self.WKB_region = (z_top, functions.WKB_region[1])
+
+    def __getattr__(self, name):
+        return getattr(self._functions, name)
+
+
+class TestHandOverSeam(unittest.TestCase):
+    """
+    Before prompts/handover prompt 12 the partition broke each T at z_init, the Liouville-Green
+    row's first sample sat up to one grid step below it (production's shape, which
+    Fixture(drop_first_WKB_sample=True) reproduces) and the numeric spline stopped at it, so no
+    accessor was evaluable in between and the integral clamped across the gap -- 5.1e-3 of the
+    total for a one-step gap (board issue [08-handover-clamp-error]). The break is now the switch
+    node, both representations cover their sub-intervals, and a shortfall raises.
     """
 
-    def test_gap_is_recorded_and_bridged(self):
+    def test_f_partition_records_no_gap_and_a_shortened_representation_raises(self):
+        """
+        prompts/handover prompt 12 (B1), section 4.2 test (f). build_partition on production-
+        shaped fixtures: breakpoints at the switch nodes, every representation covering its
+        sub-interval, no gap recorded anywhere, and the hand-over record in its place. A
+        representation shortened by one node raises, naming the factor, the sub-interval and the
+        region.
+        """
         b = 0.0
         w = w_of_b(b)
         shape = SHAPES[0]
-        reference = Case(b, shape, 100.0, exact=False)
-        gapped = Case(b, shape, 100.0, exact=False)
-        gapped.Tr_inputs = exact_Tk_inputs(
-            Fixture(w, k=shape.r, drop_first_WKB_sample=True)
-        )
-        out_ref = reference.run()
-        out_gap = gapped.run()
-        gaps = [
-            item["clamp_gaps_log1pz"]
-            for item in out_gap["metadata"]["partition"]["subintervals"]
-        ]
-        Tr_gaps = [g["Tr"] for g in gaps if g.get("Tr", 0.0) > 0.0]
-        self.assertEqual(len(Tr_gaps), 1)
-        step = (
-            out_gap["metadata"]["partition"]["max_clamp_gap_log1pz"]
-            / HANDOVER_CLAMP_MAX_GRID_STEPS
-        )
-        self.assertLess(Tr_gaps[0], 1.05 * step)
-        rel = abs(out_gap["total"] - out_ref["total"]) / abs(out_ref["total"])
-        rel_oracle = abs(out_gap["total"] - out_gap["analytic_rad"]) / abs(
-            out_gap["analytic_rad"]
-        )
-        print(
-            f"\n[hand-over clamp] gap {Tr_gaps[0]:.3e} in log(1+z) ({Tr_gaps[0] / step:.2f} grid steps); "
-            f"total with gap vs without: rel {rel:.3e}; with gap vs analytic_rad: rel {rel_oracle:.3e}"
-        )
-        # measured 5.1e-3 for a one-step gap (board issue [08-handover-clamp-error]); the
-        # assertion only pins the order of magnitude
-        self.assertLess(rel, 1.0e-2)
+        case = Case(b, shape, 100.0, exact=False)
+        case.Tq_inputs = production_seam_inputs(w, shape.q)
+        case.Tr_inputs = production_seam_inputs(w, shape.r)
+        Fq = Fixture(w, k=shape.q, drop_first_WKB_sample=True)
+        Fr = Fixture(w, k=shape.r, drop_first_WKB_sample=True)
 
-    def test_gap_beyond_tolerance_raises(self):
+        partition = case.partition()
+        metadata = partition["metadata"]
+
+        # no gap anywhere: the clamp's records are gone ...
+        self.assertNotIn("max_clamp_gap_log1pz", metadata)
+        for record in metadata["subintervals"]:
+            self.assertNotIn("clamp_gaps_log1pz", record)
+        for item in partition["subintervals"]:
+            self.assertNotIn("gaps", item)
+
+        # ... the hand-over record is in their place ...
+        breakpoints = {bp["factor"]: bp["z"] for bp in metadata["breakpoints"]}
+        for label, F in (("Tq", Fq), ("Tr", Fr)):
+            record = metadata["handover"][label]
+            self.assertEqual(record["z_init"], F.crossover_z)
+            self.assertEqual(record["z_switch"], F.z_switch)
+            self.assertLess(record["z_switch"], record["z_init"])
+            self.assertEqual(breakpoints[label], F.z_switch)
+            self.assertEqual(
+                [r["z"] for r in record["handover_continuity"]],
+                F.z_numeric_below[: DECIDED_OVERLAP_NODES + 1],
+            )
+
+        # ... and every representation covers its sub-interval, measured in log(1+z')
+        worst = 0.0
+        source_max, source_min = case.source.numeric_region
+        for item in partition["subintervals"]:
+            log_hi = log(1.0 + item["z_max"])
+            log_lo = log(1.0 + item["z_min"])
+            for label, osc in zip(("Tq", "Tr"), item["regime"][1:]):
+                functions = item[label]
+                if osc:
+                    gap = log_hi - log(1.0 + functions.WKB_region[0])
+                else:
+                    gap = log(1.0 + functions.numeric_region[1]) - log_lo
+                worst = max(worst, gap)
+            if item["method"] == "quad":
+                worst = max(worst, log(1.0 + source_min) - log_lo)
+        print(
+            f"\n[B1 partition] {len(partition['subintervals'])} sub-intervals; largest "
+            f"shortfall of any representation {worst:.3e} in log(1+z') (MIN_SUBINTERVAL_LOG_WIDTH "
+            f"{MIN_SUBINTERVAL_LOG_WIDTH:.1e}); switch nodes Tq {Fq.z_switch:.10g} < z_init "
+            f"{Fq.crossover_z:.10g}, Tr {Fr.z_switch:.10g} < z_init {Fr.crossover_z:.10g}"
+        )
+        self.assertLessEqual(worst, MIN_SUBINTERVAL_LOG_WIDTH)
+
+        Tq_f = partition["subintervals"][0]["Tq"]
+        Tr_f = partition["subintervals"][0]["Tr"]
+
+        # the source spline shortened by one node: it ends at the node just above the earlier
+        # switch node, which it then no longer reaches
+        earlier_switch = max(Fq.z_switch, Fr.z_switch)
+        grid = [z.z for z in case.source.z_sample]
+        shortened = FakeQuadSource(
+            case.q.k,
+            case.r.k,
+            [z for z in grid if z > earlier_switch],
+            case.f_exact,
+            case.source.crossover_z_q,
+            case.source.crossover_z_r,
+        )
+        with self.assertRaises(RuntimeError) as ctx:
+            build_partition(
+                case.GkPolicy, Tq_f, Tr_f, shortened, case.z_resp, case.z_source_max
+            )
+        message = str(ctx.exception)
+        print(f"[B1 partition] source spline one node short: {message}")
+        self.assertIn("QuadSource spline of f", message)
+        self.assertIn("sub-interval bottom", message)
+
+        # Tr's Liouville-Green representation shortened by one node: it starts at the stored
+        # sample below the switch node
+        with self.assertRaises(RuntimeError) as ctx:
+            build_partition(
+                case.GkPolicy,
+                Tq_f,
+                _ShortenedLG(Tr_f, Fr.z_WKB[1]),
+                case.source,
+                case.z_resp,
+                case.z_source_max,
+            )
+        message = str(ctx.exception)
+        print(f"[B1 partition] Tr's LG region one node short: {message}")
+        self.assertIn("Liouville-Green representation of Tr", message)
+        self.assertIn("sub-interval top", message)
+        self.assertIn(f"{Fr.z_WKB[1]:.5g}", message)
+
+    # docs/handover/REALISTIC-LARGE-X.md Table 2 (A2, measured on the pre-B1 tree c414451 plus
+    # the script): shape T-first, x_resp = 980, b = 0, N + 9/8 of the realistic cells against
+    # Kohri & Terada eq. (22) and the head at 50 digits, with each cell's own declared error.
+    A2_T_FIRST_980_CLOSED = +3.387e-04  # seam closed; declared error 9.2e-09
+    A2_T_FIRST_980_OPEN = -3.574e-03  # seam open (clamped); declared error 9.1e-09
+    # Table 3: the clamp term on realistic ingredients, open - closed
+    A2_T_FIRST_980_CLAMP_TERM = -3.913e-03
+
+    def test_g_production_seam_reproduces_the_representation_term_not_the_clamp(self):
+        """
+        prompts/handover prompt 12 (B1), section 4.2 test (g). End to end on the realistic
+        fixture with the seam as production has it -- both Liouville-Green rows starting at the
+        largest grid node below z_init, both numeric rows running past it -- `total` against the
+        exact reference, as N + 9/8 = KT_NORM total / predicted + 9/8.
+
+        The configuration is A2's (docs/handover/realistic_large_x.py, run_cell at lam = 1):
+        shape T-first at x_resp = 980, b = 0, the fixtures' x_max from its fixture_x_max rule and
+        its tolerances (1e-45, 1e-12). T-first because both transfer functions hand over inside
+        the range there (A2 recorded a gap for both), and it is the cheaper of the two shapes
+        for which that holds.
+
+        What it must reproduce is A2's representation term, not its clamp term. Before B1 the
+        same production-shaped seam was clamped and gave A2's "open" cell, -3.574e-3, a clamp
+        term of -3.913e-3; with the seam closed by construction A2 measured +3.387e-4, the
+        representation floor of the realistic flavour. B1 is not the closed cell bit for bit:
+        it switches one grid node lower and moves the numeric T and source splines' end
+        intervals off the seam, and docs/handover/HANDOVER-B1.md attributes the difference. So
+        the tolerance is the representation term's own size, |A2 closed| = 3.387e-4: B1 must
+        sit no further from the reference than the closed cell did, which puts it more than
+        ten times closer to the reference than the clamped cell.
+
+        The references' own errors are far below that tolerance and do not enter it (README
+        section 5 rule 8): eq. (22) in double precision is good to its returned total_error
+        (1.7e-14 of total here; asserted below 1e-3 of the tolerance), and A2's closed cell
+        carries a declared error of 9.2e-9.
+        """
+        b = 0.0
+        w = w_of_b(b)
+        shape = next(s for s in SHAPES if s.name == "T-first")
+        x_resp = 980.0
+        x_max = {
+            kk: max(1.0e3, 1.05 * x_resp * kk / shape.r) for kk in (shape.q, shape.r)
+        }
+
+        saved = dict(Case._fixtures)
+        try:
+            for kk in (shape.q, shape.r):
+                Case._fixtures[(w, kk)] = Fixture(w, k=kk, x_max=x_max[kk])
+            case = Case(b, shape, x_resp, exact=False)
+        finally:
+            Case._fixtures.clear()
+            Case._fixtures.update(saved)
+
+        case.Tq_inputs = production_seam_inputs(w, shape.q, x_max[shape.q])
+        case.Tr_inputs = production_seam_inputs(w, shape.r, x_max[shape.r])
+        out = case.run(atol=1.0e-45, rtol=1.0e-12)
+
+        tau = case.model.functions.tau
+        reference = KT.total_from_I_RD(
+            shape.k, shape.q, shape.r, tau(case.z_resp), tau(case.z_source_max)
+        )
+        N_plus = KT.KT_NORM * out["total"] / reference["total"] - KT.KT_NORM
+        reference_error = reference["total_error"] / abs(reference["total"])
+        handover = out["metadata"]["partition"]["handover"]
+
+        tolerance = abs(self.A2_T_FIRST_980_CLOSED)
+        print(
+            f"\n[B1 end to end, T-first, x_resp = 980, production seam] N + 9/8 = {N_plus:+.4e} "
+            f"(eq. (22) reference error {reference_error:.1e}); A2 closed "
+            f"{self.A2_T_FIRST_980_CLOSED:+.3e}, A2 open {self.A2_T_FIRST_980_OPEN:+.3e}; "
+            f"switch nodes Tq {handover['Tq']['z_switch']:.8g} (z_init "
+            f"{handover['Tq']['z_init']:.8g}), Tr {handover['Tr']['z_switch']:.8g} (z_init "
+            f"{handover['Tr']['z_init']:.8g})"
+        )
+
+        # the seam is production's: both factors switch below z_init, and nothing was clamped
+        for label in ("Tq", "Tr"):
+            self.assertLess(handover[label]["z_switch"], handover[label]["z_init"])
+        self.assertNotIn("max_clamp_gap_log1pz", out["metadata"]["partition"])
+
+        self.assertLess(reference_error, 1.0e-3 * tolerance)
+        self.assertLess(abs(N_plus), tolerance)
+        # ... and so it is not the clamped cell
+        self.assertGreater(
+            abs(N_plus - self.A2_T_FIRST_980_OPEN),
+            0.5 * abs(self.A2_T_FIRST_980_CLAMP_TERM),
+        )
+
+    def test_LG_row_that_skips_the_switch_node_raises(self):
+        """
+        A Liouville-Green row whose first sample is not the largest grid node below z_init has
+        skipped the switch node. Before prompt 12 this was a gap of several grid steps, beyond
+        the clamp's tolerance; there is no tolerance now, and TkSourceFunctions refuses it.
+        """
         b = 0.0
         shape = SHAPES[0]
         case = Case(b, shape, 100.0, exact=False)
         Tk_numeric, Tk_WKB = case.Tr_inputs
-        # drop five WKB samples: the gap is then ~5 grid steps, beyond the clamp tolerance
+        # drop five WKB samples: the first is then five grid steps below the switch node
         Tk_WKB.values = Tk_WKB.values[5:]
         with self.assertRaises(RuntimeError) as ctx:
             case.run()
-        self.assertIn("Liouville-Green representation of Tr", str(ctx.exception))
+        self.assertIn(
+            "largest numeric grid node strictly below z_init", str(ctx.exception)
+        )
 
     def test_response_below_the_LG_samples_raises(self):
         shape = SHAPES[0]
@@ -1822,12 +2020,15 @@ class _MinimalGk:
 class _MinimalTk:
     """
     The region bookkeeping build_partition reads; no accessor is called. `crossover_z` is a
-    float in production (TkSourceFunctions.crossover_z = TkWKBIntegration.z_init), so a factor
-    that is smooth over the whole range is given a hand-over at the bottom of it.
+    float in production (TkSourceFunctions.crossover_z, the switch node), so a factor that is
+    smooth over the whole range is given a hand-over at the bottom of it. It has no sampled
+    seam: z_init is the switch node and the continuity record is empty.
     """
 
     def __init__(self, crossover_z: float):
         self.crossover_z = crossover_z
+        self.z_init = crossover_z
+        self.handover_continuity = []
         self.numeric_region = (inf, crossover_z)
         self.WKB_region = (crossover_z, 0.0)
         self.phase = None
