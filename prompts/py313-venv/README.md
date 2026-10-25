@@ -106,8 +106,8 @@ Measured by the orchestrator on 2026-10-25 while writing this plan.
 
 | # | Prompt | Covers | Where | Model | Status |
 |---|---|---|---|---|---|
-| 01 | [`01-move-the-laptop-venv-to-python-3.13.md`](01-move-the-laptop-venv-to-python-3.13.md) | the pins; the laptop's venv; `distributions`; `CLAUDE.md`; the roots; R6 with the hard-kill pair | laptop | Opus | written |
-| 02 | [`02-move-the-mac-studio-venv-to-python-3.13.md`](02-move-the-mac-studio-venv-to-python-3.13.md) | the Mac Studio's checkout and venv; the roots; R7; A3 v2 read under the new venv | Mac Studio | Opus | written, held on 01's review |
+| 01 | [`01-move-the-laptop-venv-to-python-3.13.md`](01-move-the-laptop-venv-to-python-3.13.md) | the pins; the laptop's venv; `distributions`; `CLAUDE.md`; the roots; R6 with the hard-kill pair | laptop | Opus | landed `d4e5504`, reviewed 2026-10-25 |
+| 02 | [`02-move-the-mac-studio-venv-to-python-3.13.md`](02-move-the-mac-studio-venv-to-python-3.13.md) | the Mac Studio's checkout and venv; the roots; R7; A3 v2 read under the new venv | Mac Studio | Opus | written; released by 01's review |
 
 Both are written now, because neither prompt's task depends on what the other finds. 02 is
 **held** until 01 has landed and been reviewed, because 02's freeze must equal 01's, and 02's

@@ -1,9 +1,9 @@
 # py313-venv campaign — implementation state
 
-**Last updated:** 2026-10-25 · **Status: 01 landed, awaiting review — 1 of 2 landed.** The laptop's
-venv is Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy` 2.0.55, and R6's three stores are
-`39809dca…` (FP6 holds). 02 is written and **held** until 01's review (README §2). U1–U4 were ruled
-by the user.
+**Last updated:** 2026-10-25 · **Status: STARTED — 1 of 2 landed and reviewed** (01 at `d4e5504`,
+reviewed 2026-10-25, §5.2). The laptop's venv is Python 3.13.16 with `ray` 2.59.0 and `SQLAlchemy`
+2.0.55, and R6's three stores are `39809dca…` (FP6 holds). 02 is written and released by 01's
+review; its orchestrator note is still to be written. U1–U4 were ruled by the user.
 
 The plan is [`README.md`](README.md), written on 2026-10-25 at `ebfae11`.
 
@@ -42,8 +42,8 @@ The orchestrator's choices of method, C1–C7, are in README §6.2.
 
 | # | Prompt | Covers | Where | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|---|
-| 01 | [Move the laptop's venv to Python 3.13](01-move-the-laptop-venv-to-python-3.13.md) | the two pins; the venv; `distributions`; `CLAUDE.md`; the roots; R6 with the hard-kill pair | laptop | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25, awaiting review | the commit that adds its log | [log](logs/01-move-the-laptop-venv-to-python-3.13.md) |
-| 02 | [Move the Mac Studio's venv to Python 3.13](02-move-the-mac-studio-venv-to-python-3.13.md) | the checkout and venv there; the roots; R7; A3 v2 read under 3.13 | Mac Studio | Opus | ✍️ 2026-10-25 · ⏸ held on 01's review | ⬜ | — | — |
+| 01 | [Move the laptop's venv to Python 3.13](01-move-the-laptop-venv-to-python-3.13.md) | the two pins; the venv; `distributions`; `CLAUDE.md`; the roots; R6 with the hard-kill pair | laptop | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25, reviewed 2026-10-25 (§5.2) | `d4e5504` | [log](logs/01-move-the-laptop-venv-to-python-3.13.md) |
+| 02 | [Move the Mac Studio's venv to Python 3.13](02-move-the-mac-studio-venv-to-python-3.13.md) | the checkout and venv there; the roots; R7; A3 v2 read under 3.13 | Mac Studio | Opus | ✍️ 2026-10-25 · released by 01's review (§5.2) | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed.
 
@@ -107,11 +107,12 @@ If FP6 or FP7 fails, the bisection of README §4.3 is the user's call.
   (reported at `sqlalchemy/sql/selectable.py:4765`, where the collector found it). 3.13 newly warns
   when a `sqlite3.Connection` is collected unclosed. Traced with `PYTHONTRACEMALLOC=40` to
   `ObjectFactories/tests/test_quadsource_parent_key.py:443-444`, where `_read` does
-  `sqla.create_engine("sqlite://")` and `metadata.create_all(engine)` and never disposes it. 3.12
-  prints nothing there. **Impact:** none on any store or result: it is a test's in-memory engine,
-  and the root passes at its count. It is noise in the suite under 3.13. **Next step:**
-  `engine.dispose()` at the end of `_read` (or a `try`/`finally`), and a check that no other test
-  does the same. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.23.
+  `sqla.create_engine("sqlite://")` and `metadata.create_all(engine)`. *Corrected in review
+  (§5.2):* `_read` does call `engine.dispose()` after its `with` block, but
+  `test_a_class_not_yet_built_is_an_error_not_a_silent_miss` expects `_read` to raise, and the
+  raise skips the call. 3.12 prints nothing there. **Impact:** none on any store or result: it is a
+  test's in-memory engine, and the root passes at its count. It is noise in the suite under 3.13.
+  **Next step:** a `try`/`finally` around `_read`'s body, so that `dispose()` runs on the raise. Not assigned. Indexed at `docs/OPEN_ISSUES.md` §1.23.
 
 **Measured here, held on another board:** `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`
 (the `rrk-v020-adoption` board, §3) was narrowed on 2026-10-25 by 01's hard-kill pair under Ray
@@ -145,7 +146,7 @@ here: the `handover` board gains an `**Assigned (2026-10-25):**` line, and its r
 ### 5.1 After prompt 01 (2026-10-25)
 
 01 ran on the laptop, in the main checkout, at the dispatch `HEAD` `55c6a54`, from 12:12 to 15:37
-GMT. It landed in one commit, awaiting review. The record is
+GMT. It landed in one commit, `d4e5504`. The record is
 [`docs/py313-venv-verification.md`](../../docs/py313-venv-verification.md) §1, and the log is
 [`logs/01-move-the-laptop-venv-to-python-3.13.md`](logs/01-move-the-laptop-venv-to-python-3.13.md).
 - **The venv** is Python 3.13.16 (`/opt/local/bin/python3.13 -m venv venv`, then `pip install -r
@@ -172,3 +173,49 @@ GMT. It landed in one commit, awaiting review. The record is
 - **Under `var/`:** R6's six run directories, seven launch logs, three stores with sidecars, and
   `var/py313-venv-01/`. None is retired.
 - **02 is released by the review of this prompt**, not by this commit.
+
+### 5.2 Review of 01 (2026-10-25)
+
+The orchestrator's eight checks (`orchestrator/prompt-01.md` §3), at `d4e5504`, all pass.
+1. **Scope.** The commit holds acceptance 6's paths, and no `.py` file. `requirements.txt` changes
+   in its two lines, and `runregistrykit.toml` in `distributions` and its comment.
+2. **The venv, measured here.**
+   - Python 3.13.16, and `pyvenv.cfg` names MacPorts' 3.13.
+   - `package_provenance` gives `ray` 2.59.0, `SQLAlchemy` 2.0.55, numpy 2.2.4 and scipy 1.16.3.
+     The three git packages are at `f47b9a25…`, `67a75b97…` and `0bae3a3c…`, none editable.
+   - `pip check` is clean, and `pip install --dry-run -r requirements.txt` would install nothing.
+     The freeze has 101 lines.
+   - The 3.12 venv is intact at the recorded path, its `pyvenv.cfg` 3.12.15.
+3. **`CLAUDE.md` and the toml.** One bullet in "Repository mechanics", and the packages sentence is
+   unchanged. `distributions` lists the six names.
+4. **The roots, re-run here serially under 3.13.** AdaptiveLevin 32, CosmologyModels 39,
+   LiouvilleGreen 148 (skipped=1), ObjectFactories 280, RunDrivers 120, tools 49 and ComputeTargets
+   737, all OK. The wall-clock test passed this time.
+5. **R6's four launches**, as the log and `measure/out/` record them. `store fingerprint`,
+   recomputed here without `--write`, gives `39809dca…` for `reference` and `resumed`, each
+   matching its recorded fingerprint.
+6. **The hard-kill pair.** The route held, and the `hardkill` store recomputes to `39809dca…`. The
+   GCS server's measurement narrows `[03-a-sigkilled-drivers-gcs-server-deadlocks-in-shutdown]`,
+   on its board and in the index.
+7. **Nothing else moved.** `find var -newer <marker>` lists R6's six run directories, seven launch
+   logs, three stores with their sidecars, and `var/py313-venv-01/`, and nothing else. The tree is
+   clean, and `list` shows 59 runs, 57 finished, 2 `unknown`. The lock is free.
+8. **The records.** The log has every README §5.1 heading and ten classified deviations. The
+   verification record's §1 opens with the venv. The closed issue is on the `handover` board's §4
+   and this board's §4. `docs/OPEN_ISSUES.md` reads 104 open: one row deleted and two added.
+
+**Corrected in review.** `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` said `_read`
+"never disposes" its engine. It does call `engine.dispose()`, after its `with` block. One of the
+class's five tests, `test_a_class_not_yet_built_is_an_error_not_a_silent_miss`, expects `_read` to
+raise, and the raise skips the call. The entry and its next step are corrected to say so.
+
+**Residue** fixed in this commit: the §1 row's commit; the header; README §2's rows; and
+`prompts/INDEX.md`'s row.
+
+**Left for the user:**
+- R6's three throwaway stores, to retire;
+- the 3.12 venv in `retired-venvs/`, to delete once 02 has landed;
+- the token-auth issue's decision (§3), which also bears on 02. R7 will write a
+  `~/.ray/auth_token` on the Mac Studio.
+
+**02 is released.** Its orchestrator note is written next.

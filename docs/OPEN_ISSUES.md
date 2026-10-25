@@ -956,7 +956,7 @@ board.
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-ray-2.59-enables-token-auth-and-writes-a-token-into-home]` | py313-venv | Ray 2.59.0 turns on token auth for a local cluster: a `WARNING … Token authentication is enabled` line in every build and reader log, and `~/.ray/auth_token` (mode 644) written outside the checkout at the first start. Nothing stored changes. Not assigned. |
-| `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` | py313-venv | Under Python 3.13, ObjectFactories prints one `ResourceWarning: unclosed database`, from `test_quadsource_parent_key.py:443-444`'s undisposed `create_engine("sqlite://")`. Test noise only. Not assigned. |
+| `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` | py313-venv | Under Python 3.13, ObjectFactories prints one `ResourceWarning: unclosed database`, from `test_quadsource_parent_key.py:443-444`'s `create_engine("sqlite://")`, whose `dispose()` the one test that expects `_read` to raise skips. Test noise only. Not assigned. |
 
 ---
 

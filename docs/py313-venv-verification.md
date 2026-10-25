@@ -92,6 +92,8 @@ ran from 8 to 54.
     - Python 3.13 newly warns when a `sqlite3.Connection` is collected unclosed.
     - `PYTHONTRACEMALLOC` traced it to `ObjectFactories/tests/test_quadsource_parent_key.py:443-444`,
       where `_read` makes `sqla.create_engine("sqlite://")` and never disposes it.
+      *Corrected in the review of 01 (board §5.2):* `_read` does dispose of it after its `with`
+      block. One test of the class expects `_read` to raise, and the raise skips the call.
     - It is a test's in-memory engine, not a package's and not a store's. It is opened as
       `[01-a-test-leaves-an-in-memory-sqlite-engine-undisposed]` (§1.7).
 
