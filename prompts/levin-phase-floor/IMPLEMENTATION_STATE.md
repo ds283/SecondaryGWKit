@@ -53,7 +53,8 @@ Q1–Q4, are in README §6.3.
 prompt. Only its method waits on the measurement before it (README §6.2 C6).
 
 **Orchestrator notes** are written just before dispatch, under `orchestrator/`. The planning
-commit is this board's first.
+commit is `6af798f`. [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md) (2026-10-25) dispatches 01
+on the Mac Studio, orchestrated there, in parallel with `handover` 11 in the same checkout.
 
 ## 2. The gates
 
