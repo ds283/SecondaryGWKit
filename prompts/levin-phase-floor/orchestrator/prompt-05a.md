@@ -481,8 +481,17 @@ A3 v2's files are unchanged.
 failed. X2 is opened as `[05a-t-phase-abscissa-rounding-remains]`. X1 is not opened, because
 §9's wording is corrected instead.
 
-**What is left.** R11's and R12's stores, and the worktree `SecondaryGWKit-lpf05a-c4eaefd`, are the
-user's to keep or retire.
+**What was left, done on the user's word after `64aac39`** (2026-10-26). Both stores were retired
+as R9's and R10's were:
+- `store create`, then `store fingerprint --write`, which recorded `1b332ffa…` in each;
+- a dry run, which matched that fingerprint and found only each store's own run naming it;
+- then `store retire`.
+
+Their ten files went, and their sidecars stay as the `retired` record
+([`retire_r11.txt`](../../../docs/levin-phase-floor/05a/rehearsal/out/retire_r11.txt),
+[`retire_r12.txt`](../../../docs/levin-phase-floor/05a/rehearsal/out/retire_r12.txt)). The
+worktree `SecondaryGWKit-lpf05a-c4eaefd` was clean under `git status --short --ignored`, and was
+removed with `git worktree remove`.
 
 ---
 
