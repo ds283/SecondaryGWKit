@@ -411,9 +411,82 @@ check 6's comparison with 05a's $t$ unit on one row. Then, in **one records comm
 R13 and R14's stores are the user's to keep or retire; ask. The worktrees are removed with `git
 worktree remove` on the Mac Studio once the records are committed and the user agrees.
 
-### B.5 Addendum: Part B's dispatch
+### B.5 Addendum, 2026-10-26 17:15 GMT: Part B's dispatch
 
-*Written in the residue commit (§A.4).*
+**Part A** is the code commit **`dc9d28c`**, whose parent is **`9f66622`**. The first dispatch
+(from `2006de7`) stopped before any code, on `TestPayloadContract`'s exact key set. The user ruled
+on that and on eight findings, and the prompt was amended (§9 point 6, `9f66622`). The resumed
+agent's commit passed all nine checks of §A.3 on the laptop, and is pushed. In particular:
+- **The roots,** re-run by the laptop at `dc9d28c`: AdaptiveLevin 32, ComputeTargets 777 (764 +
+  13, the new module's methods), CosmologyModels 39, LiouvilleGreen 148 (1 skipped),
+  ObjectFactories 280, RunDrivers 127, tools 58 (55 + 3, the tool's new test), all OK.
+- **The new module, run alone:** 13 OK. Every stored remainder is within 0.496–0.500 ulp($2\pi$)
+  of the exact one over 16 cases at $k$ from $10^5$ to $3\times10^8$ ($|\theta|$ to
+  $4.1\times10^{12}$); test 4's unwrap equals the rectifier's shifts at all 51 samples.
+- **Breakage (ii), re-applied by the laptop** (the residual as $\theta + k\,L.\delta$ in double,
+  both producers): 18 failures, in tests 2 (all 16 cases), 3 and 4. **Breakage (iii)**
+  (`_build_phase` back on `build_phi_samples`): 5 failures, test 3 with $\varphi_G$ at 94 ulp
+  $(\theta)$. Both reverted; the tree clean.
+- **What was read:** `WKBtools.py`'s AST unchanged; the factories gain only the column, no
+  `inventory_spec` moved; the exact sum is integer on a dyadic scale with $2\pi$ truncated to
+  $2^{-120}$ rad; the residual is $\Delta\theta - \rho.\delta$ in double; no fallback on a null
+  residual; the changed assertions are the two source greps, `REQUIRED_KEYS` and
+  `test_residual_part_alone`'s reconstruction, its bound unchanged.
+- **Deviations the review accepted** (all classified in the log): the normalisation is
+  `div - 1`, the direction my dispatch misworded (prompt §9 point 6 corrected in this commit);
+  three more closed-form stand-ins on the double form; the $G$ stand-ins carry
+  `raw_theta_div_2pi` and `z_init`; `FakeGkSource` sampled at most $\pi/2$ per step, since its
+  phase lives wholly in $\varphi$.
+
+**The trees, by SHA:**
+- **R13 and $t_5$** run at **`9f66622`**, in the parent worktree. U0's first clause holds there:
+  `git diff --stat 1fc349c 9f66622 -- . ':!docs' ':!prompts'` shows `CLAUDE.md` and
+  `bd38e50`'s two comment-only files.
+- **R14 and $s$** run at **this addendum's commit**, in the code worktree. Its code is
+  `dc9d28c`'s: the commit adds only records under `prompts/`.
+
+**For the rehearsal agent:**
+- **The tool's form,** from the code worktree:
+  `PYTHONPATH=<code worktree> <main>/venv/bin/python -B -m tools.store_value_diff R13.sqlite R14.sqlite --json`.
+  It reads R13 without `theta_residual` and reports that column under `columns_only_in_b` in
+  `GkWKBValue`, `TkWKBValue` and `GkSourceValue`, which are then "not value-identical" for that
+  reason as well as their values. Exit 1 is expected.
+- **The disagreement warning** is a line beginning `!! WARNING (GkSourcePolicyData`. `grep` R14's
+  launch log and stdout for it; any is the §8 stop.
+- **`TkSourceFunctions._check_phase_sign` now raises** if a stored remainder differs from
+  $(k\,{\rm cs}\_\tau.\delta + r) \bmod 2\pi$ by more than $16\varepsilon(k|{\rm cs}\_\tau.\delta|
+  + |r|) + 10^{-12}$ rad. If R14 fails on it, that is a stop: report it, do not work round it.
+
+**For the re-measurement agent:** the producers' `store()` under $s$ reads
+`WKB_phase_function`'s two new payload keys, `theta_exact_sample` and `rho_delta_sample`, so the
+in-process re-run calls the payload function of the tree it runs in. U0's faithfulness clause
+runs the **parent's** producers, which read neither.
+
+**§B.0 re-checked on the Mac Studio at 17:06 UTC**, read-only:
+- the main checkout is at `28ebaf0`, `git status --short` empty, one worktree;
+- the registry holds 20 runs, all finished, nothing `running` or stale;
+- the lock is free, and `ray-processes` lists none;
+- there is no `var/levin-phase-floor-06/` and no `levin-phase-floor-06-*` store;
+- 05's `sample.json` is `73aa7876…`; 05a's wider run directory holds 122 files;
+- `~/.ray/auth_token` is mode 600; 116 GiB free. The load, 13–17 on 10 cores, is macOS's
+  `fileproviderd`, Box and ChronoSync, not Python.
+
+**A4 is not over.** Its run `handover-04-cost-growth-20261026T152704` ended `failed`, at a third
+§8 stop: six P/P₀ cells raised in its test fixture's G `tau` table. Its orchestrator,
+`handover-a4`, is idle and waiting on the user's choice of (a)–(d); (a) and (b) would make a fresh
+60-cell run in the main checkout. So, by §B.0, **Part B waits for the user's word**. If they let it
+run beside a fresh A4 run, A4's scope check must allow this prompt's `var/` paths and run
+directories, and the two share the host's cores.
+
+**The laptop then does three things:**
+1. it fetches in the Mac Studio's main checkout, which moves no working tree;
+2. it makes the worktrees `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622`, detached at
+   `9f66622`, and `…/SecondaryGWKit-lpf06-<this commit>`, detached at this addendum's commit;
+3. it starts the Mac Studio orchestrator.
+
+The orchestrator re-reads this state as its Gate, does not fetch, and stops if anything differs.
+**Other projects on this host** may take the shared lock. If `acquire` exits 3, that is the stop
+the lock's rule gives: ask the user.
 
 ---
 

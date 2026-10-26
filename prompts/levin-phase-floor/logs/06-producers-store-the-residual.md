@@ -21,8 +21,8 @@ change outside §2's exception"). §1.1 makes the phase function's payload name 
 exact key set. The stop report also gave eight further findings. The user ruled on all of them, and
 the prompt was amended at `9f66622` (§9 point 6). The tree was clean when the work resumed.
 
-**Commit:** this one commit (§4), not pushed. Its hash is not written here; the board's 06 row
-carries none until the records commit.
+**Commit:** `dc9d28c` (§4). It passed the orchestrator's nine checks on the laptop, with
+breakages (ii) and (iii) re-applied there, and was pushed (orchestrator note §A.3, §B.5).
 
 **Result:**
 - **§1.1.** `WKB_phase_function` forms each sample's phase exactly. The leading table's four node

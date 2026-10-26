@@ -481,5 +481,6 @@ Part A's first dispatch stopped, before any code was written.
      arithmetic (the wall-time tests leave no room for `mpmath` per sample), beside
      `PrimitivePhase`'s reducer, which is not touched; `_check_phase_sign` compares the stored
      remainder with $(k\,L.\delta + r)$ mod $2\pi$; `build_phi_samples` kept; an exact remainder
-     that rounds to $-$`TWO_PI` is stored as $0$ with the cycle count raised by one, keeping
-     $(-2\pi, 0]$.
+     that rounds to $-$`TWO_PI` is stored as $0$ with the cycle count moved one further from
+     zero (`div - 1` for the producers' negative phases), keeping $(-2\pi, 0]$. ("Raised by one"
+     at first; the code commit's deviation 3 corrected the direction.)
