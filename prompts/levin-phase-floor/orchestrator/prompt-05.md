@@ -327,9 +327,51 @@ independent comparison on one row. Then, in **one records commit**, pushed:
 R9 and R10's stores are the user's to keep or retire; ask. The worktree is removed with `git worktree
 remove` on the Mac Studio once the records are committed and the user agrees.
 
-### B.5 Addendum: Part B's dispatch
+### B.5 Addendum, 2026-10-26 01:35 GMT: Part B's dispatch
 
-*Written at Part B's dispatch.*
+**Part A** is the code commit **`120fdfe`**, whose parent is the dispatch SHA **`e648951`**. It
+passed all nine checks of §A.3 on the laptop and is pushed. In particular:
+- **The roots,** re-run by the laptop at `120fdfe`: AdaptiveLevin 32, ComputeTargets 754 (742 + 12),
+  CosmologyModels 39, LiouvilleGreen 148 (1 skipped), ObjectFactories 280, RunDrivers 127, tools 55
+  (49 + 6), all OK. The 18 test methods were counted from the diff.
+- **The construction, read:** $c_n$ is formed from the limbs and $k$ as `Fraction`s, reduced against
+  $2\pi$ in a private 256-bit `mpmath` context and memoised. $v$ is reduced with `WKB_mod_2pi`, and
+  the wrap is one add of `TWO_PI`. `TkSourceFunctions` keeps the default.
+- **The tool, run by the laptop** on two `build_full_store` stores: exit 0, every class
+  value-identical. After a one-ulp change to one `QuadSourceIntegral` row's `total` it exits 1, and
+  names the class, the identity, `total` and $\Delta = 2.2\times10^{-16}$. The stores were unchanged,
+  and no Ray was imported.
+
+**For the rehearsal agent:**
+- **The tool's form** is `PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff R9.sqlite R10.sqlite --json`.
+  Exit 1 is expected, since `QuadSourceIntegral` should differ. Exit 2 is a usage error or a store
+  that cannot be opened. For each differing row its JSON gives the identity and both values of each
+  differing column, in `float.hex` and as numbers, with $\Delta$ and $|\Delta|/|a|$; for `metadata`
+  it gives the keys that differ.
+- **A class whose rows cannot be matched** makes the result not value-identical, and is named. In
+  any class other than `QuadSourceIntegral` that is prompt §8's stop.
+
+**§B.0 re-checked on the Mac Studio at 01:33 GMT**, read-only:
+- the checkout is at `c8ca155`, `git status --short` empty, one worktree;
+- the registry holds 13 runs, all finished;
+- the lock is free, `~/.raypoolkit/` is empty and `~/ScienceData/.rehearsal-lock` does not exist;
+- there is no `var/levin-phase-floor-05/` and no `levin-phase-floor-05-*` store;
+- A3 v2 shows `problems: none` and `0e32f24a…`;
+- `~/.ray/auth_token` is mode 600; 118 GiB free; the load is about 5.3–6.5 on 10 cores.
+
+**The laptop then does three things.** It fast-forwards the Mac Studio checkout to this addendum's
+commit. It makes the worktree
+`/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951`, detached at `e648951`. It starts the
+Mac Studio orchestrator.
+
+**The trees, by SHA:**
+- **R9 and $p$** run at `e648951`, in the worktree;
+- **R10 and $c$** run at this addendum's commit, in the main checkout. Its code is `120fdfe`'s: the
+  commit adds only records under `prompts/`.
+
+The orchestrator re-reads this state as its Gate, does not fetch, and stops if anything differs.
+**Other projects on this host** (ChamKadanoffBaym, ChamLattice) may take the shared lock. If
+`acquire` exits 3, that is the stop the lock's rule gives: ask the user.
 
 ---
 

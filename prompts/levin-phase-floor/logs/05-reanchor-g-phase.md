@@ -14,7 +14,7 @@
 - No Ray was started, no run was launched, no production store was opened, and nothing was written
   under `var/`. The tests write stores only through `tempfile`.
 
-**Commit:** this one commit (§4), not pushed. The orchestrator records its hash on the board.
+**Commit:** `120fdfe` (`120fdfe320bbc5eaef2890a9a5055337b75c8125`), this one commit (§4). Reviewed by the orchestrator on the laptop (note §A.3, nine checks, all pass) and pushed by it.
 
 **Result:**
 - **§1.** `CumulativeTable` has four node accessors: `end_partial`, `delta_parts`, `node_term` and
