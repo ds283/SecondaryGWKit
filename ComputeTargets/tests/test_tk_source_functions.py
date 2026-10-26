@@ -156,14 +156,36 @@ class FakeNumericValue:
 
 class FakeWKBValue:
     def __init__(
-        self, z, theta_div_2pi, theta_mod_2pi, friction, H_ratio, omega_WKB_sq
+        self,
+        z,
+        theta_div_2pi,
+        theta_mod_2pi,
+        friction,
+        H_ratio,
+        omega_WKB_sq,
+        theta_residual=None,
     ):
         self.z = FakeRedshift(z)
         self.theta_div_2pi = theta_div_2pi
         self.theta_mod_2pi = theta_mod_2pi
+        # the producer's stored residual, which TkSourceFunctions takes as phi
+        # (prompts/levin-phase-floor prompt 06)
+        self.theta_residual = theta_residual
         self.friction = friction
         self.H_ratio = H_ratio
         self.omega_WKB_sq = omega_WKB_sq
+
+
+def closed_form_residual(model, k, z_init, z, theta, sign=+1):
+    """
+    The stored residual of a closed-form stand-in (prompts/levin-phase-floor prompt 06 §2, as
+    amended): ``theta - sign k cs_tau.delta(z, z_init)``, formed in double, because a closed-form
+    phase has no separate small terms to form it from. ``sign = +1`` is the producer's convention
+    (``TK_PHASE_SIGN``); a stand-in of the opposite convention passes ``sign = -1``, so that its
+    residual is small in its own convention. At ``x <= 1e6`` the subtraction costs at most about
+    ``2e-10`` rad (``eps`` of ``theta``), at the fixtures here ``x <= 1e3`` about ``2e-13``.
+    """
+    return theta - sign * k * model.functions.cs_tau.delta(z, z_init)
 
 
 class FakeTkNumeric:
@@ -417,12 +439,23 @@ class Fixture:
 
         values = []
         for z in self.z_WKB:
-            div_2pi, mod_2pi = WKB_mod_2pi(self.theta_exact(z))
+            theta = self.theta_exact(z)
+            div_2pi, mod_2pi = WKB_mod_2pi(theta)
             omega = self.omega(z)
             H_ratio = self.model.Hubble(self.crossover_z) / self.model.Hubble(z)
             friction = log(self.M_exact(z) * sqrt(omega) / (sin_coeff * sqrt(H_ratio)))
             values.append(
-                FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+                FakeWKBValue(
+                    z,
+                    div_2pi,
+                    mod_2pi,
+                    friction,
+                    H_ratio,
+                    omega * omega,
+                    theta_residual=closed_form_residual(
+                        self.model, self.k, z_init, z, theta
+                    ),
+                )
             )
 
         return TkSourceFunctions(
@@ -457,7 +490,17 @@ class Fixture:
             H_ratio = self.model.Hubble(self.crossover_z) / self.model.Hubble(z)
             friction = 1.5 * (1.0 + self.w) * log((1.0 + z) / (1.0 + self.crossover_z))
             values.append(
-                FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+                FakeWKBValue(
+                    z,
+                    div_2pi,
+                    mod_2pi,
+                    friction,
+                    H_ratio,
+                    omega * omega,
+                    theta_residual=closed_form_residual(
+                        self.model, self.k, self.crossover_z, z, sol.y[0][i]
+                    ),
+                )
             )
 
         return TkSourceFunctions(
@@ -597,12 +640,23 @@ class AnalyticRadiationFixture:
 
         values = []
         for z in self.z_WKB:
-            div_2pi, mod_2pi = WKB_mod_2pi(self.theta_exact(z))
+            theta = self.theta_exact(z)
+            div_2pi, mod_2pi = WKB_mod_2pi(theta)
             omega = self.omega(z)
             H_ratio = self.model.Hubble(z_init) / self.model.Hubble(z)
             friction = log(self.M_exact(z) * sqrt(omega) / (sin_coeff * sqrt(H_ratio)))
             values.append(
-                FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+                FakeWKBValue(
+                    z,
+                    div_2pi,
+                    mod_2pi,
+                    friction,
+                    H_ratio,
+                    omega * omega,
+                    theta_residual=closed_form_residual(
+                        self.model, self.k, z_init, z, theta
+                    ),
+                )
             )
 
         return values, sin_coeff
@@ -965,6 +1019,9 @@ class TestConsistencyChecks(unittest.TestCase):
                 friction=0.0,
                 H_ratio=1.0,
                 omega_WKB_sq=f.omega(z) ** 2,
+                theta_residual=closed_form_residual(
+                    f.model, f.k, f.crossover_z, z, f.theta_exact(z)
+                ),
             )
             for z in f.z_WKB
         ]
@@ -1302,7 +1359,17 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                 if i == index:
                     friction = friction + perturbation
                 values.append(
-                    FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+                    FakeWKBValue(
+                        z,
+                        div_2pi,
+                        mod_2pi,
+                        friction,
+                        H_ratio,
+                        omega * omega,
+                        theta_residual=closed_form_residual(
+                            f.model, f.k, f.crossover_z, z, sol.y[0][i]
+                        ),
+                    )
                 )
 
             return TkSourceFunctions(
@@ -1347,7 +1414,19 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
             H_ratio = f.model.Hubble(f.crossover_z) / f.model.Hubble(z)
             friction = 1.5 * (1.0 + f.w) * log((1.0 + z) / (1.0 + f.crossover_z))
             values.append(
-                FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+                FakeWKBValue(
+                    z,
+                    div_2pi,
+                    mod_2pi,
+                    friction,
+                    H_ratio,
+                    omega * omega,
+                    # the residual a producer of the opposite convention would store: small in
+                    # its own convention, theta = -k cs_tau.delta(z, z_init) + r (prompt 06)
+                    theta_residual=closed_form_residual(
+                        f.model, f.k, f.crossover_z, z, -sol.y[0][i], sign=-1
+                    ),
+                )
             )
 
         with self.assertRaises(RuntimeError):
@@ -1391,7 +1470,15 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                     )
                     values.append(
                         FakeWKBValue(
-                            z, div_2pi, mod_2pi, friction, H_ratio, omega * omega
+                            z,
+                            div_2pi,
+                            mod_2pi,
+                            friction,
+                            H_ratio,
+                            omega * omega,
+                            theta_residual=closed_form_residual(
+                                f.model, f.k, f.crossover_z, z, sol.y[0][i]
+                            ),
                         )
                     )
 

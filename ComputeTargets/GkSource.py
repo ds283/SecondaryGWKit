@@ -28,6 +28,10 @@ _WKBData = namedtuple(
         "theta",
         "raw_theta_div_2pi",
         "raw_theta",
+        # the small part of the phase the producer stored, theta + k tau.delta(z_init, z_response)
+        # = deltaTheta - rho.delta (prompts/levin-phase-floor prompt 06): what
+        # GkSourcePolicyData._build_phase forms phi from. None for a store written before it
+        "theta_residual",
         "H_ratio",
         "sin_coeff",
         "cos_coeff",
@@ -467,6 +471,10 @@ def assemble_GkSource_values(
                 theta_mod_2pi=theta_mod_2pi,
                 theta_div_2pi=rectified_theta_div_2pi,
                 raw_theta_div_2pi=theta_div_2pi,
+                # carried through unchanged: phi_G is formed from it, with the 2pi wraps of
+                # deltaTheta unwrapped there, in GkSourcePolicyData._build_phase, which has the tau
+                # table this function does not (prompts/levin-phase-floor prompt 06)
+                theta_residual=WKB.theta_residual if WKB is not None else None,
                 H_ratio=WKB.H_ratio if WKB is not None else None,
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
@@ -887,6 +895,7 @@ class GkSourceValue(DatastoreObject):
         analytic_G_w: Optional[float] = None,
         analytic_Gprime_w: Optional[float] = None,
         z_init: Optional[float] = None,
+        theta_residual: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -967,6 +976,7 @@ class GkSourceValue(DatastoreObject):
                 else None
             ),
             raw_theta_div_2pi=raw_theta_div_2pi,
+            theta_residual=theta_residual,
             raw_theta=(
                 TWO_PI * raw_theta_div_2pi + theta_mod_2pi
                 if raw_theta_div_2pi is not None and theta_mod_2pi is not None

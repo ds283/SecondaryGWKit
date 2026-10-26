@@ -32,7 +32,7 @@ from math import log, exp, pi
 import numpy as np
 
 from ComputeTargets.BackgroundModel import TablePrimitive
-from ComputeTargets.GkSourcePolicyData import _classify_Levin
+from ComputeTargets.GkSourcePolicyData import GK_PHASE_SIGN, _classify_Levin
 from ComputeTargets.cumulative_table import CumulativeTable
 
 # a small wavenumber, so that the leading term of the decomposition is O(1e-4) on this geometry
@@ -127,20 +127,52 @@ class FakeGkSource:
         log_top, log_bottom = log(1.0 + z_top), log(1.0 + z_bottom)
         logs = [log_bottom + (log_top - log_bottom) * i / (n - 1) for i in range(n)]
         zs = [exp(u) - 1.0 for u in logs]
+
+        # prompts/levin-phase-floor prompt 06: _build_phase unwraps phi by whole cycles between
+        # neighbouring samples, which presumes that the samples resolve phi -- that it moves by
+        # less than pi from one to the next, as a producer's stored residual does. This phase
+        # lives entirely in phi, so the WKB values are sampled densely enough for that, at most
+        # pi/2 per step, on a grid that contains the n nodes above; the background table stays
+        # on those n nodes
+        dense = max(n, int(np.ceil(rate * (log_top - log_bottom) / (0.5 * pi))) + 1)
+        per_node = int(np.ceil((dense - 1) / (n - 1)))
+        sample_zs = [zs[0]]
+        for i in range(n - 1):
+            for j in range(1, per_node):
+                u = logs[i] + (logs[i + 1] - logs[i]) * j / per_node
+                sample_zs.append(exp(u) - 1.0)
+            sample_zs.append(zs[i + 1])
+
         self.rate = rate
-        self.values = [FakeValue(z, i, rate * log(1.0 + z)) for i, z in enumerate(zs)]
-        self.z_sample = FakeZSample(zs)
+        self.values = [
+            FakeValue(z, i, rate * log(1.0 + z)) for i, z in enumerate(sample_zs)
+        ]
+        self.z_sample = FakeZSample(sample_zs)
         self.primary_WKB_largest_z = FakeZ(z_top, 0)
 
         # prompt 09: the phase is now built from the background model's conformal-time table,
-        # anchored at the response redshift. The sample redshifts are the table's nodes, as in
+        # anchored at the response redshift. The n grid redshifts are the table's nodes, as in
         # production (the background model is built on the source grid, main.py:476), and the
-        # response point is the bottom of the range.
+        # response point is the bottom of the range. (Since prompt 06 of levin-phase-floor the
+        # denser WKB samples between them, where there are any, are off the table's grid.)
         self.k = FakeWavenumber(FAKE_K)
         self.z_response = FakeZ(zs[0], 0)
         self.model_proxy = FakeModelProxy(
             FakeModel(np.array(sorted(zs, reverse=True), dtype=float))
         )
+
+        # prompts/levin-phase-floor prompt 06: _build_phase builds phi from the producer's stored
+        # residual. This closed-form phase has no separate small terms, so the residual is formed
+        # in double, theta - GK_PHASE_SIGN k tau.delta(z, z_response) (prompt 06 §2). The values
+        # are pure WKB (z_init null) and carry no wrap for the rectifier to repair
+        tau = self.model_proxy.get().functions.tau
+        for value in self.values:
+            theta = rate * log(1.0 + value.z_source.z)
+            value.WKB.theta_residual = theta - GK_PHASE_SIGN * FAKE_K * tau.delta(
+                value.z_source.z, self.z_response.z
+            )
+            value.WKB.raw_theta_div_2pi = value.WKB.theta_div_2pi
+            value.WKB.z_init = None
 
 
 class FakePolicy:

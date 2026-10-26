@@ -10,8 +10,11 @@ from config.defaults import DEFAULT_ABS_TOLERANCE
 # convention for the (mod 2pi) component: it should always be negative.
 #
 # This is the (cycle count, remainder) representation the WKB producers store: the unreduced
-# phase is formed once and reduced once, here, per sample (README §2 (e) of
-# prompts/GkTk-remedial; the module docstring of LiouvilleGreen.range_reduce_mod_2pi).
+# phase is formed once and reduced once per sample (README §2 (e) of prompts/GkTk-remedial; the
+# module docstring of LiouvilleGreen.range_reduce_mod_2pi). The producers reduced it here, against
+# the double TWO_PI, until prompts/levin-phase-floor prompt 06; since then they form the phase
+# exactly and reduce it against 2pi itself (ComputeTargets.primitive_phase.reduce_exactly_mod_2pi),
+# in the same convention.
 def WKB_mod_2pi(theta: float):
     theta_mod_2pi = fmod(theta, TWO_PI)
 
@@ -100,9 +103,10 @@ def wrap_theta(theta: float) -> Tuple[int, float]:
 
     Prefer ``WKB_mod_2pi`` directly when reducing a freshly formed phase: this function differs
     from it only in normalising ``-0.0`` to ``+0.0``, and its name says less about what it does.
-    Its one production caller, ``apply_phase_offset``, passes ``mod + delta`` with ``mod`` in
+    Its one caller, ``apply_phase_offset``, passes ``mod + delta`` with ``mod`` in
     ``(-2pi, 0]`` and ``delta`` the ``atan2`` offset in ``(-pi, pi]``, so it reduces by at most
-    one cycle there.
+    one cycle there. Neither has had a production caller since prompt 06 of
+    ``prompts/levin-phase-floor``, when the producers moved to an exact reduction.
     """
     # given a value of theta, range-reduce so that theta falls within (-TWO_PI, 0], and
     # work out what corresponding shift this produced in div 2pi
@@ -110,7 +114,7 @@ def wrap_theta(theta: float) -> Tuple[int, float]:
     # recall that by convention, all our mod 2pi values are negative
 
     # theta is already in the required range: nothing to do, and no shift required. This is the
-    # common case for the one production caller, apply_phase_offset
+    # common case for the one caller, apply_phase_offset
     if -TWO_PI < theta <= 0.0:
         return 0, theta
 
@@ -142,8 +146,14 @@ def apply_phase_offset(
     up to the rounding of the sum, and two objects that share a physical phase store the same
     cycle count (``prompts/GkTk-remedial/README.md`` §2 (e); ``RECONCILIATION.md`` §2 item 4).
 
-    This is what ``GkWKBIntegration.store()`` uses to attach the initial-data offset
-    ``deltaTheta`` to the phase returned by ``WKB_phase_function``. It replaces
+    **No production caller since prompt 06 of ``prompts/levin-phase-floor``.** Until then this is
+    what ``GkWKBIntegration.store()`` and ``TkWKBIntegration.store()`` used to attach the
+    initial-data offset ``deltaTheta`` to the phase returned by ``WKB_phase_function``. Adding
+    ``delta`` to a double remainder that had already been reduced against the double ``TWO_PI``
+    keeps ``delta`` only to ``ulp(k tau)`` of the phase it belongs to; the producers now add it to
+    the exact phase and reduce the sum exactly against 2pi
+    (``ComputeTargets.primitive_phase.reduce_exactly_mod_2pi``). It is retained for its tests
+    (``test_gk_wkb_phase``, ``test_gk_source_primitive_phase``) and the review's sweep. It replaced
     ``shift_theta_sample`` below, whose subtraction of the first sample's shift from every
     sample's ``div`` was constant within an object but differed between objects, which is what
     manufactured the +-1-cycle offsets between neighbouring objects that ``GkSource``'s
@@ -165,8 +175,9 @@ def apply_phase_offset(
 
 
 def shift_theta_sample(div_2pi_sample, mod_2pi_sample, shift):
-    # NOT USED BY THE GREEN'S-FUNCTION PRODUCTION PATH. GkWKBIntegration.store() switched to
-    # apply_phase_offset() above in prompts/GkTk-remedial prompt 06, because the rebase below
+    # NOT USED BY ANY PRODUCTION PATH. GkWKBIntegration.store() switched to
+    # apply_phase_offset() above in prompts/GkTk-remedial prompt 06 (and both producers moved on
+    # to an exact reduction in prompts/levin-phase-floor prompt 06), because the rebase below
     # (subtracting the first sample's shift from every sample) differs between objects and is the
     # source of the +-1-cycle offsets between neighbouring GkWKBIntegration objects measured in
     # review §8.3. TkWKBIntegration.store() still calls it until prompt 07 makes the same switch;

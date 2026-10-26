@@ -446,6 +446,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     value_table.c.H_ratio,
                     value_table.c.theta_mod_2pi,
                     value_table.c.theta_div_2pi,
+                    value_table.c.theta_residual,
                     value_table.c.G_WKB,
                     value_table.c.omega_WKB_sq,
                     value_table.c.WKB_criterion,
@@ -481,6 +482,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                         H_ratio=row.H_ratio,
                         theta_mod_2pi=row.theta_mod_2pi,
                         theta_div_2pi=row.theta_div_2pi,
+                        theta_residual=row.theta_residual,
                         omega_WKB_sq=row.omega_WKB_sq,
                         WKB_criterion=row.WKB_criterion,
                         G_WKB=row.G_WKB,
@@ -701,6 +703,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     "H_ratio": value.H_ratio,
                     "theta_mod_2pi": value.theta_mod_2pi,
                     "theta_div_2pi": value.theta_div_2pi,
+                    "theta_residual": value.theta_residual,
                     "G_WKB": value.G_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
@@ -1011,6 +1014,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.Column("H_ratio", sqla.Float(64), nullable=False),
                 sqla.Column("theta_mod_2pi", sqla.Float(64), nullable=False),
                 sqla.Column("theta_div_2pi", sqla.Integer, nullable=False),
+                sqla.Column("theta_residual", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
@@ -1060,6 +1064,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         H_ratio: Optional[float] = payload.get("H_ratio", None)
         theta_mod_2pi: Optional[float] = payload.get("theta_mod_2pi", None)
         theta_div_2pi: Optional[int] = payload.get("theta_div_2pi", None)
+        theta_residual: Optional[float] = payload.get("theta_residual", None)
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
         WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
         G_WKB: Optional[float] = payload.get("G_WKB", None)
@@ -1093,6 +1098,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta_mod_2pi,
                     table.c.theta_div_2pi,
+                    table.c.theta_residual,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
@@ -1130,6 +1136,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     "H_ratio": H_ratio,
                     "theta_mod_2pi": theta_mod_2pi,
                     "theta_div_2pi": theta_div_2pi,
+                    "theta_residual": theta_residual,
                     "omega_WKB_sq": omega_WKB_sq,
                     "WKB_criterion": WKB_criterion,
                     "G_WKB": G_WKB,
@@ -1182,6 +1189,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio = row_data.H_ratio
             theta_mod_2pi = row_data.theta_mod_2pi
             theta_div_2pi = row_data.theta_div_2pi
+            theta_residual = row_data.theta_residual
 
             attribute_set = {"_deserialized": True}
 
@@ -1191,6 +1199,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio=H_ratio,
             theta_mod_2pi=theta_mod_2pi,
             theta_div_2pi=theta_div_2pi,
+            theta_residual=theta_residual,
             omega_WKB_sq=omega_WKB_sq,
             WKB_criterion=WKB_criterion,
             G_WKB=G_WKB,
@@ -1268,6 +1277,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta_mod_2pi,
                     table.c.theta_div_2pi,
+                    table.c.theta_residual,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
@@ -1307,6 +1317,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio=row_data.H_ratio,
             theta_mod_2pi=row_data.theta_mod_2pi,
             theta_div_2pi=row_data.theta_div_2pi,
+            theta_residual=row_data.theta_residual,
             omega_WKB_sq=row_data.omega_WKB_sq,
             WKB_criterion=row_data.WKB_criterion,
             G_WKB=row_data.G_WKB,
@@ -1416,6 +1427,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 table.c.H_ratio,
                 table.c.theta_mod_2pi,
                 table.c.theta_div_2pi,
+                table.c.theta_residual,
                 table.c.omega_WKB_sq,
                 table.c.WKB_criterion,
                 table.c.G_WKB,
@@ -1482,6 +1494,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 H_ratio=row.H_ratio,
                 theta_mod_2pi=row.theta_mod_2pi,
                 theta_div_2pi=row.theta_div_2pi,
+                theta_residual=row.theta_residual,
                 omega_WKB_sq=row.omega_WKB_sq,
                 WKB_criterion=row.WKB_criterion,
                 G_WKB=row.G_WKB,

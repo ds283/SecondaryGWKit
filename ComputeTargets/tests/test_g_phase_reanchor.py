@@ -642,11 +642,23 @@ class TestDefault(unittest.TestCase):
 
 
 class _Value:
-    """The fields ``_build_phase`` reads off a ``GkSourceValue``."""
+    """The fields ``_build_phase`` reads off a ``GkSourceValue``.
 
-    def __init__(self, z, div, mod):
+    Since prompt 06 of ``prompts/levin-phase-floor`` that includes the producer's stored residual,
+    ``theta_residual``, which ``phi`` is built from; the value's ``z_init``, null for the pure-WKB
+    values modelled here; and the rectifier's record, ``raw_theta_div_2pi``, equal to
+    ``theta_div_2pi`` because these samples carry no wrap to repair.
+    """
+
+    def __init__(self, z, div, mod, theta_residual=None):
         self.z_source = SimpleNamespace(z=float(z))
-        self.WKB = SimpleNamespace(theta_div_2pi=div, theta_mod_2pi=mod)
+        self.WKB = SimpleNamespace(
+            theta_div_2pi=div,
+            theta_mod_2pi=mod,
+            theta_residual=theta_residual,
+            raw_theta_div_2pi=div,
+            z_init=None,
+        )
 
 
 class _ProductionPhaseGk(BesselPhaseGk):
@@ -673,7 +685,12 @@ class _ProductionPhaseGk(BesselPhaseGk):
                 self._bessel["phase"].raw_theta(k * model.tau(z)) - self._vartheta_resp
             )
             div, mod = WKB_mod_2pi(theta)
-            values.append(_Value(z, div, mod))
+            # a closed-form (Bessel) phase has no separate small terms, so its residual is formed
+            # in double, theta - GK_PHASE_SIGN k tau.delta(z, z_resp) (prompt 06 §2)
+            residual = theta - GK_PHASE_SIGN * k * self.tau.delta(
+                float(z), float(z_resp)
+            )
+            values.append(_Value(z, div, mod, theta_residual=residual))
         values.sort(key=lambda v: v.z_source.z)
 
         functions = SimpleNamespace(tau=self.tau, Hubble=model.Hubble)

@@ -897,6 +897,10 @@ class TestPayloadContract(unittest.TestCase):
         # (prompts/tolerance-convergence, prompt 05b)
         "rho_gauss_order",
         "metadata",
+        # the exact phase and the residual's interval, from which the producer forms its exact
+        # remainder and its stored residual (prompts/levin-phase-floor prompt 06 §1.1)
+        "theta_exact_sample",
+        "rho_delta_sample",
     }
     FRICTION_KEYS = {"friction_sample", "friction_data", "friction_solver_label"}
 
@@ -1147,7 +1151,7 @@ class TestSourceHygiene(unittest.TestCase):
         source = self._source("ComputeTargets/GkWKBIntegration.py")
         for pattern in ("sgn_sin_deltaTheta", "shift_theta_sample", "atol=self._atol"):
             self.assertNotIn(pattern, source, msg=pattern)
-        self.assertIn("apply_phase_offset", source)
+        self.assertIn("reduce_exactly_mod_2pi", source)
 
     def test_tk_compute_uses_the_primitive(self):
         source = self._source("ComputeTargets/TkWKBIntegration.py")

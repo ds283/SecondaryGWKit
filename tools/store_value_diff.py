@@ -55,6 +55,15 @@ each value table. Then the differing rows, each by its identity (its reference d
 resolved to physical values), with each differing column's two values and ``Δ``. Text for a person
 by default (at most ``--max-rows`` rows per class); with ``--json``, the whole of it as JSON.
 
+**A column one store's files do not hold** (``prompts/levin-phase-floor`` prompt 06 §1.5). The
+code declares the tables this tool reads; a store written by an earlier commit can lack a column the
+code has since added (06's ``theta_residual``), and ``open_read_only`` refuses such a store whole.
+When that is the only way a store differs from the declared tables -- declared columns its files
+lack, and nothing else -- it is read without those columns, and each is reported, per table, as
+present in one store only. Every other column is compared as before. Any other schema difference
+(a table absent or undeclared, a column the code does not declare) is still a refusal, exit 2. A
+column present in one store only makes the result "not value-identical".
+
 **Exit status.** 0 when the stores are value-identical in every class compared; 1 otherwise,
 including when anything could not be matched. 2 for a usage error or a store that cannot be opened.
 """
@@ -69,7 +78,9 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
 import sqlalchemy as sqla
 
+from datastorekit.SQL.schema import StoreSchemaMismatch
 from datastorekit.contract import TAG_TABLE
+from datastorekit.store_reader import open_read_only
 from datastorekit.store_inventory import (
     ShardContext,
     canonical_json,
@@ -108,6 +119,8 @@ class _TableRead:
     rows: Dict[Any, List[_Row]] = field(default_factory=dict)
     # rows that could not be given a match key, each with the reason
     unmatched: List[str] = field(default_factory=list)
+    # the columns compared, as this store holds them (a column its files lack is not among them)
+    columns: Tuple[str, ...] = ()
 
 
 @dataclass
@@ -136,6 +149,8 @@ class _StoreRead:
     not_compared: List[str]
     # class -> {leaf column -> True if it is a Float column}
     float_leaves: Dict[str, Dict[str, bool]]
+    # table -> the declared columns this store's files do not hold, read without them (prompt 06)
+    absent_columns: Dict[str, Tuple[str, ...]] = field(default_factory=dict)
 
 
 def _reference_columns(
@@ -177,6 +192,68 @@ def _identity_of(
     return found is not None, found
 
 
+class _WithoutColumns:
+    """
+    A factory whose table omits the declared columns a store's files do not hold, so that
+    ``open_read_only`` can read that store; every other attribute is the factory's own.
+    """
+
+    def __init__(self, factory, absent: Set[str]):
+        self._factory = factory
+        self._absent = set(absent)
+
+    def register(self):
+        declared = self._factory.register()
+        if declared is None:
+            return None
+        out = dict(declared)
+        out["columns"] = [c for c in declared["columns"] if c.name not in self._absent]
+        return out
+
+    def __getattr__(self, name):
+        return getattr(self._factory, name)
+
+
+def _without_columns(
+    factories: Mapping[str, Any], absent: Mapping[str, Set[str]]
+) -> Dict[str, Any]:
+    return {
+        name: (_WithoutColumns(f, absent[name]) if name in absent else f)
+        for name, f in factories.items()
+    }
+
+
+def _absent_columns(primary, factories: Mapping[str, Any]) -> Dict[str, Set[str]]:
+    """
+    The declared columns ``primary``'s files lack, by table, when that is the only way they differ
+    from the declared tables; ``{}`` when they hold exactly the declared tables. Any other
+    difference is ``open_read_only``'s refusal, re-raised as it was raised. The store is opened
+    read-only and closed again, once per table found short.
+    """
+    absent: Dict[str, Set[str]] = {}
+    while True:
+        try:
+            with open_read_only(primary, _without_columns(factories, absent)):
+                return absent
+        except StoreSchemaMismatch as e:
+            d = e.differences
+            if (
+                len(d.absent_tables) > 0
+                or len(d.extra_tables) > 0
+                or len(d.extra_columns) > 0
+                or len(d.absent_columns) == 0
+                or any(table not in factories for table in d.absent_columns)
+            ):
+                raise
+            grew = False
+            for table, columns in d.absent_columns.items():
+                before = len(absent.get(table, ()))
+                absent.setdefault(table, set()).update(columns)
+                grew = grew or len(absent[table]) > before
+            if not grew:
+                raise
+
+
 def read_store(
     primary, factories: Mapping[str, Any], classes: Optional[Sequence[str]] = None
 ) -> _StoreRead:
@@ -185,7 +262,9 @@ def read_store(
     Every class of the inventory is read for its identities (a child names its parents by them);
     the values of ``classes`` (all, by default) are kept for comparison.
     """
-    from datastorekit.store_reader import open_read_only
+    # a store written before a column was added is read without it (module docstring)
+    absent = _absent_columns(primary, factories)
+    factories = _without_columns(factories, absent)
 
     names = inventory_classes(factories)
     specs = inventory_specs(factories)
@@ -298,6 +377,7 @@ def read_store(
             parents=parents_of,
             not_compared=not_compared,
             float_leaves=float_leaves,
+            absent_columns={t: tuple(sorted(c)) for t, c in absent.items()},
         )
 
 
@@ -345,7 +425,7 @@ def _read_class(
         and c.name not in unresolvable
     ]
 
-    rows = _TableRead()
+    rows = _TableRead(columns=tuple(compared))
     for shard in shards:
         serial_identity = identities[shard.serial][name]
         for row in conns[shard.serial].execute(
@@ -396,7 +476,7 @@ def _read_class(
             for s in store.shards
             if value_table not in replicated or s.serial == lowest
         ]
-        read = _TableRead()
+        read = _TableRead(columns=tuple(v_compared))
         for shard in v_shards:
             serial_identity = identities[shard.serial][name]
             columns = ["serial", parent_column] + ref_names + v_compared
@@ -658,6 +738,11 @@ def _compare_tables(a: _TableRead, b: _TableRead, describe) -> Dict[str, Any]:
     keys_a = {k for k in a.rows if k not in dup}
     keys_b = {k for k in b.rows if k not in dup}
 
+    # a column one store does not hold is reported as such, and not compared row by row
+    columns_a = set(a.columns)
+    columns_b = set(b.columns)
+    common = sorted(columns_a & columns_b)
+
     identical = 0
     columns: Dict[str, _ColumnSummary] = {}
     differing: List[Dict[str, Any]] = []
@@ -665,7 +750,7 @@ def _compare_tables(a: _TableRead, b: _TableRead, describe) -> Dict[str, Any]:
         va = a.rows[key][0].values
         vb = b.rows[key][0].values
         diffs = {}
-        for column in sorted(set(va) | set(vb)):
+        for column in common:
             diff = compare_values(va.get(column), vb.get(column))
             if diff is not None:
                 diffs[column] = diff
@@ -690,6 +775,8 @@ def _compare_tables(a: _TableRead, b: _TableRead, describe) -> Dict[str, Any]:
         "only_in_a": [describe(k) for k in sorted(keys_a - keys_b, key=repr)],
         "only_in_b": [describe(k) for k in sorted(keys_b - keys_a, key=repr)],
         "unmatched": unmatched,
+        "columns_only_in_a": sorted(columns_a - columns_b),
+        "columns_only_in_b": sorted(columns_b - columns_a),
         "columns": {c: s.as_json() for c, s in sorted(columns.items())},
         "rows": differing,
     }
@@ -850,6 +937,8 @@ def compare_stores(
                 and len(t["only_in_a"]) == 0
                 and len(t["only_in_b"]) == 0
                 and len(t["unmatched"]) == 0
+                and len(t["columns_only_in_a"]) == 0
+                and len(t["columns_only_in_b"]) == 0
                 for t in [rows, *values.values()]
             )
             and len(unresolvable) == 0
@@ -891,6 +980,12 @@ def _format_table(lines, label, table, max_rows, indent) -> None:
         f"{len(table['only_in_a'])} only in A, {len(table['only_in_b'])} only in B, "
         f"{len(table['unmatched'])} cannot be matched by identity"
     )
+    for side, key in (("A", "columns_only_in_a"), ("B", "columns_only_in_b")):
+        for column in table[key]:
+            lines.append(
+                f"{pad}  column {column}: present in {side} only, not compared (the other "
+                f"store's files do not hold it)"
+            )
     for column, summary in table["columns"].items():
         text = f"{pad}  column {column}: {summary['count']} differ"
         if "max_abs_delta" in summary:

@@ -69,6 +69,7 @@ from ComputeTargets.tests.test_tk_source_functions import (
     Fixture,
     FakeModel,
     FakeWKBValue,
+    closed_form_residual,
     FakeTkWKB,
     log_grid,
     W_VALUES,
@@ -647,7 +648,17 @@ def matched_LG_functions(fixture: Fixture) -> TkSourceFunctions:
         H_ratio = model.Hubble(z_init) / model.Hubble(z)
         friction = 1.5 * (1.0 + fixture.w) * log((1.0 + z) / one_plus_z_init)
         values.append(
-            FakeWKBValue(z, div_2pi, mod_2pi, friction, H_ratio, omega * omega)
+            FakeWKBValue(
+                z,
+                div_2pi,
+                mod_2pi,
+                friction,
+                H_ratio,
+                omega * omega,
+                # a solve_ivp phase has no separate small terms: the residual is formed in
+                # double (prompts/levin-phase-floor prompt 06 §2)
+                theta_residual=closed_form_residual(model, k, z_init, z, sol.y[0][i]),
+            )
         )
 
     return TkSourceFunctions(

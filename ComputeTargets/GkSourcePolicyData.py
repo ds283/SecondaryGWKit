@@ -1,12 +1,12 @@
 from collections import namedtuple
-from math import log, fabs, sqrt
+from math import log, fabs, sqrt, floor
 from typing import Optional, Union, List
 
 import ray
 from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.GkSource import GkSourceProxy, GkSource
-from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
+from ComputeTargets.primitive_phase import PrimitivePhase
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
 from datastorekit import DatastoreObject
@@ -157,21 +157,42 @@ def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
     cubic spline of *it* is six or more orders better, and the growing part of the phase is no
     longer interpolated at all.
 
-    ``phi`` is built from the **rectified** cycle counts ``v.WKB.theta_div_2pi``, not from
-    ``v.WKB.raw_theta_div_2pi``. ``GkSource.assemble_GkSource_values`` (:166-233) repairs the 2pi
-    wraps of the initial-data offset that occur where the numeric stop point of a
-    ``GkWKBIntegration`` moves to the next extremum between neighbouring source redshifts; those
-    are genuine discontinuities of the *stored* phase, not of the physical one
-    (``RECONCILIATION.md`` Sec 2 item 6, campaign decision D5), and building ``phi`` from the raw
-    counts would spline straight through them.
+    **``phi`` is built from the stored residual** (``prompts/levin-phase-floor`` prompt 06). Each
+    value is the producer ``GkWKBIntegration`` for its source redshift ``z_s``, read at the response
+    redshift ``z_R``, and anchored at that object's own ``z_init`` (``z_s`` itself for a pure-WKB
+    object, whose ``z_init`` the store holds as null; the numeric hand-over, below ``z_s``, for a
+    numerically seeded one). It stores ``r = theta + k tau.delta(z_init, z_R) = deltaTheta -
+    rho.delta(z_init, z_R)``, formed from those two small terms. With ``tau.delta(a, b) = tau(b) -
+    tau(a)`` and the leading term ``-k tau.delta(z_s, z_R)`` (``GK_PHASE_SIGN = -1``),
+
+        phi(z_s) = theta - GK_PHASE_SIGN k tau.delta(z_s, z_R) = r + k tau.delta(z_s, z_init).
+
+    The second term is zero for a pure-WKB value, and the numeric span's phase, tens of rad, for a
+    seeded one; it is a double of that small size, from ``delta``'s own node term and partials. No
+    ``phi`` is formed by subtracting two numbers of size ``k tau``, as ``build_phi_samples`` did:
+    that difference was quantised to ``ulp(theta)``
+    (``[02-consumer-phi-below-the-storage-granularity]``).
+
+    **The 2pi wraps of ``deltaTheta``** between neighbouring source redshifts (where the numeric
+    stop point moves to the next extremum: ``RECONCILIATION.md`` Sec 2 item 6, campaign decision
+    D5) appear in ``r`` as jumps of whole cycles. They are removed here by unwrapping ``phi``: each
+    sample is moved by the whole number of 2pi that brings it nearest its predecessor, in
+    ascending ``z_s``, the order ``GkSource.assemble_GkSource_values``' rectifier walks. The
+    rectifier repairs the same wraps on the stored cycle counts, and its shifts are recorded in
+    every value as ``raw_theta_div_2pi - theta_div_2pi``. **The two repairs must agree**, sample for
+    sample, relative to the first sample. Where they do not, one ``!! WARNING`` line names ``k``,
+    ``z_R`` and the samples, and ``phi`` is built from its own unwrap: a build is never stopped by
+    it (prompt 06 §0.2).
+
+    A value with no stored residual -- a store written before prompt 06 -- is refused, with no
+    fallback to the old construction. Such a store is read at the commit that wrote it.
 
     **The remainder is node-anchored** (``exact_remainder=True``; ``prompts/levin-phase-floor``
     prompt 05, on the user's answer at its gate G1, 2026-10-26). ``theta_mod_2pi`` reduces the
     large constant ``k tau_R`` exactly, against 2pi itself, once per table node, and forms only a
     small remainder in double; it never rounds a double of size ``k tau_R``, whose ``eps k tau_R``
     jitter sent the Levin bisection to its depth cap (``primitive_phase.py``'s module docstring,
-    "Anchoring"). ``raw_theta`` and ``theta_deriv`` are unchanged. ``TkSourceFunctions`` keeps
-    the default.
+    "Anchoring"). ``raw_theta`` and ``theta_deriv`` are unchanged.
     """
     model = source.model_proxy.get()
 
@@ -180,17 +201,7 @@ def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
     leading = model.functions.tau
 
     z_points = [v.z_source.z for v in WKB_data]
-    theta_points = [
-        v.WKB.theta_div_2pi * TWO_PI + v.WKB.theta_mod_2pi for v in WKB_data
-    ]
-    phi_points = build_phi_samples(
-        k_float,
-        leading,
-        z_anchor,
-        z_points,
-        theta_points,
-        sign=GK_PHASE_SIGN,
-    )
+    phi_points = _phi_samples(source, WKB_data, k_float, leading, label)
 
     return PrimitivePhase(
         k_float,
@@ -203,6 +214,60 @@ def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
         label=label,
         exact_remainder=True,
     )
+
+
+def _phi_samples(source: GkSource, WKB_data, k_float: float, leading, label: str):
+    """
+    ``phi`` at each value of ``WKB_data`` (ascending in ``z_s``), from the stored residual and
+    unwrapped by whole multiples of 2pi, with the agreement check against the rectifier's shifts
+    (``_build_phase``'s docstring). Returns the list of samples.
+    """
+    raw = []
+    for v in WKB_data:
+        r = v.WKB.theta_residual
+        if r is None:
+            raise RuntimeError(
+                f"GkSourcePolicyData ({label}): the WKB value at z_source={v.z_source.z:.8g} "
+                f"(store_id={v.z_source.store_id}) for k={k_float:.8g}/Mpc, "
+                f"z_response={source.z_response.z:.8g} carries no theta_residual. The producers "
+                f"store it since prompt 06 of prompts/levin-phase-floor, and phi is built from it "
+                f"alone; a store written before then is read at the commit that wrote it"
+            )
+        z_s = v.z_source.z
+        z_init = v.WKB.z_init
+        # zero for a pure-WKB value (z_init null: the object is anchored at z_s itself)
+        span = 0.0 if z_init is None else k_float * leading.delta(z_s, float(z_init))
+        raw.append(float(r) + span)
+
+    phi = []
+    disagree = []
+    first_shift = 0
+    for i, (v, value) in enumerate(zip(WKB_data, raw)):
+        # the whole cycles removed from this sample, counted from the first: the multiple of
+        # 2pi that brings it nearest the previous unwrapped sample
+        cycles = 0 if i == 0 else int(floor((value - phi[-1]) / TWO_PI + 0.5))
+        phi.append(value - cycles * TWO_PI)
+
+        # the rectifier's shift at this sample (raw_theta_div_2pi - theta_div_2pi), relative to
+        # the first sample, must be the same number of cycles
+        shift = int(v.WKB.raw_theta_div_2pi) - int(v.WKB.theta_div_2pi)
+        if i == 0:
+            first_shift = shift
+        if shift - first_shift != cycles:
+            disagree.append((v.z_source.z, cycles, shift - first_shift))
+
+    if len(disagree) > 0:
+        shown = ", ".join(
+            f"z_s={z:.8g} (unwrap {u:+d}, rectifier {b:+d})" for z, u, b in disagree[:8]
+        )
+        print(
+            f"!! WARNING (GkSourcePolicyData, {label}): the 2pi unwrap of phi_G disagrees with "
+            f"the rectifier's block shifts at {len(disagree)} of {len(WKB_data)} samples for "
+            f"k={k_float:.8g}/Mpc, z_response={source.z_response.z:.8g}: {shown}; "
+            f"phi_G is built from its own unwrap"
+        )
+
+    return phi
 
 
 def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:

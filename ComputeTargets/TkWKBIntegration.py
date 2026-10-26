@@ -1,4 +1,5 @@
 from math import sqrt, log, atan2, sin, fabs, cos, exp
+from fractions import Fraction
 from typing import Optional, List
 
 import ray
@@ -8,7 +9,7 @@ from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber, redshift
 from datastorekit import DatastoreObject
-from LiouvilleGreen.WKBtools import apply_phase_offset
+from ComputeTargets.primitive_phase import reduce_exactly_mod_2pi
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
@@ -523,17 +524,33 @@ class TkWKBIntegration(DatastoreObject):
         self._sin_coeff = B
 
         # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
-        # change theta to theta + deltaTheta per sample, wrapping each sample's remainder back
-        # into (-2pi, 0] and adding the resulting cycle shift to that sample's div 2pi. No
-        # cross-sample rebase (README §2 (e); review §8.1). There is only one TkWKBIntegration
-        # object per k, so the cross-object stitching the Green's function needs does not arise
-        # here (review §12.7); the exactness is still worth having, because the stored
-        # theta + deltaTheta is then the phase and nothing else.
-        theta_div_2pi_sample, theta_mod_2pi_sample = apply_phase_offset(
-            data["theta_div_2pi_sample"],
-            data["theta_mod_2pi_sample"],
-            deltaTheta,
-        )
+        # change theta to theta + deltaTheta per sample. Since prompts/levin-phase-floor prompt
+        # 06 the sum is formed exactly -- WKB_phase_function hands back each sample's phase as an
+        # exact rational, deltaTheta is added to it exactly -- and reduced exactly against 2pi
+        # itself (reduce_exactly_mod_2pi), where until then deltaTheta was added to a double
+        # remainder already reduced against TWO_PI. No cross-sample rebase (README §2 (e); review
+        # §8.1). There is only one TkWKBIntegration object per k, so the cross-object stitching
+        # the Green's function needs does not arise here (review §12.7); the exactness is still
+        # worth having, because the stored theta + deltaTheta is then the phase and nothing else.
+        #
+        # The small part of the phase, theta_residual = theta + k cs_tau.delta(z_init, z) =
+        # deltaTheta - rho_T.delta(z_init, z), is stored beside it, formed from those two small
+        # terms and never by subtracting two numbers of size k cs_tau. TkSourceFunctions, anchored
+        # at the same z_init, takes it as its phi directly
+        # ([02-consumer-phi-below-the-storage-granularity]).
+        delta_theta_exact = Fraction(deltaTheta)
+        theta_div_2pi_sample = []
+        theta_mod_2pi_sample = []
+        theta_residual_sample = []
+        for theta_exact, rho_delta in zip(
+            data["theta_exact_sample"], data["rho_delta_sample"]
+        ):
+            theta_div_2pi, theta_mod_2pi = reduce_exactly_mod_2pi(
+                theta_exact + delta_theta_exact
+            )
+            theta_div_2pi_sample.append(theta_div_2pi)
+            theta_mod_2pi_sample.append(theta_mod_2pi)
+            theta_residual_sample.append(deltaTheta - rho_delta)
 
         # friction_sample[i] is friction_F.delta(z_init, z_i) = F(z_i) - F(z_init), evaluated
         # from the background model's friction_F table (prompt 04). It is negative for
@@ -588,6 +605,7 @@ class TkWKBIntegration(DatastoreObject):
                     theta_mod_2pi_sample[i],
                     theta_div_2pi_sample[i],
                     friction_sample[i],
+                    theta_residual=theta_residual_sample[i],
                     omega_WKB_sq=omega_sq,
                     WKB_criterion=WKB_criterion,
                     T_WKB=T_WKB,
@@ -626,6 +644,7 @@ class TkWKBValue(DatastoreObject):
         analytic_Tprime_rad: Optional[float] = None,
         analytic_T_w: Optional[float] = None,
         analytic_Tprime_w: Optional[float] = None,
+        theta_residual: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -634,6 +653,10 @@ class TkWKBValue(DatastoreObject):
 
         self._theta_mod_2pi = theta_mod_2pi
         self._theta_div_2pi = theta_div_2pi
+        # the small part of the phase, theta + k L.delta(z_init, z) = deltaTheta - rho.delta,
+        # formed from those two small terms (prompts/levin-phase-floor prompt 06); None for a
+        # value read from a store written before it
+        self._theta_residual = theta_residual
         self._friction = friction
         self._omega_WKB_sq = omega_WKB_sq
         self._WKB_criterion = WKB_criterion
@@ -672,6 +695,13 @@ class TkWKBValue(DatastoreObject):
     @property
     def theta_div_2pi(self) -> int:
         return self._theta_div_2pi
+
+    @property
+    def theta_residual(self) -> Optional[float]:
+        """``theta + k L.delta(z_init, z) = deltaTheta - rho.delta(z_init, z)``, the small part of
+        the phase, formed from its two small terms; the consumers build their ``phi`` from it.
+        """
+        return self._theta_residual
 
     @property
     def theta(self) -> int:

@@ -53,6 +53,7 @@ from pathlib import Path
 from typing import Optional
 from unittest import mock
 
+import mpmath
 import numpy as np
 
 import ComputeTargets.TkWKBIntegration  # noqa: F401  (for sys.modules, below)
@@ -437,8 +438,29 @@ class TestRadiationPhase(unittest.TestCase):
         cs_tau = self.model.functions.cs_tau
         worst_exact, worst_z = 0.0, None
         worst_asymptote = 0.0
-        for z, got in zip(self.samples, self.theta):
-            residual = got + RADIATION_K * cs_tau.delta(self.z_i, z)
+        # prompts/levin-phase-floor prompt 06: the stored (div, mod) are now the exact cycle count
+        # and remainder against 2pi itself, no longer against the double TWO_PI, so the phase is
+        # put back together as div * 2pi + mod, and k cs_tau.delta added from the table's own
+        # limbs and partials, both in mpmath (60 digits). The double div * TWO_PI + mod
+        # (self.theta) carries div * (2pi - TWO_PI) and the rounding of k cs_tau.delta, which the
+        # old stored phase shared and so cancelled.
+        ctx = mpmath.MPContext()
+        ctx.dps = 60
+        two_pi = 2 * ctx.pi
+        for z, d, m in zip(
+            self.samples,
+            self.payload["theta_div_2pi_sample"],
+            self.payload["theta_mod_2pi_sample"],
+        ):
+            j_a, j_b, p_a, p_b = cs_tau.delta_parts(self.z_i, z)
+            hi_a, lo_a = cs_tau.node_limbs(j_a)
+            hi_b, lo_b = cs_tau.node_limbs(j_b)
+            delta = (
+                (ctx.mpf(hi_b) - ctx.mpf(hi_a))
+                + (ctx.mpf(lo_b) - ctx.mpf(lo_a))
+                + (ctx.mpf(p_b) - ctx.mpf(p_a))
+            )
+            residual = float(d * two_pi + m + ctx.mpf(RADIATION_K) * delta)
             exact = -self.model.rho_T(RADIATION_K, z, self.z_i)
             asymptote = 1.0 / self.x_i - 1.0 / x_of_z(z)
             err = fabs(residual - exact)
@@ -918,7 +940,7 @@ class TestSourceHygiene(unittest.TestCase):
             "NumericIntegrationSupervisor",
         ):
             self.assertNotIn(pattern, source, msg=pattern)
-        self.assertIn("apply_phase_offset", source)
+        self.assertIn("reduce_exactly_mod_2pi", source)
 
     def test_the_retired_ode_lives_in_the_test_that_retires_it(self):
         """The relocation of prompt 07's §2 item 1 (decision recorded in the prompt header):

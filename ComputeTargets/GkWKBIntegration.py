@@ -1,4 +1,5 @@
 from math import log, sqrt, fabs, cos, sin, atan2
+from fractions import Fraction
 from typing import Optional, List
 
 import ray
@@ -11,7 +12,7 @@ from ComputeTargets.analytic_Gk import (
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from datastorekit import DatastoreObject
-from LiouvilleGreen.WKBtools import apply_phase_offset
+from ComputeTargets.primitive_phase import reduce_exactly_mod_2pi
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
@@ -509,15 +510,31 @@ class GkWKBIntegration(DatastoreObject):
         self._sin_coeff = B
 
         # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
-        # change theta to theta + deltaTheta per sample, wrapping each sample's remainder back
-        # into (-2pi, 0] and adding the resulting cycle shift to that sample's div 2pi. No
-        # cross-sample rebase: the stored theta + deltaTheta is exact, so that neighbouring
-        # objects agree on their cycle counts (README §2 (e); review §8.1, §8.3).
-        theta_div_2pi_sample, theta_mod_2pi_sample = apply_phase_offset(
-            data["theta_div_2pi_sample"],
-            data["theta_mod_2pi_sample"],
-            deltaTheta,
-        )
+        # change theta to theta + deltaTheta per sample. Since prompts/levin-phase-floor prompt
+        # 06 the sum is formed exactly -- WKB_phase_function hands back each sample's phase as an
+        # exact rational, deltaTheta is added to it exactly -- and reduced exactly against 2pi
+        # itself (reduce_exactly_mod_2pi), where until then deltaTheta was added to a double
+        # remainder already reduced against TWO_PI. No cross-sample rebase: each sample's cycle
+        # count is its own, so neighbouring objects agree on their cycle counts (README §2 (e);
+        # review §8.1, §8.3).
+        #
+        # The small part of the phase, theta_residual = theta + k tau.delta(z_init, z) =
+        # deltaTheta - rho.delta(z_init, z), is stored beside it, formed from those two small
+        # terms and never by subtracting two numbers of size k tau: it is what the consumers build
+        # their phi from ([02-consumer-phi-below-the-storage-granularity]).
+        delta_theta_exact = Fraction(deltaTheta)
+        theta_div_2pi_sample = []
+        theta_mod_2pi_sample = []
+        theta_residual_sample = []
+        for theta_exact, rho_delta in zip(
+            data["theta_exact_sample"], data["rho_delta_sample"]
+        ):
+            theta_div_2pi, theta_mod_2pi = reduce_exactly_mod_2pi(
+                theta_exact + delta_theta_exact
+            )
+            theta_div_2pi_sample.append(theta_div_2pi)
+            theta_mod_2pi_sample.append(theta_mod_2pi)
+            theta_residual_sample.append(deltaTheta - rho_delta)
 
         # STEP 4. EVALUATE THE FULL LIOUVILLE-GREEN SOLUTIONS
 
@@ -561,7 +578,8 @@ class GkWKBIntegration(DatastoreObject):
             norm_factor = sqrt(H_ratio / omega)
 
             # no need to include theta div 2pi in the calculation of the sin/cos functions in G_WKB
-            # (and indeed it is likely to be more accurate if we don't)
+            # (and indeed it is likely to be more accurate if we don't). The remainder is the
+            # exact one, reduced against 2pi itself (STEP 3)
             G_WKB = norm_factor * (
                 self._cos_coeff * cos(theta_mod_2pi_sample[i])
                 + self._sin_coeff * sin(theta_mod_2pi_sample[i])
@@ -575,6 +593,7 @@ class GkWKBIntegration(DatastoreObject):
                     H_ratio,
                     theta_mod_2pi_sample[i],
                     theta_div_2pi_sample[i],
+                    theta_residual=theta_residual_sample[i],
                     omega_WKB_sq=omega_sq,
                     WKB_criterion=WKB_criterion,
                     G_WKB=G_WKB,
@@ -611,6 +630,7 @@ class GkWKBValue(DatastoreObject):
         analytic_Gprime_rad: Optional[float] = None,
         analytic_G_w: Optional[float] = None,
         analytic_Gprime_w: Optional[float] = None,
+        theta_residual: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -619,6 +639,10 @@ class GkWKBValue(DatastoreObject):
 
         self._theta_mod_2pi = theta_mod_2pi
         self._theta_div_2pi = theta_div_2pi
+        # the small part of the phase, theta + k L.delta(z_init, z) = deltaTheta - rho.delta,
+        # formed from those two small terms (prompts/levin-phase-floor prompt 06); None for a
+        # value read from a store written before it
+        self._theta_residual = theta_residual
         self._omega_WKB_sq = omega_WKB_sq
         self._WKB_criterion = WKB_criterion
         self._G_WKB = G_WKB
@@ -656,6 +680,13 @@ class GkWKBValue(DatastoreObject):
     @property
     def theta_div_2pi(self) -> int:
         return self._theta_div_2pi
+
+    @property
+    def theta_residual(self) -> Optional[float]:
+        """``theta + k L.delta(z_init, z) = deltaTheta - rho.delta(z_init, z)``, the small part of
+        the phase, formed from its two small terms; the consumers build their ``phi`` from it.
+        """
+        return self._theta_residual
 
     @property
     def theta(self) -> int:

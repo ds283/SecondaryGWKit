@@ -20,9 +20,28 @@ the double-double Gauss-Legendre tables ``compute_background`` builds once per m
 ``X(z_b) - X(z_a)``, positive for ``z_b < z_a`` (``prompts/GkTk-remedial/README.md`` §2 (c)),
 so ``theta`` is negative and decreasing towards lower redshift, the author's convention.
 
-Each sample's phase is then split into a cycle count and a remainder by ``WKB_mod_2pi`` in the
-negative-remainder convention, ``theta_mod_2pi in (-2pi, 0]`` (README §2 (e)). The unreduced
-``theta`` is formed once and reduced once, per sample; nothing is rebased across samples.
+Each sample's phase is then split into a cycle count and a remainder in the negative-remainder
+convention, ``theta_mod_2pi in (-2pi, 0]`` (README §2 (e)), once per sample; nothing is rebased
+across samples.
+
+**The phase is formed and reduced exactly** (``prompts/levin-phase-floor`` prompt 06). Until then
+``theta`` was formed as one double, of size ``k tau`` (up to ~1e12 rad), and reduced against the
+double ``TWO_PI`` by ``WKB_mod_2pi``. So the residual ``rho`` (at most ~1.5e-3 rad) and the
+producer's initial-data offset survived in the stored sample only to ``ulp(k tau)``, ~1e-4 rad at
+the top, and the remainder carried a smooth ``0.18 eps |theta|`` from the modulus
+(``[02-consumer-phi-below-the-storage-granularity]``). Now:
+
+- the large term ``k * leading.delta(z_init, z)`` is taken exactly, from the table's node limbs and
+  end partials with ``k`` multiplied in exactly, and ``rho.delta(z_init, z)`` is added exactly
+  (``primitive_phase.exact_leading_phase``). The result, ``theta_exact_sample``, is a ``Fraction``;
+- it is reduced against 2pi itself (``primitive_phase.reduce_exactly_mod_2pi``), so
+  ``theta_div_2pi_sample`` is its exact cycle count and ``theta_mod_2pi_sample`` its exact
+  remainder rounded once;
+- ``rho_delta_sample`` carries the residual's own interval as the double it was always formed as.
+
+The producers add their offset ``deltaTheta`` to ``theta_exact_sample`` exactly and reduce again,
+and store the small part of the phase, ``theta_residual = deltaTheta - rho.delta``, formed from
+those two small terms and never by subtracting two numbers of size ``k tau``.
 
 **What this replaced, and why** (review §2-§4, §7, §8.2). Until prompt 06 of
 ``prompts/GkTk-remedial`` this module integrated ``dtheta/dz = omega`` as an ODE in two stages: a
@@ -62,6 +81,7 @@ the solver's steps.
 """
 
 import time
+from fractions import Fraction
 from math import fabs, log, log1p, sqrt
 from typing import List, Optional
 
@@ -76,8 +96,8 @@ from ComputeTargets.cumulative_table import CumulativeTable
 # this module was imported (prompts/tolerance-convergence, prompt 05b)
 import ComputeTargets.phase_residual as phase_residual
 from ComputeTargets.phase_residual import cached_phase_residual
+from ComputeTargets.primitive_phase import exact_leading_phase, reduce_exactly_mod_2pi
 from CosmologyConcepts import redshift_array, wavenumber, wavenumber_exit_time
-from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from Quadrature.integration_metadata import IntegrationData
 from Units import check_units
 
@@ -170,7 +190,8 @@ def WKB_phase_function(
     """
     Evaluate the Liouville-Green phase ``theta(z; z_init)`` at every redshift of ``z_sample``
     from the background model's tables (module docstring), as a ``(theta_div_2pi,
-    theta_mod_2pi)`` pair per sample.
+    theta_mod_2pi)`` pair per sample reduced exactly against 2pi, with the exact phase and the
+    residual's interval beside it.
 
     :param model_proxy: the ``ModelProxy`` of the background model; ``.get()`` supplies the
         ``BackgroundModel`` whose ``functions.tau``/``cs_tau``/``friction_F`` tables are used
@@ -187,7 +208,14 @@ def WKB_phase_function(
         ``friction_F.delta(z_init, z)`` for every sample, the exponent of the transfer function's
         friction factor
     :return: the payload described in the module docstring; keys ``"stage_1_data"``,
-        ``"stage_2_data"``, ``"theta_div_2pi_sample"``, ``"theta_mod_2pi_sample"``,
+        ``"stage_2_data"``, ``"theta_div_2pi_sample"`` and ``"theta_mod_2pi_sample"`` (the exact
+        cycle count and the exact remainder against 2pi, rounded once, of the phase
+        ``theta = -[k leading.delta(z_init, z) + rho.delta(z_init, z)]``),
+        ``"theta_exact_sample"`` (that phase itself, exactly, as a ``Fraction``: the large term
+        from the leading table's node limbs and end partials with ``k`` multiplied in exactly,
+        and the residual's interval added exactly; what the producer adds its offset to),
+        ``"rho_delta_sample"`` (``rho.delta(z_init, z)``, the residual's interval, the double it
+        is formed as: one of the two small terms of the producer's ``theta_residual``),
         ``"phase_solver_label"``, ``"has_WKB_violation"``, ``"WKB_violation_z"``,
         ``"WKB_violation_efolds_subh"``, ``"rho_gauss_order"`` (the order the residual table was
         built at, which is what the producer records and the lookup key carries),
@@ -242,6 +270,8 @@ def WKB_phase_function(
             "stage_2_data": _empty_integration_data(),
             "theta_div_2pi_sample": [0],
             "theta_mod_2pi_sample": [0.0],
+            "theta_exact_sample": [Fraction(0)],
+            "rho_delta_sample": [0.0],
             "phase_solver_label": PHASE_SOLVER_LABEL,
             "has_WKB_violation": False,
             "WKB_violation_z": None,
@@ -300,20 +330,28 @@ def WKB_phase_function(
     rho_anchor_node = nearest_table_node(rho, z_init)
     rho_anchor = rho.delta(z_init, rho_anchor_node)
 
-    # the phase at every sample, formed once and reduced once per sample; the leading table
-    # supplies the partial panel at an off-grid anchor itself, and never differences two
-    # pointwise values (README §2 (c))
+    # the phase at every sample, formed exactly and reduced exactly against 2pi, once per sample
+    # (module docstring; prompts/levin-phase-floor prompt 06). The leading table supplies the
+    # partial panel at an off-grid anchor itself, and never differences two pointwise values
+    # (README §2 (c)); exact_leading_phase reads delta's own pieces (delta_parts, node_limbs), at
+    # the cost of one delta call, and rounds none of them
     leading_evaluations_before = leading_table.total_evaluations
 
     sampled_theta_div_2pi: List[int] = []
     sampled_theta_mod_2pi: List[float] = []
+    sampled_theta_exact: List[Fraction] = []
+    sampled_rho_delta: List[float] = []
     rho_delta = 0.0
     for z in z_sample_list:
         rho_delta = rho_anchor + rho.delta(rho_anchor_node, z)
-        theta = -(k_float * leading.delta(z_init, z) + rho_delta)
-        theta_div_2pi, theta_mod_2pi = WKB_mod_2pi(theta)
+        theta_exact = exact_leading_phase(
+            k_float, leading, z_init, z, sign=-1, small_terms=(-rho_delta,)
+        )
+        theta_div_2pi, theta_mod_2pi = reduce_exactly_mod_2pi(theta_exact)
         sampled_theta_div_2pi.append(theta_div_2pi)
         sampled_theta_mod_2pi.append(theta_mod_2pi)
+        sampled_theta_exact.append(theta_exact)
+        sampled_rho_delta.append(rho_delta)
 
     leading_partial_evaluations = (
         leading_table.total_evaluations - leading_evaluations_before
@@ -405,6 +443,9 @@ def WKB_phase_function(
             "stage_2_data": _empty_integration_data(),
             "theta_div_2pi_sample": sampled_theta_div_2pi,
             "theta_mod_2pi_sample": sampled_theta_mod_2pi,
+            # the exact phase and the residual's interval, for the producer (module docstring)
+            "theta_exact_sample": sampled_theta_exact,
+            "rho_delta_sample": sampled_rho_delta,
             "phase_solver_label": PHASE_SOLVER_LABEL,
             "has_WKB_violation": has_WKB_violation,
             "WKB_violation_z": WKB_violation_z,

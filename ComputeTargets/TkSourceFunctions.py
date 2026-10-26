@@ -87,14 +87,22 @@ rho_T ~ -0.09 rad (review section 12.2) plus the initial-data offset deltaTheta 
 `TkWKBIntegration.store()` folded into the stored samples. phi is O(0.1) rad and smooth, so a
 cubic spline of *it* is limited by h^4 |phi''''|/384 instead.
 
+**phi is the producer's stored residual** (`prompts/levin-phase-floor` prompt 06).
+`TkWKBIntegration` is anchored at the same `z_init` and stores `theta_residual = deltaTheta -
+rho_T.delta(z_init, z)`, formed from those two small terms, which is phi exactly. Until then phi
+was recovered as `div * 2pi + mod - k cs_tau.delta(z, z_init)`, the difference of two numbers of
+size k cs_tau, and so was quantised to ulp(theta) on top of the granularity the stored sample
+already had (`[02-consumer-phi-below-the-storage-granularity]`). A sample without the residual is
+refused; there is no fallback.
+
 `sign = +1` here, against -1 for the Green's function: `PrimitivePhase` measures the leading
 term from a fixed anchor, and the transfer function's anchor is `z_init` at the *top* of its
 WKB region (the Green's function's is the response redshift at the bottom), so
 theta = +k cs_tau.delta(z, z_init) = -k cs_tau.delta(z_init, z), which is what
 `TkWKBIntegration` stores. `increasing` is no longer a concept: there is no spline of theta to
 order, and the sign convention is explicit. It is checked at construction against the stored
-samples -- with the wrong sign the residual would be *twice* the leading term rather than
-negligible beside it.
+samples: the stored remainder must equal (k cs_tau.delta(z, z_init) + phi) mod 2pi at every
+sample, which with the wrong sign it does not (`_check_phase_sign`).
 
 `PrimitivePhase` computes the leading part of d(theta)/dz in closed form as
 `sign * k * rate(z)`, where `rate(z)` is whatever makes d/dz[leading.delta(z, anchor)] =
@@ -148,7 +156,8 @@ attributes only, so that tests and future callers can pass synthetic stand-ins:
 
   `Tk_WKB` (a `TkWKBIntegration`, or anything exposing):
       `.values`     -- list of samples, in any z order, each with `.z.z`, `.theta_div_2pi`,
-                       `.theta_mod_2pi`, `.friction`. `.friction` is no longer *used* to build
+                       `.theta_mod_2pi`, `.theta_residual` (phi; prompts/levin-phase-floor
+                       prompt 06), `.friction`. `.friction` is no longer *used* to build
                        the amplitude -- it is cross-checked against `friction_F` and then
                        discarded -- but it is still required, because that cross-check is what
                        detects a datastore built by the retired friction ODE
@@ -212,8 +221,9 @@ from ComputeTargets.handover import (
     handover_switch_node,
     same_redshift,
 )
-from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
+from ComputeTargets.primitive_phase import PrimitivePhase
 from ComputeTargets.spline_wrappers import ZSplineWrapper
+from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from LiouvilleGreen.constants import TWO_PI
 from config.defaults import DEFAULT_FLOAT_PRECISION
 
@@ -513,16 +523,26 @@ class TkSourceFunctions:
 
         # theta = +k cs_tau.delta(z, z_init) + phi, with phi the small residual splined in
         # log(1+z). See the module docstring for why the growing part is not interpolated.
-        theta_points = [v.theta_div_2pi * TWO_PI + v.theta_mod_2pi for v in data]
-        phi_points = build_phi_samples(
-            self._k_float,
-            self._cs_tau,
-            self._z_init,
-            z_points,
-            theta_points,
-            sign=TK_PHASE_SIGN,
-        )
-        self._check_phase_sign(z_points, theta_points, phi_points)
+        #
+        # phi is the residual the producer stored (prompts/levin-phase-floor prompt 06):
+        # TkWKBIntegration is anchored at this same z_init, with the opposite sign of
+        # cs_tau.delta, so its theta_residual = theta + k cs_tau.delta(z_init, z) =
+        # theta - TK_PHASE_SIGN k cs_tau.delta(z, z_init) is phi itself, formed from its two small
+        # terms (deltaTheta - rho_T.delta). It is no longer recovered as the difference of the
+        # rebuilt div * 2pi + mod and the leading term, two numbers of size k cs_tau, which was
+        # quantised to ulp(theta) ([02-consumer-phi-below-the-storage-granularity]). A value
+        # without it, from a store written before prompt 06, is refused: no fallback.
+        missing = [v.z.z for v in data if getattr(v, "theta_residual", None) is None]
+        if len(missing) > 0:
+            raise RuntimeError(
+                f"TkSourceFunctions: {len(missing)} of {len(data)} Liouville-Green samples carry "
+                f"no theta_residual (first at z={missing[0]:.8g}), for k={self._k_float:.8g} with "
+                f"z_init={self._z_init:.10g}. The producer stores it since prompt 06 of "
+                f"prompts/levin-phase-floor and the phase is built from it alone; a store written "
+                f"before then is read at the commit that wrote it."
+            )
+        phi_points = [float(v.theta_residual) for v in data]
+        self._check_phase_sign(z_points, data, phi_points)
 
         self._phase = PrimitivePhase(
             self._k_float,
@@ -580,34 +600,52 @@ class TkSourceFunctions:
                 f"(~2e-7 absolute in F) and its datastore must be regenerated."
             )
 
-    def _check_phase_sign(self, z_points, theta_points, phi_points) -> None:
+    def _check_phase_sign(self, z_points, data, phi_points) -> None:
         """
         Confirm `TK_PHASE_SIGN` against the stored samples.
 
-        With the right sign the leading term is removed and phi is the small remainder; with
-        the wrong one it is *added*, and phi would span twice the leading term instead. So it
-        is enough to require that phi vary by less than the leading term does over the same
-        samples -- a test that cannot fail on correctly signed data (phi is O(0.1) rad against
-        a leading span of 1e4 to 1e10 rad) and cannot pass on data of the opposite sign.
+        Since prompt 06 of `prompts/levin-phase-floor` phi is the producer's stored residual,
+        small whatever convention produced it, so the old test -- that phi vary by less than the
+        leading term -- can no longer see the sign. The convention is checked instead by putting
+        the phase back together: at every sample, the stored remainder `theta_mod_2pi` must equal
+
+            (TK_PHASE_SIGN k cs_tau.delta(z, z_init) + phi) mod 2pi
+
+        by cyclic distance, to within the rounding of that sum in double,
+        `16 eps (k |cs_tau.delta| + |phi|) + 1e-12` rad. With the right sign the two are the same
+        phase. With the wrong one they differ by `2 k cs_tau.delta mod 2pi`, which is not small
+        away from z_init, so data of the opposite convention cannot pass. The sum is formed only
+        to compare remainders; phi is never formed from it.
         """
         if len(z_points) < 2:
             return
 
-        phi_span = max(phi_points) - min(phi_points)
-        leading_span = fabs(
-            self._k_float * self._cs_tau.delta(max(z_points), min(z_points))
-        )
+        eps = 2.220446049250313e-16
+        worst, worst_z, worst_tol = 0.0, None, None
+        failed = 0
+        for z, v, phi in zip(z_points, data, phi_points):
+            leading = (
+                TK_PHASE_SIGN * self._k_float * self._cs_tau.delta(z, self._z_init)
+            )
+            expected = WKB_mod_2pi(leading + phi)[1]
+            distance = fabs(float(v.theta_mod_2pi) - expected) % TWO_PI
+            distance = min(distance, TWO_PI - distance)
+            tolerance = 16.0 * eps * (fabs(leading) + fabs(phi)) + 1.0e-12
+            if distance > tolerance:
+                failed += 1
+                if worst_z is None or distance / tolerance > worst / worst_tol:
+                    worst, worst_z, worst_tol = distance, z, tolerance
 
-        if phi_span >= leading_span:
-            theta_span = max(theta_points) - min(theta_points)
+        if failed > 0:
             raise RuntimeError(
                 f"TkSourceFunctions: the stored phase samples are not consistent with the "
-                f"transfer-function sign convention theta(z) = +k cs_tau.delta(z, z_init) "
-                f"(TK_PHASE_SIGN = {TK_PHASE_SIGN:+d}): after removing the leading term the "
-                f"residual still spans {phi_span:.5g} rad against a leading span of "
-                f"{leading_span:.5g} rad (the stored phase spans {theta_span:.5g} rad). Either "
-                f"the samples carry the opposite sign convention, or they were not produced "
-                f"from this background model's sound horizon."
+                f"transfer-function sign convention theta(z) = +k cs_tau.delta(z, z_init) + phi "
+                f"(TK_PHASE_SIGN = {TK_PHASE_SIGN:+d}), with phi the stored theta_residual: at "
+                f"{failed} of {len(z_points)} samples the stored remainder theta_mod_2pi differs "
+                f"from (k cs_tau.delta + phi) mod 2pi, worst by {worst:.5g} rad at z={worst_z:.8g} "
+                f"(tolerance {worst_tol:.3g} rad). Either the samples carry the opposite sign "
+                f"convention, or they were not produced from this background model's sound "
+                f"horizon."
             )
 
     # ------------------------------------------------------------------------------------

@@ -258,7 +258,8 @@ class _LCDMTk:
         H_init = _Hubble(z_init)
         values = []
         for z in wkb_z:
-            theta = k * cls.cs_tau.delta(z, z_init) + float(_phi_true(log1p(z)))
+            phi = float(_phi_true(log1p(z)))
+            theta = k * cls.cs_tau.delta(z, z_init) + phi
             div, mod = WKB_mod_2pi(theta)
             values.append(
                 FakeWKBValue(
@@ -268,6 +269,8 @@ class _LCDMTk:
                     functions.friction_F.delta(z_init, z),
                     H_init / _Hubble(z),
                     Tk_omegaEff_sq(cls.model, k, z),
+                    # the residual from its small term, phi itself (prompt 06 §2)
+                    theta_residual=phi,
                 )
             )
         return numeric, FakeTkWKB(values, 0.37, z_init)
@@ -577,7 +580,8 @@ class TestNothingElseMoves(unittest.TestCase):
         for zz in z_samples:
             theta = GK_PHASE_SIGN * k * tau.delta(float(zz), z_response) + 0.01
             div, mod = WKB_mod_2pi(theta)
-            values.append(_Value(zz, div, mod))
+            # the residual from its small term, the 0.01 rad offset (prompt 06 §2)
+            values.append(_Value(zz, div, mod, theta_residual=0.01))
         functions = SimpleNamespace(tau=tau, Hubble=_Hubble)
         source = SimpleNamespace(
             model_proxy=SimpleNamespace(

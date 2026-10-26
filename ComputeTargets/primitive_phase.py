@@ -122,7 +122,7 @@ wavenumber and a sample of ``phi``.
 
 from fractions import Fraction
 from math import expm1, log1p
-from typing import Callable, Dict, Optional, Sequence
+from typing import Callable, Dict, Optional, Sequence, Tuple
 
 import mpmath
 import numpy as np
@@ -518,8 +518,21 @@ def build_phi_samples(
     sign: int,
 ) -> np.ndarray:
     """
-    ``phi(z_i) = theta_stored(z_i) - sign * k * leading.delta(z_i, z_anchor)``, the residual a
-    ``PrimitivePhase`` splines.
+    ``phi(z_i) = theta_stored(z_i) - sign * k * leading.delta(z_i, z_anchor)``: the residual a
+    ``PrimitivePhase`` splines, recovered *the old way*, as the difference of two numbers of size
+    ``k tau``.
+
+    **No production consumer calls this since prompt 06 of ``prompts/levin-phase-floor``.** The
+    difference above is quantised to ``ulp(theta)``, and the stored ``theta`` had already lost its
+    small part to the same granularity (``[02-consumer-phi-below-the-storage-granularity]``). The
+    producers now store that small part, ``theta_residual``, formed from its own small terms, and
+    the two consumers build ``phi`` from it: ``GkSourcePolicyData._build_phase`` as
+    ``r + k tau.delta(z_s, z_init)``, ``TkSourceFunctions`` as ``r`` itself. This function is kept
+    for the tests that pin the old construction (``test_primitive_phase``,
+    ``test_gk_source_primitive_phase``) and for measuring what it cost
+    (``test_stored_phase_residual``, prompt 06 test 3). Do not reintroduce it into a consumer.
+
+    What follows describes it as it was used until prompt 06.
 
     ``theta_stored`` must be the *unwrapped* phase ``theta_div_2pi * 2pi + theta_mod_2pi`` built
     from the **rectified** cycle counts (``GkSourceValue.WKB.theta_div_2pi``, not
@@ -543,3 +556,156 @@ def build_phi_samples(
         ],
         dtype=float,
     )
+
+
+# ---------------------------------------------------------------------------------------------
+# The producers' exact phase (prompts/levin-phase-floor prompt 06)
+# ---------------------------------------------------------------------------------------------
+#
+# ``WKB_phase_function`` and the two WKB producers' ``store()`` form every stored sample's phase
+#
+#     theta = sign * k * leading.delta(z_a, z_b) + (small terms)
+#
+# *exactly*, as a rational, and reduce it against 2pi itself. The large term comes from the
+# table's four node limbs and two end partials (the same pieces ``CumulativeTable.delta`` rounds),
+# with ``k`` multiplied in exactly; the small terms (the residual table's interval, the initial-data
+# offset) are added exactly. Nothing of size ``k tau`` is rounded before the remainder is.
+#
+# The arithmetic is Python integers on a common power-of-two scale, not ``Fraction`` and
+# ``mpmath`` per sample: the per-object wall-time tests of the producers leave no room for the
+# ~20 us a sample that ``_remainder_against_two_pi``'s route costs, where this costs a few us.
+# ``PrimitivePhase``'s own reducer, ``_remainder_against_two_pi``, is untouched; the two agree to
+# the last bit wherever both are applied to the same rational (prompt 06 test 6).
+
+# floor(2pi * 2^_TWO_PI_BITS), extended on demand; the reduction shifts it down to its own scale
+_TWO_PI_BITS = 0
+_TWO_PI_SCALED = 0
+
+# guard bits beyond the cycle count when 2pi is truncated to the working scale: the truncation
+# costs at most |cycles| * 2^-scale rad, so the scale is chosen to put that below 2^-_GUARD_BITS
+_GUARD_BITS = 120
+
+
+def _two_pi_scaled(bits: int) -> int:
+    """``floor(2pi * 2^bits)``, exact, from one constant held at the largest precision yet asked
+    for (computed in a private ``mpmath`` context, never the global one)."""
+    global _TWO_PI_BITS, _TWO_PI_SCALED
+    if bits > _TWO_PI_BITS:
+        precision = max(bits, 2048) + 64
+        ctx = mpmath.MPContext()
+        ctx.prec = precision + 64
+        _TWO_PI_SCALED = int(ctx.floor(ctx.ldexp(2 * ctx.pi, precision)))
+        _TWO_PI_BITS = precision
+    return _TWO_PI_SCALED >> (_TWO_PI_BITS - bits)
+
+
+def _dyadic(x: float) -> Tuple[int, int]:
+    """``(n, s)`` with ``x == n / 2^s`` exactly; every finite double is such a dyadic rational."""
+    n, d = float(x).as_integer_ratio()
+    return n, d.bit_length() - 1
+
+
+def exact_leading_phase(
+    k: float,
+    leading,
+    z_a: float,
+    z_b: float,
+    *,
+    sign: int,
+    small_terms: Sequence[float] = (),
+) -> Fraction:
+    """
+    ``sign * k * leading.delta(z_a, z_b) + sum(small_terms)``, **exactly**, as a ``Fraction``.
+
+    ``leading.delta(z_a, z_b)`` is taken as the table defines it before any rounding: the node
+    term ``(hi_b + lo_b) - (hi_a + lo_a)`` from the four limbs (``node_limbs``), plus the two end
+    partials ``p_b - p_a`` exactly as ``delta`` forms them (``delta_parts``, which spends the same
+    integrand evaluations as one call of ``delta``). ``k``, the partials and every small term are
+    doubles, so each is a dyadic rational and the sum is exact.
+
+    ``leading`` must supply ``delta_parts`` and ``node_limbs`` (``BackgroundModel.TablePrimitive``
+    passes them through from ``CumulativeTable``); there is no fallback to ``delta``.
+    """
+    j_a, j_b, p_a, p_b = leading.delta_parts(z_a, z_b)
+    hi_a, lo_a = leading.node_limbs(j_a)
+    hi_b, lo_b = leading.node_limbs(j_b)
+
+    # the interval (hi_b + lo_b) - (hi_a + lo_a) + p_b - p_a, each double as n / 2^s, brought to
+    # their finest common scale and summed as integers (written out: this runs once per sample
+    # in the producers' wall-time budget)
+    n1, d1 = hi_b.as_integer_ratio()
+    n2, d2 = lo_b.as_integer_ratio()
+    n3, d3 = hi_a.as_integer_ratio()
+    n4, d4 = lo_a.as_integer_ratio()
+    n5, d5 = float(p_b).as_integer_ratio()
+    n6, d6 = float(p_a).as_integer_ratio()
+    s1 = d1.bit_length() - 1
+    s2 = d2.bit_length() - 1
+    s3 = d3.bit_length() - 1
+    s4 = d4.bit_length() - 1
+    s5 = d5.bit_length() - 1
+    s6 = d6.bit_length() - 1
+    scale = max(s1, s2, s3, s4, s5, s6)
+    interval = (
+        (n1 << (scale - s1))
+        + (n2 << (scale - s2))
+        - (n3 << (scale - s3))
+        - (n4 << (scale - s4))
+        + (n5 << (scale - s5))
+        - (n6 << (scale - s6))
+    )
+
+    k_n, k_s = _dyadic(k)
+    numerator = int(sign) * k_n * interval
+    scale += k_s
+
+    for term in small_terms:
+        n, s = _dyadic(term)
+        if s > scale:
+            numerator <<= s - scale
+            scale = s
+        numerator += n << (scale - s)
+
+    if scale < 0:
+        return Fraction(numerator << (-scale))
+    return Fraction(numerator, 1 << scale)
+
+
+def reduce_exactly_mod_2pi(theta: Fraction) -> Tuple[int, float]:
+    """
+    ``(theta_div_2pi, theta_mod_2pi)`` of an exact dyadic rational ``theta``, reduced against 2pi
+    itself in the producers' negative-remainder convention: ``theta = div * 2pi + mod`` with ``div``
+    the exact cycle count, ``ceil(theta / 2pi)``, and ``mod`` the exact remainder in ``(-2pi, 0]``
+    rounded once to the nearest double.
+
+    A remainder in ``(-2pi, -TWO_PI]``, i.e. within ``2pi - TWO_PI ~ 2.4e-16`` of ``-2pi``, would
+    round to ``-TWO_PI``. It is stored as ``0.0``, with the cycle count moved one further from zero
+    in the direction of the phase (``div - 1``: ``div * 2pi - 2pi + d = (div - 1) * 2pi + d`` with
+    ``0 <= d < 2.4e-16``), so that the remainder stays in ``(-TWO_PI, 0]`` as ``WKB_mod_2pi``'s does
+    (prompt 06 §9 point 6). For the producers' negative phases that raises the count's magnitude
+    by one.
+
+    The arithmetic is integer: ``theta`` is brought to a power-of-two scale fine enough that the
+    truncation of 2pi to that scale costs at most ``2^-120`` rad, and the remainder is converted to
+    a double by one correctly rounded integer division.
+    """
+    numerator = theta.numerator
+    denominator = theta.denominator
+    shift = denominator.bit_length() - 1
+    if denominator != 1 << shift:
+        raise ValueError(
+            "reduce_exactly_mod_2pi: theta must be a dyadic rational (a sum of doubles), got "
+            f"denominator {denominator}"
+        )
+
+    work = max(shift, numerator.bit_length() - shift + _GUARD_BITS, _GUARD_BITS)
+    scaled = numerator << (work - shift)
+    two_pi = _two_pi_scaled(work)
+
+    cycles = -((-scaled) // two_pi)
+    remainder = (scaled - cycles * two_pi) / (1 << work)
+
+    if remainder <= -TWO_PI:
+        remainder = 0.0
+        cycles -= 1
+    return int(cycles), remainder + 0.0
