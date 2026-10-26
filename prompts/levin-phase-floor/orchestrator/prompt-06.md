@@ -168,8 +168,12 @@ the baselines and §A.0 of this note. It does not read `orchestrator/`. Tell it 
      producer subtracts a value of size $k\tau$ to make it;
    - no cross-sample rebase; `G_WKB` and `T_WKB` from the exact remainder;
    - `_build_phase` and `_build_WKB` build $\varphi$ from $r$; $\varphi_G$'s second term is
-     $k\,\tau.\delta(z', z_{\rm init})$, zero where `z_init` is null; the unwrap of $\varphi_G$ is
-     compared with the rectifier's block shifts, and a disagreement raises;
+     $k\,\tau.\delta(z', z_{\rm init})$, zero where `z_init` is null; in `_build_phase` the unwrap
+     of $\varphi_G$ is compared with the stored rectifier shifts, and a disagreement prints one
+     `!! WARNING` line and uses $\varphi_G$'s own unwrap (prompt §9 point 6);
+   - the exact reduction in `WKB_phase_function` is integer arithmetic, checked by test 1 against
+     `mpmath`; the wall-time tests' limits did not move; a remainder rounding to $-$`TWO_PI` is
+     stored as $0$ with the cycle count raised;
    - no fallback on a null `theta_residual`;
    - the log names `apply_phase_offset`'s remaining callers and says where $\varphi_G$ is formed.
 4. **The roots, re-run here.** Six equal to the baselines (`tools` up by the §1.5 test if one was
@@ -297,6 +301,9 @@ with §9), Part B's dispatch SHA, both worktrees' paths, §B.1 and the addendum.
     agent's, saved in `scripts/`.
   - **If R13 and R14 are value-identical in `GkWKBIntegration`'s values, stop:** then at least one
     tree did not run the code it names.
+  - **The repairs' agreement:** `grep` R14's launch log and stdout for `_build_phase`'s
+    `!! WARNING` disagreement line (prompt §0.2, §9 point 6). Any is §8's stop; report each with
+    its $k$, $z_R$ and samples. Record the count, zero included.
   - **The readers** on R14, with the store's files hashed before and after.
 - **The re-measurement agent,** prompt §6. It writes only under `var/levin-phase-floor-06/wider/`
   and its own run directory. It uses no Ray and takes no lock.

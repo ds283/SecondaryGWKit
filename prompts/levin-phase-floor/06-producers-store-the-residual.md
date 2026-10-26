@@ -135,7 +135,9 @@ true $\theta$ against $2\pi$, in $(-2\pi, 0]$. `theta_div_2pi` is its cycle coun
   $2\pi$. That is an unwrap of a small number.
   - The rectifier's own `theta_div_2pi` output stays, for the stored rows and the readers.
   - **The two repairs must agree:** the multiples of $2\pi$ found on $\varphi_G$ equal the
-    rectifier's block shifts, sample for sample. A disagreement is a stop.
+    rectifier's block shifts, sample for sample. On a fixture a disagreement fails the test. In
+    a build it prints one `!! WARNING` line naming $k$, $z_R$ and the samples, and $\varphi_G$ is
+    built from its own unwrap: a build is never killed by it. Any such line in R14 is a stop (§8).
 
 **`GkSource`'s value table** carries what `_build_phase` needs: $r$ for each source redshift, and
 the `z_init` it already stores. Where $\varphi_G$ is formed, in `assemble_GkSource_values` or in
@@ -181,10 +183,10 @@ The payload names them, and its docstring says how each was formed.
 - No other column changes.
 
 ### 1.4 The consumers
-- **`assemble_GkSource_values`** carries $r$ through, and forms $\varphi_G$ there if that is the
-  agent's choice. It also runs the agreement check of §0.2.
-- **`_build_phase`** builds its $\varphi$ samples from $r$ (§0.2), not from `build_phi_samples` on
-  a rebuilt $\theta$.
+- **`assemble_GkSource_values`** carries $r$ through.
+- **`_build_phase`** forms $\varphi_G$ from $r$ (§0.2), not from `build_phi_samples` on a rebuilt
+  $\theta$, and runs the agreement check of §0.2 there, against the stored rectifier shifts
+  (`raw_theta_div_2pi - theta_div_2pi`, relative to the first sample).
 - **`TkSourceFunctions._build_WKB`** builds $\varphi_T$ from $r$, and `_check_phase_sign` checks
   the same convention on the new samples.
 - **`build_phi_samples`** is kept, if anything still calls it, and its docstring says what it is
@@ -204,6 +206,10 @@ Test stand-ins that model a producer's stored values (`FakeWKBValue` and the lik
 `test_tk_source_functions.py`, `test_phase_groups.py`, `test_quadsource_integral.py`,
 `test_g_phase_reanchor.py`, `test_t_phase_reanchor.py`) gain the residual. It is formed as the new
 producer forms it, from its small terms.
+- **A closed-form stand-in** (the Bessel and `solve_ivp` fixtures of `test_tk_source_functions.py`,
+  `AnalyticRadiationFixture`), whose $\theta$ has no separate small terms, forms its residual as
+  $\theta - {\rm sign}\,k\,L.\delta$ in double. At $x \le 10^6$ that costs at most about
+  $2\times10^{-10}$ rad, stated in the log beside each such site.
 - **List every site in the log, by file and line.**
 - **No existing assertion changes**, with one class of exception: an assertion that pins a value
   this prompt is meant to move, such as a stored `theta_mod_2pi`, a `G_WKB` or a $\varphi$ sample.
@@ -215,6 +221,8 @@ producer forms it, from its small terms.
   `apply_phase_offset`, which §1.2 replaces on this path. That `assertIn` becomes one naming what
   replaces it. Their `assertNotIn` lines stay as they are. Keeping the name in a comment to satisfy
   the old assertion is not allowed.
+- **And the payload's key set.** `test_gk_wkb_phase.py`'s `TestPayloadContract.REQUIRED_KEYS`
+  (`:887`) gains the keys §1.1 adds. The equality assertion at `:920` stays.
 - Any other change to an existing assertion is a stop.
 
 ## 3. Tests
@@ -437,7 +445,8 @@ If U0 fails, stop.
 
 The prompt was reviewed on the laptop before Part A was dispatched. Points 1–4 were amended in
 place on the user's word. Point 5 was found while the orchestrator note was written, and amended
-under the user's instruction to dispatch. No agent had read the prompt.
+under the user's instruction to dispatch. No agent had read the prompt. Point 6 was amended after
+Part A's first dispatch stopped, before any code was written.
 1. **§0.2, $\varphi_G$'s second term.** It read $k\,\tau.\delta(z_{\rm init}(z'), z')$. With
    `CumulativeTable.delta(a, b)` $= \tau(b) - \tau(a)$, `build_phi_samples`' $\varphi = \theta -
    {\rm sign}\,k\,L.\delta(z, z_{\rm anchor})$ and `GK_PHASE_SIGN = -1`, it is
@@ -457,3 +466,20 @@ under the user's instruction to dispatch. No agent had read the prompt.
    that each producer's source names `apply_phase_offset`, which §1.2 replaces. As first written,
    changing them fell outside §2's exception and was a stop that §1.2 made certain. §2 now names
    them.
+6. **After Part A's first dispatch stopped** (the user's decisions, 2026-10-26). The agent stopped
+   at §8 before writing code: `TestPayloadContract` (`test_gk_wkb_phase.py:920`) asserts the
+   payload's exact key set, which §1.1 must extend. The user decided:
+   - §2 names `REQUIRED_KEYS`; the equality assertion stays.
+   - `assemble_GkSource_values` has no $\tau$ table, so $\varphi_G$ and the agreement check
+     move to `_build_phase` (§1.4).
+   - In a build, a disagreement of the two repairs warns and uses $\varphi_G$'s own unwrap,
+     rather than raising; any warning in R14 is §8's stop (§0.2). The rectifier changes a block
+     only where raw $\theta$ rises, so a downward wrap of $\Delta\theta$, or a step with
+     $k\Delta\tau \gtrsim \pi$ between neighbouring sources, may defeat it.
+   - A closed-form stand-in forms its residual in double (§2).
+   - Accepted as the agent proposed: the exact reduction in `WKB_phase_function` in integer
+     arithmetic (the wall-time tests leave no room for `mpmath` per sample), beside
+     `PrimitivePhase`'s reducer, which is not touched; `_check_phase_sign` compares the stored
+     remainder with $(k\,L.\delta + r)$ mod $2\pi$; `build_phi_samples` kept; an exact remainder
+     that rounds to $-$`TWO_PI` is stored as $0$ with the cycle count raised by one, keeping
+     $(-2\pi, 0]$.
