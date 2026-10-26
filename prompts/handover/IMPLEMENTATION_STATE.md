@@ -771,6 +771,27 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   and §5.4; [`docs/handover/b1/r8/issues.md`](../../docs/handover/b1/r8/issues.md). Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
 
+  **Narrowed (2026-10-26), and the next step above corrected: the gap is in `datastorekit`, and it
+  covers every class.**
+  - **What the fingerprint holds.** `datastorekit.store_inventory` (pinned `v0.5.0`) builds each
+    record from its identity (leaves and parent digests), its tags, its validated flag and a
+    **count** of its value-table rows. Its module docstring says the value tables are "counted …
+    and never listed", and that "a computed-values field can be added to `Record` later".
+  - **Why the next step was wrong.** A value table in `QuadSourceIntegral`'s `inventory_spec` would
+    add a row count, not a value.
+  - **The reach.** No class's computed values are in any fingerprint. Every rehearsal certified
+    "equal to the reference" for identities, tags and counts only. Where a value was certified, a
+    separate comparison did it, as B1's did.
+
+  **Assigned (2026-10-26), by the user at `levin-phase-floor`'s G1:**
+  - **The fix is DatastoreKit's.** A computed-values field on `Record`, declared per class, with
+    floats canonicalised bit-exactly. It is released there, and the pin is moved here in a commit of
+    its own (`CLAUDE.md`), followed by this repository's specs declaring their value columns and a
+    new rehearsal reference.
+  - **It is not on 05's path.** It must land **before the next production build**.
+    `levin-phase-floor` 05 goes ahead in parallel and certifies its own `QuadSourceIntegral` values
+    by a direct comparison.
+
 - **[03-gksource-policy-accepts-a-value-that-raises]** *(opened 2026-10-25 by prompt 03 (A3), from
   README §2 (o) item 1; indexed since 2026-09-19 as "none yet")* — `GkSourcePolicy` accepts
   `numeric_policy = "maximize-numeric"` (`MetadataConcepts/GkSourcePolicy.py:6`, checked at
