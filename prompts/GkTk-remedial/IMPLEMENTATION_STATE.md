@@ -808,6 +808,9 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   - **What is not closed: $T_k$.** Its remainder keeps the global anchor and the `TWO_PI` modulus,
     by that campaign's G1 Q2. In 05's sample no row capped under B1's code needed it: R7, the one
     capped `Gqr` row, goes with $G$ alone. A case where $T$'s floor matters would reopen it there.
+  - **$T_k$'s half is open again (2026-10-26),** as `[05-t-remainder-keeps-the-anchoring-floor]`
+    on the `levin-phase-floor` board, assigned to its prompt 05a by the user's decision the same
+    day. The case is correctness, not a row that needed it. This entry stays closed for $G_k$.
 
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5;
   `prompts/levin-phase-floor/IMPLEMENTATION_STATE.md` (05).

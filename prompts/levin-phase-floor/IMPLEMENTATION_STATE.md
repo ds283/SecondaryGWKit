@@ -36,6 +36,14 @@ producers' stored phase after it.
 - 05 opened three issues and narrowed four (§3). The finding that matters beyond the campaign:
   **B1 moves 36 of 39 stored A3 v2 totals beyond their stored error**.
 
+**05a written** (2026-10-26), on the user's decision the same day (Decisions, **05a**): $T$'s
+remainder gets the same two corrections as $G$'s, the node anchor and reduction against $2\pi$.
+Writing it opened `[05-t-remainder-keeps-the-anchoring-floor]` (§3). A planning measurement on 05's
+run, `measure/convergence_kinds.py`, finds why 9 of 05's 11 uncapped rows stay unconverged: no
+group reaches the cap. Every unconverged group either cancels across its regions, or is one region
+at depth 0 whose declared error is the driver's round-off bound. It narrows `handover`'s
+`[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]`, for G2.
+
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
 
@@ -75,6 +83,12 @@ records in `docs/levin-phase-floor/NN/` ·
 | **Layer 2** | **Deferred to G2.** Whether the driver must be told its input's floor, and whether that must reach the Clenshaw–Curtis branch (`[03-depth20-regions-are-all-clenshaw-curtis]`), is decided after layer 1 and the wider re-measurement |
 | **Order** | **05 now; no fingerprint change** (revised twice the same day). The fingerprint certifies identities, tags and value-row counts, never computed values, by design, so the issue was a misreading and is closed (`handover` board §4). A prompt that changes how values are computed certifies them directly, by a rehearsal pair compared by identity (`CLAUDE.md`, campaign conventions rule 7). 05 adds the tool, `tools/store_value_diff.py`. *(Withdrawn: first, the fingerprint before 05, on the orchestrator's mistaken premise that a value table would make it see values; then a DatastoreKit computed-values feature, judged out of proportion by the user.)* |
 
+**Made by the user after 05, 2026-10-26:**
+
+| | Decided |
+|---|---|
+| **05a** | **Rows 1 and 2 for $T$, "in exactly the same way" as 05 did them for $G$:** the node-anchored remainder and reduction against $2\pi$, in a prompt 05a before 06+. G1 Q2 had left $T$ unchanged, and 05's closing note recorded only that no sampled row needed it. $G$ and $T$ enter the integrand on an equal footing, and $T$ carries both known errors. The case is correctness, not cost: neither error has been seen to drive the bisection. Row 3, the producers' stored samples, stays G1 Q3's 06+ for both. *Orchestrator's note, writing 05a:* for $T$ the rounding of $z = {\rm expm1}(u)$ (04's I1) is the same size as the floor wherever $z \gg 1$, so row 1's gain in production is expected to be of order one there; 05a measures both (its §0.1) |
+
 The orchestrator's choices of method, C1–C6, are in README §6.2. The open questions for the user,
 Q1–Q4, are in README §6.3.
 
@@ -89,6 +103,7 @@ Q1–Q4, are in README §6.3.
 | 03 | [Instrument seven depth-20 rows](03-instrument-depth-20-rows.md) | findings §2.6 item 1 on seven of 01's candidates: depth per group by branch; the jitter in the composed phase; the discrepancy along a region's ancestry, real and with the jitter removed; what the driver can see; how far `G+r` cancels. M0 (bit-identity) gates M1–M5 | Mac Studio; Ray-free if a stand-in read-only pool works, else under the lock | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-03-instrument-20261025T194950`; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`; reviewed there, 9/9 pass, three readings confirmed by the user on 2026-10-25 (`elapsed` not gated, M5 inapplicable on R7, the pid in `status.json`); R1 re-checked from the laptop: stored and re-run agree in `float.hex` on `total` (`-0x1.631c5efe83a46p-78`), `total_abserr` (`0x1.2f222e3d4dd6dp-95`), `WKB_Levin` and `numeric_quad` (`0x0.0p+0`), `total_converged` 0 / False | `d5f5a2b` (records) | [log](logs/03-instrument-depth-20-rows.md) |
 | 04 | [Remove the floor from seven rows](04-remove-the-floor.md) | findings §2.6 item 3 in a harness, on 03's seven rows. Arm **A**: $k\tau_R$ out of $G$'s phase (layer 1(a)). Arm **X**: every factor's remainder reduced exactly, the limit of any phase layer and N4's reference. Layer 1(b) is not an arm (README §6.2 C7). Gates E1, E2, M0; scored R1 (the cap goes under X), A1 (layer 1(a) is enough where $G$'s anchor is the floor), N4, R2 with Q5's number | Mac Studio, Ray-free, **at the pre-B1 tree `98e68d3`** in a worktree: `handover` B1's strict coverage check refuses A3 v2's `QuadSource` rows, so an A3 v2 re-run at `HEAD` raises (`[12-realistic-large-x-reads-the-retired-clamp-records]`) | Opus | ✍️ 2026-10-25; §8 added on the resume (`d170e6d`) | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-04-remove-20261025T231110`, 28/28 units, none over budget; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`. The first dispatch stopped at step 5 (E1 (c), E2 failed by round-off, 4e-16–6.5e-14 rad); the user amended those two gates only. The resume's review passed. R1 re-checked from the laptop: stored and P agree in `float.hex` on `total` and `total_abserr` | records in the bookkeeping commit | [log](logs/04-remove-the-floor.md) |
 | 05 | [Layer 1(a): take $k\tau_R$ out of $G$'s phase](05-reanchor-g-phase.md) | $G$'s remainder formed node by node: an exact remainder per table node, against $2\pi$, in extended precision and memoised, plus a small variable part. $T$, `raw_theta`, `theta_deriv`, the producers and every schema unchanged. Tests (exactness against $2\pi$, no jitter, nothing else moves), with four breakages. Adds `tools/store_value_diff.py`, which compares two stores' values by physical identity (`CLAUDE.md` rule 7), with its tests. Rehearsals R9 (parent) and R10, compared with it. A wider re-measurement on A3 v2 (up to 24 depth-20 rows by class and band, 03's seven and 8 controls), with `QuadSource` recomputed in-process; gate L0; scored L1, L1q, L2, L3 | code on the laptop; R9, R10 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ✅ 2026-10-26. **Code** (§1–§4) on the laptop: reviewed there (nine checks, all pass) and pushed; ComputeTargets 742 → 754, tools 49 → 55. **§5** on the Mac Studio: R9 `levin-phase-floor-05-r9-parent-20261026T014729` (worktree at `e648951`) and R10 `levin-phase-floor-05-r10-reanchor-20261026T015120` (`53084dc`), both `done`, `1b332ffa…`; every value table identical; QSI 542/864 totals moved, median 8.7e-5 of the error, one row 28×; readers exit 0; lock released. Stopped at §8 on timings, labels, `parents_digest` and work counters; the user ruled the prompt wrongly worded. **§6**: run `levin-phase-floor-05-wider-20261026T020005`, 109/109, none over budget; L0 holds; L1 fails (9/24), L1q fails (1/7), L2 holds (8/8), L3 fails (29/31), as written, all failures on rows B1 had already uncapped or R5; on the 11 rows capped under $p$ the cap goes on all, L3 holds on all. Mac Studio review: stop on check 10 (two unclassified deviations), classified on committing by the user's agreement; checks 1–9 pass. Laptop re-checks: the 28× row, and `QuadSource` at $p$ on `low-G-r-2`. R9's and R10's stores were retired after the records commit, on the user's word (sidecars kept; `05/rehearsal/out/retire_r{9,10}.txt`), and the worktree was removed | `120fdfe` (code); records in the records commit | [log](logs/05-reanchor-g-phase.md) |
+| 05a | [Layer 1(a) for $T$](05a-reanchor-t-phase.md) | $T$'s remainder node-anchored and reduced against $2\pi$, by `PrimitivePhase`'s existing `exact_remainder`, which `TkSourceFunctions` now turns on (a keyword, default on; closed-form test fixtures turn it off). $T$'s anchor `z_init` is off the grid, so the anchor's end partial is non-zero in production for the first time. Tests with four breakages; 05's T-unchanged test replaced. R11 and R12 compared with `tools/store_value_diff.py`. 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter at each sub-interval's low-$z$ end; gate T0; scored T1–T4 | code on the laptop; R11, R12 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ⬜ | — | — |
 | 06+ | the producers' phase; layer 2 | `GkWKBIntegration` and `TkWKBIntegration`'s stored phase, by its own method (G1 Q3); then layer 2 as G2 decides | — | — | ⏸ held on 05 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · 🟡 partly landed, with what is pending · ✅ landed · ⛔ stopped and superseded.
@@ -268,6 +283,27 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
 
   `prompts/levin-phase-floor/logs/05-reanchor-g-phase.md`.
 
+  **Assigned (2026-10-26):** $T$'s half to prompt 05a, on the user's decision (Decisions, **05a**).
+  It closes when 05a's §5 and §6 hold.
+
+- **[05-t-remainder-keeps-the-anchoring-floor]** *(opened 2026-10-26 by the orchestrator, writing
+  05a, from 05's closing note on `[00-consumer-anchoring-floor]`)* — $T$'s remainder is still formed
+  by reducing one double of size $k\tau_s(z)$, against its global anchor `z_init`.
+  - **The error.** Every remainder carries rounding of about $\varepsilon k\tau_s(z)$, which is not
+    smooth in $z$. It is small at early source times and largest at late ones.
+  - **What is known of its size.** With $G$ already clean, 04's I7 put the predicted floor,
+    $\varepsilon\sum|\theta_T|$ at the late end of the `Gqr` sub-intervals, at 1.1–1.3 $F$, from
+    the two $T$ factors. No $\sigma_\theta$ of $T$ has been measured there.
+  - **What has not been seen.** It has not been seen to drive the bisection: 04's arm A, which left
+    $T$ as production forms it, matched the exact limit, and 05 removed the cap on all 11 capped
+    rows without $T$.
+  - **Why it was lost.** `[00-consumer-anchoring-floor]` (`GkTk-remedial`) was closed for $G$ by
+    05, and $T$ was recorded only in its closing note. So nothing in the index carried it.
+
+  **Impact:** an accuracy error in a factor on the same footing as $G$; its size in totals is
+  unmeasured. **Next step:** prompt 05a, which measures it in place (T1) and in totals (T3).
+  **Assigned (2026-10-26):** to 05a, on the user's decision (Decisions, **05a**).
+
 - **[04-x-at-1e-8-still-reaches-depth-20]** *(opened 2026-10-25 by prompt 04, its I6)* — with every
   remainder exact, arm X at `rtol = 1e-8` still sends one short chain of regions to
   `DEFAULT_LEVIN_MAX_DEPTH`.
@@ -378,7 +414,9 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
   55-region chain, are about the rule. They are recorded with the verdicts (the log, and §2.1 H-anchor).
 - **W5** narrows `handover`'s `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]`.
 - **W6 and W7, and the one R9/R10 row that moved by 28× its error,** narrow `handover`'s
-  `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]`.
+  `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]`. W7's cause was measured on
+  2026-10-26, writing 05a: [`measure/convergence_kinds.py`](measure/convergence_kinds.py), output
+  [`measure/out/convergence_kinds.txt`](measure/out/convergence_kinds.txt), recorded in that entry.
 - **W8,** $c$'s regions on R1–R7 against 04's arm A, is descriptive. The trees differ in three
   ways that it does not separate.
 - **W9:** 15 scipy `IntegrationWarning`s from production's numeric quadrature, 5 under $p$ and 10

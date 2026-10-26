@@ -540,6 +540,30 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.
 
+  **Narrowed (2026-10-26, a measurement on `levin-phase-floor` 05's run, writing its 05a): once
+  the cap is gone, the flag fails for two reasons, neither the cap.** Under 05's code, on its 31
+  sampled depth-20 rows, every unconverged Levin call was classified. At `1e-7` there are 67 of
+  them, and none has a region at depth 20.
+  - **18 fail on resolution.** These are multi-region groups (`G`, `G±r`, one `G+q+r`; 6–42
+    regions, depth 3–11), whose summed residual is 1.0–31× the group's request. Every region
+    passed `rtol` against its **own** value, so the regions cancel in the group's total by at least
+    that factor. The per-region test cannot add up to a relative tolerance on a cancelling sum.
+  - **49 are single regions at depth 0,** all in `Gqr` groups: the whole sub-interval accepted at
+    once.
+    - **32 meet the request on resolution.** The residual is 3e-5 to 0.9 of the request, but the
+      declared error is 1.4–199× it, or infinite on 4. That excess is the eq. (151) round-off
+      bound or the truncation term; the records do not separate them.
+    - **17 are `phase_limited`.** The driver accepted them unresolved, at 1.0–183× the request,
+      because its bound exceeded the request.
+  - **At `1e-8`** the split is 21 / 24 / 27, and the declared bound on the single regions reaches
+    4.9e3× the request.
+  - **The phase groups declare no `theta_abserr`** (`phase_groups.py`, `levin_theta`), so no phase
+    error enters the bound. These are questions for G2's Q4: what the flag tests, and how tight
+    eq. (151) is on a whole sub-interval at depth 0.
+
+  [`prompts/levin-phase-floor/measure/convergence_kinds.py`](../levin-phase-floor/measure/convergence_kinds.py);
+  output [`measure/out/convergence_kinds.txt`](../levin-phase-floor/measure/out/convergence_kinds.txt).
+
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation
   brief prescribes §5.2's second boxed form for the **off-cut** coefficient $C(\tilde y)$, a
