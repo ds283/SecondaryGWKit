@@ -118,6 +118,13 @@ Two opened by prompt 02:
   its own, before the next production build: regenerating the store with the same producers would
   reproduce the noise. This entry stays here.
 
+  **Planning note (2026-10-26):** `levin-phase-floor` prompt 06
+  ([`06-producers-store-the-residual.md`](../levin-phase-floor/06-producers-store-the-residual.md))
+  is written. Each producer value stores its residual $\Delta\theta - \rho.\delta$ from its small
+  terms, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from
+  the residual, so no $\varphi$ is a difference of two numbers of size $k\tau$. This entry closes
+  when 06's §5 and §6 hold; its S1 and S2 re-measure 04's metric on A3 v2's R1–R7.
+
 - **[02-verify-script-builds-its-own-Gk-consumer]** *(opened by prompt 02, 2026-09-13; not this
   campaign's file)* — `docs/gktk-remedial/verify_production_path.py` constructs `PrimitivePhase`
   directly at `:557` (the §3.5 $G_k$ consumer) and `:1173` (the §5 throughput section), rather than

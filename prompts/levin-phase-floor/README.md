@@ -156,7 +156,8 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | answered 2026-10-26 (the board's Decisions) |
 | 05 | [`05-reanchor-g-phase.md`](05-reanchor-g-phase.md) | layer 1(a): $G$'s remainder exact per table node, against $2\pi$; adds `tools/store_value_diff.py`; R9/R10 compared with it; a wider re-measurement on A3 v2 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
 | 05a | [`05a-reanchor-t-phase.md`](05a-reanchor-t-phase.md) | layer 1(a) and the $2\pi$ modulus for $T$, as 05 did them for $G$: `TkSourceFunctions` turns on the node-anchored remainder; R11/R12 compared with `tools/store_value_diff.py`; 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26, on the user's decision the same day |
-| 06+ | remedy | the producers' stored phase (G1 Q3), then layer 2 as G2 decides | — | — | ⬜ not written |
+| 06 | [`06-producers-store-the-residual.md`](06-producers-store-the-residual.md) | the producers' stored phase (G1 Q3), for $G$ and $T$: each value stores its small residual $\Delta\theta - \rho.\delta$ exactly, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from the residual; R13/R14 compared with `tools/store_value_diff.py`; 05's 39 rows re-run with the producers re-run in-process, with 04's $\varphi$ metric on R1–R7 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
+| 07+ | remedy | layer 2 as G2 decides | — | — | ⬜ not written |
 | **G2** | gate | the user decides layer 3 (§6.3 Q4) and the `rtol` question (Q5) | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
@@ -305,6 +306,13 @@ These are the orchestrator's choices, and the user can reverse any of them.
   Both are reduced against the double `TWO_PI`, as production's `fmod` is. So X differs from
   production by the jitter alone, and the modulus's own smooth error (about
   $0.18\,\varepsilon|\theta|$) is reported, not removed.
+- **C8 — 06 stores the small part** (added 2026-10-26, writing 06). G1 Q3 asked for a method of
+  its own for the producers' stored phase. The noise is the loss of the small terms $\rho$ and
+  $\Delta\theta$ when the producer forms one double of size $k\tau$; the consumer cannot recover
+  what is not stored. So the producers store the residual $r = \Delta\theta - \rho.\delta$ from
+  its small terms, reduce the stored remainder exactly against $2\pi$ by 05's limb construction,
+  and the consumers build $\varphi$ from $r$. The alternative, storing $\theta$ in extended
+  precision and keeping the consumer's subtraction, keeps a cancellation the residual avoids.
 
 ### 6.3 Open, for the user at the gates
 
