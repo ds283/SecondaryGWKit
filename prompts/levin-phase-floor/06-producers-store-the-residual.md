@@ -208,7 +208,14 @@ producer forms it, from its small terms.
 - **No existing assertion changes**, with one class of exception: an assertion that pins a value
   this prompt is meant to move, such as a stored `theta_mod_2pi`, a `G_WKB` or a $\varphi$ sample.
   Each such change is listed with its old and new value, and shown to be within the bound its
-  test states. Any other change to an existing assertion is a stop.
+  test states.
+- **And one source grep in each sector.** `test_gk_wkb_phase.py`'s
+  `test_gk_store_has_no_sign_fix_or_rebase` and `test_tk_wkb_phase.py`'s
+  `test_tk_wkb_integration_greps_are_empty` assert that the producer's source names
+  `apply_phase_offset`, which §1.2 replaces on this path. That `assertIn` becomes one naming what
+  replaces it. Their `assertNotIn` lines stay as they are. Keeping the name in a comment to satisfy
+  the old assertion is not allowed.
+- Any other change to an existing assertion is a stop.
 
 ## 3. Tests
 
@@ -426,10 +433,11 @@ If U0 fails, stop.
 - Any store file changes.
 - The lock is held, or will not release.
 
-## 9. Amended before dispatch (2026-10-26, on the user's word)
+## 9. Amended before dispatch (2026-10-26)
 
-The prompt was reviewed on the laptop before Part A was dispatched, and four points were amended in
-place. No agent had read it.
+The prompt was reviewed on the laptop before Part A was dispatched. Points 1–4 were amended in
+place on the user's word. Point 5 was found while the orchestrator note was written, and amended
+under the user's instruction to dispatch. No agent had read the prompt.
 1. **§0.2, $\varphi_G$'s second term.** It read $k\,\tau.\delta(z_{\rm init}(z'), z')$. With
    `CumulativeTable.delta(a, b)` $= \tau(b) - \tau(a)$, `build_phi_samples`' $\varphi = \theta -
    {\rm sign}\,k\,L.\delta(z, z_{\rm anchor})$ and `GK_PHASE_SIGN = -1`, it is
@@ -445,3 +453,7 @@ place. No agent had read it.
    error varies from sample to sample and is far above $10^{-6}F$, and storing $r$ exactly does not
    remove it. S1 is scored on pure-WKB windows only; the others are reported beside the noise of
    $\Delta\theta$ alone. S2 is unchanged.
+5. **§2, two source greps.** `test_gk_wkb_phase.py:1150` and `test_tk_wkb_phase.py:921` assert
+   that each producer's source names `apply_phase_offset`, which §1.2 replaces. As first written,
+   changing them fell outside §2's exception and was a stop that §1.2 made certain. §2 now names
+   them.
