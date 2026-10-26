@@ -1,0 +1,67 @@
+units 109 Counter({'done': 109}) not done: []
+
+== L1: 9/24 true; verdict fails
+  row cls p_depth p_regions c_depth c_regions c/p n_scored clause1 clause2 rule
+   low-G+r-1 G+r 3 11 3 11 1.0 0 True False False
+   low-G+r-2 G+r 4 12 5 12 1.0 0 True False False
+   low-G+r-3 G+r 20 1340 8 33 0.0246 1 True True True
+   low-G-r-1 G-r 4 11 4 12 1.0909 0 True False False
+   low-G-r-2 G-r 20 15068 7 42 0.0028 1 True True True
+   low-G-r-3 G-r 20 6822 8 40 0.0059 2 True True True
+   low-G-1 G 20 3902 11 34 0.0087 1 True True True
+   low-G-2 G 8 16 7 16 1.0 0 True False False
+   low-G-3 G 20 831 7 39 0.0469 1 True True True
+   mid-G+r-1 G+r 2 11 2 11 1.0 0 True False False
+   mid-G+r-2 G+r 6 16 6 16 1.0 0 True False False
+   mid-G+r-3 G+r 10 72 8 55 0.7639 0 True False False
+   mid-G-r-1 G-r 4 12 4 12 1.0 0 True False False
+   mid-G-r-2 G-r 8 58 8 58 1.0 0 True False False
+   mid-G-r-3 G-r 7 37 7 35 0.9459 0 True False False
+   mid-G-1 G 8 25 8 25 1.0 0 True False False
+   mid-G-2 G 9 37 7 27 0.7297 0 True False False
+   mid-G-3 G 6 20 5 18 0.9 0 True False False
+   R1 G+r 20 22852 8 63 0.0028 3 True True True
+   R2 G+r 5 15 4 12 0.8 0 True False False
+   R3 G+r 20 10457 5 18 0.0017 1 True True True
+   R4 G-r 20 42830 8 83 0.0019 3 True True True
+   R5 G-r 20 55 5 19 0.3455 0 True False False
+   R6 G 20 5130 8 28 0.0055 2 True True True
+
+== L1q: 1/7 true; verdict fails
+  row cls p_depth p_regions c_depth c_regions c/p n_scored clause1 clause2 rule
+   low-Gqr-1 Gqr 2 9 2 9 1.0 0 True False False
+   low-Gqr-2 Gqr 6 23 6 31 1.3478 0 True False False
+   low-Gqr-3 Gqr 4 9 4 9 1.0 0 True False False
+   mid-Gqr-1 Gqr 7 28 7 28 1.0 0 True False False
+   mid-Gqr-2 Gqr 7 21 7 21 1.0 0 True False False
+   mid-Gqr-3 Gqr 5 15 5 15 1.0 0 True False False
+   R7 Gqr 20 16660 8 27 0.0016 2 True True True
+
+== capped under p (p max_depth 20), unscored: 10/11 true; verdict fails
+  row cls p_depth p_regions c_depth c_regions c/p n_scored clause1 clause2 rule
+   low-G+r-3 G+r 20 1340 8 33 0.0246 1 True True True
+   low-G-r-2 G-r 20 15068 7 42 0.0028 1 True True True
+   low-G-r-3 G-r 20 6822 8 40 0.0059 2 True True True
+   low-G-1 G 20 3902 11 34 0.0087 1 True True True
+   low-G-3 G 20 831 7 39 0.0469 1 True True True
+   R1 G+r 20 22852 8 63 0.0028 3 True True True
+   R3 G+r 20 10457 5 18 0.0017 1 True True True
+   R4 G-r 20 42830 8 83 0.0019 3 True True True
+   R5 G-r 20 55 5 19 0.3455 0 True False False
+   R6 G 20 5130 8 28 0.0055 2 True True True
+   R7 Gqr 20 16660 8 27 0.0016 2 True True True
+
+== L2 (controls): |total_c - total_p| <= total_abserr_p
+   ctrl-low-1 ratio 0.161  True
+   ctrl-low-2 ratio 0.652  True
+   ctrl-mid-1 ratio 0.0109  True
+   ctrl-mid-2 ratio 0.00409  True
+   ctrl-seam-1 ratio 4.29e-12  True
+   ctrl-seam-2 ratio 6.58e-10  True
+   ctrl-NULL-1 ratio 0 bit-identical True
+   ctrl-NULL-2 ratio 0 bit-identical True
+  L2: 8/8; verdict holds
+
+== L3: |total_c(1e-7) - total_c(1e-8)| <= total_abserr_c(1e-7), d20 rows with both c units in budget
+  29/31 true; excluded (not in budget) []; failures [('mid-G-r-3', 1.294), ('mid-G-3', 1.698)]; verdict fails
+  on capped rows: max ratio 0.1657050944780765 all true: True

@@ -1,0 +1,16 @@
+$ env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T02:00:05Z
+# ----
+run id      levin-phase-floor-05-wider-20261026T020005
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/manifest.json
+expected    109 units (39 rows x 2 at 1e-7, 31 at 1e-8)
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py sha256 491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906
+sh pid      54763 (nohup execs sh; sh runs the driver as its child)
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005; exit $?
+launcher    pid 54759, exiting without waiting
+# ----
+# end 2026-10-26T02:00:05Z
+# exit 0

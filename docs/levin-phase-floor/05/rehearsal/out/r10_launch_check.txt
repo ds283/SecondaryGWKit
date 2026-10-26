@@ -1,0 +1,47 @@
+=== R10 one check, 2026-10-26T01:51:28Z
+$ ./venv/bin/python -m runregistrykit list | head -2
+   RUN                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05-r10-reanchor-20261026T015120  running           -       8s  levin-phase-floor prompt 05, R10 on the Mac Studio (mps026298; main checkout at 53084dc, whose code is the code commit 120fdfe; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332
+run dir: var/runs/levin-phase-floor-05-r10-reanchor-20261026T015120
+$ status.json (head)
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T01:51:27+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 49752,
+  "stage": "BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+$ head -14 launch log
+** quadsource_atol_sweep --build: registered as levin-phase-floor-05-r10-reanchor-20261026T015120
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-r10-reanchor-20261026T015120/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r10.sqlite', '--job-name', 'levin-phase-floor-05', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-10-26 01:51:24,778	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r10.sqlite" with 4 shards
+
+$ grep -c Traceback launch log
+0
+$ lsof -a -d cwd -p 49752
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF      NODE NAME
+Python  49752 ds283  cwd    DIR   1,13     2240 185399640 /Users/ds283/Documents/Code/SecondaryGWKit
+$ manifest fields
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "git_dirty": false,
+  "git_head": "53084dcb14f7835e22fe8ffde8c0ac09c20a6fca",
+  "results": "var/datastores/levin-phase-floor-05-r10.sqlite",
+  "script": "RunDrivers/quadsource_atol_sweep.py",
+  "script_sha256": "5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b",

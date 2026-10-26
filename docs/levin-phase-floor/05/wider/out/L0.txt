@@ -1,0 +1,75 @@
+# levin-phase-floor 05 section 6: gate L0
+# written 2026-10-26T01:57:24Z on mps026298.phys.susx.ac.uk
+# script l0.py sha256 b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 HEAD e6489519ee662434d1f8e430e1c172246678ac8c (status --short: empty)
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca (status --short: empty)
+# ledger /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0/ledger.jsonl: 7 records
+
+== the tree (worker evidence)
+   tree: 'p'
+   tree_path: '/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951'
+   expected_sha: 'e6489519ee662434d1f8e430e1c172246678ac8c'
+   head: 'e6489519ee662434d1f8e430e1c172246678ac8c'
+   all_in_tree: True
+   PrimitivePhase_has_exact_remainder: False
+   build_phase_source_mentions_exact_remainder: False
+   PYTHONPATH: '/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951'
+   dont_write_bytecode: True
+   status --short: empty
+   ComputeTargets: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/__init__.py
+   ComputeTargets.primitive_phase: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py
+   ComputeTargets.QuadSource: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSource.py
+   ComputeTargets.QuadSourceIntegral: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSourceIntegral.py
+   ComputeTargets.GkSourcePolicyData: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/GkSourcePolicyData.py
+   StoreFixtures: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/StoreFixtures/__init__.py
+   main.py: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/main.py
+   theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI): /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py
+   the units ran at p, from the worktree, clean: True
+
+== low-G+r-1 (shard 2, serial 38302, d20)
+   L0-p-1e-7-low-G+r-1-run1: status done; wall 0.2714211668353528; rebuild checks all hold True; dispatcher {'G': 528, 'T': 168, 'other': 0} {'T exact_remainder=None': 168, 'G exact_remainder=None': 528}; tree e6489519ee662434d1f8e430e1c172246678ac8c status empty
+      total 5.393492219208038e-31 (0x1.5e0ec2baa1330p-101), abserr 1.8120785683390897e-33, converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}
+      stored: total 4.991071745673142e-31, abserr 1.7152694273757918e-33, WKB_Levin_data {'max_depth': 20, 'num_regions': 86} (descriptive: p is not expected to equal the stored row, since QuadSource differs)
+   L0-p-1e-7-low-G+r-1-run2: status done; wall 0.2727452090475708; rebuild checks all hold True; dispatcher {'G': 528, 'T': 168, 'other': 0} {'T exact_remainder=None': 168, 'G exact_remainder=None': 528}; tree e6489519ee662434d1f8e430e1c172246678ac8c status empty
+      total 5.393492219208038e-31 (0x1.5e0ec2baa1330p-101), abserr 1.8120785683390897e-33, converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}
+      stored: total 4.991071745673142e-31, abserr 1.7152694273757918e-33, WKB_Levin_data {'max_depth': 20, 'num_regions': 86} (descriptive: p is not expected to equal the stored row, since QuadSource differs)
+   -- (a) QuadSource recomputed at p against the stored row
+   L0-p-1e-7-low-G+r-1-run1: stored serial 7; keyed as stored True [2, 602, 2, 602]; nodes stored 360, recomputed 363, common 360; common (node, column) pairs differing in bits: 0 []; removed []; added [361, 362, 363] at z [5172138424201.673, 5054375024932.154, 4939292957264.786]; B1's expected [361, 362, 363] (HANDOVER_OVERLAP_NODES = 2); added is B1's True; the stored bottom is the node above the switch node True; z_init q 167365465713.48438, r 5174408100351.156; L0 (a) HOLDS
+   L0-p-1e-7-low-G+r-1-run2: stored serial 7; keyed as stored True [2, 602, 2, 602]; nodes stored 360, recomputed 363, common 360; common (node, column) pairs differing in bits: 0 []; removed []; added [361, 362, 363] at z [5172138424201.673, 5054375024932.154, 4939292957264.786]; B1's expected [361, 362, 363] (HANDOVER_OVERLAP_NODES = 2); added is B1's True; the stored bottom is the node above the switch node True; z_init q 167365465713.48438, r 5174408100351.156; L0 (a) HOLDS
+   -- (b) the two in-process runs, bit for bit
+   floats compared in the result summary: 68
+   group Levin calls 7; regions compared 11
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   regions: identical
+   L0 (b) HOLDS
+
+== ctrl-low-1 (shard 2, serial 2095, control)
+   L0-p-1e-7-ctrl-low-1-run1: status done; wall 0.1857637499924749; rebuild checks all hold True; dispatcher {'G': 426, 'T': 66, 'other': 0} {'T exact_remainder=None': 66, 'G exact_remainder=None': 426}; tree e6489519ee662434d1f8e430e1c172246678ac8c status empty
+      total -3.821395644371439e-31 (-0x1.f00ba6dec58e2p-102), abserr 2.247692961814246e-33, converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}
+      stored: total -6.93281486722393e-31, abserr 7.447210342068791e-33, WKB_Levin_data {'max_depth': 3, 'num_regions': 10} (descriptive: p is not expected to equal the stored row, since QuadSource differs)
+   L0-p-1e-7-ctrl-low-1-run2: status done; wall 0.18470491701737046; rebuild checks all hold True; dispatcher {'G': 426, 'T': 66, 'other': 0} {'T exact_remainder=None': 66, 'G exact_remainder=None': 426}; tree e6489519ee662434d1f8e430e1c172246678ac8c status empty
+      total -3.821395644371439e-31 (-0x1.f00ba6dec58e2p-102), abserr 2.247692961814246e-33, converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}
+      stored: total -6.93281486722393e-31, abserr 7.447210342068791e-33, WKB_Levin_data {'max_depth': 3, 'num_regions': 10} (descriptive: p is not expected to equal the stored row, since QuadSource differs)
+   -- (a) QuadSource recomputed at p against the stored row
+   L0-p-1e-7-ctrl-low-1-run1: stored serial 604; keyed as stored True [601, 602, 601, 602]; nodes stored 360, recomputed 363, common 360; common (node, column) pairs differing in bits: 0 []; removed []; added [361, 362, 363] at z [5172138424201.673, 5054375024932.154, 4939292957264.786]; B1's expected [361, 362, 363] (HANDOVER_OVERLAP_NODES = 2); added is B1's True; the stored bottom is the node above the switch node True; z_init q 53325413645.46924, r 5174408100351.156; L0 (a) HOLDS
+   L0-p-1e-7-ctrl-low-1-run2: stored serial 604; keyed as stored True [601, 602, 601, 602]; nodes stored 360, recomputed 363, common 360; common (node, column) pairs differing in bits: 0 []; removed []; added [361, 362, 363] at z [5172138424201.673, 5054375024932.154, 4939292957264.786]; B1's expected [361, 362, 363] (HANDOVER_OVERLAP_NODES = 2); added is B1's True; the stored bottom is the node above the switch node True; z_init q 53325413645.46924, r 5174408100351.156; L0 (a) HOLDS
+   -- (b) the two in-process runs, bit for bit
+   floats compared in the result summary: 68
+   group Levin calls 7; regions compared 10
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   regions: identical
+   L0 (b) HOLDS
+
+== GATE L0: HOLDS

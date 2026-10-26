@@ -1,0 +1,36 @@
+=== R10 end checks, 2026-10-26T01:54:36Z
+state = done
+exit_code = 0
+pid = 49752
+stage = CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+heartbeat = 2026-10-26T01:54:10+00:00
+fingerprint_sidecar = not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r10.manifest.json is not a problem-free registry sidecar (there is none)
+fingerprint.digest = 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+fingerprint.problems = {}
+equals R8 1b332ffa...: True
+per-class digests equal to R8: True 21 classes
+R10 fingerprint classes == R9 fingerprint classes (full dict): True
+other status keys: ['exit_code', 'fingerprint', 'fingerprint_sidecar', 'heartbeat', 'host', 'pid', 'stage', 'state', 'units_done', 'units_total']
+$ kill -0 49752 49749
+(eval):kill:11: kill 49752 failed: no such process
+exit 1
+(eval):kill:11: kill 49749 failed: no such process
+exit 1
+$ tail -1 launch log
+** driver exit status 0
+$ Traceback counts; stderr size
+0
+0
+0
+total 28
+-rw-r--r-- 1 ds283 staff  4478 Oct 26 01:51 manifest.json
+-rw-r--r-- 1 ds283 staff 10324 Oct 26 01:54 status.json
+-rw-r--r-- 1 ds283 staff     0 Oct 26 01:51 stderr.log
+-rw-r--r-- 1 ds283 staff  8018 Oct 26 01:54 stdout.log
+$ registry tail
+15 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 15 finished; 0 with no host recorded.
+$ main checkout HEAD/status
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+(end)
+$ worktree status --ignored; find -newer marker
+(end)

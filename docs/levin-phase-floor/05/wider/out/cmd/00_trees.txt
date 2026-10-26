@@ -1,0 +1,22 @@
+$ bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\;\ do\ echo\ \"==\ \$t\"\;\ git\ -C\ \$t\ rev-parse\ HEAD\;\ git\ -C\ \$t\ status\ --short\;\ echo\ \"status-lines:\ \$\(git\ -C\ \$t\ status\ --short\ \|\ wc\ -l\)\"\;\ git\ -C\ \$t\ status\ --short\ --ignored\ \|\ head\ -5\;\ done\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ worktree\ list\;\ ./venv/bin/python\ --version
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:47:59Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+status-lines: 0
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951
+e6489519ee662434d1f8e430e1c172246678ac8c
+status-lines: 0
+/Users/ds283/Documents/Code/SecondaryGWKit               53084dcb [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 e6489519 (detached HEAD)
+Python 3.13.16
+# ----
+# end 2026-10-26T01:48:01Z
+# exit 0

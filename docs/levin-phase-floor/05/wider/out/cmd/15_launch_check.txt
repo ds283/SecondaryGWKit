@@ -1,0 +1,35 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/status.json\;\ echo\;\ ps\ -o\ pid\,ppid\,stat\,etime\,command\ -p\ 54763\;\ PY=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \'import\ json\,sys\;print\(json.load\(open\(sys.argv\[1\]\)\)\[\"pid\"\]\)\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/status.json\)\;\ echo\ driver\ pid\ \$PY\;\ ps\ -o\ pid\,ppid\,stat\,etime\,command\ -p\ \$PY\;\ pgrep\ -P\ \$PY\ \|\ xargs\ -I\{\}\ ps\ -o\ pid\,ppid\,stat\,etime\,command\ -p\ \{\}\;\ echo\;\ wc\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl\ 2\>/dev/null\;\ head\ -c\ 600\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl\ 2\>/dev/null\;\ echo\;\ grep\ \'\^unit\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stdout.log\ \|\ head\ -3\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stderr.log
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T02:00:10Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T02:00:09+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 54766,
+  "stage": "unit p-1e-7-low-G+r-2 done",
+  "state": "running",
+  "units_done": 2,
+  "units_total": 109
+}
+
+  PID  PPID STAT ELAPSED COMMAND
+54763     1 Ss     00:05 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005; exit $?
+driver pid 54766
+  PID  PPID STAT ELAPSED COMMAND
+54766 54763 S      00:05 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005
+  PID  PPID STAT ELAPSED COMMAND
+54776 54766 R      00:05 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/spec_p.json
+
+2 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl
+{"unit": "p-1e-7-low-G+r-1", "recorded": "2026-10-26T02:00:08+00:00", "script_sha256": "491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906", "git_head": "53084dcb14f7835e22fe8ffde8c0ac09c20a6fca", "git_dirty": false, "data": {"unit": "p-1e-7-low-G+r-1", "tree": "p", "rtol": "1e-7", "row": "low-G+r-1", "role": "d20", "shard": 2, "serial": 38302, "status": "done", "error": null, "wall_s": 0.2810134592000395, "rebuild_s": 0.26231162482872605, "budget_s": null, "dispatcher_counts": {"G": 528, "T": 168, "other": 0}, "dispatcher_flags": {"T exact_remainder=None": 168, "G exact_remainde
+unit p-1e-7-low-G+r-1: done; wall 0.281 s; budget None; counts {'G': 528, 'T': 168, 'other': 0}; flags {'T exact_remainder=None': 168, 'G exact_remainder=None': 528}; total 5.393492219208038e-31 abserr 1.8120785683390897e-33 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}; QuadSource L0a True
+unit p-1e-7-low-G+r-2: done; wall 0.378 s; budget None; counts {'G': 904, 'T': 254, 'other': 0}; flags {'T exact_remainder=None': 254, 'G exact_remainder=None': 904}; total -1.8037744675972162e-29 abserr inf converged False WKB_Levin_data {'max_depth': 4, 'num_regions': 12, 'num_simple_regions': 6, 'evaluations': 29}; QuadSource L0a True
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stderr.log
+# ----
+# end 2026-10-26T02:00:11Z
+# exit 0

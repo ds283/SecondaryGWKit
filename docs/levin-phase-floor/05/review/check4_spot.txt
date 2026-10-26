@@ -1,0 +1,2 @@
+levin-phase-floor-05-r9 shard 3 serial 92 k,q,r,z (100000.0, 100000.0, 100000.0, 249.99999999999994) total -0x1.1f665c75480dap-59 abserr 0x1.18f53929eb12dp-83 regions 16 depth 7
+levin-phase-floor-05-r10 shard 3 serial 103 k,q,r,z (100000.0, 100000.0, 100000.0, 249.99999999999994) total -0x1.1f665c7aeff2cp-59 abserr 0x1.149f8c4415fd1p-83 regions 16 depth 7

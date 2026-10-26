@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-10-25 · **Status: STARTED — 5 of 10 groupings landed (00, A1, A2, A3, B1), and prompt 05,
+**Last updated:** 2026-10-26 · **Status: STARTED — 5 of 10 groupings landed (00, A1, A2, A3, B1), and prompt 05,
 which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
@@ -438,6 +438,20 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 
   [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
 
+  **Narrowed (2026-10-26, `levin-phase-floor` 05): the cap goes in production code, where it is
+  still there.** Layer 1(a) (`120fdfe`) takes $k\tau_R$ out of $G$'s phase.
+  - **The capped rows.** On the 11 sampled A3 v2 depth-20 rows still capped under B1's code, no
+    region reaches depth 18 at `rtol = 1e-7`. The maximum depth is 5–11 at `1e-7` and at `1e-8`,
+    and the time is 644 s → 4.4 s.
+  - **The declared error.** It holds against `1e-8` on all 11.
+  - **On two uncapped mid rows** the `1e-7` error misses the change to `1e-8`: by 1.29× on
+    `mid-G-r-3` (2.7e-6 relative) and 1.70× on `mid-G-3` (3.0e-7). That is an ordinary-row
+    tolerance effect, not the floor (its W5).
+  - **20 of the 31 sampled stored depth-20 rows** are not capped under B1's code at all
+    (`[05-b1-uncaps-most-cheap-depth-20-rows]`).
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2.
+
 - **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
   baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
   `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
@@ -510,6 +524,21 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
     jitter-free limit, not the truth.
 
   [`docs/levin-phase-floor/04/issues.md`](../../docs/levin-phase-floor/04/issues.md) I8.
+
+  **Narrowed (2026-10-26, `levin-phase-floor` 05): with the floor gone, most capped rows still
+  store `total_converged` False, and the stored error is not always honest.**
+  - **Convergence.** Under layer 1(a), 21 of 31 sampled depth-20 rows are unconverged at `1e-7`,
+    and 19 of 31 at `1e-8`. On the 11 rows still capped under B1's code, 9 stay unconverged,
+    although their depth falls to 5–11. The unconverged pieces are Levin groups with 1–17 regions,
+    often `Gqr` groups. 3 rows have an infinite `total_abserr` under both codes (its W7).
+  - **The error.** On `low-G-3` the change moves the total by 2.48× the error declared before it.
+    At B1's code, R3, R6 and R7 are now within it (0.41, 0.40, 0.17; W6).
+  - **In the rehearsal pair** R9/R10, one of 864 rows, $(10^6, 3.162\times10^5, 10^6, 329.64)$,
+    moves by 28× its declared error; the next largest moves by 0.60×.
+  - **A3 v2 itself** is pre-B1. B1 moves its stored totals by up to 1.5e5× their error
+    (`[05-b1-moves-stored-a3v2-totals-beyond-their-error]`).
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation

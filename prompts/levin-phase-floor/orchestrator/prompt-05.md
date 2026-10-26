@@ -373,6 +373,49 @@ The orchestrator re-reads this state as its Gate, does not fetch, and stops if a
 **Other projects on this host** (ChamKadanoffBaym, ChamLattice) may take the shared lock. If
 `acquire` exits 3, that is the stop the lock's rule gives: ask the user.
 
+
+### B.6 What happened (2026-10-26)
+
+Part B ran from 01:44 to about 02:25 GMT, in one Mac Studio orchestrator session, with both agents at
+once.
+
+**R9 and R10.**
+- Both ended `done` with `1b332ffa…`. Every value table of every class is bit-identical.
+- **Stop 1, at prompt §8.** Outside `QuadSourceIntegral` the differences were only timings, labels
+  carrying `datetime.now()`, `GkSource.parents_digest` (a digest of serials) and GkWKB memo
+  counters in 25 rows. The user: *"Those columns cannot be expected to be identical. So I think
+  that's just an incorrectly-worded prompt."* The lock stayed held through the readers and was then
+  released. This opened `[05-store-value-diff-compares-volatile-columns]`.
+
+**The wider run.**
+- It finished 109 of 109 units, none over budget, and L0 held.
+- **Stop 2, on reading "depth-20 row":** B1 had already uncapped most stored depth-20 rows. The
+  user: *"Carry on as you propose. … I guess we only care about rows that are capped under the new
+  system"*. The laptop told the agent that $p$ is the parent (B1 without 05).
+- **Scored as written,** L1, L1q and L3 fail and L2 holds. On the 11 rows still capped under $p$
+  the cap goes on all of them.
+
+**The review.** The Mac Studio orchestrator's review stopped on check 10 alone: deviations 12 and
+14 of the wider log were unclassified. The user agreed to classify them on committing (12
+STRUCTURALLY REQUIRED, 14 IMPLEMENTATION CHOICE, in the log).
+
+**The laptop's re-checks**, as §B.4 asks, both pass:
+- the 28× row reads the tabulated totals bit for bit in both stores;
+- `QuadSource` at $p$ on `low-G-r-2` equals A3 v2 at all 666 nodes, plus B1's 3.
+
+**The header's issues.**
+- **Closed:** `[00-consumer-anchoring-floor]`, for $G$, on the capped-row reading, by the user's
+  decision. §B.4's rule would otherwise have held it open, because L1 and L3 fail as written.
+- **Narrowed:** the other two, and two more of this campaign's.
+- **Opened:** three issues, among them
+  `[05-b1-moves-stored-a3v2-totals-beyond-their-error]`.
+
+**What is left.**
+- **The stores.** The user asked whether R9's and R10's stores are needed. The laptop's answer: no.
+  R10 equals R8's fingerprint, the comparison's records are kept, and a later pair is built at its
+  own trees. They are retired only on the user's word, after this commit.
+- **The worktree** `SecondaryGWKit-lpf05-e648951` is removed on the user's word.
+
 ---
 
 ## 5. Stop and ask the user

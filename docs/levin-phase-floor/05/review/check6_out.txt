@@ -1,0 +1,24 @@
+ComputeTargets from /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/__init__.py
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+harness qs_check: {"stored_serial": 5, "n_stored": 559, "n_recomputed": 562, "n_common_differing_columns": 0, "added": [471, 472, 473], "L0a_holds": true}
+shard 0 QuadSource serial 5 Tq/Tr None want [1, 601]
+shard 1 QuadSource serial 5 Tq/Tr None want [1, 601]
+shard 2 QuadSource serial 5 Tq/Tr None want [1, 601]
+shard 3 QuadSource serial 5 Tq/Tr (1, 601) want [1, 601]
+stored QuadSourceValue rows for QuadSource serial 5 on shard 3 : 559 columns ['serial', 'parent_serial', 'z_serial', 'source', 'undiff', 'diff', 'analytic_source_rad', 'analytic_undiff_rad', 'analytic_diff_rad', 'analytic_source_w', 'analytic_undiff_w', 'analytic_diff_w']
+common nodes 559; (node,column) pairs compared 5031; differing in float.hex 0; recomputed-only z serials [471, 472, 473]; stored-only []
+example node 1 {'source': '0x1.800000000005cp+0', 'undiff': '0x1.800000000005cp+0', 'diff': '0x0.0p+0'} {'source': '0x1.800000000005cp+0', 'undiff': '0x1.800000000005cp+0', 'diff': '0x0.0p+0'}

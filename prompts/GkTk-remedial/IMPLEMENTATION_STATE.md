@@ -2,7 +2,10 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-10-25 — `[00-consumer-anchoring-floor]` **assigned** to
+**Last updated:** 2026-10-26 — `[00-consumer-anchoring-floor]` is **CLOSED for $G_k$** (§4) by
+`prompts/levin-phase-floor` prompt 05: $G_k$'s remainder is now node-anchored and reduced against
+$2\pi$ exactly, and the depth-20 cap goes on every sampled A3 v2 row still capped. $T_k$ keeps the
+global anchor by that campaign's G1. Previously 2026-10-25 — `[00-consumer-anchoring-floor]` **assigned** to
 `prompts/levin-phase-floor` (§3). Earlier the same day it was narrowed by an analysis of the
 `handover` A3 v2 store (§3): the floor is the proposed cause of the depth-20 cost cliff.
 Previously 2026-09-29 — `[03-integrationsolver-stepping-minimum-lookup]` is **CLOSED** (§4)
@@ -467,74 +470,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $z_{\rm init}$ *is* this root: whether to tighten it belongs with the other six seam decisions,
   which must be taken together.
 
-- **[00-consumer-anchoring-floor]** *(planning, 2026-09-10)* — `PrimitivePhase` reduces
-  $k\Delta\tau$ against a global anchor ($z_r$ for $G_k$, $z_{\rm init}$ for $T_k$), so its
-  `theta_mod_2pi` carries the $\varepsilon k\tau$ floor: $9\times10^{-4}$ rad at $k=3\times10^8$
-  (review §13.4). Per-region anchoring would scale the floor with the region's own phase.
-  **Impact:** Levin regions at the largest $k$; below the QCD LG floor, three to four orders below
-  today's consumer error.
-  **Measured by prompt 09 (2026-09-11).** The floor is now the *whole* error: on the review §5
-  consumer geometry at $k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, `raw_theta` is **4.189e-8 rad**
-  from a 50-digit reference, which is **2.81 ulp** of the 9.0899e7 rad span against an
-  $\varepsilon k\tau$ floor of 2.019e-8 rad and one ulp of 1.490e-8 rad; at the samples
-  themselves it is 3.681e-8 rad. The residual $\varphi$ alone is recovered to **2.157e-10 rad**,
-  so everything above the floor has been removed and re-anchoring is the only remaining lever.
-  **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
-  and a Levin-side hook, if the verification in 13 shows the floor matters.
-  **Narrowed 2026-10-25 by an analysis of the `handover` A3 v2 store, not a prompt: the floor
-  probably matters, for cost.** This is a hypothesis.
-  - **The finding.** On A3 v2's 2265 depth-20 `QuadSourceIntegral` rows, which carry 285.8 of
-    286.3 CPU-hours, the declared `total_abserr/|total|` tracks $\varepsilon k\eta(z_{\rm response})$:
-    slope 0.84, median ratio 2.2.
-  - **The proposed mechanism.** Separately reduced remainders whose large terms should cancel in a
-    slow phase group leave jitter at this floor. The Levin driver cannot resolve it, and
-    `phase_limited` cannot see it, so bisection runs to `DEFAULT_LEVIN_MAX_DEPTH`.
-  - **The fix's shape changes.** The proposal is to compose the leading terms of a *phase group*
-    before reducing, not only to anchor a factor. That removes the floor exactly where a cancelling
-    pair exists, and the driver is told the floor elsewhere.
-  - **Owner: none**, since this campaign is closed.
-  - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2, with the test
-    that would decide it at §2.6.
-
-  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md),
-  opened that day on the user's decision. This floor at the consumer, where the Levin driver meets
-  it, is that campaign's hypothesis **H-anchor** (its README §0.2). On it, $G$'s phase
-  $k\Delta\tau$, reduced against $z_{\rm response}$, carries $\varepsilon k\eta_R$ into every group
-  containing $G$, cancelling or not. Its planning reconnaissance found at least 40 % of A3 v2's
-  slow-row Levin time in groups with no cancelling pair. Whether the remedy changes
-  `PrimitivePhase` itself, and so whether it lands there or as `handover`'s D2, is that campaign's
-  gate G1 (README §6.3 Q3). This entry stays here.
-
-  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01: H-anchor holds on A3 v2.** Its
-  prediction P2 asked whether groups with and without a cancelling pair both track
-  $F = \varepsilon k\eta_R$:
-  - cancelling: slope 0.968, median $e_g/F$ 2.12;
-  - non-cancelling: slope 0.822, median $e_g/F$ 1.49.
-
-  So both do. The floor this entry names is carried into every group containing $G$. It is
-  **consistent with** that floor driving the cliff, but does not prove it: the group-level depth
-  and the parent–child discrepancy are that campaign's prompt 03. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
-
-  **Narrowed (2026-10-25, levin-phase-floor 03):** the floor is in the composed phase as
-  non-smooth jitter, at $\sigma_\theta/F$ 0.224–0.342 in every one of 29 scored groups on seven
-  depth-20 rows, cancelling or not (medians 0.270 and 0.262). Replacing `theta_mod_2pi` by a smooth
-  fit, and nothing else, lowers the depth-20 discrepancy by 3.1e6–2.4e8. Its prompt 03's M3 fails on
-  a slope clause as written; its gate G1 decides how that is read.
-  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
-
-  **Narrowed (2026-10-25, levin-phase-floor 04): removing this floor removes the cliff.** On the
-  seven depth-20 rows of that campaign's 03:
-  - **every remainder reduced exactly** (arm X): the region count fell to 0.20–0.49 % of
-    production's, and no scored group reached depth 20 at `rtol = 1e-7`;
-  - **$k\tau_R$ alone taken out of $G$'s phase** (arm A: $G$ re-anchored at the top of its range, the
-    constant reduced once in extended precision): the same as X region for region, with totals
-    agreeing to 1.2e-12. That is a change to $G$'s anchor in `PrimitivePhase`/`GkSourcePolicyData`,
-    with no Levin-side hook.
-
-  So on those rows the per-region anchoring this entry's next step names is not needed; the $G$-side
-  re-anchor is. Whether the remedy lands there, or as `handover`'s D2, is that campaign's G1 Q3.
-  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
-
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
   `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and
@@ -789,6 +724,93 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[00-consumer-anchoring-floor]** *(planning, 2026-09-10; **closed for $G_k$ by `prompts/levin-phase-floor` prompt 05**, 2026-10-26)* — `PrimitivePhase` reduces
+  $k\Delta\tau$ against a global anchor ($z_r$ for $G_k$, $z_{\rm init}$ for $T_k$), so its
+  `theta_mod_2pi` carries the $\varepsilon k\tau$ floor: $9\times10^{-4}$ rad at $k=3\times10^8$
+  (review §13.4). Per-region anchoring would scale the floor with the region's own phase.
+  **Impact:** Levin regions at the largest $k$; below the QCD LG floor, three to four orders below
+  today's consumer error.
+  **Measured by prompt 09 (2026-09-11).** The floor is now the *whole* error: on the review §5
+  consumer geometry at $k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, `raw_theta` is **4.189e-8 rad**
+  from a 50-digit reference, which is **2.81 ulp** of the 9.0899e7 rad span against an
+  $\varepsilon k\tau$ floor of 2.019e-8 rad and one ulp of 1.490e-8 rad; at the samples
+  themselves it is 3.681e-8 rad. The residual $\varphi$ alone is recovered to **2.157e-10 rad**,
+  so everything above the floor has been removed and re-anchoring is the only remaining lever.
+  **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
+  and a Levin-side hook, if the verification in 13 shows the floor matters.
+  **Narrowed 2026-10-25 by an analysis of the `handover` A3 v2 store, not a prompt: the floor
+  probably matters, for cost.** This is a hypothesis.
+  - **The finding.** On A3 v2's 2265 depth-20 `QuadSourceIntegral` rows, which carry 285.8 of
+    286.3 CPU-hours, the declared `total_abserr/|total|` tracks $\varepsilon k\eta(z_{\rm response})$:
+    slope 0.84, median ratio 2.2.
+  - **The proposed mechanism.** Separately reduced remainders whose large terms should cancel in a
+    slow phase group leave jitter at this floor. The Levin driver cannot resolve it, and
+    `phase_limited` cannot see it, so bisection runs to `DEFAULT_LEVIN_MAX_DEPTH`.
+  - **The fix's shape changes.** The proposal is to compose the leading terms of a *phase group*
+    before reducing, not only to anchor a factor. That removes the floor exactly where a cancelling
+    pair exists, and the driver is told the floor elsewhere.
+  - **Owner: none**, since this campaign is closed.
+  - [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2, with the test
+    that would decide it at §2.6.
+
+  **Assigned (2026-10-25):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md),
+  opened that day on the user's decision. This floor at the consumer, where the Levin driver meets
+  it, is that campaign's hypothesis **H-anchor** (its README §0.2). On it, $G$'s phase
+  $k\Delta\tau$, reduced against $z_{\rm response}$, carries $\varepsilon k\eta_R$ into every group
+  containing $G$, cancelling or not. Its planning reconnaissance found at least 40 % of A3 v2's
+  slow-row Levin time in groups with no cancelling pair. Whether the remedy changes
+  `PrimitivePhase` itself, and so whether it lands there or as `handover`'s D2, is that campaign's
+  gate G1 (README §6.3 Q3). This entry stays here.
+
+  **Narrowed 2026-10-25 by `levin-phase-floor` prompt 01: H-anchor holds on A3 v2.** Its
+  prediction P2 asked whether groups with and without a cancelling pair both track
+  $F = \varepsilon k\eta_R$:
+  - cancelling: slope 0.968, median $e_g/F$ 2.12;
+  - non-cancelling: slope 0.822, median $e_g/F$ 1.49.
+
+  So both do. The floor this entry names is carried into every group containing $G$. It is
+  **consistent with** that floor driving the cliff, but does not prove it: the group-level depth
+  and the parent–child discrepancy are that campaign's prompt 03. [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §1.
+
+  **Narrowed (2026-10-25, levin-phase-floor 03):** the floor is in the composed phase as
+  non-smooth jitter, at $\sigma_\theta/F$ 0.224–0.342 in every one of 29 scored groups on seven
+  depth-20 rows, cancelling or not (medians 0.270 and 0.262). Replacing `theta_mod_2pi` by a smooth
+  fit, and nothing else, lowers the depth-20 discrepancy by 3.1e6–2.4e8. Its prompt 03's M3 fails on
+  a slope clause as written; its gate G1 decides how that is read.
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §3.
+
+  **Narrowed (2026-10-25, levin-phase-floor 04): removing this floor removes the cliff.** On the
+  seven depth-20 rows of that campaign's 03:
+  - **every remainder reduced exactly** (arm X): the region count fell to 0.20–0.49 % of
+    production's, and no scored group reached depth 20 at `rtol = 1e-7`;
+  - **$k\tau_R$ alone taken out of $G$'s phase** (arm A: $G$ re-anchored at the top of its range, the
+    constant reduced once in extended precision): the same as X region for region, with totals
+    agreeing to 1.2e-12. That is a change to $G$'s anchor in `PrimitivePhase`/`GkSourcePolicyData`,
+    with no Levin-side hook.
+
+  So on those rows the per-region anchoring this entry's next step names is not needed; the $G$-side
+  re-anchor is. Whether the remedy lands there, or as `handover`'s D2, is that campaign's G1 Q3.
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
+
+  **Closed for $G_k$ (2026-10-26, `levin-phase-floor` 05), on the user's ruling.**
+  - **The change.** `PrimitivePhase` gains an opt-in node-anchored remainder (`120fdfe`), which
+    `GkSourcePolicyData._build_phase` turns on. For each table node, $k[T(n_R) - T(n) + p_R]$ is
+    formed exactly from the node limbs, reduced against $2\pi$ itself at 256 bits, and memoised.
+    Only a small part, $-k\,p_z + \varphi$, is formed in double. So no double of size $k\tau_R$
+    is rounded on the way to $G_k$'s remainder.
+  - **The tests.** On the test fixture, σ_θ falls from 0.297 $F$ to 8.8e-10 $F$. The remainder is
+    within $4\varepsilon(k|p_z|+2\pi)$ of the exact remainder at $k$ up to $3\times10^8$.
+  - **On A3 v2.** On all 11 sampled depth-20 rows still capped under `handover` B1's code, the cap
+    goes: no region reaches depth 18, and the time is 644 s → 4.4 s. 05's L1, L1q and L3 fail as
+    written, only on rows B1 had already uncapped. The user closed this issue for $G$ on the
+    capped-row reading.
+  - **What is not closed: $T_k$.** Its remainder keeps the global anchor and the `TWO_PI` modulus,
+    by that campaign's G1 Q2. In 05's sample no row capped under B1's code needed it: R7, the one
+    capped `Gqr` row, goes with $G$ alone. A case where $T$'s floor matters would reopen it there.
+
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5;
+  `prompts/levin-phase-floor/IMPLEMENTATION_STATE.md` (05).
 
 - **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13; **resolved
   by `prompts/datastore-integrity` prompt 07**, 2026-09-29)* — the WKB

@@ -1,0 +1,18 @@
+$ bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\;\ do\ echo\ ==\ \$t\;\ git\ -C\ \$t\ rev-parse\ HEAD\;\ echo\ status-lines\ \$\(git\ -C\ \$t\ status\ --short\ \|\ wc\ -l\)\;\ done\;\ echo\ worktree-ignored-lines\ \$\(git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\ status\ --short\ --ignored\ \|\ wc\ -l\)\;\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ head\ -3\ \|\ cut\ -c1-140\;\ ls\ ~/.raypoolkit\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T02:15:51Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+status-lines 0
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951
+e6489519ee662434d1f8e430e1c172246678ac8c
+status-lines 0
+worktree-ignored-lines 0
+   RUN                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05-wider-20261026T020005         done        109/109      16m  levin-phase-floor prompt 05 section 6 on the Mac Studio 
+   levin-phase-floor-05-r10-reanchor-20261026T015120  done              -      25m  levin-phase-floor prompt 05, R10 on the Mac Studio (mps0
+# ----
+# end 2026-10-26T02:15:52Z
+# exit 0

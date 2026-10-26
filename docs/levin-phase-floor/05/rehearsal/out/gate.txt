@@ -1,0 +1,35 @@
+=== gate re-check, 2026-10-26T01:46:58Z, host mps026298.phys.susx.ac.uk
+$ git -C <main> rev-parse HEAD; status --short
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+$ git -C <worktree> rev-parse HEAD; status --short --ignored
+e6489519ee662434d1f8e430e1c172246678ac8c
+$ git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit               53084dcb [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 e6489519 (detached HEAD)
+$ ./venv/bin/python -m runregistrykit list | tail -1
+13 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 13 finished; 0 with no host recorded.
+$ ls ~/.raypoolkit/ ; ls ~/ScienceData/.rehearsal-lock
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+$ ls var/datastores | grep levin-phase-floor-05
+(exit 1 of grep: 1 = none)
+$ ls -l ~/.ray/auth_token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+$ df -h .
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  809G  118G  88% /
+$ uptime
+ 1:46  up 18 days, 16:23, 1 user, load averages: 7.11 5.28 5.32
+$ ./venv/bin/python --version
+Python 3.13.16
+$ git diff --stat e6489519 53084dcb
+ ComputeTargets/BackgroundModel.py                  |   15 +
+ ComputeTargets/GkSourcePolicyData.py               |    9 +
+ ComputeTargets/cumulative_table.py                 |   78 +-
+ ComputeTargets/primitive_phase.py                  |  175 +++-
+ ComputeTargets/tests/test_g_phase_reanchor.py      |  751 ++++++++++++++
+ prompts/levin-phase-floor/IMPLEMENTATION_STATE.md  |    6 +-
+ .../levin-phase-floor/logs/05-reanchor-g-phase.md  |  407 ++++++++
+ .../levin-phase-floor/orchestrator/prompt-05.md    |   48 +-
+ tools/store_value_diff.py                          | 1035 ++++++++++++++++++++
+ tools/tests/test_store_value_diff.py               |  330 +++++++
+ 10 files changed, 2820 insertions(+), 34 deletions(-)

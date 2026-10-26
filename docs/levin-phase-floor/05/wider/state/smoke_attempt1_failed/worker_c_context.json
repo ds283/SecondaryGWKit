@@ -1,0 +1,35 @@
+{
+ "tree": "c",
+ "seconds": 0.6711202920414507,
+ "checks": [
+  [
+   "one LambdaCDM model",
+   true,
+   "1"
+  ],
+  [
+   "exit times available",
+   true,
+   ""
+  ],
+  [
+   "rebuilt redshifts equal stored z exactly",
+   true,
+   "[]"
+  ],
+  [
+   "background model available",
+   true,
+   "1"
+  ]
+ ],
+ "rtol_1e-7": [
+  3,
+  "1e-07"
+ ],
+ "rtol_1e-8": [
+  6,
+  "1e-08"
+ ],
+ "main_py_sha256": "06b7646ecfa82724d0ac5f08eb6a050b4363873a08a06d3ab3ce9951e0bf82b3"
+}

@@ -1,0 +1,61 @@
+# Every command of the rehearsal agent, verbatim, in order. Outputs are in the files named.
+## 01:46Z gate re-check (read-only) -> out/gate.txt
+## lock 1: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 05, rehearsals R9 (worktree e648951, parent of code commit 120fdfe) and R10 (main checkout 53084dc, code 120fdfe) on the Mac Studio (mps026298), then the value comparison and readers" --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log
+## touch state/r9_launch_marker   (reference mtime for find -newer over the worktree)
+## R9 launch (cwd = worktree; nothing written there):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.sqlite \
+    --job-name levin-phase-floor-05 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r9-parent --purpose \"\$0\" --campaign levin-phase-floor --prompt 05; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R9>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-r9.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > state/launch_r9.txt; disown
+##   <PURPOSE_R9> as launched: "levin-phase-floor prompt 05, R9 on the Mac Studio (mps026298; tree e648951 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951, the parent of the code commit 120fdfe; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R9/R10 value comparison"
+##   result: state/launch_r9.txt (sh pid 47763, 01:47:28Z)
+## pgrep -P 47763 -> 47770 (driver); ps -o pid,ppid,command -p 47770
+## lock 2: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 47770 >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log
+## R9 one check -> out/r9_launch_check.txt (registry list head, status.json, launch log head, Traceback count, lsof cwd of driver 47770 and of Datastore actor 47876, manifest fields)
+## --- end of turn 1 ---
+## --- turn 2 ---
+## R9 end checks -> out/r9_end_check.txt (status.json fields via python; per-class digests vs R8's status.json; kill -0 47770/47763; launch-log tail; Traceback counts; worktree git status --short --ignored and find -newer state/r9_launch_marker; store listing; registry tail; pre-R10 HEAD/status check)
+## lock 3 (look): (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log   -> nothing listed, exit 0
+## shasum -a 256 var/datastores/levin-phase-floor-05-r9*.sqlite > state/r9_store_sha256_after_build.txt; ls -l >> same
+## R10 launch (cwd = main checkout), R8's form verbatim but for names:
+cd /Users/ds283/Documents/Code/SecondaryGWKit && nohup sh -c "PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database var/datastores/levin-phase-floor-05-r10.sqlite \
+    --job-name levin-phase-floor-05 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r10-reanchor --purpose \"\$0\" --campaign levin-phase-floor --prompt 05; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R10>" \
+  > var/runs/levin-phase-floor-05-r10.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > state/launch_r10.txt; disown
+##   <PURPOSE_R10>: "levin-phase-floor prompt 05, R10 on the Mac Studio (mps026298; main checkout at 53084dc, whose code is the code commit 120fdfe; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R9/R10 value comparison, and QuadSourceIntegral alone is expected to differ"
+##   result: state/launch_r10.txt (sh pid 49749, 01:51:19Z); pgrep -P 49749 -> 49752
+## lock 4: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 49752 >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log
+## R10 one check -> out/r10_launch_check.txt
+## --- end of turn 2 ---
+## --- turn 3 ---
+## R10 end checks -> out/r10_end_check.txt (status.json via python incl. per-class digests vs R8 and full classes dict vs R9; kill -0 49752/49749; launch-log tail; Traceback counts; registry tail; main HEAD/status; worktree status --ignored and find -newer marker)
+## hashes before the comparison -> state/store_sha256_before_diff.txt (shasum -a 256 + /usr/bin/stat of both stores' 10 files; journal look)
+## comparison (cwd main checkout), timed by /usr/bin/time -p:
+PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05-r9.sqlite var/datastores/levin-phase-floor-05-r10.sqlite --json > out/store_value_diff.json 2> out/store_value_diff.json.stderr   # exit 1 (out/store_value_diff.meta.txt)
+PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05-r9.sqlite var/datastores/levin-phase-floor-05-r10.sqlite --max-rows 1000000 > out/store_value_diff.txt 2> out/store_value_diff.txt.stderr   # exit 1
+## per-class summary from the JSON (inline python) -> out/store_value_diff_summary.txt
+## ./venv/bin/python -I scripts/gkwkb_reuse_rows.py <R9> <R10> out/store_value_diff.json > out/gkwkb_reuse_rows.txt   # exit 0
+## ./venv/bin/python -I scripts/classify_non_qsi.py out/store_value_diff.json > out/classify_non_qsi.txt   # exit 0, 0 unclassified
+## hashes after -> state/store_sha256_after_diff.txt; diff with before: identical
+## lock look (DRIFT: inside a compound command, not >>): ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk   -> HELD, owner 49752 not alive, no Ray processes
+## lock 5 (look, repeated correctly): ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log
+## STOPPED here: prompt section 8 "any value outside QuadSourceIntegral differs" fires literally; question put to the orchestrator. Lock HELD; readers, tabulation, release not done.
+## --- turn 3, resumed after the user's decision (relayed 2026-10-26) ---
+## ./venv/bin/python -I scripts/tabulate_qsi.py <R9> <R10> out/store_value_diff.json out/qsi_rows.csv > out/qsi_tabulation.txt   # first run exit 1 (TypeError: None regions); script fixed (None counted as 0); re-run exit 0
+## hashes before reads -> state/r10_store_sha256_before_reads.txt
+## (cwd main checkout) bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/levin-phase-floor-05-r10.sqlite var/levin-phase-floor-05/rehearsal/extract > out/readers.txt 2>&1   # exit 0
+## hashes after reads -> state/r10_store_sha256_after_reads.txt; diff with before: identical
+## lock 6 (look): ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log   -> nothing listed, exit 0
+## lock 7: ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log   -> released, exit 0
+## lock 8 (look): ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk >> out/lock.log 2>&1; echo "exit $?" >> out/lock.log   -> free, no Ray processes, exit 0
+## final checks: runregistrykit list | tail -1; git status (both trees); find -newer state/r9_launch_marker over both trees (a stray `touch -r marker /dev/null` in that command failed with permission denied and wrote nothing)
+## PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. ./venv/bin/python scripts/parent_serials.py <R9> <R10> > out/parent_serials.txt   # exit 0
+## final hashes of all 10 store files -> state/stores_sha256_final.txt; diff with state/store_sha256_before_diff.txt: identical

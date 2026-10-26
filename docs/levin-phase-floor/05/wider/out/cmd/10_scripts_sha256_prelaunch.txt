@@ -1,0 +1,21 @@
+$ bash -c shasum\ -a\ 256\ scripts/\*\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\ status\ --short\ --ignored
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:59:42Z
+# ----
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279  scripts/harness.py
+7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+d8ac0dc3ebf2f534811ede5b440108cb77d7afc4dd8dbd113f64df026bce2bb2  scripts/launch.py
+e8579509f9b7c278c78500de4627a221875293322c2f42bacd30861ea36fbc66  scripts/prov.py
+0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22  scripts/rebuild.py
+f52fb0302cb8638848c5a25ac59869dc7cb62b4255a7f5b5af596fd8092fba86  scripts/rec.sh
+491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906  scripts/run_wider.py
+e2ef68f057ecb1cabeb59429e06952136ce96b0cfdad0d09b2a2e141dcd08341  scripts/worker.py
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+e6489519ee662434d1f8e430e1c172246678ac8c
+# ----
+# end 2026-10-26T01:59:42Z
+# exit 0

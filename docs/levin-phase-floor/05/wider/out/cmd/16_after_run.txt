@@ -1,0 +1,47 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/status.json\;\ echo\;\ wc\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stderr.log\;\ grep\ \'\^==\ run\ ends\\\|\^#\ worker\ .\ exit\\\|over\ budget\\\|:\ error\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stdout.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005\ \|\ head\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005\ \|\ wc\ -l\;\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ head\ -5\ \|\ cut\ -c1-160\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951\ status\ --short\ --ignored\ \|\ wc\ -l\;\ ps\ -p\ 54766\,54763\ -o\ pid\,command
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T02:13:12Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-26T02:11:54+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 54766,
+  "stage": "unit c-1e-8-R7 done",
+  "state": "done",
+  "units_done": 109,
+  "units_total": 109
+}
+
+109 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl
+6925 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stderr.log
+# worker p exit 0
+# worker c exit 0
+== run ends: 109 of 109 units recorded; in order True; problems []
+checkpoint.jsonl
+manifest.json
+spec_c.json
+spec_p.json
+status.json
+stderr.log
+stdout.log
+unit_c-1e-7-ctrl-low-1.pkl
+unit_c-1e-7-ctrl-low-2.pkl
+unit_c-1e-7-ctrl-mid-1.pkl
+122
+   RUN                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05-wider-20261026T020005         done        109/109      13m  levin-phase-floor prompt 05 section 6 on the Mac Studio (mps026298; Python 3
+   levin-phase-floor-05-r10-reanchor-20261026T015120  done              -      22m  levin-phase-floor prompt 05, R10 on the Mac Studio (mps026298; main checkout
+   levin-phase-floor-05-r9-parent-20261026T014729     done              -      26m  levin-phase-floor prompt 05, R9 on the Mac Studio (mps026298; tree e648951 i
+   levin-phase-floor-04-remove-20261025T231110        done          28/28   3h 02m  levin-phase-floor prompt 04 on the Mac Studio (mps026298; Python 3.13.16): r
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+e6489519ee662434d1f8e430e1c172246678ac8c
+0
+  PID COMMAND
+# ----
+# end 2026-10-26T02:13:12Z
+# exit 1

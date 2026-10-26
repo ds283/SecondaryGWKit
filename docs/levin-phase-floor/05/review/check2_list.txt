@@ -1,0 +1,5 @@
+   RUN                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05-wider-20261026T020005         done        109/109      20m  levin-phase-floor prompt 0
+   levin-phase-floor-05-r10-reanchor-20261026T015120  done              -      28m  levin-phase-floor prompt 0
+   levin-phase-floor-05-r9-parent-20261026T014729     done              -      32m  levin-phase-floor prompt 0
+   levin-phase-floor-04-remove-20261025T231110        done          28/28   3h 08m  levin-phase-floor prompt 0

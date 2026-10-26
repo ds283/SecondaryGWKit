@@ -1,0 +1,21 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/hash_store.py after_fingerprint
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T02:15:45Z
+# ----
+# store files after_fingerprint
+# written 2026-10-26T02:15:45Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 HEAD e6489519ee662434d1f8e430e1c172246678ac8c (status --short: empty)
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in var/datastores/)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1792699923608529810  2026-10-22T20:12:03.608530+00:00  handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352  1792875376155767739  2026-10-24T20:56:16.155768+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152  1792875376181522969  2026-10-24T20:56:16.181523+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888  1792875376101702570  2026-10-24T20:56:16.101702+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488  1792875376127589134  2026-10-24T20:56:16.127589+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519  1792884865850625524  2026-10-24T23:34:25.850626+00:00  handover-A3-v2-lambdacdm.manifest.json
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-26T02:15:45Z
+# exit 0

@@ -1,0 +1,24 @@
+not_compared [] identical False
+version                ident=True rows id=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+store_tag              ident=True rows id=10 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+redshift               ident=True rows id=1159 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+wavenumber             ident=True rows id=3 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+tolerance              ident=True rows id=7 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+LambdaCDM              ident=True rows id=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+QCD_Cosmology          ident=True rows id=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+IntegrationSolver      ident=True rows id=7 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+GkSourcePolicy         ident=True rows id=2 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+QuadSourcePolicy       ident=True rows id=2 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+wavenumber_exit_time   ident=False rows id=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['compute_time'] values={}
+BackgroundModel        ident=False rows id=0 differ=1 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['compute_time', 'max_RHS_time', 'mean_RHS_time'] values={'BackgroundModelValue': (1159, 0, 0, 0, 0)}
+TkNumericIntegration   ident=False rows id=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['compute_time', 'label', 'max_RHS_time', 'mean_RHS_time', 'min_RHS_time'] values={'TkNumericValue': (1478, 0, 0, 0, 0)}
+TkWKBIntegration       ident=False rows id=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['label', 'stage_1_compute_time'] values={'TkWKBValue': (2209, 0, 0, 0, 0)}
+GkNumericIntegration   ident=False rows id=0 differ=1368 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['compute_time', 'label', 'max_RHS_time', 'mean_RHS_time', 'min_RHS_time'] values={'GkNumericValue': (35874, 0, 0, 0, 0)}
+GkWKBIntegration       ident=False rows id=0 differ=3477 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['label', 'metadata', 'stage_1_RHS_evaluations', 'stage_1_compute_time'] values={'GkWKBValue': (147642, 0, 0, 0, 0)}
+   metadata keys: {'rho_evals': 25, 'rho_reused': 25}
+GkSource               ident=False rows id=0 differ=291 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['label', 'parents_digest'] values={'GkSourceValue': (169653, 0, 0, 0, 0)}
+GkSourcePolicyData     ident=True rows id=291 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+QuadSource             ident=False rows id=0 differ=6 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['compute_time', 'label'] values={'QuadSourceValue': (2447, 0, 0, 0, 0)}
+QuadSourceIntegral     ident=False rows id=0 differ=864 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=['WKB_Levin', 'WKB_Levin_elapsed', 'WKB_Levin_evaluations', 'WKB_Levin_max_depth', 'WKB_Levin_num_regions', 'WKB_Levin_simple_regions', 'analytic_compute_time', 'compute_time', 'label', 'metadata', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time', 'total', 'total_abserr'] values={}
+OneLoopIntegral        ident=True rows id=0 differ=0 onlyA=0 onlyB=0 unmatched=0 unres=[] cols=[] values={}
+BAD []

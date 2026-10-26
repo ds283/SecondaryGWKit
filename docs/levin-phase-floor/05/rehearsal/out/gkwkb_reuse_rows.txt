@@ -1,0 +1,37 @@
+GkWKBIntegration rows: A 3477, B 3477; same label set: True
+metadata differs: store_value_diff 25, this script 25; same rows: True
+
+label (timestamp removed) | A rho_reused rho_evals RHS_evals | B rho_reused rho_evals RHS_evals | other metadata keys differing
+levin-phase-floor-05-GkWKB-k1e+05-sourcez3.0706e+13-zinit1.967e+09 | True 4 236 | False 4636 4868 | -
+levin-phase-floor-05-GkWKB-k1e+05-sourcez4.4823e+06-zinit4.4823e+06 | False 4632 4632 | True 0 0 | -
+levin-phase-floor-05-GkWKB-k1e+05-sourcez5.9905e+13-zinit1.9671e+09 | False 4636 4868 | True 4 236 | -
+levin-phase-floor-05-GkWKB-k1e+05-sourcez6.2731e+13-zinit1.9671e+09 | False 4636 4868 | True 4 236 | -
+levin-phase-floor-05-GkWKB-k1e+05-sourcez6.8788e+13-zinit1.9671e+09 | True 4 236 | False 4636 4868 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez2.0753e+13-zinit1.9653e+10 | True 4 272 | False 4636 4904 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez2.4954e+13-zinit1.9656e+10 | True 4 272 | False 4636 4904 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez3.4456e+13-zinit1.966e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez3.5259e+13-zinit1.966e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez3.7783e+13-zinit1.9661e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez4.4397e+13-zinit1.9662e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez4.5432e+13-zinit1.9663e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez5.2169e+13-zinit1.9664e+10 | True 4 272 | False 4636 4904 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez5.463e+13-zinit1.9664e+10 | True 4 272 | False 4636 4904 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez6.2731e+13-zinit1.9665e+10 | False 4636 4904 | True 4 272 | -
+levin-phase-floor-05-GkWKB-k1e+06-sourcez6.7221e+13-zinit1.9665e+10 | True 4 272 | False 4636 4904 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez4.4823e+06-zinit4.4823e+06 | False 4632 4632 | True 0 0 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez4.7575e+13-zinit6.2198e+09 | False 4636 4884 | True 4 252 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez5.098e+13-zinit6.2198e+09 | False 4636 4884 | True 4 252 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez5.2169e+13-zinit6.2198e+09 | True 4 252 | False 4636 4884 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez5.5903e+13-zinit6.2199e+09 | False 4636 4884 | True 4 252 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez5.854e+13-zinit6.2199e+09 | True 4 252 | False 4636 4884 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez5.9905e+13-zinit6.2199e+09 | True 4 252 | False 4636 4884 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez6.2731e+13-zinit6.22e+09 | True 4 252 | False 4636 4884 | -
+levin-phase-floor-05-GkWKB-k3.16e+05-sourcez6.5689e+13-zinit6.22e+09 | False 4636 4884 | True 4 252 | -
+
+by k: rows differing, reused in A only, reused in B only
+  k1e+05: [5, 2, 3]
+  k1e+06: [11, 5, 6]
+  k3.16e+05: [9, 4, 5]
+A: rows with rho_reused false: 21 of 3477
+B: rows with rho_reused false: 18 of 3477
+exit 0

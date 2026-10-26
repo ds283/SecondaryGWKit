@@ -1,0 +1,15 @@
+$ bash -c shasum\ -a\ 256\ docs/levin-phase-floor/04/scripts/harness.py\ docs/levin-phase-floor/04/scripts/rebuild.py\ docs/levin-phase-floor/04/scripts/phases.py\ var/levin-phase-floor-05/wider/scripts/harness.py\ var/levin-phase-floor-05/wider/scripts/rebuild.py\ var/levin-phase-floor-05/wider/scripts/dispatch.py\;\ echo\ \'\(copied\ with\ cp:\ harness.py\,\ rebuild.py\ as\ is\;\ phases.py\ as\ dispatch.py\;\ then\ edited\ in\ wider/scripts\ only\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:53:20Z
+# ----
+a2692689810d9a8efc9b7625ccafd948f847bda09f0374637b7536cb92e9f8df  docs/levin-phase-floor/04/scripts/harness.py
+ee47bc5057d0b7b93873eb7f63265b80deaf7f1634f023e3ca1e3bf0001b5d6d  docs/levin-phase-floor/04/scripts/rebuild.py
+9f0461576e27ff4cd3c7febd58cb3f6f4b1536b65a55a97ea771d1257a4ccb61  docs/levin-phase-floor/04/scripts/phases.py
+a2692689810d9a8efc9b7625ccafd948f847bda09f0374637b7536cb92e9f8df  var/levin-phase-floor-05/wider/scripts/harness.py
+ee47bc5057d0b7b93873eb7f63265b80deaf7f1634f023e3ca1e3bf0001b5d6d  var/levin-phase-floor-05/wider/scripts/rebuild.py
+9f0461576e27ff4cd3c7febd58cb3f6f4b1536b65a55a97ea771d1257a4ccb61  var/levin-phase-floor-05/wider/scripts/dispatch.py
+(copied with cp: harness.py, rebuild.py as is; phases.py as dispatch.py; then edited in wider/scripts only)
+# ----
+# end 2026-10-26T01:53:21Z
+# exit 0

@@ -1,0 +1,382 @@
+# levin-phase-floor 05 section 6: the wider re-measurement, scored
+# written 2026-10-26T02:15:23Z on mps026298.phys.susx.ac.uk
+# script analyse.py sha256 675d6bc7787584c18eb749945b4762c17ee52f3949b8f068816f5d020fe7be78
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 HEAD e6489519ee662434d1f8e430e1c172246678ac8c (status --short: empty)
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json sha256 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+# run levin-phase-floor-05-wider-20261026T020005: 109 checkpoint records
+# every record's script_sha256: {'491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906': 109}; tree HEAD and status as expected on every record: True []
+# theta_mod_2pi calls by tree and phase flag: {('p', 'T exact_remainder=None'): 14924742, ('p', 'G exact_remainder=None'): 24192372, ('c', 'T exact_remainder=False'): 167562, ('c', 'G exact_remainder=True'): 268136}
+# QuadSource recomputed equals the stored row at its nodes and adds B1's 3 nodes (L0 clause (a)) in every unit: True []
+# over-budget units: none; error units: none
+
+== per row: p and c at rtol 1e-7, c at 1e-8 (regions = WKB_Levin_data.num_regions; d = max depth; wall in s)
+   name           cls  band  stored(d,reg)  p(d,reg,wall)        c7(d,reg,wall,budget)        c8(d,reg,wall)    conv p/c7/c8
+   low-G+r-1      G+r  low   (20,86)        (3,11,0.28)          (3,11,0.27,0.843 done)       (3,11,0.31)       True/True/True
+   low-G+r-2      G+r  low   (20,457)       (4,12,0.38)          (5,12,0.38,1.13 done)        (5,12,0.45)       False/False/False
+   low-G+r-3      G+r  low   (20,1252)      (20,1340,4.18)       (8,33,0.40,12.5 done)        (9,64,0.56)       False/False/False
+   low-G-r-1      G-r  low   (20,397)       (4,11,0.37)          (4,12,0.39,1.1 done)         (4,12,0.45)       False/False/False
+   low-G-r-2      G-r  low   (20,582)       (20,15068,44.25)     (7,42,0.49,133 done)         (9,72,0.63)       False/False/False
+   low-G-r-3      G-r  low   (20,22972)     (20,6822,36.27)      (8,40,0.40,109 done)         (9,72,0.57)       False/False/False
+   low-G-1        G    low   (20,173)       (20,3902,11.65)      (11,34,0.53,35 done)         (11,55,0.64)      False/False/False
+   low-G-2        G    low   (20,506)       (8,16,0.39)          (7,16,0.39,1.16 done)        (9,36,0.52)       False/False/False
+   low-G-3        G    low   (20,5706)      (20,831,2.65)        (7,39,0.35,7.95 done)        (8,48,0.40)       False/False/False
+   low-Gqr-1      Gqr  low   (20,39)        (2,9,0.25)           (2,9,0.26,0.755 done)        (2,9,0.27)        True/True/True
+   low-Gqr-2      Gqr  low   (20,69)        (6,23,0.26)          (6,31,0.33,0.784 done)       (6,31,0.41)       True/True/True
+   low-Gqr-3      Gqr  low   (20,49)        (4,9,0.34)           (4,9,0.28,1.02 done)         (4,9,0.30)        False/False/False
+   mid-G+r-1      G+r  mid   (20,76)        (2,11,0.20)          (2,11,0.19,0.588 done)       (2,11,0.20)       True/True/True
+   mid-G+r-2      G+r  mid   (20,98)        (6,16,0.21)          (6,16,0.21,0.618 done)       (6,16,0.26)       True/True/True
+   mid-G+r-3      G+r  mid   (20,153)       (10,72,0.54)         (8,55,0.43,1.63 done)        (8,76,0.50)       False/False/True
+   mid-G-r-1      G-r  mid   (20,60)        (4,12,0.19)          (4,12,0.18,0.564 done)       (4,12,0.19)       True/True/True
+   mid-G-r-2      G-r  mid   (20,164)       (8,58,0.43)          (8,58,0.44,1.3 done)         (9,85,0.58)       False/False/False
+   mid-G-r-3      G-r  mid   (20,172)       (7,37,0.30)          (7,35,0.30,0.906 done)       (8,52,0.41)       True/False/True
+   mid-G-1        G    mid   (20,123)       (8,25,0.33)          (8,25,0.33,1 done)           (8,45,0.53)       False/False/False
+   mid-G-2        G    mid   (20,163)       (9,37,0.40)          (7,27,0.29,1.21 done)        (7,29,0.31)       True/True/True
+   mid-G-3        G    mid   (20,220)       (6,20,0.26)          (5,18,0.27,0.774 done)       (8,49,0.41)       False/False/False
+   mid-Gqr-1      Gqr  mid   (20,60)        (7,28,0.29)          (7,28,0.29,0.857 done)       (8,44,0.44)       False/False/False
+   mid-Gqr-2      Gqr  mid   (20,63)        (7,21,0.24)          (7,21,0.25,0.734 done)       (8,29,0.29)       False/False/False
+   mid-Gqr-3      Gqr  mid   (20,46)        (5,15,0.27)          (5,15,0.27,0.798 done)       (5,15,0.32)       False/False/False
+   R1             G+r  mid   (20,34147)     (20,22852,110.64)    (8,63,0.40,332 done)         (9,123,0.76)      False/False/False
+   R2             G+r  mid   (20,29782)     (5,15,0.19)          (4,12,0.19,0.573 done)       (4,12,0.18)       True/True/True
+   R3             G+r  mid   (20,33314)     (20,10457,65.78)     (5,18,0.20,197 done)         (5,18,0.21)       True/True/True
+   R4             G-r  mid   (20,52909)     (20,42830,261.74)    (8,83,0.55,785 done)         (9,139,0.80)      False/False/False
+   R5             G-r  mid   (20,26273)     (20,55,0.43)         (5,19,0.22,1.3 done)         (5,19,0.22)       True/True/True
+   R6             G    mid   (20,22147)     (20,5130,27.30)      (8,28,0.43,81.9 done)        (8,40,0.50)       False/False/False
+   R7             Gqr  mid   (20,23338)     (20,16660,78.96)     (8,27,0.45,237 done)         (9,40,0.51)       False/False/False
+   ctrl-low-1     G    low   (3,10)         (3,10,0.25)          (3,10,0.19,0.748 done)       -                 True/True/-
+   ctrl-low-2     G    low   (3,10)         (1,8,0.20)           (1,8,0.20,0.59 done)         -                 True/True/-
+   ctrl-mid-1     G    mid   (3,10)         (2,9,0.16)           (2,9,0.17,0.495 done)        -                 True/True/-
+   ctrl-mid-2     G    mid   (1,6)          (1,6,0.17)           (1,6,0.18,0.507 done)        -                 True/True/-
+   ctrl-seam-1    G    seam  (1,4)          (1,4,0.08)           (1,4,0.13,0.234 done)        -                 True/True/-
+   ctrl-seam-2    G    seam  (9,18)         (2,5,0.09)           (2,5,0.09,0.256 done)        -                 True/True/-
+   ctrl-NULL-1    None seam  (-,-)          (-,-,0.05)           (-,-,0.05,0.152 done)        -                 True/True/-
+   ctrl-NULL-2    None seam  (-,-)          (-,-,0.06)           (-,-,0.06,0.169 done)        -                 True/True/-
+
+# the group calls of p and c@1e-7 are the same sequence of (regime, label, x_span) on every row: True []
+
+== L1, as written: every depth-20 row of the sample whose top group is G+r, G-r or lone G (24 rows)
+   row            band  p(d,regions)  c7(d,regions)  c/p      scored groups under p (n>=18: p -> c)        clause1 clause2 row
+   low-G+r-1      low   (3,11)      (3,11)         1.0000   (none)                                       True   False   FAILS
+   low-G+r-2      low   (4,12)      (5,12)         1.0000   (none)                                       True   False   FAILS
+   low-G+r-3      low   (20,1340)   (8,33)         0.0246   G/G 1199->0                                  True   True   holds
+   low-G-r-1      low   (4,11)      (4,12)         1.0909   (none)                                       True   False   FAILS
+   low-G-r-2      low   (20,15068)  (7,42)         0.0028   G/G 11741->0                                 True   True   holds
+   low-G-r-3      low   (20,6822)   (8,40)         0.0059   G/G 1671->0; Gr/G-r 4840->0                  True   True   holds
+   low-G-1        low   (20,3902)   (11,34)        0.0087   G/G 3676->0                                  True   True   holds
+   low-G-2        low   (8,16)      (7,16)         1.0000   (none)                                       True   False   FAILS
+   low-G-3        low   (20,831)    (7,39)         0.0469   G/G 689->0                                   True   True   holds
+   mid-G+r-1      mid   (2,11)      (2,11)         1.0000   (none)                                       True   False   FAILS
+   mid-G+r-2      mid   (6,16)      (6,16)         1.0000   (none)                                       True   False   FAILS
+   mid-G+r-3      mid   (10,72)     (8,55)         0.7639   (none)                                       True   False   FAILS
+   mid-G-r-1      mid   (4,12)      (4,12)         1.0000   (none)                                       True   False   FAILS
+   mid-G-r-2      mid   (8,58)      (8,58)         1.0000   (none)                                       True   False   FAILS
+   mid-G-r-3      mid   (7,37)      (7,35)         0.9459   (none)                                       True   False   FAILS
+   mid-G-1        mid   (8,25)      (8,25)         1.0000   (none)                                       True   False   FAILS
+   mid-G-2        mid   (9,37)      (7,27)         0.7297   (none)                                       True   False   FAILS
+   mid-G-3        mid   (6,20)      (5,18)         0.9000   (none)                                       True   False   FAILS
+   R1             mid   (20,22852)  (8,63)         0.0028   G/G 8908->0; Gr/G+r 6597->0; Gr/G-r 6075->0  True   True   holds
+   R2             mid   (5,15)      (4,12)         0.8000   (none)                                       True   False   FAILS
+   R3             mid   (20,10457)  (5,18)         0.0017   Gr/G+r 9635->0                               True   True   holds
+   R4             mid   (20,42830)  (8,83)         0.0019   G/G 7545->0; Gr/G+r 15539->0; Gr/G-r 17307->0True   True   holds
+   R5             mid   (20,55)     (5,19)         0.3455   (none)                                       True   False   FAILS
+   R6             mid   (20,5130)   (8,28)         0.0055   G/G 3115->0; Gqr/G+q+r 1725->0               True   True   holds
+   L1: true on 9 of 24 rows -> FAILS; false on ['low-G+r-1', 'low-G+r-2', 'low-G-r-1', 'low-G-2', 'mid-G+r-1', 'mid-G+r-2', 'mid-G+r-3', 'mid-G-r-1', 'mid-G-r-2', 'mid-G-r-3', 'mid-G-1', 'mid-G-2', 'mid-G-3', 'R2', 'R5']
+
+== L1q, as written: every depth-20 row of the sample whose top group is Gqr (7 rows)
+   row            band  p(d,regions)  c7(d,regions)  c/p      scored groups under p (n>=18: p -> c)        clause1 clause2 row
+   low-Gqr-1      low   (2,9)       (2,9)          1.0000   (none)                                       True   False   FAILS
+   low-Gqr-2      low   (6,23)      (6,31)         1.3478   (none)                                       True   False   FAILS
+   low-Gqr-3      low   (4,9)       (4,9)          1.0000   (none)                                       True   False   FAILS
+   mid-Gqr-1      mid   (7,28)      (7,28)         1.0000   (none)                                       True   False   FAILS
+   mid-Gqr-2      mid   (7,21)      (7,21)         1.0000   (none)                                       True   False   FAILS
+   mid-Gqr-3      mid   (5,15)      (5,15)         1.0000   (none)                                       True   False   FAILS
+   R7             mid   (20,16660)  (8,27)         0.0016   G/G 11393->0; Gqr/G+q+r 4647->0              True   True   holds
+   L1q: true on 1 of 7 rows -> FAILS; false on ['low-Gqr-1', 'low-Gqr-2', 'low-Gqr-3', 'mid-Gqr-1', 'mid-Gqr-2', 'mid-Gqr-3']
+   L1q failure low-Gqr-1: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 6.31658
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 2
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 2
+   L1q failure low-Gqr-2: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 3.63427
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 6
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 6
+   L1q failure low-Gqr-3: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 3.63427
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 4
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 4
+   L1q failure mid-Gqr-1: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 174.127
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 7
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 7
+   L1q failure mid-Gqr-2: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 4800.13
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 7
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 7
+   L1q failure mid-Gqr-3: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), z_response = 25.1561
+      c: 0 regions at depth >= 18 in this row's group calls; max depth 5
+      p: 0 regions at depth >= 18 in this row's group calls; max depth 5
+
+== THE SECOND READING (not scored; the user's question): the rows at depth 20 under p, i.e. still capped after B1 and before 05's change
+   11 of 31 depth-20 rows of the sample reach depth 20 under p: ['low-G+r-3', 'low-G-r-2', 'low-G-r-3', 'low-G-1', 'low-G-3', 'R1', 'R3', 'R4', 'R5', 'R6', 'R7']
+   not capped under p: ['low-G+r-1', 'low-G+r-2', 'low-G-r-1', 'low-G-2', 'low-Gqr-1', 'low-Gqr-2', 'low-Gqr-3', 'mid-G+r-1', 'mid-G+r-2', 'mid-G+r-3', 'mid-G-r-1', 'mid-G-r-2', 'mid-G-r-3', 'mid-G-1', 'mid-G-2', 'mid-G-3', 'mid-Gqr-1', 'mid-Gqr-2', 'mid-Gqr-3', 'R2']
+   rows whose top group is G+r, G-r or lone G (L1's rule on them):
+   row            band  p(d,regions)  c7(d,regions)  c/p      scored groups under p (n>=18: p -> c)        clause1 clause2 row
+   low-G+r-3      low   (20,1340)   (8,33)         0.0246   G/G 1199->0                                  True   True   holds
+   low-G-r-2      low   (20,15068)  (7,42)         0.0028   G/G 11741->0                                 True   True   holds
+   low-G-r-3      low   (20,6822)   (8,40)         0.0059   G/G 1671->0; Gr/G-r 4840->0                  True   True   holds
+   low-G-1        low   (20,3902)   (11,34)        0.0087   G/G 3676->0                                  True   True   holds
+   low-G-3        low   (20,831)    (7,39)         0.0469   G/G 689->0                                   True   True   holds
+   R1             mid   (20,22852)  (8,63)         0.0028   G/G 8908->0; Gr/G+r 6597->0; Gr/G-r 6075->0  True   True   holds
+   R3             mid   (20,10457)  (5,18)         0.0017   Gr/G+r 9635->0                               True   True   holds
+   R4             mid   (20,42830)  (8,83)         0.0019   G/G 7545->0; Gr/G+r 15539->0; Gr/G-r 17307->0True   True   holds
+   R5             mid   (20,55)     (5,19)         0.3455   (none)                                       True   False   FAILS
+   R6             mid   (20,5130)   (8,28)         0.0055   G/G 3115->0; Gqr/G+q+r 1725->0               True   True   holds
+   rows whose top group is Gqr (L1q's rule on them):
+   row            band  p(d,regions)  c7(d,regions)  c/p      scored groups under p (n>=18: p -> c)        clause1 clause2 row
+   R7             mid   (20,16660)  (8,27)         0.0016   G/G 11393->0; Gqr/G+q+r 4647->0              True   True   holds
+   L1's rule on the capped rows: true on 9 of 10; false on ['R5']
+   L1q's rule on the capped rows: true on 1 of 1; false on []
+   their groups, p -> c@1e-7 (regions; n at depth >= 18; max depth), every group:
+   low-G+r-3:
+         G/G      regions   1309 ->   10; n>=18   1199 ->   0; max depth 20 -> 8   [scored under p]
+        Gr/G+r    regions     10 ->    6; n>=18      0 ->   0; max depth  4 -> 3
+        Gr/G-r    regions     17 ->   13; n>=18      0 ->   0; max depth  6 -> 5
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   low-G-r-2:
+         G/G      regions  15030 ->   16; n>=18  11741 ->   0; max depth 20 -> 7   [scored under p]
+        Gr/G+r    regions      8 ->    8; n>=18      0 ->   0; max depth  4 -> 4
+        Gr/G-r    regions     26 ->   14; n>=18      0 ->   0; max depth  6 -> 5
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   low-G-r-3:
+         G/G      regions   1764 ->   16; n>=18   1671 ->   0; max depth 20 -> 8   [scored under p]
+        Gr/G+r    regions      9 ->    8; n>=18      0 ->   0; max depth  4 -> 4
+        Gr/G-r    regions   5045 ->   12; n>=18   4840 ->   0; max depth 20 -> 5   [scored under p]
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   low-G-1:
+         G/G      regions   3875 ->   14; n>=18   3676 ->   0; max depth 20 -> 8   [scored under p]
+       Gqr/G+q+r  regions     24 ->   17; n>=18      0 ->   0; max depth 15 -> 11
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   low-G-3:
+         G/G      regions    805 ->   15; n>=18    689 ->   0; max depth 20 -> 7   [scored under p]
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions     12 ->   11; n>=18      0 ->   0; max depth  8 -> 6
+       Gqr/G-q+r  regions     12 ->   11; n>=18      0 ->   0; max depth  8 -> 6
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R1:
+         G/G      regions   9251 ->   15; n>=18   8908 ->   0; max depth 20 -> 7   [scored under p]
+        Gr/G+r    regions   6988 ->   18; n>=18   6597 ->   0; max depth 20 -> 6   [scored under p]
+        Gr/G-r    regions   6609 ->   26; n>=18   6075 ->   0; max depth 20 -> 8   [scored under p]
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R3:
+         G/G      regions      5 ->    6; n>=18      0 ->   0; max depth  4 -> 5
+        Gr/G+r    regions  10444 ->    4; n>=18   9635 ->   0; max depth 20 -> 3   [scored under p]
+        Gr/G-r    regions      4 ->    4; n>=18      0 ->   0; max depth  3 -> 3
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R4:
+         G/G      regions   7787 ->   14; n>=18   7545 ->   0; max depth 20 -> 7   [scored under p]
+        Gr/G+r    regions  16431 ->   23; n>=18  15539 ->   0; max depth 20 -> 7   [scored under p]
+        Gr/G-r    regions  18608 ->   42; n>=18  17307 ->   0; max depth 20 -> 8   [scored under p]
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R5:
+         G/G      regions      8 ->    4; n>=18      0 ->   0; max depth  6 -> 3
+        Gr/G+r    regions     42 ->   10; n>=18      7 ->   0; max depth 20 -> 5
+        Gr/G-r    regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R6:
+         G/G      regions   3256 ->   18; n>=18   3115 ->   0; max depth 20 -> 8   [scored under p]
+       Gqr/G+q+r  regions   1871 ->    7; n>=18   1725 ->   0; max depth 20 -> 5   [scored under p]
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+   R7:
+         G/G      regions  11821 ->   17; n>=18  11393 ->   0; max depth 20 -> 8   [scored under p]
+       Gqr/G+q+r  regions   4836 ->    7; n>=18   4647 ->   0; max depth 20 -> 6   [scored under p]
+       Gqr/G+q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q+r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+       Gqr/G-q-r  regions      1 ->    1; n>=18      0 ->   0; max depth  0 -> 0
+
+== L2: every control, |total_c - total_p| <= total_abserr_p (both at 1e-7)
+   ctrl-low-1   band low  p -3.821395644371439e-31 c -3.81777832896149e-31 |dt| 3.62e-34 abserr_p 2.25e-33 ratio 0.161 bit-identical False -> holds
+   ctrl-low-2   band low  p -1.4354889159173145e-28 c -1.4355040908253356e-28 |dt| 1.52e-33 abserr_p 2.33e-33 ratio 0.652 bit-identical False -> holds
+   ctrl-mid-1   band mid  p -9.639172931336902e-29 c -9.639267614574675e-29 |dt| 9.47e-34 abserr_p 8.66e-32 ratio 0.0109 bit-identical False -> holds
+   ctrl-mid-2   band mid  p 2.769328520016094e-26 c 2.7693289177164324e-26 |dt| 3.98e-33 abserr_p 9.72e-31 ratio 0.00409 bit-identical False -> holds
+   ctrl-seam-1  band seam p -6.107343794275391e-20 c -6.107343794275593e-20 |dt| 2.02e-33 abserr_p 4.71e-22 ratio 4.29e-12 bit-identical False -> holds
+   ctrl-seam-2  band seam p 2.0317720259667396e-18 c 2.031772025966749e-18 |dt| 9.63e-33 abserr_p 1.46e-23 ratio 6.58e-10 bit-identical False -> holds
+   ctrl-NULL-1  band seam p -1.2087911009896876e-16 c -1.2087911009896876e-16 |dt| 0 abserr_p 4.91e-23 ratio 0 bit-identical True -> holds
+   ctrl-NULL-2  band seam p -4.384383430355975e-18 c -4.384383430355975e-18 |dt| 0 abserr_p 1.24e-26 ratio 0 bit-identical True -> holds
+   L2: true on 8 of 8 -> HOLDS; largest ratio 0.652
+
+== L3: every depth-20 row with both c units in budget, |total_c(1e-7) - total_c(1e-8)| <= total_abserr_c(1e-7)
+   low-G+r-1      low  G+r  c7 5.3918842127849005e-31 c8 5.3918842127849005e-31 |dt| 0 abserr_c7 1.9e-33 ratio 0 |dt|/|c8| 0 -> holds
+   low-G+r-2      low  G+r  c7 -1.8037572512398775e-29 c8 -1.8037572512398775e-29 |dt| 0 abserr_c7 inf ratio 0 |dt|/|c8| 0 -> holds
+   low-G+r-3      low  G+r  c7 -1.9904397629834092e-22 c8 -1.9904401345377915e-22 |dt| 3.72e-29 abserr_c7 2.8e-28 ratio 0.133 |dt|/|c8| 1.87e-07 -> holds
+   low-G-r-1      low  G-r  c7 -1.2319536708148697e-29 c8 -1.2319536708148697e-29 |dt| 0 abserr_c7 inf ratio 0 |dt|/|c8| 0 -> holds
+   low-G-r-2      low  G-r  c7 3.730885391909201e-23 c8 3.7308877198548467e-23 |dt| 2.33e-29 abserr_c7 6.95e-28 ratio 0.0335 |dt|/|c8| 6.24e-07 -> holds
+   low-G-r-3      low  G-r  c7 3.35604798847529e-24 c8 3.356032470887412e-24 |dt| 1.55e-29 abserr_c7 9.36e-29 ratio 0.166 |dt|/|c8| 4.62e-06 -> holds
+   low-G-1        low  G    c7 5.4306515488879396e-21 c8 5.430651546307692e-21 |dt| 2.58e-30 abserr_c7 1.82e-27 ratio 0.00141 |dt|/|c8| 4.75e-10 -> holds
+   low-G-2        low  G    c7 6.211219528362789e-23 c8 6.211217178264054e-23 |dt| 2.35e-29 abserr_c7 3.73e-28 ratio 0.063 |dt|/|c8| 3.78e-07 -> holds
+   low-G-3        low  G    c7 1.5815396674373454e-25 c8 1.5815396448676224e-25 |dt| 2.26e-33 abserr_c7 5.9e-32 ratio 0.0382 |dt|/|c8| 1.43e-08 -> holds
+   low-Gqr-1      low  Gqr  c7 -9.206103703305408e-27 c8 -9.206103703305408e-27 |dt| 0 abserr_c7 2.16e-32 ratio 0 |dt|/|c8| 0 -> holds
+   low-Gqr-2      low  Gqr  c7 -2.112078367634002e-26 c8 -2.112078367634002e-26 |dt| 0 abserr_c7 1.28e-32 ratio 0 |dt|/|c8| 0 -> holds
+   low-Gqr-3      low  Gqr  c7 -1.1899397752528739e-27 c8 -1.1899397752528739e-27 |dt| 0 abserr_c7 inf ratio 0 |dt|/|c8| 0 -> holds
+   mid-G+r-1      mid  G+r  c7 -1.936573500205446e-27 c8 -1.936573500205446e-27 |dt| 0 abserr_c7 2.04e-30 ratio 0 |dt|/|c8| 0 -> holds
+   mid-G+r-2      mid  G+r  c7 -2.4851815586318653e-25 c8 -2.4851815586318653e-25 |dt| 0 abserr_c7 8.51e-30 ratio 0 |dt|/|c8| 0 -> holds
+   mid-G+r-3      mid  G+r  c7 1.02296774770847e-23 c8 1.022967403996123e-23 |dt| 3.44e-30 abserr_c7 1.94e-29 ratio 0.177 |dt|/|c8| 3.36e-07 -> holds
+   mid-G-r-1      mid  G-r  c7 -9.238540294630595e-28 c8 -9.238540294630595e-28 |dt| 0 abserr_c7 1.33e-31 ratio 0 |dt|/|c8| 0 -> holds
+   mid-G-r-2      mid  G-r  c7 2.260981972911073e-19 c8 2.260981921954814e-19 |dt| 5.1e-27 abserr_c7 7.41e-26 ratio 0.0688 |dt|/|c8| 2.25e-08 -> holds
+   mid-G-r-3      mid  G-r  c7 1.0073331247103285e-22 c8 1.0073304056248409e-22 |dt| 2.72e-28 abserr_c7 2.1e-28 ratio 1.29 |dt|/|c8| 2.7e-06 -> FAILS
+   mid-G-1        mid  G    c7 3.5927624383075457e-20 c8 3.592762597211257e-20 |dt| 1.59e-27 abserr_c7 2.58e-27 ratio 0.615 |dt|/|c8| 4.42e-08 -> holds
+   mid-G-2        mid  G    c7 5.078835962785259e-25 c8 5.078835960394003e-25 |dt| 2.39e-34 abserr_c7 1.8e-31 ratio 0.00133 |dt|/|c8| 4.71e-10 -> holds
+   mid-G-3        mid  G    c7 -4.612834187144066e-23 c8 -4.6128328165793206e-23 |dt| 1.37e-29 abserr_c7 8.07e-30 ratio 1.7 |dt|/|c8| 2.97e-07 -> FAILS
+   mid-Gqr-1      mid  Gqr  c7 -2.3629993914722004e-22 c8 -2.3629993908378797e-22 |dt| 6.34e-32 abserr_c7 1.38e-29 ratio 0.00459 |dt|/|c8| 2.68e-10 -> holds
+   mid-Gqr-2      mid  Gqr  c7 1.5782991920577615e-22 c8 1.578299185830637e-22 |dt| 6.23e-31 abserr_c7 4.98e-29 ratio 0.0125 |dt|/|c8| 3.95e-09 -> holds
+   mid-Gqr-3      mid  Gqr  c7 -1.4561655033627965e-25 c8 -1.4561655033627965e-25 |dt| 0 abserr_c7 1.72e-31 ratio 0 |dt|/|c8| 0 -> holds
+   R1             mid  G+r  c7 -4.950201227498909e-24 c8 -4.950202103824415e-24 |dt| 8.76e-31 abserr_c7 1.49e-29 ratio 0.0587 |dt|/|c8| 1.77e-07 -> holds
+   R2             mid  G+r  c7 -5.18827702339403e-26 c8 -5.18827702339403e-26 |dt| 0 abserr_c7 6e-31 ratio 0 |dt|/|c8| 0 -> holds
+   R3             mid  G+r  c7 6.58050194359166e-29 c8 6.58050194359166e-29 |dt| 0 abserr_c7 1.19e-32 ratio 0 |dt|/|c8| 0 -> holds
+   R4             mid  G-r  c7 -3.515710041224853e-26 c8 -3.5156191166850584e-26 |dt| 9.09e-31 abserr_c7 1.07e-29 ratio 0.0846 |dt|/|c8| 2.59e-05 -> holds
+   R5             mid  G-r  c7 -1.3167402567526463e-26 c8 -1.3167402567526463e-26 |dt| 0 abserr_c7 4.39e-31 ratio 0 |dt|/|c8| 0 -> holds
+   R6             mid  G    c7 4.92609375253192e-24 c8 4.9260937378117025e-24 |dt| 1.47e-32 abserr_c7 6.46e-30 ratio 0.00228 |dt|/|c8| 2.99e-09 -> holds
+   R7             mid  Gqr  c7 3.032149615592661e-24 c8 3.03214963353919e-24 |dt| 1.79e-32 abserr_c7 5.25e-30 ratio 0.00342 |dt|/|c8| 5.92e-09 -> holds
+   L3: true on 29 of 31 -> FAILS; largest ratio 1.7; false on ['mid-G-r-3', 'mid-G-3']
+   (on the 11 rows capped under p: true on 11; ratios ['0.133', '0.0335', '0.166', '0.00141', '0.0382', '0.0587', '0', '0.0846', '0', '0.00228', '0.00342'])
+
+== descriptive: |total_c - total_p| / total_abserr_p on the depth-20 rows (04's N4, wider; c includes the modulus correction)
+   low-G+r-1      low  G+r  capped-under-p False ratio 0.0887 |dt|/|p| 0.000298 abserr_p 1.81e-33
+   low-G+r-2      low  G+r  capped-under-p False ratio 0 |dt|/|p| 9.54e-06 abserr_p inf
+   low-G+r-3      low  G+r  capped-under-p True  ratio 0.126 |dt|/|p| 1.88e-07 abserr_p 2.96e-28
+   low-G-r-1      low  G-r  capped-under-p False ratio 0 |dt|/|p| 0.000296 abserr_p inf
+   low-G-r-2      low  G-r  capped-under-p True  ratio 0.213 |dt|/|p| 4.53e-06 abserr_p 7.95e-28
+   low-G-r-3      low  G-r  capped-under-p True  ratio 0.134 |dt|/|p| 4.16e-06 abserr_p 1.04e-28
+   low-G-1        low  G    capped-under-p True  ratio 0.137 |dt|/|p| 5.19e-08 abserr_p 2.06e-27
+   low-G-2        low  G    capped-under-p False ratio 0.21 |dt|/|p| 1.26e-06 abserr_p 3.74e-28
+   low-G-3        low  G    capped-under-p True  ratio 2.48 |dt|/|p| 1.05e-06 abserr_p 6.7e-32
+   low-Gqr-1      low  Gqr  capped-under-p False ratio 0.194 |dt|/|p| 4.56e-07 abserr_p 2.17e-32
+   low-Gqr-2      low  Gqr  capped-under-p False ratio 0.932 |dt|/|p| 5.83e-07 abserr_p 1.32e-32
+   low-Gqr-3      low  Gqr  capped-under-p False ratio 0 |dt|/|p| 5.06e-06 abserr_p inf
+   mid-G+r-1      mid  G+r  capped-under-p False ratio 0.00421 |dt|/|p| 4.43e-06 abserr_p 2.04e-30
+   mid-G+r-2      mid  G+r  capped-under-p False ratio 0.017 |dt|/|p| 5.66e-07 abserr_p 8.29e-30
+   mid-G+r-3      mid  G+r  capped-under-p False ratio 0.229 |dt|/|p| 6.69e-07 abserr_p 2.98e-29
+   mid-G-r-1      mid  G-r  capped-under-p False ratio 0.0678 |dt|/|p| 1.04e-05 abserr_p 1.42e-31
+   mid-G-r-2      mid  G-r  capped-under-p False ratio 0.0013 |dt|/|p| 4.27e-10 abserr_p 7.42e-26
+   mid-G-r-3      mid  G-r  capped-under-p False ratio 0.0149 |dt|/|p| 3e-08 abserr_p 2.03e-28
+   mid-G-1        mid  G    capped-under-p False ratio 0.245 |dt|/|p| 2.09e-08 abserr_p 3.08e-27
+   mid-G-2        mid  G    capped-under-p False ratio 0.329 |dt|/|p| 1.21e-07 abserr_p 1.87e-31
+   mid-G-3        mid  G    capped-under-p False ratio 0.53 |dt|/|p| 8.8e-08 abserr_p 7.65e-30
+   mid-Gqr-1      mid  Gqr  capped-under-p False ratio 0.245 |dt|/|p| 1.46e-08 abserr_p 1.41e-29
+   mid-Gqr-2      mid  Gqr  capped-under-p False ratio 0.101 |dt|/|p| 3.2e-08 abserr_p 5.02e-29
+   mid-Gqr-3      mid  Gqr  capped-under-p False ratio 0.0368 |dt|/|p| 4.34e-08 abserr_p 1.72e-31
+   R1             mid  G+r  capped-under-p True  ratio 0.29 |dt|/|p| 1.87e-06 abserr_p 3.19e-29
+   R2             mid  G+r  capped-under-p False ratio 0.165 |dt|/|p| 1.7e-06 abserr_p 5.33e-31
+   R3             mid  G+r  capped-under-p True  ratio 0.406 |dt|/|p| 8.82e-05 abserr_p 1.43e-32
+   R4             mid  G-r  capped-under-p True  ratio 0.634 |dt|/|p| 0.000428 abserr_p 2.37e-29
+   R5             mid  G-r  capped-under-p True  ratio 0.0225 |dt|/|p| 7.61e-07 abserr_p 4.46e-31
+   R6             mid  G    capped-under-p True  ratio 0.403 |dt|/|p| 5.88e-07 abserr_p 7.2e-30
+   R7             mid  Gqr  capped-under-p True  ratio 0.17 |dt|/|p| 3.21e-07 abserr_p 5.71e-30
+   ratio > 1 on 1 of 31: [('low-G-3', '2.48')]
+
+== descriptive: cost and regions by class and band (sums over the depth-20 rows; wall in s)
+   cell          rows  capped(p)  p regions  c7 regions  c8 regions   p wall   c7 wall   c8 wall
+   low  G+r         3          1       1363          56          87     4.84      1.05      1.33
+   low  G-r         3          2      21901          94         156    80.88      1.28      1.64
+   low  G           3          2       4749          89         139    14.69      1.28      1.56
+   low  Gqr         3          0         41          49          49     0.85      0.87      0.98
+   mid  G+r         3          0         99          82         103     0.95      0.84      0.97
+   mid  G-r         3          0        107         105         149     0.92      0.92      1.17
+   mid  G           3          0         82          70         123     0.99      0.90      1.25
+   mid  Gqr         3          0         64          64          88     0.80      0.81      1.05
+   03   G+r         3          2      33324          93         153   176.61      0.80      1.15
+   03   G-r         2          2      42885         102         158   262.17      0.77      1.02
+   03   G           1          1       5130          28          40    27.30      0.43      0.50
+   03   Gqr         1          1      16660          27          40    78.96      0.45      0.51
+   low band (drawn)  : rows 12, capped under p 5, regions p 28054 -> c7 288, wall p 101.3 s -> c7 4.5 s, max depth p 20 -> c7 11 -> c8 11
+   mid band (drawn)  : rows 12, capped under p 0, regions p 352 -> c7 321, wall p 3.7 s -> c7 3.5 s, max depth p 10 -> c7 8 -> c8 9
+   03's R1-R7 (mid)  : rows 7, capped under p 6, regions p 97999 -> c7 250, wall p 545.1 s -> c7 2.4 s, max depth p 20 -> c7 8 -> c8 9
+   controls: regions p 42 -> c7 42; wall p 1.05 -> c7 1.07
+
+== descriptive: total_converged, p -> c@1e-7 -> c@1e-8
+   control  p True  -> c7 True  -> c8 None : 8 rows
+   d20      p False -> c7 False -> c8 False: 19 rows
+   d20      p False -> c7 False -> c8 True : 1 rows
+   d20      p True  -> c7 False -> c8 True : 1 rows
+   d20      p True  -> c7 True  -> c8 True : 10 rows
+   capped under p: low-G+r-3 False->False->False; low-G-r-2 False->False->False; low-G-r-3 False->False->False; low-G-1 False->False->False; low-G-3 False->False->False; R1 False->False->False; R3 True->True->True; R4 False->False->False; R5 True->True->True; R6 False->False->False; R7 False->False->False
+
+== descriptive: 03's R1-R7 against 04's arm A (layer 1(a) at the pre-B1 tree 98e68d3, against TWO_PI, anchored at z_top) and X
+   R1: regions 04 P 34147, A 133, X 133; 05 stored 34147, p 22852 (depth 20), c7 63 (depth 8)
+   R2: regions 04 P 29782, A 89, X 89; 05 stored 29782, p 15 (depth 5), c7 12 (depth 4)
+   R3: regions 04 P 33314, A 66, X 66; 05 stored 33314, p 10457 (depth 20), c7 18 (depth 5)
+   R4: regions 04 P 52909, A 167, X 167; 05 stored 52909, p 42830 (depth 20), c7 83 (depth 8)
+   R5: regions 04 P 26273, A 130, X 130; 05 stored 26273, p 55 (depth 20), c7 19 (depth 5)
+   R6: regions 04 P 22147, A 89, X 89; 05 stored 22147, p 5130 (depth 20), c7 28 (depth 8)
+   R7: regions 04 P 23338, A 88, X 88; 05 stored 23338, p 16660 (depth 20), c7 27 (depth 8)
+
+== for the board: every row, |total_p - total_stored| / total_abserr_stored (B1's effect on A3 v2's stored totals; p is B1's code)
+   low-G+r-1      d20     low  stored 4.991071745673142e-31 (abserr 1.72e-33) p 5.393492219208038e-31 |dt| 4.02e-32 ratio 23.5 rel 0.0806 within False
+   low-G+r-2      d20     low  stored -1.728199999603739e-29 (abserr 6.42e-33) p -1.8037744675972162e-29 |dt| 7.56e-31 ratio 118 rel 0.0437 within False
+   low-G+r-3      d20     low  stored -2.001080038527011e-22 (abserr 9.46e-29) p -1.9904401365455203e-22 |dt| 1.06e-24 ratio 1.13e+04 rel 0.00532 within False
+   low-G-r-1      d20     low  stored -1.3533030029865714e-29 (abserr 7.64e-33) p -1.2315890671147971e-29 |dt| 1.22e-30 ratio 159 rel 0.0899 within False
+   low-G-r-2      d20     low  stored -3.050191102181374e-24 (abserr 3.13e-28) p 3.730902304452644e-23 |dt| 4.04e-23 ratio 1.29e+05 rel 13.2 within False
+   low-G-r-3      d20     low  stored 2.484518548287219e-24 (abserr 2.67e-29) p 3.3560619604036694e-24 |dt| 8.72e-25 ratio 3.26e+04 rel 0.351 within False
+   low-G-1        d20     low  stored 5.459175649382928e-21 (abserr 7.49e-28) p 5.430651266930595e-21 |dt| 2.85e-23 ratio 3.81e+04 rel 0.00523 within False
+   low-G-2        d20     low  stored 6.106971840227609e-23 (abserr 6.69e-29) p 6.211227366508543e-23 |dt| 1.04e-24 ratio 1.56e+04 rel 0.0171 within False
+   low-G-3        d20     low  stored 1.5823776486571414e-25 (abserr 2.01e-32) p 1.5815380076651374e-25 |dt| 8.4e-29 ratio 4.17e+03 rel 0.000531 within False
+   low-Gqr-1      d20     low  stored -9.20896650975362e-27 (abserr 2.16e-32) p -9.206099503326047e-27 |dt| 2.87e-30 ratio 133 rel 0.000311 within False
+   low-Gqr-2      d20     low  stored -2.1129098526875583e-26 (abserr 9.2e-33) p -2.112079598565903e-26 |dt| 8.3e-30 ratio 903 rel 0.000393 within False
+   low-Gqr-3      d20     low  stored -1.1903712383245932e-27 (abserr inf) p -1.1899337590965746e-27 |dt| 4.37e-31 ratio 0 rel 0.000368 within True
+   mid-G+r-1      d20     mid  stored -2.69041175563728e-27 (abserr 1.09e-30) p -1.9365820869792032e-27 |dt| 7.54e-28 ratio 688 rel 0.28 within False
+   mid-G+r-2      d20     mid  stored -1.6214946902415193e-25 (abserr 4.56e-30) p -2.485182966232447e-25 |dt| 8.64e-26 ratio 1.89e+04 rel 0.533 within False
+   mid-G+r-3      d20     mid  stored 8.038583454673503e-24 (abserr 3.12e-29) p 1.0229670637197829e-23 |dt| 2.19e-24 ratio 7.01e+04 rel 0.273 within False
+   mid-G-r-1      d20     mid  stored -1.0058580983488105e-27 (abserr 9.35e-32) p -9.238443980785894e-28 |dt| 8.2e-29 ratio 877 rel 0.0815 within False
+   mid-G-r-2      d20     mid  stored 2.22867624502501e-19 (abserr 6.75e-26) p 2.260981971945967e-19 |dt| 3.23e-21 ratio 4.79e+04 rel 0.0145 within False
+   mid-G-r-3      d20     mid  stored 6.733015082349154e-23 (abserr 2.22e-28) p 1.0073330944648557e-22 |dt| 3.34e-23 ratio 1.51e+05 rel 0.496 within False
+   mid-G-1        d20     mid  stored 3.5882261287047554e-20 (abserr 1.82e-27) p 3.5927623630591306e-20 |dt| 4.54e-23 ratio 2.5e+04 rel 0.00126 within False
+   mid-G-2        d20     mid  stored 5.075135479172756e-25 (abserr 6.1e-32) p 5.078836576859142e-25 |dt| 3.7e-28 ratio 6.06e+03 rel 0.000729 within False
+   mid-G-3        d20     mid  stored -4.612808300791419e-23 (abserr 4.93e-30) p -4.612834593057285e-23 |dt| 2.63e-28 ratio 53.3 rel 5.7e-06 within False
+   mid-Gqr-1      d20     mid  stored -2.3664328003149833e-22 (abserr 4.39e-30) p -2.3629993568884085e-22 |dt| 3.43e-25 ratio 7.82e+04 rel 0.00145 within False
+   mid-Gqr-2      d20     mid  stored 1.5486863220396663e-22 (abserr 2.09e-29) p 1.5782992425171009e-22 |dt| 2.96e-24 ratio 1.42e+05 rel 0.0191 within False
+   mid-Gqr-3      d20     mid  stored -1.4573691714714353e-25 (abserr 8.76e-32) p -1.456165566563905e-25 |dt| 1.2e-28 ratio 1.37e+03 rel 0.000826 within False
+   R1             d20     mid  stored -4.5896998332991325e-24 (abserr 2.99e-29) p -4.95019197606188e-24 |dt| 3.6e-25 ratio 1.21e+04 rel 0.0785 within False
+   R2             d20     mid  stored -4.757170253764701e-26 (abserr 7.54e-31) p -5.188285827000151e-26 |dt| 4.31e-27 ratio 5.72e+03 rel 0.0906 within False
+   R3             d20     mid  stored 7.026853300557323e-29 (abserr 1.64e-32) p 6.581082300378723e-29 |dt| 4.46e-30 ratio 272 rel 0.0634 within False
+   R4             d20     mid  stored -1.407565217006096e-25 (abserr 1.71e-29) p -3.517213665615301e-26 |dt| 1.06e-25 ratio 6.18e+03 rel 0.75 within False
+   R5             d20     mid  stored -1.1219887655180737e-26 (abserr 2.04e-31) p -1.316739255208726e-26 |dt| 1.95e-27 ratio 9.53e+03 rel 0.174 within False
+   R6             d20     mid  stored 4.9262748942211906e-24 (abserr 2.12e-30) p 4.926096651522282e-24 |dt| 1.78e-28 ratio 84 rel 3.62e-05 within False
+   R7             d20     mid  stored 3.042195843665141e-24 (abserr 1.14e-30) p 3.032150588044381e-24 |dt| 1e-26 ratio 8.82e+03 rel 0.0033 within False
+   ctrl-low-1     control low  stored -6.93281486722393e-31 (abserr 7.45e-33) p -3.821395644371439e-31 |dt| 3.11e-31 ratio 41.8 rel 0.449 within False
+   ctrl-low-2     control low  stored -1.4360154471108189e-28 (abserr 1.93e-33) p -1.4354889159173145e-28 |dt| 5.27e-32 ratio 27.3 rel 0.000367 within False
+   ctrl-mid-1     control mid  stored -9.09639226401831e-29 (abserr 2.68e-31) p -9.639172931336902e-29 |dt| 5.43e-30 ratio 20.2 rel 0.0597 within False
+   ctrl-mid-2     control mid  stored 2.770046329940419e-26 (abserr 1.38e-30) p 2.769328520016094e-26 |dt| 7.18e-30 ratio 5.19 rel 0.000259 within False
+   ctrl-seam-1    control seam stored -1.0643127978106153e-19 (abserr 6.86e-21) p -6.107343794275391e-20 |dt| 4.54e-20 ratio 6.61 rel 0.426 within False
+   ctrl-seam-2    control seam stored 2.083923098421877e-18 (abserr 2.95e-23) p 2.0317720259667396e-18 |dt| 5.22e-20 ratio 1.77e+03 rel 0.025 within False
+   ctrl-NULL-1    control seam stored -1.2087911009896876e-16 (abserr 4.91e-23) p -1.2087911009896876e-16 |dt| 0 ratio 0 rel 0 within True
+   ctrl-NULL-2    control seam stored -4.384383430355975e-18 (abserr 1.24e-26) p -4.384383430355975e-18 |dt| 0 ratio 0 rel 0 within True
+   beyond the stored error on 36 of 39 rows: [('low-G+r-1', '23.5'), ('low-G+r-2', '118'), ('low-G+r-3', '1.13e+04'), ('low-G-r-1', '159'), ('low-G-r-2', '1.29e+05'), ('low-G-r-3', '3.26e+04'), ('low-G-1', '3.81e+04'), ('low-G-2', '1.56e+04'), ('low-G-3', '4.17e+03'), ('low-Gqr-1', '133'), ('low-Gqr-2', '903'), ('mid-G+r-1', '688'), ('mid-G+r-2', '1.89e+04'), ('mid-G+r-3', '7.01e+04'), ('mid-G-r-1', '877'), ('mid-G-r-2', '4.79e+04'), ('mid-G-r-3', '1.51e+05'), ('mid-G-1', '2.5e+04'), ('mid-G-2', '6.06e+03'), ('mid-G-3', '53.3'), ('mid-Gqr-1', '7.82e+04'), ('mid-Gqr-2', '1.42e+05'), ('mid-Gqr-3', '1.37e+03'), ('R1', '1.21e+04'), ('R2', '5.72e+03'), ('R3', '272'), ('R4', '6.18e+03'), ('R5', '9.53e+03'), ('R6', '84'), ('R7', '8.82e+03'), ('ctrl-low-1', '41.8'), ('ctrl-low-2', '27.3'), ('ctrl-mid-1', '20.2'), ('ctrl-mid-2', '5.19'), ('ctrl-seam-1', '6.61'), ('ctrl-seam-2', '1.77e+03')]
+
+== VERDICTS
+   L1: FAILS (9 of 24 rows true; false on ['low-G+r-1', 'low-G+r-2', 'low-G-r-1', 'low-G-2', 'mid-G+r-1', 'mid-G+r-2', 'mid-G+r-3', 'mid-G-r-1', 'mid-G-r-2', 'mid-G-r-3', 'mid-G-1', 'mid-G-2', 'mid-G-3', 'R2', 'R5'])
+   L1q: FAILS (1 of 7 rows true; false on ['low-Gqr-1', 'low-Gqr-2', 'low-Gqr-3', 'mid-Gqr-1', 'mid-Gqr-2', 'mid-Gqr-3'])
+   L2: HOLDS (8 of 8 rows true; false on [])
+   L3: FAILS (29 of 31 rows true; false on ['mid-G-r-3', 'mid-G-3'])
+   (second reading, unscored) L1's rule on the rows capped under p: {'rows': 10, 'hold': 9, 'fail': ['R5']}
+   (second reading, unscored) L1q's rule on the rows capped under p: {'rows': 1, 'hold': 1, 'fail': []}
+   over-budget units: none

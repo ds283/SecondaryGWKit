@@ -1,0 +1,6 @@
+redshift (by z): A 1159, B 1159, same keys True; serial differs in 0 of 1159
+GkNumericIntegration (by label): A 1368, B 1368, same keys True; serial differs in 1346 of 1368
+GkWKBIntegration (by label): A 3477, B 3477, same keys True; serial differs in 3466 of 3477
+A: stored parents_digest equals GkSource_parents_digest(its GkSource_parents rows) for 291 of 291 GkSource rows
+B: stored parents_digest equals GkSource_parents_digest(its GkSource_parents rows) for 291 of 291 GkSource rows
+exit 0

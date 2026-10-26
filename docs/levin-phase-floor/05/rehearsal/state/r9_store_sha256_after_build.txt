@@ -1,0 +1,10 @@
+c828be47f0d28fd3ec943554db1ac06772fefbba13c6879cc808665f89fdee66  var/datastores/levin-phase-floor-05-r9-shard0000.sqlite
+4d4742d74435e82743319d70689b4885477e6a98b2f1557b5dc200f05539fe14  var/datastores/levin-phase-floor-05-r9-shard0001.sqlite
+b0d854be48357f25b46ee99e07e9418aad814dbcc49a3ff3b443dc3efff83a48  var/datastores/levin-phase-floor-05-r9-shard0002.sqlite
+c95b0bd7ecc6277f11d6f1d6540db0324b53d7536b07b16af56482b127bc8e11  var/datastores/levin-phase-floor-05-r9-shard0003.sqlite
+cfba7ac4c218b7c25f0fef9114537b556530b5f71c6b96c6699818cc5fb7d2de  var/datastores/levin-phase-floor-05-r9.sqlite
+-rw-r--r-- 1 ds283 staff 24031232 Oct 26 01:50 var/datastores/levin-phase-floor-05-r9-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff 24244224 Oct 26 01:50 var/datastores/levin-phase-floor-05-r9-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff  1077248 Oct 26 01:47 var/datastores/levin-phase-floor-05-r9-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff 23638016 Oct 26 01:50 var/datastores/levin-phase-floor-05-r9-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff    36864 Oct 26 01:47 var/datastores/levin-phase-floor-05-r9.sqlite

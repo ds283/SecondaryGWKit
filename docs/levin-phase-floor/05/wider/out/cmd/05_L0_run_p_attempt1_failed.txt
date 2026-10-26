@@ -1,0 +1,18 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/worker.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0/spec.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:56:46Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py", line 459, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py", line 255, in main
+    ev = tree_evidence(tree_name)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py", line 205, in tree_evidence
+    "ComputeTargets.QuadSource": qs.__file__,
+                                 ^^^^^^^^^^^
+AttributeError: type object 'QuadSource' has no attribute '__file__'. Did you mean: '__le__'?
+# ----
+# end 2026-10-26T01:56:47Z
+# exit 1

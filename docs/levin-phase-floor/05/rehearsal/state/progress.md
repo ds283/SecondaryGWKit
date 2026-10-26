@@ -1,0 +1,14 @@
+# Rehearsal agent state (for resumption)
+- Turn 1 (01:46-01:48Z): gate re-checked (out/gate.txt); lock acquired exit 0; R9 launched from worktree.
+  - run levin-phase-floor-05-r9-parent-20261026T014729, sh 47763, driver 47770, set-pid 47770 exit 0.
+  - launch deviations to record: PYTHONDONTWRITEBYTECODE=1 for R9 (keep worktree unwritten); --job-name levin-phase-floor-05 shared by R9 and R10 (R8 used handover-12); absolute --database paths.
+  - marker for find -newer over worktree: state/r9_launch_marker
+- Next: turn 2 check R9 status.json (done, fingerprint == 1b332ffa...), worktree unwritten (git status --short --ignored; find -newer marker), then launch R10 from main checkout (slug r10-reanchor), set-pid.
+- Turn 2 (01:50-01:52Z): R9 done exit 0, fingerprint 1b332ffa (all 21 class digests = R8's), worktree unwritten; ray-processes empty; R9 store hashed (state/r9_store_sha256_after_build.txt).
+  - R10 launched from main checkout: run levin-phase-floor-05-r10-reanchor-20261026T015120, sh 49749, driver 49752, set-pid exit 0. No PYTHONDONTWRITEBYTECODE for R10 (R8's form).
+- Next: turn 3 = R10 status check, store hashes, store_value_diff (--json and text), tabulation script, readers on R10, ray-processes, release, records (log.md, verification.md, issues.md).
+- Turn 3 (01:54-02:05Z): R10 done exit 0, fingerprint 1b332ffa (classes dict == R9's). store_value_diff exit 1 (json+text). Outside QSI: 9 classes differ, ALL in timing columns, labels (timestamp), GkSource.parents_digest (serial hash), GkWKB rho_reuse (25 rows, memo warmness); every value table identical; no only-in-one/unmatched. Stores unchanged by comparison.
+  - STOPPED: asked orchestrator whether these count as section 8's stop. Lock still HELD (owner 49752 dead, no Ray procs).
+  - Pending on answer: QSI tabulation script (scripts/), readers on R10 with hashes, ray-processes, release, records (log.md, verification.md, issues.md).
+  - Deviation to record: lock status look made inside a compound command (UNINTENDED DRIFT), repeated correctly.
+- Turn 3 resumed (02:05-02:12Z): user ruled section 8 not to apply to the four column kinds; tabulation, readers (exit 0, store identical), ray-processes empty, release exit 0, records written. DONE.

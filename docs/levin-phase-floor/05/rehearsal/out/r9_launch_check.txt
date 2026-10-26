@@ -1,0 +1,58 @@
+=== R9 one check, 2026-10-26T01:47:42Z
+## lock 2 (separate command, before this check): set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 47770 >> out/lock.log
+$ ./venv/bin/python -m runregistrykit list | head -3
+   RUN                                              STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05-r9-parent-20261026T014729   running           -      14s  levin-phase-floor prompt 05, R9 on the Mac Studio (mps026298; tree e648951 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951, the parent of the code commit 120fdfe; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight t
+   levin-phase-floor-04-remove-20261025T231110      done          28/28   2h 36m  levin-phase-floor prompt 04 on the Mac Studio (mps026298; Python 3.13.16): remove the floor. The code runs from the git worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf04-98e68d3 at 98e68d3e1b60e6de4378b7d9aded3a120d6088a9 (98e68d3, the tree prompt 03 ran at; this manifest's git_head is the main checkout's, wh
+run dir: var/runs/levin-phase-floor-05-r9-parent-20261026T014729
+$ status.json (head)
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T01:47:42+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 47770,
+  "stage": "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+$ head -20 launch log
+** quadsource_atol_sweep --build: registered as levin-phase-floor-05-r9-parent-20261026T014729
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-r9-parent-20261026T014729/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.sqlite', '--job-name', 'levin-phase-floor-05', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-10-26 01:47:35,773	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=47876)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=47876)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=47876)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=47876)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=47876)[0m |  present-day energy density = 8.6e-24 g/m^3
+$ grep -c Traceback launch log
+0
+$ lsof -a -d cwd -p 47770
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  47770 ds283  cwd    DIR   1,13     1120 1226226617 /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951
+$ manifest git_head, cwd, script
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951",
+  "git_dirty": false,
+  "git_head": "e6489519ee662434d1f8e430e1c172246678ac8c",
+  "results": "var/datastores/levin-phase-floor-05-r9.sqlite",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/RunDrivers/quadsource_atol_sweep.py",
+  "script_sha256": "5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b",
+$ lsof -a -d cwd -p 47876   (the Datastore actor named in the launch log)
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  47876 ds283  cwd    DIR   1,13     1120 1226226617 /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951

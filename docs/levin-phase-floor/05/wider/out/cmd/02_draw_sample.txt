@@ -1,0 +1,80 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/draw_sample.py state/sample.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:52:16Z
+# ----
+# levin-phase-floor 05 section 6: the rows
+# written 2026-10-26T01:52:16Z on mps026298.phys.susx.ac.uk
+# script draw_sample.py sha256 d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 HEAD e6489519ee662434d1f8e430e1c172246678ac8c (status --short: empty)
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-01/out/groups_01.csv sha256 a8eacc91e1bef0be91c0dec596369b664ff366b8c9a97080edec4b1fbbb186d2
+# census rows (distinct (shard, serial)): 6791
+
+== depth-20 cells: band x class, up to 3 rows each
+   low  G+r : 108 candidates, 4 distinct k; taken 3
+   low  G-r : 15 candidates, 4 distinct k; taken 3
+   low  G   : 131 candidates, 5 distinct k; taken 3
+   low  Gqr : 248 candidates, 7 distinct k; taken 3
+   mid  G+r : 249 candidates, 6 distinct k; taken 3
+   mid  G-r : 64 candidates, 6 distinct k; taken 3
+   mid  G   : 44 candidates, 5 distinct k; taken 3
+   mid  Gqr : 535 candidates, 7 distinct k; taken 3
+
+== controls by band: depth < 20, compute_time <= 60 s, a group with G; 2 each
+   low : 362 candidates; taken 2
+   mid : 1167 candidates; taken 2
+   seam: 2582 candidates; taken 2
+
+== controls with NULL depth, from the store (mode=ro): population 9280 rows at (1e-32, 1e-07); NULL depth 2489; with compute_time <= 60 s 2489
+   read /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+   read /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+   read /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+   read /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+
+== the sample: 31 depth-20 rows, 8 controls
+   #  name                      (shard, serial)  band  class top-group  depth  compute_time  k  q  r  z_response
+   0  low-G+r-1                 (2, 38302)  low   G+r  G+r     20        0.7359  3e+08  9.703e+06  3e+08  2.091
+   1  low-G+r-2                 (1, 38740)  low   G+r  G+r     20        4.2744  9.558e+07  3.045e+07  9.558e+07  3.63427
+   2  low-G+r-3                 (0, 35106)  low   G+r  G+r     20       10.4929  3.139e+05  1e+05  3.139e+05  0.131835
+   3  low-G-r-1                 (1, 34844)  low   G-r  G-r     20        3.3060  9.558e+07  3.045e+07  9.558e+07  2.75667
+   4  low-G-r-2                 (0, 38940)  low   G-r  G-r     20        4.5972  3.139e+05  1e+05  3.139e+05  2.75667
+   5  low-G-r-3                 (1,  2205)  low   G-r  G-r     20      130.4849  9.851e+05  3.139e+05  9.851e+05  6.31658
+   6  low-G-1                   (3, 38376)  low   G    G       20        1.1332  1e+05  1e+05  1e+05  0.692189
+   7  low-G-2                   (0, 38989)  low   G    G       20        2.1422  3.139e+05  3.139e+05  3.139e+05  0.229138
+   8  low-G-3                   (1,  2114)  low   G    G       20       23.3012  9.851e+05  3.045e+07  3.045e+07  6.31658
+   9  low-Gqr-1                 (0, 14159)  low   Gqr  G+q+r   20        0.4492  3.139e+05  3e+08  3e+08  6.31658
+  10  low-Gqr-2                 (1,  2117)  low   Gqr  G+q+r   20        0.5735  9.851e+05  9.558e+07  9.558e+07  3.63427
+  11  low-Gqr-3                 (3, 34990)  low   Gqr  G-q-r   20        0.5743  9.703e+06  9.558e+07  9.558e+07  3.63427
+  12  mid-G+r-1                 (1,  1835)  mid   G+r  G+r     20        0.5363  9.558e+07  3.139e+05  9.558e+07  3641
+  13  mid-G+r-2                 (0, 12900)  mid   G+r  G+r     20        0.5934  3.045e+07  1e+05  3.045e+07  10998.9
+  14  mid-G+r-3                 (3, 37328)  mid   G+r  G+r     20        0.8666  9.703e+06  1e+05  9.703e+06  3641
+  15  mid-G-r-1                 (1,  2050)  mid   G-r  G-r     20        0.4261  9.558e+07  9.851e+05  9.558e+07  174.127
+  16  mid-G-r-2                 (1, 35359)  mid   G-r  G-r     20        1.0278  9.851e+05  1e+05  9.851e+05  57748.7
+  17  mid-G-r-3                 (3, 34356)  mid   G-r  G-r     20        1.0848  9.703e+06  3.139e+05  9.703e+06  76133.2
+  18  mid-G-1                   (3, 34798)  mid   G    G       20        0.8290  1e+05  3.139e+05  3.139e+05  43.7227
+  19  mid-G-2                   (2, 34727)  mid   G    G       20        0.9544  3.092e+06  3.045e+07  3.045e+07  75.9925
+  20  mid-G-3                   (0, 13767)  mid   G    G       20        1.0314  3.139e+05  9.703e+06  9.703e+06  100.185
+  21  mid-Gqr-1                 (0,  2000)  mid   Gqr  G-q-r   20        0.4341  3.139e+05  9.703e+06  9.703e+06  174.127
+  22  mid-Gqr-2                 (1,  1837)  mid   Gqr  G-q-r   20        0.4538  9.851e+05  9.703e+06  9.703e+06  4800.13
+  23  mid-Gqr-3                 (3, 38016)  mid   Gqr  G-q-r   20        0.4710  1e+05  3e+08  3e+08  25.1561
+  24  R1                        (2, 37527)  mid   G+r  G+r     20      199.8630  3.092e+06  1e+05  3.092e+06  33.1646
+  25  R2                        (0,  1797)  mid   G+r  G+r     20      220.4081  3.045e+07  3.092e+06  3.045e+07  302.644
+  26  R3                        (1, 37670)  mid   G+r  G+r     20      239.7914  9.558e+07  9.851e+05  9.558e+07  10.9786
+  27  R4                        (2, 37720)  mid   G-r  G-r     20      355.2445  3.092e+06  1e+05  3.092e+06  14.4737
+  28  R5                        (0, 37966)  mid   G-r  G-r     20      199.7166  3.045e+07  3.092e+06  3.045e+07  174.127
+  29  R6                        (2, 34728)  mid   G    G       20      134.3987  3.092e+06  3.092e+06  3.092e+06  25.1561
+  30  R7                        (2, 34820)  mid   Gqr  G+q+r   20      149.8323  3.092e+06  3.092e+06  3.092e+06  14.4737
+  31  ctrl-low-1                (2,  2095)  low   G    G       3         0.1442  3e+08  3.092e+06  3e+08  8.32749
+  32  ctrl-low-2                (2,  2184)  low   G    G       3         0.1794  3.092e+06  3e+08  3e+08  2.75667
+  33  ctrl-mid-1                (2, 36994)  mid   G    G       3         0.1211  3e+08  9.703e+06  3e+08  693.47
+  34  ctrl-mid-2                (0, 37208)  mid   G    G       1         0.1361  3.045e+07  3e+08  3e+08  2761.78
+  35  ctrl-seam-1               (2, 33120)  seam  G    G       1         0.0425  3e+08  1e+05  3e+08  2.30981e+12
+  36  ctrl-seam-2               (1, 20495)  seam  G    G       9         0.0906  9.558e+07  3.139e+05  9.558e+07  5.79984e+11
+  37  ctrl-NULL-1               (3,   452)  seam  None None    None      0.0207  1e+05  1e+05  1e+05  2.10782e+13
+  38  ctrl-NULL-2               (1, 20111)  seam  None None    None      0.0213  9.851e+05  1e+05  9.851e+05  1.10669e+14
+
+L0 rows: depth-20 low-G+r-1; control ctrl-low-1
+# ----
+# end 2026-10-26T01:52:17Z
+# exit 0

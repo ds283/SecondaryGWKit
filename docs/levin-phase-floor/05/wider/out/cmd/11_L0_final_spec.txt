@@ -1,0 +1,57 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/l0.py spec /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0_final
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:59:52Z
+# ----
+{
+ "tree": "p",
+ "units": [
+  {
+   "uid": "L0-p-1e-7-low-G+r-1-run1",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null
+  },
+  {
+   "uid": "L0-p-1e-7-low-G+r-1-run2",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null
+  },
+  {
+   "uid": "L0-p-1e-7-ctrl-low-1-run1",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null
+  },
+  {
+   "uid": "L0-p-1e-7-ctrl-low-1-run2",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0_final",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0_final/ledger.jsonl",
+ "pickle_regions": true
+}
+# ----
+# end 2026-10-26T01:59:52Z
+# exit 0

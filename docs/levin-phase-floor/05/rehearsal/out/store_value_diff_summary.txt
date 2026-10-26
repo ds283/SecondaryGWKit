@@ -1,0 +1,62 @@
+not_compared: [] identical: False
+version: identical=True rows identical=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+store_tag: identical=True rows identical=10 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+redshift: identical=True rows identical=1159 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+wavenumber: identical=True rows identical=3 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+tolerance: identical=True rows identical=7 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+LambdaCDM: identical=True rows identical=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+QCD_Cosmology: identical=True rows identical=1 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+IntegrationSolver: identical=True rows identical=7 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+GkSourcePolicy: identical=True rows identical=2 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+QuadSourcePolicy: identical=True rows identical=2 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+wavenumber_exit_time: identical=False rows identical=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col compute_time {"count": 3, "max_abs_delta": 3.095786087214947e-05, "max_rel_delta": 0.1494942203843183}
+BackgroundModel: identical=False rows identical=0 differ=1 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col compute_time {"count": 1, "max_abs_delta": 0.004466249607503414, "max_rel_delta": 0.06282035299298956}
+    col max_RHS_time {"count": 1, "max_abs_delta": 3.341119736433029e-07, "max_rel_delta": 0.11621315192743764}
+    col mean_RHS_time {"count": 1, "max_abs_delta": 6.464267365106868e-09, "max_rel_delta": 0.025521622292611824}
+TkNumericIntegration: identical=False rows identical=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col compute_time {"count": 3, "max_abs_delta": 0.0013605409767478704, "max_rel_delta": 0.01631799804523448}
+    col label {"count": 3}
+    col max_RHS_time {"count": 3, "max_abs_delta": 0.00022354302927851677, "max_rel_delta": 0.11638828404894633}
+    col mean_RHS_time {"count": 3, "max_abs_delta": 5.277572811013354e-08, "max_rel_delta": 0.022119047848494465}
+    col min_RHS_time {"count": 3, "max_abs_delta": 4.1676685214042664e-08, "max_rel_delta": 0.020929955999524318}
+TkWKBIntegration: identical=False rows identical=0 differ=3 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col label {"count": 3}
+    col stage_1_compute_time {"count": 3, "max_abs_delta": 0.00051837507635355, "max_rel_delta": 0.01610407146276452}
+GkNumericIntegration: identical=False rows identical=0 differ=1368 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col compute_time {"count": 1368, "max_abs_delta": 0.1125635418575257, "max_rel_delta": 0.9916983188512586}
+    col label {"count": 1368}
+    col max_RHS_time {"count": 1368, "max_abs_delta": 0.026898500276729465, "max_rel_delta": 7.3858691168221995}
+    col mean_RHS_time {"count": 1368, "max_abs_delta": 4.324205310941972e-06, "max_rel_delta": 1.1724038738382894}
+    col min_RHS_time {"count": 1070, "max_abs_delta": 8.312053978443146e-08, "max_rel_delta": 0.055262340887923006}
+GkWKBIntegration: identical=False rows identical=0 differ=3477 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col label {"count": 3477}
+    col metadata {"count": 25, "json_keys": {"rho_evals": 25, "rho_reused": 25}}
+    col stage_1_RHS_evaluations {"count": 25}
+    col stage_1_compute_time {"count": 3474, "max_abs_delta": 0.05346950003877282, "max_rel_delta": 8.072862873838117}
+GkSource: identical=False rows identical=0 differ=291 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col label {"count": 291}
+    col parents_digest {"count": 291}
+GkSourcePolicyData: identical=True rows identical=291 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+QuadSource: identical=False rows identical=0 differ=6 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col compute_time {"count": 6, "max_abs_delta": 0.0013345840852707624, "max_rel_delta": 0.39163687823321053}
+    col label {"count": 6}
+QuadSourceIntegral: identical=False rows identical=0 differ=864 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]
+    col WKB_Levin {"count": 542, "max_abs_delta": 4.3456640124322836e-26, "max_rel_delta": 4.032690067126834e-05}
+    col WKB_Levin_elapsed {"count": 573, "max_abs_delta": 0.12266466463916004, "max_rel_delta": 0.9419986249620127}
+    col WKB_Levin_evaluations {"count": 39}
+    col WKB_Levin_max_depth {"count": 15}
+    col WKB_Levin_num_regions {"count": 42}
+    col WKB_Levin_simple_regions {"count": 42}
+    col analytic_compute_time {"count": 864, "max_abs_delta": 0.07308995816856623, "max_rel_delta": 3.215872281162011}
+    col compute_time {"count": 864, "max_abs_delta": 0.12136466684751213, "max_rel_delta": 0.7761248852188457}
+    col label {"count": 864}
+    col metadata {"count": 864, "json_keys": {"WKB_Levin.abserr": 544, "WKB_Levin.subintervals[0].abserr": 543, "WKB_Levin.subintervals[0].converged": 3, "WKB_Levin.subintervals[0].groups[0].abserr": 543, "WKB_Levin.subintervals[0].groups[0].converged": 3, "WKB_Levin.subintervals[0].groups[0].elapsed": 573, "WKB_Lev
+    col numeric_quad_compute_time {"count": 396, "max_abs_delta": 0.004665875807404518, "max_rel_delta": 5.757060250750863}
+    col numeric_quad_max_RHS_time {"count": 391, "max_abs_delta": 0.0022789998911321163, "max_rel_delta": 34.30163868993503}
+    col numeric_quad_mean_RHS_time {"count": 396, "max_abs_delta": 2.798217437451794e-05, "max_rel_delta": 6.529225650896146}
+    col numeric_quad_min_RHS_time {"count": 353, "max_abs_delta": 8.083879947662354e-06, "max_rel_delta": 2.0861623505377636}
+    col total {"count": 542, "max_abs_delta": 4.3456640124322836e-26, "max_rel_delta": 4.032690067126834e-05}
+    col total_abserr {"count": 544, "max_abs_delta": 2.908639798334192e-26, "max_rel_delta": 0.30944114518959825}
+OneLoopIntegral: identical=True rows identical=0 differ=0 onlyA=0 onlyB=0 unmatched=0 unresolvable=[]

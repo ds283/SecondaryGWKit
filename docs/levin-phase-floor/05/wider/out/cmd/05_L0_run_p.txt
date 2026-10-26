@@ -1,0 +1,41 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/worker.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/L0/spec.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T01:56:59Z
+# ----
+# worker p evidence {"tree": "p", "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951", "expected_sha": "e6489519ee662434d1f8e430e1c172246678ac8c", "head": "e6489519ee662434d1f8e430e1c172246678ac8c", "status_short": "", "files": {"ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/__init__.py", "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py", "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSource.py", "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSourceIntegral.py", "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/GkSourcePolicyData.py", "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/StoreFixtures/__init__.py", "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/main.py", "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py"}, "all_in_tree": true, "in_tree": {"ComputeTargets": true, "ComputeTargets.primitive_phase": true, "ComputeTargets.QuadSource": true, "ComputeTargets.QuadSourceIntegral": true, "ComputeTargets.GkSourcePolicyData": true, "StoreFixtures": true, "main.py": true, "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true}, "PrimitivePhase_has_exact_remainder": false, "build_phase_source_mentions_exact_remainder": false, "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951", "PYTHONDONTWRITEBYTECODE": "1", "dont_write_bytecode": true, "OMP_NUM_THREADS": "1", "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider", "pid": 52836, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "scripts_sha256": {"worker.py": "2c84be78181dd293b36755fb903d31052e291d75b872b15fdcf76b86c2dd79db", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279", "rebuild.py": "0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22", "prov.py": "e8579509f9b7c278c78500de4627a221875293322c2f42bacd30861ea36fbc66"}}
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1740_8d1d43b6, response grid ResponseRedshiftGrid_145_c51d43ac
+   rebuild: largest source k = 3e+08/Mpc, latest tau = 13728 (for z=0.1), largest x=4.1184e+12, largest x +7.5% clearance=4.4273e+12
+
+== unit L0-p-1e-7-low-G+r-1-run1 (low-G+r-1: shard 2, serial 38302)
+unit L0-p-1e-7-low-G+r-1-run1: done; wall 0.271 s; budget None; counts {'G': 528, 'T': 168, 'other': 0}; flags {'T exact_remainder=None': 168, 'G exact_remainder=None': 528}; total 5.393492219208038e-31 abserr 1.8120785683390897e-33 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}; QuadSource L0a True
+
+== unit L0-p-1e-7-low-G+r-1-run2 (low-G+r-1: shard 2, serial 38302)
+unit L0-p-1e-7-low-G+r-1-run2: done; wall 0.273 s; budget None; counts {'G': 528, 'T': 168, 'other': 0}; flags {'T exact_remainder=None': 168, 'G exact_remainder=None': 528}; total 5.393492219208038e-31 abserr 1.8120785683390897e-33 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}; QuadSource L0a True
+
+== unit L0-p-1e-7-ctrl-low-1-run1 (ctrl-low-1: shard 2, serial 2095)
+unit L0-p-1e-7-ctrl-low-1-run1: done; wall 0.186 s; budget None; counts {'G': 426, 'T': 66, 'other': 0}; flags {'T exact_remainder=None': 66, 'G exact_remainder=None': 426}; total -3.821395644371439e-31 abserr 2.247692961814246e-33 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}; QuadSource L0a True
+
+== unit L0-p-1e-7-ctrl-low-1-run2 (ctrl-low-1: shard 2, serial 2095)
+unit L0-p-1e-7-ctrl-low-1-run2: done; wall 0.185 s; budget None; counts {'G': 426, 'T': 66, 'other': 0}; flags {'T exact_remainder=None': 66, 'G exact_remainder=None': 426}; total -3.821395644371439e-31 abserr 2.247692961814246e-33 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}; QuadSource L0a True
+
+# ----
+# end 2026-10-26T01:57:04Z
+# exit 0

@@ -1,0 +1,30 @@
+### main
+53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+### worktree
+e6489519ee662434d1f8e430e1c172246678ac8c
+### worktree --ignored
+### find worktree -newer marker (excl __pycache__)
+### find worktree -newer marker (incl __pycache__)
+### find var -newer marker, top-level groups
+      1 var//
+      1 var/datastores/
+      1 var/datastores/levin-phase-floor-05-r10-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-05-r10-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-05-r10-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-05-r10-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-05-r10.sqlite
+      1 var/datastores/levin-phase-floor-05-r9-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-05-r9-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-05-r9-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-05-r9-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-05-r9.sqlite
+      1 var/levin-phase-floor-05/
+   3293 var/levin-phase-floor-05/rehearsal
+      8 var/levin-phase-floor-05/review
+    102 var/levin-phase-floor-05/wider
+      1 var/runs/
+      5 var/runs/levin-phase-floor-05-r10-reanchor-20261026T015120
+      1 var/runs/levin-phase-floor-05-r10.launch.log
+      5 var/runs/levin-phase-floor-05-r9-parent-20261026T014729
+      1 var/runs/levin-phase-floor-05-r9.launch.log
+    123 var/runs/levin-phase-floor-05-wider-20261026T020005

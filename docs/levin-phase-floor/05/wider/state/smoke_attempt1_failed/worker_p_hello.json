@@ -1,0 +1,49 @@
+{
+ "evidence": {
+  "tree": "p",
+  "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951",
+  "expected_sha": "e6489519ee662434d1f8e430e1c172246678ac8c",
+  "head": "e6489519ee662434d1f8e430e1c172246678ac8c",
+  "status_short": "",
+  "files": {
+   "ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/__init__.py",
+   "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSource.py",
+   "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/QuadSourceIntegral.py",
+   "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/GkSourcePolicyData.py",
+   "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/StoreFixtures/__init__.py",
+   "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/main.py",
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/ComputeTargets/primitive_phase.py"
+  },
+  "all_in_tree": true,
+  "in_tree": {
+   "ComputeTargets": true,
+   "ComputeTargets.primitive_phase": true,
+   "ComputeTargets.QuadSource": true,
+   "ComputeTargets.QuadSourceIntegral": true,
+   "ComputeTargets.GkSourcePolicyData": true,
+   "StoreFixtures": true,
+   "main.py": true,
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true
+  },
+  "PrimitivePhase_has_exact_remainder": false,
+  "build_phase_source_mentions_exact_remainder": false,
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "dont_write_bytecode": true,
+  "OMP_NUM_THREADS": "1",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider",
+  "pid": 54025,
+  "host": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "scripts_sha256": {
+   "worker.py": "2c84be78181dd293b36755fb903d31052e291d75b872b15fdcf76b86c2dd79db",
+   "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b",
+   "harness.py": "be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279",
+   "rebuild.py": "0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22",
+   "prov.py": "e8579509f9b7c278c78500de4627a221875293322c2f42bacd30861ea36fbc66",
+   "run_wider.py": "491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906",
+   "launch.py": "d8ac0dc3ebf2f534811ede5b440108cb77d7afc4dd8dbd113f64df026bce2bb2"
+  }
+ }
+}
