@@ -43,6 +43,12 @@ that hold across all of them:
 6. **Verification documents are additive.** When a re-run supersedes a measurement, add a new
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
+7. **A store fingerprint certifies what a store holds, not its values.** It records identities,
+   tags and value-row counts (`datastorekit.store_inventory`). A rehearsal "equal to the reference"
+   proves no computed value. **A prompt that changes how values are computed certifies them
+   directly:** a rehearsal pair, one before the change and one after, compared by physical
+   identity with `tools/store_value_diff.py`. Every value outside the classes the change is meant to touch must be
+   bit-identical, and the differences in those classes are tabulated.
 
 ## The datastore layer is `datastorekit`; the work queue is `raypoolkit`; the registry is `runregistrykit`
 

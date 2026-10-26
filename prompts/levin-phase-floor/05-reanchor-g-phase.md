@@ -6,11 +6,13 @@
 - **Q2:** layer 1(a), with the large constant reduced against the true $2\pi$ and a wider
   re-measurement;
 - **Q3:** it lands here, consumer-only, as early as possible;
-- **Order:** the fingerprint fix runs in parallel, so this prompt certifies its values directly.
+- **Order:** no fingerprint change. The fingerprint certifies identities, tags and value-row counts,
+  never values, so this prompt certifies its values directly (`CLAUDE.md`, campaign conventions
+  rule 7) with a tool it adds, `tools/store_value_diff.py` (§3A).
 
 **Where it runs:** in three parts.
-- **§1–§4, the code:** on the laptop, by a fresh-context subagent, in the main checkout at `HEAD`.
-  One commit.
+- **§1–§4, the code and the comparison tool:** on the laptop, by a fresh-context subagent, in the
+  main checkout at `HEAD`. One commit.
 - **§5, rehearsals R9 and R10:** on the Mac Studio, orchestrated there, after the code commit is
   pushed, under the lock.
 - **§6, the wider re-measurement:** on the Mac Studio, Ray-free, reading A3 v2. It may run beside
@@ -173,6 +175,48 @@ and no datastore.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
+## 3A. The comparison tool, `tools/store_value_diff.py`
+
+`CLAUDE.md`'s campaign conventions rule 7 asks for a tool, and this prompt is the first that needs
+it. It compares the **values** of two closed stores, matched by **physical identity**: the
+inventory key `datastorekit.store_inventory` builds for each row, with no serial in it. It never
+matches by serial. This repository's code, and no change to `datastorekit`.
+- **Read only.** It opens both stores as the readers and `store fingerprint` do, with no Ray.
+- **What is compared, per class:**
+  - every column of the row itself, except its serial, its timestamp and the columns that name
+    another row. A column naming another row is compared through that row's identity, which the
+    key already holds;
+  - every row of each of its value tables, matched by its parent's identity and by the identity
+    of every other row it names (a value row's redshift, for example), never by serial.
+- **How values are compared:** floats bit for bit (`float.hex`), with `NaN` equal to `NaN` and
+  `+inf` to `+inf`; JSON columns canonicalised as JSON; everything else by `==`.
+- **What it reports:**
+  - per class: rows identical, rows that differ, and rows present in one store only;
+  - per differing column: the count, and for floats the largest $|\Delta|$ and $|\Delta|/|a|$;
+  - for a JSON column, the keys that differ.
+
+  It writes text for a person and, with `--json`, a machine-readable form. It exits 0 when the
+  stores are value-identical and 1 otherwise. `--classes` restricts the classes it compares.
+- **A class whose value rows cannot be matched by identity** is reported as such, by name. It is
+  never compared by serial instead. If a production class is such a class, stop and ask.
+- Run as `PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff A.sqlite B.sqlite`.
+
+**Its tests**, in `tools/tests/test_store_value_diff.py`, on stores built by `StoreFixtures`
+(`real_store_fixtures`), with no Ray:
+- **(t1)** two builds of the same fixture are reported identical, and the exit code is 0;
+- **(t2)** one float in a copy changed by one ulp, in a row's own column and then in a value-table
+  row, is reported precisely: class, identity, column and $\Delta$;
+- **(t3)** a row deleted from a copy is reported as present in one store only;
+- **(t4)** a copy whose serials are renumbered, with the same identities, is reported identical.
+  This is the test that it never matches by serial;
+- **(t5)** a JSON column with the same content in a different key order is identical, and a changed
+  value in it is reported by key.
+
+**One more deliberate breakage, (iv):** match by serial instead of identity. Test (t4) must fail.
+Record it in the log, then revert it.
+
+The `tools` root is one of the seven; its count rises by these tests.
+
 ## 4. Records of the code
 
 - `black` on the files changed.
@@ -184,9 +228,8 @@ and no datastore.
 ## 5. Rehearsals R9 and R10 — on the Mac Studio, after the code commit is pushed
 
 Orchestrated there, as `handover` 12's R8 was, with the records under `var/levin-phase-floor-05/`.
-**The fingerprint cannot see a `QuadSourceIntegral` value**
-(`[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]`), so this pair is compared value by
-value.
+**A fingerprint certifies identities, tags and value-row counts, never values** (`CLAUDE.md`,
+campaign conventions rule 7). So this pair is compared value by value, with §3A's tool.
 1. **The lock:** `acquire`, then `set-pid` at each launch, and `release` after the readers. Each
    lock command is a shell command of its own (`CLAUDE.md`).
 2. **R9** is at the code commit's parent, in a worktree. It runs `RunDrivers/quadsource_atol_sweep.py
@@ -194,15 +237,15 @@ value.
    `r9-parent`). Its fingerprint must equal R8's, `1b332ffa…`: it reproduces R8 at the same code.
 3. **R10** is the same at the code commit (slug `r10-reanchor`). Its fingerprint must also equal
    `1b332ffa…`, because identities and counts are unchanged.
-4. **The value comparison**, read-only, by a script of your own in `scripts/`.
-   - Match rows by physical identity: the inventory key that `datastorekit.store_inventory` builds.
-     If the two stores' serial-to-identity maps are equal, a comparison by serial is the same thing,
-     and you must show that they are equal.
-   - **Every column of every row and every value-table row, in every class other than
-     `QuadSourceIntegral`, is bit-identical** (`float.hex`, JSON canonicalised).
-   - In `QuadSourceIntegral`, tabulate per row $|\Delta{\rm total}|/|{\rm total}|$ and
-     $|\Delta{\rm total}|/$`total_abserr`, the changes in `total_converged`, regions and maximum
-     depth, and which metadata keys differ.
+4. **The value comparison:** `python -m tools.store_value_diff` on R9 and R10, at the code commit,
+   with `--json`, saved to `out/`.
+   - **Every class other than `QuadSourceIntegral` is reported value-identical**, with no row in
+     one store only.
+   - In `QuadSourceIntegral`, from the tool's JSON and a short script of your own in `scripts/`,
+     tabulate per row:
+     - $|\Delta{\rm total}|/|{\rm total}|$ and $|\Delta{\rm total}|/$`total_abserr`;
+     - the changes in `total_converged`, regions and maximum depth;
+     - which metadata keys differ.
 5. **The readers** (`docs/dk-and-rpk-migration/rehearsal/run_readers.sh`) on R10: every one exits 0,
    and the store is byte-identical before and after.
 6. **Release the lock.** `ray-processes --ray-temp-dir /tmp/ray-sgk` lists nothing.
@@ -273,7 +316,7 @@ group" is 03's definition: at least 10 regions at depth 18 or more, here under $
 
 ## 7. Acceptance
 
-1. §1–§3 as written, with every test passing, the three breakages caught and the seven roots
+1. §1–§3A as written, with every test passing, the four breakages caught and the seven roots
    rising only by the tests added.
 2. §5:
    - R9 and R10 both end `done` with fingerprint `1b332ffa…`;
@@ -297,6 +340,7 @@ group" is 03's definition: at least 10 regions at depth 18 or more, here under $
 - A seven-roots count falls.
 - R9 does not reproduce `1b332ffa…`, or R10 differs from it.
 - Any value outside `QuadSourceIntegral` differs between R9 and R10.
+- A production class's value rows cannot be matched by identity (§3A).
 - L0 fails, or `QuadSource` cannot be recomputed in-process without a production change.
 - Any store file changes.
 - The lock is held, or will not release.

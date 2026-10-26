@@ -742,56 +742,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `partition["handover"]` where the gaps were read, and correct the three comments. Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
 
-- **[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]** *(opened 2026-10-25 by prompt 12's
-  rehearsal R8, on the Mac Studio; opened on this board by the user's ruling on R8's review)* — B1
-  changed the stored integrals, and the store fingerprint shows no difference in
-  `QuadSourceIntegral`.
-  - **What was found.** `compare_with_recorded.py`, R8 against R3, reports one differing class,
-    `QuadSource`: its rows' value count, 3 more `QuadSourceValue` rows each. `QuadSourceIntegral`
-    has R3's digest (`8913eda5ce7b` in both). Yet on the one triple both readers' extracts hold,
-    63 of 96 `total`s differ from R4's (R3-equal) values, by up to 1.8e-03 of the row set's largest
-    $|{\rm total}|$, and all 864 rows carry B1's `partition.handover`.
-  - **Why.** Format 6's `inventory_spec()` for `QuadSourceIntegral`
-    (`ObjectFactories/QuadSourceIntegral.py:965`) is its identity only, parents and tags, with "no
-    validated flag and no value table", so it does not see `total`, `metadata` or the partition. Its
-    cross-shard `source` parent resolves to the `QuadSource` row's `reference_digest(key, tags)`,
-    which does not include that row's value count.
-  - **What it did here.** Prompt 12 §6.4 and §7.3 and the orchestrator note expected R8 to differ
-    in `QuadSourceIntegral` too. The user ruled that a `QuadSource`-only difference meets them
-    (log 12 §6, "The user's rulings").
-
-  **Impact:** a rehearsal that checks "equal to the reference fingerprint" cannot catch a
-  regression in `QuadSourceIntegral` values. A change to how integrals are computed, with
-  `QuadSource` unchanged, leaves the fingerprint equal; every R-rehearsal's "equal to `39809dca`"
-  certified the integrals' identities and counts, not their values. **Next step:** the likely fix
-  adds a value table to `QuadSourceIntegral`'s `inventory_spec`; a fingerprint change costs nothing
-  to make. **Assigned (2026-10-26):** to a prompt of this campaign, by the user at `levin-phase-floor`'s
-  gate G1. It must land, with a new rehearsal reference, before that campaign's layer 1 prompt
-  (05), which changes `QuadSourceIntegral` values and must be seen to. Measurement: [`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §5.3
-  and §5.4; [`docs/handover/b1/r8/issues.md`](../../docs/handover/b1/r8/issues.md). Indexed at
-  `docs/OPEN_ISSUES.md` §1.1.
-
-  **Narrowed (2026-10-26), and the next step above corrected: the gap is in `datastorekit`, and it
-  covers every class.**
-  - **What the fingerprint holds.** `datastorekit.store_inventory` (pinned `v0.5.0`) builds each
-    record from its identity (leaves and parent digests), its tags, its validated flag and a
-    **count** of its value-table rows. Its module docstring says the value tables are "counted …
-    and never listed", and that "a computed-values field can be added to `Record` later".
-  - **Why the next step was wrong.** A value table in `QuadSourceIntegral`'s `inventory_spec` would
-    add a row count, not a value.
-  - **The reach.** No class's computed values are in any fingerprint. Every rehearsal certified
-    "equal to the reference" for identities, tags and counts only. Where a value was certified, a
-    separate comparison did it, as B1's did.
-
-  **Assigned (2026-10-26), by the user at `levin-phase-floor`'s G1:**
-  - **The fix is DatastoreKit's.** A computed-values field on `Record`, declared per class, with
-    floats canonicalised bit-exactly. It is released there, and the pin is moved here in a commit of
-    its own (`CLAUDE.md`), followed by this repository's specs declaring their value columns and a
-    new rehearsal reference.
-  - **It is not on 05's path.** It must land **before the next production build**.
-    `levin-phase-floor` 05 goes ahead in parallel and certifies its own `QuadSourceIntegral` values
-    by a direct comparison.
-
 - **[03-gksource-policy-accepts-a-value-that-raises]** *(opened 2026-10-25 by prompt 03 (A3), from
   README §2 (o) item 1; indexed since 2026-09-19 as "none yet")* — `GkSourcePolicy` accepts
   `numeric_policy = "maximize-numeric"` (`MetadataConcepts/GkSourcePolicy.py:6`, checked at
@@ -884,6 +834,73 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 ---
 
 ## 4. Resolved issues
+
+Closed at `levin-phase-floor`'s gate G1, 2026-10-26:
+
+- **[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]** *(opened 2026-10-25 by prompt 12's
+  rehearsal R8, on the Mac Studio; opened on this board by the user's ruling on R8's review)* — B1
+  changed the stored integrals, and the store fingerprint shows no difference in
+  `QuadSourceIntegral`.
+  - **What was found.** `compare_with_recorded.py`, R8 against R3, reports one differing class,
+    `QuadSource`: its rows' value count, 3 more `QuadSourceValue` rows each. `QuadSourceIntegral`
+    has R3's digest (`8913eda5ce7b` in both). Yet on the one triple both readers' extracts hold,
+    63 of 96 `total`s differ from R4's (R3-equal) values, by up to 1.8e-03 of the row set's largest
+    $|{\rm total}|$, and all 864 rows carry B1's `partition.handover`.
+  - **Why.** Format 6's `inventory_spec()` for `QuadSourceIntegral`
+    (`ObjectFactories/QuadSourceIntegral.py:965`) is its identity only, parents and tags, with "no
+    validated flag and no value table", so it does not see `total`, `metadata` or the partition. Its
+    cross-shard `source` parent resolves to the `QuadSource` row's `reference_digest(key, tags)`,
+    which does not include that row's value count.
+  - **What it did here.** Prompt 12 §6.4 and §7.3 and the orchestrator note expected R8 to differ
+    in `QuadSourceIntegral` too. The user ruled that a `QuadSource`-only difference meets them
+    (log 12 §6, "The user's rulings").
+
+  **Impact:** a rehearsal that checks "equal to the reference fingerprint" cannot catch a
+  regression in `QuadSourceIntegral` values. A change to how integrals are computed, with
+  `QuadSource` unchanged, leaves the fingerprint equal; every R-rehearsal's "equal to `39809dca`"
+  certified the integrals' identities and counts, not their values. **Next step:** the likely fix
+  adds a value table to `QuadSourceIntegral`'s `inventory_spec`; a fingerprint change costs nothing
+  to make. **Assigned (2026-10-26):** to a prompt of this campaign, by the user at `levin-phase-floor`'s
+  gate G1. It must land, with a new rehearsal reference, before that campaign's layer 1 prompt
+  (05), which changes `QuadSourceIntegral` values and must be seen to. Measurement: [`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §5.3
+  and §5.4; [`docs/handover/b1/r8/issues.md`](../../docs/handover/b1/r8/issues.md). Indexed at
+  `docs/OPEN_ISSUES.md` §1.1.
+
+  **Narrowed (2026-10-26), and the next step above corrected: the gap is in `datastorekit`, and it
+  covers every class.**
+  - **What the fingerprint holds.** `datastorekit.store_inventory` (pinned `v0.5.0`) builds each
+    record from its identity (leaves and parent digests), its tags, its validated flag and a
+    **count** of its value-table rows. Its module docstring says the value tables are "counted …
+    and never listed", and that "a computed-values field can be added to `Record` later".
+  - **Why the next step was wrong.** A value table in `QuadSourceIntegral`'s `inventory_spec` would
+    add a row count, not a value.
+  - **The reach.** No class's computed values are in any fingerprint. Every rehearsal certified
+    "equal to the reference" for identities, tags and counts only. Where a value was certified, a
+    separate comparison did it, as B1's did.
+
+  **Assigned (2026-10-26), by the user at `levin-phase-floor`'s G1:**
+  - **The fix is DatastoreKit's.** A computed-values field on `Record`, declared per class, with
+    floats canonicalised bit-exactly. It is released there, and the pin is moved here in a commit of
+    its own (`CLAUDE.md`), followed by this repository's specs declaring their value columns and a
+    new rehearsal reference.
+  - **It is not on 05's path.** It must land **before the next production build**.
+    `levin-phase-floor` 05 goes ahead in parallel and certifies its own `QuadSourceIntegral` values
+    by a direct comparison.
+
+  **Closed 2026-10-26 as a misreading, by the user's decision.** The fingerprint never claimed
+  to hold computed values. `datastorekit.store_inventory` says so in its module docstring. What a
+  fingerprint certifies is what a store holds, which is what resume and integrity checks need:
+  its work items, their parents and tags, and how many value rows each has. So:
+  - **No DatastoreKit change is made.** The first assignment of the same day, to a computed-values
+    feature, is withdrawn as out of proportion.
+  - **What earlier records mean.** Wherever a record says a rehearsal reproduced or equalled a
+    reference fingerprint, it means identities, tags and value-row counts. Where values were
+    certified, a separate comparison did it, as B1's did. The records are left as written
+    (`CLAUDE.md`, campaign conventions rule 6).
+  - **The need is met by a standing rule and a tool.** A prompt that changes how values are
+    computed certifies them directly: a rehearsal pair, compared by physical identity (`CLAUDE.md`,
+    campaign conventions rule 7). The tool is `tools/store_value_diff.py`, which `levin-phase-floor` 05 adds and is the
+    first to use.
 
 Closed by `py313-venv` prompt 01, 2026-10-25:
 
