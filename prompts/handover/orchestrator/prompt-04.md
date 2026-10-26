@@ -1,186 +1,167 @@
-# Orchestrator — prompt 04, the $G_k$ phase decision test
+# Orchestrator — prompt 04 (A4), does A2's Levin cost growth survive production's phases?
 
-Read [`README.md`](README.md) in this directory first: it holds the rules that bind you.
-**You do not write code.**
+Read [`README.md`](README.md) in this directory first, and [`prompt-11.md`](prompt-11.md), whose
+arrangement this note reuses. **You do not write code.**
 
-**The prompt:** [`prompts/handover/04-gk-phase-decision-test.md`](../04-gk-phase-decision-test.md)
-**Board item:** A4 · **Closes:** nothing. It **narrows** two issues and decides whether A2's
-numbers stand.
+**The prompt:** [`prompts/handover/04-gk-phase-decision-test.md`](../04-gk-phase-decision-test.md),
+rewritten 2026-10-26 on the user's decision. **Board item:** A4 · **Closes:** nothing by itself.
+Its result goes to the user, who decides whether
+`[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` closes · **Model:** Opus, as the prompt
+recommends. You, the orchestrator, review on whatever model you were started with.
 
-**Refreshed 2026-10-25** with the prompt, which had never run. What changed: the agent works in a
-**worktree at `98e68d3`** on the laptop, not at `HEAD` (prompt header); it runs two reproduction
-cells beside the six; every cell records `max_depth`, the region count per group and the
-phase-limited count; the run is registered; and landing is a rebase, as B1's was. **The threshold
-is unchanged.**
+*(This note replaces the one written for the 2026-10-25 refresh, which dispatched A4 on the laptop
+in a worktree at `98e68d3` and never ran. That version is in the git history, at `f1a3888`.)*
 
-## 0. What makes this prompt unusual
+## 0. What makes this dispatch what it is
 
-It has exactly one failure mode that matters, and a green suite cannot detect it: **the agent
-choosing the threshold for "material" after it has seen the numbers.** Every other check here is
-routine. This one is not, and it is not a matter of the agent's good faith — by the time anyone
-writes a verdict they have already seen the result.
+**You run on the Mac Studio, as 11's orchestrator did.** You are a Claude Code session over the
+saved `MacStudio` SSH connection, in `/Users/ds283/Documents/Code/SecondaryGWKit`. You dispatch the
+executing agent **in that checkout**, wait on its run, review there, and **commit nothing**. The
+records commit is made on the laptop (§4).
 
-The prompt therefore fixes the threshold itself and forbids the agent to change it. Your job is to
-confirm the document carries it **verbatim** and that the verdict follows from it mechanically. If
-the document argues its way around the threshold, or restates it in softer words, that is a stop
-however reasonable the argument. The same goes for §2.1's new fields: they are **recorded beside**
-the verdict and must not become a third condition.
+**The run is long and Ray-free.** It has 60 cells, up to 4 at once, each with a 3-hour budget.
+Expect a few hours. Most of it is arm S and `q-smooth` at $10^6$, which A2 estimated at hours per
+cell. It takes no lock, so another Ray-free prompt, or a build that holds the lock, may share the
+host. Neither may move the checkout while A4 runs.
 
-The second thing to watch: **"no change" is the likely result and is a good one.** A2 already
-measured the representation term as flat in $x$ rather than growing like $h^4x/384$, which is weak
-evidence against contamination. An agent that returns "no material change" has done the job. Do not
-treat a null result as a thin deliverable.
-
-**It runs in parallel with two others** (the user, 2026-10-25): `handover` A3 and
-`levin-phase-floor` 04, both on the Mac Studio. Neither touches the laptop's files or its registry,
-and A4 touches nothing on the Mac Studio. The only contact is the board and `docs/OPEN_ISSUES.md`,
-which A3's bookkeeping commit also edits. Whichever lands second resolves the conflict by reading
-both sides.
-
----
+**Facts checked by the laptop orchestrator on 2026-10-26.** Pass them on.
+- **The Mac Studio**, read-only at 14:25 UTC:
+  - `handover-remedial` at `149c393` before the fast-forward, clean, one worktree;
+  - the registry holds 19 runs, all finished, and the lock is free;
+  - there is no `var/handover-04/`;
+  - `docs/handover/realistic_large_x.py` hashes `c1cd3598c23a…`, A2's;
+  - **A2's checkpoint is not on this host:** `var/runs/realistic_large_x_cells.jsonl` exists only
+    on the laptop. A2's curves are context only (prompt §1.1), and they are taken from
+    `REALISTIC-LARGE-X.md` Table 8 and the board's entry;
+  - 117 GiB free; the load is about 5.7–6.6 on 10 cores before A4.
+- **On the laptop, at `abca7e9`, by a scratch script that built objects and ran one cell:**
+  - `_ProductionPhaseGk(shape.k, w, case.z_resp, case.model, grid)` **builds** on the realistic
+    `Case`'s own $G$ grid for `together` at 980 (168 nodes, down to $z_{\rm response}$). `.phase`
+    is a `PrimitivePhase` with `exact_remainder` true, and `.old_phase` the same with it false.
+    So the prompt §2.1 fallback, building without the `phase_spline` its `super().__init__` makes,
+    was not needed there. It may be at other rungs;
+  - **`partition["handover"]`** holds `Tq` and `Tr`, each with `z_init`, `z_switch` and
+    `handover_continuity`. The sub-interval records hold `method`, `regime`, `z_max` and `z_min`,
+    and no clamp field;
+  - one cell as the realistic `Case` builds it at `HEAD`, which is arm S's $G$ with the fixture's
+    old $T$, took **20.5 s** for `together` at 980 (A2: 18.5 s).
+- **Shell.** Every command that takes arguments from a variable runs through `bash`, not zsh.
 
 ## 1. Before you dispatch
 
-1. **Confirm the branch and `HEAD`.** The campaign runs on **`handover-remedial`**. Record the SHA
-   of the dispatch commit (this note, committed and pushed); the agent must be told it and told that
-   `HEAD` is **not** its own.
-2. **The worktree.** `git worktree add -b handover-04-a4 ../SecondaryGWKit-handover-04 98e68d3`;
-   symlink `./venv` to the main checkout's (the common `info/exclude` already lists `venv`);
-   `git -C ../SecondaryGWKit-handover-04 status --short` is empty.
-3. **Take the baselines in the worktree** and record them: the seven roots, serially, at
-   `98e68d3`, into the session scratchpad. This prompt adds no test, so they are a **ceiling and a
-   floor**. (The 552 / 39 / 148 this note once carried were taken at `0d7c05c` and are stale.)
-   **The known flake** (`test_tk_wkb_phase … test_wall_time_per_object`) is re-run alone and
-   recorded; it is not a stop.
-4. **Record A2's checkpoint identity before anything runs**, in the main checkout:
-   ```bash
-   wc -l < var/runs/realistic_large_x_cells.jsonl        # expect 60
-   ./venv/bin/python -c "import json;print({json.loads(l)['script_sha256'][:12] for l in open('var/runs/realistic_large_x_cells.jsonl') if l.strip()})"
-   shasum -a 256 var/runs/realistic_large_x_cells.jsonl
-   ```
-   Expect 60 cells and the single script hash `c1cd3598c23a`. **Record all three.** The agent must
-   not modify this file; you check it afterwards. Confirm that the worktree's
-   `docs/handover/realistic_large_x.py` hashes to `c1cd3598…` too.
-5. **Take the comparison baseline yourself.** Recompute, from A2's checkpoint, the representation
-   term for the four `together` cells at $x_{\rm resp} = 10^7$ and $10^8$ and the two `q-smooth`
-   cells at $10^5$, together with `Levin_regions`, `integral_time`, `total` and the declared error
-   for each. The representation term is $N_{\rm realistic} - N_{\rm exact}$ at fixed seam and $x$,
-   computed through the block's common reference so it cancels. **Keep your numbers.** Checking the
-   agent's "before" column against the agent's own arithmetic is not a check — this is the same
-   reason prompt 02's control table was re-taken independently.
-6. **The registry and the load.** `runregistrykit list` in the main checkout shows nothing
-   `running` or stale. Record `uptime`. If anything heavy is running on the laptop, see §2's warning
-   about timings.
-7. **The marker:** `touch` a file in the scratchpad immediately before dispatch.
+The laptop has already:
+1. fetched and fast-forwarded the Mac Studio's checkout to the **dispatch SHA**, the commit that
+   adds this note (`git merge --ff-only`);
+2. started you.
+
+Then you:
+1. **The Gate**, re-read by you:
+   - `git rev-parse HEAD` is the dispatch SHA, and `git status --short` is empty;
+   - `runregistrykit list` shows nothing `running` or stale;
+   - there is no `var/handover-04/`;
+   - `realistic_large_x.py` hashes `c1cd3598…`.
+
+   Anything else is a stop. Do not fetch.
+2. **The marker:** `touch` a file in your session scratchpad immediately before dispatch.
+3. **No suite baselines.** The prompt changes no tracked file.
 
 ## 2. Dispatch
 
-One fresh-context subagent, on **Opus**. Give it the prompt file and only that prompt, the dispatch
-SHA, the worktree's path, the baselines, A2's checkpoint identity, and the files its "Read first"
-list names.
+One fresh-context subagent, on **Opus**, in the Mac Studio's checkout. Give it the prompt, the
+dispatch SHA and §0 of this note. It does not read `orchestrator/`. Tell it plainly:
+- **`HEAD` is not its own.**
+- **Commit nothing, and run no git command that writes**, `fetch` included.
+- **Write only under `var/handover-04/`**, its own run directory and launch log. A write anywhere
+  else is a stop. That includes any tracked file, the store and other prompts' `var/` directories.
+- **Save every command and its output.** The review reads the outputs, not the log.
+- **The order is fixed by prompt §3:**
+  - the construction check, the wrapper's transparency and determinism, saved;
+  - then `state/readings.md`, prompt §4 copied unchanged;
+  - then the launch.
+- **Launch, one check, end the turn.** It reports the run id, the run directory, the detached
+  Python pid, the `sh` pid and the first checkpoint line. You wait on the pid once, in the
+  background, and resume the agent with the final `status.json`.
+- **No reading is chosen after the numbers are seen.** Prompt §4 says what each reading means,
+  and that "neither" is an answer. If the numbers support neither, the agent says so and gives
+  them.
+- **Every deviation is numbered and classified** before it reports, failed attempts included.
+- **Stop and ask** at any of prompt §8's conditions.
 
-Tell it plainly:
-- **Work in the worktree.** Every command runs there with `PYTHONPATH=.`. In the main checkout it
-  reads A2's checkpoint, by absolute path, and its run directory is created there by the registry;
-  it writes nothing else there.
-- **One commit, at the end, on `handover-04-a4`**, staged by explicit path:
-  `docs/handover/gk_phase_decision_test.py`, its launcher if it is a separate file,
-  `docs/handover/GK-PHASE-DECISION-TEST.md`, `prompts/handover/logs/04-gk-phase-decision-test.md`,
-  `prompts/handover/IMPLEMENTATION_STATE.md` and `docs/OPEN_ISSUES.md`. **No push, no merge, no
-  rebase:** landing is yours (§3a). Campaign README §3 already carries A4 and must not be touched.
-- `black`; **suite counts unchanged, not risen**.
-- **Launch the run registered and detached, verify once, and end its turn** rather than polling.
-- §7's stop conditions mean *stop and ask*.
+## 3. The review — on the Mac Studio, after the agent reports
 
-**Restate the threshold in the dispatch, verbatim**, so it is fixed by you as well as by the prompt:
+1. **Scope.**
+   - `git status --short` is empty, and `HEAD` is the dispatch SHA.
+   - `find var -newer <marker>` lists only `var/handover-04/`, the run's directory and its launch
+     log, and any other session's own directory.
+   - `realistic_large_x.py` still hashes `c1cd3598…`.
+2. **The run.**
+   - `runregistrykit list` shows it `done`.
+   - Its manifest names `handover`, `04` and `cost-growth`, with `git_dirty: false` and `git_head`
+     the dispatch SHA.
+   - There are 60 cell records, each `ok` or `not reached`, and every `not reached` cell is over
+     its 3-hour budget.
+3. **The arms, read** against prompt §2.1, in the script:
+   - **S** is `Case`'s own `OffsetBesselPhaseGk`, unchanged;
+   - **P₀ and P** differ from S in `.phase` alone, and from each other only in `exact_remainder`;
+   - **$T$ in S, P₀ and P** is a `_TableCsTauFixture` with `drop_first_WKB_sample=True`, built
+     with no keyword;
+   - **E** is `ExactGk` and `ExactTkFunctions`;
+   - the tolerances are `REF_ATOL` and `REF_RTOL`, and the clamp reads are replaced by
+     `partition["handover"]`.
 
-> A change in the representation term is material if it exceeds the sum of the two cells' declared
-> errors **and** changes the clamp-to-representation ratio by more than a factor of two. A cost
-> change is material if `Levin_regions` moves by more than 2×.
+   Then **independently, by a scratch reader that builds the objects and runs no integral,** for
+   one cell of each arm: the $G$ phase's class and `exact_remainder`, and every $T$ phase's, as
+   §2.1 says. They must match the cell's own record.
+4. **The wrapper.** Read it: it calls the original `phase_group_Levin_integral` and returns its
+   result unchanged. Its transparency output shows `total` and `total_abserr` bit-identical,
+   wrapped and unwrapped.
+5. **Determinism and the readings.**
+   - The determinism output is bit-identical in all four arms.
+   - `state/readings.md` is later than the checks and earlier than the run's `manifest.json`.
+   - It quotes prompt §4 word for word (check by substring).
+6. **One cell, re-run by you.** Take one realistic cell of moderate cost, such as `T-first` at
+   $10^4$ in arm P, through the script's own cell function, in a scratch process. Its `total`,
+   `total_abserr`, `Levin_regions` and maximum depth must be bit-identical to its checkpoint record.
+7. **The numbers, re-derived** from the checkpoint by a scratch reader:
+   - the growth per shape and arm, and the level at 980;
+   - the cells `not reached`;
+   - S against P₀ and P₀ against P.
 
-**And restate the reproduction rule**, also fixed in advance: the cost verdict's "old" column for
-`q-smooth` is the reproduction in this venv, with A2's record beside it; a reproduction `total`
-outside its declared error of A2's is a stop.
+   They must match the memo. Then read the memo's §3 against prompt §4 as written. It names
+   reading 1, reading 2 or neither, with its numbers, and does not invent a threshold.
+8. **The representation term** is recorded for S, P₀ and P, with both declared errors, and with no
+   verdict.
+9. **The records.**
+   - `log.md` follows campaign README §5.1, and every deviation is classified.
+   - The memo has prompt §5's sections.
+   - `issues.md` exists.
 
-**Warn it about machine load.** `Levin_regions` is load-independent and is the sound cost statistic;
-`integral_time` is not, and a wall-clock comparison taken against a saturated machine is worthless.
-If anything comparable is running on the laptop, the cost verdict rests on region counts, with
-timings reported and explicitly marked as taken under load.
+Write your verdict on each check to `var/handover-04/review.md`, with the commands you ran and what
+they printed. End the turn with a report whose first line is the verdict (pass or stop). Then give:
+- the growth per shape for each arm, and the level at 980;
+- the cells `not reached`;
+- which reading the numbers support, in the memo's words.
 
-## 3. The review — eight checks, in the worktree
+## 4. After the review — on the laptop
 
-1. **The threshold is in the document verbatim**, before the tables, in the prompt's words. Not
-   paraphrased, not softened, not supplemented with a third condition that lets a material result
-   read as immaterial.
-2. **The verdict follows from the threshold mechanically**, and is given **separately for the two
-   issues**. They can come apart: the cost could collapse while the physics stands, or the reverse.
-   A single merged verdict is a stop. §2.1's depth fields appear beside it and do not decide it.
-3. **A2's checkpoint is intact.** 60 cells, one script hash `c1cd3598c23a`, the file's SHA-256 as you
-   recorded it. If the agent edited `realistic_large_x.py`, every cell would have been discarded and
-   silently recomputed under a different script — check the hash set has exactly one member.
-4. **The "before" column matches the numbers you took in §1.5**, to the digits. A disagreement is a
-   stop, not a rounding discussion. **The reproduction cells** are set against A2's record, and
-   each `total` is inside its declared error of A2's.
-5. **The run.** `runregistrykit list` shows it `done`, recorded at `98e68d3`. Every record in its
-   checkpoint carries the script's SHA-256 (the committed script's) and the git SHA. Six, eight or
-   ten cells, and if ten, the log says the `q-smooth` cost collapsed and why that licensed $10^6$.
-6. **Suites read exactly the baselines you took in the worktree.** A rise means a test was added,
-   which prompt §5 forbids.
-7. **Scope.** `git show --stat handover-04-a4`: only §2's paths.
-   **`docs/handover/realistic_large_x.py` and `REALISTIC-LARGE-X.md` are untouched** — this prompt
-   does not correct A2, it decides whether A2 needs correcting.
-   `ComputeTargets/tests/test_phase_groups.py` is untouched: fixing the false claim at `:301`
-   belongs to B2. `find <main checkout>/var -newer <marker>` lists only the run directory.
-8. **Bookkeeping.** Both `02-` issues **narrowed**, not closed — closing them belongs to whoever
-   acts on the verdict. The A4 row and item on the board. The log records the worktree and the tree
-   as `STRUCTURALLY REQUIRED` deviations. `black --check` clean. Commit message in `CLAUDE.md`'s
-   form.
-
-## 3a. Landing
-
-In the worktree: `git rebase handover-remedial`. The board's A4 row and item will conflict with the
-refresh's: take the agent's. Any other conflict on the board or the index is resolved by reading
-both sides. The rebase brings no `.py` file outside `docs/` into question, because the commit adds
-only `docs/` scripts; if it does, re-run the seven roots at the rebased tip. Then, in the main
-checkout, `git merge --ff-only handover-04-a4`, and push. The landed SHA goes on the board in your
-residue commit. Remove the worktree and the branch once landed.
-
-After landing, `docs/handover/gk_phase_decision_test.py` is a record of its own SHA: at `HEAD` it
-raises, through `realistic_large_x.py`. That is expected and is in its docstring.
-
-## 4. What a good outcome looks like
-
-- The threshold quoted before the numbers, and a verdict that reads as arithmetic against it.
-- Two verdicts, one per issue, that may disagree with each other.
-- If the result is null: A2's §4 and §7 stand as measured, both issues narrow to "the fixture and
-  `test_phase_groups.py:301` are stale", and B2 inherits a documentation fix rather than a re-take.
-  The depth fields then say which of the cost issue's other two mechanisms is still standing.
-- If the cost collapses but the physics does not move: the `q-smooth` ceiling was an artefact, the
-  instrument reaches further than A2 reported, and the representation term is still sound. That is
-  the most interesting outcome and the one most likely to be under-reported — make sure the
-  document says what it implies for A2 §8 item 5.
+The laptop session is woken when this one ends. It copies `var/handover-04/` back with `rsync -a`,
+without checkpoints or pickles, and re-checks check 6's cell record over `ssh macstudio-tunnel`
+itself. Then, in **one records commit**, pushed:
+- the scripts and outputs to `docs/handover/a4/`, scripts byte-identical and unformatted, with
+  `docs/handover/a4/scripts/` added to `CLAUDE.md`'s `black` paragraph;
+- the memo as `docs/handover/GK-PHASE-COST-GROWTH.md`;
+- `log.md` to `logs/04-gk-phase-decision-test.md`;
+- the board: A4's row and item;
+- the narrowings of `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]` and
+  `[12-realistic-large-x-reads-the-retired-clamp-records]`;
+- **`[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]`:** closed or narrowed **on the
+  user's word**, after the laptop has put the memo's §3 to them;
+- anything `issues.md` opens;
+- `docs/OPEN_ISSUES.md` to match, with the count and date corrected by counting;
+- this directory's README row for 04.
 
 ## 5. Stop and ask the user
 
-Relay verbatim; do not adjudicate.
-
-- **The representation term moves materially.** A2 §4 was taken on a contaminated fixture and
-  re-taking it is the user's decision, not a follow-on the agent may start.
-- **A reproduction cell's `total` is outside its declared error of A2's.**
-- The `PrimitivePhase` cannot be built offline.
-- The corrected fixture will not drive at $x = 1.6\times10^8$.
-- The agent proposes editing `realistic_large_x.py`, `REALISTIC-LARGE-X.md`, `test_phase_groups.py`,
-  `AdaptiveLevin/` or any production file.
-- The agent proposes adjusting the threshold or the reproduction rule, for any reason.
-- Any check in §3 fails. **Report it; do not repair it.**
-
-## 6. After it lands
-
-Report: the landed commit; the suite counts before and after; the threshold as the document states
-it; the representation term and `Levin_regions` before and after for every cell, with your own §1.5
-numbers beside the agent's; the reproduction against A2's record; the two verdicts; the depth
-record's headline; A2's checkpoint cell count, script hash and SHA-256 before and after; and the
-narrowing notes.
-
-Then stop. What follows from the verdict — a re-take of A2, or a documentation fix folded into B2 —
-is the user's call.
+Relay verbatim; do not adjudicate. The prompt's §8 conditions, or any failed check in §3: report
+it, do not repair it. **Never write to a store or to another run's directory**, never move the
+checkout, and never run a git command that writes.
