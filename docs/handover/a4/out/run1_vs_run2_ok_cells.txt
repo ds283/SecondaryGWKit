@@ -1,0 +1,34 @@
+E|together|980 identical
+E|T-first|980 identical
+E|q-smooth|980 identical
+P|together|980 DIFFER total 9.233400888168772e-13/9.233400888168772e-13 abserr 2.2600566435339106e-20/2.2600566479954525e-20 regions 46/46
+E|q-smooth|10000 identical
+E|together|10000 identical
+E|T-first|10000 identical
+P0|together|980 identical
+E|q-smooth|100000 identical
+E|q-smooth|1e+06 identical
+E|together|100000 identical
+E|T-first|100000 identical
+P|T-first|980 DIFFER total 7.469443338319054e-11/7.469443338319054e-11 abserr 2.579184425459271e-19/2.5791844397362047e-19 regions 34/34
+E|T-first|1e+06 identical
+E|together|1e+06 identical
+E|T-first|1e+07 identical
+P0|T-first|980 DIFFER total 7.469443338319072e-11/7.469443338319072e-11 abserr 2.579183083427506e-19/2.5791831119813733e-19 regions 34/34
+E|together|1e+07 identical
+E|together|1e+08 identical
+S|T-first|980 identical
+S|together|980 identical
+S|q-smooth|980 identical
+S|T-first|10000 identical
+S|together|10000 identical
+S|q-smooth|10000 identical
+S|T-first|100000 identical
+S|T-first|1e+06 identical
+S|together|100000 identical
+S|T-first|1e+07 identical
+S|together|1e+06 identical
+S|q-smooth|100000 identical
+S|q-smooth|1e+06 identical
+S|together|1e+07 identical
+S|together|1e+08 identical

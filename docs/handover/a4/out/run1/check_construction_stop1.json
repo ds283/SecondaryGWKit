@@ -1,0 +1,1621 @@
+{
+ "cells": [
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.023078042082488537
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.10222216695547104
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 168,
+     "z_max": 332.3333333333334,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.07578295888379216
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 168,
+     "z_max": 332.3333333333334,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.07558625005185604
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.024861082900315523
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.062236791010946035
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.06158862495794892
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.0635998749639839
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.029373415978625417
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.07727012503892183
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.0772967089433223
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.07743595796637237
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.034526250092312694
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09529370814561844
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09375895792618394
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09421775001101196
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.04012520797550678
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.17922695819288492
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 569,
+     "z_max": 3401359.5442176852,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.20228566601872444
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 569,
+     "z_max": 3401359.5442176852,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.2095482088625431
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.045821334002539515
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.22032858291640878
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 669,
+     "z_max": 34013604.44217689,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.24200641713105142
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 669,
+     "z_max": 34013604.44217689,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.2550222920253873
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.022090083919465542
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.0754369581118226
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 156,
+     "z_max": 248.9999999999999,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.07687054201960564
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 156,
+     "z_max": 248.9999999999999,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.0778230419382453
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.02530162502080202
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.06558345910161734
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.06294808303937316
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.06332525005564094
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.03157591703347862
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.0823682090267539
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.07893258309923112
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=30812.7 lies more than one grid interval above the table (max node z=30111.2)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.07989712501876056
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.034654124872758985
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09407666698098183
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09355650003999472
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=308136 lies more than one grid interval above the table (max node z=301121)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09545629192143679
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.03963908297009766
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.18477679206989706
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 557,
+     "z_max": 2551019.4081632667,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.19647620804607868
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 557,
+     "z_max": 2551019.4081632667,
+     "z_min": 6.069595132934192
+    }
+   },
+   "build_time": 0.19596425001509488
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.02001737500540912
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.07165620801970363
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 260,
+     "z_max": 2498.9999999999995,
+     "z_min": 5.480462205189675
+    }
+   },
+   "build_time": 0.0783409159630537
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_TableCsTauFixture",
+     "drop_first_WKB_sample": true
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 260,
+     "z_max": 2498.9999999999995,
+     "z_min": 5.480462205189675
+    }
+   },
+   "build_time": 0.0784652498550713
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.022504332941025496
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3388.5 lies more than one grid interval above the table (max node z=3311.36)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.08632941707037389
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3388.5 lies more than one grid interval above the table (max node z=3311.36)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.0834663340356201
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=3388.5 lies more than one grid interval above the table (max node z=3311.36)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.08255958301015198
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.024931499967351556
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=33894 lies more than one grid interval above the table (max node z=33122.5)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.0965965420473367
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=33894 lies more than one grid interval above the table (max node z=33122.5)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.09803112503141165
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=33894 lies more than one grid interval above the table (max node z=33122.5)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.12898745806887746
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "build_time": 0.029422083869576454
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=338949 lies more than one grid interval above the table (max node z=331234)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.12601400003768504
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=338949 lies more than one grid interval above the table (max node z=331234)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.12423558393493295
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": false,
+   "error": "RuntimeError: CumulativeTable[cs_tau]: z=338949 lies more than one grid interval above the table (max node z=331234)",
+   "problems": [],
+   "objects": null,
+   "build_time": 0.12564808409661055
+  }
+ ],
+ "check": "construction",
+ "ok": false,
+ "a4_cells_sha256": "201419cb264b547e2800f441e0c73477152dc3195cca6fa8fd59da558dfaf734",
+ "a4_checks_sha256": "0c3920e4f16db92b18b1f1bd59b6a939c2ed2786d828ccd2f4c45600f1149afc",
+ "started_unix": 1793026423.964782,
+ "elapsed": 5.419940948486328
+}

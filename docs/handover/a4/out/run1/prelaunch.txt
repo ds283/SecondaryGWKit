@@ -1,0 +1,21 @@
+Mon Oct 26 15:26:59 UTC 2026
+8d7dc6ecd618ea9263438f4dff2d5ac09a6b324fde6b00b64798bf0f9b78711d  var/handover-04/scripts/a4_cells.py
+a023b7d23f6cf18b1517f936e7c3eff020cf3e2a477670565b7cda91cd89dd4a  var/handover-04/scripts/a4_checks.py
+70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5  var/handover-04/scripts/a4_driver.py
+6a85c1904d16e09c49756e12b3e0e3b6f2d74db326d51dc3b47a9ee8e259e33e  var/handover-04/scripts/a4_launch.py
+1,4c1,4
+< 8d7dc6ecd618ea9263438f4dff2d5ac09a6b324fde6b00b64798bf0f9b78711d  scripts/a4_cells.py
+< a023b7d23f6cf18b1517f936e7c3eff020cf3e2a477670565b7cda91cd89dd4a  scripts/a4_checks.py
+< 70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5  scripts/a4_driver.py
+< 6a85c1904d16e09c49756e12b3e0e3b6f2d74db326d51dc3b47a9ee8e259e33e  scripts/a4_launch.py
+---
+> 8d7dc6ecd618ea9263438f4dff2d5ac09a6b324fde6b00b64798bf0f9b78711d scripts/a4_cells.py
+> a023b7d23f6cf18b1517f936e7c3eff020cf3e2a477670565b7cda91cd89dd4a scripts/a4_checks.py
+> 70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5 scripts/a4_driver.py
+> 6a85c1904d16e09c49756e12b3e0e3b6f2d74db326d51dc3b47a9ee8e259e33e scripts/a4_launch.py
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(status end)
+   handover-06-reference-20261022T195228                 done              -   3d 20h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+19 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 19 finished; 0 with no host recorded.
+15:26  up 19 days,  6:03, 1 user, load averages: 6.32 5.35 5.05

@@ -1,0 +1,5 @@
+arm E : total 0x1.04bc9b113980ap-40 / 0x1.04bc9b113980ap-40, total_abserr 0x1.ca37a87b9d532p-79 / 0x1.ca37a87b9d532p-79, 7 groups, regions 7 / 7, max depth 0 / 0: bit-identical (0.53 s, 0.52 s)
+arm S : total 0x1.03eeb8b66f1f6p-40 / 0x1.03eeb8b66f1f6p-40, total_abserr 0x1.ab7246e48e2b9p-66 / 0x1.ab7246e48e2b9p-66, 7 groups, regions 1254 / 1254, max depth 12 / 12: bit-identical (17.99 s, 18.28 s)
+arm P0: total 0x1.03e5b6e170f34p-40 / 0x1.03e5b6e170f34p-40, total_abserr 0x1.aaeb334668b46p-66 / 0x1.aaeb334668b46p-66, 7 groups, regions 53 / 53, max depth 6 / 6: bit-identical (0.97 s, 0.98 s)
+arm P : total 0x1.03e5aa4fb7fcep-40 / 0x1.03e5aa4fb7fcep-40, total_abserr 0x1.aae9a227f3fdap-66 / 0x1.aae9a227f3fdap-66, 7 groups, regions 46 / 46, max depth 5 / 5: bit-identical (0.86 s, 0.87 s)
+== check determinism: HOLDS (41.8 s)

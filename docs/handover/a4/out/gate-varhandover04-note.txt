@@ -1,0 +1,11 @@
+== note: var/handover-04 was created by the executing agent's own mkdir in the same command that ran the gate (gate date 14:44:07 UTC); the orchestrator found no var/handover-04/ at 14:43 UTC. Birth times (BSD stat) and contents:
+2026-10-26T14:44:06+0000 var/handover-04
+2026-10-26T14:44:06+0000 var/handover-04/out
+2026-10-26T14:44:06+0000 var/handover-04/scripts
+2026-10-26T14:44:06+0000 var/handover-04/state
+var/handover-04
+var/handover-04/out
+var/handover-04/out/gate-varhandover04-note.txt
+var/handover-04/out/gate.txt
+var/handover-04/scripts
+var/handover-04/state

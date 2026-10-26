@@ -1,0 +1,13 @@
+Mon Oct 26 17:37:14 UTC 2026
+67badeab27e49e0f97a709ca67f8911d9663e0d8763e789c5946415cc9e64798  var/handover-04/scripts/a4_cells.py
+a8a71a6d52f6c6b1f744ee14f0ba0e97ddf25bf938a638891d4a1a7278d432fa  var/handover-04/scripts/a4_checks.py
+70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5  var/handover-04/scripts/a4_driver.py
+cfa774dcf918d293f8f1c2033e71cf9117a454f7c6a82dfa29aee4754267d564  var/handover-04/scripts/a4_launch.py
+aa792008144b8655a0536db1277c897e0188c80ab8c0de7ea62686768b0b0f56  var/handover-04/scripts/a4_tables.py
+-- against the hashes before the checks:
+scripts unchanged since the checks
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(status end)
+   handover-04-cost-growth-20261026T152704               failed        60/60   2h 10m  handover prompt 04 (A4) on the Mac Studio (mps026298; Python 3.13.16), main checkout at the dispatch SHA 28ebaf0: does A2's Levin cost growth survive production's phases? A2's ladder (together 980-1e8, T-first 980-1e7, q-smooth 980-1e6; b = 0; one seam) at HEAD in four arms that differ in G's phase alone: E exact; S A2's phase_spline G; P0 a PrimitivePhase G with exact_remainder off; P production's G (exact_remainder on); T production's (table cs_tau, keyword at its default, production seam) in S, P0, P. 60 cells, each a child process, up to 4 at once, 3 h wall-clock budget per cell (over budget = not reached); Ray-free, no datastore, no lock; expect a few hours  · cell S|together|1e+08 ok
+20 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 20 finished; 0 with no host recorded.
+17:37  up 19 days,  8:13, 1 user, load averages: 13.53 14.54 15.27

@@ -1,0 +1,27 @@
+Mon Oct 26 15:27:10 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T15:27:10+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 7030,
+  "stage": "cell E|T-first|980 ok",
+  "state": "running",
+  "units_done": 2,
+  "units_total": 60
+}
+
+  PID  PPID ELAPSED COMMAND
+ 7022     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04/scripts/a4_driver.py --run-dir /Users/ds283/Documents
+  PID  PPID ELAPSED COMMAND
+ 7030  7022   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04/scripts/a4_dri
+-- checkpoint lines:
+3
+{"unit": "E|together|980", "recorded": "2026-10-26T15:27:10+00:00", "script_sha256": "70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"arm": "E", "shape": "together", "x_resp": 980.0, "status": "ok", "total": 9.26322986810291e-13, "total_abserr": 2.9611606381780933e-24, "numeric_quad": 4.488885097685004e-12, "WKB_Levin": -3.562562110874713e-12, "analytic_rad": 9.263229868100053e-13, "declared": 8.691835702236153e-12, "converged": false, "phase_limited": false, "Levin_fraction": 3.84591785111
+
+-- stdout:
+ "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "executable": "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python", "pid": 7030, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04", "started": "2026-10-26T15:27:06.571260+00:00", "parallel": 4, "budget_s": 10800.0, "units": ["E|together|980", "E|together|10000", "E|together|100000", "E|together|1e+06", "E|together|1e+07", "E|together|1e+08", "E|T-first|980", "E|T-first|10000", "E|T-first|100000", "E|T-first|1e+06", "E|T-first|1e+07", "E|q-smooth|980", "E|q-smooth|10000", "E|q-smooth|100000", "E|q-smooth|1e+06", "P|together|980", "P0|together|980", "S|together|980", "P|T-first|980", "P0|T-first|980", "S|T-first|980", "P|q-smooth|980", "P0|q-smooth|980", "S|q-smooth|980", "P|together|10000", "P0|together|10000", "S|together|10000", "P|T-first|10000", "P0|T-first|10000", "S|T-fir-- stderr:
+2026-10-26T15:26:53+0000 var/handover-04/state/readings.md
+2026-10-26T15:27:04+0000 var/runs/handover-04-cost-growth-20261026T152704/manifest.json

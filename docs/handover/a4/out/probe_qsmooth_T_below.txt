@@ -1,0 +1,2 @@
+Gr 5.480462205189675 {'G': ([], 0), 'Tq': (['a: RuntimeError: PrimitivePhase[T_k WKB phase]: evaluated out-of-bounds of upper limit at log_x=1.8688 (raw x=5.4805) | Maximum allowed value is log_x=1.0822 (raw x=1.9511)'], 10), 'Tr': ([], 0)}
+Tq WKB_region (np.float64(1.9510587814408087), np.float64(-0.9422649730810374)) Tr (np.float64(323.60599342645355), np.float64(5.171868766847311)) z_resp 5.480462205189676

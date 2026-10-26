@@ -1,0 +1,20 @@
+{
+ "recorded": 5,
+ "planned": 5,
+ "counts": {
+  "ok": 3,
+  "raised": 1,
+  "not reached": 1
+ },
+ "problems": [
+  "P|together|10000: raised: RuntimeError: CumulativeTable[cs_tau]: z=3080.37 lies more than one grid interval above the table (max node z=3010.21)"
+ ],
+ "order": [
+  "E|together|980",
+  "E|T-first|980",
+  "P|together|980",
+  "P|together|10000",
+  "S|together|980"
+ ],
+ "ended": "2026-10-26T14:53:14.578686+00:00"
+}

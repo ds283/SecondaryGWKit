@@ -1,0 +1,50 @@
+Mon Oct 26 17:32:24 UTC 2026
+renamed 'out/check_construction.txt' -> 'out/run1/check_construction.txt'
+renamed 'out/check_construction.json' -> 'out/run1/check_construction.json'
+renamed 'out/check_construction_stop1.txt' -> 'out/run1/check_construction_stop1.txt'
+renamed 'out/check_construction_stop1.json' -> 'out/run1/check_construction_stop1.json'
+renamed 'out/check_transparency.txt' -> 'out/run1/check_transparency.txt'
+renamed 'out/check_transparency.json' -> 'out/run1/check_transparency.json'
+renamed 'out/check_determinism.txt' -> 'out/run1/check_determinism.txt'
+renamed 'out/check_determinism.json' -> 'out/run1/check_determinism.json'
+renamed 'out/prelaunch.txt' -> 'out/run1/prelaunch.txt'
+renamed 'out/launch.txt' -> 'out/run1/launch.txt'
+renamed 'out/started_check.txt' -> 'out/run1/started_check.txt'
+renamed 'out/scripts_sha256_before_checks.txt' -> 'out/run1/scripts_sha256_before_checks.txt'
+renamed 'out/readings_written.txt' -> 'out/run1/readings_written.txt'
+renamed 'out/tables.md' -> 'out/run1/tables.md'
+renamed 'out/tables.err' -> 'out/run1/tables.err'
+'state/readings.md' -> 'state/readings-run1.md'
+renamed 'GK-PHASE-COST-GROWTH.md' -> 'GK-PHASE-COST-GROWTH-run1.md'
+'scripts/a4_cells.py' -> 'scripts-run1/a4_cells.py'
+'scripts/a4_checks.py' -> 'scripts-run1/a4_checks.py'
+'scripts/a4_driver.py' -> 'scripts-run1/a4_driver.py'
+'scripts/a4_launch.py' -> 'scripts-run1/a4_launch.py'
+'scripts/a4_tables.py' -> 'scripts-run1/a4_tables.py'
+2026-10-26T15:26:53+0000 state/readings.md
+2026-10-26T15:26:53+0000 state/readings-run1.md
+2026-10-26T14:53:49+0000 out/run1/check_construction_stop1.json
+2026-10-26T14:53:49+0000 out/run1/check_construction_stop1.txt
+2026-10-26T15:25:07+0000 out/run1/check_construction.json
+2026-10-26T15:25:07+0000 out/run1/check_construction.txt
+2026-10-26T15:26:38+0000 out/run1/check_determinism.json
+2026-10-26T15:26:38+0000 out/run1/check_determinism.txt
+2026-10-26T15:25:52+0000 out/run1/check_transparency.json
+2026-10-26T15:25:52+0000 out/run1/check_transparency.txt
+2026-10-26T15:27:04+0000 out/run1/launch.txt
+2026-10-26T15:26:59+0000 out/run1/prelaunch.txt
+2026-10-26T15:26:53+0000 out/run1/readings_written.txt
+2026-10-26T15:24:51+0000 out/run1/scripts_sha256_before_checks.txt
+2026-10-26T15:27:11+0000 out/run1/started_check.txt
+2026-10-26T16:10:30+0000 out/run1/tables.err
+2026-10-26T16:10:30+0000 out/run1/tables.md
+8d7dc6ecd618ea9263438f4dff2d5ac09a6b324fde6b00b64798bf0f9b78711d  scripts/a4_cells.py
+a023b7d23f6cf18b1517f936e7c3eff020cf3e2a477670565b7cda91cd89dd4a  scripts/a4_checks.py
+70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5  scripts/a4_driver.py
+6a85c1904d16e09c49756e12b3e0e3b6f2d74db326d51dc3b47a9ee8e259e33e  scripts/a4_launch.py
+aa792008144b8655a0536db1277c897e0188c80ab8c0de7ea62686768b0b0f56  scripts/a4_tables.py
+8d7dc6ecd618ea9263438f4dff2d5ac09a6b324fde6b00b64798bf0f9b78711d  scripts-run1/a4_cells.py
+a023b7d23f6cf18b1517f936e7c3eff020cf3e2a477670565b7cda91cd89dd4a  scripts-run1/a4_checks.py
+70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5  scripts-run1/a4_driver.py
+6a85c1904d16e09c49756e12b3e0e3b6f2d74db326d51dc3b47a9ee8e259e33e  scripts-run1/a4_launch.py
+aa792008144b8655a0536db1277c897e0188c80ab8c0de7ea62686768b0b0f56  scripts-run1/a4_tables.py

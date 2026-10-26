@@ -1,0 +1,11 @@
+Mon Oct 26 15:27:03 UTC 2026
+run id      handover-04-cost-growth-20261026T152704
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-04-cost-growth-20261026T152704
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-04-cost-growth-20261026T152704/manifest.json
+checkpoint  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-04-cost-growth-20261026T152704/checkpoint.jsonl
+expected    60 cells
+driver      /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04/scripts/a4_driver.py sha256 70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5
+sh pid      7022 (nohup execs sh; sh runs the driver as its child)
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04/scripts/a4_driver.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-04-cost-growth-20261026T152704; exit $?
+launcher    pid 7018, exiting without waiting
+launcher exit=0

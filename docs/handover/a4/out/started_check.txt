@@ -1,0 +1,27 @@
+Mon Oct 26 17:37:27 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T17:37:25+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 69649,
+  "stage": "cell E|q-smooth|980 ok",
+  "state": "running",
+  "units_done": 2,
+  "units_total": 60
+}
+
+  PID  PPID ELAPSED COMMAND
+69642     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/handover-04/scripts/a4_dr
+  PID  PPID ELAPSED COMMAND
+69649 69642   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Secon
+-- checkpoint lines:
+2
+{"unit": "E|T-first|980", "recorded": "2026-10-26T17:37:25+00:00", "script_sha256": "70dd520be4ddef238745c13dbdb4ade272d4b55c35d855e054a9b37ec99a95f5", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"arm": "E", "shape": "T-first", "x_resp": 980.0, "status": "ok", "total": 7.469042198322359e-11, "total_abserr": 9.815855090047108e-23, "numeric_quad": -1.4082206621539574e-10, "WKB_Levin": 2.1551248819861933e-10, "analytic_rad": 7.46904219831883e-11, "declared":
+
+-- stderr:
+2026-10-26T17:37:09+0000 var/handover-04/state/readings.md
+2026-10-26T17:37:21+0000 var/runs/handover-04-cost-growth-20261026T173720/manifest.json
+"a4_cells_sha256": "67badeab27e49e0f97a709ca67f8911d9663e0d8763e789c5946415cc9e64798"

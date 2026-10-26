@@ -1,0 +1,4546 @@
+{
+ "cells": [
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 300.973834223185,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.029322957852855325
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 294.10587814408103,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.1304984160233289
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 168,
+     "z_max": 332.3333333333334,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 168
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 294.10587814408103,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.10209808382205665
+  },
+  {
+   "shape": "together",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 168,
+     "z_max": 332.3333333333334,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 168
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 294.10587814408103,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.10311183286830783
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3080.365655338623,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.02805970818735659
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.211186366521,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.12661950010806322
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 269,
+     "z_max": 3400.3605442176863,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 269
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.211186366521,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13673087488859892
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 269,
+     "z_max": 3400.3605442176863,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 269
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.211186366521,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.1316560001578182
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30812.656553386212,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.03270587488077581
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30111.1501789153,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.1535930831450969
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 369,
+     "z_max": 34012.6054421769,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 369
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30111.1501789153,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.16546208411455154
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 369,
+     "z_max": 34012.6054421769,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 369
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30111.1501789153,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.16609220812097192
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 308135.56553386245,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.03676733304746449
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 301120.72049873957,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.18832070799544454
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 469,
+     "z_max": 340135.05442176876,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 469
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 301120.72049873957,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.21142629208043218
+  },
+  {
+   "shape": "together",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 469,
+     "z_max": 340135.05442176876,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 469
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 301120.72049873957,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.21081512491218746
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3081364.6553386226,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.04599408293142915
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3011217.6192587093,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.23559070914052427
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 569,
+     "z_max": 3401359.5442176852,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 569
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3011217.6192587093,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.2508387081325054
+  },
+  {
+   "shape": "together",
+   "x_resp": 10000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 569,
+     "z_max": 3401359.5442176852,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 569
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3011217.6192587093,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.24727991712279618
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30813655.553386204,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.047728207893669605
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30813655.553386204,
+     "z_init": 30813655.553386204,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.36472517985848e-10
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36976386.86406346,
+     "z_init": 36976386.86406346,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6368205414048354e-10
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30112195.088243145,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.26785845891572535
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30813655.553386204,
+     "z_init": 30813655.553386204,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.36472517985848e-10
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36976386.86406346,
+     "z_init": 36976386.86406346,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6368205414048354e-10
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 669,
+     "z_max": 34013604.44217689,
+     "z_min": 6.069595132934192,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 0.0,
+     "tau_table_nodes": 669
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30112195.088243145,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.2824709590058774
+  },
+  {
+   "shape": "together",
+   "x_resp": 100000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30813655.553386204,
+     "z_init": 30813655.553386204,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.36472517985848e-10
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36976386.86406346,
+     "z_init": 36976386.86406346,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6368205414048354e-10
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 669,
+     "z_max": 34013604.44217689,
+     "z_min": 6.069595132934192,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 0.0,
+     "tau_table_nodes": 669
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 30112195.088243145,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.2817048749420792
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 248.9999999999999,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.02169070881791413
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 248.9999999999999,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.0901653750333935
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 156,
+     "z_max": 248.9999999999999,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 156
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 248.9999999999999,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.09930250002071261
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 300.973834223185,
+     "z_init": 300.973834223185,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.4495870572963145e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 361.3686010678221,
+     "z_init": 361.3686010678221,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.628180943894385e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 156,
+     "z_max": 248.9999999999999,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 156
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 248.9999999999999,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714648,
+       "below_a_ulp": 0.0,
+       "where": null
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.10055854194797575
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2550.020408163265,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.028064458863809705
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2550.020408163265,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13011954189278185
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 257,
+     "z_max": 2550.020408163265,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 257
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2550.020408163265,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13340275012888014
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365261463526484e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3696.638786406349,
+     "z_init": 3696.638786406349,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6365968161659455e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 257,
+     "z_max": 2550.020408163265,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 257
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2550.020408163265,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714646,
+       "below_a_ulp": 1.0,
+       "where": [
+        2,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13382341712713242
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 25509.204081632655,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        1,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.033040166134014726
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 25509.204081632655,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        1,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.15782712493091822
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 357,
+     "z_max": 25509.204081632655,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 357
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 25509.204081632655,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        1,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.16759070800617337
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 30812.656553386212,
+     "z_init": 30812.656553386212,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.365017498229251e-07
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 36975.387864063465,
+     "z_init": 36975.387864063465,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.6366976121239257e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 357,
+     "z_max": 25509.204081632655,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 357
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 25509.204081632655,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.9558032127714644,
+       "below_a_ulp": 2.0,
+       "where": [
+        1,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.16983341588638723
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 255101.04081632636,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.03819400002248585
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 255101.04081632636,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.19716358301229775
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 457,
+     "z_max": 255101.04081632636,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 457
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 255101.04081632636,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.19701395789161325
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 308135.56553386245,
+     "z_init": 308135.56553386245,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364878239207281e-08
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 369762.87864063506,
+     "z_init": 369762.87864063506,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636755878170857e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 457,
+     "z_max": 255101.04081632636,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 457
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 255101.04081632636,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.2020417081657797
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2551019.4081632667,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.04230899992398918
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2551019.4081632667,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.2323789580259472
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 557,
+     "z_max": 2551019.4081632667,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 557
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2551019.4081632667,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.25393424998037517
+  },
+  {
+   "shape": "T-first",
+   "x_resp": 10000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3081364.6553386226,
+     "z_init": 3081364.6553386226,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.364788188374115e-09
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3697637.786406348,
+     "z_init": 3697637.786406348,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.636793842470484e-09
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 557,
+     "z_max": 2551019.4081632667,
+     "z_min": 6.069595132934193,
+     "case_grid_last_node": 6.069595132934192,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 557
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 2551019.4081632667,
+      "z_min": 6.069595132934192,
+      "a": 1.9558032127714648,
+      "lowest": {
+       "lowest": 1.955803212771464,
+       "below_a_ulp": 4.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.30395208299160004
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gr",
+      "z_max": 331.1712176455035,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": "inactive",
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.02356516709551215
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 2.0197383422318502,
+     "z_init": 2.0197383422318502,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.004449587057296431
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 331.1712176455035,
+     "z_init": 331.1712176455035,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.958015575157675e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gr",
+      "z_max": 323.60599342645355,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": "inactive",
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.09557495801709592
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 2.0197383422318502,
+     "z_init": 2.0197383422318502,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.004449587057296431
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 331.1712176455035,
+     "z_init": 331.1712176455035,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.958015575157675e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 260,
+     "z_max": 2498.9999999999995,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 260
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gr",
+      "z_max": 323.60599342645355,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": "inactive",
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.10027637495659292
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 980.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 2.0197383422318502,
+     "z_init": 2.0197383422318502,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.004449587057296431
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 331.1712176455035,
+     "z_init": 331.1712176455035,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 368,
+     "p_R": 3.958015575157675e-05
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 260,
+     "z_max": 2498.9999999999995,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 260
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gr",
+      "z_max": 323.60599342645355,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": "inactive",
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.10040958388708532
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 29.813656553386235,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        3,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.02442020899616182
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 29.813656553386235,
+     "z_init": 29.813656553386235,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.000436059531615049
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3388.502220872482,
+     "z_init": 3388.502220872482,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9671965267264775e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 29.11284470857969,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.11414479184895754
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 29.813656553386235,
+     "z_init": 29.813656553386235,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.000436059531615049
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3388.502220872482,
+     "z_init": 3388.502220872482,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9671965267264775e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 361,
+     "z_max": 25509.204081632655,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 361
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 29.11284470857969,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.12369225011207163
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 10000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 29.813656553386235,
+     "z_init": 29.813656553386235,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -0.000436059531615049
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3388.502220872482,
+     "z_init": 3388.502220872482,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9671965267264775e-06
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 361,
+     "z_max": 25509.204081632655,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 361
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 29.11284470857969,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.12402337486855686
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 307.13656553386227,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.026782792061567307
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 307.13656553386227,
+     "z_init": 307.13656553386227,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.360595316150411e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 33894.02220872486,
+     "z_init": 33894.02220872486,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.967306485953366e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 300.12844708579695,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.12685304204933345
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 307.13656553386227,
+     "z_init": 307.13656553386227,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.360595316150411e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 33894.02220872486,
+     "z_init": 33894.02220872486,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.967306485953366e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 461,
+     "z_max": 255101.04081632636,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 461
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 300.12844708579695,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13921404210850596
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 100000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 307.13656553386227,
+     "z_init": 307.13656553386227,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.360595316150411e-05
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 33894.02220872486,
+     "z_init": 33894.02220872486,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.967306485953366e-07
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 461,
+     "z_max": 255101.04081632636,
+     "z_min": 5.480462205189676,
+     "case_grid_last_node": 5.480462205189675,
+     "last_node_moved_by_ulp": 1.0,
+     "tau_table_nodes": 461
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 300.12844708579695,
+      "z_min": 5.480462205189675,
+      "a": 1.868791835781835,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 1.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.13950249995104969
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "E",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "Tr": {
+     "class": "_ExactPhase",
+     "module": "ComputeTargets.tests.test_phase_groups",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null,
+     "object_class": "ExactTkFunctions"
+    },
+    "G_sin_amplitude_owner": "ExactGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3080.365655338623,
+      "z_min": 5.480462205189677,
+      "a": 1.8687918357818352,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.031722750049084425
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "S",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "phase_spline",
+     "module": "LiouvilleGreen.phase_spline",
+     "exact_remainder": null,
+     "leading_class": null,
+     "sign": null
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.361632297447519e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 338949.2220872484,
+     "z_init": 338949.2220872484,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9673700489136816e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": null,
+    "G_grid": null
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.268184170186,
+      "z_min": 5.480462205189677,
+      "a": 1.8687918357818352,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.15545420884154737
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "P0",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": false,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.361632297447519e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 338949.2220872484,
+     "z_init": 338949.2220872484,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9673700489136816e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 561,
+     "z_max": 2551019.4081632667,
+     "z_min": 5.480462205189677,
+     "case_grid_last_node": 5.480462205189677,
+     "last_node_moved_by_ulp": 0.0,
+     "tau_table_nodes": 561
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.268184170186,
+      "z_min": 5.480462205189677,
+      "a": 1.8687918357818352,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.17069854098372161
+  },
+  {
+   "shape": "q-smooth",
+   "x_resp": 1000000.0,
+   "arm": "P",
+   "ok": true,
+   "error": null,
+   "problems": [],
+   "objects": {
+    "G": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": -1
+    },
+    "Tq": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 3080.365655338623,
+     "z_init": 3080.365655338623,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -4.361632297447519e-06
+    },
+    "Tr": {
+     "class": "PrimitivePhase",
+     "module": "ComputeTargets.primitive_phase",
+     "exact_remainder": true,
+     "leading_class": "TablePrimitive",
+     "sign": 1,
+     "object_class": "TkSourceFunctions",
+     "fixture_class": "_UnionTableCsTauFixture",
+     "drop_first_WKB_sample": true,
+     "z_anchor": 338949.2220872484,
+     "z_init": 338949.2220872484,
+     "anchor_node_index": null,
+     "anchor_nearest_node": 369,
+     "p_R": -3.9673700489136816e-08
+    },
+    "G_sin_amplitude_owner": "OffsetBesselPhaseGk",
+    "G_path": "_ProductionPhaseGk",
+    "G_grid": {
+     "nodes": 561,
+     "z_max": 2551019.4081632667,
+     "z_min": 5.480462205189677,
+     "case_grid_last_node": 5.480462205189677,
+     "last_node_moved_by_ulp": 0.0,
+     "tau_table_nodes": 561
+    }
+   },
+   "below_anchor": {
+    "subintervals": [
+     {
+      "regime": "Gqr",
+      "z_max": 3010.268184170186,
+      "z_min": 5.480462205189677,
+      "a": 1.8687918357818352,
+      "lowest": {
+       "lowest": 1.8687918357818347,
+       "below_a_ulp": 2.0,
+       "where": [
+        0,
+        24
+       ]
+      },
+      "failures": {
+       "G": [],
+       "Tq": [],
+       "Tr": []
+      }
+     }
+    ],
+    "G_ok": true,
+    "T_ok": true
+   },
+   "build_time": 0.1719175421167165
+  }
+ ],
+ "check": "construction",
+ "ok": true,
+ "a4_cells_sha256": "67badeab27e49e0f97a709ca67f8911d9663e0d8763e789c5946415cc9e64798",
+ "a4_checks_sha256": "a8a71a6d52f6c6b1f744ee14f0ba0e97ddf25bf938a638891d4a1a7278d432fa",
+ "started_unix": 1793036121.7627661,
+ "elapsed": 8.017018795013428
+}
