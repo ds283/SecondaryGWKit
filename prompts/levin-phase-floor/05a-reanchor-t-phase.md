@@ -295,7 +295,7 @@ This reads the phase objects only and runs no quadrature.
 If T0 fails, stop.
 
 **Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
-- **T1 — the floor is there, and goes.**
+- **T1 — the floor is there, and goes.** *(Replaced before the run by §9, 2026-10-26.)*
   - **The rule:** in every probe window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad, sampled in
     $z$: $\sigma_\theta \ge 0.1\,\varepsilon|\theta_T|$ under $c$, and
     $\sigma_\theta \le \max(10^{-3}\varepsilon|\theta_T|,\ 10^{-13}\ {\rm rad})$ under $t$.
@@ -360,3 +360,54 @@ If T0 fails, stop.
 - T0 fails.
 - Any store file changes.
 - The lock is held, or will not release.
+
+## 9. T1 amended before §6 runs (added 2026-10-26)
+
+§1–§4 landed as `1fc349c` and passed the orchestrator's review. In writing test 3, the agent found
+that T1's rule cannot be scored as written, for two reasons that are not the phase. Its log records
+both, as observations 1 and 2.
+- **An unresolved window measures `numpy.unwrap`.** A window of relative width $10^{-6}$ moves
+  $\theta_T$ by about $10^{-6}\tfrac{z}{1+z}|d\theta_T/du|$. Where $|\theta_T| \gtrsim 10^9$ and
+  $z \gtrsim 1$ that is hundreds to thousands of rad across 65 samples. `unwrap` then folds by whole
+  cycles per index, and the rounding of the sampled doubles turns the folds into
+  $\sigma_\theta \approx 0.01$–$0.1\,\varepsilon|\theta_T|$. The remainder was exact to
+  $8\times10^{-14}$ rad when this was measured.
+- **Between table nodes, the node-anchored remainder keeps $\varepsilon k|p_z|$.** That is the
+  rounding of its small part $v = -k p_z + \phi$, which test 2's bound
+  $4\varepsilon(k|p_z| + 2\pi)$ already admits. For $G$ it was negligible beside
+  $\varepsilon k\eta_R$. For $T$, $|p_z|$ reaches half a table interval of $\tau_s$, about
+  $0.0115\,|d\theta_T/du|/k$, so it is a fixed fraction of $\varepsilon|\theta_T|$: measured at
+  $7.5\times10^{-3}$ midway at $z \approx 10^4$, and $2.8\times10^{-4}$ midway at $z \approx 0.12$.
+  T1's $10^{-3}$ is below the first. Test 3 holds as written because its window sits on a node
+  (log, deviation 4). It stands.
+
+**The user's decision (2026-10-26): amend T1 before §6 runs.** No §6 number exists: R11, R12 and
+the re-measurement have not started, and no probe of the 39 rows has been made. The amendment
+changes **T1 only**. T0, T2, T3, T4 and the descriptive items are unchanged.
+
+**The probe window, amended.** At each sub-interval's low-$z$ end, the window starts at relative
+width $10^{-6}$ in $z$, as §6 says. Then:
+- it is sampled under both $c$ and $t$. If the largest step of the unwrapped samples is $\pi/2$ or
+  more under either, the width is halved and the window sampled again;
+- this repeats until both trees' largest step is below $\pi/2$. The width used and that step are
+  recorded per window;
+- if the 65 samples would stop being distinct doubles first, the window is **unresolved**. It is
+  reported and not scored;
+- the $u$-sampled $\sigma_\theta$ uses the same width, in $\log(1+z)$.
+
+Record $\max|p_z|$ over the window's 65 samples beside it: under $t$, from $T$'s `cs_tau.end_partial`
+at each sample.
+
+**T1, amended.** It replaces §6's T1. The $u$-sampled clause is unchanged.
+- **The rule:** in every resolved probe window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad,
+  sampled in $z$: $\sigma_\theta \ge 0.1\,\varepsilon|\theta_T|$ under $c$, and
+  $\sigma_\theta \le \max\big(10^{-3}\varepsilon|\theta_T|,\ \varepsilon(k\max|p_z| + 2\pi),\ 10^{-13}\ {\rm rad}\big)$
+  under $t$.
+- **Holds** if true in every such window. **Fails** if false in any. **Undecided** if none is
+  false but some window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad is unresolved.
+- **Also report, unscored,** in how many windows the term $\varepsilon(k\max|p_z| + 2\pi)$ is the
+  largest of the three, and $\sigma_\theta/(\varepsilon|\theta_T|)$ under $t$ in those windows.
+
+**In the records.** `state/predictions.md` quotes §6's predictions with this section's T1 in place
+of §6's, and says so. The log's **Predictions and verdicts** keeps §6's T1, marked "replaced before
+the run by §9", with this section's T1 after it.

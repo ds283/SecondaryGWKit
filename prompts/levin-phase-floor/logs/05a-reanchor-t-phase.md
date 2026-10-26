@@ -146,9 +146,22 @@ how T1 can be measured.
     $|{\rm total}_t(10^{-7}) - {\rm total}_t(10^{-8})| \le$ `total_abserr`$_t(10^{-7})$.
   - 05's L3, the same rule under $c$, held on 29 of 31.
 
+**T1 above was replaced before the run by prompt §9** (the user's decision, 2026-10-26, after
+observations 1 and 2 below; added by the orchestrator after the review of `1fc349c`). No §6 number
+existed. The amended T1, copied unchanged from prompt §9, is scored in its place; the probe window
+is narrowed until it is resolved, as §9 states:
+- **The rule:** in every resolved probe window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad,
+  sampled in $z$: $\sigma_\theta \ge 0.1\,\varepsilon|\theta_T|$ under $c$, and
+  $\sigma_\theta \le \max\big(10^{-3}\varepsilon|\theta_T|,\ \varepsilon(k\max|p_z| + 2\pi),\ 10^{-13}\ {\rm rad}\big)$
+  under $t$.
+- **Holds** if true in every such window. **Fails** if false in any. **Undecided** if none is
+  false but some window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad is unresolved.
+- **Also report, unscored,** in how many windows the term $\varepsilon(k\max|p_z| + 2\pi)$ is the
+  largest of the three, and $\sigma_\theta/(\varepsilon|\theta_T|)$ under $t$ in those windows.
+
 | | Verdict |
 |---|---|
-| T1 | not yet scored (§6) |
+| T1 (as amended by §9) | not yet scored (§6) |
 | T2 | not yet scored (§6) |
 | T3 | not yet scored (§6) |
 | T4 | not yet scored (§6) |
