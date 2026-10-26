@@ -164,6 +164,14 @@ def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
     are genuine discontinuities of the *stored* phase, not of the physical one
     (``RECONCILIATION.md`` Sec 2 item 6, campaign decision D5), and building ``phi`` from the raw
     counts would spline straight through them.
+
+    **The remainder is node-anchored** (``exact_remainder=True``; ``prompts/levin-phase-floor``
+    prompt 05, on the user's answer at its gate G1, 2026-10-26). ``theta_mod_2pi`` reduces the
+    large constant ``k tau_R`` exactly, against 2pi itself, once per table node, and forms only a
+    small remainder in double; it never rounds a double of size ``k tau_R``, whose ``eps k tau_R``
+    jitter sent the Levin bisection to its depth cap (``primitive_phase.py``'s module docstring,
+    "Anchoring"). ``raw_theta`` and ``theta_deriv`` are unchanged. ``TkSourceFunctions`` keeps
+    the default.
     """
     model = source.model_proxy.get()
 
@@ -193,6 +201,7 @@ def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
         sign=GK_PHASE_SIGN,
         model_functions=model.functions,
         label=label,
+        exact_remainder=True,
     )
 
 

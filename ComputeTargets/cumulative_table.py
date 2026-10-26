@@ -341,6 +341,66 @@ class CumulativeTable:
         return self._nearest_node(log1p(z)), False
 
     # -----------------------------------------------------------------------------------------
+    # the node accessors: delta's own pieces, for a caller that must keep the node term exact
+    # -----------------------------------------------------------------------------------------
+    #
+    # ``delta`` rounds its node term ``(hi_b - hi_a) + (lo_b - lo_a)`` to a double. That is
+    # accurate relative to the difference, but a caller that multiplies it by a large k and then
+    # reduces mod 2pi needs the four limbs themselves (prompts/levin-phase-floor prompt 05 §1):
+    # ``PrimitivePhase`` with ``exact_remainder`` forms the node term exactly from them, once per
+    # node, and only the small end partial in double. These accessors expose exactly what
+    # ``delta`` uses -- the same node choice (``_locate``) and the same partials (``_integral``)
+    # -- and ``delta`` is built from them, so the two cannot drift apart.
+
+    def end_partial(self, z: float) -> Tuple[int, float]:
+        """
+        ``(j, p)``: the node ``delta`` assigns to ``z``, and the partial ``p = int_z^{z_j} f dz``
+        from ``z`` to it, exactly as ``delta`` forms each of its two end partials (``0.0``, with no
+        integrand call, on a node). So ``T(z) = T(z_j) - p`` and
+        ``delta(z_a, z_b) = node_term(j_a, j_b) + (p_b - p_a)``.
+        """
+        z = float(z)
+        j, on_grid = self._locate(z)
+        if on_grid:
+            return j, 0.0
+        return j, self._integral(z, self._z_list[j])
+
+    def delta_parts(self, z_a: float, z_b: float) -> Tuple[int, int, float, float]:
+        """
+        ``(j_a, j_b, p_a, p_b)``: the two nodes and the two end partials ``delta(z_a, z_b)`` is
+        formed from (see ``end_partial``). ``delta`` is ``node_term(j_a, j_b) + ends`` with
+        ``ends = p_b - p_a``, bit for bit, because ``delta`` is computed from this.
+        """
+        z_a = float(z_a)
+        z_b = float(z_b)
+        j_a, on_a = self._locate(z_a)
+        j_b, on_b = self._locate(z_b)
+
+        # partial(n(b) -> b) = int_{z_b}^{z_{n(b)}}; partial(a -> n(a)) = -int_{z_a}^{z_{n(a)}}
+        p_b = 0.0 if on_b else self._integral(z_b, self._z_list[j_b])
+        p_a = 0.0 if on_a else self._integral(z_a, self._z_list[j_a])
+        return j_a, j_b, p_a, p_b
+
+    def node_term(self, j_a: int, j_b: int) -> float:
+        """``T(n_b) - T(n_a)`` as ``delta`` rounds it: ``(hi_b - hi_a) + (lo_b - lo_a)``."""
+        return (self._hi_list[j_b] - self._hi_list[j_a]) + (
+            self._lo_list[j_b] - self._lo_list[j_a]
+        )
+
+    def node_limbs(self, j: int) -> Tuple[float, float]:
+        """
+        ``(hi, lo)`` of node ``j``: ``T(z_j) = hi + lo`` exactly, as two doubles. A caller that
+        needs the node term without rounding forms ``(hi_b - hi_a) + (lo_b - lo_a)`` from these
+        in exact arithmetic.
+        """
+        j = int(j)
+        if not 0 <= j < self._n:
+            raise IndexError(
+                f"CumulativeTable[{self._label}]: node index {j} is outside 0..{self._n - 1}"
+            )
+        return self._hi_list[j], self._lo_list[j]
+
+    # -----------------------------------------------------------------------------------------
     # accessors
     # -----------------------------------------------------------------------------------------
 
@@ -378,19 +438,13 @@ class CumulativeTable:
         On-grid endpoints cost no integrand call; an off-grid endpoint costs ``order`` calls per
         break-free panel. ``delta(z, z) == 0.0`` exactly and ``delta(a, b) == -delta(b, a)`` to
         the bit: the two terms are formed so that reversing the arguments negates each exactly.
+
+        The pieces are ``delta_parts`` and ``node_term``, which a caller can read separately
+        (prompts/levin-phase-floor prompt 05 §1); the result is the same, bit for bit, as when
+        this method formed them inline.
         """
-        z_a = float(z_a)
-        z_b = float(z_b)
-        j_a, on_a = self._locate(z_a)
-        j_b, on_b = self._locate(z_b)
-
-        table = (self._hi_list[j_b] - self._hi_list[j_a]) + (
-            self._lo_list[j_b] - self._lo_list[j_a]
-        )
-
-        # partial(n(b) -> b) = int_{z_b}^{z_{n(b)}}; partial(a -> n(a)) = -int_{z_a}^{z_{n(a)}}
-        p_b = 0.0 if on_b else self._integral(z_b, self._z_list[j_b])
-        p_a = 0.0 if on_a else self._integral(z_a, self._z_list[j_a])
+        j_a, j_b, p_a, p_b = self.delta_parts(z_a, z_b)
+        table = self.node_term(j_a, j_b)
         ends = p_b - p_a
 
         return table + ends

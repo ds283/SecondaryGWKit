@@ -53,17 +53,49 @@ than making ``model_functions`` lie about ``Hubble`` (prompt 15 of the campaign;
 ``H/c_s``). (Exact-radiation check: ``theta = -k(1/s_r - 1/s_s)``, ``d theta/d z_s = -k/s_s^2 =
 -k/H`` with ``H = H0 s^2``, ``H0 = 1``, i.e. ``rate = 1/H``.)
 
-**Anchoring, and the floor it implies** (README Sec 7 D6; review Sec 13.4). ``theta_mod_2pi``
-reduces ``raw_theta`` with ``WKB_mod_2pi`` -- one reduction of one unreduced value, per the house
-rules in ``LiouvilleGreen/range_reduce_mod_2pi.py`` -- against the *global* anchor ``z_anchor``.
-The reduced product is therefore as large as the whole range's phase, and inherits the
-``eps k tau`` rounding floor: ~1e-7 rad at ``k = 1e5/Mpc`` and ~9e-4 rad at ``k = 3e8/Mpc``
-(review Sec 1, Sec 13.4). That is accepted here: it is three to four orders below the consumer
-error this class replaces and at or below the QCD Liouville-Green truncation floor of ~1e-3 rad
-(review Sec 6), so nothing physical is visible under it. Per-*region* anchoring -- re-anchoring
-at each Levin subinterval, so the floor scales with that region's own phase instead of the whole
-range's -- is the recorded follow-up ``[00-consumer-anchoring-floor]`` and is deliberately not
-done here (README Sec 0.4).
+**Anchoring, and the floor it implies** (README Sec 7 D6; review Sec 13.4;
+``prompts/levin-phase-floor`` prompt 05). There are two ways to form the remainder, chosen per
+object by the ``exact_remainder`` constructor keyword.
+
+*The default* (``exact_remainder=False``) reduces ``raw_theta`` with ``WKB_mod_2pi`` -- one
+reduction of one unreduced value, per the house rules in ``LiouvilleGreen/range_reduce_mod_2pi.py``
+-- against the *global* anchor ``z_anchor``. The reduced value is a double as large as the whole
+range's phase, ``~ k tau(z_anchor)``, so the remainder inherits its ``eps k tau`` rounding: ~1e-7
+rad at ``k = 1e5/Mpc`` and ~9e-4 rad at ``k = 3e8/Mpc`` (review Sec 1, Sec 13.4). That rounding is
+not smooth in ``z``. The reduction is also against the double ``TWO_PI``, not against 2pi, which
+adds a smooth ``0.18 eps |theta|``. ``levin-phase-floor`` found the jitter at 0.22-0.34 of
+``F = eps k tau_R`` in every expensive phase group of A3 v2, and showed that it, and not the
+integrand, sends the Levin bisection to its depth cap (its 03 and 04; VERIFICATION Sec 3-4).
+
+*The node-anchored remainder* (``exact_remainder=True``) forms no double of size ``k tau_R`` on
+the way to the remainder. ``CumulativeTable.delta`` is a node term plus two end partials,
+``delta(z, z_R) = [T(n_R) - T(n_z)] + p_R - p_z``, with ``n_z`` the node ``delta`` assigns to
+``z`` and ``p_z`` the local Gauss partial to it (zero on a node). So
+
+    theta(z) = c_{n_z} + v(z),
+    c_n  = (sign k [T(n_R) - T(n) + p_R]) mod 2pi,       v(z) = -sign k p_z + phi(u).
+
+``c_n`` is computed once per node, lazily, and memoised: the node term exactly from the four
+limbs (``CumulativeTable.node_limbs``), ``k`` multiplied in exactly, and the reduction against
+2pi itself in extended precision (``mpmath``, 256 bits), then rounded once to a double in
+``[-TWO_PI, 0]``. ``v`` is at most ``k`` times half a table interval of the primitive plus O(1)
+rad; it is formed in double and reduced with ``WKB_mod_2pi``, whose modulus error,
+``0.18 eps |v|``, is negligible. The remainder is ``c_{n_z} + rem(v)``, wrapped once by an exact
+add of ``TWO_PI`` (Sterbenz). What is left is ``~ eps k |p_z|`` of jitter and ~1e-15 rad where
+``n_z`` switches between nodes. ``raw_theta`` and ``theta_deriv`` are the same in both modes,
+bit for bit: ``raw_theta`` is still the double of size ``k tau_R``, used for the driver's
+total-variation gate and for diagnostics, where that size is harmless.
+
+**Who uses which** (gate G1 of ``prompts/levin-phase-floor``, answered by the user on
+2026-10-26). The Green's function turns the node-anchored remainder on
+(``GkSourcePolicyData._build_phase``): its anchor term ``k tau_R`` was the floor (04's arm A
+matched the exact limit region for region). The transfer function keeps the default
+(``TkSourceFunctions``): G1 took the large constant out of ``G``'s phase only, and ``T``'s
+remainders are unchanged bit for bit. Whether ``T`` needs the same is for the wider
+re-measurement of prompt 05 to show, and is a finding for the board, not a change made here.
+Per-*region* anchoring, ``[00-consumer-anchoring-floor]``, is what this answers for ``G``. The
+noise in the stored samples of ``phi`` (``[02-consumer-phi-below-the-storage-granularity]``) is
+not touched by either mode.
 
 **Protocol.** This class implements exactly the three methods every ``phase_spline`` consumer
 calls -- ``raw_theta(x, x_is_log)``, ``theta_mod_2pi(x, x_is_log)``,
@@ -80,18 +112,51 @@ No Ray, no datastore: this is a plain numerical object built from a ``TablePrimi
 wavenumber and a sample of ``phi``.
 """
 
+from fractions import Fraction
 from math import expm1, log1p
-from typing import Callable, Optional, Sequence
+from typing import Callable, Dict, Optional, Sequence
 
+import mpmath
 import numpy as np
+from mpmath.libmp import round_nearest, to_float
 from scipy.interpolate import make_interp_spline
 
 from LiouvilleGreen.WKBtools import WKB_mod_2pi
+from LiouvilleGreen.constants import TWO_PI
 
 # The out-of-range policy is phase_spline's, and is shared rather than re-stated: inside the
 # sampled range evaluate normally; within SPLINE_TOP_BOTTOM_CUSHION of a fractional overshoot,
 # clamp to the boundary; beyond that, raise.
 from LiouvilleGreen.phase_spline import SPLINE_TOP_BOTTOM_CUSHION
+
+# The node constants c_n of the node-anchored remainder are reduced against 2pi itself in this
+# private mpmath context, never in the global one (which a caller may have set). 256 bits is
+# ~77 decimal digits: |sign k [T(n_R) - T(n) + p_R]| is at most ~1e13 rad (~2^43), so the
+# reduction's error, ~2^43 * 2^-256 of 2pi, is ~1e-63 rad, far below the one rounding to a
+# double that follows it.
+_REMAINDER_CONTEXT = mpmath.MPContext()
+_REMAINDER_CONTEXT.prec = 256
+
+
+def _remainder_against_two_pi(theta: Fraction) -> float:
+    """
+    ``theta mod 2pi`` into ``(-2pi, 0]``, for an exact rational ``theta``, reduced against 2pi
+    itself (not against the double ``TWO_PI``) in ``_REMAINDER_CONTEXT``, then rounded once to
+    the nearest double. The result lies in ``[-TWO_PI, 0]``: ``TWO_PI < 2pi``, so a remainder in
+    ``(-2pi, -TWO_PI]`` rounds to ``-TWO_PI``, which is still in ``(-2pi, 0]``.
+    """
+    ctx = _REMAINDER_CONTEXT
+    # every double is a dyadic rational, so the denominator is a power of two and the division
+    # rounds only the numerator, relative 2^-256
+    x = ctx.mpf(theta.numerator) / ctx.mpf(theta.denominator)
+    two_pi = 2 * ctx.pi
+    r = x - ctx.ceil(x / two_pi) * two_pi
+    # ceil puts r in (-2pi, 0] up to the context's rounding; settle an edge case either way
+    while r > 0:
+        r -= two_pi
+    while r <= -two_pi:
+        r += two_pi
+    return to_float(r._mpf_, rnd=round_nearest)
 
 
 class PrimitivePhase:
@@ -127,6 +192,13 @@ class PrimitivePhase:
         or ``c_s(z)/H(z)`` for ``cs_tau``. Defaults to ``None``, which builds
         ``lambda z: 1.0 / model_functions.Hubble(z)`` -- the value every caller that predates
         this parameter relied on, so omitting it changes nothing
+    :param exact_remainder: ``False`` (the default) reduces ``raw_theta`` with ``WKB_mod_2pi``,
+        exactly as before this parameter existed. ``True`` forms ``theta_mod_2pi`` node by node,
+        with the large constant reduced exactly against 2pi and never rounded at the size of
+        ``k tau_R`` (module docstring, "Anchoring"). It needs ``leading`` to supply the node
+        accessors ``end_partial`` and ``node_limbs`` (``BackgroundModel.TablePrimitive`` passes
+        them through from ``CumulativeTable``); without them the constructor raises
+        ``ValueError``, and there is no fallback
     """
 
     def __init__(
@@ -142,6 +214,7 @@ class PrimitivePhase:
         label: str = "",
         spline_order: int = 3,
         rate: Optional[Callable[[float], float]] = None,
+        exact_remainder: bool = False,
     ):
         self._label = label
 
@@ -220,6 +293,33 @@ class PrimitivePhase:
         self.min_x = float(self._z_points[0])
         self.max_x = float(self._z_points[-1])
 
+        # the node-anchored remainder (module docstring, "Anchoring"): opt in, and only with the
+        # leading primitive's node accessors. No fallback to the default: a caller that asks for
+        # it and cannot have it is told so here, at construction
+        self._exact_remainder = bool(exact_remainder)
+        self._node_constants: Dict[int, float] = {}
+        self._anchor_node = None
+        self._anchor_exact = None
+        if self._exact_remainder:
+            missing = [
+                name
+                for name in ("end_partial", "node_limbs")
+                if not callable(getattr(leading, name, None))
+            ]
+            if len(missing) > 0:
+                raise ValueError(
+                    f"PrimitivePhase[{label}]: exact_remainder needs the leading primitive's node "
+                    f"accessors end_partial and node_limbs (CumulativeTable, through "
+                    f"BackgroundModel.TablePrimitive); {type(leading).__name__} lacks "
+                    f"{', '.join(missing)}"
+                )
+            # T(n_R) + p_R, exactly: the anchor's node limbs and its own end partial, which is
+            # a constant of the object (zero when the anchor is a node, as in production)
+            j_R, p_R = leading.end_partial(self._z_anchor)
+            hi_R, lo_R = leading.node_limbs(j_R)
+            self._anchor_node = int(j_R)
+            self._anchor_exact = Fraction(hi_R) + Fraction(lo_R) + Fraction(p_R)
+
     # ---------------------------------------------------------------------------------------
     # range discipline (phase_spline's, so that a consumer sees the same behaviour)
     # ---------------------------------------------------------------------------------------
@@ -283,10 +383,48 @@ class PrimitivePhase:
         return self._sign * self._k * leading + float(self._spline(u))
 
     def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
-        """``raw_theta`` reduced into ``(-2pi, 0]`` (the producers' negative-remainder
-        convention), against the global anchor ``z_anchor`` -- see the module docstring for the
-        floor this implies and why it is accepted."""
-        return WKB_mod_2pi(self.raw_theta(x, x_is_log=x_is_log))[1]
+        """
+        The phase reduced into ``(-2pi, 0]`` (the producers' negative-remainder convention).
+
+        By default, ``raw_theta`` reduced with ``WKB_mod_2pi`` against the global anchor
+        ``z_anchor``, carrying ``eps k tau_R`` of rounding. With ``exact_remainder``,
+        ``c_{n_z} + rem(v(z))``, wrapped once into ``[-TWO_PI, 0]``, with no double of size
+        ``k tau_R`` formed on the way. The module docstring, "Anchoring", has both.
+        """
+        if not self._exact_remainder:
+            return WKB_mod_2pi(self.raw_theta(x, x_is_log=x_is_log))[1]
+
+        # the abscissa exactly as raw_theta takes it
+        raw_x, log_x = self._get_x(x, x_is_log)
+        u = self._clamped_u(raw_x, log_x)
+
+        # delta(z, z_R) = [T(n_R) - T(n_z)] + p_R - p_z: the node and the partial delta uses
+        j, p_z = self._leading.end_partial(raw_x)
+        c = self._node_constant(j)
+
+        # the small variable part, -sign k p_z + phi(u), in double, as raw_theta forms its sum
+        v = -self._sign * self._k * p_z + float(self._spline(u))
+
+        # c is in [-TWO_PI, 0] and rem(v) in (-TWO_PI, 0], so the sum is in [-2 TWO_PI, 0]; one
+        # add of TWO_PI to a value in [-2 TWO_PI, -TWO_PI] is exact (Sterbenz)
+        r = c + WKB_mod_2pi(v)[1]
+        if r <= -TWO_PI:
+            r += TWO_PI
+        return r
+
+    def _node_constant(self, j: int) -> float:
+        """
+        ``c_j = (sign k [T(n_R) - T(n_j) + p_R]) mod 2pi`` in ``[-TWO_PI, 0]``: the node term from
+        the four limbs and ``k`` multiplied in, both exactly (``Fraction``), reduced against 2pi
+        itself in extended precision and rounded once. Computed on first use and memoised.
+        """
+        c = self._node_constants.get(j)
+        if c is None:
+            hi, lo = self._leading.node_limbs(j)
+            node_term = self._anchor_exact - (Fraction(hi) + Fraction(lo))
+            c = _remainder_against_two_pi(self._sign * Fraction(self._k) * node_term)
+            self._node_constants[j] = c
+        return c
 
     def theta_deriv(
         self, x: float, x_is_log: bool = False, log_derivative: bool = False
@@ -328,6 +466,11 @@ class PrimitivePhase:
     @property
     def k(self) -> float:
         return self._k
+
+    @property
+    def exact_remainder(self) -> bool:
+        """Whether ``theta_mod_2pi`` is the node-anchored remainder (module docstring)."""
+        return self._exact_remainder
 
     @property
     def sign(self) -> int:

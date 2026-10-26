@@ -661,6 +661,21 @@ class TablePrimitive:
     def delta(self, z_a: float, z_b: float) -> float:
         return self._table.delta(float(z_a), float(z_b))
 
+    # the node accessors, passed through (prompts/levin-phase-floor prompt 05 §1): delta's own
+    # pieces, for a caller that keeps the node term exact (PrimitivePhase's exact_remainder)
+
+    def end_partial(self, z: float) -> tuple[int, float]:
+        return self._table.end_partial(float(z))
+
+    def delta_parts(self, z_a: float, z_b: float) -> tuple[int, int, float, float]:
+        return self._table.delta_parts(float(z_a), float(z_b))
+
+    def node_term(self, j_a: int, j_b: int) -> float:
+        return self._table.node_term(j_a, j_b)
+
+    def node_limbs(self, j: int) -> tuple[float, float]:
+        return self._table.node_limbs(j)
+
     @property
     def table(self) -> CumulativeTable:
         return self._table
