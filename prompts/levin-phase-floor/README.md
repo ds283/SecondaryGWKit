@@ -153,8 +153,9 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | 02 | [`02-phase-noise-injection.md`](02-phase-noise-injection.md) | findings §2.6 item 2: deterministic phase noise of amplitude $\delta$ added to the composed `theta_mod_2pi` on A2's fixtures, by group; depth and regions against $\delta$ | laptop, offline, no Ray, no store | Opus | ⛔ stopped at step 3 and superseded by 03 (user, 2026-10-25); N4 moves to 04 |
 | 03 | [`03-instrument-depth-20-rows.md`](03-instrument-depth-20-rows.md) | findings §2.6 item 1: seven A3 v2 rows from 01's list, re-run in-process and bit-identical to the store; depth per group, the jitter, and the discrepancy along a region's ancestry against the floor, with a jitter-removed control | Mac Studio, reads A3 v2 | Opus | written 2026-10-25, after 01 |
 | 04 | [`04-remove-the-floor.md`](04-remove-the-floor.md) | findings §2.6 item 3: in a harness, not in production, take $k\tau_R$ out of $G$'s phase and/or compose the group's leading terms before reduction, as 01–03 indicate; re-run 03's rows; and, from 02's N4, whether each row's stored `total_abserr` covers $|{\rm total} - {\rm total}_{\rm jitter\ removed}|$ | Mac Studio, reads A3 v2, at the pre-B1 tree `98e68d3` | Opus | landed 2026-10-25: R1, A1 and R2 hold, N4 fails on 3 of 7; §8 amended two gates after a stop at step 5 |
-| **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | ⬜ |
-| 05+ | remedy | §2.7 layers 1–2 as G1 decides, each with its own tests and an offline re-measurement of 03's rows | laptop | — | ⬜ not written |
+| **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | answered 2026-10-26 (the board's Decisions) |
+| 05 | [`05-reanchor-g-phase.md`](05-reanchor-g-phase.md) | layer 1(a): $G$'s remainder exact per table node, against $2\pi$; R9/R10 compared value by value; a wider re-measurement on A3 v2 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
+| 06+ | remedy | the producers' stored phase (G1 Q3), then layer 2 as G2 decides | — | — | ⬜ not written |
 | **G2** | gate | the user decides layer 3 (§6.3 Q4) and the `rtol` question (Q5) | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
