@@ -17,6 +17,10 @@
 
 **Commit:** this one commit (§4), not pushed. Its hash is not written here; the board's 05a row
 carries none until the records commit.
+*Orchestrator, after the review:* the commit is **`1fc349c`**. It passed all nine checks of the
+review on the laptop and was pushed. The follow-ups are `bd38e50` (observation 4's three comments,
+on the user's word) and `2db3f9e` (T1 amended by prompt §9, on the user's decision, after
+observations 1 and 2).
 
 **Result:**
 - **§1.** `TkSourceFunctions(..., exact_remainder=True)`, passed to the `PrimitivePhase` of
@@ -370,7 +374,9 @@ nothing.
    - **Bearing:** T1's under-$t$ clause, $\le 10^{-3}\varepsilon|\theta_T|$, would fail on such
      windows for a reason that is not the phase. A guard on the largest unwrapped step, or a window
      narrow enough to resolve, would separate the two. **Proposed issue**, for the orchestrator to
-     open or not: `[05a-unresolved-probe-window-measures-the-unwrap]`.
+     open or not: `[05a-unresolved-probe-window-measures-the-unwrap]`. *(Orchestrator: not opened. The user
+     amended T1 before §6 instead (prompt §9, `2db3f9e`): an unresolved window is narrowed until it
+     resolves, and one that cannot be is undecided.)*
 2. **For §6's T1 and for the construction: between nodes, $T$'s node-anchored remainder keeps
    $\varepsilon k|p_z|$, up to $\sim10^{-2}\,\varepsilon|\theta_T|$.**
    - $v = -k p_z + \phi$ is formed in double. $|p_z|$ is up to half a table interval of $\tau_s$,
@@ -404,7 +410,8 @@ nothing.
      production does". Through `exact_functions()` it now gets `exact_remainder=False`; the tests
      that need production's configuration capture its samples instead (deviation 5).
 
-   A follow-up commit could correct all three; none changes behaviour.
+   A follow-up commit could correct all three; none changes behaviour. *(Orchestrator: corrected in `bd38e50`, on
+   the user's word, comments and docstrings only.)*
 5. **`test_t_phase_reanchor` imports from three other test modules** (`test_g_phase_reanchor`,
    `test_phase_groups` and `test_quadsource_integral`), as §3 asks ("import that fixture rather
    than copying it"). A rename of their private helpers would break it at import.

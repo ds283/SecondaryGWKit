@@ -370,9 +370,78 @@ comparison with 05's $c$ unit on one row. Then, in **one records commit**, pushe
 R11 and R12's stores are the user's to keep or retire; ask. The worktree is removed with `git
 worktree remove` on the Mac Studio once the records are committed and the user agrees.
 
-### B.5 Addendum: Part B's dispatch
+### B.5 Addendum, 2026-10-26 12:20 GMT: Part B's dispatch
 
-*Written at Part B's dispatch, in the residue commit.*
+**Part A** is the code commit **`1fc349c`**, whose parent is the dispatch SHA **`c4eaefd`**. It
+passed all nine checks of §A.3 on the laptop and is pushed. In particular:
+- **The roots,** re-run by the laptop at `1fc349c`: AdaptiveLevin 32, ComputeTargets 764 (754 +
+  10), CosmologyModels 39, LiouvilleGreen 148 (1 skipped), ObjectFactories 280, RunDrivers 127,
+  tools 55, all OK. The 10 methods were counted from the diff; the replaced test was renamed in
+  place.
+- **`primitive_phase.py`'s code did not move:** its AST, with the module docstring removed, is
+  identical at `c4eaefd` and `1fc349c`. The keyword defaults on, is passed only to `_build_WKB`'s
+  `PrimitivePhase`, and has no fallback.
+- **Breakage (iv), re-applied by the laptop** ($p_R \to 0$ in the anchor): test 2 failed off a node
+  at all four $k$, by exactly $k p_R$ reduced, and passed on a node. Reverted; the tree clean.
+
+**Two commits follow it, on the user's word (2026-10-26):**
+- **`bd38e50`** corrects the three comments the log's observation 4 names. Comments and docstrings
+  only: both modules' ASTs, docstrings removed, are identical before and after. So R12's and $t$'s
+  code is `1fc349c`'s.
+- **`2db3f9e`** amends T1 before §6 runs: prompt **§9**. The agent's observations 1 and 2 showed
+  that T1 as written could not be scored. A window of relative width $10^{-6}$ at large
+  $|\theta_T|$ and $z \gtrsim 1$ is not resolved by its 65 samples, so $\sigma_\theta$ measures
+  `numpy.unwrap`. And between table nodes the remainder keeps $\varepsilon k|p_z|$, up to
+  $\sim10^{-2}\varepsilon|\theta_T|$, which test 2's bound already admits. §9 narrows each window
+  until it resolves, and bounds $\sigma_\theta$ under $t$ by
+  $\max(10^{-3}\varepsilon|\theta_T|, \varepsilon(k\max|p_z| + 2\pi), 10^{-13})$. T0, T2–T4 are
+  unchanged.
+
+**For the rehearsal agent:**
+- **The tool's form** is `PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff R11.sqlite R12.sqlite --json`.
+  Exit 1 is expected, since `QuadSourceIntegral` should differ. Exit 2 is a usage error or a store
+  that cannot be opened.
+- **`QuadSourceIntegral`'s `metadata` is expected to differ** as well as its totals: it stores
+  `handover_continuity`, which takes $\sin$ and $\cos$ of $T$'s `theta_mod_2pi` (log, observation
+  3). That is inside the class whose values are meant to move.
+
+**For the re-measurement agent:**
+- **Prompt §9 is part of its scope.** The probe follows §9's windows, records each window's width,
+  largest unwrapped step under both trees, and $\max|p_z|$. `state/predictions.md` quotes §6 with
+  §9's T1 in place of §6's, as §9 says.
+- **T0's first clause** holds at the parent: `git diff --stat 120fdfe c4eaefd -- . ':!docs'
+  ':!prompts'` shows `CLAUDE.md` alone.
+
+**For the review (§B.3), two checks read with §9:**
+- **Check 8:** `state/predictions.md` quotes §6's predictions with §9's T1, word for word.
+- **Check 9:** T1 is re-scored as §9 states, from the saved windows: each resolved window's
+  $\sigma_\theta$ against its own $\max|p_z|$, and each unresolved window counted.
+
+**And §B.4's closing rule** reads T1 as §9's.
+
+**§B.0 re-checked on the Mac Studio at 12:12 GMT**, read-only:
+- the checkout is at `53084dc`, `git status --short` empty, one worktree;
+- the registry holds 16 runs, all finished;
+- the lock is free, `~/.raypoolkit/` is empty and `~/ScienceData/.rehearsal-lock` does not exist;
+- there is no `var/levin-phase-floor-05a/` and no `levin-phase-floor-05a-*` store;
+- 05's `sample.json` is `73aa7876…`, and its run directory holds 122 files;
+- A3 v2 shows `problems: none` and `0e32f24a…`;
+- `~/.ray/auth_token` is mode 600; 117 GiB free; the load is about 4.3 on 10 cores.
+
+**The laptop then does three things:**
+1. it fast-forwards the Mac Studio checkout to this addendum's commit;
+2. it makes the worktree `/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd`, detached at
+   `c4eaefd`;
+3. it starts the Mac Studio orchestrator.
+
+**The trees, by SHA:**
+- **R11 and $c$** run at `c4eaefd`, in the worktree;
+- **R12 and $t$** run at this addendum's commit, in the main checkout. Its code is `1fc349c`'s, up
+  to `bd38e50`'s comments. The commit itself adds only records under `prompts/`.
+
+The orchestrator re-reads this state as its Gate, does not fetch, and stops if anything differs.
+**Other projects on this host** may take the shared lock. If `acquire` exits 3, that is the stop
+the lock's rule gives: ask the user.
 
 ---
 
