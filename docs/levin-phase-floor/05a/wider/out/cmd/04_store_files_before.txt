@@ -1,0 +1,27 @@
+$ bash -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -B\ scripts/hash_store.py\ before\ \>\ state/store_files_before.txt\;\ cat\ state/store_files_before.txt\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/\ \|\ grep\ -i\ \'A3-v2\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:24:04Z
+# ----
+# store files before
+# written 2026-10-26T12:24:04Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd HEAD c4eaefda26ccb615fa5864cac877454ba364c304 (status --short: empty)
+# tree t: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 149c3938bb9e074df3682f8e511c7b57cd9c55c5 (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in var/datastores/)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1792699923608529810  2026-10-22T20:12:03.608530+00:00  handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352  1792875376155767739  2026-10-24T20:56:16.155768+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152  1792875376181522969  2026-10-24T20:56:16.181523+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888  1792875376101702570  2026-10-24T20:56:16.101702+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488  1792875376127589134  2026-10-24T20:56:16.127589+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519  1792884865850625524  2026-10-24T23:34:25.850626+00:00  handover-A3-v2-lambdacdm.manifest.json
+# journal/-wal/-shm files beside the store: none
+-rw-r--r--  1 ds283 staff 106340352 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0000.sqlite
+-rw-r--r--  1 ds283 staff 107569152 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0001.sqlite
+-rw-r--r--  1 ds283 staff 107429888 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0002.sqlite
+-rw-r--r--  1 ds283 staff 105791488 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     10519 Oct 25 00:34 handover-A3-v2-lambdacdm.manifest.json
+-rw-r--r--  1 ds283 staff     36864 Oct 22 21:12 handover-A3-v2-lambdacdm.sqlite
+# ----
+# end 2026-10-26T12:24:05Z
+# exit 0

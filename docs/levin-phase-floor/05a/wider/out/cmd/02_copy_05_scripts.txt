@@ -1,0 +1,56 @@
+$ bash -c set\ -e\;\ for\ f\ in\ analyse.py\ dispatch.py\ draw_sample.py\ harness.py\ hash_store.py\ l0.py\ launch.py\ prov.py\ rebuild.py\ run_wider.py\ worker.py\;\ do\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/\$f\ scripts/\$f\;\ done\;\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py\ scripts/convergence_kinds.py\;\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json\ state/sample.json\;\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.md\ state/sample.md\;\ echo\ \'==\ sha256\,\ 05\ copy\ \(var\)\ and\ 05a\ copy\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/\*.py\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh\ scripts/\*.py\ scripts/rec.sh\ /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py\;\ echo\ \'==\ rec.sh\,\ diff\ against\ 05\ copy\'\;\ diff\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh\ scripts/rec.sh\ \|\|\ true\;\ echo\ \'==\ 05\ var\ copy\ vs\ docs\ copy\ of\ 05\ harness\'\;\ diff\ -r\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts\ /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/05/wider/scripts\ \&\&\ echo\ identical
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:23:35Z
+# ----
+== sha256, 05 copy (var) and 05a copy
+675d6bc7787584c18eb749945b4762c17ee52f3949b8f068816f5d020fe7be78  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/analyse.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/draw_sample.py
+be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/harness.py
+7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/l0.py
+d8ac0dc3ebf2f534811ede5b440108cb77d7afc4dd8dbd113f64df026bce2bb2  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/launch.py
+e8579509f9b7c278c78500de4627a221875293322c2f42bacd30861ea36fbc66  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/prov.py
+0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rebuild.py
+491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py
+e2ef68f057ecb1cabeb59429e06952136ce96b0cfdad0d09b2a2e141dcd08341  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py
+f52fb0302cb8638848c5a25ac59869dc7cb62b4255a7f5b5af596fd8092fba86  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh
+675d6bc7787584c18eb749945b4762c17ee52f3949b8f068816f5d020fe7be78  scripts/analyse.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279  scripts/harness.py
+7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+d8ac0dc3ebf2f534811ede5b440108cb77d7afc4dd8dbd113f64df026bce2bb2  scripts/launch.py
+e8579509f9b7c278c78500de4627a221875293322c2f42bacd30861ea36fbc66  scripts/prov.py
+0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22  scripts/rebuild.py
+491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906  scripts/run_wider.py
+e2ef68f057ecb1cabeb59429e06952136ce96b0cfdad0d09b2a2e141dcd08341  scripts/worker.py
+aaae6682ff56bd21b05318bb8b38bd34bae450f1b286eb1a6e0bc7fa150bb6a8  scripts/rec.sh
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py
+== rec.sh, diff against 05 copy
+2c2,4
+< # levin-phase-floor 05 §6 (wider): run one command and record it with its output.
+---
+> # levin-phase-floor 05a §6 (wider): run one command and record it with its output.
+> # Copied from 05's scripts/rec.sh; changed (prompt 05a): its comments' paths, and every record is
+> # also appended to out/commands.log.
+4,5c6,8
+< # Writes var/levin-phase-floor-05/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
+< # end UTC times, the combined stdout+stderr, and the exit code. Also echoes the output.
+---
+> # Writes var/levin-phase-floor-05a/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
+> # end UTC times, the combined stdout+stderr, and the exit code. Appends the same to
+> # out/commands.log. Also echoes the output.
+28a32,35
+> {
+>   echo "=================== $NAME (out/cmd/$NAME.txt)"
+>   cat "$F"
+> } >> "$HERE/../out/commands.log"
+== 05 var copy vs docs copy of 05 harness
+identical
+# ----
+# end 2026-10-26T12:23:35Z
+# exit 0

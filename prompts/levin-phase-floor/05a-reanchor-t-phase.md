@@ -395,6 +395,15 @@ width $10^{-6}$ in $z$, as §6 says. Then:
   reported and not scored;
 - the $u$-sampled $\sigma_\theta$ uses the same width, in $\log(1+z)$.
 
+**"The largest step", corrected after the run (2026-10-26, the user's decision).** The step meant
+is the phase's own advance per sample, $|d\theta_T/dz|\,(b-a)/64$, the **true step**. It is not
+the largest step of `numpy.unwrap`'s output: that is folded into $(-\pi, \pi]$, so it can be small
+while the samples advance by many cycles each. Under that literal reading T1 failed in 36 of 70
+windows, all aliased ones. The re-measurement agent raised this after the launch, and had fixed
+both readings in `predictions.md` before the run. The user ruled for the true step, without having
+seen either reading's numbers, which already existed on the Mac Studio. T1's verdict of record is
+the true step's (05a's log, Predictions and verdicts). The lines above are left as first written.
+
 Record $\max|p_z|$ over the window's 65 samples beside it: under $t$, from $T$'s `cs_tau.end_partial`
 at each sample.
 

@@ -1,0 +1,54 @@
+=== R12 end checks, 2026-10-26T12:27:51Z
+$ python: status.json top-level fields (copy saved as out/r12_status.json); per-class vs R8 and full classes dict vs R11
+state = done
+exit_code = 0
+pid = 24897
+stage = CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+heartbeat = 2026-10-26T12:27:25+00:00
+fingerprint_sidecar = not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05a-r12.manifest.json is not a problem-free registry sidecar (there is none)
+fingerprint.digest = 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+fingerprint.problems = {}
+taken = {'git_head': '149c3938bb9e074df3682f8e511c7b57cd9c55c5', 'git_dirty': False}
+equals R8 1b332ffa...: True
+per-class digests equal to R8: True 21 classes
+classes object equal to R11's: True
+QuadSourceIntegral count: 864
+$ kill -0 24897; kill -0 24894
+(eval):kill:15: kill 24897 failed: no such process
+exit 1
+(eval):kill:15: kill 24894 failed: no such process
+exit 1
+$ tail -1 launch log
+** driver exit status 0
+$ grep -c Traceback launch log, stdout.log; wc -c stderr.log
+0
+0
+0
+$ ls -l run dir
+total 28
+-rw-r--r-- 1 ds283 staff  4586 Oct 26 12:24 manifest.json
+-rw-r--r-- 1 ds283 staff 10328 Oct 26 12:27 status.json
+-rw-r--r-- 1 ds283 staff     0 Oct 26 12:24 stderr.log
+-rw-r--r-- 1 ds283 staff  8024 Oct 26 12:27 stdout.log
+$ ls -l 05a store files
+-rw-r--r-- 1 ds283 staff  24088576 Oct 26 12:23 levin-phase-floor-05a-r11-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff  24203264 Oct 26 12:23 levin-phase-floor-05a-r11-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff   1077248 Oct 26 12:20 levin-phase-floor-05a-r11-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff  23642112 Oct 26 12:23 levin-phase-floor-05a-r11-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     36864 Oct 26 12:20 levin-phase-floor-05a-r11.sqlite
+-rw-r--r-- 1 ds283 staff  24076288 Oct 26 12:27 levin-phase-floor-05a-r12-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff  24203264 Oct 26 12:27 levin-phase-floor-05a-r12-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff   1077248 Oct 26 12:24 levin-phase-floor-05a-r12-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff  23560192 Oct 26 12:27 levin-phase-floor-05a-r12-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     36864 Oct 26 12:24 levin-phase-floor-05a-r12.sqlite
+$ runregistrykit list | head -4 | tail -3 ; tail -1
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05a-r12-reanchor-t-20261026T122434  done              -       3m  levin-phase-floor prompt 05a, R12
+   levin-phase-floor-05a-r11-parent-20261026T122041      done              -       7m  levin-phase-floor prompt 05a, R11
+   levin-phase-floor-05-wider-20261026T020005            done        109/109  10h 27m  levin-phase-floor prompt 05 secti
+18 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 18 finished; 0 with no host recorded.
+$ main: HEAD; status --short
+149c3938bb9e074df3682f8e511c7b57cd9c55c5
+(end)
+$ worktree: status --short --ignored; find -newer state/r11_launch_marker
+(end)

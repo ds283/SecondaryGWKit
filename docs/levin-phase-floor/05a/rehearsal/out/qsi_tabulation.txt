@@ -1,0 +1,84 @@
+rows: A 864, B 864; same (k,q,r,z_response) set: True
+tolerances A: [(-32.0, -7.0)]; B: [(-32.0, -7.0)]
+tool: 864 rows differ, 0 identical; same key set as the stores: True
+cross-check of `total` against the tool: 0 mismatches
+
+`total` differs in 424 of 864 rows; bit-identical in 440
+numeric_quad identical in 864/864; analytic_rad identical in 864/864; WKB_Levin identical in 429/864
+rows with total differing but WKB_Levin identical: 0
+rel_dtotal over the 424 differing rows: median 1.383e-15, 90% 2.838e-14, max 2.924e-11
+dtotal_over_abserr_A over the 424 differing rows: median 8.254e-09, 90% 4.361e-08, max 8.810e-05
+dtotal_over_abserr_B over the 424 differing rows: median 8.254e-09, 90% 4.361e-08, max 8.810e-05
+rows with |dtotal|/abserr_A > 1.0: 0; /abserr_B > 1.0: 0
+rows with |dtotal|/abserr_A > 0.1: 0; /abserr_B > 0.1: 0
+
+transitions (A -> B), all rows:
+  converged: 0->0: 355, 1->1: 509
+  phase_limited: 0->0: 833, 1->1: 31
+  max_depth: 0->0: 5, 1->1: 3, 10->10: 2, 11->11: 13, 12->12: 10, 14->14: 1, 2->2: 3, 3->3: 11, 4->4: 3, 5->5: 17, 6->6: 229, 7->7: 259, 8->8: 17, None->None: 291
+  regions: 0 rows change; total regions A 13652, B 13652 (None counted as 0)
+
+non-wall-clock metadata keys that differ, by number of rows (top 30):
+   768  partition.handover.Tr.handover_continuity[2].dT_rel
+   768  partition.handover.Tr.handover_continuity[2].dTprime_rel
+   576  partition.handover.Tq.handover_continuity[2].dT_rel
+   576  partition.handover.Tq.handover_continuity[2].dTprime_rel
+   531  WKB_Levin.subintervals[1].groups[0].value
+   494  WKB_Levin.subintervals[1].value
+   476  WKB_Levin.abserr
+   476  WKB_Levin.subintervals[1].abserr
+   451  WKB_Levin.subintervals[1].groups[0].abserr
+   345  WKB_Levin.subintervals[1].groups[3].value
+   288  partition.handover.Tq.handover_continuity[0].dTprime_rel
+   190  WKB_Levin.subintervals[1].groups[1].abserr
+   184  WKB_Levin.subintervals[1].groups[1].value
+   175  WKB_Levin.subintervals[2].groups[0].value
+   174  WKB_Levin.subintervals[2].groups[1].value
+   174  WKB_Levin.subintervals[2].groups[3].value
+   174  WKB_Levin.subintervals[2].value
+   170  WKB_Levin.subintervals[2].groups[2].value
+   166  WKB_Levin.subintervals[1].groups[3].abserr
+   115  WKB_Levin.subintervals[2].abserr
+    96  partition.handover.Tr.handover_continuity[0].dTprime_rel
+    94  WKB_Levin.subintervals[2].groups[0].abserr
+    90  WKB_Levin.subintervals[2].groups[2].abserr
+    69  WKB_Levin.subintervals[2].groups[1].abserr
+    67  WKB_Levin.subintervals[2].groups[3].abserr
+    27  WKB_Levin.subintervals[0].groups[0].abserr
+    27  WKB_Levin.subintervals[0].groups[0].value
+    25  WKB_Levin.subintervals[0].value
+     3  WKB_Levin.subintervals[0].abserr
+distinct non-wall-clock keys differing: 29; rows with any: 864; rows with wall-clock keys only: 0
+
+the 15 rows of largest |dtotal|/abserr_A:
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=6904.72: rel 3.512e-12, /abserr_A 8.810e-05, /abserr_B 8.810e-05, depth 11->11, regions 32->32, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=9104.3: rel 1.583e-12, /abserr_A 3.800e-05, /abserr_B 3.801e-05, depth 11->11, regions 31->31, converged 0->0
+  k=1e+05 q=1e+05 r=1e+05 z_resp=2284.25: rel 1.808e-12, /abserr_A 3.585e-05, /abserr_B 3.585e-05, depth 11->11, regions 28->28, converged 1->1
+  k=1e+05 q=1e+05 r=1e+05 z_resp=3971.41: rel 1.833e-12, /abserr_A 2.098e-05, /abserr_B 2.098e-05, depth 11->11, regions 26->26, converged 1->1
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=1732.38: rel 2.247e-12, /abserr_A 2.042e-05, /abserr_B 2.042e-05, depth 12->12, regions 34->34, converged 0->0
+  k=1e+05 q=1e+05 r=1e+05 z_resp=6904.72: rel 6.702e-13, /abserr_A 1.793e-05, /abserr_B 1.793e-05, depth 12->12, regions 33->33, converged 1->1
+  k=1e+05 q=1e+05 r=1e+05 z_resp=3011.93: rel 1.222e-12, /abserr_A 1.792e-05, /abserr_B 1.792e-05, depth 11->11, regions 28->28, converged 1->1
+  k=1e+05 q=1e+05 r=1e+05 z_resp=5236.55: rel 8.933e-13, /abserr_A 1.746e-05, /abserr_B 1.746e-05, depth 10->10, regions 28->28, converged 1->1
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=3011.93: rel 1.272e-12, /abserr_A 1.531e-05, /abserr_B 1.531e-05, depth 12->12, regions 32->32, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=755.687: rel 2.491e-12, /abserr_A 1.369e-05, /abserr_B 1.369e-05, depth 12->12, regions 27->27, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=2284.25: rel 1.210e-12, /abserr_A 1.357e-05, /abserr_B 1.357e-05, depth 12->12, regions 36->36, converged 0->0
+  k=1e+05 q=1e+05 r=1e+05 z_resp=755.687: rel 2.136e-12, /abserr_A 1.269e-05, /abserr_B 1.269e-05, depth 11->11, regions 32->32, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=250: rel 8.212e-13, /abserr_A 9.520e-06, /abserr_B 9.520e-06, depth 12->12, regions 31->31, converged 0->0
+  k=1e+05 q=1e+05 r=1e+05 z_resp=329.64: rel 4.696e-13, /abserr_A 8.429e-06, /abserr_B 8.429e-06, depth 11->11, regions 26->26, converged 1->1
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=1313.84: rel 4.894e-13, /abserr_A 6.051e-06, /abserr_B 6.051e-06, depth 12->12, regions 31->31, converged 0->0
+
+by max depth under A: rows, rows where total differs, median and max |dtotal|/abserr_A
+  depth 0: 5 rows, 0 differ
+  depth 1: 3 rows, 1 differ, median 0.000e+00, max 0.000e+00
+  depth 2: 3 rows, 1 differ, median 2.703e-09, max 2.703e-09
+  depth 3: 11 rows, 4 differ, median 1.907e-09, max 1.030e-08
+  depth 4: 3 rows, 2 differ, median 3.015e-09, max 3.015e-09
+  depth 5: 17 rows, 9 differ, median 3.314e-09, max 9.425e-09
+  depth 6: 229 rows, 145 differ, median 5.370e-09, max 7.549e-08
+  depth 7: 259 rows, 221 differ, median 1.004e-08, max 7.326e-08
+  depth 8: 17 rows, 15 differ, median 1.132e-08, max 4.321e-08
+  depth 10: 2 rows, 2 differ, median 1.746e-05, max 1.746e-05
+  depth 11: 13 rows, 13 differ, median 8.429e-06, max 8.810e-05
+  depth 12: 10 rows, 10 differ, median 1.357e-05, max 2.042e-05
+  depth 14: 1 rows, 1 differ, median 1.543e-06, max 1.543e-06
+  depth None: 291 rows, 0 differ

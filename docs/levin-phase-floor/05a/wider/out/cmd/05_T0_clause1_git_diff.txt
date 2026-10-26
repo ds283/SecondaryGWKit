@@ -1,0 +1,11 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ git\ diff\ --stat\ 120fdfe\ c4eaefd\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'\(end\ of\ diff\ --stat\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:24:05Z
+# ----
+ CLAUDE.md | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+(end of diff --stat)
+# ----
+# end 2026-10-26T12:24:05Z
+# exit 0

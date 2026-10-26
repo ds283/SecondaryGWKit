@@ -1,0 +1,19 @@
+$ bash -c diff\ -ruN\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts\ scripts\ \>\ out/scripts_diff_against_05.txt\;\ echo\ diff\ exit\ \$\?\;\ diff\ -rq\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts\ scripts\;\ wc\ -l\ out/scripts_diff_against_05.txt\;\ cmp\ scripts/convergence_kinds.py\ /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py\ \&\&\ echo\ \'convergence_kinds.py\ identical\ to\ prompts/levin-phase-floor/measure/\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:30:35Z
+# ----
+diff exit 1
+Only in scripts: convergence_kinds.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/launch.py and scripts/launch.py differ
+Only in scripts: probe.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/prov.py and scripts/prov.py differ
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh and scripts/rec.sh differ
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py and scripts/run_wider.py differ
+Only in scripts: t0.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py and scripts/worker.py differ
+1167 out/scripts_diff_against_05.txt
+convergence_kinds.py identical to prompts/levin-phase-floor/measure/
+# ----
+# end 2026-10-26T12:30:36Z
+# exit 0

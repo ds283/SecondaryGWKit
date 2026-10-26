@@ -1,0 +1,53 @@
+{
+ "evidence": {
+  "tree": "t",
+  "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "expected_sha": "149c3938bb9e074df3682f8e511c7b57cd9c55c5",
+  "head": "149c3938bb9e074df3682f8e511c7b57cd9c55c5",
+  "status_short": "",
+  "files": {
+   "ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/__init__.py",
+   "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py",
+   "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py",
+   "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/GkSourcePolicyData.py",
+   "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/TkSourceFunctions.py",
+   "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit/StoreFixtures/__init__.py",
+   "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit/main.py",
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/primitive_phase.py"
+  },
+  "all_in_tree": true,
+  "in_tree": {
+   "ComputeTargets": true,
+   "ComputeTargets.primitive_phase": true,
+   "ComputeTargets.QuadSource": true,
+   "ComputeTargets.QuadSourceIntegral": true,
+   "ComputeTargets.GkSourcePolicyData": true,
+   "ComputeTargets.TkSourceFunctions": true,
+   "StoreFixtures": true,
+   "main.py": true,
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true
+  },
+  "PrimitivePhase_has_exact_remainder": true,
+  "build_phase_source_mentions_exact_remainder": true,
+  "TkSourceFunctions_exact_remainder_default": true,
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "dont_write_bytecode": true,
+  "OMP_NUM_THREADS": "1",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider",
+  "pid": 28252,
+  "host": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "scripts_sha256": {
+   "worker.py": "e8430786b7272359b48f881f18064149979015a273b170361ce8baa59cc62009",
+   "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b",
+   "harness.py": "be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279",
+   "rebuild.py": "0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22",
+   "prov.py": "470d3bcea426effb6bb3095c7d9f494e47fb7970b841bcbbbac0fabfc9995707",
+   "run_wider.py": "af656ad4fa038dd87524dce67bb0dea21bb4cef1302cda3583283f542f864bec",
+   "launch.py": "676ae5a00618dcd71cf6ed767912fc085a9e7ccf6d4ff276568c1a53960a90e8",
+   "probe.py": "d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef"
+  }
+ }
+}

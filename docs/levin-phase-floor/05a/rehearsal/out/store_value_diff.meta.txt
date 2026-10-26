@@ -1,0 +1,7 @@
+start 2026-10-26T12:28:17Z
+cwd /Users/ds283/Documents/Code/SecondaryGWKit HEAD 149c3938bb9e074df3682f8e511c7b57cd9c55c5
+$ PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite --json > var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json 2> var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json.stderr
+exit 1
+$ PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite --max-rows 1000000 > var/levin-phase-floor-05a/rehearsal/out/store_value_diff.txt 2> var/levin-phase-floor-05a/rehearsal/out/store_value_diff.txt.stderr
+exit 1
+end 2026-10-26T12:28:49Z

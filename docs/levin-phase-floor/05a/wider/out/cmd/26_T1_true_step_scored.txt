@@ -1,0 +1,14 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/t1_true_step_only.py state/probe_windows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T13:24:32Z
+# ----
+# t1_true_step_only.py sha256 316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d
+# input state/probe_windows.json sha256 9919f483d4fd58d5b16b1e1b757cdab48d75484eea3c5fd433fb8a1fcaaf2c83
+levels where the true-step-alone choice differs from analyse.py's true_step level: none
+scored windows needing a re-probe (no kept level resolves them, or their level's samples are not saved): none
+T1 [true step alone, SCORED per the user's decision]: {'below 1e-11, not scored': 21, 'true': 70} -> HOLDS
+   sigma_c/eps|theta| in [0.1979, 0.3737]; sigma_t/eps|theta| in [4.379e-10, 1.313e-05]; largest sigma_t/bound 0.01313; largest unwrapped step at the level used 1.439 rad; levels used {0: 23, 2: 12, 3: 7, 5: 8, 6: 7, 7: 2, 8: 11}
+# ----
+# end 2026-10-26T13:24:33Z
+# exit 0

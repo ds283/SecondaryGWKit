@@ -1,0 +1,43 @@
+$ bash -c stat\ -c\ \'%y\ %n\'\ state/predictions.md\ state/predictions_attempt1_wrong_window_lines.md\ out/T0.txt\ out/cmd/09_T0_check.txt\;\ shasum\ -a\ 256\ state/predictions.md\ state/\*.raw\;\ diff\ state/predictions_attempt1_wrong_window_lines.md\ state/predictions.md\;\ echo\ \'==\ check:\ each\ quoted\ block\ byte-identical\ to\ the\ prompt\ lines\'\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \'from\ pathlib\ import\ Path\;\ s=Path\(\"state/predictions.md\"\).read_text\(\)\;\ r6=Path\(\"state/prompt_section6_predictions.raw\"\).read_text\(\).splitlines\(keepends=True\)\;\ t1=Path\(\"state/prompt_section9_T1.raw\"\).read_text\(\)\;\ w=Path\(\"state/prompt_section9_window.raw\"\).read_text\(\)\;\ print\(\"heading\ line\"\,\ r6\[0\]\ in\ s\)\;\ print\(\"section\ 9\ T1\ block\"\,\ \(r6\[0\]+t1\)\ in\ s\)\;\ print\(\"u-sampled\ clause\"\,\ \"\".join\(r6\[6:9\]\)\ in\ s\)\;\ print\(\"T2-T4\ and\ descriptive\"\,\ \"\".join\(r6\[9:\]\)\ in\ s\)\;\ print\(\"window\ block\"\,\ w\ in\ s\)\;\ print\(\"section\ 6\ T1\ rule\ \(replaced\)\ absent\"\,\ r6\[2\]\ not\ in\ s\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:30:03Z
+# ----
+2026-10-26 12:30:03.204717700 +0000 state/predictions.md
+2026-10-26 12:29:30.091618505 +0000 state/predictions_attempt1_wrong_window_lines.md
+2026-10-26 12:28:33.951087955 +0000 out/T0.txt
+2026-10-26 12:28:33.951087955 +0000 out/cmd/09_T0_check.txt
+6a3cc8cec06bee86c186e6e9d80cc172852b66d322d5d8891fb6f04360fee3ed  state/predictions.md
+9bee0d839ec4a21b826a1125401808526d640b1f602959a5daab1339a1f1f09b  state/prompt_section6_predictions.raw
+5671424783c9a82ae92ec907b7a2aae86d0bcdd31622e447ffc350afce61fc5e  state/prompt_section9_T1.raw
+063ca5d156bc2a33b8b2e5dc2bfb714a40cb6b54dc6148833dfe89e11a7d5783  state/prompt_section9_window.raw
+8,9c8,11
+< 391–399 (`state/prompt_section9_window.raw`). Written after gate T0 held (`out/T0.txt`) and before
+< the run is launched.
+---
+> 388–399 (`state/prompt_section9_window.raw`). Written after gate T0 held (`out/T0.txt`) and before
+> the run is launched. (A first write, at 12:29:30Z, quoted the window from line 391 instead of 388;
+> it is kept as `state/predictions_attempt1_wrong_window_lines.md`. The second write also points
+> the first reading below at `state/T0/c/ledger.jsonl` instead of `out/T0.txt`; nothing else differs.)
+65c67
+< *§9's amended probe window (lines 391–399), on which §9's T1 is scored:*
+---
+> *§9's amended probe window (lines 388–399), on which §9's T1 is scored:*
+66a69,71
+> **The probe window, amended.** At each sub-interval's low-$z$ end, the window starts at relative
+> width $10^{-6}$ in $z$, as §6 says. Then:
+> - it is sampled under both $c$ and $t$. If the largest step of the unwrapped samples is $\pi/2$ or
+88c93
+<   pass the literal rule while its samples step by many cycles (out/T0.txt's workers' ledgers). The
+---
+>   pass the literal rule while its samples step by many cycles (T0's $c$ windows, `state/T0/c/ledger.jsonl`). The
+== check: each quoted block byte-identical to the prompt lines
+heading line True
+section 9 T1 block True
+u-sampled clause True
+T2-T4 and descriptive True
+window block True
+section 6 T1 rule (replaced) absent True
+# ----
+# end 2026-10-26T12:30:03Z
+# exit 0

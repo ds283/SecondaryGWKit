@@ -1,0 +1,32 @@
+**Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
+- **T1 — the floor is there, and goes.** *(Replaced before the run by §9, 2026-10-26.)*
+  - **The rule:** in every probe window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad, sampled in
+    $z$: $\sigma_\theta \ge 0.1\,\varepsilon|\theta_T|$ under $c$, and
+    $\sigma_\theta \le \max(10^{-3}\varepsilon|\theta_T|,\ 10^{-13}\ {\rm rad})$ under $t$.
+  - **Holds** if true in every such window.
+  - **The $u$-sampled $\sigma_\theta$ under $t$** is not scored. Wherever it exceeds
+    $0.1\,\varepsilon|\theta_T|$, report it against $\varepsilon\,\tfrac{z}{1+z}|d\theta_T/du|$, and
+    propose an issue for the abscissa term in the log's "Observations not acted on".
+- **T2 — the cap does not return.**
+  - **The rule:** on every row (all 39), under $t$ at `1e-7`, no group has a region at depth ≥ 18.
+  - **Holds** if true on every row; an over-budget unit counts as false.
+- **T3 — $T$'s errors were within the declared error.**
+  - **The rule:** on every row (all 39), $|{\rm total}_t - {\rm total}_c| \le$ `total_abserr`$_c$,
+    at `1e-7`.
+  - A failure measures what $T$'s two errors cost a total beyond what it declared. That is a
+    finding about the rows before this prompt, not a fault in it.
+- **T4 — the declared error is honest after the change.**
+  - **The rule:** on every one of the 31 depth-20 rows with both $t$ units in budget,
+    $|{\rm total}_t(10^{-7}) - {\rm total}_t(10^{-8})| \le$ `total_abserr`$_t(10^{-7})$.
+  - 05's L3, the same rule under $c$, held on 29 of 31.
+
+**Descriptive, not scored:**
+- $|{\rm total}_t - {\rm total}_c|/|{\rm total}_c|$ and $/$`total_abserr`$_c$ on every row;
+- regions and maximum depth per group, $c$ against $t$, with the `Gqr` groups and the low-$z$ end
+  of each sub-interval shown apart;
+- `total_converged` under $c$ and $t$;
+- **the kinds of non-convergence** under $t$ at both tolerances, by the orchestrator's
+  `prompts/levin-phase-floor/measure/convergence_kinds.py`, copied unchanged, recorded by SHA-256,
+  and run as `convergence_kinds.py <this run> --tree t --capped-run <05's run>`. It reads the
+  `checkpoint.jsonl` and `unit_*.pkl` layout of 05's run, which the harness keeps. The same
+  measurement under 05's $c$ is `prompts/levin-phase-floor/measure/out/convergence_kinds.txt`.

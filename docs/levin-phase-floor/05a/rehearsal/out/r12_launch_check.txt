@@ -1,0 +1,66 @@
+=== R12 one check, 2026-10-26T12:24:48Z
+## lock 4 (separate command, before this check): set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 24897 >> out/lock.log
+$ tail -2 out/lock.log
+recorded pid 24897 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+$ ./venv/bin/python -m runregistrykit list | head -3
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05a-r12-reanchor-t-20261026T122434  running           -      15s  levin-phase-floor prompt 05a, R12 on the Mac Studio (mps026298; main checkout at 149c393, whose code is the code commit 1fc349c up to bd38e50's comments; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R11/R12 value comparison, and QuadSourceIntegral alone is expected to differ  · CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+   levin-phase-floor-05a-r11-parent-20261026T122041      done              -       4m  levin-phase-floor prompt 05a, R11 on the Mac Studio (mps026298; tree c4eaefd in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd, the parent of the code commit 1fc349c; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R11/R12 value comparison  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+run dir: var/runs/levin-phase-floor-05a-r12-reanchor-t-20261026T122434
+$ status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T12:24:46+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 24897,
+  "stage": "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+$ head -25 launch log
+** quadsource_atol_sweep --build: registered as levin-phase-floor-05a-r12-reanchor-t-20261026T122434
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05a-r12-reanchor-t-20261026T122434/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05a-r12.sqlite', '--job-name', 'levin-phase-floor-05a', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-10-26 12:24:39,613	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05a-r12.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=24995)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=24995)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=24995)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=24995)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=24995)[0m |  present-day energy density = 8.6e-24 g/m^3
+[36m(Datastore pid=24995)[0m |  matter-radiation equality at z = 3403
+[36m(Datastore pid=24995)[0m |  matter-Lambda equality at z = 0.3034
+[36m(Datastore pid=24998)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=24998)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+
+$ grep -c Traceback launch log
+0
+$ kill -0 24897; kill -0 24894
+24897 alive
+24894 alive
+$ lsof -a -d cwd -p 24897
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF      NODE NAME
+Python  24897 ds283  cwd    DIR   1,13     2240 185399640 /Users/ds283/Documents/Code/SecondaryGWKit
+$ manifest git_head, cwd, script
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit",
+  "git_dirty": false,
+  "git_head": "149c3938bb9e074df3682f8e511c7b57cd9c55c5",
+  "results": "var/datastores/levin-phase-floor-05a-r12.sqlite",
+  "script": "RunDrivers/quadsource_atol_sweep.py",
+  "script_sha256": "5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b",

@@ -900,3 +900,467 @@ The other 20 are not capped under $p$, R2 among them (05's `issues.md` W2).
 - **B1 against the stored rows** (05's `issues.md` W1): $\lvert{\rm total}_p - {\rm total}_{\rm stored}\rvert$
   exceeds the stored `total_abserr` on 36 of 39 rows. The ratios are 5.2 to 1.5e5. The three rows
   within error are `low-Gqr-3` (stored error infinite) and the two `NULL` controls (bit-identical).
+
+## 5a. Layer 1(a) for $T$
+
+**Prompt 05a, 2026-10-26, in three parts**, as 05 ran. The code was written on the laptop; R11 and
+R12 and the re-measurement of 05's 39 rows ran on the Mac Studio.
+
+- **The code** is `1fc349c`. `TkSourceFunctions` gains the keyword `exact_remainder`, default on,
+  passed to its WKB phase's `PrimitivePhase`. So $T$'s remainder is formed node by node and reduced
+  against $2\pi$, by the construction 05 built for $G$. $T$'s anchor `z_init` is a root, so the
+  anchor's end partial is non-zero in production for the first time. `raw_theta`, `theta_deriv`
+  and $G$'s phase are unchanged, and `primitive_phase.py`'s code did not move. The tests and the
+  four breakages are in `prompts/levin-phase-floor/logs/05a-reanchor-t-phase.md`.
+  - On the test fixture, σ_θ sampled in $z$ at a table node falls from 0.24 to
+    $4.8\times10^{-8}\,\varepsilon|\theta_T|$.
+  - `bd38e50` corrected three comments the code commit left stale.
+- **T1 was amended before §6 ran** (prompt §9, `2db3f9e`, the user's decision). The code's tests
+  showed that a probe window of relative width $10^{-6}$ is not resolved by its 65 samples at
+  large $|\theta_T|$, and that between table nodes the remainder keeps $\varepsilon k|p_z|$. §9
+  narrows each window until it is resolved, and admits $\varepsilon(k\max|p_z| + 2\pi)$ in the bound
+  under $t$.
+- **R11 against R12** is §5a.1.
+  - Both give `1b332ffa…`, and every value table of every class is bit-identical.
+  - Outside `QuadSourceIntegral`, only the four volatile kinds of
+    `[05-store-value-diff-compares-volatile-columns]` differ.
+  - 424 of 864 totals move, by at most $2.9\times10^{-11}$ relative and $8.8\times10^{-5}$ of the
+    declared error. No depth, region count or convergence flag changes.
+- **The re-measurement** is §5a.2.
+  - T0 holds: all 39 of 05a's $c$ units equal 05's $c$ units bit for bit.
+  - **T1 holds by the true step** (70 of 70 windows; under $t$, σ_θ is at most
+    $1.3\times10^{-5}\,\varepsilon|\theta_T|$, against 0.20–0.37 under $c$). Read literally it
+    fails in 36, all aliased.
+  - T2 and T3 hold. $T$'s two errors moved a total by at most $4.7\times10^{-6}$ of its declared
+    error, and changed no Levin call's regions, depth or flag.
+  - T4 fails on the two rows on which 05's L3 failed, at the same ratios.
+  - Sampled in $u$, as production calls it, the rounding of $z = {\rm expm1}(u)$ remains: 0.14–0.29
+    of $\varepsilon\tfrac{z}{1+z}|d\theta_T/du|$ (`[05a-t-phase-abscissa-rounding-remains]`).
+
+**T1's reading, and when it was decided.** §9's rule "the largest step of the unwrapped samples"
+was meant as the phase's true step per sample. Read literally, it is the folded step, which admits
+aliased windows. The re-measurement agent fixed both readings in `predictions.md` at 12:30:03Z,
+before the run, with the literal one to be scored, and asked which §9 meant. Both were scored at
+12:35:49Z. The question reached the laptop while the run was reported as going, and the laptop
+told the user that no T1 number existed yet. That was wrong. The user chose the true step, without
+having seen either number, and the ruling reached the Mac Studio at about 13:23Z. After the laptop
+corrected the record of the timing, the user confirmed the true step as T1's verdict of record.
+The literal reading's 36 failures stay beside it.
+
+**The issues.** On the user's word, `[05-t-remainder-keeps-the-anchoring-floor]` and `[04-g-phase-is-reduced-against-the-double-two-pi]`
+are closed. §B.4 of the orchestrator note asks the user first whenever T1 or T4 fails, and T4 fails.
+That failure is 05's, unchanged by $T$.
+
+**Records** are in [`05a/`](05a/):
+- `rehearsal/` and `wider/`, each holding `out/`, `scripts/`, `state/`, the agent's `log.md`,
+  `verification.md` as first written, and `issues.md`;
+- the Mac Studio orchestrator's [`review.md`](05a/review.md), with its scratch readers reproduced
+  in full.
+
+The scripts are byte-identical to the runs and are left unformatted (`CLAUDE.md`). The readers'
+`extract/`, the pickles, the CSVs and the tool's 41 MB and 10 MB outputs stay on the Mac Studio.
+
+**Set in on committing** by the laptop orchestrator, from the two agents' `verification.md`:
+- the subsections are numbered 5a.1 and 5a.2;
+- three links to files kept on the Mac Studio only are made plain text.
+
+The text is otherwise the agents'.
+
+**The laptop's re-checks** (orchestrator note §B.4), read-only over SSH:
+- on the row of largest $|\Delta{\rm total}|/$`total_abserr` ($k = q = r = 3.162\times10^5$,
+  $z_{\rm response} = 6904.72$), R11 and R12 read the tabulated totals bit for bit
+  (`0x1.2b4c92b9fb462p-60`, `0x1.2b4c92b9ffc9cp-60`);
+- on `low-G-r-2`, 05a's $c$ unit at `1e-7` equals 05's $c$ unit in all 16 fields by bit pattern;
+- A3 v2's five files hash as they did before the run.
+
+### 5a.1 Rehearsals R11 and R12, and the value comparison (prompt 05a §5)
+
+**Prompt 05a §5, run 2026-10-26, 12:20–12:33 UTC, on the Mac Studio** (mps026298, arm64, Darwin
+27.0.0).
+- **The checkout.** The records were written in the main checkout at `149c393`
+  (`handover-remedial`, clean throughout). Its code is the code commit `1fc349c`'s, up to
+  `bd38e50`'s comment-only changes.
+- **The software.** Python 3.13.16 from the main checkout's venv: `ray` 2.59.0, `SQLAlchemy`
+  2.0.55, `datastorekit` 0.5.0, `raypoolkit` 0.3.0, `runregistrykit` 0.2.0.
+- **The load** was about 5–6 on 10 cores. Prompt §6's Ray-free re-measurement ran beside the
+  readers, from 12:30:47.
+
+**Records** are in [`05a/rehearsal/`](05a/rehearsal/): `out/`, `scripts/` and `state/`, the
+agent's `log.md`, this section as first written, and `issues.md`.
+- Every command is in [`out/commands.log`](05a/rehearsal/out/commands.log).
+- The scripts' SHA-256 are in [`out/script_sha256.txt`](05a/rehearsal/out/script_sha256.txt). All
+  four (`classify_non_qsi.py`, `tabulate_qsi.py`, `tools/store_value_diff.py`, `run_readers.sh`)
+  equal 05's.
+- The readers' `extract/` was not copied back.
+
+#### The two trees
+
+| | R11 (before) | R12 (after) |
+|---|---|---|
+| tree | worktree `SecondaryGWKit-lpf05a-c4eaefd`, detached at `c4eaefd` (the code commit's parent) | main checkout at `149c393` (code = `1fc349c`) |
+| how it ran | cwd and `PYTHONPATH` the worktree; the main checkout's venv python by absolute path; `PYTHONDONTWRITEBYTECODE=1` | R10's launch: `PYTHONPATH=.`, `./venv/bin/python` |
+| run | `levin-phase-floor-05a-r11-parent-20261026T122041` | `levin-phase-floor-05a-r12-reanchor-t-20261026T122434` |
+| `sh` / driver pid | 22677 / 22684 | 24894 / 24897 |
+| wall | 12:20:41 → 12:23:39 | 12:24:34 → 12:27:25 |
+| manifest | `git_head` `c4eaefda…`, `git_dirty` false, cwd the worktree | `git_head` `149c3938…`, `git_dirty` false, cwd the main checkout |
+| launcher SHA-256 | `5b984c75…` (R8's) | `5b984c75…` |
+| end | `done`, exit 0, no Traceback, `stderr.log` empty | `done`, exit 0, no Traceback, `stderr.log` empty |
+| store | `var/datastores/levin-phase-floor-05a-r11.sqlite` + 4 shards | `var/datastores/levin-phase-floor-05a-r12.sqlite` + 4 shards |
+
+**The scope.** Both builds were R8's rehearsal scope:
+- 3 k over 1e5–1e6/Mpc, zend 250;
+- atol 1e-32, rtol 1e-7, 6 CPUs;
+- the same `--job-name levin-phase-floor-05a`, and `--campaign levin-phase-floor --prompt 05a`.
+
+**The worktree.** At R11's launch, `lsof` showed that the driver's cwd, and that of the Ray
+`Datastore` actor 22808, was the worktree
+([`out/r11_launch_check.txt`](05a/rehearsal/out/r11_launch_check.txt)). After both runs, the
+worktree's `git status --short --ignored` was empty, and `find -newer` listed nothing in it.
+
+#### The lock
+
+[`out/lock.log`](05a/rehearsal/out/lock.log). Each command was a shell command of its own, output by
+`>>`.
+
+| # | command | output | exit |
+|---|---|---|---|
+| 1 | `acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 05a, rehearsals R11 … and R12 …" --ray-temp-dir /tmp/ray-sgk --ray-address in-process` | acquired | 0 |
+| 2 | `set-pid … 22684` (R11) | recorded | 0 |
+| 3 | `ray-processes --ray-temp-dir /tmp/ray-sgk` (after R11) | nothing | 0 |
+| 4 | `set-pid … 24897` (R12) | recorded | 0 |
+| 5 | `ray-processes --ray-temp-dir /tmp/ray-sgk` (after the readers) | nothing | 0 |
+| 6 | `release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk` | released | 0 |
+| 7 | `status --ray-temp-dir /tmp/ray-sgk` | free; no Ray processes | 0 |
+| 8 | `ray-processes --ray-temp-dir /tmp/ray-sgk` | nothing | 0 |
+
+#### The fingerprints
+
+| | digest | problems | per-class |
+|---|---|---|---|
+| R8 (reference, `handover-12-r8-reference-20261025T210551`) | `1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7` | none | 21 classes |
+| **R11** | **`1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`** | none | all 21 digests equal R8's |
+| **R12** | **`1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`** | none | all 21 equal R8's; the whole `classes` object equals R11's |
+
+The fingerprints are the ones the launcher took at the end of each build, read from `status.json`
+([`out/r11_end_check.txt`](05a/rehearsal/out/r11_end_check.txt),
+[`out/r12_end_check.txt`](05a/rehearsal/out/r12_end_check.txt); the files themselves are
+[`out/r11_status.json`](05a/rehearsal/out/r11_status.json) and
+[`out/r12_status.json`](05a/rehearsal/out/r12_status.json)). There is no sidecar, because
+`--build` writes none.
+
+#### The value comparison (prompt §5.4)
+
+`PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite --json`,
+run in the main checkout at `149c393`. It exited **1**, as expected, in 17 s. The text form, with
+`--max-rows 1000000`, also exited 1.
+
+Outputs:
+- `out/store_value_diff.json` (41 MB, on the Mac Studio only);
+- `out/store_value_diff.txt` (10 MB, on the Mac Studio only);
+- [`out/store_value_diff_summary.txt`](05a/rehearsal/out/store_value_diff_summary.txt);
+- [`out/store_value_diff.meta.txt`](05a/rehearsal/out/store_value_diff.meta.txt).
+
+- **Structure.** 21 classes were compared, and `not_compared` is empty. In every class:
+  - 0 rows are in one store only;
+  - 0 rows cannot be matched by identity;
+  - 0 columns are unresolvable.
+- **Every value table of every class is bit-identical between R11 and R12**, as the tool's JSON
+  shows:
+
+  | value table | rows identical | differ / only in one / unmatched |
+  |---|---|---|
+  | BackgroundModelValue | 1159 | 0 / 0 / 0 |
+  | TkNumericValue | 1478 | 0 / 0 / 0 |
+  | TkWKBValue | 2209 | 0 / 0 / 0 |
+  | GkNumericValue | 35874 | 0 / 0 / 0 |
+  | GkWKBValue | 147642 | 0 / 0 / 0 |
+  | GkSourceValue | 169653 | 0 / 0 / 0 |
+  | QuadSourceValue | 2447 | 0 / 0 / 0 |
+
+- **Row columns outside `QuadSourceIntegral`.** As in 05, 12 classes are reported value-identical:
+  `version`, `store_tag`, `redshift`, `wavenumber`, `tolerance`, `LambdaCDM`, `QCD_Cosmology`,
+  `IntegrationSolver`, `GkSourcePolicy`, `QuadSourcePolicy`, `GkSourcePolicyData`, and
+  `OneLoopIntegral`, which has no rows.
+- **Eight classes differ, in row columns only.** 05's
+  [`scripts/classify_non_qsi.py`](05a/rehearsal/scripts/classify_non_qsi.py), copied unchanged
+  (`26690e61…`), assigns every differing column to one of the four volatile kinds of
+  `[05-store-value-diff-compares-volatile-columns]`. **0 are left unclassified**
+  ([`out/classify_non_qsi.txt`](05a/rehearsal/out/classify_non_qsi.txt)):
+
+  | kind | columns | classes (rows) | column-differences |
+  |---|---|---|---|
+  | wall-clock timing | `compute_time`, `stage_1_compute_time`, `{min,mean,max}_RHS_time` | wavenumber_exit_time (3), BackgroundModel (1), TkNumericIntegration (3), TkWKBIntegration (3), GkNumericIntegration (1368), GkWKBIntegration (3474), QuadSource (6) | 8607 |
+  | `label` | equal once the trailing `datetime.now()` stamp is removed | TkNumeric (3), TkWKB (3), GkNumeric (1368), GkWKB (3477), GkSource (291), QuadSource (6) | 5148 |
+  | `GkSource.parents_digest` | the SHA-256 of the parents' serials (05 §5.x) | GkSource (291 of 291) | 291 |
+  | GkWKB work counters | `metadata` keys `rho_evals`, `rho_reused`; `stage_1_RHS_evaluations` | GkWKBIntegration (31 of 3477) | 62 |
+
+  Nothing outside `QuadSourceIntegral` differs in any other way, so prompt §8's stop does not fire.
+
+#### `QuadSourceIntegral`, tabulated per row
+
+05's [`scripts/tabulate_qsi.py`](05a/rehearsal/scripts/tabulate_qsi.py), copied unchanged
+(`b7508351…`), reads both stores (`mode=ro`) and the tool's JSON. Its docstring still names R9 and
+R10; **here A = R11 (parent `c4eaefd`) and B = R12 (code `1fc349c`)**. Its outputs are
+[`out/qsi_tabulation.txt`](05a/rehearsal/out/qsi_tabulation.txt), with one row per integral in
+`out/qsi_rows.csv` (on the Mac Studio only). Further counts from the CSV are in
+[`out/qsi_extra_counts.txt`](05a/rehearsal/out/qsi_extra_counts.txt).
+
+- **The pairing.** Rows were paired by physical (k, q, r, z_response), giving 864 = 864, with one
+  atol and one rtol, (−32, −7). The pairing has the same key set as the tool's 864 identity-matched
+  rows, and 0 mismatches in `total`'s `float.hex` against the tool.
+- **All 864 rows differ in some column.** Wall-clock columns and `label` differ in every row, and
+  so does `metadata` (below).
+
+| | rows |
+|---|---|
+| `total` differs | **424** of 864 (440 bit-identical) |
+| `WKB_Levin` differs | 435. Every row whose `total` differs is among them; in 11 more, the change rounds away in `total` |
+| `numeric_quad` / `analytic_rad` differ | **0** / **0** |
+| `total_abserr` differs | 476 |
+| rows with no `WKB_Levin` part (`max_depth` None) | 291, none of which differs in `total` |
+
+Over the 424 rows whose `total` differs:
+
+| statistic | median | 90 % | max |
+|---|---|---|---|
+| $\lvert\Delta{\rm total}\rvert/\lvert{\rm total}_A\rvert$ | 1.38e-15 | 2.84e-14 | 2.92e-11 |
+| $\lvert\Delta{\rm total}\rvert/$`total_abserr`$_A$ | 8.25e-09 | 4.36e-08 | 8.81e-05 |
+| $\lvert\Delta{\rm total}\rvert/$`total_abserr`$_B$ | 8.25e-09 | 4.36e-08 | 8.81e-05 |
+
+- Rows with $\lvert\Delta{\rm total}\rvert/$`total_abserr` > 0.1: **0** (and so 0 above 1).
+- **The largest ratio** is at $(k,q,r,z_{\rm resp}) = (3.162\times10^5, 3.162\times10^5,
+  3.162\times10^5, 6904.72)$. There the ratio is 8.8e-5 and the relative change 3.5e-12, at depth
+  11, with 32 regions and `total_converged` 0 in both stores. The 15 largest ratios are all on the
+  equal-$k$ diagonals $k = q = r = 10^5$ and $3.162\times10^5$, at depths 10–12.
+- **`total_converged`:** no row changes (0→0: 355, 1→1: 509). **`total_phase_limited`:** no row
+  changes (0→0: 833, 1→1: 31).
+- **`WKB_Levin_max_depth`:** no row changes. **`WKB_Levin_num_regions`:** no row changes, with
+  13,652 regions in both stores.
+- **By depth under A,** the median $\lvert\Delta{\rm total}\rvert/$`total_abserr`$_A$ is:
+  - 2e-9 to 1.1e-8 at depths 2–8;
+  - 1.5e-6 to 1.7e-5 at depths 10–14;
+  - the maximum anywhere is 8.8e-5, at depth 11.
+- **`total_abserr` = inf in both stores:** 26 rows, at depths 0–8. 12 of their `total`s differ, by
+  1.1e-16 to 1.0e-15 relative, and the tabulation prints their ratio as 0. This is the open issue
+  `[04-roundoff-floor-can-be-infinite]`.
+- **Metadata.** The non-wall-clock keys that differ, 29 distinct, are two families:
+  - `partition.handover.T{q,r}.handover_continuity[i].d{T,Tprime}_rel`, **in every one of the 864
+    rows**. This is expected (§B.5). The diagnostic takes $\sin$ and $\cos$ of $T$'s
+    `theta_mod_2pi`, which is what this prompt changes. In 292 rows these are the only
+    non-wall-clock keys that differ: the 291 rows with no WKB part, and one at depth 0;
+  - the `WKB_Levin` `value`/`abserr` tree (`WKB_Levin.abserr` in 476 rows, `subintervals[i]`, and
+    `subintervals[i].groups[j]`), in 572 rows. No `regions`, `simple_regions` or `evaluations` key
+    differs.
+- **R11 and R12 are not value-identical in `QuadSourceIntegral`.** So each tree ran the code it
+  names.
+
+These are recorded, not judged. Prompt §6 scores the effect on A3 v2's rows.
+
+**Beside 05's R9/R10, for orientation only.** 05 changed $G$'s phase, and moved 542 `total`s by up
+to 4.0e-5 relative and 28× `total_abserr`. It changed 15 depths and 42 region counts. This prompt
+changes $T$'s phase, and moves 424 `total`s by at most 2.9e-11 relative and 8.8e-5 ×
+`total_abserr`. It changes no depth, region count or convergence flag.
+
+#### The readers (prompt §5.5)
+
+`bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/levin-phase-floor-05a-r12.sqlite var/levin-phase-floor-05a/rehearsal/extract`,
+with the lock held, from 12:29:51 to 12:32:26 UTC
+([`out/readers.txt`](05a/rehearsal/out/readers.txt)). Overall exit **0**.
+
+| reader | exit | wall | lookups | files written (05's R10) | store files after |
+|---|---|---|---|---|---|
+| `extract_Gk_data.py` | 0 | 28 s | 116 | 387 (450) | identical |
+| `extract_GkWKB_data.py` | 0 | 57 s | 348 | 2436 (2436) | identical |
+| `extract_GkSource_data.py` | 0 | 20 s | 10 | 162 (142) | identical |
+| `extract_TkWKB_data.py` | 0 | 15 s | 3 | 27 (27) | identical |
+| `extract_tensor_source_data.py` | 0 | 14 s | 6 | 27 (27) | identical |
+| `extract_QuadSourceIntegral_data.py` | 0 | 17 s | 24 | 73 (74) | identical |
+
+- The lookups equal 05's and R8's.
+- File counts differ only where a reader draws an unseeded subsample
+  (`[10-the-readers-draw-their-work-lists-unseeded]`).
+- After each reader, 0 Ray processes of this venv were left, and no reader log has a Traceback.
+
+**R12's store, before and after the readers.** The `diff` is empty, and there is no `-journal`,
+`-wal` or `-shm` file
+([`state/r12_store_sha256_before_reads.txt`](05a/rehearsal/state/r12_store_sha256_before_reads.txt),
+[`state/r12_store_sha256_after_reads.txt`](05a/rehearsal/state/r12_store_sha256_after_reads.txt)):
+
+```
+94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  levin-phase-floor-05a-r12.sqlite            36864
+b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  levin-phase-floor-05a-r12-shard0000.sqlite  24076288
+a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  levin-phase-floor-05a-r12-shard0001.sqlite  24203264
+af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  levin-phase-floor-05a-r12-shard0002.sqlite   1077248
+5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  levin-phase-floor-05a-r12-shard0003.sqlite  23560192
+```
+
+**Both stores, all ten files, are byte-identical from before the comparison to the end**
+([`state/store_sha256_before_diff.txt`](05a/rehearsal/state/store_sha256_before_diff.txt),
+[`state/stores_sha256_final.txt`](05a/rehearsal/state/stores_sha256_final.txt)). R11's files equal
+the hashes taken just after its build
+([`state/r11_store_sha256_after_build.txt`](05a/rehearsal/state/r11_store_sha256_after_build.txt)).
+R11's primary is `8553800554d70f69d0fd90655899ed819bb5bf2456d62456da293f660e1a7cb8`.
+
+#### Against prompt §7.2
+
+- R11 and R12 both end `done` with fingerprint `1b332ffa…`: **yes**.
+- Every value table outside `QuadSourceIntegral` is identical, and every other difference there is
+  of the four kinds: **yes**.
+  - All 7 value tables are bit-identical: 360,462 rows.
+  - 0 differences are unclassified, and 0 rows are in one store only.
+- The `QuadSourceIntegral` differences are tabulated: **yes**.
+  - 424 of 864 `total`s moved, all through `WKB_Levin`, by at most 2.9e-11 relative and 8.8e-5 ×
+    `total_abserr`.
+  - No depth, region count or convergence flag changed.
+  - `handover_continuity` moved in every row.
+- The readers exit 0: **yes**, and the store is byte-identical.
+- The lock is released: **yes**.
+
+### 5a.2 The wider re-measurement for $T$ (prompt 05a §6, with §9's T1)
+
+**Prompt 05a §6, with T1 as amended by §9, run 2026-10-26 on the Mac Studio (mps026298).** There
+was no Ray, no lock and no store write (route (a), as in §3–§5). Two trees took part:
+- $c$, the code commit's parent `c4eaefd`, whose code is 05's $c$: $G$ node-anchored, $T$ not. It
+  ran from the git worktree `SecondaryGWKit-lpf05a-c4eaefd`.
+- $t$, the code commit `1fc349c`: $T$'s remainder node-anchored and reduced against $2\pi$. It ran
+  from the main checkout at `149c393`, whose code is `1fc349c`'s up to `bd38e50`'s comments.
+
+The rows are 05's 39, from 05's `sample.json` copied unchanged
+([`state/sample.json`](05a/wider/state/sample.json), SHA-256 `73aa7876…`, equal to the
+`sample_sha256` 05's run recorded). The harness is 05's
+([`scripts/`](05a/wider/scripts/); its diff against 05's copy is
+[`out/scripts_diff_against_05_final.txt`](05a/wider/out/scripts_diff_against_05_final.txt)).
+Its trees are renamed $c$/$t$, and it adds the phase probe ([`scripts/probe.py`](05a/wider/scripts/probe.py)).
+
+Each worker loaded its packages from its own tree only, as recorded per unit. Under $c$, every $T$
+phase had `exact_remainder` False and every $G$ phase True. Under $t$, both were True.
+
+**The run.** `levin-phase-floor-05a-wider-20261026T123047` ended `done`, 109/109 units, exit 0,
+in under two minutes. Its checkpoints and pickles stay in that run directory on the Mac Studio.
+- The units ran in order: $c$@1e-7 on all 39 rows, $t$@1e-7 on all 39, and $t$@1e-8 on the 31
+  depth-20 rows. The budget of the $t$ units was 3× the row's $c$ wall time.
+- Every record carries `run_wider.py`'s SHA-256 (`af656ad4…`) and its tree's `HEAD` and empty
+  `git status --short`.
+- No unit went over budget (the largest wall/budget is 0.861), none raised, and the probe raised
+  nowhere.
+
+**The store** was byte-identical before, before the launch, after the run and after the
+fingerprint ([`before`](05a/wider/state/store_files_before.txt),
+[`after`](05a/wider/state/store_files_after_fingerprint.txt)). No journal, `-wal` or `-shm` file
+appeared. `store fingerprint`, run without `--write`, gives
+`0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56` and `problems: none`
+([`out/fingerprint_05a_wider.txt`](05a/wider/out/fingerprint_05a_wider.txt)).
+
+**The phase probe** reads phase objects only and runs no quadrature.
+- **Where.** It covers every Levin sub-interval of every row with an oscillatory $T$ factor, and
+  every such factor: 91 windows on 37 rows. Each window starts at the sub-interval's low-$z$ end
+  $z_{\min}$ and is $[z_{\min}, z_{\min}(1+w)]$ with $w = 10^{-6}/2^n$.
+- **What each tree computes at every level** until its 65 samples stop being distinct doubles:
+  - $\sigma_\theta$ of `theta_mod_2pi` sampled in $z$, as §3 test 3 computes it;
+  - the same sampled in $u$;
+  - the largest unwrapped step;
+  - $\max|p_z|$, from `cs_tau.end_partial`.
+- **The level used** is the first at which both trees' largest unwrapped step is below $\pi/2$.
+  No window with $\varepsilon|\theta_T| \ge 10^{-11}$ was unresolved.
+- **Where it is kept.** Every level of both ladders, and the samples as `float.hex` at the level
+  used, are in [`state/probe_windows.json`](05a/wider/state/probe_windows.json).
+  [`scripts/rescore_t1.py`](05a/wider/scripts/rescore_t1.py) re-scores T1 from that file alone,
+  recomputing every $\sigma$ from the samples, and agrees in every window
+  ([`out/cmd/24_rescore_t1.txt`](05a/wider/out/cmd/24_rescore_t1.txt)).
+
+**Outputs:**
+- [`out/T0.txt`](05a/wider/out/T0.txt);
+- [`out/wider_05a.txt`](05a/wider/out/wider_05a.txt): every unit, every group, every probe window
+  under both readings, and the scores;
+- [`out/convergence_kinds_t.txt`](05a/wider/out/convergence_kinds_t.txt);
+- [`out/commands.log`](05a/wider/out/commands.log), which has every command with its output.
+
+#### Gate T0
+
+| | Number | Verdict |
+|---|---|---|
+| **(a)** `git diff --stat 120fdfe c4eaefd -- . ':!docs' ':!prompts'` | `CLAUDE.md` alone | holds |
+| **(b)** $c$@1e-7 against 05's $c$ unit, on `low-G+r-1` and `ctrl-low-1` | `total`, `total_abserr`, and all 7 calls' value and abserr: 16 doubles per row, identical by `==` and `float.hex`. So are the whole result summary, the call summaries and every region array of 05's pickles | holds |
+| **(c)** two in-process runs of the same $t$ unit, on both rows | result, calls, regions, probe summaries and every probe sample bit-identical | holds |
+
+[`state/predictions.md`](05a/wider/state/predictions.md) was written at 12:30:03Z, after T0 held
+(12:28:33Z) and before the 12:30:47Z launch. It quotes §6's predictions with §9's T1 in place of
+§6's, and fixes how each rule is read.
+
+#### Verdicts, scored as written
+
+*(T1's scored verdict was later taken by the true step, by the user's decision: it holds. See
+below the table. The T1 row here is the literal reading, kept beside it.)*
+
+| | Rule | Number | Verdict |
+|---|---|---|---|
+| **T1** (§9) | in every resolved window with $\varepsilon\lvert\theta_T\rvert \ge 10^{-11}$ rad, sampled in $z$: $\sigma_c \ge 0.1\,\varepsilon\lvert\theta_T\rvert$ and $\sigma_t \le \max(10^{-3}\varepsilon\lvert\theta_T\rvert,\ \varepsilon(k\max\lvert p_z\rvert+2\pi),\ 10^{-13})$ | 70 scored windows, 0 unresolved. The $c$ clause holds in all 70: $\sigma_c$ = 0.196–0.374 $\varepsilon\lvert\theta_T\rvert$. The $t$ clause holds in 34 ($\sigma_t \le 1.3\times10^{-5}\,\varepsilon\lvert\theta_T\rvert$) and fails in 36 ($\sigma_t$ 0.016–0.23 $\varepsilon\lvert\theta_T\rvert$). Those 36 are exactly the windows the literal step rule accepts while the phase steps 4.9–352 rad per sample (below) | **fails** |
+| **T2** | every row (39), $t$@1e-7: no group has a region at depth ≥ 18 | 39 of 39; largest depth 11 | **holds** |
+| **T3** | every row (39): $\lvert{\rm total}_t - {\rm total}_c\rvert \le$ `total_abserr`$_c$ at 1e-7 | 39 of 39; largest ratio $4.66\times10^{-6}$ (`low-G-1`); largest relative change $3.6\times10^{-12}$ (R4); 13 totals bit-identical | **holds** |
+| **T4** | every depth-20 row (31) with both $t$ units in budget: $\lvert t(10^{-7}) - t(10^{-8})\rvert \le$ `total_abserr`$_t(10^{-7})$ | 29 of 31; fails on `mid-G-r-3` (1.29) and `mid-G-3` (1.70), the same rows and ratios as 05's L3 under $c$; holds on all 11 rows capped under B1 (largest 0.166) | **fails** |
+
+**T1's failure is the probe's step rule, not the phase.**
+- §9 halves a window while "the largest step of the unwrapped samples" is $\pi/2$ or more. Read
+  as written, that is the folded step, which can be small while the samples advance by many cycles.
+- On those windows, `numpy.unwrap` removes whole cycles per index. The rounding of the abscissae
+  then reads as jitter of $0.13$–$0.30\,\varepsilon z|d\theta_T/dz|$, whatever the remainder.
+- **By the true step** (unscored; both readings were fixed before the run, and both are kept), the
+  same rule holds in **70 of 70** windows:
+  - $\sigma_t$ is $4.4\times10^{-10}$–$1.31\times10^{-5}\,\varepsilon|\theta_T|$, at most 0.013 of
+    its bound;
+  - $\sigma_c$ is 0.198–0.374.
+  - The reading by the true step means the first level at which $|d\theta_T/dz|(b-a)/64 < \pi/2$
+    also holds in both trees.
+- The question of which reading §9 means is the user's (05a's `issues.md` X1).
+
+**T1's scored verdict, by the user's decision after the run: holds.**
+- The coordinator relayed the decision to the Mac Studio session at about 13:23Z. The user chose
+  "True step (Recommended)": *"T1 is scored on windows whose true step |dθ/dz|(b−a)/64 is below
+  π/2, narrowing further where it isn't. This is what §9 meant by 'resolved'. The literal
+  unwrapped-step reading is reported beside it, unscored."*
+
+| | Rule | Number | Verdict |
+|---|---|---|---|
+| **T1** (§9, scored by the true step) | as above, on windows resolved by $\lvert d\theta_T/dz\rvert(b-a)/64 < \pi/2$ under both $c$ and $t$ | 91 windows, 70 with $\varepsilon\lvert\theta_T\rvert \ge 10^{-11}$, 0 unresolved, true in 70. $\sigma_c$ 0.198–0.374 $\varepsilon\lvert\theta_T\rvert$; $\sigma_t$ $4.4\times10^{-10}$–$1.31\times10^{-5}\,\varepsilon\lvert\theta_T\rvert$, at most 0.0131 of its bound ([`out/cmd/26_T1_true_step_scored.txt`](05a/wider/out/cmd/26_T1_true_step_scored.txt)) | **holds** |
+| T1 (§9, literal step; now unscored) | the table above | 36 of 70 false, all aliased | (fails) |
+
+- **No re-probe was needed.** The kept levels resolve every window by the true step, and the level
+  chosen by the true step alone is, in all 91 windows, the level whose samples were saved.
+- **The timing, as the files show it,** is in
+  [`state/predictions_note_T1_reading.md`](05a/wider/state/predictions_note_T1_reading.md):
+  - `predictions.md` fixed both readings at 12:30:03Z;
+  - both were first scored at 12:35:49Z;
+  - the decision reached the Mac Studio session at about 13:23Z.
+
+**§9's unscored items.**
+- The term $\varepsilon(k\max|p_z| + 2\pi)$ is the largest of the three in **0** windows: the
+  windows sit at or near table nodes, with $k\max|p_z| \le 10^{-6}|\theta_T|$.
+- **Sampled in $u$**, as production calls the phase, $\sigma_t$ is 0.14–0.29 of the abscissa term
+  $\varepsilon\tfrac{z}{1+z}|d\theta_T/du|$ everywhere.
+  - It exceeds $0.1\,\varepsilon|\theta_T|$ in 14 windows at $z \gg 1$, at 0.10–0.22.
+  - Under $c$ it is 0.21–0.40.
+  - At $z < 1$ it falls to 0.0025–0.0096 under $t$.
+  - This is §0.1's prediction: for $T$ the abscissa term is the size of the removed floor wherever
+    $z \gg 1$. An issue is proposed (X2).
+
+#### Descriptive
+
+- **$t$ against $c$:**
+  - all 219 Levin group calls are the same sequence, with the same region count, maximum depth and
+    convergence flag. That includes the 140 `Gqr` groups and the regions at each sub-interval's
+    low-$z$ end;
+  - `total_converged` is unchanged on every row;
+  - the totals move by at most $4.7\times10^{-6}$ of `total_abserr`$_c$.
+
+  On these rows, $T$'s two errors were never what the integrator saw.
+- **Cost:** the regions are unchanged (low band 288, mid band 321, R1–R7 250, the 11 capped rows
+  426 at 1e-7). The wall times are 0.06–1.15 s per unit and carry the host's load.
+- **The kinds of non-convergence** under $t$ ([`out/convergence_kinds_t.txt`](05a/wider/out/convergence_kinds_t.txt);
+  `convergence_kinds.py` unchanged, SHA-256 `49c83a72…`):
+
+  | | resolution | bound only | phase-limited |
+  |---|---|---|---|
+  | 1e-7 | 18 | 32 | 17 |
+  | 1e-8 | 21 | 24 | 27 |
+
+  These equal 05's $c$ (`prompts/levin-phase-floor/measure/out/convergence_kinds.txt`).

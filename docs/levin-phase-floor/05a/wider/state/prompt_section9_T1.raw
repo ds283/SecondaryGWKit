@@ -1,0 +1,10 @@
+**T1, amended.** It replaces §6's T1. The $u$-sampled clause is unchanged.
+- **The rule:** in every resolved probe window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad,
+  sampled in $z$: $\sigma_\theta \ge 0.1\,\varepsilon|\theta_T|$ under $c$, and
+  $\sigma_\theta \le \max\big(10^{-3}\varepsilon|\theta_T|,\ \varepsilon(k\max|p_z| + 2\pi),\ 10^{-13}\ {\rm rad}\big)$
+  under $t$.
+- **Holds** if true in every such window. **Fails** if false in any. **Undecided** if none is
+  false but some window with $\varepsilon|\theta_T| \ge 10^{-11}$ rad is unresolved.
+- **Also report, unscored,** in how many windows the term $\varepsilon(k\max|p_z| + 2\pi)$ is the
+  largest of the three, and $\sigma_\theta/(\varepsilon|\theta_T|)$ under $t$ in those windows.
+

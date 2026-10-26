@@ -1,0 +1,42 @@
+$ bash -c shasum\ -a\ 256\ scripts/\*\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -B\ scripts/hash_store.py\ prelaunch\ \>\ state/store_files_prelaunch.txt\;\ cat\ state/store_files_prelaunch.txt\;\ diff\ \<\(grep\ -v\ \'\^#\'\ state/store_files_before.txt\)\ \<\(grep\ -v\ \'\^#\'\ state/store_files_prelaunch.txt\)\ \&\&\ echo\ \'store\ files:\ identical\ to\ before\'\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ head\ -4\ \|\ cut\ -c1-200\;\ git\ status\ --short\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd\ status\ --short\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:30:36Z
+# ----
+675d6bc7787584c18eb749945b4762c17ee52f3949b8f068816f5d020fe7be78  scripts/analyse.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+be34a0f403c6bee0e473263d5e7102459d99f00b653409c4619d8202ca214279  scripts/harness.py
+7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+676ae5a00618dcd71cf6ed767912fc085a9e7ccf6d4ff276568c1a53960a90e8  scripts/launch.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  scripts/probe.py
+470d3bcea426effb6bb3095c7d9f494e47fb7970b841bcbbbac0fabfc9995707  scripts/prov.py
+0fd2189907c7c104ca125adcdf794385740958c3848d73d6d11c36c73c9cdc22  scripts/rebuild.py
+aaae6682ff56bd21b05318bb8b38bd34bae450f1b286eb1a6e0bc7fa150bb6a8  scripts/rec.sh
+af656ad4fa038dd87524dce67bb0dea21bb4cef1302cda3583283f542f864bec  scripts/run_wider.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  scripts/t0.py
+e8430786b7272359b48f881f18064149979015a273b170361ce8baa59cc62009  scripts/worker.py
+# store files prelaunch
+# written 2026-10-26T12:30:36Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 7bcafe9b6e29efabf47702dab940cacf441637a396eccee5a5c0c775ed7dcfd4
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd HEAD c4eaefda26ccb615fa5864cac877454ba364c304 (status --short: empty)
+# tree t: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 149c3938bb9e074df3682f8e511c7b57cd9c55c5 (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in var/datastores/)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1792699923608529810  2026-10-22T20:12:03.608530+00:00  handover-A3-v2-lambdacdm.sqlite
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  106340352  1792875376155767739  2026-10-24T20:56:16.155768+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  107569152  1792875376181522969  2026-10-24T20:56:16.181523+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  107429888  1792875376101702570  2026-10-24T20:56:16.101702+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  105791488  1792875376127589134  2026-10-24T20:56:16.127589+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  10519  1792884865850625524  2026-10-24T23:34:25.850626+00:00  handover-A3-v2-lambdacdm.manifest.json
+# journal/-wal/-shm files beside the store: none
+store files: identical to before
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05a-r12-reanchor-t-20261026T122434  done              -       6m  levin-phase-floor prompt 05a, R12 on the Mac Studio (mps026298; main checkout at 149c393, whose code is the code 
+   levin-phase-floor-05a-r11-parent-20261026T122041      done              -      10m  levin-phase-floor prompt 05a, R11 on the Mac Studio (mps026298; tree c4eaefd in the worktree /Users/ds283/Documen
+   levin-phase-floor-05-wider-20261026T020005            done        109/109  10h 30m  levin-phase-floor prompt 05 section 6 on the Mac Studio (mps026298; Python 3.13.16): the wider re-measurement of 
+12:30  up 19 days,  3:07, 1 user, load averages: 35.20 14.02 9.15
+# ----
+# end 2026-10-26T12:30:37Z
+# exit 0

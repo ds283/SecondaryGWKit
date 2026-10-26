@@ -1,0 +1,17 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ git\ show\ 149c3938:prompts/levin-phase-floor/05a-reanchor-t-phase.md\ \|\ sed\ -n\ 297\,328p\ \>\ var/levin-phase-floor-05a/wider/state/prompt_section6_predictions.raw\ \&\&\ git\ show\ 149c3938:prompts/levin-phase-floor/05a-reanchor-t-phase.md\ \|\ sed\ -n\ 401\,410p\ \>\ var/levin-phase-floor-05a/wider/state/prompt_section9_T1.raw\ \&\&\ git\ show\ 149c3938:prompts/levin-phase-floor/05a-reanchor-t-phase.md\ \|\ sed\ -n\ 391\,399p\ \>\ var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw\ \&\&\ shasum\ -a\ 256\ prompts/levin-phase-floor/05a-reanchor-t-phase.md\ var/levin-phase-floor-05a/wider/state/\*.raw\ \&\&\ git\ show\ 149c3938:prompts/levin-phase-floor/05a-reanchor-t-phase.md\ \|\ shasum\ -a\ 256\ \&\&\ wc\ -l\ var/levin-phase-floor-05a/wider/state/\*.raw
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:29:06Z
+# ----
+67c2ed1e4ceee0d631dc2728bf5820b8cde9ea1537511afff6d51cf7b378059d  prompts/levin-phase-floor/05a-reanchor-t-phase.md
+9bee0d839ec4a21b826a1125401808526d640b1f602959a5daab1339a1f1f09b  var/levin-phase-floor-05a/wider/state/prompt_section6_predictions.raw
+5671424783c9a82ae92ec907b7a2aae86d0bcdd31622e447ffc350afce61fc5e  var/levin-phase-floor-05a/wider/state/prompt_section9_T1.raw
+3bd353750de62a13668b0383063ab8599b3a08f9b60bfcd9ea77b07dee89edb6  var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw
+67c2ed1e4ceee0d631dc2728bf5820b8cde9ea1537511afff6d51cf7b378059d  -
+  32 var/levin-phase-floor-05a/wider/state/prompt_section6_predictions.raw
+  10 var/levin-phase-floor-05a/wider/state/prompt_section9_T1.raw
+   9 var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw
+  51 total
+# ----
+# end 2026-10-26T12:29:06Z
+# exit 0

@@ -1,0 +1,176 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/t0.py check /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:28:32Z
+# ----
+# levin-phase-floor 05a section 6: gate T0, clauses (b) and (c)
+# written 2026-10-26T12:28:33Z on mps026298.phys.susx.ac.uk
+# script t0.py sha256 ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd HEAD c4eaefda26ccb615fa5864cac877454ba364c304 (status --short: empty)
+# tree t: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 149c3938bb9e074df3682f8e511c7b57cd9c55c5 (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/sample.json sha256 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+# ledger /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/c/ledger.jsonl: 5 records
+# ledger /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/t/ledger.jsonl: 7 records
+
+== the c worker's evidence
+   tree: 'c'
+   tree_path: '/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd'
+   expected_sha: 'c4eaefda26ccb615fa5864cac877454ba364c304'
+   head: 'c4eaefda26ccb615fa5864cac877454ba364c304'
+   all_in_tree: True
+   PrimitivePhase_has_exact_remainder: True
+   build_phase_source_mentions_exact_remainder: True
+   TkSourceFunctions_exact_remainder_default: 'absent'
+   PYTHONPATH: '/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd'
+   dont_write_bytecode: True
+   status --short: empty
+   ComputeTargets: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/__init__.py
+   ComputeTargets.primitive_phase: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/primitive_phase.py
+   ComputeTargets.QuadSource: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/QuadSource.py
+   ComputeTargets.QuadSourceIntegral: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/QuadSourceIntegral.py
+   ComputeTargets.GkSourcePolicyData: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/GkSourcePolicyData.py
+   ComputeTargets.TkSourceFunctions: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/TkSourceFunctions.py
+   StoreFixtures: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/StoreFixtures/__init__.py
+   main.py: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/main.py
+   theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI): /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd/ComputeTargets/primitive_phase.py
+   the units ran at c, from its own tree, clean: True
+
+== the t worker's evidence
+   tree: 't'
+   tree_path: '/Users/ds283/Documents/Code/SecondaryGWKit'
+   expected_sha: '149c3938bb9e074df3682f8e511c7b57cd9c55c5'
+   head: '149c3938bb9e074df3682f8e511c7b57cd9c55c5'
+   all_in_tree: True
+   PrimitivePhase_has_exact_remainder: True
+   build_phase_source_mentions_exact_remainder: True
+   TkSourceFunctions_exact_remainder_default: True
+   PYTHONPATH: '/Users/ds283/Documents/Code/SecondaryGWKit'
+   dont_write_bytecode: True
+   status --short: empty
+   ComputeTargets: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/__init__.py
+   ComputeTargets.primitive_phase: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/primitive_phase.py
+   ComputeTargets.QuadSource: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSource.py
+   ComputeTargets.QuadSourceIntegral: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py
+   ComputeTargets.GkSourcePolicyData: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/GkSourcePolicyData.py
+   ComputeTargets.TkSourceFunctions: /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/TkSourceFunctions.py
+   StoreFixtures: /Users/ds283/Documents/Code/SecondaryGWKit/StoreFixtures/__init__.py
+   main.py: /Users/ds283/Documents/Code/SecondaryGWKit/main.py
+   theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI): /Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/primitive_phase.py
+   the units ran at t, from its own tree, clean: True
+
+   T0-c-1e-7-low-G+r-1: status done; wall 0.27744658291339874; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 528, 'T': 168, 'other': 0} {'T exact_remainder=False': 168, 'G exact_remainder=True': 528}; T phase exact_remainder {'Tq': False, 'Tr': False}; probe windows 3 in 0.13332508294843137 s, error None; tree c4eaefda26ccb615fa5864cac877454ba364c304 status empty
+      total 5.3918842127849005e-31 (0x1.5df40b06b0330p-101), abserr 1.8990822253038357e-33 (0x1.3b8a063a31e65p-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}
+      T's phases report exact_remainder False under c: True; every theta_mod_2pi call of T has exact_remainder=False and of G True: True; probe windows' flags [False]
+   T0-c-1e-7-ctrl-low-1: status done; wall 0.1936912089586258; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 426, 'T': 66, 'other': 0} {'T exact_remainder=False': 66, 'G exact_remainder=True': 426}; T phase exact_remainder {'Tq': False, 'Tr': False}; probe windows 3 in 0.1319243749603629 s, error None; tree c4eaefda26ccb615fa5864cac877454ba364c304 status empty
+      total -3.81777832896149e-31 (-0x1.ef9372276a0e3p-102), abserr 2.4529086874911758e-33 (0x1.978f325e6017bp-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}
+      T's phases report exact_remainder False under c: True; every theta_mod_2pi call of T has exact_remainder=False and of G True: True; probe windows' flags [False]
+   T0-t-1e-7-low-G+r-1-run1: status done; wall 0.2861501248553395; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 528, 'T': 168, 'other': 0} {'T exact_remainder=True': 168, 'G exact_remainder=True': 528}; T phase exact_remainder {'Tq': True, 'Tr': True}; probe windows 3 in 0.09804149996489286 s, error None; tree 149c3938bb9e074df3682f8e511c7b57cd9c55c5 status empty
+      total 5.391884212784901e-31 (0x1.5df40b06b0331p-101), abserr 1.8990822253023386e-33 (0x1.3b8a063a30d4dp-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}
+      T's phases report exact_remainder True under t: True; every theta_mod_2pi call of T has exact_remainder=True and of G True: True; probe windows' flags [True]
+   T0-t-1e-7-low-G+r-1-run2: status done; wall 0.28938404214568436; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 528, 'T': 168, 'other': 0} {'T exact_remainder=True': 168, 'G exact_remainder=True': 528}; T phase exact_remainder {'Tq': True, 'Tr': True}; probe windows 3 in 0.10456737503409386 s, error None; tree 149c3938bb9e074df3682f8e511c7b57cd9c55c5 status empty
+      total 5.391884212784901e-31 (0x1.5df40b06b0331p-101), abserr 1.8990822253023386e-33 (0x1.3b8a063a30d4dp-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 11, 'num_simple_regions': 4, 'evaluations': 29}
+      T's phases report exact_remainder True under t: True; every theta_mod_2pi call of T has exact_remainder=True and of G True: True; probe windows' flags [True]
+   T0-t-1e-7-ctrl-low-1-run1: status done; wall 0.20396808302029967; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 426, 'T': 66, 'other': 0} {'T exact_remainder=True': 66, 'G exact_remainder=True': 426}; T phase exact_remainder {'Tq': True, 'Tr': True}; probe windows 3 in 0.10460629197768867 s, error None; tree 149c3938bb9e074df3682f8e511c7b57cd9c55c5 status empty
+      total -3.8177783289614954e-31 (-0x1.ef9372276a0efp-102), abserr 2.4529086874907673e-33 (0x1.978f325e5fcd1p-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}
+      T's phases report exact_remainder True under t: True; every theta_mod_2pi call of T has exact_remainder=True and of G True: True; probe windows' flags [True]
+   T0-t-1e-7-ctrl-low-1-run2: status done; wall 0.1975442918483168; rebuild checks all hold True; QuadSource L0a True; dispatcher {'G': 426, 'T': 66, 'other': 0} {'T exact_remainder=True': 66, 'G exact_remainder=True': 426}; T phase exact_remainder {'Tq': True, 'Tr': True}; probe windows 3 in 0.09689037501811981 s, error None; tree 149c3938bb9e074df3682f8e511c7b57cd9c55c5 status empty
+      total -3.8177783289614954e-31 (-0x1.ef9372276a0efp-102), abserr 2.4529086874907673e-33 (0x1.978f325e5fcd1p-109), converged True, WKB_Levin_data {'max_depth': 3, 'num_regions': 10, 'num_simple_regions': 4, 'evaluations': 25}
+      T's phases report exact_remainder True under t: True; every theta_mod_2pi call of T has exact_remainder=True and of G True: True; probe windows' flags [True]
+
+== T0 (b): c at 1e-7 against 05's c unit, bit for bit (levin-phase-floor-05-wider-20261026T020005, checkpoint sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee)
+-- T0-c-1e-7-low-G+r-1 against 05's c-1e-7-low-G+r-1
+   05's record: script_sha256 491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906, tree 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca, pickle unit_c-1e-7-low-G+r-1.pkl sha256 c8eae6dbd08b9935ea78f78e2da2f47c882f4462b63bcdd3483be3157280850a
+   total: ==  5.3918842127849005e-31 (0x1.5df40b06b0330p-101) vs 5.3918842127849005e-31 (0x1.5df40b06b0330p-101)
+   total_abserr: ==  1.8990822253038357e-33 (0x1.3b8a063a31e65p-109) vs 1.8990822253038357e-33 (0x1.3b8a063a31e65p-109)
+   call 0 G/G value: ==  5.920102722687474e-32 (0x1.3363a9ab3dcecp-104) vs 5.920102722687474e-32 (0x1.3363a9ab3dcecp-104)
+   call 0 G/G abserr: ==  1.6554161805605955e-34 (0x1.b815c9880a940p-113) vs 1.6554161805605955e-34 (0x1.b815c9880a940p-113)
+   call 1 Gr/G+r value: ==  1.2690514099982457e-31 (0x1.4976eee07e584p-103) vs 1.2690514099982457e-31 (0x1.4976eee07e584p-103)
+   call 1 Gr/G+r abserr: ==  1.4513317004475925e-34 (0x1.81d4846a0be00p-113) vs 1.4513317004475925e-34 (0x1.81d4846a0be00p-113)
+   call 2 Gr/G-r value: ==  -1.363901922012078e-32 (-0x1.1b4576f8871a0p-106) vs -1.363901922012078e-32 (-0x1.1b4576f8871a0p-106)
+   call 2 Gr/G-r abserr: ==  1.1104087439916857e-34 (0x1.273280cd32200p-113) vs 1.1104087439916857e-34 (0x1.273280cd32200p-113)
+   call 3 Gqr/G+q+r value: ==  -2.8637087140470886e-33 (-0x1.dbd0b28a58d45p-109) vs -2.8637087140470886e-33 (-0x1.dbd0b28a58d45p-109)
+   call 3 Gqr/G+q+r abserr: ==  7.870961811670201e-35 (0x1.a27dfb092d486p-114) vs 7.870961811670201e-35 (0x1.a27dfb092d486p-114)
+   call 4 Gqr/G+q-r value: ==  6.080239341561256e-33 (0x1.f92063c0e3d3bp-108) vs 6.080239341561256e-33 (0x1.f92063c0e3d3bp-108)
+   call 4 Gqr/G+q-r abserr: ==  2.1131625362081442e-35 (0x1.c16b830d4a143p-116) vs 2.1131625362081442e-35 (0x1.c16b830d4a143p-116)
+   call 5 Gqr/G-q+r value: ==  4.8664564593008796e-33 (0x1.944a1528e9cc8p-108) vs 4.8664564593008796e-33 (0x1.944a1528e9cc8p-108)
+   call 5 Gqr/G-q+r abserr: ==  7.21786442595816e-35 (0x1.7fc47ac9a21d2p-114) vs 7.21786442595816e-35 (0x1.7fc47ac9a21d2p-114)
+   call 6 Gqr/G-q-r value: ==  -6.111771416909887e-33 (-0x1.fbbf00b382b7cp-108) vs -6.111771416909887e-33 (-0x1.fbbf00b382b7cp-108)
+   call 6 Gqr/G-q-r abserr: ==  2.065597727754865e-35 (0x1.b74dd6617df47p-116) vs 2.065597727754865e-35 (0x1.b74dd6617df47p-116)
+   the clause's own fields (16 doubles): all bit-identical
+   beyond the clause: floats in the result summary 68; regions compared 11
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   regions: identical
+   T0 (b) on low-G+r-1: HOLDS
+-- T0-c-1e-7-ctrl-low-1 against 05's c-1e-7-ctrl-low-1
+   05's record: script_sha256 491d2608c583f5ac61af3716e6c2fbd6c19daa48c61fe66c8b6e8fb95e29b906, tree 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca, pickle unit_c-1e-7-ctrl-low-1.pkl sha256 213ec5c161ce8ffcf9894dc6627be306503eaad798220730e4fa17fc3db2ee39
+   total: ==  -3.81777832896149e-31 (-0x1.ef9372276a0e3p-102) vs -3.81777832896149e-31 (-0x1.ef9372276a0e3p-102)
+   total_abserr: ==  2.4529086874911758e-33 (0x1.978f325e6017bp-109) vs 2.4529086874911758e-33 (0x1.978f325e6017bp-109)
+   call 0 G/G value: ==  1.370102358221415e-31 (0x1.63b2ebab4215dp-103) vs 1.370102358221415e-31 (0x1.63b2ebab4215dp-103)
+   call 0 G/G abserr: ==  4.99620349547338e-35 (0x1.09a4cc4c809d0p-114) vs 4.99620349547338e-35 (0x1.09a4cc4c809d0p-114)
+   call 1 Gr/G+r value: ==  -2.427994836248035e-31 (-0x1.3b2bf7be66e35p-102) vs -2.427994836248035e-31 (-0x1.3b2bf7be66e35p-102)
+   call 1 Gr/G+r abserr: ==  1.0034271283759383e-34 (0x1.0ac1b62f0a800p-113) vs 1.0034271283759383e-34 (0x1.0ac1b62f0a800p-113)
+   call 2 Gr/G-r value: ==  6.26600297954724e-32 (0x1.45597740092acp-104) vs 6.26600297954724e-32 (0x1.45597740092acp-104)
+   call 2 Gr/G-r abserr: ==  1.0145803913684377e-35 (0x1.af8e057d3a000p-117) vs 1.0145803913684377e-35 (0x1.af8e057d3a000p-117)
+   call 3 Gqr/G+q+r value: ==  -1.8511808437424247e-32 (-0x1.8079a7f6dc07ap-106) vs -1.8511808437424247e-32 (-0x1.8079a7f6dc07ap-106)
+   call 3 Gqr/G+q+r abserr: ==  4.045106499493922e-35 (0x1.ae2645ebb0d39p-115) vs 4.045106499493922e-35 (0x1.ae2645ebb0d39p-115)
+   call 4 Gqr/G+q-r value: ==  -1.9328836870378224e-33 (-0x1.4127c78d60dc4p-109) vs -1.9328836870378224e-33 (-0x1.4127c78d60dc4p-109)
+   call 4 Gqr/G+q-r abserr: ==  1.1396254368831169e-35 (0x1.e4be389cb3c6bp-117) vs 1.1396254368831169e-35 (0x1.e4be389cb3c6bp-117)
+   call 5 Gqr/G-q+r value: ==  1.9898078661319767e-32 (0x1.9d44553759a55p-106) vs 1.9898078661319767e-32 (0x1.9d44553759a55p-106)
+   call 5 Gqr/G-q+r abserr: ==  3.9361912551262895e-35 (0x1.a2915172a9145p-115) vs 3.9361912551262895e-35 (0x1.a2915172a9145p-115)
+   call 6 Gqr/G-q-r value: ==  2.7454265569969648e-33 (0x1.c82987e79bcafp-109) vs 2.7454265569969648e-33 (0x1.c82987e79bcafp-109)
+   call 6 Gqr/G-q-r abserr: ==  1.1316578921620253e-35 (0x1.e15aa1e19a8c4p-117) vs 1.1316578921620253e-35 (0x1.e15aa1e19a8c4p-117)
+   the clause's own fields (16 doubles): all bit-identical
+   beyond the clause: floats in the result summary 68; regions compared 10
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   regions: identical
+   T0 (b) on ctrl-low-1: HOLDS
+== T0 (b): HOLDS
+
+== T0 (c): two in-process runs of the same t unit, bit for bit
+-- low-G+r-1
+   floats in the result summary 68; group Levin calls 7; regions compared 11; probe windows 3; probe sample values compared 31200
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   probe: identical
+   T_phase_exact_remainder: identical
+   regions: identical
+   probe_samples: identical
+   T0 (c) on low-G+r-1: HOLDS
+-- ctrl-low-1
+   floats in the result summary 68; group Levin calls 7; regions compared 10; probe windows 3; probe sample values compared 31070
+   result: identical
+   calls: identical
+   qs_check: identical
+   dispatcher_counts: identical
+   dispatcher_flags: identical
+   n_calls_total: identical
+   stored: identical
+   probe: identical
+   T_phase_exact_remainder: identical
+   regions: identical
+   probe_samples: identical
+   T0 (c) on ctrl-low-1: HOLDS
+== T0 (c): HOLDS
+
+== GATE T0, clauses (b) and (c), with both trees' evidence: HOLDS
+# ----
+# end 2026-10-26T12:28:33Z
+# exit 0

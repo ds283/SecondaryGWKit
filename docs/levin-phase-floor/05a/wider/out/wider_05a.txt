@@ -1,0 +1,675 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/analyse.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05a-wider-20261026T123047 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/analysis.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/probe_windows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:35:48Z
+# ----
+# levin-phase-floor 05a section 6: the wider re-measurement, scored (T1 as amended by section 9)
+# written 2026-10-26T12:35:49Z on mps026298.phys.susx.ac.uk
+# script analyse.py sha256 b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d
+# tree c: /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd HEAD c4eaefda26ccb615fa5864cac877454ba364c304 (status --short: empty)
+# tree t: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 149c3938bb9e074df3682f8e511c7b57cd9c55c5 (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05a-wider-20261026T123047/checkpoint.jsonl sha256 248f5498cd32d2cb06b9bb90fbb708465de29906bd24cf94f5e1cdf7645a1cd6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/sample.json sha256 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# run levin-phase-floor-05a-wider-20261026T123047: 109 checkpoint records
+# every record's script_sha256: {'af656ad4fa038dd87524dce67bb0dea21bb4cef1302cda3583283f542f864bec': 109}; tree HEAD and status as expected on every record: True []
+# theta_mod_2pi calls by tree and phase flag: {('c', 'T exact_remainder=False'): 59906, ('c', 'G exact_remainder=True'): 98194, ('t', 'T exact_remainder=True'): 167562, ('t', 'G exact_remainder=True'): 268136}
+# T's phase exact_remainder per unit, by tree: {('c', '{"Tq": false, "Tr": false}'): 39, ('t', '{"Tq": true, "Tr": true}'): 70}
+# QuadSource recomputed equals the stored row at its nodes and adds B1's 3 nodes in every unit: True []
+# probe errors: none
+# over-budget units: none; error units: none
+# largest t wall / budget: 0.861 (t-1e-8-R3)
+# rows capped under B1's code (05's p at depth 20, from levin-phase-floor-05-wider-20261026T020005): 11: ['low-G+r-3', 'low-G-r-2', 'low-G-r-3', 'low-G-1', 'low-G-3', 'R1', 'R3', 'R4', 'R5', 'R6', 'R7']
+
+== per row: c and t at rtol 1e-7, t at 1e-8 (regions = WKB_Levin_data.num_regions; d = max depth; wall in s)
+   name           cls  band  stored(d,reg)  c7(d,reg,wall)       t7(d,reg,wall,budget)        t8(d,reg,wall,status)   conv c7/t7/t8
+   low-G+r-1      G+r  low   (20,86)        (3,11,0.50)          (3,11,0.30,1.5 done)         (3,11,0.35,done)        True/True/True
+   low-G+r-2      G+r  low   (20,457)       (5,12,0.90)          (5,12,0.41,2.71 done)        (5,12,0.47,done)        False/False/False
+   low-G+r-3      G+r  low   (20,1252)      (8,33,0.69)          (8,33,0.40,2.07 done)        (9,64,0.57,done)        False/False/False
+   low-G-r-1      G-r  low   (20,397)       (4,12,0.47)          (4,12,0.38,1.4 done)         (4,12,0.55,done)        False/False/False
+   low-G-r-2      G-r  low   (20,582)       (7,42,0.97)          (7,42,0.52,2.9 done)         (9,72,0.70,done)        False/False/False
+   low-G-r-3      G-r  low   (20,22972)     (8,40,1.15)          (8,40,0.41,3.44 done)        (9,72,0.60,done)        False/False/False
+   low-G-1        G    low   (20,173)       (11,34,0.73)         (11,34,0.54,2.19 done)       (11,55,0.68,done)       False/False/False
+   low-G-2        G    low   (20,506)       (7,16,0.75)          (7,16,0.41,2.24 done)        (9,36,0.46,done)        False/False/False
+   low-G-3        G    low   (20,5706)      (7,39,0.57)          (7,39,0.36,1.71 done)        (8,48,0.41,done)        False/False/False
+   low-Gqr-1      Gqr  low   (20,39)        (2,9,0.43)           (2,9,0.27,1.3 done)          (2,9,0.29,done)         True/True/True
+   low-Gqr-2      Gqr  low   (20,69)        (6,31,0.54)          (6,31,0.33,1.62 done)        (6,31,0.35,done)        True/True/True
+   low-Gqr-3      Gqr  low   (20,49)        (4,9,0.34)           (4,9,0.29,1.03 done)         (4,9,0.33,done)         False/False/False
+   mid-G+r-1      G+r  mid   (20,76)        (2,11,0.22)          (2,11,0.20,0.65 done)        (2,11,0.21,done)        True/True/True
+   mid-G+r-2      G+r  mid   (20,98)        (6,16,0.23)          (6,16,0.21,0.704 done)       (6,16,0.22,done)        True/True/True
+   mid-G+r-3      G+r  mid   (20,153)       (8,55,0.64)          (8,55,0.53,1.91 done)        (8,76,0.51,done)        False/False/True
+   mid-G-r-1      G-r  mid   (20,60)        (4,12,0.30)          (4,12,0.20,0.892 done)       (4,12,0.27,done)        True/True/True
+   mid-G-r-2      G-r  mid   (20,164)       (8,58,0.47)          (8,58,0.46,1.4 done)         (9,85,0.57,done)        False/False/False
+   mid-G-r-3      G-r  mid   (20,172)       (7,35,0.32)          (7,35,0.31,0.97 done)        (8,52,0.40,done)        False/False/True
+   mid-G-1        G    mid   (20,123)       (8,25,0.36)          (8,25,0.35,1.08 done)        (8,45,0.49,done)        False/False/False
+   mid-G-2        G    mid   (20,163)       (7,27,0.32)          (7,27,0.31,0.95 done)        (7,29,0.31,done)        True/True/True
+   mid-G-3        G    mid   (20,220)       (5,18,0.29)          (5,18,0.29,0.857 done)       (8,49,0.71,done)        False/False/False
+   mid-Gqr-1      Gqr  mid   (20,60)        (7,28,0.31)          (7,28,0.33,0.93 done)        (8,44,0.40,done)        False/False/False
+   mid-Gqr-2      Gqr  mid   (20,63)        (7,21,0.26)          (7,21,0.27,0.792 done)       (8,29,0.31,done)        False/False/False
+   mid-Gqr-3      Gqr  mid   (20,46)        (5,15,0.29)          (5,15,0.28,0.868 done)       (5,15,0.33,done)        False/False/False
+   R1             G+r  mid   (20,34147)     (8,63,0.42)          (8,63,0.40,1.27 done)        (9,123,0.68,done)       False/False/False
+   R2             G+r  mid   (20,29782)     (4,12,0.19)          (4,12,0.18,0.571 done)       (4,12,0.22,done)        True/True/True
+   R3             G+r  mid   (20,33314)     (5,18,0.22)          (5,18,0.22,0.655 done)       (5,18,0.56,done)        True/True/True
+   R4             G-r  mid   (20,52909)     (8,83,0.60)          (8,83,0.56,1.8 done)         (9,139,1.10,done)       False/False/False
+   R5             G-r  mid   (20,26273)     (5,19,0.24)          (5,19,0.23,0.732 done)       (5,19,0.42,done)        True/True/True
+   R6             G    mid   (20,22147)     (8,28,0.45)          (8,28,0.45,1.34 done)        (8,40,0.66,done)        False/False/False
+   R7             Gqr  mid   (20,23338)     (8,27,0.77)          (8,27,0.48,2.31 done)        (9,40,0.62,done)        False/False/False
+   ctrl-low-1     G    low   (3,10)         (3,10,0.21)          (3,10,0.21,0.637 done)       -                       True/True/-
+   ctrl-low-2     G    low   (3,10)         (1,8,0.22)           (1,8,0.21,0.654 done)        -                       True/True/-
+   ctrl-mid-1     G    mid   (3,10)         (2,9,0.19)           (2,9,0.18,0.559 done)        -                       True/True/-
+   ctrl-mid-2     G    mid   (1,6)          (1,6,0.18)           (1,6,0.18,0.549 done)        -                       True/True/-
+   ctrl-seam-1    G    seam  (1,4)          (1,4,0.09)           (1,4,0.09,0.259 done)        -                       True/True/-
+   ctrl-seam-2    G    seam  (9,18)         (2,5,0.10)           (2,5,0.13,0.303 done)        -                       True/True/-
+   ctrl-NULL-1    None seam  (-,-)          (-,-,0.16)           (-,-,0.07,0.488 done)        -                       True/True/-
+   ctrl-NULL-2    None seam  (-,-)          (-,-,0.12)           (-,-,0.06,0.352 done)        -                       True/True/-
+
+# the group calls of c and t@1e-7 are the same sequence of (regime, label, x_span) on every row: True []
+
+== T2: every row (all 39), under t at 1e-7, no group has a region at depth >= 18 (an over-budget unit counts as false)
+   low-G+r-1      d20     t7 max depth 3; regions at depth >= 18 in its worst group 0 -> holds
+   low-G+r-2      d20     t7 max depth 5; regions at depth >= 18 in its worst group 0 -> holds
+   low-G+r-3      d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-r-1      d20     t7 max depth 4; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-r-2      d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-r-3      d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-1        d20     t7 max depth 11; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-2        d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   low-G-3        d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   low-Gqr-1      d20     t7 max depth 2; regions at depth >= 18 in its worst group 0 -> holds
+   low-Gqr-2      d20     t7 max depth 6; regions at depth >= 18 in its worst group 0 -> holds
+   low-Gqr-3      d20     t7 max depth 4; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G+r-1      d20     t7 max depth 2; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G+r-2      d20     t7 max depth 6; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G+r-3      d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-r-1      d20     t7 max depth 4; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-r-2      d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-r-3      d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-1        d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-2        d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   mid-G-3        d20     t7 max depth 5; regions at depth >= 18 in its worst group 0 -> holds
+   mid-Gqr-1      d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   mid-Gqr-2      d20     t7 max depth 7; regions at depth >= 18 in its worst group 0 -> holds
+   mid-Gqr-3      d20     t7 max depth 5; regions at depth >= 18 in its worst group 0 -> holds
+   R1             d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   R2             d20     t7 max depth 4; regions at depth >= 18 in its worst group 0 -> holds
+   R3             d20     t7 max depth 5; regions at depth >= 18 in its worst group 0 -> holds
+   R4             d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   R5             d20     t7 max depth 5; regions at depth >= 18 in its worst group 0 -> holds
+   R6             d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   R7             d20     t7 max depth 8; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-low-1     control t7 max depth 3; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-low-2     control t7 max depth 1; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-mid-1     control t7 max depth 2; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-mid-2     control t7 max depth 1; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-seam-1    control t7 max depth 1; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-seam-2    control t7 max depth 2; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-NULL-1    control t7 max depth -; regions at depth >= 18 in its worst group 0 -> holds
+   ctrl-NULL-2    control t7 max depth -; regions at depth >= 18 in its worst group 0 -> holds
+   T2: true on 39 of 39 -> HOLDS; largest max depth under t@1e-7 11
+   (the 11 capped under B1: true on 11 of 11; max depth there 11)
+
+== T3: every row (all 39), |total_t - total_c| <= total_abserr_c at 1e-7
+   low-G+r-1      d20     low  G+r  capped-B1 False c 5.3918842127849005e-31 t 5.391884212784901e-31 |dt| 8.76e-47 abserr_c 1.9e-33 ratio 4.61e-14 |dt|/|c| 1.62e-16 bit-identical False -> holds
+   low-G+r-2      d20     low  G+r  capped-B1 False c -1.8037572512398775e-29 t -1.8037572512398773e-29 |dt| 2.8e-45 abserr_c inf ratio 0 |dt|/|c| 1.55e-16 bit-identical False -> holds
+   low-G+r-3      d20     low  G+r  capped-B1 True  c -1.9904397629834092e-22 t -1.9904397629834047e-22 |dt| 4.47e-37 abserr_c 2.8e-28 ratio 1.6e-09 |dt|/|c| 2.24e-15 bit-identical False -> holds
+   low-G-r-1      d20     low  G-r  capped-B1 False c -1.2319536708148697e-29 t -1.2319536708148707e-29 |dt| 9.81e-45 abserr_c inf ratio 0 |dt|/|c| 7.96e-16 bit-identical False -> holds
+   low-G-r-2      d20     low  G-r  capped-B1 True  c 3.730885391909201e-23 t 3.730885391909342e-23 |dt| 1.41e-36 abserr_c 6.95e-28 ratio 2.03e-09 |dt|/|c| 3.78e-14 bit-identical False -> holds
+   low-G-r-3      d20     low  G-r  capped-B1 True  c 3.35604798847529e-24 t 3.356047988475283e-24 |dt| 6.61e-39 abserr_c 9.36e-29 ratio 7.06e-11 |dt|/|c| 1.97e-15 bit-identical False -> holds
+   low-G-1        d20     low  G    capped-B1 True  c 5.4306515488879396e-21 t 5.430651548896442e-21 |dt| 8.5e-33 abserr_c 1.82e-27 ratio 4.66e-06 |dt|/|c| 1.57e-12 bit-identical False -> holds
+   low-G-2        d20     low  G    capped-B1 False c 6.211219528362789e-23 t 6.2112195283628e-23 |dt| 1.18e-37 abserr_c 3.73e-28 ratio 3.15e-10 |dt|/|c| 1.89e-15 bit-identical False -> holds
+   low-G-3        d20     low  G    capped-B1 True  c 1.5815396674373454e-25 t 1.5815396674373454e-25 |dt| 0 abserr_c 5.9e-32 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   low-Gqr-1      d20     low  Gqr  capped-B1 False c -9.206103703305408e-27 t -9.206103703305408e-27 |dt| 0 abserr_c 2.16e-32 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   low-Gqr-2      d20     low  Gqr  capped-B1 False c -2.112078367634002e-26 t -2.112078367634002e-26 |dt| 0 abserr_c 1.28e-32 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   low-Gqr-3      d20     low  Gqr  capped-B1 False c -1.1899397752528739e-27 t -1.1899397752528739e-27 |dt| 0 abserr_c inf ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   mid-G+r-1      d20     mid  G+r  capped-B1 False c -1.936573500205446e-27 t -1.936573500207437e-27 |dt| 1.99e-39 abserr_c 2.04e-30 ratio 9.77e-10 |dt|/|c| 1.03e-12 bit-identical False -> holds
+   mid-G+r-2      d20     mid  G+r  capped-B1 False c -2.4851815586318653e-25 t -2.485181558630755e-25 |dt| 1.11e-37 abserr_c 8.51e-30 ratio 1.31e-08 |dt|/|c| 4.47e-13 bit-identical False -> holds
+   mid-G+r-3      d20     mid  G+r  capped-B1 False c 1.02296774770847e-23 t 1.0229677477082686e-23 |dt| 2.01e-36 abserr_c 1.94e-29 ratio 1.04e-07 |dt|/|c| 1.97e-13 bit-identical False -> holds
+   mid-G-r-1      d20     mid  G-r  capped-B1 False c -9.238540294630595e-28 t -9.238540294630586e-28 |dt| 8.97e-43 abserr_c 1.33e-31 ratio 6.76e-12 |dt|/|c| 9.71e-16 bit-identical False -> holds
+   mid-G-r-2      d20     mid  G-r  capped-B1 False c 2.260981972911073e-19 t 2.2609819729110506e-19 |dt| 2.21e-33 abserr_c 7.41e-26 ratio 2.99e-08 |dt|/|c| 9.8e-15 bit-identical False -> holds
+   mid-G-r-3      d20     mid  G-r  capped-B1 False c 1.0073331247103285e-22 t 1.0073331247101683e-22 |dt| 1.6e-35 abserr_c 2.1e-28 ratio 7.63e-08 |dt|/|c| 1.59e-13 bit-identical False -> holds
+   mid-G-1        d20     mid  G    capped-B1 False c 3.5927624383075457e-20 t 3.592762438307546e-20 |dt| 6.02e-36 abserr_c 2.58e-27 ratio 2.33e-09 |dt|/|c| 1.68e-16 bit-identical False -> holds
+   mid-G-2        d20     mid  G    capped-B1 False c 5.078835962785259e-25 t 5.078835962785259e-25 |dt| 0 abserr_c 1.8e-31 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   mid-G-3        d20     mid  G    capped-B1 False c -4.612834187144066e-23 t -4.612834187144066e-23 |dt| 0 abserr_c 8.07e-30 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   mid-Gqr-1      d20     mid  Gqr  capped-B1 False c -2.3629993914722004e-22 t -2.3629993914722004e-22 |dt| 0 abserr_c 1.38e-29 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   mid-Gqr-2      d20     mid  Gqr  capped-B1 False c 1.5782991920577615e-22 t 1.5782991920577615e-22 |dt| 0 abserr_c 4.98e-29 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   mid-Gqr-3      d20     mid  Gqr  capped-B1 False c -1.4561655033627965e-25 t -1.4561655033627965e-25 |dt| 0 abserr_c 1.72e-31 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   R1             d20     mid  G+r  capped-B1 True  c -4.950201227498909e-24 t -4.95020122749857e-24 |dt| 3.39e-37 abserr_c 1.49e-29 ratio 2.27e-08 |dt|/|c| 6.86e-14 bit-identical False -> holds
+   R2             d20     mid  G+r  capped-B1 False c -5.18827702339403e-26 t -5.188277023394016e-26 |dt| 1.38e-40 abserr_c 6e-31 ratio 2.3e-10 |dt|/|c| 2.66e-15 bit-identical False -> holds
+   R3             d20     mid  G+r  capped-B1 True  c 6.58050194359166e-29 t 6.580501943591604e-29 |dt| 5.61e-43 abserr_c 1.19e-32 ratio 4.71e-11 |dt|/|c| 8.52e-15 bit-identical False -> holds
+   R4             d20     mid  G-r  capped-B1 True  c -3.515710041224853e-26 t -3.5157100412376543e-26 |dt| 1.28e-37 abserr_c 1.07e-29 ratio 1.19e-08 |dt|/|c| 3.64e-12 bit-identical False -> holds
+   R5             d20     mid  G-r  capped-B1 True  c -1.3167402567526463e-26 t -1.3167402567527198e-26 |dt| 7.35e-40 abserr_c 4.39e-31 ratio 1.67e-09 |dt|/|c| 5.58e-14 bit-identical False -> holds
+   R6             d20     mid  G    capped-B1 True  c 4.92609375253192e-24 t 4.926093752531916e-24 |dt| 4.41e-39 abserr_c 6.46e-30 ratio 6.82e-10 |dt|/|c| 8.95e-16 bit-identical False -> holds
+   R7             d20     mid  Gqr  capped-B1 True  c 3.032149615592661e-24 t 3.032149615592662e-24 |dt| 1.1e-39 abserr_c 5.25e-30 ratio 2.1e-10 |dt|/|c| 3.63e-16 bit-identical False -> holds
+   ctrl-low-1     control low  G    capped-B1 False c -3.81777832896149e-31 t -3.8177783289614954e-31 |dt| 5.25e-46 abserr_c 2.45e-33 ratio 2.14e-13 |dt|/|c| 1.38e-15 bit-identical False -> holds
+   ctrl-low-2     control low  G    capped-B1 False c -1.4355040908253356e-28 t -1.4355040908253356e-28 |dt| 0 abserr_c 2.17e-33 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   ctrl-mid-1     control mid  G    capped-B1 False c -9.639267614574675e-29 t -9.639267614574625e-29 |dt| 5.04e-43 abserr_c 8.44e-32 ratio 5.98e-12 |dt|/|c| 5.23e-15 bit-identical False -> holds
+   ctrl-mid-2     control mid  G    capped-B1 False c 2.7693289177164324e-26 t 2.7693289177164324e-26 |dt| 0 abserr_c 9.74e-31 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   ctrl-seam-1    control seam G    capped-B1 False c -6.107343794275593e-20 t -6.107343794275555e-20 |dt| 3.85e-34 abserr_c 4.71e-22 ratio 8.18e-13 |dt|/|c| 6.31e-15 bit-identical False -> holds
+   ctrl-seam-2    control seam G    capped-B1 False c 2.031772025966749e-18 t 2.031772025966779e-18 |dt| 2.97e-32 abserr_c 1.46e-23 ratio 2.03e-09 |dt|/|c| 1.46e-14 bit-identical False -> holds
+   ctrl-NULL-1    control seam None capped-B1 False c -1.2087911009896876e-16 t -1.2087911009896876e-16 |dt| 0 abserr_c 4.91e-23 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   ctrl-NULL-2    control seam None capped-B1 False c -4.384383430355975e-18 t -4.384383430355975e-18 |dt| 0 abserr_c 1.24e-26 ratio 0 |dt|/|c| 0 bit-identical True -> holds
+   T3: true on 39 of 39 -> HOLDS; largest ratio 4.66e-06; false on []; undecided on []; totals bit-identical on 13 rows ['low-G-3', 'low-Gqr-1', 'low-Gqr-2', 'low-Gqr-3', 'mid-G-2', 'mid-G-3', 'mid-Gqr-1', 'mid-Gqr-2', 'mid-Gqr-3', 'ctrl-low-2', 'ctrl-mid-2', 'ctrl-NULL-1', 'ctrl-NULL-2']
+   (on the 11 rows capped under B1: true on 11; ratios ['1.6e-09', '2.03e-09', '7.06e-11', '4.66e-06', '0', '2.27e-08', '4.71e-11', '1.19e-08', '1.67e-09', '6.82e-10', '2.1e-10'])
+
+== T4: every depth-20 row with both t units in budget, |total_t(1e-7) - total_t(1e-8)| <= total_abserr_t(1e-7)
+   low-G+r-1      low  G+r  capped-B1 False t7 5.391884212784901e-31 t8 5.391884212784901e-31 |dt| 0 abserr_t7 1.9e-33 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   low-G+r-2      low  G+r  capped-B1 False t7 -1.8037572512398773e-29 t8 -1.8037572512398773e-29 |dt| 0 abserr_t7 inf ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   low-G+r-3      low  G+r  capped-B1 True  t7 -1.9904397629834047e-22 t8 -1.990440134537787e-22 |dt| 3.72e-29 abserr_t7 2.8e-28 ratio 0.133 |dt|/|t8| 1.87e-07 -> holds   (05's L3 under c: ratio 0.133, holds)
+   low-G-r-1      low  G-r  capped-B1 False t7 -1.2319536708148707e-29 t8 -1.2319536708148707e-29 |dt| 0 abserr_t7 inf ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   low-G-r-2      low  G-r  capped-B1 True  t7 3.730885391909342e-23 t8 3.7308877198549454e-23 |dt| 2.33e-29 abserr_t7 6.95e-28 ratio 0.0335 |dt|/|t8| 6.24e-07 -> holds   (05's L3 under c: ratio 0.0335, holds)
+   low-G-r-3      low  G-r  capped-B1 True  t7 3.356047988475283e-24 t8 3.356032470887405e-24 |dt| 1.55e-29 abserr_t7 9.36e-29 ratio 0.166 |dt|/|t8| 4.62e-06 -> holds   (05's L3 under c: ratio 0.166, holds)
+   low-G-1        low  G    capped-B1 True  t7 5.430651548896442e-21 t8 5.430651546316228e-21 |dt| 2.58e-30 abserr_t7 1.82e-27 ratio 0.00141 |dt|/|t8| 4.75e-10 -> holds   (05's L3 under c: ratio 0.00141, holds)
+   low-G-2        low  G    capped-B1 False t7 6.2112195283628e-23 t8 6.211217178264066e-23 |dt| 2.35e-29 abserr_t7 3.73e-28 ratio 0.063 |dt|/|t8| 3.78e-07 -> holds   (05's L3 under c: ratio 0.063, holds)
+   low-G-3        low  G    capped-B1 True  t7 1.5815396674373454e-25 t8 1.5815396448676224e-25 |dt| 2.26e-33 abserr_t7 5.9e-32 ratio 0.0382 |dt|/|t8| 1.43e-08 -> holds   (05's L3 under c: ratio 0.0382, holds)
+   low-Gqr-1      low  Gqr  capped-B1 False t7 -9.206103703305408e-27 t8 -9.206103703305408e-27 |dt| 0 abserr_t7 2.16e-32 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   low-Gqr-2      low  Gqr  capped-B1 False t7 -2.112078367634002e-26 t8 -2.112078367634002e-26 |dt| 0 abserr_t7 1.28e-32 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   low-Gqr-3      low  Gqr  capped-B1 False t7 -1.1899397752528739e-27 t8 -1.1899397752528739e-27 |dt| 0 abserr_t7 inf ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   mid-G+r-1      mid  G+r  capped-B1 False t7 -1.936573500207437e-27 t8 -1.936573500207437e-27 |dt| 0 abserr_t7 2.04e-30 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   mid-G+r-2      mid  G+r  capped-B1 False t7 -2.485181558630755e-25 t8 -2.485181558630755e-25 |dt| 0 abserr_t7 8.51e-30 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   mid-G+r-3      mid  G+r  capped-B1 False t7 1.0229677477082686e-23 t8 1.0229674039958896e-23 |dt| 3.44e-30 abserr_t7 1.94e-29 ratio 0.177 |dt|/|t8| 3.36e-07 -> holds   (05's L3 under c: ratio 0.177, holds)
+   mid-G-r-1      mid  G-r  capped-B1 False t7 -9.238540294630586e-28 t8 -9.238540294630586e-28 |dt| 0 abserr_t7 1.33e-31 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   mid-G-r-2      mid  G-r  capped-B1 False t7 2.2609819729110506e-19 t8 2.260981921954758e-19 |dt| 5.1e-27 abserr_t7 7.41e-26 ratio 0.0688 |dt|/|t8| 2.25e-08 -> holds   (05's L3 under c: ratio 0.0688, holds)
+   mid-G-r-3      mid  G-r  capped-B1 False t7 1.0073331247101683e-22 t8 1.0073304056249388e-22 |dt| 2.72e-28 abserr_t7 2.1e-28 ratio 1.29 |dt|/|t8| 2.7e-06 -> FAILS   (05's L3 under c: ratio 1.29, fails)
+   mid-G-1        mid  G    capped-B1 False t7 3.592762438307546e-20 t8 3.592762597211257e-20 |dt| 1.59e-27 abserr_t7 2.58e-27 ratio 0.615 |dt|/|t8| 4.42e-08 -> holds   (05's L3 under c: ratio 0.615, holds)
+   mid-G-2        mid  G    capped-B1 False t7 5.078835962785259e-25 t8 5.078835960394003e-25 |dt| 2.39e-34 abserr_t7 1.8e-31 ratio 0.00133 |dt|/|t8| 4.71e-10 -> holds   (05's L3 under c: ratio 0.00133, holds)
+   mid-G-3        mid  G    capped-B1 False t7 -4.612834187144066e-23 t8 -4.6128328165793206e-23 |dt| 1.37e-29 abserr_t7 8.07e-30 ratio 1.7 |dt|/|t8| 2.97e-07 -> FAILS   (05's L3 under c: ratio 1.7, fails)
+   mid-Gqr-1      mid  Gqr  capped-B1 False t7 -2.3629993914722004e-22 t8 -2.3629993908378797e-22 |dt| 6.34e-32 abserr_t7 1.38e-29 ratio 0.00459 |dt|/|t8| 2.68e-10 -> holds   (05's L3 under c: ratio 0.00459, holds)
+   mid-Gqr-2      mid  Gqr  capped-B1 False t7 1.5782991920577615e-22 t8 1.578299185830637e-22 |dt| 6.23e-31 abserr_t7 4.98e-29 ratio 0.0125 |dt|/|t8| 3.95e-09 -> holds   (05's L3 under c: ratio 0.0125, holds)
+   mid-Gqr-3      mid  Gqr  capped-B1 False t7 -1.4561655033627965e-25 t8 -1.4561655033627965e-25 |dt| 0 abserr_t7 1.72e-31 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   R1             mid  G+r  capped-B1 True  t7 -4.95020122749857e-24 t8 -4.950202103823873e-24 |dt| 8.76e-31 abserr_t7 1.49e-29 ratio 0.0587 |dt|/|t8| 1.77e-07 -> holds   (05's L3 under c: ratio 0.0587, holds)
+   R2             mid  G+r  capped-B1 False t7 -5.188277023394016e-26 t8 -5.188277023394016e-26 |dt| 0 abserr_t7 6e-31 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   R3             mid  G+r  capped-B1 True  t7 6.580501943591604e-29 t8 6.580501943591604e-29 |dt| 0 abserr_t7 1.19e-32 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   R4             mid  G-r  capped-B1 True  t7 -3.5157100412376543e-26 t8 -3.51561911667266e-26 |dt| 9.09e-31 abserr_t7 1.07e-29 ratio 0.0846 |dt|/|t8| 2.59e-05 -> holds   (05's L3 under c: ratio 0.0846, holds)
+   R5             mid  G-r  capped-B1 True  t7 -1.3167402567527198e-26 t8 -1.3167402567527198e-26 |dt| 0 abserr_t7 4.39e-31 ratio 0 |dt|/|t8| 0 -> holds   (05's L3 under c: ratio 0, holds)
+   R6             mid  G    capped-B1 True  t7 4.926093752531916e-24 t8 4.926093737811696e-24 |dt| 1.47e-32 abserr_t7 6.46e-30 ratio 0.00228 |dt|/|t8| 2.99e-09 -> holds   (05's L3 under c: ratio 0.00228, holds)
+   R7             mid  Gqr  capped-B1 True  t7 3.032149615592662e-24 t8 3.0321496335392106e-24 |dt| 1.79e-32 abserr_t7 5.25e-30 ratio 0.00342 |dt|/|t8| 5.92e-09 -> holds   (05's L3 under c: ratio 0.00342, holds)
+   T4: true on 29 of 31 -> FAILS; largest ratio 1.7; false on ['mid-G-r-3', 'mid-G-3']; excluded []
+   (on the 11 rows capped under B1: true on 11; ratios ['0.133', '0.0335', '0.166', '0.00141', '0.0382', '0.0587', '0', '0.0846', '0', '0.00228', '0.00342'])
+
+== T1 (as amended by section 9): the probe windows, c against t
+   windows: 91 paired; mismatches: none
+
+   -- reading: LITERAL (scored): largest unwrapped z-step < pi/2 in both trees
+   row            sub fac  z            k          |theta|     eps|th|    n  w         step c/t        true step   sig_c/eps|th| sig_t/eps|th| bound_t/eps|th| largest term          maxpz_t    u_t/eps|th| absc/eps|th| verdict
+   low-G+r-1        1 Tr  1.67213e+11  3e+08      462.8       1.03e-13   0  1e-06     0.000/0.000                                                     7.5e-06     0.2946        0.01797       0.9731          1e-13                 1.6e-12    0.2198      1.037        not scored (eps|theta| < 1e-11)
+   low-G+r-1        2 Tq  2.091        9.703e+06  5.334e+09   1.18e-06   0  1e-06     1.486/1.486                                                     7.77        0.2669        0.02059       0.001           1e-3 eps|theta|       5.12e-05   0.03998     0.09322      FAILS (c True, t False)
+   low-G+r-1        2 Tr  2.091        3e+08      1.649e+11   3.66e-05   0  1e-06     1.449/1.449                                                     240         0.3722        0.02531       0.001           1e-3 eps|theta|       5.12e-05   0.04578     0.09322      FAILS (c True, t False)
+   low-G+r-2        1 Tr  5.16895e+11  9.558e+07  32.23       7.16e-15   0  1e-06     0.000/0.000                                                     7.73e-07    0.4903        0.08092       13.98           1e-13                 5.18e-13   0.2689      1.535        not scored (eps|theta| < 1e-11)
+   low-G+r-2        2 Tq  3.63427      3.045e+07  1.579e+10   3.51e-06   2  2.5e-07   0.961/0.961                                                     7.24        0.374         0.01585       0.001           1e-3 eps|theta|       1.52e-05   0.04298     0.1174       FAILS (c True, t False)
+   low-G+r-2        2 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    1  5e-07     1.488/1.488                                                     45.5        0.2888        0.01768       0.001           1e-3 eps|theta|       3.04e-05   0.04384     0.1174       FAILS (c True, t False)
+   low-G+r-3        1 Tr  1.70899e+09  3.139e+05  31.89       7.08e-15   0  1e-06     0.000/0.000                                                     7.68e-07    0.4098        0.06842       14.12           1e-13                 1.57e-10   0.2846      1.541        not scored (eps|theta| < 1e-11)
+   low-G+r-3        2 Tq  0.131835     1e+05      6.161e+07   1.37e-08   0  1e-06     0.009/0.009                                                     0.009       0.2724        3.424e-07     0.001           1e-3 eps|theta|       5.76e-06   0.00262     0.009347     holds
+   low-G+r-3        2 Tr  0.131835     3.139e+05  1.934e+08   4.29e-08   0  1e-06     0.028/0.028                                                     0.0282      0.3115        1.445e-08     0.001           1e-3 eps|theta|       5.76e-06   0.00262     0.009347     holds
+   low-G-r-1        1 Tr  5.16895e+11  9.558e+07  32.23       7.16e-15   0  1e-06     0.000/0.000                                                     7.73e-07    0.4903        0.08092       13.98           1e-13                 5.18e-13   0.2689      1.535        not scored (eps|theta| < 1e-11)
+   low-G-r-1        2 Tq  2.75667      3.045e+07  1.629e+10   3.62e-06   1  5e-07     0.866/0.866                                                     13.4        0.3023        0.02175       0.001           1e-3 eps|theta|       2.82e-05   0.02176     0.1056       FAILS (c True, t False)
+   low-G-r-1        2 Tr  2.75667      9.558e+07  5.112e+10   1.14e-05   4  6.25e-08  1.013/1.013                                                     5.27        0.328         0.02608       0.001           1e-3 eps|theta|       3.53e-06   0.05473     0.1056       FAILS (c True, t False)
+   low-G-r-2        1 Tr  1.70899e+09  3.139e+05  31.89       7.08e-15   0  1e-06     0.000/0.000                                                     7.68e-07    0.4098        0.06842       14.12           1e-13                 1.57e-10   0.2846      1.541        not scored (eps|theta| < 1e-11)
+   low-G-r-2        2 Tq  2.75667      1e+05      5.348e+07   1.19e-08   0  1e-06     0.088/0.088                                                     0.0882      0.2942        2.128e-07     0.001           1e-3 eps|theta|       5.65e-05   0.02374     0.1056       holds
+   low-G-r-2        2 Tr  2.75667      3.139e+05  1.679e+08   3.73e-08   0  1e-06     0.277/0.277                                                     0.277       0.3427        9.538e-08     0.001           1e-3 eps|theta|       5.65e-05   0.02374     0.1056       holds
+   low-G-r-3        1 Tr  5.40595e+09  9.851e+05  31.5        6.99e-15   0  1e-06     0.000/0.000                                                     7.62e-07    0.4626        0.04329       14.3            1e-13                 4.95e-11   0.3272      1.547        not scored (eps|theta| < 1e-11)
+   low-G-r-3        2 Tq  6.31658      3.139e+05  1.516e+08   3.37e-08   0  1e-06     0.331/0.331                                                     0.331       0.3064        2.681e-07     0.001           1e-3 eps|theta|       6.75e-05   0.02359     0.1398       holds
+   low-G-r-3        2 Tr  6.31658      9.851e+05  4.757e+08   1.06e-07   0  1e-06     1.039/1.039                                                     1.04        0.2095        2.408e-07     0.001           1e-3 eps|theta|       6.75e-05   0.02359     0.1398       holds
+   low-G-1          1 Tq  0.692189     1e+05      5.928e+07   1.32e-08   0  1e-06     0.042/0.042                                                     0.0416      0.286         3.837e-07     0.001           1e-3 eps|theta|       2.66e-05   0.009626    0.04492      holds
+   low-G-1          1 Tr  0.692189     1e+05      5.928e+07   1.32e-08   0  1e-06     0.042/0.042                                                     0.0416      0.286         3.837e-07     0.001           1e-3 eps|theta|       2.66e-05   0.009626    0.04492      holds
+   low-G-2          1 Tq  0.229138     3.139e+05  1.92e+08    4.26e-08   0  1e-06     0.049/0.049                                                     0.0485      0.3208        7.398e-08     0.001           1e-3 eps|theta|       9.89e-06   0.002541    0.01617      holds
+   low-G-2          1 Tr  0.229138     3.139e+05  1.92e+08    4.26e-08   0  1e-06     0.049/0.049                                                     0.0485      0.3208        7.398e-08     0.001           1e-3 eps|theta|       9.89e-06   0.002541    0.01617      holds
+   low-G-3          1 Tq  6.31658      3.045e+07  1.471e+10   3.27e-06   0  1e-06     0.719/0.719                                                     32.1        0.2035        0.02457       0.001           1e-3 eps|theta|       6.75e-05   0.05189     0.1398       FAILS (c True, t False)
+   low-G-3          1 Tr  6.31658      3.045e+07  1.471e+10   3.27e-06   0  1e-06     0.719/0.719                                                     32.1        0.2035        0.02457       0.001           1e-3 eps|theta|       6.75e-05   0.05189     0.1398       FAILS (c True, t False)
+   low-Gqr-1        1 Tq  6.31658      3e+08      1.449e+11   3.22e-05   1  5e-07     1.194/1.194                                                     158         0.303         0.02512       0.001           1e-3 eps|theta|       3.38e-05   0.05496     0.1398       FAILS (c True, t False)
+   low-Gqr-1        1 Tr  6.31658      3e+08      1.449e+11   3.22e-05   1  5e-07     1.194/1.194                                                     158         0.303         0.02512       0.001           1e-3 eps|theta|       3.38e-05   0.05496     0.1398       FAILS (c True, t False)
+   low-Gqr-2        1 Tq  3.63427      9.558e+07  4.957e+10   1.1e-05    1  5e-07     1.488/1.488                                                     45.5        0.2888        0.01768       0.001           1e-3 eps|theta|       3.04e-05   0.04384     0.1174       FAILS (c True, t False)
+   low-Gqr-2        1 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    1  5e-07     1.488/1.488                                                     45.5        0.2888        0.01768       0.001           1e-3 eps|theta|       3.04e-05   0.04384     0.1174       FAILS (c True, t False)
+   low-Gqr-3        1 Tq  3.63427      9.558e+07  4.957e+10   1.1e-05    1  5e-07     1.488/1.488                                                     45.5        0.2888        0.01768       0.001           1e-3 eps|theta|       3.04e-05   0.04384     0.1174       FAILS (c True, t False)
+   low-Gqr-3        1 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    1  5e-07     1.488/1.488                                                     45.5        0.2888        0.01768       0.001           1e-3 eps|theta|       3.04e-05   0.04384     0.1174       FAILS (c True, t False)
+   mid-G+r-1        1 Tr  5.40595e+09  9.558e+07  4714        1.05e-12   0  1e-06     0.000/0.000                                                     7.39e-05    0.37          0.000612      0.09553         1e-13                 4.95e-11   0.2054      1.004        not scored (eps|theta| < 1e-11)
+   mid-G+r-1        2 Tq  3641         3.139e+05  1.628e+07   3.62e-09   0  1e-06     0.186/0.186                                                     0.186       0.2019        3.62e-07      0.001           1e-3 eps|theta|       3.8e-05    0.1028      0.7319       holds
+   mid-G+r-1        2 Tr  3641         9.558e+07  4.959e+09   1.1e-06    0  1e-06     0.156/0.156                                                     56.7        0.3496        0.1172        0.001           1e-3 eps|theta|       3.8e-05    1.67        0.7319       FAILS (c True, t False)
+   mid-G+r-2        1 Tr  1.70899e+09  3.045e+07  4751        1.06e-12   0  1e-06     0.000/0.000                                                     7.45e-05    0.3508        0.0007918     0.09478         1e-13                 1.57e-10   0.1831      1.004        not scored (eps|theta| < 1e-11)
+   mid-G+r-2        2 Tq  10998.9      1e+05      2.119e+06   4.71e-10   0  1e-06     0.029/0.029                                                     0.029       0.3737        2.211e-06     0.001           1e-3 eps|theta|       1.86e-05   0.1621      0.8765       holds
+   mid-G+r-2        2 Tr  10998.9      3.045e+07  6.455e+08   1.43e-07   3  1.25e-07  1.105/1.105                                                     1.1         0.3015        3.365e-07     0.001           1e-3 eps|theta|       2.32e-06   0.1714      0.8765       holds
+   mid-G+r-3        1 Tr  1.70899e+09  9.703e+06  1502        3.34e-13   0  1e-06     0.000/0.000                                                     2.37e-05    0.3713        0.001762      0.2998          1e-13                 1.57e-10   0.1851      1.012        not scored (eps|theta| < 1e-11)
+   mid-G+r-3        2 Tq  3641         1e+05      5.188e+06   1.15e-09   0  1e-06     0.059/0.059                                                     0.0593      0.3042        7.629e-07     0.001           1e-3 eps|theta|       3.8e-05    0.1028      0.7319       holds
+   mid-G+r-3        2 Tr  3641         9.703e+06  5.034e+08   1.12e-07   0  1e-06     0.527/0.527                                                     5.76        0.261         0.1283        0.001           1e-3 eps|theta|       3.8e-05    1.829       0.7319       FAILS (c True, t False)
+   mid-G-r-1        1 Tr  1.6711e+10   9.558e+07  1513        3.36e-13   0  1e-06     0.000/0.000                                                     2.39e-05    0.404         0.004773      0.2976          1e-13                 1.6e-11    0.1495      1.011        not scored (eps|theta| < 1e-11)
+   mid-G-r-1        2 Tq  174.127      9.851e+05  2.337e+08   5.19e-08   0  1e-06     1.144/1.144                                                     1.14        0.2075        4.328e-07     0.001           1e-3 eps|theta|       7.43e-05   0.06071     0.3134       holds
+   mid-G-r-1        2 Tr  174.127      9.558e+07  2.267e+10   5.03e-06   1  5e-07     1.037/1.037                                                     55.5        0.268         0.06708       0.001           1e-3 eps|theta|       3.72e-05   0.3637      0.3134       FAILS (c True, t False)
+   mid-G-r-2        1 Tr  1.70899e+09  9.851e+05  137         3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4885        0.1132        3.288           1e-13                 1.57e-10   0.2195      1.126        not scored (eps|theta| < 1e-11)
+   mid-G-r-2        2 Tq  57748.7      1e+05      4.502e+05   1e-10      0  1e-06     0.007/0.007                                                     0.00684     0.326         1.313e-05     0.001           1e-13                 4.38e-06   0.1546      0.9719       holds
+   mid-G-r-2        2 Tr  57748.7      9.851e+05  4.435e+06   9.85e-10   0  1e-06     0.067/0.067                                                     0.0673      0.3736        1.402e-06     0.001           1e-3 eps|theta|       4.38e-06   0.1546      0.9719       holds
+   mid-G-r-3        1 Tr  5.40595e+09  9.703e+06  463         1.03e-13   0  1e-06     0.000/0.000                                                     7.51e-06    0.2751        0.01708       0.9726          1e-13                 4.95e-11   0.2146      1.037        not scored (eps|theta| < 1e-11)
+   mid-G-r-3        2 Tq  76133.2      3.139e+05  1.079e+06   2.4e-10    0  1e-06     0.016/0.016                                                     0.0165      0.3415        1.21e-05      0.001           1e-3 eps|theta|       3.36e-06   0.2156      0.9784       holds
+   mid-G-r-3        2 Tr  76133.2      9.703e+06  3.337e+07   7.41e-09   0  1e-06     0.510/0.510                                                     0.51        0.1979        7.197e-07     0.001           1e-3 eps|theta|       3.36e-06   0.2156      0.9784       holds
+   mid-G-1          1 Tq  43.7227      3.139e+05  1.072e+08   2.38e-08   0  1e-06     0.372/0.372                                                     0.372       0.2691        2.772e-07     0.001           1e-3 eps|theta|       7.59e-05   0.03846     0.2221       holds
+   mid-G-1          1 Tr  43.7227      3.139e+05  1.072e+08   2.38e-08   0  1e-06     0.372/0.372                                                     0.372       0.2691        2.772e-07     0.001           1e-3 eps|theta|       7.59e-05   0.03846     0.2221       holds
+   mid-G-2          1 Tq  75.9925      3.045e+07  9.125e+09   2.03e-06   1  5e-07     0.797/0.797                                                     18.1        0.3537        0.0633        0.001           1e-3 eps|theta|       3.79e-05   0.2922      0.2532       FAILS (c True, t False)
+   mid-G-2          1 Tr  75.9925      3.045e+07  9.125e+09   2.03e-06   1  5e-07     0.797/0.797                                                     18.1        0.3537        0.0633        0.001           1e-3 eps|theta|       3.79e-05   0.2922      0.2532       FAILS (c True, t False)
+   mid-G-3          1 Tq  100.185      9.703e+06  2.704e+09   6e-07      0  1e-06     1.106/1.106                                                     11.5        0.3352        0.05427       0.001           1e-3 eps|theta|       7.56e-05   0.3434      0.2712       FAILS (c True, t False)
+   mid-G-3          1 Tr  100.185      9.703e+06  2.704e+09   6e-07      0  1e-06     1.106/1.106                                                     11.5        0.3352        0.05427       0.001           1e-3 eps|theta|       7.56e-05   0.3434      0.2712       FAILS (c True, t False)
+   mid-Gqr-1        1 Tq  174.127      9.703e+06  2.302e+09   5.11e-07   0  1e-06     1.296/1.296                                                     11.3        0.2838        0.07338       0.001           1e-3 eps|theta|       7.43e-05   0.4316      0.3134       FAILS (c True, t False)
+   mid-Gqr-1        1 Tr  174.127      9.703e+06  2.302e+09   5.11e-07   0  1e-06     1.296/1.296                                                     11.3        0.2838        0.07338       0.001           1e-3 eps|theta|       7.43e-05   0.4316      0.3134       FAILS (c True, t False)
+   mid-Gqr-2        1 Tq  4800.13      9.703e+06  4.088e+08   9.08e-08   0  1e-06     1.340/1.340                                                     4.94        0.3394        0.2318        0.001           1e-3 eps|theta|       3.26e-05   2.201       0.774        FAILS (c True, t False)
+   mid-Gqr-2        1 Tr  4800.13      9.703e+06  4.088e+08   9.08e-08   0  1e-06     1.340/1.340                                                     4.94        0.3394        0.2318        0.001           1e-3 eps|theta|       3.26e-05   2.201       0.774        FAILS (c True, t False)
+   mid-Gqr-3        1 Tq  25.1561      3e+08      1.15e+11    2.55e-05   0  1e-06     0.187/0.187                                                     352         0.2455        0.03515       0.001           1e-3 eps|theta|       7.5e-05    0.1109      0.1957       FAILS (c True, t False)
+   mid-Gqr-3        1 Tr  25.1561      3e+08      1.15e+11    2.55e-05   0  1e-06     0.187/0.187                                                     352         0.2455        0.03515       0.001           1e-3 eps|theta|       7.5e-05    0.1109      0.1957       FAILS (c True, t False)
+   R1               1 Tr  1.70899e+09  3.092e+06  466.8       1.04e-13   0  1e-06     0.000/0.000                                                     7.56e-06    0.2996        0.01111       0.9647          1e-13                 1.57e-10   0.1896      1.037        not scored (eps|theta| < 1e-11)
+   R1               2 Tq  33.1646      1e+05      3.625e+07   8.05e-09   0  1e-06     0.118/0.118                                                     0.118       0.2976        2.248e-07     0.001           1e-3 eps|theta|       7.55e-05   0.05519     0.2084       holds
+   R1               2 Tr  33.1646      3.092e+06  1.121e+09   2.49e-07   2  2.5e-07   0.912/0.912                                                     0.912       0.3233        5.86e-08      0.001           1e-3 eps|theta|       1.89e-05   0.05762     0.2084       holds
+   R2               1 Tr  5.28612e+10  3.045e+07  136.9       3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4558        0.1023        3.29            1e-13                 5.06e-12   0.209       1.126        not scored (eps|theta| < 1e-11)
+   R2               2 Tq  302.644      3.092e+06  6.082e+08   1.35e-07   2  2.5e-07   0.869/0.869                                                     0.869       0.3164        8.487e-08     0.001           1e-3 eps|theta|       1.8e-05    0.0962      0.3657       holds
+   R2               2 Tr  302.644      3.045e+07  5.991e+09   1.33e-06   5  3.12e-08  1.070/1.070                                                     1.07        0.2989        6.257e-09     0.001           1e-3 eps|theta|       2.25e-06   0.07994     0.3657       holds
+   R3               1 Tr  1.6711e+10   9.558e+07  1513        3.36e-13   0  1e-06     0.000/0.000                                                     2.39e-05    0.404         0.004773      0.2976          1e-13                 1.6e-11    0.1495      1.011        not scored (eps|theta| < 1e-11)
+   R3               2 Tq  10.9786      9.851e+05  4.377e+08   9.72e-08   0  1e-06     1.104/1.104                                                     1.1         0.2183        2.861e-07     0.001           1e-3 eps|theta|       7.17e-05   0.02968     0.1615       holds
+   R3               2 Tr  10.9786      9.558e+07  4.248e+10   9.43e-06   0  1e-06     0.343/0.343                                                     107         0.2838        0.03256       0.001           1e-3 eps|theta|       7.17e-05   0.1015      0.1615       FAILS (c True, t False)
+   R4               1 Tr  1.70899e+09  3.092e+06  466.8       1.04e-13   0  1e-06     0.000/0.000                                                     7.56e-06    0.2996        0.01111       0.9647          1e-13                 1.57e-10   0.1896      1.037        not scored (eps|theta| < 1e-11)
+   R4               2 Tq  14.4737      1e+05      4.243e+07   9.42e-09   0  1e-06     0.114/0.114                                                     0.114       0.2512        1.242e-07     0.001           1e-3 eps|theta|       7.32e-05   0.02348     0.1724       holds
+   R4               2 Tr  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   R5               1 Tr  5.28612e+10  3.045e+07  136.9       3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4558        0.1023        3.29            1e-13                 5.06e-12   0.209       1.126        not scored (eps|theta| < 1e-11)
+   R5               2 Tq  174.127      3.092e+06  7.333e+08   1.63e-07   2  2.5e-07   0.898/0.898                                                     0.898       0.2749        5.423e-08     0.001           1e-3 eps|theta|       1.86e-05   0.06239     0.3134       holds
+   R5               2 Tr  174.127      3.045e+07  7.224e+09   1.6e-06    1  5e-07     1.163/1.163                                                     17.7        0.1956        0.07018       0.001           1e-3 eps|theta|       3.72e-05   0.38        0.3134       FAILS (c True, t False)
+   R6               1 Tq  25.1561      3.092e+06  1.185e+09   2.63e-07   2  2.5e-07   0.906/0.906                                                     0.906       0.3072        5.185e-08     0.001           1e-3 eps|theta|       1.88e-05   0.03449     0.1957       holds
+   R6               1 Tr  25.1561      3.092e+06  1.185e+09   2.63e-07   2  2.5e-07   0.906/0.906                                                     0.906       0.3072        5.185e-08     0.001           1e-3 eps|theta|       1.88e-05   0.03449     0.1957       holds
+   R7               1 Tq  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   R7               1 Tr  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   ctrl-low-1       1 Tr  5.28612e+10  3e+08      1501        3.33e-13   0  1e-06     0.000/0.000                                                     2.37e-05    0.3449        0.004296      0.3             1e-13                 5.06e-12   0.1791      1.012        not scored (eps|theta| < 1e-11)
+   ctrl-low-1       2 Tq  8.32749      3.092e+06  1.434e+09   3.19e-07   2  2.5e-07   0.844/0.844                                                     0.844       0.2534        3.232e-08     0.001           1e-3 eps|theta|       1.75e-05   0.04339     0.1506       holds
+   ctrl-low-1       2 Tr  8.32749      3e+08      1.392e+11   3.09e-05   0  1e-06     0.908/0.908                                                     328         0.3477        0.04139       0.001           1e-3 eps|theta|       6.99e-05   0.09891     0.1506       FAILS (c True, t False)
+   ctrl-low-2       1 Tq  2.75667      3e+08      1.604e+11   3.56e-05   0  1e-06     0.740/0.740                                                     265         0.2991        0.02046       0.001           1e-3 eps|theta|       5.65e-05   0.04241     0.1056       FAILS (c True, t False)
+   ctrl-low-2       1 Tr  2.75667      3e+08      1.604e+11   3.56e-05   0  1e-06     0.740/0.740                                                     265         0.2991        0.02046       0.001           1e-3 eps|theta|       5.65e-05   0.04241     0.1056       FAILS (c True, t False)
+   ctrl-mid-1       1 Tr  1.67213e+11  3e+08      462.8       1.03e-13   0  1e-06     0.000/0.000                                                     7.5e-06     0.2946        0.01797       0.9731          1e-13                 1.6e-12    0.2198      1.037        not scored (eps|theta| < 1e-11)
+   ctrl-mid-1       2 Tq  693.47       9.703e+06  1.354e+09   3.01e-07   1  5e-07     1.341/1.341                                                     4.94        0.3547        0.1175        0.001           1e-3 eps|theta|       3.26e-05   0.6816      0.4672       FAILS (c True, t False)
+   ctrl-mid-1       2 Tr  693.47       3e+08      4.187e+10   9.3e-06    2  2.5e-07   1.003/1.003                                                     76.4        0.3156        0.09721       0.001           1e-3 eps|theta|       1.63e-05   0.3667      0.4672       FAILS (c True, t False)
+   ctrl-mid-2       1 Tq  2761.78      3e+08      1.894e+10   4.2e-06    1  5e-07     1.133/1.133                                                     102         0.3262        0.144         0.001           1e-3 eps|theta|       2.17e-05   0.7461      0.6872       FAILS (c True, t False)
+   ctrl-mid-2       1 Tr  2761.78      3e+08      1.894e+10   4.2e-06    1  5e-07     1.133/1.133                                                     102         0.3262        0.144         0.001           1e-3 eps|theta|       2.17e-05   0.7461      0.6872       FAILS (c True, t False)
+   ctrl-seam-1      2 Tr  2.30981e+12  3e+08      17.51       3.89e-15   0  1e-06     0.000/0.000                                                     5.43e-07    0.8573        0.7818        25.73           1e-13                 1.16e-13   0.6598      1.984        not scored (eps|theta| < 1e-11)
+   ctrl-seam-2      2 Tr  5.79984e+11  9.558e+07  26.85       5.96e-15   0  1e-06     0.000/0.000                                                     6.89e-07    0.3583        0.1893        16.78           1e-13                 4.61e-13   0.4593      1.642        not scored (eps|theta| < 1e-11)
+   T1 [literal]: windows 91; with eps|theta| >= 1e-11: 70; resolved and scored 70; true in 34; false in 36 (c clause false 0, t clause false 36); unresolved and >= 1e-11: 0; scored windows whose true step >= pi/2 (aliased): 36 -> FAILS
+      sigma_c/eps|theta| in [0.1956, 0.374]; sigma_t/eps|theta| in [6.257e-09, 0.2318]; largest sigma_t/bound_t 231.8; levels used {0: 41, 2: 11, 1: 15, 4: 1, 3: 1, 5: 1}
+      (unscored) the term eps(k max|p_z| + 2pi) is the largest of the three in 0 windows; sigma_t/eps|theta| there in [-, -]; largest term counts {'1e-3 eps|theta|': 69, '1e-13': 1}
+      (unscored) u-sampled sigma_t > 0.1 eps|theta| in 27 windows: mid-G+r-1 2 Tq: 0.1028 against abscissa 0.7319; mid-G+r-1 2 Tr: 1.67 against abscissa 0.7319; mid-G+r-2 2 Tq: 0.1621 against abscissa 0.8765; mid-G+r-2 2 Tr: 0.1714 against abscissa 0.8765; mid-G+r-3 2 Tq: 0.1028 against abscissa 0.7319; mid-G+r-3 2 Tr: 1.829 against abscissa 0.7319; mid-G-r-1 2 Tr: 0.3637 against abscissa 0.3134; mid-G-r-2 2 Tq: 0.1546 against abscissa 0.9719; mid-G-r-2 2 Tr: 0.1546 against abscissa 0.9719; mid-G-r-3 2 Tq: 0.2156 against abscissa 0.9784; mid-G-r-3 2 Tr: 0.2156 against abscissa 0.9784; mid-G-2 1 Tq: 0.2922 against abscissa 0.2532; mid-G-2 1 Tr: 0.2922 against abscissa 0.2532; mid-G-3 1 Tq: 0.3434 against abscissa 0.2712; mid-G-3 1 Tr: 0.3434 against abscissa 0.2712; mid-Gqr-1 1 Tq: 0.4316 against abscissa 0.3134; mid-Gqr-1 1 Tr: 0.4316 against abscissa 0.3134; mid-Gqr-2 1 Tq: 2.201 against abscissa 0.774; mid-Gqr-2 1 Tr: 2.201 against abscissa 0.774; mid-Gqr-3 1 Tq: 0.1109 against abscissa 0.1957; mid-Gqr-3 1 Tr: 0.1109 against abscissa 0.1957; R3 2 Tr: 0.1015 against abscissa 0.1615; R5 2 Tr: 0.38 against abscissa 0.3134; ctrl-mid-1 2 Tq: 0.6816 against abscissa 0.4672; ctrl-mid-1 2 Tr: 0.3667 against abscissa 0.4672; ctrl-mid-2 1 Tq: 0.7461 against abscissa 0.6872; ctrl-mid-2 1 Tr: 0.7461 against abscissa 0.6872
+
+   -- reading: TRUE STEP (unscored): also |dtheta/dz|(b-a)/64 < pi/2
+   row            sub fac  z            k          |theta|     eps|th|    n  w         step c/t        true step   sig_c/eps|th| sig_t/eps|th| bound_t/eps|th| largest term          maxpz_t    u_t/eps|th| absc/eps|th| verdict
+   low-G+r-1        1 Tr  1.67213e+11  3e+08      462.8       1.03e-13   0  1e-06     0.000/0.000                                                     7.5e-06     0.2946        0.01797       0.9731          1e-13                 1.6e-12    0.2198      1.037        not scored (eps|theta| < 1e-11)
+   low-G+r-1        2 Tq  2.091        9.703e+06  5.334e+09   1.18e-06   3  1.25e-07  0.971/0.971                                                     0.971       0.304         7.826e-09     0.001           1e-3 eps|theta|       6.41e-06   0.02661     0.09322      holds
+   low-G+r-1        2 Tr  2.091        3e+08      1.649e+11   3.66e-05   8  3.91e-09  0.938/0.938                                                     0.938       0.37          1.966e-09     0.001           1e-3 eps|theta|       2e-07      0.02533     0.09322      holds
+   low-G+r-2        1 Tr  5.16895e+11  9.558e+07  32.23       7.16e-15   0  1e-06     0.000/0.000                                                     7.73e-07    0.4903        0.08092       13.98           1e-13                 5.18e-13   0.2689      1.535        not scored (eps|theta| < 1e-11)
+   low-G+r-2        2 Tq  3.63427      3.045e+07  1.579e+10   3.51e-06   5  3.12e-08  0.905/0.905                                                     0.905       0.3274        2.053e-09     0.001           1e-3 eps|theta|       1.9e-06    0.01713     0.1174       holds
+   low-G+r-2        2 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    6  1.56e-08  1.421/1.421                                                     1.42        0.325         2.161e-09     0.001           1e-3 eps|theta|       9.51e-07   0.01791     0.1174       holds
+   low-G+r-3        1 Tr  1.70899e+09  3.139e+05  31.89       7.08e-15   0  1e-06     0.000/0.000                                                     7.68e-07    0.4098        0.06842       14.12           1e-13                 1.57e-10   0.2846      1.541        not scored (eps|theta| < 1e-11)
+   low-G+r-3        2 Tq  0.131835     1e+05      6.161e+07   1.37e-08   0  1e-06     0.009/0.009                                                     0.009       0.2724        3.424e-07     0.001           1e-3 eps|theta|       5.76e-06   0.00262     0.009347     holds
+   low-G+r-3        2 Tr  0.131835     3.139e+05  1.934e+08   4.29e-08   0  1e-06     0.028/0.028                                                     0.0282      0.3115        1.445e-08     0.001           1e-3 eps|theta|       5.76e-06   0.00262     0.009347     holds
+   low-G-r-1        1 Tr  5.16895e+11  9.558e+07  32.23       7.16e-15   0  1e-06     0.000/0.000                                                     7.73e-07    0.4903        0.08092       13.98           1e-13                 5.18e-13   0.2689      1.535        not scored (eps|theta| < 1e-11)
+   low-G-r-1        2 Tq  2.75667      3.045e+07  1.629e+10   3.62e-06   5  3.12e-08  0.840/0.840                                                     0.84        0.2816        6.811e-09     0.001           1e-3 eps|theta|       1.76e-06   0.02206     0.1056       holds
+   low-G-r-1        2 Tr  2.75667      9.558e+07  5.112e+10   1.14e-05   6  1.56e-08  1.317/1.317                                                     1.32        0.3249        2.23e-09      0.001           1e-3 eps|theta|       8.82e-07   0.02106     0.1056       holds
+   low-G-r-2        1 Tr  1.70899e+09  3.139e+05  31.89       7.08e-15   0  1e-06     0.000/0.000                                                     7.68e-07    0.4098        0.06842       14.12           1e-13                 1.57e-10   0.2846      1.541        not scored (eps|theta| < 1e-11)
+   low-G-r-2        2 Tq  2.75667      1e+05      5.348e+07   1.19e-08   0  1e-06     0.088/0.088                                                     0.0882      0.2942        2.128e-07     0.001           1e-3 eps|theta|       5.65e-05   0.02374     0.1056       holds
+   low-G-r-2        2 Tr  2.75667      3.139e+05  1.679e+08   3.73e-08   0  1e-06     0.277/0.277                                                     0.277       0.3427        9.538e-08     0.001           1e-3 eps|theta|       5.65e-05   0.02374     0.1056       holds
+   low-G-r-3        1 Tr  5.40595e+09  9.851e+05  31.5        6.99e-15   0  1e-06     0.000/0.000                                                     7.62e-07    0.4626        0.04329       14.3            1e-13                 4.95e-11   0.3272      1.547        not scored (eps|theta| < 1e-11)
+   low-G-r-3        2 Tq  6.31658      3.139e+05  1.516e+08   3.37e-08   0  1e-06     0.331/0.331                                                     0.331       0.3064        2.681e-07     0.001           1e-3 eps|theta|       6.75e-05   0.02359     0.1398       holds
+   low-G-r-3        2 Tr  6.31658      9.851e+05  4.757e+08   1.06e-07   0  1e-06     1.039/1.039                                                     1.04        0.2095        2.408e-07     0.001           1e-3 eps|theta|       6.75e-05   0.02359     0.1398       holds
+   low-G-1          1 Tq  0.692189     1e+05      5.928e+07   1.32e-08   0  1e-06     0.042/0.042                                                     0.0416      0.286         3.837e-07     0.001           1e-3 eps|theta|       2.66e-05   0.009626    0.04492      holds
+   low-G-1          1 Tr  0.692189     1e+05      5.928e+07   1.32e-08   0  1e-06     0.042/0.042                                                     0.0416      0.286         3.837e-07     0.001           1e-3 eps|theta|       2.66e-05   0.009626    0.04492      holds
+   low-G-2          1 Tq  0.229138     3.139e+05  1.92e+08    4.26e-08   0  1e-06     0.049/0.049                                                     0.0485      0.3208        7.398e-08     0.001           1e-3 eps|theta|       9.89e-06   0.002541    0.01617      holds
+   low-G-2          1 Tr  0.229138     3.139e+05  1.92e+08    4.26e-08   0  1e-06     0.049/0.049                                                     0.0485      0.3208        7.398e-08     0.001           1e-3 eps|theta|       9.89e-06   0.002541    0.01617      holds
+   low-G-3          1 Tq  6.31658      3.045e+07  1.471e+10   3.27e-06   5  3.12e-08  1.004/1.004                                                     1           0.2091        5.385e-09     0.001           1e-3 eps|theta|       2.11e-06   0.02028     0.1398       holds
+   low-G-3          1 Tr  6.31658      3.045e+07  1.471e+10   3.27e-06   5  3.12e-08  1.004/1.004                                                     1           0.2091        5.385e-09     0.001           1e-3 eps|theta|       2.11e-06   0.02028     0.1398       holds
+   low-Gqr-1        1 Tq  6.31658      3e+08      1.449e+11   3.22e-05   8  3.91e-09  1.237/1.237                                                     1.24        0.3266        1.008e-09     0.001           1e-3 eps|theta|       2.64e-07   0.02455     0.1398       holds
+   low-Gqr-1        1 Tr  6.31658      3e+08      1.449e+11   3.22e-05   8  3.91e-09  1.237/1.237                                                     1.24        0.3266        1.008e-09     0.001           1e-3 eps|theta|       2.64e-07   0.02455     0.1398       holds
+   low-Gqr-2        1 Tq  3.63427      9.558e+07  4.957e+10   1.1e-05    6  1.56e-08  1.421/1.421                                                     1.42        0.325         2.161e-09     0.001           1e-3 eps|theta|       9.51e-07   0.01791     0.1174       holds
+   low-Gqr-2        1 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    6  1.56e-08  1.421/1.421                                                     1.42        0.325         2.161e-09     0.001           1e-3 eps|theta|       9.51e-07   0.01791     0.1174       holds
+   low-Gqr-3        1 Tq  3.63427      9.558e+07  4.957e+10   1.1e-05    6  1.56e-08  1.421/1.421                                                     1.42        0.325         2.161e-09     0.001           1e-3 eps|theta|       9.51e-07   0.01791     0.1174       holds
+   low-Gqr-3        1 Tr  3.63427      9.558e+07  4.957e+10   1.1e-05    6  1.56e-08  1.421/1.421                                                     1.42        0.325         2.161e-09     0.001           1e-3 eps|theta|       9.51e-07   0.01791     0.1174       holds
+   mid-G+r-1        1 Tr  5.40595e+09  9.558e+07  4714        1.05e-12   0  1e-06     0.000/0.000                                                     7.39e-05    0.37          0.000612      0.09553         1e-13                 4.95e-11   0.2054      1.004        not scored (eps|theta| < 1e-11)
+   mid-G+r-1        2 Tq  3641         3.139e+05  1.628e+07   3.62e-09   0  1e-06     0.186/0.186                                                     0.186       0.2019        3.62e-07      0.001           1e-3 eps|theta|       3.8e-05    0.1028      0.7319       holds
+   mid-G+r-1        2 Tr  3641         9.558e+07  4.959e+09   1.1e-06    6  1.56e-08  0.886/0.886                                                     0.886       0.3047        3.82e-08      0.001           1e-3 eps|theta|       5.93e-07   0.1168      0.7319       holds
+   mid-G+r-2        1 Tr  1.70899e+09  3.045e+07  4751        1.06e-12   0  1e-06     0.000/0.000                                                     7.45e-05    0.3508        0.0007918     0.09478         1e-13                 1.57e-10   0.1831      1.004        not scored (eps|theta| < 1e-11)
+   mid-G+r-2        2 Tq  10998.9      1e+05      2.119e+06   4.71e-10   0  1e-06     0.029/0.029                                                     0.029       0.3737        2.211e-06     0.001           1e-3 eps|theta|       1.86e-05   0.1621      0.8765       holds
+   mid-G+r-2        2 Tr  10998.9      3.045e+07  6.455e+08   1.43e-07   3  1.25e-07  1.105/1.105                                                     1.1         0.3015        3.365e-07     0.001           1e-3 eps|theta|       2.32e-06   0.1714      0.8765       holds
+   mid-G+r-3        1 Tr  1.70899e+09  9.703e+06  1502        3.34e-13   0  1e-06     0.000/0.000                                                     2.37e-05    0.3713        0.001762      0.2998          1e-13                 1.57e-10   0.1851      1.012        not scored (eps|theta| < 1e-11)
+   mid-G+r-3        2 Tq  3641         1e+05      5.188e+06   1.15e-09   0  1e-06     0.059/0.059                                                     0.0593      0.3042        7.629e-07     0.001           1e-3 eps|theta|       3.8e-05    0.1028      0.7319       holds
+   mid-G+r-3        2 Tr  3641         9.703e+06  5.034e+08   1.12e-07   2  2.5e-07   1.439/1.439                                                     1.44        0.2009        2.488e-07     0.001           1e-3 eps|theta|       9.49e-06   0.1083      0.7319       holds
+   mid-G-r-1        1 Tr  1.6711e+10   9.558e+07  1513        3.36e-13   0  1e-06     0.000/0.000                                                     2.39e-05    0.404         0.004773      0.2976          1e-13                 1.6e-11    0.1495      1.011        not scored (eps|theta| < 1e-11)
+   mid-G-r-1        2 Tq  174.127      9.851e+05  2.337e+08   5.19e-08   0  1e-06     1.144/1.144                                                     1.14        0.2075        4.328e-07     0.001           1e-3 eps|theta|       7.43e-05   0.06071     0.3134       holds
+   mid-G-r-1        2 Tr  174.127      9.558e+07  2.267e+10   5.03e-06   7  7.81e-09  0.867/0.867                                                     0.867       0.2673        3.008e-09     0.001           1e-3 eps|theta|       5.81e-07   0.05674     0.3134       holds
+   mid-G-r-2        1 Tr  1.70899e+09  9.851e+05  137         3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4885        0.1132        3.288           1e-13                 1.57e-10   0.2195      1.126        not scored (eps|theta| < 1e-11)
+   mid-G-r-2        2 Tq  57748.7      1e+05      4.502e+05   1e-10      0  1e-06     0.007/0.007                                                     0.00684     0.326         1.313e-05     0.001           1e-13                 4.38e-06   0.1546      0.9719       holds
+   mid-G-r-2        2 Tr  57748.7      9.851e+05  4.435e+06   9.85e-10   0  1e-06     0.067/0.067                                                     0.0673      0.3736        1.402e-06     0.001           1e-3 eps|theta|       4.38e-06   0.1546      0.9719       holds
+   mid-G-r-3        1 Tr  5.40595e+09  9.703e+06  463         1.03e-13   0  1e-06     0.000/0.000                                                     7.51e-06    0.2751        0.01708       0.9726          1e-13                 4.95e-11   0.2146      1.037        not scored (eps|theta| < 1e-11)
+   mid-G-r-3        2 Tq  76133.2      3.139e+05  1.079e+06   2.4e-10    0  1e-06     0.016/0.016                                                     0.0165      0.3415        1.21e-05      0.001           1e-3 eps|theta|       3.36e-06   0.2156      0.9784       holds
+   mid-G-r-3        2 Tr  76133.2      9.703e+06  3.337e+07   7.41e-09   0  1e-06     0.510/0.510                                                     0.51        0.1979        7.197e-07     0.001           1e-3 eps|theta|       3.36e-06   0.2156      0.9784       holds
+   mid-G-1          1 Tq  43.7227      3.139e+05  1.072e+08   2.38e-08   0  1e-06     0.372/0.372                                                     0.372       0.2691        2.772e-07     0.001           1e-3 eps|theta|       7.59e-05   0.03846     0.2221       holds
+   mid-G-1          1 Tr  43.7227      3.139e+05  1.072e+08   2.38e-08   0  1e-06     0.372/0.372                                                     0.372       0.2691        2.772e-07     0.001           1e-3 eps|theta|       7.59e-05   0.03846     0.2221       holds
+   mid-G-2          1 Tq  75.9925      3.045e+07  9.125e+09   2.03e-06   5  3.12e-08  1.128/1.128                                                     1.13        0.2651        7.536e-09     0.001           1e-3 eps|theta|       2.37e-06   0.06111     0.2532       holds
+   mid-G-2          1 Tr  75.9925      3.045e+07  9.125e+09   2.03e-06   5  3.12e-08  1.128/1.128                                                     1.13        0.2651        7.536e-09     0.001           1e-3 eps|theta|       2.37e-06   0.06111     0.2532       holds
+   mid-G-3          1 Tq  100.185      9.703e+06  2.704e+09   6e-07      3  1.25e-07  1.433/1.433                                                     1.43        0.3419        4.869e-08     0.001           1e-3 eps|theta|       9.45e-06   0.04985     0.2712       holds
+   mid-G-3          1 Tr  100.185      9.703e+06  2.704e+09   6e-07      3  1.25e-07  1.433/1.433                                                     1.43        0.3419        4.869e-08     0.001           1e-3 eps|theta|       9.45e-06   0.04985     0.2712       holds
+   mid-Gqr-1        1 Tq  174.127      9.703e+06  2.302e+09   5.11e-07   3  1.25e-07  1.409/1.409                                                     1.41        0.278         4.864e-08     0.001           1e-3 eps|theta|       9.29e-06   0.06617     0.3134       holds
+   mid-Gqr-1        1 Tr  174.127      9.703e+06  2.302e+09   5.11e-07   3  1.25e-07  1.409/1.409                                                     1.41        0.278         4.864e-08     0.001           1e-3 eps|theta|       9.29e-06   0.06617     0.3134       holds
+   mid-Gqr-2        1 Tq  4800.13      9.703e+06  4.088e+08   9.08e-08   2  2.5e-07   1.236/1.236                                                     1.24        0.2618        3.069e-07     0.001           1e-3 eps|theta|       8.15e-06   0.1702      0.774        holds
+   mid-Gqr-2        1 Tr  4800.13      9.703e+06  4.088e+08   9.08e-08   2  2.5e-07   1.236/1.236                                                     1.24        0.2618        3.069e-07     0.001           1e-3 eps|theta|       8.15e-06   0.1702      0.774        holds
+   mid-Gqr-3        1 Tq  25.1561      3e+08      1.15e+11    2.55e-05   8  3.91e-09  1.374/1.374                                                     1.37        0.2663        7.973e-10     0.001           1e-3 eps|theta|       2.93e-07   0.0353      0.1957       holds
+   mid-Gqr-3        1 Tr  25.1561      3e+08      1.15e+11    2.55e-05   8  3.91e-09  1.374/1.374                                                     1.37        0.2663        7.973e-10     0.001           1e-3 eps|theta|       2.93e-07   0.0353      0.1957       holds
+   R1               1 Tr  1.70899e+09  3.092e+06  466.8       1.04e-13   0  1e-06     0.000/0.000                                                     7.56e-06    0.2996        0.01111       0.9647          1e-13                 1.57e-10   0.1896      1.037        not scored (eps|theta| < 1e-11)
+   R1               2 Tq  33.1646      1e+05      3.625e+07   8.05e-09   0  1e-06     0.118/0.118                                                     0.118       0.2976        2.248e-07     0.001           1e-3 eps|theta|       7.55e-05   0.05519     0.2084       holds
+   R1               2 Tr  33.1646      3.092e+06  1.121e+09   2.49e-07   2  2.5e-07   0.912/0.912                                                     0.912       0.3233        5.86e-08      0.001           1e-3 eps|theta|       1.89e-05   0.05762     0.2084       holds
+   R2               1 Tr  5.28612e+10  3.045e+07  136.9       3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4558        0.1023        3.29            1e-13                 5.06e-12   0.209       1.126        not scored (eps|theta| < 1e-11)
+   R2               2 Tq  302.644      3.092e+06  6.082e+08   1.35e-07   2  2.5e-07   0.869/0.869                                                     0.869       0.3164        8.487e-08     0.001           1e-3 eps|theta|       1.8e-05    0.0962      0.3657       holds
+   R2               2 Tr  302.644      3.045e+07  5.991e+09   1.33e-06   5  3.12e-08  1.070/1.070                                                     1.07        0.2989        6.257e-09     0.001           1e-3 eps|theta|       2.25e-06   0.07994     0.3657       holds
+   R3               1 Tr  1.6711e+10   9.558e+07  1513        3.36e-13   0  1e-06     0.000/0.000                                                     2.39e-05    0.404         0.004773      0.2976          1e-13                 1.6e-11    0.1495      1.011        not scored (eps|theta| < 1e-11)
+   R3               2 Tq  10.9786      9.851e+05  4.377e+08   9.72e-08   0  1e-06     1.104/1.104                                                     1.1         0.2183        2.861e-07     0.001           1e-3 eps|theta|       7.17e-05   0.02968     0.1615       holds
+   R3               2 Tr  10.9786      9.558e+07  4.248e+10   9.43e-06   7  7.81e-09  0.837/0.837                                                     0.837       0.2628        1.856e-09     0.001           1e-3 eps|theta|       5.61e-07   0.03317     0.1615       holds
+   R4               1 Tr  1.70899e+09  3.092e+06  466.8       1.04e-13   0  1e-06     0.000/0.000                                                     7.56e-06    0.2996        0.01111       0.9647          1e-13                 1.57e-10   0.1896      1.037        not scored (eps|theta| < 1e-11)
+   R4               2 Tq  14.4737      1e+05      4.243e+07   9.42e-09   0  1e-06     0.114/0.114                                                     0.114       0.2512        1.242e-07     0.001           1e-3 eps|theta|       7.32e-05   0.02348     0.1724       holds
+   R4               2 Tr  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   R5               1 Tr  5.28612e+10  3.045e+07  136.9       3.04e-14   0  1e-06     0.000/0.000                                                     2.41e-06    0.4558        0.1023        3.29            1e-13                 5.06e-12   0.209       1.126        not scored (eps|theta| < 1e-11)
+   R5               2 Tq  174.127      3.092e+06  7.333e+08   1.63e-07   2  2.5e-07   0.898/0.898                                                     0.898       0.2749        5.423e-08     0.001           1e-3 eps|theta|       1.86e-05   0.06239     0.3134       holds
+   R5               2 Tr  174.127      3.045e+07  7.224e+09   1.6e-06    5  3.12e-08  1.105/1.105                                                     1.11        0.2276        1.323e-08     0.001           1e-3 eps|theta|       2.32e-06   0.06144     0.3134       holds
+   R6               1 Tq  25.1561      3.092e+06  1.185e+09   2.63e-07   2  2.5e-07   0.906/0.906                                                     0.906       0.3072        5.185e-08     0.001           1e-3 eps|theta|       1.88e-05   0.03449     0.1957       holds
+   R6               1 Tr  25.1561      3.092e+06  1.185e+09   2.63e-07   2  2.5e-07   0.906/0.906                                                     0.906       0.3072        5.185e-08     0.001           1e-3 eps|theta|       1.88e-05   0.03449     0.1957       holds
+   R7               1 Tq  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   R7               1 Tr  14.4737      3.092e+06  1.312e+09   2.91e-07   2  2.5e-07   0.884/0.884                                                     0.884       0.2489        5.575e-08     0.001           1e-3 eps|theta|       1.83e-05   0.02472     0.1724       holds
+   ctrl-low-1       1 Tr  5.28612e+10  3e+08      1501        3.33e-13   0  1e-06     0.000/0.000                                                     2.37e-05    0.3449        0.004296      0.3             1e-13                 5.06e-12   0.1791      1.012        not scored (eps|theta| < 1e-11)
+   ctrl-low-1       2 Tq  8.32749      3.092e+06  1.434e+09   3.19e-07   2  2.5e-07   0.844/0.844                                                     0.844       0.2534        3.232e-08     0.001           1e-3 eps|theta|       1.75e-05   0.04339     0.1506       holds
+   ctrl-low-1       2 Tr  8.32749      3e+08      1.392e+11   3.09e-05   8  3.91e-09  1.280/1.280                                                     1.28        0.3217        8.33e-10      0.001           1e-3 eps|theta|       2.73e-07   0.03565     0.1506       holds
+   ctrl-low-2       1 Tq  2.75667      3e+08      1.604e+11   3.56e-05   8  3.91e-09  1.034/1.034                                                     1.03        0.3629        4.379e-10     0.001           1e-3 eps|theta|       2.21e-07   0.02245     0.1056       holds
+   ctrl-low-2       1 Tr  2.75667      3e+08      1.604e+11   3.56e-05   8  3.91e-09  1.034/1.034                                                     1.03        0.3629        4.379e-10     0.001           1e-3 eps|theta|       2.21e-07   0.02245     0.1056       holds
+   ctrl-mid-1       1 Tr  1.67213e+11  3e+08      462.8       1.03e-13   0  1e-06     0.000/0.000                                                     7.5e-06     0.2946        0.01797       0.9731          1e-13                 1.6e-12    0.2198      1.037        not scored (eps|theta| < 1e-11)
+   ctrl-mid-1       2 Tq  693.47       9.703e+06  1.354e+09   3.01e-07   3  1.25e-07  1.236/1.236                                                     1.24        0.3311        5.216e-08     0.001           1e-3 eps|theta|       8.15e-06   0.09556     0.4672       holds
+   ctrl-mid-1       2 Tr  693.47       3e+08      4.187e+10   9.3e-06    8  3.91e-09  1.194/1.194                                                     1.19        0.3655        2.147e-09     0.001           1e-3 eps|theta|       2.55e-07   0.09004     0.4672       holds
+   ctrl-mid-2       1 Tq  2761.78      3e+08      1.894e+10   4.2e-06    8  3.91e-09  0.794/0.794                                                     0.794       0.28          3.709e-09     0.001           1e-3 eps|theta|       1.69e-07   0.1598      0.6872       holds
+   ctrl-mid-2       1 Tr  2761.78      3e+08      1.894e+10   4.2e-06    8  3.91e-09  0.794/0.794                                                     0.794       0.28          3.709e-09     0.001           1e-3 eps|theta|       1.69e-07   0.1598      0.6872       holds
+   ctrl-seam-1      2 Tr  2.30981e+12  3e+08      17.51       3.89e-15   0  1e-06     0.000/0.000                                                     5.43e-07    0.8573        0.7818        25.73           1e-13                 1.16e-13   0.6598      1.984        not scored (eps|theta| < 1e-11)
+   ctrl-seam-2      2 Tr  5.79984e+11  9.558e+07  26.85       5.96e-15   0  1e-06     0.000/0.000                                                     6.89e-07    0.3583        0.1893        16.78           1e-13                 4.61e-13   0.4593      1.642        not scored (eps|theta| < 1e-11)
+   T1 [true_step]: windows 91; with eps|theta| >= 1e-11: 70; resolved and scored 70; true in 70; false in 0 (c clause false 0, t clause false 0); unresolved and >= 1e-11: 0; scored windows whose true step >= pi/2 (aliased): 0 -> HOLDS
+      sigma_c/eps|theta| in [0.1979, 0.3737]; sigma_t/eps|theta| in [4.379e-10, 1.313e-05]; largest sigma_t/bound_t 0.01313; levels used {3: 7, 8: 11, 5: 8, 6: 7, 0: 23, 2: 12, 7: 2}
+      (unscored) the term eps(k max|p_z| + 2pi) is the largest of the three in 0 windows; sigma_t/eps|theta| there in [-, -]; largest term counts {'1e-3 eps|theta|': 69, '1e-13': 1}
+      (unscored) u-sampled sigma_t > 0.1 eps|theta| in 14 windows: mid-G+r-1 2 Tq: 0.1028 against abscissa 0.7319; mid-G+r-1 2 Tr: 0.1168 against abscissa 0.7319; mid-G+r-2 2 Tq: 0.1621 against abscissa 0.8765; mid-G+r-2 2 Tr: 0.1714 against abscissa 0.8765; mid-G+r-3 2 Tq: 0.1028 against abscissa 0.7319; mid-G+r-3 2 Tr: 0.1083 against abscissa 0.7319; mid-G-r-2 2 Tq: 0.1546 against abscissa 0.9719; mid-G-r-2 2 Tr: 0.1546 against abscissa 0.9719; mid-G-r-3 2 Tq: 0.2156 against abscissa 0.9784; mid-G-r-3 2 Tr: 0.2156 against abscissa 0.9784; mid-Gqr-2 1 Tq: 0.1702 against abscissa 0.774; mid-Gqr-2 1 Tr: 0.1702 against abscissa 0.774; ctrl-mid-2 1 Tq: 0.1598 against abscissa 0.6872; ctrl-mid-2 1 Tr: 0.1598 against abscissa 0.6872
+
+== descriptive: |total_t - total_c| / |total_c| and / total_abserr_c on every row: see T3's table
+
+== descriptive: regions and max depth per group, c -> t at 1e-7 (low10 = regions starting in the lowest 10% in log(1+z) of the group's sub-interval, and their max depth)
+   low-G+r-1 (G+r, low):
+               G/G      x in (29.274, 37.336): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged True -> True
+              Gr/G+r    x in (25.843, 29.274): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (25.843, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.1285, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (1.1285, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.1285, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.1285, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   low-G+r-2 (G+r, low):
+               G/G      x in (28.123, 37.336): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 3 -> 3, max depth 5 -> 5; converged True -> True
+              Gr/G+r    x in (26.971, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+              Gr/G-r    x in (26.971, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.5335, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (1.5335, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.5335, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.5335, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   low-G+r-3 (G+r, low, capped under B1):
+               G/G      x in (22.411, 37.336): regions   10 ->   10; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 8 -> 8; converged True -> True
+              Gr/G+r    x in (21.259, 22.411): regions    6 ->    6; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged False -> False
+              Gr/G-r    x in (21.259, 22.411): regions   13 ->   13; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 3 -> 3, max depth 5 -> 5; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (0.12384, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (0.12384, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (0.12384, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (0.12384, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-G-r-1 (G-r, low):
+               G/G      x in (28.123, 37.336): regions    5 ->    5; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+              Gr/G+r    x in (26.971, 28.123): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (26.971, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.3235, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (1.3235, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.3235, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.3235, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   low-G-r-2 (G-r, low, capped under B1):
+               G/G      x in (22.411, 37.336): regions   16 ->   16; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 7 -> 7; converged False -> False
+              Gr/G+r    x in (21.259, 22.411): regions    8 ->    8; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+              Gr/G-r    x in (21.259, 22.411): regions   14 ->   14; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 3 -> 3, max depth 5 -> 5; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.3235, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (1.3235, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (1.3235, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (1.3235, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-G-r-3 (G-r, low, capped under B1):
+               G/G      x in (23.539, 37.336): regions   16 ->   16; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 8 -> 8; converged False -> False
+              Gr/G+r    x in (22.411, 23.539): regions    8 ->    8; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+              Gr/G-r    x in (22.411, 23.539): regions   12 ->   12; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.9901, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (1.9901, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (1.9901, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (1.9901, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-G-1 (G, low, capped under B1):
+               G/G      x in (21.259, 37.336): regions   14 ->   14; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 8 -> 8; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (0.52602, 21.259): regions   17 ->   17; max depth 11 -> 11; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 2 -> 2; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (0.52602, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (0.52602, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (0.52602, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-G-2 (G, low):
+               G/G      x in (22.411, 37.336): regions   12 ->   12; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 7 -> 7; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (0.20631, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (0.20631, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (0.20631, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (0.20631, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-G-3 (G, low, capped under B1):
+               G/G      x in (26.971, 37.336): regions   15 ->   15; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 7 -> 7; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.9901, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (1.9901, 26.971): regions   11 ->   11; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.9901, 26.971): regions   11 ->   11; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.9901, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   low-Gqr-1 (Gqr, low):
+               G/G      x in (29.274, 37.336): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 2 -> 2; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.9901, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (1.9901, 29.274): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.9901, 29.274): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.9901, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   low-Gqr-2 (Gqr, low):
+               G/G      x in (28.123, 37.336): regions    9 ->    9; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 6 -> 6, max depth 6 -> 6; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (1.5335, 28.123): regions   10 ->   10; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.5335, 28.123): regions   10 ->   10; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   low-Gqr-3 (Gqr, low):
+               G/G      x in (28.123, 37.336): regions    5 ->    5; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (1.5335, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G+r-1 (G+r, mid):
+               G/G      x in (28.123, 37.336): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 2 -> 2; converged True -> True
+              Gr/G+r    x in (22.411, 28.123): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (22.411, 28.123): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (8.2003, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (8.2003, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (8.2003, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (8.2003, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G+r-2 (G+r, mid):
+               G/G      x in (26.971, 37.336): regions    8 ->    8; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 5 -> 5, max depth 6 -> 6; converged True -> True
+              Gr/G+r    x in (21.259, 26.971): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (21.259, 26.971): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (9.3056, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (9.3056, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (9.3056, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (9.3056, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G+r-3 (G+r, mid):
+               G/G      x in (25.843, 37.336): regions   12 ->   12; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 7 -> 7; converged True -> True
+              Gr/G+r    x in (21.259, 25.843): regions   37 ->   37; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 15 -> 15, max depth 8 -> 8; converged False -> False
+              Gr/G-r    x in (21.259, 25.843): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (8.2003, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (8.2003, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (8.2003, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (8.2003, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G-r-1 (G-r, mid):
+               G/G      x in (28.123, 37.336): regions    5 ->    5; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+              Gr/G+r    x in (23.539, 28.123): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (23.539, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (5.1655, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (5.1655, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (5.1655, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (5.1655, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G-r-2 (G-r, mid):
+               G/G      x in (23.539, 37.336): regions   12 ->   12; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 8 -> 8; converged True -> True
+              Gr/G+r    x in (21.259, 23.539): regions   14 ->   14; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 4 -> 4, max depth 6 -> 6; converged False -> False
+              Gr/G-r    x in (21.259, 23.539): regions   28 ->   28; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 6 -> 6, max depth 6 -> 6; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (10.964, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (10.964, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (10.964, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (10.964, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G-r-3 (G-r, mid):
+               G/G      x in (25.843, 37.336): regions   10 ->   10; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 7 -> 7; converged True -> True
+              Gr/G+r    x in (22.411, 25.843): regions   19 ->   19; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 6 -> 6; converged False -> False
+              Gr/G-r    x in (22.411, 25.843): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (11.24, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (11.24, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (11.24, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (11.24, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G-1 (G, mid):
+               G/G      x in (22.411, 37.336): regions    9 ->    9; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 6 -> 6, max depth 8 -> 8; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (3.8005, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (3.8005, 22.411): regions    7 ->    7; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (3.8005, 22.411): regions    7 ->    7; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (3.8005, 22.411): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   mid-G-2 (G, mid):
+               G/G      x in (26.971, 37.336): regions    9 ->    9; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 6 -> 6, max depth 7 -> 7; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (4.3437, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (4.3437, 26.971): regions    8 ->    8; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (4.3437, 26.971): regions    8 ->    8; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (4.3437, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   mid-G-3 (G, mid):
+               G/G      x in (25.843, 37.336): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (4.617, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (4.617, 25.843): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (4.617, 25.843): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (4.617, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   mid-Gqr-1 (Gqr, mid):
+               G/G      x in (25.843, 37.336): regions   14 ->   14; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 10 -> 10, max depth 7 -> 7; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (5.1655, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (5.1655, 25.843): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (5.1655, 25.843): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (5.1655, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   mid-Gqr-2 (Gqr, mid):
+               G/G      x in (25.843, 37.336): regions   13 ->   13; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 10 -> 10, max depth 7 -> 7; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (8.4766, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (8.4766, 25.843): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (8.4766, 25.843): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (8.4766, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   mid-Gqr-3 (Gqr, mid):
+               G/G      x in (29.274, 37.336): regions    7 ->    7; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 4 -> 4, max depth 5 -> 5; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (3.2641, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (3.2641, 29.274): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (3.2641, 29.274): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (3.2641, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   R1 (G+r, mid, capped under B1):
+               G/G      x in (24.691, 37.336): regions   15 ->   15; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 9 -> 9, max depth 7 -> 7; converged True -> True
+              Gr/G+r    x in (21.259, 24.691): regions   18 ->   18; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 6 -> 6; converged False -> False
+              Gr/G-r    x in (21.259, 24.691): regions   26 ->   26; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 10 -> 10, max depth 8 -> 8; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (3.5312, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (3.5312, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (3.5312, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (3.5312, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   R2 (G+r, mid):
+               G/G      x in (26.971, 37.336): regions    5 ->    5; max depth  4 ->  4; n>=18 0 -> 0; low10 regions 2 -> 2, max depth 4 -> 4; converged True -> True
+              Gr/G+r    x in (24.691, 26.971): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (24.691, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (5.7159, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (5.7159, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (5.7159, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (5.7159, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   R3 (G+r, mid, capped under B1):
+               G/G      x in (28.123, 37.336): regions    6 ->    6; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 3 -> 3, max depth 5 -> 5; converged True -> True
+              Gr/G+r    x in (23.539, 28.123): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G-r    x in (23.539, 28.123): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (2.4831, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (2.4831, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (2.4831, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (2.4831, 23.539): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   R4 (G-r, mid, capped under B1):
+               G/G      x in (24.691, 37.336): regions   14 ->   14; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 7 -> 7, max depth 7 -> 7; converged False -> False
+              Gr/G+r    x in (21.259, 24.691): regions   23 ->   23; max depth  7 ->  7; n>=18 0 -> 0; low10 regions 8 -> 8, max depth 7 -> 7; converged False -> False
+              Gr/G-r    x in (21.259, 24.691): regions   42 ->   42; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 14 -> 14, max depth 8 -> 8; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (2.7391, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G+q-r  x in (2.7391, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (2.7391, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (2.7391, 21.259): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   R5 (G-r, mid, capped under B1):
+               G/G      x in (26.971, 37.336): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged True -> True
+              Gr/G+r    x in (24.691, 26.971): regions   10 ->   10; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 3 -> 3, max depth 5 -> 5; converged True -> True
+              Gr/G-r    x in (24.691, 26.971): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (5.1655, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (5.1655, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (5.1655, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (5.1655, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   R6 (G, mid, capped under B1):
+               G/G      x in (24.691, 37.336): regions   18 ->   18; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 10 -> 10, max depth 8 -> 8; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (3.2641, 24.691): regions    7 ->    7; max depth  5 ->  5; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (3.2641, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (3.2641, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (3.2641, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   R7 (Gqr, mid, capped under B1):
+               G/G      x in (24.691, 37.336): regions   17 ->   17; max depth  8 ->  8; n>=18 0 -> 0; low10 regions 10 -> 10, max depth 8 -> 8; converged False -> False
+      [Gqr]  Gqr/G+q+r  x in (2.7391, 24.691): regions    7 ->    7; max depth  6 ->  6; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (2.7391, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q+r  x in (2.7391, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+      [Gqr]  Gqr/G-q-r  x in (2.7391, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged False -> False
+   ctrl-low-1 (G, low):
+               G/G      x in (29.274, 37.336): regions    4 ->    4; max depth  3 ->  3; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 3 -> 3; converged True -> True
+              Gr/G+r    x in (24.691, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+              Gr/G-r    x in (24.691, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (2.233, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (2.233, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (2.233, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (2.233, 24.691): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   ctrl-low-2 (G, low):
+               G/G      x in (29.274, 37.336): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (1.3235, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (1.3235, 29.274): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (1.3235, 29.274): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (1.3235, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   ctrl-mid-1 (G, mid):
+               G/G      x in (29.274, 37.336): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 2 -> 2; converged True -> True
+              Gr/G+r    x in (25.843, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+              Gr/G-r    x in (25.843, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (6.5431, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (6.5431, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (6.5431, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (6.5431, 25.843): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   ctrl-mid-2 (G, mid):
+               G/G      x in (29.274, 37.336): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+      [Gqr]  Gqr/G+q+r  x in (7.924, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G+q-r  x in (7.924, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q+r  x in (7.924, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+      [Gqr]  Gqr/G-q-r  x in (7.924, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   ctrl-seam-1 (G, seam):
+               G/G      x in (29.274, 35.677): regions    2 ->    2; max depth  1 ->  1; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 1 -> 1; converged True -> True
+              Gr/G+r    x in (28.468, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+              Gr/G-r    x in (28.468, 29.274): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   ctrl-seam-2 (G, seam):
+               G/G      x in (28.123, 35.677): regions    3 ->    3; max depth  2 ->  2; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 2 -> 2; converged True -> True
+              Gr/G+r    x in (27.086, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+              Gr/G-r    x in (27.086, 28.123): regions    1 ->    1; max depth  0 ->  0; n>=18 0 -> 0; low10 regions 1 -> 1, max depth 0 -> 0; converged True -> True
+   groups: 219; same region count under c and t: 219; t more: 0; t fewer: 0
+   Gqr groups: 140; same region count 140; regions c 264 -> t 264; max depth c 11 -> t 11
+
+== descriptive: cost and regions by band (sums; wall in s)
+   low band (drawn)  : rows 12, regions c7 288 -> t7 288 -> t8 431, wall c7 8.04 -> t7 4.60 -> t8 5.75, max depth c7 11 -> t7 11 -> t8 11
+   mid band (drawn)  : rows 12, regions c7 321 -> t7 321 -> t8 463, wall c7 4.00 -> t7 3.72 -> t8 4.74, max depth c7 8 -> t7 8 -> t8 9
+   03's R1-R7 (mid)  : rows 7, regions c7 250 -> t7 250 -> t8 391, wall c7 2.89 -> t7 2.52 -> t8 4.26, max depth c7 8 -> t7 8 -> t8 9
+   capped under B1   : rows 11, regions c7 426 -> t7 426 -> t8 690, wall c7 6.81 -> t7 4.57 -> t8 7.00, max depth c7 11 -> t7 11 -> t8 11
+   controls          : rows 8, regions c7 42 -> t7 42 -> t8 0, wall c7 1.27 -> t7 1.13 -> t8 0.00, max depth c7 3 -> t7 3 -> t8 0
+
+== descriptive: total_converged, c@1e-7 -> t@1e-7 -> t@1e-8
+   control  c7 True  -> t7 True  -> t8 None : 8 rows
+   d20      c7 False -> t7 False -> t8 False: 19 rows
+   d20      c7 False -> t7 False -> t8 True : 2 rows
+   d20      c7 True  -> t7 True  -> t8 True : 10 rows
+   changed between c7 and t7: []
+   capped under B1: low-G+r-3 False->False->False; low-G-r-2 False->False->False; low-G-r-3 False->False->False; low-G-1 False->False->False; low-G-3 False->False->False; R1 False->False->False; R3 True->True->True; R4 False->False->False; R5 True->True->True; R6 False->False->False; R7 False->False->False
+   rows with infinite total_abserr: c7 ['low-G+r-2', 'low-G-r-1', 'low-Gqr-3'], t7 ['low-G+r-2', 'low-G-r-1', 'low-Gqr-3']
+
+== VERDICTS
+   T1 (section 9, literal reading, scored): FAILS
+   (T1 by the true step, unscored): HOLDS
+   T2: HOLDS (39 of 39 rows true; false on [])
+   T3: HOLDS (39 of 39 rows true; false on [])
+   T4: FAILS (29 of 31 rows true; false on ['mid-G-r-3', 'mid-G-3'])
+   over-budget units: none
+# ----
+# end 2026-10-26T12:35:49Z
+# exit 0

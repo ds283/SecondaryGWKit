@@ -1,0 +1,89 @@
+=== extract_Gk_data: 2026-10-26 12:29:51 +0000: PYTHONPATH=. ./venv/bin/python extract_Gk_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_Gk_data/
+exit 0; wall 28 s; files written 387
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+7:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 1044/sec)
+26:      Queue summary: 3 lookup (avg 1228/sec)
+31:      Queue summary: 116 lookup (avg 519.3/min)
+=== extract_GkWKB_data: 2026-10-26 12:30:20 +0000: PYTHONPATH=. ./venv/bin/python extract_GkWKB_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_GkWKB_data/
+exit 0; wall 57 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 1036/sec)
+24:      Queue summary: 3 lookup (avg 1146/sec)
+31:      Queue summary: 348 lookup (avg 470.1/min)
+=== extract_GkSource_data: 2026-10-26 12:31:18 +0000: PYTHONPATH=. ./venv/bin/python extract_GkSource_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_GkSource_data/
+exit 0; wall 20 s; files written 162
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+7:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+23:      Queue summary: 3 lookup (avg 1101/sec)
+28:      Queue summary: 3 lookup (avg 1373/sec)
+33:      Queue summary: 10 lookup (avg 87.63/min)
+=== extract_TkWKB_data: 2026-10-26 12:31:39 +0000: PYTHONPATH=. ./venv/bin/python extract_TkWKB_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_TkWKB_data/
+exit 0; wall 15 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 866.1/sec)
+26:      Queue summary: 3 lookup (avg 77.49/min)
+=== extract_tensor_source_data: 2026-10-26 12:31:54 +0000: PYTHONPATH=. ./venv/bin/python extract_tensor_source_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_tensor_source_data/
+exit 0; wall 14 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+7:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 1005/sec)
+26:      Queue summary: 6 lookup (avg 142.7/min)
+=== extract_QuadSourceIntegral_data: 2026-10-26 12:32:09 +0000: PYTHONPATH=. ./venv/bin/python extract_QuadSourceIntegral_data.py --database var/datastores/levin-phase-floor-05a-r12.sqlite --ray-address local --models LambdaCDM --output var/levin-phase-floor-05a/rehearsal/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 17 s; files written 73
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  2026-10-26T12:24:44 36864 var/datastores/levin-phase-floor-05a-r12.sqlite
+  b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  2026-10-26T12:27:23 24076288 var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+  a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  2026-10-26T12:27:23 24203264 var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+  af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  2026-10-26T12:24:44 1077248 var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+  5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  2026-10-26T12:27:23 23560192 var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 815.7/sec)
+24:      Queue summary: 3 lookup (avg 1156/sec)
+31:      Queue summary: 24 lookup (avg 311.3/min)
+run_readers.sh exit 0

@@ -1,0 +1,84 @@
+# Every command of the rehearsal agent (levin-phase-floor 05a, prompt section 5), verbatim, in order. Outputs are in the files named.
+# Main checkout /Users/ds283/Documents/Code/SecondaryGWKit at 149c393; worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd at c4eaefd. R = var/levin-phase-floor-05a/rehearsal.
+## --- turn 1 ---
+## 12:20Z gate re-check (read-only; cwd main checkout): git rev-parse/status both trees, worktree list, runregistrykit list, ~/.raypoolkit, ~/ScienceData/.rehearsal-lock, store names, auth_token mode, df, uptime, python --version, git diff --stat c4eaefd 149c393 (code paths), shasum of the launcher in both trees -> out/gate.txt
+## lock 1: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 05a, rehearsals R11 (worktree c4eaefd, parent of code commit 1fc349c) and R12 (main checkout 149c393, code 1fc349c) on the Mac Studio (mps026298), then the value comparison and readers" --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log
+## lock 1 result: exit 0 (out/lock.log)
+## touch state/r11_launch_marker   (reference mtime for find -newer over the worktree)
+## R11 launch (cwd = worktree; nothing written there):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05a-r11.sqlite \
+    --job-name levin-phase-floor-05a --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r11-parent --purpose \"\$0\" --campaign levin-phase-floor --prompt 05a; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R11>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05a-r11.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/rehearsal/state/launch_r11.txt; disown
+##   <PURPOSE_R11> as launched: "levin-phase-floor prompt 05a, R11 on the Mac Studio (mps026298; tree c4eaefd in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd, the parent of the code commit 1fc349c; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R11/R12 value comparison"
+##   result: state/launch_r11.txt (sh pid 22677, 12:20:40Z); pgrep -P 22677 -> 22684 (driver); ps -o pid,ppid,command -p 22684
+## lock 2: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 22684 >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> exit 0
+## R11 one check -> out/r11_launch_check.txt (registry list head, status.json, launch log head, Traceback count, lsof cwd of driver and of the Datastore actor, manifest fields)
+## --- end of turn 1 ---
+## --- turn 2 ---
+## cp var/runs/levin-phase-floor-05a-r11-parent-20261026T122041/status.json out/r11_status.json
+## R11 end checks -> out/r11_end_check.txt (status.json fields via python; per-class digests vs R8's status.json; kill -0 22684/22677; launch-log tail; Traceback counts; run dir listing; worktree git status --short --ignored and find -newer state/r11_launch_marker; store listing; registry tail; pre-R12 HEAD/status check)
+## lock 3 (look): (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> nothing listed, exit 0
+## shasum -a 256 var/datastores/levin-phase-floor-05a-r11*.sqlite; ls -l same -> state/r11_store_sha256_after_build.txt
+## R12 launch (cwd = main checkout), R10's form but for names and the absolute --database and launch log:
+cd /Users/ds283/Documents/Code/SecondaryGWKit && nohup sh -c "PYTHONPATH=. ./venv/bin/python -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05a-r12.sqlite \
+    --job-name levin-phase-floor-05a --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r12-reanchor-t --purpose \"\$0\" --campaign levin-phase-floor --prompt 05a; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R12>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05a-r12.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/rehearsal/state/launch_r12.txt; disown
+##   <PURPOSE_R12> as launched: "levin-phase-floor prompt 05a, R12 on the Mac Studio (mps026298; main checkout at 149c393, whose code is the code commit 1fc349c up to bd38e50's comments; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R11/R12 value comparison, and QuadSourceIntegral alone is expected to differ"
+##   result: state/launch_r12.txt (sh pid 24894, 12:24:33Z); pgrep -P 24894 -> 24897 (driver)
+## lock 4: (cwd main checkout) ./venv/bin/python -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 24897 >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log
+## R12 one check -> out/r12_launch_check.txt
+## --- end of turn 2 ---
+## --- turn 3 ---
+## cp var/runs/levin-phase-floor-05a-r12-reanchor-t-20261026T122434/status.json out/r12_status.json
+## R12 end checks -> out/r12_end_check.txt (status.json via python incl. per-class digests vs R8 and full classes dict vs R11; kill -0 24897/24894; launch-log tail; Traceback counts; run dir; store listing; registry; main HEAD/status; worktree status --ignored and find -newer state/r11_launch_marker)
+## hashes before the comparison -> state/store_sha256_before_diff.txt (shasum -a 256 + /usr/bin/stat -f '%N %z %m' of both stores' 10 files; journal look); R11's five equal state/r11_store_sha256_after_build.txt
+## cp docs/levin-phase-floor/05/rehearsal/scripts/{classify_non_qsi.py,tabulate_qsi.py} scripts/   (unchanged)
+## SHA-256 of the two scripts, tools/store_value_diff.py, run_readers.sh and the launcher in both trees, beside 05's -> out/script_sha256.txt  (all four equal 05's)
+## comparison (cwd main checkout), timed by /usr/bin/time -p (its output lands in the .stderr files, which hold nothing else):
+PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite --json > var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json 2> var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json.stderr   # exit 1 (out/store_value_diff.meta.txt)
+PYTHONPATH=. ./venv/bin/python -m tools.store_value_diff var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite --max-rows 1000000 > var/levin-phase-floor-05a/rehearsal/out/store_value_diff.txt 2> var/levin-phase-floor-05a/rehearsal/out/store_value_diff.txt.stderr   # exit 1
+## per-class summary from the JSON (inline python, read-only; its text verbatim below) -> out/store_value_diff_summary.txt
+##   import json,sys
+##   d=json.load(open(sys.argv[1]))
+##   print("a:",d["a"]); print("b:",d["b"])
+##   print("not_compared:",d["not_compared"],"identical:",d["identical"])
+##   nv=nrows=0; vbad=[]
+##   for cls,c in d["classes"].items():
+##       r=c["rows"]
+##       print(f'{cls}: identical={c["identical"]} rows identical={r["identical"]} differ={r["differ"]} onlyA={len(r["only_in_a"])} onlyB={len(r["only_in_b"])} unmatched={len(r["unmatched"])} unresolvable={c["unresolvable_columns"]}')
+##       for col,e in sorted(r["columns"].items()):
+##           print("    col",col,json.dumps(e)[:600])
+##       for vt,v in c["values"].items():
+##           nv+=1; nrows+=v["identical"]+v["differ"]
+##           ok = v["differ"]==0 and not v["only_in_a"] and not v["only_in_b"] and not v["unmatched"]
+##           if not ok: vbad.append((cls,vt))
+##           print(f'    value table {vt}: identical={v["identical"]} differ={v["differ"]} onlyA={len(v["only_in_a"])} onlyB={len(v["only_in_b"])} unmatched={len(v["unmatched"])}')
+##   print(f"value tables: {nv}, rows {nrows}, not bit-identical: {vbad}")
+##   print("classes not identical:",[k for k,c in d["classes"].items() if not c["identical"]])
+./venv/bin/python -I var/levin-phase-floor-05a/rehearsal/scripts/classify_non_qsi.py var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json > var/levin-phase-floor-05a/rehearsal/out/classify_non_qsi.txt 2> var/levin-phase-floor-05a/rehearsal/out/classify_non_qsi.stderr   # exit 0, 0 unclassified
+./venv/bin/python -I var/levin-phase-floor-05a/rehearsal/scripts/tabulate_qsi.py var/datastores/levin-phase-floor-05a-r11.sqlite var/datastores/levin-phase-floor-05a-r12.sqlite var/levin-phase-floor-05a/rehearsal/out/store_value_diff.json var/levin-phase-floor-05a/rehearsal/out/qsi_rows.csv > var/levin-phase-floor-05a/rehearsal/out/qsi_tabulation.txt 2> var/levin-phase-floor-05a/rehearsal/out/qsi_tabulation.stderr   # exit 0, first run
+## read-only look at the depth-1 rows of out/qsi_rows.csv (inline python printing the rows; ratio 0 because total_abserr is inf)
+## inline python, read-only, counts from out/qsi_rows.csv and out/classify_non_qsi.txt -> out/qsi_extra_counts.txt (the text is in that file's producing command, verbatim:)
+##   rows=list(csv.DictReader(open('out/qsi_rows.csv'))); count abserr 'inf' rows; rows with total bit-identical and named metadata keys; rows with any/only handover_continuity keys, any WKB_Levin key; sum of "'kind': n" over out/classify_non_qsi.txt
+## grep -n 'random|sample(' extract_Gk_data.py extract_GkSource_data.py extract_QuadSourceIntegral_data.py   (why files-written counts vary: unseeded random.sample)
+## hashes after the comparison -> state/store_sha256_after_diff.txt; diff with before: identical
+## hashes before reads -> state/r12_store_sha256_before_reads.txt
+## (cwd main checkout) bash docs/dk-and-rpk-migration/rehearsal/run_readers.sh var/datastores/levin-phase-floor-05a-r12.sqlite var/levin-phase-floor-05a/rehearsal/extract > var/levin-phase-floor-05a/rehearsal/out/readers.txt 2>&1   # exit 0
+## hashes after reads -> state/r12_store_sha256_after_reads.txt; diff with before: identical
+## lock 5 (look): ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> nothing listed, exit 0
+## lock 6: ./venv/bin/python -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> released, exit 0
+## lock 7 (look): ./venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> free, no Ray processes, exit 0
+## lock 8 (look): ./venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-05a/rehearsal/out/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-05a/rehearsal/out/lock.log   -> nothing listed, exit 0
+## final checks -> out/final_check.txt (runregistrykit list head/tail; main HEAD/status; worktree HEAD, status --ignored, find -newer marker; ls ~/.raypoolkit; 05a store listing)
+## final hashes of all 10 store files -> state/stores_sha256_final.txt; diff with state/store_sha256_before_diff.txt: identical
+## records written: log.md, verification.md, issues.md (Write tool); state/progress.md updated. End of turn 3.

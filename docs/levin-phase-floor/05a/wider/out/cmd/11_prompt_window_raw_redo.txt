@@ -1,0 +1,21 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ git\ show\ 149c3938:prompts/levin-phase-floor/05a-reanchor-t-phase.md\ \|\ sed\ -n\ 388\,399p\ \>\ var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw\ \&\&\ shasum\ -a\ 256\ var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw\ \&\&\ cat\ var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:29:53Z
+# ----
+063ca5d156bc2a33b8b2e5dc2bfb714a40cb6b54dc6148833dfe89e11a7d5783  var/levin-phase-floor-05a/wider/state/prompt_section9_window.raw
+**The probe window, amended.** At each sub-interval's low-$z$ end, the window starts at relative
+width $10^{-6}$ in $z$, as §6 says. Then:
+- it is sampled under both $c$ and $t$. If the largest step of the unwrapped samples is $\pi/2$ or
+  more under either, the width is halved and the window sampled again;
+- this repeats until both trees' largest step is below $\pi/2$. The width used and that step are
+  recorded per window;
+- if the 65 samples would stop being distinct doubles first, the window is **unresolved**. It is
+  reported and not scored;
+- the $u$-sampled $\sigma_\theta$ uses the same width, in $\log(1+z)$.
+
+Record $\max|p_z|$ over the window's 65 samples beside it: under $t$, from $T$'s `cs_tau.end_partial`
+at each sample.
+# ----
+# end 2026-10-26T12:29:53Z
+# exit 0

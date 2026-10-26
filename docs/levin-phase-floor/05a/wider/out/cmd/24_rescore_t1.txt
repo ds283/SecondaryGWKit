@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/rescore_t1.py state/probe_windows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:36:25Z
+# ----
+# rescore_t1.py sha256 f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d
+# input state/probe_windows.json sha256 9919f483d4fd58d5b16b1e1b757cdab48d75484eea3c5fd433fb8a1fcaaf2c83; 91 windows
+T1 [literal]: {'below 1e-11, not scored': 21, 'false': 36, 'true': 34} -> FAILS; disagreements with analyse.py: none
+T1 [true_step]: {'below 1e-11, not scored': 21, 'true': 70} -> HOLDS; disagreements with analyse.py: none
+# ----
+# end 2026-10-26T12:36:26Z
+# exit 0

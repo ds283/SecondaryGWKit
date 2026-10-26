@@ -1,0 +1,12 @@
+**The probe window, amended.** At each sub-interval's low-$z$ end, the window starts at relative
+width $10^{-6}$ in $z$, as §6 says. Then:
+- it is sampled under both $c$ and $t$. If the largest step of the unwrapped samples is $\pi/2$ or
+  more under either, the width is halved and the window sampled again;
+- this repeats until both trees' largest step is below $\pi/2$. The width used and that step are
+  recorded per window;
+- if the 65 samples would stop being distinct doubles first, the window is **unresolved**. It is
+  reported and not scored;
+- the $u$-sampled $\sigma_\theta$ uses the same width, in $\log(1+z)$.
+
+Record $\max|p_z|$ over the window's 65 samples beside it: under $t$, from $T$'s `cs_tau.end_partial`
+at each sample.

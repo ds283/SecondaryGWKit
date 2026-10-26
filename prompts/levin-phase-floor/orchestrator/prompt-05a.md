@@ -443,6 +443,47 @@ The orchestrator re-reads this state as its Gate, does not fetch, and stops if a
 **Other projects on this host** may take the shared lock. If `acquire` exits 3, that is the stop
 the lock's rule gives: ask the user.
 
+### B.6 What happened (2026-10-26)
+
+Part B ran from 12:17 to about 13:30 UTC, in one Mac Studio orchestrator session, with both agents
+at once. It was started on the user's word, since the app starts a session on another host only in
+reply to the user.
+
+**R11 and R12.**
+- Both ended `done` with `1b332ffa…`, and every value table of every class is bit-identical.
+- Outside `QuadSourceIntegral`, only the four volatile kinds differ, with none unclassified, so §8
+  did not fire.
+- 424 of 864 totals move, by at most $8.8\times10^{-5}$ of their error. The readers exited 0 and
+  the lock was released.
+
+**The re-measurement.**
+- 109 of 109 units, none over budget. T0 held: all 39 $c$ units equal 05's bit for bit.
+- **One question, after the launch.** The agent asked whether §9's "largest step of the unwrapped
+  samples" means the folded step, which admits aliased windows, or the phase's true step. It had
+  fixed both readings before the run.
+  - The laptop relayed the question, and told the user that no T1 number existed yet. That was
+    wrong: both readings had been scored at 12:35:49Z.
+  - The user chose the true step without having seen either number. Once the record of the timing
+    had been corrected, the user confirmed it.
+- **The verdicts:** T1 holds by the true step (70 of 70), and fails literally (36 aliased). T2 and
+  T3 hold. T4 fails on 05's two L3 rows, unchanged.
+
+**The review.** The Mac Studio orchestrator's review passed all ten checks, and its dated addendum
+re-read checks 8 and 9 after the ruling.
+
+**The laptop's re-checks**, as §B.4 asks, both pass:
+- the QSI row of largest $|\Delta|/$abserr reads the tabulated totals bit for bit in both stores;
+- `low-G-r-2`'s $c$ unit equals 05's in all 16 fields.
+
+A3 v2's files are unchanged.
+
+**The header's issues.** Both are closed, on the user's word after §B.4's question, since T4
+failed. X2 is opened as `[05a-t-phase-abscissa-rounding-remains]`. X1 is not opened, because
+§9's wording is corrected instead.
+
+**What is left.** R11's and R12's stores, and the worktree `SecondaryGWKit-lpf05a-c4eaefd`, are the
+user's to keep or retire.
+
 ---
 
 ## 5. Stop and ask the user

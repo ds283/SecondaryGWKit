@@ -1,0 +1,2145 @@
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/analyse.py scripts/analyse.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/analyse.py	2026-10-26 02:15:22
++++ scripts/analyse.py	2026-10-26 12:35:40
+@@ -1,33 +1,40 @@
+ """
+-levin-phase-floor prompt 05 section 6: score the run from its checkpoints and region pickles.
++levin-phase-floor prompt 05a section 6 (T1 as amended by section 9): score the run from its
++checkpoints and pickles. Copied from prompt 05's ``scripts/analyse.py``
++(docs/levin-phase-floor/05/wider/scripts/analyse.py, sha256 675d6bc7..., a record that is not
++edited), and rewritten for 05a's rules (prompt 05a: "Change only those [05's paths, trees, unit
++sets], and whatever the probe below needs"; 05's L1-L3 are not 05a's rules, so its scoring code
++is replaced). Kept from 05: ``F``, ``le_exact``, ``g``, the per-row table, the group-sequence check
++and the band/cost summary, with 05's trees p/c read as c/t.
+ 
+-Reads the run's checkpoint.jsonl and unit_*.pkl, state/sample.json, and (descriptive only) prompt
+-04's checkpoint for its arm A on R1-R7. Runs nothing; imports nothing from either tree.
++Reads the run's checkpoint.jsonl and unit_*.pkl, state/sample.json, and 05's run's checkpoint
++(prov.RUN05: which rows were capped under B1's code, i.e. 05's p at depth 20). Runs nothing;
++imports nothing from either tree.
+ 
+-Definitions (prompt 05 section 6, as written):
+-- a row's **regions** are WKB_Levin_data.num_regions of the unit (04's "X regions");
+-- a **group** is a Levin group call, identified by (regime, group label); p's and c's calls on the
+-  same row are checked to be the same sequence of (regime, label, x_span) bit for bit;
+-- a group's **depth-18 count** is its regions at depth >= 18 (04's n_depth_ge_18);
+-- **p's scored set** on a row: the groups with at least 10 regions at depth >= 18 under p (03's
+-  definition, "here under p");
+-- **L1 / L1q, a row holds** iff c@1e-7 is in budget, every group of p's scored set has fewer than
+-  10 regions at depth >= 18 under c@1e-7, and regions(c@1e-7) <= regions(p) / 10. L1 is over the
+-  depth-20 rows of the sample whose (stored) top group is G+r, G-r or lone G; L1q over those whose
+-  top group is Gqr. Holds iff true on every such row.
+-- **L2, a control holds** iff |total_c - total_p| <= total_abserr_p (c and p at 1e-7).
+-- **L3, a row holds** iff |total_c(1e-7) - total_c(1e-8)| <= total_abserr_c(1e-7), on every
+-  depth-20 row with both c units in budget.
+-The inequalities are evaluated exactly on the doubles (fractions.Fraction); an infinite abserr
+-makes a rule true, a NaN false. The numbers printed are doubles.
++Rules (state/predictions.md, fixed before the run, with its "Readings fixed before the run"):
++- **T1 (section 9).** Windows are paired by (row, sub-interval, factor) between c and t, and
++  checked to start at the same double. The level used is the first n at which both trees' level
++  is distinct and both trees' largest unwrapped z-sampled step is below pi/2; none: unresolved.
++  In every resolved window with eps|theta_T| >= 1e-11 rad: sigma_c >= 0.1 eps|theta_T| and
++  sigma_t <= max(1e-3 eps|theta_T|, eps (k max|p_z|_t + 2 pi), 1e-13). Holds if true in every such
++  window; fails if false in any; undecided if none false but some such window unresolved.
++  **Reported apart, unscored:** the same rule at the level chosen by the true step (the first n
++  at which also |d theta/dz| (b - a)/64 < pi/2, which is the same double in both trees since
++  theta_deriv is unchanged).
++- **T2.** Every row (39), t at 1e-7: no group has a region at depth >= 18. Over budget: false.
++- **T3.** Every row (39): |total_t - total_c| <= total_abserr_c at 1e-7. A row whose t@1e-7 unit is
++  over budget is undecided.
++- **T4.** Every depth-20 row (31 stored at depth 20) with both t units in budget:
++  |total_t(1e-7) - total_t(1e-8)| <= total_abserr_t(1e-7).
++The inequalities of T3/T4 are evaluated exactly on the doubles (fractions.Fraction); an infinite
++abserr makes a rule true, a NaN false. The numbers printed are doubles.
+ 
+-Usage: python -I -B analyse.py RUN_DIR OUT_JSON   (text to stdout)
++Usage: python -I -B analyse.py RUN_DIR OUT_JSON PROBE_JSON   (text to stdout)
+ """
+ 
+ import collections
+ import json
+ import math
+-import os
+ import sys
+ from fractions import Fraction
+ from pathlib import Path
+@@ -38,10 +45,13 @@
+ import numpy as np  # noqa: E402
+ import ray.cloudpickle as cloudpickle  # noqa: E402
+ 
+-from prov import MAIN, WIDER, header  # noqa: E402
++from prov import RUN05, TREES, WIDER, header  # noqa: E402
+ 
+-RUN04 = MAIN / "var" / "runs" / "levin-phase-floor-04-remove-20261025T231110"
+ R03 = ["R1", "R2", "R3", "R4", "R5", "R6", "R7"]
++EPS = float(np.finfo(np.float64).eps)
++HALF_PI = 0.5 * math.pi
++T1_MIN_SCALE = 1.0e-11
++TWO_PI = 2.0 * math.pi
+ 
+ 
+ def F(d):
+@@ -73,30 +83,41 @@
+     return str(x)
+ 
+ 
++def fit_sigma(x, vals, a, b):
++    """test_t_phase_reanchor._sigma_theta's fit (probe.py's _fit), for re-computation."""
++    th = np.unwrap(vals)
++    t = (2.0 * x - (a + b)) / (b - a)
++    coef = np.polynomial.polynomial.polyfit(t, th, 4)
++    res = th - np.polynomial.polynomial.polyval(t, coef)
++    return float(np.sqrt(np.mean(res * res))), float(np.max(np.abs(np.diff(th))))
++
++
++def hexlist(a):
++    return None if a is None else [float(v).hex() for v in a]
++
++
+ def main():
+     run_dir = Path(sys.argv[1])
+     out_json = Path(sys.argv[2])
++    probe_json = Path(sys.argv[3])
+     lines = header(
+         Path(__file__).resolve(),
+-        "levin-phase-floor 05 section 6: the wider re-measurement, scored",
+-        [run_dir / "checkpoint.jsonl", WIDER / "state" / "sample.json"],
++        "levin-phase-floor 05a section 6: the wider re-measurement, scored (T1 as amended by section 9)",
++        [run_dir / "checkpoint.jsonl", WIDER / "state" / "sample.json", RUN05 / "checkpoint.jsonl"],
+     )
+     out = lines.append
+     sample = json.loads((WIDER / "state" / "sample.json").read_text())
+     rows = sample["rows"]
+-    by_name = {r["name"]: r for r in rows}
+ 
+     recs = [json.loads(l) for l in (run_dir / "checkpoint.jsonl").read_text().splitlines()]
+     units = {r["unit"]: r for r in recs}
+     out(f"# run {run_dir.name}: {len(recs)} checkpoint records")
+ 
+-    # provenance of every record
++    # ------------------------------------------------------------------ provenance
+     prov_bad = []
+     for r in recs:
+         d = r["data"]
+-        want = {"p": "e6489519ee662434d1f8e430e1c172246678ac8c",
+-                "c": "53084dcb14f7835e22fe8ffde8c0ac09c20a6fca"}[d["tree"]]
+-        if d["tree_head"] != want or d["tree_status_short"].strip() != "":
++        if d["tree_head"] != TREES[d["tree"]][1] or d["tree_status_short"].strip() != "":
+             prov_bad.append(r["unit"])
+     shas = collections.Counter(r["script_sha256"] for r in recs)
+     out(f"# every record's script_sha256: {dict(shas)}; tree HEAD and status as expected on "
+@@ -107,9 +128,15 @@
+         for k, v in (d.get("dispatcher_flags") or {}).items():
+             flags[(d["tree"], k)] += v
+     out(f"# theta_mod_2pi calls by tree and phase flag: {dict(flags)}")
++    ter = collections.Counter(
++        (r["data"]["tree"], json.dumps(r["data"].get("T_phase_exact_remainder"))) for r in recs
++    )
++    out(f"# T's phase exact_remainder per unit, by tree: {dict(ter)}")
+     qs_bad = [r["unit"] for r in recs if not r["data"]["qs_check"]["L0a_holds"]]
+-    out(f"# QuadSource recomputed equals the stored row at its nodes and adds B1's 3 nodes "
+-        f"(L0 clause (a)) in every unit: {not qs_bad} {qs_bad}")
++    out(f"# QuadSource recomputed equals the stored row at its nodes and adds B1's 3 nodes in every "
++        f"unit: {not qs_bad} {qs_bad}")
++    pe = [r["unit"] for r in recs if r["data"].get("probe_error")]
++    out(f"# probe errors: {pe if pe else 'none'}")
+ 
+     def unit(tree, rtol, name):
+         r = units.get(f"{tree}-{rtol}-{name}")
+@@ -127,366 +154,437 @@
+         w = d["result"]["WKB_Levin_data"]
+         return None if w is None else w["max_depth"]
+ 
+-    def groups(d):
+-        return [((c["regime"], c["group"]), c) for c in d["calls"]]
+-
+     def load_pkl(d):
+         return cloudpickle.loads((run_dir / d["pickle"]).read_bytes())
+ 
+     over = [r["unit"] for r in recs if r["data"]["status"] == "over budget"]
+     errs = [r["unit"] for r in recs if r["data"]["status"] == "error"]
+     out(f"# over-budget units: {over if over else 'none'}; error units: {errs if errs else 'none'}")
++    worst = max(
++        (r["data"]["wall_s"] / r["data"]["budget_s"], r["unit"])
++        for r in recs
++        if r["data"]["tree"] == "t" and r["data"]["budget_s"]
++    )
++    out(f"# largest t wall / budget: {worst[0]:.3f} ({worst[1]})")
+ 
++    # the rows capped under B1's code: 05's p at depth 20
++    r05 = {}
++    for l in (RUN05 / "checkpoint.jsonl").read_text().splitlines():
++        rr = json.loads(l)
++        r05[rr["unit"]] = rr["data"]
++    d20 = [r["name"] for r in rows if r["role"] == "d20"]
++    capped = [
++        n for n in d20
++        if r05[f"p-1e-7-{n}"]["status"] == "done"
++        and (r05[f"p-1e-7-{n}"]["result"]["WKB_Levin_data"] or {}).get("max_depth") == 20
++    ]
++    out(f"# rows capped under B1's code (05's p at depth 20, from {RUN05.name}): {len(capped)}: {capped}")
++
+     # ------------------------------------------------------------------ per-row table
+     res = {}
+     out("")
+-    out("== per row: p and c at rtol 1e-7, c at 1e-8 (regions = WKB_Levin_data.num_regions; "
++    out("== per row: c and t at rtol 1e-7, t at 1e-8 (regions = WKB_Levin_data.num_regions; "
+         "d = max depth; wall in s)")
+-    out("   name           cls  band  stored(d,reg)  p(d,reg,wall)        c7(d,reg,wall,budget)        "
+-        "c8(d,reg,wall)    conv p/c7/c8")
++    out("   name           cls  band  stored(d,reg)  c7(d,reg,wall)       t7(d,reg,wall,budget)        "
++        "t8(d,reg,wall,status)   conv c7/t7/t8")
+     for r in rows:
+         name = r["name"]
+-        p, c7, c8 = unit("p", "1e-7", name), unit("c", "1e-7", name), unit("c", "1e-8", name)
+-        st = p["stored"]
+-        sw = st["WKB_Levin_data"] or {}
++        c7, t7, t8 = unit("c", "1e-7", name), unit("t", "1e-7", name), unit("t", "1e-8", name)
++        sw = c7["stored"]["WKB_Levin_data"] or {}
+         e = {
+-            "name": name,
+-            "role": r["role"],
+-            "cls": r["cls"],
+-            "band": r["band"],
+-            "k": float(r["k"]),
+-            "z_response": r["z_response"],
+-            "stored_depth": sw.get("max_depth"),
+-            "stored_regions": sw.get("num_regions"),
+-            "p_depth": maxdepth(p),
+-            "p_regions": regions(p),
+-            "p_wall": p["wall_s"],
+-            "c7_depth": maxdepth(c7),
+-            "c7_regions": regions(c7),
+-            "c7_wall": c7["wall_s"],
+-            "c7_budget": c7["budget_s"],
++            "name": name, "role": r["role"], "cls": r["cls"], "band": r["band"], "k": float(r["k"]),
++            "z_response": r["z_response"], "capped_B1": name in capped,
++            "stored_depth": sw.get("max_depth"), "stored_regions": sw.get("num_regions"),
++            "c7_depth": maxdepth(c7), "c7_regions": regions(c7), "c7_wall": c7["wall_s"],
+             "c7_status": c7["status"],
+-            "p_conv": p["result"]["total_converged"] if p["status"] == "done" else None,
++            "t7_depth": maxdepth(t7), "t7_regions": regions(t7), "t7_wall": t7["wall_s"],
++            "t7_budget": t7["budget_s"], "t7_status": t7["status"],
+             "c7_conv": c7["result"]["total_converged"] if c7["status"] == "done" else None,
++            "t7_conv": t7["result"]["total_converged"] if t7["status"] == "done" else None,
+         }
+-        if c8 is not None:
+-            e.update(
+-                c8_depth=maxdepth(c8),
+-                c8_regions=regions(c8),
+-                c8_wall=c8["wall_s"],
+-                c8_status=c8["status"],
+-                c8_conv=c8["result"]["total_converged"] if c8["status"] == "done" else None,
+-            )
+-        # totals
+-        tp, ap = F(p["result"]["total"]), F(p["result"]["total_abserr"])
+-        tc, ac = F(c7["result"]["total"]), F(c7["result"]["total_abserr"])
+-        e.update(total_p=tp, abserr_p=ap, total_c7=tc, abserr_c7=ac)
+-        if c8 is not None and c8["status"] == "done":
+-            e.update(total_c8=F(c8["result"]["total"]), abserr_c8=F(c8["result"]["total_abserr"]))
+-        e["total_stored"] = F(st["total"])
+-        e["abserr_stored"] = F(st["total_abserr"])
++        if t8 is not None:
++            e.update(t8_depth=maxdepth(t8), t8_regions=regions(t8), t8_wall=t8["wall_s"],
++                     t8_budget=t8["budget_s"], t8_status=t8["status"],
++                     t8_conv=t8["result"]["total_converged"] if t8["status"] == "done" else None)
++        if c7["status"] == "done":
++            e.update(total_c7=F(c7["result"]["total"]), abserr_c7=F(c7["result"]["total_abserr"]))
++        if t7["status"] == "done":
++            e.update(total_t7=F(t7["result"]["total"]), abserr_t7=F(t7["result"]["total_abserr"]))
++        if t8 is not None and t8["status"] == "done":
++            e.update(total_t8=F(t8["result"]["total"]), abserr_t8=F(t8["result"]["total_abserr"]))
+         res[name] = e
+         out(
+             f"   {name:<14s} {str(r['cls']):4s} {r['band']:4s}  "
+             f"({g(e['stored_depth'])},{g(e['stored_regions'])})".ljust(44)
+-            + f"({g(e['p_depth'])},{g(e['p_regions'])},{e['p_wall']:.2f})".ljust(21)
+-            + f"({g(e['c7_depth'])},{g(e['c7_regions'])},{e['c7_wall']:.2f},{g(e['c7_budget'])} {e['c7_status']})".ljust(29)
+-            + (f"({g(e.get('c8_depth'))},{g(e.get('c8_regions'))},{e['c8_wall']:.2f})".ljust(18) if c8 is not None else "-".ljust(18))
+-            + f"{e['p_conv']}/{e['c7_conv']}/{e.get('c8_conv', '-')}"
++            + f"({g(e['c7_depth'])},{g(e['c7_regions'])},{e['c7_wall']:.2f})".ljust(21)
++            + f"({g(e['t7_depth'])},{g(e['t7_regions'])},{e['t7_wall']:.2f},{g(e['t7_budget'])} {e['t7_status']})".ljust(29)
++            + (f"({g(e.get('t8_depth'))},{g(e.get('t8_regions'))},{e['t8_wall']:.2f},{e['t8_status']})".ljust(24) if t8 is not None else "-".ljust(24))
++            + f"{e['c7_conv']}/{e['t7_conv']}/{e.get('t8_conv', '-')}"
+         )
+ 
+-    # ------------------------------------------------------------------ groups, p vs c
++    # ------------------------------------------------------------------ groups, c vs t
+     group_tables = {}
+     seq_ok = {}
+     for r in rows:
+         name = r["name"]
+-        p, c7 = unit("p", "1e-7", name), unit("c", "1e-7", name)
+-        gp = groups(p)
+-        gc = groups(c7) if c7["status"] == "done" else []
+-        same = [
+-            (k, a["x_span"][0]["hex"], a["x_span"][1]["hex"]) for k, a in gp
+-        ] == [(k, a["x_span"][0]["hex"], a["x_span"][1]["hex"]) for k, a in gc]
+-        seq_ok[name] = same
+-        cmap = {k: c for k, c in gc}
++        c7, t7 = unit("c", "1e-7", name), unit("t", "1e-7", name)
++        gc = [((c["regime"], c["group"]), c) for c in c7["calls"]]
++        gt = [((c["regime"], c["group"]), c) for c in t7["calls"]] if t7["status"] == "done" else []
++        seq_ok[name] = [(k, a["x_span"][0]["hex"], a["x_span"][1]["hex"]) for k, a in gc] == [
++            (k, a["x_span"][0]["hex"], a["x_span"][1]["hex"]) for k, a in gt]
++        pc = load_pkl(c7)
++        pt = load_pkl(t7) if t7["status"] == "done" else {"regions": []}
+         tab = []
+-        for k, a in gp:
+-            c = cmap.get(k)
+-            tab.append(
+-                {
+-                    "regime": k[0],
+-                    "group": k[1],
+-                    "p_n18": a["n_depth_ge_18"],
+-                    "p_regions": a["num_regions"],
+-                    "p_maxd": a["max_depth"],
+-                    "c_n18": None if c is None else c["n_depth_ge_18"],
+-                    "c_regions": None if c is None else c["num_regions"],
+-                    "c_maxd": None if c is None else c["max_depth"],
+-                    "scored": a["n_depth_ge_18"] >= 10,
+-                }
+-            )
++        for i, (k, a) in enumerate(gc):
++            b = gt[i][1] if i < len(gt) else None
++            low = {}
++            for tree, pk in (("c", pc), ("t", pt)):
++                if i >= len(pk["regions"]):
++                    low[tree] = (None, None)
++                    continue
++                reg = pk["regions"][i]
++                x0, x1 = reg["x_span"]
++                cut = x0 + 0.1 * (x1 - x0)
++                m = reg["start"] < cut
++                low[tree] = (int(m.sum()), int(reg["depth"][m].max()) if m.any() else None)
++            tab.append({
++                "index": a["index"], "regime": k[0], "group": k[1],
++                "x_span": [a["x_span"][0]["repr"], a["x_span"][1]["repr"]],
++                "c_regions": a["num_regions"], "c_maxd": a["max_depth"], "c_n18": a["n_depth_ge_18"],
++                "t_regions": None if b is None else b["num_regions"],
++                "t_maxd": None if b is None else b["max_depth"],
++                "t_n18": None if b is None else b["n_depth_ge_18"],
++                "c_conv": a["converged"], "t_conv": None if b is None else b["converged"],
++                "c_low10_regions": low["c"][0], "c_low10_maxd": low["c"][1],
++                "t_low10_regions": low["t"][0], "t_low10_maxd": low["t"][1],
++            })
+         group_tables[name] = tab
+-        res[name]["scored_groups"] = [f"{t['regime']}/{t['group']}" for t in tab if t["scored"]]
+     out("")
+-    out(f"# the group calls of p and c@1e-7 are the same sequence of (regime, label, x_span) on "
++    out(f"# the group calls of c and t@1e-7 are the same sequence of (regime, label, x_span) on "
+         f"every row: {all(seq_ok.values())} {[n for n, v in seq_ok.items() if not v]}")
+ 
+-    def l1_row(name):
+-        e = res[name]
+-        tab = group_tables[name]
+-        if e["c7_status"] != "done":
+-            return False, "over budget" if e["c7_status"] == "over budget" else e["c7_status"], None
+-        scored = [t for t in tab if t["scored"]]
+-        worst = max((t["c_n18"] for t in scored), default=None)
+-        clause1 = all(t["c_n18"] is not None and t["c_n18"] < 10 for t in scored)
+-        pr, cr = e["p_regions"], e["c7_regions"]
+-        clause2 = pr is not None and cr is not None and Fraction(cr) <= Fraction(pr, 10)
+-        detail = {
+-            "n_scored": len(scored),
+-            "worst_c_n18_in_scored": worst,
+-            "clause1": clause1,
+-            "p_regions": pr,
+-            "c_regions": cr,
+-            "ratio": None if not pr else cr / pr,
+-            "clause2": clause2,
+-        }
+-        return clause1 and clause2, None, detail
+-
+-    def l1_table(names, title):
+-        out(f"   {'row':<14s} band  p(d,regions)  c7(d,regions)  c/p      scored groups under p (n>=18: p -> c)        clause1 clause2 row")
+-        verdicts = []
+-        for n in names:
+-            ok, why, det = l1_row(n)
+-            e = res[n]
+-            sg = [
+-                f"{t['regime']}/{t['group']} {t['p_n18']}->{t['c_n18']}"
+-                for t in group_tables[n]
+-                if t["scored"]
+-            ]
+-            out(
+-                f"   {n:<14s} {e['band']:4s}  ({g(e['p_depth'])},{g(e['p_regions'])})".ljust(36)
+-                + f"({g(e['c7_depth'])},{g(e['c7_regions'])})".ljust(15)
+-                + f"{g(det['ratio'] if det else None, '.4f')}".ljust(9)
+-                + f"{'; '.join(sg) if sg else '(none)'}".ljust(45)
+-                + f"{det['clause1'] if det else '-'}   {det['clause2'] if det else '-'}   "
+-                + ("holds" if ok else f"FAILS{' (' + why + ')' if why else ''}")
+-            )
+-            verdicts.append((n, ok, det))
+-        return verdicts
+-
+-    # ------------------------------------------------------------------ L1, L1q as written
+-    d20 = [r["name"] for r in rows if r["role"] == "d20"]
+-    l1_rows = [n for n in d20 if res[n]["cls"] in ("G+r", "G-r", "G")]
+-    l1q_rows = [n for n in d20 if res[n]["cls"] == "Gqr"]
+     scores = {}
++    # ------------------------------------------------------------------ T2
+     out("")
+-    out("== L1, as written: every depth-20 row of the sample whose top group is G+r, G-r or lone G "
+-        f"({len(l1_rows)} rows)")
+-    v = l1_table(l1_rows, "L1")
+-    nh = sum(1 for _n, ok, _d in v if ok)
+-    scores["L1"] = {"rows": len(v), "hold": nh, "fail": [n for n, ok, _ in v if not ok],
+-                    "verdict": "holds" if nh == len(v) else "fails"}
+-    out(f"   L1: true on {nh} of {len(v)} rows -> {scores['L1']['verdict'].upper()}; "
+-        f"false on {scores['L1']['fail']}")
+-    out("")
+-    out(f"== L1q, as written: every depth-20 row of the sample whose top group is Gqr ({len(l1q_rows)} rows)")
+-    v = l1_table(l1q_rows, "L1q")
+-    nh = sum(1 for _n, ok, _d in v if ok)
+-    scores["L1q"] = {"rows": len(v), "hold": nh, "fail": [n for n, ok, _ in v if not ok],
+-                     "verdict": "holds" if nh == len(v) else "fails"}
+-    out(f"   L1q: true on {nh} of {len(v)} rows -> {scores['L1q']['verdict'].upper()}; "
+-        f"false on {scores['L1q']['fail']}")
++    out("== T2: every row (all 39), under t at 1e-7, no group has a region at depth >= 18 "
++        "(an over-budget unit counts as false)")
++    t2 = []
++    for r in rows:
++        n = r["name"]
++        e = res[n]
++        if e["t7_status"] != "done":
++            ok, why = False, e["t7_status"]
++            worst18, md = None, None
++        else:
++            worst18 = max((t["t_n18"] for t in group_tables[n]), default=0)
++            md = max((t["t_maxd"] for t in group_tables[n]), default=None)
++            ok, why = worst18 == 0, None
++        t2.append((n, ok))
++        out(f"   {n:<14s} {e['role']:<7s} t7 max depth {g(md)}; regions at depth >= 18 in its "
++            f"worst group {g(worst18)} -> {'holds' if ok else 'FAILS' + (' (' + why + ')' if why else '')}")
++    scores["T2"] = {"rows": len(t2), "hold": sum(1 for _n, ok in t2 if ok),
++                    "fail": [n for n, ok in t2 if not ok],
++                    "max_depth_t7": max((res[n]["t7_depth"] or 0) for n, _ in t2),
++                    "verdict": "holds" if all(ok for _n, ok in t2) else "fails"}
++    out(f"   T2: true on {scores['T2']['hold']} of {len(t2)} -> {scores['T2']['verdict'].upper()}; "
++        f"largest max depth under t@1e-7 {scores['T2']['max_depth_t7']}")
++    out(f"   (the 11 capped under B1: true on {sum(1 for n, ok in t2 if ok and n in capped)} of "
++        f"{len(capped)}; max depth there {max(res[n]['t7_depth'] or 0 for n in capped)})")
+ 
+-    # depth-18 regions against z_response on failing Gqr rows (the rule's own report)
+-    for n in scores["L1q"]["fail"]:
+-        out(f"   L1q failure {n}: regions at depth >= 18 under c@1e-7 (and p), x = log(1+z'), "
+-            f"z_response = {res[n]['z_response']:.6g}")
+-        for tree in ("c", "p"):
+-            d = unit(tree, "1e-7", n)
+-            pk = load_pkl(d)
+-            n_deep = sum(int((c["depth"] >= 18).sum()) for c in pk["regions"])
+-            out(f"      {tree}: {n_deep} regions at depth >= 18 in this row's group calls; max "
+-                f"depth {max((int(c['depth'].max()) for c in pk['regions'] if len(c['depth'])), default=None)}")
+-            for c in pk["regions"]:
+-                m = c["depth"] >= 18
+-                if m.any():
+-                    zs = np.expm1(0.5 * (c["start"][m] + c["end"][m]))
+-                    out(f"      {tree} {c['regime']}/{c['group']}: {int(m.sum())} regions; z' "
+-                        f"from {zs.min():.6g} to {zs.max():.6g}; (1+z')/(1+z_resp) "
+-                        f"{(1 + zs.min()) / (1 + res[n]['z_response']):.6g} to "
+-                        f"{(1 + zs.max()) / (1 + res[n]['z_response']):.6g}")
+-
+-    # ------------------------------------------------------------------ the second reading
+-    capped = [n for n in d20 if res[n]["p_depth"] == 20]
++    # ------------------------------------------------------------------ T3
+     out("")
+-    out("== THE SECOND READING (not scored; the user's question): the rows at depth 20 under p, "
+-        "i.e. still capped after B1 and before 05's change")
+-    out(f"   {len(capped)} of {len(d20)} depth-20 rows of the sample reach depth 20 under p: {capped}")
+-    out(f"   not capped under p: {[n for n in d20 if res[n]['p_depth'] != 20]}")
+-    out("   rows whose top group is G+r, G-r or lone G (L1's rule on them):")
+-    v1 = l1_table([n for n in capped if res[n]["cls"] in ("G+r", "G-r", "G")], "L1-capped")
+-    out("   rows whose top group is Gqr (L1q's rule on them):")
+-    v2 = l1_table([n for n in capped if res[n]["cls"] == "Gqr"], "L1q-capped")
+-    scores["L1_capped"] = {"rows": len(v1), "hold": sum(1 for _n, ok, _ in v1 if ok),
+-                           "fail": [n for n, ok, _ in v1 if not ok]}
+-    scores["L1q_capped"] = {"rows": len(v2), "hold": sum(1 for _n, ok, _ in v2 if ok),
+-                            "fail": [n for n, ok, _ in v2 if not ok]}
+-    out(f"   L1's rule on the capped rows: true on {scores['L1_capped']['hold']} of "
+-        f"{scores['L1_capped']['rows']}; false on {scores['L1_capped']['fail']}")
+-    out(f"   L1q's rule on the capped rows: true on {scores['L1q_capped']['hold']} of "
+-        f"{scores['L1q_capped']['rows']}; false on {scores['L1q_capped']['fail']}")
+-    out("   their groups, p -> c@1e-7 (regions; n at depth >= 18; max depth), every group:")
+-    for n in capped:
+-        out(f"   {n}:")
+-        for t in group_tables[n]:
+-            out(f"      {t['regime']:>4s}/{t['group']:<6s} regions {t['p_regions']:>6d} -> {g(t['c_regions']):>4s}; "
+-                f"n>=18 {t['p_n18']:>6d} -> {g(t['c_n18']):>3s}; max depth {t['p_maxd']:>2d} -> {g(t['c_maxd'])}"
+-                + ("   [scored under p]" if t["scored"] else ""))
+-
+-    # ------------------------------------------------------------------ L2
+-    out("")
+-    out("== L2: every control, |total_c - total_p| <= total_abserr_p (both at 1e-7)")
+-    ctrl = [r["name"] for r in rows if r["role"] == "control"]
+-    l2 = []
+-    for n in ctrl:
++    out("== T3: every row (all 39), |total_t - total_c| <= total_abserr_c at 1e-7")
++    t3 = []
++    for r in rows:
++        n = r["name"]
+         e = res[n]
+-        ok, df, ratio = le_exact(e["total_c7"], e["total_p"], e["abserr_p"])
+-        bit = float(e["total_c7"]).hex() == float(e["total_p"]).hex()
+-        out(f"   {n:<12s} band {e['band']:4s} p {e['total_p']!r} c {e['total_c7']!r} |dt| {g(df)} "
+-            f"abserr_p {g(e['abserr_p'])} ratio {g(ratio)} bit-identical {bit} -> {'holds' if ok else 'FAILS'}")
+-        l2.append((n, ok, ratio, bit))
+-    scores["L2"] = {"rows": len(l2), "hold": sum(1 for x in l2 if x[1]),
+-                    "fail": [x[0] for x in l2 if not x[1]],
+-                    "max_ratio": max(x[2] for x in l2),
+-                    "verdict": "holds" if all(x[1] for x in l2) else "fails"}
+-    out(f"   L2: true on {scores['L2']['hold']} of {len(l2)} -> {scores['L2']['verdict'].upper()}; "
+-        f"largest ratio {g(scores['L2']['max_ratio'])}")
++        if e["t7_status"] != "done" or e["c7_status"] != "done":
++            t3.append((n, None, None, None))
++            out(f"   {n:<14s} undecided: c7 {e['c7_status']}, t7 {e['t7_status']}")
++            continue
++        ok, df, ratio = le_exact(e["total_t7"], e["total_c7"], e["abserr_c7"])
++        rel = df / abs(e["total_c7"]) if e["total_c7"] else (0.0 if df == 0 else float("inf"))
++        bit = e["total_t7"].hex() == e["total_c7"].hex()
++        e.update(T3_ok=ok, dt_c=df, dt_ratio_abserr_c=ratio, dt_rel_c=rel, total_bit_identical=bit)
++        out(f"   {n:<14s} {e['role']:<7s} {e['band']:4s} {str(e['cls']):4s} capped-B1 {e['capped_B1']!s:5s} "
++            f"c {e['total_c7']!r} t {e['total_t7']!r} |dt| {g(df)} abserr_c {g(e['abserr_c7'])} "
++            f"ratio {g(ratio)} |dt|/|c| {g(rel)} bit-identical {bit} -> {'holds' if ok else 'FAILS'}")
++        t3.append((n, ok, ratio, rel))
++    fails = [x[0] for x in t3 if x[1] is False]
++    und = [x[0] for x in t3 if x[1] is None]
++    finite = [x[2] for x in t3 if x[2] is not None and not math.isnan(x[2])]
++    scores["T3"] = {"rows": len(t3), "hold": sum(1 for x in t3 if x[1]), "fail": fails,
++                    "undecided_rows": und, "max_ratio": max(finite) if finite else None,
++                    "bit_identical_rows": [n for n in res if res[n].get("total_bit_identical")],
++                    "verdict": "fails" if fails else ("undecided" if und else "holds")}
++    out(f"   T3: true on {scores['T3']['hold']} of {len(t3)} -> {scores['T3']['verdict'].upper()}; "
++        f"largest ratio {g(scores['T3']['max_ratio'])}; false on {fails}; undecided on {und}; "
++        f"totals bit-identical on {len(scores['T3']['bit_identical_rows'])} rows {scores['T3']['bit_identical_rows']}")
++    t3c = [x for x in t3 if x[0] in capped]
++    out(f"   (on the {len(t3c)} rows capped under B1: true on {sum(1 for x in t3c if x[1])}; ratios "
++        f"{[g(x[2]) for x in t3c]})")
+ 
+-    # ------------------------------------------------------------------ L3
++    # ------------------------------------------------------------------ T4
+     out("")
+-    out("== L3: every depth-20 row with both c units in budget, |total_c(1e-7) - total_c(1e-8)| "
+-        "<= total_abserr_c(1e-7)")
+-    l3 = []
++    out("== T4: every depth-20 row with both t units in budget, |total_t(1e-7) - total_t(1e-8)| "
++        "<= total_abserr_t(1e-7)")
++    t4 = []
+     for n in d20:
+         e = res[n]
+-        if e["c7_status"] != "done" or e.get("c8_status") != "done":
+-            out(f"   {n:<14s} excluded: c7 {e['c7_status']}, c8 {e.get('c8_status')}")
++        if e["t7_status"] != "done" or e.get("t8_status") != "done":
++            out(f"   {n:<14s} excluded: t7 {e['t7_status']}, t8 {e.get('t8_status')}")
+             continue
+-        ok, df, ratio = le_exact(e["total_c7"], e["total_c8"], e["abserr_c7"])
+-        q5 = df / abs(e["total_c8"]) if e["total_c8"] else None
+-        out(f"   {n:<14s} {e['band']:4s} {str(e['cls']):4s} c7 {e['total_c7']!r} c8 {e['total_c8']!r} "
+-            f"|dt| {g(df)} abserr_c7 {g(e['abserr_c7'])} ratio {g(ratio)} |dt|/|c8| {g(q5)} -> "
+-            f"{'holds' if ok else 'FAILS'}")
+-        l3.append((n, ok, ratio, q5))
+-    finite = [x[2] for x in l3 if x[2] is not None and not math.isnan(x[2])]
+-    scores["L3"] = {"rows": len(l3), "hold": sum(1 for x in l3 if x[1]),
+-                    "fail": [x[0] for x in l3 if not x[1]],
++        ok, df, ratio = le_exact(e["total_t7"], e["total_t8"], e["abserr_t7"])
++        q5 = df / abs(e["total_t8"]) if e["total_t8"] else None
++        e.update(T4_ok=ok, T4_ratio=ratio, T4_rel=q5)
++        # 05's L3 on the same row, for comparison (c in 05's run is this run's c)
++        l3 = le_exact(F(r05[f"c-1e-7-{n}"]["result"]["total"]), F(r05[f"c-1e-8-{n}"]["result"]["total"]),
++                      F(r05[f"c-1e-7-{n}"]["result"]["total_abserr"]))
++        out(f"   {n:<14s} {e['band']:4s} {str(e['cls']):4s} capped-B1 {e['capped_B1']!s:5s} t7 {e['total_t7']!r} "
++            f"t8 {e['total_t8']!r} |dt| {g(df)} abserr_t7 {g(e['abserr_t7'])} ratio {g(ratio)} "
++            f"|dt|/|t8| {g(q5)} -> {'holds' if ok else 'FAILS'}   (05's L3 under c: ratio {g(l3[2])}, "
++            f"{'holds' if l3[0] else 'fails'})")
++        t4.append((n, ok, ratio, q5))
++    finite = [x[2] for x in t4 if x[2] is not None and not math.isnan(x[2])]
++    scores["T4"] = {"rows": len(t4), "hold": sum(1 for x in t4 if x[1]),
++                    "fail": [x[0] for x in t4 if not x[1]], "excluded": [n for n in d20 if n not in [x[0] for x in t4]],
+                     "max_ratio": max(finite) if finite else None,
+-                    "verdict": "holds" if all(x[1] for x in l3) else "fails"}
+-    out(f"   L3: true on {scores['L3']['hold']} of {len(l3)} -> {scores['L3']['verdict'].upper()}; "
+-        f"largest ratio {g(scores['L3']['max_ratio'])}; false on {scores['L3']['fail']}")
+-    l3c = [x for x in l3 if x[0] in capped]
+-    out(f"   (on the {len(l3c)} rows capped under p: true on {sum(1 for x in l3c if x[1])}; "
+-        f"ratios {[g(x[2]) for x in l3c]})")
++                    "verdict": "holds" if all(x[1] for x in t4) else "fails"}
++    out(f"   T4: true on {scores['T4']['hold']} of {len(t4)} -> {scores['T4']['verdict'].upper()}; "
++        f"largest ratio {g(scores['T4']['max_ratio'])}; false on {scores['T4']['fail']}; excluded "
++        f"{scores['T4']['excluded']}")
++    t4c = [x for x in t4 if x[0] in capped]
++    out(f"   (on the {len(t4c)} rows capped under B1: true on {sum(1 for x in t4c if x[1])}; ratios "
++        f"{[g(x[2]) for x in t4c]})")
+ 
+-    # ------------------------------------------------------------------ descriptive
++    # ------------------------------------------------------------------ T1, the probe
+     out("")
+-    out("== descriptive: |total_c - total_p| / total_abserr_p on the depth-20 rows (04's N4, wider; "
+-        "c includes the modulus correction)")
+-    n4 = []
+-    for n in d20:
+-        e = res[n]
+-        ok, df, ratio = le_exact(e["total_c7"], e["total_p"], e["abserr_p"])
+-        rel = df / abs(e["total_p"]) if e["total_p"] else None
+-        out(f"   {n:<14s} {e['band']:4s} {str(e['cls']):4s} capped-under-p {e['p_depth'] == 20!s:5s} "
+-            f"ratio {g(ratio)} |dt|/|p| {g(rel)} abserr_p {g(e['abserr_p'])}")
+-        n4.append((n, ratio))
+-    over1 = [(n, r) for n, r in n4 if r is not None and r > 1]
+-    out(f"   ratio > 1 on {len(over1)} of {len(n4)}: {[(n, g(r)) for n, r in over1]}")
++    out("== T1 (as amended by section 9): the probe windows, c against t")
++    windows = []
++    mismatch = []
++    for r in rows:
++        n = r["name"]
++        c7, t7 = unit("c", "1e-7", n), unit("t", "1e-7", n)
++        wc, wt = c7.get("probe") or [], t7.get("probe") or []
++        if len(wc) != len(wt):
++            mismatch.append(f"{n}: {len(wc)} vs {len(wt)} windows")
++            continue
++        sc = load_pkl(c7).get("probe_samples") or []
++        st = load_pkl(t7).get("probe_samples") or []
++        for i, (a, b) in enumerate(zip(wc, wt)):
++            key = (a["subinterval"], a["factor"])
++            if key != (b["subinterval"], b["factor"]) or a["z_hex"] != b["z_hex"] or a["k"] != b["k"]:
++                mismatch.append(f"{n} window {i}: {key} {a['z_hex']} vs {(b['subinterval'], b['factor'])} {b['z_hex']}")
++                continue
++            if a["theta"] != b["theta"] or a["abs_dtheta_dz"] != b["abs_dtheta_dz"]:
++                mismatch.append(f"{n} window {i}: raw_theta or theta_deriv differ between trees")
++            windows.append((n, a, b, sc[i], st[i]))
++    out(f"   windows: {len(windows)} paired; mismatches: {mismatch if mismatch else 'none'}")
+ 
+-    out("")
+-    out("== descriptive: cost and regions by class and band (sums over the depth-20 rows; wall in s)")
+-    out("   cell          rows  capped(p)  p regions  c7 regions  c8 regions   p wall   c7 wall   c8 wall")
+-    cells = collections.OrderedDict()
+-    for n in d20:
+-        e = res[n]
+-        key = ("03" if n in R03 else e["band"], e["cls"])
+-        cells.setdefault(key, []).append(e)
+-    for (b, cls), es in cells.items():
+-        out(f"   {b:4s} {str(cls):4s}     {len(es):4d}  {sum(1 for e in es if e['p_depth'] == 20):9d}  "
+-            f"{sum(e['p_regions'] or 0 for e in es):9d}  {sum(e['c7_regions'] or 0 for e in es):10d}  "
+-            f"{sum(e.get('c8_regions') or 0 for e in es):10d}  {sum(e['p_wall'] for e in es):7.2f}  "
+-            f"{sum(e['c7_wall'] for e in es):8.2f}  {sum(e.get('c8_wall') or 0 for e in es):8.2f}")
+-    for lab, sel in (("low band (drawn)", lambda n: res[n]["band"] == "low"),
+-                     ("mid band (drawn)", lambda n: res[n]["band"] == "mid" and n not in R03),
+-                     ("03's R1-R7 (mid)", lambda n: n in R03)):
+-        es = [res[n] for n in d20 if sel(n)]
+-        out(f"   {lab:<18s}: rows {len(es)}, capped under p {sum(1 for e in es if e['p_depth'] == 20)}, "
+-            f"regions p {sum(e['p_regions'] or 0 for e in es)} -> c7 {sum(e['c7_regions'] or 0 for e in es)}, "
+-            f"wall p {sum(e['p_wall'] for e in es):.1f} s -> c7 {sum(e['c7_wall'] for e in es):.1f} s, "
+-            f"max depth p {max(e['p_depth'] or 0 for e in es)} -> c7 {max(e['c7_depth'] or 0 for e in es)} "
+-            f"-> c8 {max(e.get('c8_depth') or 0 for e in es)}")
+-    ctr = [res[n] for n in ctrl]
+-    out(f"   controls: regions p {sum(e['p_regions'] or 0 for e in ctr)} -> c7 "
+-        f"{sum(e['c7_regions'] or 0 for e in ctr)}; wall p {sum(e['p_wall'] for e in ctr):.2f} -> "
+-        f"c7 {sum(e['c7_wall'] for e in ctr):.2f}")
++    def choose(a, b, true_step):
++        for la, lb in zip(a["levels"], b["levels"]):
++            if not (la["distinct"] and lb["distinct"]):
++                return None
++            if la["step_z"] < HALF_PI and lb["step_z"] < HALF_PI and (
++                not true_step or (la["true_step_z_est"] < HALF_PI and lb["true_step_z_est"] < HALF_PI)
++            ):
++                return la["n"]
++        return None
+ 
++    def score(a, b, lev):
++        la, lb = a["levels"][lev], b["levels"][lev]
++        scale = EPS * a["abs_theta"]
++        terms = {"1e-3 eps|theta|": 1e-3 * scale,
++                 "eps(k max|p_z| + 2pi)": EPS * (a["k"] * lb["max_abs_p_z"] + TWO_PI),
++                 "1e-13": 1e-13}
++        bound = max(terms.values())
++        largest = max(terms, key=terms.get)
++        c_ok = la["sigma_z"] >= 0.1 * scale
++        t_ok = lb["sigma_z"] <= bound
++        return {"n": lev, "w": la["w"], "step_c": la["step_z"], "step_t": lb["step_z"],
++                "true_step": lb["true_step_z_est"], "sigma_c": la["sigma_z"], "sigma_t": lb["sigma_z"],
++                "sigma_u_c": la["sigma_u"], "sigma_u_t": lb["sigma_u"],
++                "max_abs_p_z_t": lb["max_abs_p_z"], "max_abs_p_z_c": la["max_abs_p_z"],
++                "bound_t": bound, "largest_term": largest, "terms": terms,
++                "c_ratio": la["sigma_z"] / scale, "t_ratio": lb["sigma_z"] / scale,
++                "u_t_ratio": None if lb["sigma_u"] is None else lb["sigma_u"] / scale,
++                "c_ok": c_ok, "t_ok": t_ok, "ok": c_ok and t_ok, "nodes_t": lb["nodes"]}
++
++    t1 = {"literal": [], "true_step": []}
++    probe_out = []
++    for (n, a, b, sa, sb) in windows:
++        scale = EPS * a["abs_theta"]
++        rec = {"row": n, "subinterval": a["subinterval"], "factor": a["factor"], "regime": a["regime"],
++               "z": a["z"], "z_hex": a["z_hex"], "k": a["k"], "z_init": a["z_init"],
++               "abs_theta": a["abs_theta"], "eps_abs_theta": scale, "abs_dtheta_du": a["abs_dtheta_du"],
++               "abs_dtheta_dz": a["abs_dtheta_dz"], "abscissa_term": a["abscissa_term"],
++               "exact_remainder": {"c": a["exact_remainder"], "t": b["exact_remainder"]},
++               "scored_scale": scale >= T1_MIN_SCALE,
++               "ladder": {"c": a["levels"], "t": b["levels"]}}
++        for reading in ("literal", "true_step"):
++            lev = choose(a, b, reading == "true_step")
++            if lev is None:
++                rec[reading] = None
++            else:
++                s = score(a, b, lev)
++                s["samples"] = {
++                    "z": hexlist(sb[lev]["z"]), "u": hexlist(sb[lev]["u"]),
++                    "theta_z_c": hexlist(sa[lev]["theta_z"]), "theta_z_t": hexlist(sb[lev]["theta_z"]),
++                    "theta_u_c": hexlist(sa[lev]["theta_u"]), "theta_u_t": hexlist(sb[lev]["theta_u"]),
++                    "p_z_t": hexlist(sb[lev]["p_z"]), "node_t": [int(v) for v in sb[lev]["node"]],
++                }
++                # re-computed from the samples, as a check of the recorded sigma
++                x = np.array([float.fromhex(v) for v in s["samples"]["z"]])
++                for tree in ("c", "t"):
++                    th = np.array([float.fromhex(v) for v in s["samples"][f"theta_z_{tree}"]])
++                    sig, stp = fit_sigma(x, th, x[0], x[-1])
++                    assert sig == s[f"sigma_{tree}"] and stp == s[f"step_{tree}"], (n, tree, sig, s[f"sigma_{tree}"])
++                rec[reading] = s
++            t1[reading].append(rec)
++        probe_out.append(rec)
++
++    for reading in ("literal", "true_step"):
++        out("")
++        out(f"   -- reading: {'LITERAL (scored): largest unwrapped z-step < pi/2 in both trees' if reading == 'literal' else 'TRUE STEP (unscored): also |dtheta/dz|(b-a)/64 < pi/2'}")
++        out("   row            sub fac  z            k          |theta|     eps|th|    n  w         step c/t        true step   "
++            "sig_c/eps|th| sig_t/eps|th| bound_t/eps|th| largest term          maxpz_t    u_t/eps|th| absc/eps|th| verdict")
++        nf, nu, nh, nsc = [], [], 0, 0
++        for rec in t1[reading]:
++            s = rec[reading]
++            sc = rec["scored_scale"]
++            if s is None:
++                tag = "UNRESOLVED" + ("" if sc else " (below 1e-11, not scored)")
++                if sc:
++                    nu.append(rec)
++                out(f"   {rec['row']:<14s} {rec['subinterval']:>3d} {rec['factor']:3s} {rec['z']:<12.6g} {rec['k']:<10.4g} "
++                    f"{rec['abs_theta']:<11.4g} {rec['eps_abs_theta']:<10.3g} {tag}")
++                continue
++            if sc:
++                nsc += 1
++                if s["ok"]:
++                    nh += 1
++                else:
++                    nf.append(rec)
++            verdict = ("holds" if s["ok"] else f"FAILS (c {s['c_ok']}, t {s['t_ok']})") if sc else "not scored (eps|theta| < 1e-11)"
++            scale = rec["eps_abs_theta"]
++            out(f"   {rec['row']:<14s} {rec['subinterval']:>3d} {rec['factor']:3s} {rec['z']:<12.6g} {rec['k']:<10.4g} "
++                f"{rec['abs_theta']:<11.4g} {scale:<10.3g} {s['n']:<2d} {s['w']:<9.3g} {s['step_c']:.3f}/{s['step_t']:.3f}".ljust(150)
++                + f"{s['true_step']:<11.3g} {s['c_ratio']:<13.4g} {s['t_ratio']:<13.4g} {s['bound_t'] / scale:<15.4g} "
++                f"{s['largest_term']:<21s} {s['max_abs_p_z_t']:<10.3g} {g(s['u_t_ratio'], '.4g'):<11s} "
++                f"{rec['abscissa_term'] / scale:<12.4g} {verdict}")
++        verdict = "fails" if nf else ("undecided" if nu else "holds")
++        scored = [rec for rec in t1[reading] if rec["scored_scale"] and rec[reading] is not None]
++        pz_largest = [rec for rec in scored if rec[reading]["largest_term"] == "eps(k max|p_z| + 2pi)"]
++        u_over = [rec for rec in scored if rec[reading]["u_t_ratio"] is not None and rec[reading]["u_t_ratio"] > 0.1]
++        aliased = [rec for rec in scored if rec[reading]["true_step"] >= HALF_PI]
++        summ = {
++            "windows": len(t1[reading]),
++            "with_scale_ge_1e-11": sum(1 for rec in t1[reading] if rec["scored_scale"]),
++            "resolved_scored": nsc, "hold": nh,
++            "fail": [(rec["row"], rec["subinterval"], rec["factor"], rec[reading]["c_ok"], rec[reading]["t_ok"]) for rec in nf],
++            "fail_c_clause": sum(1 for rec in nf if not rec[reading]["c_ok"]),
++            "fail_t_clause": sum(1 for rec in nf if not rec[reading]["t_ok"]),
++            "unresolved_scored": [(rec["row"], rec["subinterval"], rec["factor"]) for rec in nu],
++            "unresolved_below_scale": sum(1 for rec in t1[reading] if rec[reading] is None and not rec["scored_scale"]),
++            "aliased_scored": len(aliased),
++            "c_ratio_range": [min((r[reading]["c_ratio"] for r in scored), default=None), max((r[reading]["c_ratio"] for r in scored), default=None)],
++            "t_ratio_range": [min((r[reading]["t_ratio"] for r in scored), default=None), max((r[reading]["t_ratio"] for r in scored), default=None)],
++            "t_over_bound_max": max((r[reading]["sigma_t"] / r[reading]["bound_t"] for r in scored), default=None),
++            "pz_term_largest_windows": len(pz_largest),
++            "pz_term_largest_t_ratio_range": [min((r[reading]["t_ratio"] for r in pz_largest), default=None), max((r[reading]["t_ratio"] for r in pz_largest), default=None)],
++            "largest_term_counts": dict(collections.Counter(r[reading]["largest_term"] for r in scored)),
++            "u_t_over_0.1": [(r["row"], r["subinterval"], r["factor"], r[reading]["u_t_ratio"], r["abscissa_term"] / r["eps_abs_theta"]) for r in u_over],
++            "levels_used": dict(collections.Counter(r[reading]["n"] for r in scored)),
++            "verdict": verdict,
++        }
++        scores[f"T1_{reading}"] = summ
++        out(f"   T1 [{reading}]: windows {summ['windows']}; with eps|theta| >= 1e-11: {summ['with_scale_ge_1e-11']}; "
++            f"resolved and scored {nsc}; true in {nh}; false in {len(nf)} (c clause false {summ['fail_c_clause']}, t clause false "
++            f"{summ['fail_t_clause']}); unresolved and >= 1e-11: {len(nu)}; scored windows whose true step >= pi/2 (aliased): "
++            f"{summ['aliased_scored']} -> {verdict.upper()}")
++        out(f"      sigma_c/eps|theta| in [{g(summ['c_ratio_range'][0], '.4g')}, {g(summ['c_ratio_range'][1], '.4g')}]; "
++            f"sigma_t/eps|theta| in [{g(summ['t_ratio_range'][0], '.4g')}, {g(summ['t_ratio_range'][1], '.4g')}]; largest "
++            f"sigma_t/bound_t {g(summ['t_over_bound_max'], '.4g')}; levels used {summ['levels_used']}")
++        out(f"      (unscored) the term eps(k max|p_z| + 2pi) is the largest of the three in {summ['pz_term_largest_windows']} "
++            f"windows; sigma_t/eps|theta| there in [{g(summ['pz_term_largest_t_ratio_range'][0], '.4g')}, "
++            f"{g(summ['pz_term_largest_t_ratio_range'][1], '.4g')}]; largest term counts {summ['largest_term_counts']}")
++        out(f"      (unscored) u-sampled sigma_t > 0.1 eps|theta| in {len(u_over)} windows: "
++            + "; ".join(f"{r[0]} {r[1]} {r[2]}: {r[3]:.4g} against abscissa {r[4]:.4g}" for r in summ["u_t_over_0.1"]))
++
++    # ------------------------------------------------------------------ descriptive
+     out("")
+-    out("== descriptive: total_converged, p -> c@1e-7 -> c@1e-8")
+-    tr = collections.Counter()
++    out("== descriptive: |total_t - total_c| / |total_c| and / total_abserr_c on every row: see T3's table")
++    out("")
++    out("== descriptive: regions and max depth per group, c -> t at 1e-7 (low10 = regions starting in the "
++        "lowest 10% in log(1+z) of the group's sub-interval, and their max depth)")
+     for r in rows:
+-        e = res[r["name"]]
+-        tr[(r["role"], e["p_conv"], e["c7_conv"], e.get("c8_conv"))] += 1
+-    for k, v in sorted(tr.items(), key=str):
+-        out(f"   {k[0]:<8s} p {k[1]!s:5s} -> c7 {k[2]!s:5s} -> c8 {k[3]!s:5s}: {v} rows")
+-    out(f"   capped under p: " + "; ".join(
+-        f"{n} {res[n]['p_conv']}->{res[n]['c7_conv']}->{res[n].get('c8_conv')}" for n in capped))
++        n = r["name"]
++        tab = group_tables[n]
++        if not tab:
++            continue
++        out(f"   {n} ({res[n]['cls']}, {res[n]['band']}{', capped under B1' if res[n]['capped_B1'] else ''}):")
++        for gq in (False, True):
++            for t in tab:
++                if (t["regime"] == "Gqr") != gq:
++                    continue
++                out(f"      {'[Gqr] ' if gq else '      '}{t['regime']:>4s}/{t['group']:<6s} x in ({float(t['x_span'][0]):.5g}, "
++                    f"{float(t['x_span'][1]):.5g}): regions {t['c_regions']:>4d} -> {g(t['t_regions']):>4s}; max depth "
++                    f"{t['c_maxd']:>2d} -> {g(t['t_maxd']):>2s}; n>=18 {t['c_n18']} -> {g(t['t_n18'])}; low10 regions "
++                    f"{g(t['c_low10_regions'])} -> {g(t['t_low10_regions'])}, max depth {g(t['c_low10_maxd'])} -> "
++                    f"{g(t['t_low10_maxd'])}; converged {t['c_conv']} -> {t['t_conv']}")
++    allg = [t for tab in group_tables.values() for t in tab]
++    same_r = sum(1 for t in allg if t["c_regions"] == t["t_regions"])
++    out(f"   groups: {len(allg)}; same region count under c and t: {same_r}; t more: "
++        f"{sum(1 for t in allg if (t['t_regions'] or 0) > t['c_regions'])}; t fewer: "
++        f"{sum(1 for t in allg if t['t_regions'] is not None and t['t_regions'] < t['c_regions'])}")
++    gq = [t for t in allg if t["regime"] == "Gqr"]
++    out(f"   Gqr groups: {len(gq)}; same region count {sum(1 for t in gq if t['c_regions'] == t['t_regions'])}; "
++        f"regions c {sum(t['c_regions'] for t in gq)} -> t {sum(t['t_regions'] or 0 for t in gq)}; max depth c "
++        f"{max(t['c_maxd'] for t in gq)} -> t {max(t['t_maxd'] or 0 for t in gq)}")
+ 
+     out("")
+-    out("== descriptive: 03's R1-R7 against 04's arm A (layer 1(a) at the pre-B1 tree 98e68d3, "
+-        "against TWO_PI, anchored at z_top) and X")
+-    try:
+-        r04 = [json.loads(l) for l in (RUN04 / "checkpoint.jsonl").read_text().splitlines()]
+-        a04 = {}
+-        for rr in r04:
+-            dd = rr["data"]
+-            if dd["status"] == "done":
+-                a04[(dd["arm"], dd["rtol"], dd["row"])] = dd["result"]["WKB_Levin_data"]["num_regions"]
+-        for n in R03:
+-            e = res[n]
+-            out(f"   {n}: regions 04 P {a04.get(('P', '1e-7', n))}, A {a04.get(('A', '1e-7', n))}, "
+-                f"X {a04.get(('X', '1e-7', n))}; 05 stored {e['stored_regions']}, p {e['p_regions']} "
+-                f"(depth {e['p_depth']}), c7 {e['c7_regions']} (depth {e['c7_depth']})")
+-    except FileNotFoundError:
+-        out("   04's run directory not found")
++    out("== descriptive: cost and regions by band (sums; wall in s)")
++    for lab, sel in (("low band (drawn)", lambda n: res[n]["band"] == "low" and res[n]["role"] == "d20"),
++                     ("mid band (drawn)", lambda n: res[n]["band"] == "mid" and n not in R03 and res[n]["role"] == "d20"),
++                     ("03's R1-R7 (mid)", lambda n: n in R03),
++                     ("capped under B1", lambda n: n in capped),
++                     ("controls", lambda n: res[n]["role"] == "control")):
++        es = [res[n] for n in res if sel(n)]
++        out(f"   {lab:<18s}: rows {len(es)}, regions c7 {sum(e['c7_regions'] or 0 for e in es)} -> t7 "
++            f"{sum(e['t7_regions'] or 0 for e in es)} -> t8 {sum(e.get('t8_regions') or 0 for e in es)}, wall c7 "
++            f"{sum(e['c7_wall'] for e in es):.2f} -> t7 {sum(e['t7_wall'] for e in es):.2f} -> t8 "
++            f"{sum(e.get('t8_wall') or 0 for e in es):.2f}, max depth c7 {max(e['c7_depth'] or 0 for e in es)} -> t7 "
++            f"{max(e['t7_depth'] or 0 for e in es)} -> t8 {max(e.get('t8_depth') or 0 for e in es)}")
+ 
+     out("")
+-    out("== for the board: every row, |total_p - total_stored| / total_abserr_stored "
+-        "(B1's effect on A3 v2's stored totals; p is B1's code)")
+-    b1 = []
++    out("== descriptive: total_converged, c@1e-7 -> t@1e-7 -> t@1e-8")
++    tr = collections.Counter()
+     for r in rows:
+         e = res[r["name"]]
+-        ok, df, ratio = le_exact(e["total_p"], e["total_stored"], e["abserr_stored"])
+-        rel = df / abs(e["total_stored"]) if e["total_stored"] else None
+-        out(f"   {r['name']:<14s} {r['role']:<7s} {r['band']:4s} stored {e['total_stored']!r} "
+-            f"(abserr {g(e['abserr_stored'])}) p {e['total_p']!r} |dt| {g(df)} ratio {g(ratio)} "
+-            f"rel {g(rel)} within {ok}")
+-        b1.append((r["name"], ratio, ok))
+-    beyond = [(n, g(x)) for n, x, ok in b1 if not ok]
+-    out(f"   beyond the stored error on {len(beyond)} of {len(b1)} rows: {beyond}")
+-    scores["B1_beyond_stored_error"] = [n for n, x, ok in b1 if not ok]
++        tr[(r["role"], e["c7_conv"], e["t7_conv"], e.get("t8_conv"))] += 1
++    for k, v in sorted(tr.items(), key=str):
++        out(f"   {k[0]:<8s} c7 {k[1]!s:5s} -> t7 {k[2]!s:5s} -> t8 {k[3]!s:5s}: {v} rows")
++    out(f"   changed between c7 and t7: {[n for n in res if res[n]['c7_conv'] != res[n]['t7_conv']]}")
++    out(f"   capped under B1: " + "; ".join(
++        f"{n} {res[n]['c7_conv']}->{res[n]['t7_conv']}->{res[n].get('t8_conv')}" for n in capped))
++    out(f"   rows with infinite total_abserr: c7 {[n for n in res if math.isinf(res[n].get('abserr_c7', 0))]}, "
++        f"t7 {[n for n in res if math.isinf(res[n].get('abserr_t7', 0))]}")
+ 
+     out("")
+     out("== VERDICTS")
+-    for k in ("L1", "L1q", "L2", "L3"):
++    out(f"   T1 (section 9, literal reading, scored): {scores['T1_literal']['verdict'].upper()}")
++    out(f"   (T1 by the true step, unscored): {scores['T1_true_step']['verdict'].upper()}")
++    for k in ("T2", "T3", "T4"):
+         s = scores[k]
+         out(f"   {k}: {s['verdict'].upper()} ({s['hold']} of {s['rows']} rows true; false on {s['fail']})")
+-    out(f"   (second reading, unscored) L1's rule on the rows capped under p: {scores['L1_capped']}")
+-    out(f"   (second reading, unscored) L1q's rule on the rows capped under p: {scores['L1q_capped']}")
+     out(f"   over-budget units: {over if over else 'none'}")
+ 
+     out_json.write_text(json.dumps({"rows": res, "groups": group_tables, "scores": scores,
+-                                    "capped_under_p": capped, "over_budget": over}, indent=1,
+-                                   default=str))
++                                    "capped_under_B1": capped, "over_budget": over}, indent=1, default=str))
++    probe_json.write_text(json.dumps({
++        "about": "levin-phase-floor 05a section 6, the phase probe: every window, both trees' ladders, and "
++                 "the samples (as float.hex) at the level each reading uses. rescore_t1.py re-scores T1 from this file alone.",
++        "eps": EPS, "windows": probe_out}, default=str))
+     print("\n".join(lines))
+ 
+ 
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/convergence_kinds.py scripts/convergence_kinds.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/convergence_kinds.py	1970-01-01 01:00:00
++++ scripts/convergence_kinds.py	2026-10-26 12:14:05
+@@ -0,0 +1,173 @@
++"""Why do 05's depth-20 rows stay unconverged once the cap has gone? A planning measurement.
++
++Run by the orchestrator on 2026-10-26 while writing prompt 05a, on the Mac Studio, read-only and
++Ray-free. It reads prompt 05's wider re-measurement, the run
++`levin-phase-floor-05-wider-20261026T020005`: its `checkpoint.jsonl` (one record per unit, with
++each Levin call's group value, abserr, atol, rtol, converged and phase_limited) and its
++`unit_*.pkl` (each call's regions, with the abserr each region was accepted on). It reads no
++store and writes only its own output.
++
++    scp convergence_kinds.py macstudio-tunnel:Documents/Code/SecondaryGWKit/var/levin-phase-floor-measure/scripts/
++    ssh macstudio-tunnel 'cd ~/Documents/Code/SecondaryGWKit && ./venv/bin/python -I \\
++        var/levin-phase-floor-measure/scripts/convergence_kinds.py \\
++        var/runs/levin-phase-floor-05-wider-20261026T020005'
++
++`--tree` names the tree whose units are read (default `c`, 05's code). A row is "capped" when its
++unit of `--capped-tree` at `rtol = 1e-7` in `--capped-run` reaches depth 20 (default: tree `p`,
++B1's code without 05's change, in the same run). Prompt 05a runs this on its own run with
++`--tree t --capped-run <05's run>`, so that its rows are read against 05's capped set.
++
++For each Levin call (one phase group of one sub-interval) of the tree that is not converged, three
++numbers:
++- E, the group's declared abserr, which is the sum of each region's `total_err`, the larger of its
++  resolution residual (or a Clenshaw-Curtis region's nested-pair estimate) and its eq. (151)
++  round-off bound, plus its truncation term (`levin_quadrature.py`, `used_interval`);
++- R, the sum of the regions' own abserr, the resolution residual or nested-pair estimate alone;
++- req = max(atol, rtol |value|), what the group's `converged` tests E against
++  (`levin_quadrature.py:2308-2309`).
++
++Every unconverged call falls in one of four kinds:
++- "cap": a region at depth >= 20;
++- "phase-limited": the driver accepted a region because its round-off bound exceeded the request;
++- "resolution": R > req with neither of the above. Each region passed rtol against its own value,
++  so the regions' values cancel in the group's total by at least R / req;
++- "bound only": R <= req < E. The resolution residual meets the request; the excess is the
++  round-off bound or the truncation term, which these records do not separate.
++"""
++
++import argparse
++import collections
++import hashlib
++import json
++import os
++import pickle
++import platform
++import subprocess
++from datetime import datetime, timezone
++
++
++def sha256(path):
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for block in iter(lambda: f.read(1 << 20), b""):
++            h.update(block)
++    return h.hexdigest()
++
++
++def fval(x):
++    if isinstance(x, dict):
++        return float.fromhex(x["hex"]) if "hex" in x else float(x["repr"])
++    return float(x)
++
++
++def kind(call, regions):
++    if int(regions["depth"].max()) >= 20:
++        return "cap"
++    if call["phase_limited"]:
++        return "phase-limited"
++    req = max(call["atol"], call["rtol"] * abs(fval(call["value"])))
++    if float(regions["abserr"].sum()) > req:
++        return "resolution"
++    return "bound only"
++
++
++def read_checkpoint(run_dir):
++    checkpoint = os.path.join(run_dir, "checkpoint.jsonl")
++    print(f"# input {checkpoint} sha256 {sha256(checkpoint)}")
++    recs = {}
++    with open(checkpoint) as f:
++        for line in f:
++            r = json.loads(line)
++            recs[r["unit"]] = r
++    with open(os.path.join(run_dir, "manifest.json")) as f:
++        print(f"# run {run_dir}: git_head {json.load(f).get('git_head')}")
++    return recs
++
++
++def main(run_dir, tree, capped_run, capped_tree):
++    script = os.path.abspath(__file__)
++    head = subprocess.run(
++        ["git", "rev-parse", "HEAD"],
++        capture_output=True,
++        text=True,
++        cwd=os.path.dirname(script),
++    ).stdout.strip()
++
++    print(
++        f"# convergence_kinds.py, run {datetime.now(timezone.utc).isoformat(timespec='seconds')}"
++    )
++    print(
++        f"# host {platform.node()}; python {platform.python_version()}; git HEAD {head}"
++    )
++    print(f"# script sha256 {sha256(script)}")
++    print(f"# tree {tree}; capped: tree {capped_tree} at rtol 1e-7 in {capped_run}")
++
++    recs = read_checkpoint(run_dir)
++    capped_recs = (
++        recs
++        if os.path.realpath(capped_run) == os.path.realpath(run_dir)
++        else read_checkpoint(capped_run)
++    )
++
++    rows = sorted({r["data"]["row"] for r in recs.values()})
++    for rtol in ("1e-7", "1e-8"):
++        tally = collections.Counter()
++        tally_capped = collections.Counter()
++        print("")
++        print(f"== tree {tree} at rtol {rtol}: every unconverged Levin call")
++        print(
++            f"   row            role     capped_{capped_tree}  regime/group   kind            "
++            "regions maxdepth   E/req     R/req   (E-R)/E"
++        )
++        for row in rows:
++            unit = recs.get(f"{tree}-{rtol}-{row}")
++            if unit is None or unit["data"]["status"] != "done":
++                continue
++            data = unit["data"]
++            p = capped_recs.get(f"{capped_tree}-1e-7-{row}")
++            capped = (
++                p is not None
++                and p["data"]["status"] == "done"
++                and p["data"]["result"]["WKB_Levin_data"] is not None
++                and p["data"]["result"]["WKB_Levin_data"]["max_depth"] >= 20
++            )
++            pkl = os.path.join(run_dir, data["pickle"])
++            with open(pkl, "rb") as f:
++                record = pickle.load(f)
++            print(f"# input {data['pickle']} sha256 {sha256(pkl)}")
++            calls = {c["index"]: c for c in data["calls"]}
++            for regions in record["regions"]:
++                call = calls[regions["index"]]
++                if call["converged"]:
++                    continue
++                e = fval(call["abserr"])
++                r = float(regions["abserr"].sum())
++                req = max(call["atol"], call["rtol"] * abs(fval(call["value"])))
++                k = kind(call, regions)
++                tally[k] += 1
++                if capped:
++                    tally_capped[k] += 1
++                share = (e - r) / e if e > 0 and e != float("inf") else float("nan")
++                print(
++                    f"   {row:<14s} {data['role']:<8s} {str(capped):<9s} "
++                    f"{call['regime'] + '/' + call['group']:<14s} {k:<15s} "
++                    f"{len(regions['abserr']):>7d} {int(regions['depth'].max()):>8d} "
++                    f"{e / req:>9.3g} {r / req:>9.3g} {share:>9.4f}"
++                )
++        print(f"   kinds, every row: {dict(tally)}")
++        print(f"   kinds, rows capped under {capped_tree}: {dict(tally_capped)}")
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
++    parser.add_argument("run_dir")
++    parser.add_argument("--tree", default="c")
++    parser.add_argument("--capped-run", default=None)
++    parser.add_argument("--capped-tree", default="p")
++    args = parser.parse_args()
++    main(
++        args.run_dir,
++        args.tree,
++        args.capped_run if args.capped_run is not None else args.run_dir,
++        args.capped_tree,
++    )
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/launch.py scripts/launch.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/launch.py	2026-10-26 01:58:54
++++ scripts/launch.py	2026-10-26 12:26:13
+@@ -1,4 +1,11 @@
+ """
++levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/launch.py,
++docs/levin-phase-floor/05/wider/scripts/launch.py, sha256 d8ac0dc3..., a record that is not
++edited). Changed here, each change marked "prompt 05a": the prompt (``05a``) under which the run is
++registered, the trees and the unit sets named in its purpose and scope, and the names it imports
++from prov.py. Prompt 05's text follows, unchanged; read its trees ``p``/``c`` as ``c``/``t``, its
++``53084dc`` as ``149c393`` and its ``e648951`` as ``c4eaefd``.
++
+ levin-phase-floor prompt 05 section 6: launch the registered run, detached. Adapted from prompt
+ 04's ``scripts/launch.py`` (docs/levin-phase-floor/04/scripts/launch.py, sha256 51572fa8..., a
+ record that is not edited).
+@@ -31,26 +38,28 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ 
+-from prov import C_SHA, MAIN, P_SHA, P_TREE, PYTHON, WIDER, sha256  # noqa: E402
++from prov import C_SHA, C_TREE, MAIN, PYTHON, T_SHA, WIDER, sha256  # noqa: E402  prompt 05a
+ 
+ import runregistrykit  # noqa: E402
+ 
+ SCRIPT = HERE / "run_wider.py"
+ 
+-PURPOSE = (
+-    "levin-phase-floor prompt 05 section 6 on the Mac Studio (mps026298; Python 3.13.16): the wider "
+-    "re-measurement of layer 1(a) on A3 v2, Ray-free, no lock. Two trees: p, the code commit's "
+-    f"parent {P_SHA[:7]} in the git worktree {P_TREE}; c, the code commit 120fdfe, in the main "
+-    f"checkout at {C_SHA[:7]} (this manifest's git_head; it adds only records). 39 rows of "
+-    "state/sample.json (31 depth-20, 8 controls), re-run in-process on a read-only stand-in "
+-    "ShardedPool with QuadSource recomputed in-process; units in order p@1e-7 (39), c@1e-7 (39), "
+-    "c@1e-8 (31 depth-20); c budget 3x the row's p wall; about 30-60 min"
++PURPOSE = (  # prompt 05a
++    "levin-phase-floor prompt 05a section 6 (T1 as amended by section 9) on the Mac Studio "
++    "(mps026298; Python 3.13.16): the wider re-measurement of T's node-anchored remainder on A3 v2, "
++    "Ray-free, no lock. Two trees: c, the code commit's parent "
++    f"{C_SHA[:7]} (05's c) in the git worktree {C_TREE}; t, the code commit 1fc349c, in the main "
++    f"checkout at {T_SHA[:7]} (this manifest's git_head; its code is 1fc349c's up to bd38e50's "
++    "comments). 05's 39 rows of state/sample.json (31 depth-20, 8 controls), re-run in-process on "
++    "a read-only stand-in ShardedPool with QuadSource recomputed in-process; units in order "
++    "c@1e-7 (39), t@1e-7 (39), t@1e-8 (31 depth-20); t budget 3x the row's c wall; the phase probe "
++    "in every 1e-7 unit, after its timed section; about 20-60 min"
+ )
+-SCOPE = (
++SCOPE = (  # prompt 05a
+     "39 QuadSourceIntegral rows of handover-A3-v2-lambdacdm.sqlite (read-only), listed in "
+-    "var/levin-phase-floor-05/wider/state/sample.json; trees p (worktree e648951) and c (main "
+-    "checkout, code 120fdfe); rtol 1e-7 and 1e-8 (c, depth-20 rows); no store write, no Ray, no "
+-    "lock"
++    "var/levin-phase-floor-05a/wider/state/sample.json (05's sample, copied unchanged); trees c "
++    "(worktree c4eaefd) and t (main checkout, code 1fc349c); rtol 1e-7 and 1e-8 (t, depth-20 "
++    "rows); no store write, no Ray, no lock"
+ )
+ HEARTBEAT_MEANS = (
+     "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at "
+@@ -68,7 +77,7 @@
+     child_argv = [str(PYTHON), "-B", str(SCRIPT), "--run-dir", "<run dir>"]
+     run = runregistrykit.begin(
+         campaign="levin-phase-floor",
+-        prompt="05",
++        prompt="05a",  # prompt 05a
+         slug="wider",
+         purpose=PURPOSE,
+         argv=child_argv,
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/probe.py scripts/probe.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/probe.py	1970-01-01 01:00:00
++++ scripts/probe.py	2026-10-26 12:25:06
+@@ -0,0 +1,159 @@
++"""
++levin-phase-floor prompt 05a section 6, with section 9's T1: the phase probe. New in 05a (05's
++harness has no probe); run by worker.py in each tree's rtol 1e-7 unit, after the unit's timed
++section, on the transfer-function objects the unit's own ``build_partition`` call built (captured
++by worker.py). It reads phase objects only and runs no quadrature.
++
++For every Levin sub-interval of the row (``method == "Levin"``) and every transfer-function factor
++oscillatory there (``regime[1]`` for T_q, ``regime[2]`` for T_r), one **window** at the
++sub-interval's low-z end ``z_min`` (where |theta_T| is largest):
++
++- **the ladder** (section 9). Level n has relative width ``w_n = 1e-6 / 2**n`` in z: the window is
++  ``[a, b]`` with ``a = z_min`` and ``b = a + a * w_n``, so it lies inside the sub-interval. Its 65
++  samples are ``numpy.linspace(a, b, 65)``, ends included, as prompt 05a section 3 test 3
++  (``test_t_phase_reanchor._sigma_theta``) takes them. Each tree computes **every** level from
++  n = 0 until the 65 samples stop being distinct doubles (``numpy.diff > 0`` fails), and records
++  each level. Which level is *used* depends on both trees (section 9: "halve while either tree's
++  largest unwrapped step is >= pi/2"), so it is chosen by analyse.py from the two trees' ladders:
++  the first level at which both trees' largest unwrapped step (sampled in z) is below pi/2. A
++  window with no such level before the samples stop being distinct is **unresolved**.
++- **at every level, in this tree:**
++  - sampled in z: ``theta_mod_2pi(z, x_is_log=False)`` at the 65 doubles; ``numpy.unwrap``; a
++    degree-4 least-squares polynomial in t in [-1, 1]; sigma_theta, the RMS residual; and the
++    largest |step| of the unwrapped samples. This is test 3's ``_sigma_theta``, unchanged;
++  - sampled in u (descriptive): the same with ``theta_mod_2pi(u, x_is_log=True)`` at
++    ``numpy.linspace(log1p(a), log1p(b), 65)``, the same window in log(1+z) (section 9: "the
++    u-sampled sigma_theta uses the same width, in log(1+z)"). If those 65 u doubles are not
++    distinct, the u numbers of that level are None;
++  - ``p_z`` at each z sample, from the factor's ``cs_tau.end_partial`` (the phase's leading
++    primitive), with its node; max |p_z| (section 9 asks for it under t; it is recorded under both);
++  - every sample: the abscissae and the values, as doubles (in the unit's pickle).
++- **per window:** z = a, k, z_init, |theta_T| = |raw_theta(a)|, |d theta_T/du| =
++  |theta_deriv(a, log_derivative=True)|, |d theta_T/dz| (so that the true step per sample,
++  |d theta/dz| (b - a)/64, can be set beside the unwrapped one), the abscissa term
++  eps z/(1+z) |d theta_T/du|, ``exact_remainder`` of the phase, and the sub-interval.
++
++``EPS`` is 2**-52, ``numpy.finfo(float).eps``, as the tests use.
++"""
++
++import math
++
++import numpy as np
++
++EPS = float(np.finfo(np.float64).eps)
++SIGMA_POINTS = 65
++SIGMA_DEGREE = 4
++W0 = 1.0e-6
++MAX_STEP = 0.5 * math.pi
++MAX_LEVELS = 80  # a guard only; the ladder ends when the samples stop being distinct
++
++
++def _fit(x, vals, a, b):
++    """test_t_phase_reanchor._sigma_theta's fit, on samples already taken."""
++    th = np.unwrap(vals)
++    t = (2.0 * x - (a + b)) / (b - a)
++    coef = np.polynomial.polynomial.polyfit(t, th, SIGMA_DEGREE)
++    res = th - np.polynomial.polynomial.polyval(t, coef)
++    return float(np.sqrt(np.mean(res * res))), float(np.max(np.abs(np.diff(th))))
++
++
++def _distinct(x):
++    return bool(np.all(np.diff(x) > 0.0))
++
++
++def probe_factor(phase, z_min):
++    """The ladder of one window. Returns (summary, samples): summary is JSON-able (floats as
++    repr strings where exactness matters is not needed: the samples carry the doubles)."""
++    leading = phase._leading
++    a = float(z_min)
++    theta_a = float(phase.raw_theta(a))
++    dth_du = float(phase.theta_deriv(a, log_derivative=True))
++    dth_dz = float(phase.theta_deriv(a))
++    levels = []
++    samples = []
++    for n in range(MAX_LEVELS):
++        w = W0 / 2.0**n
++        b = a + a * w
++        x = np.linspace(a, b, SIGMA_POINTS)
++        if not _distinct(x):
++            levels.append({"n": n, "w": w, "a": a.hex(), "b": float(b).hex(), "distinct": False})
++            samples.append(None)
++            break
++        th_z = np.array([phase.theta_mod_2pi(float(z), x_is_log=False) for z in x])
++        sig_z, step_z = _fit(x, th_z, a, b)
++        parts = [leading.end_partial(float(z)) for z in x]
++        nodes = np.array([int(j) for j, _p in parts], dtype=np.int64)
++        p_z = np.array([float(p) for _j, p in parts])
++        ua, ub = math.log1p(a), math.log1p(float(b))
++        u = np.linspace(ua, ub, SIGMA_POINTS)
++        if _distinct(u):
++            th_u = np.array([phase.theta_mod_2pi(float(v), x_is_log=True) for v in u])
++            sig_u, step_u = _fit(u, th_u, ua, ub)
++        else:
++            th_u, sig_u, step_u = None, None, None
++        levels.append(
++            {
++                "n": n,
++                "w": w,
++                "a": a.hex(),
++                "b": float(b).hex(),
++                "distinct": True,
++                "sigma_z": sig_z,
++                "step_z": step_z,
++                "sigma_u": sig_u,
++                "step_u": step_u,
++                "u_distinct": th_u is not None,
++                "max_abs_p_z": float(np.max(np.abs(p_z))),
++                "nodes": sorted({int(j) for j in nodes}),
++                "true_step_z_est": abs(dth_dz) * (float(b) - a) / (SIGMA_POINTS - 1),
++            }
++        )
++        samples.append(
++            {"z": x, "theta_z": th_z, "p_z": p_z, "node": nodes, "u": u, "theta_u": th_u}
++        )
++    summary = {
++        "z": a,
++        "z_hex": a.hex(),
++        "k": float(phase.k),
++        "z_init": float(phase.z_anchor),
++        "theta": theta_a,
++        "abs_theta": abs(theta_a),
++        "eps_abs_theta": EPS * abs(theta_a),
++        "abs_dtheta_du": abs(dth_du),
++        "abs_dtheta_dz": abs(dth_dz),
++        "abscissa_term": EPS * a / (1.0 + a) * abs(dth_du),
++        "exact_remainder": bool(getattr(phase, "exact_remainder", None)),
++        "levels": levels,
++    }
++    return summary, samples
++
++
++def probe_partition(subintervals):
++    """Every window of a row. ``subintervals`` is build_partition's list (each with z_max, z_min,
++    regime, method, Tq, Tr). Returns (windows, samples), in sub-interval order, T_q before T_r."""
++    windows = []
++    all_samples = []
++    for i, item in enumerate(subintervals):
++        if item["method"] != "Levin":
++            continue
++        regime = tuple(bool(x) for x in item["regime"])
++        for label, osc, fn in (("Tq", regime[1], item["Tq"]), ("Tr", regime[2], item["Tr"])):
++            if not osc:
++                continue
++            summary, samples = probe_factor(fn.phase, item["z_min"])
++            summary.update(
++                {
++                    "subinterval": i,
++                    "factor": label,
++                    "regime": list(regime),
++                    "sub_z_max": float(item["z_max"]),
++                    "sub_z_min": float(item["z_min"]),
++                    "window_inside_subinterval_at_level0": float(
++                        item["z_min"] + item["z_min"] * W0
++                    )
++                    <= float(item["z_max"]),
++                }
++            )
++            windows.append(summary)
++            all_samples.append(samples)
++    return windows, all_samples
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/prov.py scripts/prov.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/prov.py	2026-10-26 01:51:03
++++ scripts/prov.py	2026-10-26 12:23:59
+@@ -1,13 +1,16 @@
+-"""levin-phase-floor prompt 05 section 6 (the wider re-measurement): provenance shared by every
+-script. Adapted from prompt 04's ``scripts/prov.py`` (docs/levin-phase-floor/04/scripts/prov.py,
+-a record, not edited).
++"""levin-phase-floor prompt 05a section 6 (the wider re-measurement, with section 9's T1): provenance
++shared by every script. Copied from prompt 05's ``scripts/prov.py``
++(docs/levin-phase-floor/05/wider/scripts/prov.py, sha256 e8579509..., a record, not edited); changed
++here only in its trees and its paths (prompt 05a section 6: "the scripts name 05's paths, its trees
++p and c ... Change only those"), each change marked "prompt 05a".
+ 
+-Two trees take part (prompt 05 section 6):
+-- P_TREE, the parent of the code commit, ``e648951``: the git worktree
+-  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951`` (detached). Nothing is written there.
+-- C_TREE, the code commit: the main checkout, at the dispatch SHA ``53084dc``, whose code is the
+-  code commit ``120fdfe``'s (``53084dc`` adds only records under ``prompts/``). It also holds the
+-  records, the store, ``var/`` and the registry.
++Two trees take part (prompt 05a section 6):
++- C_TREE, the code commit's parent ``c4eaefd``, whose code is 05's c: the git worktree
++  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd`` (detached). Nothing is written there.
++- T_TREE, the code commit: the main checkout, at Part B's dispatch SHA ``149c393``, whose code is
++  the code commit ``1fc349c``'s up to ``bd38e50``'s comment-only changes (``2db3f9e`` and
++  ``149c393`` add only records under ``prompts/``). It also holds the records, the store, ``var/``
++  and the registry.
+ 
+ Every output header records the SHA-256 of the script that wrote it and both trees' HEADs and
+ ``git status --short``. Read-only git only (rev-parse, status).
+@@ -21,16 +24,21 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # var/levin-phase-floor-05/wider
++WIDER = HERE.parent  # var/levin-phase-floor-05a/wider  (prompt 05a)
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+ assert HERE.parents[3] == MAIN, HERE
+ 
+-P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951")
+-P_SHA = "e6489519ee662434d1f8e430e1c172246678ac8c"
+-C_TREE = MAIN
+-C_SHA = "53084dcb14f7835e22fe8ffde8c0ac09c20a6fca"  # dispatch SHA; its code is 120fdfe's
+-CODE_COMMIT = "120fdfe3"
+-TREES = {"p": (P_TREE, P_SHA), "c": (C_TREE, C_SHA)}
++# prompt 05a: the trees c (the code commit's parent, 05's c) and t (the code commit)
++C_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd")
++C_SHA = "c4eaefda26ccb615fa5864cac877454ba364c304"
++T_TREE = MAIN
++T_SHA = "149c3938bb9e074df3682f8e511c7b57cd9c55c5"  # Part B's dispatch SHA; its code is 1fc349c's
++CODE_COMMIT = "1fc349c"
++TREES = {"c": (C_TREE, C_SHA), "t": (T_TREE, T_SHA)}
++
++# prompt 05a: 05's run, T0's reference for c and convergence_kinds.py's --capped-run
++RUN05 = MAIN / "var" / "runs" / "levin-phase-floor-05-wider-20261026T020005"
++SAMPLE_SHA256 = "73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7"
+ 
+ PYTHON = MAIN / "venv" / "bin" / "python"
+ STORE_DIR = MAIN / "var" / "datastores"
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh scripts/rec.sh
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh	2026-10-26 01:47:58
++++ scripts/rec.sh	2026-10-26 12:23:19
+@@ -1,8 +1,11 @@
+ #!/bin/bash
+-# levin-phase-floor 05 §6 (wider): run one command and record it with its output.
++# levin-phase-floor 05a §6 (wider): run one command and record it with its output.
++# Copied from 05's scripts/rec.sh; changed (prompt 05a): its comments' paths, and every record is
++# also appended to out/commands.log.
+ # Usage: rec.sh NAME CMD [ARGS...]
+-# Writes var/levin-phase-floor-05/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
+-# end UTC times, the combined stdout+stderr, and the exit code. Also echoes the output.
++# Writes var/levin-phase-floor-05a/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
++# end UTC times, the combined stdout+stderr, and the exit code. Appends the same to
++# out/commands.log. Also echoes the output.
+ set -u
+ HERE="$(cd "$(dirname "$0")" && pwd)"
+ OUT="$HERE/../out/cmd"
+@@ -26,5 +29,9 @@
+   echo "# end $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+   echo "# exit $RC"
+ } >> "$F"
++{
++  echo "=================== $NAME (out/cmd/$NAME.txt)"
++  cat "$F"
++} >> "$HERE/../out/commands.log"
+ cat "$F"
+ exit $RC
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rescore_t1.py scripts/rescore_t1.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rescore_t1.py	1970-01-01 01:00:00
++++ scripts/rescore_t1.py	2026-10-26 12:36:22
+@@ -0,0 +1,91 @@
++"""
++levin-phase-floor prompt 05a section 6: re-score T1 (as amended by section 9) from
++``state/probe_windows.json`` alone. New in 05a. It imports nothing from either tree and reads no
++checkpoint, so that T1 can be re-scored from the saved windows (orchestrator note, review check 9).
++
++For each window it re-derives the level used from both trees' ladders (both readings: the literal
++"largest unwrapped z-step < pi/2 in both trees", and the unscored "also the true step
++|d theta/dz| (b - a)/64 < pi/2"), re-computes sigma_theta under c and t from the saved samples
++(``numpy.unwrap``, degree-4 fit in t in [-1, 1], RMS; test_t_phase_reanchor._sigma_theta),
++max |p_z| under t from the saved p_z, and applies section 9's rule:
++  sigma_c >= 0.1 eps|theta_T|  and  sigma_t <= max(1e-3 eps|theta_T|, eps (k max|p_z| + 2 pi), 1e-13)
++in every resolved window with eps|theta_T| >= 1e-11 rad.
++
++Usage: python -I -B rescore_t1.py PROBE_JSON
++"""
++
++import collections
++import hashlib
++import json
++import math
++import sys
++
++import numpy as np
++
++EPS = float(np.finfo(np.float64).eps)
++
++
++def fit(x, th):
++    a, b = x[0], x[-1]
++    u = np.unwrap(th)
++    t = (2.0 * x - (a + b)) / (b - a)
++    coef = np.polynomial.polynomial.polyfit(t, u, 4)
++    res = u - np.polynomial.polynomial.polyval(t, coef)
++    return float(np.sqrt(np.mean(res * res))), float(np.max(np.abs(np.diff(u))))
++
++
++def H(v):
++    return np.array([float.fromhex(s) for s in v])
++
++
++def main(path):
++    with open(path, "rb") as f:
++        digest = hashlib.sha256(f.read()).hexdigest()
++    with open(path) as f:
++        P = json.load(f)
++    me = __file__
++    with open(me, "rb") as f:
++        print(f"# rescore_t1.py sha256 {hashlib.sha256(f.read()).hexdigest()}")
++    print(f"# input {path} sha256 {digest}; {len(P['windows'])} windows")
++    for reading in ("literal", "true_step"):
++        tally = collections.Counter()
++        bad = []
++        for w in P["windows"]:
++            lc, lt = w["ladder"]["c"], w["ladder"]["t"]
++            lev = None
++            for a, b in zip(lc, lt):
++                if not (a["distinct"] and b["distinct"]):
++                    break
++                if a["step_z"] < math.pi / 2 and b["step_z"] < math.pi / 2 and (
++                    reading == "literal"
++                    or (a["true_step_z_est"] < math.pi / 2 and b["true_step_z_est"] < math.pi / 2)
++                ):
++                    lev = a["n"]
++                    break
++            rec = w[reading]
++            if (lev is None) != (rec is None) or (lev is not None and lev != rec["n"]):
++                bad.append(f"{w['row']} {w['subinterval']} {w['factor']}: level {lev} vs {rec and rec['n']}")
++            scale = EPS * w["abs_theta"]
++            if scale < 1e-11:
++                tally["below 1e-11, not scored"] += 1
++                continue
++            if lev is None:
++                tally["unresolved"] += 1
++                continue
++            s = rec["samples"]
++            x = H(s["z"])
++            sc, stc = fit(x, H(s["theta_z_c"]))
++            st, stt = fit(x, H(s["theta_z_t"]))
++            pz = float(np.max(np.abs(H(s["p_z_t"]))))
++            if (sc, st, stc, stt, pz) != (rec["sigma_c"], rec["sigma_t"], rec["step_c"], rec["step_t"], rec["max_abs_p_z_t"]):
++                bad.append(f"{w['row']} {w['subinterval']} {w['factor']}: recomputed numbers differ")
++            bound = max(1e-3 * scale, EPS * (w["k"] * pz + 2 * math.pi), 1e-13)
++            ok = sc >= 0.1 * scale and st <= bound
++            tally["true" if ok else "false"] += 1
++        verdict = "fails" if tally["false"] else ("undecided" if tally["unresolved"] else "holds")
++        print(f"T1 [{reading}]: {dict(tally)} -> {verdict.upper()}; disagreements with analyse.py: "
++              f"{bad if bad else 'none'}")
++
++
++if __name__ == "__main__":
++    main(sys.argv[1])
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py scripts/run_wider.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py	2026-10-26 01:58:42
++++ scripts/run_wider.py	2026-10-26 12:26:13
+@@ -1,4 +1,19 @@
+ """
++levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/run_wider.py,
++docs/levin-phase-floor/05/wider/scripts/run_wider.py, sha256 491d2608..., a record that is not
++edited). Changed here, each change marked "prompt 05a", only in its trees and its unit sets
++(prompt 05a section 6): the trees are ``c`` (05's c, the worktree at ``c4eaefd``) and ``t`` (the
++code commit, the main checkout) in place of 05's ``p`` and ``c``, so the units are
++
++    1. c at rtol 1e-7, on every row          (the baseline, and each row's budget)
++    2. t at rtol 1e-7, on every row
++    3. t at rtol 1e-8, on the depth-20 rows
++
++with the budget of sets 2 and 3 3x the row's ``c`` wall time; and the rtol 1e-7 units of both
++trees carry ``"probe": true`` in their spec, for the phase probe (probe.py; prompt 05a section 6
++with section 9), which is also added to the hashed scripts. Prompt 05's text follows, unchanged;
++read its ``p`` as this run's ``c`` and its ``c`` as ``t``.
++
+ levin-phase-floor prompt 05 section 6: the registered run (slug ``wider``). The driver.
+ 
+ It imports nothing from either tree. It runs prompt 05 section 6's units, in its order, one
+@@ -55,6 +70,7 @@
+     "rebuild.py",
+     "prov.py",
+     "launch.py",
++    "probe.py",  # prompt 05a
+ ]
+ 
+ 
+@@ -77,21 +93,25 @@
+             "set": None,
+         }
+ 
++    # prompt 05a: trees c, t (05's p, c); the rtol 1e-7 units carry the phase probe
+     if 1 in sets:
+         for r in rs:
+-            u = unit("p", "1e-7", r)
++            u = unit("c", "1e-7", r)
+             u["set"] = 1
++            u["probe"] = True
+             units.append(u)
+     if 2 in sets:
+         for r in rs:
+-            u = unit("c", "1e-7", r)
++            u = unit("t", "1e-7", r)
+             u["set"] = 2
++            u["probe"] = True
+             units.append(u)
+     if 3 in sets:
+         for r in rs:
+             if r["role"] == "d20":
+-                u = unit("c", "1e-8", r)
++                u = unit("t", "1e-8", r)
+                 u["set"] = 3
++                u["probe"] = False
+                 units.append(u)
+     return units
+ 
+@@ -142,7 +162,7 @@
+ 
+         for signum in (signal.SIGTERM, signal.SIGINT):
+             signal.signal(signum, terminal)
+-        run.heartbeat(pid=os.getpid(), stage="started: the p worker is next")
++        run.heartbeat(pid=os.getpid(), stage="started: the c worker is next")  # prompt 05a
+ 
+         stop_beat = threading.Event()
+ 
+@@ -234,7 +254,9 @@
+                         problems.append(f"{uid}: tree {data['tree_head']} status {data['tree_status_short']!r}")
+                     if data["status"] == "error":
+                         problems.append(f"{uid}: error")
+-                    if tree_name == "p":
++                    if data.get("probe_error"):  # prompt 05a
++                        problems.append(f"{uid}: probe error")
++                    if tree_name == "c":  # prompt 05a: the baseline tree
+                         p_wall[data["row"]] = data["wall_s"]
+                         p_status[data["row"]] = data["status"]
+                     record(uid, data)
+@@ -252,9 +274,10 @@
+             problems.append(f"the {tree_name} worker did not report {sorted(missing)}")
+ 
+     try:
+-        p_units = [u for u in units if u["tree"] == "p"]
+-        run_worker("p", p_units)
+-        c_units = [u for u in units if u["tree"] == "c"]
++        # prompt 05a: c is the baseline (05's p), t is measured against it (05's c)
++        p_units = [u for u in units if u["tree"] == "c"]
++        run_worker("c", p_units)
++        c_units = [u for u in units if u["tree"] == "t"]
+         for u in c_units:
+             if args.budget_override is not None:
+                 u["budget"] = args.budget_override
+@@ -262,8 +285,8 @@
+                 u["budget"] = BUDGET_FACTOR * p_wall[u["row"]]
+             else:
+                 u["budget"] = None
+-                u["budget_note"] = f"no budget: the p unit of {u['row']} is {p_status.get(u['row'])}"
+-        run_worker("c", c_units)
++                u["budget_note"] = f"no budget: the c unit of {u['row']} is {p_status.get(u['row'])}"
++        run_worker("t", c_units)
+     except BaseException:
+         traceback.print_exc()
+         if run is not None:
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/t0.py scripts/t0.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/t0.py	1970-01-01 01:00:00
++++ scripts/t0.py	2026-10-26 12:27:29
+@@ -0,0 +1,380 @@
++"""
++levin-phase-floor prompt 05a section 6: gate T0's second and third clauses, before the run. New in
++05a, derived from prompt 05's ``scripts/l0.py`` (docs/levin-phase-floor/05/wider/scripts/l0.py,
++sha256 b2b48660..., a record that is not edited; its copy here is unused and unchanged): its
++helpers ``strip``, ``float_hex_walk``, ``diff_paths`` and ``_iter_floats`` are copied unchanged, and
++its ``spec`` and ``check`` are rewritten for T0's clauses. T0's first clause (the ``git diff
++--stat``) is a command of its own (out/cmd/05_T0_clause1_git_diff.txt).
++
++On one depth-20 row and one control: ``state/sample.json``'s "L0" names them (05's gate rows,
++``low-G+r-1`` and ``ctrl-low-1``).
++
++    python -I -B t0.py spec OUT_DIR    writes OUT_DIR/c/spec.json (tree c, rtol 1e-7, each row once)
++                                       and OUT_DIR/t/spec.json (tree t, rtol 1e-7, each row twice, in
++                                       one process: two in-process runs of the same unit), for
++                                       worker.py; every unit carries the probe, as the run's 1e-7
++                                       units do
++    python -I -B t0.py check OUT_DIR   reads both ledgers and pickles, and 05's run; prints the gate
++
++- **Clause (b), c reproduces 05's c bit for bit.** Each c unit against 05's ``c-1e-7-<row>`` record
++  of ``levin-phase-floor-05-wider-20261026T020005`` (prov.RUN05): ``total``, ``total_abserr``, and
++  every group call's ``value`` and ``abserr``, each by ``==`` and ``float.hex``, never ``isclose``;
++  and, beyond what the clause names, the whole result summary, every call summary, ``qs_check``,
++  the dispatcher's counts and flags, the call count, the stored row's summary (all but wall-clock
++  fields), and every region array of 05's pickle by its bytes.
++- **Clause (c), two in-process runs of the same t unit are bit-identical:** as 05's L0 (b) (every
++  float of the result summary, every call summary, ``qs_check``, the dispatcher's counts and
++  flags, the region arrays by bytes), and also the probe's window summaries and every probe sample
++  array by its bytes.
++- The tree evidence of both workers: each loaded its packages from its own tree, at its expected
++  SHA, with an empty ``git status --short``; and T's phases report ``exact_remainder`` false under
++  c and true under t.
++"""
++
++import json
++import math
++import sys
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++
++from prov import RUN05, WIDER, header, sha256  # noqa: E402
++
++WALL = {"elapsed", "compute_time", "wall_s", "rebuild_s", "probe_s"}
++COMPARED = ("result", "calls", "qs_check", "dispatcher_counts", "dispatcher_flags",
++            "n_calls_total", "stored")
++
++
++def spec(out_dir: Path):
++    sample = json.loads((WIDER / "state" / "sample.json").read_text())
++    by_name = {r["name"]: r for r in sample["rows"]}
++    for tree, reps in (("c", (1,)), ("t", (1, 2))):
++        units = []
++        for which in ("d20", "control"):
++            row = by_name[sample["L0"][which]]
++            for rep in reps:
++                units.append(
++                    {
++                        "uid": f"T0-{tree}-1e-7-{row['name']}" + (f"-run{rep}" if tree == "t" else ""),
++                        "tree": tree,
++                        "rtol": "1e-7",
++                        "row": row["name"],
++                        "shard": row["shard"],
++                        "serial": row["serial"],
++                        "role": row["role"],
++                        "budget": None,
++                        "probe": True,
++                    }
++                )
++        d = out_dir / tree
++        d.mkdir(parents=True, exist_ok=True)
++        s = {
++            "tree": tree,
++            "units": units,
++            "out_dir": str(d),
++            "emit_fd": None,
++            "emit_file": str(d / "ledger.jsonl"),
++            "pickle_regions": True,
++        }
++        (d / "spec.json").write_text(json.dumps(s, indent=1))
++        print(json.dumps(s, indent=1))
++
++
++# ---- 05's l0.py helpers, unchanged ------------------------------------------------------------
++
++
++def strip(x):
++    """Remove wall-clock fields, recursively."""
++    if isinstance(x, dict):
++        return {k: strip(v) for k, v in x.items() if k not in WALL}
++    if isinstance(x, list):
++        return [strip(v) for v in x]
++    return x
++
++
++def float_hex_walk(x):
++    """Every float in a structure as float.hex (JSON floats are repr, which round-trips)."""
++    if isinstance(x, dict):
++        return {k: float_hex_walk(v) for k, v in x.items()}
++    if isinstance(x, list):
++        return [float_hex_walk(v) for v in x]
++    if isinstance(x, float):
++        return ("f", x.hex())
++    return x
++
++
++def diff_paths(a, b, path="", out=None):
++    out = [] if out is None else out
++    if type(a) is not type(b):
++        out.append(f"{path}: type {type(a).__name__} vs {type(b).__name__}")
++    elif isinstance(a, dict):
++        for k in sorted(set(a) | set(b)):
++            if k not in a or k not in b:
++                out.append(f"{path}.{k}: present in one only")
++            else:
++                diff_paths(a[k], b[k], f"{path}.{k}", out)
++    elif isinstance(a, list):
++        if len(a) != len(b):
++            out.append(f"{path}: length {len(a)} vs {len(b)}")
++        for i, (x, y) in enumerate(zip(a, b)):
++            diff_paths(x, y, f"{path}[{i}]", out)
++    elif isinstance(a, float):
++        if not (a.hex() == b.hex() and (a == b or (math.isnan(a) and math.isnan(b)))):
++            out.append(f"{path}: {a!r} ({a.hex()}) vs {b!r} ({b.hex()})")
++    elif a != b:
++        out.append(f"{path}: {a!r} vs {b!r}")
++    return out
++
++
++def _iter_floats(x):
++    if isinstance(x, dict):
++        if set(x) == {"repr", "hex"}:  # worker.fx: a float as repr and hex
++            yield x["hex"]
++            return
++        for v in x.values():
++            yield from _iter_floats(v)
++    elif isinstance(x, list):
++        for v in x:
++            yield from _iter_floats(v)
++    elif isinstance(x, float):
++        yield x
++
++
++# ---- T0 ----------------------------------------------------------------------------------------
++
++
++def _fx_same(a, b):
++    """Two worker.fx floats: equal by == and by float.hex (NaN equal to NaN only by hex)."""
++    if a is None or b is None:
++        return a is None and b is None, f"{a} vs {b}"
++    x, y = float.fromhex(a["hex"]), float.fromhex(b["hex"])
++    same = x.hex() == y.hex() and (x == y or (math.isnan(x) and math.isnan(y)))
++    return same, f"{a['repr']} ({a['hex']}) vs {b['repr']} ({b['hex']})"
++
++
++def _regions_diff(pa, pb):
++    rdiff = []
++    if len(pa["regions"]) != len(pb["regions"]):
++        rdiff.append(f"region lists: {len(pa['regions'])} vs {len(pb['regions'])} calls")
++    n = 0
++    for i, (x, y) in enumerate(zip(pa["regions"], pb["regions"])):
++        n += len(x["start"])
++        for f in ("start", "end", "depth", "type", "abserr"):
++            if x[f].dtype != y[f].dtype or x[f].tobytes() != y[f].tobytes():
++                rdiff.append(f"call {i} ({x['regime']}, {x['group']}) {f} differs")
++        if (x["regime"], x["group"]) != (y["regime"], y["group"]) or tuple(
++            float(v).hex() for v in x["x_span"]
++        ) != tuple(float(v).hex() for v in y["x_span"]):
++            rdiff.append(f"call {i}: label or x_span differs")
++    return rdiff, n
++
++
++def _probe_samples_diff(sa, sb):
++    out = []
++    n = 0
++    if (sa is None) != (sb is None):
++        return ["probe samples present in one only"], 0
++    if sa is None:
++        return [], 0
++    if len(sa) != len(sb):
++        return [f"windows {len(sa)} vs {len(sb)}"], 0
++    for w, (la, lb) in enumerate(zip(sa, sb)):
++        if len(la) != len(lb):
++            out.append(f"window {w}: levels {len(la)} vs {len(lb)}")
++            continue
++        for lev, (xa, xb) in enumerate(zip(la, lb)):
++            if (xa is None) != (xb is None):
++                out.append(f"window {w} level {lev}: present in one only")
++                continue
++            if xa is None:
++                continue
++            for f in ("z", "theta_z", "p_z", "node", "u", "theta_u"):
++                if (xa[f] is None) != (xb[f] is None):
++                    out.append(f"window {w} level {lev} {f}: present in one only")
++                elif xa[f] is not None:
++                    n += len(xa[f])
++                    if xa[f].dtype != xb[f].dtype or xa[f].tobytes() != xb[f].tobytes():
++                        out.append(f"window {w} level {lev} {f} differs")
++    return out, n
++
++
++def _evidence_lines(ev, tree, lines):
++    lines.append(f"== the {tree} worker's evidence")
++    for k in ("tree", "tree_path", "expected_sha", "head", "all_in_tree",
++              "PrimitivePhase_has_exact_remainder", "build_phase_source_mentions_exact_remainder",
++              "TkSourceFunctions_exact_remainder_default", "PYTHONPATH", "dont_write_bytecode"):
++        lines.append(f"   {k}: {ev.get(k)!r}")
++    lines.append(f"   status --short: {'empty' if ev['status_short'].strip() == '' else repr(ev['status_short'])}")
++    for k, v in ev["files"].items():
++        lines.append(f"   {k}: {v}")
++    ok = (
++        ev["tree"] == tree
++        and ev["head"] == ev["expected_sha"]
++        and ev["all_in_tree"]
++        and ev["status_short"].strip() == ""
++        and ev["dont_write_bytecode"]
++    )
++    lines.append(f"   the units ran at {tree}, from its own tree, clean: {ok}")
++    return ok
++
++
++def check(out_dir: Path):
++    import ray.cloudpickle as cloudpickle
++
++    lines = header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 05a section 6: gate T0, clauses (b) and (c)",
++        [RUN05 / "checkpoint.jsonl", WIDER / "state" / "sample.json"],
++    )
++    ok_all = True
++    ledgers = {}
++    for tree in ("c", "t"):
++        recs = [json.loads(l) for l in (out_dir / tree / "ledger.jsonl").read_text().splitlines()]
++        ledgers[tree] = recs
++        lines.append(f"# ledger {out_dir / tree / 'ledger.jsonl'}: {len(recs)} records")
++    lines.append("")
++    for tree in ("c", "t"):
++        hello = [r for r in ledgers[tree] if r["kind"] == "hello"]
++        ok_all &= _evidence_lines(hello[-1]["evidence"], tree, lines)
++        lines.append("")
++
++    units = {tree: [r["data"] for r in ledgers[tree] if r["kind"] == "unit"] for tree in ("c", "t")}
++    for tree in ("c", "t"):
++        for d in units[tree]:
++            lines.append(
++                f"   {d['unit']}: status {d['status']}; wall {d['wall_s']}; rebuild checks all hold "
++                f"{d.get('rebuild_checks_all_hold')}; QuadSource L0a {d.get('qs_check', {}).get('L0a_holds')}; "
++                f"dispatcher {d['dispatcher_counts']} {d['dispatcher_flags']}; T phase exact_remainder "
++                f"{d.get('T_phase_exact_remainder')}; probe windows "
++                f"{None if d.get('probe') is None else len(d['probe'])} in {d.get('probe_s')} s, error "
++                f"{d.get('probe_error')!r}; tree {d['tree_head']} status "
++                f"{'empty' if d['tree_status_short'].strip() == '' else repr(d['tree_status_short'])}"
++            )
++            if d["status"] != "done" or d.get("probe_error"):
++                ok_all = False
++                lines.append(f"   !! not done or probe error: {d.get('error')} {d.get('probe_error')}")
++            else:
++                r = d["result"]
++                lines.append(
++                    f"      total {r['total']['repr']} ({r['total']['hex']}), abserr "
++                    f"{r['total_abserr']['repr']} ({r['total_abserr']['hex']}), converged "
++                    f"{r['total_converged']}, WKB_Levin_data {r['WKB_Levin_data']}"
++                )
++            want = {"c": False, "t": True}[tree]
++            ter = d.get("T_phase_exact_remainder")
++            flag_ok = ter is not None and ter["Tq"] is want and ter["Tr"] is want
++            flags = d["dispatcher_flags"] or {}
++            flag_keys_ok = all(
++                (k.startswith("T ") and k == f"T exact_remainder={want}")
++                or (k.startswith("G ") and k == "G exact_remainder=True")
++                for k in flags
++            )
++            probe_flags = {w["exact_remainder"] for w in (d.get("probe") or [])}
++            lines.append(
++                f"      T's phases report exact_remainder {want} under {tree}: {flag_ok}; every "
++                f"theta_mod_2pi call of T has exact_remainder={want} and of G True: "
++                f"{flag_keys_ok}; probe windows' flags {sorted(probe_flags)}"
++            )
++            ok_all &= flag_ok and flag_keys_ok and probe_flags <= {want}
++
++    # ---------------------------------------------------------------- clause (b)
++    lines.append("")
++    lines.append("== T0 (b): c at 1e-7 against 05's c unit, bit for bit "
++                 f"({RUN05.name}, checkpoint sha256 {sha256(RUN05 / 'checkpoint.jsonl')})")
++    ref = {}
++    for l in (RUN05 / "checkpoint.jsonl").read_text().splitlines():
++        r = json.loads(l)
++        ref[r["unit"]] = r
++    clause_b = True
++    for d in units["c"]:
++        ru = ref.get(f"c-1e-7-{d['row']}")
++        lines.append(f"-- {d['unit']} against 05's {ru['unit'] if ru else None}")
++        if ru is None or d["status"] != "done":
++            clause_b = False
++            lines.append("   !! no reference, or the unit did not finish")
++            continue
++        rd = ru["data"]
++        lines.append(f"   05's record: script_sha256 {ru['script_sha256']}, tree {rd['tree_head']}, "
++                     f"pickle {rd['pickle']} sha256 {rd['pickle_sha256']}")
++        named = []
++        for f in ("total", "total_abserr"):
++            same, txt = _fx_same(d["result"][f], rd["result"][f])
++            named.append(same)
++            lines.append(f"   {f}: {'==' if same else 'DIFFERS'}  {txt}")
++        if len(d["calls"]) != len(rd["calls"]):
++            named.append(False)
++            lines.append(f"   calls: {len(d['calls'])} vs {len(rd['calls'])}")
++        for ca, cb in zip(d["calls"], rd["calls"]):
++            for f in ("value", "abserr"):
++                same, txt = _fx_same(ca[f], cb[f])
++                named.append(same)
++                lines.append(f"   call {ca['index']} {ca['regime']}/{ca['group']} {f}: "
++                             f"{'==' if same else 'DIFFERS'}  {txt}")
++        named_ok = all(named)
++        lines.append(f"   the clause's own fields ({len(named)} doubles): "
++                     f"{'all bit-identical' if named_ok else 'NOT all bit-identical'}")
++        comp = {}
++        for key in COMPARED:
++            comp[key] = diff_paths(float_hex_walk(strip(d[key])), float_hex_walk(strip(rd[key])), key)
++        pa = cloudpickle.loads((out_dir / "c" / d["pickle"]).read_bytes())
++        pb = cloudpickle.loads((RUN05 / rd["pickle"]).read_bytes())
++        comp["regions"], n_reg = _regions_diff(pa, pb)
++        lines.append(f"   beyond the clause: floats in the result summary "
++                     f"{sum(1 for _ in _iter_floats(strip(d['result'])))}; regions compared {n_reg}")
++        for k, v in comp.items():
++            lines.append(f"   {k}: {'identical' if not v else f'{len(v)} differences, first {v[:5]}'}")
++        same_all = named_ok and all(len(v) == 0 for v in comp.values())
++        lines.append(f"   T0 (b) on {d['row']}: {'HOLDS' if same_all else 'FAILS'}")
++        clause_b &= same_all
++    lines.append(f"== T0 (b): {'HOLDS' if clause_b else 'FAILS'}")
++    ok_all &= clause_b
++
++    # ---------------------------------------------------------------- clause (c)
++    lines.append("")
++    lines.append("== T0 (c): two in-process runs of the same t unit, bit for bit")
++    rows = {}
++    for d in units["t"]:
++        rows.setdefault(d["row"], []).append(d)
++    clause_c = True
++    for row, ds in rows.items():
++        lines.append(f"-- {row}")
++        if len(ds) != 2 or any(d["status"] != "done" for d in ds):
++            clause_c = False
++            lines.append("   !! not two completed runs")
++            continue
++        a, b = ds
++        comp = {}
++        for key in COMPARED + ("probe", "T_phase_exact_remainder"):
++            comp[key] = diff_paths(float_hex_walk(strip(a[key])), float_hex_walk(strip(b[key])), key)
++        pa = cloudpickle.loads((out_dir / "t" / a["pickle"]).read_bytes())
++        pb = cloudpickle.loads((out_dir / "t" / b["pickle"]).read_bytes())
++        comp["regions"], n_reg = _regions_diff(pa, pb)
++        comp["probe_samples"], n_ps = _probe_samples_diff(pa.get("probe_samples"), pb.get("probe_samples"))
++        lines.append(f"   floats in the result summary {sum(1 for _ in _iter_floats(strip(a['result'])))}; "
++                     f"group Levin calls {len(pa['regions'])}; regions compared {n_reg}; probe windows "
++                     f"{len(a['probe'] or [])}; probe sample values compared {n_ps}")
++        for k, v in comp.items():
++            lines.append(f"   {k}: {'identical' if not v else f'{len(v)} differences, first {v[:5]}'}")
++        same = all(len(v) == 0 for v in comp.values())
++        lines.append(f"   T0 (c) on {row}: {'HOLDS' if same else 'FAILS'}")
++        clause_c &= same
++    lines.append(f"== T0 (c): {'HOLDS' if clause_c else 'FAILS'}")
++    ok_all &= clause_c
++
++    lines.append("")
++    lines.append(f"== GATE T0, clauses (b) and (c), with both trees' evidence: {'HOLDS' if ok_all else 'FAILS'}")
++    print("\n".join(lines))
++    return 0 if ok_all else 1
++
++
++if __name__ == "__main__":
++    cmd, out = sys.argv[1], Path(sys.argv[2])
++    if cmd == "spec":
++        spec(out)
++    elif cmd == "check":
++        sys.exit(check(out))
++    else:
++        raise SystemExit(f"unknown command {cmd}")
+diff -ruN /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py scripts/worker.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py	2026-10-26 01:59:14
++++ scripts/worker.py	2026-10-26 12:25:45
+@@ -1,4 +1,21 @@
+ """
++levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/worker.py,
++docs/levin-phase-floor/05/wider/scripts/worker.py, sha256 e2ef68f0..., a record that is not
++edited). Changed here, each change marked "prompt 05a": the trees are ``c`` (the worktree at
++``c4eaefd``, 05's c) and ``t`` (the main checkout, the code commit ``1fc349c``'s code) in place of
++05's ``p`` and ``c``; the module-provenance evidence also names ``ComputeTargets.TkSourceFunctions``
++and whether its constructor has ``exact_remainder``; and, for the phase probe (prompt 05a section 6
++with section 9; probe.py), ``build_partition`` is wrapped at its module attribute
++(``ComputeTargets.QuadSourceIntegral.build_partition``, through which
++``evaluate_QuadSource_integral`` calls it) to keep the sub-intervals and the two transfer-function
++objects the unit built, every unit records each factor's ``phase.exact_remainder``, and a unit
++whose spec has ``"probe": true`` (the rtol 1e-7 units) runs probe.py on them after its timed
++section and records the windows (summaries in the checkpoint, samples in the pickle). The probe
++reads phase objects only; it runs after ``wall_s`` is measured, outside the budget, with the
++dispatcher uninstalled, so it changes neither the unit's result nor its counts.
++
++(Prompt 05's text follows, unchanged.)
++
+ levin-phase-floor prompt 05 section 6: the worker. Runs a list of units, all in one tree, in this
+ process, by route (a) (harness.py, rebuild.py: a read-only stand-in ShardedPool, no Ray, no store
+ write), and emits one JSON line per unit.
+@@ -56,6 +73,7 @@
+     "prov.py",
+     "run_wider.py",
+     "launch.py",
++    "probe.py",  # prompt 05a
+ ]
+ 
+ 
+@@ -202,6 +220,7 @@
+     qs = importlib.import_module("ComputeTargets.QuadSource")
+     qsi = importlib.import_module("ComputeTargets.QuadSourceIntegral")
+     gpd = importlib.import_module("ComputeTargets.GkSourcePolicyData")
++    tsf = importlib.import_module("ComputeTargets.TkSourceFunctions")  # prompt 05a
+     from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+ 
+     import dispatch
+@@ -213,6 +232,7 @@
+         "ComputeTargets.QuadSource": qs.__file__,
+         "ComputeTargets.QuadSourceIntegral": qsi.__file__,
+         "ComputeTargets.GkSourcePolicyData": gpd.__file__,
++        "ComputeTargets.TkSourceFunctions": tsf.__file__,  # prompt 05a
+         "StoreFixtures": StoreFixtures.__file__,
+         "main.py": str(MAIN_PY),
+         "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": dispatch.ORIG_FILE,
+@@ -235,6 +255,15 @@
+         "PrimitivePhase_has_exact_remainder": "exact_remainder" in params,
+         "build_phase_source_mentions_exact_remainder": "exact_remainder=True"
+         in inspect.getsource(gpd._build_phase),
++        # prompt 05a: the keyword the code commit adds (absent at c, present and True at t)
++        "TkSourceFunctions_exact_remainder_default": (
++            inspect.signature(tsf.TkSourceFunctions.__init__)
++            .parameters["exact_remainder"]
++            .default
++            if "exact_remainder"
++            in inspect.signature(tsf.TkSourceFunctions.__init__).parameters
++            else "absent"
++        ),
+         "PYTHONPATH": os.environ.get("PYTHONPATH"),
+         "PYTHONDONTWRITEBYTECODE": os.environ.get("PYTHONDONTWRITEBYTECODE"),
+         "dont_write_bytecode": sys.dont_write_bytecode,
+@@ -278,11 +307,18 @@
+     from rebuild import MAIN_PY_SHA256, PRIMARY, build_context, rebuild_row
+ 
+     import dispatch as DP
++    import probe as PROBE  # prompt 05a
+ 
+     orig_levin = QSI_MOD.adaptive_levin_sincos
+     orig_eval = QSI_MOD.evaluate_QuadSource_integral
+-    holder = {"calls": None, "disp": None, "deadline": None}
++    orig_partition = QSI_MOD.build_partition  # prompt 05a
++    holder = {"calls": None, "disp": None, "deadline": None, "partition": None}
+ 
++    def w_partition(*a, **kw):  # prompt 05a: keep what the unit's own call built
++        result = orig_partition(*a, **kw)
++        holder["partition"] = result
++        return result
++
+     def w_levin(*a, **kw):
+         result = orig_levin(*a, **kw)
+         calls = holder["calls"]
+@@ -339,7 +375,7 @@
+                     calls = []
+                     wall = None
+                     rb = None
+-                    holder.update(disp=None)
++                    holder.update(disp=None, partition=None)  # prompt 05a: partition
+                     try:
+                         t_rb = time.perf_counter()
+                         rb = rebuild_row(
+@@ -354,6 +390,7 @@
+                         holder.update(calls=calls)
+                         QSI_MOD.adaptive_levin_sincos = w_levin
+                         QSI_MOD.evaluate_QuadSource_integral = w_eval
++                        QSI_MOD.build_partition = w_partition  # prompt 05a
+                         t0 = time.perf_counter()
+                         budget = u.get("budget")
+                         holder["deadline"] = None if budget is None else t0 + budget
+@@ -368,6 +405,7 @@
+                             holder.update(calls=None, deadline=None)
+                             QSI_MOD.adaptive_levin_sincos = orig_levin
+                             QSI_MOD.evaluate_QuadSource_integral = orig_eval
++                            QSI_MOD.build_partition = orig_partition  # prompt 05a
+                     except Exception:
+                         status = "error"
+                         err = traceback.format_exc()
+@@ -376,8 +414,10 @@
+                     finally:
+                         QSI_MOD.adaptive_levin_sincos = orig_levin
+                         QSI_MOD.evaluate_QuadSource_integral = orig_eval
++                        QSI_MOD.build_partition = orig_partition  # prompt 05a
+                     assert QSI_MOD.adaptive_levin_sincos is orig_levin
+                     assert QSI_MOD.evaluate_QuadSource_integral is orig_eval
++                    assert QSI_MOD.build_partition is orig_partition  # prompt 05a
+                     assert DP.PrimitivePhase.__dict__["theta_mod_2pi"] is DP.ORIG_THETA_MOD_2PI
+                     disp = holder["disp"]
+                     group_calls = [
+@@ -412,6 +452,35 @@
+                         data["rebuild_checks_all_hold"] = all(c[1] for c in rb["checks"])
+                     if result is not None:
+                         data["result"] = summarise_result(result)
++                    # prompt 05a: T's phase flags, and the phase probe (probe.py)
++                    part = holder["partition"]
++                    holder["partition"] = None
++                    probe_samples = None
++                    data["T_phase_exact_remainder"] = (
++                        None
++                        if part is None or len(part["subintervals"]) == 0
++                        else {
++                            "Tq": getattr(part["subintervals"][0]["Tq"].phase, "exact_remainder", None),
++                            "Tr": getattr(part["subintervals"][0]["Tr"].phase, "exact_remainder", None),
++                        }
++                    )
++                    data["probe"] = None
++                    data["probe_s"] = None
++                    data["probe_error"] = None
++                    if u.get("probe") and status != "error":
++                        if part is None:
++                            data["probe_error"] = "no partition was built in this unit"
++                        else:
++                            t_pr = time.perf_counter()
++                            try:
++                                data["probe"], probe_samples = PROBE.probe_partition(
++                                    part["subintervals"]
++                                )
++                            except Exception:
++                                data["probe_error"] = traceback.format_exc()
++                                print(data["probe_error"], flush=True)
++                            data["probe_s"] = time.perf_counter() - t_pr
++                    part = None
+                     if spec.get("pickle_regions", True) and status != "error":
+                         pkl = out_dir / f"unit_{uid}.pkl"
+                         dump_record(
+@@ -428,6 +497,7 @@
+                                     }
+                                     for c in group_calls
+                                 ],
++                                "probe_samples": probe_samples,  # prompt 05a
+                             },
+                             pkl,
+                         )
+@@ -448,6 +518,12 @@
+                             f"; QuadSource L0a {rb['qs_check']['L0a_holds']}"
+                             if rb is not None
+                             else ""
++                        )
++                        + f"; T exact_remainder {data['T_phase_exact_remainder']}"  # prompt 05a
++                        + (
++                            f"; probe {len(data['probe'])} windows in {data['probe_s']:.1f} s"
++                            if data["probe"] is not None
++                            else (f"; probe error" if data["probe_error"] else "")
+                         ),
+                         flush=True,
+                     )
+@@ -457,6 +533,7 @@
+     finally:
+         QSI_MOD.adaptive_levin_sincos = orig_levin
+         QSI_MOD.evaluate_QuadSource_integral = orig_eval
++        QSI_MOD.build_partition = orig_partition  # prompt 05a
+     emit("bye", {"ray_initialized": ray.is_initialized()})
+     emit_handle.close()
+     if ray.is_initialized():

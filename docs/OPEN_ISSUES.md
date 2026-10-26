@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-26 · **113 open** across twenty-two campaigns.
+**Last updated:** 2026-10-26 · **112 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -72,8 +72,9 @@ on that board's §4. Its prompt 04 closed `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]` the same day, on that board's §4. Every row
 above is on a board. The three `handover` rows a document review indexed on 2026-09-19 without one
 were opened on that board on 2026-10-25 by its prompt 03 (A3), which opened two more of its own. The `levin-phase-floor` board
-(2026-10-25) holds six issues of its own: two opened by its prompt 01, two by its prompt 03 (a third was closed at
-G1 on 2026-10-26) and two by its prompt 04.
+(2026-10-25) holds nine issues of its own: two opened by its prompt 01, two by its prompt 03 (a third was closed at
+G1 on 2026-10-26), one by its prompt 04 (a second was closed by its prompt 05a on 2026-10-26), three by its prompt 05
+and one by its prompt 05a. The one opened in writing 05a was closed by 05a the same day.
 The four other rows of §1.24 were assigned to it from other boards and stay on them.
 
 ---
@@ -958,7 +959,8 @@ remains in this section.**
 ([board](../prompts/levin-phase-floor/IMPLEMENTATION_STATE.md)). It owns A3 v2's depth-20 Levin
 cost cliff and the honesty of what a `QuadSourceIntegral` row stores about its error and
 convergence. Its plan opened no issue; its prompt 01 opened two, its prompt 03 three (one closed at gate G1 on 2026-10-26), its prompt
-04 two, its prompt 05 three, and the writing of its prompt 05a one: the last ten rows. The four rows above them were assigned to it: three from §1.1 on 2026-10-25, and one from §1.6 on 2026-10-26. A fifth, `[00-consumer-anchoring-floor]` from §1.4, was closed for $G_k$ by its prompt 05 on 2026-10-26. **Each stays on its own board**, which is the record and is where it
+04 two (one closed by its prompt 05a on 2026-10-26), its prompt 05 three, the writing of its prompt 05a one (closed by
+05a the same day) and its prompt 05a one: the last nine rows. The four rows above them were assigned to it: three from §1.1 on 2026-10-25, and one from §1.6 on 2026-10-26. A fifth, `[00-consumer-anchoring-floor]` from §1.4, was closed for $G_k$ by its prompt 05 on 2026-10-26. **Each stays on its own board**, which is the record and is where it
 is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; this campaign's prompt
 01 measures whether it reaches A3 v2.
 
@@ -972,12 +974,11 @@ is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; thi
 | `[01-depth20-floor-eta-is-wrong-above-1e12]` | levin-phase-floor | `depth20_floor.py`'s $\eta(z)$ integrates only to $z = 10^{15}$: off from $1.2\times10^{13}$, negative above $10^{15}$. No effect on the findings; wrong $F$ for seam rows if reused. |
 | `[03-depth20-regions-are-all-clenshaw-curtis]` | levin-phase-floor | 189,196 of 189,196 depth-20 regions on 03's seven rows are Clenshaw–Curtis, so §2.7 layer 2 must reach that branch's acceptance test — where `[10-levin-wholesale-cc-fallback]` lives, out of this campaign's scope. A scope question for G1. **Narrowed 2026-10-25** by `levin-phase-floor` 04: with the floor gone no group reaches depth 20 at `1e-7`; a short chain still does at `1e-8`. |
 | `[03-storefixtures-standin-pickle-and-exit-rows]` | levin-phase-floor | `standin_pool` pickles with plain `pickle`, which cannot carry a `GkSource`; `real_store_fixtures`' exit-time rows lack the efold columns `TkNumericIntegration` reads. 03 worked round both in its harness; 04 needs the same. |
-| `[04-g-phase-is-reduced-against-the-double-two-pi]` | levin-phase-floor | `theta_mod_2pi` reduces by `fmod` against the double `TWO_PI`, so `sin` sees $\theta + n(2\pi-\texttt{TWO\_PI})$: a smooth phase error of about $0.18\,\varepsilon|\theta|$, 0.175 $F$ for $G$ on every row of 04. Accuracy, not cost; a layer 1 should reduce against $2\pi$. **Narrowed 2026-10-26** by 05: done for $G$ (reduced against $2\pi$ at 256 bits); $T$ keeps `TWO_PI` by G1 Q2. **Assigned 2026-10-26:** $T$'s half to prompt 05a (user's decision). |
 | `[04-x-at-1e-8-still-reaches-depth-20]` | levin-phase-floor | With every remainder exact, `rtol = 1e-8` still sends one 2-region chain per group to the cap on 5 of 7 rows (none at `1e-7`). Cause not located; bears on G2 Q4 and layer 2. **Narrowed 2026-10-26** by 05: at the current code the maximum depth at `1e-8` is ≤ 11 on all 31 sampled rows; likely the pre-B1 clamp edge, to re-check at `HEAD`. |
 | `[05-store-value-diff-compares-volatile-columns]` | levin-phase-floor | `tools/store_value_diff.py` compares every row column but serial and timestamp, so two builds of the same code are never value-identical: timings, timestamped `label`, the serial-derived `GkSource.parents_digest` and GkWKB memo counters differ, with every value table identical. Prompt 05 §8 and rule 7's wording assumed otherwise. |
 | `[05-b1-moves-stored-a3v2-totals-beyond-their-error]` | levin-phase-floor | `handover` B1's code moves 36 of 39 sampled A3 v2 `QuadSourceIntegral` totals beyond their stored error, by 5.2× to 1.5e5×; one changes sign. A3 v2's totals are pre-B1; whether it is rebuilt before any physics is read is open. |
 | `[05-b1-uncaps-most-cheap-depth-20-rows]` | levin-phase-floor | Under B1's code 20 of 31 sampled stored depth-20 rows no longer reach the cap (R2: 29,782 → 15 regions); A3 v2's stored depth and 01's census describe pre-B1 code. Likely the old hand-over clamp's kink. |
-| `[05-t-remainder-keeps-the-anchoring-floor]` | levin-phase-floor | $T$'s remainder still reduces one double of size $k\tau_s$ against its global anchor `z_init`, so it carries $\varepsilon k\tau_s$ of non-smooth rounding (predicted 1.1–1.3 $F$ for two $T$ factors at the late end of `Gqr` sub-intervals, 04's I7; not measured). Not seen to drive the bisection. It was lost from the index when `[00-consumer-anchoring-floor]` closed for $G$. **Assigned 2026-10-26** to prompt 05a (user's decision). |
+| `[05a-t-phase-abscissa-rounding-remains]` | levin-phase-floor | $T$'s phase is evaluated at $z = {\rm expm1}(u)$ rounded, about $\varepsilon\tfrac{z}{1+z}|d\theta_T/du|$ of jitter, the size of the floor 05a removed wherever $z \gg 1$. Sampled in $u$ under 05a it is 0.14–0.29 of that term, up to 0.22 $\varepsilon|\theta_T|$; no Levin call moved. A leading term in $u$ would remove it: producer work, G1 Q3's 06+. |
 
 ---
 

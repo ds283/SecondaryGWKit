@@ -1,0 +1,7 @@
+rows: 864
+rows with total_abserr inf (A or B): 26 ; of them total differs: 12
+rows whose total is bit-identical but named metadata keys differ: 440
+rows with any handover_continuity: 864
+rows with any WKB_Levin key: 572
+rows with only handover_continuity keys: 292
+classify_non_qsi column-difference counts by kind (summed over classes and columns): {'timing': 8607, 'label': 5148, 'rho_reuse': 62, 'parents_digest': 291}

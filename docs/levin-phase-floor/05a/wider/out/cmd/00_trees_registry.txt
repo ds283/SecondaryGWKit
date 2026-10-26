@@ -1,0 +1,42 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\;\ echo\ \"==\ main\ checkout\"\;\ git\ rev-parse\ HEAD\;\ git\ status\ --short\;\ echo\ \"\(status\ end\)\"\;\ git\ worktree\ list\;\ echo\ \"==\ worktree\"\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd\ status\ --short\;\ echo\ \"\(status\ end\)\"\;\ echo\ \"==\ worktree\ status\ --short\ --ignored\ \(shared\ with\ R11\,\ which\ runs\ from\ it\)\"\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd\ status\ --short\ --ignored\;\ echo\ \"\(end\)\"\;\ echo\ \"==\ registry\"\;\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ cut\ -c1-200\;\ echo\ \"==\ load\"\;\ uptime\;\ ./venv/bin/python\ -V
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:23:27Z
+# ----
+== main checkout
+149c3938bb9e074df3682f8e511c7b57cd9c55c5
+(status end)
+/Users/ds283/Documents/Code/SecondaryGWKit                149c3938 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd c4eaefda (detached HEAD)
+== worktree
+c4eaefda26ccb615fa5864cac877454ba364c304
+(status end)
+== worktree status --short --ignored (shared with R11, which runs from it)
+(end)
+== registry
+   RUN                                                STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-05a-r11-parent-20261026T122041   running           -       3m  levin-phase-floor prompt 05a, R11 on the Mac Studio (mps026298; tree c4eaefd in the worktree /Users/ds283/Documents/
+   levin-phase-floor-05-wider-20261026T020005         done        109/109  10h 23m  levin-phase-floor prompt 05 section 6 on the Mac Studio (mps026298; Python 3.13.16): the wider re-measurement of lay
+   levin-phase-floor-05-r10-reanchor-20261026T015120  done              -  10h 32m  levin-phase-floor prompt 05, R10 on the Mac Studio (mps026298; main checkout at 53084dc, whose code is the code comm
+   levin-phase-floor-05-r9-parent-20261026T014729     done              -  10h 35m  levin-phase-floor prompt 05, R9 on the Mac Studio (mps026298; tree e648951 in the worktree /Users/ds283/Documents/Co
+   levin-phase-floor-04-remove-20261025T231110        done          28/28  13h 12m  levin-phase-floor prompt 04 on the Mac Studio (mps026298; Python 3.13.16): remove the floor. The code runs from the 
+   handover-12-r8-reference-20261025T210551           done              -  15h 17m  handover prompt 12, R8 on the Mac Studio (mps026298; tree 8a02f0c, B1 code 049c7c8; Python 3.13.16): reference rehea
+   levin-phase-floor-03-instrument-20261025T194950    done            7/7  16h 33m  levin-phase-floor prompt 03 on the Mac Studio (mps026298; tree 98e68d3; Python 3.13.16): re-run the seven depth-20 A
+   py313-venv-02-resumed-c-20261025T165549            done              -  19h 27m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; 
+   py313-venv-02-resumed-b-20261025T165402            killed            -  19h 29m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; 
+   py313-venv-02-resumed-a-20261025T165114            killed            -  19h 32m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; 
+   py313-venv-02-reference-20261025T164631            done              -  19h 36m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; 
+   py313-venv-02-reference-20261025T163202            failed            -  19h 51m  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; 
+   handover-07-a3-v2-20261022T211155                  done              -   3d 16h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main
+   handover-06-resumed-c-20261022T200159              done              -   3d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef
+   handover-06-resumed-b-20261022T200009              killed            -   3d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef
+   handover-06-resumed-a-20261022T195718              killed            -   3d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef
+   handover-06-reference-20261022T195228              done              -   3d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef
+
+17 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 16 finished; 0 with no host recorded.
+== load
+12:23  up 19 days, 3 hrs, 1 user, load averages: 10.84 8.27 6.37
+Python 3.13.16
+# ----
+# end 2026-10-26T12:23:28Z
+# exit 0

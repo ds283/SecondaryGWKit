@@ -1,0 +1,26 @@
+$ bash -c diff\ -ruN\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts\ scripts\ \>\ out/scripts_diff_against_05_after_ruling.txt\;\ diff\ -rq\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts\ scripts\;\ shasum\ -a\ 256\ scripts/t1_true_step_only.py\ state/predictions.md\ state/predictions_attempt1_wrong_window_lines.md\ state/predictions_note_T1_reading.md\;\ stat\ -c\ \'%y\ %n\'\ state/predictions.md\ state/predictions_attempt1_wrong_window_lines.md\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ git\ status\ --short\ \&\&\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd\ status\ --short\ --ignored\;\ echo\ \'\(statuses\ end\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T13:25:38Z
+# ----
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/analyse.py and scripts/analyse.py differ
+Only in scripts: convergence_kinds.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/launch.py and scripts/launch.py differ
+Only in scripts: probe.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/prov.py and scripts/prov.py differ
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/rec.sh and scripts/rec.sh differ
+Only in scripts: rescore_t1.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/run_wider.py and scripts/run_wider.py differ
+Only in scripts: t0.py
+Only in scripts: t1_true_step_only.py
+Files /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/scripts/worker.py and scripts/worker.py differ
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  scripts/t1_true_step_only.py
+6a3cc8cec06bee86c186e6e9d80cc172852b66d322d5d8891fb6f04360fee3ed  state/predictions.md
+7dbe4f1d817980480f8cd2aab69ebef06a6d767f42933da3453efc5ce7e5c0b9  state/predictions_attempt1_wrong_window_lines.md
+0422ef48444841728479cbe9225ba04090a8538e7bcaa27cd8d2a5bd88641432  state/predictions_note_T1_reading.md
+2026-10-26 12:30:03.204717700 +0000 state/predictions.md
+2026-10-26 12:29:30.091618505 +0000 state/predictions_attempt1_wrong_window_lines.md
+(statuses end)
+# ----
+# end 2026-10-26T13:25:39Z
+# exit 0

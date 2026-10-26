@@ -1,0 +1,10 @@
+$ bash -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -B\ scripts/hash_store.py\ after_fingerprint\ \>\ state/store_files_after_fingerprint.txt\;\ diff\ \<\(grep\ -v\ \'\^#\'\ state/store_files_before.txt\)\ \<\(grep\ -v\ \'\^#\'\ state/store_files_after_fingerprint.txt\)\ \&\&\ echo\ \'store\ files:\ identical\ to\ before\'\;\ grep\ journal\ state/store_files_after_fingerprint.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:33:13Z
+# ----
+store files: identical to before
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-26T12:33:14Z
+# exit 0

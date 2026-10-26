@@ -1,0 +1,23 @@
+# 2026-10-26T12:33:05Z final
+a56f91d046c9565ac10f646d0d01de928d870e8e8792a13bdfb5ff506a3367df  var/datastores/levin-phase-floor-05a-r11-shard0000.sqlite
+3820f92fe12c8a4aaabcf089c5177c03774c1529cf97d6ed76b47a22cf059119  var/datastores/levin-phase-floor-05a-r11-shard0001.sqlite
+ad57fa271effc6f2321fbc1a3dcfe34a96c38c6232e8d254fcd9e8fbfa134f49  var/datastores/levin-phase-floor-05a-r11-shard0002.sqlite
+a5b3b12b3561d531e320ee0f113fa6c105a0763d3845dc5bd4a53cb197711c35  var/datastores/levin-phase-floor-05a-r11-shard0003.sqlite
+8553800554d70f69d0fd90655899ed819bb5bf2456d62456da293f660e1a7cb8  var/datastores/levin-phase-floor-05a-r11.sqlite
+b42aa513f7d75b563ed196e4e8d6065c20606e8357565ebec912d36dbacb4e04  var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite
+a5d54bbbe8d6b1a64c47ea252f5b11be1dad640e2d061746493276e55254a73f  var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite
+af01699e932eeda9b24d8e4661fb284c3bec8ad1f0531f6c4f8bcb4d4897b273  var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite
+5b249c8510b5bd91ece9cb67bc060e17cd12bbac475c71246836bb861835c9da  var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite
+94dae1cca60ef5d58e9ef298d8fdd4fbf937a7eebbdd3f1495e9ca0b6300c749  var/datastores/levin-phase-floor-05a-r12.sqlite
+var/datastores/levin-phase-floor-05a-r11-shard0000.sqlite 24088576 1793017417
+var/datastores/levin-phase-floor-05a-r11-shard0001.sqlite 24203264 1793017417
+var/datastores/levin-phase-floor-05a-r11-shard0002.sqlite 1077248 1793017252
+var/datastores/levin-phase-floor-05a-r11-shard0003.sqlite 23642112 1793017417
+var/datastores/levin-phase-floor-05a-r11.sqlite 36864 1793017252
+var/datastores/levin-phase-floor-05a-r12-shard0000.sqlite 24076288 1793017643
+var/datastores/levin-phase-floor-05a-r12-shard0001.sqlite 24203264 1793017643
+var/datastores/levin-phase-floor-05a-r12-shard0002.sqlite 1077248 1793017484
+var/datastores/levin-phase-floor-05a-r12-shard0003.sqlite 23560192 1793017643
+var/datastores/levin-phase-floor-05a-r12.sqlite 36864 1793017484
+# journals/wal:
+(end)

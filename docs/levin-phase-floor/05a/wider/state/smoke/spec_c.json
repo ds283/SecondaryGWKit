@@ -1,0 +1,33 @@
+{
+ "tree": "c",
+ "units": [
+  {
+   "uid": "c-1e-7-low-G+r-1",
+   "tree": "c",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "set": 1,
+   "probe": true
+  },
+  {
+   "uid": "c-1e-7-ctrl-NULL-1",
+   "tree": "c",
+   "rtol": "1e-7",
+   "row": "ctrl-NULL-1",
+   "shard": 3,
+   "serial": 452,
+   "role": "control",
+   "budget": null,
+   "set": 1,
+   "probe": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/smoke",
+ "emit_fd": 4,
+ "emit_file": null,
+ "pickle_regions": true
+}

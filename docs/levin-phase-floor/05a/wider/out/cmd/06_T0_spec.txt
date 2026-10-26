@@ -1,0 +1,92 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/t0.py spec /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:27:42Z
+# ----
+{
+ "tree": "c",
+ "units": [
+  {
+   "uid": "T0-c-1e-7-low-G+r-1",
+   "tree": "c",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "probe": true
+  },
+  {
+   "uid": "T0-c-1e-7-ctrl-low-1",
+   "tree": "c",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/c",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/c/ledger.jsonl",
+ "pickle_regions": true
+}
+{
+ "tree": "t",
+ "units": [
+  {
+   "uid": "T0-t-1e-7-low-G+r-1-run1",
+   "tree": "t",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "probe": true
+  },
+  {
+   "uid": "T0-t-1e-7-low-G+r-1-run2",
+   "tree": "t",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "probe": true
+  },
+  {
+   "uid": "T0-t-1e-7-ctrl-low-1-run1",
+   "tree": "t",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true
+  },
+  {
+   "uid": "T0-t-1e-7-ctrl-low-1-run2",
+   "tree": "t",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/t",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider/state/T0/t/ledger.jsonl",
+ "pickle_regions": true
+}
+# ----
+# end 2026-10-26T12:27:42Z
+# exit 0

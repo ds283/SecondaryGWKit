@@ -1,0 +1,16 @@
+$ bash -c shasum\ -a\ 256\ state/sample.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json\;\ cmp\ state/sample.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json\ \&\&\ echo\ \'cmp:\ identical\'\;\ echo\ \'==\ expected\ 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7\'\;\ echo\ \'==\ the\ sample_sha256\ 05\ run\ recorded\ \(run_wider\ header\ in\ its\ stdout.log\):\'\;\ grep\ \'\^#\ run_wider\ header\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/stdout.log\ \|\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \'import\ sys\,json\;\ \[print\(json.loads\(l.split\(\"header\ \"\,1\)\[1\]\)\[\"sample_sha256\"\]\)\ for\ l\ in\ sys.stdin\]\'\;\ S=\$\(shasum\ -a\ 256\ state/sample.json\ \|\ cut\ -d\'\ \'\ -f1\)\;\ \[\ \"\$S\"\ =\ 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7\ \]\ \&\&\ echo\ \'SAMPLE\ SHA-256\ MATCHES\'\ \|\|\ echo\ \'SAMPLE\ SHA-256\ DIFFERS\'\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \'import\ json\;\ s=json.load\(open\(\"state/sample.json\"\)\)\;\ r=s\[\"rows\"\]\;\ print\(len\(r\)\,\ \"rows\;\"\,\ sum\(x\[\"role\"\]==\"d20\"\ for\ x\ in\ r\)\,\ \"d20\;\"\,\ sum\(x\[\"role\"\]==\"control\"\ for\ x\ in\ r\)\,\ \"controls\;\ L0:\"\,\ s\[\"L0\"\]\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05a/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T12:23:46Z
+# ----
+73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7  state/sample.json
+73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json
+cmp: identical
+== expected 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+== the sample_sha256 05 run recorded (run_wider header in its stdout.log):
+73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+SAMPLE SHA-256 MATCHES
+39 rows; 31 d20; 8 controls; L0: {'d20': 'low-G+r-1', 'control': 'ctrl-low-1'}
+# ----
+# end 2026-10-26T12:23:46Z
+# exit 0
