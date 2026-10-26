@@ -430,6 +430,7 @@ class Fixture:
             self.k_object,
             self.Tk_numeric,
             FakeTkWKB(values, sin_coeff, self.crossover_z),
+            exact_remainder=False,
         )
 
     def LG_functions(self, sin_coeff=0.37):
@@ -464,6 +465,7 @@ class Fixture:
             self.k_object,
             self.Tk_numeric,
             FakeTkWKB(values, sin_coeff, self.crossover_z),
+            exact_remainder=False,
         )
 
 
@@ -612,6 +614,7 @@ class AnalyticRadiationFixture:
             self.k_object,
             self.Tk_numeric,
             FakeTkWKB(values, sin_coeff, self.crossover_z),
+            exact_remainder=False,
         )
 
     def stored_phase_spline(self):
@@ -972,6 +975,7 @@ class TestConsistencyChecks(unittest.TestCase):
                 f.k_object,
                 f.Tk_numeric,
                 FakeTkWKB(values, functions.sin_coeff, f.crossover_z, cos_coeff=1.0e-3),
+                exact_remainder=False,
             )
 
     def test_WKB_grid_starting_below_the_hand_over(self):
@@ -1306,6 +1310,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                 f.k_object,
                 f.Tk_numeric,
                 FakeTkWKB(values, 0.37, f.crossover_z),
+                exact_remainder=False,
             )
 
         # the consistent case must build
@@ -1351,6 +1356,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                 f.k_object,
                 f.Tk_numeric,
                 FakeTkWKB(values, 0.37, f.crossover_z),
+                exact_remainder=False,
             )
 
     def test_missing_background_tables_are_refused_by_name(self):
@@ -1395,6 +1401,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                         f.k_object,
                         f.Tk_numeric,
                         FakeTkWKB(values, sin_coeff, f.crossover_z),
+                        exact_remainder=False,
                     )
                 self.assertIn(name, str(caught.exception))
 

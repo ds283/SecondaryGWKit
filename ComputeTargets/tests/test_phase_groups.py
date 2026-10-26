@@ -655,6 +655,7 @@ def matched_LG_functions(fixture: Fixture) -> TkSourceFunctions:
         fixture.k_object,
         fixture.Tk_numeric,
         FakeTkWKB(values, sin_coeff, z_init),
+        exact_remainder=False,
     )
 
 

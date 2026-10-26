@@ -86,16 +86,24 @@ add of ``TWO_PI`` (Sterbenz). What is left is ``~ eps k |p_z|`` of jitter and ~1
 bit for bit: ``raw_theta`` is still the double of size ``k tau_R``, used for the driver's
 total-variation gate and for diagnostics, where that size is harmless.
 
-**Who uses which** (gate G1 of ``prompts/levin-phase-floor``, answered by the user on
-2026-10-26). The Green's function turns the node-anchored remainder on
-(``GkSourcePolicyData._build_phase``): its anchor term ``k tau_R`` was the floor (04's arm A
-matched the exact limit region for region). The transfer function keeps the default
-(``TkSourceFunctions``): G1 took the large constant out of ``G``'s phase only, and ``T``'s
-remainders are unchanged bit for bit. Whether ``T`` needs the same is for the wider
-re-measurement of prompt 05 to show, and is a finding for the board, not a change made here.
-Per-*region* anchoring, ``[00-consumer-anchoring-floor]``, is what this answers for ``G``. The
-noise in the stored samples of ``phi`` (``[02-consumer-phi-below-the-storage-granularity]``) is
-not touched by either mode.
+**Who uses which.** Both production factors use the node-anchored remainder.
+- The Green's function (``GkSourcePolicyData._build_phase``), since prompt 05 of
+  ``prompts/levin-phase-floor``, on the user's answer at its gate G1 (2026-10-26): its anchor term
+  ``k tau_R`` was the floor (04's arm A matched the exact limit region for region). Its anchor,
+  the response redshift, is a table node in production, so its ``p_R`` is zero. This is what
+  answers per-*region* anchoring, ``[00-consumer-anchoring-floor]``, for ``G``.
+- The transfer function (``TkSourceFunctions``, whose ``exact_remainder`` keyword defaults to
+  on), since prompt 05a, on the user's decision of 2026-10-26 to treat ``T`` "in exactly the same
+  way": ``T`` enters the integrand on the same footing as ``G`` and carried both errors, the
+  ``eps k tau_s`` rounding and the modulus. Its anchor ``z_init`` is a root, not a table node, so
+  its ``p_R`` is a non-zero double from the table's own quadrature, and enters ``c_n`` exactly as
+  that double.
+
+The default remains for objects whose leading primitive has no table nodes: test fixtures built
+on a closed form, which pass ``exact_remainder=False`` explicitly. Neither mode touches the
+rounding of the abscissa itself, ``z = expm1(u)``, about ``eps z/(1+z) |d theta/du|`` (04's I1),
+which for ``T`` is the same size as the floor removed wherever ``z >> 1``, nor the noise in the
+stored samples of ``phi`` (``[02-consumer-phi-below-the-storage-granularity]``).
 
 **Protocol.** This class implements exactly the three methods every ``phase_spline`` consumer
 calls -- ``raw_theta(x, x_is_log)``, ``theta_mod_2pi(x, x_is_log)``,

@@ -294,7 +294,7 @@ def exact_Tk_inputs(fixture: Fixture):
     """
     captured = {}
 
-    def capture(model, k, Tk_numeric, Tk_WKB):
+    def capture(model, k, Tk_numeric, Tk_WKB, exact_remainder=True):
         captured["inputs"] = (Tk_numeric, Tk_WKB)
         return None
 
@@ -423,7 +423,7 @@ class Case:
                 float(shape.r): self.Fr.exact_envelope_model(),
             }
             self.Tk_builder = lambda model, k, Tn, Tw: tk_fixtures.TkSourceFunctions(
-                envelope_models[float(k)], k, Tn, Tw
+                envelope_models[float(k)], k, Tn, Tw, exact_remainder=False
             )
 
         # source: the exact f, splined on the production grid over the both-numeric region.

@@ -508,15 +508,41 @@ class TestNothingElseMoves(unittest.TestCase):
             f"{n} abscissae, both signs"
         )
 
-    def test_transfer_function_remainders_are_unchanged(self):
+    def test_transfer_function_keyword_off_is_WKB_mod_2pi_of_raw_theta(self):
         """
-        A ``TkSourceFunctions`` phase, built as production builds it (``exact_remainder`` left at
-        its default), keeps today's remainder bit for bit: ``WKB_mod_2pi(raw_theta)[1]``, which is
-        what ``theta_mod_2pi`` returned before prompt 05.
+        **Replaced by prompt 05a §3 test 4(b)** (prompt 05a §2). This was
+        ``test_transfer_function_remainders_are_unchanged``, which asserted G1's decision that
+        ``T``'s remainders stay as they were with ``exact_remainder`` left at its default. The
+        user reversed that on 2026-10-26: ``TkSourceFunctions`` now defaults the keyword on
+        (``test_t_phase_reanchor`` tests that). What remains true, and is asserted here, is that
+        with the keyword *off* a ``TkSourceFunctions`` phase on a table ``cs_tau`` keeps the old
+        remainder bit for bit: ``WKB_mod_2pi(raw_theta)[1]``, which is what ``theta_mod_2pi``
+        returned before prompt 05.
         """
+        from unittest.mock import patch
+
+        import ComputeTargets.tests.test_tk_source_functions as tk_fixtures
+
         fixture = _TableCsTauFixture(END_TO_END_W)
-        T = fixture.exact_functions()
+        # the fixture's own stored samples, captured from exact_functions() as
+        # test_quadsource_integral.exact_Tk_inputs captures them, and read against its table
+        # cs_tau with the keyword passed explicitly off
+        captured = {}
+
+        def capture(model, k, Tk_numeric, Tk_WKB, exact_remainder=True):
+            captured["inputs"] = (Tk_numeric, Tk_WKB)
+
+        with patch.object(tk_fixtures, "TkSourceFunctions", capture):
+            fixture.exact_functions()
+        T = TkSourceFunctions(
+            fixture.exact_envelope_model(),
+            fixture.k_object,
+            *captured["inputs"],
+            exact_remainder=False,
+        )
         phase = T.phase
+        self.assertIsInstance(phase._leading, TablePrimitive)
+        self.assertFalse(phase.exact_remainder)
         self.assertEqual(phase.sign, +1)
         # every WKB sample, and the midpoints between them
         z = sorted(fixture.z_WKB)
@@ -528,8 +554,9 @@ class TestNothingElseMoves(unittest.TestCase):
             if float.hex(got) != float.hex(want):
                 differ.append((zz, got, want))
         print(
-            f"\n[05 test 4] TkSourceFunctions remainders: {len(points) - len(differ)} of "
-            f"{len(points)} bit-identical to WKB_mod_2pi(raw_theta)[1]"
+            f"\n[05a test 4(b)] TkSourceFunctions remainders, keyword off: "
+            f"{len(points) - len(differ)} of {len(points)} bit-identical to "
+            f"WKB_mod_2pi(raw_theta)[1]"
             + (
                 f"; first difference at z={differ[0][0]!r}: {differ[0][1]!r} against "
                 f"{differ[0][2]!r}"

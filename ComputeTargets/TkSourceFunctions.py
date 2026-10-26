@@ -105,6 +105,21 @@ rate = c_s/H, and `_sound_horizon_rate` below builds exactly that callable, pass
 sqrt(Tk_omegaEff_sq), and now equals `phase.theta_deriv(z)` to the accuracy of phi's spline
 derivative rather than to that of a spline of theta.
 
+**The remainder is node-anchored** (`exact_remainder=True`, the default;
+`prompts/levin-phase-floor` prompt 05a, on the user's decision of 2026-10-26). `theta_mod_2pi`
+no longer reduces one double of size k cs_tau(z), which carried eps k cs_tau(z) of rounding that
+is not smooth in z, against the double `TWO_PI`, which added a smooth 0.18 eps |theta|. Instead it
+reduces the large constant k [cs_tau(n_init) - cs_tau(n) + p_init] exactly against 2pi itself,
+once per table node n, and forms only the small part -k p_z + phi in double, exactly as
+`GkSourcePolicyData._build_phase` does for the Green's function since prompt 05
+(`primitive_phase.py`'s module docstring, "Anchoring"). Unlike the Green's function's anchor,
+`z_init` is a root, not a table node, so its end partial p_init is non-zero in production.
+`raw_theta` and `theta_deriv` are unchanged. The constructor keyword exists for test fixtures
+whose `cs_tau` is a closed form with no table nodes: they pass `exact_remainder=False`.
+Production never passes it. What the remainder still carries is the rounding of the abscissa
+itself, z = expm1(log(1+z)), about eps z/(1+z) |d theta/d log(1+z)|, which for T is the same size
+as the floor removed wherever z >> 1 (prompt 05a section 0.1).
+
 `sin_coeff` is exposed as well: `M` already includes it (so `M` may be negative, and no
 absolute value is taken anywhere), but a consumer that wants T's sign convention needs it.
 
@@ -211,6 +226,12 @@ MIN_SPLINE_DATA_POINTS = 5
 #
 # which is what TkWKBIntegration stores. (GkSourcePolicyData anchors at the response redshift,
 # at the bottom of its range, and carries sign = -1.)
+#
+# Its remainder is node-anchored, as the Green's function's is (PrimitivePhase's
+# exact_remainder; prompts/levin-phase-floor prompt 05a): the constant k [cs_tau(n_init) -
+# cs_tau(n) + p_init] is reduced exactly against 2pi once per table node n, so no double of size
+# k cs_tau is rounded on the way to theta_mod_2pi. z_init is a root, not a node, so the anchor's
+# end partial p_init is non-zero here, where the Green's function's is zero.
 TK_PHASE_SIGN = +1
 
 # The stored `friction` samples must agree with model.functions.friction_F to this fraction of
@@ -279,6 +300,7 @@ class TkSourceFunctions:
         k,
         Tk_numeric,
         Tk_WKB,
+        exact_remainder: bool = True,
     ):
         """
         :param model: a BackgroundModel (only `model.functions` is used)
@@ -287,6 +309,14 @@ class TkSourceFunctions:
             for the crossover cross-check.
         :param Tk_numeric: numeric-region data; see the module docstring for the protocol
         :param Tk_WKB: WKB-region data; see the module docstring for the protocol
+        :param exact_remainder: passed to the phase's `PrimitivePhase`. `True` (the default,
+            and what production uses: it never passes this) gives the node-anchored remainder,
+            reduced exactly against 2pi once per table node (module docstring, "Phase"). It
+            needs `model.functions.cs_tau` to supply the node accessors `end_partial` and
+            `node_limbs`, as `BackgroundModel.TablePrimitive` does; without them
+            `PrimitivePhase` raises `ValueError`, and there is no fallback. `False` reduces
+            `raw_theta` with `WKB_mod_2pi`, as before prompt 05a of `prompts/levin-phase-floor`:
+            for test fixtures whose `cs_tau` is a closed form with no table nodes
         """
         self._model = model
         self._k = k
@@ -339,6 +369,9 @@ class TkSourceFunctions:
                 f"(TkWKBIntegration.store() sets cos_coeff = 0 at TkWKBIntegration.py:458), but cos_coeff={cos_coeff:.8g}"
             )
         self._sin_coeff = float(Tk_WKB.sin_coeff)
+
+        # passed to the phase unchanged: no fallback when cs_tau lacks the node accessors
+        self._exact_remainder = bool(exact_remainder)
 
         # The Liouville-Green row fixes the switch node (its first sample); the numeric spline is
         # then cut relative to that node, so the WKB side is built first.
@@ -501,6 +534,7 @@ class TkSourceFunctions:
             model_functions=self._model.functions,
             rate=_sound_horizon_rate(self._model.functions),
             label="T_k WKB phase",
+            exact_remainder=self._exact_remainder,
         )
 
         self._H_init = self._model.functions.Hubble(self._z_init)
