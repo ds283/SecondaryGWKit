@@ -1,7 +1,7 @@
 # levin-phase-floor campaign — implementation state
 
 **Last updated:** 2026-10-25 · **Status: MEASURED — 4 of 4 measurement prompts closed: 01, 03 and 04
-landed, 02 stopped and superseded; gate G1 is open.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+landed, 02 stopped and superseded; gate G1 answered 2026-10-26.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
 `handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
 the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
 issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
@@ -17,8 +17,9 @@ passed. **With the floor removed the cap goes:** R1 holds on 7 of 7 rows, with t
 to 0.20–0.49 % of production's. **Taking $k\tau_R$ out of $G$'s phase alone does the same, region for
 region** (A1 holds, and A matched X on every row). **N4 fails on 3 of 7 rows:** the stored
 `total_abserr` understates the jitter's own effect by 1.16–1.94×. R2 holds, and Q5's number is at most
-6.7e-6. 04 opened two issues and narrowed four here and on other boards (§3). **Gate G1 is open:** the
-remedy prompts wait on the user's answers to README §6.3 Q1–Q3.
+6.7e-6. 04 opened two issues and narrowed four here and on other boards (§3). **Gate G1 was answered
+on 2026-10-26** (Decisions below): H-anchor; layer 1(a) here, after the fingerprint fix; the
+producers' stored phase after it.
 
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
@@ -48,6 +49,17 @@ records in `docs/levin-phase-floor/NN/` ·
 | **U1** | Open this campaign from findings §2: the §2.6 test first, then the remedy |
 | **U2** | A3 v2 analysis runs on the Mac Studio; the laptop's Ray is left to ChamPBH and StochasticInstantons |
 
+**Gate G1, answered by the user on 2026-10-26 (README §6.3):**
+
+| | Answer |
+|---|---|
+| **Q1** | **H-anchor stands.** H-cancel is not excluded as a minor contribution, but re-anchoring $G$ alone removes the cliff (04's A1), so the remedy starts there |
+| **Q2** | **Layer 1(a): $k\tau_R$ taken out of $G$'s phase.** It is not guaranteed for every future geometry, so the prompt that lands it re-measures a wider sample: low band and `Gqr`-dominated rows. The large constant is reduced against the true $2\pi$ in extended precision, not against `TWO_PI` (`[04-g-phase-is-reduced-against-the-double-two-pi]`) |
+| **Q3** | **Here, and as early as possible**, before anything else is stored. Layer 1(a) is consumer-only and lands in this campaign, not as `handover`'s D2. The noise in the producers' stored phase samples is not removed by regenerating the store. It needs its own method, and this campaign takes it up for both `GkWKBIntegration` and `TkWKBIntegration` after layer 1, before the next production build (`[02-consumer-phi-below-the-storage-granularity]`, assigned here) |
+| **M3** | **Its slope clause is badly posed** (`[03-m3-slope-clause-is-badly-posed-at-round-off]`). Its ratio clause and 04's R1 carry the comparison, so the mechanism is recorded as holding (§2.2). 03's verdict as written stays beside it |
+| **Layer 2** | **Deferred to G2.** Whether the driver must be told its input's floor, and whether that must reach the Clenshaw–Curtis branch (`[03-depth20-regions-are-all-clenshaw-curtis]`), is decided after layer 1 and the wider re-measurement |
+| **Order** | **The fingerprint first.** `[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]` is fixed, with a new rehearsal reference, before the layer 1 prompt, so that the layer 1 rehearsal can show its change in `QuadSourceIntegral` |
+
 The orchestrator's choices of method, C1–C6, are in README §6.2. The open questions for the user,
 Q1–Q4, are in README §6.3.
 
@@ -61,7 +73,8 @@ Q1–Q4, are in README §6.3.
 | 02 | [Phase-noise injection](02-phase-noise-injection.md) | findings §2.6 item 2 on A2's fixtures, three arms; N1–N4 | laptop, offline, no Ray | Opus | ✍️ 2026-10-25 | ⛔ stopped at step 3, superseded by 03 (user, 2026-10-25). Step 2's bit-identity at δ = 0 held on all eight cases; the δ = 1e-4 check never ran; the probe `levin-phase-floor-02-noise-probe-20261025T183809` was stopped by SIGTERM, `killed` at 16/19, after its first noised cell ran ~69 min unfinished; the sweep was never launched; N1–N4 not scored (N1, N3 answered by 03; N4 to 04; N2 dropped) | `87813ed` | [log](logs/02-phase-noise-injection.md) |
 | 03 | [Instrument seven depth-20 rows](03-instrument-depth-20-rows.md) | findings §2.6 item 1 on seven of 01's candidates: depth per group by branch; the jitter in the composed phase; the discrepancy along a region's ancestry, real and with the jitter removed; what the driver can see; how far `G+r` cancels. M0 (bit-identity) gates M1–M5 | Mac Studio; Ray-free if a stand-in read-only pool works, else under the lock | Opus | ✍️ 2026-10-25 | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-03-instrument-20261025T194950`; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`; reviewed there, 9/9 pass, three readings confirmed by the user on 2026-10-25 (`elapsed` not gated, M5 inapplicable on R7, the pid in `status.json`); R1 re-checked from the laptop: stored and re-run agree in `float.hex` on `total` (`-0x1.631c5efe83a46p-78`), `total_abserr` (`0x1.2f222e3d4dd6dp-95`), `WKB_Levin` and `numeric_quad` (`0x0.0p+0`), `total_converged` 0 / False | `d5f5a2b` (records) | [log](logs/03-instrument-depth-20-rows.md) |
 | 04 | [Remove the floor from seven rows](04-remove-the-floor.md) | findings §2.6 item 3 in a harness, on 03's seven rows. Arm **A**: $k\tau_R$ out of $G$'s phase (layer 1(a)). Arm **X**: every factor's remainder reduced exactly, the limit of any phase layer and N4's reference. Layer 1(b) is not an arm (README §6.2 C7). Gates E1, E2, M0; scored R1 (the cap goes under X), A1 (layer 1(a) is enough where $G$'s anchor is the floor), N4, R2 with Q5's number | Mac Studio, Ray-free, **at the pre-B1 tree `98e68d3`** in a worktree: `handover` B1's strict coverage check refuses A3 v2's `QuadSource` rows, so an A3 v2 re-run at `HEAD` raises (`[12-realistic-large-x-reads-the-retired-clamp-records]`) | Opus | ✍️ 2026-10-25; §8 added on the resume (`d170e6d`) | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-04-remove-20261025T231110`, 28/28 units, none over budget; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`. The first dispatch stopped at step 5 (E1 (c), E2 failed by round-off, 4e-16–6.5e-14 rad); the user amended those two gates only. The resume's review passed. R1 re-checked from the laptop: stored and P agree in `float.hex` on `total` and `total_abserr` | records in the bookkeeping commit | [log](logs/04-remove-the-floor.md) |
-| 05+ | remedy | §2.7 layers 1–2, as G1 decides | laptop | — | ⏸ held on G1 | ⬜ | — | — |
+| 05 | layer 1(a) | $k\tau_R$ out of $G$'s phase at the consumer, the constant reduced against $2\pi$ in extended precision; tests; a rehearsal; a wider re-measurement on A3 v2's rows, low band and `Gqr` included | laptop; rehearsal and re-measurement on the Mac Studio | — | ⏸ held on the fingerprint fix (G1 Order) | ⬜ | — | — |
+| 06+ | the producers' phase; layer 2 | `GkWKBIntegration` and `TkWKBIntegration`'s stored phase, by its own method (G1 Q3); then layer 2 as G2 decides | — | — | ⏸ held on 05 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · ✅ landed · ⛔ stopped and superseded.
 
@@ -89,7 +102,7 @@ VERIFICATION §4. The worktree is kept until the user agrees to remove it.
 
 | Gate | Holds when | After | State |
 |---|---|---|---|
-| **G1** | the user has read 01–04 and answered README §6.3 Q1–Q3: which hypothesis stands, which layer 1, and where it lands | 04 | 🔓 **open** since 2026-10-25: 01–04 have landed, and the answers are awaited |
+| **G1** | the user has read 01–04 and answered README §6.3 Q1–Q3: which hypothesis stands, which layer 1, and where it lands | 04 | ✅ **answered 2026-10-26** (Decisions above): H-anchor; layer 1(a) here; the producers after it |
 | **G2** | the user has answered Q4: the depth cap, the acceptance test and `total_converged` | the layer 1–2 prompts | ⬜ |
 
 ### 2.1 The hypotheses
@@ -114,7 +127,8 @@ Prompt 03 §3: "a non-smooth phase floor, invisible to the driver, drives the bi
 - **M5 holds** on R1–R5 (worst +0.34 %); R7 has no `Gr` sub-interval, so it is inapplicable there.
 
 **So "the mechanism holds" does not hold as written**, and the clause "M2 holds and M3 fails ⇒
-refuted" fires by its letter.
+refuted" fires by its letter. *(G1, 2026-10-26: the user ruled M3's slope clause badly posed. The
+mechanism is recorded as **holding**, on M1, M2, M4, M3's ratio clause and 04's R1.)*
 
 **I1's argument, the agent's** (03's `issues.md` I1 and log note (a)): with the jitter removed, D
 is at round-off, about 1e-16 to 1e-13, from depth 10 onward, so no slope can be measured; the ratio
@@ -159,28 +173,6 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
   +0.34 %. So `G+r` oscillates at about 0.27 of `G-r`'s rate, and the cancellation is not exact. R6
   and R7 (`q == r == k`) have no `Gr` sub-interval. What remains is the correction note on the
   findings document. VERIFICATION §3.2.
-- **[03-m3-slope-clause-is-badly-posed-at-round-off]** *(opened 2026-10-25 by prompt 03, its I1)* —
-  prompt 03's M3 slope clause cannot be met by the jitter-free control.
-  - With `theta_mod_2pi` replaced on the depth-10 span by a degree-12 fit, and nothing else
-    changed, the median D is about 2e-16 to 1e-13 at **every** depth from 10 to 20: the round-off
-    of the 24/47-point nested Clenshaw–Curtis pair. The real phase gives 4e-8 to 5e-6.
-  - So the control's slope over depths 12–20 is −0.020 to 0.148 per row, below 2 on 7 of 7, while
-    the depth-20 ratio real/control is 3.1e6–2.4e8, at least 100 on 7 of 7.
-
-  **Impact:**
-  - as written, M3 fails, the mechanism verdict is not met, and "M2 holds and M3 fails ⇒ refuted"
-    fires by its letter (§2.2);
-  - the agent argues that the clause assumes algebraic convergence above a floor, which a
-    discrepancy already at round-off at depth 10 cannot show, and that the measurement points the
-    other way. Per README §5 rule 3 it is recorded as badly posed, not re-posed.
-
-  **Next step:** the user decides at G1 how the verdict is read. Not adjudicated here.
-
-  **Narrowed (2026-10-25, prompt 04, R1):** the full re-run that M3's control stood in for has now
-  been made. With every remainder reduced exactly and nothing else changed, the cap goes on 7 of 7
-  rows, and the region count falls to 0.20–0.49 % of production's. So the re-run shows what I1
-  argued the ratio clause meant. What stays open is the record: how G1 reads M3's verdict.
-
 - **[03-depth20-regions-are-all-clenshaw-curtis]** *(opened 2026-10-25 by prompt 03, its I2)* —
   every depth-20 region on the seven rows is a Clenshaw–Curtis fallback region.
   - 189,196 of 189,196 in the 29 scored groups; no group, scored or not, has a Levin region at
@@ -205,6 +197,9 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
   - at `1e-8` a single short chain per group still reaches the cap
     (`[04-x-at-1e-8-still-reaches-depth-20]`);
   - A3 v2's other depth-20 rows are unmeasured.
+
+  **G1 (2026-10-26): deferred to G2** by the user. Layer 1 lands first, then a wider re-measurement,
+  and G2 decides whether layer 2 is needed and whether it must reach this branch.
 
 - **[03-storefixtures-standin-pickle-and-exit-rows]** *(opened 2026-10-25 by prompt 03, its I3)* —
   `StoreFixtures` cannot carry A3 v2's objects as they stand.
@@ -275,11 +270,37 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
 - `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` — `handover` board §3;
 - `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` — `handover` board §3;
 - `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` — `handover` board §3;
-- `[00-consumer-anchoring-floor]` — `GkTk-remedial` board §3.
+- `[00-consumer-anchoring-floor]` — `GkTk-remedial` board §3;
+- `[02-consumer-phi-below-the-storage-granularity]` — `phase-representation` board §3, assigned
+  2026-10-26 at G1 (Q3).
 
 **Measured here, not assigned:** `[04-roundoff-floor-can-be-infinite]` (`levin-refactor` board).
 01 confirms whether it reaches A3 v2, and narrows it there.
 
 ## 4. Resolved issues
 
-None.
+- **[03-m3-slope-clause-is-badly-posed-at-round-off]** *(opened 2026-10-25 by prompt 03, its I1)* —
+  prompt 03's M3 slope clause cannot be met by the jitter-free control.
+  - With `theta_mod_2pi` replaced on the depth-10 span by a degree-12 fit, and nothing else
+    changed, the median D is about 2e-16 to 1e-13 at **every** depth from 10 to 20: the round-off
+    of the 24/47-point nested Clenshaw–Curtis pair. The real phase gives 4e-8 to 5e-6.
+  - So the control's slope over depths 12–20 is −0.020 to 0.148 per row, below 2 on 7 of 7, while
+    the depth-20 ratio real/control is 3.1e6–2.4e8, at least 100 on 7 of 7.
+
+  **Impact:**
+  - as written, M3 fails, the mechanism verdict is not met, and "M2 holds and M3 fails ⇒ refuted"
+    fires by its letter (§2.2);
+  - the agent argues that the clause assumes algebraic convergence above a floor, which a
+    discrepancy already at round-off at depth 10 cannot show, and that the measurement points the
+    other way. Per README §5 rule 3 it is recorded as badly posed, not re-posed.
+
+  **Next step:** the user decides at G1 how the verdict is read. Not adjudicated here.
+
+  **Narrowed (2026-10-25, prompt 04, R1):** the full re-run that M3's control stood in for has now
+  been made. With every remainder reduced exactly and nothing else changed, the cap goes on 7 of 7
+  rows, and the region count falls to 0.20–0.49 % of production's. So the re-run shows what I1
+  argued the ratio clause meant. What stays open is the record: how G1 reads M3's verdict.
+
+  **Closed 2026-10-26 at gate G1, by the user's ruling:** the slope clause is badly posed, and the
+  mechanism is recorded as holding on M1, M2, M4, M3's ratio clause and 04's R1 (§2.2). 03's verdict
+  as written stays on record beside the ruling.

@@ -306,6 +306,9 @@ These are the orchestrator's choices, and the user can reverse any of them.
 
 ### 6.3 Open, for the user at the gates
 
+*Q1–Q3 were answered at G1 on 2026-10-26; the answers are on the board, under Decisions. Q4 and Q5
+remain for G2.*
+
 - **Q1 (G1): which hypothesis stands.** H-cancel, H-anchor, both or neither.
 - **Q2 (G1): which layer 1 is wanted.**
   - (a) $k\tau_R$ taken out of $G$'s phase at the consumer;

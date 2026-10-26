@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-25 · **112 open** across twenty-two campaigns.
+**Last updated:** 2026-10-26 · **111 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -72,8 +72,8 @@ on that board's §4. Its prompt 04 closed `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]` the same day, on that board's §4. Every row
 above is on a board. The three `handover` rows a document review indexed on 2026-09-19 without one
 were opened on that board on 2026-10-25 by its prompt 03 (A3), which opened two more of its own. The `levin-phase-floor` board
-(2026-10-25) holds seven issues of its own: two opened by its prompt 01, three by its prompt 03 and
-two by its prompt 04.
+(2026-10-25) holds six issues of its own: two opened by its prompt 01, two by its prompt 03 (a third was closed at
+G1 on 2026-10-26) and two by its prompt 04.
 The four other rows of §1.24 were assigned to it from other boards and stay on them.
 
 ---
@@ -133,7 +133,7 @@ with two of its own. Workstream **C2** owns `[03-gksource-policy-accepts-a-value
 | `[10-the-readers-draw-their-work-lists-unseeded]` | handover | Every `extract_*` reader draws its `k`/`z_source` subsample with an unseeded `random.sample` (GkWKB: 174 of ~1740 source redshifts), so outputs differ run to run, a check naming a pair passes only if the draw includes it (prompt 10's held at ~1 in 10), and a "complete" read-back covers the sample, not the store. Not assigned. |
 | `[11-seam-band-rows-deviate-from-the-oracle-by-up-to-two-orders]` | handover | In A3 v2's seam band $|{\rm total}/{\tt analytic\_rad}-1|$ has median 5.3e-04 but max **96.9** (20.5 at $10^8$); A2 bounded the clamp term at 0.91. Near-zero oracles, or the worst stored `total`s on the grid — not yet identified. Not assigned. |
 | `[12-realistic-large-x-reads-the-retired-clamp-records]` | handover | B1 removed the partition's clamp-gap keys; A2's `realistic_large_x.py` reads them (`:332`, `:356`, `:666`) and raises `KeyError` at `HEAD`. Also stale clamp mentions in `primitive_phase.py`, `main.py`, and pre-B1 `QuadSource` rows refused by B1's strict check. Owner **B2**. |
-| `[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]` | handover | `QuadSourceIntegral`'s `inventory_spec` records identity and tags only: B1 changed the stored integrals, yet R8's fingerprint differs from R3's in `QuadSource` alone. A rehearsal that checks "equal to the reference fingerprint" cannot catch a regression in `QuadSourceIntegral` values. Likely fix: a value table in that `inventory_spec`. Not assigned. |
+| `[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]` | handover | `QuadSourceIntegral`'s `inventory_spec` records identity and tags only: B1 changed the stored integrals, yet R8's fingerprint differs from R3's in `QuadSource` alone. A rehearsal that checks "equal to the reference fingerprint" cannot catch a regression in `QuadSourceIntegral` values. Likely fix: a value table in that `inventory_spec`. **Assigned 2026-10-26** within `handover`, to land before `levin-phase-floor` 05. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
@@ -272,9 +272,8 @@ README §7 D2 decision was then taken on the evidence of
 campaign was **closed**, its remaining issue passing to the `qcd-background-audit` campaign (§1.7). Close-out:
 `docs/gktk-remedial-verification.md` §8.
 
-| Issue | Board | Hook |
-|---|---|---|
-| `[02-consumer-phi-below-the-storage-granularity]` | phase-representation | $\varphi$ is recovered as a difference of two numbers of size $k\tau$, so on QCD $G_k$ its whole range is 6.0 ulp of the stored phase at $k=10^7$ and **2.0 ulp (3 distinct values over 1,377 samples)** at $3\times10^8$. Differentiating that staircase makes `theta_deriv` **3× and 10× worse than omitting $\varphi$ altogether**, and is what §3.6's two failing rows actually are. `[00-consumer-anchoring-floor]` seen in the derivative. **Narrowed 2026-10-25** by `levin-phase-floor` 04: on A3 v2's ΛCDM $G_k$ the stored samples themselves carry 0.15–0.21 $F$ of noise in $\varphi$, not only the consumer's subtraction. |
+Its one remaining row, `[02-consumer-phi-below-the-storage-granularity]`, was assigned to
+`levin-phase-floor` on 2026-10-26 and is indexed in §1.24.
 
 ---
 
@@ -959,8 +958,9 @@ remains in this section.**
 [`docs/handover/A3-V2-FINDINGS.md`](handover/A3-V2-FINDINGS.md) §2
 ([board](../prompts/levin-phase-floor/IMPLEMENTATION_STATE.md)). It owns A3 v2's depth-20 Levin
 cost cliff and the honesty of what a `QuadSourceIntegral` row stores about its error and
-convergence. Its plan opened no issue; its prompt 01 opened two, its prompt 03 three and its prompt 04 two (the last seven rows). The four rows above them were assigned to it the same day, three
-from §1.1 and one from §1.4. **Each stays on its own board**, which is the record and is where it
+convergence. Its plan opened no issue; its prompt 01 opened two, its prompt 03 three (one closed at gate G1 on 2026-10-26) and its prompt
+04 two: the last six rows. The five rows above them were assigned to it: three from §1.1 and one from
+§1.4 on 2026-10-25, and one from §1.6 on 2026-10-26. **Each stays on its own board**, which is the record and is where it
 is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; this campaign's prompt
 01 measures whether it reaches A3 v2.
 
@@ -970,9 +970,9 @@ is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; thi
 | `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` | handover | `total_converged` and `total_phase_limited` are stored and **nothing reads either**; 889 rows that ran to the depth cap without meeting a tolerance are keyed and served like any other. No defined route to remove them — only `--prune-unvalidated`, which would mean clearing a validation flag by hand. **Subsumed by the regeneration, user decision 2026-09-23:** the store is rebuilt from scratch at the chosen pair, so these rows cease to exist rather than being cleaned. The design question survives only if the adopted pair still reaches the depth cap. **Narrowed 2026-10-25 (handover 08): live again** — the adopted pair still reaches the cap; A3 v2 stores 2262 unconverged rows (1179 at depth 20), nothing reads the flag. **Narrowed 2026-10-25 (A3 v2 findings §2.5):** the flag is per group, against each group's own value; 132 of 1086 converged depth-20 rows declare `abserr/|total|` > 1e-4, max 5.0e-2. A gate belongs on `total_abserr/|total|`, not on the flag. **Narrowed 2026-10-25 (`levin-phase-floor` 01):** §2.5 reproduces; 558 rows store `total_abserr = +inf`. **Narrowed 2026-10-25** by `levin-phase-floor` 04: on 3 of 7 depth-20 rows the stored `total_abserr` understates the jitter's own effect by 1.16–1.94× (N4). |
 | `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` | handover | Levin regions are flat in $x$ on the exact flavour (7→9, 7→13, 17→30) and grow 12–105× on the realistic one (720→97,590), where the spline knot count grows only 1.9× (540→1041) — 15–80 regions per knot at the top against 1.3–2.4 at the base. May be the issue above seen from the cost side: `_adaptive_levin` forgives a region only once `abserr <= phase_err`, and a `phase_spline` floor grows linearly in $x$. Affects no $N$ (every term is a difference at fixed flavour); it bounds how far the harness reaches and forced `q-smooth` realistic to stop at $10^5$. One-cell experiment written into the board entry, deliberately not run. **Narrowed 2026-10-25 (A3 v2 findings §2.3):** the phase floor $\varepsilon x$ exceeds the harness's `REF_RTOL = 1e-12` from $x \approx 4.5\times10^3$, a candidate third explanation; why the exact flavour stays flat is unexplained. **Planning note 2026-10-25:** `levin-phase-floor` 02's N2 was not tested, so `handover` A4 (prompt 04, refreshed) is the only planned answer; it records `max_depth` and regions per group. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. **Measured by prompt 09:** the floor is now the whole error — 4.189e-8 rad = 2.81 ulp of the span at $k=10^8$, with $\varphi$ itself recovered to 2.157e-10 rad. **Narrowed 2026-10-25 (`docs/handover/A3-V2-FINDINGS.md`):** proposed as the cause of A3 v2's depth-20 cost cliff (285.8 of 286.3 CPU-hr); the fix's shape becomes composing a phase group's leading terms before reduction. No owner. **Narrowed 2026-10-25 (`levin-phase-floor` 01):** H-anchor holds on A3 v2 (P2). **Narrowed 2026-10-25 (`levin-phase-floor` 03):** the composed phase carries non-smooth jitter at $\sigma_\theta/F$ 0.224–0.342 in all 29 scored groups, cancelling or not; a smooth phase lowers the depth-20 discrepancy 3.1e6–2.4e8×. **Narrowed 2026-10-25** by `levin-phase-floor` 04: removing it removes the cliff on 03's rows, and re-anchoring $G$ alone does as much as exact remainders. |
+| `[02-consumer-phi-below-the-storage-granularity]` | phase-representation — assigned here 2026-10-26 (G1 Q3); the producers' stored phase follows layer 1 | $\varphi$ is recovered as a difference of two numbers of size $k\tau$, so on QCD $G_k$ its whole range is 6.0 ulp of the stored phase at $k=10^7$ and **2.0 ulp (3 distinct values over 1,377 samples)** at $3\times10^8$. Differentiating that staircase makes `theta_deriv` **3× and 10× worse than omitting $\varphi$ altogether**, and is what §3.6's two failing rows actually are. `[00-consumer-anchoring-floor]` seen in the derivative. **Narrowed 2026-10-25** by `levin-phase-floor` 04: on A3 v2's ΛCDM $G_k$ the stored samples themselves carry 0.15–0.21 $F$ of noise in $\varphi$, not only the consumer's subtraction. |
 | `[01-slow-group-leading-terms-do-not-cancel]` | levin-phase-floor | $G$'s leading phase runs at $k/H$, $T$'s at $c_s k/H$, so on `r == k` the "slow" `G+r` is ~3.7× slower than `G-r`, not stationary; findings §2.2's "cancel identically" is overstated, and layer 1(b) cannot zero it. **Narrowed 2026-10-25 (03, M5):** measured $|\theta'_{G+r}|/|\theta'_{G-r}|$ = 0.26795–0.26885 on R1–R5 against $(1-c_s)/(1+c_s)$ = 0.267949 (+0.34 %); stands as written. |
 | `[01-depth20-floor-eta-is-wrong-above-1e12]` | levin-phase-floor | `depth20_floor.py`'s $\eta(z)$ integrates only to $z = 10^{15}$: off from $1.2\times10^{13}$, negative above $10^{15}$. No effect on the findings; wrong $F$ for seam rows if reused. |
-| `[03-m3-slope-clause-is-badly-posed-at-round-off]` | levin-phase-floor | 03's M3 needs a control slope ≥ 2, but with the jitter removed $D$ is at round-off from depth 10 (slope −0.020 to 0.148), while the ratio clause holds at 3.1e6–2.4e8; as written the mechanism verdict fails and "refuted" fires. G1 decides how it is read. **Narrowed 2026-10-25** by `levin-phase-floor` 04: the full re-run with the jitter removed takes all seven rows off the cap (R1). |
 | `[03-depth20-regions-are-all-clenshaw-curtis]` | levin-phase-floor | 189,196 of 189,196 depth-20 regions on 03's seven rows are Clenshaw–Curtis, so §2.7 layer 2 must reach that branch's acceptance test — where `[10-levin-wholesale-cc-fallback]` lives, out of this campaign's scope. A scope question for G1. **Narrowed 2026-10-25** by `levin-phase-floor` 04: with the floor gone no group reaches depth 20 at `1e-7`; a short chain still does at `1e-8`. |
 | `[03-storefixtures-standin-pickle-and-exit-rows]` | levin-phase-floor | `standin_pool` pickles with plain `pickle`, which cannot carry a `GkSource`; `real_store_fixtures`' exit-time rows lack the efold columns `TkNumericIntegration` reads. 03 worked round both in its harness; 04 needs the same. |
 | `[04-g-phase-is-reduced-against-the-double-two-pi]` | levin-phase-floor | `theta_mod_2pi` reduces by `fmod` against the double `TWO_PI`, so `sin` sees $\theta + n(2\pi-\texttt{TWO\_PI})$: a smooth phase error of about $0.18\,\varepsilon|\theta|$, 0.175 $F$ for $G$ on every row of 04. Accuracy, not cost; a layer 1 should reduce against $2\pi$. |

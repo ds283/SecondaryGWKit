@@ -112,6 +112,12 @@ Two opened by prompt 02:
   Q3, whether layer 1 must change what is stored.
   [`docs/levin-phase-floor/04/issues.md`](../../docs/levin-phase-floor/04/issues.md) I2.
 
+  **Assigned (2026-10-26):** to [`prompts/levin-phase-floor`](../levin-phase-floor/README.md), by the
+  user at that campaign's gate G1 (Q3). That campaign lands its consumer-side layer 1 first. It
+  then takes up the stored phase of both `GkWKBIntegration` and `TkWKBIntegration`, by a method of
+  its own, before the next production build: regenerating the store with the same producers would
+  reproduce the noise. This entry stays here.
+
 - **[02-verify-script-builds-its-own-Gk-consumer]** *(opened by prompt 02, 2026-09-13; not this
   campaign's file)* — `docs/gktk-remedial/verify_production_path.py` constructs `PrimitivePhase`
   directly at `:557` (the §3.5 $G_k$ consumer) and `:1173` (the §5 throughput section), rather than

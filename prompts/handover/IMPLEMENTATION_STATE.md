@@ -765,7 +765,9 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `QuadSource` unchanged, leaves the fingerprint equal; every R-rehearsal's "equal to `39809dca`"
   certified the integrals' identities and counts, not their values. **Next step:** the likely fix
   adds a value table to `QuadSourceIntegral`'s `inventory_spec`; a fingerprint change costs nothing
-  to make. Not assigned. Measurement: [`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §5.3
+  to make. **Assigned (2026-10-26):** to a prompt of this campaign, by the user at `levin-phase-floor`'s
+  gate G1. It must land, with a new rehearsal reference, before that campaign's layer 1 prompt
+  (05), which changes `QuadSourceIntegral` values and must be seen to. Measurement: [`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §5.3
   and §5.4; [`docs/handover/b1/r8/issues.md`](../../docs/handover/b1/r8/issues.md). Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
 
