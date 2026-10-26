@@ -413,8 +413,18 @@ STRUCTURALLY REQUIRED, 14 IMPLEMENTATION CHOICE, in the log).
 **What is left.**
 - **The stores.** The user asked whether R9's and R10's stores are needed. The laptop's answer: no.
   R10 equals R8's fingerprint, the comparison's records are kept, and a later pair is built at its
-  own trees. They are retired only on the user's word, after this commit.
-- **The worktree** `SecondaryGWKit-lpf05-e648951` is removed on the user's word.
+  own trees.
+- **Done on the user's word, after `b0207e0`** (2026-10-26, 08:48 GMT). Both stores were retired
+  as R8's was:
+  - `store create`, then `store fingerprint --write`, which recorded `1b332ffa…` in each;
+  - a dry run, which matched that fingerprint and found only each store's own run naming it;
+  - then `store retire`.
+
+  Their ten files went, and their sidecars stay as the `retired` record
+  ([`retire_r9.txt`](../../../docs/levin-phase-floor/05/rehearsal/out/retire_r9.txt),
+  [`retire_r10.txt`](../../../docs/levin-phase-floor/05/rehearsal/out/retire_r10.txt)). The
+  worktree `SecondaryGWKit-lpf05-e648951` was clean under `git status --short --ignored`, and was
+  removed with `git worktree remove`.
 
 ---
 

@@ -1,0 +1,52 @@
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-05-r9-parent-20261026T014729  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-05-r9-shard0000.sqlite
+  var/datastores/levin-phase-floor-05-r9-shard0001.sqlite
+  var/datastores/levin-phase-floor-05-r9-shard0002.sqlite
+  var/datastores/levin-phase-floor-05-r9-shard0003.sqlite
+  var/datastores/levin-phase-floor-05-r9.sqlite
+tombstone:
+  {
+    "completed": "2026-10-26T08:49:00+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-05-r9-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-05-r9-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-05-r9-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-05-r9-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-05-r9.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "53084dcb14f7835e22fe8ffde8c0ac09c20a6fca",
+    "reason": "levin-phase-floor prompt 05: R9/R10 value-comparison pair; records committed in b0207e0 (docs/levin-phase-floor/05/); not needed further (user, 2026-10-26)",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-05-r9-parent-20261026T014729",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-10-26T08:49:00+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-05-r9.manifest.json
