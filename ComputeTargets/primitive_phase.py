@@ -322,7 +322,8 @@ class PrimitivePhase:
                     f"{', '.join(missing)}"
                 )
             # T(n_R) + p_R, exactly: the anchor's node limbs and its own end partial, which is
-            # a constant of the object (zero when the anchor is a node, as in production)
+            # a constant of the object (zero when the anchor is a node, as G's z_R is in
+            # production; non-zero for T, whose z_init is a root)
             j_R, p_R = leading.end_partial(self._z_anchor)
             hi_R, lo_R = leading.node_limbs(j_R)
             self._anchor_node = int(j_R)

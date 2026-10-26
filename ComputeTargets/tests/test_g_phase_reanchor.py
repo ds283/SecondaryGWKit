@@ -8,7 +8,8 @@ rounding is not smooth in ``z``: 03 found it at 0.22-0.34 F in every expensive p
 showed it sends the Levin bisection to its cap. With ``exact_remainder=True`` the remainder is
 ``c_{n_z} + rem(v(z))``: a per-node constant reduced exactly against 2pi itself, plus a small
 variable part ``v = -sign k p_z + phi(u)`` in double (``primitive_phase.py``'s module docstring,
-"Anchoring"). ``GkSourcePolicyData._build_phase`` turns it on for G; ``TkSourceFunctions`` does not.
+"Anchoring"). ``GkSourcePolicyData._build_phase`` turns it on for G; since prompt 05a,
+``TkSourceFunctions`` turns it on for T too (``test_t_phase_reanchor``).
 
 The six tests of prompt 05 §3, in order:
 
@@ -18,8 +19,9 @@ The six tests of prompt 05 §3, in order:
    remainder of theta against 2pi, at four k, two z_R and both signs.
 3. **No jitter** (``TestNoJitter``): 04's sigma_theta at z' ~ 1e10, k = 3e6, off and on.
 4. **Nothing else moves** (``TestNothingElseMoves``): ``raw_theta``/``theta_deriv`` bit-identical
-   with the keyword on and off; a ``TkSourceFunctions`` phase built as production builds it keeps
-   today's remainders bit for bit.
+   with the keyword on and off; a ``TkSourceFunctions`` phase with the keyword off keeps the
+   pre-05 remainders bit for bit (prompt 05a §3 test 4(b), which replaced 05's test that T's
+   remainders were unchanged).
 5. **The default is today's** (``TestDefault``): keyword off is ``WKB_mod_2pi(raw_theta)[1]`` bit
    for bit; keyword on without the accessor raises.
 6. **End to end** (``TestEndToEnd``): ``test_phase_groups``' realistic fixture at w = 1/3 with G's
@@ -447,10 +449,12 @@ class _TableCsTauFixture(Fixture):
     """
     ``test_tk_source_functions``' exact fixture with ``cs_tau`` a real ``TablePrimitive`` (a
     ``CumulativeTable`` of ``c_s/H`` on the WKB grid, shifted to the closed form at its top node),
-    as production's ``functions.cs_tau`` is, instead of a ``ClosedFormPrimitive``. So the
-    ``TkSourceFunctions`` below builds its phase exactly as production does, on a leading
-    primitive that *has* the node accessors: turning ``exact_remainder`` on for T would change its
-    remainders, not raise.
+    as production's ``functions.cs_tau`` is, instead of a ``ClosedFormPrimitive``. So a
+    ``TkSourceFunctions`` built on it with no keyword builds its phase as production does, on a
+    leading primitive that *has* the node accessors, node-anchored (prompt 05a). The inherited
+    ``exact_functions`` passes ``exact_remainder=False``, as every closed-form fixture site does;
+    a test that wants production's construction captures the fixture's samples and builds the
+    object itself (``test_t_phase_reanchor._table_fixture_functions``).
     """
 
     def exact_envelope_model(self):
