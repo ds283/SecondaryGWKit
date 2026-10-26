@@ -121,11 +121,13 @@ true $\theta$ against $2\pi$, in $(-2\pi, 0]$. `theta_div_2pi` is its cycle coun
   $L.\delta$, so $\varphi_T(z) = r(z)$, up to the sign convention `_check_phase_sign` confirms.
 - **$G$:** a `GkSource` gathers one value per source redshift $z'$ at a fixed response $z_R$. The
   value comes from the producer object for $z'$, anchored at that object's own `z_init`. With
-  `_build_phase`'s leading term $-k\,\tau.\delta(z', z_R)$,
-  $$\varphi_G(z') = r(z'; z_R) + k\,\tau.\delta(z_{\rm init}(z'), z'),$$
-  up to the sign conventions the agent confirms.
-  - **The second term is small:** zero for a pure-WKB object, where `z_init` is $z'$; and the
-    numeric span's phase, tens of rad, for a numerically seeded one.
+  `_build_phase`'s leading term $-k\,\tau.\delta(z', z_R)$ (`GK_PHASE_SIGN = -1`), and
+  $\tau.\delta(a, b) = \tau(b) - \tau(a)$ (`CumulativeTable.delta`),
+  $$\varphi_G(z') = r(z'; z_R) + k\,\tau.\delta(z', z_{\rm init}(z')).$$
+  The agent confirms this against test 5.
+  - **The second term is small:** zero for a pure-WKB object, where `z_init` is $z'$ (`GkSource`
+    stores `z_init` as null there); and the numeric span's phase, tens of rad and positive, for a
+    numerically seeded one, whose `z_init` is below $z'$.
   - **It is formed exactly** from the table's limbs and partials, or as a double of that small
     size. Never as a difference of two values of $\tau$ times $k$.
 - **The $2\pi$ wraps of $\Delta\theta$** between neighbouring source redshifts, which the
@@ -271,10 +273,11 @@ As 05a §5, with what 05 and 05a learned. Records under `var/levin-phase-floor-0
    --build --rehearsal` as R8–R12 ran it, registered with `--campaign levin-phase-floor --prompt 06`
    and slug `r13-parent`. Its fingerprint must equal `1b332ffa…`.
 3. **R14** is the same at the code commit, in a worktree too (§ header), with slug
-   `r14-residual`. Its fingerprint is **reported**.
-   - It may differ from `1b332ffa…` only in the classes of §0.3, and only if the added column
-     enters what the fingerprint digests.
-   - Any other class whose digest differs is a stop.
+   `r14-residual`. Its fingerprint must also equal `1b332ffa…`.
+   - The inventory specs digest identities, tags and value-row counts, not value columns
+     (`ObjectFactories/GkWKBIntegration.py`, `inventory_spec`), and this prompt changes none of
+     them. The added column does not enter the fingerprint.
+   - Any difference is a stop.
 4. **The value comparison:** `tools.store_value_diff` on R13 and R14, with `--json`, saved to
    `out/`. 05's `classify_non_qsi.py` is copied unchanged and recorded by SHA-256. It sorts every
    difference outside the classes of §0.3 into the four volatile kinds of
@@ -286,8 +289,9 @@ As 05a §5, with what 05 and 05a learned. Records under `var/levin-phase-floor-0
      - `theta_residual` present in R14 only;
      - $|\Delta|$ of `theta_mod_2pi` against $\varepsilon|\theta|$, where $|\theta|$ is formed from
        the stored cycle count;
-     - `theta_div_2pi` changes, which should be none, or a cycle at a remainder within one ulp of
-       $0$ or $-2\pi$;
+     - `theta_div_2pi` changes, which should be none, or one cycle where R14's remainder lies
+       within $4\varepsilon|\theta|$ of $0$ or $-2\pi$: the old remainder's error (§0.1). Any other
+       change is listed on its own;
      - `G_WKB` and `T_WKB` relative changes;
      - `GkSourcePolicyData`'s changed fields (`Levin_z` among them);
      - and `QuadSourceIntegral` per row, as 05's `tabulate_qsi.py` tabulates it, copied
@@ -336,6 +340,11 @@ over-budget unit is a result.
 every Levin sub-interval: 04's `window_rms` of $\varphi$ over windows of 9 consecutive samples,
 centred inside the sub-interval, under $t_5$ and under $s$. Record $F = \varepsilon k\eta_R$ for
 each row, and each window's $|\theta|$.
+- **Each $G$ window is tagged** pure-WKB if every one of its 9 source samples comes from a
+  pure-WKB object (`GkSource`'s `z_init` null), and numerically seeded otherwise.
+- **For a numerically seeded window,** record also the window RMS of the $\Delta\theta$ the
+  re-run producers formed for its samples, on the same fit. That $\Delta\theta$ carries the
+  `GkNumericIntegration`'s own error at its `rtol`, which no change to storage removes.
 
 **Gate U0, before the run:**
 - `git diff --stat 1fc349c <code commit's parent> -- . ':!docs' ':!prompts'` shows `CLAUDE.md`
@@ -354,12 +363,15 @@ If U0 fails, stop.
 
 **Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
 - **S1 — $\varphi_G$'s noise goes.**
-  - **The rule:** in every probe window of $G$ on R1–R7,
+  - **The rule:** in every **pure-WKB** probe window of $G$ on R1–R7,
     $\sigma_s \le \max(10^{-3}\,\sigma_{t_5},\ 10^{-6}F)$.
-  - **Holds** if true in every window.
+  - **Holds** if true in every pure-WKB window. **Undecided** if there is none.
+  - Numerically seeded windows are not scored: their $\sigma_s$ is reported beside the window RMS
+    of $\Delta\theta$ alone (the probe, above).
   - 04 measured $\sigma$ at 0 at the median, quantised, and 0.46–0.78 $F$ at the maximum, for
     production's $\varphi_G$.
-- **S2 — $\varphi_T$'s too.** S1's rule for every probe window of a $T$ factor.
+- **S2 — $\varphi_T$'s too.** S1's rule for every probe window of a $T$ factor. $T$ has one
+  object per $k$, so its $\Delta\theta$ is a constant and every $T$ window is scored.
 - **S3 — the cap does not return.** On every row (all 39), under $s$ at `1e-7`, no group has a
   region at depth ≥ 18. An over-budget unit counts as false.
 - **S4 — the stored noise was within the declared error.**
@@ -386,7 +398,7 @@ If U0 fails, stop.
 1. §1–§3 as written: every test passing, the five breakages caught, and the seven roots rising
    only by the tests added.
 2. §5:
-   - R13 ends `done` with `1b332ffa…`, and R14 `done` with its fingerprint reported as §5.3 says;
+   - R13 and R14 both end `done` with `1b332ffa…`;
    - outside the classes of §0.3, every value table is identical and every other difference is of
      the four kinds;
    - inside them, the differences are tabulated;
@@ -407,9 +419,29 @@ If U0 fails, stop.
 - The two repairs of §0.2 disagree anywhere, on a fixture or in R14.
 - An existing assertion has to change outside §2's exception.
 - A seven-roots count falls.
-- R13 does not give `1b332ffa…`, or R14's fingerprint differs outside the classes of §0.3.
+- R13 or R14 does not give `1b332ffa…`.
 - Outside those classes, a value table differs, or a column differs in a way that is not one of
   the four kinds.
 - U0 fails.
 - Any store file changes.
 - The lock is held, or will not release.
+
+## 9. Amended before dispatch (2026-10-26, on the user's word)
+
+The prompt was reviewed on the laptop before Part A was dispatched, and four points were amended in
+place. No agent had read it.
+1. **§0.2, $\varphi_G$'s second term.** It read $k\,\tau.\delta(z_{\rm init}(z'), z')$. With
+   `CumulativeTable.delta(a, b)` $= \tau(b) - \tau(a)$, `build_phi_samples`' $\varphi = \theta -
+   {\rm sign}\,k\,L.\delta(z, z_{\rm anchor})$ and `GK_PHASE_SIGN = -1`, it is
+   $k\,\tau.\delta(z', z_{\rm init}(z'))$, the opposite sign.
+2. **§5.3, R14's fingerprint.** It allowed R14 to differ from `1b332ffa…` if the added column
+   entered the fingerprint. It does not: the inventory specs digest no value column. R14 must give
+   `1b332ffa…`, as R10 and R12 did.
+3. **§5.4, `theta_div_2pi` changes.** It expected a changed cycle only at a remainder within one
+   ulp of $0$ or $-2\pi$. The old remainder was wrong by up to about $\varepsilon|\theta|$, so a
+   cycle can change anywhere within that of the boundary. The bound is now $4\varepsilon|\theta|$.
+4. **§6, S1.** A numerically seeded `GkWKBIntegration` takes its $\Delta\theta$ from the
+   `GkNumericIntegration` at `rtol` $10^{-8}$, a separate integration for each source redshift. Its
+   error varies from sample to sample and is far above $10^{-6}F$, and storing $r$ exactly does not
+   remove it. S1 is scored on pure-WKB windows only; the others are reported beside the noise of
+   $\Delta\theta$ alone. S2 is unchanged.
