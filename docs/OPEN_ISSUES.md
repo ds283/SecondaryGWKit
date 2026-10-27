@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-10-27 · **114 open** across twenty-two campaigns.
+**Last updated:** 2026-10-27 · **112 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
