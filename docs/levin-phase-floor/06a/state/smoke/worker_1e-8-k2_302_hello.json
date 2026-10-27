@@ -1,0 +1,70 @@
+{
+ "worker": "1e-8-k2_302",
+ "evidence": {
+  "tree": "h",
+  "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f",
+  "expected_sha": "e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c",
+  "head": "e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c",
+  "status_short": "",
+  "files": {
+   "ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/__init__.py",
+   "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/QuadSource.py",
+   "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/QuadSourceIntegral.py",
+   "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/GkSourcePolicyData.py",
+   "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/TkSourceFunctions.py",
+   "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/StoreFixtures/__init__.py",
+   "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/main.py",
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/GkWKBIntegration.py",
+   "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/TkWKBIntegration.py",
+   "ComputeTargets.GkSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/ComputeTargets/GkSource.py",
+   "Quadrature.integrators.WKB_phase_function": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/Quadrature/integrators/WKB_phase_function.py",
+   "WKB_phase_function (the producers' remote's function)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/Quadrature/integrators/WKB_phase_function.py"
+  },
+  "all_in_tree": true,
+  "in_tree": {
+   "ComputeTargets": true,
+   "ComputeTargets.primitive_phase": true,
+   "ComputeTargets.QuadSource": true,
+   "ComputeTargets.QuadSourceIntegral": true,
+   "ComputeTargets.GkSourcePolicyData": true,
+   "ComputeTargets.TkSourceFunctions": true,
+   "StoreFixtures": true,
+   "main.py": true,
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true,
+   "ComputeTargets.GkWKBIntegration": true,
+   "ComputeTargets.TkWKBIntegration": true,
+   "ComputeTargets.GkSource": true,
+   "Quadrature.integrators.WKB_phase_function": true,
+   "WKB_phase_function (the producers' remote's function)": true
+  },
+  "PrimitivePhase_has_exact_remainder": true,
+  "build_phase_source_mentions_exact_remainder": true,
+  "TkSourceFunctions_exact_remainder_default": true,
+  "producers_store_reduce_exactly": {
+   "GkWKBIntegration": true,
+   "TkWKBIntegration": true
+  },
+  "GkWKBValue_has_theta_residual": true,
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "dont_write_bytecode": true,
+  "OMP_NUM_THREADS": "1",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a",
+  "pid": 24061,
+  "host": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "scripts_sha256": {
+   "worker.py": "a6a379de0bb8f52fd973b5603e87372271a5da6301b3f3f9ca7b9eb26f311fdd",
+   "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b",
+   "harness.py": "b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71",
+   "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212",
+   "prov.py": "d71471913e3ebeebf2a41c8eb72c64d334d8fa1f17fcc5cda6bcde0a3e16949c",
+   "run_census.py": "83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c",
+   "launch.py": "c78bb5281a93f15e77b5d3cd597c26d368dbda743cd39cefb34822f8a341f2f3",
+   "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e",
+   "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"
+  }
+ }
+}

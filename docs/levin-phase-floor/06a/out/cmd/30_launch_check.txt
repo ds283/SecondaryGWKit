@@ -1,0 +1,33 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json, os, subprocess, time\nrd=\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143\'\nck=os.path.join(rd,\'checkpoint.jsonl\'); t0=time.time()\nwhile time.time()-t0<150 and not (os.path.exists(ck) and os.path.getsize(ck)>0): time.sleep(2)\nprint(f\'waited {time.time()-t0:.1f} s (at most 150) for the first checkpoint record\')\nst=json.load(open(os.path.join(rd,\'status.json\'))); print(json.dumps(st,indent=1))\npid=st[\'pid\']\nprint(subprocess.run([\'ps\',\'-o\',\'pid,ppid,stat,etime,command\',\'-p\',f\'24951,{pid}\'],capture_output=True,text=True).stdout)\nkids=subprocess.run([\'pgrep\',\'-P\',str(pid)],capture_output=True,text=True).stdout.split()\nprint(\'children of the driver:\', kids, len(kids))\nfor p in (24951,pid):\n    try: os.kill(p,0); print(f\'kill -0 {p}: alive\')\n    except OSError as e: print(f\'kill -0 {p}: {e}\')\nlines=open(ck).read().splitlines() if os.path.exists(ck) else []\nprint(\'checkpoint records:\', len(lines))\nif lines:\n    r=json.loads(lines[0]); d=r[\'data\']\n    print(\'first checkpoint:\', r[\'unit\'], r.get(\'recorded\'), \'script_sha256\', r.get(\'script_sha256\'), \'git_head\', r.get(\'git_head\'), \'status\', d[\'status\'], \'wall\', d[\'wall_s\'], \'worker\', d[\'worker\'], \'tree_head\', d[\'tree_head\'], \'total\', (d.get(\'result\') or {}).get(\'total\'), \'max_depth\', ((d.get(\'result\') or {}).get(\'WKB_Levin_data\') or {}).get(\'max_depth\'))\nprint(\'stderr.log bytes\', os.path.getsize(os.path.join(rd,\'stderr.log\')))\nprint(\'/tmp/ray-sgk entries\', len(os.listdir(\'/tmp/ray-sgk\')))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:31:52Z
+# ----
+waited 54.2 s (at most 150) for the first checkpoint record
+{
+ "exit_code": null,
+ "heartbeat": "2026-10-27T02:32:46+00:00",
+ "host": {
+  "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+  "id": "d120d1cf03551e6f"
+ },
+ "pid": 24956,
+ "stage": "10 units recorded; last h-1e-7-0-10126 done",
+ "state": "running",
+ "units_done": 15,
+ "units_total": 18560
+}
+  PID  PPID STAT ELAPSED COMMAND
+24951     1 Ss     01:03 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143; exit $?
+24956 24951 S      01:03 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+
+children of the driver: ['24973', '24974', '24975', '24976', '24977', '24978'] 6
+kill -0 24951: alive
+kill -0 24956: alive
+checkpoint records: 16
+first checkpoint: h-1e-7-2-32862 2026-10-27T02:32:44+00:00 script_sha256 83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c git_head 28ebaf0743e0555fb2c4512ce714884005a60eff status done wall 0.0855950410477817 worker 1e-7-k2_2 tree_head e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c total {'repr': '-3.206072677084478e-25', 'hex': '-0x1.8ce47fb3c8b65p-82'} max_depth None
+stderr.log bytes 0
+/tmp/ray-sgk entries 59
+# ----
+# end 2026-10-27T02:32:46Z
+# exit 0

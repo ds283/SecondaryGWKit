@@ -1,0 +1,22 @@
+{
+ "tree": "h",
+ "name": "1e-8-k3_201",
+ "units": [
+  {
+   "uid": "h-1e-8-3-34946",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34946",
+   "names05": null,
+   "shard": 3,
+   "serial": 34946,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false
+  }
+ ],
+ "out_dir": "state/smoke",
+ "emit_fd": 5,
+ "emit_file": null,
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+}

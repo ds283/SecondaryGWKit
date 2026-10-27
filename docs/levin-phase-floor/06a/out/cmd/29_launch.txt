@@ -1,0 +1,16 @@
+$ env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:31:43Z
+# ----
+run id      levin-phase-floor-06a-census-20261027T023143
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/manifest.json
+expected    18560 units (9280 rows at 1e-7, then at 1e-8)
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py sha256 83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c
+sh pid      24951 (nohup execs sh; sh runs the driver as its child)
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143; exit $?
+launcher    pid 24947, exiting without waiting
+# ----
+# end 2026-10-27T02:31:43Z
+# exit 0

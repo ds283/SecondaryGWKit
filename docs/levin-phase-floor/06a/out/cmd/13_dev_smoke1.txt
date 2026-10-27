@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_census.py --out-dir state/dev/smoke1 --rows low-G+r-1 --rtols 1e-7 --max-workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:21:46Z
+# ----
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py", "script_sha256": "83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c", "scripts_sha256": {"run_census.py": "83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c", "worker.py": "a6a379de0bb8f52fd973b5603e87372271a5da6301b3f3f9ca7b9eb26f311fdd", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "d71471913e3ebeebf2a41c8eb72c64d334d8fa1f17fcc5cda6bcde0a3e16949c", "launch.py": "c78bb5281a93f15e77b5d3cd597c26d368dbda743cd39cefb34822f8a341f2f3", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "trees": {"h": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f", "e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 19964, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a", "started": "2026-10-27T02:21:47.072848+00:00", "n_units": 1, "workers": {"1e-7": [["1e-7-k2_302", 1]]}, "budget_s": 300.0, "max_workers": 1, "skipped_as_recorded": 0}
+# worker 1e-7-k2_302 pid 19965 (1 units)
+# worker 1e-7-k2_302 exit 0
+
+== run ends: 1 of 1 units recorded; units in error 0; problems []
+# ----
+# end 2026-10-27T02:22:42Z
+# exit 0

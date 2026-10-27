@@ -1,0 +1,528 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/analyse06a.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:20:57Z
+# ----
+# levin-phase-floor 06a: the census analysis
+# written 2026-10-27T03:20:57Z on mps026298.phys.susx.ac.uk
+# script analyse06a.py sha256 c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# units 18560; pickle records 18560, each checked against its sha256
+
+== status and budget
+   1e-7: units 9280; status {'done': 9280}; rows with no Levin call 2489
+   1e-8: units 9280; status {'done': 9280}; rows with no Levin call 2489
+
+== Predictions (section 4), scored as written
+   C1 (rtol 1e-7): rows with a region at depth >= 18: 0 of 9280; over budget after the pass 0; errored 0; largest row depth 12 -> holds
+   C2 (rtol 1e-8): rows with a region at depth >= 18: 0 of 9280; over budget after the pass 0; errored 0; largest row depth 13 -> holds
+   C3: rows whose depth exceeds 11: at 1e-7 19, at 1e-8 29 -> fails
+     1e-7: their depths {12: 19}
+     1e-8: their depths {12: 28, 13: 1}
+
+== 1. The distribution of row depth
+   rtol 1e-7: 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 511, 7: 2010, 8: 732, 9: 29, 10: 3, 11: 31, 12: 19, none: 2489
+   largest row depth
+     by band  : low: 12; mid: 12; seam: 9
+     by regime: G: 9; Gqr: 12; Gr: 9; none: -; qr: 9; r: 3
+     by class : G+r: 9; G-r: 9; G: 12; Gqr: 12; none: 9
+   median row depth (rows with a Levin call)
+     by band  : low: 6; mid: 6; seam: 3
+     by regime: G: 6; Gqr: 11; Gr: 8; none: -; qr: 0; r: 1
+     by class : G+r: 6; G-r: 7; G: 2; Gqr: 7; none: 0
+   rows
+     by band  : low: 1088; mid: 2112; seam: 6080
+     by regime: G: 6161; Gqr: 57; Gr: 150; none: 2489; qr: 392; r: 31
+     by class : G+r: 1860; G-r: 364; G: 1285; Gqr: 2859; none: 2912
+   cross-tabulation, A3 v2's stored depth (rows) x h's row depth at 1e-7:
+     stored \ h       0     1     2     3     4     5     6     7     8     9    10    11    12  none
+     <=10           217   507   948    70     8     7     4     4     2     0     0     0     0     0   (rows 1767)
+     11-19           74    22   671   469    38    75   335   758   269    13     2    24     9     0   (rows 2759)
+     20               0     1   167   115    53    14   172  1248   461    16     1     7    10     0   (rows 2265)
+     NULL             0     0     0     0     0     0     0     0     0     0     0     0     0  2489   (rows 2489)
+   rtol 1e-8: 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1565, 9: 923, 10: 8, 11: 24, 12: 28, 13: 1, none: 2489
+   largest row depth
+     by band  : low: 12; mid: 13; seam: 10
+     by regime: G: 10; Gqr: 13; Gr: 9; none: -; qr: 9; r: 4
+     by class : G+r: 9; G-r: 9; G: 12; Gqr: 13; none: 9
+   median row depth (rows with a Levin call)
+     by band  : low: 7; mid: 7; seam: 3
+     by regime: G: 6; Gqr: 11; Gr: 9; none: -; qr: 0; r: 2
+     by class : G+r: 6; G-r: 8; G: 2; Gqr: 8; none: 0
+   rows
+     by band  : low: 1088; mid: 2112; seam: 6080
+     by regime: G: 6243; Gqr: 65; Gr: 60; none: 2489; qr: 392; r: 31
+     by class : G+r: 1860; G-r: 364; G: 1285; Gqr: 2859; none: 2912
+   cross-tabulation, A3 v2's stored depth (rows) x h's row depth at 1e-8:
+     stored \ h       0     1     2     3     4     5     6     7     8     9    10    11    12    13  none
+     <=10           214   500   952    69    13     7     6     4     1     1     0     0     0     0     0   (rows 1767)
+     11-19           70    15   671   430    41    70   283   313   462   365     4    19    15     1     0   (rows 2759)
+     20               0     1   167    68    15    14   107   212  1102   557     4     5    13     0     0   (rows 2265)
+     NULL             0     0     0     0     0     0     0     0     0     0     0     0     0     0  2489   (rows 2489)
+
+== 2. Where depth falls by branch: regions at each depth >= 12, Levin / Clenshaw-Curtis
+   rtol 1e-7: depth 12: 13 / 25
+     band low: 12: 0/2
+     band mid: 12: 13/23
+     class G: 12: 0/2
+     class Gqr: 12: 13/23
+     regime Gqr: 12: 13/25
+   rtol 1e-7, every region by depth (Levin/CC): 0: 24461/491, 1: 7080/6903, 2: 3941/7762, 3: 839/9124, 4: 708/8741, 5: 1921/7631, 6: 1242/12100, 7: 2060/11146, 8: 277/2092, 9: 80/66, 10: 77/0, 11: 69/30, 12: 13/25
+   rtol 1e-8: depth 12: 17 / 42, depth 13: 0 / 2
+     band low: 12: 0/8
+     band mid: 12: 17/34, 13: 0/2
+     class G: 12: 0/2
+     class Gqr: 12: 17/40, 13: 0/2
+     regime Gqr: 12: 17/42, 13: 0/2
+   rtol 1e-8, every region by depth (Levin/CC): 0: 23475/470, 1: 7320/6963, 2: 4506/7512, 3: 1580/8706, 4: 1423/12098, 5: 2502/13826, 6: 2320/18801, 7: 3011/20175, 8: 456/19053, 9: 104/2669, 10: 76/20, 11: 76/26, 12: 17/42, 13: 0/2
+
+== 3. The deepest rows (20 at each rtol; by row depth, then regions)
+   rtol 1e-7:
+   * 3-38028  k 1e+05 q 1e+05 r 1e+05 z_resp 10.979 [mid, class Gqr, stored depth 17]: depth 12, regions 33 (Levin 19, CC 14), total_converged False, |total|/abserr 9.85e+06
+       G    G       depth  8 regions   12 (L 0, CC 12) conv True  plim False |value|/abserr 2.75e+07
+       Gqr  G+q+r   depth 12 regions   18 (L 16, CC 2) conv True  plim False |value|/abserr 2.9e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 6.59e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 6.59e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 9.72e+05
+   * 0-2065  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 57.642 [mid, class Gqr, stored depth 20]: depth 12, regions 32 (Levin 21, CC 11), total_converged False, |total|/abserr 1.2e+06
+       G    G       depth  8 regions   10 (L 0, CC 10) conv False plim False |value|/abserr 5.36e+06
+       Gqr  G+q+r   depth 12 regions   19 (L 18, CC 1) conv True  plim False |value|/abserr 3.16e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.19e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.19e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.09e+06
+   * 3-13905  k 1e+05 q 1e+05 r 1e+05 z_resp 132.08 [mid, class Gqr, stored depth 19]: depth 12, regions 30 (Levin 16, CC 14), total_converged False, |total|/abserr 1.78e+07
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 2.93e+07
+       Gqr  G+q+r   depth 12 regions   16 (L 13, CC 3) conv True  plim False |value|/abserr 4.37e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.38e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.38e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.91e+06
+   * 0-12974  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 2094.9 [mid, class Gqr, stored depth 19]: depth 12, regions 29 (Levin 15, CC 14), total_converged False, |total|/abserr 8.68e+06
+       G    G       depth  8 regions   12 (L 0, CC 12) conv True  plim False |value|/abserr 1.67e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 12, CC 2) conv True  plim False |value|/abserr 1.88e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.31e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.31e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 7.9e+06
+   * 0-12975  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 1589 [mid, class Gqr, stored depth 19]: depth 12, regions 29 (Levin 18, CC 11), total_converged False, |total|/abserr 5.39e+06
+       G    G       depth  8 regions   10 (L 0, CC 10) conv False plim False |value|/abserr 5.59e+06
+       Gqr  G+q+r   depth 12 regions   16 (L 15, CC 1) conv True  plim False |value|/abserr 3.47e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 5.16e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 5.16e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.56e+06
+   * 0-14054  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 14.474 [mid, class Gqr, stored depth 20]: depth 12, regions 29 (Levin 18, CC 11), total_converged False, |total|/abserr 1.08e+06
+       G    G       depth  8 regions   10 (L 0, CC 10) conv False plim False |value|/abserr 2.69e+06
+       Gqr  G+q+r   depth 12 regions   16 (L 15, CC 1) conv True  plim False |value|/abserr 7.44e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.85e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.85e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.97e+05
+   * 0-1894  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 302.64 [mid, class Gqr, stored depth 19]: depth 12, regions 29 (Levin 17, CC 12), total_converged False, |total|/abserr 1.1e+07
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 1.88e+07
+       Gqr  G+q+r   depth 12 regions   15 (L 14, CC 1) conv True  plim False |value|/abserr 2.34e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 7.93e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 7.93e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.86e+05
+   * 0-1795  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 174.13 [mid, class Gqr, stored depth 19]: depth 12, regions 28 (Levin 15, CC 13), total_converged False, |total|/abserr 1.41e+07
+       G    G       depth  8 regions   12 (L 0, CC 12) conv True  plim False |value|/abserr 3.03e+07
+       Gqr  G+q+r   depth 12 regions   13 (L 12, CC 1) conv True  plim False |value|/abserr 1.47e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.18e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.18e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.61e+06
+   * 0-1893  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 398.99 [mid, class Gqr, stored depth 19]: depth 12, regions 28 (Levin 17, CC 11), total_converged False, |total|/abserr 1.39e+07
+       G    G       depth  8 regions   10 (L 0, CC 10) conv True  plim False |value|/abserr 2.66e+07
+       Gqr  G+q+r   depth 12 regions   15 (L 14, CC 1) conv True  plim False |value|/abserr 3.92e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 4.65e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 4.65e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.25e+06
+   * 3-34687  k 1e+05 q 1e+05 r 1e+05 z_resp 14.474 [mid, class Gqr, stored depth 18]: depth 12, regions 28 (Levin 15, CC 13), total_converged False, |total|/abserr 1.3e+07
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 3.15e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 12, CC 2) conv True  plim False |value|/abserr 6.2e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.71e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.71e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.89e+06
+   * 3-38378  k 1e+05 q 1e+05 r 1e+05 z_resp 0.30208 [low, class G, stored depth 20]: depth 12, regions 28 (Levin 14, CC 14), total_converged False, |total|/abserr 5.61e+06
+       G    G       depth  8 regions   12 (L 0, CC 12) conv True  plim False |value|/abserr 2.75e+07
+       Gqr  G+q+r   depth 12 regions   13 (L 11, CC 2) conv True  plim False |value|/abserr 8.35e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.7e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.7e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 4.14e+05
+   * 0-1971  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 75.993 [mid, class Gqr, stored depth 19]: depth 12, regions 27 (Levin 16, CC 11), total_converged False, |total|/abserr 1e+07
+       G    G       depth  8 regions   10 (L 0, CC 10) conv True  plim False |value|/abserr 2.4e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 13, CC 1) conv True  plim False |value|/abserr 1.59e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.7e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.7e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.39e+06
+   * 0-2053  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 43.723 [mid, class Gqr, stored depth 20]: depth 12, regions 27 (Levin 15, CC 12), total_converged False, |total|/abserr 8.52e+06
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 3.61e+07
+       Gqr  G+q+r   depth 12 regions   13 (L 12, CC 1) conv True  plim False |value|/abserr 1.68e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.45e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.45e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.27e+06
+   * 0-37229  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 3641 [mid, class Gqr, stored depth 20]: depth 12, regions 27 (Levin 14, CC 13), total_converged True, |total|/abserr 2.37e+07
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 3.63e+07
+       Gqr  G+q+r   depth 12 regions   13 (L 11, CC 2) conv True  plim False |value|/abserr 1.07e+09
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 2.44e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 2.44e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.33e+07
+   * 1-35409  k 9.851e+05 q 9.851e+05 r 9.851e+05 z_resp 8342.9 [mid, class Gqr, stored depth 20]: depth 12, regions 27 (Levin 17, CC 10), total_converged False, |total|/abserr 3.03e+07
+       G    G       depth  8 regions   10 (L 0, CC 10) conv True  plim False |value|/abserr 5.18e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 14, CC 0) conv True  plim False |value|/abserr 1.24e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.48e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.48e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 7.21e+06
+   * 0-12891  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 6328.3 [mid, class Gqr, stored depth 20]: depth 12, regions 26 (Levin 16, CC 10), total_converged True, |total|/abserr 2.18e+07
+       G    G       depth  7 regions    8 (L 0, CC 8) conv True  plim False |value|/abserr 3.24e+07
+       Gqr  G+q+r   depth 12 regions   15 (L 13, CC 2) conv True  plim False |value|/abserr 4.65e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 3.9e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 3.9e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 2.03e+07
+   * 0-1953  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 33.165 [mid, class Gqr, stored depth 20]: depth 12, regions 26 (Levin 15, CC 11), total_converged False, |total|/abserr 1.83e+06
+       G    G       depth  8 regions   10 (L 0, CC 10) conv False plim False |value|/abserr 4.29e+06
+       Gqr  G+q+r   depth 12 regions   13 (L 12, CC 1) conv True  plim False |value|/abserr 1.07e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.53e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.53e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.57e+05
+   * 0-1969  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 100.19 [mid, class Gqr, stored depth 20]: depth 12, regions 26 (Levin 15, CC 11), total_converged False, |total|/abserr 4.2e+05
+       G    G       depth  8 regions   10 (L 0, CC 10) conv False plim False |value|/abserr 3.24e+06
+       Gqr  G+q+r   depth 12 regions   13 (L 12, CC 1) conv True  plim False |value|/abserr 5.1e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.47e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.47e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.31e+06
+   * 0-1880  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 2761.8 [mid, class Gqr, stored depth 20]: depth 12, regions 25 (Levin 16, CC 9), total_converged True, |total|/abserr 1.94e+07
+       G    G       depth  7 regions    8 (L 0, CC 8) conv True  plim False |value|/abserr 3.29e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 13, CC 1) conv True  plim False |value|/abserr 8.58e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.93e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.93e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv True  plim False |value|/abserr 1.09e+07
+   * 3-34418  k 1e+05 q 1e+05 r 1e+05 z_resp 4800.1 [mid, class Gqr, stored depth 17]: depth 11, regions 32 (Levin 18, CC 14), total_converged False, |total|/abserr 1.75e+07
+       G    G       depth  8 regions   11 (L 0, CC 11) conv True  plim False |value|/abserr 1.96e+07
+       Gqr  G+q+r   depth 11 regions   16 (L 13, CC 3) conv False plim False |value|/abserr 6.46e+06
+       Gqr  G+q-r   depth  1 regions    2 (L 2, CC 0) conv True  plim False |value|/abserr 1.69e+07
+       Gqr  G-q+r   depth  1 regions    2 (L 2, CC 0) conv True  plim False |value|/abserr 1.69e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 6.85e+06
+   rtol 1e-8:
+   * 0-1971  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 75.993 [mid, class Gqr, stored depth 19]: depth 13, regions 38 (Levin 16, CC 22), total_converged False, |total|/abserr 1.9e+07
+       G    G       depth  9 regions   19 (L 0, CC 19) conv True  plim False |value|/abserr 2.22e+08
+       Gqr  G+q+r   depth 13 regions   16 (L 13, CC 3) conv True  plim False |value|/abserr 1.6e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.7e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.7e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.39e+06
+   * 3-34857  k 1e+05 q 1e+05 r 1e+05 z_resp 0.39825 [low, class Gqr, stored depth 18]: depth 12, regions 57 (Levin 23, CC 34), total_converged False, |total|/abserr 2.01e+06
+       G    G       depth 10 regions   23 (L 0, CC 23) conv False plim False |value|/abserr 2.88e+07
+       Gqr  G+q+r   depth 12 regions   31 (L 20, CC 11) conv False plim False |value|/abserr 3.74e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.35e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.35e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 6.77e+04
+   * 0-1953  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 33.165 [mid, class Gqr, stored depth 20]: depth 12, regions 50 (Levin 18, CC 32), total_converged False, |total|/abserr 2.39e+06
+       G    G       depth  9 regions   19 (L 0, CC 19) conv False plim False |value|/abserr 1.42e+07
+       Gqr  G+q+r   depth 12 regions   28 (L 15, CC 13) conv False plim False |value|/abserr 2.01e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.53e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.53e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.57e+05
+   * 3-38445  k 1e+05 q 1e+05 r 1e+05 z_resp 3.6343 [low, class Gqr, stored depth 19]: depth 12, regions 50 (Levin 21, CC 29), total_converged False, |total|/abserr 8.73e+06
+       G    G       depth  9 regions   18 (L 0, CC 18) conv False plim False |value|/abserr 9.78e+07
+       Gqr  G+q+r   depth 12 regions   29 (L 18, CC 11) conv False plim False |value|/abserr 8.15e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.9e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.9e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.01e+05
+   * 3-38378  k 1e+05 q 1e+05 r 1e+05 z_resp 0.30208 [low, class G, stored depth 20]: depth 12, regions 48 (Levin 26, CC 22), total_converged False, |total|/abserr 6.82e+06
+       G    G       depth  9 regions   17 (L 0, CC 17) conv True  plim False |value|/abserr 1.1e+08
+       Gqr  G+q+r   depth 12 regions   28 (L 23, CC 5) conv True  plim False |value|/abserr 1.08e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.7e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.7e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 4.14e+05
+   * 0-2065  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 57.642 [mid, class Gqr, stored depth 20]: depth 12, regions 44 (Levin 22, CC 22), total_converged False, |total|/abserr 1.98e+06
+       G    G       depth  8 regions   21 (L 0, CC 21) conv False plim False |value|/abserr 2.75e+07
+       Gqr  G+q+r   depth 12 regions   20 (L 19, CC 1) conv True  plim False |value|/abserr 2.83e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.19e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.19e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.09e+06
+   * 0-1814  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 526.01 [mid, class Gqr, stored depth 19]: depth 12, regions 42 (Levin 19, CC 23), total_converged False, |total|/abserr 4.37e+07
+       G    G       depth  9 regions   22 (L 0, CC 22) conv True  plim False |value|/abserr 2.31e+08
+       Gqr  G+q+r   depth 12 regions   17 (L 16, CC 1) conv True  plim False |value|/abserr 1.42e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.09e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.09e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.92e+06
+   * 3-13819  k 1e+05 q 1e+05 r 1e+05 z_resp 43.723 [mid, class Gqr, stored depth 20]: depth 12, regions 42 (Levin 17, CC 25), total_converged False, |total|/abserr 3.86e+07
+       G    G       depth  9 regions   23 (L 0, CC 23) conv True  plim False |value|/abserr 2.09e+08
+       Gqr  G+q+r   depth 12 regions   16 (L 14, CC 2) conv True  plim False |value|/abserr 7.76e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 4.83e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 4.83e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 4.24e+06
+   * 3-1925  k 1e+05 q 1e+05 r 1e+05 z_resp 19.081 [mid, class Gqr, stored depth 20]: depth 12, regions 42 (Levin 16, CC 26), total_converged False, |total|/abserr 2.14e+07
+       G    G       depth  9 regions   24 (L 0, CC 24) conv True  plim False |value|/abserr 2.14e+08
+       Gqr  G+q+r   depth 12 regions   15 (L 13, CC 2) conv True  plim False |value|/abserr 1.3e+10
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.9e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.9e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 2.44e+06
+   * 0-12891  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 6328.3 [mid, class Gqr, stored depth 20]: depth 12, regions 41 (Levin 17, CC 24), total_converged False, |total|/abserr 7.37e+07
+       G    G       depth  9 regions   22 (L 0, CC 22) conv True  plim False |value|/abserr 1.45e+08
+       Gqr  G+q+r   depth 12 regions   16 (L 14, CC 2) conv True  plim False |value|/abserr 4.73e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.9e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.9e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.03e+07
+   * 0-1795  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 174.13 [mid, class Gqr, stored depth 19]: depth 12, regions 40 (Levin 16, CC 24), total_converged False, |total|/abserr 2.86e+07
+       G    G       depth  9 regions   23 (L 0, CC 23) conv True  plim False |value|/abserr 2.61e+08
+       Gqr  G+q+r   depth 12 regions   14 (L 13, CC 1) conv True  plim False |value|/abserr 1.47e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.18e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.18e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.61e+06
+   * 0-1880  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 2761.8 [mid, class Gqr, stored depth 20]: depth 12, regions 40 (Levin 17, CC 23), total_converged False, |total|/abserr 5.88e+07
+       G    G       depth  9 regions   22 (L 0, CC 22) conv True  plim False |value|/abserr 1.45e+08
+       Gqr  G+q+r   depth 12 regions   15 (L 14, CC 1) conv True  plim False |value|/abserr 5.8e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.93e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.93e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.09e+07
+   * 0-1894  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 302.64 [mid, class Gqr, stored depth 19]: depth 12, regions 40 (Levin 17, CC 23), total_converged False, |total|/abserr 2.73e+07
+       G    G       depth  9 regions   22 (L 0, CC 22) conv True  plim False |value|/abserr 1.46e+08
+       Gqr  G+q+r   depth 12 regions   15 (L 14, CC 1) conv True  plim False |value|/abserr 2.34e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 7.93e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 7.93e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.86e+05
+   * 3-13905  k 1e+05 q 1e+05 r 1e+05 z_resp 132.08 [mid, class Gqr, stored depth 19]: depth 12, regions 40 (Levin 17, CC 23), total_converged False, |total|/abserr 2.54e+07
+       G    G       depth  9 regions   16 (L 0, CC 16) conv False plim False |value|/abserr 4.68e+07
+       Gqr  G+q+r   depth 12 regions   21 (L 14, CC 7) conv True  plim False |value|/abserr 1.17e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.38e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.38e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.91e+06
+   * 0-12975  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 1589 [mid, class Gqr, stored depth 19]: depth 12, regions 39 (Levin 20, CC 19), total_converged False, |total|/abserr 1.1e+07
+       G    G       depth  9 regions   18 (L 0, CC 18) conv False plim False |value|/abserr 1.43e+07
+       Gqr  G+q+r   depth 12 regions   18 (L 17, CC 1) conv True  plim False |value|/abserr 1.41e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.16e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 5.16e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.56e+06
+   * 0-37217  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 693.47 [mid, class Gqr, stored depth 19]: depth 12, regions 39 (Levin 16, CC 23), total_converged False, |total|/abserr 4.84e+07
+       G    G       depth  9 regions   22 (L 0, CC 22) conv True  plim False |value|/abserr 2.33e+08
+       Gqr  G+q+r   depth 12 regions   14 (L 13, CC 1) conv True  plim False |value|/abserr 1.09e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.76e+06
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 3.76e+06
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.26e+06
+   * 3-38028  k 1e+05 q 1e+05 r 1e+05 z_resp 10.979 [mid, class Gqr, stored depth 17]: depth 12, regions 39 (Levin 20, CC 19), total_converged False, |total|/abserr 1.49e+07
+       G    G       depth  9 regions   17 (L 0, CC 17) conv True  plim False |value|/abserr 1.1e+08
+       Gqr  G+q+r   depth 12 regions   19 (L 17, CC 2) conv False plim False |value|/abserr 9.93e+07
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 6.59e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 6.59e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 9.72e+05
+   * 0-12892  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 4800.1 [mid, class Gqr, stored depth 20]: depth 12, regions 38 (Levin 17, CC 21), total_converged False, |total|/abserr 3.76e+07
+       G    G       depth  9 regions   20 (L 0, CC 20) conv False plim False |value|/abserr 7.29e+07
+       Gqr  G+q+r   depth 12 regions   15 (L 14, CC 1) conv True  plim False |value|/abserr 3.5e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.88e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 2.88e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim False |value|/abserr 1.56e+07
+   * 0-12974  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 2094.9 [mid, class Gqr, stored depth 19]: depth 12, regions 38 (Levin 15, CC 23), total_converged False, |total|/abserr 2.09e+07
+       G    G       depth  9 regions   21 (L 0, CC 21) conv False plim False |value|/abserr 6e+07
+       Gqr  G+q+r   depth 12 regions   14 (L 12, CC 2) conv True  plim False |value|/abserr 1.88e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.31e+07
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 1.31e+07
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 7.9e+06
+   * 0-14054  k 3.139e+05 q 3.139e+05 r 3.139e+05 z_resp 14.474 [mid, class Gqr, stored depth 20]: depth 12, regions 38 (Levin 18, CC 20), total_converged False, |total|/abserr 1.29e+06
+       G    G       depth  9 regions   19 (L 0, CC 19) conv False plim False |value|/abserr 7.56e+06
+       Gqr  G+q+r   depth 12 regions   16 (L 15, CC 1) conv True  plim False |value|/abserr 7.44e+08
+       Gqr  G+q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.85e+05
+       Gqr  G-q+r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.85e+05
+       Gqr  G-q-r   depth  0 regions    1 (L 1, CC 0) conv False plim True  |value|/abserr 3.97e+05
+
+== 4. Regions, against A3 v2's stored WKB_Levin_num_regions
+   rtol 1e-7: store total h 108,879 (simple 66,111; Levin 42,768, CC 66,111) against stored 145,313,734 (ratio 0.0007)
+     per row with a Levin call (6791): median 12, 90th 35, max 76
+     h / stored per row: median 0.233, 10th 0.00191, 90th 0.9, min 1.19e-05, max 1.4; rows with more regions than stored 74
+     rows where 'has a Levin call' differs from 'stored regions not NULL': 0
+   regions (sum)
+     by band  : low: 20004; mid: 38504; seam: 50371
+     by regime: G: 96422; Gqr: 1520; Gr: 8250; none: 0; qr: 2607; r: 80
+     by class : G+r: 41223; G-r: 12263; G: 11788; Gqr: 40918; none: 2687
+   stored regions (sum)
+     by band  : low: 126295626; mid: 18827616; seam: 190492
+     by regime: G: 129513513; Gqr: 11530; Gr: 15782758; none: 0; qr: 5652; r: 281
+     by class : G+r: 97681222; G-r: 36832685; G: 4880278; Gqr: 5913616; none: 5933
+   rtol 1e-8: store total h 157,229 (simple 110,363; Levin 46,866, CC 110,363) against stored 145,313,734 (ratio 0.0011)
+     per row with a Levin call (6791): median 13, 90th 58, max 136
+     h / stored per row: median 0.31, 10th 0.00265, 90th 0.941, min 1.19e-05, max 1.55; rows with more regions than stored 125
+     rows where 'has a Levin call' differs from 'stored regions not NULL': 0
+   regions (sum)
+     by band  : low: 27871; mid: 54787; seam: 74571
+     by regime: G: 146999; Gqr: 2499; Gr: 4099; none: 0; qr: 3524; r: 108
+     by class : G+r: 57048; G-r: 18731; G: 13958; Gqr: 63860; none: 3632
+   stored regions (sum)
+     by band  : low: 126295626; mid: 18827616; seam: 190492
+     by regime: G: 139523875; Gqr: 19201; Gr: 5764725; none: 0; qr: 5652; r: 281
+     by class : G+r: 97681222; G-r: 36832685; G: 4880278; Gqr: 5913616; none: 5933
+
+== 5. Convergence
+   rtol 1e-7: total_converged False on 2578 of 9280 rows (A3 v2 stored False on 2262); unconverged Levin calls 6964 of 37325; phase-limited calls 1213; total_phase_limited rows 585
+     rows with total_abserr = +inf: 634 (A3 v2 stored +inf on 558)
+       1-20282 k 9.851e+05 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       2-33134 k 3.092e+06 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       0-10638 k 3.139e+05 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       1-20559 k 9.851e+05 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       0-10583 k 3.139e+05 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       2-33188 k 3.092e+06 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       0-10644 k 3.045e+07 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       1-20473 k 9.851e+05 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       2-33308 k 3.092e+06 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       0-10398 k 3.139e+05 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       1-20568 k 9.558e+07 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       2-33485 k 3e+08 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       1-20634 k 9.851e+05 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       2-21580 k 3.092e+06 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       0-10310 k 3.045e+07 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       0-33608 k 3.139e+05 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       1-20635 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       1-20386 k 9.558e+07 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       1-20504 k 9.851e+05 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       0-10388 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       2-33291 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       0-10669 k 3.139e+05 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       2-33080 k 3.092e+06 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       0-10372 k 3.045e+07 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       1-20719 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       0-10544 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       1-20680 k 9.851e+05 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       0-33581 k 3.139e+05 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       2-33232 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       1-20344 k 9.558e+07 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       2-33439 k 3.092e+06 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       0-10373 k 3.045e+07 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       1-20550 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       0-33583 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       1-20565 k 9.851e+05 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       0-10671 k 3.139e+05 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       2-21621 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       2-33411 k 3.092e+06 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       0-10443 k 3.045e+07 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       1-20469 k 9.558e+07 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+   total_converged False
+     by band  : low: 829; mid: 946; seam: 803
+     by regime: G: 2015; Gqr: 45; Gr: 124; none: 0; qr: 392; r: 2
+     by class : G+r: 662; G-r: 231; G: 277; Gqr: 1014; none: 394
+   rtol 1e-8: total_converged False on 2638 of 9280 rows (A3 v2 stored False on 2262); unconverged Levin calls 7647 of 37325; phase-limited calls 1720; total_phase_limited rows 745
+     rows with total_abserr = +inf: 634 (A3 v2 stored +inf on 558)
+       0-10638 k 3.139e+05 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       1-20282 k 9.851e+05 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       2-33134 k 3.092e+06 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       0-10583 k 3.139e+05 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       2-33188 k 3.092e+06 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       1-20559 k 9.851e+05 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       0-10644 k 3.045e+07 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       0-10398 k 3.139e+05 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       2-33308 k 3.092e+06 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       1-20473 k 9.851e+05 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       1-20568 k 9.558e+07 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       2-33485 k 3e+08 q 3e+08 r 3e+08 z 4.0146e+12 [seam, none] stored abserr inf
+       0-33608 k 3.139e+05 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       0-10310 k 3.045e+07 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       1-20634 k 9.851e+05 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       2-21580 k 3.092e+06 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       1-20386 k 9.558e+07 q 3e+08 r 3e+08 z 3.0451e+12 [seam, none] stored abserr inf
+       0-10388 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       0-10669 k 3.139e+05 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       2-33291 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       1-20635 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+       1-20504 k 9.851e+05 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       2-33080 k 3.092e+06 q 3e+08 r 3e+08 z 1.329e+12 [seam, none] stored abserr inf
+       0-10372 k 3.045e+07 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       0-10544 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       1-20344 k 9.558e+07 q 3e+08 r 3e+08 z 2.3098e+12 [seam, none] stored abserr inf
+       0-33581 k 3.139e+05 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       1-20719 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       2-33232 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 1.008e+12 [seam, none] stored abserr inf
+       1-20680 k 9.851e+05 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       2-33439 k 3.092e+06 q 3e+08 r 3e+08 z 1.008e+12 [seam, none] stored abserr inf
+       0-10373 k 3.045e+07 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       0-33583 k 3.139e+05 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       1-20550 k 9.851e+05 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       0-10671 k 3.139e+05 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       1-20565 k 9.851e+05 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       2-21621 k 3.092e+06 q 9.558e+07 r 9.558e+07 z 7.6462e+11 [seam, none] stored abserr inf
+       2-33411 k 3.092e+06 q 3e+08 r 3e+08 z 7.6462e+11 [seam, none] stored abserr inf
+       1-20469 k 9.558e+07 q 3e+08 r 3e+08 z 1.752e+12 [seam, none] stored abserr inf
+       0-10443 k 3.045e+07 q 9.558e+07 r 9.558e+07 z 1.329e+12 [seam, none] stored abserr inf
+   total_converged False
+     by band  : low: 829; mid: 970; seam: 839
+     by regime: G: 2152; Gqr: 62; Gr: 29; none: 0; qr: 392; r: 3
+     by class : G+r: 598; G-r: 204; G: 277; Gqr: 1164; none: 395
+
+== 6. Totals at 1e-7 against A3 v2's stored totals
+   rows compared 9280; bit-identical 2377; stored total_abserr zero or non-finite on 558 (not ratioed)
+   relative |dtotal|/|stored|: median 0.00122, 90th 0.125, 99th 0.871, max 42.6
+   |dtotal| / stored total_abserr (8722 rows): median 286, 90th 5.37e+04, 99th 3.21e+05, max 8.64e+05; beyond 1x 6187, 10x 5677, 100x 4818
+   rows beyond 1x the stored error
+     by band  : low: >1x 959/966; mid: >1x 2059/2068; seam: >1x 3169/5688
+     by regime: G: >1x 5945/5995; Gqr: >1x 57/57; Gr: >1x 150/150; none: >1x 4/2489; qr: >1x 0/0; r: >1x 31/31
+     by class : G+r: >1x 1821/1832; G-r: >1x 351/352; G: >1x 1161/1192; Gqr: >1x 2819/2826; none: >1x 35/2520
+   the ten largest against the stored error:
+     2-1524  [mid, G+r, stored depth 18]: 8.64e+05x, relative 0.126
+     2-1297  [seam, G+r, stored depth 18]: 7.98e+05x, relative 0.125
+     2-21922  [seam, G+r, stored depth 18]: 7.63e+05x, relative 0.126
+     3-965  [seam, G+r, stored depth 18]: 6.93e+05x, relative 0.189
+     3-664  [seam, G+r, stored depth 17]: 6.83e+05x, relative 0.634
+     3-662  [seam, G+r, stored depth 18]: 6.59e+05x, relative 0.449
+     3-673  [seam, G+r, stored depth 17]: 6.56e+05x, relative 0.304
+     0-33844  [seam, G+r, stored depth 20]: 6.38e+05x, relative 0.341
+     3-787  [seam, G+r, stored depth 18]: 6.14e+05x, relative 0.0837
+     3-13522  [mid, Gqr, stored depth 19]: 5.68e+05x, relative 0.00737
+   descriptive: |total(1e-7) - total(1e-8)| / total_abserr(1e-7) at h, 8646 rows: median 0, 90th 0.337, max 3.91e+04; beyond 1x 341
+   GkSourcePolicyData assembled in the 1e-7 workers: 1160; differing from A3 v2's in Levin_z 22, type 0, quality 0 (any 22)
+   GkSourcePolicyData assembled in the 1e-8 workers: 1160; differing from A3 v2's in Levin_z 22, type 0, quality 0 (any 22)
+
+== 7. The stationary-point scan (1e-7; 4,097 points per call)
+   calls scanned 37325; grid spacing h (log(1+z')): median 0.00253, min 1.69e-05, max 0.00712
+   calls with an interior stationary point (a sign change of theta' on the grid): 720; rows: 720 of 9280
+   calls that accept a region across one: 720; rows: 720; regions listed 720 (grid 707, ends 13)
+   LIMIT: a pair of stationary points closer together than the grid spacing h is not seen.
+   listed regions by depth {0: 623, 1: 40, 2: 2, 3: 2, 10: 3, 11: 32, 12: 18}; by branch {'Levin': 677, 'CC': 43}; phase-limited 238
+   listed regions' 1/relerr (|value|/abserr): median 8.2e+05, min 2.74e+03, max 1.09e+13
+   listed regions by band {'mid': 308, 'low': 412}; by regime/group {'Gqr/G+q+r': 720}; by class {'Gqr': 484, 'G': 236}
+   min|theta'|/max|theta'| on calls with a sign change: median 2.62e-09
+   rows with an interior stationary point
+     by band  : low: 412; mid: 308; seam: 0
+     by regime: G: 667; Gqr: 53; Gr: 0; none: 0; qr: 0; r: 0
+     by class : G+r: 0; G-r: 0; G: 236; Gqr: 484; none: 0
+   rows accepting a region across one
+     by band  : low: 412; mid: 308; seam: 0
+     by regime: G: 667; Gqr: 53; Gr: 0; none: 0; qr: 0; r: 0
+     by class : G+r: 0; G-r: 0; G: 236; Gqr: 484; none: 0
+   rows deeper than 11 at 1e-7 holding an interior stationary point: 19 of 19
+
+== 8. Cost
+   rtol 1e-7: Levin wall per unit median 0.252 s, 90th 0.457, max 0.785, sum 0.666 h; rebuild sum 0.295 h (max 58.4 s, the first unit of each worker carries its producer re-run); scan sum 0.270 h
+   Levin wall sum (s)
+     by band  : low: 404; mid: 755; seam: 1240
+     by regime: G: 1981; Gqr: 29; Gr: 73; none: 227; qr: 84; r: 6
+     by class : G+r: 626; G-r: 147; G: 385; Gqr: 925; none: 316
+     slowest unit h-1e-7-3-983 0.785 s (depth 8, regions 70)
+   rtol 1e-8: Levin wall per unit median 0.273 s, 90th 0.548, max 1.03, sum 0.767 h; rebuild sum 0.296 h (max 58.2 s, the first unit of each worker carries its producer re-run); scan sum 0.000 h
+   Levin wall sum (s)
+     by band  : low: 460; mid: 870; seam: 1430
+     by regime: G: 2366; Gqr: 38; Gr: 31; none: 229; qr: 90; r: 6
+     by class : G+r: 732; G-r: 186; G: 413; Gqr: 1105; none: 325
+     slowest unit h-1e-8-2-36986 1.03 s (depth 9, regions 120)
+   A3 v2's stored compute_time, summed over the 9,280 rows: 286.33 h
+   producer re-run 1e-7-k0_101: 56.6 s (1740 GkWKBIntegration, 108590 samples; coefficient mismatches 0; values bit-identical to stored in every column 554/108590; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-7-k0_202: 57.8 s (1740 GkWKBIntegration, 118493 samples; coefficient mismatches 0; values bit-identical to stored in every column 539/118493; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-7-k1_102: 56.2 s (1740 GkWKBIntegration, 111698 samples; coefficient mismatches 0; values bit-identical to stored in every column 442/111698; theta_div_2pi changes 1, not one cycle near a boundary 0)
+   producer re-run 1e-7-k1_301: 57.1 s (1740 GkWKBIntegration, 120244 samples; coefficient mismatches 0; values bit-identical to stored in every column 319/120244; theta_div_2pi changes 2, not one cycle near a boundary 0)
+   producer re-run 1e-7-k2_2: 55.6 s (1740 GkWKBIntegration, 114081 samples; coefficient mismatches 0; values bit-identical to stored in every column 551/114081; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-7-k2_302: 56.6 s (1740 GkWKBIntegration, 121785 samples; coefficient mismatches 0; values bit-identical to stored in every column 270/121785; theta_div_2pi changes 1, not one cycle near a boundary 0)
+   producer re-run 1e-7-k3_1: 52.7 s (1740 GkWKBIntegration, 105813 samples; coefficient mismatches 0; values bit-identical to stored in every column 473/105813; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-7-k3_201: 52.8 s (1740 GkWKBIntegration, 116233 samples; coefficient mismatches 0; values bit-identical to stored in every column 475/116233; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-8-k0_101: 56.4 s (1740 GkWKBIntegration, 108590 samples; coefficient mismatches 0; values bit-identical to stored in every column 554/108590; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-8-k0_202: 57.4 s (1740 GkWKBIntegration, 118493 samples; coefficient mismatches 0; values bit-identical to stored in every column 539/118493; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-8-k1_102: 56.2 s (1740 GkWKBIntegration, 111698 samples; coefficient mismatches 0; values bit-identical to stored in every column 442/111698; theta_div_2pi changes 1, not one cycle near a boundary 0)
+   producer re-run 1e-8-k1_301: 56.8 s (1740 GkWKBIntegration, 120244 samples; coefficient mismatches 0; values bit-identical to stored in every column 319/120244; theta_div_2pi changes 2, not one cycle near a boundary 0)
+   producer re-run 1e-8-k2_2: 55.4 s (1740 GkWKBIntegration, 114081 samples; coefficient mismatches 0; values bit-identical to stored in every column 551/114081; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-8-k2_302: 55.8 s (1740 GkWKBIntegration, 121785 samples; coefficient mismatches 0; values bit-identical to stored in every column 270/121785; theta_div_2pi changes 1, not one cycle near a boundary 0)
+   producer re-run 1e-8-k3_1: 52.7 s (1740 GkWKBIntegration, 105813 samples; coefficient mismatches 0; values bit-identical to stored in every column 473/105813; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   producer re-run 1e-8-k3_201: 53.9 s (1740 GkWKBIntegration, 116233 samples; coefficient mismatches 0; values bit-identical to stored in every column 475/116233; theta_div_2pi changes 0, not one cycle near a boundary 0)
+   T re-runs 128: coefficients bit-identical to stored in 128; theta_div_2pi changes 0
+   QuadSources recomputed 128; L0a holds on 128
+
+== 9. Disagreement warnings (!! WARNING (GkSourcePolicyData)
+   per-unit counters, summed over 18560 units: 0; (k, z_response) assemblies that printed one: 0 of 2320
+   grep of the workers' logs: 0
+
+# wrote out/census_summary.txt, out/census_rows.csv.gz (1654484 bytes), out/scan_listed_regions.csv, state/analysis.json
+# ----
+# end 2026-10-27T03:21:02Z
+# exit 0

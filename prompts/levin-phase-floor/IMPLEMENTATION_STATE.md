@@ -2,9 +2,9 @@
 
 **Last updated:** 2026-10-27 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
 landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 written up and answered in
-part on 2026-10-27 (§2.3): next are 06a (the depth census, for the layer-2 decision), 07 (the
-stationary-point guard, `[06-levin-accepts-a-region-across-a-stationary-point]`) and 08 (fact-finding
-for gate G3).** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+part on 2026-10-27 (§2.3); 06a's depth census landed the same day (C1 and C2 hold): next are the
+user's layer-2 decision on it, 07 (the stationary-point guard,
+`[06-levin-accepts-a-region-across-a-stationary-point]`) and 08 (fact-finding for gate G3).** 01 ran on the Mac Studio on 2026-10-25, in parallel with
 `handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
 the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
 issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
@@ -97,6 +97,19 @@ moves only in 06's records commit.
   `[06-levin-accepts-a-region-across-a-stationary-point]`, assigned to G2 with layer 3 (§3).
 - 06 opened three issues (§3).
 
+**06a landed** (2026-10-27): the depth census, G2's L2 (b). Every one of A3 v2's 9,280 rows was
+re-run in-process at the current code, at `1e-7` and `1e-8`, on the Mac Studio in 45 minutes,
+Ray-free (§2.3.1).
+- **C1 and C2 hold:** no row has a region at depth ≥ 18 at either tolerance. The deepest row is at
+  12 and 13 respectively.
+- **C3 fails:** 19 rows (`1e-7`) and 29 (`1e-8`) exceed 06's largest depth, 11. Every one holds an
+  interior stationary point, and its deep regions sit at that point.
+- **C4 holds:** 06's 70 units are reproduced bit for bit.
+- **Beyond the prompt:** 720 calls store-wide accept a region across a stationary point, 623 of
+  them as a single region. B1's movement of A3 v2's stored totals reaches 6,187 of 8,722 rows.
+- **The review** stopped on check 9 alone, a superseded script's hash with no kept file. The user
+  accepted the record as it stands.
+
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
 
@@ -162,6 +175,7 @@ records in `docs/levin-phase-floor/NN/` ·
 |---|---|
 | **G2 L2** | **A census first, then the decision:** *"L2 (b) first, then make a decision whether layer 2 is needed. As you say, it doesn't look to be required."* Prompt 06a re-runs A3 v2's rows at the current code for the depth distribution; the user decides layer 2 on it |
 | **G2 Q4 (i)–(ii)** | **"Prompt 07 becomes the stationary point guard."** `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically (Decisions, **06 P1**). The round-off-limited exit where the guard fires is part of it. Its open choices, (α)–(γ) in §2.3, are proposed in 07's prompt and settled when it is written |
+| **06a check 9** | **The record is accepted as it stands:** *"Yes, just accept as it stands."* `out/cmd/17` names the first, superseded `c0.py` (`b33229d8…`), whose text was not kept (deviation 15); C0's verdict rests on `out/cmd/18` |
 | **G2 Q4 (iii)–(v), Q5** | **Fact-finding after 07:** *"After that we have the next fact-finding exercise to answer Q4(iii)-(v) and Q5."* Prompt 08 measures them with 07's guard in place, and the user answers them at a new gate, G3 |
 
 The orchestrator's choices of method, C1–C6, are in README §6.2. The open questions for the user,
@@ -180,7 +194,7 @@ Q1–Q4, are in README §6.3.
 | 05 | [Layer 1(a): take $k\tau_R$ out of $G$'s phase](05-reanchor-g-phase.md) | $G$'s remainder formed node by node: an exact remainder per table node, against $2\pi$, in extended precision and memoised, plus a small variable part. $T$, `raw_theta`, `theta_deriv`, the producers and every schema unchanged. Tests (exactness against $2\pi$, no jitter, nothing else moves), with four breakages. Adds `tools/store_value_diff.py`, which compares two stores' values by physical identity (`CLAUDE.md` rule 7), with its tests. Rehearsals R9 (parent) and R10, compared with it. A wider re-measurement on A3 v2 (up to 24 depth-20 rows by class and band, 03's seven and 8 controls), with `QuadSource` recomputed in-process; gate L0; scored L1, L1q, L2, L3 | code on the laptop; R9, R10 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ✅ 2026-10-26. **Code** (§1–§4) on the laptop: reviewed there (nine checks, all pass) and pushed; ComputeTargets 742 → 754, tools 49 → 55. **§5** on the Mac Studio: R9 `levin-phase-floor-05-r9-parent-20261026T014729` (worktree at `e648951`) and R10 `levin-phase-floor-05-r10-reanchor-20261026T015120` (`53084dc`), both `done`, `1b332ffa…`; every value table identical; QSI 542/864 totals moved, median 8.7e-5 of the error, one row 28×; readers exit 0; lock released. Stopped at §8 on timings, labels, `parents_digest` and work counters; the user ruled the prompt wrongly worded. **§6**: run `levin-phase-floor-05-wider-20261026T020005`, 109/109, none over budget; L0 holds; L1 fails (9/24), L1q fails (1/7), L2 holds (8/8), L3 fails (29/31), as written, all failures on rows B1 had already uncapped or R5; on the 11 rows capped under $p$ the cap goes on all, L3 holds on all. Mac Studio review: stop on check 10 (two unclassified deviations), classified on committing by the user's agreement; checks 1–9 pass. Laptop re-checks: the 28× row, and `QuadSource` at $p$ on `low-G-r-2`. R9's and R10's stores were retired after the records commit, on the user's word (sidecars kept; `05/rehearsal/out/retire_r{9,10}.txt`), and the worktree was removed | `120fdfe` (code); records in the records commit | [log](logs/05-reanchor-g-phase.md) |
 | 05a | [Layer 1(a) for $T$](05a-reanchor-t-phase.md) | $T$'s remainder node-anchored and reduced against $2\pi$, by `PrimitivePhase`'s existing `exact_remainder`, which `TkSourceFunctions` now turns on (a keyword, default on; closed-form test fixtures turn it off). $T$'s anchor `z_init` is off the grid, so the anchor's end partial is non-zero in production for the first time. Tests with four breakages; 05's T-unchanged test replaced. R11 and R12 compared with `tools/store_value_diff.py`. 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter at each sub-interval's low-$z$ end; gate T0; scored T1–T4 | code on the laptop; R11, R12 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ✅ 2026-10-26. **Code** (§1–§4) on the laptop: `TkSourceFunctions(..., exact_remainder=True)`; 9 closed-form fixture sites pass `False`; `test_t_phase_reanchor` (10 methods) and 4(b) in place of 05's T-unchanged test; the four breakages caught; ComputeTargets 754 → 764, the other six roots equal; reviewed there (nine checks, all pass; breakage (iv) re-applied by the orchestrator) and pushed. Three stale comments corrected (`bd38e50`); **T1 amended before §6** (prompt §9, `2db3f9e`). **§5** on the Mac Studio: R11 `levin-phase-floor-05a-r11-parent-20261026T122041` (worktree at `c4eaefd`) and R12 `levin-phase-floor-05a-r12-reanchor-t-20261026T122434` (`149c393`), both `done`, `1b332ffa…`; every value table identical, only the four volatile kinds outside QSI; QSI 424/864 totals moved, at most 2.9e-11 relative and 8.8e-5 of the error, no depth, region or flag changed; readers exit 0; lock released. **§6**: run `levin-phase-floor-05a-wider-20261026T123047`, 109/109, none over budget; T0 holds (all 39 $c$ units equal 05's bit for bit); T1 holds by the true step (70/70), the reading of record by the user's decision, and fails read literally (36/70, all aliased); T2 holds (largest depth 11); T3 holds (largest 4.7e-6 of the error); T4 fails (29/31, 05's two L3 rows, same ratios). Mac Studio review: all ten checks pass. Laptop re-checks: the QSI row of largest change, and a $c$ unit against 05's. R11's and R12's stores were retired after the records commit, on the user's word (sidecars kept; `05a/rehearsal/out/retire_r1{1,2}.txt`), and the worktree was removed | `1fc349c` (code); `bd38e50` (comments); `2db3f9e` (T1 amended); records in the records commit | [log](logs/05a-reanchor-t-phase.md) |
 | 06 | [The producers' stored phase](06-producers-store-the-residual.md) | `GkWKBIntegration` and `TkWKBIntegration`'s stored phase, by its own method (G1 Q3; README §6.2 C8): each value stores its residual $r = \Delta\theta - \rho.\delta$ from its small terms (a new `theta_residual` column, on `GkSource`'s values too); the stored remainder is reduced exactly against $2\pi$; `_build_phase` and `TkSourceFunctions` build $\varphi$ from $r$, $G$'s with its $2\pi$ wraps unwrapped and checked against the rectifier. Tests with five breakages. R13 and R14 compared with `tools/store_value_diff.py`. 05's 39 rows re-run with the producers re-run in-process; gate U0; scored S1–S5, with 04's $\varphi$ metric on R1–R7 | code on the laptop; R13, R14 and the re-measurement on the Mac Studio, from worktrees | Opus | ✍️ 2026-10-26; amended before dispatch (§9 points 1–5) and after Part A's first stop (§9 point 6, `9f66622`) | ✅ 2026-10-27. **Code** (§1–§4) on the laptop: the producers form each sample's phase exactly and reduce it against $2\pi$; `theta_residual` stored on `GkWKBValue`, `TkWKBValue` and `GkSourceValue`; $\varphi_T = r$, $\varphi_G = r + k\tau.\delta(z_s, z_{\rm init})$ unwrapped in `_build_phase` and checked against the rectifier; ComputeTargets 764 → 777, tools 55 → 58; reviewed there (nine checks, breakages (ii) and (iii) re-applied) after a first dispatch that stopped on the payload's key set. **§5** on the Mac Studio, from worktrees: R13 `levin-phase-floor-06-r13-parent-20261026T215550` (`9f66622`) and R14 `levin-phase-floor-06-r14-residual-20261026T215945` (`f5cee4c`), both `done`, `1b332ffa…`; every value table outside the five classes identical; no cycle count changed; no disagreement warning; readers exit 0; lock released. **§6**: run `levin-phase-floor-06-wider-20261026T223634`, 109/109, none over budget, $s$ on a certified scratch copy of A3 v2 (route B); U0 holds; S1 holds (6,700/6,700, $\le 8.8\times10^{-14}F$), S3 holds, S2 fails (2,115/12,862, the metric's floor), S4 fails (34/39), S5 fails (28/31). Mac Studio review: ten checks, check 4 on the user's ruling. Laptop re-checks: one `GkWKBValue` row, and `mid-G-1` against 05a. **P1** investigated from the laptop: an `AdaptiveLevin` defect at stationary points, R13 right and R14 wrong. The user closed the header issue | `dc9d28c` (code); `59d4070`, `7b6c1cd`, `9f66622` (prompt §9); records in the records commit | [log](logs/06-producers-store-the-residual.md) |
-| 06a | [The depth census at the current code](06a-depth-census.md) | G2's L2 (b): all 9,280 A3 v2 rows re-run in-process at `HEAD` (code `f5cee4c`'s), Ray-free, on 06's certified scratch copy, at `1e-7` and `1e-8`, for the distribution of Levin depth, so that the user can decide whether layer 2 is needed. Each producer re-run once per $k$, not per row; gate C0 (06's units reproduced bit for bit); scored C1–C4; descriptive, a stationary-point scan for 07 | Mac Studio, in a worktree, no lock | Opus | ✍️ 2026-10-27 | ⬜ | — | — |
+| 06a | [The depth census at the current code](06a-depth-census.md) | G2's L2 (b): all 9,280 A3 v2 rows re-run in-process at `HEAD` (code `f5cee4c`'s), Ray-free, on 06's certified scratch copy, at `1e-7` and `1e-8`, for the distribution of Levin depth, so that the user can decide whether layer 2 is needed. Each producer re-run once per $k$, not per row; gate C0 (06's units reproduced bit for bit); scored C1–C4; descriptive, a stationary-point scan for 07 | Mac Studio, in a worktree, no lock | Opus | ✍️ 2026-10-27 | ✅ 2026-10-27 on the Mac Studio, run `levin-phase-floor-06a-census-20261027T023143`, 18,560/18,560 units in 45.5 min, none over budget or in error; worktree at `e05c34f`. C0 holds; **C1 holds** (0 of 9,280 at depth ≥ 18 at `1e-7`, deepest 12), **C2 holds** (0 at `1e-8`, deepest 13), **C3 fails** (19 and 29 rows above 11, all stationary-point rows), **C4 holds** (70/70). A3 v2 and its copy unchanged, `0e32f24a…`. Mac Studio review: nine checks pass, check 9 (a superseded `c0.py`'s hash, file not kept) accepted as it stands by the user. Laptop re-checks: two more of 05's rows against 06, and one census line against its checkpoint | records in the records commit | [log](logs/06a-depth-census.md) |
 | 07 | The stationary-point guard | G2's Q4 (i) and (ii): `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically; the stationary points located in advance from the closed-form $\theta'$, and a guard in the driver | laptop; Mac Studio for its rehearsals | Opus | ⬜ not written | ⬜ | — | — |
 | 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, the dead `local_atol` branch, what `total_converged` means, and `rtol` | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
 
@@ -356,6 +370,34 @@ fact-finding prompt for Q4 (iii)–(v) and Q5.
    or on the census if L2 (b) is taken. Each of those questions turns on declared errors the guard
    changes.
 4. **Close `[04-x-at-1e-8-still-reaches-depth-20]` at G2.**
+
+#### 2.3.1 The census at the current code (06a, 2026-10-27)
+
+*Added after 06a landed. The evidence above, on 05's 39 rows, stands as it was. This is G2's L2 (b),
+over the whole store.* `VERIFICATION.md` §6a.
+
+| `rtol` | rows | rows with a region at depth ≥ 18 | largest row depth | rows deeper than 11 | regions |
+|---|---|---|---|---|---|
+| `1e-7` | 9,280 | 0 | 12 | 19 | 108,879 |
+| `1e-8` | 9,280 | 0 | 13 | 29 | 157,229 |
+
+A3 v2 stored 145,313,734 regions. 2,489 rows have no Levin call.
+- **The 2,265 rows stored at depth 20** fall to depths 1–12 at `1e-7`, 1,248 of them to depth 7.
+- **Every row deeper than 11 is a stationary-point row.** Each holds an interior stationary point
+  of θ′ in its `G+q+r` call, and its regions at depth ≥ 11 lie within 1–3.5 grid spacings of the
+  point. They are mostly equilateral ($q = r = k$) at $k = 10^5$ and $3.14	imes10^5$/Mpc, mid band.
+- **Depth ≥ 12 by branch** (Levin / Clenshaw–Curtis): 13 / 25 at `1e-7`; 17 / 42, plus 0 / 2 at
+  depth 13, at `1e-8`.
+- **Convergence, the "before" for 08:**
+  - `total_converged` is False on 2,578 rows at `1e-7` and 2,638 at `1e-8` (2,262 stored).
+  - The unconverged calls at `1e-7` / `1e-8` are, by kind: bound only 4,014 / 3,745, resolution
+    1,737 / 2,182, phase-limited 1,213 / 1,720, capped 0 / 0.
+  - 634 rows have an infinite `total_abserr`.
+- **`1e-7` against `1e-8`:** the change exceeds `total_abserr`(`1e-7`) on 341 of 8,646 rows. The
+  median ratio is 0, the 90th percentile 0.34, and the largest $3.9\times10^4$.
+
+**For L2:** C1 and C2 hold, so no row of A3 v2 needs layer 2 at either tolerance at this code. What
+depth remains is at stationary points, which are 07's.
 
 ## 3. Active and unresolved issues
 
@@ -539,6 +581,15 @@ fact-finding prompt for Q4 (iii)–(v) and Q5.
   [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
   `docs/levin-phase-floor/05/wider/issues.md` W1.
 
+  **Widened to the whole store (2026-10-27, prompt 06a's census, issues X3).** At the current code
+  and `1e-7`, the total moves beyond the stored `total_abserr` on 6,187 of the 8,722 rows with a
+  finite, non-zero stored error. It moves beyond 10× on 5,677 rows and beyond 100× on 4,818. The
+  median is 286× and the largest $8.6\times10^5$× (`2-1524`). The relative change has median
+  $1.2\times10^{-3}$ and maximum 42.6. 2,377 rows are bit-identical, mostly rows with no Levin call.
+  05's $p$ units give the same size on their 38 rows, so the effect is B1's, not the census's. The
+  next step is unchanged. `VERIFICATION.md` §6a;
+  `docs/levin-phase-floor/06a/issues.md` X3.
+
 - **[05-b1-uncaps-most-cheap-depth-20-rows]** *(opened 2026-10-26 by prompt 05, its §6 agent's
   W2)* — under B1's code, 20 of the 31 sampled stored depth-20 rows no longer reach the cap.
   - **Which rows:** all 12 drawn mid-band rows, all 6 drawn `Gqr` rows, four low-band rows and 03's
@@ -607,6 +658,20 @@ fact-finding prompt for Q4 (iii)–(v) and Q5.
     stationary point off any bisection point.
   [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.3;
   [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md).
+
+  **Measured across A3 v2 (2026-10-27, prompt 06a's scan, issues X1–X2).** At the current code and
+  `1e-7`, θ′ was sampled on 4,097 points per Levin call.
+  - **Where:** 720 of 37,325 calls hold an interior sign change, in 720 of the 9,280 rows, all in
+    group `G+q+r`. 412 are in the low band, 308 in mid and none in seam.
+  - **What is accepted across them:** in every one a region is accepted across the point. 623 of
+    those regions are at depth 0, the whole call accepted as one region, P1's pattern. 677 are
+    Levin regions and 238 are phase-limited.
+  - **Depth:** every A3 v2 row deeper than 11 is one of these rows, with its deep regions at the
+    point.
+  - **The limit:** two points closer together than the grid spacing (median $2.5\times10^{-3}$ in
+    $\log(1+z')$) are not seen.
+  - **For 07:** `docs/levin-phase-floor/06a/out/scan_listed_regions.csv` lists every such region.
+    The next step is unchanged.
 
 - **[06-s2-window-metric-floors-on-phi-t-structure]** *(opened 2026-10-27 by prompt 06, its §6
   agent's W4)* — 04's φ metric, the RMS residual of a degree-4 fit over 9 consecutive samples,

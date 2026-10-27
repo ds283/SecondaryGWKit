@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:13:38Z
+# ----
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: 1
+    16277 16275 sed -n 5,$p
+# ----
+# end 2026-10-27T02:13:39Z
+# exit 0

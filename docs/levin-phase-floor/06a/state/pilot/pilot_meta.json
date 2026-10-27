@@ -1,0 +1,10 @@
+{
+ "t_start": 1793068021.436234,
+ "t_end": 1793068103.247787,
+ "wall_s": 81.81155300140381,
+ "exit": 0,
+ "child_ru_maxrss_bytes": 436436992,
+ "child_ru_utime_s": 75.339914,
+ "child_ru_stime_s": 5.09324,
+ "tmp_ray_sgk_new": []
+}

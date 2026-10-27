@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport hashlib, os, datetime\nP=\'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/prompts/levin-phase-floor/06a-depth-census.md\'; F=\'state/predictions.md\'\np=open(P,\'rb\').read(); s=open(F,\'rb\').read()\nst=os.stat(F)\nprint(\'predictions.md sha256\', hashlib.sha256(s).hexdigest(), \'bytes\', len(s))\nprint(\'mtime\', datetime.datetime.fromtimestamp(st.st_mtime, datetime.timezone.utc).isoformat(), \'ns\', st.st_mtime_ns)\nprint(\'prompt sha256\', hashlib.sha256(p).hexdigest())\ni=p.find(b\'## 4. Predictions\\n\'); j=p.find(b\'## 5. Descriptive, not scored\\n\')\nprint(\'section 4 of the prompt, bytes\', i, \'to\', j, \'; equal to the file:\', p[i:j]==s)\nprint(\'now\', datetime.datetime.now(datetime.timezone.utc).isoformat())\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:28:48Z
+# ----
+predictions.md sha256 3ad9b43de04d005164c705a4116d608b32788932e17a71abd2f428a998f3f405 bytes 1678
+mtime 2026-10-27T02:28:40.042260+00:00 ns 1793068120042260132
+prompt sha256 6e0c1fa1f7d30fb16c54de9cf383a195b88371d623d4e2fa8158511a857d052e
+section 4 of the prompt, bytes 13468 to 15146 ; equal to the file: True
+now 2026-10-27T02:28:48.086330+00:00
+# ----
+# end 2026-10-27T02:28:48Z
+# exit 0

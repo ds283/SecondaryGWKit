@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/pilot.py run state/pilot
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:27:01Z
+# ----
+pilot worker pid 22469; 48 units
+{
+ "t_start": 1793068021.436234,
+ "t_end": 1793068103.247787,
+ "wall_s": 81.81155300140381,
+ "exit": 0,
+ "child_ru_maxrss_bytes": 436436992,
+ "child_ru_utime_s": 75.339914,
+ "child_ru_stime_s": 5.09324,
+ "tmp_ray_sgk_new": []
+}
+# ----
+# end 2026-10-27T02:28:23Z
+# exit 0

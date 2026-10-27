@@ -1,0 +1,17 @@
+$ bash -c for\ f\ in\ 24_store_files_prelaunch\ 32_store_files_after\ 36_store_files_after_fingerprint\;\ do\ scripts/compare_hashes.sh\ out/cmd/00_store_files_before.txt\ out/cmd/\$f.txt\ \|\ tail\ -1\;\ done\;\ for\ f\ in\ 25_copy_files_prelaunch\ 33_copy_files_after\ 37_copy_files_after_fingerprint\;\ do\ scripts/compare_hashes.sh\ out/cmd/01_copy_files_before.txt\ out/cmd/\$f.txt\ \|\ tail\ -1\;\ done\;\ scripts/compare_hashes.sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt\ out/cmd/37_copy_files_after_fingerprint.txt\ \|\ tail\ -1\;\ grep\ journal\ out/cmd/36_\*.txt\ out/cmd/37_\*.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:18:14Z
+# ----
+EQUAL
+EQUAL
+EQUAL
+EQUAL
+EQUAL
+EQUAL
+EQUAL
+out/cmd/36_store_files_after_fingerprint.txt:# journal/-wal/-shm files beside the store: none
+out/cmd/37_copy_files_after_fingerprint.txt:# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-27T03:18:14Z
+# exit 0

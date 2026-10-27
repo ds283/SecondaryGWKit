@@ -1,0 +1,29 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ head\ -3\;\ echo\ \'--\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'--\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ status\ --short\ --ignored\;\ echo\ \'\(end\)\'\;\ echo\ \'--\ /tmp/ray-sgk\'\;\ ls\ /tmp/ray-sgk\ \|\ wc\ -l\;\ ls\ -t\ /tmp/ray-sgk\ \|\ head\ -2\;\ echo\ \'--\ run\ dir\'\;\ du\ -sk\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143\ \|\ wc\ -l\;\ echo\ \'--\ 06\ records\ untouched\'\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634\ \|\ wc\ -l\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl\;\ diff\ -r\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/docs/levin-phase-floor/06/wider/scripts\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts\ \&\&\ echo\ \'06\ scripts\ in\ var\ ==\ docs\'\;\ echo\ \'--\ 06a\ records\'\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/\*\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/out\ \|\ sort\ -h\ \|\ tail\ -12
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:22:30Z
+# ----
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06a-census-20261027T023143          done      18560/18560      51m  levin-phase-floor prompt 06a on the Mac Studio (mps026298; Python 3.13.16): the depth census, every A3 v2 QuadSourceIntegral row (9280) re-run in-process at the current code at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock. One tree, h, the git worktree at the dispatch SHA e05c34f (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f; its code outside docs/ and prompts/ is 06's s tree f5cee4c's byte for byte). It reads, read-only, 06's certified scratch copy of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint 0e32f24a) on a stand-in ShardedPool; each producer re-run once per worker (each GkWKBIntegration of a k once, each TkWKBIntegration once), each GkSource/GkSourcePolicyData once per (k, z_response), each QuadSource once per (q, r). One worker per k per rtol, at most six at once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; the stationary-point scan in every 1e-7 unit, after its timed section. The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; pilot projection about 0.85 h  · 18560 units recorded; last h-1e-8-3-39148 done
+   levin-phase-floor-06-wider-20261026T223634            done        109/109   4h 45m  levin-phase-floor prompt 06 section 6 on the Mac Studio (mps026298; Python 3.13.16): the re-measurement of 05's 39 rows on A3 v2 with the producers re-run in-process, Ray-free, no lock. Two trees, both git worktrees: t5, the code commit's parent 9f66622 (05a's t; its consumers and the stored producer samples) in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622; s, Part B's dispatch SHA f5cee4c (code dc9d28c; its producers re-run on each row's GkWKBIntegration and TkWKBIntegration objects, and its consumers) in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c. The manifest's git_head is the main checkout's (28ebaf0), where no tree runs. 05's 39 rows of state/sample.json (31 depth-20, 8 controls), on a read-only stand-in ShardedPool with QuadSource recomputed in-process; units in order t5@1e-7 (39), s@1e-7 (39), s@1e-8 (31 depth-20); s budget 3x the row's t5 wall (the producer re-run is outside it, in the rebuild); the phase probe in the 1e-7 units of R1-R7, after the timed section  · unit s-1e-8-R7 done
+-- main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+-- worktree
+e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c
+(end)
+-- /tmp/ray-sgk
+59
+session_2026-10-26_22-14-21_570637_8558
+session_latest
+-- run dir
+229284	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+133
+-- 06 records untouched
+124
+134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl
+06 scripts in var == docs
+-- 06a records
+23M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# ----
+# end 2026-10-27T03:22:31Z
+# exit 0

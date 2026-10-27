@@ -1,0 +1,36 @@
+$ bash -c ls\ -la\;\ ls\ out\ \|\ head\ -30\;\ ls\ out/cmd\ \|\ wc\ -l\;\ shasum\ -a\ 256\ log.md\ verification.md\ issues.md\ out/census_summary.txt\ out/census_rows.csv.gz\ out/scan_listed_regions.csv\ state/analysis.json\ state/predictions.md\ state/rows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:24:45Z
+# ----
+total 36
+drwxr-xr-x  8 ds283 staff   256 Oct 27 03:24 .
+drwxr-xr-x 21 ds283 staff   672 Oct 27 02:12 ..
+-rw-r--r--  1 ds283 staff  6489 Oct 27 03:23 issues.md
+-rw-r--r--  1 ds283 staff 17050 Oct 27 03:24 log.md
+drwxr-xr-x 11 ds283 staff   352 Oct 27 03:22 out
+drwxr-xr-x 41 ds283 staff  1312 Oct 27 03:22 scripts
+drwxr-xr-x 10 ds283 staff   320 Oct 27 03:21 state
+-rw-r--r--  1 ds283 staff  6473 Oct 27 03:24 verification.md
+census_rows.csv.gz
+census_summary.txt
+cmd
+commands.log
+convergence_kinds_06a.diff
+convergence_kinds_h.txt
+scan_listed_regions.csv
+scripts_diff_against_06_at_launch.txt
+scripts_diff_against_06_final.txt
+47
+65e6798fa93fec7c69c58a7b77394ede33b6408939d92152029616dd32619dfa  log.md
+4aa1f68b8bfc264ffe80b07cbb3f4496ab734ac4df2f53186c4c7e8379c54956  verification.md
+692cf585481d0e2fe7e010f58185c947598fe978b3508176cd19d31242489a96  issues.md
+59f7e6ac60361f66e8e082ea0c680f3dbda7e3dd65a6195c303564c9381e3e71  out/census_summary.txt
+c25698e98140fe6bc74cfd57f88c93f3b10936d4a2b0f55f7e7e4166df0e9021  out/census_rows.csv.gz
+752177413aca22aa7563b7d27abb96c9eb09d3ea503a910d67ad6097e7f737af  out/scan_listed_regions.csv
+9e1c12dabf40cfd077e9d55178ddf81c9297d64ab54fd74be88c4a2f45bf5ff7  state/analysis.json
+3ad9b43de04d005164c705a4116d608b32788932e17a71abd2f428a998f3f405  state/predictions.md
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  state/rows.json
+# ----
+# end 2026-10-27T03:24:46Z
+# exit 0

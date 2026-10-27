@@ -1,0 +1,24 @@
+{
+ "tree": "h",
+ "name": "1e-7-k2_302",
+ "units": [
+  {
+   "uid": "h-1e-7-2-38302",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-38302",
+   "names05": [
+    "low-G+r-1"
+   ],
+   "shard": 2,
+   "serial": 38302,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  }
+ ],
+ "out_dir": "state/dev/smoke1",
+ "emit_fd": 4,
+ "emit_file": null,
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+}

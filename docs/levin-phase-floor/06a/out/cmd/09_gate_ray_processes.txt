@@ -1,0 +1,8 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:13:29Z
+# ----
+# ----
+# end 2026-10-27T02:13:30Z
+# exit 0

@@ -1,0 +1,24 @@
+{
+ "tree": "h",
+ "name": "W3",
+ "units": [
+  {
+   "uid": "h-1e-7-2-2095",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-2095",
+   "names05": [
+    "ctrl-low-1"
+   ],
+   "shard": 2,
+   "serial": 2095,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  }
+ ],
+ "out_dir": "state/C0/W3",
+ "emit_fd": null,
+ "emit_file": "state/C0/W3/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+}

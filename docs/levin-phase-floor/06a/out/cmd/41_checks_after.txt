@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/checks_after.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:21:41Z
+# ----
+# levin-phase-floor 06a: cross-checks after the run
+# written 2026-10-27T03:21:41Z on mps026298.phys.susx.ac.uk
+# script checks_after.py sha256 e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+rtol 1e-7: rows deeper than 11: 19; of them with an interior stationary point at 1e-7: 19
+rtol 1e-8: rows deeper than 11: 29; of them with an interior stationary point at 1e-7: 29
+rtol 1e-7: regions at depth >= 11 in stationary-point rows: 137; distance of the region's midpoint from the nearest sign change, in grid spacings h: median 1, 90th 2.5, max 3.5
+rtol 1e-8: regions at depth >= 11 in stationary-point rows: 163; distance of the region's midpoint from the nearest sign change, in grid spacings h: median 1, 90th 2.5, max 3.5
+05's p units (B1's code) against A3 v2's stored totals: 38 rows with a finite stored error; |p - stored|/stored_abserr median 2.97e+03, max 1.51e+05; beyond 1x 36
+  largest: [('mid-G-r-3', '1.51e+05x', 'rel 0.496'), ('mid-Gqr-2', '1.42e+05x', 'rel 0.0191'), ('low-G-r-2', '1.29e+05x', 'rel 13.2'), ('mid-Gqr-1', '7.82e+04x', 'rel 0.00145'), ('mid-G+r-3', '7.01e+04x', 'rel 0.273')]
+# ----
+# end 2026-10-27T03:21:43Z
+# exit 0

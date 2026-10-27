@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/c0.py run state/C0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:24:18Z
+# ----
+W1: pid 21206, units ['h-1e-7-2-38302', 'h-1e-7-2-14352', 'h-1e-7-2-38301', 'h-1e-7-2-14407', 'h-1e-7-2-34900', 'h-1e-7-2-14408', 'h-1e-7-2-2196', 'h-1e-7-2-14353', 'h-1e-8-2-38302']
+W2: pid 21207, units ['h-1e-7-2-14352', 'h-1e-7-2-38301', 'h-1e-7-2-14407', 'h-1e-7-2-34900', 'h-1e-7-2-14408', 'h-1e-7-2-2196', 'h-1e-7-2-14353', 'h-1e-7-2-38302']
+W3: pid 21208, units ['h-1e-7-2-2095']
+exit codes {'W1': 0, 'W2': 0, 'W3': 0}
+/tmp/ray-sgk entries before 59, after 59, new []
+# ----
+# end 2026-10-27T02:25:22Z
+# exit 0

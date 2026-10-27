@@ -1,0 +1,128 @@
+$ bash -c ls\ -la\ /tmp/ray-sgk\ 2\>\&1\;\ ls\ /tmp/ray-sgk/session_\*\ -d\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:13:30Z
+# ----
+total 4
+drwxrwxrwx  61 ds283 wheel  1952 Oct 26 22:14 .
+drwxrwxrwt 522 root  wheel 16704 Oct 27 02:13 ..
+-rw-r--r--   1 ds283 wheel    98 Oct 25 10:56 prom_metrics_service_discovery.json
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:50 session_2026-10-25_10-50-09_138224_46020
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:53 session_2026-10-25_10-51-06_087475_46672
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:54 session_2026-10-25_10-54-01_339900_48224
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:54 session_2026-10-25_10-54-38_261201_48682
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:55 session_2026-10-25_10-55-00_205981_49005
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:55 session_2026-10-25_10-55-25_352870_49358
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 10:56 session_2026-10-25_10-55-59_418072_49775
+drwxrwxrwx   6 ds283 wheel   192 Oct 25 16:32 session_2026-10-25_16-32-03_858951_93203
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:50 session_2026-10-25_16-46-32_856698_929
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:53 session_2026-10-25_16-51-14_897195_3417
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:55 session_2026-10-25_16-54-03_502186_5005
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:57 session_2026-10-25_16-55-50_202575_6029
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:58 session_2026-10-25_16-58-37_426637_7783
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 16:59 session_2026-10-25_16-59-02_999536_8111
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:00 session_2026-10-25_16-59-48_021702_8710
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:00 session_2026-10-25_17-00-07_751694_9066
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:00 session_2026-10-25_17-00-23_261502_9367
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:00 session_2026-10-25_17-00-37_389385_9658
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:01 session_2026-10-25_17-00-54_958374_9982
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:03 session_2026-10-25_17-02-42_801794_11234
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:06 session_2026-10-25_17-03-45_646481_11963
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:06 session_2026-10-25_17-06-15_506876_13214
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:07 session_2026-10-25_17-06-58_398267_13783
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:07 session_2026-10-25_17-07-24_439924_14203
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:08 session_2026-10-25_17-07-52_823157_14655
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 17:09 session_2026-10-25_17-08-30_101832_15145
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:08 session_2026-10-25_21-05-52_048521_21718
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:13 session_2026-10-25_21-12-49_523945_25126
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:13 session_2026-10-25_21-13-15_829526_25483
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:14 session_2026-10-25_21-14-00_732543_25951
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:14 session_2026-10-25_21-14-19_650889_26274
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:14 session_2026-10-25_21-14-34_959324_26583
+drwxrwxrwx  10 ds283 wheel   320 Oct 25 21:15 session_2026-10-25_21-14-48_733157_26864
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 01:50 session_2026-10-26_01-47-31_349798_47770
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 01:54 session_2026-10-26_01-51-21_639714_49752
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:06 session_2026-10-26_02-06-14_921557_57780
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:07 session_2026-10-26_02-06-41_470776_58156
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:07 session_2026-10-26_02-07-30_521216_58633
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:08 session_2026-10-26_02-07-50_663521_58950
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:08 session_2026-10-26_02-08-08_768162_59255
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 02:08 session_2026-10-26_02-08-23_017201_59570
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:23 session_2026-10-26_12-20-43_492082_22684
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:27 session_2026-10-26_12-24-35_204962_24897
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:30 session_2026-10-26_12-29-54_450551_27890
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:31 session_2026-10-26_12-30-22_313812_28378
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:31 session_2026-10-26_12-31-20_973217_29111
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:31 session_2026-10-26_12-31-41_321690_29532
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:32 session_2026-10-26_12-31-56_816144_29871
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 12:32 session_2026-10-26_12-32-11_381024_30192
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 21:58 session_2026-10-26_21-55-52_579453_97740
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:02 session_2026-10-26_21-59-46_179241_99938
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:12 session_2026-10-26_22-12-17_818554_6768
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:13 session_2026-10-26_22-12-43_390260_7104
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:13 session_2026-10-26_22-13-31_408468_7630
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:14 session_2026-10-26_22-13-51_007795_8001
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:14 session_2026-10-26_22-14-06_610962_8294
+drwxrwxrwx  10 ds283 wheel   320 Oct 26 22:14 session_2026-10-26_22-14-21_570637_8558
+lrwxr-xr-x   1 ds283 wheel    52 Oct 26 22:14 session_latest -> /tmp/ray-sgk/session_2026-10-26_22-14-21_570637_8558
+/tmp/ray-sgk/session_2026-10-25_10-50-09_138224_46020
+/tmp/ray-sgk/session_2026-10-25_10-51-06_087475_46672
+/tmp/ray-sgk/session_2026-10-25_10-54-01_339900_48224
+/tmp/ray-sgk/session_2026-10-25_10-54-38_261201_48682
+/tmp/ray-sgk/session_2026-10-25_10-55-00_205981_49005
+/tmp/ray-sgk/session_2026-10-25_10-55-25_352870_49358
+/tmp/ray-sgk/session_2026-10-25_10-55-59_418072_49775
+/tmp/ray-sgk/session_2026-10-25_16-32-03_858951_93203
+/tmp/ray-sgk/session_2026-10-25_16-46-32_856698_929
+/tmp/ray-sgk/session_2026-10-25_16-51-14_897195_3417
+/tmp/ray-sgk/session_2026-10-25_16-54-03_502186_5005
+/tmp/ray-sgk/session_2026-10-25_16-55-50_202575_6029
+/tmp/ray-sgk/session_2026-10-25_16-58-37_426637_7783
+/tmp/ray-sgk/session_2026-10-25_16-59-02_999536_8111
+/tmp/ray-sgk/session_2026-10-25_16-59-48_021702_8710
+/tmp/ray-sgk/session_2026-10-25_17-00-07_751694_9066
+/tmp/ray-sgk/session_2026-10-25_17-00-23_261502_9367
+/tmp/ray-sgk/session_2026-10-25_17-00-37_389385_9658
+/tmp/ray-sgk/session_2026-10-25_17-00-54_958374_9982
+/tmp/ray-sgk/session_2026-10-25_17-02-42_801794_11234
+/tmp/ray-sgk/session_2026-10-25_17-03-45_646481_11963
+/tmp/ray-sgk/session_2026-10-25_17-06-15_506876_13214
+/tmp/ray-sgk/session_2026-10-25_17-06-58_398267_13783
+/tmp/ray-sgk/session_2026-10-25_17-07-24_439924_14203
+/tmp/ray-sgk/session_2026-10-25_17-07-52_823157_14655
+/tmp/ray-sgk/session_2026-10-25_17-08-30_101832_15145
+/tmp/ray-sgk/session_2026-10-25_21-05-52_048521_21718
+/tmp/ray-sgk/session_2026-10-25_21-12-49_523945_25126
+/tmp/ray-sgk/session_2026-10-25_21-13-15_829526_25483
+/tmp/ray-sgk/session_2026-10-25_21-14-00_732543_25951
+/tmp/ray-sgk/session_2026-10-25_21-14-19_650889_26274
+/tmp/ray-sgk/session_2026-10-25_21-14-34_959324_26583
+/tmp/ray-sgk/session_2026-10-25_21-14-48_733157_26864
+/tmp/ray-sgk/session_2026-10-26_01-47-31_349798_47770
+/tmp/ray-sgk/session_2026-10-26_01-51-21_639714_49752
+/tmp/ray-sgk/session_2026-10-26_02-06-14_921557_57780
+/tmp/ray-sgk/session_2026-10-26_02-06-41_470776_58156
+/tmp/ray-sgk/session_2026-10-26_02-07-30_521216_58633
+/tmp/ray-sgk/session_2026-10-26_02-07-50_663521_58950
+/tmp/ray-sgk/session_2026-10-26_02-08-08_768162_59255
+/tmp/ray-sgk/session_2026-10-26_02-08-23_017201_59570
+/tmp/ray-sgk/session_2026-10-26_12-20-43_492082_22684
+/tmp/ray-sgk/session_2026-10-26_12-24-35_204962_24897
+/tmp/ray-sgk/session_2026-10-26_12-29-54_450551_27890
+/tmp/ray-sgk/session_2026-10-26_12-30-22_313812_28378
+/tmp/ray-sgk/session_2026-10-26_12-31-20_973217_29111
+/tmp/ray-sgk/session_2026-10-26_12-31-41_321690_29532
+/tmp/ray-sgk/session_2026-10-26_12-31-56_816144_29871
+/tmp/ray-sgk/session_2026-10-26_12-32-11_381024_30192
+/tmp/ray-sgk/session_2026-10-26_21-55-52_579453_97740
+/tmp/ray-sgk/session_2026-10-26_21-59-46_179241_99938
+/tmp/ray-sgk/session_2026-10-26_22-12-17_818554_6768
+/tmp/ray-sgk/session_2026-10-26_22-12-43_390260_7104
+/tmp/ray-sgk/session_2026-10-26_22-13-31_408468_7630
+/tmp/ray-sgk/session_2026-10-26_22-13-51_007795_8001
+/tmp/ray-sgk/session_2026-10-26_22-14-06_610962_8294
+/tmp/ray-sgk/session_2026-10-26_22-14-21_570637_8558
+/tmp/ray-sgk/session_latest
+# ----
+# end 2026-10-27T02:13:30Z
+# exit 0

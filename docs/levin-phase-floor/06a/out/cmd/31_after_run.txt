@@ -1,0 +1,54 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json, os, collections\nrd=\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143\'\nst=collections.Counter(); per=collections.Counter(); n=0; uids=set(); dup=0; heads=collections.Counter(); scripts=collections.Counter(); scanerr=0; warn=0\nfor l in open(rd+\'/checkpoint.jsonl\'):\n    r=json.loads(l); d=r[\'data\']; n+=1\n    if r[\'unit\'] in uids: dup+=1\n    uids.add(r[\'unit\']); st[(d[\'rtol\'],d[\'status\'])]+=1\n    heads[(d[\'tree_head\'], d[\'tree_status_short\'])]+=1; scripts[r[\'script_sha256\']]+=1\n    scanerr+= d.get(\'scan_error\') or 0; warn+=d[\'policy_warnings\'][\'count\']\nprint(\'records\',n,\'distinct\',len(uids),\'dup\',dup); print(\'status\',dict(st)); print(\'tree\',dict(heads)); print(\'script\',dict(scripts)); print(\'scan errors\',scanerr,\'policy warnings (unit counters)\',warn)\nprint(json.load(open(rd+\'/status.json\')))\nm=json.load(open(rd+\'/manifest.json\')); print({k:m.get(k) for k in (\'id\',\'started\',\'git_head\',\'git_dirty\')})\ntot=0\nfor root,ds,fs in os.walk(rd):\n    for f in fs: tot+=os.path.getsize(os.path.join(root,f))\nprint(\'run dir bytes\',tot, \'files\', sum(len(fs) for _,_,fs in os.walk(rd)))\nprint(\'stderr bytes\', os.path.getsize(rd+\'/stderr.log\'))\nprint(open(rd+\'/stdout.log\').read()[-1500:])\nprint(\'/tmp/ray-sgk entries\', len(os.listdir(\'/tmp/ray-sgk\')), sorted(os.listdir(\'/tmp/ray-sgk\'))[-3:])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:17:32Z
+# ----
+records 18560 distinct 18560 dup 0
+status {('1e-7', 'done'): 9280, ('1e-8', 'done'): 9280}
+tree {('e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c', ''): 18560}
+script {'83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c': 18560}
+scan errors 0 policy warnings (unit counters) 0
+{'exit_code': 0, 'heartbeat': '2026-10-27T03:17:10+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 24956, 'stage': '18560 units recorded; last h-1e-8-3-39148 done', 'state': 'done', 'units_done': 18560, 'units_total': 18560}
+{'id': None, 'started': None, 'git_head': '28ebaf0743e0555fb2c4512ce714884005a60eff', 'git_dirty': False}
+run dir bytes 219778859 files 133
+stderr bytes 0
+1", 1160], ["1e-7-k3_201", 1160]], "1e-8": [["1e-8-k0_101", 1160], ["1e-8-k0_202", 1160], ["1e-8-k1_102", 1160], ["1e-8-k1_301", 1160], ["1e-8-k2_2", 1160], ["1e-8-k2_302", 1160], ["1e-8-k3_1", 1160], ["1e-8-k3_201", 1160]]}, "budget_s": 300.0, "max_workers": 6, "skipped_as_recorded": 0}
+# worker 1e-7-k0_101 pid 24973 (1160 units)
+# worker 1e-7-k0_202 pid 24974 (1160 units)
+# worker 1e-7-k1_102 pid 24975 (1160 units)
+# worker 1e-7-k1_301 pid 24976 (1160 units)
+# worker 1e-7-k2_2 pid 24977 (1160 units)
+# worker 1e-7-k2_302 pid 24978 (1160 units)
+# worker 1e-7-k0_101 exit 0
+# worker 1e-7-k3_1 pid 43680 (1160 units)
+# worker 1e-7-k1_102 exit 0
+# worker 1e-7-k3_201 pid 44137 (1160 units)
+# worker 1e-7-k0_202 exit 0
+# worker 1e-7-k1_301 exit 0
+# worker 1e-7-k2_302 exit 0
+# worker 1e-7-k2_2 exit 0
+# worker 1e-7-k3_1 exit 0
+# worker 1e-7-k3_201 exit 0
+# worker 1e-8-k0_101 pid 53979 (1160 units)
+# worker 1e-8-k0_202 pid 53980 (1160 units)
+# worker 1e-8-k1_102 pid 53981 (1160 units)
+# worker 1e-8-k1_301 pid 53982 (1160 units)
+# worker 1e-8-k2_2 pid 53983 (1160 units)
+# worker 1e-8-k2_302 pid 53984 (1160 units)
+# worker 1e-8-k2_302 exit 0
+# worker 1e-8-k3_1 pid 71866 (1160 units)
+# worker 1e-8-k1_301 exit 0
+# worker 1e-8-k3_201 pid 71896 (1160 units)
+# worker 1e-8-k0_202 exit 0
+# worker 1e-8-k0_101 exit 0
+# worker 1e-8-k1_102 exit 0
+# worker 1e-8-k2_2 exit 0
+# worker 1e-8-k3_1 exit 0
+# worker 1e-8-k3_201 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+
+/tmp/ray-sgk entries 59 ['session_2026-10-26_22-14-06_610962_8294', 'session_2026-10-26_22-14-21_570637_8558', 'session_latest']
+# ----
+# end 2026-10-27T03:17:33Z
+# exit 0

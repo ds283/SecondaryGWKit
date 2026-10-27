@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B state/dev/dev_compare_smoke1.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:23:53Z
+# ----
+True
+     == total
+     == total_abserr
+     == total_converged
+     == number of group calls
+     calls: 7; 14 call values/abserrs compared
+     == number of region-array records
+     regions: 9 regions x 5 arrays compared as bytes
+# ----
+# end 2026-10-27T02:23:53Z
+# exit 0

@@ -1,0 +1,8 @@
+# run 2026-10-27T10:48:15Z on mps026298.phys.susx.ac.uk, recheck06a.py sha256 3df5db4fd88f8aedaae00b694c2b202002d3864a3964b2cccaae0199ac5a55f7
+mid-G-3 1e-7 h-1e-7-0-13767 total/abserr census ('-0x1.be2039b64ab5dp-75', '0x1.53b46c6b2f0f3p-97') 06 ('-0x1.be2039b64ab5dp-75', '0x1.53b46c6b2f0f3p-97') equal True
+  calls 5 5 every call equal (value, abserr, regions, depth): True
+R4 1e-8 h-1e-8-2-37720 total/abserr census ('-0x1.5c2858554dcebp-85', '0x1.894f8ddb52bfdp-97') 06 ('-0x1.5c2858554dcebp-85', '0x1.894f8ddb52bfdp-97') equal True
+  calls 7 7 every call equal (value, abserr, regions, depth): True
+csv data lines (with header) 18561
+csv 0-1971 @1e-8: [{'h_depth': '13', 'regions': '38', 'total_hex': '0x1.6b3058aae2397p-66', 'total_abserr_hex': '0x1.40b29ccb8ec49p-90'}]
+checkpoint: total 0x1.6b3058aae2397p-66 abserr 0x1.40b29ccb8ec49p-90 max depth 13 regions 38

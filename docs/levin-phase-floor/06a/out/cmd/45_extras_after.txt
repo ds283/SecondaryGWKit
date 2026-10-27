@@ -1,0 +1,41 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/extras_after.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:22:49Z
+# ----
+# levin-phase-floor 06a: extracts for issues.md
+# written 2026-10-27T03:22:49Z on mps026298.phys.susx.ac.uk
+# script extras_after.py sha256 1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+Levin_z differs: k 3.045e+07 z_response 6.3166 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 2.091 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 1.5861 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.91255 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.69219 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.52504 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.39825 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.30208 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.22914 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.17381 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.13184 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3.045e+07 z_response 0.1 [low]: h 9198924704785.217 stored 9413253209796.457; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 2.7567 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 2.091 [low]: h 92045966461796.23 stored 94190573034541.55; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 1.5861 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.91255 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.69219 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.52504 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.22914 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.17381 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.13184 [low]: h 92045966461796.23 stored 94190573034541.55; type WKB quality complete
+Levin_z differs: k 3e+08 z_response 0.1 [low]: h 92045966461796.23 stored 89950190012954.89; type WKB quality complete
+rtol 1e-7: (+inf at h, +inf stored): {(False, False): 8642, (True, False): 80, (True, True): 554, (False, True): 4}
+rtol 1e-7: (total_converged at h, stored): {('False', 'True'): 544, ('True', 'True'): 6474, ('False', 'False'): 2034, ('True', 'False'): 228}
+  +inf rows at h by band {'mid': 61, 'low': 181, 'seam': 392}, by class {'Gqr': 96, 'G': 97, 'none': 392, 'G+r': 31, 'G-r': 18}, with a Levin call 634
+rtol 1e-8: (+inf at h, +inf stored): {(False, False): 8642, (True, False): 80, (True, True): 554, (False, True): 4}
+rtol 1e-8: (total_converged at h, stored): {('False', 'True'): 612, ('True', 'True'): 6406, ('False', 'False'): 2026, ('True', 'False'): 236}
+  +inf rows at h by band {'mid': 61, 'low': 181, 'seam': 392}, by class {'Gqr': 96, 'G': 97, 'none': 392, 'G+r': 31, 'G-r': 18}, with a Levin call 634
+# ----
+# end 2026-10-27T03:22:49Z
+# exit 0

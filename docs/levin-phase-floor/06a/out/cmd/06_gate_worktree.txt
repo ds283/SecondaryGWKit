@@ -1,0 +1,11 @@
+$ bash -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ rev-parse\ HEAD\;\ echo\ \'--\ status\ --short\ --ignored:\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ status\ --short\ --ignored\;\ echo\ \'--\ \(end\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:13:28Z
+# ----
+e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c
+-- status --short --ignored:
+-- (end)
+# ----
+# end 2026-10-27T02:13:28Z
+# exit 0

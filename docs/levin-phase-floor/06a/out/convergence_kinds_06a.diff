@@ -1,0 +1,27 @@
+1c1,5
+< """Why do 05's depth-20 rows stay unconverged once the cap has gone? A planning measurement.
+---
+> """prompt 06a's copy of measure/convergence_kinds.py (changed only to read the census's records:
+> each unit's region record is one record of a per-worker pickle stream, at the offset and length its
+> checkpoint line names, checked against the record's sha256, which is printed in place of the
+> whole pickle's; marked "prompt 06a"). Run with --tree h --capped-run <the census run>
+> --capped-tree h, so that "capped" means depth 20 at h itself (prompt 06a section 5 item 5).
+2a7,8
+> Why do 05's depth-20 rows stay unconverged once the cap has gone? A planning measurement.
+> 
+135,137c141,147
+<             with open(pkl, "rb") as f:
+<                 record = pickle.load(f)
+<             print(f"# input {data['pickle']} sha256 {sha256(pkl)}")
+---
+>             with open(pkl, "rb") as f:  # prompt 06a: one record of the worker's stream
+>                 f.seek(data["pickle_offset"])
+>                 blob = f.read(data["pickle_length"])
+>             if hashlib.sha256(blob).hexdigest() != data["pickle_record_sha256"]:
+>                 raise SystemExit(f"{data['unit']}: pickle record sha256 differs")
+>             record = pickle.loads(blob)
+>             print(f"# input {data['pickle']}@{data['pickle_offset']} record sha256 {data['pickle_record_sha256']}")
+152c162
+<                     f"   {row:<14s} {data['role']:<8s} {str(capped):<9s} "
+---
+>                     f"   {row:<14s} {str(data.get('role')):<8s} {str(capped):<9s} "  # prompt 06a: no role

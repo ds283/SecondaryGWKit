@@ -1,0 +1,88 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/c0.py c4 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T03:18:19Z
+# ----
+# levin-phase-floor 06a: prediction C4
+# written 2026-10-27T03:18:19Z on mps026298.phys.susx.ac.uk
+# script c0.py sha256 2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl sha256 134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+   h-1e-7-0-2000 (mid-Gqr-1) vs s-1e-7-mid-Gqr-1: IDENTICAL
+   h-1e-8-0-2000 (mid-Gqr-1) vs s-1e-8-mid-Gqr-1: IDENTICAL
+   h-1e-7-0-13767 (mid-G-3) vs s-1e-7-mid-G-3: IDENTICAL
+   h-1e-8-0-13767 (mid-G-3) vs s-1e-8-mid-G-3: IDENTICAL
+   h-1e-7-0-14159 (low-Gqr-1) vs s-1e-7-low-Gqr-1: IDENTICAL
+   h-1e-8-0-14159 (low-Gqr-1) vs s-1e-8-low-Gqr-1: IDENTICAL
+   h-1e-7-0-38940 (low-G-r-2) vs s-1e-7-low-G-r-2: IDENTICAL
+   h-1e-8-0-38940 (low-G-r-2) vs s-1e-8-low-G-r-2: IDENTICAL
+   h-1e-7-0-38989 (low-G-2) vs s-1e-7-low-G-2: IDENTICAL
+   h-1e-8-0-38989 (low-G-2) vs s-1e-8-low-G-2: IDENTICAL
+   h-1e-7-0-35106 (low-G+r-3) vs s-1e-7-low-G+r-3: IDENTICAL
+   h-1e-8-0-35106 (low-G+r-3) vs s-1e-8-low-G+r-3: IDENTICAL
+   h-1e-7-0-12900 (mid-G+r-2) vs s-1e-7-mid-G+r-2: IDENTICAL
+   h-1e-8-0-12900 (mid-G+r-2) vs s-1e-8-mid-G+r-2: IDENTICAL
+   h-1e-7-0-37208 (ctrl-mid-2) vs s-1e-7-ctrl-mid-2: IDENTICAL
+   h-1e-7-0-1797 (R2) vs s-1e-7-R2: IDENTICAL
+   h-1e-8-0-1797 (R2) vs s-1e-8-R2: IDENTICAL
+   h-1e-7-0-37966 (R5) vs s-1e-7-R5: IDENTICAL
+   h-1e-8-0-37966 (R5) vs s-1e-8-R5: IDENTICAL
+   h-1e-7-1-20111 (ctrl-NULL-2) vs s-1e-7-ctrl-NULL-2: IDENTICAL
+   h-1e-7-1-35359 (mid-G-r-2) vs s-1e-7-mid-G-r-2: IDENTICAL
+   h-1e-8-1-35359 (mid-G-r-2) vs s-1e-8-mid-G-r-2: IDENTICAL
+   h-1e-7-1-1837 (mid-Gqr-2) vs s-1e-7-mid-Gqr-2: IDENTICAL
+   h-1e-8-1-1837 (mid-Gqr-2) vs s-1e-8-mid-Gqr-2: IDENTICAL
+   h-1e-7-1-2205 (low-G-r-3) vs s-1e-7-low-G-r-3: IDENTICAL
+   h-1e-8-1-2205 (low-G-r-3) vs s-1e-8-low-G-r-3: IDENTICAL
+   h-1e-7-1-2114 (low-G-3) vs s-1e-7-low-G-3: IDENTICAL
+   h-1e-8-1-2114 (low-G-3) vs s-1e-8-low-G-3: IDENTICAL
+   h-1e-7-1-2117 (low-Gqr-2) vs s-1e-7-low-Gqr-2: IDENTICAL
+   h-1e-8-1-2117 (low-Gqr-2) vs s-1e-8-low-Gqr-2: IDENTICAL
+   h-1e-7-1-20495 (ctrl-seam-2) vs s-1e-7-ctrl-seam-2: IDENTICAL
+   h-1e-7-1-1835 (mid-G+r-1) vs s-1e-7-mid-G+r-1: IDENTICAL
+   h-1e-8-1-1835 (mid-G+r-1) vs s-1e-8-mid-G+r-1: IDENTICAL
+   h-1e-7-1-2050 (mid-G-r-1) vs s-1e-7-mid-G-r-1: IDENTICAL
+   h-1e-8-1-2050 (mid-G-r-1) vs s-1e-8-mid-G-r-1: IDENTICAL
+   h-1e-7-1-37670 (R3) vs s-1e-7-R3: IDENTICAL
+   h-1e-8-1-37670 (R3) vs s-1e-8-R3: IDENTICAL
+   h-1e-7-1-38740 (low-G+r-2) vs s-1e-7-low-G+r-2: IDENTICAL
+   h-1e-8-1-38740 (low-G+r-2) vs s-1e-8-low-G+r-2: IDENTICAL
+   h-1e-7-1-34844 (low-G-r-1) vs s-1e-7-low-G-r-1: IDENTICAL
+   h-1e-8-1-34844 (low-G-r-1) vs s-1e-8-low-G-r-1: IDENTICAL
+   h-1e-7-2-34727 (mid-G-2) vs s-1e-7-mid-G-2: IDENTICAL
+   h-1e-8-2-34727 (mid-G-2) vs s-1e-8-mid-G-2: IDENTICAL
+   h-1e-7-2-37527 (R1) vs s-1e-7-R1: IDENTICAL
+   h-1e-8-2-37527 (R1) vs s-1e-8-R1: IDENTICAL
+   h-1e-7-2-34728 (R6) vs s-1e-7-R6: IDENTICAL
+   h-1e-8-2-34728 (R6) vs s-1e-8-R6: IDENTICAL
+   h-1e-7-2-37720 (R4) vs s-1e-7-R4: IDENTICAL
+   h-1e-8-2-37720 (R4) vs s-1e-8-R4: IDENTICAL
+   h-1e-7-2-34820 (R7) vs s-1e-7-R7: IDENTICAL
+   h-1e-8-2-34820 (R7) vs s-1e-8-R7: IDENTICAL
+   h-1e-7-2-2184 (ctrl-low-2) vs s-1e-7-ctrl-low-2: IDENTICAL
+   h-1e-7-2-33120 (ctrl-seam-1) vs s-1e-7-ctrl-seam-1: IDENTICAL
+   h-1e-7-2-36994 (ctrl-mid-1) vs s-1e-7-ctrl-mid-1: IDENTICAL
+   h-1e-7-2-2095 (ctrl-low-1) vs s-1e-7-ctrl-low-1: IDENTICAL
+   h-1e-7-2-38302 (low-G+r-1) vs s-1e-7-low-G+r-1: IDENTICAL
+   h-1e-8-2-38302 (low-G+r-1) vs s-1e-8-low-G+r-1: IDENTICAL
+   h-1e-7-3-452 (ctrl-NULL-1) vs s-1e-7-ctrl-NULL-1: IDENTICAL
+   h-1e-7-3-34798 (mid-G-1) vs s-1e-7-mid-G-1: IDENTICAL
+   h-1e-8-3-34798 (mid-G-1) vs s-1e-8-mid-G-1: IDENTICAL
+   h-1e-7-3-38016 (mid-Gqr-3) vs s-1e-7-mid-Gqr-3: IDENTICAL
+   h-1e-8-3-38016 (mid-Gqr-3) vs s-1e-8-mid-Gqr-3: IDENTICAL
+   h-1e-7-3-38376 (low-G-1) vs s-1e-7-low-G-1: IDENTICAL
+   h-1e-8-3-38376 (low-G-1) vs s-1e-8-low-G-1: IDENTICAL
+   h-1e-7-3-34356 (mid-G-r-3) vs s-1e-7-mid-G-r-3: IDENTICAL
+   h-1e-8-3-34356 (mid-G-r-3) vs s-1e-8-mid-G-r-3: IDENTICAL
+   h-1e-7-3-37328 (mid-G+r-3) vs s-1e-7-mid-G+r-3: IDENTICAL
+   h-1e-8-3-37328 (mid-G+r-3) vs s-1e-8-mid-G+r-3: IDENTICAL
+   h-1e-7-3-34990 (low-Gqr-3) vs s-1e-7-low-Gqr-3: IDENTICAL
+   h-1e-8-3-34990 (low-Gqr-3) vs s-1e-8-low-Gqr-3: IDENTICAL
+
+== C4: 70 of 70 units bit-identical to 06's s units; HOLDS
+# ----
+# end 2026-10-27T03:18:48Z
+# exit 0

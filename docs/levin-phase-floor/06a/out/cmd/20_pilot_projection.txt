@@ -1,0 +1,44 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/pilot.py project state/pilot
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:28:26Z
+# ----
+# levin-phase-floor 06a: the pilot's projection
+# written 2026-10-27T02:28:26Z on mps026298.phys.susx.ac.uk
+# script pilot.py sha256 6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input state/pilot/emit_timed.jsonl sha256 3988e74a37aafbc0a5582de5cb1a034fcb0c062b9b3293fa3423d8286d986c36
+# input state/pilot/pilot_meta.json sha256 1880ec0b2f0f8f3cbdebd891fa3cb4329af5f92033d65954b18905c814319732
+
+== the pilot: 48 units in 81.8 s wall; exit 0; peak RSS 416 MiB; /tmp/ray-sgk new entries []
+   process start to context: 3.6 s
+   producer re-run of k (rerun_k_G): 47.8 s (1740 GkWKBIntegration, 116233 samples)
+   GkSource + GkSourcePolicyData assemblies: 6, 0.08, 0.15, 0.15, 0.08, 0.14, 0.31 s
+   T re-runs and QuadSources built: 16
+
+   per unit, by rtol and band (seconds between unit lines, the k's producer re-run taken out):
+     1e-7 low : n 8; mean 0.718; min 0.549; max 0.942; wall_s [0.413, 0.372, 0.316, 0.595, 0.438, 0.331, 0.281, 0.253]
+     1e-7 mid : n 8; mean 0.688; min 0.509; max 0.920; wall_s [0.226, 0.566, 0.329, 0.364, 0.434, 0.268, 0.391, 0.218]
+     1e-7 seam: n 8; mean 0.747; min 0.647; max 0.981; wall_s [0.166, 0.33, 0.311, 0.341, 0.26, 0.199, 0.176, 0.189]
+     a worker at 1e-7 (one k, 1160 units {'seam': 760, 'mid': 264, 'low': 136}): 898 s = 0.25 h
+     1e-8 low : n 8; mean 0.632; min 0.454; max 0.981; wall_s [0.503, 0.428, 0.373, 0.667, 0.465, 0.355, 0.317, 0.29]
+     1e-8 mid : n 8; mean 0.538; min 0.381; max 0.688; wall_s [0.25, 0.501, 0.52, 0.422, 0.429, 0.269, 0.223, 0.217]
+     1e-8 seam: n 8; mean 0.449; min 0.334; max 0.650; wall_s [0.185, 0.336, 0.483, 0.357, 0.285, 0.198, 0.177, 0.177]
+     a worker at 1e-8 (one k, 1160 units {'seam': 760, 'mid': 264, 'low': 136}): 620 s = 0.17 h
+
+   PROJECTION, wall time at six workers: 2 rounds x (worker 1e-7 + worker 1e-8) = 3038 s = 0.84 h; CPU 3.38 h (8 k)
+     bytes per unit 1e-7 low : mean 15886 (+ log 437)
+     bytes per unit 1e-7 mid : mean 15519 (+ log 437)
+     bytes per unit 1e-7 seam: mean 15289 (+ log 437)
+     bytes per unit 1e-8 low : mean 13956 (+ log 437)
+     bytes per unit 1e-8 mid : mean 13482 (+ log 437)
+     bytes per unit 1e-8 seam: mean 11641 (+ log 437)
+   PROJECTION, run directory size: 266 MB = 0.27 GB (fixed per-worker files about 0.3 MB)
+   section 3.1 stop rule (more than 24 h or 20 GB): within
+   unit statuses: {'done': 48}; max depth by unit: [('1e-7', 'seam', 7), ('1e-7', 'seam', 7), ('1e-7', 'seam', 7), ('1e-7', 'seam', 7), ('1e-7', 'seam', 7), ('1e-7', 'seam', 6), ('1e-7', 'seam', 2), ('1e-7', 'seam', 1), ('1e-7', 'mid', 8), ('1e-7', 'mid', 7), ('1e-7', 'mid', 8), ('1e-7', 'mid', 8), ('1e-7', 'mid', 7), ('1e-7', 'mid', 6), ('1e-7', 'mid', 3), ('1e-7', 'mid', 2), ('1e-7', 'low', 8), ('1e-7', 'low', 7), ('1e-7', 'low', 7), ('1e-7', 'low', 7), ('1e-7', 'low', 7), ('1e-7', 'low', 7), ('1e-7', 'low', 2), ('1e-7', 'low', 2), ('1e-8', 'seam', 7), ('1e-8', 'seam', 7), ('1e-8', 'seam', 7), ('1e-8', 'seam', 7), ('1e-8', 'seam', 7), ('1e-8', 'seam', 6), ('1e-8', 'seam', 2), ('1e-8', 'seam', 1), ('1e-8', 'mid', 8), ('1e-8', 'mid', 8), ('1e-8', 'mid', 8), ('1e-8', 'mid', 8), ('1e-8', 'mid', 8), ('1e-8', 'mid', 6), ('1e-8', 'mid', 3), ('1e-8', 'mid', 2), ('1e-8', 'low', 9), ('1e-8', 'low', 8), ('1e-8', 'low', 8), ('1e-8', 'low', 8), ('1e-8', 'low', 8), ('1e-8', 'low', 7), ('1e-8', 'low', 2), ('1e-8', 'low', 2)]
+   scan seconds per 1e-7 unit: [0.052, 0.159, 0.051, 0.052, 0.119, 0.118, 0.12, 0.124, 0.165, 0.173, 0.171, 0.172, 0.123, 0.126, 0.125, 0.126, 0.172, 0.172, 0.179, 0.171, 0.13, 0.128, 0.128, 0.132]
+# ----
+# end 2026-10-27T02:28:26Z
+# exit 0

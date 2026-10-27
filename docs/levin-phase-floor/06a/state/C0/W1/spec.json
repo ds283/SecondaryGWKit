@@ -1,0 +1,122 @@
+{
+ "tree": "h",
+ "name": "W1",
+ "units": [
+  {
+   "uid": "h-1e-7-2-38302",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-38302",
+   "names05": [
+    "low-G+r-1"
+   ],
+   "shard": 2,
+   "serial": 38302,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-14352",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-14352",
+   "names05": null,
+   "shard": 2,
+   "serial": 14352,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-38301",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-38301",
+   "names05": null,
+   "shard": 2,
+   "serial": 38301,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-14407",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-14407",
+   "names05": null,
+   "shard": 2,
+   "serial": 14407,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-34900",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-34900",
+   "names05": null,
+   "shard": 2,
+   "serial": 34900,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-14408",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-14408",
+   "names05": null,
+   "shard": 2,
+   "serial": 14408,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-2196",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-2196",
+   "names05": null,
+   "shard": 2,
+   "serial": 2196,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-7-2-14353",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-14353",
+   "names05": null,
+   "shard": 2,
+   "serial": 14353,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true
+  },
+  {
+   "uid": "h-1e-8-2-38302",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-38302",
+   "names05": [
+    "low-G+r-1"
+   ],
+   "shard": 2,
+   "serial": 38302,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false
+  }
+ ],
+ "out_dir": "state/C0/W1",
+ "emit_fd": null,
+ "emit_file": "state/C0/W1/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+}

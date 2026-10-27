@@ -245,6 +245,27 @@ the depth distribution to the user for L2. The user's decision closes or narrows
 that records it. The worktree is removed with `git worktree remove`, and the scratch copy of A3 v2
 is deleted, each only on the user's word.
 
+
+## 7. What happened (2026-10-27)
+
+The laptop pushed `e05c34f`, fetched in the Mac Studio's main checkout and made the worktree
+`SecondaryGWKit-lpf06a-e05c34f`. It then started the Mac Studio orchestrator at about 02:10 UTC.
+§1's facts held at its Gate.
+
+- **Before the launch:** C0 held, all five clauses. The pilot projected 0.84 h and 266 MB. The
+  predictions were saved at 02:28:40Z.
+- **The run:** `levin-phase-floor-06a-census-20261027T023143`, 02:31:43Z–03:17:10Z. It recorded
+  18,560 of 18,560 units, none over budget or in error, so the over-budget pass had nothing to do.
+- **The verdicts:** C1 and C2 hold, with no row at depth ≥ 18 and the deepest at 12 and 13. C3
+  fails, on 19 and 29 rows, all of them stationary-point rows. C4 holds, 70 of 70.
+- **The review** passed nine checks and stopped on check 9. `out/cmd/17` records the SHA-256 of
+  the first `c0.py`, `b33229d8…`, which had been changed in place (deviation 15) and not kept. The
+  user ruled: *"Yes, just accept as it stands."*
+- **The laptop's re-checks**, as §5 asks, both pass. `mid-G-3` at `1e-7` and `R4` at `1e-8` equal
+  06's units. The `0-1971` line of `census_rows.csv.gz` equals its checkpoint record.
+- **The three issues** remain for the user's L2 decision. The worktree and the scratch copy of A3 v2
+  are kept until the user says otherwise.
+
 ## 6. Stop and ask the user
 
 Relay verbatim; do not adjudicate. Stop at the prompt's §9 conditions, or at any failed check in

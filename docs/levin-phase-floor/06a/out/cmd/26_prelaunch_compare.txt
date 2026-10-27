@@ -1,0 +1,10 @@
+$ bash -c scripts/compare_hashes.sh\ out/cmd/00_store_files_before.txt\ out/cmd/24_store_files_prelaunch.txt\ \|\ tail\ -1\;\ scripts/compare_hashes.sh\ out/cmd/01_copy_files_before.txt\ out/cmd/25_copy_files_prelaunch.txt\ \|\ tail\ -1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:31:32Z
+# ----
+EQUAL
+EQUAL
+# ----
+# end 2026-10-27T02:31:32Z
+# exit 0

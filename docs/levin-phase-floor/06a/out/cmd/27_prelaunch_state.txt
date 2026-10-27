@@ -1,0 +1,62 @@
+$ bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -m\ runregistrykit\ list\ \|\ head\ -4\;\ echo\ \'--\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'--\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f\ status\ --short\ --ignored\;\ echo\ \'--\ /tmp/ray-sgk\ entries\'\;\ ls\ /tmp/ray-sgk\ \|\ wc\ -l\;\ ls\ -t\ /tmp/ray-sgk\ \|\ head\ -2\;\ echo\ \'--\ scripts\ sha256\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/\*\;\ echo\ \'--\ rows.json\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json\;\ echo\ \'--\ predictions.md\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/predictions.md\;\ echo\ \'--\ disk\'\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit\ \|\ tail\ -1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:31:32Z
+# ----
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06-wider-20261026T223634            done        109/109   3h 54m  levin-phase-floor prompt 06 section 6 on the Mac Studio (mps026298; Python 3.13.16): the re-measurement of 05's 39 rows on A3 v2 with the producers re-run in-process, Ray-free, no lock. Two trees, both git worktrees: t5, the code commit's parent 9f66622 (05a's t; its consumers and the stored producer samples) in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622; s, Part B's dispatch SHA f5cee4c (code dc9d28c; its producers re-run on each row's GkWKBIntegration and TkWKBIntegration objects, and its consumers) in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c. The manifest's git_head is the main checkout's (28ebaf0), where no tree runs. 05's 39 rows of state/sample.json (31 depth-20, 8 controls), on a read-only stand-in ShardedPool with QuadSource recomputed in-process; units in order t5@1e-7 (39), s@1e-7 (39), s@1e-8 (31 depth-20); s budget 3x the row's t5 wall (the producer re-run is outside it, in the rebuild); the phase probe in the 1e-7 units of R1-R7, after the timed section  · unit s-1e-8-R7 done
+   levin-phase-floor-06-r14-residual-20261026T215945     done              -   4h 31m  levin-phase-floor prompt 06, R14 on the Mac Studio (mps026298; tree f5cee4c in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c, whose code is the code commit dc9d28c; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R13/R14 value comparison, and GkWKBIntegration, TkWKBIntegration, GkSource, GkSourcePolicyData and QuadSourceIntegral alone are expected to differ  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -   4h 35m  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f66622 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622, the parent of the code commit dc9d28c; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R13/R14 value comparison  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+-- main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+-- worktree
+e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c
+-- /tmp/ray-sgk entries
+59
+session_2026-10-26_22-14-21_570637_8558
+session_latest
+-- scripts sha256
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/analyse06.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/characterise_s2.py
+b8c57a5a6a89c85cadf9298983957b29bef770d385d9d72c66712b358823e508  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/compare_hashes.sh
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/convergence_kinds.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/draw_sample.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/explore_store.py
+be04fac8c9694f773685a90c296ae1afe0c0fa3b93b44a9a6c6d6896e3190383  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/extract_predictions.sh
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/fingerprint_copy.py
+b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/l0.py
+b7c57f451a06a1b6a229630fe0350c41068f5300be02cbf2e04835a82a6d2395  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/launch.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/probe.py
+d71471913e3ebeebf2a41c8eb72c64d334d8fa1f17fcc5cda6bcde0a3e16949c  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/rebuild.py
+f2a6ce26fba1bd9f53bcbb506bbcb4063d71dcd55325be093b49bcdb1f256768  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/rec.sh
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/rescore_t1.py
+83c4deec8831280c302350bc5659649b913fa6e9292dc7620c1ad48ba24c275c  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/run_wider.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/t1_true_step_only.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/u0_clause_a.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/u0.py
+a6a379de0bb8f52fd973b5603e87372271a5da6301b3f3f9ca7b9eb26f311fdd  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/scripts/worker.py
+-- rows.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json
+-- predictions.md
+3ad9b43de04d005164c705a4116d608b32788932e17a71abd2f428a998f3f405  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/predictions.md
+-- disk
+/dev/disk3s3s1  927G  819G  108G  89% /
+# ----
+# end 2026-10-27T02:31:32Z
+# exit 0

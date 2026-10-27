@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json, hashlib\nfor src in (\'state/C0/W1/emit.jsonl\',\'state/pilot/emit_timed.jsonl\'):\n    for l in open(src):\n        m=json.loads(l); m=json.loads(m[\'line\']) if \'line\' in m else m\n        if m[\'kind\']==\'hello\': h=m[\'evidence\'][\'scripts_sha256\']; break\n    now={n: hashlib.sha256(open(\'scripts/\'+n,\'rb\').read()).hexdigest() for n in h}\n    print(src, {n: (\'same\' if now[n]==h[n] else \'CHANGED\') for n in h})\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:31:39Z
+# ----
+state/C0/W1/emit.jsonl {'worker.py': 'same', 'dispatch.py': 'same', 'harness.py': 'same', 'rebuild.py': 'same', 'prov.py': 'same', 'run_census.py': 'same', 'launch.py': 'CHANGED', 'rerun.py': 'same', 'spscan.py': 'same'}
+state/pilot/emit_timed.jsonl {'worker.py': 'same', 'dispatch.py': 'same', 'harness.py': 'same', 'rebuild.py': 'same', 'prov.py': 'same', 'run_census.py': 'same', 'launch.py': 'CHANGED', 'rerun.py': 'same', 'spscan.py': 'same'}
+# ----
+# end 2026-10-27T02:31:39Z
+# exit 0

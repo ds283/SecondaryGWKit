@@ -1,0 +1,14 @@
+$ bash -c scripts/extract_predictions.sh\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/prompts/levin-phase-floor/06a-depth-census.md\ state/predictions.md\ \&\&\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/prompts/levin-phase-floor/06a-depth-census.md\ state/predictions.md\ \&\&\ wc\ -c\ state/predictions.md\ \&\&\ stat\ -f\ \'%N\ mtime\ %Sm\ \(%m\)\'\ -t\ \'%Y-%m-%dT%H:%M:%SZ\'\ state/predictions.md\ \&\&\ TZ=UTC\ stat\ -f\ \'%N\ mtime\ %Sm\'\ -t\ \'%Y-%m-%dT%H:%M:%SZ\'\ state/predictions.md\ \&\&\ echo\ \'---\ does\ the\ prompt\ contain\ the\ file\ verbatim\ \(python\ check\):\'\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \"import\ sys\;\ p=open\(\'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/prompts/levin-phase-floor/06a-depth-census.md\'\,\'rb\'\).read\(\)\;\ s=open\(\'state/predictions.md\'\,\'rb\'\).read\(\)\;\ print\(\'verbatim\ substring\ of\ the\ prompt:\'\,\ s\ in\ p\,\ \'\;\ starts\'\,\ s\[:20\]\,\ \'\;\ ends\'\,\ s\[-40:\]\)\"\ \&\&\ echo\ \'---\ the\ file:\'\ \&\&\ cat\ state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:28:39Z
+# ----
+6e0c1fa1f7d30fb16c54de9cf383a195b88371d623d4e2fa8158511a857d052e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f/prompts/levin-phase-floor/06a-depth-census.md
+3ad9b43de04d005164c705a4116d608b32788932e17a71abd2f428a998f3f405  state/predictions.md
+1678 state/predictions.md
+stat: cannot read file system information for '%N mtime %Sm (%m)': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%SZ': No such file or directory
+state/predictions.md 100000d0000001a ? 1a 4096 4096 242837545 28172961 28172961 1133845022 1126918440
+# ----
+# end 2026-10-27T02:28:40Z
+# exit 1

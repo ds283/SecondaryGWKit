@@ -1,0 +1,65 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/c0.py check state/C0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:25:42Z
+# ----
+# levin-phase-floor 06a: gate C0 clauses (c)-(e)
+# written 2026-10-27T02:25:42Z on mps026298.phys.susx.ac.uk
+# script c0.py sha256 2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl sha256 134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1
+
+== (c) the census path is 06's path: census units against 06's s units, bit for bit
+   W1 h-1e-7-2-38302 vs 06 s-1e-7-low-G+r-1: IDENTICAL (census status done, total 5.399057214431862e-31)
+     == total
+     == total_abserr
+     == total_converged
+     == number of group calls
+     calls: 7; 14 call values/abserrs compared
+     == number of region-array records
+     regions: 9 regions x 5 arrays compared as bytes
+   W1 h-1e-8-2-38302 vs 06 s-1e-8-low-G+r-1: IDENTICAL (census status done, total 5.399057214431862e-31)
+     == total
+     == total_abserr
+     == total_converged
+     == number of group calls
+     calls: 7; 14 call values/abserrs compared
+     == number of region-array records
+     regions: 9 regions x 5 arrays compared as bytes
+   W3 h-1e-7-2-2095 vs 06 s-1e-7-ctrl-low-1: IDENTICAL (census status done, total -3.7220756925118377e-31)
+     == total
+     == total_abserr
+     == total_converged
+     == number of group calls
+     calls: 7; 14 call values/abserrs compared
+     == number of region-array records
+     regions: 8 regions x 5 arrays compared as bytes
+   (c) holds
+
+== (d) order does not matter: low-G+r-1 at 1e-7 first in a fresh worker (W1) and last after its block's other rows (W2)
+   position in W1 1 of 9; in W2 8 of 8
+   W1 cache_built [{'kind': 'producers_G', 'k_serial': 302}, {'kind': 'Gk', 'k_serial': 302, 'z_response_serial': 1608}, {'kind': 'producers_T', 'mode_serial': 302}, {'kind': 'producers_T', 'mode_serial': 201}, {'kind': 'QuadSource', 'q_serial': 201, 'r_serial': 302}]
+   W2 cache_built [{'kind': 'producers_T', 'mode_serial': 201}, {'kind': 'QuadSource', 'q_serial': 201, 'r_serial': 302}]
+   h-1e-7-2-38302: IDENTICAL in every computed value
+   descriptive, the block's other rows, run in both workers at different positions:
+     h-1e-7-2-14352: identical (positions 2 and 1)
+     h-1e-7-2-38301: identical (positions 3 and 2)
+     h-1e-7-2-14407: identical (positions 4 and 3)
+     h-1e-7-2-34900: identical (positions 5 and 4)
+     h-1e-7-2-14408: identical (positions 6 and 5)
+     h-1e-7-2-2196: identical (positions 7 and 6)
+     h-1e-7-2-14353: identical (positions 8 and 7)
+   (d) holds
+
+== (e) no Ray
+   /tmp/ray-sgk entries before 59, after 59, new []
+   workers' ray_initialized at exit: {'W1': False, 'W2': False, 'W3': False}
+   unit statuses by worker: {'W1': ['done'], 'W2': ['done'], 'W3': ['done']}
+   (e) holds
+
+== C0 (c), (d), (e): HOLD
+# ----
+# end 2026-10-27T02:25:44Z
+# exit 0

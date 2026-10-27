@@ -1,0 +1,31 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/make_rows.py state/rows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-27T02:17:26Z
+# ----
+# levin-phase-floor 06a: the row list
+# written 2026-10-27T02:17:26Z on mps026298.phys.susx.ac.uk
+# script make_rows.py sha256 8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f HEAD e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-01/out/groups_01.csv sha256 a8eacc91e1bef0be91c0dec596369b664ff366b8c9a97080edec4b1fbbb186d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/sample.json sha256 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+# QuadSourceIntegral rows at (atol, rtol) = (1e-32, 1e-07): 9280 (expected 9280); at any other pair: 0
+# rows by k_key: {'0:101': 1160, '0:202': 1160, '1:102': 1160, '1:301': 1160, '2:2': 1160, '2:302': 1160, '3:1': 1160, '3:201': 1160}
+#   0:101: k ['313856.84721559234']; 145 z_response blocks
+#   0:202: k ['30454960.396664713']; 145 z_response blocks
+#   1:102: k ['985061.2054411147']; 145 z_response blocks
+#   1:301: k ['95584978.52172911']; 145 z_response blocks
+#   2:2: k ['3091682.0425413917']; 145 z_response blocks
+#   2:302: k ['300000000.0000001']; 145 z_response blocks
+#   3:1: k ['100000.0']; 145 z_response blocks
+#   3:201: k ['9703455.784651041']; 145 z_response blocks
+# by band: {'seam': 6080, 'mid': 2112, 'low': 1088}
+# by class: {'None': 2912, 'G+r': 1860, 'Gqr': 2859, 'G': 1285, 'G-r': 364}
+# by stored depth bin: {'NULL': 2489, '<=10': 1767, '11-19': 2759, '20': 2265}
+# 05's rows marked: 39 (sample has 39); depth-20 role: 31
+# 05's rows not found: []
+# wrote state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# ----
+# end 2026-10-27T02:17:27Z
+# exit 0
