@@ -936,6 +936,52 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `TkWKBValue` rows. [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.6. Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
 
+  **Narrowed 2026-10-27, from the laptop (the mechanism confirmed; on the fixture an artefact).**
+  An in-process probe on B2's recorded cells (`docs/handover/b2/scripts/probe13.py`, outputs in
+  `docs/handover/b2/probe13/`) formed $A_{\rm TLG}$ and $B_{\rm TLG}$ three ways at four places:
+  - **as B2 ran it** (Levin's $T$ derivative $\omega(1+z)$): $A-B$ = $+3.68\times10^{-5}$
+    (`q-smooth` 980), $-5.38\times10^{-5}$ (`q-smooth` $10^7$), $-4.05\times10^{-5}$ (`together`
+    $10^7$), $+9.8\times10^{-10}$ (`together` 980), reproducing the run;
+  - **with Levin's $T$ derivative taken from the phase it oscillates with**
+    (`phase.theta_deriv`, $\omega$ still in the integrand's $b=(1+z)M\omega$): $A-B$ is
+    $4\times10^{-16}$, $3\times10^{-14}$, $-3.6\times10^{-10}$ and $9.8\times10^{-10}$, against summed
+    declared errors of $2\times10^{-10}$–$6\times10^{-8}$. The interactions vanish;
+  - **with no derivative supplied** (`LEVIN_USE_THETA_DERIV = False`, the driver differentiates
+    $\theta$ itself): at the two `q-smooth` places $A_{\rm TLG} = B_{\rm TLG}$ to $5\times10^{-14}$, at
+    the same values as the phase arm ($+1.7843\times10^{-5}$, $-3.6498\times10^{-5}$). The two
+    `together` places did not finish inside the probe's 40-minute limit.
+
+  So the mechanism is the one proposed. The Levin driver is handed $T$'s phase derivative from
+  `omega`, the Liouville–Green closed form, while it oscillates with the stored phase. Where the
+  two disagree, its result depends on the subdivision, and its error estimate cannot see it.
+  **On B2's fixture they disagree by construction:** the realistic $T$'s stored phase is the exact
+  Bessel phase (`closed_form_residual`), while `omega` and `dlnM_dz` are Liouville–Green.
+  **Production is consistent by construction:** `TkWKBIntegration` stores
+  $\theta_T = -[k\,\tau_s + \rho_T]$, with $\rho_T$ tabulated from the same $\omega_{\rm eff}$ that
+  `TkSourceFunctions.omega` returns, and `PrimitivePhase.theta_deriv` is $k\,c_s/H$ in closed form
+  plus the $\varphi$ spline's derivative. Production's mismatch is that spline's derivative error
+  alone, not measured here.
+
+  **What it changes in B2's numbers.** With the derivative consistent, `together` 980 has
+  $A_{\rm TLG} = B_{\rm TLG} = -4.07\times10^{-5}$ (B2: $+1.106\times10^{-4}$) and
+  $N_R + 9/8 = +3.471\times10^{-3}$ (B2: $+3.623\times10^{-3}$). About $1.5\times10^{-4}$ of B2's
+  residue there is the fixture's mismatch. The `f` term, 93 % of that residue as run and 97 % with the derivative consistent, is untouched:
+  `f` is read only on the all-smooth sub-interval, where no Levin call is made.
+  [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.7 records this.
+
+  **Impact now:** B2's `TLG` column, and the `Tnum`/`G` interactions on `q-smooth` and `together`'s
+  upper rungs, carry a fixture artefact. E1 and E2 trade the `f` spline against the
+  Liouville–Green truncation, so they would score one side of that trade on it.
+  **Next step:**
+  1. make the realistic fixture's $T$ self-consistent, as production's is: its stored phase and
+     amplitude Liouville–Green-integrated from the same $\omega_{\rm eff}$, not the exact Bessel
+     ones. That also makes `[00-tk-lg-truncation-floor]`'s amplitude and phase truncation
+     measurable, which B2 could not do;
+  2. measure $|\theta'_{\rm phase} - \omega(1+z)|$ on real `TkWKBValue` rows, which bounds
+     production's version.
+
+  Both come before E1.
+
 ---
 
 ## 4. Resolved issues

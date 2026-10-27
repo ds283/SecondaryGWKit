@@ -1,0 +1,4 @@
+q-smooth      980 noderiv  N_E'+9/8 -1.2821e-12  N_R+9/8 -5.6384e-05  A_TLG +1.7843e-05  B_TLG +1.7843e-05  A-B +2.665e-15  (err 1.8e-10)
+q-smooth    1e+07 noderiv  N_E'+9/8 -1.4217e-11  N_R+9/8 +7.0815e-07  A_TLG -3.6498e-05  B_TLG -3.6498e-05  A-B +4.863e-14  (err 2.2e-08)
+
+[exited with code 0]

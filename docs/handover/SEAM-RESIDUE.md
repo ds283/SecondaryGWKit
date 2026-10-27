@@ -380,6 +380,33 @@ contribution changes with whatever else drives the subdivision.
 attribution between `TLG`, `Tnum` and `G` is reported jointly, not per term. Opened as
 `[13-the-tlg-term-depends-on-the-levin-subdivision]`.
 
+
+### 4.7 After the run: §4.6's mechanism confirmed (2026-10-27)
+
+*Added after this document was written, from a laptop probe outside the registered run:*
+`b2/scripts/probe13.py`, outputs in `b2/probe13/`. It changes none of §3's numbers.
+
+§4.6's proposed mechanism holds. Taking the Levin driver's $T$ phase derivative from the phase
+it oscillates with (`phase.theta_deriv`), instead of from `omega`, makes $A_{\rm TLG} = B_{\rm TLG}$
+to $\le4\times10^{-10}$ at `q-smooth` 980 and $10^7$ and `together` 980 and $10^7$. Letting the
+driver differentiate $\theta$ itself gives the same values at the two `q-smooth` places. On this
+fixture the realistic $T$'s stored phase is the exact Bessel phase while `omega` and `dlnM_dz` are
+Liouville–Green, so the two disagree by construction. Production's stored phase is integrated
+from the same $\omega_{\rm eff}$, so it is consistent by construction.
+
+| place | $A_{\rm TLG}$, as run | $B_{\rm TLG}$, as run | $A_{\rm TLG} = B_{\rm TLG}$, derivative from the phase | $N_R+9/8$, as run | $N_R+9/8$, derivative from the phase |
+|---|---|---|---|---|---|
+| `q-smooth` 980 | $+5.463\times10^{-5}$ | $+1.784\times10^{-5}$ | $+1.784\times10^{-5}$ | $-5.638\times10^{-5}$ | $-5.638\times10^{-5}$ |
+| `q-smooth` $10^7$ | $-9.027\times10^{-5}$ | $-3.646\times10^{-5}$ | $-3.650\times10^{-5}$ | $+7.46\times10^{-7}$ | $+7.08\times10^{-7}$ |
+| `together` $10^7$ | $-3.331\times10^{-5}$ | $+7.19\times10^{-6}$ | $+7.79\times10^{-6}$ | $-1.0903\times10^{-3}$ | $-1.0897\times10^{-3}$ |
+| `together` 980 | $+1.106\times10^{-4}$ | $+1.106\times10^{-4}$ | $-4.07\times10^{-5}$ | $+3.623\times10^{-3}$ | $+3.471\times10^{-3}$ |
+
+So this document's `TLG` column, and the interactions §4.6 reports jointly, carry a property of
+the fixture, not of production: up to about $1.5\times10^{-4}$ in $N$. **The `f` attribution is
+unaffected:** `f` is read only on the all-smooth sub-interval, where no Levin call is made, and it
+is 97 % of `together`'s residue at 980 once the derivative is made consistent
+($3.375\times10^{-3}$ of $3.471\times10^{-3}$; 93 % as run). `[13-the-tlg-term-depends-on-the-levin-subdivision]`
+carries the next step: make the fixture's $T$ self-consistent before E1.
 ---
 
 ## 5. Against the earlier records

@@ -1,0 +1,14 @@
+probe13, b2_cells sha256 0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931
+sign check on E' (exact T_r): max |omega(1+z) - phase'| / |omega(1+z)| = 0.00e+00
+q-smooth      980 base     N_E'+9/8 +4.3299e-14  N_R+9/8 -5.6384e-05  A_TLG +5.4634e-05  B_TLG +1.7843e-05  A-B +3.679e-05  (err 1.9e-10)
+q-smooth      980 phase    N_E'+9/8 +4.3299e-14  N_R+9/8 -5.6384e-05  A_TLG +1.7843e-05  B_TLG +1.7843e-05  A-B +4.441e-16  (err 1.9e-10)
+q-smooth      980 noderiv  N_E'+9/8 +4.3299e-14  N_R+9/8 -5.6384e-05  A_TLG +5.4634e-05  B_TLG +1.7843e-05  A-B +3.679e-05  (err 1.9e-10)
+q-smooth    1e+07 base     N_E'+9/8 +2.6839e-12  N_R+9/8 +7.4618e-07  A_TLG -9.0269e-05  B_TLG -3.6460e-05  A-B -5.381e-05  (err 2.2e-08)
+q-smooth    1e+07 phase    N_E'+9/8 +2.6839e-12  N_R+9/8 +7.0814e-07  A_TLG -3.6498e-05  B_TLG -3.6498e-05  A-B +3.020e-14  (err 2.2e-08)
+q-smooth    1e+07 noderiv  N_E'+9/8 +2.6839e-12  N_R+9/8 +7.4618e-07  A_TLG -9.0269e-05  B_TLG -3.6460e-05  A-B -5.381e-05  (err 2.2e-08)
+together    1e+07 base     N_E'+9/8 -8.4247e-11  N_R+9/8 -1.0903e-03  A_TLG -3.3309e-05  B_TLG +7.1924e-06  A-B -4.050e-05  (err 5.8e-08)
+together    1e+07 phase    N_E'+9/8 -8.4247e-11  N_R+9/8 -1.0897e-03  A_TLG +7.7890e-06  B_TLG +7.7894e-06  A-B -3.558e-10  (err 5.8e-08)
+together    1e+07 noderiv  N_E'+9/8 -8.4247e-11  N_R+9/8 -1.0903e-03  A_TLG -3.3309e-05  B_TLG +7.1924e-06  A-B -4.050e-05  (err 5.8e-08)
+together      980 base     N_E'+9/8 +3.2641e-14  N_R+9/8 +3.6227e-03  A_TLG +1.1060e-04  B_TLG +1.1060e-04  A-B +9.760e-10  (err 5.5e-08)
+together      980 phase    N_E'+9/8 +3.2641e-14  N_R+9/8 +3.4713e-03  A_TLG -4.0738e-05  B_TLG -4.0739e-05  A-B +9.760e-10  (err 5.5e-08)
+together      980 noderiv  N_E'+9/8 +3.2641e-14  N_R+9/8 +3.6227e-03  A_TLG +1.1060e-04  B_TLG +1.1060e-04  A-B +9.760e-10  (err 5.5e-08)
