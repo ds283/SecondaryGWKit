@@ -1,0 +1,4 @@
+driver from /Users/ds283/Documents/Code/SecondaryGWKit-probe13/AdaptiveLevin/levin_quadrature.py (detached worktree at 4cef62a, clean)
+q-smooth      980 base     N_E'+9/8 +4.3299e-14  N_R+9/8 -5.6384e-05  A_TLG +5.4634e-05  B_TLG +1.7843e-05  A-B +3.679e-05  (err 1.9e-10)
+q-smooth      980 phase    N_E'+9/8 +4.3299e-14  N_R+9/8 -5.6384e-05  A_TLG +1.7843e-05  B_TLG +1.7843e-05  A-B +4.441e-16  (err 1.9e-10)
+q-smooth      980 noderiv  N_E'+9/8 -1.2821e-12  N_R+9/8 -5.6384e-05  A_TLG +1.7843e-05  B_TLG +1.7843e-05  A-B +2.665e-15  (err 1.8e-10)
