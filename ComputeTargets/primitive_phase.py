@@ -110,8 +110,10 @@ calls -- ``raw_theta(x, x_is_log)``, ``theta_mod_2pi(x, x_is_log)``,
 ``theta_deriv(x, x_is_log, log_derivative)`` -- plus the ``num_chunks`` property that
 ``QuadSourceIntegral`` reads through ``getattr`` into its stored metadata. So
 ``AdaptiveLevin.levin_quadrature`` (through the phase dict), ``ComputeTargets.phase_groups``
-(``_OscillatoryG.theta_deriv``, ``_composed_*``), ``QuadSourceIntegral._ClampedPhase`` and
+(``_OscillatoryG.theta_deriv``, ``_composed_*``) and
 ``ComputeTargets.spline_wrappers.GkWKBSplineWrapper`` consume one of these unchanged.
+``QuadSourceIntegral`` reaches it only through ``phase_groups``: its clamp adapter was removed by
+``prompts/handover`` prompt 12.
 
 ``x`` is a redshift throughout (``x_is_log=True`` means ``x = log(1+z)``), matching the
 ``x_is_redshift=True, x_is_log=True`` configuration the two production consumers used.
@@ -172,8 +174,7 @@ class PrimitivePhase:
     ``theta(x) = sign * k * leading.delta(x, x_anchor) + phi(x)``, evaluated from a per-model
     ``CumulativeTable`` accessor and a spline of the small residual ``phi``. Implements the
     ``phase_spline`` protocol used by ``AdaptiveLevin`` (through the phase dict),
-    ``phase_groups._OscillatoryG``, ``QuadSourceIntegral._ClampedPhase`` and
-    ``spline_wrappers.GkWKBSplineWrapper``.
+    ``phase_groups._OscillatoryG`` and ``spline_wrappers.GkWKBSplineWrapper``.
 
     See the module docstring for the decomposition, the sign convention, the closed-form
     derivative and the anchoring floor.

@@ -24,8 +24,10 @@ requires, plus the phase-composition and region-boundary checks:
         prompt asks for (and reaches ~1e-13).
       - "realistic" fixtures: real TkSourceFunctions objects from prompt 05's exact fixture
         (bessel_phase amplitude and phase, re-splined on the production grid) and a
-        Green's-function stand-in whose phase is a real phase_spline through bessel_phase
-        samples. This used to carry bessel_phase's own accuracy (~x * 1e-8 in phase,
+        Green's-function stand-in, BesselPhaseGk, whose phase is built from bessel_phase samples
+        by GkSourcePolicyData._build_phase as production builds it (until prompts/handover
+        prompt 13 it was a phase_spline through the samples; BesselPhaseGk's docstring names
+        what is still not production's). This used to carry bessel_phase's own accuracy (~x * 1e-8 in phase,
         docs/lg-phase-and-handover-followup-2026-09.md section 2.4) on top of the phase
         re-spline error. **It no longer does**: prompts/transfer-remedial's prompt 05 replaced
         that construction, and the object now declares 5e-12 rad of phase error at these
@@ -46,12 +48,15 @@ Stand-in background and transfer-function fixtures are imported from test_tk_sou
 """
 
 import unittest
-from math import log, exp, sqrt, sin, cos, pi, gamma, atan2, fmod
+from math import log, log1p, exp, sqrt, sin, cos, pi, gamma, atan2, fmod, ulp
+from types import SimpleNamespace
 
 import mpmath
 import numpy as np
 from scipy.special import jv, yv
 
+from ComputeTargets.BackgroundModel import TAU_GAUSS_ORDER, TablePrimitive
+from ComputeTargets.GkSourcePolicyData import GK_PHASE_SIGN, _build_phase
 from ComputeTargets.QuadSource import source_function
 from ComputeTargets.analytic_Gk import compute_analytic_G
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
@@ -65,6 +70,7 @@ from ComputeTargets.phase_groups import (
 )
 from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from ComputeTargets.WKB_Tk import Tk_d_ln_omegaEff_dz
+from ComputeTargets.cumulative_table import CumulativeTable
 from ComputeTargets.tests.test_tk_source_functions import (
     Fixture,
     FakeModel,
@@ -293,16 +299,92 @@ class ExactGk:
 
 
 # =============================================================================================
-# realistic Green's-function fixture: bessel_phase + a real phase_spline
+# realistic Green's-function fixture: bessel_phase samples, phase built by _build_phase
 # =============================================================================================
+
+# A grid node within this many ulp of log(1 + z_resp) is the response redshift itself, moved by
+# the exp/log round trip of log_grid (test_tk_source_functions.log_grid ends at
+# exp(log(1 + z_resp)) - 1, which is z_resp, or one to three ulp from it). It is set back to
+# z_resp exactly: in production z_resp is a node of the background grid and the lowest source
+# redshift sampled (prompts/handover prompt 13, [04-production-phase-gk-tau-table-has-a-zero-
+# width-bottom-interval]).
+RESPONSE_NODE_SNAP_ULPS = 8
+
+
+class _StoredGkValue:
+    """The fields ``GkSourcePolicyData._build_phase`` reads off a stored ``GkSourceValue``.
+
+    Since prompt 06 of ``prompts/levin-phase-floor`` that includes the producer's stored residual,
+    ``theta_residual``, which ``phi`` is built from; the value's ``z_init``, null for the pure-WKB
+    values modelled here; and the rectifier's record, ``raw_theta_div_2pi``, equal to
+    ``theta_div_2pi`` because these samples carry no wrap to repair.
+    """
+
+    def __init__(self, z, div, mod, theta_residual=None):
+        self.z_source = SimpleNamespace(z=float(z))
+        self.WKB = SimpleNamespace(
+            theta_div_2pi=div,
+            theta_mod_2pi=mod,
+            theta_residual=theta_residual,
+            raw_theta_div_2pi=div,
+            z_init=None,
+        )
+
+
+def response_anchored_grid(z_grid, z_resp):
+    """
+    ``(sample_grid, table_nodes)`` for a Green's-function phase anchored at ``z_resp``, both
+    descending.
+
+    ``sample_grid`` is ``z_grid`` with any node within ``RESPONSE_NODE_SNAP_ULPS`` ulp of
+    ``log(1 + z_resp)`` set exactly to ``z_resp``. ``table_nodes`` is ``sample_grid`` with
+    ``z_resp`` added if it is not already a node, so that the table covers the anchor. The nodes
+    must be distinct in ``log(1+z)``, not merely in ``z``: ``CumulativeTable`` locates an abscissa
+    by ``log1p`` and refuses a point more than one interval beyond its end node, so two nodes one
+    ulp apart in ``z`` and identical in ``log(1+z)`` make a zero-width end interval that refuses
+    every point below it. A pair that is not distinct raises here, naming it.
+    """
+    z_resp = float(z_resp)
+    u_resp = log1p(z_resp)
+    snap = RESPONSE_NODE_SNAP_ULPS * ulp(u_resp)
+    sample_grid = sorted(
+        {z_resp if abs(log1p(float(z)) - u_resp) <= snap else float(z) for z in z_grid},
+        reverse=True,
+    )
+    table_nodes = sorted(set(sample_grid) | {z_resp}, reverse=True)
+    u = [log1p(z) for z in table_nodes]
+    for i in range(len(u) - 1):
+        if not u[i] > u[i + 1]:
+            raise ValueError(
+                f"response_anchored_grid: nodes z={table_nodes[i]!r} and "
+                f"z={table_nodes[i + 1]!r} are not distinct in log(1+z)"
+            )
+    return sample_grid, table_nodes
 
 
 class BesselPhaseGk:
     """
-    GkSourceFunctions stand-in built the way GkSourcePolicyData._create_functions builds the
-    real one: the phase is a phase_spline over log(1+z') through (div 2pi, mod 2pi) samples,
-    chunk_logstep=125, increasing=False (theta_G decreases with the source redshift); the
-    amplitude is bessel_phase's modulus. numeric_Gk is compute_analytic_G.
+    GkSourceFunctions stand-in whose phase is built as production builds it
+    (prompts/handover prompt 13, `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]`):
+    ``GkSourcePolicyData._build_phase`` itself, on stand-ins for the stored ``GkSource`` values at
+    the nodes of ``z_grid``. That is a ``PrimitivePhase`` -- the leading ``-k tau.delta(z', z_resp)``
+    from a real ``CumulativeTable`` of ``1/H`` (``TAU_GAUSS_ORDER``, shifted to the closed-form
+    ``tau`` at its top node), anchored at the response redshift, plus a cubic spline of the small
+    residual ``phi`` -- with ``exact_remainder=True``. Each stand-in carries the exact radiation-
+    era phase as ``(div 2pi, mod 2pi)`` and its ``theta_residual``. A closed-form (Bessel) phase has
+    no separate small terms, so the residual is formed in double, ``theta - GK_PHASE_SIGN k
+    tau.delta(z', z_resp)`` (``levin-phase-floor`` prompt 06 §2), where production forms it from
+    its producer's small terms. The table's nodes and the samples come from
+    ``response_anchored_grid``.
+
+    **Not production's:** the amplitude is ``bessel_phase``'s modulus, where production splines
+    the stored WKB amplitude; ``numeric_Gk`` is ``compute_analytic_G``, where production splines
+    the stored numeric solution; and the samples sit on whatever grid the caller passes (the
+    uniform 100-per-decade grid, for every caller here), not on production's background grid.
+
+    Until prompt 13 the phase was a ``phase_spline`` through the ``(div 2pi, mod 2pi)`` samples
+    themselves, the construction ``_build_phase`` replaced at ``prompts/GkTk-remedial`` prompt 09,
+    whose ``h^4 x/384`` floor grows with ``x``.
     """
 
     def __init__(self, k, w, z_resp, model: FakeModel, z_grid):
@@ -318,26 +400,33 @@ class BesselPhaseGk:
         self._m_resp = self._bessel["mod"](k * self.tau_resp)
         self._vartheta_resp = self._bessel["phase"].raw_theta(k * self.tau_resp)
 
-        samples = []
-        for z in z_grid:
+        sample_grid, table_nodes = response_anchored_grid(z_grid, z_resp)
+        self.z_nodes = table_nodes
+        table = CumulativeTable(
+            table_nodes, lambda z: 1.0 / model.Hubble(z), TAU_GAUSS_ORDER, label="tau"
+        ).shifted(model.tau(table_nodes[0]))
+        self.tau = TablePrimitive(table, "tau")
+
+        values = []
+        for z in sample_grid:
             theta = (
                 self._bessel["phase"].raw_theta(k * model.tau(z)) - self._vartheta_resp
             )
             div, mod = WKB_mod_2pi(theta)
-            samples.append((log(1.0 + z), div, mod))
-        samples.sort(key=lambda s: s[0])
-        log_x, div_2pi, mod_2pi = zip(*samples)
-        self.phase = phase_spline(
-            list(log_x),
-            list(div_2pi),
-            list(mod_2pi),
-            x_is_log=True,
-            x_is_redshift=True,
-            chunk_step=None,
-            chunk_logstep=125,
-            increasing=False,
+            residual = theta - GK_PHASE_SIGN * k * self.tau.delta(z, float(z_resp))
+            values.append(_StoredGkValue(z, div, mod, theta_residual=residual))
+        values.sort(key=lambda v: v.z_source.z)
+
+        self.model_functions = SimpleNamespace(tau=self.tau, Hubble=model.Hubble)
+        source = SimpleNamespace(
+            model_proxy=SimpleNamespace(
+                get=lambda: SimpleNamespace(functions=self.model_functions)
+            ),
+            k=SimpleNamespace(k=float(k)),
+            z_response=SimpleNamespace(z=float(z_resp)),
         )
-        self.WKB_region = (max(z_grid), min(z_grid))
+        self.phase = _build_phase(source, values, "test G")
+        self.WKB_region = (max(sample_grid), min(sample_grid))
 
     @staticmethod
     def _z(x, z_is_log):
@@ -850,7 +939,7 @@ class TestOracle1DirectProduct(unittest.TestCase):
     def test_realistic_fixtures_populated_regimes(self):
         """
         The same identity on real TkSourceFunctions objects (bessel_phase amplitude, re-splined
-        phase) and the phase_spline-backed G fixture, in the regions where each representation
+        phase) and the realistic G fixture (BesselPhaseGk), in the regions where each representation
         is actually valid.
         """
         populated = [
@@ -1016,7 +1105,7 @@ class TestOracle2Bessel(unittest.TestCase):
 
     def test_realistic_fixtures_vs_scipy(self):
         """
-        The all-oscillatory regime on real TkSourceFunctions objects and the phase_spline-backed
+        The all-oscillatory regime on real TkSourceFunctions objects and the realistic
         G fixture against the scipy oracle. The residual is the fixtures' floor, reported for
         prompt 08 as an acceptance threshold; the same points restricted to x_q > 100 show how
         fast it falls away from the hand-over, and the 300/decade repeat shows it is not a grid

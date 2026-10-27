@@ -413,8 +413,9 @@ class TestProtocol(unittest.TestCase):
         self.assertEqual(getattr(pp, "num_chunks", None), 1)
 
     def test_clamped_phase_style_calls(self):
-        """`QuadSourceIntegral._ClampedPhase` calls all three with `x_is_log=True` after clamping
-        the abscissa into the phase's own range; `phase_groups._composed_*` does the same.
+        """`phase_groups._composed_*` calls all three with `x_is_log=True`, inside the phase's
+        own range (until prompts/handover prompt 12 `QuadSourceIntegral`'s clamp adapter did the
+        same after clamping the abscissa into that range).
         """
         pp = _phase(np.zeros_like(_Geometry.z_samples))
         lo, hi = pp.min_log_x, pp.max_log_x

@@ -1886,11 +1886,13 @@ def run_pipeline(
 
             # pass the full source grid: QuadSource truncates it internally to the region
             # where *both* Tq and Tr are still described by their numeric representation
-            # (plus the exactly-known super-horizon region above it), so the values it
-            # stores end at the larger of the two Tk hand-over redshifts. Below that at
-            # least one transfer function is oscillatory and the source term cannot be
-            # represented by a spline through sampled values; that region is handled from
-            # the Liouville-Green representation instead.
+            # (plus the exactly-known super-horizon region above it). Since prompts/handover
+            # prompt 12 the values it stores end HANDOVER_OVERLAP_NODES grid nodes below the
+            # switch node of the factor that hands over earlier (the largest grid node below
+            # the larger of the two Tk z_init); a consumer evaluates the spline only down to
+            # that switch node. Below it at least one transfer function is oscillatory and the
+            # source term cannot be represented by a spline through sampled values; that
+            # region is handled from the Liouville-Green representation instead.
             work_refs.append(
                 {
                     "ref": pool.object_get(

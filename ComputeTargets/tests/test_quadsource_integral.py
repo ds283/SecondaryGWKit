@@ -11,12 +11,24 @@ ComputeTargets/tests/test_tk_source_functions.py, in two flavours:
     evaluate_QuadSource_integral's Tk_functions_builder hook, the Green's function is ExactGk and
     the source spline is replaced by the exact f. Every ingredient is then exact to rounding and
     the comparison against the oracles tests the partition and the integrator alone.
-  * "realistic" -- the transfer functions are TkSourceFunctions built from prompt 05's exact
-    fixture (bessel_phase amplitude and phase re-splined on the production 100-per-decade grid,
-    Liouville-Green closed forms for omega and d ln M/dz), the Green's function's phase is a real
-    phase_spline through bessel_phase samples (BesselPhaseGk) and f is a spline through exact
-    samples on the production grid, as QuadSource stores it. This carries the representation
-    floors logs 05, 06 and 07 measured, and is the accuracy production can expect.
+  * "realistic" -- every ingredient built by production's own constructor from stand-ins for its
+    stored samples (since prompts/handover prompt 13, which made it so):
+      - the transfer functions are TkSourceFunctions with no keyword (exact_remainder on, as
+        production since levin-phase-floor 05a), on a table cs_tau, built from prompt 05's exact
+        fixture (_TableCsTauFixture: stored samples of the exact Bessel amplitude and phase
+        carrying theta_residual; Liouville-Green closed forms for omega and d ln M/dz);
+      - the seam is production's: the Liouville-Green samples begin at the largest grid node
+        below z_init (drop_first_WKB_sample=True) and the numeric samples continue past it;
+      - the Green's function's phase is built by GkSourcePolicyData._build_phase itself, a
+        PrimitivePhase on a CumulativeTable of 1/H anchored at z_resp (BesselPhaseGk);
+      - f is a spline through exact samples on the production grid, as QuadSource stores it.
+    What is still **not** production's: G's amplitude is bessel_phase's modulus and its numeric
+    branch is compute_analytic_G, not splines of stored solutions; every grid is the uniform
+    100-per-decade grid, not production's curvature-criterion grid; f is splined from exact
+    samples, not from samples of the stored T; and the hand-over sits at the fixture's fixed
+    depth (3.5 e-folds inside the horizon, x_T ~ 19), not where find_phase_extremum puts it.
+    This carries the representation floors logs 05, 06 and 07 measured, and is the accuracy
+    production can expect up to those differences.
 
 The code's own oracle is analytic_integral (spec 04 R14, audit QI-1); a second, independent
 oracle is scipy.quad of the exact integrand on a short range.
@@ -27,7 +39,7 @@ import importlib.util
 import subprocess
 import tempfile
 import unittest
-from math import log, exp, sqrt, inf
+from math import log, log1p, exp, sqrt, inf
 from pathlib import Path
 from unittest.mock import patch
 
@@ -36,7 +48,8 @@ import sqlalchemy as sqla
 from scipy.integrate import quad
 from scipy.interpolate import make_interp_spline
 
-from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
+from ComputeTargets.BackgroundModel import TablePrimitive
+from ComputeTargets.GkSourcePolicyData import GK_PHASE_SIGN, GkSourceFunctions
 from ComputeTargets.QuadSource import QuadSourceFunctions, source_function
 from ComputeTargets.QuadSourceIntegral import (
     QuadSourceIntegral,
@@ -58,7 +71,9 @@ from ComputeTargets.phase_groups import (
     evaluate_sum,
     evaluate_envelope,
 )
+from ComputeTargets.primitive_phase import PrimitivePhase
 from ComputeTargets.spline_wrappers import ZSplineWrapper
+from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from config.defaults import DEFAULT_FLOAT_PRECISION
 import ComputeTargets.tests.test_tk_source_functions as tk_fixtures
 from ComputeTargets.tests import kohri_terada as KT
@@ -70,6 +85,7 @@ from ComputeTargets.tests.test_tk_source_functions import (
     PRODUCTION_SAMPLES_PER_LOG10Z,
 )
 from ComputeTargets.tests.test_phase_groups import ExactTk, ExactGk, BesselPhaseGk
+from ComputeTargets.tests.test_g_phase_reanchor import _TableCsTauFixture
 from LiouvilleGreen.bessel_phase import bessel_phase
 
 # the two values of b the prompt asks for; w = (1 - b) / (3 (1 + b))
@@ -215,61 +231,6 @@ class FakeGkPolicy:
         )
 
 
-class OffsetBesselPhaseGk(BesselPhaseGk):
-    """
-    BesselPhaseGk with the sampled Green's-function phase shifted by a whole number of cycles.
-    The unshifted theta_G = vartheta(k eta') - vartheta(k eta_resp) vanishes at z' = z_resp, and
-    when the phase grid reaches z_resp a rounding-level positive value there gets
-    WKB_mod_2pi's div2pi = +1 while every other sample has div2pi <= 0, which phase_spline's
-    logarithmic chunking refuses (it requires one sign). Shifting theta by -2 cycles keeps
-    sin/cos, theta_deriv and every phase *difference* identical and gives the spline a
-    single-signed div2pi range. (Log 07's fixture avoided the issue by stopping its grid 5 %
-    above z_resp, which an integral down to z_resp cannot do.)
-    """
-
-    OFFSET_CYCLES = -2
-
-    def __init__(self, k, w, z_resp, model, z_grid):
-        from LiouvilleGreen.WKBtools import WKB_mod_2pi
-        from LiouvilleGreen.constants import TWO_PI
-        from LiouvilleGreen.phase_spline import phase_spline
-
-        self.k = k
-        self.w = w
-        self.model = model
-        self.b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
-        self.nu = 0.5 + self.b
-        self.z_resp = z_resp
-        self.tau_resp = model.tau(z_resp)
-
-        self._bessel = bessel_phase(self.nu, 1.02 * k * self.tau_resp)
-        self._m_resp = self._bessel["mod"](k * self.tau_resp)
-        self._vartheta_resp = self._bessel["phase"].raw_theta(k * self.tau_resp)
-
-        samples = []
-        for z in z_grid:
-            theta = (
-                self._bessel["phase"].raw_theta(k * model.tau(z))
-                - self._vartheta_resp
-                + self.OFFSET_CYCLES * TWO_PI
-            )
-            div, mod = WKB_mod_2pi(theta)
-            samples.append((log(1.0 + z), div, mod))
-        samples.sort(key=lambda s: s[0])
-        log_x, div_2pi, mod_2pi = zip(*samples)
-        self.phase = phase_spline(
-            list(log_x),
-            list(div_2pi),
-            list(mod_2pi),
-            x_is_log=True,
-            x_is_redshift=True,
-            chunk_step=None,
-            chunk_logstep=125,
-            increasing=False,
-        )
-        self.WKB_region = (max(z_grid), min(z_grid))
-
-
 class ExactTkFunctions(ExactTk):
     """
     ExactTk (exact amplitude-phase decomposition of the analytic T, valid at every z) with the
@@ -344,6 +305,7 @@ class Case:
     """
 
     _fixtures = {}
+    _production_fixtures = {}
 
     @classmethod
     def fixture(cls, w, k):
@@ -351,6 +313,21 @@ class Case:
         if key not in cls._fixtures:
             cls._fixtures[key] = Fixture(w, k=k)
         return cls._fixtures[key]
+
+    @classmethod
+    def production_fixture(cls, fixture: Fixture) -> _TableCsTauFixture:
+        """
+        The realistic flavour's transfer-function fixture for the seeded `fixture`: the same
+        constructor arguments (so the same grids, z_init and samples), as a `_TableCsTauFixture`
+        (a table `cs_tau`, covering z_init with z_init off a node) with
+        `drop_first_WKB_sample=True` (production's seam: the Liouville-Green samples begin at the
+        largest grid node below z_init). Cached on those arguments.
+        """
+        parameters = dict(fixture.parameters, drop_first_WKB_sample=True)
+        key = tuple(sorted(parameters.items()))
+        if key not in cls._production_fixtures:
+            cls._production_fixtures[key] = _TableCsTauFixture(**parameters)
+        return cls._production_fixtures[key]
 
     def __init__(
         self,
@@ -365,6 +342,7 @@ class Case:
         self.w = w = w_of_b(b)
         self.shape = shape
         self.exact = exact
+        self.x_resp = x_resp
         self.model = FakeModel(w)
         model = self.model
 
@@ -396,9 +374,9 @@ class Case:
         self.G_type = G_type
 
         # transfer-function inputs and the builder that turns them into two-region functions
-        self.Tq_inputs = exact_Tk_inputs(self.Fq)
-        self.Tr_inputs = exact_Tk_inputs(self.Fr)
         if exact:
+            self.Tq_inputs = exact_Tk_inputs(self.Fq)
+            self.Tr_inputs = exact_Tk_inputs(self.Fr)
             exact_functions = {
                 float(shape.q): ExactTkFunctions(
                     shape.q, w, model, self.Fq.crossover_z
@@ -409,21 +387,24 @@ class Case:
             }
             self.Tk_builder = lambda model, k, Tn, Tw: exact_functions[float(k)]
         else:
-            # The stored `friction` samples captured above are backed out from the *exact*
-            # Bessel envelope, so the background they are consistent with is the one whose
-            # Liouville-Green friction integral is that envelope's -- `exact_envelope_model()`,
-            # which prompt 10 of prompts/GkTk-remedial added to the fixture for exactly this.
-            # Since TkSourceFunctions now reads the friction from `model.functions.friction_F`
-            # rather than splining the samples, handing it `self.model` (the constant-w closed
-            # form) would silently build the LG amplitude instead of the exact envelope; it
-            # refuses to, naming the ~6e-6 disagreement. Substitute the right model per
-            # wavenumber, as the `exact` branch above already does for the whole object.
+            # Production's construction since levin-phase-floor 05a (prompts/handover prompt 13):
+            # TkSourceFunctions with no keyword (exact_remainder on), on a table cs_tau, read
+            # against the fixture's exact_envelope_model() -- whose friction_F is the exact
+            # Bessel envelope's, the background the stored `friction` samples are backed out
+            # from (prompts/GkTk-remedial prompt 10; handing it self.model would build the LG
+            # amplitude instead, and TkSourceFunctions refuses that, naming the ~6e-6
+            # disagreement) and whose cs_tau is _TableCsTauFixture's table -- on production's
+            # seam (Case.production_fixture). The envelope models are built once per Case.
+            self.Pq = self.production_fixture(self.Fq)
+            self.Pr = self.production_fixture(self.Fr)
+            self.Tq_inputs = exact_Tk_inputs(self.Pq)
+            self.Tr_inputs = exact_Tk_inputs(self.Pr)
             envelope_models = {
-                float(shape.q): self.Fq.exact_envelope_model(),
-                float(shape.r): self.Fr.exact_envelope_model(),
+                float(shape.q): self.Pq.exact_envelope_model(),
+                float(shape.r): self.Pr.exact_envelope_model(),
             }
             self.Tk_builder = lambda model, k, Tn, Tw: tk_fixtures.TkSourceFunctions(
-                envelope_models[float(k)], k, Tn, Tw, exact_remainder=False
+                envelope_models[float(k)], k, Tn, Tw
             )
 
         # source: the exact f, splined on the production grid over the both-numeric region.
@@ -454,8 +435,10 @@ class Case:
         if exact:
             gk = ExactGk(shape.k, w, self.z_resp, model)
         else:
+            # production's phase construction, GkSourcePolicyData._build_phase, on this grid
+            # (the grid's end node is set exactly to z_resp: BesselPhaseGk's docstring)
             top = z_source_max if G_type == "WKB" else self.G_crossover_z
-            gk = OffsetBesselPhaseGk(
+            gk = BesselPhaseGk(
                 shape.k,
                 w,
                 self.z_resp,
@@ -548,6 +531,39 @@ class Case:
         return f"b={self.b:g} {self.shape.name} x_resp={self.shape.r * sqrt(self.w) * self.model.tau(self.z_resp):.0f} {'exact' if self.exact else 'realistic'}"
 
 
+def exact_with_the_geometry_of(case: Case) -> Case:
+    """
+    The exact-ingredient Case of a realistic `case` (same b, shape, x_resp, G type and range),
+    with its ExactTkFunctions breaking where the realistic T do -- at production's switch nodes,
+    `case.Pq.z_switch` and `case.Pr.z_switch`, one grid step below z_init -- instead of at
+    z_init, so that the two runs share one partition (prompts/handover prompt 13, on the user's
+    ruling at its Part A stop). Everything else is `Case(exact=True)`'s.
+    """
+    exact = Case(
+        case.b,
+        case.shape,
+        case.x_resp,
+        exact=True,
+        G_type=case.G_type,
+        z_source_max=case.z_source_max,
+    )
+    functions = {
+        float(case.shape.q): ExactTkFunctions(
+            case.shape.q, exact.w, exact.model, case.Pq.z_switch
+        ),
+        float(case.shape.r): ExactTkFunctions(
+            case.shape.r, exact.w, exact.model, case.Pr.z_switch
+        ),
+    }
+    # as on TkSourceFunctions since prompts/handover prompt 12: crossover_z (the break) is the
+    # switch node, z_init (which evaluate_QuadSource_integral checks against the QuadSource's
+    # record) stays the initialisation redshift
+    functions[float(case.shape.q)].z_init = case.Pq.crossover_z
+    functions[float(case.shape.r)].z_init = case.Pr.crossover_z
+    exact.Tk_builder = lambda model, k, Tn, Tw: functions[float(k)]
+    return exact
+
+
 def regimes_of(result: dict):
     return [
         tuple(item["regime"])
@@ -595,6 +611,14 @@ class TestAnalyticOracle(unittest.TestCase):
     1e-3 (prompt 06's 4.5e-4 with 2x headroom), the Levin part to 5e-4 (log 07's number), and
     total - analytic_rad to 1.5e-3 of the same scale. This is NOT the prompt's 1e-5; see
     logs/08-qsi-phase-group-integration.md deviation 1 for the arithmetic.
+
+    The two parts are compared like for like only if both runs share one partition. Since
+    prompts/handover prompt 13 the realistic T break at production's switch node, one grid step
+    below z_init, so the exact-ingredient comparator is `exact_with_the_geometry_of(case)`: its
+    ExactTkFunctions break at the same switch nodes (the user's ruling at that prompt's Part A
+    stop, 2026-10-27). Against a comparator breaking at z_init the parts differ by 1e-2 to 1e-1
+    of scale, the integral of one grid step moved from one part to the other, while the total
+    does not.
     """
 
     EXACT_THRESHOLD = 1.0e-5
@@ -636,8 +660,8 @@ class TestAnalyticOracle(unittest.TestCase):
         for b in B_VALUES:
             for shape in SHAPES:
                 for x_resp in X_RESP_VALUES:
-                    exact = Case(b, shape, x_resp, exact=True).run()
                     case = Case(b, shape, x_resp, exact=False)
+                    exact = exact_with_the_geometry_of(case).run()
                     out = case.run()
                     A = out["analytic_rad"]
                     scale = max(
@@ -927,6 +951,151 @@ class TestSeams(unittest.TestCase):
 
 
 # =============================================================================================
+# the realistic flavour is production's construction (prompts/handover prompt 13, B2, Part A)
+# =============================================================================================
+
+
+class TestRealisticFlavourIsProductions(unittest.TestCase):
+    """
+    prompts/handover prompt 13 §1.4 tests (a)-(c). `Case(exact=False)` builds G's phase with
+    `GkSourcePolicyData._build_phase`, each T with `TkSourceFunctions` and no keyword on a table
+    `cs_tau`, and the seam as production has it; the two fixture defects A4 found are fixed.
+    """
+
+    def test_a_construction(self):
+        """
+        (a) On one cheap realistic Case, the objects the integral reads (G's from the policy's
+        GkSourceFunctions, each T's from build_partition): G's phase is a PrimitivePhase with exact_remainder on, on a TablePrimitive; each T's phase is
+        a PrimitivePhase on a TablePrimitive with exact_remainder on; and each T's
+        Liouville-Green region starts strictly below its z_init (production's seam).
+        """
+        case = Case(0.0, SHAPES[0], 100.0, exact=False)
+        partition = case.partition()
+        # build_partition and evaluate_QuadSource_integral read G from GkPolicy.functions
+        G = case.GkPolicy.functions.phase
+        self.assertIsInstance(G, PrimitivePhase)
+        self.assertIsInstance(G._leading, TablePrimitive)
+        self.assertTrue(G.exact_remainder)
+        self.assertEqual(G.sign, GK_PHASE_SIGN)
+        self.assertEqual(G.z_anchor, case.z_resp)
+        lines = [
+            f"G: {type(G).__name__} on {type(G._leading).__name__}, exact_remainder "
+            f"{G.exact_remainder}, anchored at z_resp={G.z_anchor!r}"
+        ]
+        for label, F in (("Tq", case.Pq), ("Tr", case.Pr)):
+            T = partition["subintervals"][0][label]
+            with self.subTest(factor=label):
+                self.assertIsInstance(T, TkSourceFunctions)
+                self.assertIsInstance(T.phase, PrimitivePhase)
+                self.assertIsInstance(T.phase._leading, TablePrimitive)
+                self.assertTrue(T.phase.exact_remainder)
+                self.assertEqual(T.z_init, F.crossover_z)
+                self.assertLess(T.WKB_region[0], T.z_init)
+                self.assertEqual(T.WKB_region[0], F.z_switch)
+            lines.append(
+                f"{label}: {type(T.phase).__name__} on {type(T.phase._leading).__name__}, "
+                f"exact_remainder {T.phase.exact_remainder}; WKB_region[0]="
+                f"{float(T.WKB_region[0])!r} < z_init={float(T.z_init)!r}"
+            )
+        print("\n[13 test (a)] " + "; ".join(lines))
+
+    def test_b_table_cs_tau_fixture_covers_z_init(self):
+        """
+        (b) _TableCsTauFixture on production's seam at a configuration A4 recorded raising:
+        A2's ladder at x_resp = 1e4, shape "together", both factors (docs/handover/a4/issues.md
+        item 1; realistic_large_x.py's scaled_shape and fixture_x_max, written out). It builds T
+        -- the constructor anchors T's phase at z_init, which is what raised -- the table
+        evaluates at z_init, z_init is not one of its nodes, and the numeric T evaluates there.
+        Above the switch node the Liouville-Green accessors are not defined, as in production.
+        """
+        w = w_of_b(0.0)
+        x_resp = 1.0e4
+        base = next(s for s in SHAPES if s.name == "together")
+        lam = x_resp / 980.0
+        q, r = lam * base.q, lam * base.r
+        lines = []
+        for label, kk in (("Tq", q), ("Tr", r)):
+            with self.subTest(factor=label):
+                F = _TableCsTauFixture(
+                    w,
+                    k=kk,
+                    x_max=max(1.0e3, 1.05 * x_resp * kk / r),
+                    drop_first_WKB_sample=True,
+                )
+                z_init = float(F.crossover_z)
+                T = tk_fixtures.TkSourceFunctions(
+                    F.exact_envelope_model(), F.k_object, *exact_Tk_inputs(F)
+                )
+                cs_tau = T.phase._leading
+                self.assertIsInstance(cs_tau, TablePrimitive)
+                self.assertTrue(T.phase.exact_remainder)
+                self.assertEqual(T.phase.z_anchor, z_init)
+                self.assertLess(F.z_switch, z_init)
+                nodes = cs_tau.table.z_nodes
+                self.assertGreater(nodes[0], z_init)
+                self.assertLess(nodes[-1], z_init)
+                self.assertNotIn(z_init, set(float(z) for z in nodes))
+                self.assertIsNone(cs_tau.table.node_index(z_init))
+                j, p_R = cs_tau.end_partial(z_init)
+                self.assertNotEqual(p_R, 0.0)
+                # tau_s(z_switch) - tau_s(z_init): conformal time falls as z rises
+                span = cs_tau.delta(z_init, F.z_switch)
+                self.assertTrue(np.isfinite(span) and span > 0.0)
+                self.assertTrue(np.isfinite(T.T(z_init)))
+                self.assertTrue(np.isfinite(T.phase.theta_mod_2pi(F.z_switch)))
+                lines.append(
+                    f"{label} k={kk:.6g}: z_init={z_init!r} off the table's nodes (nearest "
+                    f"node {j}, p_R={p_R:.4e}), table {len(nodes)} nodes from "
+                    f"{nodes[0]:.6g} to {nodes[-1]:.6g}; switch node {float(F.z_switch)!r}"
+                )
+        print("\n[13 test (b)] together, x_resp = 1e4: " + "; ".join(lines))
+
+    def test_c_no_zero_width_interval_at_the_anchor(self):
+        """
+        (c) The realistic G construction on a grid whose last node is one ulp below z_resp
+        (what log_grid's round trip gives at most rungs: docs/handover/a4/issues.md item 2) builds
+        a tau table whose nodes are distinct in log(1+z), with z_resp its bottom node, and its
+        phase evaluates at log(1 + z_resp) and one ulp below it, as phase_group_Levin_integral
+        and the Levin driver form them.
+        """
+        b = 0.0
+        w = w_of_b(b)
+        model = FakeModel(w)
+        shape = SHAPES[0]
+        z_resp = z_at_tau(model, 980.0 / (shape.r * sqrt(w)))
+        G_crossover_z = z_at_tau(model, shape.G_cross_x / shape.k)
+        grid = [
+            float(z)
+            for z in log_grid(
+                1.0 + G_crossover_z, 1.0 + z_resp, PRODUCTION_SAMPLES_PER_LOG10Z
+            )
+        ]
+        grid[-1] = float(np.nextafter(z_resp, -np.inf))
+        self.assertEqual(log(1.0 + grid[-1]), log(1.0 + z_resp))
+        gk = BesselPhaseGk(shape.k, w, z_resp, model, grid)
+        a = log(1.0 + z_resp)
+        below = float(np.nextafter(a, -np.inf))
+        for u in (a, below):
+            with self.subTest(u=u):
+                self.assertTrue(np.isfinite(gk.phase.theta_mod_2pi(u, x_is_log=True)))
+                self.assertTrue(np.isfinite(gk.phase.raw_theta(u, x_is_log=True)))
+                self.assertTrue(
+                    np.isfinite(
+                        gk.phase.theta_deriv(u, x_is_log=True, log_derivative=True)
+                    )
+                )
+        u_nodes = [log1p(z) for z in gk.tau.table.z_nodes]
+        self.assertTrue(all(a > c for a, c in zip(u_nodes[:-1], u_nodes[1:])))
+        self.assertEqual(float(gk.tau.table.z_nodes[-1]), z_resp)
+        print(
+            f"\n[13 test (c)] grid's last node {grid[-1]!r} = z_resp - 1 ulp, z_resp={z_resp!r}; "
+            f"table bottom interval {u_nodes[-2] - u_nodes[-1]:.4e} in log(1+z); "
+            f"theta_mod_2pi one ulp below log(1+z_resp): "
+            f"{gk.phase.theta_mod_2pi(below, x_is_log=True)!r}"
+        )
+
+
+# =============================================================================================
 # the hand-over seam in production's shape: no gap, no clamp (prompts/handover prompt 12, B1)
 # =============================================================================================
 
@@ -1163,8 +1332,13 @@ class TestHandOverSeam(unittest.TestCase):
         shape = SHAPES[0]
         case = Case(b, shape, 100.0, exact=False)
         Tk_numeric, Tk_WKB = case.Tr_inputs
-        # drop five WKB samples: the first is then five grid steps below the switch node
-        Tk_WKB.values = Tk_WKB.values[5:]
+        # drop one WKB sample: the row starts at the switch node (production's seam), so its
+        # first sample is then the node below it, two grid steps below z_init and still among
+        # the numeric samples. (Dropping more than NUMERIC_NODES_BELOW_INIT - 1 runs past the
+        # stored numeric nodes, and TkSourceFunctions refuses earlier, with "is not among the
+        # stored numeric samples"; prompts/handover prompt 13 moved this test from five to one,
+        # on the user's ruling at its Part A stop.)
+        Tk_WKB.values = Tk_WKB.values[1:]
         with self.assertRaises(RuntimeError) as ctx:
             case.run()
         self.assertIn(

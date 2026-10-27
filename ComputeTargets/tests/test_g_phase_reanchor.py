@@ -42,13 +42,12 @@ import copy
 import unittest
 from fractions import Fraction
 from math import expm1, log1p, sqrt, ulp
-from types import SimpleNamespace
 
 import mpmath
 import numpy as np
 
 from ComputeTargets.BackgroundModel import TAU_GAUSS_ORDER, TablePrimitive
-from ComputeTargets.GkSourcePolicyData import GK_PHASE_SIGN, _build_phase
+from ComputeTargets.GkSourcePolicyData import GK_PHASE_SIGN
 from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from ComputeTargets.cumulative_table import CumulativeTable
 from ComputeTargets.phase_groups import build_phase_groups
@@ -56,6 +55,7 @@ from ComputeTargets.primitive_phase import PrimitivePhase
 from ComputeTargets.tests import test_phase_groups
 from ComputeTargets.tests.test_phase_groups import (
     BesselPhaseGk,
+    _StoredGkValue,
     Case,
     K_WAVENUMBER,
     circular_distance,
@@ -447,19 +447,45 @@ class TestNoJitter(unittest.TestCase):
 
 class _TableCsTauFixture(Fixture):
     """
-    ``test_tk_source_functions``' exact fixture with ``cs_tau`` a real ``TablePrimitive`` (a
-    ``CumulativeTable`` of ``c_s/H`` on the WKB grid, shifted to the closed form at its top node),
-    as production's ``functions.cs_tau`` is, instead of a ``ClosedFormPrimitive``. So a
+    ``test_tk_source_functions``' exact fixture with ``cs_tau`` a real ``TablePrimitive``, as
+    production's ``functions.cs_tau`` is, instead of a ``ClosedFormPrimitive``. So a
     ``TkSourceFunctions`` built on it with no keyword builds its phase as production does, on a
     leading primitive that *has* the node accessors, node-anchored (prompt 05a). The inherited
     ``exact_functions`` passes ``exact_remainder=False``, as every closed-form fixture site does;
     a test that wants production's construction captures the fixture's samples and builds the
-    object itself (``test_t_phase_reanchor._table_fixture_functions``).
+    object itself (``test_t_phase_reanchor._table_fixture_functions``,
+    ``test_quadsource_integral.Case``).
+
+    **The table** is a ``CumulativeTable`` of ``c_s/H`` at ``TAU_GAUSS_ORDER`` on the union of the
+    fixture's numeric and Liouville-Green nodes (``z_numeric``, ``z_numeric_below``, ``z_WKB``),
+    **without the one numeric node equal to** ``z_init`` (``z_numeric[-1] == crossover_z`` bit for
+    bit), descending, shifted to the closed form at its top node. So the table covers ``z_init``,
+    where ``T``'s phase is anchored, and ``z_init`` is off a node, as on production's background
+    grid, where ``z_init`` is a root; the interval around it is two grid steps wide. This is A4's
+    ``_UnionTableCsTauFixture`` (``docs/handover/a4/scripts/a4_cells.py``, the user's answers at
+    A4's stops), adopted here by prompts/handover prompt 13. Until then the table was built on
+    ``z_WKB`` alone, which with ``drop_first_WKB_sample=True`` starts one grid step below
+    ``z_init``, and whether ``z_init`` was refused turned on one ulp of ``log1p``
+    (``[04-table-cs-tau-fixture-does-not-cover-z-init-when-the-first-sample-is-dropped]``).
     """
+
+    def cs_tau_nodes(self):
+        """The table's nodes, descending; ``z_init`` lies strictly inside them and is not one."""
+        nodes = {float(z) for z in self.z_numeric}
+        nodes |= {float(z) for z in self.z_numeric_below}
+        nodes |= {float(z) for z in self.z_WKB}
+        nodes.discard(float(self.crossover_z))
+        nodes = sorted(nodes, reverse=True)
+        if not nodes[0] > self.crossover_z > nodes[-1]:
+            raise RuntimeError(
+                f"_TableCsTauFixture: the cs_tau table's nodes {nodes[0]!r}..{nodes[-1]!r} do "
+                f"not cover z_init={self.crossover_z!r}"
+            )
+        return nodes
 
     def exact_envelope_model(self):
         model = super().exact_envelope_model()
-        nodes = list(self.z_WKB)  # descending, from z_init
+        nodes = self.cs_tau_nodes()
         w = self.w
         table = CumulativeTable(
             nodes, lambda z: sqrt(w) / model.Hubble(z), TAU_GAUSS_ORDER, label="cs_tau"
@@ -641,67 +667,23 @@ class TestDefault(unittest.TestCase):
 # ------------------------------------------------------------------------------------------------
 
 
-class _Value:
-    """The fields ``_build_phase`` reads off a ``GkSourceValue``.
-
-    Since prompt 06 of ``prompts/levin-phase-floor`` that includes the producer's stored residual,
-    ``theta_residual``, which ``phi`` is built from; the value's ``z_init``, null for the pure-WKB
-    values modelled here; and the rectifier's record, ``raw_theta_div_2pi``, equal to
-    ``theta_div_2pi`` because these samples carry no wrap to repair.
-    """
-
-    def __init__(self, z, div, mod, theta_residual=None):
-        self.z_source = SimpleNamespace(z=float(z))
-        self.WKB = SimpleNamespace(
-            theta_div_2pi=div,
-            theta_mod_2pi=mod,
-            theta_residual=theta_residual,
-            raw_theta_div_2pi=div,
-            z_init=None,
-        )
+# The fields ``_build_phase`` reads off a ``GkSourceValue``: since prompts/handover prompt 13 the
+# stand-in lives beside ``BesselPhaseGk``, which builds its phase with ``_build_phase`` too.
+_Value = _StoredGkValue
 
 
 class _ProductionPhaseGk(BesselPhaseGk):
     """
-    ``test_phase_groups``' realistic G fixture (bessel_phase amplitude, stored (div 2pi, mod 2pi)
-    samples of the exact radiation phase), with its phase built by ``GkSourcePolicyData._build_phase``
-    itself -- a ``PrimitivePhase`` on a real ``CumulativeTable`` of ``1/H``, anchored at the response
-    redshift, which is a node -- instead of a ``phase_spline``. ``old_phase`` is the same object
-    with the keyword off: today's remainder.
+    ``test_phase_groups``' realistic G fixture, ``BesselPhaseGk`` (bessel_phase amplitude, stored
+    (div 2pi, mod 2pi) samples of the exact radiation phase carrying ``theta_residual``), whose
+    phase is built by ``GkSourcePolicyData._build_phase`` itself -- a ``PrimitivePhase`` on a real
+    ``CumulativeTable`` of ``1/H``, anchored at the response redshift. Since prompts/handover
+    prompt 13 that is ``BesselPhaseGk``'s own construction, so this class adds only ``old_phase``:
+    the same object with the keyword off, today's remainder before prompt 05.
     """
 
     def __init__(self, k, w, z_resp, model, z_grid):
         super().__init__(k, w, z_resp, model, z_grid)
-
-        nodes = sorted({float(z) for z in z_grid} | {float(z_resp)}, reverse=True)
-        table = CumulativeTable(
-            nodes, lambda z: 1.0 / model.Hubble(z), TAU_GAUSS_ORDER, label="tau"
-        ).shifted(model.tau(nodes[0]))
-        self.tau = TablePrimitive(table, "tau")
-
-        values = []
-        for z in z_grid:
-            theta = (
-                self._bessel["phase"].raw_theta(k * model.tau(z)) - self._vartheta_resp
-            )
-            div, mod = WKB_mod_2pi(theta)
-            # a closed-form (Bessel) phase has no separate small terms, so its residual is formed
-            # in double, theta - GK_PHASE_SIGN k tau.delta(z, z_resp) (prompt 06 §2)
-            residual = theta - GK_PHASE_SIGN * k * self.tau.delta(
-                float(z), float(z_resp)
-            )
-            values.append(_Value(z, div, mod, theta_residual=residual))
-        values.sort(key=lambda v: v.z_source.z)
-
-        functions = SimpleNamespace(tau=self.tau, Hubble=model.Hubble)
-        source = SimpleNamespace(
-            model_proxy=SimpleNamespace(
-                get=lambda: SimpleNamespace(functions=functions)
-            ),
-            k=SimpleNamespace(k=float(k)),
-            z_response=SimpleNamespace(z=float(z_resp)),
-        )
-        self.phase = _build_phase(source, values, "test G")
         self.old_phase = PrimitivePhase(
             self.phase.k,
             self.tau,
@@ -709,7 +691,7 @@ class _ProductionPhaseGk(BesselPhaseGk):
             self.phase.z_samples,
             self.phase.phi_samples,
             sign=self.phase.sign,
-            model_functions=functions,
+            model_functions=self.model_functions,
             label="test G, keyword off",
         )
 

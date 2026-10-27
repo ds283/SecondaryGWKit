@@ -259,6 +259,20 @@ class Fixture:
         drop_first_WKB_sample=False,
         numeric_nodes_below_init=NUMERIC_NODES_BELOW_INIT,
     ):
+        # the constructor's arguments, so that a fixture of another class can be built on exactly
+        # this one's grids (test_quadsource_integral.Case builds its realistic flavour's
+        # production-shaped fixture from the one it is seeded with)
+        self.parameters = dict(
+            w=w,
+            k=k,
+            efolds_suph=efolds_suph,
+            efolds_subh=efolds_subh,
+            x_max=x_max,
+            numeric_samples=numeric_samples,
+            WKB_samples=WKB_samples,
+            drop_first_WKB_sample=drop_first_WKB_sample,
+            numeric_nodes_below_init=numeric_nodes_below_init,
+        )
         self.w = w
         self.k = k
         self.model = FakeModel(w)
