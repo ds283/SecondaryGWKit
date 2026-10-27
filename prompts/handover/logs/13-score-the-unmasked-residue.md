@@ -8,6 +8,8 @@ the dispatch SHA `c3802bf`:
   landing is by rebase);
 - Part B: "Record handover prompt 13: B2's residue attribution" (the records commit).
 
+**Landed 2026-10-27** by rebase onto `handover-remedial` over `levin-phase-floor` 06a's records (`1027dea`, `139f0b9`), which touched no `.py` file outside `docs/`: Part A as `d88faec`, the records as `fd11b82`, the user's ruling on deviation 8 as `c9d9185`, and the index's count, corrected from 114 to 112 by counting after the rebase, as `0572abe`. The run's records name `28ade78`, the pre-rebase Part A.
+
 **Model:** Claude Opus 5.5, in a fresh-context subagent on the laptop.
 **Date:** 2026-10-27
 **Result (Part A):** COMPLETE WITH DEVIATIONS. §1.1–§1.3 are implemented, tests (a)–(c) pass and
@@ -377,7 +379,8 @@ change.
 Each is saved as `b2/out/check_<name>.txt` and `.json`, and each HOLDS.
 1. **Construction.** 208 objects (16 rungs × 13) were built with no problems. R's $G$ and $T$
    phases are each a `PrimitivePhase` on a `TablePrimitive` with `exact_remainder` on at every
-   rung. Each $T$'s `WKB_region[0]` is below its $z_{m init}$. R's $G$ phase evaluates at
+   rung. Each $T$'s `WKB_region[0]` is below its $z_{
+m init}$. R's $G$ phase evaluates at
    $\log(1+z_{\rm resp})$ and 1–8 ulp below it.
 2. **Completeness**, at `together` 980, bit for bit in four quantities:
    - **(i)** the hybrid with nothing delegated equals unwrapped R
