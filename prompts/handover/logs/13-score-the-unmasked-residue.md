@@ -418,7 +418,10 @@ Each is saved as `b2/out/check_<name>.txt` and `.json`, and each HOLDS.
 ## Deviations from the prompt (Part B)
 
 8. **The together-980 numbers were seen before `terms.md` was written.** **UNINTENDED DRIFT, kept.**
-   *Not ruled on by the user; the orchestrator will put it to them at review.*
+   **Accepted by the user at review, 2026-10-27:** *"Let's accept the deviation. i don't think this
+   is important."* The orchestrator had confirmed that `b2_cells.py`, which holds the mapping, hashed
+   `0a8ae0eb…` in `mapping_before_smoke.txt` before the smoke test, and that every checkpoint record
+   carries the same hash.
    - **What happened.** After writing `b2_cells.py`, the agent smoke-tested it by running all 13
      objects at `together` 980 in-process. That was before §2.5's checks and before `terms.md`.
      It saw R +3.6227e-3, E′ +3.3e-14, E′+f +3.375e-3, E′+Tnum +1.37e-4, E′+TLG +1.11e-4,
