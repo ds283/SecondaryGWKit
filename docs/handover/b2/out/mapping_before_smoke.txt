@@ -1,0 +1,19 @@
+b2_cells.py as written before the smoke test of all 13 objects at together 980 (2026-10-27); the smoke test is recorded in the log:
+2026-10-27 11:02:27.306892318 +0000 scripts/b2_cells.py
+0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931  scripts/b2_cells.py
+TERMS = ("f", "Tnum", "Trep", "TLG", "G")
+T_ACCESSORS = {
+    "Tnum": ("T", "dT_dz"),
+    "Trep": ("M", "phase"),
+    "TLG": ("omega", "dlnM_dz"),
+}
+G_ACCESSORS = ("phase", "sin_amplitude")
+ACCESSORS = {
+    "f": ("QuadSource.functions.source",),
+    "Tnum": tuple(f"T.{a}" for a in T_ACCESSORS["Tnum"]),
+    "Trep": tuple(f"T.{a}" for a in T_ACCESSORS["Trep"]),
+    "TLG": tuple(f"T.{a}" for a in T_ACCESSORS["TLG"]),
+    "G": tuple(f"Gk.{a}" for a in G_ACCESSORS),
+}
+
+OBJECTS = (

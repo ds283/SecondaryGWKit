@@ -2,7 +2,10 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-10-25 — `[08-handover-clamp-error]` and
+**Last updated:** 2026-10-27 — `[05-numeric-region-is-now-the-accuracy-floor]`,
+`[06-source-spline-residual-vs-handover]` and `[07-lg-derivative-truncation-at-handover]` narrowed
+by `prompts/handover` prompt 13 (B2), which measured each as a term of the seam's residue.
+Previously: 2026-10-25 — `[08-handover-clamp-error]` and
 `[12-handover-clamp-error-in-production]` closed by `prompts/handover` prompt 12 (board item B1,
 the $T_k$ hand-over by overlap; moved to §4), and `[05-numeric-region-is-now-the-accuracy-floor]`
 and `[06-source-spline-residual-vs-handover]` narrowed by it. Previously: 2026-09-14 —
@@ -188,6 +191,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   - the Liouville–Green side, which B1 did not change: its row still begins at the switch node, and
     B1 measured nothing there beyond the continuity record;
   - the production-$x$ note above, which is `[12-phase-spline-error-grows-with-x]`'s.
+  **Narrowed 2026-10-27 by `prompts/handover` prompt 13 (board item B2): measured as a term of the
+  seam's residue, on the realistic fixture at 100 per decade.** The numeric $T$ branch (`T.T`,
+  `T.dT_dz`, read in the Levin sub-intervals where that $T$ is smooth, with $T = 1$ above its
+  grid) contributes $A_{\rm Tnum} = B_{\rm Tnum}$ in $N$:
+  - `together`: $-4.9\times10^{-5}$ to $+1.37\times10^{-4}$, 1.2–9% of the residue;
+  - `T-first`: $+1.0\times10^{-6}$ to $+8.2\times10^{-6}$, opposite in sign to the source-spline
+    term;
+  - `q-smooth`, where $T_q$ is smooth everywhere: $-1.43\times10^{-4}$ to $+3.7\times10^{-5}$,
+    largely cancelled by the Liouville–Green term.
+
+  The lever is still `source_samples_per_log10z`
+  ([`docs/handover/SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.2).
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -235,6 +250,20 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   to 1.4e-04 of envelope on real rows) and its growth to $O(1)$ for a hand-over at the bottom of the
   search window are unchanged. `together`'s 3.5e-03 after B1, larger than A2's representation term
   there, is not attributed; that is `handover` B2's.
+  **Narrowed 2026-10-27 by `prompts/handover` prompt 13 (board item B2): the interior residual is
+  attributed, and it is the largest term.** On the realistic fixture at 100 per decade (production's
+  $G$ and $T$ constructions, production's seam), the spline of $f$ on the all-smooth sub-interval
+  contributes $A_f = B_f$ (additive at every rung):
+  - **`together`:** 0.88–1.02 of the seam's residue, $7.7\times10^{-5}$ to $3.4\times10^{-3}$ in $N$.
+    `together`'s $+3.623\times10^{-3}$ at $x_{\rm resp}=980$ is **93% this term**, so it is now
+    attributed;
+  - **`T-first`:** 1.22–1.26 of the residue, $1.0\times10^{-5}$ to $7.4\times10^{-5}$;
+  - **`q-smooth`:** $\le2.4\times10^{-8}$, because its all-smooth sub-interval ends above the $T$ seam.
+
+  This is the interior residual this entry records, integrated: B1 removed the end interval.
+  **What stays open:** the remedy (a denser source grid, or E1/E2's depth), and the size on
+  production's curvature-criterion grid, which this fixture does not have
+  ([`docs/handover/SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.1).
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -256,6 +285,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `docs/lg-phase-and-handover-followup-2026-09.md` §1.4 would reduce it; both are out of scope
   here.
   **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
+  **Narrowed 2026-10-27 by `prompts/handover` prompt 13 (board item B2): measured as a term of the
+  seam's residue, on the realistic fixture at its fixed hand-over $x_T\approx19.1$.** `omega` and
+  `dlnM_dz` (term `TLG`) contribute, in $N$:
+  - `together`: $-3.3\times10^{-5}$ to $+1.1\times10^{-4}$ (3.1% of `together`'s residue at 980);
+  - `T-first`: $+9.5\times10^{-7}$ to $+5.0\times10^{-6}$;
+  - `q-smooth`: $-9.0\times10^{-5}$ to $+1.41\times10^{-4}$ add-one, against $-3.6\times10^{-5}$
+    to $+5.2\times10^{-5}$ remove-one. There it largely cancels the numeric-$T$ term.
+
+  Its per-term value depends on the Levin subdivision, through an interaction with $G$ and with
+  the numeric $T$ (`handover`'s `[13-the-tlg-term-depends-on-the-levin-subdivision]`). Nothing
+  here is a depth scan; that is `handover` E2's
+  ([`docs/handover/SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.3, §4.6).
 
 - **[12-phase-spline-error-grows-with-x]** *(measured in `docs/lg-phase-and-handover-followup-2026-09.md`
   §2, 2026-09-08; measured on real rows by prompt 12, 2026-09-09; **split out into its own issue

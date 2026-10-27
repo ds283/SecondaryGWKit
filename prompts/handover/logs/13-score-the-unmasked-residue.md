@@ -1,16 +1,30 @@
 # Log 13 — B2: score the residue the gap was masking
 
 **Prompt:** [`prompts/handover/13-score-the-unmasked-residue.md`](../13-score-the-unmasked-residue.md).
-This file holds **Part A** (§1, the fixtures). Part B (§2–§3, the measurement) completes it.
-**Commit:** Part A, "Make the realistic flavour production's construction", on branch
-`handover-13-b2` in the worktree `SecondaryGWKit-handover-13`, cut at the dispatch SHA `c3802bf`
-(the SHA is not embedded here, because it does not exist until the commit is made).
+Part A (§1, the fixtures) and Part B (§2–§3, the measurement).
+**Commits:** both on branch `handover-13-b2` in the worktree `SecondaryGWKit-handover-13`, cut at
+the dispatch SHA `c3802bf`:
+- Part A: `28ade78`, "Make the realistic flavour production's construction" (the branch SHA;
+  landing is by rebase);
+- Part B: "Record handover prompt 13: B2's residue attribution" (the records commit).
+
 **Model:** Claude Opus 5.5, in a fresh-context subagent on the laptop.
 **Date:** 2026-10-27
 **Result (Part A):** COMPLETE WITH DEVIATIONS. §1.1–§1.3 are implemented, tests (a)–(c) pass and
 their three breakages are caught, the four comments are corrected and the grep is clean, and no
 root's count fell. The agent stopped once (§6: two existing tests failed after the change), and
-the user ruled on both. Those two rulings are deviations 1 and 2.
+the user ruled on both. Those two rulings are deviations 1 and 2. The orchestrator's review passed
+7 of 7.
+**Result (Part B):** COMPLETE WITH DEVIATIONS.
+- Run `handover-13-residue-20261027T110832` ended `done`, with 208/208 cells `ok` and none
+  `not reached`.
+- §2.5's six checks held before the launch, and `terms.md` is older than the manifest.
+- Completeness held bit for bit, the geometry control held, and E reproduces A2's exact column.
+- The residue is additive at every rung, and `together`'s 980 residue is attributed: 93% to the
+  source spline.
+- The measurement is [`docs/handover/SEAM-RESIDUE.md`](../../../docs/handover/SEAM-RESIDUE.md).
+  Part B's deviations are 8–17 below.
+- **Deviation 8, the together-980 numbers seen before `terms.md`, is awaiting the user's ruling.**
 
 ## Gate
 
@@ -320,3 +334,178 @@ These import fixtures Part A changes. Each is a record of the tree it ran on, an
 - `exact_with_the_geometry_of(case)` is the exact flavour on R's partition. It is the T half of
   E′: the exact $G$ is `ExactGk`, and the source is `FakeQuadSource(exact=True)`.
 - Test (a) is Part B's construction check (§2.5 item 1).
+
+---
+
+# Part B — the measurement (§2–§3)
+
+## What shipped
+
+All new files are under `docs/handover/`. Nothing outside `docs/` and `prompts/` changed in Part B.
+- [`SEAM-RESIDUE.md`](../../../docs/handover/SEAM-RESIDUE.md), §0–§7 in prompt §3's order.
+- [`b2/scripts/`](../../../docs/handover/b2/scripts/), each byte-identical (`cmp`) to the copy in
+  the worktree's gitignored `var/handover-13/scripts/`:
+  - `b2_cells.py` (`0a8ae0eb…`): one cell, the objects and the hybrids;
+  - `b2_driver.py` (`dc8772e3…`): 208 cells, at most 2 at once, 1 h budget each;
+  - `b2_launch.py` (`c8fb8bf0…`): `runregistrykit.begin`, then `nohup sh -c` in a new session;
+  - `b2_checks.py` (`6bbda526…`): §2.5's six checks;
+  - `b2_tables.py`: §3's tables, from the checkpoint alone;
+  - `b2_probe_pairs.py`: the post-run pair probe (deviation 14).
+
+  The first four are the run's hashed set and stamp every checkpoint record. The two others ran
+  after the run and are records of their own SHA.
+- [`b2/out/`](../../../docs/handover/b2/out/): `tables.md` (the tables' stdout, §3's source);
+  `terms.md`; `check_<name>.txt` and `.json` for the six checks; `mapping_before_smoke.txt`;
+  `probe_pairs.txt`; `launch.txt`; and the run's `run_manifest.json`, `run_summary.json` and
+  `run_stdout.log`.
+- **Not copied:** the checkpoint and the per-cell files (`cells/*.json`, `.out`, `.err`), which
+  stay in the run directory under the main checkout's `var/runs/`.
+
+**The objects and the five terms** are as SEAM-RESIDUE.md §0 and `b2/out/terms.md` state.
+Delegation swaps accessors only, keeping R's geometry:
+- `HybridT` wraps each `TkSourceFunctions`;
+- `GkSourceFunctions._replace` handles $G$;
+- `QuadSourceFunctions` with the exact $f$ handles the source.
+
+The mapping was read from the code. `TkSourceFunctions.T` never dispatches to the WKB form; the
+$f$ spline is read only on the all-smooth sub-interval; $T$'s Levin phase derivative is `omega`;
+and `numeric_Gk` is exact in R and E alike, so it is in no term. No term needed a production
+change.
+
+## §2.5's checks (before the launch)
+
+Each is saved as `b2/out/check_<name>.txt` and `.json`, and each HOLDS.
+1. **Construction.** 208 objects (16 rungs × 13) were built with no problems. R's $G$ and $T$
+   phases are each a `PrimitivePhase` on a `TablePrimitive` with `exact_remainder` on at every
+   rung. Each $T$'s `WKB_region[0]` is below its $z_{m init}$. R's $G$ phase evaluates at
+   $\log(1+z_{\rm resp})$ and 1–8 ulp below it.
+2. **Completeness**, at `together` 980, bit for bit in four quantities:
+   - **(i)** the hybrid with nothing delegated equals unwrapped R
+     (`total` `0x1.03e5aa4fb72dep-40`, `total_abserr` `0x1.aaeb34a31deebp-66`);
+   - **(ii)** the hybrid with everything delegated equals `exact_with_the_geometry_of(R)`
+     (`0x1.04bc9b11398a2p-40`, `0x1.0450e9d8fd8f0p-78`);
+   - **disjointness:** 9 accessors, 0 in two terms.
+3. **Determinism.** E, E′ and R run twice are bit-identical in totals and in every group's regions
+   and depths (7, 7 and 44 regions; depths 0, 0 and 5).
+4. **Transparency.** R with and without the wrapper is bit-identical, with 44 regions both ways.
+5. **Controls.**
+   - **E against A2's Table 2,** exact closed: within the declared errors at all 16 rungs, with
+     $|\Delta N|\le4.4\times10^{-14}$. In $N$ that is 13–15 significant figures. A2's four printed
+     figures of $N+9/8$, which is at the rounding level, agree 0–4 times.
+   - **Geometry:** $N_{E'}-N_E = -3.73\times10^{-14}$ against $1.84\times10^{-11}$.
+   - **R against A4's arm P:** $+3.622668\times10^{-3}$ against $+3.623\times10^{-3}$, recorded.
+6. **Stationary points.** 108 rows at 4001 points each, with no sign change. The nearest approach
+   is `T-first` $10^7$, group $G-q+r$, with $|\theta'|_{\min} = 0.626$ per $\log(1+z)$, 0.0226 of
+   the largest constituent.
+
+**`terms.md` against the launch.** `terms.md` has mtime 11:08:19.57 UTC and the manifest
+11:08:32.84 UTC: 13 s older. The copy in `b2/out/` keeps the mtime (`cp -p`).
+
+## The run
+
+- **Run id and directory:** `handover-13-residue-20261027T110832`, in the main checkout's
+  `var/runs/handover-13-residue-20261027T110832/`.
+- **Launch:** registered, campaign `handover`, prompt `13`, slug `residue`. The driver's pid was
+  24600, recorded with `Run.heartbeat`.
+- **Verification:** one check at launch (status `running`, pid answers `kill -0`, heartbeat 4 s
+  old), then no polling.
+- **Duration:** 11:08:36–11:18:12 UTC, with 456 s of cell wall time. The longest cell took 15.1 s.
+  The 1-minute load ran 6.0–26.9.
+- **Outcome:** `done`, exit 0. Every record carries `git_head` `28ade78…` and an empty
+  `git status --short`.
+- **Cells `not reached`:** none. Cells raised or skipped: none.
+
+## Deviations from the prompt (Part B)
+
+8. **The together-980 numbers were seen before `terms.md` was written.** **UNINTENDED DRIFT, kept.**
+   *Not ruled on by the user; the orchestrator will put it to them at review.*
+   - **What happened.** After writing `b2_cells.py`, the agent smoke-tested it by running all 13
+     objects at `together` 980 in-process. That was before §2.5's checks and before `terms.md`.
+     It saw R +3.6227e-3, E′ +3.3e-14, E′+f +3.375e-3, E′+Tnum +1.37e-4, E′+TLG +1.11e-4,
+     E′+Trep +9e-11 and E′+G +6e-12.
+   - **Why the mapping did not move.** It was already coded in `b2_cells.py`, and its sha256
+     (`0a8ae0eb…`) and text were saved in `state/mapping_before_smoke.txt` right after the smoke
+     test. The run's records carry the same hash, so the mapping is unchanged since.
+   - **What it costs.** The `terms.md`-before-manifest evidence covers the other 15 rungs fully,
+     but at `together` 980 it shows only that the mapping did not change after the numbers were
+     seen.
+9. **How completeness is checked.** **IMPLEMENTATION CHOICE.** Read literally, "E′ + all five ≡ R"
+   and "R − all five ≡ E′" are identities if E′ is defined as R − all five. So each side was built
+   differently: (i) the nothing-delegated hybrid against unwrapped R; (ii) the all-delegated hybrid
+   against `exact_with_the_geometry_of(R)`, an independent construction.
+10. **The §6 raise-stop schedule.** **IMPLEMENTATION CHOICE.** A cell depends on every cell of its
+    shape at a lower rung that is planned before it. E cells run first, so they depend only on the
+    E cells below them. No cell raised, so this never acted.
+11. **The tables script is not in the run's hashed set.** **IMPLEMENTATION CHOICE.** This lets it be
+    extended after the run. Tables 5 and 6 (per-term ranges, signs, monotonicity and slopes, and
+    the additivity margins) were added after the run. It reads only the checkpoint.
+12. **The E control takes A2's values from `REALISTIC-LARGE-X.md` Table 2,** to four figures, with
+    half a unit of the fourth figure added to the bound. It does not use A2's JSONL in the main
+    checkout. **IMPLEMENTATION CHOICE.**
+13. **Small choices,** each an **IMPLEMENTATION CHOICE**:
+    - the 50-digit reference is recomputed in every cell (identical within a rung, about 0.05 s);
+    - the construction check also evaluates R's $G$ phase below $z_{\rm resp}$;
+    - the scan reports $\theta'$ relative to the largest constituent's as well.
+14. **A post-run probe of pairwise hybrids.** **IMPLEMENTATION CHOICE.** Run in-process and not
+    registered (`b2_probe_pairs.py`, `b2/out/probe_pairs.txt`, about a minute). The run's
+    interactions passed the additivity rule but were visible, at 50–62% of the largest term on
+    `q-smooth` and in $B_G$ on `together`. The probe located them in `TLG`×`G` and `TLG`×`Tnum`.
+    It is labelled in SEAM-RESIDUE.md §4.6 as not part of the measurement, and it changes no
+    number of it.
+15. **The driver's docstring gets the within-rung order wrong.** It says "E′, R", but the plan
+    runs R, E′, then the hybrids. **UNINTENDED DRIFT, kept:** the driver is hashed into every
+    record.
+16. **CLAUDE.md is not edited.** **STRUCTURALLY REQUIRED.**
+    - **The instruction.** Prompt §7 and the orchestrator ask that `docs/handover/b2/scripts/` be
+      listed in CLAUDE.md's formatting paragraph if it is not `black`-clean.
+    - **The state.** Five of its six scripts are not `black`-clean, and they must stay
+      byte-identical to what ran.
+    - **Why not done.** This agent does not change CLAUDE.md on an agent's instruction, so the
+      line is left for the orchestrator or the user.
+    - **The text to add,** after "`docs/levin-phase-floor/06/`":
+      "and `handover` B2's `docs/handover/b2/scripts/`".
+    - **Until then** the tree is not clean under `black --check` outside `prompts/`, by these five
+      files.
+17. **SEAM-RESIDUE.md §4 reports `TLG` jointly with `Tnum`, and `G`'s remove-one term as an
+    interaction,** on `q-smooth` and on `together`'s upper rungs. The additivity rule passed
+    there, so the prompt's rule alone would have allowed a per-term attribution. The joint
+    reporting follows the measured interaction (deviation 14), and the document says so.
+    **IMPLEMENTATION CHOICE.**
+
+## Issue movements (§7)
+
+- **Closed, moved to this board's §4 and deleted from the index:**
+  - `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]`;
+  - `[04-table-cs-tau-fixture-does-not-cover-z-init-when-the-first-sample-is-dropped]`;
+  - `[12-realistic-large-x-reads-the-retired-clamp-records]`.
+- **Narrowed** (each note dated 2026-10-27 and pointing at SEAM-RESIDUE.md):
+  - on this board, `[04-production-phase-gk-tau-table-has-a-zero-width-bottom-interval]`: the
+    fixture half is fixed; whether `CumulativeTable` should refuse such nodes stays open;
+  - on `source-remediation`, `[05-numeric-region-is-now-the-accuracy-floor]`,
+    `[06-source-spline-residual-vs-handover]` and `[07-lg-derivative-truncation-at-handover]`;
+  - on `GkTk-remedial`, `[00-tk-lg-truncation-floor]`.
+- **Opened:** `[13-the-tlg-term-depends-on-the-levin-subdivision]`.
+- **Counts:** the board's §3 goes from 19 to **17**. `docs/OPEN_ISSUES.md` goes from 116 to
+  **114**, counted by rows.
+
+## Observations not acted on
+
+1. **A4's scripts no longer import at `HEAD`**, because `OffsetBesselPhaseGk` is gone. This is not
+   opened as an issue. They are records of their own SHA and run at it (`28ebaf0`), as §1.5's list
+   says, and nothing at `HEAD` needs them.
+2. **`T-first`'s nearest approach to a stationary point is 0.0226 of the largest constituent's
+   $\theta'$**, at $10^7$. That is no sign change, but closer than the orchestrator's reading of
+   about −0.16 $k$ at 980. It is recorded in SEAM-RESIDUE.md §2 and is not an issue.
+3. **No term is monotone in $x_{\rm resp}$** except $A_G$ on `q-smooth`. The sign follows the
+   rung. That is recorded, not explained (SEAM-RESIDUE.md §4.5).
+
+## State handed on
+
+- **For E1 and E2:** the seam's residue on this fixture is the source spline's interior first, then
+  the numeric $T$ and the Liouville–Green derivative terms. The phase constructions are not a
+  factor.
+- **Before any per-term budget is scored:** `[13-the-tlg-term-depends-on-the-levin-subdivision]`'s
+  next step should be taken first.
+- **To regenerate the tables:**
+  `python -B docs/handover/b2/scripts/b2_tables.py <run dir>/checkpoint.jsonl`.
+

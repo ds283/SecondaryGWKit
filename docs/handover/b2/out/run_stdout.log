@@ -1,0 +1,419 @@
+# b2_driver header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13/scripts/b2_driver.py", "scripts_sha256": {"b2_driver.py": "dc8772e3c7b5dfe345296abc1dfffa78d303afc6de179149028920289d6d2278", "b2_cells.py": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931", "b2_checks.py": "6bbda526d49dae88caff96b5ab92237d414203f2d3fea469777c09c8e7c6fb97", "b2_launch.py": "c8fb8bf00530571bf891bcd51ce0bd2d7a1fbab3813818e2cbbf1a67f7c04e72"}, "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3", "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931", "host": "mps026088.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "executable": "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python", "pid": 24600, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13", "started": "2026-10-27T11:08:36.661805+00:00", "parallel": 2, "budget_s": 3600.0, "units": ["E|together|980", "E|T-first|980", "E|q-smooth|980", "E|together|10000", "E|T-first|10000", "E|q-smooth|10000", "E|together|100000", "E|T-first|100000", "E|q-smooth|100000", "E|together|1e+06", "E|T-first|1e+06", "E|q-smooth|1e+06", "E|together|1e+07", "E|T-first|1e+07", "E|q-smooth|1e+07", "E|together|1e+08", "R|together|980", "Ep|together|980", "Ep+f|together|980", "Ep+Tnum|together|980", "Ep+Trep|together|980", "Ep+TLG|together|980", "Ep+G|together|980", "R-f|together|980", "R-Tnum|together|980", "R-Trep|together|980", "R-TLG|together|980", "R-G|together|980", "R|T-first|980", "Ep|T-first|980", "Ep+f|T-first|980", "Ep+Tnum|T-first|980", "Ep+Trep|T-first|980", "Ep+TLG|T-first|980", "Ep+G|T-first|980", "R-f|T-first|980", "R-Tnum|T-first|980", "R-Trep|T-first|980", "R-TLG|T-first|980", "R-G|T-first|980", "R|q-smooth|980", "Ep|q-smooth|980", "Ep+f|q-smooth|980", "Ep+Tnum|q-smooth|980", "Ep+Trep|q-smooth|980", "Ep+TLG|q-smooth|980", "Ep+G|q-smooth|980", "R-f|q-smooth|980", "R-Tnum|q-smooth|980", "R-Trep|q-smooth|980", "R-TLG|q-smooth|980", "R-G|q-smooth|980", "R|together|10000", "Ep|together|10000", "Ep+f|together|10000", "Ep+Tnum|together|10000", "Ep+Trep|together|10000", "Ep+TLG|together|10000", "Ep+G|together|10000", "R-f|together|10000", "R-Tnum|together|10000", "R-Trep|together|10000", "R-TLG|together|10000", "R-G|together|10000", "R|T-first|10000", "Ep|T-first|10000", "Ep+f|T-first|10000", "Ep+Tnum|T-first|10000", "Ep+Trep|T-first|10000", "Ep+TLG|T-first|10000", "Ep+G|T-first|10000", "R-f|T-first|10000", "R-Tnum|T-first|10000", "R-Trep|T-first|10000", "R-TLG|T-first|10000", "R-G|T-first|10000", "R|q-smooth|10000", "Ep|q-smooth|10000", "Ep+f|q-smooth|10000", "Ep+Tnum|q-smooth|10000", "Ep+Trep|q-smooth|10000", "Ep+TLG|q-smooth|10000", "Ep+G|q-smooth|10000", "R-f|q-smooth|10000", "R-Tnum|q-smooth|10000", "R-Trep|q-smooth|10000", "R-TLG|q-smooth|10000", "R-G|q-smooth|10000", "R|together|100000", "Ep|together|100000", "Ep+f|together|100000", "Ep+Tnum|together|100000", "Ep+Trep|together|100000", "Ep+TLG|together|100000", "Ep+G|together|100000", "R-f|together|100000", "R-Tnum|together|100000", "R-Trep|together|100000", "R-TLG|together|100000", "R-G|together|100000", "R|T-first|100000", "Ep|T-first|100000", "Ep+f|T-first|100000", "Ep+Tnum|T-first|100000", "Ep+Trep|T-first|100000", "Ep+TLG|T-first|100000", "Ep+G|T-first|100000", "R-f|T-first|100000", "R-Tnum|T-first|100000", "R-Trep|T-first|100000", "R-TLG|T-first|100000", "R-G|T-first|100000", "R|q-smooth|100000", "Ep|q-smooth|100000", "Ep+f|q-smooth|100000", "Ep+Tnum|q-smooth|100000", "Ep+Trep|q-smooth|100000", "Ep+TLG|q-smooth|100000", "Ep+G|q-smooth|100000", "R-f|q-smooth|100000", "R-Tnum|q-smooth|100000", "R-Trep|q-smooth|100000", "R-TLG|q-smooth|100000", "R-G|q-smooth|100000", "R|together|1e+06", "Ep|together|1e+06", "Ep+f|together|1e+06", "Ep+Tnum|together|1e+06", "Ep+Trep|together|1e+06", "Ep+TLG|together|1e+06", "Ep+G|together|1e+06", "R-f|together|1e+06", "R-Tnum|together|1e+06", "R-Trep|together|1e+06", "R-TLG|together|1e+06", "R-G|together|1e+06", "R|T-first|1e+06", "Ep|T-first|1e+06", "Ep+f|T-first|1e+06", "Ep+Tnum|T-first|1e+06", "Ep+Trep|T-first|1e+06", "Ep+TLG|T-first|1e+06", "Ep+G|T-first|1e+06", "R-f|T-first|1e+06", "R-Tnum|T-first|1e+06", "R-Trep|T-first|1e+06", "R-TLG|T-first|1e+06", "R-G|T-first|1e+06", "R|q-smooth|1e+06", "Ep|q-smooth|1e+06", "Ep+f|q-smooth|1e+06", "Ep+Tnum|q-smooth|1e+06", "Ep+Trep|q-smooth|1e+06", "Ep+TLG|q-smooth|1e+06", "Ep+G|q-smooth|1e+06", "R-f|q-smooth|1e+06", "R-Tnum|q-smooth|1e+06", "R-Trep|q-smooth|1e+06", "R-TLG|q-smooth|1e+06", "R-G|q-smooth|1e+06", "R|together|1e+07", "Ep|together|1e+07", "Ep+f|together|1e+07", "Ep+Tnum|together|1e+07", "Ep+Trep|together|1e+07", "Ep+TLG|together|1e+07", "Ep+G|together|1e+07", "R-f|together|1e+07", "R-Tnum|together|1e+07", "R-Trep|together|1e+07", "R-TLG|together|1e+07", "R-G|together|1e+07", "R|T-first|1e+07", "Ep|T-first|1e+07", "Ep+f|T-first|1e+07", "Ep+Tnum|T-first|1e+07", "Ep+Trep|T-first|1e+07", "Ep+TLG|T-first|1e+07", "Ep+G|T-first|1e+07", "R-f|T-first|1e+07", "R-Tnum|T-first|1e+07", "R-Trep|T-first|1e+07", "R-TLG|T-first|1e+07", "R-G|T-first|1e+07", "R|q-smooth|1e+07", "Ep|q-smooth|1e+07", "Ep+f|q-smooth|1e+07", "Ep+Tnum|q-smooth|1e+07", "Ep+Trep|q-smooth|1e+07", "Ep+TLG|q-smooth|1e+07", "Ep+G|q-smooth|1e+07", "R-f|q-smooth|1e+07", "R-Tnum|q-smooth|1e+07", "R-Trep|q-smooth|1e+07", "R-TLG|q-smooth|1e+07", "R-G|q-smooth|1e+07", "R|together|1e+08", "Ep|together|1e+08", "Ep+f|together|1e+08", "Ep+Tnum|together|1e+08", "Ep+Trep|together|1e+08", "Ep+TLG|together|1e+08", "Ep+G|together|1e+08", "R-f|together|1e+08", "R-Tnum|together|1e+08", "R-Trep|together|1e+08", "R-TLG|together|1e+08", "R-G|together|1e+08"], "tree_head": "28ade78c3dd038f2d84e664918b78a318a4a150d", "tree_status_short": ""}
+# start E|together|980 pid 24607
+# start E|T-first|980 pid 24608
+[11:08:42] E|together|980: ok, 7 regions, depth 0, integral 0.5 s (wall 4.0 s)
+[11:08:42] E|T-first|980: ok, 7 regions, depth 0, integral 0.2 s (wall 4.9 s)
+# start E|q-smooth|980 pid 24637
+# start E|together|10000 pid 24638
+[11:08:47] E|q-smooth|980: ok, 17 regions, depth 8, integral 0.2 s (wall 4.0 s)
+[11:08:48] E|together|10000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.6 s)
+# start E|T-first|10000 pid 24664
+# start E|q-smooth|10000 pid 24665
+[11:08:52] E|T-first|10000: ok, 10 regions, depth 2, integral 0.3 s (wall 4.0 s)
+[11:08:53] E|q-smooth|10000: ok, 21 regions, depth 6, integral 0.2 s (wall 4.6 s)
+# start E|together|100000 pid 24678
+# start E|T-first|100000 pid 24679
+[11:08:57] E|together|100000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.0 s)
+[11:08:58] E|T-first|100000: ok, 9 regions, depth 1, integral 0.3 s (wall 4.6 s)
+# start E|q-smooth|100000 pid 24691
+# start E|together|1e+06 pid 24692
+[11:09:03] E|q-smooth|100000: ok, 21 regions, depth 6, integral 0.2 s (wall 4.0 s)
+[11:09:03] E|together|1e+06: ok, 9 regions, depth 2, integral 0.6 s (wall 4.6 s)
+# start E|T-first|1e+06 pid 24705
+# start E|q-smooth|1e+06 pid 24706
+[11:09:08] E|T-first|1e+06: ok, 12 regions, depth 3, integral 0.3 s (wall 4.0 s)
+[11:09:08] E|q-smooth|1e+06: ok, 16 regions, depth 3, integral 0.2 s (wall 4.6 s)
+# start E|together|1e+07 pid 24758
+# start E|T-first|1e+07 pid 24759
+[11:09:13] E|together|1e+07: ok, 9 regions, depth 2, integral 0.6 s (wall 4.0 s)
+[11:09:14] E|T-first|1e+07: ok, 13 regions, depth 4, integral 0.4 s (wall 4.6 s)
+# start E|q-smooth|1e+07 pid 24780
+# start E|together|1e+08 pid 24781
+[11:09:18] E|q-smooth|1e+07: ok, 30 regions, depth 5, integral 0.3 s (wall 4.0 s)
+[11:09:19] E|together|1e+08: ok, 9 regions, depth 2, integral 0.5 s (wall 4.6 s)
+# start R|together|980 pid 24801
+# start Ep|together|980 pid 24803
+[11:09:23] R|together|980: ok, 44 regions, depth 5, integral 0.9 s (wall 4.0 s)
+[11:09:24] Ep|together|980: ok, 7 regions, depth 0, integral 0.6 s (wall 4.6 s)
+# start Ep+f|together|980 pid 24826
+# start Ep+Tnum|together|980 pid 24827
+[11:09:29] Ep+f|together|980: ok, 7 regions, depth 0, integral 0.6 s (wall 4.0 s)
+[11:09:29] Ep+Tnum|together|980: ok, 44 regions, depth 5, integral 0.7 s (wall 4.7 s)
+# start Ep+Trep|together|980 pid 24843
+# start Ep+TLG|together|980 pid 24844
+[11:09:34] Ep+Trep|together|980: ok, 7 regions, depth 0, integral 0.6 s (wall 4.0 s)
+[11:09:35] Ep+TLG|together|980: ok, 7 regions, depth 0, integral 0.5 s (wall 4.7 s)
+# start Ep+G|together|980 pid 24866
+# start R-f|together|980 pid 24867
+[11:09:39] Ep+G|together|980: ok, 7 regions, depth 0, integral 0.5 s (wall 4.0 s)
+[11:09:39] R-f|together|980: ok, 44 regions, depth 5, integral 0.8 s (wall 4.1 s)
+# start R-Tnum|together|980 pid 24893
+# start R-Trep|together|980 pid 24894
+[11:09:43] R-Tnum|together|980: ok, 7 regions, depth 0, integral 0.6 s (wall 4.0 s)
+[11:09:43] R-Trep|together|980: ok, 44 regions, depth 5, integral 0.7 s (wall 4.2 s)
+# start R-TLG|together|980 pid 24905
+# start R-G|together|980 pid 24906
+[11:09:48] R-TLG|together|980: ok, 44 regions, depth 5, integral 0.9 s (wall 4.0 s)
+[11:09:48] R-G|together|980: ok, 44 regions, depth 5, integral 0.9 s (wall 4.7 s)
+# start R|T-first|980 pid 24921
+# start Ep|T-first|980 pid 24922
+[11:09:53] R|T-first|980: ok, 34 regions, depth 7, integral 0.5 s (wall 4.0 s)
+[11:09:53] Ep|T-first|980: ok, 7 regions, depth 0, integral 0.2 s (wall 4.2 s)
+# start Ep+f|T-first|980 pid 24947
+# start Ep+Tnum|T-first|980 pid 24948
+[11:09:57] Ep+f|T-first|980: ok, 7 regions, depth 0, integral 0.2 s (wall 4.0 s)
+[11:09:57] Ep+Tnum|T-first|980: ok, 30 regions, depth 7, integral 0.3 s (wall 4.2 s)
+# start Ep+Trep|T-first|980 pid 24962
+# start Ep+TLG|T-first|980 pid 24963
+[11:10:02] Ep+Trep|T-first|980: ok, 8 regions, depth 1, integral 0.3 s (wall 4.0 s)
+[11:10:02] Ep+TLG|T-first|980: ok, 10 regions, depth 3, integral 0.2 s (wall 4.6 s)
+# start Ep+G|T-first|980 pid 24972
+# start R-f|T-first|980 pid 24973
+[11:10:06] Ep+G|T-first|980: ok, 7 regions, depth 0, integral 0.2 s (wall 4.0 s)
+[11:10:06] R-f|T-first|980: ok, 34 regions, depth 7, integral 0.5 s (wall 4.1 s)
+# start R-Tnum|T-first|980 pid 24982
+# start R-Trep|T-first|980 pid 24983
+[11:10:10] R-Tnum|T-first|980: ok, 11 regions, depth 3, integral 0.3 s (wall 4.0 s)
+[11:10:10] R-Trep|T-first|980: ok, 33 regions, depth 7, integral 0.3 s (wall 4.1 s)
+# start R-TLG|T-first|980 pid 24993
+# start R-G|T-first|980 pid 24994
+[11:10:14] R-TLG|T-first|980: ok, 31 regions, depth 7, integral 0.5 s (wall 4.0 s)
+[11:10:14] R-G|T-first|980: ok, 34 regions, depth 7, integral 0.5 s (wall 4.1 s)
+# start R|q-smooth|980 pid 25004
+# start Ep|q-smooth|980 pid 25005
+[11:10:17] Ep|q-smooth|980: ok, 10 regions, depth 3, integral 0.2 s (wall 2.0 s)
+# start Ep+f|q-smooth|980 pid 25013
+[11:10:21] Ep+f|q-smooth|980: ok, 10 regions, depth 3, integral 0.2 s (wall 4.0 s)
+# start Ep+Tnum|q-smooth|980 pid 25018
+[11:10:23] R|q-smooth|980: ok, 686 regions, depth 11, integral 5.3 s (wall 8.3 s)
+# start Ep+Trep|q-smooth|980 pid 25023
+[11:10:28] Ep+Trep|q-smooth|980: ok, 10 regions, depth 3, integral 0.3 s (wall 4.0 s)
+# start Ep+TLG|q-smooth|980 pid 25037
+[11:10:30] Ep+Tnum|q-smooth|980: ok, 687 regions, depth 11, integral 5.1 s (wall 9.1 s)
+# start Ep+G|q-smooth|980 pid 25054
+[11:10:32] Ep+TLG|q-smooth|980: ok, 10 regions, depth 3, integral 0.2 s (wall 4.1 s)
+# start R-f|q-smooth|980 pid 25059
+[11:10:34] Ep+G|q-smooth|980: ok, 17 regions, depth 5, integral 0.2 s (wall 4.2 s)
+# start R-Tnum|q-smooth|980 pid 25064
+[11:10:38] R-Tnum|q-smooth|980: ok, 25 regions, depth 5, integral 0.3 s (wall 4.0 s)
+# start R-Trep|q-smooth|980 pid 25071
+[11:10:40] R-f|q-smooth|980: ok, 686 regions, depth 11, integral 5.2 s (wall 8.3 s)
+# start R-TLG|q-smooth|980 pid 25077
+[11:10:45] R-Trep|q-smooth|980: ok, 694 regions, depth 11, integral 3.2 s (wall 6.1 s)
+# start R-G|q-smooth|980 pid 25084
+[11:10:49] R-TLG|q-smooth|980: ok, 674 regions, depth 11, integral 5.6 s (wall 8.1 s)
+# start R|together|10000 pid 25092
+[11:10:53] R-G|q-smooth|980: ok, 697 regions, depth 11, integral 5.2 s (wall 8.1 s)
+[11:10:53] R|together|10000: ok, 66 regions, depth 6, integral 1.2 s (wall 4.2 s)
+# start Ep|together|10000 pid 25101
+# start Ep+f|together|10000 pid 25102
+[11:10:57] Ep|together|10000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.0 s)
+[11:10:57] Ep+f|together|10000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.2 s)
+# start Ep+Tnum|together|10000 pid 25114
+# start Ep+Trep|together|10000 pid 25115
+[11:11:01] Ep+Tnum|together|10000: ok, 47 regions, depth 5, integral 0.7 s (wall 4.0 s)
+[11:11:02] Ep+Trep|together|10000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.2 s)
+# start Ep+TLG|together|10000 pid 25124
+# start Ep+G|together|10000 pid 25125
+[11:11:06] Ep+TLG|together|10000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.0 s)
+[11:11:06] Ep+G|together|10000: ok, 17 regions, depth 6, integral 0.6 s (wall 4.1 s)
+# start R-f|together|10000 pid 25136
+# start R-Tnum|together|10000 pid 25137
+[11:11:10] R-f|together|10000: ok, 66 regions, depth 6, integral 1.1 s (wall 4.0 s)
+[11:11:10] R-Tnum|together|10000: ok, 27 regions, depth 6, integral 0.8 s (wall 4.2 s)
+# start R-Trep|together|10000 pid 25147
+# start R-TLG|together|10000 pid 25148
+[11:11:14] R-Trep|together|10000: ok, 58 regions, depth 6, integral 0.7 s (wall 4.0 s)
+[11:11:14] R-TLG|together|10000: ok, 65 regions, depth 6, integral 1.2 s (wall 4.2 s)
+# start R-G|together|10000 pid 25157
+# start R|T-first|10000 pid 25158
+[11:11:19] R-G|together|10000: ok, 47 regions, depth 5, integral 0.8 s (wall 4.0 s)
+[11:11:19] R|T-first|10000: ok, 44 regions, depth 7, integral 0.7 s (wall 4.5 s)
+# start Ep|T-first|10000 pid 25168
+# start Ep+f|T-first|10000 pid 25169
+[11:11:23] Ep|T-first|10000: ok, 10 regions, depth 2, integral 0.3 s (wall 4.0 s)
+[11:11:23] Ep+f|T-first|10000: ok, 10 regions, depth 2, integral 0.3 s (wall 4.2 s)
+# start Ep+Tnum|T-first|10000 pid 25178
+# start Ep+Trep|T-first|10000 pid 25179
+[11:11:27] Ep+Tnum|T-first|10000: ok, 29 regions, depth 7, integral 0.4 s (wall 4.0 s)
+[11:11:27] Ep+Trep|T-first|10000: ok, 12 regions, depth 2, integral 0.4 s (wall 4.1 s)
+# start Ep+TLG|T-first|10000 pid 25189
+# start Ep+G|T-first|10000 pid 25190
+[11:11:32] Ep+TLG|T-first|10000: ok, 10 regions, depth 2, integral 0.3 s (wall 4.0 s)
+[11:11:32] Ep+G|T-first|10000: ok, 16 regions, depth 5, integral 0.3 s (wall 4.1 s)
+# start R-f|T-first|10000 pid 25199
+# start R-Tnum|T-first|10000 pid 25200
+[11:11:36] R-f|T-first|10000: ok, 44 regions, depth 7, integral 0.8 s (wall 4.0 s)
+[11:11:36] R-Tnum|T-first|10000: ok, 25 regions, depth 6, integral 0.6 s (wall 4.1 s)
+# start R-Trep|T-first|10000 pid 25210
+# start R-TLG|T-first|10000 pid 25211
+[11:11:40] R-Trep|T-first|10000: ok, 36 regions, depth 7, integral 0.4 s (wall 4.0 s)
+[11:11:40] R-TLG|T-first|10000: ok, 39 regions, depth 7, integral 0.8 s (wall 4.2 s)
+# start R-G|T-first|10000 pid 25223
+# start R|q-smooth|10000 pid 25224
+[11:11:44] R-G|T-first|10000: ok, 31 regions, depth 7, integral 0.6 s (wall 4.0 s)
+# start Ep|q-smooth|10000 pid 25233
+[11:11:46] Ep|q-smooth|10000: ok, 17 regions, depth 4, integral 0.2 s (wall 2.0 s)
+# start Ep+f|q-smooth|10000 pid 25240
+[11:11:49] Ep+f|q-smooth|10000: ok, 17 regions, depth 4, integral 0.2 s (wall 2.0 s)
+# start Ep+Tnum|q-smooth|10000 pid 25247
+[11:11:53] R|q-smooth|10000: ok, 1190 regions, depth 14, integral 9.8 s (wall 12.4 s)
+# start Ep+Trep|q-smooth|10000 pid 25256
+[11:11:57] Ep+Tnum|q-smooth|10000: ok, 1225 regions, depth 14, integral 6.2 s (wall 8.3 s)
+[11:11:57] Ep+Trep|q-smooth|10000: ok, 17 regions, depth 4, integral 0.2 s (wall 4.3 s)
+# start Ep+TLG|q-smooth|10000 pid 25267
+# start Ep+G|q-smooth|10000 pid 25268
+[11:12:01] Ep+TLG|q-smooth|10000: ok, 17 regions, depth 4, integral 0.2 s (wall 4.0 s)
+[11:12:01] Ep+G|q-smooth|10000: ok, 32 regions, depth 6, integral 0.3 s (wall 4.1 s)
+# start R-f|q-smooth|10000 pid 25279
+# start R-Tnum|q-smooth|10000 pid 25280
+[11:12:05] R-Tnum|q-smooth|10000: ok, 42 regions, depth 6, integral 0.4 s (wall 4.0 s)
+# start R-Trep|q-smooth|10000 pid 25290
+[11:12:14] R-f|q-smooth|10000: ok, 1190 regions, depth 14, integral 9.8 s (wall 12.2 s)
+[11:12:14] R-Trep|q-smooth|10000: ok, 1199 regions, depth 14, integral 5.7 s (wall 8.2 s)
+# start R-TLG|q-smooth|10000 pid 25298
+# start R-G|q-smooth|10000 pid 25299
+[11:12:26] R-G|q-smooth|10000: ok, 1226 regions, depth 14, integral 9.8 s (wall 12.0 s)
+# start R|together|100000 pid 25307
+[11:12:28] R-TLG|q-smooth|10000: ok, 1175 regions, depth 14, integral 10.6 s (wall 14.2 s)
+# start Ep|together|100000 pid 25314
+[11:12:30] R|together|100000: ok, 80 regions, depth 8, integral 1.3 s (wall 4.1 s)
+# start Ep+f|together|100000 pid 25319
+[11:12:32] Ep|together|100000: ok, 8 regions, depth 1, integral 0.5 s (wall 4.1 s)
+# start Ep+Tnum|together|100000 pid 25324
+[11:12:34] Ep+f|together|100000: ok, 8 regions, depth 1, integral 0.6 s (wall 4.1 s)
+# start Ep+Trep|together|100000 pid 25329
+[11:12:36] Ep+Tnum|together|100000: ok, 46 regions, depth 5, integral 0.7 s (wall 4.1 s)
+# start Ep+TLG|together|100000 pid 25336
+[11:12:39] Ep+Trep|together|100000: ok, 8 regions, depth 1, integral 0.6 s (wall 4.1 s)
+[11:12:39] Ep+TLG|together|100000: ok, 8 regions, depth 1, integral 0.5 s (wall 2.1 s)
+# start Ep+G|together|100000 pid 25343
+# start R-f|together|100000 pid 25344
+[11:12:43] Ep+G|together|100000: ok, 35 regions, depth 9, integral 0.8 s (wall 4.0 s)
+[11:12:43] R-f|together|100000: ok, 80 regions, depth 8, integral 1.4 s (wall 4.2 s)
+# start R-Tnum|together|100000 pid 25354
+# start R-Trep|together|100000 pid 25355
+[11:12:47] R-Tnum|together|100000: ok, 42 regions, depth 8, integral 1.1 s (wall 4.0 s)
+[11:12:47] R-Trep|together|100000: ok, 80 regions, depth 9, integral 0.9 s (wall 4.1 s)
+# start R-TLG|together|100000 pid 25366
+# start R-G|together|100000 pid 25367
+[11:12:51] R-TLG|together|100000: ok, 76 regions, depth 8, integral 1.5 s (wall 4.0 s)
+[11:12:51] R-G|together|100000: ok, 46 regions, depth 5, integral 0.9 s (wall 4.1 s)
+# start R|T-first|100000 pid 25380
+# start Ep|T-first|100000 pid 25381
+[11:12:55] R|T-first|100000: ok, 53 regions, depth 7, integral 0.9 s (wall 4.0 s)
+[11:12:55] Ep|T-first|100000: ok, 9 regions, depth 1, integral 0.3 s (wall 4.1 s)
+# start Ep+f|T-first|100000 pid 25392
+# start Ep+Tnum|T-first|100000 pid 25393
+[11:12:59] Ep+f|T-first|100000: ok, 9 regions, depth 1, integral 0.3 s (wall 4.0 s)
+[11:12:59] Ep+Tnum|T-first|100000: ok, 28 regions, depth 7, integral 0.4 s (wall 4.1 s)
+# start Ep+Trep|T-first|100000 pid 25403
+# start Ep+TLG|T-first|100000 pid 25404
+[11:13:04] Ep+Trep|T-first|100000: ok, 12 regions, depth 2, integral 0.4 s (wall 4.0 s)
+[11:13:04] Ep+TLG|T-first|100000: ok, 13 regions, depth 5, integral 0.3 s (wall 4.1 s)
+# start Ep+G|T-first|100000 pid 25413
+# start R-f|T-first|100000 pid 25414
+[11:13:08] Ep+G|T-first|100000: ok, 32 regions, depth 7, integral 0.5 s (wall 4.0 s)
+[11:13:08] R-f|T-first|100000: ok, 53 regions, depth 7, integral 0.9 s (wall 4.1 s)
+# start R-Tnum|T-first|100000 pid 25426
+# start R-Trep|T-first|100000 pid 25427
+[11:13:12] R-Tnum|T-first|100000: ok, 34 regions, depth 6, integral 0.7 s (wall 4.0 s)
+[11:13:12] R-Trep|T-first|100000: ok, 51 regions, depth 7, integral 0.5 s (wall 4.2 s)
+# start R-TLG|T-first|100000 pid 25436
+# start R-G|T-first|100000 pid 25437
+[11:13:16] R-TLG|T-first|100000: ok, 53 regions, depth 7, integral 1.5 s (wall 4.0 s)
+[11:13:16] R-G|T-first|100000: ok, 34 regions, depth 7, integral 0.8 s (wall 4.1 s)
+# start R|q-smooth|100000 pid 25454
+# start Ep|q-smooth|100000 pid 25455
+[11:13:18] Ep|q-smooth|100000: ok, 21 regions, depth 4, integral 0.2 s (wall 2.0 s)
+# start Ep+f|q-smooth|100000 pid 25463
+[11:13:20] Ep+f|q-smooth|100000: ok, 21 regions, depth 4, integral 0.2 s (wall 2.0 s)
+# start Ep+Tnum|q-smooth|100000 pid 25468
+[11:13:29] R|q-smooth|100000: ok, 1204 regions, depth 14, integral 10.2 s (wall 12.2 s)
+[11:13:29] Ep+Tnum|q-smooth|100000: ok, 1216 regions, depth 14, integral 6.0 s (wall 8.2 s)
+# start Ep+Trep|q-smooth|100000 pid 25478
+# start Ep+TLG|q-smooth|100000 pid 25479
+[11:13:33] Ep+Trep|q-smooth|100000: ok, 21 regions, depth 4, integral 0.3 s (wall 4.0 s)
+[11:13:33] Ep+TLG|q-smooth|100000: ok, 21 regions, depth 4, integral 0.2 s (wall 4.2 s)
+# start Ep+G|q-smooth|100000 pid 25502
+# start R-f|q-smooth|100000 pid 25503
+[11:13:37] Ep+G|q-smooth|100000: ok, 44 regions, depth 5, integral 0.4 s (wall 4.0 s)
+# start R-Tnum|q-smooth|100000 pid 25512
+[11:13:41] R-Tnum|q-smooth|100000: ok, 61 regions, depth 6, integral 0.5 s (wall 4.0 s)
+# start R-Trep|q-smooth|100000 pid 25518
+[11:13:45] R-f|q-smooth|100000: ok, 1204 regions, depth 14, integral 9.8 s (wall 12.2 s)
+# start R-TLG|q-smooth|100000 pid 25525
+[11:13:51] R-Trep|q-smooth|100000: ok, 1206 regions, depth 14, integral 6.5 s (wall 10.2 s)
+# start R-G|q-smooth|100000 pid 25557
+[11:14:00] R-TLG|q-smooth|100000: ok, 1204 regions, depth 14, integral 11.9 s (wall 14.2 s)
+# start R|together|1e+06 pid 25566
+[11:14:04] R-G|q-smooth|100000: ok, 1221 regions, depth 14, integral 10.1 s (wall 12.2 s)
+[11:14:04] R|together|1e+06: ok, 102 regions, depth 9, integral 1.7 s (wall 4.2 s)
+# start Ep|together|1e+06 pid 25573
+# start Ep+f|together|1e+06 pid 25574
+[11:14:08] Ep|together|1e+06: ok, 9 regions, depth 2, integral 0.6 s (wall 4.0 s)
+[11:14:08] Ep+f|together|1e+06: ok, 9 regions, depth 2, integral 0.6 s (wall 4.1 s)
+# start Ep+Tnum|together|1e+06 pid 25584
+# start Ep+Trep|together|1e+06 pid 25585
+[11:14:12] Ep+Tnum|together|1e+06: ok, 48 regions, depth 5, integral 0.8 s (wall 4.0 s)
+[11:14:12] Ep+Trep|together|1e+06: ok, 17 regions, depth 6, integral 0.8 s (wall 4.1 s)
+# start Ep+TLG|together|1e+06 pid 25594
+# start Ep+G|together|1e+06 pid 25595
+[11:14:16] Ep+TLG|together|1e+06: ok, 11 regions, depth 4, integral 0.6 s (wall 4.0 s)
+[11:14:16] Ep+G|together|1e+06: ok, 49 regions, depth 9, integral 0.9 s (wall 4.2 s)
+# start R-f|together|1e+06 pid 25604
+# start R-Tnum|together|1e+06 pid 25605
+[11:14:21] R-f|together|1e+06: ok, 102 regions, depth 9, integral 1.7 s (wall 4.0 s)
+[11:14:21] R-Tnum|together|1e+06: ok, 63 regions, depth 9, integral 1.4 s (wall 4.1 s)
+# start R-Trep|together|1e+06 pid 25626
+# start R-TLG|together|1e+06 pid 25627
+[11:14:25] R-Trep|together|1e+06: ok, 97 regions, depth 9, integral 1.1 s (wall 4.0 s)
+[11:14:25] R-TLG|together|1e+06: ok, 96 regions, depth 9, integral 1.9 s (wall 4.2 s)
+# start R-G|together|1e+06 pid 25654
+# start R|T-first|1e+06 pid 25656
+[11:14:29] R-G|together|1e+06: ok, 56 regions, depth 6, integral 1.1 s (wall 4.0 s)
+[11:14:29] R|T-first|1e+06: ok, 46 regions, depth 7, integral 0.8 s (wall 4.2 s)
+# start Ep|T-first|1e+06 pid 25705
+# start Ep+f|T-first|1e+06 pid 25706
+[11:14:33] Ep|T-first|1e+06: ok, 12 regions, depth 3, integral 0.3 s (wall 4.0 s)
+[11:14:33] Ep+f|T-first|1e+06: ok, 12 regions, depth 3, integral 0.4 s (wall 4.1 s)
+# start Ep+Tnum|T-first|1e+06 pid 25736
+# start Ep+Trep|T-first|1e+06 pid 25737
+[11:14:37] Ep+Tnum|T-first|1e+06: ok, 31 regions, depth 7, integral 0.5 s (wall 4.0 s)
+[11:14:37] Ep+Trep|T-first|1e+06: ok, 14 regions, depth 4, integral 0.5 s (wall 4.1 s)
+# start Ep+TLG|T-first|1e+06 pid 25814
+# start Ep+G|T-first|1e+06 pid 25815
+[11:14:42] Ep+TLG|T-first|1e+06: ok, 10 regions, depth 3, integral 0.3 s (wall 4.0 s)
+[11:14:42] Ep+G|T-first|1e+06: ok, 26 regions, depth 8, integral 0.5 s (wall 4.1 s)
+# start R-f|T-first|1e+06 pid 25861
+# start R-Tnum|T-first|1e+06 pid 25862
+[11:14:46] R-f|T-first|1e+06: ok, 46 regions, depth 7, integral 0.8 s (wall 4.0 s)
+[11:14:46] R-Tnum|T-first|1e+06: ok, 27 regions, depth 7, integral 0.7 s (wall 4.1 s)
+# start R-Trep|T-first|1e+06 pid 25890
+# start R-TLG|T-first|1e+06 pid 25891
+[11:14:50] R-Trep|T-first|1e+06: ok, 45 regions, depth 8, integral 0.5 s (wall 4.0 s)
+[11:14:50] R-TLG|T-first|1e+06: ok, 46 regions, depth 7, integral 0.9 s (wall 4.2 s)
+# start R-G|T-first|1e+06 pid 25908
+# start R|q-smooth|1e+06 pid 25909
+[11:14:54] R-G|T-first|1e+06: ok, 31 regions, depth 7, integral 0.6 s (wall 4.0 s)
+# start Ep|q-smooth|1e+06 pid 25953
+[11:14:56] Ep|q-smooth|1e+06: ok, 24 regions, depth 5, integral 0.3 s (wall 2.0 s)
+# start Ep+f|q-smooth|1e+06 pid 25961
+[11:14:59] Ep+f|q-smooth|1e+06: ok, 24 regions, depth 5, integral 0.3 s (wall 2.0 s)
+# start Ep+Tnum|q-smooth|1e+06 pid 25978
+[11:15:07] R|q-smooth|1e+06: ok, 1478 regions, depth 14, integral 13.0 s (wall 16.4 s)
+# start Ep+Trep|q-smooth|1e+06 pid 26006
+[11:15:09] Ep+Tnum|q-smooth|1e+06: ok, 1505 regions, depth 14, integral 7.7 s (wall 10.2 s)
+# start Ep+TLG|q-smooth|1e+06 pid 26076
+[11:15:11] Ep+Trep|q-smooth|1e+06: ok, 24 regions, depth 5, integral 0.3 s (wall 4.1 s)
+[11:15:11] Ep+TLG|q-smooth|1e+06: ok, 24 regions, depth 5, integral 0.3 s (wall 2.1 s)
+# start Ep+G|q-smooth|1e+06 pid 26083
+# start R-f|q-smooth|1e+06 pid 26084
+[11:15:15] Ep+G|q-smooth|1e+06: ok, 104 regions, depth 8, integral 0.7 s (wall 4.0 s)
+# start R-Tnum|q-smooth|1e+06 pid 26148
+[11:15:19] R-Tnum|q-smooth|1e+06: ok, 139 regions, depth 9, integral 1.2 s (wall 4.0 s)
+# start R-Trep|q-smooth|1e+06 pid 26181
+[11:15:28] R-f|q-smooth|1e+06: ok, 1478 regions, depth 14, integral 13.0 s (wall 16.3 s)
+# start R-TLG|q-smooth|1e+06 pid 26228
+[11:15:30] R-Trep|q-smooth|1e+06: ok, 1485 regions, depth 14, integral 7.5 s (wall 10.1 s)
+# start R-G|q-smooth|1e+06 pid 26259
+[11:15:46] R-TLG|q-smooth|1e+06: ok, 1470 regions, depth 14, integral 14.9 s (wall 18.2 s)
+[11:15:46] R-G|q-smooth|1e+06: ok, 1509 regions, depth 14, integral 13.6 s (wall 16.2 s)
+# start R|together|1e+07 pid 26376
+# start Ep|together|1e+07 pid 26378
+[11:15:50] Ep|together|1e+07: ok, 9 regions, depth 2, integral 0.7 s (wall 4.0 s)
+# start Ep+f|together|1e+07 pid 26390
+[11:15:54] R|together|1e+07: ok, 313 regions, depth 14, integral 4.8 s (wall 8.2 s)
+[11:15:54] Ep+f|together|1e+07: ok, 9 regions, depth 2, integral 0.7 s (wall 4.1 s)
+# start Ep+Tnum|together|1e+07 pid 26438
+# start Ep+Trep|together|1e+07 pid 26439
+[11:15:59] Ep+Tnum|together|1e+07: ok, 48 regions, depth 5, integral 0.8 s (wall 4.0 s)
+[11:15:59] Ep+Trep|together|1e+07: ok, 9 regions, depth 2, integral 0.7 s (wall 4.2 s)
+# start Ep+TLG|together|1e+07 pid 26474
+# start Ep+G|together|1e+07 pid 26475
+[11:16:03] Ep+TLG|together|1e+07: ok, 9 regions, depth 2, integral 0.6 s (wall 4.0 s)
+# start R-f|together|1e+07 pid 26495
+[11:16:05] Ep+G|together|1e+07: ok, 292 regions, depth 14, integral 2.9 s (wall 6.1 s)
+# start R-Tnum|together|1e+07 pid 26501
+[11:16:11] R-f|together|1e+07: ok, 313 regions, depth 14, integral 4.9 s (wall 8.1 s)
+# start R-Trep|together|1e+07 pid 26551
+[11:16:13] R-Tnum|together|1e+07: ok, 274 regions, depth 14, integral 4.5 s (wall 8.1 s)
+# start R-TLG|together|1e+07 pid 26556
+[11:16:17] R-Trep|together|1e+07: ok, 339 regions, depth 14, integral 2.7 s (wall 6.1 s)
+# start R-G|together|1e+07 pid 26593
+[11:16:21] R-TLG|together|1e+07: ok, 304 regions, depth 14, integral 5.5 s (wall 8.2 s)
+[11:16:22] R-G|together|1e+07: ok, 48 regions, depth 5, integral 1.0 s (wall 4.1 s)
+# start R|T-first|1e+07 pid 26615
+# start Ep|T-first|1e+07 pid 26616
+[11:16:26] R|T-first|1e+07: ok, 114 regions, depth 9, integral 1.6 s (wall 4.0 s)
+[11:16:26] Ep|T-first|1e+07: ok, 13 regions, depth 4, integral 0.4 s (wall 4.1 s)
+# start Ep+f|T-first|1e+07 pid 26625
+# start Ep+Tnum|T-first|1e+07 pid 26626
+[11:16:30] Ep+f|T-first|1e+07: ok, 13 regions, depth 4, integral 0.4 s (wall 4.0 s)
+[11:16:30] Ep+Tnum|T-first|1e+07: ok, 32 regions, depth 7, integral 0.5 s (wall 4.1 s)
+# start Ep+Trep|T-first|1e+07 pid 26658
+# start Ep+TLG|T-first|1e+07 pid 26659
+[11:16:34] Ep+Trep|T-first|1e+07: ok, 14 regions, depth 4, integral 0.5 s (wall 4.0 s)
+[11:16:34] Ep+TLG|T-first|1e+07: ok, 13 regions, depth 4, integral 0.4 s (wall 4.2 s)
+# start Ep+G|T-first|1e+07 pid 26668
+# start R-f|T-first|1e+07 pid 26669
+[11:16:38] Ep+G|T-first|1e+07: ok, 99 regions, depth 11, integral 1.0 s (wall 4.0 s)
+[11:16:39] R-f|T-first|1e+07: ok, 114 regions, depth 9, integral 1.6 s (wall 4.1 s)
+# start R-Tnum|T-first|1e+07 pid 26690
+# start R-Trep|T-first|1e+07 pid 26691
+[11:16:43] R-Tnum|T-first|1e+07: ok, 95 regions, depth 9, integral 1.5 s (wall 4.0 s)
+[11:16:43] R-Trep|T-first|1e+07: ok, 123 regions, depth 11, integral 1.0 s (wall 4.1 s)
+# start R-TLG|T-first|1e+07 pid 26708
+# start R-G|T-first|1e+07 pid 26709
+[11:16:47] R-TLG|T-first|1e+07: ok, 111 regions, depth 9, integral 1.9 s (wall 4.0 s)
+[11:16:47] R-G|T-first|1e+07: ok, 33 regions, depth 7, integral 0.7 s (wall 4.1 s)
+# start R|q-smooth|1e+07 pid 26720
+# start Ep|q-smooth|1e+07 pid 26721
+[11:16:51] Ep|q-smooth|1e+07: ok, 20 regions, depth 4, integral 0.3 s (wall 4.0 s)
+# start Ep+f|q-smooth|1e+07 pid 26731
+[11:16:55] Ep+f|q-smooth|1e+07: ok, 20 regions, depth 4, integral 0.3 s (wall 4.0 s)
+# start Ep+Tnum|q-smooth|1e+07 pid 26740
+[11:17:01] R|q-smooth|1e+07: ok, 1244 regions, depth 13, integral 11.2 s (wall 14.3 s)
+# start Ep+Trep|q-smooth|1e+07 pid 26750
+[11:17:06] Ep+Tnum|q-smooth|1e+07: ok, 1218 regions, depth 13, integral 6.3 s (wall 10.2 s)
+[11:17:06] Ep+Trep|q-smooth|1e+07: ok, 20 regions, depth 4, integral 0.3 s (wall 4.2 s)
+# start Ep+TLG|q-smooth|1e+07 pid 26760
+# start Ep+G|q-smooth|1e+07 pid 26761
+[11:17:10] Ep+TLG|q-smooth|1e+07: ok, 20 regions, depth 4, integral 0.2 s (wall 4.0 s)
+[11:17:10] Ep+G|q-smooth|1e+07: ok, 191 regions, depth 10, integral 1.1 s (wall 4.2 s)
+# start R-f|q-smooth|1e+07 pid 26773
+# start R-Tnum|q-smooth|1e+07 pid 26774
+[11:17:14] R-Tnum|q-smooth|1e+07: ok, 209 regions, depth 10, integral 1.8 s (wall 4.0 s)
+# start R-Trep|q-smooth|1e+07 pid 26781
+[11:17:22] R-Trep|q-smooth|1e+07: ok, 1236 regions, depth 13, integral 6.1 s (wall 8.0 s)
+# start R-TLG|q-smooth|1e+07 pid 26787
+[11:17:24] R-f|q-smooth|1e+07: ok, 1244 regions, depth 13, integral 10.8 s (wall 14.3 s)
+# start R-G|q-smooth|1e+07 pid 26792
+[11:17:37] R-TLG|q-smooth|1e+07: ok, 1223 regions, depth 13, integral 11.5 s (wall 14.1 s)
+[11:17:37] R-G|q-smooth|1e+07: ok, 1226 regions, depth 13, integral 10.1 s (wall 12.2 s)
+# start R|together|1e+08 pid 26801
+# start Ep|together|1e+08 pid 26802
+[11:17:41] Ep|together|1e+08: ok, 9 regions, depth 2, integral 0.6 s (wall 4.0 s)
+# start Ep+f|together|1e+08 pid 26811
+[11:17:45] R|together|1e+08: ok, 286 regions, depth 13, integral 4.5 s (wall 8.2 s)
+[11:17:45] Ep+f|together|1e+08: ok, 9 regions, depth 2, integral 0.6 s (wall 4.2 s)
+# start Ep+Tnum|together|1e+08 pid 26818
+# start Ep+Trep|together|1e+08 pid 26819
+[11:17:49] Ep+Tnum|together|1e+08: ok, 47 regions, depth 5, integral 0.8 s (wall 4.0 s)
+[11:17:49] Ep+Trep|together|1e+08: ok, 9 regions, depth 2, integral 0.7 s (wall 4.2 s)
+# start Ep+TLG|together|1e+08 pid 26829
+# start Ep+G|together|1e+08 pid 26830
+[11:17:54] Ep+TLG|together|1e+08: ok, 9 regions, depth 2, integral 0.6 s (wall 4.0 s)
+# start R-f|together|1e+08 pid 26841
+[11:17:56] Ep+G|together|1e+08: ok, 253 regions, depth 14, integral 2.5 s (wall 6.1 s)
+# start R-Tnum|together|1e+08 pid 26851
+[11:18:02] R-f|together|1e+08: ok, 286 regions, depth 13, integral 4.7 s (wall 8.1 s)
+[11:18:02] R-Tnum|together|1e+08: ok, 250 regions, depth 13, integral 4.2 s (wall 6.2 s)
+# start R-Trep|together|1e+08 pid 26860
+# start R-TLG|together|1e+08 pid 26861
+[11:18:08] R-Trep|together|1e+08: ok, 288 regions, depth 14, integral 2.3 s (wall 6.0 s)
+# start R-G|together|1e+08 pid 26870
+[11:18:10] R-TLG|together|1e+08: ok, 285 regions, depth 13, integral 5.0 s (wall 8.1 s)
+[11:18:12] R-G|together|1e+08: ok, 47 regions, depth 5, integral 1.0 s (wall 4.2 s)
+
+== run ends: 208 of 208 cells recorded; {'ok': 208}; problems []

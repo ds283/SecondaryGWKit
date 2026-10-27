@@ -1,0 +1,427 @@
+{
+ "same": {
+  "total": true,
+  "total_abserr": true,
+  "numeric_quad": true,
+  "WKB_Levin": true,
+  "Levin_regions_from_metadata": true
+ },
+ "wrapped": {
+  "object": "R",
+  "shape": "together",
+  "x_resp": 980.0,
+  "status": "ok",
+  "delegated": null,
+  "total": 9.233400888162084e-13,
+  "total_abserr": 2.2600891601604973e-20,
+  "numeric_quad": 4.003231974606505e-12,
+  "WKB_Levin": -3.0798918857902964e-12,
+  "analytic_rad": 9.263229868100053e-13,
+  "declared": 2.44773208434836e-08,
+  "converged": false,
+  "phase_limited": true,
+  "Levin_fraction": 3.3355985764020604,
+  "Levin_regions_from_metadata": 44,
+  "handover": {
+   "Tq": {
+    "z_init": 300.973834223185,
+    "z_switch": 294.10587814408103,
+    "handover_continuity": [
+     {
+      "z": 294.10587814408103,
+      "dT_rel": -2.4314095982707213e-15,
+      "dTprime_rel": -6.349698984727424e-06
+     },
+     {
+      "z": 287.3941237465756,
+      "dT_rel": -2.488182662675346e-15,
+      "dTprime_rel": -8.461675099295728e-06
+     },
+     {
+      "z": 280.83501845038865,
+      "dT_rel": -3.6507161537520325e-15,
+      "dTprime_rel": -8.570865400538174e-06
+     }
+    ]
+   },
+   "Tr": {
+    "z_init": 361.3686010678221,
+    "z_switch": 353.1156291924949,
+    "handover_continuity": [
+     {
+      "z": 353.1156291924949,
+      "dT_rel": -4.642081864418084e-15,
+      "dTprime_rel": -6.3540155633751385e-06
+     },
+     {
+      "z": 345.05061936623633,
+      "dT_rel": -5.09275273164604e-15,
+      "dTprime_rel": -8.464780540222495e-06
+     },
+     {
+      "z": 337.1692907393817,
+      "dT_rel": -2.1060078795114435e-15,
+      "dTprime_rel": -8.56724463661714e-06
+     }
+    ]
+   }
+  },
+  "breakpoints": [
+   {
+    "factor": "G",
+    "z": 332.3333333333333,
+    "inside_range": true
+   },
+   {
+    "factor": "Tq",
+    "z": 294.10587814408103,
+    "inside_range": true
+   },
+   {
+    "factor": "Tr",
+    "z": 353.1156291924949,
+    "inside_range": true
+   }
+  ],
+  "partition_subintervals": [
+   {
+    "z_max": 1780956.9092309182,
+    "z_min": 353.1156291924949,
+    "regime": [
+     false,
+     false,
+     false
+    ],
+    "method": "quad"
+   },
+   {
+    "z_max": 353.1156291924949,
+    "z_min": 332.3333333333334,
+    "regime": [
+     false,
+     false,
+     true
+    ],
+    "method": "Levin"
+   },
+   {
+    "z_max": 332.3333333333334,
+    "z_min": 294.10587814408103,
+    "regime": [
+     true,
+     false,
+     true
+    ],
+    "method": "Levin"
+   },
+   {
+    "z_max": 294.10587814408103,
+    "z_min": 6.069595132934192,
+    "regime": [
+     true,
+     true,
+     true
+    ],
+    "method": "Levin"
+   }
+  ],
+  "phase_objects": {
+   "G": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": -1
+   },
+   "G_sin_amplitude_owner": "BesselPhaseGk",
+   "G_numeric_Gk_owner": "BesselPhaseGk",
+   "source_owner": "ZSplineWrapper",
+   "Tq": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": 1,
+    "object_class": "TkSourceFunctions",
+    "z_init": 300.973834223185,
+    "crossover_z": 294.10587814408103,
+    "WKB_region_top": 294.10587814408103,
+    "accessor_owners": {
+     "T": "TkSourceFunctions",
+     "dT_dz": "TkSourceFunctions",
+     "M": "TkSourceFunctions",
+     "phase": "PrimitivePhase",
+     "omega": "TkSourceFunctions",
+     "dlnM_dz": "TkSourceFunctions"
+    }
+   },
+   "Tr": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": 1,
+    "object_class": "TkSourceFunctions",
+    "z_init": 361.3686010678221,
+    "crossover_z": 353.1156291924949,
+    "WKB_region_top": 353.1156291924949,
+    "accessor_owners": {
+     "T": "TkSourceFunctions",
+     "dT_dz": "TkSourceFunctions",
+     "M": "TkSourceFunctions",
+     "phase": "PrimitivePhase",
+     "omega": "TkSourceFunctions",
+     "dlnM_dz": "TkSourceFunctions"
+    }
+   }
+  },
+  "construction_ok": true,
+  "setup_time": 0.0633046249859035,
+  "check_time": 0.023438874864950776,
+  "integral_time": 0.9082373341079801,
+  "loadavg_before": [
+   9.0849609375,
+   11.14111328125,
+   19.93701171875
+  ],
+  "loadavg_after": [
+   9.0849609375,
+   11.14111328125,
+   19.93701171875
+  ],
+  "instrumented": true,
+  "host": "mps026088.phys.susx.ac.uk",
+  "pid": 24328,
+  "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+  "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3",
+  "REF_ATOL": 1e-45,
+  "REF_RTOL": 1e-12,
+  "Levin_regions": 44,
+  "phase_limited_regions": 1,
+  "max_depth": 5,
+  "max_depth_group": "1:Gr:G+r",
+  "ref": {
+   "u": 0.9090909090909091,
+   "v": 1.0909090909090908,
+   "x": 1555.9589754660415,
+   "x_min": 0.006176451415828349,
+   "z_resp": 6.069595132934193,
+   "predicted": 9.263229868103486e-13,
+   "predicted_no_head": 9.264387967101262e-13,
+   "vs_eq25": 0.09666173646468068,
+   "eq25_note": ""
+  },
+  "reference_time": 0.02640100009739399,
+  "N_plus_9_8": 0.0036226675697239585
+ },
+ "unwrapped": {
+  "object": "R",
+  "shape": "together",
+  "x_resp": 980.0,
+  "status": "ok",
+  "delegated": null,
+  "total": 9.233400888162084e-13,
+  "total_abserr": 2.2600891601604973e-20,
+  "numeric_quad": 4.003231974606505e-12,
+  "WKB_Levin": -3.0798918857902964e-12,
+  "analytic_rad": 9.263229868100053e-13,
+  "declared": 2.44773208434836e-08,
+  "converged": false,
+  "phase_limited": true,
+  "Levin_fraction": 3.3355985764020604,
+  "Levin_regions_from_metadata": 44,
+  "handover": {
+   "Tq": {
+    "z_init": 300.973834223185,
+    "z_switch": 294.10587814408103,
+    "handover_continuity": [
+     {
+      "z": 294.10587814408103,
+      "dT_rel": -2.4314095982707213e-15,
+      "dTprime_rel": -6.349698984727424e-06
+     },
+     {
+      "z": 287.3941237465756,
+      "dT_rel": -2.488182662675346e-15,
+      "dTprime_rel": -8.461675099295728e-06
+     },
+     {
+      "z": 280.83501845038865,
+      "dT_rel": -3.6507161537520325e-15,
+      "dTprime_rel": -8.570865400538174e-06
+     }
+    ]
+   },
+   "Tr": {
+    "z_init": 361.3686010678221,
+    "z_switch": 353.1156291924949,
+    "handover_continuity": [
+     {
+      "z": 353.1156291924949,
+      "dT_rel": -4.642081864418084e-15,
+      "dTprime_rel": -6.3540155633751385e-06
+     },
+     {
+      "z": 345.05061936623633,
+      "dT_rel": -5.09275273164604e-15,
+      "dTprime_rel": -8.464780540222495e-06
+     },
+     {
+      "z": 337.1692907393817,
+      "dT_rel": -2.1060078795114435e-15,
+      "dTprime_rel": -8.56724463661714e-06
+     }
+    ]
+   }
+  },
+  "breakpoints": [
+   {
+    "factor": "G",
+    "z": 332.3333333333333,
+    "inside_range": true
+   },
+   {
+    "factor": "Tq",
+    "z": 294.10587814408103,
+    "inside_range": true
+   },
+   {
+    "factor": "Tr",
+    "z": 353.1156291924949,
+    "inside_range": true
+   }
+  ],
+  "partition_subintervals": [
+   {
+    "z_max": 1780956.9092309182,
+    "z_min": 353.1156291924949,
+    "regime": [
+     false,
+     false,
+     false
+    ],
+    "method": "quad"
+   },
+   {
+    "z_max": 353.1156291924949,
+    "z_min": 332.3333333333334,
+    "regime": [
+     false,
+     false,
+     true
+    ],
+    "method": "Levin"
+   },
+   {
+    "z_max": 332.3333333333334,
+    "z_min": 294.10587814408103,
+    "regime": [
+     true,
+     false,
+     true
+    ],
+    "method": "Levin"
+   },
+   {
+    "z_max": 294.10587814408103,
+    "z_min": 6.069595132934192,
+    "regime": [
+     true,
+     true,
+     true
+    ],
+    "method": "Levin"
+   }
+  ],
+  "phase_objects": {
+   "G": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": -1
+   },
+   "G_sin_amplitude_owner": "BesselPhaseGk",
+   "G_numeric_Gk_owner": "BesselPhaseGk",
+   "source_owner": "ZSplineWrapper",
+   "Tq": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": 1,
+    "object_class": "TkSourceFunctions",
+    "z_init": 300.973834223185,
+    "crossover_z": 294.10587814408103,
+    "WKB_region_top": 294.10587814408103,
+    "accessor_owners": {
+     "T": "TkSourceFunctions",
+     "dT_dz": "TkSourceFunctions",
+     "M": "TkSourceFunctions",
+     "phase": "PrimitivePhase",
+     "omega": "TkSourceFunctions",
+     "dlnM_dz": "TkSourceFunctions"
+    }
+   },
+   "Tr": {
+    "class": "PrimitivePhase",
+    "module": "ComputeTargets.primitive_phase",
+    "exact_remainder": true,
+    "leading_class": "TablePrimitive",
+    "sign": 1,
+    "object_class": "TkSourceFunctions",
+    "z_init": 361.3686010678221,
+    "crossover_z": 353.1156291924949,
+    "WKB_region_top": 353.1156291924949,
+    "accessor_owners": {
+     "T": "TkSourceFunctions",
+     "dT_dz": "TkSourceFunctions",
+     "M": "TkSourceFunctions",
+     "phase": "PrimitivePhase",
+     "omega": "TkSourceFunctions",
+     "dlnM_dz": "TkSourceFunctions"
+    }
+   }
+  },
+  "construction_ok": true,
+  "setup_time": 0.05110004101879895,
+  "check_time": 0.020764084067195654,
+  "integral_time": 0.8766281250864267,
+  "loadavg_before": [
+   9.0849609375,
+   11.14111328125,
+   19.93701171875
+  ],
+  "loadavg_after": [
+   9.0849609375,
+   11.14111328125,
+   19.93701171875
+  ],
+  "instrumented": false,
+  "host": "mps026088.phys.susx.ac.uk",
+  "pid": 24328,
+  "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+  "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3",
+  "REF_ATOL": 1e-45,
+  "REF_RTOL": 1e-12,
+  "ref": {
+   "u": 0.9090909090909091,
+   "v": 1.0909090909090908,
+   "x": 1555.9589754660415,
+   "x_min": 0.006176451415828349,
+   "z_resp": 6.069595132934193,
+   "predicted": 9.263229868103486e-13,
+   "predicted_no_head": 9.264387967101262e-13,
+   "vs_eq25": 0.09666173646468068,
+   "eq25_note": ""
+  },
+  "reference_time": 0.02605041698552668,
+  "N_plus_9_8": 0.0036226675697239585
+ },
+ "check": "transparency",
+ "ok": true,
+ "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+ "b2_checks_sha256": "6bbda526d49dae88caff96b5ab92237d414203f2d3fea469777c09c8e7c6fb97",
+ "started_unix": 1793099123.7074938,
+ "elapsed": 1.99688720703125
+}

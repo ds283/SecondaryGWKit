@@ -1,0 +1,20 @@
+E against A2's exact closed column (REALISTIC-LARGE-X.md Table 2, pre-B1 tree):
+   together     1e+03 E +6.994405e-14 (err 9.8e-12) A2 +6.994e-14 (err 9.8e-12) diff +4.05e-18 vs bound 2.0e-11: within; 4 of A2's 4 printed figures agree
+   together     1e+04 E +3.108624e-15 (err 1.5e-12) A2 +2.887e-15 (err 1.5e-12) diff +2.22e-16 vs bound 3.0e-12: within; 0 of A2's 4 printed figures agree
+   together     1e+05 E +1.723066e-13 (err 1.9e-11) A2 +1.721e-13 (err 1.9e-11) diff +2.07e-16 vs bound 3.8e-11: within; 3 of A2's 4 printed figures agree
+   together     1e+06 E -1.561418e-12 (err 1.5e-10) A2 -1.561e-12 (err 1.6e-10) diff -4.18e-16 vs bound 3.1e-10: within; 4 of A2's 4 printed figures agree
+   together     1e+07 E -3.101086e-10 (err 1.1e-08) A2 -3.101e-10 (err 1.1e-08) diff -8.61e-15 vs bound 2.2e-08: within; 4 of A2's 4 printed figures agree
+   together     1e+08 E -1.461442e-10 (err 4.0e-08) A2 -1.461e-10 (err 3.9e-08) diff -4.42e-14 vs bound 7.9e-08: within; 4 of A2's 4 printed figures agree
+   T-first      1e+03 E -2.930989e-14 (err 5.4e-12) A2 -2.376e-14 (err 5.4e-12) diff -5.55e-15 vs bound 1.1e-11: within; 1 of A2's 4 printed figures agree
+   T-first      1e+04 E -2.220446e-16 (err 1.1e-12) A2 -2.220e-16 (err 1.1e-12) diff -4.46e-20 vs bound 2.3e-12: within; 4 of A2's 4 printed figures agree
+   T-first      1e+05 E +6.461498e-14 (err 1.8e-12) A2 +6.484e-14 (err 1.8e-12) diff -2.25e-16 vs bound 3.6e-12: within; 2 of A2's 4 printed figures agree
+   T-first      1e+06 E -2.310374e-12 (err 8.8e-11) A2 -2.310e-12 (err 8.8e-11) diff -3.74e-16 vs bound 1.8e-10: within; 4 of A2's 4 printed figures agree
+   T-first      1e+07 E +4.673595e-12 (err 3.5e-10) A2 +4.674e-12 (err 3.5e-10) diff -4.05e-16 vs bound 6.9e-10: within; 4 of A2's 4 printed figures agree
+   q-smooth     1e+03 E -3.643752e-13 (err 5.8e-12) A2 -3.668e-13 (err 5.9e-12) diff +2.42e-15 vs bound 1.2e-11: within; 2 of A2's 4 printed figures agree
+   q-smooth     1e+04 E -1.088019e-13 (err 1.2e-11) A2 -1.015e-13 (err 1.1e-11) diff -7.30e-15 vs bound 2.3e-11: within; 2 of A2's 4 printed figures agree
+   q-smooth     1e+05 E -3.854694e-13 (err 2.3e-11) A2 -3.866e-13 (err 2.4e-11) diff +1.13e-15 vs bound 4.7e-11: within; 2 of A2's 4 printed figures agree
+   q-smooth     1e+06 E +2.002842e-13 (err 6.1e-10) A2 +2.265e-13 (err 6.1e-10) diff -2.62e-14 vs bound 1.2e-09: within; 1 of A2's 4 printed figures agree
+   q-smooth     1e+07 E -6.286083e-13 (err 5.5e-09) A2 -6.486e-13 (err 5.5e-09) diff +2.00e-14 vs bound 1.1e-08: within; 1 of A2's 4 printed figures agree
+geometry control, together 980: N_E' - N_E = -3.730e-14, sum of declared errors 1.838e-11: within (N_E'+9/8 +3.264056e-14, N_E+9/8 +6.994405e-14)
+R at together 980: N+9/8 = +3.622668e-03 (declared, in N, 2.7e-08); A4 arm P +3.623e-03 at 28ebaf0, before levin-phase-floor 06; difference -3.32e-07, recorded, not judged
+== check controls: HOLDS (8.8 s)

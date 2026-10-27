@@ -1,0 +1,69 @@
+{
+ "cell": [
+  "together",
+  980.0
+ ],
+ "i": {
+  "hybrid_none": {
+   "total": 9.233400888162084e-13,
+   "total_abserr": 2.2600891601604973e-20,
+   "numeric_quad": 4.003231974606505e-12,
+   "WKB_Levin": -3.0798918857902964e-12
+  },
+  "R": {
+   "total": 9.233400888162084e-13,
+   "total_abserr": 2.2600891601604973e-20,
+   "numeric_quad": 4.003231974606505e-12,
+   "WKB_Levin": -3.0798918857902964e-12
+  },
+  "same": {
+   "total": true,
+   "total_abserr": true,
+   "numeric_quad": true,
+   "WKB_Levin": true
+  },
+  "delegation": {
+   "terms": [],
+   "accessors": [],
+   "T_names": []
+  }
+ },
+ "ii": {
+  "hybrid_all": {
+   "total": 9.263229868103217e-13,
+   "total_abserr": 3.364506324642508e-24,
+   "numeric_quad": 4.0060107318932485e-12,
+   "WKB_Levin": -3.0796877450829267e-12
+  },
+  "exact_with_the_geometry_of": {
+   "total": 9.263229868103217e-13,
+   "total_abserr": 3.364506324642508e-24,
+   "numeric_quad": 4.0060107318932485e-12,
+   "WKB_Levin": -3.0796877450829267e-12
+  },
+  "same": {
+   "total": true,
+   "total_abserr": true,
+   "numeric_quad": true,
+   "WKB_Levin": true
+  }
+ },
+ "accessor_to_term": {
+  "QuadSource.functions.source": "f",
+  "T.T": "Tnum",
+  "T.dT_dz": "Tnum",
+  "T.M": "Trep",
+  "T.phase": "Trep",
+  "T.omega": "TLG",
+  "T.dlnM_dz": "TLG",
+  "Gk.phase": "G",
+  "Gk.sin_amplitude": "G"
+ },
+ "clashes": [],
+ "check": "completeness",
+ "ok": true,
+ "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+ "b2_checks_sha256": "6bbda526d49dae88caff96b5ab92237d414203f2d3fea469777c09c8e7c6fb97",
+ "started_unix": 1793099110.623669,
+ "elapsed": 2.9837141036987305
+}

@@ -2,7 +2,9 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-10-26 — `[00-consumer-anchoring-floor]` is **CLOSED for $G_k$** (§4) by
+**Last updated:** 2026-10-27 — `[00-tk-lg-truncation-floor]` narrowed by `prompts/handover` prompt
+13 (B2): its derivative half measured as a term of the seam's residue on a fixture.
+Previously 2026-10-26 — `[00-consumer-anchoring-floor]` is **CLOSED for $G_k$** (§4) by
 `prompts/levin-phase-floor` prompt 05: $G_k$'s remainder is now node-anchored and reduced against
 $2\pi$ exactly, and the depth-20 cap goes on every sampled A3 v2 row still capped. $T_k$ keeps the
 global anchor by that campaign's G1. Previously 2026-10-25 — `[00-consumer-anchoring-floor]` **assigned** to
@@ -503,6 +505,16 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $x=10^4$, and a 24/400 ratio of **4902** against $(400/24)^3=4630$ — the $x_i^{-3}$ law, now
   pinned by `test_tk_wkb_phase.TestRadiationValue`. **Next step:** none here; recorded for the
   hand-over campaign.
+  **Narrowed 2026-10-27 by `prompts/handover` prompt 13 (board item B2): the derivative half,
+  measured on a fixture; the amplitude and phase half, not.** On the realistic fixture at its
+  fixed hand-over $x_T\approx19.1$, the Liouville–Green closed forms `omega` and `dlnM_dz`
+  contribute $10^{-6}$ to $1.4\times10^{-4}$ in $N$ to the seam's residue, the same order as the
+  numeric-$T$ term and below the source spline's wherever that is present. The fixture's stored $T$
+  amplitude and phase are the exact Bessel ones, not Liouville–Green-integrated, so the
+  $x_i^{-3}$ truncation this entry records is **not** in that measurement. The stored
+  representation term (`Trep`) is $\le9.2\times10^{-11}$ there because it carries only the phase
+  construction. No depth was scanned
+  ([`docs/handover/SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.3).
 
 - **[00-tk-superhorizon-ic-series]** *(planning, 2026-09-10; inert)* — once prompt 12 lands, the
   $T_k$ numeric floor is the super-horizon initial condition $T=1,T'=0$ at $2.5\times10^{-6}$

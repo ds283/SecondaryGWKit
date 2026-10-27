@@ -1,0 +1,85 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13/scripts/b2_driver.py",
+    "--run-dir",
+    "<run dir>"
+  ],
+  "campaign": "handover",
+  "checkpoint": "var/runs/handover-13-residue-20261027T110832/checkpoint.jsonl",
+  "created": "2026-10-27T11:08:32+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13",
+  "expected_units": 208,
+  "git_dirty": false,
+  "git_head": "28ade78c3dd038f2d84e664918b78a318a4a150d",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each cell's record, and every 60 s by a thread of the driver while its process lives. A cell's checkpoint record means it ended: ok, not reached (killed over its 1 h budget), raised or skipped.",
+  "host": {
+    "id": "8d2b247824882486",
+    "machine": "arm64",
+    "name": "mps026088.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "13",
+  "purpose": "handover prompt 13 (B2), Part B, on the laptop (Python 3.13.16) in the worktree SecondaryGWKit-handover-13 at 28ade78 (Part A landed): score the residue the T_k seam gap was masking. A2's ladder (together 980-1e8, T-first 980-1e7, q-smooth 980-1e7; b = 0) in 13 objects built through test_quadsource_integral.Case: E (exact flavour), R (production's construction and seam), E' (R's geometry, exact ingredients) and the add-one and remove-one hybrids of five terms (f the source spline, Tnum the numeric T, Trep T's stored WKB representation M and phase, TLG the Liouville-Green omega and dlnM_dz, G the Green's function's phase and amplitude). 208 cells, each a child process, at most 2 at once, 1 h wall-clock budget per cell (over budget = not reached); Ray-free, no datastore, no lock; expect under an hour",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "handover-13-residue-20261027T110832",
+  "scope": "208 cells = 16 rungs x 13 objects of b2_cells.py (imports docs/handover/realistic_large_x.py c1cd3598, unedited); REF_ATOL 1e-45, REF_RTOL 1e-12; no store, no Ray, no lock; records in this run directory only",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13/scripts/b2_driver.py",
+  "script_sha256": "dc8772e3c7b5dfe345296abc1dfffa78d303afc6de179149028920289d6d2278",
+  "unit": "cells"
+}

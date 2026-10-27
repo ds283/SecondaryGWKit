@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-10-27 · **Status: STARTED — 5 of 10 groupings landed (00, A1, A2, A3, B1), and prompt 05,
+**Last updated:** 2026-10-27 · **Status: STARTED — 6 of 10 groupings landed (00, A1, A2, A3, B1, B2), and prompt 05,
 which is outside them.** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
@@ -109,6 +109,8 @@ and is kept as a record; the agent stopped three times, each answered by the use
 
 **B2 Part A landed 2026-10-27** (prompt 13 §1), on branch `handover-13-b2` in its laptop worktree: `Case(exact=False)` is now production's construction — $G$'s phase by `_build_phase` (`BesselPhaseGk`, its $\tau$ table's node at $z_{\rm resp}$ snapped exactly), each $T$ by `TkSourceFunctions` with no keyword on `_TableCsTauFixture`'s union table (covering $z_{\rm init}$, off a node), production's seam — and the four stale clamp comments are corrected. Three tests added; two existing tests were amended on the user's ruling at the agent's one stop. Part B, the measurement, has not started. No issue moves until the records commit; §3 still holds **nineteen**.
 
+**B2 landed 2026-10-27** (prompt 13 Part B; run `handover-13-residue-20261027T110832`, `done`, 208/208 cells `ok`, on the laptop, Ray-free): [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md). **The residue B1 unmasked is additive at all 16 rungs and is carried by the source spline and the transfer function's numeric and Liouville–Green terms.** `together`'s $+3.623\times10^{-3}$ at 980 is 93% the source spline ($A_f = +3.375\times10^{-3}$), 3.8% `Tnum` and 3.1% `TLG`. `T-first` is dominated by the same `f` term, offset by the $T$ terms. On `q-smooth`, `f` is absent and `Tnum` and `TLG` largely cancel. `Trep` and `G` (the stored phases, now production's) are $\le1.4\times10^{-8}$ everywhere. B2 closed three issues (§4), narrowed `[04-production-phase-gk-tau-table-has-a-zero-width-bottom-interval]` and four on other boards, and opened `[13-the-tlg-term-depends-on-the-levin-subdivision]`, so §3 holds **seventeen**.
+
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
 [`docs/lg-phase-and-handover-followup-2026-09.md`](../../docs/lg-phase-and-handover-followup-2026-09.md) ·
@@ -133,7 +135,7 @@ and is kept as a record; the agent stopped three times, each answered by the use
 | A3 | [The policy-geometry census](03-policy-geometry-census.md) | **A3** — refreshed 2026-10-25: on A3 v2 on the Mac Studio, read-only and Ray-free, at `HEAD`, orchestrated there as 10 and 11 ([`orchestrator/prompt-03.md`](orchestrator/prompt-03.md)); reconciled with 11's policy count | Sonnet, on the Mac Studio | ✍️ 2026-09-19; refreshed 2026-10-25 | ✅ 2026-10-25 on the Mac Studio at `c8ca155`, in parallel with `levin-phase-floor` 04; reviewed there, 7 / 7, check 5 on the user's ruling; three rows recounted from the laptop | records in the bookkeeping commit | [`logs/03-…`](logs/03-policy-geometry-census.md) |
 | A4 | [Does A2's Levin cost growth survive production's phases?](04-gk-phase-decision-test.md) | **A4** — rewritten 2026-10-26 on the user's decision: on the Mac Studio, Ray-free, at `HEAD`; four arms (E exact; S A2's `phase_spline` $G$; P₀ a `PrimitivePhase` $G$ without 05's node anchor; P production's $G$ since 05), $T$ production's (05a) in every realistic arm; two readings fixed before the run, no threshold; the only planned answer to `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` | Opus | ✍️ 2026-09-21; refreshed 2026-10-25; rewritten 2026-10-26 | ✅ 2026-10-26 on the Mac Studio, reviewed there 9 / 9 (run 2, `handover-04-cost-growth-20261026T173720`, 60/60 `ok`); run 1 failed on a fixture's zero-width table and is a record; three stops, each answered by the user; growth re-derived from the checkpoint by the laptop | records in A4's records commit | [log](logs/04-gk-phase-decision-test.md) |
 | B1 | [Remove the $T_k$ gap, by overlap](12-remove-the-tk-gap.md) (prompt 12) | **B1** — README §7 D1 (b), decided 2026-10-25; the code on the laptop, rehearsal R8 on the Mac Studio | Opus 5.5 | ✍️ 2026-10-25 | ✅ 2026-10-25: code reviewed 8/8 in its worktree; R8 on the Mac Studio reviewed 7/7, check 3 on the user's ruling | `049c7c8` (code, rebased from `73f4c4d`); records: `ad23a29` | [`logs/12-…`](logs/12-remove-the-tk-gap.md) |
-| B2 | [Score the residue the gap was masking](13-score-the-unmasked-residue.md) (prompt 13) | **B2** — Part A makes the realistic flavour production's (G by `_build_phase`, T on a table `cs_tau`, production's seam) and fixes the two A4 fixture defects; Part B splits the post-B1 residue into five terms (`f`, `Tnum`, `Trep`, `TLG`, `G`) by add-one and remove-one substitution over A2's ladder; all on the laptop, in a worktree, Ray-free ([`orchestrator/prompt-13.md`](orchestrator/prompt-13.md)) | Opus | ✍️ 2026-10-27 | 🟡 **Part A landed** 2026-10-27 (fixtures and comments, on `handover-13-b2`); Part B not started | Part A: the commit "Make the realistic flavour production's construction" | [`logs/13-…`](logs/13-score-the-unmasked-residue.md) (Part A's half) |
+| B2 | [Score the residue the gap was masking](13-score-the-unmasked-residue.md) (prompt 13) | **B2** — Part A makes the realistic flavour production's (G by `_build_phase`, T on a table `cs_tau`, production's seam) and fixes the two A4 fixture defects; Part B splits the post-B1 residue into five terms (`f`, `Tnum`, `Trep`, `TLG`, `G`) by add-one and remove-one substitution over A2's ladder; all on the laptop, in a worktree, Ray-free ([`orchestrator/prompt-13.md`](orchestrator/prompt-13.md)) | Opus 5.5 | ✍️ 2026-10-27 | ✅ 2026-10-27, on `handover-13-b2` in its laptop worktree: Part A (fixtures and comments) reviewed 7/7; Part B's run `done`, 208/208 | Part A `28ade78` "Make the realistic flavour production's construction" (branch SHA); records: "Record handover prompt 13: B2's residue attribution" | [`logs/13-…`](logs/13-score-the-unmasked-residue.md) |
 | B3 | Give the seam a contract | **B3** | — | ⬜ no | ⬜ | — | — |
 | B4 | Make `incomplete` unreachable | **B4** | — | ⬜ no | ⬜ | — | — |
 | C1 | The stop point as an identity | **C1** | — | ⬜ no | ⬜ | — | — |
@@ -171,7 +173,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 | A3 | **MEASUREMENT** | Read-only census over stored `GkSourcePolicyData` rows: how many **source-grid intervals** `crossover_z` has on each side, against the stored `quality` band, plus the type/quality census and the `fail` rows. Needs a datastore. Answers README §7 **D5**. | 03 | ✅ **Done, 2026-10-25**, at `c8ca155` on the Mac Studio, read-only and Ray-free; the store byte-identical, fingerprint `0e32f24a…`. **D5's answer:** on the 72 `mixed` rows, `crossover_z` has 6 / 308 / 481 / 664 / 664 numeric and 1 / 82 / 82 / 82 / 82 WKB intervals (min / 5th / median / 95th / max), by node index. Only the `minimal` row (shard 2, serial 460) has fewer than two on a side (6 and 1). **On all 71 `mixed`/`complete` rows `crossover_z` is one node, $3.121867\times10^{15}$, super-horizon at every $k$**, and `primary_WKB_largest_z` is the grid top, so the overlap is 8.8–17.0 e-folds wide: the 82 is `CLEARANCE_GOOD` = 0.05 measured in intervals at the top of this grid (`[03-the-g-crossover-is-one-super-horizon-node-on-every-complete-row]`). The half-e-fold band of README §2 (q) carries both representations on all 72 rows, so the lever map is not falsified. 11's policy count is reproduced in every cell. **The §5.5 shape:** restricted to $10^5$–$10^7$/Mpc, `mixed` is 6.34 % against 13.42 %, the same per $k$ (9.2 against 8.86) over 145 response redshifts per $k$ against 66. The review stopped at check 5 because that is not one of §2.2's three differences. **The user ruled (2026-10-25)** that it is a fourth known one, recorded at `docs/source-remediation-verification.md:224-238` (`--zend 1e7`, 66 response redshifts), which §2.2 omitted. §5.5's 7 `fail` rows and their absence here are unexplained. Record: [`POLICY-GEOMETRY.md`](../../docs/handover/POLICY-GEOMETRY.md), [`docs/handover/a3-v2/policy-geometry/`](../../docs/handover/a3-v2/policy-geometry/). ⬜ *Before it ran:* **Written, not run; refreshed 2026-10-25.** Re-pointed from the A3 baseline store to A3 v2 (`0e32f24a…`) on the Mac Studio, read-only and Ray-free (`sqlite3` and `json` only, in the pattern of 11's `seam_census.py`), at `HEAD`: B1 changed no `GkSourcePolicyData` or `GkSource` file (`git diff 98e68d3 HEAD --stat`). Reconciled with 11, which already counted the policy table (363 / 71 + 1 / 725, no `fail`, no `incomplete`): A3 does not re-take that count but checks it, compares its shape with verification §5.5 (now restricted to $10^5$–$10^7$/Mpc as well, since the full-store shape has shifted), tabulates the one `minimal` row, and answers README §2 (q)'s $z_{\rm response}$-versus-$k$ question by a stated proxy, because there is no `incomplete` row to cluster. Opens all three README §2 (o)/(p) issues. Records under `var/handover-03/`, committed on the laptop. |
 | A4 | **MEASUREMENT** | Whether the realistic flavour's growth of Levin cost in $x$ survives production's phases. A2's ladder (15 rungs over three shapes, `q-smooth` to $10^6$) at `HEAD` in four arms that differ in $G$'s phase alone: E (exact), S (`phase_spline`), P₀ (`PrimitivePhase`, keyword off), P (`PrimitivePhase` as production builds it since `levin-phase-floor` 05). S against P₀ isolates the `phase_spline` floor, P₀ against P the anchoring floor. Two readings fixed before the run; no threshold. | 04 | ✅ **Done, 2026-10-26**, on the Mac Studio at `28ebaf0`. Run 2 `done`, 60/60 cells. **Growth across the ladder** (top rung over 980), `together` / `T-first` / `q-smooth`: E 1.29 / 1.86 / 0.94; S 6.8 / 46.9 / 40.2; P₀ 8,935 / 2,356 / 619; **P 6.26 / 3.29 / 2.16** (regions 46→288, 34→112, 686→1,480). **Level at 980** over E: S 49–179×, P₀ and P 4.9–40×. P never reaches depth 20; S and P₀ do on every shape. **Neither reading cleanly**: P lies between E and S on every shape, close to S on `together`. The anchoring floor (P₀ against P, 287–1,427×) dominates what the `phase_spline` floor adds (S against P₀). The realistic $T$ was built on the fixture's numeric and WKB nodes without the one at $z_{\rm init}$ (off a node, as in production), and P's and P₀'s $\tau$ table on the `Case`'s $G$ grid ending exactly at $z_{\rm resp}$: the user's three answers. Records: [`GK-PHASE-COST-GROWTH.md`](../../docs/handover/GK-PHASE-COST-GROWTH.md), [`docs/handover/a4/`](../../docs/handover/a4/). *Before it ran:* **Rewritten 2026-10-26, not run**, on the user's decision: at `HEAD` every arm runs on one tree, so B1's seam change cannot enter the comparison; A2's recorded cells are context only; the fixture's $G$ is to be made production's in any case (B2), so no "material" threshold is needed. *Until then:* **Written 2026-09-21, not run; refreshed 2026-10-25.** Runs on the laptop in a worktree at `98e68d3`: `realistic_large_x.py` raises at `HEAD` since B1 (`[12-realistic-large-x-reads-the-retired-clamp-records]`), and A4 judges A2's pre-B1 numbers. It is now the only planned answer to `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]`, since `levin-phase-floor` 02 was superseded and its N2 not tested. Every cell records `max_depth`, regions per group and phase-limited regions, as that issue's narrowings ask, beside the verdict and not in it; two reproduction cells measure the venv's drift since A2. The threshold for "material" is unchanged. |
 | B1 | **REMEDY** | Remove the $T_k$ seam gap by one of README §7 **D1**'s three recorded constructions. Not a tuning decision: holding a phase constant across up to 0.44 rad is wrong under any objective. | 12 | ✅ **Done, 2026-10-25: the code `049c7c8`, R8 in B1's records commit.** **R8** (`handover-12-r8-reference-20261025T210551`, on the Mac Studio at `8a02f0c`) ended `done`, exit 0, in about 3.5 min. Its fingerprint **`1b332ffa…`** differs from R3's `39809dca…` in `QuadSource` only: each of its six rows gained 3 nodes (371, 371, 371, 428, 428, 478 against R4's 368, 368, 368, 425, 425, 475), with the values at R3's nodes bit-identical. All 864 `QuadSourceIntegral` rows carry `partition.handover`, and none a clamp key. The continuity residuals, recorded and not judged: at the switch node $|\Delta T_{\rm rel}|$ 1.7e-7–3.2e-7 and $|\Delta T'_{\rm rel}|$ 4.2e-6–5.7e-6, growing to 1.5e-5–1.6e-5 and 3.0e-5–3.1e-5 at the second overlap node. The six readers exit 0 on a byte-identical store; the lock was taken and released. **Check 3, on the user's ruling:** a `QuadSource`-only difference meets prompt §6.4 and §7.3, because `QuadSourceIntegral`'s `inventory_spec` records identity and tags only. The prompt and the orchestrator note expected both classes to differ, which was their misreading. The ruling opened `[12-the-fingerprint-cannot-see-a-quadsourceintegral-change]` (§3). **R8's fingerprint is the rehearsal reference from here on**, kept by its run directory on the Mac Studio; its store was retired on 2026-10-25 after the records commit (`docs/handover/b1/r8/out/retire_r8.txt`). On the `source-remediation` board B1 closed `[08-handover-clamp-error]` and `[12-handover-clamp-error-in-production]`, and narrowed `[05-numeric-region-is-now-the-accuracy-floor]` (its $T_k$ hand-over part) and `[06-source-spline-residual-vs-handover]`. Record: [`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md) §5, [`docs/handover/b1/r8/`](../../docs/handover/b1/r8/). **The code** landed 2026-10-25 as `049c7c8`, rebased onto `handover-remedial` from `handover-12-b1` once `levin-phase-floor` 02 was superseded; its review passed all eight checks of `orchestrator/prompt-12.md` §A.3. `ComputeTargets/handover.py` holds `HANDOVER_OVERLAP_NODES = 2` and `handover_switch_node`; `TkSourceFunctions.crossover_z` is the switch node, `z_init` is new, `handover_continuity` records both representations at the switch and overlap nodes; `QuadSource` stores the overlap; `QuadSourceIntegral` has no clamp and checks every representation strictly, and its `partition` metadata carries `handover` instead of the clamp gaps. Tests (a)–(g) pass and both breakages are caught; `ComputeTargets` 737 → 742. On the exact fixture the continuity residuals are 3e-14 in $T$ and the LG truncation (≤ 6.5e-5) in $T'$; end to end, T-first at $x_{\rm resp} = 980$ is 6.0e-05 from the reference, against A2's 3.4e-04 closed and 3.6e-03 clamped ([`HANDOVER-B1.md`](../../docs/handover/HANDOVER-B1.md)). ⬜ **Written 2026-10-25 as prompt 12**, on the user's decision **D1 = (b), the Liouville–Green initialisation kept at the extremum**. Writing it found that every A3 v2 `TkNumericIntegration` row already stores 118–126 numeric samples below $z_{\rm init}$; the gap is made by `TkSourceFunctions` and `QuadSource` discarding them (README §2 (a), corrected). So B1 changes consumers only: switch at the first node below $z_{\rm init}$, keep two numeric overlap nodes, remove the clamp, record continuity at the shared nodes. No producer, no schema. Rehearsal R8 must differ from R3 in `QuadSource` and `QuadSourceIntegral` only. |
-| B2 | **MEASUREMENT** | Re-run A2 at the same configurations with the gap gone and attribute what is left, by term. | 13 | 🟡 **Part A landed 2026-10-27; Part B not started.** Part A (prompt 13 §1): `Case(exact=False)` is production's construction in $G$ (`_build_phase`), $T$ (no keyword, table `cs_tau` covering $z_{\rm init}$ off a node) and the seam; the two A4 fixture defects are fixed in the fixtures; the four clamp comments are corrected; tests (a)–(c) added and their breakages caught; two existing tests amended on the user's ruling (the realistic oracle's exact comparator now shares the realistic partition; the skipped-switch-node test drops one sample, not five). No issue moves until the records commit ([log](logs/13-score-the-unmasked-residue.md)). *Before that:* ✍️ **Written 2026-10-27, not run.** B1 and A2 have landed, so README §4 item 2's block is lifted. Two parts, two commits, on the laptop in a worktree: Part A, the fixtures; Part B, a registered run of 208 cells (16 rungs × E, E′, R and five add-one and five remove-one hybrids) and `docs/handover/SEAM-RESIDUE.md`. *Until then:* **Grouping only.** Blocked on B1 and A2 by README §4 item 2's masking argument. |
+| B2 | **MEASUREMENT** | Re-run A2 at the same configurations with the gap gone and attribute what is left, by term. | 13 | ✅ **Done, 2026-10-27**, on the laptop at `28ade78`, run `handover-13-residue-20261027T110832` (208/208 `ok`, 10 min). **Additive at all 16 rungs** by the rule fixed in `terms.md` before the run. **`together` 980's $+3.623\times10^{-3}$ is 93% the source spline** ($A_f = B_f = +3.375\times10^{-3}$), 3.8% `Tnum`, 3.1% `TLG`. `f` dominates `together` (0.88–1.02 of $D$) and `T-first` (1.22–1.26, offset by the $T$ terms); on `q-smooth` it is absent and `Tnum` and `TLG` largely cancel. `Trep` $\le9.2\times10^{-11}$, `G` $\le1.4\times10^{-8}$. No term is monotone in $x_{\rm resp}$. The `TLG` term interacts with `G` and with `Tnum` through the Levin subdivision (`[13-the-tlg-term-depends-on-the-levin-subdivision]`). Controls: E reproduces A2's exact column at every rung; $N_{E'}-N_E\le2.7\times10^{-10}$; no stationary point. Record: [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md), [`docs/handover/b2/`](../../docs/handover/b2/). *Part A:* 🟡 **Part A landed 2026-10-27; Part B not started.** Part A (prompt 13 §1): `Case(exact=False)` is production's construction in $G$ (`_build_phase`), $T$ (no keyword, table `cs_tau` covering $z_{\rm init}$ off a node) and the seam; the two A4 fixture defects are fixed in the fixtures; the four clamp comments are corrected; tests (a)–(c) added and their breakages caught; two existing tests amended on the user's ruling (the realistic oracle's exact comparator now shares the realistic partition; the skipped-switch-node test drops one sample, not five). No issue moves until the records commit ([log](logs/13-score-the-unmasked-residue.md)). *Before that:* ✍️ **Written 2026-10-27, not run.** B1 and A2 have landed, so README §4 item 2's block is lifted. Two parts, two commits, on the laptop in a worktree: Part A, the fixtures; Part B, a registered run of 208 cells (16 rungs × E, E′, R and five add-one and five remove-one hybrids) and `docs/handover/SEAM-RESIDUE.md`. *Until then:* **Grouping only.** Blocked on B1 and A2 by README §4 item 2's masking argument. |
 | B3 | **REMEDY** | Make `quality = "incomplete"` and `type = "fail"` load-bearing; add the missing `_classify_crossover` tests; fix the ungated dump at `main.py:2929`. No prerequisites. | — | ⬜ **Grouping only.** |
 | B4 | **REMEDY** | Size the $G$ overlap by construction with L1/L2 so that `_classify_crossover` cannot fail on the grid that ships. Needs A3 (the unit is grid intervals) and README §7 **D7**. | — | ⬜ **Grouping only.** |
 | C1 | **REMEDY** | Tighten `find_phase_extremum`'s `root_scalar` to a floor justified by the method; key the two WKB row types on the numeric row rather than on an absolute-`1e-7` match of a $z\sim10^{12}$ float; filter the stored initial values. | — | ⬜ **Grouping only.** |
@@ -617,39 +619,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   [`logs/01-domenech-general-b-oracle.md`](logs/01-domenech-general-b-oracle.md), "Observations not
   acted on" item 2. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[02-realistic-fixture-Gk-phase-is-the-superseded-construction]** *(opened 2026-09-20 by prompt
-  02)* — `ComputeTargets/tests/test_phase_groups.py:299` documents `BesselPhaseGk` as built *"the
-  way `GkSourcePolicyData._create_functions` builds the real one: the phase is a `phase_spline`
-  over $\log(1+z')$ through (div 2pi, mod 2pi) samples"*. **That has not been true since
-  `prompts/GkTk-remedial` prompt 09.** Production's `GkSourcePolicyData._build_phase`
-  (`:145-190`, consumed at `:726`) returns a `PrimitivePhase` — the leading $-k\,\Delta\tau$ from
-  the background table with only a small residual splined — which is precisely how that campaign
-  discharged `[12-phase-spline-error-grows-with-x]`'s $\delta\theta \simeq h^4x/384$ for $G_k$
-  (board M14: 4.189e-08 rad against 7.286e-03 for the same samples, a ratio of 1.739e+05).
-  `TkSourceFunctions` *is* current — prompt 10 gave it a `PrimitivePhase` too — so the realistic
-  flavour's $T$ half is production's and its $G$ half is the construction production abandoned.
-  Consequences, in order of how much they matter: the module docstring of
-  `test_quadsource_integral.py` claims the realistic flavour "is the accuracy production can
-  expect", and that is **stale for $G$**; prompt 02's representation term (4.08e-05 – 2.68e-03,
-  `REALISTIC-LARGE-X.md` §4) is therefore an **upper bound** on production's rather than an
-  estimate of it, because it carries a term production has already removed; and the Levin cost
-  growth of the issue below may be the same staleness seen from the cost side.
-  **Impact:** **B2**, which re-runs this harness once the gap is gone and attributes what is left —
-  it should fix the fixture before it scores the residue, or its numbers will be pessimistic by an
-  unknown factor for $G$. Also any later reader of the test module's docstring. Nothing in
-  production is wrong; this is an instrument that has fallen behind the thing it models.
-  **Next step:** rebuild `BesselPhaseGk`/`OffsetBesselPhaseGk` on `PrimitivePhase` as
-  `_build_phase` does, and correct both docstrings. Not done here: prompt 02 §5 forbids editing
-  `test_quadsource_integral.py`, and `test_phase_groups.py` is not in its scope either.
-  Measurement: [`logs/02-realistic-flavour-large-x-harness.md`](logs/02-realistic-flavour-large-x-harness.md),
-  "Observations not acted on" item 1. Indexed at `docs/OPEN_ISSUES.md` §1.1.
-
-  **Narrowed 2026-10-26 by A4:** at `HEAD`, with $G$'s phase built as production builds it, the
-  realistic flavour's representation term is recorded per cell beside the `phase_spline` arm's,
-  with both declared errors and no verdict ([`GK-PHASE-COST-GROWTH.md`](../../docs/handover/GK-PHASE-COST-GROWTH.md) §5).
-  A4 built production's $G$ in its own script (`docs/handover/a4/scripts/a4_cells.py`); the
-  fixture itself is unchanged and stays B2's to fix.
-
 - **[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]** *(opened 2026-09-20 by prompt 02)* —
   the Levin driver's region count is **flat in $x$ on the exact flavour and grows steeply on the
   realistic one**, and the growth may be a property of the fixture rather than of production.
@@ -820,47 +789,6 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   `var/handover-11/out/subintervals_11.csv` on the Mac Studio (not committed; `*.csv` is excluded) with $|{\tt analytic\_rad}|$ against its
   neighbours in $(k, q, r)$, read-only. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
-- **[12-realistic-large-x-reads-the-retired-clamp-records]** *(opened 2026-10-25 by prompt 12, B1;
-  not acted on, by the prompt's own §4.1)* — B1 removed `metadata["partition"]["max_clamp_gap_log1pz"]`
-  and every `subintervals[i]["clamp_gaps_log1pz"]`. `docs/handover/realistic_large_x.py`, A2's
-  harness, reads `item["clamp_gaps_log1pz"]` (`:332`, `:666`) and `partition["max_clamp_gap_log1pz"]`
-  (`:356`), so at `HEAD` every cell raises `KeyError`; its docstring also describes `_ClampedTk`
-  (`:45`, `:194`). The prompt forbids editing it (its checkpoint is gated on its own SHA-256) and
-  makes a re-run after B1 B2's. Three related records of the same removal:
-  - `docs/levin-phase-floor/noise_injection.py` (another session's, untracked when B1 ran) imports
-    that module and `test_quadsource_integral`'s `Case`, and is now a record of its own SHA;
-  - `ComputeTargets/primitive_phase.py:73`, `:102` and `ComputeTargets/tests/test_primitive_phase.py:416`
-    name `QuadSourceIntegral._ClampedPhase`, and `main.py:1887-1893` says `QuadSource`'s values end at
-    the larger hand-over;
-  - a pre-B1 store's `QuadSource` rows (A3 v2's) stop at the last node above $z_{\rm init}$, and
-    B1's strict source check refuses them, so a resume of an old store at B1's tree must recompute
-    `QuadSource` first.
-
-  `seam_census.py` is a byte-identical record and stays; `analyse_quadsource_integral.py` reads the
-  keys with `.get` and does not raise. **Impact:** A2's tables cannot be regenerated, or extended
-  to B2's configurations, until the two reads are replaced; the stale comments mislead a reader.
-  **Owner: B2**, which re-runs A2 after B1 (prompt 12 §4.1). **Next step:** in B2, read
-  `partition["handover"]` where the gaps were read, and correct the three comments. Indexed at
-  `docs/OPEN_ISSUES.md` §1.1.
-
-  **Narrowed 2026-10-26 by A4:** its sibling `docs/handover/a4/scripts/a4_cells.py` imports from
-  `realistic_large_x.py` and replaces only the clamp reads, with reads of `partition["handover"]`,
-  and runs A2's whole ladder at `HEAD`. So B2 has a working pattern; `realistic_large_x.py` itself
-  and the three stale comments are unchanged.
-
-- **[04-table-cs-tau-fixture-does-not-cover-z-init-when-the-first-sample-is-dropped]** *(opened
-  2026-10-26 by prompt 04, A4, its `issues.md` item 1)* — `levin-phase-floor` 05's
-  `_TableCsTauFixture` (`ComputeTargets/tests/test_g_phase_reanchor.py:448`) builds its `cs_tau`
-  table on the fixture's own `z_WKB`. With `drop_first_WKB_sample=True`, production's seam, that
-  grid starts one step below $z_{\rm init}$, where $T$ is anchored. `CumulativeTable` refuses a
-  point more than one interval above its top node, so one ulp of `log1p` decides whether $T$
-  builds: on A2's ladder it raises at $10^4$–$10^6$. The fixture's numeric grid also ends exactly
-  on $z_{\rm init}$, so a table on numeric and WKB nodes makes $z_{\rm init}$ a node, unlike
-  production. **Impact:** test-fixture only; production's `cs_tau` covers the whole grid. B2 and
-  any instrument on production's seam meets it. A4 built its own table, on the user's answer.
-  **Next step:** build the fixture's table on nodes covering $z_{\rm init}$, off a node.
-  `docs/handover/a4/issues.md` item 1.
-
 - **[04-production-phase-gk-tau-table-has-a-zero-width-bottom-interval]** *(opened 2026-10-26 by
   prompt 04, A4, its `issues.md` item 2)* — `levin-phase-floor` 05's `_ProductionPhaseGk`
   (`test_g_phase_reanchor.py:652`) builds its `tau` table on its grid plus $z_{\rm resp}$. Given
@@ -872,6 +800,16 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   not checked. **Impact:** test-fixture only, as found. **Next step:** dedupe the fixture's nodes
   in $\log(1+z)$, and decide whether `CumulativeTable` should refuse such a pair.
   `docs/handover/a4/issues.md` item 2.
+
+  **Narrowed 2026-10-27 by prompt 13 (B2), Part A (`28ade78`): the fixture half is fixed.**
+  `test_phase_groups.response_anchored_grid` sets any grid node within 8 ulp of
+  $\log(1+z_{\rm resp})$ exactly to $z_{\rm resp}$, and raises if the table's nodes are not
+  distinct in $\log(1+z)$. `BesselPhaseGk`, which `_ProductionPhaseGk` now is, builds on it. Test
+  (c) builds $G$ on a grid whose last node is $z_{\rm resp}$ less one ulp and evaluates one ulp
+  below the anchor; restoring the duplicate node makes it raise "lies more than one grid interval
+  below the table". **What stays open:** whether `CumulativeTable` should refuse nodes that are not
+  distinct in $\log(1+z)$, and whether production's background grid can hold such a pair. Neither
+  is B2's.
 
 - **[03-gksource-policy-accepts-a-value-that-raises]** *(opened 2026-10-25 by prompt 03 (A3), from
   README §2 (o) item 1; indexed since 2026-09-19 as "none yet")* — `GkSourcePolicy` accepts
@@ -962,9 +900,149 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   take it up at once. The entry and its measurements stay on the other board, which is right where
   the two differ; indexed at `docs/OPEN_ISSUES.md` §1.1.
 
+
+- **[13-the-tlg-term-depends-on-the-levin-subdivision]** *(opened 2026-10-27 by prompt 13, B2)* —
+  on the realistic fixture the contribution of the Liouville–Green closed forms (`T.omega`,
+  `T.dlnM_dz`, term `TLG`) to the seam's residue depends on what else in the cell is realistic,
+  and the dependence follows the Levin driver's subdivision.
+  - **The interactions.** On every `q-smooth` rung the add-one interaction $\sum A_i - D$ is
+    0.50–0.62 of the largest single term, while the remove-one sum matches $D$ to
+    $\le1.3\times10^{-7}$. On `together` at $10^5$, $10^7$ and $10^8$, $G$'s remove-one term is
+    $-1.1\times10^{-5}$, $+4.05\times10^{-5}$ and $+8.8\times10^{-6}$, where its add-one term is
+    $\le1.6\times10^{-9}$.
+  - **The pairs.** A post-run probe of pairwise hybrids (`docs/handover/b2/out/probe_pairs.txt`)
+    puts both interactions in pairs with `TLG`. At `q-smooth` 980 the interaction of `TLG` with
+    `G` is $-3.674\times10^{-5}$ and with `Tnum` $-3.679\times10^{-5}$. At `q-smooth` $10^7$ both
+    are $+5.381\times10^{-5}$. At `together` $10^7$, `TLG`×`G` is $+4.050\times10^{-5}$. `TLG`×`f`
+    and `TLG`×`Trep` are 0, and every pair of `G` with a term other than `TLG` is
+    $\le3\times10^{-11}$.
+  - **The common thing.** `G` and `Tnum` share only one effect on the cell: each raises its Levin
+    region count from 9–20 to several hundred (`q-smooth` 980: E′+TLG 10 regions, R−TLG 674).
+  - **A plausible mechanism, not demonstrated.** The driver's phase derivative for $T$ is
+    `omega`, the Liouville–Green closed form. The phase it oscillates with is the stored one,
+    which on this fixture is the exact Bessel phase. If the two differ by the Liouville–Green
+    truncation, the Levin result depends on how finely the range is cut.
+
+  **Impact:** on this fixture, `TLG`'s per-term value is not well defined on `q-smooth`, and $B_G$
+  on `together`'s upper rungs is an interaction. [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md)
+  §4.6 reports them jointly. Whether production has the effect, and how large it is, is not
+  measured: production's stored $T$ phase comes from its own WKB integration, not from a closed
+  form, so its consistency with `omega` may be better or worse than the fixture's. E1, E2 and
+  anything else that scores a per-term budget at the seam meets it. **Next step:** test the
+  mechanism directly. Re-run E′+TLG at `q-smooth` 980 with the Levin phase derivative taken from
+  `phase.theta_deriv` instead of `omega` (a hybrid that changes only the derivative), and with a
+  forced fine subdivision. If either brings `TLG`'s add-one term to its remove-one value, the
+  mechanism is confirmed. Then measure the stored phase's consistency with `omega` on real
+  `TkWKBValue` rows. [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.6. Indexed at
+  `docs/OPEN_ISSUES.md` §1.1.
+
 ---
 
 ## 4. Resolved issues
+
+Closed by prompt 13 (B2), 2026-10-27 (Part A `28ade78`; records in [`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) and [`docs/handover/b2/`](../../docs/handover/b2/)):
+
+- **[02-realistic-fixture-Gk-phase-is-the-superseded-construction]** *(opened 2026-09-20 by prompt
+  02)* — `ComputeTargets/tests/test_phase_groups.py:299` documents `BesselPhaseGk` as built *"the
+  way `GkSourcePolicyData._create_functions` builds the real one: the phase is a `phase_spline`
+  over $\log(1+z')$ through (div 2pi, mod 2pi) samples"*. **That has not been true since
+  `prompts/GkTk-remedial` prompt 09.** Production's `GkSourcePolicyData._build_phase`
+  (`:145-190`, consumed at `:726`) returns a `PrimitivePhase` — the leading $-k\,\Delta\tau$ from
+  the background table with only a small residual splined — which is precisely how that campaign
+  discharged `[12-phase-spline-error-grows-with-x]`'s $\delta\theta \simeq h^4x/384$ for $G_k$
+  (board M14: 4.189e-08 rad against 7.286e-03 for the same samples, a ratio of 1.739e+05).
+  `TkSourceFunctions` *is* current — prompt 10 gave it a `PrimitivePhase` too — so the realistic
+  flavour's $T$ half is production's and its $G$ half is the construction production abandoned.
+  Consequences, in order of how much they matter: the module docstring of
+  `test_quadsource_integral.py` claims the realistic flavour "is the accuracy production can
+  expect", and that is **stale for $G$**; prompt 02's representation term (4.08e-05 – 2.68e-03,
+  `REALISTIC-LARGE-X.md` §4) is therefore an **upper bound** on production's rather than an
+  estimate of it, because it carries a term production has already removed; and the Levin cost
+  growth of the issue below may be the same staleness seen from the cost side.
+  **Impact:** **B2**, which re-runs this harness once the gap is gone and attributes what is left —
+  it should fix the fixture before it scores the residue, or its numbers will be pessimistic by an
+  unknown factor for $G$. Also any later reader of the test module's docstring. Nothing in
+  production is wrong; this is an instrument that has fallen behind the thing it models.
+  **Next step:** rebuild `BesselPhaseGk`/`OffsetBesselPhaseGk` on `PrimitivePhase` as
+  `_build_phase` does, and correct both docstrings. Not done here: prompt 02 §5 forbids editing
+  `test_quadsource_integral.py`, and `test_phase_groups.py` is not in its scope either.
+  Measurement: [`logs/02-realistic-flavour-large-x-harness.md`](logs/02-realistic-flavour-large-x-harness.md),
+  "Observations not acted on" item 1. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Narrowed 2026-10-26 by A4:** at `HEAD`, with $G$'s phase built as production builds it, the
+  realistic flavour's representation term is recorded per cell beside the `phase_spline` arm's,
+  with both declared errors and no verdict ([`GK-PHASE-COST-GROWTH.md`](../../docs/handover/GK-PHASE-COST-GROWTH.md) §5).
+  A4 built production's $G$ in its own script (`docs/handover/a4/scripts/a4_cells.py`); the
+  fixture itself is unchanged and stays B2's to fix.
+
+  **Closed 2026-10-27 by prompt 13 (B2).** Part A (`28ade78`) rebuilt `BesselPhaseGk` on
+  `GkSourcePolicyData._build_phase` itself (a `PrimitivePhase` on a `CumulativeTable` of $1/H$,
+  `exact_remainder` on), reduced `_ProductionPhaseGk` to it plus `old_phase`, deleted
+  `OffsetBesselPhaseGk`, and corrected both docstrings, which now name what is still not
+  production's (amplitude, `numeric_Gk`, grid). Part B measured what the old construction cost:
+  with production's $G$, the $G$ term of the seam's residue is $|A_G|\le1.6\times10^{-9}$ in $N$
+  on `together` and `T-first` and $\le1.4\times10^{-8}$ on `q-smooth`, three to eight orders below
+  the largest term at every rung. So A2's representation term was an upper bound in the way this
+  entry said, and $G$'s construction is not where the residue lives
+  ([`SEAM-RESIDUE.md`](../../docs/handover/SEAM-RESIDUE.md) §4.4).
+
+- **[04-table-cs-tau-fixture-does-not-cover-z-init-when-the-first-sample-is-dropped]** *(opened
+  2026-10-26 by prompt 04, A4, its `issues.md` item 1)* — `levin-phase-floor` 05's
+  `_TableCsTauFixture` (`ComputeTargets/tests/test_g_phase_reanchor.py:448`) builds its `cs_tau`
+  table on the fixture's own `z_WKB`. With `drop_first_WKB_sample=True`, production's seam, that
+  grid starts one step below $z_{\rm init}$, where $T$ is anchored. `CumulativeTable` refuses a
+  point more than one interval above its top node, so one ulp of `log1p` decides whether $T$
+  builds: on A2's ladder it raises at $10^4$–$10^6$. The fixture's numeric grid also ends exactly
+  on $z_{\rm init}$, so a table on numeric and WKB nodes makes $z_{\rm init}$ a node, unlike
+  production. **Impact:** test-fixture only; production's `cs_tau` covers the whole grid. B2 and
+  any instrument on production's seam meets it. A4 built its own table, on the user's answer.
+  **Next step:** build the fixture's table on nodes covering $z_{\rm init}$, off a node.
+  `docs/handover/a4/issues.md` item 1.
+
+  **Closed 2026-10-27 by prompt 13 (B2), Part A (`28ade78`).** `_TableCsTauFixture` now builds
+  its table on A4's union of the fixture's numeric and WKB nodes without the node equal to
+  $z_{\rm init}$ (`cs_tau_nodes()`), so the table covers $z_{\rm init}$ off a node, as production's
+  grid does. Test (b) (`TestRealisticFlavourIsProductions`) builds $T$ at `together` $10^4$, one of
+  the configurations A4 recorded raising, and fails when the table is built on the dropped
+  `z_WKB` again. The `levin-phase-floor` 05a tests pass. Log 13, Part A.
+
+- **[12-realistic-large-x-reads-the-retired-clamp-records]** *(opened 2026-10-25 by prompt 12, B1;
+  not acted on, by the prompt's own §4.1)* — B1 removed `metadata["partition"]["max_clamp_gap_log1pz"]`
+  and every `subintervals[i]["clamp_gaps_log1pz"]`. `docs/handover/realistic_large_x.py`, A2's
+  harness, reads `item["clamp_gaps_log1pz"]` (`:332`, `:666`) and `partition["max_clamp_gap_log1pz"]`
+  (`:356`), so at `HEAD` every cell raises `KeyError`; its docstring also describes `_ClampedTk`
+  (`:45`, `:194`). The prompt forbids editing it (its checkpoint is gated on its own SHA-256) and
+  makes a re-run after B1 B2's. Three related records of the same removal:
+  - `docs/levin-phase-floor/noise_injection.py` (another session's, untracked when B1 ran) imports
+    that module and `test_quadsource_integral`'s `Case`, and is now a record of its own SHA;
+  - `ComputeTargets/primitive_phase.py:73`, `:102` and `ComputeTargets/tests/test_primitive_phase.py:416`
+    name `QuadSourceIntegral._ClampedPhase`, and `main.py:1887-1893` says `QuadSource`'s values end at
+    the larger hand-over;
+  - a pre-B1 store's `QuadSource` rows (A3 v2's) stop at the last node above $z_{\rm init}$, and
+    B1's strict source check refuses them, so a resume of an old store at B1's tree must recompute
+    `QuadSource` first.
+
+  `seam_census.py` is a byte-identical record and stays; `analyse_quadsource_integral.py` reads the
+  keys with `.get` and does not raise. **Impact:** A2's tables cannot be regenerated, or extended
+  to B2's configurations, until the two reads are replaced; the stale comments mislead a reader.
+  **Owner: B2**, which re-runs A2 after B1 (prompt 12 §4.1). **Next step:** in B2, read
+  `partition["handover"]` where the gaps were read, and correct the three comments. Indexed at
+  `docs/OPEN_ISSUES.md` §1.1.
+
+  **Narrowed 2026-10-26 by A4:** its sibling `docs/handover/a4/scripts/a4_cells.py` imports from
+  `realistic_large_x.py` and replaces only the clamp reads, with reads of `partition["handover"]`,
+  and runs A2's whole ladder at `HEAD`. So B2 has a working pattern; `realistic_large_x.py` itself
+  and the three stale comments are unchanged.
+
+  **Closed 2026-10-27 by prompt 13 (B2).** Part A (`28ade78`) corrected the stale clamp comments
+  (`primitive_phase.py`, twice; `test_primitive_phase.py`; `main.py`'s `QuadSource` comment). The
+  clamp grep outside `venv/`, `docs/` and `prompts/` now finds only the three `assertNotIn` checks
+  of `test_quadsource_integral.py`. Part B's [`docs/handover/b2/scripts/b2_cells.py`](../../docs/handover/b2/scripts/b2_cells.py)
+  is `realistic_large_x.py`'s successor at `HEAD`. It imports what still holds and reads
+  `partition["handover"]` where A2 read the clamp records, and it ran A2's whole ladder in
+  `handover-13-residue-20261027T110832`. `realistic_large_x.py` itself is A2's record and stays
+  unedited; it runs at A2's tree. The pre-B1-store point is unchanged and belongs to whoever
+  resumes such a store.
 
 Closed at `levin-phase-floor`'s gate G1, 2026-10-26:
 

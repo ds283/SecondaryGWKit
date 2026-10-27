@@ -1,0 +1,4 @@
+E  : total 0x1.04bc9b113980ap-40 / 0x1.04bc9b113980ap-40, total_abserr 0x1.ca37a87b9d532p-79 / 0x1.ca37a87b9d532p-79, 7 groups, regions 7 / 7, max depth 0 / 0: bit-identical
+Ep : total 0x1.04bc9b11398a2p-40 / 0x1.04bc9b11398a2p-40, total_abserr 0x1.0450e9d8fd8f0p-78 / 0x1.0450e9d8fd8f0p-78, 7 groups, regions 7 / 7, max depth 0 / 0: bit-identical
+R  : total 0x1.03e5aa4fb72dep-40 / 0x1.03e5aa4fb72dep-40, total_abserr 0x1.aaeb34a31deebp-66 / 0x1.aaeb34a31deebp-66, 7 groups, regions 44 / 44, max depth 5 / 5: bit-identical
+== check determinism: HOLDS (4.5 s)

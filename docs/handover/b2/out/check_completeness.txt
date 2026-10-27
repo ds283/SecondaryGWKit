@@ -1,0 +1,22 @@
+(i) E'+all five vs R:
+   total         hybrid, D = {}   9.233400888162084e-13     0x1.03e5aa4fb72dep-40    | R unwrapped 9.233400888162084e-13     0x1.03e5aa4fb72dep-40    bit-identical
+   total_abserr  hybrid, D = {}   2.2600891601604973e-20    0x1.aaeb34a31deebp-66    | R unwrapped 2.2600891601604973e-20    0x1.aaeb34a31deebp-66    bit-identical
+   numeric_quad  hybrid, D = {}   4.003231974606505e-12     0x1.19b3d0ed022a3p-38    | R unwrapped 4.003231974606505e-12     0x1.19b3d0ed022a3p-38    bit-identical
+   WKB_Levin     hybrid, D = {}   -3.0798918857902964e-12   -0x1.b174ccb228bd7p-39   | R unwrapped -3.0798918857902964e-12   -0x1.b174ccb228bd7p-39   bit-identical
+(ii) R-all five vs E':
+   total         hybrid, D = all  9.263229868103217e-13     0x1.04bc9b11398a2p-40    | exact_with_the_geometry_of(R) 9.263229868103217e-13     0x1.04bc9b11398a2p-40    bit-identical
+   total_abserr  hybrid, D = all  3.364506324642508e-24     0x1.0450e9d8fd8f0p-78    | exact_with_the_geometry_of(R) 3.364506324642508e-24     0x1.0450e9d8fd8f0p-78    bit-identical
+   numeric_quad  hybrid, D = all  4.0060107318932485e-12    0x1.19e5dfae93c2fp-38    | exact_with_the_geometry_of(R) 4.0060107318932485e-12    0x1.19e5dfae93c2fp-38    bit-identical
+   WKB_Levin     hybrid, D = all  -3.0796877450829267e-12   -0x1.b16d71d48ac0dp-39   | exact_with_the_geometry_of(R) -3.0796877450829267e-12   -0x1.b16d71d48ac0dp-39   bit-identical
+disjointness (b2_cells.ACCESSORS), accessor -> term:
+   QuadSource.functions.source    f
+   T.T                            Tnum
+   T.dT_dz                        Tnum
+   T.M                            Trep
+   T.phase                        Trep
+   T.omega                        TLG
+   T.dlnM_dz                      TLG
+   Gk.phase                       G
+   Gk.sin_amplitude               G
+   9 accessors, 0 in two terms []
+== check completeness: HOLDS (3.0 s)

@@ -1,0 +1,9 @@
+run id      handover-13-residue-20261027T110832
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-13-residue-20261027T110832
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-13-residue-20261027T110832/manifest.json
+checkpoint  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-13-residue-20261027T110832/checkpoint.jsonl
+expected    208 cells
+driver      /Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13/scripts/b2_driver.py sha256 dc8772e3c7b5dfe345296abc1dfffa78d303afc6de179149028920289d6d2278
+sh pid      24593 (nohup execs sh; sh runs the driver as its child)
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit-handover-13/var/handover-13/scripts/b2_driver.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/handover-13-residue-20261027T110832; exit $?
+launcher    pid 24588, exiting without waiting

@@ -1,0 +1,18 @@
+together     1e+03 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+together     1e+04 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+together     1e+05 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+together     1e+06 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+together     1e+07 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+together     1e+08 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+T-first      1e+03 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+T-first      1e+04 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+T-first      1e+05 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+T-first      1e+06 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+T-first      1e+07 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+q-smooth     1e+03 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+q-smooth     1e+04 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+q-smooth     1e+05 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+q-smooth     1e+06 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+q-smooth     1e+07 R        ok  G=PrimitivePhase/True/TablePrimitive Tq=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True Tr=PrimitivePhase/True/TablePrimitive WKB_top<z_init: True G below z_resp: 0 failures
+208 objects built (16 rungs x 13); 0 with problems
+== check construction: HOLDS (25.8 s)

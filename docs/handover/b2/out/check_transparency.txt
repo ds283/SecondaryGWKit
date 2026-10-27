@@ -1,0 +1,6 @@
+total          wrapped 9.233400888162084e-13      0x1.03e5aa4fb72dep-40  unwrapped 9.233400888162084e-13      0x1.03e5aa4fb72dep-40  bit-identical
+total_abserr   wrapped 2.2600891601604973e-20     0x1.aaeb34a31deebp-66  unwrapped 2.2600891601604973e-20     0x1.aaeb34a31deebp-66  bit-identical
+numeric_quad   wrapped 4.003231974606505e-12      0x1.19b3d0ed022a3p-38  unwrapped 4.003231974606505e-12      0x1.19b3d0ed022a3p-38  bit-identical
+WKB_Levin      wrapped -3.0798918857902964e-12    -0x1.b174ccb228bd7p-39  unwrapped -3.0798918857902964e-12    -0x1.b174ccb228bd7p-39  bit-identical
+Levin regions (metadata): wrapped 44, unwrapped 44; the wrapper's own count 44
+== check transparency: HOLDS (2.0 s)

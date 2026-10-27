@@ -1,0 +1,8 @@
+108 (rung, Levin sub-interval, group) rows, 4001 points each; 0 with a sign change
+   together  nearest approach: x_resp 1e+03, sub-interval 3 (Gqr), group G+q+r: min |theta'| = 5.6729e+00 per log(1+z) = 0.1522 of the largest constituent's |theta'| there, at z = 294.106
+   T-first   nearest approach: x_resp 1e+07, sub-interval 3 (Gqr), group G-q+r: min |theta'| = 6.2598e-01 per log(1+z) = 0.0226 of the largest constituent's |theta'| there, at z = 2.55102e+06
+   q-smooth  nearest approach: x_resp 1e+07, sub-interval 3 (Gqr), group G+q+r: min |theta'| = 1.2171e+03 per log(1+z) = 0.3592 of the largest constituent's |theta'| there, at z = 30111.6
+   together  smallest absolute min |theta'|: 5.6729e+00 per log(1+z) (x_resp 1e+03, Gqr, G+q+r; 0.1522 relative)
+   T-first   smallest absolute min |theta'|: 6.2598e-01 per log(1+z) (x_resp 1e+07, Gqr, G-q+r; 0.0226 relative)
+   q-smooth  smallest absolute min |theta'|: 4.0000e+00 per log(1+z) (x_resp 1e+07, G, G; 1.0000 relative)
+== check stationary: HOLDS (4.8 s)
