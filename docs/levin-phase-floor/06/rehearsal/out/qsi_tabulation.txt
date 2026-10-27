@@ -1,0 +1,127 @@
+rows: A 864, B 864; same (k,q,r,z_response) set: True
+tolerances A: [(-32.0, -7.0)]; B: [(-32.0, -7.0)]
+tool: 864 rows differ, 0 identical; same key set as the stores: True
+cross-check of `total` against the tool: 0 mismatches
+
+`total` differs in 554 of 864 rows; bit-identical in 310
+numeric_quad identical in 864/864; analytic_rad identical in 864/864; WKB_Levin identical in 296/864
+rows with total differing but WKB_Levin identical: 0
+rel_dtotal over the 554 differing rows: median 2.787e-11, 90% 1.368e-08, max 1.568e-03
+dtotal_over_abserr_A over the 554 differing rows: median 1.899e-04, 90% 9.819e-02, max 1.818e+04
+dtotal_over_abserr_B over the 554 differing rows: median 1.898e-04, 90% 9.579e-02, max 1.277e+04
+rows with |dtotal|/abserr_A > 1.0: 4; /abserr_B > 1.0: 2
+rows with |dtotal|/abserr_A > 0.1: 55; /abserr_B > 0.1: 54
+
+transitions (A -> B), all rows:
+  converged: 0->0: 355, 1->1: 509
+  phase_limited: 0->0: 829, 0->1: 4, 1->0: 9, 1->1: 22
+  max_depth: 0->0: 5, 1->1: 3, 10->10: 2, 11->11: 13, 12->12: 9, 12->6: 1, 14->6: 1, 2->2: 3, 3->3: 11, 4->3: 1, 4->4: 2, 5->5: 17, 6->6: 229, 7->7: 259, 8->8: 17, None->None: 291
+  regions: 59 rows change; total regions A 13652, B 13495 (None counted as 0)
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=250: regions 31->14, depth 12->6, converged 0->0, |dtotal|/abserr_A 1.82e+04
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=250: regions 30->15, depth 14->6, converged 0->0, |dtotal|/abserr_A 484
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=250: regions 24->12, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.363
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=329.64: regions 26->17, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0115
+    k=1e+05 q=1e+06 r=1e+06 z_resp=329.64: regions 22->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0493
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=755.687: regions 21->14, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.216
+    k=1e+05 q=1e+06 r=1e+06 z_resp=250: regions 21->15, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.192
+    k=1e+05 q=1e+06 r=1e+06 z_resp=434.651: regions 21->15, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0168
+    k=1e+05 q=1e+06 r=1e+06 z_resp=1313.84: regions 16->10, depth 4->3, converged 0->0, |dtotal|/abserr_A 0.0893
+    k=1e+05 q=1e+05 r=1e+05 z_resp=755.687: regions 32->27, depth 11->11, converged 0->0, |dtotal|/abserr_A 0.0167
+    k=1e+06 q=1e+06 r=1e+06 z_resp=996.42: regions 19->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 1.02
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=573.115: regions 18->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0543
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=755.687: regions 19->15, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.17
+    k=1e+05 q=1e+06 r=1e+06 z_resp=1732.38: regions 18->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.232
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=2284.25: regions 36->32, depth 12->12, converged 0->0, |dtotal|/abserr_A 0.0756
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=2284.25: regions 16->12, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0447
+    k=1e+06 q=1e+05 r=1e+06 z_resp=329.64: regions 55->51, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.502
+    k=1e+06 q=1e+06 r=1e+06 z_resp=329.64: regions 20->16, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.218
+    k=1e+06 q=1e+06 r=1e+06 z_resp=573.115: regions 18->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0251
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=434.651: regions 19->17, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.279
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=3011.93: regions 14->16, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.169
+    k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=3971.41: regions 18->16, depth 6->6, converged 1->1, |dtotal|/abserr_A 0.096
+    k=1e+05 q=1e+06 r=1e+06 z_resp=20871.2: regions 16->14, depth 6->6, converged 1->1, |dtotal|/abserr_A 0.46
+    k=3.162e+05 q=1e+05 r=3.162e+05 z_resp=6904.72: regions 40->38, depth 7->7, converged 1->1, |dtotal|/abserr_A 0.0224
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=1313.84: regions 31->29, depth 12->12, converged 0->0, |dtotal|/abserr_A 0.125
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=3011.93: regions 32->30, depth 12->12, converged 0->0, |dtotal|/abserr_A 0.0729
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=6904.72: regions 32->30, depth 11->11, converged 0->0, |dtotal|/abserr_A 0.105
+    k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=15828.8: regions 21->19, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.0131
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=434.651: regions 14->16, depth 8->8, converged 0->0, |dtotal|/abserr_A 0.271
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=573.115: regions 12->14, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.245
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=996.42: regions 16->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0286
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=1313.84: regions 12->14, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.253
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=1732.38: regions 14->12, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.126
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=5236.55: regions 13->15, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.218
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=9104.3: regions 18->16, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.00137
+    k=3.162e+05 q=1e+06 r=1e+06 z_resp=36286.8: regions 18->20, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0142
+    k=1e+06 q=1e+06 r=1e+06 z_resp=250: regions 17->15, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.253
+    k=1e+06 q=1e+06 r=1e+06 z_resp=434.651: regions 18->16, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.369
+    k=1e+06 q=1e+06 r=1e+06 z_resp=1313.84: regions 17->15, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.156
+    k=1e+06 q=1e+06 r=1e+06 z_resp=1732.38: regions 15->13, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.0381
+    k=1e+06 q=1e+06 r=1e+06 z_resp=3011.93: regions 13->15, depth 7->7, converged 0->0, |dtotal|/abserr_A 0.155
+    k=1e+06 q=1e+06 r=1e+06 z_resp=3971.41: regions 14->12, depth 6->6, converged 0->0, |dtotal|/abserr_A 0.143
+
+non-wall-clock metadata keys that differ, by number of rows (top 30):
+   768  partition.handover.Tr.handover_continuity[0].dTprime_rel
+   768  partition.handover.Tr.handover_continuity[2].dT_rel
+   768  partition.handover.Tr.handover_continuity[2].dTprime_rel
+   576  partition.handover.Tq.handover_continuity[0].dTprime_rel
+   576  partition.handover.Tq.handover_continuity[2].dT_rel
+   576  partition.handover.Tq.handover_continuity[2].dTprime_rel
+   570  WKB_Levin.subintervals[0].groups[0].abserr
+   569  WKB_Levin.subintervals[0].groups[0].value
+   568  WKB_Levin.subintervals[0].value
+   546  WKB_Levin.abserr
+   546  WKB_Levin.subintervals[0].abserr
+   546  WKB_Levin.subintervals[1].abserr
+   546  WKB_Levin.subintervals[1].groups[0].value
+   543  WKB_Levin.subintervals[1].groups[0].abserr
+   543  WKB_Levin.subintervals[1].groups[1].abserr
+   543  WKB_Levin.subintervals[1].groups[1].value
+   543  WKB_Levin.subintervals[1].value
+   480  partition.handover.Tr.handover_continuity[0].dT_rel
+   355  WKB_Levin.subintervals[1].groups[3].abserr
+   354  WKB_Levin.subintervals[1].groups[3].value
+   353  WKB_Levin.subintervals[1].groups[2].value
+   352  WKB_Levin.subintervals[1].groups[2].abserr
+   288  partition.handover.Tq.handover_continuity[1].dT_rel
+   288  partition.handover.Tq.handover_continuity[1].dTprime_rel
+   288  partition.handover.Tq.handover_continuity[0].dT_rel
+   176  WKB_Levin.subintervals[2].groups[0].value
+   176  WKB_Levin.subintervals[2].groups[1].value
+   176  WKB_Levin.subintervals[2].groups[2].value
+   176  WKB_Levin.subintervals[2].groups[3].value
+   175  WKB_Levin.subintervals[2].abserr
+distinct non-wall-clock keys differing: 60; rows with any: 864; rows with wall-clock keys only: 0
+
+the 15 rows of largest |dtotal|/abserr_A:
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=250: rel 1.568e-03, /abserr_A 1.818e+04, /abserr_B 1.277e+04, depth 12->6, regions 31->14, converged 0->0
+  k=1e+05 q=3.162e+05 r=3.162e+05 z_resp=250: rel 2.764e-05, /abserr_A 4.844e+02, /abserr_B 5.546e+02, depth 14->6, regions 30->15, converged 0->0
+  k=1e+06 q=1e+06 r=1e+06 z_resp=755.687: rel 2.917e-07, /abserr_A 1.254e+00, /abserr_B 9.036e-01, depth 7->7, regions 15->14, converged 0->0
+  k=1e+06 q=1e+06 r=1e+06 z_resp=996.42: rel 7.932e-08, /abserr_A 1.023e+00, /abserr_B 8.864e-01, depth 6->6, regions 19->14, converged 0->0
+  k=1e+05 q=1e+06 r=1e+06 z_resp=573.115: rel 1.660e-08, /abserr_A 5.495e-01, /abserr_B 5.797e-01, depth 6->6, regions 14->14, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=434.651: rel 3.635e-08, /abserr_A 5.272e-01, /abserr_B 7.157e-01, depth 12->12, regions 23->23, converged 0->0
+  k=1e+06 q=1e+05 r=1e+06 z_resp=329.64: rel 9.444e-07, /abserr_A 5.017e-01, /abserr_B 5.249e-01, depth 7->7, regions 55->51, converged 0->0
+  k=1e+05 q=1e+06 r=1e+06 z_resp=20871.2: rel 1.501e-08, /abserr_A 4.596e-01, /abserr_B 3.680e-01, depth 6->6, regions 16->14, converged 1->1
+  k=1e+05 q=1e+06 r=1e+06 z_resp=996.42: rel 1.187e-08, /abserr_A 4.221e-01, /abserr_B 4.826e-01, depth 6->6, regions 14->14, converged 0->0
+  k=1e+06 q=3.162e+05 r=1e+06 z_resp=329.64: rel 5.761e-07, /abserr_A 4.197e-01, /abserr_B 4.330e-01, depth 7->7, regions 39->39, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=329.64: rel 3.789e-08, /abserr_A 4.186e-01, /abserr_B 4.255e-01, depth 12->12, regions 32->32, converged 0->0
+  k=1e+06 q=1e+05 r=1e+06 z_resp=755.687: rel 1.645e-07, /abserr_A 4.117e-01, /abserr_B 3.894e-01, depth 7->7, regions 53->53, converged 0->0
+  k=1e+06 q=1e+06 r=1e+06 z_resp=434.651: rel 1.584e-07, /abserr_A 3.687e-01, /abserr_B 5.011e-01, depth 7->7, regions 18->16, converged 0->0
+  k=3.162e+05 q=3.162e+05 r=3.162e+05 z_resp=996.42: rel 2.852e-08, /abserr_A 3.651e-01, /abserr_B 4.813e-01, depth 12->12, regions 28->28, converged 0->0
+  k=3.162e+05 q=1e+06 r=1e+06 z_resp=250: rel 2.853e-08, /abserr_A 3.627e-01, /abserr_B 2.334e-01, depth 6->6, regions 24->12, converged 0->0
+
+by max depth under A: rows, rows where total differs, median and max |dtotal|/abserr_A
+  depth 0: 5 rows, 1 differ, median 3.258e-09, max 3.258e-09
+  depth 1: 3 rows, 1 differ, median 0.000e+00, max 0.000e+00
+  depth 2: 3 rows, 2 differ, median 2.055e-05, max 2.055e-05
+  depth 3: 11 rows, 3 differ, median 4.828e-07, max 5.902e-04
+  depth 4: 3 rows, 1 differ, median 8.928e-02, max 8.928e-02
+  depth 5: 17 rows, 16 differ, median 1.039e-05, max 4.147e-02
+  depth 6: 229 rows, 228 differ, median 7.139e-05, max 1.023e+00
+  depth 7: 259 rows, 259 differ, median 2.404e-04, max 1.254e+00
+  depth 8: 17 rows, 17 differ, median 1.856e-04, max 2.709e-01
+  depth 10: 2 rows, 2 differ, median 4.261e-02, max 4.261e-02
+  depth 11: 13 rows, 13 differ, median 4.374e-02, max 1.737e-01
+  depth 12: 10 rows, 10 differ, median 1.251e-01, max 1.818e+04
+  depth 14: 1 rows, 1 differ, median 4.844e+02, max 4.844e+02
+  depth None: 291 rows, 0 differ

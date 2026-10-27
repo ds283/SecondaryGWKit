@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/scripts/examine_outliers.py", line 93, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/scripts/examine_outliers.py", line 55, in main
+    print(f"  {r['table']} k={float(r['k']):.6g} div {r['div_B']} |theta| {float(r['theta_abs']):.4e} "
+                              ~~~~~^^^^^^^^
+ValueError: could not convert string to float: '0x1.e848000000000p+19'

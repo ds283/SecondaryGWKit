@@ -1,0 +1,41 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/worker.py state/dev/s/spec.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:09:02Z
+# ----
+# worker s evidence {"tree": "s", "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c", "expected_sha": "f5cee4c7a76e755119d923341f204f139b29be7e", "head": "f5cee4c7a76e755119d923341f204f139b29be7e", "status_short": "", "files": {"ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/__init__.py", "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/primitive_phase.py", "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/QuadSource.py", "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/QuadSourceIntegral.py", "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/GkSourcePolicyData.py", "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/TkSourceFunctions.py", "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/StoreFixtures/__init__.py", "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/main.py", "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/primitive_phase.py", "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/GkWKBIntegration.py", "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/TkWKBIntegration.py", "ComputeTargets.GkSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/GkSource.py", "Quadrature.integrators.WKB_phase_function": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/Quadrature/integrators/WKB_phase_function.py", "WKB_phase_function (the producers' remote's function)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/Quadrature/integrators/WKB_phase_function.py"}, "all_in_tree": true, "in_tree": {"ComputeTargets": true, "ComputeTargets.primitive_phase": true, "ComputeTargets.QuadSource": true, "ComputeTargets.QuadSourceIntegral": true, "ComputeTargets.GkSourcePolicyData": true, "ComputeTargets.TkSourceFunctions": true, "StoreFixtures": true, "main.py": true, "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true, "ComputeTargets.GkWKBIntegration": true, "ComputeTargets.TkWKBIntegration": true, "ComputeTargets.GkSource": true, "Quadrature.integrators.WKB_phase_function": true, "WKB_phase_function (the producers' remote's function)": true}, "PrimitivePhase_has_exact_remainder": true, "build_phase_source_mentions_exact_remainder": true, "TkSourceFunctions_exact_remainder_default": true, "producers_store_reduce_exactly": {"GkWKBIntegration": true, "TkWKBIntegration": true}, "GkWKBValue_has_theta_residual": true, "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c", "PYTHONDONTWRITEBYTECODE": "1", "dont_write_bytecode": true, "OMP_NUM_THREADS": "1", "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider", "pid": 5085, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "scripts_sha256": {"worker.py": "486ab0d3bf9289f042b168db8ef9528b42e8011353ef47e18b1d7d433ce3201c", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71", "rebuild.py": "a29dbd70d641f7bd88c4f9fe2d84df148b32134291a844b63da98e0f88324e0e", "prov.py": "fc546674bf2c4c1951fd8c967ddcc7c490b9663a8c0f2cc94060754fd2182b70", "run_wider.py": "962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45", "launch.py": "c78bb5281a93f15e77b5d3cd597c26d368dbda743cd39cefb34822f8a341f2f3", "rerun.py": "36f590fdd0e8a29dbb48e54151678ab4b38a533de10eb95826f791fb00d03086", "phase_probe06.py": "7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22"}}
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/worker.py", line 674, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/worker.py", line 422, in main
+    pool, printed = open_readonly_pool(PRIMARY, cluster)
+                    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/harness.py", line 183, in open_readonly_pool
+    pool = sp_mod.ShardedPool(
+        version_label=VERSION_LABEL,
+    ...<10 lines>...
+        factories=factories,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py", line 219, in __init__
+    self._open(version_label, drop_tables, read_table_config, read_only)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py", line 235, in _open
+    self._open_read_only(version_label, drop_tables, read_table_config)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py", line 597, in _open_read_only
+    with open_read_only(self._primary_file, self._factories):
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/store_reader.py", line 228, in open_read_only
+    _describe_shard(primary_path, serial, Path(path), engine, built.tables)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/store_reader.py", line 135, in _describe_shard
+    raise StoreSchemaMismatch(
+        _VERB, primary, f'shard #{serial} "{str(path)}"', differences
+    )
+datastorekit.SQL.schema.StoreSchemaMismatch: Cannot read sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm.sqlite": shard #0 "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite" differs from the tables this code declares (its table "TkWKBValue" lacks the column(s) "theta_residual"; its table "GkWKBValue" lacks the column(s) "theta_residual"; its table "GkSourceValue" lacks the column(s) "theta_residual"), so nothing was read
+# ----
+# end 2026-10-26T22:09:04Z
+# exit 1

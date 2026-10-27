@@ -1,7 +1,8 @@
 # levin-phase-floor campaign — implementation state
 
-**Last updated:** 2026-10-26 · **Status: LAYER 1(a) LANDED FOR $G$ AND $T$ — 01, 03, 04, 05 and 05a landed, 02
-stopped and superseded; gate G1 answered 2026-10-26; G2 open.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+**Last updated:** 2026-10-27 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
+landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 open, and now also holds
+`[06-levin-accepts-a-region-across-a-stationary-point]`.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
 `handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
 the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
 issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
@@ -74,6 +75,26 @@ old construction. The first dispatch stopped before any code on the payload's ke
 ruled on that and eight findings (prompt §9 point 6). §5 and §6 are pending; the header's issue
 moves only in 06's records commit.
 
+**06 landed** (2026-10-27): the producers' stored phase, code `dc9d28c`.
+- **R13 and R14** (Mac Studio, from worktrees) both give `1b332ffa…`. Outside the five classes 06
+  changes, every value table is identical. Inside them no cycle count changes, and the remainder
+  moves by a median 0.3 $\varepsilon|\theta|$. 554 of 864 totals move, by a median
+  $2.8\times10^{-11}$ relative.
+- **On 05's 39 rows,** with the producers re-run in-process: U0 holds. **S1 holds**: $\varphi_G$'s
+  storage noise goes, from production's quantised value to at most $8.8\times10^{-14}F$ in 6,700 of
+  6,700 pure-WKB windows. S3 holds. S2 fails as written, where its metric measures $\varphi_T$'s own
+  shape (W4). S4 fails on 5 rows and S5 on 3, both findings about the declared error.
+- **Three stops**, each answered by the user: route (B) for reading A3 v2 under the new code, S1's
+  pure-WKB reading, and check 4's reading of 05's classifier (Decisions, **06**).
+- **The user closed** `[02-consumer-phi-below-the-storage-granularity]` (`phase-representation` §4).
+- **P1, the finding that matters beyond the prompt.** Two rehearsal totals moved by up to
+  $1.8\times10^4$ times their declared error. Investigated from the laptop: R13's are right and
+  R14's are wrong, because `AdaptiveLevin` accepts a region containing an interior stationary point,
+  the Kohri–Terada resonance, with an error estimate about $10^4$ too small. R13's noisier phase
+  forced the bisection that found it by luck. Opened as
+  `[06-levin-accepts-a-region-across-a-stationary-point]`, assigned to G2 with layer 3 (§3).
+- 06 opened three issues (§3).
+
 The plan is [`README.md`](README.md), written on 2026-10-25 at `effba46`. Its audit is
 [`docs/handover/A3-V2-FINDINGS.md`](../../docs/handover/A3-V2-FINDINGS.md) §2.
 
@@ -83,7 +104,7 @@ two named hypotheses, H-cancel and H-anchor (README §0.2). Then it lands the re
 admits.
 
 **Campaign:** [`README.md`](README.md) ·
-**Code:** none in 01–04; layer 1(a) in 05 (`120fdfe`, $G$) and 05a (`1fc349c`, $T$); the producers' stored phase in 06 (§1–§4; §5–§6 pending) ·
+**Code:** none in 01–04; layer 1(a) in 05 (`120fdfe`, $G$) and 05a (`1fc349c`, $T$); the producers' stored phase in 06 (`dc9d28c`) ·
 **Verification:** `docs/levin-phase-floor/VERIFICATION.md` (created by 01), with each prompt's
 records in `docs/levin-phase-floor/NN/` ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.24
@@ -122,6 +143,17 @@ records in `docs/levin-phase-floor/NN/` ·
 | **05a T1** | **T1 is read by the true step**, $\lvert d\theta_T/dz\rvert(b-a)/64 < \pi/2$, not by `numpy.unwrap`'s folded step. The user chose it without having seen either reading's numbers, which already existed on the Mac Studio. The user then confirmed it once the timing had been corrected. T1 holds (70 of 70); the literal reading's 36 aliased failures stay beside it |
 | **05a close** | **Both 05a issues closed** although T4 fails, since T4's failure is 05's L3 on the same rows and ratios, unchanged by $T$; X2 opened as an issue |
 
+**Made by the user during and after 06, 2026-10-26 and 27:**
+
+| | Decided |
+|---|---|
+| **06 §9** | **Six amendments to the prompt** (`59d4070`, `7b6c1cd`, `9f66622`): $\varphi_G$'s sign; R14 must give `1b332ffa…`; the cycle-change bound; S1 scored on pure-WKB windows only (a numerically seeded value's $\Delta\theta$ carries the numeric integration's own error); two source greps and the payload's key set named in §2; $\varphi_G$ and the agreement check in `_build_phase`, a disagreement warning rather than raising; closed-form fixtures forming the residual in double |
+| **06 route (B)** | **$s$ reads a certified scratch copy of A3 v2** with the three nullable columns added, since no post-06 tree can open a pre-06 store: *"We have to be practical and pragmatic. The repo rules are there to prevent cheating, not to get in the way of honest work."* |
+| **06 S1** | **Pure-WKB means `z_init == z_source`**, reading (I): *"Clearly (I)."* Ruled with no S1 number in existence. The prompt's "null" was the laptop's error |
+| **06 check 4** | **Passes**: 05's classifier exempts `QuadSourceIntegral` alone, and its 185 `UNCLASSIFIED` all lie inside the five classes 06 changes, with 0 outside |
+| **06 close** | **`[02-consumer-phi-below-the-storage-granularity]` closed** on S1 and S3, with S2's failure read as the metric's (W4). R13, R14 and the scratch copy of A3 v2 are kept |
+| **06 P1** | **The stationary-point guard belongs here**, as a generic fix to the Levin integrator: *"We are supposed to deliver a function Levin integrator, and this is needed whether or not we plan to use the integrator as part of the 1-loop machinery. So we should fix this now, generically."* The stationary points are located in advance from the closed-form $\theta'$, and the driver refuses a region whose $\theta'$ changes sign or nearly vanishes. The time integrals must also run late enough to include the QCD crossover and $e^+e^-$ annihilation for the configurations that resonate during them, which the advance location makes possible |
+
 The orchestrator's choices of method, C1–C6, are in README §6.2. The open questions for the user,
 Q1–Q4, are in README §6.3.
 
@@ -137,7 +169,7 @@ Q1–Q4, are in README §6.3.
 | 04 | [Remove the floor from seven rows](04-remove-the-floor.md) | findings §2.6 item 3 in a harness, on 03's seven rows. Arm **A**: $k\tau_R$ out of $G$'s phase (layer 1(a)). Arm **X**: every factor's remainder reduced exactly, the limit of any phase layer and N4's reference. Layer 1(b) is not an arm (README §6.2 C7). Gates E1, E2, M0; scored R1 (the cap goes under X), A1 (layer 1(a) is enough where $G$'s anchor is the floor), N4, R2 with Q5's number | Mac Studio, Ray-free, **at the pre-B1 tree `98e68d3`** in a worktree: `handover` B1's strict coverage check refuses A3 v2's `QuadSource` rows, so an A3 v2 re-run at `HEAD` raises (`[12-realistic-large-x-reads-the-retired-clamp-records]`) | Opus | ✍️ 2026-10-25; §8 added on the resume (`d170e6d`) | ✅ 2026-10-25 on the Mac Studio, run `levin-phase-floor-04-remove-20261025T231110`, 28/28 units, none over budget; route (a), Ray-free; M0 bit-identical 7/7; store unchanged, `0e32f24a…`. The first dispatch stopped at step 5 (E1 (c), E2 failed by round-off, 4e-16–6.5e-14 rad); the user amended those two gates only. The resume's review passed. R1 re-checked from the laptop: stored and P agree in `float.hex` on `total` and `total_abserr` | records in the bookkeeping commit | [log](logs/04-remove-the-floor.md) |
 | 05 | [Layer 1(a): take $k\tau_R$ out of $G$'s phase](05-reanchor-g-phase.md) | $G$'s remainder formed node by node: an exact remainder per table node, against $2\pi$, in extended precision and memoised, plus a small variable part. $T$, `raw_theta`, `theta_deriv`, the producers and every schema unchanged. Tests (exactness against $2\pi$, no jitter, nothing else moves), with four breakages. Adds `tools/store_value_diff.py`, which compares two stores' values by physical identity (`CLAUDE.md` rule 7), with its tests. Rehearsals R9 (parent) and R10, compared with it. A wider re-measurement on A3 v2 (up to 24 depth-20 rows by class and band, 03's seven and 8 controls), with `QuadSource` recomputed in-process; gate L0; scored L1, L1q, L2, L3 | code on the laptop; R9, R10 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ✅ 2026-10-26. **Code** (§1–§4) on the laptop: reviewed there (nine checks, all pass) and pushed; ComputeTargets 742 → 754, tools 49 → 55. **§5** on the Mac Studio: R9 `levin-phase-floor-05-r9-parent-20261026T014729` (worktree at `e648951`) and R10 `levin-phase-floor-05-r10-reanchor-20261026T015120` (`53084dc`), both `done`, `1b332ffa…`; every value table identical; QSI 542/864 totals moved, median 8.7e-5 of the error, one row 28×; readers exit 0; lock released. Stopped at §8 on timings, labels, `parents_digest` and work counters; the user ruled the prompt wrongly worded. **§6**: run `levin-phase-floor-05-wider-20261026T020005`, 109/109, none over budget; L0 holds; L1 fails (9/24), L1q fails (1/7), L2 holds (8/8), L3 fails (29/31), as written, all failures on rows B1 had already uncapped or R5; on the 11 rows capped under $p$ the cap goes on all, L3 holds on all. Mac Studio review: stop on check 10 (two unclassified deviations), classified on committing by the user's agreement; checks 1–9 pass. Laptop re-checks: the 28× row, and `QuadSource` at $p$ on `low-G-r-2`. R9's and R10's stores were retired after the records commit, on the user's word (sidecars kept; `05/rehearsal/out/retire_r{9,10}.txt`), and the worktree was removed | `120fdfe` (code); records in the records commit | [log](logs/05-reanchor-g-phase.md) |
 | 05a | [Layer 1(a) for $T$](05a-reanchor-t-phase.md) | $T$'s remainder node-anchored and reduced against $2\pi$, by `PrimitivePhase`'s existing `exact_remainder`, which `TkSourceFunctions` now turns on (a keyword, default on; closed-form test fixtures turn it off). $T$'s anchor `z_init` is off the grid, so the anchor's end partial is non-zero in production for the first time. Tests with four breakages; 05's T-unchanged test replaced. R11 and R12 compared with `tools/store_value_diff.py`. 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter at each sub-interval's low-$z$ end; gate T0; scored T1–T4 | code on the laptop; R11, R12 and the re-measurement on the Mac Studio | Opus | ✍️ 2026-10-26 | ✅ 2026-10-26. **Code** (§1–§4) on the laptop: `TkSourceFunctions(..., exact_remainder=True)`; 9 closed-form fixture sites pass `False`; `test_t_phase_reanchor` (10 methods) and 4(b) in place of 05's T-unchanged test; the four breakages caught; ComputeTargets 754 → 764, the other six roots equal; reviewed there (nine checks, all pass; breakage (iv) re-applied by the orchestrator) and pushed. Three stale comments corrected (`bd38e50`); **T1 amended before §6** (prompt §9, `2db3f9e`). **§5** on the Mac Studio: R11 `levin-phase-floor-05a-r11-parent-20261026T122041` (worktree at `c4eaefd`) and R12 `levin-phase-floor-05a-r12-reanchor-t-20261026T122434` (`149c393`), both `done`, `1b332ffa…`; every value table identical, only the four volatile kinds outside QSI; QSI 424/864 totals moved, at most 2.9e-11 relative and 8.8e-5 of the error, no depth, region or flag changed; readers exit 0; lock released. **§6**: run `levin-phase-floor-05a-wider-20261026T123047`, 109/109, none over budget; T0 holds (all 39 $c$ units equal 05's bit for bit); T1 holds by the true step (70/70), the reading of record by the user's decision, and fails read literally (36/70, all aliased); T2 holds (largest depth 11); T3 holds (largest 4.7e-6 of the error); T4 fails (29/31, 05's two L3 rows, same ratios). Mac Studio review: all ten checks pass. Laptop re-checks: the QSI row of largest change, and a $c$ unit against 05's. R11's and R12's stores were retired after the records commit, on the user's word (sidecars kept; `05a/rehearsal/out/retire_r1{1,2}.txt`), and the worktree was removed | `1fc349c` (code); `bd38e50` (comments); `2db3f9e` (T1 amended); records in the records commit | [log](logs/05a-reanchor-t-phase.md) |
-| 06 | [The producers' stored phase](06-producers-store-the-residual.md) | `GkWKBIntegration` and `TkWKBIntegration`'s stored phase, by its own method (G1 Q3; README §6.2 C8): each value stores its residual $r = \Delta\theta - \rho.\delta$ from its small terms (a new `theta_residual` column, on `GkSource`'s values too); the stored remainder is reduced exactly against $2\pi$; `_build_phase` and `TkSourceFunctions` build $\varphi$ from $r$, $G$'s with its $2\pi$ wraps unwrapped and checked against the rectifier. Tests with five breakages. R13 and R14 compared with `tools/store_value_diff.py`. 05's 39 rows re-run with the producers re-run in-process; gate U0; scored S1–S5, with 04's $\varphi$ metric on R1–R7 | code on the laptop; R13, R14 and the re-measurement on the Mac Studio, from worktrees | Opus | ✍️ 2026-10-26; amended before dispatch (§9 points 1–5) and after Part A's first stop (§9 point 6, `9f66622`) | 🟡 **Code** (§1–§4) landed on the laptop, 2026-10-26: the producers form each sample's phase exactly and reduce it against $2\pi$ (integer helpers beside `PrimitivePhase`'s reducer, which is untouched); `theta_residual` stored on `GkWKBValue`, `TkWKBValue` and `GkSourceValue`; $\varphi_T = r$, $\varphi_G = r + k\tau.\delta(z_s, z_{\rm init})$ unwrapped in `_build_phase` and checked against the rectifier (a disagreement warns); `tools/store_value_diff.py` reads a store lacking a declared column and reports it in one store only. `test_stored_phase_residual` (13 methods) and the tool's (3); the five breakages caught; ComputeTargets 764 → 777, tools 55 → 58, the other five roots equal. The first dispatch stopped at §8 (the payload's key set, `test_gk_wkb_phase.py:920`) before any code; the user ruled and §9 point 6 amended the prompt. **§5 (R13, R14) and §6 pending** on the Mac Studio | `dc9d28c` (code); records in the records commit | [log](logs/06-producers-store-the-residual.md) |
+| 06 | [The producers' stored phase](06-producers-store-the-residual.md) | `GkWKBIntegration` and `TkWKBIntegration`'s stored phase, by its own method (G1 Q3; README §6.2 C8): each value stores its residual $r = \Delta\theta - \rho.\delta$ from its small terms (a new `theta_residual` column, on `GkSource`'s values too); the stored remainder is reduced exactly against $2\pi$; `_build_phase` and `TkSourceFunctions` build $\varphi$ from $r$, $G$'s with its $2\pi$ wraps unwrapped and checked against the rectifier. Tests with five breakages. R13 and R14 compared with `tools/store_value_diff.py`. 05's 39 rows re-run with the producers re-run in-process; gate U0; scored S1–S5, with 04's $\varphi$ metric on R1–R7 | code on the laptop; R13, R14 and the re-measurement on the Mac Studio, from worktrees | Opus | ✍️ 2026-10-26; amended before dispatch (§9 points 1–5) and after Part A's first stop (§9 point 6, `9f66622`) | ✅ 2026-10-27. **Code** (§1–§4) on the laptop: the producers form each sample's phase exactly and reduce it against $2\pi$; `theta_residual` stored on `GkWKBValue`, `TkWKBValue` and `GkSourceValue`; $\varphi_T = r$, $\varphi_G = r + k\tau.\delta(z_s, z_{\rm init})$ unwrapped in `_build_phase` and checked against the rectifier; ComputeTargets 764 → 777, tools 55 → 58; reviewed there (nine checks, breakages (ii) and (iii) re-applied) after a first dispatch that stopped on the payload's key set. **§5** on the Mac Studio, from worktrees: R13 `levin-phase-floor-06-r13-parent-20261026T215550` (`9f66622`) and R14 `levin-phase-floor-06-r14-residual-20261026T215945` (`f5cee4c`), both `done`, `1b332ffa…`; every value table outside the five classes identical; no cycle count changed; no disagreement warning; readers exit 0; lock released. **§6**: run `levin-phase-floor-06-wider-20261026T223634`, 109/109, none over budget, $s$ on a certified scratch copy of A3 v2 (route B); U0 holds; S1 holds (6,700/6,700, $\le 8.8\times10^{-14}F$), S3 holds, S2 fails (2,115/12,862, the metric's floor), S4 fails (34/39), S5 fails (28/31). Mac Studio review: ten checks, check 4 on the user's ruling. Laptop re-checks: one `GkWKBValue` row, and `mid-G-1` against 05a. **P1** investigated from the laptop: an `AdaptiveLevin` defect at stationary points, R13 right and R14 wrong. The user closed the header issue | `dc9d28c` (code); `59d4070`, `7b6c1cd`, `9f66622` (prompt §9); records in the records commit | [log](logs/06-producers-store-the-residual.md) |
 | 07+ | layer 2 | as G2 decides | — | — | ⏸ held on 06 | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · 🟡 partly landed, with what is pending · ✅ landed · ⛔ stopped and superseded.
@@ -405,6 +437,87 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
   [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
   `docs/levin-phase-floor/05/wider/issues.md` W2.
 
+- **[06-levin-accepts-a-region-across-a-stationary-point]** *(opened 2026-10-27 by prompt 06, its
+  rehearsal agent's P1, investigated from the laptop)* — `adaptive_levin_sincos` accepts a Levin
+  region that contains an interior stationary point of its phase, with an error estimate far too
+  small.
+  - **Where seen.** Two R14 rows at $z_{\rm response} = 250$, $(k,q,r) = (3.162\times10^5)^3$ and
+    $(10^5, 3.162\times10^5, 3.162\times10^5)$. Group G+q+r on $z \in [250, 5.42\times10^9]$ is
+    stationary at $z_* = 10211.3$ ($c_s = 1/2$) and $z_* = 275.0$ ($2qc_s = k$). Each is accepted
+    as one region of 3 evaluations. The totals are wrong by $1.28\times10^4$ and 555 times their
+    declared error, the group by $6.8\times10^{-3}$ and $1.2\times10^{-3}$.
+  - **The mechanism.** The region's estimate, and those of its two halves, all lack the
+    stationary-phase term, so the step-(4) residual is about $10^5$ smaller than the true error. The
+    miss equals the leading stationary-phase term to $10^{-5}$. The relative test can also be passed
+    through another part of the region. At rtol $10^{-9}$ and $10^{-11}$ the eq. (151) floor, with a
+    small but finite $G_0 = \min|\theta'|$, accepts the region as round-off-limited instead.
+  - **Why R13 was right.** Its noisier phase lifted the root's residual over rtol, by factors 2.05
+    and 1.008, through the unrelated high-$z$ half, and bisection then found the point. 06's
+    integrand is the more accurate of the two; it removed the noise that had rescued these rows.
+  - **Not closed by C2.** The C2 total-variation gate diverts only regions whose phase varies by less
+    than $6\pi$ (`levin_quadrature.py`, `_adaptive_levin_subregion_impl`). Its regression case puts
+    the stationary point at $x = 1/2$, the first bisection point. The one-loop reconciliation's
+    "already closed" (`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md`
+    §1.5, §3.1) is wrong, and carries a dated correction note. The QCD review's Levin benchmark
+    (§5.2) is in exact radiation, where no isolated stationary point exists.
+
+  **Impact:**
+  - **Structural, not an edge case.** The stationary point is the Kohri–Terada resonance, where the
+    signal is expected to come from, and nearly every triangle with $\Sigma = (q+r)/k > \sqrt3$
+    has one wherever $c_s(z_*) = 1/\Sigma$. A stored `total_abserr` on such a group is not
+    trustworthy, in stores built at either tree, A3 v2 included.
+  - 06 makes the failure likelier, by removing the noise that sometimes forced the bisection.
+  - Any error budget built from the stored errors, the one-loop integral's included, waits on the
+    fix.
+  - It may bear on 06's S4 and S5 failures; not separated.
+
+  **Next step:** a generic fix to the integrator, in this campaign, decided at G2 with layer 3's
+  acceptance test (the user, 2026-10-27; Decisions, **06 P1**), before the next production build.
+  - **Locate the stationary points before integrating,** from each group's closed-form $\theta'$:
+    the sign changes, and the near-zero minima where two points are about to coalesce (the QCD and
+    $e^+e^-$ caustics). Split the range there, and give a small window around each to a rule that
+    resolves the phase directly.
+  - **Guard the driver,** as a safety net: no Levin acceptance, and no round-off-limited exit, for a
+    region whose $\theta'$ changes sign or nearly vanishes on its nodes.
+  - **The located points also set how late the time integral must run,** for the configurations
+    that resonate during the QCD crossover and $e^+e^-$ annihilation.
+  - **Regression cases:** the two R14 rows with 06's reference, and a synthetic case with the
+    stationary point off any bisection point.
+  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.3;
+  [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md).
+
+- **[06-s2-window-metric-floors-on-phi-t-structure]** *(opened 2026-10-27 by prompt 06, its §6
+  agent's W4)* — 04's φ metric, the RMS residual of a degree-4 fit over 9 consecutive samples,
+  measures $\varphi$'s own shape wherever that exceeds the storage noise. So a rule bounding the
+  new $\sigma$ by $10^{-3}\sigma_{t_5}$, which presumes $\sigma_{t_5}$ is noise, fails there.
+  - S2 failed in 2,115 of 12,862 $T$ windows, all at $z \ge 1.75\times10^7$, where $|\theta_T|$ is
+    0.05–1,500 rad. There $\sigma_s/\sigma_{t_5}$ = 0.952–1.04, identical in both trees, and
+    $\sigma$ is 1.7e-12–1.7e-10 rad, 5 to $1.5\times10^7$ times $\varepsilon|\theta|$.
+  - In the other 10,747 windows $\sigma_s/\sigma_{t_5}$ has median $3.8\times10^{-5}$.
+
+  **Impact:** none on 06's code: the user closed `[02-consumer-phi-below-the-storage-granularity]`
+  on S1 and S3 with S2 read this way. A later prompt that scores $\varphi$'s noise by this metric
+  meets the same floor.
+
+  **Next step:** a later noise metric differences against a reference $\varphi$, or bounds by the fit
+  residual of an exact $\varphi$ on the same samples, rather than by $\sigma_{t_5}$.
+  `docs/levin-phase-floor/06/wider/issues.md` W4.
+
+- **[06-ray-task-output-does-not-reach-the-launch-log]** *(opened 2026-10-27 by prompt 06, its
+  rehearsal agent's P2)* — `_build_phase`'s disagreement warning and `_check_phase_sign` run inside
+  Ray tasks, and in both rehearsal builds the launch log and `stdout.log` hold only the `Datastore`
+  actor's output. No task printed anything in either build, so whether a task's `print` would have
+  reached the launch log was not tested. The rehearsal agent searched Ray's worker logs under
+  `/tmp/ray-sgk/session_*/logs/` instead (every count 0), which are not durable records.
+
+  **Impact:** a check that greps a build's log for a warning, as 06's §8 stop did, may pass because
+  the warning never reaches the log. The stationary-point fix above, and any production build that
+  relies on a warning, meet this.
+
+  **Next step:** show once, on a rehearsal build, whether a task's `print` reaches the driver's
+  log; if not, record warnings in a durable place (a stored metadata field or a run-directory
+  file). `docs/levin-phase-floor/06/rehearsal/issues.md` P2.
+
 **04's other findings, not opened as issues** (`docs/levin-phase-floor/04/issues.md`):
 - **I1**, the incomplete gate bounds, was resolved by prompt §8 on the user's decision.
 - **I4**: `runregistrykit.begin` takes `git_head` from the script's directory. That is the package's
@@ -428,14 +541,43 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
 - **W9:** 15 scipy `IntegrationWarning`s from production's numeric quadrature, 5 under $p$ and 10
   under $c$. No unit failed. Recorded in the log.
 
+**06's other findings, not opened as issues** (`docs/levin-phase-floor/06/{rehearsal,wider}/issues.md`):
+- **W1:** no tree after `dc9d28c` can open a store written before it, since the factories declare
+  `theta_residual`. That is the standing rule (an old store is read at the SHA that wrote it); 06's
+  §6 met it and the user chose route (B).
+- **W2:** A3 v2's diagnostic `analytic_G_w`, `analytic_Gprime_w` and some `analytic_G_rad` values
+  predate `1c19998`. No consumer reads them.
+- **W3:** the prompt's "`z_init` null" premise was the laptop's error; the user ruled reading (I).
+  Its open point is settled: `CumulativeTable.delta(z, z)` is exactly 0.0, so a pure-WKB value's
+  second term in `_phi_samples` is exactly zero.
+- **W5 and W6:** S4 fails on 5 of 39 rows (up to 10.8× `total_abserr`$_{t_5}$, `low-G-3`; `ctrl-low-1`
+  moves by 2.5 % of its total) and S5 on 3 of 31 (`mid-G-3`, `mid-G-r-3` as in 05a's T4, and
+  `mid-G-1`). Findings about the declared error, for G2's Q4 and Q5; whether
+  `[06-levin-accepts-a-region-across-a-stationary-point]` causes any of them is not separated.
+- **W7:** more phase-limited non-convergence under $s$ (`convergence_kinds.py`: at 1e-7 resolution
+  14, bound only 32, phase-limited 23, against 05a's 18, 32, 17). For G2's Q4.
+- **W8:** numerically seeded $G$ windows keep $\sigma_s$ of $2.1\times10^{-4}F$ at the median, about
+  8× the window RMS of $\Delta\theta$ alone, against $0.27F$ before. Descriptive; S1 does not score
+  them (prompt §9 point 4).
+- **W9, W10, W11:** the re-run values against A3 v2 (17 single-cycle changes, all within
+  $4\varepsilon|\theta|$ of a boundary), `Levin_z` moving on one row, and 15 scipy
+  `IntegrationWarning`s. Recorded in the log.
+- **W12:** `python -m runregistrykit store fingerprint` takes its fingerprinter from the main
+  checkout's `runregistrykit.toml`, so it cannot fingerprint a store of a later schema from a
+  worktree. Possibly RunRegistryKit's intended behaviour; recorded for its maintainers, not worked
+  round.
+- **The rehearsal agent's recurrences** of `[05-store-value-diff-compares-volatile-columns]`, of
+  05's memo-counter swaps (25 rows), of `[04-roundoff-floor-can-be-infinite]` (26 rows with an
+  infinite `total_abserr` in both stores) and of the readers' unseeded work lists, as in 05a.
+
 **Assigned here on 2026-10-25, held on their own boards** (README §1, §6.2 C5):
 - `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` — `handover` board §3;
 - `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` — `handover` board §3;
 - `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` — `handover` board §3;
 - `[00-consumer-anchoring-floor]` — `GkTk-remedial` board; **closed there for $G$ on
   2026-10-26** by 05, on the user's ruling (its §4);
-- `[02-consumer-phi-below-the-storage-granularity]` — `phase-representation` board §3, assigned
-  2026-10-26 at G1 (Q3).
+- `[02-consumer-phi-below-the-storage-granularity]` — `phase-representation` board, assigned
+  2026-10-26 at G1 (Q3); **closed there on 2026-10-27** by 06, on the user's word (its §4).
 
 **Measured here, not assigned:** `[04-roundoff-floor-can-be-infinite]` (`levin-refactor` board).
 01 confirms whether it reaches A3 v2, and narrows it there.

@@ -1,0 +1,42 @@
+== . 28ebaf0
+== ../SecondaryGWKit-lpf06-9f66622 9f66622
+== ../SecondaryGWKit-lpf06-f5cee4c f5cee4c
+== var newer than marker (top-level grouping)
+      1 /
+      1 datastores/
+      1 datastores/levin-phase-floor-06-r13-shard0000.sqlite
+      1 datastores/levin-phase-floor-06-r13-shard0001.sqlite
+      1 datastores/levin-phase-floor-06-r13-shard0002.sqlite
+      1 datastores/levin-phase-floor-06-r13-shard0003.sqlite
+      1 datastores/levin-phase-floor-06-r13.sqlite
+      1 datastores/levin-phase-floor-06-r14-shard0000.sqlite
+      1 datastores/levin-phase-floor-06-r14-shard0001.sqlite
+      1 datastores/levin-phase-floor-06-r14-shard0002.sqlite
+      1 datastores/levin-phase-floor-06-r14-shard0003.sqlite
+      1 datastores/levin-phase-floor-06-r14.sqlite
+      1 levin-phase-floor-06/
+   3289 levin-phase-floor-06/rehearsal
+    144 levin-phase-floor-06/wider
+      1 runs/
+      5 runs/levin-phase-floor-06-r13-parent-20261026T215550
+      1 runs/levin-phase-floor-06-r13.launch.log
+      5 runs/levin-phase-floor-06-r14-residual-20261026T215945
+      1 runs/levin-phase-floor-06-r14.launch.log
+    125 runs/levin-phase-floor-06-wider-20261026T223634
+== datastores newer
+var/datastores
+var/datastores/levin-phase-floor-06-r14-shard0000.sqlite
+var/datastores/levin-phase-floor-06-r13.sqlite
+var/datastores/levin-phase-floor-06-r13-shard0001.sqlite
+var/datastores/levin-phase-floor-06-r13-shard0003.sqlite
+var/datastores/levin-phase-floor-06-r14-shard0003.sqlite
+var/datastores/levin-phase-floor-06-r14.sqlite
+var/datastores/levin-phase-floor-06-r14-shard0001.sqlite
+var/datastores/levin-phase-floor-06-r13-shard0000.sqlite
+var/datastores/levin-phase-floor-06-r13-shard0002.sqlite
+var/datastores/levin-phase-floor-06-r14-shard0002.sqlite
+== worktrees newer
+== A3 v2
+unchanged
+== 05/05a
+unchanged

@@ -413,6 +413,9 @@ worktree remove` on the Mac Studio once the records are committed and the user a
 
 ### B.5 Addendum, 2026-10-26 17:15 GMT: Part B's dispatch
 
+*(Two facts in this note proved wrong in Part B, and §B.6 records both: `z_init` is not null for a
+pure-WKB value, and check 4's "no `UNCLASSIFIED`" did not allow for 06's other four classes.)*
+
 **Part A** is the code commit **`dc9d28c`**, whose parent is **`9f66622`**. The first dispatch
 (from `2006de7`) stopped before any code, on `TestPayloadContract`'s exact key set. The user ruled
 on that and on eight findings, and the prompt was amended (§9 point 6, `9f66622`). The resumed
@@ -487,6 +490,51 @@ directories, and the two share the host's cores.
 The orchestrator re-reads this state as its Gate, does not fetch, and stops if anything differs.
 **Other projects on this host** may take the shared lock. If `acquire` exits 3, that is the stop
 the lock's rule gives: ask the user.
+
+### B.6 What happened (2026-10-26 and 27)
+
+Part B ran from 21:52 to about 23:45 UTC, in one Mac Studio orchestrator session, both agents at
+once. The laptop started it on the user's word after A4's run 2 ended, fetched in the Mac
+Studio's main checkout, and made the two worktrees. The main checkout stayed at `28ebaf0`
+throughout.
+
+**R13 and R14.**
+- Both ended `done` with `1b332ffa…`.
+- Outside the five classes 06 changes, every value table is identical. Inside them no cycle count
+  changes, and the remainder moves by a median 0.3 $\varepsilon|\theta|$.
+- 554 of 864 totals move. Two at $z_{\rm response} = 250$ move by $1.8\times10^4$ and 484 times
+  R13's error: P1, below.
+- No disagreement warning; the readers exited 0; the lock was released.
+
+**The re-measurement.**
+- **It stopped before U0.** $s$ cannot open A3 v2, whose value tables lack the column $s$
+  declares. Neither the prompt nor this note foresaw that. The user chose route (B), a certified
+  scratch copy with the three columns added.
+- **The pure-WKB tag was wrong.** §A.0 and check 9 of this note said `GkSource` stores `z_init`
+  null for a pure-WKB value. That came from a comment at `GkSource.py:34` and was never checked
+  against the store. A3 v2 stores `z_init == z_source`. The agent fixed two readings before the
+  launch, and the user ruled reading (I), "Clearly (I).", with no S1 number in existence. The laptop
+  passed the corrected tagging to the review for check 9.
+- 109 of 109 units, none over budget. U0 holds. S1 holds, S3 holds; S2, S4 and S5 fail.
+
+**The review** stopped on check 4 alone. Read literally, the check asked 05's classifier for no
+`UNCLASSIFIED`, and that classifier exempts only `QuadSourceIntegral`. The user ruled that it
+passes, all 185 lying inside the five classes. This note's wording was the fault.
+
+**The laptop's re-checks**, as §B.4 asks, both pass:
+- the changed `GkWKBValue` of largest $|\theta|$ is unique in each store and reads as tabulated;
+- `mid-G-1`'s $t_5$ unit equals 05a's $t$ unit in all its compared fields.
+
+**P1.** At the user's request a laptop subagent rebuilt the two rows in-process under each tree.
+- **R13's totals are right and R14's are wrong.** Group G+q+r has an interior stationary point,
+  which a single Levin region misses, with an error estimate about $10^4$ too small.
+- 06's integrand is the more accurate of the two.
+- **After reading `docs/one-loop-planning` with the user,** P1 was opened as an `AdaptiveLevin`
+  defect for this campaign. It is to be fixed generically at G2: locate the stationary points in
+  advance from the closed-form $\theta'$, and guard the driver.
+
+**The header issue.** The user closed it on S1 and S3, with S2's failure read as the metric's. R13,
+R14 and the scratch copy of A3 v2 are kept. The worktrees stay until the user agrees to remove them.
 
 ---
 

@@ -1,0 +1,76 @@
+# command: PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/reference.py r14
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:10:43Z
+# script sha256 af48204f85c8f9a84e979e440a5a33220f3334777ec1b06e950a5ceba25b0658  analyse.py
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 fbb85121c4e66174e89fbc1502f00078f0e8c02edf079327f842109b4bd7ae75  reference.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+# p1 r14: reads /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite (read-only)
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# p1 r14: context in 0.4 s
+# p1 r14 row1: total np.float64(5.927866035235912e-20) (stored 5.927866035235912e-20); all identical True; compute 0.4 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+# p1 r14 row2: total np.float64(-3.3962843526143793e-19) (stored -3.3962843526143793e-19); all identical True; compute 0.3 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+== r14 row1 G+q+r: x_s 9.231349907086202 (z 10211.31789), theta'' 1553661.9
+   55.0 us per integrand evaluation
+   Phi 1000 [9.195970161, 9.267749271] GL dphi 1 n 12: -3.70574678113778e-25 (1998 pieces, max span 1.5 rad, 1.4 s)
+   Phi 1000 [9.195970161, 9.267749271] GL dphi 0.5 n 20: -3.7057467811748047e-25 (3998 pieces, max span 0.75 rad, 4.6 s)
+   Phi 1000 Levin outer m 6 rtol 1e-07: left 4.009499676060369e-28 right -5.373245206535142e-23 (abserr 8.88e-32, 0.5 s)
+   Phi 1000 Levin outer m 9 rtol 1e-07: left 4.009499704985386e-28 right -5.373245202459544e-23 (abserr 5.76e-34, 3.7 s)
+   Phi 1000 Levin outer m 9 rtol 1e-10: left 4.009499704633493e-28 right -5.373245202461462e-23 (abserr 2.49e-34, 3.7 s)
+   Phi 1000: REFERENCE -5.410262575274241e-23 (GL err 3.7e-36, Levin outer err 4.08e-32); Levin m9 over window -3.70574678112667e-25 vs GL -3.7057467811748047e-25
+   Phi 10000 [9.122668066, 9.350275030] GL dphi 1 n 12: -3.7082401064669687e-25 (19996 pieces, max span 1.5 rad, 14.1 s)
+   Phi 10000 [9.122668066, 9.350275030] GL dphi 0.5 n 20: -3.708240106455438e-25 (39996 pieces, max span 0.75 rad, 46.6 s)
+   Phi 10000 Levin outer m 6 rtol 1e-07: left 4.797468309632962e-28 right -5.37322815023957e-23 (abserr 1.03e-31, 0.5 s)
+   Phi 10000 Levin outer m 9 rtol 1e-07: left 4.797468305544807e-28 right -5.373228148895476e-23 (abserr 5.88e-34, 3.9 s)
+   Phi 10000 Levin outer m 9 rtol 1e-10: left 4.7974683066158645e-28 right -5.373228148894261e-23 (abserr 2.27e-34, 4.3 s)
+   Phi 10000: REFERENCE -5.410262575276974e-23 (GL err 1.15e-36, Levin outer err 1.34e-32); Levin m9 over window -3.7082401063307175e-25 vs GL -3.708240106455438e-25
+   Phi 30000 [9.048543834, 9.445206204] GL dphi 1 n 12: -3.696377875554137e-25 (59996 pieces, max span 1.5 rad, 42.7 s)
+   Phi 30000 [9.048543834, 9.445206204] GL dphi 0.5 n 20: -3.6963778754674815e-25 (119996 pieces, max span 0.75 rad, 139.1 s)
+   Phi 30000 Levin outer m 6 rtol 1e-07: left -4.2393055062098603e-29 right -5.373294552137285e-23 (abserr 1.19e-31, 0.5 s)
+   Phi 30000 Levin outer m 9 rtol 1e-07: left -4.2393056031237905e-29 right -5.373294557212236e-23 (abserr 4.71e-34, 3.8 s)
+   Phi 30000 Levin outer m 9 rtol 1e-10: left -4.239305607852693e-29 right -5.373294557216727e-23 (abserr 2.51e-34, 3.8 s)
+   Phi 30000: REFERENCE -5.410262575272514e-23 (GL err 8.67e-36, Levin outer err 5.08e-32); Levin m9 over window -3.6963778753593944e-25 vs GL -3.6963778754674815e-25
+== r14 row2 G+q+r: x_s 5.620431994441799 (z 275.0085917), theta'' 21269630
+   98.1 us per integrand evaluation
+   Phi 1000 [5.610745799, 5.630139739] GL dphi 1 n 12: 3.735021378616176e-26 (1998 pieces, max span 1.5 rad, 1.4 s)
+   Phi 1000 [5.610745799, 5.630139739] GL dphi 0.5 n 20: 3.735021378663544e-26 (3998 pieces, max span 0.75 rad, 4.6 s)
+   Phi 1000 Levin outer m 6 rtol 1e-07: left 4.7781295252956535e-29 right 3.130296089122171e-23 (abserr 6.94e-31, 0.5 s)
+   Phi 1000 Levin outer m 9 rtol 1e-07: left 4.7781295290225474e-29 right 3.130296096639359e-23 (abserr 1.55e-33, 3.8 s)
+   Phi 1000 Levin outer m 9 rtol 1e-10: left 4.778129505897015e-29 right 3.130296096630319e-23 (abserr 1.19e-33, 29.2 s)
+   Phi 1000: REFERENCE 3.134035896147552e-23 (GL err 4.74e-37, Levin outer err 7.52e-32); Levin m9 over window 3.7350213787405796e-26 vs GL 3.735021378663544e-26
+   Phi 10000 [5.589874580, 5.651204910] GL dphi 1 n 12: 3.753913859762506e-26 (19996 pieces, max span 1.5 rad, 14.0 s)
+   Phi 10000 [5.589874580, 5.651204910] GL dphi 0.5 n 20: 3.753913860192194e-26 (39996 pieces, max span 0.75 rad, 46.2 s)
+   Phi 10000 Levin outer m 6 rtol 1e-07: left -4.392955277042581e-29 right 3.130286380552131e-23 (abserr 7.33e-31, 0.5 s)
+   Phi 10000 Levin outer m 9 rtol 1e-07: left -4.392955168534909e-29 right 3.1302863752442367e-23 (abserr 1.18e-33, 3.7 s)
+   Phi 10000 Levin outer m 9 rtol 1e-10: left -4.392954947890947e-29 right 3.1302863752517104e-23 (abserr 8.06e-34, 5.3 s)
+   Phi 10000: REFERENCE 3.1340358961492603e-23 (GL err 4.3e-36, Levin outer err 5.31e-32); Levin m9 over window 3.7539138602536215e-26 vs GL 3.753913860192194e-26
+   Phi 30000 [5.567639152, 5.673871429] GL dphi 1 n 12: 3.7407579422091747e-26 (59996 pieces, max span 1.5 rad, 42.3 s)
+   Phi 30000 [5.567639152, 5.673871429] GL dphi 0.5 n 20: 3.7407579427169544e-26 (119996 pieces, max span 0.75 rad, 139.3 s)
+   Phi 30000 Levin outer m 6 rtol 1e-07: left 1.9736432092235454e-29 right 3.1302931909339063e-23 (abserr 7.55e-31, 0.5 s)
+   Phi 30000 Levin outer m 9 rtol 1e-07: left 1.9736433123442555e-29 right 3.1302931645611663e-23 (abserr 1.38e-33, 3.8 s)
+   Phi 30000 Levin outer m 9 rtol 1e-10: left 1.9736435296500297e-29 right 3.1302931645667887e-23 (abserr 1.03e-33, 108.8 s)
+   Phi 30000: REFERENCE 3.1340358961471956e-23 (GL err 5.08e-36, Levin outer err 2.64e-31); Levin m9 over window 3.740757943150674e-26 vs GL 3.7407579427169544e-26
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/reference_r14.json sha256 a58ed835211a2344635d38bfb310509bdceaca18fbe08f5ac1209d58d88d3b7a
+# exit 0 at 2026-10-27T00:22:18Z

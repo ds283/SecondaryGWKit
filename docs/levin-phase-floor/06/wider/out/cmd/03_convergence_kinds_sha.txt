@@ -1,0 +1,12 @@
+$ bash -c shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/prompts/levin-phase-floor/measure/convergence_kinds.py\ scripts/convergence_kinds.py\ /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py\;\ cmp\ scripts/convergence_kinds.py\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/prompts/levin-phase-floor/measure/convergence_kinds.py\ \&\&\ echo\ identical-to-measure
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T21:57:36Z
+# ----
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/prompts/levin-phase-floor/measure/convergence_kinds.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  /Users/ds283/Documents/Code/SecondaryGWKit/prompts/levin-phase-floor/measure/convergence_kinds.py
+identical-to-measure
+# ----
+# end 2026-10-26T21:57:36Z
+# exit 0

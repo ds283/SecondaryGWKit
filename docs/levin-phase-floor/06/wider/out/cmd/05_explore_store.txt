@@ -1,0 +1,61 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -I scripts/explore_store.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T21:58:27Z
+# ----
+== shard 0
+  GkWKBIntegration: 3480
+  GkWKBValue: 227083
+  TkWKBIntegration: 2
+  TkWKBValue: 2354
+  GkSource: 290
+  GkSourceValue: 254040
+  GkNumericIntegration: 1188
+  QuadSourceIntegral: 2320
+  GkSourcePolicyData: 290
+  columns GkWKBValue: ['serial', 'wkb_serial', 'z_serial', 'H_ratio', 'theta_mod_2pi', 'theta_div_2pi', 'omega_WKB_sq', 'WKB_criterion', 'G_WKB', 'analytic_G_rad', 'analytic_Gprime_rad', 'analytic_G_w', 'analytic_Gprime_w']
+  columns TkWKBValue: ['serial', 'wkb_serial', 'z_serial', 'H_ratio', 'theta_mod_2pi', 'theta_div_2pi', 'friction', 'omega_WKB_sq', 'WKB_criterion', 'T_WKB', 'analytic_T_rad', 'analytic_Tprime_rad', 'analytic_T_w', 'analytic_Tprime_w']
+  columns GkSourceValue: ['serial', 'parent_serial', 'z_source_serial', 'G', 'Gprime', 'H_ratio', 'theta_mod_2pi', 'theta_div_2pi', 'raw_theta_div_2pi', 'G_WKB', 'new_G_WKB', 'abs_G_WKB_err', 'rel_G_WKB_err', 'sin_coeff', 'cos_coeff', 'z_init', 'omega_WKB_sq', 'WKB_criterion', 'analytic_G_rad', 'analytic_Gprime_rad']
+  columns GkWKBIntegration: ['serial', 'version', 'timestamp', 'label', 'wavenumber_exit_serial', 'model_serial', 'numeric_serial', 'rho_gauss_order', 'solver_serial', 'z_source_serial', 'z_min_serial', 'z_samples', 'z_init', 'sin_coeff', 'cos_coeff', 'G_init', 'Gprime_init', 'stage_1_compute_time', 'stage_1_compute_steps', 'stage_1_RHS_evaluations', 'stage_1_mean_RHS_time', 'stage_1_max_RHS_time', 'stage_1_min_RHS_time', 'stage_2_compute_time', 'stage_2_compute_steps', 'stage_2_RHS_evaluations', 'stage_2_mean_RHS_time', 'stage_2_max_RHS_time', 'stage_2_min_RHS_time', 'has_WKB_violation', 'WKB_violation_z', 'WKB_violation_efolds_subh', 'init_efolds_subh', 'validated', 'metadata']
+  columns TkWKBIntegration: ['serial', 'version', 'timestamp', 'label', 'wavenumber_exit_serial', 'model_serial', 'numeric_serial', 'rho_gauss_order', 'phase_solver_serial', 'friction_solver_serial', 'z_min_serial', 'z_samples', 'z_init', 'sin_coeff', 'cos_coeff', 'T_init', 'Tprime_init', 'stage_1_compute_time', 'stage_1_compute_steps', 'stage_1_RHS_evaluations', 'stage_1_mean_RHS_time', 'stage_1_max_RHS_time', 'stage_1_min_RHS_time', 'stage_2_compute_time', 'stage_2_compute_steps', 'stage_2_RHS_evaluations', 'stage_2_mean_RHS_time', 'stage_2_max_RHS_time', 'stage_2_min_RHS_time', 'friction_compute_time', 'friction_compute_steps', 'friction_RHS_evaluations', 'friction_mean_RHS_time', 'friction_max_RHS_time', 'friction_min_RHS_time', 'has_WKB_violation', 'WKB_violation_z', 'WKB_violation_efolds_subh', 'init_efolds_subh', 'validated', 'metadata']
+  GkWKBValue per GkWKBIntegration: n=3480 min=1 median=73.0 max=108 total=227083
+  GkWKBIntegration per k (k serial, n, n pure): [(101, 1740, 1064), (202, 1740, 1271)]
+== shard 1
+  GkWKBIntegration: 3480
+  GkWKBValue: 231942
+  TkWKBIntegration: 2
+  TkWKBValue: 2457
+  GkSource: 290
+  GkSourceValue: 254040
+  GkNumericIntegration: 1089
+  QuadSourceIntegral: 2320
+  GkSourcePolicyData: 290
+  GkWKBValue per GkWKBIntegration: n=3480 min=1 median=73.0 max=112 total=231942
+  GkWKBIntegration per k (k serial, n, n pure): [(102, 1740, 1118), (301, 1740, 1321)]
+== shard 2
+  GkWKBIntegration: 3480
+  GkWKBValue: 235866
+  TkWKBIntegration: 2
+  TkWKBValue: 2561
+  GkSource: 290
+  GkSourceValue: 254040
+  GkNumericIntegration: 985
+  QuadSourceIntegral: 2320
+  GkSourcePolicyData: 290
+  GkWKBValue per GkWKBIntegration: n=3480 min=1 median=73.0 max=116 total=235866
+  GkWKBIntegration per k (k serial, n, n pure): [(2, 1740, 1172), (302, 1740, 1370)]
+== shard 3
+  GkWKBIntegration: 3480
+  GkWKBValue: 222046
+  TkWKBIntegration: 2
+  TkWKBValue: 2255
+  GkSource: 290
+  GkSourceValue: 254040
+  GkNumericIntegration: 1287
+  QuadSourceIntegral: 2320
+  GkSourcePolicyData: 290
+  GkWKBValue per GkWKBIntegration: n=3480 min=1 median=73.0 max=104 total=222046
+  GkWKBIntegration per k (k serial, n, n pure): [(1, 1740, 1015), (201, 1740, 1221)]
+# ----
+# end 2026-10-26T21:58:29Z
+# exit 0

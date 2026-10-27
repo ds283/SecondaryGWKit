@@ -1,0 +1,2 @@
+r13 levin-phase-floor-06-r13-shard0003.sqlite serial 75 total -0x1.1f665c7aeff31p-59 abserr 0x1.149f8c0949579p-83 1.1172723304663116e-25 WKB_Levin -0x1.1f665c7aeff31p-59 numeric_quad 0x0.0p+0 analytic_rad -0x1.5a09ca82db3b4p-58 regions 16
+r14 levin-phase-floor-06-r14-shard0003.sqlite serial 232 total -0x1.1f665c9de3ef8p-59 abserr 0x1.ae7f4aca32bf7p-84 8.693822424567017e-26 WKB_Levin -0x1.1f665c9de3ef8p-59 numeric_quad 0x0.0p+0 analytic_rad -0x1.5a09ca82db3b4p-58 regions 15

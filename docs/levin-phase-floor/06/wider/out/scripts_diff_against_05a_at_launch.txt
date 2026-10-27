@@ -1,0 +1,2584 @@
+diff -ruN state/scripts_05a_reference/certify_copy.py scripts/certify_copy.py
+--- state/scripts_05a_reference/certify_copy.py	1970-01-01 01:00:00
++++ scripts/certify_copy.py	2026-10-26 22:20:29
+@@ -0,0 +1,114 @@
++"""levin-phase-floor prompt 06 section 6, route (B): certify the scratch copy (make_copy.py) against
++A3 v2, both opened sqlite3 mode=ro. For the primary and each shard:
++- the schema: sqlite_master (type, name, tbl_name, sql) of every object identical, except that
++  the CREATE TABLE sql of GkWKBValue, TkWKBValue and GkSourceValue on a shard, which with the one
++  ", theta_residual FLOAT" that ALTER TABLE wrote taken out must be A3 v2's exactly; PRAGMA table_info of every table identical except that one trailing column;
++- the rows: every row of every table identical, as A3 v2's columns read in rowid order (or in
++  the table's own order where it has no rowid), each value compared by type and, for a float, by
++  bit pattern (struct pack), never by ``==`` alone;
++- the added column is NULL in every row.
++Prints a line per table and a verdict."""
++import sqlite3
++import struct
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import STORE_DIR, WIDER, header  # noqa: E402
++
++COPY_DIR = WIDER / "state" / "a3v2_copy"
++NAMES = ["handover-A3-v2-lambdacdm.sqlite"] + [
++    f"handover-A3-v2-lambdacdm-shard{i:04d}.sqlite" for i in range(4)
++]
++ADDED = {"GkWKBValue", "TkWKBValue", "GkSourceValue"}
++
++
++def ro(p):
++    return sqlite3.connect(f"{p.as_uri()}?mode=ro", uri=True)
++
++
++def key(v):
++    if isinstance(v, float):
++        return ("f", struct.pack("<d", v))
++    return (type(v).__name__, v)
++
++
++def main():
++    for l in header(Path(__file__).resolve(), "route (B): the scratch copy of A3 v2, certified"):
++        print(l)
++    ok = True
++    total_rows = 0
++    for name in NAMES:
++        a, b = ro(STORE_DIR / name), ro(COPY_DIR / name)
++        ma = sorted(a.execute("select type, name, tbl_name, sql from sqlite_master").fetchall(), key=lambda r: (r[0], r[1]))
++        mb = sorted(b.execute("select type, name, tbl_name, sql from sqlite_master").fetchall(), key=lambda r: (r[0], r[1]))
++        if [r[:3] for r in ma] != [r[:3] for r in mb]:
++            ok = False
++            print(f"!! {name}: sqlite_master objects differ")
++        for ra, rb in zip(ma, mb):
++            if ra[3] != rb[3]:
++                # SQLite's ALTER TABLE ADD COLUMN writes ", theta_residual FLOAT" after the last
++                # column definition, before the table constraints; with that one occurrence taken
++                # out, the copy's sql must be A3 v2's exactly
++                if (
++                    ra[0] == "table"
++                    and ra[1] in ADDED
++                    and rb[3].count(", theta_residual FLOAT") == 1
++                    and rb[3].replace(", theta_residual FLOAT", "", 1) == ra[3]
++                ):
++                    print(f"   {name}: {ra[1]} CREATE sql differs only by the added column ', theta_residual FLOAT'")
++                else:
++                    ok = False
++                    print(f"!! {name}: sql of {ra[1]} differs:\n   {ra[3]!r}\n   {rb[3]!r}")
++        tables = [r[1] for r in ma if r[0] == "table" and not r[1].startswith("sqlite_")]
++        for t in tables:
++            ia = a.execute(f'PRAGMA table_info("{t}")').fetchall()
++            ib = b.execute(f'PRAGMA table_info("{t}")').fetchall()
++            if t in ADDED:
++                extra = ib[len(ia):]
++                good = ib[: len(ia)] == ia and len(extra) == 1 and extra[0][1] == "theta_residual" and extra[0][2] == "FLOAT" and extra[0][3] == 0
++            else:
++                good = ia == ib
++            if not good:
++                ok = False
++                print(f"!! {name}: {t} table_info differs: {ia} vs {ib}")
++            cols = ", ".join(f'"{c[1]}"' for c in ia)
++            wr = a.execute("select sql from sqlite_master where name=?", (t,)).fetchone()[0]
++            order = "" if "WITHOUT ROWID" in (wr or "").upper() else " ORDER BY rowid"
++            ca = a.execute(f'SELECT {cols} FROM "{t}"{order}')
++            cb = b.execute(f'SELECT {cols} FROM "{t}"{order}')
++            n = 0
++            diff = 0
++            while True:
++                xa = ca.fetchmany(20000)
++                xb = cb.fetchmany(20000)
++                if len(xa) != len(xb):
++                    ok = False
++                    print(f"!! {name}: {t} row counts differ")
++                    break
++                if not xa:
++                    break
++                for p, q in zip(xa, xb):
++                    if tuple(map(key, p)) != tuple(map(key, q)):
++                        diff += 1
++                n += len(xa)
++            nulls = ""
++            if t in ADDED:
++                nn = b.execute(f'SELECT COUNT(*) FROM "{t}" WHERE theta_residual IS NOT NULL').fetchone()[0]
++                nulls = f"; theta_residual non-NULL rows {nn}"
++                if nn != 0:
++                    ok = False
++            total_rows += n
++            if diff:
++                ok = False
++            print(f"   {name}: {t}: {n} rows, {diff} differing{nulls}")
++        a.close()
++        b.close()
++    print(f"== {total_rows} rows compared")
++    print(f"== the copy is A3 v2 but for the three added, all-NULL columns: {'CERTIFIED' if ok else 'NOT CERTIFIED'}")
++    return 0 if ok else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN state/scripts_05a_reference/explore_store.py scripts/explore_store.py
+--- state/scripts_05a_reference/explore_store.py	1970-01-01 01:00:00
++++ scripts/explore_store.py	2026-10-26 21:58:27
+@@ -0,0 +1,32 @@
++"""levin-phase-floor prompt 06 section 6: a read-only look at A3 v2's producer tables, to size the
++in-process re-run of the producers (new in 06; not part of the run). Every shard is opened
++sqlite3 mode=ro. Prints, per shard: the GkWKBIntegration, GkWKBValue, TkWKBIntegration,
++TkWKBValue, GkSource and GkSourceValue row counts, the value tables' columns, and per
++GkWKBIntegration the number of value rows (min/median/max)."""
++import sqlite3
++import statistics
++import sys
++from pathlib import Path
++
++STORE_DIR = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores")
++for shard in range(4):
++    p = STORE_DIR / f"handover-A3-v2-lambdacdm-shard{shard:04d}.sqlite"
++    conn = sqlite3.connect(f"{p.as_uri()}?mode=ro", uri=True)
++    print(f"== shard {shard}")
++    for t in ["GkWKBIntegration", "GkWKBValue", "TkWKBIntegration", "TkWKBValue", "GkSource", "GkSourceValue", "GkNumericIntegration", "QuadSourceIntegral", "GkSourcePolicyData"]:
++        try:
++            n = conn.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]
++        except sqlite3.OperationalError as e:
++            n = f"({e})"
++        print(f"  {t}: {n}")
++    if shard == 0:
++        for t in ["GkWKBValue", "TkWKBValue", "GkSourceValue", "GkWKBIntegration", "TkWKBIntegration"]:
++            cols = [r[1] for r in conn.execute(f'PRAGMA table_info("{t}")')]
++            print(f"  columns {t}: {cols}")
++    rows = conn.execute('SELECT wkb_serial, COUNT(*) FROM "GkWKBValue" GROUP BY wkb_serial').fetchall()
++    if rows:
++        c = [r[1] for r in rows]
++        print(f"  GkWKBValue per GkWKBIntegration: n={len(c)} min={min(c)} median={statistics.median(c)} max={max(c)} total={sum(c)}")
++    rows = conn.execute('SELECT wavenumber_exit_serial, COUNT(*), SUM(numeric_serial IS NULL) FROM "GkWKBIntegration" GROUP BY wavenumber_exit_serial').fetchall()
++    print(f"  GkWKBIntegration per k (k serial, n, n pure): {rows}")
++    conn.close()
+diff -ruN state/scripts_05a_reference/fingerprint_copy.py scripts/fingerprint_copy.py
+--- state/scripts_05a_reference/fingerprint_copy.py	1970-01-01 01:00:00
++++ scripts/fingerprint_copy.py	2026-10-26 22:21:42
+@@ -0,0 +1,27 @@
++"""levin-phase-floor prompt 06 section 6, route (B): the scratch copy's store fingerprint, under the
++tree on PYTHONPATH (s: its factories declare theta_residual, so it can read the copy).
++``python -m runregistrykit store fingerprint`` loads the fingerprinter named by the main checkout's
++runregistrykit.toml from the main checkout (28ebaf0), whose factories cannot read the copy
++(out/cmd/13); this calls the same fingerprinter object, the tree's ``config.fingerprint:
++fingerprinter`` (a ``runregistrykit.fingerprint.DatastoreKitFingerprinter``), with its ``take``,
++and prints its ``describe`` and the digest. Read-only: datastorekit's read-only reader.
++
++Usage: PYTHONPATH=<tree> python -B fingerprint_copy.py PRIMARY"""
++import datetime
++import json
++import sys
++
++import config.fingerprint as cf
++
++primary = sys.argv[1]
++print(f"# config.fingerprint from {cf.__file__}; format {cf.FINGERPRINT_FORMAT}")
++fp, _inv = cf.fingerprinter.take(
++    primary, {"at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
++)
++for line in cf.fingerprinter.describe(fp):
++    print(line)
++keys = sorted(k for k in fp if k not in ("classes",))
++print("# top-level keys:", keys)
++for k in keys:
++    if k != "problems":
++        print(f"{k}: {json.dumps(fp[k], default=str)[:200]}")
+diff -ruN state/scripts_05a_reference/harness.py scripts/harness.py
+--- state/scripts_05a_reference/harness.py	2026-10-26 21:51:54
++++ scripts/harness.py	2026-10-26 22:05:20
+@@ -1,4 +1,19 @@
+ """
++levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/harness.py,
++docs/levin-phase-floor/05a/wider/scripts/harness.py, itself 05's unchanged; a record, not edited).
++Changed here, each change marked "prompt 06": this paragraph; and, for the
++producers re-run in-process (prompt 06 section 6: "the re-run of the producers ... with the
++``ray.remote`` stood in as 05's harness stood in ``QuadSource``'s"; rerun.py), four more stand-ins
++inside ``standin_ray()``, each the same ``_StandinRemoteFunction`` as 05's two: the
++``WKB_phase_function.remote`` that ``GkWKBIntegration.compute()`` and
++``TkWKBIntegration.compute()`` dispatch with (patched at each producer module's attribute, which is
++where each calls it through), ``assemble_GkSource_values.remote`` (``GkSource.compute()``) and
++``apply_GkSource_policy.remote`` (``GkSourcePolicyData.compute()``). Each runs the function's own
++body in-process on Ray-style copies of its arguments. In a tree whose producers are not re-run
++they are never called.
++
++(05's text follows, unchanged.)
++
+ levin-phase-floor prompt 05 section 6 (copied from prompt 04's scripts/harness.py,
+ docs/levin-phase-floor/04/scripts/harness.py, sha256 a2692689..., a record that is not edited).
+ Changed here in exactly four places (counting the ``QS_MOD`` import), each marked "prompt 05": this paragraph; the job_name below;
+@@ -53,6 +68,11 @@
+ sp_mod = importlib.import_module("datastorekit.SQL.ShardedPool")
+ QSI_MOD = importlib.import_module("ComputeTargets.QuadSourceIntegral")
+ QS_MOD = importlib.import_module("ComputeTargets.QuadSource")  # prompt 05
++# prompt 06: the producers' modules, for the re-run (rerun.py)
++GKW_MOD = importlib.import_module("ComputeTargets.GkWKBIntegration")
++TKW_MOD = importlib.import_module("ComputeTargets.TkWKBIntegration")
++GKS_MOD = importlib.import_module("ComputeTargets.GkSource")
++GPD_MOD = importlib.import_module("ComputeTargets.GkSourcePolicyData")
+ 
+ # main.py's VERSION_LABEL (main.py:322); the store's version row (A3 v2 holds only this label)
+ VERSION_LABEL = "2025.1.1"
+@@ -124,6 +144,22 @@
+                 _StandinRemoteFunction(QS_MOD.compute_quad_source),
+             ), mock.patch.object(
+                 ray, "wait", standin_wait
++            ), mock.patch.object(  # prompt 06: the producers re-run in-process
++                GKW_MOD,
++                "WKB_phase_function",
++                _StandinRemoteFunction(GKW_MOD.WKB_phase_function),
++            ), mock.patch.object(
++                TKW_MOD,
++                "WKB_phase_function",
++                _StandinRemoteFunction(TKW_MOD.WKB_phase_function),
++            ), mock.patch.object(
++                GKS_MOD,
++                "assemble_GkSource_values",
++                _StandinRemoteFunction(GKS_MOD.assemble_GkSource_values),
++            ), mock.patch.object(
++                GPD_MOD,
++                "apply_GkSource_policy",
++                _StandinRemoteFunction(GPD_MOD.apply_GkSource_policy),
+             ):
+                 yield cluster
+     if ray.is_initialized():
+diff -ruN state/scripts_05a_reference/hash_store.py scripts/hash_store.py
+--- state/scripts_05a_reference/hash_store.py	2026-10-26 21:51:54
++++ scripts/hash_store.py	2026-10-26 22:22:28
+@@ -5,7 +5,10 @@
+ Prompt 05 section 6's copy of prompt 04's hash_store.py (a record, not edited), with prompt 05's
+ prov.py header and the journal check added.
+ 
+-Usage: python hash_store.py LABEL   (writes to stdout)
++Usage: python hash_store.py LABEL [DIR]   (writes to stdout)
++
++prompt 06: the optional DIR (default A3 v2's, var/datastores) hashes the same five store files in
++another directory: the scratch copy of route (B), state/a3v2_copy. Changed here only by that.
+ """
+ 
+ import datetime
+@@ -27,11 +30,15 @@
+ 
+ def main():
+     label = sys.argv[1] if len(sys.argv) > 1 else ""
++    store_dir = sys.argv[2] if len(sys.argv) > 2 else str(STORE_DIR)  # prompt 06
+     for line in header(os.path.abspath(__file__), f"store files {label}"):
+         print(line)
+-    print("# sha256  size_bytes  mtime_ns  mtime_utc  path (in var/datastores/)")
++    print(f"# sha256  size_bytes  mtime_ns  mtime_utc  path (in {store_dir})")
+     for rel in FILES:
+-        p = os.path.join(str(STORE_DIR), rel)
++        p = os.path.join(store_dir, rel)
++        if not os.path.exists(p) and rel.endswith(".manifest.json"):  # prompt 06: the copy has none
++            print(f"# {rel}: absent")
++            continue
+         st = os.stat(p)
+         mt = datetime.datetime.fromtimestamp(
+             st.st_mtime, datetime.timezone.utc
+@@ -39,7 +46,7 @@
+         print(f"{sha256(p)}  {st.st_size}  {st.st_mtime_ns}  {mt}  {rel}")
+     side = sorted(
+         f
+-        for f in os.listdir(str(STORE_DIR))
++        for f in os.listdir(store_dir)
+         if f.startswith("handover-A3-v2-lambdacdm")
+         and (f.endswith("-journal") or f.endswith("-wal") or f.endswith("-shm"))
+     )
+diff -ruN state/scripts_05a_reference/launch.py scripts/launch.py
+--- state/scripts_05a_reference/launch.py	2026-10-26 21:51:54
++++ scripts/launch.py	2026-10-26 22:08:18
+@@ -1,4 +1,12 @@
+ """
++levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/launch.py,
++docs/levin-phase-floor/05a/wider/scripts/launch.py, a record that is not edited). Changed here,
++each change marked "prompt 06": the prompt (``06``) under which the run is registered, the trees
++and unit sets named in its purpose and scope, and the names it imports from prov.py. The
++manifest's git_head is the main checkout's (``28ebaf0``), where no tree runs; both trees are
++worktrees, which the purpose names and every checkpoint payload records. 05a's text follows,
++unchanged; read its ``c``/``t`` as ``t5``/``s``.
++
+ levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/launch.py,
+ docs/levin-phase-floor/05/wider/scripts/launch.py, sha256 d8ac0dc3..., a record that is not
+ edited). Changed here, each change marked "prompt 05a": the prompt (``05a``) under which the run is
+@@ -38,27 +46,29 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ 
+-from prov import C_SHA, C_TREE, MAIN, PYTHON, T_SHA, WIDER, sha256  # noqa: E402  prompt 05a
++from prov import MAIN, PYTHON, S_SHA, S_TREE, T5_SHA, T5_TREE, WIDER, sha256  # noqa: E402  prompt 06
+ 
+ import runregistrykit  # noqa: E402
+ 
+ SCRIPT = HERE / "run_wider.py"
+ 
+-PURPOSE = (  # prompt 05a
+-    "levin-phase-floor prompt 05a section 6 (T1 as amended by section 9) on the Mac Studio "
+-    "(mps026298; Python 3.13.16): the wider re-measurement of T's node-anchored remainder on A3 v2, "
+-    "Ray-free, no lock. Two trees: c, the code commit's parent "
+-    f"{C_SHA[:7]} (05's c) in the git worktree {C_TREE}; t, the code commit 1fc349c, in the main "
+-    f"checkout at {T_SHA[:7]} (this manifest's git_head; its code is 1fc349c's up to bd38e50's "
+-    "comments). 05's 39 rows of state/sample.json (31 depth-20, 8 controls), re-run in-process on "
+-    "a read-only stand-in ShardedPool with QuadSource recomputed in-process; units in order "
+-    "c@1e-7 (39), t@1e-7 (39), t@1e-8 (31 depth-20); t budget 3x the row's c wall; the phase probe "
+-    "in every 1e-7 unit, after its timed section; about 20-60 min"
++PURPOSE = (  # prompt 06
++    "levin-phase-floor prompt 06 section 6 on the Mac Studio (mps026298; Python 3.13.16): the "
++    "re-measurement of 05's 39 rows on A3 v2 with the producers re-run in-process, Ray-free, no "
++    "lock. Two trees, both git worktrees: t5, the code commit's parent "
++    f"{T5_SHA[:7]} (05a's t; its consumers and the stored producer samples) in {T5_TREE}; s, "
++    f"Part B's dispatch SHA {S_SHA[:7]} (code dc9d28c; its producers re-run on each row's "
++    f"GkWKBIntegration and TkWKBIntegration objects, and its consumers) in {S_TREE}. The manifest's "
++    "git_head is the main checkout's (28ebaf0), where no tree runs. 05's 39 rows of "
++    "state/sample.json (31 depth-20, 8 controls), on a read-only stand-in ShardedPool with QuadSource "
++    "recomputed in-process; units in order t5@1e-7 (39), s@1e-7 (39), s@1e-8 (31 depth-20); s budget "
++    "3x the row's t5 wall (the producer re-run is outside it, in the rebuild); the phase probe in the "
++    "1e-7 units of R1-R7, after the timed section"
+ )
+-SCOPE = (  # prompt 05a
++SCOPE = (  # prompt 06
+     "39 QuadSourceIntegral rows of handover-A3-v2-lambdacdm.sqlite (read-only), listed in "
+-    "var/levin-phase-floor-05a/wider/state/sample.json (05's sample, copied unchanged); trees c "
+-    "(worktree c4eaefd) and t (main checkout, code 1fc349c); rtol 1e-7 and 1e-8 (t, depth-20 "
++    "var/levin-phase-floor-06/wider/state/sample.json (05's sample, copied unchanged); trees t5 "
++    "(worktree 9f66622) and s (worktree f5cee4c, code dc9d28c); rtol 1e-7 and 1e-8 (s, depth-20 "
+     "rows); no store write, no Ray, no lock"
+ )
+ HEARTBEAT_MEANS = (
+@@ -77,7 +87,7 @@
+     child_argv = [str(PYTHON), "-B", str(SCRIPT), "--run-dir", "<run dir>"]
+     run = runregistrykit.begin(
+         campaign="levin-phase-floor",
+-        prompt="05a",  # prompt 05a
++        prompt="06",  # prompt 06
+         slug="wider",
+         purpose=PURPOSE,
+         argv=child_argv,
+diff -ruN state/scripts_05a_reference/make_copy.py scripts/make_copy.py
+--- state/scripts_05a_reference/make_copy.py	1970-01-01 01:00:00
++++ scripts/make_copy.py	2026-10-26 22:19:35
+@@ -0,0 +1,65 @@
++"""levin-phase-floor prompt 06 section 6, route (B) (the user's decision, 2026-10-26, relayed by the
++laptop session): build the unregistered scratch copy of A3 v2 that ``s`` opens read-only.
++
++At the code commit the factories declare ``theta_residual`` on ``GkWKBValue``, ``TkWKBValue`` and
++``GkSourceValue``; datastorekit refuses to open a store whose tables lack a declared column, so
++``s`` cannot open A3 v2 itself (out/cmd/06_dev_smoke_s.txt). The copy is A3 v2's primary and four
++shards, copied byte for byte under their own names (the primary names its shards by file name) into
++``state/a3v2_copy/``, with ``ALTER TABLE <t> ADD COLUMN theta_residual FLOAT`` on each of the three
++value tables of each shard copy: nullable, and NULL in every row. The sidecar manifest is not
++copied: the copy is not a registered store.
++
++A3 v2 is only read here, ``open(..., "rb")``. Every write is to a path under ``state/a3v2_copy/``,
++checked before the write. Certification is certify_copy.py.
++"""
++import hashlib
++import shutil
++import sqlite3
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import STORE_DIR, WIDER, sha256  # noqa: E402
++
++COPY_DIR = WIDER / "state" / "a3v2_copy"
++NAMES = ["handover-A3-v2-lambdacdm.sqlite"] + [
++    f"handover-A3-v2-lambdacdm-shard{i:04d}.sqlite" for i in range(4)
++]
++TABLES = ["GkWKBValue", "TkWKBValue", "GkSourceValue"]
++
++
++def main():
++    COPY_DIR.mkdir(parents=True, exist_ok=True)
++    if any(COPY_DIR.iterdir()):
++        raise SystemExit(f"{COPY_DIR} is not empty")
++    for name in NAMES:
++        src = STORE_DIR / name
++        dst = COPY_DIR / name
++        h_src = sha256(src)
++        with open(src, "rb") as fi, open(dst, "xb") as fo:
++            shutil.copyfileobj(fi, fo, 1 << 20)
++        h_dst = sha256(dst)
++        print(f"copied {name}: source sha256 {h_src}, copy sha256 {h_dst}, equal {h_src == h_dst}")
++        if h_src != h_dst:
++            raise SystemExit("copy differs")
++    for i in range(4):
++        dst = (COPY_DIR / f"handover-A3-v2-lambdacdm-shard{i:04d}.sqlite").resolve()
++        assert dst.parent == COPY_DIR.resolve(), dst
++        conn = sqlite3.connect(str(dst))
++        try:
++            for t in TABLES:
++                cols = [r[1] for r in conn.execute(f'PRAGMA table_info("{t}")')]
++                if "theta_residual" in cols:
++                    raise SystemExit(f"{dst.name}: {t} already has theta_residual")
++                conn.execute(f'ALTER TABLE "{t}" ADD COLUMN theta_residual FLOAT')
++                print(f"{dst.name}: ALTER TABLE {t} ADD COLUMN theta_residual FLOAT")
++            conn.commit()
++        finally:
++            conn.close()
++    for p in sorted(COPY_DIR.iterdir()):
++        print(f"{p.name}  {p.stat().st_size}  sha256 {sha256(p)}")
++
++
++if __name__ == "__main__":
++    main()
+diff -ruN state/scripts_05a_reference/phase_probe06.py scripts/phase_probe06.py
+--- state/scripts_05a_reference/phase_probe06.py	1970-01-01 01:00:00
++++ scripts/phase_probe06.py	2026-10-26 22:07:06
+@@ -0,0 +1,171 @@
++"""
++levin-phase-floor prompt 06 section 6: the phase probe. New in 06 (05a's probe.py, which measured
++sigma_theta of T's remainder in narrow z windows, is copied unchanged and unused). Run by
++worker.py in each tree's rtol 1e-7 unit of 04's rows R1-R7, after the unit's timed section, with
++the dispatcher uninstalled, on the objects the unit's own ``build_partition`` call was handed and
++built (captured by worker.py). It reads phase objects, the GkSource's values and, under ``s``,
++the re-run producers' ``deltaTheta``; it runs no quadrature.
++
++Prompt 06 section 6: "for every factor of every Levin sub-interval: 04's ``window_rms`` of phi
++over windows of 9 consecutive samples, centred inside the sub-interval, under t5 and under s.
++Record F = eps k eta_R for each row, and each window's |theta|."
++
++- **The factors.** For each sub-interval with ``method == "Levin"``: G if ``regime[0]``, T_q if
++  ``regime[1]``, T_r if ``regime[2]``. G's phase is ``GkPolicy.functions.phase`` and T's
++  ``TkSourceFunctions.phase``, the ``PrimitivePhase`` objects the unit's Levin calls used. Its
++  samples are ``phase.z_samples`` (ascending) and ``phase.phi_samples``, in ``u = log1p(z)``.
++- **The windows.** 04's ``window_rms`` (docs/levin-phase-floor/04/scripts/check_phases.py:106),
++  copied unchanged: the RMS residual about a degree-4 fit in ``t`` in [-1, 1] over each window
++  of 9 consecutive samples; a window's centre is its 5th sample. A window is the sub-interval's
++  when its centre lies in the sub-interval's ``x_span = (log(1 + z_min), log(1 + z_max))``, as
++  04 formed it.
++- **Per window:** the start index, the 9 z and phi as ``float.hex``, the RMS, ``|theta|`` at the
++  centre (``|raw_theta(z_c)|``) and the largest over the 9, ``theta_deriv`` (log derivative) at
++  the centre (descriptive: "theta_deriv's change at the Levin windows").
++- **G's windows** also carry each of the 9 samples' ``z_init`` from the GkSource value it was
++  read from (``v.WKB.z_init``: None for a pure-WKB object), and the tag **pure-WKB** if all 9 are
++  None, **numerically seeded** otherwise. Under ``s`` they carry each sample's ``deltaTheta`` from
++  the re-run producer of its source redshift (rerun.py), and ``window_rms`` of it on the same fit:
++  ``dtheta_rms_unwrapped`` after ``numpy.unwrap`` (the wraps of deltaTheta between neighbours are
++  whole cycles, which the phi unwrap removes too), ``dtheta_rms_raw`` without.
++- **T's windows** carry the re-run ``deltaTheta`` of the T object under ``s`` (a constant).
++
++``EPS`` is 2**-52. F is formed in the analysis (eps k eta(z_response), 04's F).
++"""
++
++import math
++
++import numpy as np
++
++PHI_WINDOW = 9
++PHI_DEG = 4
++
++
++def window_rms(u, y):
++    """RMS residual about a degree-4 fit over each window of 9 consecutive samples, in u.
++    (docs/levin-phase-floor/04/scripts/check_phases.py:106, unchanged.)"""
++    out = []
++    centres = []
++    for i in range(0, len(u) - PHI_WINDOW + 1):
++        uu = u[i : i + PHI_WINDOW]
++        yy = y[i : i + PHI_WINDOW]
++        t = (2.0 * uu - (uu[0] + uu[-1])) / (uu[-1] - uu[0])
++        coef = np.polynomial.polynomial.polyfit(t, yy, PHI_DEG)
++        res = yy - np.polynomial.polynomial.polyval(t, coef)
++        out.append(float(np.sqrt(np.mean(res * res))))
++        centres.append(float(uu[PHI_WINDOW // 2]))
++    return np.array(out), np.array(centres)
++
++
++def _hex(v):
++    return [None if x is None else float(x).hex() for x in v]
++
++
++def probe_row(partition, GkPolicy, Tq_f, Tr_f, dtheta_G=None, dtheta_T=None):
++    """Every window of a row. Returns (windows, samples): windows is JSON-able; samples holds
++    each factor's full z and phi arrays (for the pickle). ``dtheta_G`` (under ``s``) maps a
++    z_source serial to rerun.py's record of its re-run GkWKBIntegration (``deltaTheta``,
++    ``pure_WKB``, ...); ``dtheta_T`` maps "Tq"/"Tr" to that T object's re-run ``deltaTheta``."""
++    subs = [
++        (i, item)
++        for i, item in enumerate(partition["subintervals"])
++        if item["method"] == "Levin"
++    ]
++    factors = {}
++    need = {"G": False, "Tq": False, "Tr": False}
++    for _i, item in subs:
++        reg = tuple(bool(x) for x in item["regime"])
++        need["G"] |= reg[0]
++        need["Tq"] |= reg[1]
++        need["Tr"] |= reg[2]
++
++    G_vals = None
++    if need["G"]:
++        phase = GkPolicy.functions.phase
++        source = GkPolicy._source_proxy.get()
++        G_vals = {v.z_source.z: v for v in source.values if v.has_WKB}
++        factors["G"] = phase
++    if need["Tq"]:
++        factors["Tq"] = Tq_f.phase
++    if need["Tr"]:
++        factors["Tr"] = Tr_f.phase
++
++    T_dtheta = dtheta_T or {}
++
++    samples = {}
++    rms_by_factor = {}
++    for name, phase in factors.items():
++        zs = np.asarray(phase.z_samples, dtype=float)
++        phi = np.asarray(phase.phi_samples, dtype=float)
++        if not np.all(np.diff(zs) > 0):
++            raise RuntimeError(f"probe: {name}'s z samples are not ascending")
++        u = np.log1p(zs)
++        w, centres = window_rms(u, phi)
++        rms_by_factor[name] = (u, w, centres)
++        samples[name] = {
++            "z": zs,
++            "phi": phi,
++            "k": float(phase.k),
++            "sign": int(phase.sign),
++            "z_anchor": float(phase.z_anchor),
++        }
++
++    windows = []
++    for i, item in subs:
++        reg = tuple(bool(x) for x in item["regime"])
++        x_span = (math.log(1.0 + item["z_min"]), math.log(1.0 + item["z_max"]))
++        for name, flag in (("G", reg[0]), ("Tq", reg[1]), ("Tr", reg[2])):
++            if not flag:
++                continue
++            phase = factors[name]
++            u, w, centres = rms_by_factor[name]
++            zs = samples[name]["z"]
++            phi = samples[name]["phi"]
++            for i0 in range(len(w)):
++                c = centres[i0]
++                if not (x_span[0] <= c <= x_span[1]):
++                    continue
++                zz = zs[i0 : i0 + PHI_WINDOW]
++                pp = phi[i0 : i0 + PHI_WINDOW]
++                zc = float(zz[PHI_WINDOW // 2])
++                thetas = [abs(float(phase.raw_theta(float(z)))) for z in zz]
++                win = {
++                    "sub": i,
++                    "regime": list(reg),
++                    "x_span": [x_span[0].hex(), x_span[1].hex()],
++                    "factor": name,
++                    "i0": int(i0),
++                    "z_centre": zc,
++                    "u_centre": float(c),
++                    "z": _hex(zz),
++                    "phi": _hex(pp),
++                    "rms": float(w[i0]),
++                    "abs_theta_centre": abs(float(phase.raw_theta(zc))),
++                    "abs_theta_max": max(thetas),
++                    "theta_deriv_u_centre": float(phase.theta_deriv(zc, log_derivative=True)),
++                    "k": samples[name]["k"],
++                }
++                if name == "G":
++                    vals = [G_vals[float(z)] for z in zz]
++                    z_inits = [v.WKB.z_init for v in vals]
++                    win["z_source_serials"] = [int(v.z_source.store_id) for v in vals]
++                    win["z_init"] = [None if x is None else float(x) for x in z_inits]
++                    win["pure_WKB"] = all(x is None for x in z_inits)
++                    if dtheta_G is not None:
++                        dts = [dtheta_G[int(v.z_source.store_id)]["deltaTheta"] for v in vals]
++                        uu = np.log1p(np.asarray(zz))
++                        dt = np.asarray(dts, dtype=float)
++                        r_un, _ = window_rms(uu, np.unwrap(dt))
++                        r_raw, _ = window_rms(uu, dt)
++                        win["deltaTheta"] = _hex(dts)
++                        win["dtheta_rms_unwrapped"] = float(r_un[0])
++                        win["dtheta_rms_raw"] = float(r_raw[0])
++                        win["rerun_pure_WKB"] = [
++                            bool(dtheta_G[int(v.z_source.store_id)]["pure_WKB"]) for v in vals
++                        ]
++                else:
++                    win["deltaTheta_T"] = (
++                        None if T_dtheta.get(name) is None else float(T_dtheta[name]).hex()
++                    )
++                windows.append(win)
++    return windows, samples
+diff -ruN state/scripts_05a_reference/prov.py scripts/prov.py
+--- state/scripts_05a_reference/prov.py	2026-10-26 21:51:54
++++ scripts/prov.py	2026-10-26 22:22:18
+@@ -1,17 +1,28 @@
+-"""levin-phase-floor prompt 05a section 6 (the wider re-measurement, with section 9's T1): provenance
++"""levin-phase-floor prompt 06 section 6 (the re-measurement of 05's 39 rows on A3 v2, with the
++producers re-run in-process): provenance shared by every script. Copied from prompt 05a's
++``scripts/prov.py`` (docs/levin-phase-floor/05a/wider/scripts/prov.py, a record, not edited);
++changed here only in its trees and its paths (prompt 06 section 6: "Change only: the tree names and
++paths; ..."), each change marked "prompt 06".
++
++Two trees take part (prompt 06 section 6), both git worktrees, detached (orchestrator note B.5):
++- T5_TREE, the code commit's parent ``9f66622``, whose code is 05a's t: the worktree
++  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622``. Its consumers, and the stored
++  producer samples. U0's producer-faithfulness clause runs here too.
++- S_TREE, Part B's dispatch SHA ``f5cee4c``, whose code is the code commit ``dc9d28c``'s (the
++  dispatch commit adds only records under ``prompts/``): the worktree
++  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c``. Its producers re-run on each row's
++  objects, and its consumers.
++The main checkout (``MAIN``, at ``28ebaf0``) holds the venv, the store, ``var/`` and the registry,
++and no tree runs from it. Nothing is written in either worktree.
++
++(05a's text follows, unchanged; read its c as t5 and its t as s.)
++
++levin-phase-floor prompt 05a section 6 (the wider re-measurement, with section 9's T1): provenance
+ shared by every script. Copied from prompt 05's ``scripts/prov.py``
+ (docs/levin-phase-floor/05/wider/scripts/prov.py, sha256 e8579509..., a record, not edited); changed
+ here only in its trees and its paths (prompt 05a section 6: "the scripts name 05's paths, its trees
+ p and c ... Change only those"), each change marked "prompt 05a".
+ 
+-Two trees take part (prompt 05a section 6):
+-- C_TREE, the code commit's parent ``c4eaefd``, whose code is 05's c: the git worktree
+-  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd`` (detached). Nothing is written there.
+-- T_TREE, the code commit: the main checkout, at Part B's dispatch SHA ``149c393``, whose code is
+-  the code commit ``1fc349c``'s up to ``bd38e50``'s comment-only changes (``2db3f9e`` and
+-  ``149c393`` add only records under ``prompts/``). It also holds the records, the store, ``var/``
+-  and the registry.
+-
+ Every output header records the SHA-256 of the script that wrote it and both trees' HEADs and
+ ``git status --short``. Read-only git only (rev-parse, status).
+ """
+@@ -24,19 +35,20 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # var/levin-phase-floor-05a/wider  (prompt 05a)
++WIDER = HERE.parent  # var/levin-phase-floor-06/wider  (prompt 06)
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+ assert HERE.parents[3] == MAIN, HERE
+ 
+-# prompt 05a: the trees c (the code commit's parent, 05's c) and t (the code commit)
+-C_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf05a-c4eaefd")
+-C_SHA = "c4eaefda26ccb615fa5864cac877454ba364c304"
+-T_TREE = MAIN
+-T_SHA = "149c3938bb9e074df3682f8e511c7b57cd9c55c5"  # Part B's dispatch SHA; its code is 1fc349c's
+-CODE_COMMIT = "1fc349c"
+-TREES = {"c": (C_TREE, C_SHA), "t": (T_TREE, T_SHA)}
++# prompt 06: the trees t5 (the code commit's parent, 05a's t) and s (the code commit), both worktrees
++T5_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622")
++T5_SHA = "9f66622d5ced82de9a6ec0c20baa9a2e715c6d27"
++S_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c")
++S_SHA = "f5cee4c7a76e755119d923341f204f139b29be7e"  # Part B's dispatch SHA; its code is dc9d28c's
++CODE_COMMIT = "dc9d28c"
++TREES = {"t5": (T5_TREE, T5_SHA), "s": (S_TREE, S_SHA)}
+ 
+-# prompt 05a: 05's run, T0's reference for c and convergence_kinds.py's --capped-run
++# prompt 06: 05a's run, U0's reference for t5; 05's run, convergence_kinds.py's --capped-run
++RUN05A = MAIN / "var" / "runs" / "levin-phase-floor-05a-wider-20261026T123047"
+ RUN05 = MAIN / "var" / "runs" / "levin-phase-floor-05-wider-20261026T020005"
+ SAMPLE_SHA256 = "73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7"
+ 
+@@ -46,7 +58,14 @@
+ CENSUS = MAIN / "var" / "levin-phase-floor-01" / "out" / "groups_01.csv"
+ A3V2_DIGEST = "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56"
+ 
++# prompt 06, route (B) (the user's decision, 2026-10-26): s cannot open A3 v2 (its factories
++# declare theta_residual, which A3 v2's value tables lack), so it opens, read-only, the unregistered
++# scratch copy make_copy.py built and certify_copy.py / fingerprint_copy.py certified: A3 v2 with
++# the three nullable, all-NULL columns added. t5 opens A3 v2 itself.
++COPY_DIR = WIDER / "state" / "a3v2_copy"
++STORE_DIR_BY_TREE = {"t5": STORE_DIR, "s": COPY_DIR}
+ 
++
+ def sha256(path):
+     h = hashlib.sha256()
+     with open(path, "rb") as f:
+@@ -57,11 +76,16 @@
+ 
+ def tree_state(tree):
+     """(HEAD, git status --short) of a tree, read-only."""
++    # prompt 06: --no-optional-locks, so that ``status`` does not refresh (write) the index
+     head = subprocess.run(
+-        ["git", "-C", str(tree), "rev-parse", "HEAD"], capture_output=True, text=True
++        ["git", "--no-optional-locks", "-C", str(tree), "rev-parse", "HEAD"],
++        capture_output=True,
++        text=True,
+     ).stdout.strip()
+     status = subprocess.run(
+-        ["git", "-C", str(tree), "status", "--short"], capture_output=True, text=True
++        ["git", "--no-optional-locks", "-C", str(tree), "status", "--short"],
++        capture_output=True,
++        text=True,
+     ).stdout
+     return head, status
+ 
+diff -ruN state/scripts_05a_reference/pure_wkb_zinit.py scripts/pure_wkb_zinit.py
+--- state/scripts_05a_reference/pure_wkb_zinit.py	1970-01-01 01:00:00
++++ scripts/pure_wkb_zinit.py	2026-10-26 22:35:46
+@@ -0,0 +1,19 @@
++"""levin-phase-floor prompt 06 section 6: how A3 v2 records a pure-WKB GkWKBIntegration's z_init
++(read-only, sqlite3 mode=ro, every shard). Prompt 06 section 6 tags a G window pure-WKB "if every
++one of its 9 source samples comes from a pure-WKB object (GkSource's z_init null)"; this counts,
++per shard, the GkWKBIntegration rows with no numeric parent and how their z_init relates to their
++z_source, the seeded rows likewise, and the GkSourceValue rows with WKB data whose z_init is null."""
++import sqlite3
++from pathlib import Path
++
++D = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores")
++for i in range(4):
++    c = sqlite3.connect(f"{(D / f'handover-A3-v2-lambdacdm-shard{i:04d}.sqlite').as_uri()}?mode=ro", uri=True)
++    q = 'select count(*), sum(w.z_init is null), sum(w.z_init = r.z), sum(w.z_init < r.z) from "GkWKBIntegration" w join redshift r on r.serial = w.z_source_serial where w.numeric_serial is {} null'
++    pure = c.execute(q.format("")).fetchone()
++    seeded = c.execute(q.format("not")).fetchone()
++    gsv = c.execute('select count(*), sum(z_init is null) from "GkSourceValue" where theta_mod_2pi is not null').fetchone()
++    print(f"shard {i}: pure-WKB rows (numeric_serial NULL): n={pure[0]}, z_init NULL {pure[1]}, z_init == z_source {pure[2]}, z_init < z_source {pure[3]}")
++    print(f"shard {i}: seeded rows: n={seeded[0]}, z_init NULL {seeded[1]}, z_init == z_source {seeded[2]}, z_init < z_source {seeded[3]}")
++    print(f"shard {i}: GkSourceValue rows with WKB data: n={gsv[0]}, z_init NULL {gsv[1]}")
++    c.close()
+diff -ruN state/scripts_05a_reference/rebuild.py scripts/rebuild.py
+--- state/scripts_05a_reference/rebuild.py	2026-10-26 21:51:54
++++ scripts/rebuild.py	2026-10-26 22:22:18
+@@ -1,4 +1,23 @@
+ """
++levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/rebuild.py,
++docs/levin-phase-floor/05a/wider/scripts/rebuild.py, itself 05's unchanged; a record, not edited).
++Changed here, each change marked "prompt 06", only for the re-run of the producers (prompt 06
++section 6; rerun.py):
++- ``build_context`` also returns the run's solver map (``solvers``, which a producer's ``store()``
++  reads its solver from) and the pool's redshift objects by serial (``redshift_by_id``, from the
++  ``read_table("redshift")`` it already makes);
++- ``rebuild_row`` takes ``rerun``. With ``rerun=False`` (``t5``) nothing changes: every producer
++  value is read from A3 v2. With ``rerun=True`` (``s``, and U0's faithfulness clause at ``t5``) the
++  stage's full lookups of the ``GkSource``, the ``GkSourcePolicyData`` and the two
++  ``TkWKBIntegration`` are replaced by rerun.py's re-run chain, whose read-backs carry the stored
++  rows' serials; every serial-only lookup, every check and the existence query are unchanged,
++  and run first;
++- every row records its ``GkSourcePolicyData``'s ``type``, ``quality``, ``crossover_z`` and
++  ``Levin_z`` (prompt 06 section 6, descriptive: "``Levin_z`` under both trees");
++- ``use_store_dir``, route (B): s reads the certified scratch copy of A3 v2 (prov.py).
++
++(05's text follows, unchanged.)
++
+ levin-phase-floor prompt 05 section 6 (copied from prompt 04's scripts/rebuild.py,
+ docs/levin-phase-floor/04/scripts/rebuild.py, sha256 ee47bc50..., a record that is not edited).
+ Changed here, each change marked "prompt 05":
+@@ -117,6 +136,16 @@
+ PRIMARY = STORE_DIR / "handover-A3-v2-lambdacdm.sqlite"
+ 
+ 
++def use_store_dir(store_dir):
++    """prompt 06, route (B): point PRIMARY and shard_file() at ``store_dir`` (A3 v2's directory for
++    t5, the certified scratch copy's for s; prov.STORE_DIR_BY_TREE). The worker calls it once,
++    before opening the pool."""
++    global STORE_DIR, PRIMARY
++    STORE_DIR = Path(store_dir)
++    PRIMARY = STORE_DIR / "handover-A3-v2-lambdacdm.sqlite"
++    return PRIMARY
++
++
+ def shard_file(shard: int) -> Path:
+     return STORE_DIR / f"handover-A3-v2-lambdacdm-shard{shard:04d}.sqlite"
+ 
+@@ -376,7 +405,8 @@
+     )
+ 
+     # every rebuilt redshift's z equals the stored z (read_table, mode=ro through the pool)
+-    stored_z = {z.store_id: z.z for z in ray.get(pool.read_table("redshift"))}
++    redshift_objs = ray.get(pool.read_table("redshift"))  # prompt 06: kept, by serial
++    stored_z = {z.store_id: z.z for z in redshift_objs}
+     mismatched = [
+         (z.store_id, z.z, stored_z.get(z.store_id))
+         for z in list(z_source_sample) + list(z_response_sample)
+@@ -509,11 +539,13 @@
+         Bessel_2pt5_proxy=Bessel_2pt5_proxy,
+         z_source_integral_max_z=z_source_integral_max_z,
+         z_source_integral_response_sample=z_source_integral_response_sample,
++        solvers=solvers,  # prompt 06
++        redshift_by_id={z.store_id: z for z in redshift_objs},  # prompt 06
+     )
+ 
+ 
+ def rebuild_row(
+-    ctx: dict, pool, shard: int, serial: int, log=print, rtol=None
++    ctx: dict, pool, shard: int, serial: int, log=print, rtol=None, rerun=False
+ ) -> dict:
+     """The QuadSourceIntegral stage for the one work item stored as (shard, serial).
+ 
+@@ -786,6 +818,14 @@
+     )
+ 
+     # the stage's full lookups, main.py:3733-4029, for this one item
++    # prompt 06: with rerun, the GkSource, GkSourcePolicyData and TkWKBIntegration lookups are
++    # replaced by the producers re-run in-process (rerun.py), after the TkNumericIntegration ones
++    if rerun:
++        return _rebuild_row_rerun(
++            ctx, pool, shard, serial, log, rtol, checks, raw, stored, k, q, r, z_response,
++            GkSource_parents, GkSource_serial_obj, GkSourcePolicy_serial_obj, Gk_tags, Tk_tags,
++            parents,
++        )
+     (GkSource_obj,) = ray.get(
+         pool.object_get_vectorized(
+             "GkSource",
+@@ -946,6 +986,170 @@
+         r=r,
+         z_response=z_response,
+         parents=parents,
++        GkPolicy_summary=policy_summary(GkPolicy_obj),  # prompt 06
++        rerun=None,  # prompt 06
++    )
++
++
++# ---------------------------------------------------------------------------------------------
++# prompt 06: the producers re-run in-process (rerun.py)
++# ---------------------------------------------------------------------------------------------
++
++
++def policy_summary(GkPolicy):
++    """A GkSourcePolicyData's classification, exactly (floats as hex)."""
++
++    def fz(x):
++        return None if x is None else float(x).hex()
++
++    return {
++        "store_id": GkPolicy.store_id,
++        "type": GkPolicy.type,
++        "quality": GkPolicy.quality,
++        "crossover_z": fz(GkPolicy.crossover_z),
++        "Levin_z": fz(GkPolicy.Levin_z),
++    }
++
++
++def _rebuild_row_rerun(
++    ctx, pool, shard, serial, log, rtol, checks, raw, stored, k, q, r, z_response,
++    GkSource_parents, GkSource_serial_obj, GkSourcePolicy_serial_obj, Gk_tags, Tk_tags, parents,
++):
++    """rebuild_row's tail with the producers re-run: the TkNumericIntegration and QuadSource
++    lookups and the QuadSource recomputation exactly as rebuild_row makes them; the GkSource,
++    GkSourcePolicyData and TkWKBIntegration from rerun.rerun_row."""
++    import rerun as RR
++
++    t = ctx["tags"]
++    model_proxy = ctx["model_proxy"]
++    missing_Tk = list({q, r})
++    Tk_numeric_results = [
++        ray.get(
++            pool.object_get(
++                "TkNumericIntegration",
++                model=model_proxy,
++                z_sample=None,
++                k=k_exit,
++                z_init=None,
++                atol=ctx["Tk_numeric_atol"],
++                rtol=ctx["Tk_numeric_rtol"],
++                tags=Tk_tags,
++            )
++        )
++        for k_exit in missing_Tk
++    ]
++    Tk_numeric_serials_full = {
++        k_exit.store_id: obj.store_id
++        for k_exit, obj in zip(missing_Tk, Tk_numeric_results)
++    }
++    (QuadSource_obj,) = ray.get(
++        pool.object_get_vectorized(
++            "QuadSource",
++            {"q": q},
++            payload_data=[
++                {
++                    "model": model_proxy,
++                    "z_sample": None,
++                    "r": r,
++                    "Tq_serial": Tk_numeric_serials_full[q.store_id],
++                    "Tr_serial": Tk_numeric_serials_full[r.store_id],
++                    "tags": Tk_tags,
++                }
++            ],
++        )
++    )
++    rr = RR.rerun_row(
++        ctx,
++        pool,
++        shard_file(shard),
++        k,
++        q,
++        r,
++        z_response,
++        GkSource_parents[(k.store_id, z_response.store_id)],
++        GkSource_serial_obj,
++        GkSourcePolicy_serial_obj,
++        Gk_tags,
++        Tk_tags,
++        missing_Tk,
++        Tk_numeric_results,
++        log=log,
++    )
++    GkPolicy_obj = rr["GkPolicy"]
++    Tk_numeric_full = {
++        k_exit.store_id: obj for k_exit, obj in zip(missing_Tk, Tk_numeric_results)
++    }
++    Tq_num = Tk_numeric_full[q.store_id]
++    Tr_num = Tk_numeric_full[r.store_id]
++    QuadSource_recomputed, qs_check = recompute_QuadSource(
++        ctx, model_proxy, q, r, Tq_num, Tr_num, Tk_tags, QuadSource_obj
++    )
++    _check(
++        checks,
++        "QuadSource recomputed: keyed on the stored row's two TkNumericIntegrations",
++        qs_check["keyed_as_stored"],
++        str(qs_check["Tq_Tr_serials"]),
++    )
++    Gk_cache = {(k.store_id, z_response.store_id): GkPolicy_obj}
++    source_cache = {(q.store_id, r.store_id): QuadSource_recomputed}
++    Tk_numeric_cache = Tk_numeric_full
++    Tk_WKB_cache = {k_exit.store_id: rr["Tk_WKB"][k_exit.store_id] for k_exit in missing_Tk}
++    compute_payload = build_QuadSourceIntegral_payload(
++        z_response,
++        k,
++        q,
++        r,
++        Gk_cache,
++        source_cache,
++        Tk_numeric_cache,
++        Tk_WKB_cache,
++        ctx["b_value"],
++        ctx["Bessel_0pt5_proxy"],
++        ctx["Bessel_2pt5_proxy"],
++    )
++    work = QuadSourceIntegral(
++        payload=None,
++        model=model_proxy,
++        policy=ctx["GkSource_policy_1pt5"],
++        quad_policy=ctx["QuadSource_policy_1pt5"],
++        z_response=z_response,
++        z_source_max=ctx["z_source_integral_max_z"],
++        k=k,
++        q=q,
++        r=r,
++        atol=ctx["quad_atol"],
++        rtol=ctx["quad_rtol"] if rtol is None else rtol,
++        label=None,
++        tags=[
++            t["TkProductionTag"],
++            t["GkProductionTag"],
++            t["RunLabelTag"],
++            t["SourceGridConstructionTag"],
++            t["SourceZGridSizeTag"],
++            t["ResponseZGridSizeTag"],
++            t["LargestSourceZTag"],
++            t["SmallestSourceZTag"],
++            t["ResponseSparsenessZTag"],
++        ],
++        **parents,
++    )
++    rerun_record = {
++        key: value for key, value in rr.items() if key not in ("GkPolicy", "GkSource", "Tk_WKB")
++    }
++    return dict(
++        qs_check=qs_check,
++        checks=checks,
++        raw=raw,
++        stored=stored,
++        work=work,
++        compute_payload=compute_payload,
++        k=k,
++        q=q,
++        r=r,
++        z_response=z_response,
++        parents=parents,
++        GkPolicy_summary=policy_summary(GkPolicy_obj),
++        rerun=rerun_record,
+     )
+ 
+ 
+diff -ruN state/scripts_05a_reference/rec.sh scripts/rec.sh
+--- state/scripts_05a_reference/rec.sh	2026-10-26 21:51:54
++++ scripts/rec.sh	2026-10-26 21:57:10
+@@ -1,9 +1,11 @@
+ #!/bin/bash
+-# levin-phase-floor 05a §6 (wider): run one command and record it with its output.
+-# Copied from 05's scripts/rec.sh; changed (prompt 05a): its comments' paths, and every record is
+-# also appended to out/commands.log.
++# levin-phase-floor 06 §6 (wider): run one command and record it with its output.
++# Copied from 05a's scripts/rec.sh (docs/levin-phase-floor/05a/wider/scripts/rec.sh), changed
++# (prompt 06) only in these comments' prompt and paths. 05a's note: copied from 05's
++# scripts/rec.sh; changed (prompt 05a): its comments' paths, and every record is also appended to
++# out/commands.log.
+ # Usage: rec.sh NAME CMD [ARGS...]
+-# Writes var/levin-phase-floor-05a/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
++# Writes var/levin-phase-floor-06/wider/out/cmd/NAME.txt: the command line, cwd, host, start and
+ # end UTC times, the combined stdout+stderr, and the exit code. Appends the same to
+ # out/commands.log. Also echoes the output.
+ set -u
+diff -ruN state/scripts_05a_reference/rerun.py scripts/rerun.py
+--- state/scripts_05a_reference/rerun.py	1970-01-01 01:00:00
++++ scripts/rerun.py	2026-10-26 22:27:11
+@@ -0,0 +1,667 @@
++"""
++levin-phase-floor prompt 06 section 6: the producers re-run in-process. New in 06 (05a's harness
++reads every producer value from A3 v2; prompt 06 section 6: "the re-run of the producers").
++
++For one QuadSourceIntegral row, ``rerun_row`` re-runs, in this process and under the tree on
++``PYTHONPATH``, every ``GkWKBIntegration`` whose value at the row's ``z_response`` its ``GkSource``
++is assembled from, and the ``TkWKBIntegration`` of each of ``q`` and ``r``. Then it assembles the
++``GkSource`` and computes the ``GkSourcePolicyData`` from them. Nothing is written to the store.
++
++**Each producer is re-run from what A3 v2 stores** (prompt 06 section 6: "from its stored
++``z_init``, initial data, ``z_sample`` and model, through the producer's own code"):
++- the integration row is read by production's own reader, the factory, with
++  ``_do_not_populate=True``, which reads the integration table only (at ``s`` the factories'
++  value-table reads name ``theta_residual``, a column A3 v2 does not have). Its parent
++  (``numeric_serial``, or ``PURE_WKB``) and its ``z_source`` are first read from the row itself
++  with ``sqlite3`` ``mode=ro``, and the factory's object is checked to be that row (its serial);
++- ``z_sample`` is the redshifts of the row's stored value rows (``sqlite3`` ``mode=ro``: the
++  value table's ``serial`` and ``z_serial`` only), as the redshift objects the pool holds, in
++  descending ``z``, the order the factory reads them in;
++- the object is constructed as the factory's miss branch constructs it (``payload=None``), with
++  the stored ``z_init``, ``G_init``/``Gprime_init`` (``T_init``/``Tprime_init``), parent, label,
++  the stage's tags and the run's solver map; then ``compute()`` and ``store()``, with
++  ``WKB_phase_function.remote`` stood in in-process by harness.py, as 05's harness stood in
++  ``QuadSource``'s.
++
++**What a later stage would read back** is formed as the factories form it from stored rows,
++since nothing is stored:
++- a ``GkWKBValue`` at ``z_response``, as ``GkWKBValue.read_batch`` returns it: the re-run value
++  with ``_deserialized``, ``_k_exit``, ``_z_source`` and ``_parent_serial`` (the integration's
++  serial) set, and the stored value row's serial as its ``store_id``;
++- the ``GkSource``: ``GkSource.compute()`` with the numeric values production's reader returns
++  (``GkNumericValue.read_batch``, unchanged by prompt 06) and those WKB values, the parent set the
++  existence query was keyed on, and ``assemble_GkSource_values``' own body (stood in by
++  harness.py); then the read-back the factory's ``build()`` forms: the stored row's serial and
++  label, the values in descending ``z_source`` with the stored value rows' serials, ``z_sample``
++  the values' redshifts, the metadata through JSON;
++- the ``GkSourcePolicyData``: the factory's miss branch, ``compute()`` on a ``GkSourceProxy`` of
++  that read-back with ``apply_GkSource_policy``'s own body (stood in by harness.py), then the
++  read-back: the stored row's serial, ``crossover_z`` and ``Levin_z`` as the floats their columns
++  hold, the metadata through JSON;
++- each ``TkWKBIntegration``: the factory's ``_do_not_populate`` object (every integration-table
++  field, as stored), copied, with the re-run's values, ``z_sample`` and coefficients in place,
++  which is what the factory's populated ``build()`` forms from the same rows.
++
++**Records.** Every re-run object's ``deltaTheta`` is captured, exactly, by wrapping ``atan2`` at
++the producer module's attribute for the one ``store()`` call (it is called once there); the phase
++probe needs it (prompt 06 section 6). The re-run values are compared with the stored ones
++(descriptive under ``s``; under ``t5`` this is U0's producer-faithfulness clause): every column the
++stored value table has, by bit pattern.
++
++Read-only: every ``sqlite3`` connection is ``mode=ro``; the pool is read-only.
++"""
++
++import contextlib
++import copy
++import importlib
++import json
++import math
++import sqlite3
++import time
++from math import ulp
++from unittest import mock
++
++import ray
++
++GKW_MOD = importlib.import_module("ComputeTargets.GkWKBIntegration")
++TKW_MOD = importlib.import_module("ComputeTargets.TkWKBIntegration")
++GKS_MOD = importlib.import_module("ComputeTargets.GkSource")
++GPD_MOD = importlib.import_module("ComputeTargets.GkSourcePolicyData")
++
++from ComputeTargets.GkSource import GkSource, GkSourceProxy  # noqa: E402
++from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData  # noqa: E402
++from ComputeTargets.GkWKBIntegration import GkWKBIntegration  # noqa: E402
++from ComputeTargets.TkWKBIntegration import TkWKBIntegration  # noqa: E402
++from CosmologyConcepts import redshift, redshift_array  # noqa: E402
++from ObjectFactories.GkSourcePolicyData import (  # noqa: E402
++    _quality_deserialize,
++    _type_deserialize,
++)
++
++EPS = 2.0**-52
++
++# the stored value tables' columns compared with the re-run values' attributes (every column but
++# the keys); the stored GkSourceValue columns with the assembled values' attributes
++GKW_COLS = (
++    "H_ratio",
++    "theta_mod_2pi",
++    "theta_div_2pi",
++    "omega_WKB_sq",
++    "WKB_criterion",
++    "G_WKB",
++    "analytic_G_rad",
++    "analytic_Gprime_rad",
++    "analytic_G_w",
++    "analytic_Gprime_w",
++)
++TKW_COLS = (
++    "H_ratio",
++    "theta_mod_2pi",
++    "theta_div_2pi",
++    "friction",
++    "omega_WKB_sq",
++    "WKB_criterion",
++    "T_WKB",
++    "analytic_T_rad",
++    "analytic_Tprime_rad",
++    "analytic_T_w",
++    "analytic_Tprime_w",
++)
++
++
++def _bits(x):
++    if x is None:
++        return None
++    if isinstance(x, bool):
++        return ("b", x)
++    if isinstance(x, int):
++        return ("i", x)
++    return ("f", float(x).hex())
++
++
++def same_bits(a, b):
++    return _bits(a) == _bits(b)
++
++
++@contextlib.contextmanager
++def _capture_atan2(module):
++    """Wrap ``atan2`` at ``module``'s attribute; yields the list of values it returned."""
++    got = []
++    orig = module.atan2
++
++    def rec(y, x):
++        v = orig(y, x)
++        got.append(v)
++        return v
++
++    with mock.patch.object(module, "atan2", rec):
++        yield got
++    if module.atan2 is not orig:
++        raise RuntimeError("rerun: atan2 was not restored")
++
++
++def _ro(shard_file):
++    return sqlite3.connect(f"{shard_file.as_uri()}?mode=ro", uri=True)
++
++
++def _rows(conn, sql, args=()):
++    cur = conn.execute(sql, args)
++    cols = [d[0] for d in cur.description]
++    return [dict(zip(cols, r)) for r in cur.fetchall()]
++
++
++class _Stats:
++    """Per-class comparison of re-run values with the stored ones."""
++
++    def __init__(self, cols, theta_col="theta_mod_2pi", amp_col=None):
++        self.cols = cols
++        self.amp_col = amp_col
++        self.n_values = 0
++        self.n_identical_all = 0
++        self.differ = {c: 0 for c in cols}
++        self.first = []
++        self.max_mod_over_eps_theta = 0.0
++        self.div_changes = 0
++        self.div_changes_not_near_boundary = []
++        self.max_amp_rel = 0.0
++
++    def add(self, stored_row, value, where):
++        self.n_values += 1
++        all_same = True
++        for c in self.cols:
++            s = stored_row[c]
++            v = getattr(value, c)
++            if not same_bits(s, v):
++                all_same = False
++                self.differ[c] += 1
++                if len(self.first) < 8:
++                    self.first.append((where, c, _bits(s), _bits(v)))
++        if all_same:
++            self.n_identical_all += 1
++        # the phase: |theta| from the stored cycle count, the change of the remainder against
++        # eps |theta|, and cycle changes (prompt 06 section 5.4's classes, descriptive here)
++        theta_abs = abs(
++            stored_row["theta_div_2pi"] * 2.0 * math.pi + stored_row["theta_mod_2pi"]
++        )
++        d_div = int(value.theta_div_2pi) - int(stored_row["theta_div_2pi"])
++        if d_div == 0:
++            dm = abs(float(value.theta_mod_2pi) - float(stored_row["theta_mod_2pi"]))
++            if theta_abs > 0:
++                self.max_mod_over_eps_theta = max(
++                    self.max_mod_over_eps_theta, dm / (EPS * theta_abs)
++                )
++        else:
++            self.div_changes += 1
++            m = float(value.theta_mod_2pi)
++            near = min(abs(m), abs(m + 2.0 * math.pi)) <= 4.0 * EPS * theta_abs
++            if abs(d_div) != 1 or not near:
++                if len(self.div_changes_not_near_boundary) < 8:
++                    self.div_changes_not_near_boundary.append(
++                        (where, d_div, m, theta_abs)
++                    )
++        if self.amp_col is not None:
++            s, v = stored_row[self.amp_col], getattr(value, self.amp_col)
++            if s is not None and v is not None and s != 0:
++                self.max_amp_rel = max(self.max_amp_rel, abs((v - s) / s))
++
++    def summary(self):
++        return {
++            "n_values": self.n_values,
++            "n_bit_identical_in_every_column": self.n_identical_all,
++            "n_differing_by_column": self.differ,
++            "first_differences": self.first,
++            "max_abs_dmod_over_eps_theta_same_div": self.max_mod_over_eps_theta,
++            "theta_div_2pi_changes": self.div_changes,
++            "theta_div_2pi_changes_not_one_cycle_near_boundary": self.div_changes_not_near_boundary,
++            f"max_rel_change_{self.amp_col}": self.max_amp_rel,
++        }
++
++
++def rerun_row(
++    ctx,
++    pool,
++    shard_file,
++    k,
++    q,
++    r,
++    z_response,
++    GkSource_parents_set,
++    GkSource_serial_obj,
++    GkSourcePolicy_serial_obj,
++    Gk_tags,
++    Tk_tags,
++    missing_Tk,
++    Tk_numeric_results,
++    log=print,
++):
++    """The re-run chain for one row (module docstring). Returns a dict with the read-back
++    ``GkPolicy`` and ``Tk_WKB`` objects, the read-back ``GkSource``, every re-run object's
++    ``deltaTheta``, timings and the comparisons with the stored values."""
++    t_all = time.perf_counter()
++    model_proxy = ctx["model_proxy"]
++    solvers = ctx["solvers"]
++    z_by_id = ctx["redshift_by_id"]
++    out = {"timing": {}}
++
++    # the shard of each wavenumber, from the primary's shard_keys table (sqlite3 mode=ro): G's
++    # rows are on k's shard, which is the QuadSourceIntegral row's; each T on its own mode's
++    primary_file = shard_file.parent / "handover-A3-v2-lambdacdm.sqlite"
++    pconn = _ro(primary_file)
++    try:
++        shard_of = dict(pconn.execute("SELECT * FROM shard_keys").fetchall())
++    finally:
++        pconn.close()
++    if shard_file.name != f"handover-A3-v2-lambdacdm-shard{shard_of[k.k.store_id]:04d}.sqlite":
++        raise RuntimeError(f"rerun: k's shard is not the row's ({shard_file.name})")
++
++    conn = _ro(shard_file)
++    try:
++        # ------------------------------------------------------------------ G's WKB objects
++        t0 = time.perf_counter()
++        members = [m for m in GkSource_parents_set if m[2] is not None]
++        wkb_serials = [m[2] for m in members]
++        if len(set(wkb_serials)) != len(wkb_serials):
++            raise RuntimeError("rerun: a GkWKBIntegration serial appears twice in the parent set")
++        integ = {}
++        for chunk_start in range(0, len(wkb_serials), 500):
++            chunk = wkb_serials[chunk_start : chunk_start + 500]
++            qs = ",".join("?" * len(chunk))
++            for row in _rows(
++                conn,
++                f'SELECT serial, z_source_serial, numeric_serial, z_init, G_init, Gprime_init, '
++                f'sin_coeff, cos_coeff, z_samples, wavenumber_exit_serial, model_serial '
++                f'FROM "GkWKBIntegration" WHERE serial IN ({qs})',
++                chunk,
++            ):
++                integ[row["serial"]] = row
++        values_by_wkb = {}
++        for chunk_start in range(0, len(wkb_serials), 500):
++            chunk = wkb_serials[chunk_start : chunk_start + 500]
++            qs = ",".join("?" * len(chunk))
++            for row in _rows(
++                conn,
++                f'SELECT serial, wkb_serial, z_serial, {", ".join(GKW_COLS)} '
++                f'FROM "GkWKBValue" WHERE wkb_serial IN ({qs})',
++                chunk,
++            ):
++                values_by_wkb.setdefault(row["wkb_serial"], []).append(row)
++        out["timing"]["G_sql_read"] = time.perf_counter() - t0
++
++        G_stats = _Stats(GKW_COLS, amp_col="G_WKB")
++        coeff_mismatch = []
++        WKB_data = {}
++        deltaTheta_by_z_source = {}
++        n_samples_rerun = 0
++        t_lookup = 0.0
++        t_compute = 0.0
++        for z_source_serial, numeric_member, wkb_serial in members:
++            row = integ.get(wkb_serial)
++            if row is None:
++                raise RuntimeError(f"rerun: no GkWKBIntegration row {wkb_serial}")
++            if row["z_source_serial"] != z_source_serial or row["wavenumber_exit_serial"] != k.store_id or row["model_serial"] != model_proxy.store_id:
++                raise RuntimeError(f"rerun: GkWKBIntegration {wkb_serial} is not this member's: {row}")
++            z_source = z_by_id[z_source_serial]
++            tl = time.perf_counter()
++            stored = ray.get(
++                pool.object_get(
++                    "GkWKBIntegration",
++                    solver_labels=solvers,
++                    model=model_proxy,
++                    k=k,
++                    z_source=z_source,
++                    numeric_serial=(
++                        GkWKBIntegration.PURE_WKB
++                        if row["numeric_serial"] is None
++                        else row["numeric_serial"]
++                    ),
++                    z_sample=None,
++                    tags=Gk_tags,
++                    _do_not_populate=True,
++                )
++            )
++            t_lookup += time.perf_counter() - tl
++            if not stored.available or stored.store_id != wkb_serial:
++                raise RuntimeError(
++                    f"rerun: the factory's GkWKBIntegration for z_source serial {z_source_serial} "
++                    f"is {stored.store_id if stored.available else None}, not {wkb_serial}"
++                )
++            stored_values = sorted(
++                values_by_wkb[wkb_serial], key=lambda v: z_by_id[v["z_serial"]].z, reverse=True
++            )
++            if row["z_samples"] is not None and len(stored_values) != row["z_samples"]:
++                raise RuntimeError(f"rerun: GkWKBIntegration {wkb_serial} value count")
++            z_sample = redshift_array([z_by_id[v["z_serial"]] for v in stored_values])
++            work = GkWKBIntegration(
++                payload=None,
++                solver_labels=solvers,
++                model=model_proxy,
++                k=k,
++                z_source=z_source,
++                numeric_serial=stored.numeric_serial,
++                z_init=stored._z_init,
++                G_init=stored.G_init,
++                Gprime_init=stored.Gprime_init,
++                z_sample=z_sample,
++                label=stored.label,
++                tags=Gk_tags,
++            )
++            tc = time.perf_counter()
++            work.compute()
++            with _capture_atan2(GKW_MOD) as got:
++                if work.store() is not True:
++                    raise RuntimeError("rerun: GkWKBIntegration.store() did not resolve")
++            t_compute += time.perf_counter() - tc
++            if len(got) != 1:
++                raise RuntimeError(f"rerun: atan2 called {len(got)} times in one store()")
++            n_samples_rerun += len(work.values)
++            if not (same_bits(work.sin_coeff, row["sin_coeff"]) and same_bits(work.cos_coeff, row["cos_coeff"])):
++                coeff_mismatch.append((wkb_serial, _bits(work.sin_coeff), _bits(row["sin_coeff"])))
++            the_value = None
++            for sv, v in zip(stored_values, work.values):
++                if v.z.store_id != sv["z_serial"]:
++                    raise RuntimeError("rerun: value order differs from z_sample")
++                G_stats.add(sv, v, (wkb_serial, sv["z_serial"]))
++                if sv["z_serial"] == z_response.store_id:
++                    the_value = (sv, v)
++            if the_value is None:
++                raise RuntimeError(
++                    f"rerun: GkWKBIntegration {wkb_serial} has no value at z_response serial "
++                    f"{z_response.store_id}"
++                )
++            sv, v = the_value
++            # as GkWKBValue.read_batch returns it (module docstring)
++            v._my_id = sv["serial"]
++            v._deserialized = True
++            v._k_exit = k
++            v._z_source = z_source
++            v._parent_serial = wkb_serial
++            WKB_data[z_source_serial] = v
++            deltaTheta_by_z_source[z_source_serial] = {
++                "deltaTheta": got[0],
++                "z_init": stored._z_init,
++                "pure_WKB": stored.numeric_serial is None,
++                "wkb_serial": wkb_serial,
++            }
++        out["timing"]["G_factory_lookups"] = t_lookup
++        out["timing"]["G_compute_store"] = t_compute
++        out["G_objects_rerun"] = len(members)
++        out["G_samples_rerun"] = n_samples_rerun
++        out["G_coeff_mismatches"] = coeff_mismatch[:8]
++        out["G_coeff_mismatch_count"] = len(coeff_mismatch)
++        out["G_values_vs_stored"] = G_stats.summary()
++        out["deltaTheta_by_z_source"] = deltaTheta_by_z_source
++
++        # ------------------------------------------------------------------ G's numeric values
++        t0 = time.perf_counter()
++        GkNs = ray.get(
++            pool.object_read_batch(
++                "GkNumericValue",
++                {"k": k},
++                model=model_proxy,
++                z=z_response,
++                atol=ctx["Gk_numeric_atol"],
++                rtol=ctx["Gk_numeric_rtol"],
++                tags=Gk_tags,
++            )
++        )
++        numeric_data = {}
++        for GkN in GkNs:
++            assert GkN._k_exit.store_id == k.store_id
++            assert GkN.z.store_id == z_response.store_id
++            numeric_data[GkN._z_source.store_id] = GkN
++        out["timing"]["G_numeric_read"] = time.perf_counter() - t0
++
++        # ------------------------------------------------------------------ the GkSource
++        t0 = time.perf_counter()
++        z_source_pool = ctx["z_source_sample"].truncate(z_response, keep="higher")
++        work = GkSource(
++            payload=None,
++            model=model_proxy,
++            k=k,
++            z_response=z_response,
++            z_sample=z_source_pool,
++            tags=Gk_tags,
++            parents=GkSource_parents_set,
++        )
++        work.compute(payload={"numeric": numeric_data, "WKB": WKB_data})
++        work.store()
++        if work.values is None:
++            raise RuntimeError("rerun: GkSource.store() did not resolve")
++        if work.assembled_parents != GkSource_parents_set:
++            raise RuntimeError("rerun: the assembled parents are not the keyed set")
++        stored_gsv = {
++            row["z_source_serial"]: row
++            for row in _rows(
++                conn,
++                'SELECT * FROM "GkSourceValue" WHERE parent_serial = ?',
++                (GkSource_serial_obj.store_id,),
++            )
++        }
++        assembled = sorted(work.values, key=lambda v: v.z_source.z, reverse=True)
++        for v in assembled:
++            v._my_id = stored_gsv[v.z_source.store_id]["serial"]
++        gs_meta = json.loads(json.dumps(work.metadata)) if work.metadata is not None else None
++        GkSource_rb = GkSource(
++            payload={
++                "store_id": GkSource_serial_obj.store_id,
++                "values": assembled,
++                "numeric_smallest_z": work.numeric_smallest_z,
++                "primary_WKB_largest_z": work.primary_WKB_largest_z,
++                "metadata": gs_meta,
++            },
++            k=k,
++            model=model_proxy,
++            label=GkSource_serial_obj.label,
++            z_response=redshift(store_id=z_response.store_id, z=z_response.z),
++            z_sample=redshift_array([v.z_source for v in assembled]),
++            tags=Gk_tags,
++            parents=GkSource_parents_set,
++        )
++        GkSource_rb._deserialized = True
++        # the assembled values against the stored GkSourceValue rows, every stored column but the
++        # keys (theta_residual is in no stored row)
++        gs_cols = [
++            c
++            for c in next(iter(stored_gsv.values())).keys()
++            if c not in ("serial", "parent_serial", "z_source_serial")
++        ]
++        gs_differ = {c: 0 for c in gs_cols}
++        gs_first = []
++        gs_identical = 0
++        for v in assembled:
++            sr = stored_gsv[v.z_source.store_id]
++            ok = True
++            for c in gs_cols:
++                if c in ("G", "Gprime"):
++                    a = v.numeric.G if c == "G" else v.numeric.Gprime
++                elif c in ("omega_WKB_sq", "WKB_criterion", "analytic_G_rad", "analytic_Gprime_rad"):
++                    a = getattr(v, c)
++                else:
++                    a = getattr(v.WKB, c)
++                if not same_bits(a, sr[c]):
++                    ok = False
++                    gs_differ[c] += 1
++                    if len(gs_first) < 8:
++                        gs_first.append((v.z_source.store_id, c, _bits(sr[c]), _bits(a)))
++            gs_identical += ok
++        out["GkSource_vs_stored"] = {
++            "n_values": len(assembled),
++            "n_stored": len(stored_gsv),
++            "n_bit_identical_in_every_column": gs_identical,
++            "n_differing_by_column": gs_differ,
++            "first_differences": gs_first,
++            "numeric_smallest_z": None
++            if work.numeric_smallest_z is None
++            else work.numeric_smallest_z.store_id,
++            "primary_WKB_largest_z": None
++            if work.primary_WKB_largest_z is None
++            else work.primary_WKB_largest_z.store_id,
++        }
++        out["timing"]["GkSource"] = time.perf_counter() - t0
++
++        # ------------------------------------------------------------------ GkSourcePolicyData
++        t0 = time.perf_counter()
++        pol_work = GkSourcePolicyData(
++            payload=None,
++            source=GkSourceProxy(GkSource_rb),
++            policy=ctx["GkSource_policy_1pt5"],
++            k=k,
++            label=None,
++        )
++        pol_work.compute()
++        pol_work.store()
++        stored_pol = _rows(
++            conn,
++            'SELECT serial, type, quality, crossover_z, Levin_z, metadata FROM "GkSourcePolicyData" WHERE serial = ?',
++            (GkSourcePolicy_serial_obj.store_id,),
++        )[0]
++        GkPolicy_rb = GkSourcePolicyData(
++            source=GkSourceProxy(GkSource_rb),
++            policy=ctx["GkSource_policy_1pt5"],
++            k=k,
++            payload={
++                "store_id": GkSourcePolicy_serial_obj.store_id,
++                "type": pol_work.type,
++                "quality": pol_work.quality,
++                "crossover_z": None
++                if pol_work.crossover_z is None
++                else float(pol_work.crossover_z),
++                "Levin_z": None if pol_work.Levin_z is None else float(pol_work.Levin_z),
++                "metadata": json.loads(json.dumps(pol_work.metadata))
++                if pol_work.metadata is not None
++                else {},
++            },
++        )
++        GkPolicy_rb._deserialized = True
++        out["GkSourcePolicyData"] = {
++            "rerun": {
++                "type": pol_work.type,
++                "quality": pol_work.quality,
++                "crossover_z": None
++                if pol_work.crossover_z is None
++                else float(pol_work.crossover_z).hex(),
++                "Levin_z": None if pol_work.Levin_z is None else float(pol_work.Levin_z).hex(),
++                "Levin_z_store_id": getattr(pol_work.Levin_z, "store_id", None),
++                "metadata": json.loads(json.dumps(pol_work.metadata)),
++            },
++            "stored": {
++                "serial": stored_pol["serial"],
++                # as the factory's build() deserialises them
++                "type": None
++                if stored_pol["type"] is None
++                else _type_deserialize[stored_pol["type"]],
++                "quality": None
++                if stored_pol["quality"] is None
++                else _quality_deserialize[stored_pol["quality"]],
++                "crossover_z": None
++                if stored_pol["crossover_z"] is None
++                else float(stored_pol["crossover_z"]).hex(),
++                "Levin_z": None
++                if stored_pol["Levin_z"] is None
++                else float(stored_pol["Levin_z"]).hex(),
++                "metadata": json.loads(stored_pol["metadata"])
++                if stored_pol["metadata"] is not None
++                else None,
++            },
++        }
++        out["timing"]["GkSourcePolicyData"] = time.perf_counter() - t0
++
++        # ------------------------------------------------------------------ T's WKB objects
++        # each mode's TkWKBIntegration is held on the shard of its own wavenumber, which the
++        # primary's shard_keys table names (sqlite3 mode=ro)
++        t0 = time.perf_counter()
++        Tk_WKB_rb = {}
++        T_stats = _Stats(TKW_COLS, amp_col="T_WKB")
++        T_info = {}
++        for k_exit, Tk_numeric in zip(missing_Tk, Tk_numeric_results):
++            stored = ray.get(
++                pool.object_get(
++                    "TkWKBIntegration",
++                    solver_labels=[],
++                    model=model_proxy,
++                    z_sample=None,
++                    k=k_exit,
++                    numeric_serial=Tk_numeric.store_id,
++                    tags=Tk_tags,
++                    _do_not_populate=True,
++                )
++            )
++            if not stored.available:
++                raise RuntimeError(f"rerun: no TkWKBIntegration for k serial {k_exit.store_id}")
++            tconn = _ro(
++                shard_file.parent
++                / f"handover-A3-v2-lambdacdm-shard{shard_of[k_exit.k.store_id]:04d}.sqlite"
++            )
++            srow = _rows(
++                tconn,
++                'SELECT serial, numeric_serial, z_init, T_init, Tprime_init, sin_coeff, cos_coeff, z_samples FROM "TkWKBIntegration" WHERE serial = ?',
++                (stored.store_id,),
++            )[0]
++            stored_values = sorted(
++                _rows(
++                    tconn,
++                    f'SELECT serial, wkb_serial, z_serial, {", ".join(TKW_COLS)} FROM "TkWKBValue" WHERE wkb_serial = ?',
++                    (stored.store_id,),
++                ),
++                key=lambda v: z_by_id[v["z_serial"]].z,
++                reverse=True,
++            )
++            tconn.close()
++            if len(stored_values) != srow["z_samples"]:
++                raise RuntimeError("rerun: TkWKBIntegration value count")
++            z_sample = redshift_array([z_by_id[v["z_serial"]] for v in stored_values])
++            work = TkWKBIntegration(
++                payload=None,
++                solver_labels=solvers,
++                model=model_proxy,
++                k=k_exit,
++                numeric_serial=stored.numeric_serial,
++                z_init=stored.z_init,
++                T_init=stored._T_init,
++                Tprime_init=stored._Tprime_init,
++                z_sample=z_sample,
++                label=stored.label,
++                tags=Tk_tags,
++            )
++            work.compute()
++            with _capture_atan2(TKW_MOD) as got:
++                if work.store() is not True:
++                    raise RuntimeError("rerun: TkWKBIntegration.store() did not resolve")
++            if len(got) != 1:
++                raise RuntimeError(f"rerun: atan2 called {len(got)} times in one Tk store()")
++            for sv, v in zip(stored_values, work.values):
++                if v.z.store_id != sv["z_serial"]:
++                    raise RuntimeError("rerun: Tk value order differs from z_sample")
++                T_stats.add(sv, v, (stored.store_id, sv["z_serial"]))
++                v._my_id = sv["serial"]
++            rb = copy.copy(stored)
++            del rb._do_not_populate
++            rb._values = work.values
++            rb._z_sample = z_sample
++            rb._sin_coeff = work.sin_coeff
++            rb._cos_coeff = work.cos_coeff
++            Tk_WKB_rb[k_exit.store_id] = rb
++            T_info[k_exit.store_id] = {
++                "serial": stored.store_id,
++                "deltaTheta": got[0],
++                "z_init": stored.z_init,
++                "n_values": len(work.values),
++                "coeffs_bit_identical_to_stored": same_bits(work.sin_coeff, srow["sin_coeff"])
++                and same_bits(work.cos_coeff, srow["cos_coeff"]),
++            }
++        out["T_objects"] = T_info
++        out["T_values_vs_stored"] = T_stats.summary()
++        out["timing"]["T"] = time.perf_counter() - t0
++    finally:
++        conn.close()
++
++    out["timing"]["total"] = time.perf_counter() - t_all
++    out["GkPolicy"] = GkPolicy_rb
++    out["GkSource"] = GkSource_rb
++    out["Tk_WKB"] = Tk_WKB_rb
++    log(
++        f"   rerun: {out['G_objects_rerun']} GkWKBIntegration ({out['G_samples_rerun']} samples), "
++        f"{len(Tk_WKB_rb)} TkWKBIntegration, GkSource ({len(assembled)} values), "
++        f"GkSourcePolicyData; {out['timing']['total']:.1f} s"
++    )
++    return out
+diff -ruN state/scripts_05a_reference/run_wider.py scripts/run_wider.py
+--- state/scripts_05a_reference/run_wider.py	2026-10-26 21:51:54
++++ scripts/run_wider.py	2026-10-26 22:08:05
+@@ -1,4 +1,19 @@
+ """
++levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/run_wider.py,
++docs/levin-phase-floor/05a/wider/scripts/run_wider.py, a record that is not edited). Changed here,
++each change marked "prompt 06", only in its trees, its unit sets and the scripts it hashes (prompt
++06 section 6): the trees are ``t5`` (05a's t, the worktree at ``9f66622``) and ``s`` (the code
++commit, the worktree at ``f5cee4c``) in place of 05a's ``c`` and ``t``, so the units are
++
++    1. t5 at rtol 1e-7, on every row          (the baseline, and each row's budget)
++    2. s at rtol 1e-7, on every row           (the producers re-run: "rerun": true)
++    3. s at rtol 1e-8, on the 31 depth-20 rows (the producers re-run: "rerun": true)
++
++with the budget of sets 2 and 3 3x the row's ``t5`` wall time, raised from the dispatcher as
++before; and the phase probe (phase_probe06.py) is carried by the rtol 1e-7 units of 04's rows
++R1-R7 only, in both trees. 05a's text follows, unchanged; read its ``c`` as ``t5`` and its ``t``
++as ``s``.
++
+ levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/run_wider.py,
+ docs/levin-phase-floor/05/wider/scripts/run_wider.py, sha256 491d2608..., a record that is not
+ edited). Changed here, each change marked "prompt 05a", only in its trees and its unit sets
+@@ -70,8 +85,10 @@
+     "rebuild.py",
+     "prov.py",
+     "launch.py",
+-    "probe.py",  # prompt 05a
++    "rerun.py",  # prompt 06
++    "phase_probe06.py",  # prompt 06
+ ]
++PROBE_ROWS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7")  # prompt 06: 04's seven rows
+ 
+ 
+ def plan(sample, rows=None, sets=(1, 2, 3)):
+@@ -93,25 +110,29 @@
+             "set": None,
+         }
+ 
+-    # prompt 05a: trees c, t (05's p, c); the rtol 1e-7 units carry the phase probe
++    # prompt 06: trees t5, s (05a's c, t); s re-runs the producers; the rtol 1e-7 units of R1-R7
++    # carry the phase probe
+     if 1 in sets:
+         for r in rs:
+-            u = unit("c", "1e-7", r)
++            u = unit("t5", "1e-7", r)
+             u["set"] = 1
+-            u["probe"] = True
++            u["probe"] = r["name"] in PROBE_ROWS
++            u["rerun"] = False
+             units.append(u)
+     if 2 in sets:
+         for r in rs:
+-            u = unit("t", "1e-7", r)
++            u = unit("s", "1e-7", r)
+             u["set"] = 2
+-            u["probe"] = True
++            u["probe"] = r["name"] in PROBE_ROWS
++            u["rerun"] = True
+             units.append(u)
+     if 3 in sets:
+         for r in rs:
+             if r["role"] == "d20":
+-                u = unit("t", "1e-8", r)
++                u = unit("s", "1e-8", r)
+                 u["set"] = 3
+                 u["probe"] = False
++                u["rerun"] = True
+                 units.append(u)
+     return units
+ 
+@@ -162,7 +183,7 @@
+ 
+         for signum in (signal.SIGTERM, signal.SIGINT):
+             signal.signal(signum, terminal)
+-        run.heartbeat(pid=os.getpid(), stage="started: the c worker is next")  # prompt 05a
++        run.heartbeat(pid=os.getpid(), stage="started: the t5 worker is next")  # prompt 06
+ 
+         stop_beat = threading.Event()
+ 
+@@ -256,7 +277,7 @@
+                         problems.append(f"{uid}: error")
+                     if data.get("probe_error"):  # prompt 05a
+                         problems.append(f"{uid}: probe error")
+-                    if tree_name == "c":  # prompt 05a: the baseline tree
++                    if tree_name == "t5":  # prompt 06: the baseline tree
+                         p_wall[data["row"]] = data["wall_s"]
+                         p_status[data["row"]] = data["status"]
+                     record(uid, data)
+@@ -274,10 +295,10 @@
+             problems.append(f"the {tree_name} worker did not report {sorted(missing)}")
+ 
+     try:
+-        # prompt 05a: c is the baseline (05's p), t is measured against it (05's c)
+-        p_units = [u for u in units if u["tree"] == "c"]
+-        run_worker("c", p_units)
+-        c_units = [u for u in units if u["tree"] == "t"]
++        # prompt 06: t5 is the baseline (05a's c), s is measured against it (05a's t)
++        p_units = [u for u in units if u["tree"] == "t5"]
++        run_worker("t5", p_units)
++        c_units = [u for u in units if u["tree"] == "s"]
+         for u in c_units:
+             if args.budget_override is not None:
+                 u["budget"] = args.budget_override
+@@ -285,8 +306,8 @@
+                 u["budget"] = BUDGET_FACTOR * p_wall[u["row"]]
+             else:
+                 u["budget"] = None
+-                u["budget_note"] = f"no budget: the c unit of {u['row']} is {p_status.get(u['row'])}"
+-        run_worker("t", c_units)
++                u["budget_note"] = f"no budget: the t5 unit of {u['row']} is {p_status.get(u['row'])}"
++        run_worker("s", c_units)
+     except BaseException:
+         traceback.print_exc()
+         if run is not None:
+diff -ruN state/scripts_05a_reference/u0.py scripts/u0.py
+--- state/scripts_05a_reference/u0.py	1970-01-01 01:00:00
++++ scripts/u0.py	2026-10-26 22:24:58
+@@ -0,0 +1,455 @@
++"""
++levin-phase-floor prompt 06 section 6: gate U0's clauses (b), (c) and (d), before the run. New in
++06, derived from 05a's ``scripts/t0.py`` (docs/levin-phase-floor/05a/wider/scripts/t0.py, a record
++that is not edited; its copy here is unused and unchanged): 05's helpers ``strip``,
++``float_hex_walk``, ``diff_paths``, ``_iter_floats`` and 05a's ``_fx_same``, ``_regions_diff`` and
++``_evidence_lines`` are copied unchanged; ``spec`` and ``check`` are rewritten for U0. Clause (a)
++is u0_clause_a.py.
++
++On one depth-20 row and one control, 05's and 05a's gate rows (``state/sample.json``'s "L0":
++``low-G+r-1`` and ``ctrl-low-1``). Every unit carries the probe, so that it is exercised before the
++launch (the run probes only R1-R7).
++
++    python -I -B u0.py spec OUT_DIR    writes OUT_DIR/t5/spec.json (t5 at 1e-7: each row read from
++                                       A3 v2, then each row with the producers re-run on A3 v2, in
++                                       one process) and OUT_DIR/s/spec.json (s at 1e-7, producers
++                                       re-run on the certified copy, each row twice in one process)
++    python -I -B u0.py check OUT_DIR   reads both ledgers and pickles, and 05a's run; prints U0
++
++- **(b) t5 at 1e-7 reproduces 05a's t unit bit for bit** (``t-1e-7-<row>`` of
++  ``levin-phase-floor-05a-wider-20261026T123047``, prov.RUN05A): ``total``, ``total_abserr`` and
++  every call's ``value`` and ``abserr``, by ``==`` and ``float.hex``; beyond the clause, the whole
++  result summary, the call summaries, ``qs_check``, the dispatcher's counts and flags, the call
++  count, the stored row's summary, and every region array of 05a's pickle by its bytes. 05a's
++  probe was not 06's, so the probe is not compared.
++- **(c) the producer re-run is faithful at the parent.** In the t5 units with ``"rerun": true``,
++  on A3 v2: every re-run ``GkWKBIntegration`` value's ``theta_div_2pi``, ``theta_mod_2pi`` and
++  ``G_WKB``, and every re-run ``TkWKBIntegration`` value's ``theta_div_2pi``, ``theta_mod_2pi``
++  and ``T_WKB``, are bit-identical to A3 v2's (rerun.py compares by bit pattern), and every
++  re-run object's coefficients are. Beyond the clause, and reported: the other value columns;
++  the assembled GkSource against A3 v2's, column by column; the recomputed GkSourcePolicyData
++  against A3 v2's; and the re-run unit's result, calls, ``qs_check``, dispatcher and regions
++  against the t5 unit that read every producer value from A3 v2.
++- **(d) two in-process runs of the same s unit are bit-identical**: as 05a's T0 (c), plus the
++  re-run's record (timings aside), the GkSourcePolicyData, the probe's windows and every probe
++  sample, and every re-run object's ``deltaTheta``.
++- Both workers' tree evidence.
++"""
++
++import json
++import math
++import sys
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++
++from prov import RUN05A, WIDER, header, sha256  # noqa: E402
++
++WALL = {"elapsed", "compute_time", "wall_s", "rebuild_s", "probe_s", "timing"}
++COMPARED = ("result", "calls", "qs_check", "dispatcher_counts", "dispatcher_flags",
++            "n_calls_total", "stored")
++
++
++def spec(out_dir: Path):
++    sample = json.loads((WIDER / "state" / "sample.json").read_text())
++    by_name = {r["name"]: r for r in sample["rows"]}
++    plans = {
++        "t5": [("", False, None), ("rerun-", True, None)],
++        "s": [("", True, 1), ("", True, 2)],
++    }
++    for tree, plan in plans.items():
++        units = []
++        for prefix, rerun, rep in plan:
++            for which in ("d20", "control"):
++                row = by_name[sample["L0"][which]]
++                units.append(
++                    {
++                        "uid": f"U0-{tree}-{prefix}1e-7-{row['name']}" + (f"-run{rep}" if rep else ""),
++                        "tree": tree,
++                        "rtol": "1e-7",
++                        "row": row["name"],
++                        "shard": row["shard"],
++                        "serial": row["serial"],
++                        "role": row["role"],
++                        "budget": None,
++                        "probe": True,
++                        "rerun": rerun,
++                    }
++                )
++        if tree == "s":  # each row's two runs adjacent, as 05a's T0 ran them
++            units.sort(key=lambda u: (u["row"] != sample["L0"]["d20"], u["uid"]))
++        d = out_dir / tree
++        d.mkdir(parents=True, exist_ok=True)
++        s = {
++            "tree": tree,
++            "units": units,
++            "out_dir": str(d),
++            "emit_fd": None,
++            "emit_file": str(d / "ledger.jsonl"),
++            "pickle_regions": True,
++        }
++        (d / "spec.json").write_text(json.dumps(s, indent=1))
++        print(json.dumps(s, indent=1))
++
++
++# ---- 05's l0.py helpers, unchanged ------------------------------------------------------------
++
++
++def strip(x):
++    """Remove wall-clock fields, recursively."""
++    if isinstance(x, dict):
++        return {k: strip(v) for k, v in x.items() if k not in WALL}
++    if isinstance(x, list):
++        return [strip(v) for v in x]
++    return x
++
++
++def float_hex_walk(x):
++    """Every float in a structure as float.hex (JSON floats are repr, which round-trips)."""
++    if isinstance(x, dict):
++        return {k: float_hex_walk(v) for k, v in x.items()}
++    if isinstance(x, list):
++        return [float_hex_walk(v) for v in x]
++    if isinstance(x, float):
++        return ("f", x.hex())
++    return x
++
++
++def diff_paths(a, b, path="", out=None):
++    out = [] if out is None else out
++    if type(a) is not type(b):
++        out.append(f"{path}: type {type(a).__name__} vs {type(b).__name__}")
++    elif isinstance(a, dict):
++        for k in sorted(set(a) | set(b)):
++            if k not in a or k not in b:
++                out.append(f"{path}.{k}: present in one only")
++            else:
++                diff_paths(a[k], b[k], f"{path}.{k}", out)
++    elif isinstance(a, list):
++        if len(a) != len(b):
++            out.append(f"{path}: length {len(a)} vs {len(b)}")
++        for i, (x, y) in enumerate(zip(a, b)):
++            diff_paths(x, y, f"{path}[{i}]", out)
++    elif isinstance(a, float):
++        if not (a.hex() == b.hex() and (a == b or (math.isnan(a) and math.isnan(b)))):
++            out.append(f"{path}: {a!r} ({a.hex()}) vs {b!r} ({b.hex()})")
++    elif a != b:
++        out.append(f"{path}: {a!r} vs {b!r}")
++    return out
++
++
++def _iter_floats(x):
++    if isinstance(x, dict):
++        if set(x) == {"repr", "hex"}:  # worker.fx: a float as repr and hex
++            yield x["hex"]
++            return
++        for v in x.values():
++            yield from _iter_floats(v)
++    elif isinstance(x, list):
++        for v in x:
++            yield from _iter_floats(v)
++    elif isinstance(x, float):
++        yield x
++
++
++# ---- 05a's t0.py helpers, unchanged ---------------------------------------------------------
++
++
++def _fx_same(a, b):
++    """Two worker.fx floats: equal by == and by float.hex (NaN equal to NaN only by hex)."""
++    if a is None or b is None:
++        return a is None and b is None, f"{a} vs {b}"
++    x, y = float.fromhex(a["hex"]), float.fromhex(b["hex"])
++    same = x.hex() == y.hex() and (x == y or (math.isnan(x) and math.isnan(y)))
++    return same, f"{a['repr']} ({a['hex']}) vs {b['repr']} ({b['hex']})"
++
++
++def _regions_diff(pa, pb):
++    rdiff = []
++    if len(pa["regions"]) != len(pb["regions"]):
++        rdiff.append(f"region lists: {len(pa['regions'])} vs {len(pb['regions'])} calls")
++    n = 0
++    for i, (x, y) in enumerate(zip(pa["regions"], pb["regions"])):
++        n += len(x["start"])
++        for f in ("start", "end", "depth", "type", "abserr"):
++            if x[f].dtype != y[f].dtype or x[f].tobytes() != y[f].tobytes():
++                rdiff.append(f"call {i} ({x['regime']}, {x['group']}) {f} differs")
++        if (x["regime"], x["group"]) != (y["regime"], y["group"]) or tuple(
++            float(v).hex() for v in x["x_span"]
++        ) != tuple(float(v).hex() for v in y["x_span"]):
++            rdiff.append(f"call {i}: label or x_span differs")
++    return rdiff, n
++
++
++def _probe_samples_diff(sa, sb):
++    """06's probe samples: per factor, z and phi arrays by bytes, and k, sign, z_anchor."""
++    if (sa is None) != (sb is None):
++        return ["probe samples present in one only"], 0
++    if sa is None:
++        return [], 0
++    out = []
++    n = 0
++    if sorted(sa) != sorted(sb):
++        return [f"factors {sorted(sa)} vs {sorted(sb)}"], 0
++    for f in sa:
++        for key in ("z", "phi"):
++            a, b = sa[f][key], sb[f][key]
++            n += len(a)
++            if a.dtype != b.dtype or a.tobytes() != b.tobytes():
++                out.append(f"{f} {key} differs")
++        for key in ("k", "sign", "z_anchor"):
++            if repr(sa[f][key]) != repr(sb[f][key]):
++                out.append(f"{f} {key} differs")
++    return out, n
++
++
++def _dtheta_diff(da, db):
++    if (da is None) != (db is None):
++        return ["deltaTheta present in one only"]
++    if da is None:
++        return []
++    if sorted(da) != sorted(db):
++        return ["deltaTheta keys differ"]
++    out = []
++    for k in da:
++        x, y = da[k], db[k]
++        if float(x["deltaTheta"]).hex() != float(y["deltaTheta"]).hex() or x["z_init"] != y["z_init"] or x["pure_WKB"] != y["pure_WKB"] or x["wkb_serial"] != y["wkb_serial"]:
++            out.append(f"z_source {k}: {x} vs {y}")
++    return out
++
++
++def _evidence_lines(ev, tree, lines):
++    lines.append(f"== the {tree} worker's evidence")
++    for k in ("tree", "tree_path", "expected_sha", "head", "all_in_tree",
++              "PrimitivePhase_has_exact_remainder", "build_phase_source_mentions_exact_remainder",
++              "TkSourceFunctions_exact_remainder_default", "PYTHONPATH", "dont_write_bytecode"):
++        lines.append(f"   {k}: {ev.get(k)!r}")
++    lines.append(f"   status --short: {'empty' if ev['status_short'].strip() == '' else repr(ev['status_short'])}")
++    for k, v in ev["files"].items():
++        lines.append(f"   {k}: {v}")
++    ok = (
++        ev["tree"] == tree
++        and ev["head"] == ev["expected_sha"]
++        and ev["all_in_tree"]
++        and ev["status_short"].strip() == ""
++        and ev["dont_write_bytecode"]
++    )
++    lines.append(f"   the units ran at {tree}, from its own tree, clean: {ok}")
++    return ok
++
++
++def check(out_dir: Path):
++    import ray.cloudpickle as cloudpickle
++
++    lines = header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 06 section 6: gate U0, clauses (b), (c) and (d)",
++        [RUN05A / "checkpoint.jsonl", WIDER / "state" / "sample.json"],
++    )
++    ok_all = True
++    ledgers = {}
++    for tree in ("t5", "s"):
++        recs = [json.loads(l) for l in (out_dir / tree / "ledger.jsonl").read_text().splitlines()]
++        ledgers[tree] = recs
++        lines.append(f"# ledger {out_dir / tree / 'ledger.jsonl'}: {len(recs)} records")
++    lines.append("")
++    for tree in ("t5", "s"):
++        hello = [r for r in ledgers[tree] if r["kind"] == "hello"]
++        ev = hello[-1]["evidence"]
++        ok_all &= _evidence_lines(ev, tree, lines)
++        want = {"t5": False, "s": True}[tree]
++        rex = ev.get("producers_store_reduce_exactly")
++        lines.append(f"   producers' store() reduce exactly: {rex} (expected {want} under {tree}); "
++                     f"GkWKBValue has theta_residual: {ev.get('GkWKBValue_has_theta_residual')}")
++        ok_all &= rex == {"GkWKBIntegration": want, "TkWKBIntegration": want}
++        store = [r for r in ledgers[tree] if r["kind"] == "store"]
++        lines.append(f"   store read: {store[-1]['primary'] if store else None}")
++        lines.append("")
++
++    units = {tree: {r["data"]["unit"]: r["data"] for r in ledgers[tree] if r["kind"] == "unit"} for tree in ("t5", "s")}
++    for tree in ("t5", "s"):
++        for uid, d in units[tree].items():
++            lines.append(
++                f"   {uid}: status {d['status']}; wall {d['wall_s']}; rebuild checks all hold "
++                f"{d.get('rebuild_checks_all_hold')}; QuadSource L0a {d.get('qs_check', {}).get('L0a_holds')}; "
++                f"dispatcher {d['dispatcher_counts']} {d['dispatcher_flags']}; T exact_remainder "
++                f"{d.get('T_phase_exact_remainder')}; rerun {d.get('rerun_requested')}; policy warnings "
++                f"{d.get('policy_warnings')}; probe windows {None if d.get('probe') is None else len(d['probe'])}, "
++                f"error {d.get('probe_error')!r}; tree {d['tree_head']} status "
++                f"{'empty' if d['tree_status_short'].strip() == '' else repr(d['tree_status_short'])}"
++            )
++            if d["status"] != "done" or d.get("probe_error") or (d.get("policy_warnings") or {}).get("count"):
++                ok_all = False
++                lines.append(f"   !! not done, probe error or policy warning: {d.get('error')} {d.get('probe_error')}")
++            else:
++                r = d["result"]
++                lines.append(
++                    f"      total {r['total']['repr']} ({r['total']['hex']}), abserr "
++                    f"{r['total_abserr']['repr']} ({r['total_abserr']['hex']}), converged "
++                    f"{r['total_converged']}, WKB_Levin_data {r['WKB_Levin_data']}; GkPolicy {d.get('GkPolicy')}"
++                )
++            flags = d["dispatcher_flags"] or {}
++            fl_ok = all(k in ("T exact_remainder=True", "G exact_remainder=True") for k in flags)
++            ter = d.get("T_phase_exact_remainder")
++            fl_ok &= ter is not None and ter["Tq"] is True and ter["Tr"] is True
++            lines.append(f"      every theta_mod_2pi call node-anchored (G and T): {fl_ok}")
++            ok_all &= fl_ok
++
++    def comp_units(a, b, pdir_a, pdir_b, keys):
++        comp = {}
++        for key in keys:
++            comp[key] = diff_paths(float_hex_walk(strip(a.get(key))), float_hex_walk(strip(b.get(key))), key)
++        pa = cloudpickle.loads((pdir_a / a["pickle"]).read_bytes())
++        pb = cloudpickle.loads((pdir_b / b["pickle"]).read_bytes())
++        comp["regions"], n_reg = _regions_diff(pa, pb)
++        return comp, n_reg, pa, pb
++
++    # ---------------------------------------------------------------- clause (b)
++    lines.append("")
++    lines.append("== U0 (b): t5 at 1e-7 against 05a's t unit, bit for bit "
++                 f"({RUN05A.name}, checkpoint sha256 {sha256(RUN05A / 'checkpoint.jsonl')})")
++    ref = {}
++    for l in (RUN05A / "checkpoint.jsonl").read_text().splitlines():
++        r = json.loads(l)
++        ref[r["unit"]] = r
++    clause_b = True
++    for uid, d in units["t5"].items():
++        if d.get("rerun_requested"):
++            continue
++        ru = ref.get(f"t-1e-7-{d['row']}")
++        lines.append(f"-- {uid} against 05a's {ru['unit'] if ru else None}")
++        if ru is None or d["status"] != "done":
++            clause_b = False
++            lines.append("   !! no reference, or the unit did not finish")
++            continue
++        rd = ru["data"]
++        lines.append(f"   05a's record: script_sha256 {ru['script_sha256']}, tree {rd['tree_head']}, "
++                     f"pickle {rd['pickle']} sha256 {rd['pickle_sha256']}")
++        named = []
++        for f in ("total", "total_abserr"):
++            same, txt = _fx_same(d["result"][f], rd["result"][f])
++            named.append(same)
++            lines.append(f"   {f}: {'==' if same else 'DIFFERS'}  {txt}")
++        if len(d["calls"]) != len(rd["calls"]):
++            named.append(False)
++            lines.append(f"   calls: {len(d['calls'])} vs {len(rd['calls'])}")
++        for ca, cb in zip(d["calls"], rd["calls"]):
++            for f in ("value", "abserr"):
++                same, txt = _fx_same(ca[f], cb[f])
++                named.append(same)
++                lines.append(f"   call {ca['index']} {ca['regime']}/{ca['group']} {f}: "
++                             f"{'==' if same else 'DIFFERS'}  {txt}")
++        named_ok = all(named)
++        lines.append(f"   the clause's own fields ({len(named)} doubles): "
++                     f"{'all bit-identical' if named_ok else 'NOT all bit-identical'}")
++        comp, n_reg, _pa, _pb = comp_units(d, rd, out_dir / "t5", RUN05A, COMPARED)
++        lines.append(f"   beyond the clause: floats in the result summary "
++                     f"{sum(1 for _ in _iter_floats(strip(d['result'])))}; regions compared {n_reg}")
++        for k, v in comp.items():
++            lines.append(f"   {k}: {'identical' if not v else f'{len(v)} differences, first {v[:5]}'}")
++        same_all = named_ok and all(len(v) == 0 for v in comp.values())
++        lines.append(f"   U0 (b) on {d['row']}: {'HOLDS' if same_all else 'FAILS'}")
++        clause_b &= same_all
++    lines.append(f"== U0 (b): {'HOLDS' if clause_b else 'FAILS'}")
++    ok_all &= clause_b
++
++    # ---------------------------------------------------------------- clause (c)
++    lines.append("")
++    lines.append("== U0 (c): the producer re-run at the parent (t5) on A3 v2, against A3 v2's values")
++    clause_c = True
++    for uid, d in units["t5"].items():
++        if not d.get("rerun_requested"):
++            continue
++        lines.append(f"-- {uid}")
++        rr = d.get("rerun")
++        if d["status"] != "done" or rr is None:
++            clause_c = False
++            lines.append("   !! not done")
++            continue
++        G, T = rr["G_values_vs_stored"], rr["T_values_vs_stored"]
++        gnamed = {c: G["n_differing_by_column"][c] for c in ("theta_div_2pi", "theta_mod_2pi", "G_WKB")}
++        tnamed = {c: T["n_differing_by_column"][c] for c in ("theta_div_2pi", "theta_mod_2pi", "T_WKB")}
++        tcoeff = {k: v["coeffs_bit_identical_to_stored"] for k, v in rr["T_objects"].items()}
++        clause = (
++            G["n_values"] > 0 and T["n_values"] > 0
++            and all(v == 0 for v in gnamed.values()) and all(v == 0 for v in tnamed.values())
++            and rr["G_coeff_mismatch_count"] == 0 and all(tcoeff.values())
++        )
++        lines.append(f"   GkWKBIntegration: {rr['G_objects_rerun']} objects, {G['n_values']} values; "
++                     f"values differing in the clause's columns {gnamed}; coefficient mismatches "
++                     f"{rr['G_coeff_mismatch_count']}")
++        lines.append(f"   TkWKBIntegration: {len(rr['T_objects'])} objects, {T['n_values']} values; "
++                     f"differing {tnamed}; coefficients bit-identical {tcoeff}")
++        lines.append(f"   the clause on {d['row']}: {'HOLDS' if clause else 'FAILS'}")
++        lines.append(f"   beyond the clause (reported): G values bit-identical in every column "
++                     f"{G['n_bit_identical_in_every_column']}/{G['n_values']}, differing by column "
++                     f"{ {k: v for k, v in G['n_differing_by_column'].items() if v} }, first "
++                     f"{G['first_differences'][:3]}; T {T['n_bit_identical_in_every_column']}/{T['n_values']}")
++        GS = rr["GkSource_vs_stored"]
++        lines.append(f"   GkSource assembled: {GS['n_bit_identical_in_every_column']}/{GS['n_values']} "
++                     f"values bit-identical in every stored column; differing "
++                     f"{ {k: v for k, v in GS['n_differing_by_column'].items() if v} }, first {GS['first_differences'][:3]}")
++        P = rr["GkSourcePolicyData"]
++        pol_same = all(P["rerun"][k] == P["stored"][k] for k in ("type", "quality", "crossover_z", "Levin_z", "metadata"))
++        lines.append(f"   GkSourcePolicyData recomputed equal to A3 v2's (type, quality, crossover_z, "
++                     f"Levin_z, metadata): {pol_same}  {P['rerun']} vs {P['stored']}")
++        ref_uid = uid.replace("rerun-", "")
++        rd = units["t5"].get(ref_uid)
++        comp, n_reg, _pa, _pb = comp_units(d, rd, out_dir / "t5", out_dir / "t5", COMPARED + ("GkPolicy",))
++        lines.append(f"   against {ref_uid} (every producer value read from A3 v2): regions compared {n_reg}")
++        for k, v in comp.items():
++            lines.append(f"   {k}: {'identical' if not v else f'{len(v)} differences, first {v[:5]}'}")
++        chain_same = all(len(v) == 0 for v in comp.values())
++        lines.append(f"   beyond the clause, the whole re-run chain reproduces the stored-input unit "
++                     f"bit for bit: {chain_same}")
++        clause_c &= clause
++    lines.append(f"== U0 (c): {'HOLDS' if clause_c else 'FAILS'}")
++    ok_all &= clause_c
++
++    # ---------------------------------------------------------------- clause (d)
++    lines.append("")
++    lines.append("== U0 (d): two in-process runs of the same s unit, bit for bit")
++    rows = {}
++    for uid, d in units["s"].items():
++        rows.setdefault(d["row"], []).append(d)
++    clause_d = True
++    for row, ds in rows.items():
++        lines.append(f"-- {row}")
++        if len(ds) != 2 or any(d["status"] != "done" for d in ds):
++            clause_d = False
++            lines.append("   !! not two completed runs")
++            continue
++        a, b = ds
++        comp, n_reg, pa, pb = comp_units(a, b, out_dir / "s", out_dir / "s",
++                                         COMPARED + ("probe", "T_phase_exact_remainder", "GkPolicy", "rerun"))
++        comp["probe_samples"], n_ps = _probe_samples_diff(pa.get("probe_samples"), pb.get("probe_samples"))
++        comp["deltaTheta"] = _dtheta_diff(pa.get("deltaTheta_by_z_source"), pb.get("deltaTheta_by_z_source"))
++        lines.append(f"   floats in the result summary {sum(1 for _ in _iter_floats(strip(a['result'])))}; "
++                     f"group Levin calls {len(pa['regions'])}; regions compared {n_reg}; probe windows "
++                     f"{len(a['probe'] or [])}; probe sample values compared {n_ps}; re-run deltaTheta "
++                     f"{len(pa.get('deltaTheta_by_z_source') or {})}")
++        for k, v in comp.items():
++            lines.append(f"   {k}: {'identical' if not v else f'{len(v)} differences, first {v[:5]}'}")
++        same = all(len(v) == 0 for v in comp.values())
++        lines.append(f"   U0 (d) on {row}: {'HOLDS' if same else 'FAILS'}")
++        clause_d &= same
++    lines.append(f"== U0 (d): {'HOLDS' if clause_d else 'FAILS'}")
++    ok_all &= clause_d
++
++    lines.append("")
++    lines.append(f"== GATE U0, clauses (b), (c) and (d), with both trees' evidence: {'HOLDS' if ok_all else 'FAILS'}")
++    print("\n".join(lines))
++    return 0 if ok_all else 1
++
++
++if __name__ == "__main__":
++    cmd, out = sys.argv[1], Path(sys.argv[2])
++    if cmd == "spec":
++        spec(out)
++    elif cmd == "check":
++        sys.exit(check(out))
++    else:
++        raise SystemExit(f"unknown command {cmd}")
+diff -ruN state/scripts_05a_reference/u0_clause_a.py scripts/u0_clause_a.py
+--- state/scripts_05a_reference/u0_clause_a.py	1970-01-01 01:00:00
++++ scripts/u0_clause_a.py	2026-10-26 22:23:58
+@@ -0,0 +1,65 @@
++"""levin-phase-floor prompt 06 section 6, gate U0 clause (a). New in 06.
++
++`git diff --stat 1fc349c <code commit's parent> -- . ':!docs' ':!prompts'` must show CLAUDE.md and
++bd38e50's two comment-only files (ComputeTargets/primitive_phase.py,
++ComputeTargets/tests/test_g_phase_reanchor.py), and those two files' ASTs, docstrings removed, must
++equal 1fc349c's. Read-only git (diff --stat, show), run in the parent worktree with
++--no-optional-locks. Prints the stat, each file's AST verdict, and the clause's verdict."""
++import ast
++import subprocess
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import T5_SHA, T5_TREE, header  # noqa: E402
++
++BASE = "1fc349c"
++EXPECTED = {
++    "CLAUDE.md",
++    "ComputeTargets/primitive_phase.py",
++    "ComputeTargets/tests/test_g_phase_reanchor.py",
++}
++
++
++def git(*args):
++    r = subprocess.run(
++        ["git", "--no-optional-locks", "-C", str(T5_TREE), *args],
++        capture_output=True,
++        text=True,
++    )
++    if r.returncode != 0:
++        raise SystemExit(f"git {args}: {r.stderr}")
++    return r.stdout
++
++
++def strip_docstrings(tree):
++    for node in ast.walk(tree):
++        if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
++            body = node.body
++            if body and isinstance(body[0], ast.Expr) and isinstance(getattr(body[0], "value", None), ast.Constant) and isinstance(body[0].value.value, str):
++                node.body = body[1:] or [ast.Pass()]
++    return tree
++
++
++def main():
++    for l in header(Path(__file__).resolve(), "levin-phase-floor 06 section 6: gate U0, clause (a)"):
++        print(l)
++    stat = git("diff", "--stat", BASE, T5_SHA, "--", ".", ":!docs", ":!prompts")
++    print(f"$ git diff --stat {BASE} {T5_SHA[:7]} -- . ':!docs' ':!prompts'")
++    print(stat.rstrip())
++    names = set(git("diff", "--name-only", BASE, T5_SHA, "--", ".", ":!docs", ":!prompts").split())
++    print(f"files: {sorted(names)}; expected {sorted(EXPECTED)}: {names == EXPECTED}")
++    ok = names == EXPECTED
++    for path in sorted(EXPECTED - {"CLAUDE.md"}):
++        a = ast.dump(strip_docstrings(ast.parse(git("show", f"{BASE}:{path}"))))
++        b = ast.dump(strip_docstrings(ast.parse(git("show", f"{T5_SHA}:{path}"))))
++        same = a == b
++        ok &= same
++        print(f"{path}: AST without docstrings equal to {BASE}'s: {same}")
++    print(f"== U0 (a): {'HOLDS' if ok else 'FAILS'}")
++    return 0 if ok else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN state/scripts_05a_reference/worker.py scripts/worker.py
+--- state/scripts_05a_reference/worker.py	2026-10-26 21:51:54
++++ scripts/worker.py	2026-10-26 22:22:18
+@@ -1,4 +1,31 @@
+ """
++levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/worker.py,
++docs/levin-phase-floor/05a/wider/scripts/worker.py, a record that is not edited). Changed here,
++each change marked "prompt 06":
++- the trees are ``t5`` (the worktree at ``9f66622``, 05a's t) and ``s`` (the worktree at
++  ``f5cee4c``, the code commit ``dc9d28c``'s code) in place of 05a's ``c`` and ``t``;
++- **the re-run of the producers**: a unit whose spec has ``"rerun": true`` (every ``s`` unit, and
++  U0's faithfulness units at ``t5``) calls ``rebuild_row(..., rerun=True)`` (rebuild.py, rerun.py);
++  its record carries the re-run's summary (timings, the comparison of every re-run value with the
++  stored one, the recomputed ``GkSourcePolicyData``) and its pickle every re-run object's
++  ``deltaTheta``;
++- every unit records its ``GkSourcePolicyData``'s classification (``Levin_z`` among it), and counts
++  the ``!! WARNING (GkSourcePolicyData`` lines (the disagreement of the two repairs, prompt 06
++  section 0.2) its process printed while the unit ran, by a pass-through counter on ``sys.stdout``;
++- the module-provenance evidence also names the producers' modules, ``WKB_phase_function``'s,
++  ``GkSource``'s and rerun.py's imports, and whether the producers' ``store()`` reduce exactly
++  (``reduce_exactly_mod_2pi`` in its source: absent at t5, present at s);
++- **route (B)** (the user's decision): ``s`` reads, read-only, the certified scratch copy of A3 v2
++  with the three nullable all-NULL ``theta_residual`` columns (prov.STORE_DIR_BY_TREE,
++  rebuild.use_store_dir); ``t5`` reads A3 v2;
++- **the phase probe** is 06's (phase_probe06.py): ``build_partition`` is wrapped at its module
++  attribute as in 05a, now keeping its arguments (the ``GkSourcePolicyData`` and the two
++  ``TkSourceFunctions`` the unit's own call was handed) as well as its result, and a unit whose
++  spec has ``"probe": true`` (the rtol 1e-7 units of R1-R7) runs phase_probe06.probe_row on them
++  after its timed section, with the dispatcher uninstalled. 05a's probe.py is not called.
++
++(05a's text follows, unchanged; read its c as t5, its t as s, and its probe as 06's.)
++
+ levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/worker.py,
+ docs/levin-phase-floor/05/wider/scripts/worker.py, sha256 e2ef68f0..., a record that is not
+ edited). Changed here, each change marked "prompt 05a": the trees are ``c`` (the worktree at
+@@ -73,10 +100,40 @@
+     "prov.py",
+     "run_wider.py",
+     "launch.py",
+-    "probe.py",  # prompt 05a
++    "rerun.py",  # prompt 06
++    "phase_probe06.py",  # prompt 06
+ ]
+ 
+ 
++class _WarnCounter:
++    """prompt 06: a pass-through on sys.stdout that counts the lines starting with
++    ``!! WARNING (GkSourcePolicyData`` (the two repairs' disagreement, prompt 06 section 0.2)."""
++
++    PREFIX = "!! WARNING (GkSourcePolicyData"
++
++    def __init__(self, stream):
++        self._stream = stream
++        self.count = 0
++        self.lines = []
++        self._buf = ""
++
++    def write(self, text):
++        self._buf += text
++        while "\n" in self._buf:
++            line, self._buf = self._buf.split("\n", 1)
++            if line.startswith(self.PREFIX):
++                self.count += 1
++                if len(self.lines) < 5:
++                    self.lines.append(line[:400])
++        return self._stream.write(text)
++
++    def flush(self):
++        return self._stream.flush()
++
++    def __getattr__(self, name):
++        return getattr(self._stream, name)
++
++
+ class OverBudget(BaseException):
+     pass
+ 
+@@ -221,6 +278,10 @@
+     qsi = importlib.import_module("ComputeTargets.QuadSourceIntegral")
+     gpd = importlib.import_module("ComputeTargets.GkSourcePolicyData")
+     tsf = importlib.import_module("ComputeTargets.TkSourceFunctions")  # prompt 05a
++    gkw = importlib.import_module("ComputeTargets.GkWKBIntegration")  # prompt 06
++    tkw = importlib.import_module("ComputeTargets.TkWKBIntegration")  # prompt 06
++    gks = importlib.import_module("ComputeTargets.GkSource")  # prompt 06
++    wpf = importlib.import_module("Quadrature.integrators.WKB_phase_function")  # prompt 06
+     from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+ 
+     import dispatch
+@@ -236,6 +297,13 @@
+         "StoreFixtures": StoreFixtures.__file__,
+         "main.py": str(MAIN_PY),
+         "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": dispatch.ORIG_FILE,
++        "ComputeTargets.GkWKBIntegration": gkw.__file__,  # prompt 06
++        "ComputeTargets.TkWKBIntegration": tkw.__file__,  # prompt 06
++        "ComputeTargets.GkSource": gks.__file__,  # prompt 06
++        "Quadrature.integrators.WKB_phase_function": wpf.__file__,  # prompt 06
++        "WKB_phase_function (the producers' remote's function)": (
++            gkw.WKB_phase_function._function.__code__.co_filename
++        ),  # prompt 06
+     }
+     in_tree = {
+         k: str(Path(v).resolve()).startswith(str(tree) + os.sep)
+@@ -264,6 +332,15 @@
+             in inspect.signature(tsf.TkSourceFunctions.__init__).parameters
+             else "absent"
+         ),
++        # prompt 06: the producers' exact reduction (absent at t5, present at s)
++        "producers_store_reduce_exactly": {
++            "GkWKBIntegration": "reduce_exactly_mod_2pi"
++            in inspect.getsource(gkw.GkWKBIntegration.store),
++            "TkWKBIntegration": "reduce_exactly_mod_2pi"
++            in inspect.getsource(tkw.TkWKBIntegration.store),
++        },
++        "GkWKBValue_has_theta_residual": "theta_residual"
++        in inspect.signature(gkw.GkWKBValue.__init__).parameters,
+         "PYTHONPATH": os.environ.get("PYTHONPATH"),
+         "PYTHONDONTWRITEBYTECODE": os.environ.get("PYTHONDONTWRITEBYTECODE"),
+         "dont_write_bytecode": sys.dont_write_bytecode,
+@@ -304,19 +381,27 @@
+         raise SystemExit(f"worker {tree_name}: tree evidence does not hold: {ev}")
+ 
+     from harness import QSI_MOD, close_pool, dump_record, open_readonly_pool, standin_ray
+-    from rebuild import MAIN_PY_SHA256, PRIMARY, build_context, rebuild_row
++    import rebuild as RB  # prompt 06
++    from rebuild import MAIN_PY_SHA256, build_context, rebuild_row
++    from prov import STORE_DIR_BY_TREE  # prompt 06
+ 
++    # prompt 06, route (B): t5 reads A3 v2, s the certified scratch copy
++    PRIMARY = RB.use_store_dir(STORE_DIR_BY_TREE[tree_name])
++    emit("store", {"tree": tree_name, "primary": str(PRIMARY)})
++    print(f"# worker {tree_name} reads {PRIMARY}", flush=True)
++
+     import dispatch as DP
+-    import probe as PROBE  # prompt 05a
++    import phase_probe06 as PROBE  # prompt 06
+ 
+     orig_levin = QSI_MOD.adaptive_levin_sincos
+     orig_eval = QSI_MOD.evaluate_QuadSource_integral
+     orig_partition = QSI_MOD.build_partition  # prompt 05a
+-    holder = {"calls": None, "disp": None, "deadline": None, "partition": None}
++    holder = {"calls": None, "disp": None, "deadline": None, "partition": None, "partition_args": None}
+ 
+     def w_partition(*a, **kw):  # prompt 05a: keep what the unit's own call built
+         result = orig_partition(*a, **kw)
+         holder["partition"] = result
++        holder["partition_args"] = a  # prompt 06: GkPolicy, Tq_f, Tr_f, source, z_resp, z_top
+         return result
+ 
+     def w_levin(*a, **kw):
+@@ -375,7 +460,9 @@
+                     calls = []
+                     wall = None
+                     rb = None
+-                    holder.update(disp=None, partition=None)  # prompt 05a: partition
++                    holder.update(disp=None, partition=None, partition_args=None)  # prompt 05a, 06
++                    warn = _WarnCounter(sys.stdout)  # prompt 06
++                    sys.stdout = warn
+                     try:
+                         t_rb = time.perf_counter()
+                         rb = rebuild_row(
+@@ -385,6 +472,7 @@
+                             u["serial"],
+                             log=lambda s: print(s, flush=True),
+                             rtol=rtol_obj[u["rtol"]],
++                            rerun=bool(u.get("rerun", False)),  # prompt 06
+                         )
+                         rebuild_s = time.perf_counter() - t_rb
+                         holder.update(calls=calls)
+@@ -415,6 +503,7 @@
+                         QSI_MOD.adaptive_levin_sincos = orig_levin
+                         QSI_MOD.evaluate_QuadSource_integral = orig_eval
+                         QSI_MOD.build_partition = orig_partition  # prompt 05a
++                        sys.stdout = warn._stream  # prompt 06
+                     assert QSI_MOD.adaptive_levin_sincos is orig_levin
+                     assert QSI_MOD.evaluate_QuadSource_integral is orig_eval
+                     assert QSI_MOD.build_partition is orig_partition  # prompt 05a
+@@ -450,11 +539,32 @@
+                         data["qs_check"] = rb["qs_check"]
+                         data["stored"] = summarise_stored(rb["stored"])
+                         data["rebuild_checks_all_hold"] = all(c[1] for c in rb["checks"])
++                        # prompt 06: the classification, and the re-run's summary
++                        data["GkPolicy"] = rb["GkPolicy_summary"]
++                        rr = rb["rerun"]
++                        data["rerun"] = (
++                            None
++                            if rr is None
++                            else json.loads(
++                                json.dumps(
++                                    {
++                                        kk: vv
++                                        for kk, vv in rr.items()
++                                        if kk != "deltaTheta_by_z_source"
++                                    },
++                                    default=str,
++                                )
++                            )
++                        )
++                    data["rerun_requested"] = bool(u.get("rerun", False))  # prompt 06
++                    data["policy_warnings"] = {"count": warn.count, "first": warn.lines}  # prompt 06
+                     if result is not None:
+                         data["result"] = summarise_result(result)
+                     # prompt 05a: T's phase flags, and the phase probe (probe.py)
+                     part = holder["partition"]
++                    part_args = holder["partition_args"]  # prompt 06
+                     holder["partition"] = None
++                    holder["partition_args"] = None
+                     probe_samples = None
+                     data["T_phase_exact_remainder"] = (
+                         None
+@@ -473,14 +583,28 @@
+                         else:
+                             t_pr = time.perf_counter()
+                             try:
+-                                data["probe"], probe_samples = PROBE.probe_partition(
+-                                    part["subintervals"]
++                                # prompt 06: 06's probe, on the objects the unit's own call used
++                                rr = None if rb is None else rb["rerun"]
++                                dtheta_T = None
++                                if rr is not None:
++                                    dtheta_T = {
++                                        "Tq": rr["T_objects"][rb["q"].store_id]["deltaTheta"],
++                                        "Tr": rr["T_objects"][rb["r"].store_id]["deltaTheta"],
++                                    }
++                                data["probe"], probe_samples = PROBE.probe_row(
++                                    part,
++                                    part_args[0],
++                                    part_args[1],
++                                    part_args[2],
++                                    dtheta_G=None if rr is None else rr["deltaTheta_by_z_source"],
++                                    dtheta_T=dtheta_T,
+                                 )
+                             except Exception:
+                                 data["probe_error"] = traceback.format_exc()
+                                 print(data["probe_error"], flush=True)
+                             data["probe_s"] = time.perf_counter() - t_pr
+                     part = None
++                    part_args = None
+                     if spec.get("pickle_regions", True) and status != "error":
+                         pkl = out_dir / f"unit_{uid}.pkl"
+                         dump_record(
+@@ -498,6 +622,12 @@
+                                     for c in group_calls
+                                 ],
+                                 "probe_samples": probe_samples,  # prompt 05a
++                                # prompt 06: every re-run object's deltaTheta, z_init, parent
++                                "deltaTheta_by_z_source": (
++                                    None
++                                    if rb is None or rb["rerun"] is None
++                                    else rb["rerun"]["deltaTheta_by_z_source"]
++                                ),
+                             },
+                             pkl,
+                         )
+@@ -520,6 +650,16 @@
+                             else ""
+                         )
+                         + f"; T exact_remainder {data['T_phase_exact_remainder']}"  # prompt 05a
++                        + f"; policy warnings {warn.count}"  # prompt 06
++                        + (
++                            f"; rerun {data['rerun']['timing']['total']:.1f} s, G values identical "
++                            f"{data['rerun']['G_values_vs_stored']['n_bit_identical_in_every_column']}"
++                            f"/{data['rerun']['G_values_vs_stored']['n_values']}, T "
++                            f"{data['rerun']['T_values_vs_stored']['n_bit_identical_in_every_column']}"
++                            f"/{data['rerun']['T_values_vs_stored']['n_values']}"
++                            if data.get("rerun")
++                            else ""
++                        )  # prompt 06
+                         + (
+                             f"; probe {len(data['probe'])} windows in {data['probe_s']:.1f} s"
+                             if data["probe"] is not None

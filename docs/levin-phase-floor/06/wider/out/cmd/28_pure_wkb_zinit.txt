@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/pure_wkb_zinit.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:35:46Z
+# ----
+shard 0: pure-WKB rows (numeric_serial NULL): n=2335, z_init NULL 0, z_init == z_source 2335, z_init < z_source 0
+shard 0: seeded rows: n=1145, z_init NULL 0, z_init == z_source 0, z_init < z_source 1145
+shard 0: GkSourceValue rows with WKB data: n=227083, z_init NULL 0
+shard 1: pure-WKB rows (numeric_serial NULL): n=2439, z_init NULL 0, z_init == z_source 2439, z_init < z_source 0
+shard 1: seeded rows: n=1041, z_init NULL 0, z_init == z_source 0, z_init < z_source 1041
+shard 1: GkSourceValue rows with WKB data: n=231942, z_init NULL 0
+shard 2: pure-WKB rows (numeric_serial NULL): n=2542, z_init NULL 0, z_init == z_source 2542, z_init < z_source 0
+shard 2: seeded rows: n=938, z_init NULL 0, z_init == z_source 0, z_init < z_source 938
+shard 2: GkSourceValue rows with WKB data: n=235866, z_init NULL 0
+shard 3: pure-WKB rows (numeric_serial NULL): n=2236, z_init NULL 0, z_init == z_source 2236, z_init < z_source 0
+shard 3: seeded rows: n=1244, z_init NULL 0, z_init == z_source 0, z_init < z_source 1244
+shard 3: GkSourceValue rows with WKB data: n=222046, z_init NULL 0
+# ----
+# end 2026-10-26T22:35:47Z
+# exit 0

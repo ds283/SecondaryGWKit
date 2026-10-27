@@ -1,0 +1,32 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json, os, subprocess, time\nrd=\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634\'\nck=os.path.join(rd,\'checkpoint.jsonl\'); t0=time.time()\nwhile time.time()-t0<90 and not (os.path.exists(ck) and os.path.getsize(ck)>0): time.sleep(1)\nprint(f\'waited {time.time()-t0:.1f} s (at most 90) for the first checkpoint record\')\nst=json.load(open(os.path.join(rd,\'status.json\'))); print(json.dumps(st,indent=1))\npid=st[\'pid\']\nprint(subprocess.run([\'ps\',\'-o\',\'pid,ppid,stat,etime,command\',\'-p\',f\'19695,{pid}\'],capture_output=True,text=True).stdout)\nprint(\'children of the driver:\', subprocess.run([\'pgrep\',\'-P\',str(pid)],capture_output=True,text=True).stdout.split())\nfor p in (19695,pid):\n    try: os.kill(p,0); print(f\'kill -0 {p}: alive\')\n    except OSError as e: print(f\'kill -0 {p}: {e}\')\nlines=open(ck).read().splitlines() if os.path.exists(ck) else []\nprint(\'checkpoint records:\', len(lines))\nif lines:\n    r=json.loads(lines[0]); d=r[\'data\']\n    print(\'first checkpoint:\', r[\'unit\'], r.get(\'recorded\'), \'script_sha256\', r.get(\'script_sha256\'), \'git_head\', r.get(\'git_head\'), \'status\', d[\'status\'], \'wall\', d[\'wall_s\'], \'tree_head\', d[\'tree_head\'], \'total\', (d.get(\'result\') or {}).get(\'total\'), \'GkPolicy\', d.get(\'GkPolicy\'), \'probe windows\', None if d.get(\'probe\') is None else len(d[\'probe\']))\nprint(\'stderr.log bytes\', os.path.getsize(os.path.join(rd,\'stderr.log\')))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:36:43Z
+# ----
+waited 0.0 s (at most 90) for the first checkpoint record
+{
+ "exit_code": null,
+ "heartbeat": "2026-10-26T22:36:42+00:00",
+ "host": {
+  "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+  "id": "d120d1cf03551e6f"
+ },
+ "pid": 19700,
+ "stage": "unit t5-1e-7-low-G-1 done",
+ "state": "running",
+ "units_done": 7,
+ "units_total": 109
+}
+  PID  PPID STAT ELAPSED COMMAND
+19695     1 Ss     00:09 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/run_wider.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634; exit $?
+19700 19695 S      00:09 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/run_wider.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634
+
+children of the driver: ['19705']
+kill -0 19695: alive
+kill -0 19700: alive
+checkpoint records: 7
+first checkpoint: t5-1e-7-low-G+r-1 2026-10-26T22:36:38+00:00 script_sha256 962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45 git_head 28ebaf0743e0555fb2c4512ce714884005a60eff status done wall 0.273526375181973 tree_head 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27 total {'repr': '5.391884212784901e-31', 'hex': '0x1.5df40b06b0331p-101'} GkPolicy {'store_id': 1165, 'type': 'WKB', 'quality': 'complete', 'crossover_z': None, 'Levin_z': '0x1.56a9ce9670b63p+46'} probe windows None
+stderr.log bytes 0
+# ----
+# end 2026-10-26T22:36:43Z
+# exit 0

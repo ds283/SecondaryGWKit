@@ -1,0 +1,12 @@
+$ bash -c shasum\ -a\ 256\ state/sample.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json\;\ cmp\ state/sample.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json\ \&\&\ echo\ cmp-identical\;\ test\ \"\$\(shasum\ -a\ 256\ state/sample.json\ \|\ cut\ -d\"\ \"\ -f1\)\"\ =\ 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7\ \&\&\ echo\ \"equals\ 73aa7876...\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T21:57:35Z
+# ----
+73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7  state/sample.json
+73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-05/wider/state/sample.json
+cmp-identical
+equals 73aa7876...
+# ----
+# end 2026-10-26T21:57:36Z
+# exit 0

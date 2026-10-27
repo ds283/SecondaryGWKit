@@ -1,0 +1,69 @@
+{
+ "evidence": {
+  "tree": "t5",
+  "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622",
+  "expected_sha": "9f66622d5ced82de9a6ec0c20baa9a2e715c6d27",
+  "head": "9f66622d5ced82de9a6ec0c20baa9a2e715c6d27",
+  "status_short": "",
+  "files": {
+   "ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/__init__.py",
+   "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/QuadSource.py",
+   "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/QuadSourceIntegral.py",
+   "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/GkSourcePolicyData.py",
+   "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/TkSourceFunctions.py",
+   "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/StoreFixtures/__init__.py",
+   "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/main.py",
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/GkWKBIntegration.py",
+   "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/TkWKBIntegration.py",
+   "ComputeTargets.GkSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/ComputeTargets/GkSource.py",
+   "Quadrature.integrators.WKB_phase_function": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/Quadrature/integrators/WKB_phase_function.py",
+   "WKB_phase_function (the producers' remote's function)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/Quadrature/integrators/WKB_phase_function.py"
+  },
+  "all_in_tree": true,
+  "in_tree": {
+   "ComputeTargets": true,
+   "ComputeTargets.primitive_phase": true,
+   "ComputeTargets.QuadSource": true,
+   "ComputeTargets.QuadSourceIntegral": true,
+   "ComputeTargets.GkSourcePolicyData": true,
+   "ComputeTargets.TkSourceFunctions": true,
+   "StoreFixtures": true,
+   "main.py": true,
+   "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true,
+   "ComputeTargets.GkWKBIntegration": true,
+   "ComputeTargets.TkWKBIntegration": true,
+   "ComputeTargets.GkSource": true,
+   "Quadrature.integrators.WKB_phase_function": true,
+   "WKB_phase_function (the producers' remote's function)": true
+  },
+  "PrimitivePhase_has_exact_remainder": true,
+  "build_phase_source_mentions_exact_remainder": true,
+  "TkSourceFunctions_exact_remainder_default": true,
+  "producers_store_reduce_exactly": {
+   "GkWKBIntegration": false,
+   "TkWKBIntegration": false
+  },
+  "GkWKBValue_has_theta_residual": false,
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "dont_write_bytecode": true,
+  "OMP_NUM_THREADS": "1",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider",
+  "pid": 18030,
+  "host": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "scripts_sha256": {
+   "worker.py": "31e4399bf33b70e0eaa30b2e1c18d7a84b73a62d9cee1db0257bd15d5a5b13d5",
+   "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b",
+   "harness.py": "b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71",
+   "rebuild.py": "d3c2b757c1f64c95db6c5644ce169bcae7ee5cc7fbf0ec0c83640be8df6198b7",
+   "prov.py": "9a8beb6dec9cad7ce651d8be2a4c80c3875e68419dc3c16d179d4e86320e2838",
+   "run_wider.py": "962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45",
+   "launch.py": "c78bb5281a93f15e77b5d3cd597c26d368dbda743cd39cefb34822f8a341f2f3",
+   "rerun.py": "c8412bec306f863ae29e596aa2f7bf2c3714c3a90b6122bfbc6584af5f898b84",
+   "phase_probe06.py": "7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22"
+  }
+ }
+}

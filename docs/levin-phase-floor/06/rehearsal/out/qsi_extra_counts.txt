@@ -1,0 +1,26 @@
+# qsi_extra_counts.py sha256 0d1c564c578488fea24f718b2da2f9fa6d8a4cb0fa2c54339203fd725560297e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/qsi_rows.csv sha256 88c8045ff718e523b4ceeb092cf23832817e2a765e8384932408649f7135da39
+rows with total_abserr inf (A or B): 26; A inf 26, B inf 26; of them total differs: 9
+rows with |dtotal|/abserr_A > 1 or /abserr_B > 1:
+  k=100000 q=316228 r=316228 z_resp=250: total A -3.3961904798e-19 B -3.3962843526e-19, rel 2.764e-05, abserr A 1.938e-26 B 1.692e-26, /abserr_A 4.844e+02 /abserr_B 5.546e+02, depth 14->6, regions 30->15, converged 0->0, phase_limited 0->0
+  k=316228 q=316228 r=316228 z_resp=250: total A 5.9185854655e-20 B 5.9278660352e-20, rel 1.568e-03, abserr A 5.105e-27 B 7.270e-27, /abserr_A 1.818e+04 /abserr_B 1.277e+04, depth 12->6, regions 31->14, converged 0->0, phase_limited 0->0
+  k=1e+06 q=1e+06 r=1e+06 z_resp=755.687: total A 2.5200049842e-21 B 2.5200042492e-21, rel 2.917e-07, abserr A 5.860e-28 B 8.133e-28, /abserr_A 1.254e+00 /abserr_B 9.036e-01, depth 7->7, regions 15->14, converged 0->0, phase_limited 0->1
+  k=1e+06 q=1e+06 r=1e+06 z_resp=996.42: total A -7.4540525599e-21 B -7.4540519686e-21, rel 7.932e-08, abserr A 5.782e-28 B 6.670e-28, /abserr_A 1.023e+00 /abserr_B 8.864e-01, depth 6->6, regions 19->14, converged 0->0, phase_limited 1->0
+rows whose max depth changed:
+  k=100000 q=316228 r=316228 z_resp=250: depth 14->6, regions 30->15, /abserr_A 4.844e+02, phase_limited 0->0
+  k=100000 q=1e+06 r=1e+06 z_resp=1313.84: depth 4->3, regions 16->10, /abserr_A 8.928e-02, phase_limited 1->1
+  k=316228 q=316228 r=316228 z_resp=250: depth 12->6, regions 31->14, /abserr_A 1.818e+04, phase_limited 0->0
+rows whose phase_limited changed: 13
+  k=100000 q=1e+06 r=1e+06 z_resp=250: 1->0, depth 7->7, /abserr_A 1.924e-01
+  k=100000 q=1e+06 r=1e+06 z_resp=755.687: 0->1, depth 6->6, /abserr_A 8.793e-02
+  k=316228 q=1e+06 r=1e+06 z_resp=250: 0->1, depth 6->6, /abserr_A 3.627e-01
+  k=316228 q=1e+06 r=1e+06 z_resp=434.651: 1->0, depth 8->8, /abserr_A 2.709e-01
+  k=316228 q=1e+06 r=1e+06 z_resp=573.115: 0->1, depth 7->7, /abserr_A 2.450e-01
+  k=316228 q=1e+06 r=1e+06 z_resp=36286.8: 1->0, depth 6->6, /abserr_A 1.421e-02
+  k=1e+06 q=1e+06 r=1e+06 z_resp=250: 1->0, depth 7->7, /abserr_A 2.534e-01
+  k=1e+06 q=1e+06 r=1e+06 z_resp=434.651: 1->0, depth 7->7, /abserr_A 3.687e-01
+  k=1e+06 q=1e+06 r=1e+06 z_resp=573.115: 1->0, depth 6->6, /abserr_A 2.510e-02
+  k=1e+06 q=1e+06 r=1e+06 z_resp=755.687: 0->1, depth 7->7, /abserr_A 1.254e+00
+  k=1e+06 q=1e+06 r=1e+06 z_resp=996.42: 1->0, depth 6->6, /abserr_A 1.023e+00
+  k=1e+06 q=1e+06 r=1e+06 z_resp=2284.25: 1->0, depth 8->8, /abserr_A 1.379e-01
+  k=1e+06 q=1e+06 r=1e+06 z_resp=3971.41: 1->0, depth 6->6, /abserr_A 1.433e-01

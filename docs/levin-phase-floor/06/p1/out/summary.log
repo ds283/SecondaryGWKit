@@ -1,0 +1,30 @@
+# command: PYTHONPATH= OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/summary.py 
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:22:55Z
+# script sha256 af48204f85c8f9a84e979e440a5a33220f3334777ec1b06e950a5ceba25b0658  analyse.py
+# script sha256 c7a79aaf516f157f26373e455e553499c189c9b8eb828cb1be497c7214d2fc03  compare.py
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 fbb85121c4e66174e89fbc1502f00078f0e8c02edf079327f842109b4bd7ae75  reference.py
+# script sha256 c2862dfc7ead8054dc22a8e1b5634d518fa7cd2515f3e91bd5de815dd9fe7099  rootdiag.py
+# script sha256 04a2fd9cf22b5d5131780e5b6add296d341b6fa7bf13224d933ed3993c26344d  samples.py
+# script sha256 6b03752fdaaacceec6b6c34fd95b965d26ccec787e7ccaf916c5ecc37c982177  summary.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+== row1: scale 250.99999999999994
+   r13: stored G+q+r -1.3579759013e-20 (abserr 1.71e-28); reference x scale -1.3579758964e-20 +- 1.1e-32 (conservative 3.4e-30); stored - ref -4.8273e-29 = 0.283 x abserr
+       total stored 5.9185854655e-20, corrected 5.9185854703e-20, stored - corrected -4.8273e-29 = 0.00946 x total_abserr
+   r14: stored G+q+r -1.3486952774e-20 (abserr 2.57e-27); reference x scale -1.3579759064e-20 +- 1.1e-32 (conservative 3.4e-30); stored - ref 9.2806e-23 = 3.61e+04 x abserr
+       total stored 5.9278660352e-20, corrected 5.9185854062e-20, stored - corrected 9.2806e-23 = 1.28e+04 x total_abserr
+   all-low-groups corrected totals: r13 5.9185854809e-20, r14 5.9185854251e-20
+   reference r14 - r13 -3.968e-31 (unscaled); corrected totals r14 - r13 -6.414e-28
+== row2: scale 250.99999999999994
+   r13: stored G+q+r 7.8664299264e-21 (abserr 3.23e-30); reference x scale 7.8664300997e-21 +- 1.9e-32 (conservative 1.5e-29); stored - ref -1.7321e-28 = 53.6 x abserr
+       total stored -3.3961904798e-19, corrected -3.3961904781e-19, stored - corrected -1.7321e-28 = 0.00894 x total_abserr
+   r14: stored G+q+r 7.8570445902e-21 (abserr 5.50e-28); reference x scale 7.8664300993e-21 +- 1.9e-32 (conservative 1.3e-29); stored - ref -9.3855e-24 = 1.71e+04 x abserr
+       total stored -3.3962843526e-19, corrected -3.3961904975e-19, stored - corrected -9.3855e-24 = 555 x total_abserr
+   all-low-groups corrected totals: r13 -3.3961904654e-19, r14 -3.3961904983e-19
+   reference r14 - r13 -1.257e-33 (unscaled); corrected totals r14 - r13 -1.942e-27
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/summary.json sha256 a32267574ac827d84417fe9e146ebb8dea32395a658b5bd7924f532857596a4c
+# exit 0 at 2026-10-27T00:22:55Z

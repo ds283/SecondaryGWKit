@@ -1,0 +1,30 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/make_copy.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:19:36Z
+# ----
+copied handover-A3-v2-lambdacdm.sqlite: source sha256 1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522, copy sha256 1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522, equal True
+copied handover-A3-v2-lambdacdm-shard0000.sqlite: source sha256 b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5, copy sha256 b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5, equal True
+copied handover-A3-v2-lambdacdm-shard0001.sqlite: source sha256 c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e, copy sha256 c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e, equal True
+copied handover-A3-v2-lambdacdm-shard0002.sqlite: source sha256 175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6, copy sha256 175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6, equal True
+copied handover-A3-v2-lambdacdm-shard0003.sqlite: source sha256 76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1, copy sha256 76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1, equal True
+handover-A3-v2-lambdacdm-shard0000.sqlite: ALTER TABLE GkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0000.sqlite: ALTER TABLE TkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0000.sqlite: ALTER TABLE GkSourceValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0001.sqlite: ALTER TABLE GkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0001.sqlite: ALTER TABLE TkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0001.sqlite: ALTER TABLE GkSourceValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0002.sqlite: ALTER TABLE GkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0002.sqlite: ALTER TABLE TkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0002.sqlite: ALTER TABLE GkSourceValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0003.sqlite: ALTER TABLE GkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0003.sqlite: ALTER TABLE TkWKBValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0003.sqlite: ALTER TABLE GkSourceValue ADD COLUMN theta_residual FLOAT
+handover-A3-v2-lambdacdm-shard0000.sqlite  106340352  sha256 bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17
+handover-A3-v2-lambdacdm-shard0001.sqlite  107569152  sha256 aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05
+handover-A3-v2-lambdacdm-shard0002.sqlite  107429888  sha256 5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66
+handover-A3-v2-lambdacdm-shard0003.sqlite  105791488  sha256 ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de
+handover-A3-v2-lambdacdm.sqlite  36864  sha256 1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522
+# ----
+# end 2026-10-26T22:19:37Z
+# exit 0

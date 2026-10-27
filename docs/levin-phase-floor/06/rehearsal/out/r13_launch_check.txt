@@ -1,0 +1,65 @@
+=== R13 one check, 2026-10-26T21:56:03Z
+## lock 2 (separate command, before this check): set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 97740 >> out/lock.log
+$ ./venv/bin/python -m runregistrykit list | head -2
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06-r13-parent-20261026T215550       running           -      14s  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f66622 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622, the parent of the code commit dc9d28c; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R13/R14 value comparison  · CALCULATE QUADRATIC SOURCE TERMS
+run dir: var/runs/levin-phase-floor-06-r13-parent-20261026T215550
+$ status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-26T21:56:03+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 97740,
+  "stage": "CALCULATE QUADRATIC SOURCE TERMS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+$ head -25 launch log
+** quadsource_atol_sweep --build: registered as levin-phase-floor-06-r13-parent-20261026T215550
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-r13-parent-20261026T215550/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite', '--job-name', 'levin-phase-floor-06', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-10-26 21:55:57,075	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=97834)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=97834)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=97834)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=97834)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=97834)[0m |  present-day energy density = 8.6e-24 g/m^3
+[36m(Datastore pid=97834)[0m |  matter-radiation equality at z = 3403
+[36m(Datastore pid=97834)[0m |  matter-Lambda equality at z = 0.3034
+[36m(Datastore pid=97833)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=97833)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+
+$ grep -c Traceback launch log
+0
+$ kill -0 97740; kill -0 97736
+97740 alive
+97736 alive
+$ lsof -a -d cwd -p 97740
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  97740 ds283  cwd    DIR   1,13     1120 1227296213 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622
+$ manifest git_head, cwd, script
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622",
+  "git_dirty": false,
+  "git_head": "9f66622d5ced82de9a6ec0c20baa9a2e715c6d27",
+  "results": "var/datastores/levin-phase-floor-06-r13.sqlite",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/RunDrivers/quadsource_atol_sweep.py",
+  "script_sha256": "5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b",
+$ lsof -a -d cwd -p 97834   (the Datastore actor named in the launch log)
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  97834 ds283  cwd    DIR   1,13     1120 1227296213 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622

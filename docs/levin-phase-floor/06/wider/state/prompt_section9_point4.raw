@@ -1,0 +1,5 @@
+4. **§6, S1.** A numerically seeded `GkWKBIntegration` takes its $\Delta\theta$ from the
+   `GkNumericIntegration` at `rtol` $10^{-8}$, a separate integration for each source redshift. Its
+   error varies from sample to sample and is far above $10^{-6}F$, and storing $r$ exactly does not
+   remove it. S1 is scored on pure-WKB windows only; the others are reported beside the noise of
+   $\Delta\theta$ alone. S2 is unchanged.

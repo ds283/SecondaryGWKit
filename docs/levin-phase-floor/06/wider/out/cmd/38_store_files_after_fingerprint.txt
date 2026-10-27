@@ -1,0 +1,12 @@
+$ bash -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/hash_store.py\ after_fingerprint\ \>\ state/store_files_after_fingerprint.txt\;\ diff\ \<\(grep\ -v\ \"\^\[#\$\]\"\ state/store_files_before.txt\)\ \<\(grep\ -v\ \"\^#\"\ state/store_files_after_fingerprint.txt\)\ \&\&\ echo\ \"A3\ v2\ files:\ identical\ to\ before\"\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/hash_store.py\ copy_after_fingerprint\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy\ \>\ state/copy_files_after_fingerprint.txt\;\ diff\ \<\(grep\ -v\ \"\^#\"\ state/copy_files_certified.txt\)\ \<\(grep\ -v\ \"\^#\"\ state/copy_files_after_fingerprint.txt\)\ \&\&\ echo\ \"copy:\ identical\ to\ certified\"\;\ grep\ -h\ journal\ state/store_files_after_fingerprint.txt\ state/copy_files_after_fingerprint.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:25:02Z
+# ----
+A3 v2 files: identical to before
+copy: identical to certified
+# journal/-wal/-shm files beside the store: none
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-26T23:25:03Z
+# exit 0

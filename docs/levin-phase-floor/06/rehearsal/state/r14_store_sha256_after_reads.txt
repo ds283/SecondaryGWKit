@@ -1,0 +1,12 @@
+=== 2026-10-26T22:14:43Z R14 store after the readers
+1c0f3cf63cc95208c53e558d152255f34fa6b17c9b82f9270a2b43f2f126f7da  var/datastores/levin-phase-floor-06-r14-shard0000.sqlite
+866511b7ef81f27da9bcf5306bd9a6efa9c367475f3c7959a23a78d07c943fcd  var/datastores/levin-phase-floor-06-r14-shard0001.sqlite
+dfaad9499d3d7f7364532cd5cb8091b1f32a51d1fed0a1a43f10213fdaff656b  var/datastores/levin-phase-floor-06-r14-shard0002.sqlite
+410bf34b370512c5426428f1c6f3c6ea6008e3bd9b0d371f60e08bbce9d12a57  var/datastores/levin-phase-floor-06-r14-shard0003.sqlite
+fff6cf7fac9106897efba04547710ec99ce051f4f2457108dc8cdb6fd9689acd  var/datastores/levin-phase-floor-06-r14.sqlite
+var/datastores/levin-phase-floor-06-r14-shard0000.sqlite 25038848 1793052156
+var/datastores/levin-phase-floor-06-r14-shard0001.sqlite 25255936 1793052156
+var/datastores/levin-phase-floor-06-r14-shard0002.sqlite 1077248 1793051995
+var/datastores/levin-phase-floor-06-r14-shard0003.sqlite 24485888 1793052155
+var/datastores/levin-phase-floor-06-r14.sqlite 36864 1793051995
+no -journal/-wal/-shm

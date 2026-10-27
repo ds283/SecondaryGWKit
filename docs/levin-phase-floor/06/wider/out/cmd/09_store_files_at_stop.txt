@@ -1,0 +1,12 @@
+$ bash -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/hash_store.py\ at_stop\ \>\ state/store_files_at_stop.txt\;\ diff\ \<\(grep\ -v\ \"\^#\"\ state/store_files_before.txt\)\ \<\(grep\ -v\ \"\^#\"\ state/store_files_at_stop.txt\)\ \&\&\ echo\ \"store\ files:\ identical\ to\ before\"\;\ grep\ journal\ state/store_files_at_stop.txt\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622\ status\ --short\ --ignored\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ status\ --short\ --ignored\;\ echo\ \"\(worktree\ statuses\ end\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:11:42Z
+# ----
+1d0
+< $ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py before
+# journal/-wal/-shm files beside the store: none
+(worktree statuses end)
+# ----
+# end 2026-10-26T22:11:42Z
+# exit 0

@@ -1,0 +1,79 @@
+# examine_outliers.py sha256 1f1a5dd32ff1591647ebc0a3dde47e0f3183d75e6461024b837835d1e99f6d80
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/phase_classes_rows.csv sha256 89b5ddb62c4b799596fa0409f1a48116ce1564025c79444aa438c78be447cd5e
+
+(1) rows with |Δ mod|/(eps|theta|) > 4, |theta| from the producer's own cycle count
+  GkWKBValue k=1e+06 div 1 |theta| 1.4717e-02 |Δmod| 8.882e-16 ratio 271.79; GkSource |theta| same k and remainders: 2.5118e+01 (ratio 0.159)
+  GkWKBValue k=100000 div 0 |theta| 8.3930e-03 |Δmod| 1.995e-16 ratio 107.05; GkSource |theta| same k and remainders: 1.2575e+01 (ratio 0.071)
+  GkWKBValue k=316228 div 1 |theta| 4.2216e-02 |Δmod| 8.882e-16 ratio 94.75; GkSource |theta| same k and remainders: 2.5091e+01 (ratio 0.159)
+  GkWKBValue k=1e+06 div 0 |theta| 6.4844e-03 |Δmod| 1.119e-16 ratio 77.71; GkSource |theta| same k and remainders: 1.2573e+01 (ratio 0.040)
+  GkWKBValue k=1e+06 div 0 |theta| 6.9228e-04 |Δmod| 9.433e-18 ratio 61.36; GkSource |theta| same k and remainders: 2.5133e+01 (ratio 0.002)
+  GkWKBValue k=100000 div 1 |theta| 7.0563e-02 |Δmod| 8.882e-16 ratio 56.69; GkSource |theta| same k and remainders: 2.5062e+01 (ratio 0.160)
+  GkWKBValue k=100000 div 0 |theta| 2.1923e-02 |Δmod| 2.116e-16 ratio 43.48; GkSource |theta| same k and remainders: 2.5155e+01 (ratio 0.038)
+  GkWKBValue k=100000 div 1 |theta| 1.0284e-01 |Δmod| 8.882e-16 ratio 38.90; GkSource |theta| same k and remainders: 2.5030e+01 (ratio 0.160)
+  GkWKBValue k=316228 div 1 |theta| 1.2664e-01 |Δmod| 8.882e-16 ratio 31.59; GkSource |theta| same k and remainders: 1.8723e+01 (ratio 0.214)
+  GkWKBValue k=100000 div 1 |theta| 1.3587e-01 |Δmod| 8.882e-16 ratio 29.44; GkSource |theta| same k and remainders: 2.4997e+01 (ratio 0.160)
+  GkWKBValue k=1e+06 div 1 |theta| 1.5165e-01 |Δmod| 8.882e-16 ratio 26.38; GkSource |theta| same k and remainders: 2.4981e+01 (ratio 0.160)
+  GkWKBValue k=1e+06 div 0 |theta| 4.4846e-02 |Δmod| 2.429e-16 ratio 24.39; GkSource |theta| same k and remainders: 2.5178e+01 (ratio 0.043)
+  GkWKBValue k=100000 div 1 |theta| 1.9986e-01 |Δmod| 8.882e-16 ratio 20.01; GkSource |theta| same k and remainders: 1.8650e+01 (ratio 0.214)
+  GkWKBValue k=1e+06 div 1 |theta| 2.7226e-01 |Δmod| 8.882e-16 ratio 14.69; GkSource |theta| same k and remainders: 2.4860e+01 (ratio 0.161)
+  GkWKBValue k=1e+06 div 1 |theta| 2.9403e-01 |Δmod| 8.882e-16 ratio 13.60; GkSource |theta| same k and remainders: 2.4839e+01 (ratio 0.161)
+  GkWKBValue k=1e+06 div 0 |theta| 7.2631e-02 |Δmod| 2.082e-16 ratio 12.91; GkSource |theta| same k and remainders: 2.5205e+01 (ratio 0.037)
+  GkWKBValue k=100000 div 1 |theta| 3.1293e-01 |Δmod| 8.882e-16 ratio 12.78; GkSource |theta| same k and remainders: 2.4820e+01 (ratio 0.161)
+  GkWKBValue k=1e+06 div 1 |theta| 3.1728e-01 |Δmod| 8.882e-16 ratio 12.61; GkSource |theta| same k and remainders: 1.8532e+01 (ratio 0.216)
+  GkWKBValue k=1e+06 div 0 |theta| 9.9164e-02 |Δmod| 2.498e-16 ratio 11.34; GkSource |theta| same k and remainders: 2.5232e+01 (ratio 0.045)
+  GkWKBValue k=1e+06 div 1 |theta| 3.6244e-01 |Δmod| 8.882e-16 ratio 11.04; GkSource |theta| same k and remainders: 2.4770e+01 (ratio 0.161)
+  GkWKBValue k=100000 div 0 |theta| 5.1358e-02 |Δmod| 1.249e-16 ratio 10.95; GkSource |theta| same k and remainders: 2.5184e+01 (ratio 0.022)
+  GkWKBValue k=100000 div 1 |theta| 3.8163e-01 |Δmod| 8.882e-16 ratio 10.48; GkSource |theta| same k and remainders: 1.8468e+01 (ratio 0.217)
+  GkWKBValue k=100000 div 0 |theta| 8.0122e-02 |Δmod| 1.527e-16 ratio 8.58; GkSource |theta| same k and remainders: 2.5213e+01 (ratio 0.027)
+  GkWKBValue k=316228 div 0 |theta| 1.6491e-02 |Δmod| 3.123e-17 ratio 8.53; GkSource |theta| same k and remainders: 2.5149e+01 (ratio 0.006)
+  TkWKBValue k=100000 div 1 |theta| 4.7572e-01 |Δmod| 8.882e-16 ratio 8.41; GkSource |theta| same k and remainders: none
+  GkWKBValue k=100000 div 0 |theta| 1.4920e-01 |Δmod| 2.776e-16 ratio 8.38; GkSource |theta| same k and remainders: 2.5282e+01 (ratio 0.049)
+  GkWKBValue k=100000 div 1 |theta| 5.1162e-01 |Δmod| 8.882e-16 ratio 7.82; GkSource |theta| same k and remainders: 2.4621e+01 (ratio 0.162)
+  GkWKBValue k=1e+06 div 1 |theta| 5.5685e-01 |Δmod| 8.882e-16 ratio 7.18; GkSource |theta| same k and remainders: 5.5685e-01 (ratio 7.183)
+  GkWKBValue k=1e+06 div 0 |theta| 3.0466e-02 |Δmod| 4.857e-17 ratio 7.18; GkSource |theta| same k and remainders: 2.5163e+01 (ratio 0.009)
+  GkWKBValue k=1e+06 div 1 |theta| 5.6978e-01 |Δmod| 8.882e-16 ratio 7.02; GkSource |theta| same k and remainders: 2.4563e+01 (ratio 0.163)
+  TkWKBValue k=316228 div 0 |theta| 2.9452e-01 |Δmod| 4.441e-16 ratio 6.79; GkSource |theta| same k and remainders: none
+  GkWKBValue k=100000 div 1 |theta| 6.4593e-01 |Δmod| 8.882e-16 ratio 6.19; GkSource |theta| same k and remainders: 1.1920e+01 (ratio 0.336)
+  GkWKBValue k=316228 div 0 |theta| 7.3861e-02 |Δmod| 9.714e-17 ratio 5.92; GkSource |theta| same k and remainders: 2.5207e+01 (ratio 0.017)
+  GkWKBValue k=1e+06 div 0 |theta| 5.8899e-02 |Δmod| 7.633e-17 ratio 5.84; GkSource |theta| same k and remainders: 2.5192e+01 (ratio 0.014)
+  GkWKBValue k=1e+06 div 0 |theta| 4.8802e-01 |Δmod| 6.106e-16 ratio 5.64; GkSource |theta| same k and remainders: 2.5621e+01 (ratio 0.107)
+  GkWKBValue k=1e+06 div 1 |theta| 7.2017e-01 |Δmod| 8.882e-16 ratio 5.55; GkSource |theta| same k and remainders: 2.4413e+01 (ratio 0.164)
+  GkWKBValue k=1e+06 div 0 |theta| 4.5286e-01 |Δmod| 5.551e-16 ratio 5.52; GkSource |theta| same k and remainders: 2.5586e+01 (ratio 0.098)
+  GkWKBValue k=100000 div 1 |theta| 7.3457e-01 |Δmod| 8.882e-16 ratio 5.45; GkSource |theta| same k and remainders: 2.4398e+01 (ratio 0.164)
+  GkWKBValue k=316228 div 1 |theta| 7.5815e-01 |Δmod| 8.882e-16 ratio 5.28; GkSource |theta| same k and remainders: 5.5250e+00 (ratio 0.724)
+  GkWKBValue k=1e+06 div 0 |theta| 1.4249e-01 |Δmod| 1.665e-16 ratio 5.26; GkSource |theta| same k and remainders: 6.4257e+00 (ratio 0.117)
+  GkWKBValue k=1e+06 div 0 |theta| 2.1494e-01 |Δmod| 2.498e-16 ratio 5.23; GkSource |theta| same k and remainders: 2.5348e+01 (ratio 0.044)
+  GkWKBValue k=1e+06 div 1 |theta| 7.8535e-01 |Δmod| 8.882e-16 ratio 5.09; GkSource |theta| same k and remainders: 2.4347e+01 (ratio 0.164)
+  GkWKBValue k=1e+06 div 0 |theta| 8.6051e-02 |Δmod| 9.714e-17 ratio 5.08; GkSource |theta| same k and remainders: 2.5219e+01 (ratio 0.017)
+  GkWKBValue k=1e+06 div 0 |theta| 4.4301e-01 |Δmod| 4.996e-16 ratio 5.08; GkSource |theta| same k and remainders: 2.5576e+01 (ratio 0.088)
+  GkWKBValue k=1e+06 div 0 |theta| 1.4870e-01 |Δmod| 1.665e-16 ratio 5.04; GkSource |theta| same k and remainders: 2.5281e+01 (ratio 0.030)
+  GkWKBValue k=100000 div 0 |theta| 3.1123e-01 |Δmod| 3.331e-16 ratio 4.82; GkSource |theta| same k and remainders: 2.5444e+01 (ratio 0.059)
+  GkWKBValue k=100000 div 0 |theta| 4.8674e-01 |Δmod| 4.996e-16 ratio 4.62; GkSource |theta| same k and remainders: 1.9336e+01 (ratio 0.116)
+  GkWKBValue k=316228 div 0 |theta| 4.4048e-01 |Δmod| 4.441e-16 ratio 4.54; GkSource |theta| same k and remainders: 2.5573e+01 (ratio 0.078)
+  GkWKBValue k=1e+06 div 1 |theta| 8.8893e-01 |Δmod| 8.882e-16 ratio 4.50; GkSource |theta| same k and remainders: 2.4244e+01 (ratio 0.165)
+  GkWKBValue k=316228 div 1 |theta| 8.9455e-01 |Δmod| 8.882e-16 ratio 4.47; GkSource |theta| same k and remainders: 5.3886e+00 (ratio 0.742)
+  GkWKBValue k=1e+06 div 0 |theta| 5.5947e-01 |Δmod| 5.551e-16 ratio 4.47; GkSource |theta| same k and remainders: 2.5692e+01 (ratio 0.097)
+  GkWKBValue k=1e+06 div 0 |theta| 1.7181e-01 |Δmod| 1.665e-16 ratio 4.37; GkSource |theta| same k and remainders: 2.5305e+01 (ratio 0.030)
+  GkWKBValue k=1e+06 div 0 |theta| 8.7534e-02 |Δmod| 8.327e-17 ratio 4.28; GkSource |theta| same k and remainders: 8.7534e-02 (ratio 4.284)
+  GkWKBValue k=100000 div 1 |theta| 9.8458e-01 |Δmod| 8.882e-16 ratio 4.06; GkSource |theta| same k and remainders: 1.1582e+01 (ratio 0.345)
+  total: 54
+
+(2) rows with |ΔG| > A |Δ theta_mod|
+  GkWKBValue: 615 rows; of them |ΔG| <= A|Δθ| + 4 eps A: 615; |Δθ| <= 1e-14 rad: 581; max |Δθ| among them 1.688e-12
+    ratio 2.729: |Δθ| 1.110e-16, |ΔG| 6.104e-05, A 2.015e+11, eps*A 4.474e-05, |G| 1.493e+11, (|ΔG| - A|Δθ|)/(eps A) 0.86
+    ratio 2.261: |Δθ| 5.551e-17, |ΔG| 7.629e-06, A 6.078e+10, eps*A 1.350e-05, |G| 2.593e+10, (|ΔG| - A|Δθ|)/(eps A) 0.32
+    ratio 1.783: |Δθ| 5.551e-17, |ΔG| 4.768e-07, A 4.818e+09, eps*A 1.070e-06, |G| 1.670e+09, (|ΔG| - A|Δθ|)/(eps A) 0.20
+    ratio 1.747: |Δθ| 2.776e-17, |ΔG| 5.588e-09, A 1.152e+08, eps*A 2.558e-08, |G| 1.222e+07, (|ΔG| - A|Δθ|)/(eps A) 0.09
+    ratio 1.730: |Δθ| 5.551e-17, |ΔG| 4.883e-04, A 5.084e+12, eps*A 1.129e-03, |G| 1.790e+12, (|ΔG| - A|Δθ|)/(eps A) 0.18
+    ratio 1.693: |Δθ| 5.551e-17, |ΔG| 1.192e-07, A 1.268e+09, eps*A 2.816e-07, |G| 4.873e+08, (|ΔG| - A|Δθ|)/(eps A) 0.17
+    ratio 1.690: |Δθ| 1.110e-16, |ΔG| 1.192e-07, A 6.353e+08, eps*A 1.411e-07, |G| 4.176e+08, (|ΔG| - A|Δθ|)/(eps A) 0.35
+    ratio 1.606: |Δθ| 1.110e-16, |ΔG| 1.000e+00, A 5.607e+15, eps*A 1.245e+00, |G| 3.405e+15, (|ΔG| - A|Δθ|)/(eps A) 0.30
+  TkWKBValue: 14 rows; of them |ΔG| <= A|Δθ| + 4 eps A: 14; |Δθ| <= 1e-14 rad: 12; max |Δθ| among them 1.865e-14
+    ratio 1.080: |Δθ| 4.441e-16, |ΔG| 1.952e-18, A 4.068e-03, eps*A 9.033e-19, |G| 1.946e-03, (|ΔG| - A|Δθ|)/(eps A) 0.16
+    ratio 1.044: |Δθ| 8.882e-16, |ΔG| 2.168e-18, A 2.339e-03, eps*A 5.194e-19, |G| 6.487e-04, (|ΔG| - A|Δθ|)/(eps A) 0.17
+    ratio 1.017: |Δθ| 1.069e-15, |ΔG| 5.855e-18, A 5.386e-03, eps*A 1.196e-18, |G| 4.962e-04, (|ΔG| - A|Δθ|)/(eps A) 0.08
+    ratio 1.009: |Δθ| 8.882e-16, |ΔG| 1.518e-18, A 1.694e-03, eps*A 3.761e-19, |G| 4.972e-04, (|ΔG| - A|Δθ|)/(eps A) 0.04
+    ratio 1.007: |Δθ| 8.882e-16, |ΔG| 3.036e-18, A 3.396e-03, eps*A 7.540e-19, |G| 2.719e-04, (|ΔG| - A|Δθ|)/(eps A) 0.03
+    ratio 1.005: |Δθ| 5.829e-16, |ΔG| 3.144e-18, A 5.365e-03, eps*A 1.191e-18, |G| 7.366e-04, (|ΔG| - A|Δθ|)/(eps A) 0.01
+    ratio 1.000: |Δθ| 4.441e-16, |ΔG| 8.657e-19, A 1.949e-03, eps*A 4.327e-19, |G| 7.771e-06, (|ΔG| - A|Δθ|)/(eps A) 0.00
+    ratio 1.000: |Δθ| 5.773e-15, |ΔG| 5.130e-18, A 8.884e-04, eps*A 1.973e-19, |G| 1.202e-05, (|ΔG| - A|Δθ|)/(eps A) 0.00

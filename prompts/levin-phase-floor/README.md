@@ -156,9 +156,9 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | **G1** | gate | the user reads 01–04 and decides which hypothesis stands and which remedy layers follow (§6.3 Q1–Q3) | — | — | answered 2026-10-26 (the board's Decisions) |
 | 05 | [`05-reanchor-g-phase.md`](05-reanchor-g-phase.md) | layer 1(a): $G$'s remainder exact per table node, against $2\pi$; adds `tools/store_value_diff.py`; R9/R10 compared with it; a wider re-measurement on A3 v2 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
 | 05a | [`05a-reanchor-t-phase.md`](05a-reanchor-t-phase.md) | layer 1(a) and the $2\pi$ modulus for $T$, as 05 did them for $G$: `TkSourceFunctions` turns on the node-anchored remainder; R11/R12 compared with `tools/store_value_diff.py`; 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26, on the user's decision the same day |
-| 06 | [`06-producers-store-the-residual.md`](06-producers-store-the-residual.md) | the producers' stored phase (G1 Q3), for $G$ and $T$: each value stores its small residual $\Delta\theta - \rho.\delta$ exactly, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from the residual; R13/R14 compared with `tools/store_value_diff.py`; 05's 39 rows re-run with the producers re-run in-process, with 04's $\varphi$ metric on R1–R7 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
+| 06 | [`06-producers-store-the-residual.md`](06-producers-store-the-residual.md) | the producers' stored phase (G1 Q3), for $G$ and $T$: each value stores its small residual $\Delta\theta - \rho.\delta$ exactly, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from the residual; R13/R14 compared with `tools/store_value_diff.py`; 05's 39 rows re-run with the producers re-run in-process, with 04's $\varphi$ metric on R1–R7 | laptop; Mac Studio for §5–§6 | Opus | landed 2026-10-27: S1 and S3 hold, S2, S4 and S5 fail; opened `[06-levin-accepts-a-region-across-a-stationary-point]` for G2 |
 | 07+ | remedy | layer 2 as G2 decides | — | — | ⬜ not written |
-| **G2** | gate | the user decides layer 3 (§6.3 Q4) and the `rtol` question (Q5) | — | — | ⬜ |
+| **G2** | gate | the user decides layer 3 (§6.3 Q4), now with the stationary-point guard, and the `rtol` question (Q5) | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
 anything still to be measured: 01 reads what is stored, and 02 runs on fixtures. 03's rows and the
@@ -332,7 +332,12 @@ remain for G2.*
   - `DEFAULT_LEVIN_MAX_DEPTH`, which was never chosen;
   - the per-region acceptance test and its dead length-share `local_atol` branch;
   - what `total_converged` means, and whether a consumer gate reads `total_abserr/|total|`
-    (findings §2.5).
+    (findings §2.5);
+  - **the stationary-point guard** (added 2026-10-27, on the user's decision after 06):
+    `[06-levin-accepts-a-region-across-a-stationary-point]`. The acceptance test is blind to an
+    interior stationary point of a region's phase. It is fixed here, generically: the points are
+    located in advance from the closed-form $\theta'$ and split out, and the driver refuses a
+    region whose $\theta'$ changes sign or nearly vanishes.
 - **Q5 (G2): whether `rtol = 1e-7` is right for accuracy.** Added 2026-10-25 at the user's request.
   - `a3-v2-readiness` prompt 01 (D1, D2) moved `DEFAULT_QUADRATURE_RTOL` from `1e-8` to `1e-7` as
     the loosest rung the 2026-09 tolerance sweep found self-converged, partly on cost.

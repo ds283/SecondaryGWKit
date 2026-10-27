@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json,hashlib\ncur=lambda n: hashlib.sha256(open(\'scripts/\'+n,\'rb\').read()).hexdigest()\nfor t in (\'t5\',\'s\'):\n    recs=[json.loads(l) for l in open(f\'state/U0/{t}/ledger.jsonl\')]\n    u=[r for r in recs if r[\'kind\']==\'unit\'][-1][\'data\'][\'scripts_sha256\']\n    print(t, {n:(h==cur(n)) for n,h in u.items()})\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:36:28Z
+# ----
+t5 {'worker.py': True, 'dispatch.py': True, 'harness.py': True, 'rebuild.py': True, 'prov.py': True, 'run_wider.py': True, 'launch.py': True, 'rerun.py': True, 'phase_probe06.py': True}
+s {'worker.py': True, 'dispatch.py': True, 'harness.py': True, 'rebuild.py': True, 'prov.py': True, 'run_wider.py': True, 'launch.py': True, 'rerun.py': True, 'phase_probe06.py': True}
+# ----
+# end 2026-10-26T22:36:29Z
+# exit 0

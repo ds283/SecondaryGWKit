@@ -1,0 +1,233 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/analyse06.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/analysis.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/probe_windows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:26:50Z
+# ----
+# levin-phase-floor 06 section 6: S1-S5 and the descriptive items
+# written 2026-10-26T23:26:51Z on mps026298.phys.susx.ac.uk
+# script analyse06.py sha256 a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9
+# tree t5: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 HEAD 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27 (status --short: empty)
+# tree s: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c HEAD f5cee4c7a76e755119d923341f204f139b29be7e (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl sha256 134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/sample.json sha256 73aa7876469a59121782de31c46b5fa9224857eec2799d7ee6611ba918d833f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/predictions.md sha256 5b63820713021d813b401894b034729818e9f49c1428779cb85b937fab87f7f6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/handover/a3-v2/findings/depth20_floor.py sha256 c82f72b0c7bda8174e1b01b3989929651f0e2156b7d2e9f02951206935d0e746
+# 109 checkpoint records; script_sha256 ['962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45']
+# trees on the records: [('s', 'f5cee4c7a76e755119d923341f204f139b29be7e', ''), ('t5', '9f66622d5ced82de9a6ec0c20baa9a2e715c6d27', '')]
+# statuses {'done': 109}; over budget []; errors []
+# largest s wall / budget: 0.715 (s-1e-8-R2)
+# '!! WARNING (GkSourcePolicyData' lines counted in all units: 0
+# probe errors: []
+# rows capped under B1's code (05's p at depth 20): 11: ['low-G+r-3', 'low-G-r-2', 'low-G-r-3', 'low-G-1', 'low-G-3', 'R1', 'R3', 'R4', 'R5', 'R6', 'R7']
+
+== S3: on every row (all 39), under s at 1e-7, no group has a region at depth >= 18; an over-budget unit counts as false
+   true on 39 of 39; largest depth 11; on the 11 capped under B1 largest 11
+   false on: []
+== S3: HOLDS
+
+== S4: on every row (all 39), |total_s - total_t5| <= total_abserr_t5, at 1e-7
+   row            role    capped                 total_t5      |s-t5|   abserr_t5      ratio        rel
+   low-G+r-1      d20     False     5.391884212784901e-31   7.173e-34   1.899e-33  3.777e-01  1.330e-03 ok
+   low-G+r-2      d20     False   -1.8037572512398773e-29   6.153e-34         inf  0.000e+00  3.411e-05 ok
+   low-G+r-3      d20     True    -1.9904397629834047e-22   5.361e-29   2.798e-28  1.917e-01  2.694e-07 ok
+   low-G-r-1      d20     False   -1.2319536708148707e-29   3.222e-34         inf  0.000e+00  2.615e-05 ok
+   low-G-r-2      d20     True      3.730885391909342e-23   8.168e-29   6.950e-28  1.175e-01  2.189e-06 ok
+   low-G-r-3      d20     True      3.356047988475283e-24   3.045e-30   9.365e-29  3.252e-02  9.073e-07 ok
+   low-G-1        d20     True      5.430651548896442e-21   4.369e-28   1.825e-27  2.394e-01  8.045e-08 ok
+   low-G-2        d20     False       6.2112195283628e-23   8.285e-29   3.733e-28  2.220e-01  1.334e-06 ok
+   low-G-3        d20     True     1.5815396674373454e-25   6.375e-31   5.901e-32  1.080e+01  4.031e-06 FALSE
+   low-Gqr-1      d20     False    -9.206103703305408e-27   1.752e-32   2.162e-32  8.104e-01  1.903e-06 ok
+   low-Gqr-2      d20     False    -2.112078367634002e-26   3.677e-33   1.279e-32  2.875e-01  1.741e-07 ok
+   low-Gqr-3      d20     False   -1.1899397752528739e-27   1.332e-32         inf  0.000e+00  1.119e-05 ok
+   mid-G+r-1      d20     False    -1.936573500207437e-27   6.511e-31   2.039e-30  3.194e-01  3.362e-04 ok
+   mid-G+r-2      d20     False    -2.485181558630755e-25   4.992e-30   8.505e-30  5.869e-01  2.009e-05 ok
+   mid-G+r-3      d20     False    1.0229677477082686e-23   7.182e-30   1.942e-29  3.699e-01  7.021e-07 ok
+   mid-G-r-1      d20     False    -9.238540294630586e-28   5.563e-32   1.326e-31  4.196e-01  6.021e-05 ok
+   mid-G-r-2      d20     False    2.2609819729110506e-19   1.081e-29   7.406e-26  1.460e-04  4.782e-11 ok
+   mid-G-r-3      d20     False    1.0073331247101683e-22   5.854e-30   2.101e-28  2.787e-02  5.812e-08 ok
+   mid-G-1        d20     False     3.592762438307546e-20   1.206e-27   2.584e-27  4.667e-01  3.357e-08 ok
+   mid-G-2        d20     False     5.078835962785259e-25   2.919e-31   1.801e-31  1.620e+00  5.746e-07 FALSE
+   mid-G-3        d20     False    -4.612834187144066e-23   6.971e-30   8.073e-30  8.635e-01  1.511e-07 ok
+   mid-Gqr-1      d20     False   -2.3629993914722004e-22   5.085e-31   1.381e-29  3.681e-02  2.152e-09 ok
+   mid-Gqr-2      d20     False    1.5782991920577615e-22   1.426e-29   4.982e-29  2.862e-01  9.035e-08 ok
+   mid-Gqr-3      d20     False   -1.4561655033627965e-25   2.552e-34   1.724e-31  1.481e-03  1.753e-09 ok
+   R1             d20     True      -4.95020122749857e-24   1.279e-29   1.493e-29  8.569e-01  2.584e-06 ok
+   R2             d20     False    -5.188277023394016e-26   8.935e-31   5.997e-31  1.490e+00  1.722e-05 FALSE
+   R3             d20     True      6.580501943591604e-29   5.926e-33   1.189e-32  4.985e-01  9.005e-05 ok
+   R4             d20     True    -3.5157100412376543e-26   1.305e-30   1.075e-29  1.214e-01  3.713e-05 ok
+   R5             d20     True    -1.3167402567527198e-26   6.860e-32   4.395e-31  1.561e-01  5.210e-06 ok
+   R6             d20     True      4.926093752531916e-24   2.374e-30   6.460e-30  3.675e-01  4.819e-07 ok
+   R7             d20     True      3.032149615592662e-24   2.755e-30   5.251e-30  5.246e-01  9.085e-07 ok
+   ctrl-low-1     control False   -3.8177783289614954e-31   9.570e-33   2.453e-33  3.902e+00  2.507e-02 FALSE
+   ctrl-low-2     control False   -1.4355040908253356e-28   7.725e-33   2.165e-33  3.568e+00  5.381e-05 FALSE
+   ctrl-mid-1     control False    -9.639267614574625e-29   4.345e-32   8.442e-32  5.147e-01  4.507e-04 ok
+   ctrl-mid-2     control False    2.7693289177164324e-26   5.144e-32   9.739e-31  5.282e-02  1.857e-06 ok
+   ctrl-seam-1    control False    -6.107343794275555e-20   1.932e-31   4.711e-22  4.102e-10  3.164e-12 ok
+   ctrl-seam-2    control False     2.031772025966779e-18   8.170e-31   1.463e-23  5.584e-08  4.021e-13 ok
+   ctrl-NULL-1    control False   -1.2087911009896876e-16   0.000e+00   4.915e-23  0.000e+00  0.000e+00 ok
+   ctrl-NULL-2    control False    -4.384383430355975e-18   0.000e+00   1.241e-26  0.000e+00  0.000e+00 ok
+   true on 34 of 39; false on [('low-G-3', 10.804), ('mid-G-2', 1.62), ('R2', 1.49), ('ctrl-low-1', 3.902), ('ctrl-low-2', 3.568)]; undecided []
+   bit-identical totals on 2 rows: ['ctrl-NULL-1', 'ctrl-NULL-2']
+== S4: FAILS
+
+== S5: on the 31 depth-20 rows with both s units in budget, |total_s(1e-7) - total_s(1e-8)| <= total_abserr_s(1e-7)
+   low-G+r-1      capped-B1 False ratio 0 ok
+   low-G+r-2      capped-B1 False ratio 0 ok
+   low-G+r-3      capped-B1 True  ratio 0.0466 ok
+   low-G-r-1      capped-B1 False ratio 0 ok
+   low-G-r-2      capped-B1 True  ratio 0.0311 ok
+   low-G-r-3      capped-B1 True  ratio 0.0233 ok
+   low-G-1        capped-B1 True  ratio 0.823 ok
+   low-G-2        capped-B1 False ratio 0.0877 ok
+   low-G-3        capped-B1 True  ratio 5.99e-06 ok
+   low-Gqr-1      capped-B1 False ratio 0 ok
+   low-Gqr-2      capped-B1 False ratio 0 ok
+   low-Gqr-3      capped-B1 False ratio 0 ok
+   mid-G+r-1      capped-B1 False ratio 0 ok
+   mid-G+r-2      capped-B1 False ratio 0 ok
+   mid-G+r-3      capped-B1 False ratio 0.194 ok
+   mid-G-r-1      capped-B1 False ratio 0 ok
+   mid-G-r-2      capped-B1 False ratio 0.0688 ok
+   mid-G-r-3      capped-B1 False ratio 1.32 FALSE
+   mid-G-1        capped-B1 False ratio 1.31 FALSE
+   mid-G-2        capped-B1 False ratio 0 ok
+   mid-G-3        capped-B1 False ratio 1.57 FALSE
+   mid-Gqr-1      capped-B1 False ratio 0.00454 ok
+   mid-Gqr-2      capped-B1 False ratio 0.0131 ok
+   mid-Gqr-3      capped-B1 False ratio 0 ok
+   R1             capped-B1 True  ratio 0.0616 ok
+   R2             capped-B1 False ratio 0 ok
+   R3             capped-B1 True  ratio 0 ok
+   R4             capped-B1 True  ratio 0.0813 ok
+   R5             capped-B1 True  ratio 0 ok
+   R6             capped-B1 True  ratio 0.00141 ok
+   R7             capped-B1 True  ratio 0.0107 ok
+   true on 28 of 31 scored; excluded []; false on [('mid-G-r-3', 1.322), ('mid-G-1', 1.305), ('mid-G-3', 1.566)]; on the capped: true on 11 of 11, largest 0.823
+== S5: FAILS
+
+== the phase probe (R1-R7): windows matched across trees
+   R1: F 1.69e-06; windows t5 3170, s 3170, in one tree only 0
+   R2: F 4.599e-06; windows t5 3138, s 3138, in one tree only 0
+   R3: F 9.192e-05; windows t5 3566, s 3566, in one tree only 0
+   R4: F 2.595e-06; windows t5 3278, s 3278, in one tree only 0
+   R5: F 6.492e-06; windows t5 3210, s 3210, in one tree only 0
+   R6: F 1.956e-06; windows t5 3361, s 3361, in one tree only 0
+   R7: F 2.595e-06; windows t5 3433, s 3433, in one tree only 0
+
+== S1 (reading (I), of record): every pure-WKB G window: sigma_s <= max(1e-3 sigma_t5, 1e-6 F)
+   G windows 10294; tag (I) disagrees between t5, s and the s re-run's parents in 0
+   pure-WKB (I): 6700 scored windows, 0 unmatched; true in 6700; false in 0
+      sigma_t5/F: median 0, max 0; sigma_s/F: median 5.73e-16, max 8.82e-14; sigma_s/bound max 8.82e-08
+      sigma_t5 == 0 in 6700 windows
+      R1: 913 windows; sigma_t5/F median 0 max 0; sigma_s/F median 4.7e-15 max 8.82e-14; false 0
+      R2: 916 windows; sigma_t5/F median 0 max 0; sigma_s/F median 2.33e-16 max 1.63e-14; false 0
+      R3: 1110 windows; sigma_t5/F median 0 max 0; sigma_s/F median 3.6e-18 max 8.81e-16; false 0
+      R4: 949 windows; sigma_t5/F median 0 max 0; sigma_s/F median 3.11e-15 max 5.75e-14; false 0
+      R5: 940 windows; sigma_t5/F median 0 max 0; sigma_s/F median 1.51e-16 max 1.15e-14; false 0
+      R6: 924 windows; sigma_t5/F median 0 max 0; sigma_s/F median 3.98e-15 max 7.62e-14; false 0
+      R7: 948 windows; sigma_t5/F median 0 max 0; sigma_s/F median 3.11e-15 max 5.75e-14; false 0
+== S1 (I): HOLDS
+
+== S1 (reading (L), unscored): z_init null in all 9 samples
+   pure-WKB windows under (L): 0; S1 by (L): UNDECIDED (no window)
+
+== numerically seeded G windows (not scored): sigma_s beside the window RMS of the re-run deltaTheta
+   3594 windows
+   R1: 563 windows; sigma_s/F median 0.000408 max 0.00124; sigma_t5/F median 0.279 max 0.584; dtheta RMS/F median 3.43e-05 max 1.35e+05; sigma_s / dtheta RMS median 9.59
+   R2: 464 windows; sigma_s/F median 0.000135 max 0.000455; sigma_t5/F median 0.317 max 0.72; dtheta RMS/F median 1.83e-05 max 5.71e+04; sigma_s / dtheta RMS median 4.2
+   R3: 414 windows; sigma_s/F median 8.2e-06 max 2.57e-05; sigma_t5/F median 0.272 max 0.575; dtheta RMS/F median 0.00689 max 2.86e+03; sigma_s / dtheta RMS median 0.00354
+   R4: 563 windows; sigma_s/F median 0.000266 max 0.000809; sigma_t5/F median 0.253 max 0.533; dtheta RMS/F median 2.24e-05 max 8.81e+04; sigma_s / dtheta RMS median 9.59
+   R5: 464 windows; sigma_s/F median 9.56e-05 max 0.000323; sigma_t5/F median 0.211 max 0.457; dtheta RMS/F median 1.29e-05 max 4.05e+04; sigma_s / dtheta RMS median 4.2
+   R6: 563 windows; sigma_s/F median 0.000352 max 0.00107; sigma_t5/F median 0.336 max 0.784; dtheta RMS/F median 2.97e-05 max 1.17e+05; sigma_s / dtheta RMS median 9.59
+   R7: 563 windows; sigma_s/F median 0.000266 max 0.000809; sigma_t5/F median 0.253 max 0.533; dtheta RMS/F median 2.24e-05 max 8.81e+04; sigma_s / dtheta RMS median 9.59
+
+== S2: every probe window of a T factor: sigma_s <= max(1e-3 sigma_t5, 1e-6 F)
+   T windows: 12862 scored windows, 0 unmatched; true in 10747; false in 2115
+      sigma_t5/F: median 9.48e-06, max 0.0575; sigma_s/F: median 1.37e-09, max 0.000102; sigma_s/bound max 102
+      sigma_t5 == 0 in 0 windows
+      R1: 1694 windows; sigma_t5/F median 1.84e-05 max 0.039; sigma_s/F median 5.85e-09 max 0.000102; false 400
+      R2: 1758 windows; sigma_t5/F median 6.38e-06 max 0.0555; sigma_s/F median 1.62e-09 max 3.76e-05; false 300
+      R3: 2042 windows; sigma_t5/F median 6.31e-07 max 0.0276; sigma_s/F median 3.16e-11 max 1.88e-06; false 38
+      R4: 1766 windows; sigma_t5/F median 1.43e-05 max 0.0349; sigma_s/F median 2.65e-09 max 6.66e-05; false 360
+      R5: 1806 windows; sigma_t5/F median 5.22e-06 max 0.0575; sigma_s/F median 8.83e-10 max 2.66e-05; false 265
+      R6: 1874 windows; sigma_t5/F median 2.15e-05 max 0.0337; sigma_s/F median 2.27e-09 max 8.83e-05; false 388
+      R7: 1922 windows; sigma_t5/F median 1.68e-05 max 0.0349; sigma_s/F median 1.5e-09 max 6.66e-05; false 364
+      FALSE: R1 sub 1 Tr i0 1019 z 1.70899e+09 sigma_s 5.366e-12 sigma_t5 5.385e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1020 z 1.7488e+09 sigma_s 5.491e-12 sigma_t5 5.488e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1021 z 1.78955e+09 sigma_s 5.619e-12 sigma_t5 5.617e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1022 z 1.83125e+09 sigma_s 5.750e-12 sigma_t5 5.754e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1023 z 1.87391e+09 sigma_s 5.885e-12 sigma_t5 5.873e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1024 z 1.91757e+09 sigma_s 6.022e-12 sigma_t5 6.017e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1025 z 1.96225e+09 sigma_s 6.162e-12 sigma_t5 6.176e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1026 z 2.00797e+09 sigma_s 6.306e-12 sigma_t5 6.314e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1027 z 2.05475e+09 sigma_s 6.453e-12 sigma_t5 6.443e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1028 z 2.10263e+09 sigma_s 6.603e-12 sigma_t5 6.602e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1029 z 2.15162e+09 sigma_s 6.757e-12 sigma_t5 6.753e-12 bound 1.690e-12 F 1.690e-06
+      FALSE: R1 sub 1 Tr i0 1030 z 2.20175e+09 sigma_s 6.915e-12 sigma_t5 6.912e-12 bound 1.690e-12 F 1.690e-06
+== S2: FAILS
+
+== descriptive: theta_deriv (log) at the window centres, s against t5
+   G: 10294 windows; |d theta_deriv| median 5.93e-10, max 0.00658; relative median 3.73e-14, max 4.92
+   Tq: 6071 windows; |d theta_deriv| median 3.78e-10, max 1.12e-05; relative median 2.49e-15, max 4.62e-14
+   Tr: 6791 windows; |d theta_deriv| median 4.8e-10, max 0.000293; relative median 2.38e-15, max 4.62e-14
+
+== descriptive per row: totals, convergence, regions, depth, Levin_z, policy
+   row            role    cap   conv t5/s7/s8  regions t5->s7 (s8)    depth t5->s7 (s8)  Levin_z t5 / s; type,quality t5 / s; wall t5, s7/budget
+   low-G+r-1      d20     False T/T/T          11->9 (9)         3->2 (2)         Levin_z 0x1.56a9ce9670b63p+46 -> 0x1.4edc7c892d90fp+46; policy same; wall 0.274, 0.293/0.821
+   low-G+r-2      d20     False F/F/F          12->9 (9)         5->2 (2)         Levin_z same; policy same; wall 0.375, 0.404/1.126
+   low-G+r-3      d20     True  F/F/F          33->33 (60)         8->8 (9)         Levin_z same; policy same; wall 0.375, 0.395/1.125
+   low-G-r-1      d20     False F/F/F          12->9 (9)         4->2 (2)         Levin_z same; policy same; wall 0.368, 0.476/1.105
+   low-G-r-2      d20     True  F/F/F          42->36 (61)         7->7 (9)         Levin_z same; policy same; wall 0.465, 0.421/1.395
+   low-G-r-3      d20     True  F/F/F          40->34 (62)         8->8 (9)         Levin_z same; policy same; wall 0.386, 0.473/1.158
+   low-G-1        d20     True  F/F/F          34->29 (36)         11->11 (11)         Levin_z same; policy same; wall 0.511, 0.507/1.533
+   low-G-2        d20     False F/F/F          16->13 (27)         7->7 (9)         Levin_z same; policy same; wall 0.414, 0.482/1.243
+   low-G-3        d20     True  F/F/F          39->14 (17)         7->7 (8)         Levin_z same; policy same; wall 0.342, 0.236/1.025
+   low-Gqr-1      d20     False T/T/T          9->11 (11)         2->2 (2)         Levin_z same; policy same; wall 0.253, 0.297/0.759
+   low-Gqr-2      d20     False T/T/T          31->17 (17)         6->6 (6)         Levin_z same; policy same; wall 0.313, 0.242/0.939
+   low-Gqr-3      d20     False F/F/F          9->10 (10)         4->5 (5)         Levin_z same; policy same; wall 0.265, 0.388/0.795
+   mid-G+r-1      d20     False T/T/T          11->11 (11)         2->2 (2)         Levin_z same; policy same; wall 0.201, 0.218/0.602
+   mid-G+r-2      d20     False T/T/T          16->16 (16)         6->6 (6)         Levin_z same; policy same; wall 0.205, 0.229/0.615
+   mid-G+r-3      d20     False F/F/T          55->53 (74)         8->8 (8)         Levin_z same; policy same; wall 0.410, 0.535/1.229
+   mid-G-r-1      d20     False T/T/T          12->9 (9)         4->2 (2)         Levin_z same; policy same; wall 0.183, 0.200/0.548
+   mid-G-r-2      d20     False F/F/F          58->58 (85)         8->8 (9)         Levin_z same; policy same; wall 0.414, 0.432/1.241
+   mid-G-r-3      d20     False F/T/T          35->35 (52)         7->7 (8)         Levin_z same; policy same; wall 0.291, 0.320/0.873
+   mid-G-1        d20     False F/F/F          25->13 (23)         8->8 (8)         Levin_z same; policy same; wall 0.333, 0.317/0.998
+   mid-G-2        d20     False T/T/T          27->15 (15)         7->7 (7)         Levin_z same; policy same; wall 0.291, 0.258/0.872
+   mid-G-3        d20     False F/F/F          18->12 (36)         5->3 (8)         Levin_z same; policy same; wall 0.264, 0.265/0.793
+   mid-Gqr-1      d20     False F/F/F          28->22 (30)         7->7 (8)         Levin_z same; policy same; wall 0.287, 0.379/0.862
+   mid-Gqr-2      d20     False F/F/F          21->19 (27)         7->7 (8)         Levin_z same; policy same; wall 0.245, 0.261/0.735
+   mid-Gqr-3      d20     False F/F/F          15->15 (15)         5->5 (5)         Levin_z same; policy same; wall 0.273, 0.291/0.818
+   R1             d20     True  F/F/F          63->57 (115)         8->8 (9)         Levin_z same; policy same; wall 0.384, 0.380/1.152
+   R2             d20     False T/T/T          12->10 (10)         4->2 (2)         Levin_z same; policy same; wall 0.180, 0.193/0.539
+   R3             d20     True  T/T/T          18->10 (10)         5->2 (2)         Levin_z same; policy same; wall 0.207, 0.210/0.620
+   R4             d20     True  F/F/F          83->70 (128)         8->8 (9)         Levin_z same; policy same; wall 0.512, 0.475/1.535
+   R5             d20     True  T/T/T          19->23 (23)         5->6 (6)         Levin_z same; policy same; wall 0.214, 0.368/0.641
+   R6             d20     True  F/F/F          28->15 (22)         8->8 (8)         Levin_z same; policy same; wall 0.425, 0.375/1.274
+   R7             d20     True  F/F/F          27->15 (24)         8->8 (9)         Levin_z same; policy same; wall 0.462, 0.405/1.385
+   ctrl-low-1     control False T/T/-          10->8 (None)         3->1 (None)         Levin_z same; policy same; wall 0.202, 0.207/0.605
+   ctrl-low-2     control False T/T/-          8->8 (None)         1->1 (None)         Levin_z same; policy same; wall 0.198, 0.350/0.593
+   ctrl-mid-1     control False T/T/-          9->9 (None)         2->2 (None)         Levin_z same; policy same; wall 0.170, 0.192/0.511
+   ctrl-mid-2     control False T/T/-          6->6 (None)         1->1 (None)         Levin_z same; policy same; wall 0.172, 0.193/0.515
+   ctrl-seam-1    control False T/T/-          4->4 (None)         1->1 (None)         Levin_z same; policy same; wall 0.079, 0.103/0.238
+   ctrl-seam-2    control False T/T/-          5->5 (None)         2->2 (None)         Levin_z same; policy same; wall 0.142, 0.252/0.427
+   ctrl-NULL-1    control False T/T/-          0->0 (None)         0->0 (None)         Levin_z same; policy same; wall 0.051, 0.059/0.153
+   ctrl-NULL-2    control False T/T/-          0->0 (None)         0->0 (None)         Levin_z same; policy same; wall 0.055, 0.072/0.165
+   group calls whose (regions, max depth, converged) changed t5 -> s at 1e-7: 48 of 219
+   regions all 39: t5 901 -> s@1e-7 742; s@1e-8 1053; unconverged t5 21, s@1e-7 20, s@1e-8 19
+   regions depth-20 (31): t5 859 -> s@1e-7 702; s@1e-8 1053; unconverged t5 21, s@1e-7 20, s@1e-8 19
+   regions controls (8): t5 42 -> s@1e-7 40; s@1e-8 0; unconverged t5 0, s@1e-7 0, s@1e-8 0
+   regions capped under B1 (11): t5 426 -> s@1e-7 336; s@1e-8 558; unconverged t5 9, s@1e-7 9, s@1e-8 9
+   regions R1-R7: t5 250 -> s@1e-7 200; s@1e-8 332; unconverged t5 4, s@1e-7 4, s@1e-8 4
+   rows with an infinite total_abserr_t5: ['low-G+r-2', 'low-G-r-1', 'low-Gqr-3']
+
+== descriptive: the re-run producers against A3 v2's stored values (s@1e-7 units)
+   G values re-run 3960030: theta_div_2pi changes 17 (not one cycle within 4 eps|theta| of a boundary: []); max |d theta_mod_2pi|/(eps|theta|) at the same cycle 1.88e+03; max relative G_WKB change 24.9
+   T values re-run 73015: theta_div_2pi changes 0 (not near a boundary: []); max |d mod|/(eps|theta|) 67.3; max relative T_WKB change 0.0308
+   rows whose recomputed GkSourcePolicyData type/quality/crossover_z/Levin_z differs from A3 v2's: ['low-G+r-1']
+   re-run time over the 39 s@1e-7 units: 1443 s
+
+== verdicts: {'S1 (I)': 'HOLDS', 'S1 (L)': 'UNDECIDED (no window)', 'S2': 'FAILS', 'S3': 'HOLDS', 'S4': 'FAILS', 'S5': 'FAILS'}
+# ----
+# end 2026-10-26T23:26:53Z
+# exit 0

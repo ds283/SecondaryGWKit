@@ -1,0 +1,101 @@
+# command: PYTHONPATH= OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/compare.py 
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:17:28Z
+# script sha256 af48204f85c8f9a84e979e440a5a33220f3334777ec1b06e950a5ceba25b0658  analyse.py
+# script sha256 c7a79aaf516f157f26373e455e553499c189c9b8eb828cb1be497c7214d2fc03  compare.py
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 fbb85121c4e66174e89fbc1502f00078f0e8c02edf079327f842109b4bd7ae75  reference.py
+# script sha256 c2862dfc7ead8054dc22a8e1b5634d518fa7cd2515f3e91bd5de815dd9fe7099  rootdiag.py
+# script sha256 04a2fd9cf22b5d5131780e5b6add296d341b6fa7bf13224d933ed3993c26344d  samples.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+== row1: 28002 points, x_s 9.231349907086202
+   G+q+r.f_cos            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q+r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q+r.theta            max |d| 2.980e-08 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 1); window 2.980e-08; identical 27086/28002
+   G+q+r.theta_deriv      max |d|/env 3.465e-14, max rel (>1e-3 env) 3.483e-12; window 4.521e-14; identical 2951/28002
+   G+q+r.theta_mod_2pi    max cyclic |d| 4.548e-08 rad = 1.53 ulp(max|theta|) = 5.12e+07 ulp(2pi); window 1.019e-08; identical 7/28002
+   G+q-r.f_cos            max |d|/env None, max rel (>1e-3 env) None; window None; identical 28002/28002
+   G+q-r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q-r.theta            max |d| 2.980e-08 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 1); window 0.000e+00; identical 27821/28002
+   G+q-r.theta_deriv      max |d|/env 2.417e-14, max rel (>1e-3 env) 3.273e-13; window 2.869e-16; identical 2951/28002
+   G+q-r.theta_mod_2pi    max cyclic |d| 4.548e-08 rad = 1.53 ulp(max|theta|) = 5.12e+07 ulp(2pi); window 9.779e-09; identical 83/28002
+   G-q+r.f_cos            max |d|/env None, max rel (>1e-3 env) None; window None; identical 28002/28002
+   G-q+r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q+r.theta            max |d| 2.980e-08 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 1); window 0.000e+00; identical 27821/28002
+   G-q+r.theta_deriv      max |d|/env 2.417e-14, max rel (>1e-3 env) 3.273e-13; window 2.869e-16; identical 2951/28002
+   G-q+r.theta_mod_2pi    max cyclic |d| 4.548e-08 rad = 1.53 ulp(max|theta|) = 5.12e+07 ulp(2pi); window 9.779e-09; identical 83/28002
+   G-q-r.f_cos            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q-r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q-r.theta            max |d| 2.980e-08 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 16); window 2.980e-08; identical 26692/28002
+   G-q-r.theta_deriv      max |d|/env 1.855e-14, max rel (>1e-3 env) 1.563e-13; window 2.878e-16; identical 5580/28002
+   G-q-r.theta_mod_2pi    max cyclic |d| 4.548e-08 rad = 1.53 ulp(max|theta|) = 5.12e+07 ulp(2pi); window 1.091e-08; identical 7/28002
+   G.phi                  max |d| 4.548e-08 rad = 1.53 ulp(max|theta|) (pointwise-ulp max 1.53); window 9.776e-09; identical 1/28002
+   G.raw_theta            max |d| 2.980e-08 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 1); window 0.000e+00; identical 27821/28002
+   G.sin_amplitude        max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G.theta_deriv          max |d|/env 2.417e-14, max rel (>1e-3 env) 3.273e-13; window 2.869e-16; identical 2951/28002
+   G.theta_mod_2pi        max cyclic |d| 4.548e-08 rad = 1.53 ulp(max|theta|) = 5.12e+07 ulp(2pi); window 9.779e-09; identical 83/28002
+   Hubble                 max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.M                   max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.dlnM_dz             max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.omega               max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.phi                 max |d| 9.823e-09 rad = 1.32 ulp(max|theta|) (pointwise-ulp max 256); window 7.730e-10; identical 307/28002
+   Tq.raw_theta           max |d| 7.451e-09 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 256); window 9.313e-10; identical 18627/28002
+   Tq.theta_mod_2pi       max cyclic |d| 9.808e-09 rad = 1.32 ulp(max|theta|) = 1.1e+07 ulp(2pi); window 7.785e-10; identical 1233/28002
+   Tr.M                   max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.dlnM_dz             max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.omega               max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.phi                 max |d| 9.823e-09 rad = 1.32 ulp(max|theta|) (pointwise-ulp max 256); window 7.730e-10; identical 307/28002
+   Tr.raw_theta           max |d| 7.451e-09 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 256); window 9.313e-10; identical 18627/28002
+   Tr.theta_mod_2pi       max cyclic |d| 9.808e-09 rad = 1.32 ulp(max|theta|) = 1.1e+07 ulp(2pi); window 7.785e-10; identical 1233/28002
+   wBackground            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   knots G: r13 median/max resid 1.323e-23/6.954e-08 rad (4.44e-16/2.33 ulp); r14 7.285e-19/1.207e-09 rad (2.44e-11/0.0405 ulp); 732 knots in the sub-interval
+   knots Tq: r13 median/max resid 7.761e-11/9.934e-09 rad (1/2.07e+08 ulp); r14 6.464e-13/3.024e-09 rad (0.0444/2.07e+08 ulp); 730 knots in the sub-interval
+   knots Tr: r13 median/max resid 7.761e-11/9.934e-09 rad (1/2.07e+08 ulp); r14 6.464e-13/3.024e-09 rad (0.0444/2.07e+08 ulp); 730 knots in the sub-interval
+== row2: 28002 points, x_s 5.620431994441799
+   G+q+r.f_cos            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q+r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q+r.theta            max |d| 2.980e-08 rad = 2.00 ulp(max|theta|) (pointwise-ulp max 2); window 2.980e-08; identical 23980/28002
+   G+q+r.theta_deriv      max |d|/env 1.045e-13, max rel (>1e-3 env) 3.391e-11; window 4.821e-14; identical 5755/28002
+   G+q+r.theta_mod_2pi    max cyclic |d| 3.527e-08 rad = 2.37 ulp(max|theta|) = 3.97e+07 ulp(2pi); window 1.130e-08; identical 93/28002
+   G+q-r.f_cos            max |d|/env None, max rel (>1e-3 env) None; window None; identical 28002/28002
+   G+q-r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G+q-r.theta            max |d| 2.980e-08 rad = 2.00 ulp(max|theta|) (pointwise-ulp max 2); window 9.313e-10; identical 25710/28002
+   G+q-r.theta_deriv      max |d|/env 3.767e-14, max rel (>1e-3 env) 8.023e-12; window 1.104e-15; identical 5746/28002
+   G+q-r.theta_mod_2pi    max cyclic |d| 3.527e-08 rad = 2.37 ulp(max|theta|) = 3.97e+07 ulp(2pi); window 5.530e-10; identical 21/28002
+   G-q+r.f_cos            max |d|/env None, max rel (>1e-3 env) None; window None; identical 28002/28002
+   G-q+r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q+r.theta            max |d| 2.980e-08 rad = 2.00 ulp(max|theta|) (pointwise-ulp max 2); window 9.313e-10; identical 25710/28002
+   G-q+r.theta_deriv      max |d|/env 3.767e-14, max rel (>1e-3 env) 8.023e-12; window 1.104e-15; identical 5746/28002
+   G-q+r.theta_mod_2pi    max cyclic |d| 3.527e-08 rad = 2.37 ulp(max|theta|) = 3.97e+07 ulp(2pi); window 5.530e-10; identical 21/28002
+   G-q-r.f_cos            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q-r.f_sin            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G-q-r.theta            max |d| 2.980e-08 rad = 2.00 ulp(max|theta|) (pointwise-ulp max 512); window 2.980e-08; identical 23433/28002
+   G-q-r.theta_deriv      max |d|/env 1.925e-14, max rel (>1e-3 env) 3.860e-12; window 6.382e-16; identical 7113/28002
+   G-q-r.theta_mod_2pi    max cyclic |d| 3.527e-08 rad = 2.37 ulp(max|theta|) = 3.97e+07 ulp(2pi); window 1.174e-08; identical 16/28002
+   G.phi                  max |d| 3.527e-08 rad = 2.37 ulp(max|theta|) (pointwise-ulp max 2.37); window 5.468e-10; identical 1/28002
+   G.raw_theta            max |d| 2.980e-08 rad = 2.00 ulp(max|theta|) (pointwise-ulp max 2); window 9.313e-10; identical 25710/28002
+   G.sin_amplitude        max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   G.theta_deriv          max |d|/env 3.767e-14, max rel (>1e-3 env) 8.023e-12; window 1.104e-15; identical 5746/28002
+   G.theta_mod_2pi        max cyclic |d| 3.527e-08 rad = 2.37 ulp(max|theta|) = 3.97e+07 ulp(2pi); window 5.530e-10; identical 21/28002
+   Hubble                 max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.M                   max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.dlnM_dz             max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.omega               max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tq.phi                 max |d| 9.823e-09 rad = 1.32 ulp(max|theta|) (pointwise-ulp max 256); window 5.758e-09; identical 307/28002
+   Tq.raw_theta           max |d| 7.451e-09 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 256); window 7.451e-09; identical 18759/28002
+   Tq.theta_mod_2pi       max cyclic |d| 9.808e-09 rad = 1.32 ulp(max|theta|) = 1.1e+07 ulp(2pi); window 5.759e-09; identical 1183/28002
+   Tr.M                   max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.dlnM_dz             max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.omega               max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   Tr.phi                 max |d| 9.823e-09 rad = 1.32 ulp(max|theta|) (pointwise-ulp max 256); window 5.758e-09; identical 307/28002
+   Tr.raw_theta           max |d| 7.451e-09 rad = 1.00 ulp(max|theta|) (pointwise-ulp max 256); window 7.451e-09; identical 18759/28002
+   Tr.theta_mod_2pi       max cyclic |d| 9.808e-09 rad = 1.32 ulp(max|theta|) = 1.1e+07 ulp(2pi); window 5.759e-09; identical 1183/28002
+   wBackground            max |d|/env 0.000e+00, max rel (>1e-3 env) 0.000e+00; window 0.000e+00; identical 28002/28002
+   knots G: r13 median/max resid 5.294e-23/2.980e-08 rad (3.55e-15/2 ulp); r14 5.369e-18/5.307e-09 rad (3.98e-10/0.356 ulp); 732 knots in the sub-interval
+   knots Tq: r13 median/max resid 7.761e-11/9.934e-09 rad (1/2.07e+08 ulp); r14 6.464e-13/3.024e-09 rad (0.0444/2.07e+08 ulp); 730 knots in the sub-interval
+   knots Tr: r13 median/max resid 7.761e-11/9.934e-09 rad (1/2.07e+08 ulp); r14 6.464e-13/3.024e-09 rad (0.0444/2.07e+08 ulp); 730 knots in the sub-interval
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/compare.json sha256 4f8c6f7279475cac79c19695e172a4e3051a6f013efc3474886da740bf2ae0aa
+# exit 0 at 2026-10-27T00:17:28Z

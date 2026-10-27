@@ -1,0 +1,36 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/status.json\;\ echo\;\ wc\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/stderr.log\;\ grep\ \'\^==\ run\ ends\\\|\^#\ worker\ .\*\ exit\\\|over\ budget\\\|:\ error\\\|probe\ error\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/stdout.log\ \|\ cut\ -c1-300\;\ echo\ \'==\ policy\ warning\ lines\ in\ stdout:\'\;\ grep\ -c\ \'\^\!\!\ WARNING\ \(GkSourcePolicyData\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/stdout.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634\ \|\ wc\ -l\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ head\ -4\ \|\ cut\ -c1-160\;\ git\ --no-optional-locks\ status\ --short\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622\ status\ --short\ --ignored\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ status\ --short\ --ignored\;\ echo\ \'\(statuses\ end\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:24:17Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-26T23:23:16+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 19700,
+  "stage": "unit s-1e-8-R7 done",
+  "state": "done",
+  "units_done": 109,
+  "units_total": 109
+}
+
+109 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl
+7065 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634/stderr.log
+# worker t5 exit 0
+# worker s exit 0
+== run ends: 109 of 109 units recorded; in order True; problems []
+== policy warning lines in stdout:
+0
+124
+86M	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06-wider-20261026T223634
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06-wider-20261026T223634            done        109/109      48m  levin-phase-floor prompt 06 section 6 on the Mac Studio (mps026298; Pytho
+   levin-phase-floor-06-r14-residual-20261026T215945     done              -   1h 24m  levin-phase-floor prompt 06, R14 on the Mac Studio (mps026298; tree f5cee
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -   1h 28m  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f666
+(statuses end)
+# ----
+# end 2026-10-26T23:24:18Z
+# exit 0

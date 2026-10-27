@@ -1,0 +1,31 @@
+**Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
+- **S1 — $\varphi_G$'s noise goes.**
+  - **The rule:** in every **pure-WKB** probe window of $G$ on R1–R7,
+    $\sigma_s \le \max(10^{-3}\,\sigma_{t_5},\ 10^{-6}F)$.
+  - **Holds** if true in every pure-WKB window. **Undecided** if there is none.
+  - Numerically seeded windows are not scored: their $\sigma_s$ is reported beside the window RMS
+    of $\Delta\theta$ alone (the probe, above).
+  - 04 measured $\sigma$ at 0 at the median, quantised, and 0.46–0.78 $F$ at the maximum, for
+    production's $\varphi_G$.
+- **S2 — $\varphi_T$'s too.** S1's rule for every probe window of a $T$ factor. $T$ has one
+  object per $k$, so its $\Delta\theta$ is a constant and every $T$ window is scored.
+- **S3 — the cap does not return.** On every row (all 39), under $s$ at `1e-7`, no group has a
+  region at depth ≥ 18. An over-budget unit counts as false.
+- **S4 — the stored noise was within the declared error.**
+  - **The rule:** on every row (all 39), $|{\rm total}_s - {\rm total}_{t_5}| \le$
+    `total_abserr`$_{t_5}$, at `1e-7`.
+  - A failure measures what the stored noise cost a total beyond what it declared. That is a
+    finding about the rows before this prompt, not a fault in it.
+- **S5 — the declared error is honest after the change.**
+  - **The rule:** on every one of the 31 depth-20 rows with both $s$ units in budget,
+    $|{\rm total}_s(10^{-7}) - {\rm total}_s(10^{-8})| \le$ `total_abserr`$_s(10^{-7})$.
+  - 05a's T4, the same rule under $t_5$, held on 29 of 31.
+
+**Descriptive, not scored:**
+- $|{\rm total}_s - {\rm total}_{t_5}|$, relative and against `total_abserr`$_{t_5}$, on every row;
+- regions and maximum depth per group, $t_5$ against $s$;
+- `total_converged` under both trees;
+- `theta_deriv`'s change at the Levin windows: $\varphi'$ was the term 04 and
+  `phase-representation` 02 found worse than omitting $\varphi$;
+- `GkSourcePolicyData`'s `Levin_z` under both trees;
+- `convergence_kinds.py` under $s$, as 05a ran it.

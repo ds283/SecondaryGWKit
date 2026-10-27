@@ -1,0 +1,15 @@
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 06 section 5, rehearsals R13 (worktree 9f66622, parent of code commit dc9d28c) and R14 (worktree f5cee4c, code dc9d28c) on the Mac Studio (mps026298), then the value comparison and readers
+exit 0
+recorded pid 97740 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+recorded pid 99938 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+exit 0
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0
+exit 0

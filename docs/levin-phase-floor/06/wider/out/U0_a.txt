@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/u0_clause_a.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:23:58Z
+# ----
+# levin-phase-floor 06 section 6: gate U0, clause (a)
+# written 2026-10-26T22:23:58Z on mps026298.phys.susx.ac.uk
+# script u0_clause_a.py sha256 a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a
+# tree t5: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 HEAD 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27 (status --short: empty)
+# tree s: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c HEAD f5cee4c7a76e755119d923341f204f139b29be7e (status --short: empty)
+$ git diff --stat 1fc349c 9f66622 -- . ':!docs' ':!prompts'
+ CLAUDE.md                                     |  7 ++++---
+ ComputeTargets/primitive_phase.py             |  3 ++-
+ ComputeTargets/tests/test_g_phase_reanchor.py | 18 +++++++++++-------
+ 3 files changed, 17 insertions(+), 11 deletions(-)
+files: ['CLAUDE.md', 'ComputeTargets/primitive_phase.py', 'ComputeTargets/tests/test_g_phase_reanchor.py']; expected ['CLAUDE.md', 'ComputeTargets/primitive_phase.py', 'ComputeTargets/tests/test_g_phase_reanchor.py']: True
+ComputeTargets/primitive_phase.py: AST without docstrings equal to 1fc349c's: True
+ComputeTargets/tests/test_g_phase_reanchor.py: AST without docstrings equal to 1fc349c's: True
+== U0 (a): HOLDS
+# ----
+# end 2026-10-26T22:23:59Z
+# exit 0

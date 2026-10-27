@@ -1,0 +1,1354 @@
+{
+ "header": [
+  "# p1 rootdiag, tree r14",
+  "# written 2026-10-27T00:15:04Z on mps026298.phys.susx.ac.uk",
+  "# script rootdiag.py sha256 c2862dfc7ead8054dc22a8e1b5634d518fa7cd2515f3e91bd5de815dd9fe7099",
+  "# tree r13: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 HEAD 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27 (status --short: empty)",
+  "# tree r14: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c HEAD f5cee4c7a76e755119d923341f204f139b29be7e (status --short: empty)"
+ ],
+ "rows": {
+  "row1": {
+   "x_s": {
+    "repr": "9.231349907086202",
+    "hex": "0x1.276737eb9bc5ap+3"
+   },
+   "probes": [
+    {
+     "depth": 0,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "22.413544878488572",
+       "hex": "0x1.669de13c08966p+4"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "5420993175.396223",
+       "hex": "0x1.431dca97656eep+32"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-5.373287957650585e-23",
+      "hex": "-0x1.03d61543047c7p-74"
+     },
+     "step4_residual": {
+      "repr": "3.2315433971795864e-30",
+      "hex": "0x1.062c87d000000p-98"
+     },
+     "relerr": {
+      "repr": "6.014089366974008e-08",
+      "hex": "0x1.024d9ca521dfcp-24"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.617252502225453e-33",
+      "hex": "0x1.0cb6504cba1bfp-109"
+     },
+     "roundoff_floor": {
+      "repr": "1.0235856699214647e-29",
+      "hex": "0x1.9f37369225052p-97"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 1,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-1.1576993450184603e-26",
+      "hex": "-0x1.ca9ca95c80826p-87"
+     },
+     "step4_residual": {
+      "repr": "1.1571448600426268e-32",
+      "hex": "0x1.e0a8bf5900000p-107"
+     },
+     "relerr": {
+      "repr": "9.995220448327817e-07",
+      "hex": "0x1.0c4ea1c4a852bp-20"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "8.086262511127264e-34",
+      "hex": "0x1.0cb6504cba1bep-110"
+     },
+     "roundoff_floor": {
+      "repr": "1.0785212613264447e-33",
+      "hex": "0x1.66667120027d6p-110"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 1,
+     "span": [
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      },
+      {
+       "repr": "22.413544878488572",
+       "hex": "0x1.669de13c08966p+4"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      },
+      {
+       "repr": "5420993175.396223",
+       "hex": "0x1.431dca97656eep+32"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-5.372130581459906e-23",
+      "hex": "-0x1.03c7c163e6204p-74"
+     },
+     "step4_residual": {
+      "repr": "9.067350941275422e-31",
+      "hex": "0x1.26409ac000000p-100"
+     },
+     "relerr": {
+      "repr": "1.6878500916585335e-08",
+      "hex": "0x1.21f86e9c107cbp-26"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "8.086262511127266e-34",
+      "hex": "0x1.0cb6504cba1bfp-110"
+     },
+     "roundoff_floor": {
+      "repr": "9.208240962270084e-34",
+      "hex": "0x1.31ff0cfda80c7p-110"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 2,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-3.850888138343499e-28",
+      "hex": "-0x1.e828770365448p-92"
+     },
+     "step4_residual": {
+      "repr": "7.413139603554266e-34",
+      "hex": "0x1.ecb008d700000p-111"
+     },
+     "relerr": {
+      "repr": "1.9250504319792343e-06",
+      "hex": "0x1.02603aac10c7ap-19"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "4.043131255563633e-34",
+      "hex": "0x1.0cb6504cba1bfp-111"
+     },
+     "roundoff_floor": {
+      "repr": "1.4338289578729255e-34",
+      "hex": "0x1.7d2d57a18f4c9p-113"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 2,
+     "span": [
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      },
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      },
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-1.1191893064901653e-26",
+      "hex": "-0x1.bb5b4799d962bp-87"
+     },
+     "step4_residual": {
+      "repr": "6.865420802623577e-37",
+      "hex": "0x1.d33c800000000p-121"
+     },
+     "relerr": {
+      "repr": "6.134280200170095e-11",
+      "hex": "0x1.0dc9dae52890fp-34"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "4.043131255563631e-34",
+      "hex": "0x1.0cb6504cba1bdp-111"
+     },
+     "roundoff_floor": {
+      "repr": "2.3820830988020475e-36",
+      "hex": "0x1.954a5a1d32bb5p-119"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 3,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "6.367098968850884e-30",
+      "hex": "0x1.0247bc6714b54p-97"
+     },
+     "step4_residual": {
+      "repr": "5.100724868714023e-38",
+      "hex": "0x1.15b5ba8000000p-124"
+     },
+     "relerr": {
+      "repr": "8.011065783126327e-09",
+      "hex": "0x1.1342147017dd1p-27"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.0215656277818164e-34",
+      "hex": "0x1.0cb6504cba1bfp-112"
+     },
+     "roundoff_floor": {
+      "repr": "1.9530840347865774e-37",
+      "hex": "0x1.09d70bc3b22bfp-122"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 3,
+     "span": [
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-3.9145517148924047e-28",
+      "hex": "-0x1.f03a77509ccf5p-92"
+     },
+     "step4_residual": {
+      "repr": "1.3279363680076143e-32",
+      "hex": "0x1.13cd353790000p-106"
+     },
+     "relerr": {
+      "repr": "3.392422718980881e-05",
+      "hex": "0x1.1c93b92116d71p-15"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.0215656277818164e-34",
+      "hex": "0x1.0cb6504cba1bfp-112"
+     },
+     "roundoff_floor": {
+      "repr": "6.007813536323305e-36",
+      "hex": "0x1.ff1697b7ecd17p-118"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 4,
+     "span": [
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      },
+      {
+       "repr": "8.691970177761181",
+       "hex": "0x1.16249ea46954ap+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      },
+      {
+       "repr": "5953.902910303434",
+       "hex": "0x1.741e725213078p+12"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "9.748591833822004e-29",
+      "hex": "0x1.ee4ff4f665d04p-94"
+     },
+     "step4_residual": {
+      "repr": "6.244571594368767e-38",
+      "hex": "0x1.53fca00000000p-124"
+     },
+     "relerr": {
+      "repr": "6.405613960268289e-10",
+      "hex": "0x1.6027008400a4ap-31"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.0107828138909078e-34",
+      "hex": "0x1.0cb6504cba1bdp-113"
+     },
+     "roundoff_floor": {
+      "repr": "1.4685016076642014e-37",
+      "hex": "0x1.8fc3a024136f5p-123"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 4,
+     "span": [
+      {
+       "repr": "8.691970177761181",
+       "hex": "0x1.16249ea46954ap+3"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "5953.902910303434",
+       "hex": "0x1.741e725213078p+12"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-4.889278104637804e-28",
+      "hex": "-0x1.35e512acb0b29p-91"
+     },
+     "step4_residual": {
+      "repr": "1.348406142588164e-29",
+      "hex": "0x1.117d3ff1b4d20p-96"
+     },
+     "relerr": {
+      "repr": "0.028361002648931228",
+      "hex": "0x1.d0aaaab6f8b15p-6"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.0107828138909086e-34",
+      "hex": "0x1.0cb6504cba1c1p-113"
+     },
+     "roundoff_floor": {
+      "repr": "9.009793779308094e-37",
+      "hex": "0x1.32965f894f41ap-120"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 5,
+     "span": [
+      {
+       "repr": "8.691970177761181",
+       "hex": "0x1.16249ea46954ap+3"
+      },
+      {
+       "repr": "9.219723050866081",
+       "hex": "0x1.2707f8a2b4b59p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "5953.902910303434",
+       "hex": "0x1.741e725213078p+12"
+      },
+      {
+       "repr": "10093.26834211831",
+       "hex": "0x1.3b6a25908d724p+13"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-1.0077930972168471e-26",
+      "hex": "-0x1.8f3a5ca9e5a93p-87"
+     },
+     "step4_residual": {
+      "repr": "1.383732686979143e-31",
+      "hex": "0x1.673ccfb210000p-103"
+     },
+     "relerr": {
+      "repr": "1.3730513635795697e-05",
+      "hex": "0x1.ccb836cbb8ccfp-17"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "5.053914069454543e-35",
+      "hex": "0x1.0cb6504cba1c1p-114"
+     },
+     "roundoff_floor": {
+      "repr": "8.255048309759936e-37",
+      "hex": "0x1.18e79ce54ffc2p-120"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 5,
+     "span": [
+      {
+       "repr": "9.219723050866081",
+       "hex": "0x1.2707f8a2b4b59p+3"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "10093.26834211831",
+       "hex": "0x1.3b6a25908d724p+13"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "9.602487223130572e-27",
+      "hex": "0x1.7c64ca1f13787p-87"
+     },
+     "step4_residual": {
+      "repr": "9.126695409521981e-29",
+      "hex": "0x1.cec7479e4be80p-94"
+     },
+     "relerr": {
+      "repr": "0.009504511901393111",
+      "hex": "0x1.37719fe3f563bp-7"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "5.053914069454543e-35",
+      "hex": "0x1.0cb6504cba1c1p-114"
+     },
+     "roundoff_floor": {
+      "repr": "1.579175280833045e-36",
+      "hex": "0x1.0caec8c7e4fdfp-119"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 6,
+     "span": [
+      {
+       "repr": "9.219723050866081",
+       "hex": "0x1.2707f8a2b4b59p+3"
+      },
+      {
+       "repr": "9.48359948741853",
+       "hex": "0x1.2f79a5a1da660p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "10093.26834211831",
+       "hex": "0x1.3b6a25908d724p+13"
+      },
+      {
+       "repr": "13141.407407798524",
+       "hex": "0x1.9aab425f05166p+13"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "1.0489018399827787e-26",
+      "hex": "0x1.9f8348a4ad564p-87"
+     },
+     "step4_residual": {
+      "repr": "3.2020536229979357e-28",
+      "hex": "0x1.95e894bf82680p-92"
+     },
+     "relerr": {
+      "repr": "0.03148896150593742",
+      "hex": "0x1.01f5237b4bcf5p-5"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.526957034727263e-35",
+      "hex": "0x1.0cb6504cba1b1p-115"
+     },
+     "roundoff_floor": {
+      "repr": "1.3466070592829384e-36",
+      "hex": "0x1.ca3a04e95f5dep-120"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 6,
+     "span": [
+      {
+       "repr": "9.48359948741853",
+       "hex": "0x1.2f79a5a1da660p+3"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "13141.407407798524",
+       "hex": "0x1.9aab425f05166p+13"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-7.952642226019943e-28",
+      "hex": "-0x1.f80eff65d45fbp-91"
+     },
+     "step4_residual": {
+      "repr": "1.5647010756528053e-39",
+      "hex": "0x1.109c000000000p-129"
+     },
+     "relerr": {
+      "repr": "1.9675235364333632e-12",
+      "hex": "0x1.14e781915ae38p-39"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.52695703472728e-35",
+      "hex": "0x1.0cb6504cba1d1p-115"
+     },
+     "roundoff_floor": {
+      "repr": "1.0448102997866094e-38",
+      "hex": "0x1.c7143dcb310d1p-127"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    }
+   ]
+  },
+  "row2": {
+   "x_s": {
+    "repr": "5.620431994441799",
+    "hex": "0x1.67b528656140dp+2"
+   },
+   "probes": [
+    {
+     "depth": 0,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "22.413544878488572",
+       "hex": "0x1.669de13c08966p+4"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "5420993175.396223",
+       "hex": "0x1.431dca97656eep+32"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "3.1302966494737344e-23",
+      "hex": "0x1.2ebe64220b90cp-75"
+     },
+     "step4_residual": {
+      "repr": "2.1928712696810757e-30",
+      "hex": "0x1.63d04f1000000p-99"
+     },
+     "relerr": {
+      "repr": "7.005315051106362e-08",
+      "hex": "0x1.2ce040e89aa56p-24"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.617252502225453e-33",
+      "hex": "0x1.0cb6504cba1bfp-109"
+     },
+     "roundoff_floor": {
+      "repr": "9.509804570397665e-31",
+      "hex": "0x1.349c5d8d12a08p-100"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 1,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "6.559642216350696e-27",
+      "hex": "0x1.03daacd62729bp-87"
+     },
+     "step4_residual": {
+      "repr": "1.722786329962257e-33",
+      "hex": "0x1.1e3f39ec00000p-109"
+     },
+     "relerr": {
+      "repr": "2.62634191491116e-07",
+      "hex": "0x1.1a00563bbc8f9p-22"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "8.086262511127264e-34",
+      "hex": "0x1.0cb6504cba1bep-110"
+     },
+     "roundoff_floor": {
+      "repr": "1.0210841218406956e-34",
+      "hex": "0x1.0f7362657ca8cp-113"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 1,
+     "span": [
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      },
+      {
+       "repr": "22.413544878488572",
+       "hex": "0x1.669de13c08966p+4"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      },
+      {
+       "repr": "5420993175.396223",
+       "hex": "0x1.431dca97656eep+32"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "3.1296404659649725e-23",
+      "hex": "0x1.2eae25136ddf4p-75"
+     },
+     "step4_residual": {
+      "repr": "9.041763426768616e-31",
+      "hex": "0x1.256c082000000p-100"
+     },
+     "relerr": {
+      "repr": "2.8890741684542793e-08",
+      "hex": "0x1.f056d35f09a73p-26"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "8.086262511127266e-34",
+      "hex": "0x1.0cb6504cba1bfp-110"
+     },
+     "roundoff_floor": {
+      "repr": "2.864028390927823e-33",
+      "hex": "0x1.dbde4b836e0c9p-109"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 2,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "1.7556446518953416e-29",
+      "hex": "0x1.6416483830ba1p-96"
+     },
+     "step4_residual": {
+      "repr": "3.676329009376082e-33",
+      "hex": "0x1.316adefd81000p-108"
+     },
+     "relerr": {
+      "repr": "0.00020944437656240984",
+      "hex": "0x1.b73c97ece2a13p-13"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "4.043131255563633e-34",
+      "hex": "0x1.0cb6504cba1bfp-111"
+     },
+     "roundoff_floor": {
+      "repr": "1.3151139265332385e-35",
+      "hex": "0x1.17b19cdd39a02p-116"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 2,
+     "span": [
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      },
+      {
+       "repr": "13.969498908810177",
+       "hex": "0x1.bf0622935b1dep+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      },
+      {
+       "repr": "1166476.2982254943",
+       "hex": "0x1.1cc8c4c588189p+20"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "6.542087492618073e-27",
+      "hex": "0x1.0328a62b07f90p-87"
+     },
+     "step4_residual": {
+      "repr": "2.2782535537578185e-36",
+      "hex": "0x1.839ff00000000p-119"
+     },
+     "relerr": {
+      "repr": "3.482456565016201e-10",
+      "hex": "0x1.7ee67024442fbp-32"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "4.043131255563631e-34",
+      "hex": "0x1.0cb6504cba1bdp-111"
+     },
+     "roundoff_floor": {
+      "repr": "1.7029168510547438e-35",
+      "hex": "0x1.6a2b9cbe584efp-116"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 3,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "2.8195093882168407e-29",
+      "hex": "0x1.1deea610e423ap-95"
+     },
+     "step4_residual": {
+      "repr": "3.915570088920322e-33",
+      "hex": "0x1.454af752c0000p-108"
+     },
+     "relerr": {
+      "repr": "0.00013887416389830393",
+      "hex": "0x1.233d7fc01f94ep-13"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.0215656277818164e-34",
+      "hex": "0x1.0cb6504cba1bfp-112"
+     },
+     "roundoff_floor": {
+      "repr": "7.449414176043832e-36",
+      "hex": "0x1.3cdcefed62833p-117"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 3,
+     "span": [
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      },
+      {
+       "repr": "9.747475923970981",
+       "hex": "0x1.37eb52a100168p+3"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      },
+      {
+       "repr": "17109.984830061636",
+       "hex": "0x1.0b57f0774aab6p+14"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "-1.0642323692224366e-29",
+      "hex": "-0x1.afb4352f0eca7p-97"
+     },
+     "step4_residual": {
+      "repr": "4.4092648376041206e-36",
+      "hex": "0x1.771948ea00000p-118"
+     },
+     "relerr": {
+      "repr": "4.143141070615692e-07",
+      "hex": "0x1.bcddcb68b5111p-22"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.0215656277818164e-34",
+      "hex": "0x1.0cb6504cba1bfp-112"
+     },
+     "roundoff_floor": {
+      "repr": "4.639343616507556e-37",
+      "hex": "0x1.3bbcc3f9dd4b1p-121"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 4,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "6.580958685341583",
+       "hex": "0x1.a52e6d5677a1ep+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "720.2304309637558",
+       "hex": "0x1.681d7ec306a89p+9"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "2.034962233099812e-29",
+      "hex": "0x1.9cbd47b4bd3dep-96"
+     },
+     "step4_residual": {
+      "repr": "8.11649846613315e-34",
+      "hex": "0x1.0db78860f0000p-110"
+     },
+     "relerr": {
+      "repr": "3.9885253564482476e-05",
+      "hex": "0x1.4e94ee0914a5fp-15"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.0107828138909086e-34",
+      "hex": "0x1.0cb6504cba1c1p-113"
+     },
+     "roundoff_floor": {
+      "repr": "6.253978786599647e-37",
+      "hex": "0x1.a99fad7ab99fap-121"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 4,
+     "span": [
+      {
+       "repr": "6.580958685341583",
+       "hex": "0x1.a52e6d5677a1ep+2"
+      },
+      {
+       "repr": "7.636464431551382",
+       "hex": "0x1.e8bbd54fa5259p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "720.2304309637558",
+       "hex": "0x1.681d7ec306a89p+9"
+      },
+      {
+       "repr": "2071.403723299461",
+       "hex": "0x1.02eceb4d1ffa3p+11"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "7.849387121259207e-30",
+      "hex": "0x1.3e68b239006acp-97"
+     },
+     "step4_residual": {
+      "repr": "5.692163652825554e-37",
+      "hex": "0x1.83637a4000000p-121"
+     },
+     "relerr": {
+      "repr": "7.251730584403618e-08",
+      "hex": "0x1.37759ef93bdb8p-24"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "1.0107828138909078e-34",
+      "hex": "0x1.0cb6504cba1bdp-113"
+     },
+     "roundoff_floor": {
+      "repr": "5.963903970646441e-38",
+      "hex": "0x1.44b4b0743d729p-124"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 5,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "6.053205812236683",
+       "hex": "0x1.8367b959e0e00p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "424.47483847097544",
+       "hex": "0x1.a8798f0397b8ep+8"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "1.28018544137735e-29",
+      "hex": "0x1.03a70748e5677p-96"
+     },
+     "step4_residual": {
+      "repr": "4.2646218862460406e-33",
+      "hex": "0x1.624a7a1254000p-108"
+     },
+     "relerr": {
+      "repr": "0.0003332363324342137",
+      "hex": "0x1.5d6c7264f1092p-12"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "5.053914069454543e-35",
+      "hex": "0x1.0cb6504cba1c1p-114"
+     },
+     "roundoff_floor": {
+      "repr": "1.8350753670368064e-37",
+      "hex": "0x1.f38e168b57eb9p-123"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 5,
+     "span": [
+      {
+       "repr": "6.053205812236683",
+       "hex": "0x1.8367b959e0e00p+2"
+      },
+      {
+       "repr": "6.580958685341583",
+       "hex": "0x1.a52e6d5677a1ep+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "424.47483847097544",
+       "hex": "0x1.a8798f0397b8ep+8"
+      },
+      {
+       "repr": "720.2304309637558",
+       "hex": "0x1.681d7ec306a89p+9"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "7.548579567071232e-30",
+      "hex": "0x1.3234ee93f2b45p-97"
+     },
+     "step4_residual": {
+      "repr": "5.938825631541065e-37",
+      "hex": "0x1.942cef7000000p-121"
+     },
+     "relerr": {
+      "repr": "7.867474994478845e-08",
+      "hex": "0x1.51e7cd688e9b7p-24"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "5.053914069454543e-35",
+      "hex": "0x1.0cb6504cba1c1p-114"
+     },
+     "roundoff_floor": {
+      "repr": "1.943085757191621e-38",
+      "hex": "0x1.a72aa6a30657ep-126"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    },
+    {
+     "depth": 6,
+     "span": [
+      {
+       "repr": "5.5254529391317835",
+       "hex": "0x1.61a1055d4a1e2p+2"
+      },
+      {
+       "repr": "5.7893293756842334",
+       "hex": "0x1.72845f5b957f1p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "249.9999999999999",
+       "hex": "0x1.f3ffffffffffcp+7"
+      },
+      {
+       "repr": "325.79379500874063",
+       "hex": "0x1.45cb36265244ep+8"
+      }
+     ],
+     "contains_x_s": true,
+     "type": "Levin",
+     "estimate": {
+      "repr": "7.70850056444266e-30",
+      "hex": "0x1.38b1a582f5ba8p-97"
+     },
+     "step4_residual": {
+      "repr": "7.730256733050053e-32",
+      "hex": "0x1.9160bc948dc00p-104"
+     },
+     "relerr": {
+      "repr": "0.010129807581948968",
+      "hex": "0x1.4beefc23be419p-7"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.5269570347272716e-35",
+      "hex": "0x1.0cb6504cba1c1p-115"
+     },
+     "roundoff_floor": {
+      "repr": "4.902922347071898e-38",
+      "hex": "0x1.0af0c384b84bep-124"
+     },
+     "phase_limited": false,
+     "resolved": false,
+     "accepted_by_driver": false
+    },
+    {
+     "depth": 6,
+     "span": [
+      {
+       "repr": "5.7893293756842334",
+       "hex": "0x1.72845f5b957f1p+2"
+      },
+      {
+       "repr": "6.053205812236683",
+       "hex": "0x1.8367b959e0e00p+2"
+      }
+     ],
+     "z_span": [
+      {
+       "repr": "325.79379500874063",
+       "hex": "0x1.45cb36265244ep+8"
+      },
+      {
+       "repr": "424.47483847097544",
+       "hex": "0x1.a8798f0397b8ep+8"
+      }
+     ],
+     "contains_x_s": false,
+     "type": "Levin",
+     "estimate": {
+      "repr": "5.0890892274445935e-30",
+      "hex": "0x1.9ce03f7f2593cp-98"
+     },
+     "step4_residual": {
+      "repr": "2.7101112300041962e-42",
+      "hex": "0x1.e380000000000p-139"
+     },
+     "relerr": {
+      "repr": "5.325336438179291e-13",
+      "hex": "0x1.2bca2fad21e8fp-41"
+     },
+     "rtol": 1e-07,
+     "local_atol": {
+      "repr": "2.5269570347272716e-35",
+      "hex": "0x1.0cb6504cba1c1p-115"
+     },
+     "roundoff_floor": {
+      "repr": "7.761047592397533e-39",
+      "hex": "0x1.520a9289d8955p-127"
+     },
+     "phase_limited": false,
+     "resolved": true,
+     "accepted_by_driver": true
+    }
+   ]
+  }
+ },
+ "evidence": {
+  "tree": "r14",
+  "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c",
+  "expected_sha": "f5cee4c7a76e755119d923341f204f139b29be7e",
+  "head": "f5cee4c7a76e755119d923341f204f139b29be7e",
+  "status_short": "",
+  "files": {
+   "ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/__init__.py",
+   "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/StoreFixtures/__init__.py",
+   "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/primitive_phase.py",
+   "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/QuadSource.py",
+   "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/QuadSourceIntegral.py",
+   "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/GkSourcePolicyData.py",
+   "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/TkSourceFunctions.py",
+   "ComputeTargets.phase_groups": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/phase_groups.py",
+   "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/GkWKBIntegration.py",
+   "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/ComputeTargets/TkWKBIntegration.py",
+   "AdaptiveLevin.levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/AdaptiveLevin/levin_quadrature.py",
+   "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/main.py"
+  },
+  "all_in_tree": true,
+  "in_tree": {
+   "ComputeTargets": true,
+   "StoreFixtures": true,
+   "ComputeTargets.primitive_phase": true,
+   "ComputeTargets.QuadSource": true,
+   "ComputeTargets.QuadSourceIntegral": true,
+   "ComputeTargets.GkSourcePolicyData": true,
+   "ComputeTargets.TkSourceFunctions": true,
+   "ComputeTargets.phase_groups": true,
+   "ComputeTargets.GkWKBIntegration": true,
+   "ComputeTargets.TkWKBIntegration": true,
+   "AdaptiveLevin.levin_quadrature": true,
+   "main.py": true
+  },
+  "GkWKBValue_has_theta_residual": true,
+  "TkSourceFunctions_reads_theta_residual": true,
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c",
+  "dont_write_bytecode": true,
+  "OMP_NUM_THREADS": "1",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out",
+  "pid": 64364,
+  "host": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "ray_initialized": false,
+  "scripts_sha256": {
+   "p1lib.py": "d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed",
+   "harness.py": "dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7",
+   "rebuild.py": "a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b",
+   "prov.py": "ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140"
+  },
+  "primary": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite"
+ }
+}

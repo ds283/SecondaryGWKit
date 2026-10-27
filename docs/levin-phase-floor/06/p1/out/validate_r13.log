@@ -1,0 +1,36 @@
+# command: PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/validate.py r13
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:03:23Z
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+# p1 r13: reads /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite (read-only)
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# p1 r13: context in 0.4 s
+# p1 r13 row1: total np.float64(5.918585465520117e-20) (stored 5.918585465520117e-20); all identical True; compute 0.5 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+# p1 r13 row2: total np.float64(-3.3961904798375587e-19) (stored -3.3961904798375587e-19); all identical True; compute 0.3 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+== r13 row1: all identical True; 54 items; differing []
+== r13 row2: all identical True; 54 items; differing []
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/validate_r13.json sha256 86424efad7b73bf766b9956858bdbac6499734c4ffc60ccf4fa8b3441e62a481
+# exit 0 at 2026-10-27T00:03:26Z

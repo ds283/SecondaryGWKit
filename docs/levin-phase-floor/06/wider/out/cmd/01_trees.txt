@@ -1,0 +1,81 @@
+$ bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\;\ do\ echo\ \"==\ \$t\"\;\ git\ -C\ \$t\ rev-parse\ HEAD\;\ git\ -C\ \$t\ status\ --short\;\ echo\ \"--\ ignored:\"\;\ git\ -C\ \$t\ status\ --short\ --ignored\;\ done\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ worktree\ list\;\ hostname\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T21:57:18Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+-- ignored:
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+!! ObjectFactories/__pycache__/
+!! Omega_GW_sensitivity.pdf
+!! Omega_GW_sensitivity.png
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! RayTools/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! docs/handover/a3-v2/findings/__pycache__/
+!! profile-db.sqlite
+!! test-db-qcd-shard0000.sqlite
+!! test-db-qcd-shard0001.sqlite
+!! test-db-qcd-shard0002.sqlite
+!! test-db-qcd-shard0003.sqlite
+!! test-db-qcd-shard0004.sqlite
+!! test-db-qcd-shard0005.sqlite
+!! test-db-qcd-shard0006.sqlite
+!! test-db-qcd-shard0007.sqlite
+!! test-db-qcd-shard0008.sqlite
+!! test-db-qcd-shard0009.sqlite
+!! test-db-qcd-shard0010.sqlite
+!! test-db-qcd-shard0011.sqlite
+!! test-db-qcd-shard0012.sqlite
+!! test-db-qcd-shard0013.sqlite
+!! test-db-qcd-shard0014.sqlite
+!! test-db-qcd-shard0015.sqlite
+!! test-db-qcd-shard0016.sqlite
+!! test-db-qcd-shard0017.sqlite
+!! test-db-qcd-shard0018.sqlite
+!! test-db-qcd-shard0019.sqlite
+!! test-db-qcd.sqlite
+!! thirdparty/__pycache__/
+!! three_bessel_debug/
+!! tools/__pycache__/
+!! var/
+!! venv/
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622
+9f66622d5ced82de9a6ec0c20baa9a2e715c6d27
+-- ignored:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c
+f5cee4c7a76e755119d923341f204f139b29be7e
+-- ignored:
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 9f66622 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c f5cee4c (detached HEAD)
+mps026298.phys.susx.ac.uk
+21:57  up 19 days, 12:33, 2 users, load averages: 10.01 10.10 9.51
+# ----
+# end 2026-10-26T21:57:19Z
+# exit 0

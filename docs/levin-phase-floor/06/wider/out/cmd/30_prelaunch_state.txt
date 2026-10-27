@@ -1,0 +1,62 @@
+$ bash -c diff\ -ruN\ state/scripts_05a_reference\ scripts\ \>\ out/scripts_diff_against_05a_at_launch.txt\;\ echo\ \"diff\ exit\ \$\?\"\;\ diff\ -rq\ state/scripts_05a_reference\ scripts\;\ shasum\ -a\ 256\ scripts/\*\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/hash_store.py\ prelaunch\ \>\ state/store_files_prelaunch.txt\;\ diff\ \<\(grep\ -v\ \"\^\[#\$\]\"\ state/store_files_before.txt\)\ \<\(grep\ -v\ \"\^#\"\ state/store_files_prelaunch.txt\)\ \&\&\ echo\ \"A3\ v2\ files:\ identical\ to\ before\"\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/hash_store.py\ copy_prelaunch\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy\ \>\ state/copy_files_prelaunch.txt\;\ diff\ \<\(grep\ -v\ \"\^#\"\ state/copy_files_certified.txt\ \|\ cut\ -d\"\ \"\ -f1\,3\,5-\)\ \<\(grep\ -v\ \"\^#\"\ state/copy_files_prelaunch.txt\ \|\ cut\ -d\"\ \"\ -f1\,3\,5-\)\ \&\&\ echo\ \"copy\ files:\ sha256\ identical\ to\ certified\"\;\ grep\ -h\ journal\ state/store_files_prelaunch.txt\ state/copy_files_prelaunch.txt\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ head\ -4\ \|\ cut\ -c1-160\;\ git\ --no-optional-locks\ status\ --short\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622\ status\ --short\ --ignored\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ status\ --short\ --ignored\;\ echo\ \"\(statuses\ end\)\"\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:36:19Z
+# ----
+diff exit 1
+Only in scripts: certify_copy.py
+Only in scripts: explore_store.py
+Only in scripts: fingerprint_copy.py
+Files state/scripts_05a_reference/harness.py and scripts/harness.py differ
+Files state/scripts_05a_reference/hash_store.py and scripts/hash_store.py differ
+Files state/scripts_05a_reference/launch.py and scripts/launch.py differ
+Only in scripts: make_copy.py
+Only in scripts: phase_probe06.py
+Files state/scripts_05a_reference/prov.py and scripts/prov.py differ
+Only in scripts: pure_wkb_zinit.py
+Files state/scripts_05a_reference/rebuild.py and scripts/rebuild.py differ
+Files state/scripts_05a_reference/rec.sh and scripts/rec.sh differ
+Only in scripts: rerun.py
+Files state/scripts_05a_reference/run_wider.py and scripts/run_wider.py differ
+Only in scripts: u0.py
+Only in scripts: u0_clause_a.py
+Files state/scripts_05a_reference/worker.py and scripts/worker.py differ
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  scripts/analyse.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  scripts/certify_copy.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  scripts/explore_store.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  scripts/fingerprint_copy.py
+b2df1f2a840707326abbc434192b7e620362b8c6cb24c4fa443b07e8a91a1b71  scripts/harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+c78bb5281a93f15e77b5d3cd597c26d368dbda743cd39cefb34822f8a341f2f3  scripts/launch.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  scripts/make_copy.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  scripts/phase_probe06.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  scripts/probe.py
+9a8beb6dec9cad7ce651d8be2a4c80c3875e68419dc3c16d179d4e86320e2838  scripts/prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  scripts/pure_wkb_zinit.py
+d3c2b757c1f64c95db6c5644ce169bcae7ee5cc7fbf0ec0c83640be8df6198b7  scripts/rebuild.py
+bc0d4c06ee81ed1277c3f96ca18f2f5e18e1c45aa44a0f53d1df45888c9b0f8b  scripts/rec.sh
+c8412bec306f863ae29e596aa2f7bf2c3714c3a90b6122bfbc6584af5f898b84  scripts/rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  scripts/rescore_t1.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  scripts/run_wider.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  scripts/t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  scripts/t1_true_step_only.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  scripts/u0_clause_a.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  scripts/u0.py
+31e4399bf33b70e0eaa30b2e1c18d7a84b73a62d9cee1db0257bd15d5a5b13d5  scripts/worker.py
+A3 v2 files: identical to before
+copy files: sha256 identical to certified
+# journal/-wal/-shm files beside the store: none
+# journal/-wal/-shm files beside the store: none
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06-r14-residual-20261026T215945     done              -      37m  levin-phase-floor prompt 06, R14 on the Mac Studio (mps026298; tree f5cee
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -      41m  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f666
+   handover-04-cost-growth-20261026T173720               done          60/60   4h 59m  handover prompt 04 (A4) on the Mac Studio (mps026298; Python 3.13.16), ma
+(statuses end)
+22:36  up 19 days, 13:12, 2 users, load averages: 4.07 8.45 9.33
+# ----
+# end 2026-10-26T22:36:20Z
+# exit 0

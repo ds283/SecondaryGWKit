@@ -1,0 +1,9 @@
+# recheck4.py sha256 4d4c713379818aed6c0d83fba60ae9a8ddebd3d3b7d235e352979043bfcd2b31, run 2026-10-27T01:11:31Z on mps026298, R13/R14 store hashes compared before and after
+chosen: k 0x1.e848000000000p+19 z (('z_serial', 'redshift', '1b2a1c1291d9072de8e205f0776f39e0adf15bc642029eb6c1348f083d06437a'),) |theta| 766842537.9856694 div -122046780 -122046780
+tabulated mod_A -0x1.8cf0843e97b54p+1 mod_B -0x1.8cf083e8164e1p+1 residual_B 1.570322791017612 G_A -2354840159.2321043 G_B -2354842499.9763517
+r13 matches 1
+  shard serial div mod G_WKB [residual]: [1, 29003, -122046780, '-0x1.8cf0843e97b54p+1', '-2354840159.2321043']
+r14 matches 1
+  shard serial div mod G_WKB [residual]: [1, 47146, -122046780, '-0x1.8cf083e8164e1p+1', '-2354842499.9763517', '0x1.9200aca79586bp+0', '1.570322791017612']
+|dmod| = 4.0282253532808454e-08  eps|theta| = 1.7027324838673627e-07  ratio 0.2365741765924183  tabulated 0.2365741765924183
+STORES-UNCHANGED

@@ -1,0 +1,50 @@
+=== 2026-10-26T22:03:53Z Ray session logs /tmp/ray-sgk/session_2026-10-26_21-55-52_579453_97740 (read-only)
+$ ls logs/worker-*.out | wc -l; ls logs/worker-*.err | wc -l
+12
+12
+$ cat logs/worker-*.out logs/worker-*.err | grep -c "!! WARNING (GkSourcePolicyData"
+0
+$ ... | grep -c "!! WARNING"
+0
+$ ... | grep -c Traceback
+0
+$ ... | grep -c _check_phase_sign
+0
+$ ... | grep -ciE "error|exception"
+0
+$ grep -h "^:task_name:" logs/worker-*.out | sort | uniq -c
+    291 :task_name:apply_GkSource_policy
+    291 :task_name:assemble_GkSource_values
+      1 :task_name:compute_background
+      6 :task_name:compute_quad_source
+    864 :task_name:compute_QuadSource_integral
+      3 :task_name:find_horizon_exit_time
+   1371 :task_name:numeric_with_phase_cut
+   3480 :task_name:WKB_phase_function
+$ total bytes of worker-*.err
+205411
+=== 2026-10-26T22:03:53Z Ray session logs /tmp/ray-sgk/session_2026-10-26_21-59-46_179241_99938 (read-only)
+$ ls logs/worker-*.out | wc -l; ls logs/worker-*.err | wc -l
+12
+12
+$ cat logs/worker-*.out logs/worker-*.err | grep -c "!! WARNING (GkSourcePolicyData"
+0
+$ ... | grep -c "!! WARNING"
+0
+$ ... | grep -c Traceback
+0
+$ ... | grep -c _check_phase_sign
+0
+$ ... | grep -ciE "error|exception"
+0
+$ grep -h "^:task_name:" logs/worker-*.out | sort | uniq -c
+    291 :task_name:apply_GkSource_policy
+    291 :task_name:assemble_GkSource_values
+      1 :task_name:compute_background
+      6 :task_name:compute_quad_source
+    864 :task_name:compute_QuadSource_integral
+      3 :task_name:find_horizon_exit_time
+   1371 :task_name:numeric_with_phase_cut
+   3480 :task_name:WKB_phase_function
+$ total bytes of worker-*.err
+205411

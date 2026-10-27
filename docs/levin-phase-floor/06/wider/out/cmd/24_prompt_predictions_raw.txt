@@ -1,0 +1,48 @@
+$ bash -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ show\ f5cee4c:prompts/levin-phase-floor/06-producers-store-the-residual.md\ \|\ sed\ -n\ 379\,409p\ \>\ state/prompt_section6_predictions.raw\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ show\ f5cee4c:prompts/levin-phase-floor/06-producers-store-the-residual.md\ \|\ sed\ -n\ 460\,464p\ \>\ state/prompt_section9_point4.raw\;\ shasum\ -a\ 256\ state/\*.raw\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c\ show\ f5cee4c:prompts/levin-phase-floor/06-producers-store-the-residual.md\ \|\ shasum\ -a\ 256\;\ cat\ state/prompt_section6_predictions.raw\;\ echo\ ----\;\ cat\ state/prompt_section9_point4.raw
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:32:31Z
+# ----
+882f862c232726a835ae27b77d7c2e322af9bacc02eb783e58f39c17fb3f317b  state/prompt_section6_predictions.raw
+688b5d6db185839aee71eb3895cffb539a6209fc7f7d52181defd7e4f2d0b6e6  state/prompt_section9_point4.raw
+531ccb5acaafc4c0579bb464939f0685a9051cb61542b784b5842914cfd09941  -
+**Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
+- **S1 — $\varphi_G$'s noise goes.**
+  - **The rule:** in every **pure-WKB** probe window of $G$ on R1–R7,
+    $\sigma_s \le \max(10^{-3}\,\sigma_{t_5},\ 10^{-6}F)$.
+  - **Holds** if true in every pure-WKB window. **Undecided** if there is none.
+  - Numerically seeded windows are not scored: their $\sigma_s$ is reported beside the window RMS
+    of $\Delta\theta$ alone (the probe, above).
+  - 04 measured $\sigma$ at 0 at the median, quantised, and 0.46–0.78 $F$ at the maximum, for
+    production's $\varphi_G$.
+- **S2 — $\varphi_T$'s too.** S1's rule for every probe window of a $T$ factor. $T$ has one
+  object per $k$, so its $\Delta\theta$ is a constant and every $T$ window is scored.
+- **S3 — the cap does not return.** On every row (all 39), under $s$ at `1e-7`, no group has a
+  region at depth ≥ 18. An over-budget unit counts as false.
+- **S4 — the stored noise was within the declared error.**
+  - **The rule:** on every row (all 39), $|{\rm total}_s - {\rm total}_{t_5}| \le$
+    `total_abserr`$_{t_5}$, at `1e-7`.
+  - A failure measures what the stored noise cost a total beyond what it declared. That is a
+    finding about the rows before this prompt, not a fault in it.
+- **S5 — the declared error is honest after the change.**
+  - **The rule:** on every one of the 31 depth-20 rows with both $s$ units in budget,
+    $|{\rm total}_s(10^{-7}) - {\rm total}_s(10^{-8})| \le$ `total_abserr`$_s(10^{-7})$.
+  - 05a's T4, the same rule under $t_5$, held on 29 of 31.
+
+**Descriptive, not scored:**
+- $|{\rm total}_s - {\rm total}_{t_5}|$, relative and against `total_abserr`$_{t_5}$, on every row;
+- regions and maximum depth per group, $t_5$ against $s$;
+- `total_converged` under both trees;
+- `theta_deriv`'s change at the Levin windows: $\varphi'$ was the term 04 and
+  `phase-representation` 02 found worse than omitting $\varphi$;
+- `GkSourcePolicyData`'s `Levin_z` under both trees;
+- `convergence_kinds.py` under $s$, as 05a ran it.
+----
+4. **§6, S1.** A numerically seeded `GkWKBIntegration` takes its $\Delta\theta$ from the
+   `GkNumericIntegration` at `rtol` $10^{-8}$, a separate integration for each source redshift. Its
+   error varies from sample to sample and is far above $10^{-6}F$, and storing $r$ exactly does not
+   remove it. S1 is scored on pure-WKB windows only; the others are reported beside the noise of
+   $\Delta\theta$ alone. S2 is unchanged.
+# ----
+# end 2026-10-26T22:32:31Z
+# exit 0

@@ -1,0 +1,185 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/certify_copy.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:20:30Z
+# ----
+# route (B): the scratch copy of A3 v2, certified
+# written 2026-10-26T22:20:30Z on mps026298.phys.susx.ac.uk
+# script certify_copy.py sha256 b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0
+# tree t5: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 HEAD 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27 (status --short: empty)
+# tree s: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c HEAD f5cee4c7a76e755119d923341f204f139b29be7e (status --short: empty)
+   handover-A3-v2-lambdacdm.sqlite: replicated_tables: 13 rows, 0 differing
+   handover-A3-v2-lambdacdm.sqlite: replication_in_flight: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm.sqlite: shard_key_config: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm.sqlite: shard_keys: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm.sqlite: sharded_tables: 15 rows, 0 differing
+   handover-A3-v2-lambdacdm.sqlite: shards: 4 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSourceValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0000.sqlite: BackgroundModel: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: BackgroundModelValue: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: BackgroundModel_tags: 4 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkNumericIntegration: 1188 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkNumericValue: 39179 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkNumeric_tags: 9504 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSource: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSourcePolicyData: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSourceValue: 254040 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSource_parents: 254040 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkSource_tags: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkWKBIntegration: 3480 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkWKBValue: 227083 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0000.sqlite: GkWKB_tags: 27840 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: IntegrationSolver: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: LambdaCDM: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: OneLoopIntegral: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: OneLoopIntegral_tags: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QCD_Cosmology: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSource: 10 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSourceIntegral: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSourceIntegral_tags: 20880 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSourceValue: 4807 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: QuadSource_tags: 70 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkNumericIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkNumericValue: 967 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkNumeric_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkWKBIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkWKBValue: 2354 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0000.sqlite: TkWKB_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: redshift: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: store_tag: 10 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: tolerance: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: version: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: wavenumber: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0000.sqlite: wavenumber_exit_time: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSourceValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0001.sqlite: BackgroundModel: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: BackgroundModelValue: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: BackgroundModel_tags: 4 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkNumericIntegration: 1089 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkNumericValue: 33876 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkNumeric_tags: 8712 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSource: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSourcePolicyData: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSourceValue: 254040 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSource_parents: 254040 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkSource_tags: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkWKBIntegration: 3480 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkWKBValue: 231942 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0001.sqlite: GkWKB_tags: 27840 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: IntegrationSolver: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: LambdaCDM: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: OneLoopIntegral: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: OneLoopIntegral_tags: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QCD_Cosmology: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSource: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSourceIntegral: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSourceIntegral_tags: 20880 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSourceValue: 3681 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: QuadSource_tags: 56 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkNumericIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkNumericValue: 963 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkNumeric_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkWKBIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkWKBValue: 2457 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0001.sqlite: TkWKB_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: redshift: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: store_tag: 10 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: tolerance: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: version: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: wavenumber: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0001.sqlite: wavenumber_exit_time: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSourceValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0002.sqlite: BackgroundModel: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: BackgroundModelValue: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: BackgroundModel_tags: 4 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkNumericIntegration: 985 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkNumericValue: 28525 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkNumeric_tags: 7880 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSource: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSourcePolicyData: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSourceValue: 254040 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSource_parents: 254040 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkSource_tags: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkWKBIntegration: 3480 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkWKBValue: 235866 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0002.sqlite: GkWKB_tags: 27840 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: IntegrationSolver: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: LambdaCDM: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: OneLoopIntegral: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: OneLoopIntegral_tags: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QCD_Cosmology: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSource: 6 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSourceIntegral: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSourceIntegral_tags: 20880 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSourceValue: 2658 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: QuadSource_tags: 42 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkNumericIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkNumericValue: 963 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkNumeric_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkWKBIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkWKBValue: 2561 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0002.sqlite: TkWKB_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: redshift: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: store_tag: 10 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: tolerance: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: version: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: wavenumber: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0002.sqlite: wavenumber_exit_time: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSourceValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkWKBValue CREATE sql differs only by the added column ', theta_residual FLOAT'
+   handover-A3-v2-lambdacdm-shard0003.sqlite: BackgroundModel: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: BackgroundModelValue: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: BackgroundModel_tags: 4 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkNumericIntegration: 1287 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkNumericValue: 44865 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkNumeric_tags: 10296 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSource: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSourcePolicyData: 290 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSourceValue: 254040 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSource_parents: 254040 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkSource_tags: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkWKBIntegration: 3480 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkWKBValue: 222046 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0003.sqlite: GkWKB_tags: 27840 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: IntegrationSolver: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: LambdaCDM: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: OneLoopIntegral: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: OneLoopIntegral_tags: 0 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QCD_Cosmology: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSource: 12 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSourceIntegral: 2320 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSourceIntegral_tags: 20880 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSourcePolicy: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSourceValue: 6032 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: QuadSource_tags: 84 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkNumericIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkNumericValue: 972 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkNumeric_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkWKBIntegration: 2 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkWKBValue: 2255 rows, 0 differing; theta_residual non-NULL rows 0
+   handover-A3-v2-lambdacdm-shard0003.sqlite: TkWKB_tags: 14 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: redshift: 1740 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: store_tag: 10 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: tolerance: 7 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: version: 1 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: wavenumber: 8 rows, 0 differing
+   handover-A3-v2-lambdacdm-shard0003.sqlite: wavenumber_exit_time: 8 rows, 0 differing
+== 3411578 rows compared
+== the copy is A3 v2 but for the three added, all-NULL columns: CERTIFIED
+# ----
+# end 2026-10-26T22:20:52Z
+# exit 0

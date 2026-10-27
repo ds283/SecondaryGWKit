@@ -1,0 +1,58 @@
+=== R13 end checks, 2026-10-26T21:59:25Z
+$ status.json fields and per-class digests vs R8 (python, read-only)
+state = done
+exit_code = 0
+stage = CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+heartbeat = 2026-10-26T21:58:44+00:00
+pid = 97740
+fingerprint.digest = 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+fingerprint.encoding_format = 1
+fingerprint.fingerprint_format = 6
+fingerprint.problems = {}
+fingerprint.taken = {'git_dirty': False, 'git_head': '9f66622d5ced82de9a6ec0c20baa9a2e715c6d27', 'run_id': 'levin-phase-floor-06-r13-parent-20261026T215550', 'when': '2026-10-26T21:58:42+00:00'}
+fingerprint_sidecar = not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.manifest.json is not a problem-free registry sidecar (there is none)
+R8 digest = 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+digest equal R8: True
+classes: 21 R8: 21 same keys: True
+classes differing from R8: []
+$ kill -0 97740; kill -0 97736
+(eval):kill:22: kill 97740 failed: no such process
+97740 gone
+(eval):kill:22: kill 97736 failed: no such process
+97736 gone
+$ tail -8 launch log
+[36m(Datastore pid=97836)[0m |  Omega_cc = 0.6889[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=97836)[0m |  Omega_r = 9.129e-05[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=97836)[0m |  present-day energy density = 8.6e-24 g/m^3[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=97836)[0m |  matter-radiation equality at z = 3407[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=97836)[0m |  matter-Lambda equality at z = 0.3034[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=97836)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"[32m [repeated 3x across cluster][0m
+[36m(Datastore pid=97836)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20[32m [repeated 3x across cluster][0m
+** driver exit status 0
+$ grep -c Traceback launch log, stdout.log, stderr.log
+0
+var/runs/levin-phase-floor-06-r13-parent-20261026T215550/stderr.log: 0 Tracebacks, 0 bytes
+var/runs/levin-phase-floor-06-r13-parent-20261026T215550/stdout.log: 0 Tracebacks, 8006 bytes
+$ ls -la run dir
+total 28
+drwxr-xr-x  6 ds283 staff   192 Oct 26 21:58 .
+drwxr-xr-x 40 ds283 staff  1280 Oct 26 21:55 ..
+-rw-r--r--  1 ds283 staff  4600 Oct 26 21:55 manifest.json
+-rw-r--r--  1 ds283 staff 10322 Oct 26 21:58 status.json
+-rw-r--r--  1 ds283 staff     0 Oct 26 21:55 stderr.log
+-rw-r--r--  1 ds283 staff  8006 Oct 26 21:58 stdout.log
+$ git -C P status --short --ignored; find P -newer state/r13_launch_marker
+$ git -C C status --short --ignored; find C -newer state/r13_launch_marker
+$ ls -l var/datastores/levin-phase-floor-06*
+-rw-r--r-- 1 ds283 staff 24072192 Oct 26 21:58 var/datastores/levin-phase-floor-06-r13-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff 24285184 Oct 26 21:58 var/datastores/levin-phase-floor-06-r13-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff  1077248 Oct 26 21:56 var/datastores/levin-phase-floor-06-r13-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff 23564288 Oct 26 21:58 var/datastores/levin-phase-floor-06-r13-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff    36864 Oct 26 21:56 var/datastores/levin-phase-floor-06-r13.sqlite
+$ runregistrykit list | head -3; tail -1
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -       4m  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f666
+   handover-04-cost-growth-20261026T173720               done          60/60   4h 22m  handover prompt 04 (A4) on the Mac Studio (mps026298; Python 3.13.16), ma
+22 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 22 finished; 0 with no host recorded.
+$ git -C M rev-parse HEAD; status --short
+28ebaf0743e0555fb2c4512ce714884005a60eff

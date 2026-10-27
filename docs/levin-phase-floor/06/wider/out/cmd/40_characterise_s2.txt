@@ -1,0 +1,50 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B scripts/characterise_s2.py state/probe_windows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:27:30Z
+# ----
+== T windows, S2 true: 10747
+   sigma_s/sigma_t5: min 1.28e-10 median 3.78e-05 p90 1 max 8.89
+   sigma_t5/(eps|theta|): min 3.28e-11 median 0.224 p90 1.48 max 2.87e+05
+   sigma_s/(eps|theta|): min 2.33e-11 median 1.99e-06 p90 1.45 max 2.87e+05
+   sigma_s/F: min 1.61e-12 median 7.31e-10 p90 1.84e-07 max 9.96e-07
+   sigma_s (rad): min 1.48e-16 median 2.4e-15 p90 8.79e-13 max 9.11e-11
+   z_centre: min 11 median 2.52e+05 p90 4.71e+08 max 8.58e+11
+   |theta| at centre: min 1.31 median 3.13e+06 p90 8.58e+08 max 4.25e+10
+   by (row, factor): R1 Tq 572 (z 33.2-1.71e+07); R1 Tr 722 (z 33.2-1.3e+10); R2 Tq 675 (z 303-4.1e+10); R2 Tr 783 (z 303-4.3e+10); R3 Tq 905 (z 11-1.42e+10); R3 Tr 1099 (z 11-8.58e+11); R4 Tq 627 (z 14.5-2.64e+07); R4 Tr 779 (z 14.5-1.31e+10); R5 Tq 718 (z 174-4.15e+10); R5 Tr 823 (z 174-4.4e+10); R6 Tq 743 (z 25.2-1.31e+10); R6 Tr 743 (z 25.2-1.31e+10); R7 Tq 779 (z 14.5-1.31e+10); R7 Tr 779 (z 14.5-1.31e+10)
+== T windows, S2 false: 2115
+   sigma_s/sigma_t5: min 0.952 median 1 p90 1 max 1.04
+   sigma_t5/(eps|theta|): min 4.94 median 925 p90 5.46e+04 max 1.51e+07
+   sigma_s/(eps|theta|): min 5.04 median 925 p90 5.46e+04 max 1.51e+07
+   sigma_s/F: min 1e-06 median 6.01e-06 p90 3.45e-05 max 0.000102
+   sigma_s (rad): min 1.7e-12 median 1.89e-11 p90 9.83e-11 max 1.73e-10
+   z_centre: min 1.75e+07 median 6.35e+09 p90 5.48e+10 max 1.49e+12
+   |theta| at centre: min 0.0514 median 96.2 p90 636 max 1.51e+03
+   by (row, factor): R1 Tq 196 (z 1.75e+07-1.56e+09); R1 Tr 204 (z 5.4e+08-4.82e+10); R2 Tq 154 (z 1.49e+09-4.82e+10); R2 Tr 146 (z 1.49e+10-4.71e+11); R3 Tq 14 (z 8.97e+09-1.52e+10); R3 Tr 24 (z 8.78e+11-1.49e+12); R4 Tq 177 (z 2.71e+07-1.56e+09); R4 Tr 183 (z 8.37e+08-4.82e+10); R5 Tq 135 (z 2.1e+09-4.82e+10); R5 Tr 130 (z 2.06e+10-4.71e+11); R6 Tq 194 (z 6.35e+08-4.82e+10); R6 Tr 194 (z 6.35e+08-4.82e+10); R7 Tq 182 (z 8.37e+08-4.82e+10); R7 Tr 182 (z 8.37e+08-4.82e+10)
+== T windows by z_centre bin: n, false
+   [0e+00, 1e+02): 744, 0
+   [1e+02, 1e+04): 2656, 0
+   [1e+04, 1e+06): 2800, 0
+   [1e+06, 1e+08): 2800, 133
+   [1e+08, 1e+10): 2642, 1089
+   [1e+10, 1e+12): 1202, 875
+   [1e+12, 1e+20): 18, 18
+== G windows, pure-WKB (I): 6700
+   sigma_t5/(eps|theta|): min 0 median 0 p90 0 max 0
+   sigma_s/(eps|theta|): min 1.88e-20 median 6.23e-16 p90 2.14e-14 max 1.14e-13
+   sigma_t5/F: min 0 median 0 p90 0 max 0
+   sigma_s/F: min 1.88e-20 median 5.73e-16 p90 1.87e-14 max 8.82e-14
+   z_centre: min 12 median 2.47e+06 p90 1.52e+10 max 1.21e+12
+== G windows, seeded: 3594
+   sigma_t5/(eps|theta|): min 0 median 0.273 p90 0.426 max 0.785
+   sigma_s/(eps|theta|): min 5.53e-07 median 0.00021 p90 0.000473 max 0.00124
+   sigma_t5/F: min 0 median 0.273 p90 0.425 max 0.784
+   sigma_s/F: min 5.53e-07 median 0.00021 p90 0.000472 max 0.00124
+   z_centre: min 4.15e+10 median 4.51e+13 p90 5.06e+15 max 1.64e+16
+   dtheta RMS unwrapped/F: min 6.35e-08 median 2.8e-05 p90 42.3 max 1.35e+05
+   dtheta RMS raw/F: min 6.35e-08 median 2.8e-05 p90 42.3 max 1.35e+05
+   sigma_s / dtheta RMS unwrapped: min 4.98e-10 median 7.79 p90 28.3 max 236
+   windows with dtheta RMS unwrapped > 1e-3 rad: 56
+# ----
+# end 2026-10-26T23:27:30Z
+# exit 0

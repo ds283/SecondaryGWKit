@@ -1,0 +1,16 @@
+$ bash -c stat\ -f\ \"%Sm\ %N\"\ -t\ \"%Y-%m-%dT%H:%M:%S%z\"\ state/predictions.md\ out/U0.txt\ out/U0_a.txt\;\ shasum\ -a\ 256\ state/predictions.md\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -I\ -c\ \"from\ pathlib\ import\ Path\;\ s=Path\(\\\"state/predictions.md\\\"\).read_text\(\)\;\ print\(\\\"section\ 6\ block\ quoted\ byte\ for\ byte:\\\"\,\ Path\(\\\"state/prompt_section6_predictions.raw\\\"\).read_text\(\)\ in\ s\)\;\ print\(\\\"section\ 9\ point\ 4\ quoted:\\\"\,\ Path\(\\\"state/prompt_section9_point4.raw\\\"\).read_text\(\)\ in\ s\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:32:54Z
+# ----
+stat: cannot read file system information for '%Sm %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S%z': No such file or directory
+state/predictions.md 100000d0000001a ? 1a 4096 4096 242837545 28052218 28052218 1129014461 1122088720
+out/U0.txt 100000d0000001a ? 1a 4096 4096 242837545 28052218 28052218 1129014461 1122088720
+out/U0_a.txt 100000d0000001a ? 1a 4096 4096 242837545 28052218 28052218 1129014461 1122088720
+851f1dc940f2151e8aad86e75c7f8db2d5d0bc33a4a84003140dfd33ef270aea  state/predictions.md
+section 6 block quoted byte for byte: True
+section 9 point 4 quoted: True
+# ----
+# end 2026-10-26T22:32:54Z
+# exit 0

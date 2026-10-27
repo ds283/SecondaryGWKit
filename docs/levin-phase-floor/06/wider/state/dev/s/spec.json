@@ -1,0 +1,21 @@
+{
+ "tree": "s",
+ "units": [
+  {
+   "uid": "dev-s-1e-7-ctrl-low-1",
+   "tree": "s",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/dev/s",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/dev/s/ledger.jsonl",
+ "pickle_regions": true
+}

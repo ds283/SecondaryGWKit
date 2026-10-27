@@ -1,0 +1,9 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -m runregistrykit store fingerprint /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:21:01Z
+# ----
+!! Cannot read sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite": shard #0 "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0000.sqlite" differs from the tables this code declares (its table "TkWKBValue" has the column(s) "theta_residual", which this code does not declare; its table "GkWKBValue" has the column(s) "theta_residual", which this code does not declare; its table "GkSourceValue" has the column(s) "theta_residual", which this code does not declare), so nothing was read
+# ----
+# end 2026-10-26T22:21:03Z
+# exit 1

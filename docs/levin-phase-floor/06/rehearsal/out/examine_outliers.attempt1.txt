@@ -1,0 +1,4 @@
+# examine_outliers.py sha256 05f5f1ca6a4a14ddf5ddb72363cdd7f59a4cb317a41802cd8f49cc162430ad0e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/phase_classes_rows.csv sha256 89b5ddb62c4b799596fa0409f1a48116ce1564025c79444aa438c78be447cd5e
+
+(1) rows with |Δ mod|/(eps|theta|) > 4, |theta| from the producer's own cycle count

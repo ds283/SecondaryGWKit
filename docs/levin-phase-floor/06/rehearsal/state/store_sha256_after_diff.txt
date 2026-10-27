@@ -1,0 +1,22 @@
+=== 2026-10-26T22:11:44Z both stores after the comparison and tabulations
+f5e52b359826c4976834f12d8a60b41520b95430a3f6db19e11f2780acfe7326  var/datastores/levin-phase-floor-06-r13-shard0000.sqlite
+dd2c2c41edecbf4da1665ffcc76468f68dbcdae218bd3b64fd1c69773e768182  var/datastores/levin-phase-floor-06-r13-shard0001.sqlite
+742c324a1d4dbffb01ae30ece7aaf12d5dffa5a400cf24e5657d2eedd80cbf9b  var/datastores/levin-phase-floor-06-r13-shard0002.sqlite
+59b53f71d9a76a2667c7a3dde59e8bff4872aac991938b9d75afc153b81d83ad  var/datastores/levin-phase-floor-06-r13-shard0003.sqlite
+766839d657e7f943f2e3ef1f3058268544b42ffcfeb1d8f753a68d9c768989c9  var/datastores/levin-phase-floor-06-r13.sqlite
+1c0f3cf63cc95208c53e558d152255f34fa6b17c9b82f9270a2b43f2f126f7da  var/datastores/levin-phase-floor-06-r14-shard0000.sqlite
+866511b7ef81f27da9bcf5306bd9a6efa9c367475f3c7959a23a78d07c943fcd  var/datastores/levin-phase-floor-06-r14-shard0001.sqlite
+dfaad9499d3d7f7364532cd5cb8091b1f32a51d1fed0a1a43f10213fdaff656b  var/datastores/levin-phase-floor-06-r14-shard0002.sqlite
+410bf34b370512c5426428f1c6f3c6ea6008e3bd9b0d371f60e08bbce9d12a57  var/datastores/levin-phase-floor-06-r14-shard0003.sqlite
+fff6cf7fac9106897efba04547710ec99ce051f4f2457108dc8cdb6fd9689acd  var/datastores/levin-phase-floor-06-r14.sqlite
+var/datastores/levin-phase-floor-06-r13-shard0000.sqlite 24072192 1793051922
+var/datastores/levin-phase-floor-06-r13-shard0001.sqlite 24285184 1793051922
+var/datastores/levin-phase-floor-06-r13-shard0002.sqlite 1077248 1793051761
+var/datastores/levin-phase-floor-06-r13-shard0003.sqlite 23564288 1793051922
+var/datastores/levin-phase-floor-06-r13.sqlite 36864 1793051761
+var/datastores/levin-phase-floor-06-r14-shard0000.sqlite 25038848 1793052156
+var/datastores/levin-phase-floor-06-r14-shard0001.sqlite 25255936 1793052156
+var/datastores/levin-phase-floor-06-r14-shard0002.sqlite 1077248 1793051995
+var/datastores/levin-phase-floor-06-r14-shard0003.sqlite 24485888 1793052155
+var/datastores/levin-phase-floor-06-r14.sqlite 36864 1793051995
+no -journal/-wal/-shm

@@ -1,0 +1,21 @@
+{
+ "tree": "t5",
+ "units": [
+  {
+   "uid": "dev-t5-1e-7-ctrl-low-1",
+   "tree": "t5",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/dev/t5",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/dev/t5/ledger.jsonl",
+ "pickle_regions": true
+}

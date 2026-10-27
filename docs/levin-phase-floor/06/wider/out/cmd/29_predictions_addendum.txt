@@ -1,0 +1,13 @@
+$ bash -c $'shasum -a 256 state/predictions.md state/predictions_as_first_written.md; /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c "\nimport os,datetime\nfrom pathlib import Path\na=Path(\\"state/predictions_as_first_written.md\\").read_text(); b=Path(\\"state/predictions.md\\").read_text()\nprint(\\"first-written text is a prefix of the current file:\\", b.startswith(a))\nfor p in [\\"state/predictions_as_first_written.md\\",\\"state/predictions.md\\"]:\n    print(datetime.datetime.fromtimestamp(os.stat(p).st_mtime, datetime.timezone.utc).isoformat(), p)"'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:36:09Z
+# ----
+5b63820713021d813b401894b034729818e9f49c1428779cb85b937fab87f7f6  state/predictions.md
+851f1dc940f2151e8aad86e75c7f8db2d5d0bc33a4a84003140dfd33ef270aea  state/predictions_as_first_written.md
+first-written text is a prefix of the current file: True
+2026-10-26T22:32:53.969652+00:00 state/predictions_as_first_written.md
+2026-10-26T22:36:09.397016+00:00 state/predictions.md
+# ----
+# end 2026-10-26T22:36:09Z
+# exit 0

@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/fingerprint_copy.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:21:18Z
+# ----
+# config.fingerprint from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/config/fingerprint.py; format 6
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/scripts/fingerprint_copy.py", line 18, in <module>
+    fp, _inv = cf.fingerprinter.take(primary, datetime.datetime.now(datetime.timezone.utc).isoformat())
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/fingerprint.py", line 129, in take
+    return fingerprint_of(inventory, self.fingerprint_format, taken), inventory
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/store_fingerprint.py", line 159, in fingerprint_of
+    "taken": dict(taken) if taken is not None else None,
+             ~~~~^^^^^^^
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+# ----
+# end 2026-10-26T22:21:31Z
+# exit 1

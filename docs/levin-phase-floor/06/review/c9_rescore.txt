@@ -1,0 +1,13 @@
+windows 23156 Counter({'G': 10294, 'Tr': 6791, 'Tq': 6071})
+sigma recomputed != saved: 0
+pure-WKB(I) tag re-derived != saved: 0 ; G windows whose z_init differs between trees: 0 ; windows tagged by (L), all null: 0
+S1 (I): pure-WKB G windows 6700 {'true': 6700} -> holds ; sigma_s/F max 8.821066979393409e-14 median 5.725427199745094e-16
+S1 seeded windows 3594 sigma_s/F median 0.00020986846978431967 max 0.0012414056078521858 ; sigma_t5/F median 0.2726337507420401 max 0.7837305714770697 ; dtheta RMS/F median 2.8027422859656058e-05 n 3594
+S2: T windows 12862 {'false': 2115, 'true': 10747} -> fails
+units 109 Counter({'done': 109})
+rows 39 d20 31
+not done (over budget / error): []
+rows with no Levin calls under s@1e-7: ['ctrl-NULL-1', 'ctrl-NULL-2']
+S3: rows 39 false [] largest depth 11 -> holds
+S4: true 34 of 39 false [('R2', 1.49), ('ctrl-low-1', 3.902), ('ctrl-low-2', 3.568), ('low-G-3', 10.804), ('mid-G-2', 1.62)]
+S5: rows with both s in budget 31 true 28 false [('mid-G-1', 1.305), ('mid-G-3', 1.566), ('mid-G-r-3', 1.322)]

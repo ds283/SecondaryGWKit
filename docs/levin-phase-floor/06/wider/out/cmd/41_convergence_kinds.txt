@@ -1,0 +1,242 @@
+$ ./venv/bin/python -I var/levin-phase-floor-06/wider/scripts/convergence_kinds.py var/runs/levin-phase-floor-06-wider-20261026T223634 --tree s --capped-run var/runs/levin-phase-floor-05-wider-20261026T020005
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:27:46Z
+# ----
+# convergence_kinds.py, run 2026-10-26T23:27:46+00:00
+# host mps026298.phys.susx.ac.uk; python 3.13.16; git HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff
+# script sha256 49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b
+# tree s; capped: tree p at rtol 1e-7 in var/runs/levin-phase-floor-05-wider-20261026T020005
+# input var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl sha256 134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1
+# run var/runs/levin-phase-floor-06-wider-20261026T223634: git_head 28ebaf0743e0555fb2c4512ce714884005a60eff
+# input var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# run var/runs/levin-phase-floor-05-wider-20261026T020005: git_head 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+
+== tree s at rtol 1e-7: every unconverged Levin call
+   row            role     capped_p  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+# input unit_s-1e-7-R1.pkl sha256 bcad4d82c7f9ae3d76d835411fbc4be8a735a0388770bba809ca514f61e1b81d
+   R1             d20      True      Gr/G+r         resolution           17        6      17.3      17.3    0.0000
+   R1             d20      True      Gr/G-r         resolution           24        8      13.1      13.1    0.0000
+   R1             d20      True      Gqr/G+q+r      bound only            1        0      75.1     0.034    0.9995
+   R1             d20      True      Gqr/G+q-r      bound only            1        0      34.8   0.00275    0.9999
+   R1             d20      True      Gqr/G-q+r      bound only            1        0      81.4    0.0283    0.9997
+   R1             d20      True      Gqr/G-q-r      bound only            1        0      34.1  0.000499    1.0000
+# input unit_s-1e-7-R2.pkl sha256 99aeb098489f26e5c715e6728efb068be3a2969ebc0328e994163db87b440555
+# input unit_s-1e-7-R3.pkl sha256 050791057b76fbee438e55a3f057bddbafa26df4ce0184a809c266c29e348d4c
+# input unit_s-1e-7-R4.pkl sha256 4744bc9bd70c9f1060791f69dfb69f658f504611b614a880d3c4db26db737a00
+   R4             d20      True      G/G            resolution           10        7      2.16      2.16    0.0000
+   R4             d20      True      Gr/G+r         resolution           21        7      1.39      1.39    0.0000
+   R4             d20      True      Gr/G-r         resolution           35        8      2.69      2.69    0.0000
+   R4             d20      True      Gqr/G+q+r      bound only            1        0       143    0.0123    0.9999
+   R4             d20      True      Gqr/G+q-r      bound only            1        0      52.1   0.00444    0.9999
+   R4             d20      True      Gqr/G-q+r      bound only            1        0       128    0.0425    0.9997
+   R4             d20      True      Gqr/G-q-r      bound only            1        0        51   0.00446    0.9999
+# input unit_s-1e-7-R5.pkl sha256 7bd6c9461b61aa933ce34dc9be0022a9e8a64658fd1208a8ebc40d6f8beb1373
+# input unit_s-1e-7-R6.pkl sha256 6c0985be66b45c7ffb8ef34986cadd18fdc7bbd69486176b44d379de3468e042
+   R6             d20      True      Gqr/G+q+r      phase-limited         1        0       108      2.35    0.9781
+   R6             d20      True      Gqr/G+q-r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q+r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q-r      bound only            1        0      30.3      0.56    0.9816
+# input unit_s-1e-7-R7.pkl sha256 f38f9368fdb346b0981503806a489d06a380ea193584321ea816cc64f40c0160
+   R7             d20      True      Gqr/G+q+r      phase-limited         1        0       276      49.1    0.8223
+   R7             d20      True      Gqr/G+q-r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q+r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q-r      bound only            1        0      39.3     0.438    0.9888
+# input unit_s-1e-7-ctrl-NULL-1.pkl sha256 a6dd7f457a64b7d5b2fb61436e83a24b16fcfb4c7a14f81bb556382ce9c2833e
+# input unit_s-1e-7-ctrl-NULL-2.pkl sha256 ae7f07f8e694921900f779499a89c83ad1897eb89cd3398d02c7304e3341cdda
+# input unit_s-1e-7-ctrl-low-1.pkl sha256 8adb8a3a270c101679a8f831c586878c2906645ea346c88ed2e9dc2473f629ab
+# input unit_s-1e-7-ctrl-low-2.pkl sha256 8e3abed8fe32d53a91253f6448b3dcc3a40a162e0d33545ca9910cb5455bfcdb
+# input unit_s-1e-7-ctrl-mid-1.pkl sha256 86704e050d0ecb0d0d44ecc8694939bc58367ff5807ec0b9f7334771cd091624
+# input unit_s-1e-7-ctrl-mid-2.pkl sha256 bcadeac91ff8082aabce0af59e1bab274a422e828c27c2dedd8d40e85475db74
+# input unit_s-1e-7-ctrl-seam-1.pkl sha256 f77c569643f6b0710075b65f167cd5cd90eb238a2752e808e45e3714241f3750
+# input unit_s-1e-7-ctrl-seam-2.pkl sha256 d63ca6418f44631544f44a143245109f5ff980e26296a88ca8c3802decb62247
+# input unit_s-1e-7-low-G+r-1.pkl sha256 1840993b2f5d7180f04ed69d764a7178bc31f2cfa94b9ad375b2f42406a4babe
+# input unit_s-1e-7-low-G+r-2.pkl sha256 46d071f633c2a533ab2b057a72a69bb7854cf55a40ecc27659972e933c5f7826
+   low-G+r-2      d20      False     Gqr/G+q+r      bound only            1        0       inf   0.00135       nan
+# input unit_s-1e-7-low-G+r-3.pkl sha256 2ed2f847312680e11037e14354f7b39b621900c967a548a3e5fb889842619a28
+   low-G+r-3      d20      True      Gr/G+r         resolution            6        3      4.74      4.74    0.0000
+   low-G+r-3      d20      True      Gr/G-r         resolution           13        5      31.1      31.1    0.0000
+   low-G+r-3      d20      True      Gqr/G+q+r      bound only            1        0      37.2      0.15    0.9960
+   low-G+r-3      d20      True      Gqr/G+q-r      bound only            1        0        40     0.313    0.9922
+   low-G+r-3      d20      True      Gqr/G-q+r      bound only            1        0      34.5     0.204    0.9941
+   low-G+r-3      d20      True      Gqr/G-q-r      bound only            1        0      45.5     0.209    0.9954
+# input unit_s-1e-7-low-G-1.pkl sha256 8b2ad7c19d5322b7dbc1316f0c17591293ffa4b0271bd6d55c63a08d6fe6e55b
+   low-G-1        d20      True      Gqr/G+q-r      phase-limited         1        0       487      27.7    0.9432
+   low-G-1        d20      True      Gqr/G-q+r      phase-limited         1        0       487      27.7    0.9432
+   low-G-1        d20      True      Gqr/G-q-r      phase-limited         1        0      69.6      2.25    0.9676
+# input unit_s-1e-7-low-G-2.pkl sha256 3b5d5082ddd413cb92c323929f72dac0790cb2e05e3b35cb5ebf9bbb393914dc
+   low-G-2        d20      False     G/G            resolution            9        7       1.5       1.5    0.0000
+   low-G-2        d20      False     Gqr/G+q+r      phase-limited         1        0      74.1      29.5    0.6019
+   low-G-2        d20      False     Gqr/G+q-r      phase-limited         1        0      46.3      3.42    0.9262
+   low-G-2        d20      False     Gqr/G-q+r      phase-limited         1        0      46.3      3.42    0.9262
+   low-G-2        d20      False     Gqr/G-q-r      phase-limited         1        0      45.4      2.97    0.9346
+# input unit_s-1e-7-low-G-3.pkl sha256 226a6ecc87490fdd7812229ef2169d835b9e681c6ef7417c10026d8ba39849bc
+   low-G-3        d20      True      Gqr/G+q+r      bound only            1        0      1.45    0.0748    0.9484
+   low-G-3        d20      True      Gqr/G+q-r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q+r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q-r      bound only            1        0      2.67     0.111    0.9585
+# input unit_s-1e-7-low-G-r-1.pkl sha256 d5f3c6b92ffae2a477444d33923eed108c679d9a477a197cc7d368fea027598c
+   low-G-r-1      d20      False     Gqr/G+q+r      bound only            1        0       inf  3.32e-05       nan
+# input unit_s-1e-7-low-G-r-2.pkl sha256 ffc8758e345b6bb1645e1ba3a2d8a7a6eafacb59b1a5b80e49cc1734b13889e8
+   low-G-r-2      d20      True      G/G            resolution           10        7      2.15      2.15    0.0000
+   low-G-r-2      d20      True      Gqr/G+q+r      phase-limited         1        0      67.6      9.81    0.8549
+   low-G-r-2      d20      True      Gqr/G+q-r      bound only            1        0      42.3     0.142    0.9967
+   low-G-r-2      d20      True      Gqr/G-q+r      phase-limited         1        0       131       2.4    0.9817
+   low-G-r-2      d20      True      Gqr/G-q-r      bound only            1        0      35.9       0.3    0.9916
+# input unit_s-1e-7-low-G-r-3.pkl sha256 80b35aa64968581ec15bcc79fb82817d755de059270ed3553d6983a2c2e28f0c
+   low-G-r-3      d20      True      G/G            resolution           10        8      2.82      2.82    0.0000
+   low-G-r-3      d20      True      Gqr/G+q+r      phase-limited         1        0       108      8.11    0.9250
+   low-G-r-3      d20      True      Gqr/G+q-r      bound only            1        0       199     0.356    0.9982
+   low-G-r-3      d20      True      Gqr/G-q+r      bound only            1        0      99.9     0.772    0.9923
+   low-G-r-3      d20      True      Gqr/G-q-r      bound only            1        0       161    0.0206    0.9999
+# input unit_s-1e-7-low-Gqr-1.pkl sha256 24c84bdec9ad9cacc4942748da049e02976f3abf1cf07b9969d0aef11b196e7f
+# input unit_s-1e-7-low-Gqr-2.pkl sha256 7ce43c2e15e0bc3092a4fe61b547d1fe49a10b54760edb4e2ae562d3a99fb085
+# input unit_s-1e-7-low-Gqr-3.pkl sha256 6cdcf1a460e81adc9f60a0456f810f87c5072c9bd31759d513ba4d5a0493977b
+   low-Gqr-3      d20      False     Gqr/G+q-r      bound only            1        0       inf     0.448       nan
+   low-Gqr-3      d20      False     Gqr/G-q+r      bound only            1        0       inf     0.448       nan
+# input unit_s-1e-7-mid-G+r-1.pkl sha256 403fb1ab3320d20d53864218bbd50887187b1cd9ff13fcb6abaa25e148ea227c
+# input unit_s-1e-7-mid-G+r-2.pkl sha256 25c1e8d88e1eafc8eff7d45e8e2250dd5d1d2a410ff76c402fb5254b873be015
+# input unit_s-1e-7-mid-G+r-3.pkl sha256 a1d5315e80c616eecdaa4b9e67bea322a22b187e8639177cf64cce431febf0dc
+   mid-G+r-3      d20      False     Gr/G+r         resolution           35        8      1.58      1.58    0.0000
+# input unit_s-1e-7-mid-G-1.pkl sha256 43c82d3bfda82f7f9a183b38eb712eae4f3ab6b78370b808f676bbf02d05e6c7
+   mid-G-1        d20      False     Gqr/G+q+r      bound only            1        0       1.4     0.954    0.3201
+   mid-G-1        d20      False     Gqr/G+q-r      phase-limited         1        0      2.26      1.25    0.4492
+   mid-G-1        d20      False     Gqr/G-q+r      phase-limited         1        0      2.26      1.25    0.4492
+   mid-G-1        d20      False     Gqr/G-q-r      phase-limited         1        0      3.16      1.16    0.6330
+# input unit_s-1e-7-mid-G-2.pkl sha256 994396e6f98fb9ed0924fbc95675be012f93dbbfc0a6f142070a65bbeb2be463
+# input unit_s-1e-7-mid-G-3.pkl sha256 892dd6a33e468077763cb107ff9688b42e74627facaf5de364633c43c379a089
+   mid-G-3        d20      False     Gqr/G+q+r      phase-limited         1        0      13.6      1.09    0.9197
+   mid-G-3        d20      False     Gqr/G-q-r      phase-limited         1        0      17.5      1.15    0.9345
+# input unit_s-1e-7-mid-G-r-1.pkl sha256 d32a56f30910fa502b0812446f85e0e3893a5c1d7582af3717071f46686cb86b
+# input unit_s-1e-7-mid-G-r-2.pkl sha256 6bd513edc56dee0fa6ce840a8e71da0e7da7937b69a98a9a67199b80361693ad
+   mid-G-r-2      d20      False     Gr/G+r         resolution           14        6      18.4      18.4    0.0000
+   mid-G-r-2      d20      False     Gr/G-r         resolution           28        6      12.6      12.6    0.0000
+# input unit_s-1e-7-mid-G-r-3.pkl sha256 c407847f780ca9804de7abd8827e9058603907cc04b88db72625317bf4e13f1d
+# input unit_s-1e-7-mid-Gqr-1.pkl sha256 31e5c51ef18d122475985f85cc3322014937c13f175835ce5374c81396d20351
+   mid-Gqr-1      d20      False     Gqr/G+q+r      phase-limited         1        0      13.4      1.29    0.9036
+   mid-Gqr-1      d20      False     Gqr/G-q-r      phase-limited         1        0      16.3      1.28    0.9216
+# input unit_s-1e-7-mid-Gqr-2.pkl sha256 352bafaf9055297cccdd2820ceb325f621dc99e8ab894f42981dc79096d13d8b
+   mid-Gqr-2      d20      False     G/G            resolution           13        7      1.01      1.01    0.0001
+   mid-Gqr-2      d20      False     Gqr/G+q+r      bound only            1        0       1.8     0.168    0.9067
+   mid-Gqr-2      d20      False     Gqr/G-q-r      bound only            1        0       1.9    0.0993    0.9477
+# input unit_s-1e-7-mid-Gqr-3.pkl sha256 87475afb038d4a275921077dfe4fb4ae933dd665a6fb66f84c52e0b0b1003ccb
+   mid-Gqr-3      d20      False     Gqr/G+q+r      bound only            1        0      1.66    0.0187    0.9888
+   mid-Gqr-3      d20      False     Gqr/G-q-r      bound only            1        0      1.67   0.00415    0.9975
+   kinds, every row: {'resolution': 14, 'bound only': 32, 'phase-limited': 23}
+   kinds, rows capped under p: {'resolution': 9, 'bound only': 23, 'phase-limited': 12}
+
+== tree s at rtol 1e-8: every unconverged Levin call
+   row            role     capped_p  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+# input unit_s-1e-8-R1.pkl sha256 ee7dcec29c43f7839253fc4d379803b8e314af29ce4e1b21d13540d9bf1569a9
+   R1             d20      True      G/G            resolution           15        9       1.5       1.5    0.0000
+   R1             d20      True      Gr/G+r         resolution           37        7       7.5       7.5    0.0000
+   R1             d20      True      Gr/G-r         resolution           59        8       2.2       2.2    0.0000
+   R1             d20      True      Gqr/G+q+r      bound only            1        0       120    0.0541    0.9995
+   R1             d20      True      Gqr/G+q-r      bound only            1        0      34.8   0.00275    0.9999
+   R1             d20      True      Gqr/G-q+r      bound only            1        0       110    0.0382    0.9997
+   R1             d20      True      Gqr/G-q-r      bound only            1        0      34.1  0.000499    1.0000
+# input unit_s-1e-8-R2.pkl sha256 c2f0b694e19679a08fdb135e15fc9d66691f889cab51b8053c44e95fbd64faa2
+# input unit_s-1e-8-R3.pkl sha256 b1c56fda39463edbd46998943dd965ee9fd0d94c447361972383abd1b9f006b0
+# input unit_s-1e-8-R4.pkl sha256 a028d2c963887b5ea0f204f7f2cd707ae607e5d135d019c89b9cdc409537bd03
+   R4             d20      True      G/G            resolution           22        9      1.41      1.41    0.0000
+   R4             d20      True      Gr/G+r         resolution           40        8      2.11      2.11    0.0000
+   R4             d20      True      Gr/G-r         resolution           62        9      3.71      3.71    0.0000
+   R4             d20      True      Gqr/G+q+r      bound only            1        0       186     0.016    0.9999
+   R4             d20      True      Gqr/G+q-r      bound only            1        0      52.1   0.00444    0.9999
+   R4             d20      True      Gqr/G-q+r      bound only            1        0       171    0.0565    0.9997
+   R4             d20      True      Gqr/G-q-r      bound only            1        0        51   0.00446    0.9999
+# input unit_s-1e-8-R5.pkl sha256 863c9a67b85bae405d6de42cf02643d1ed43624f837a76f4af989cd56433f156
+# input unit_s-1e-8-R6.pkl sha256 8608382fd40a9ab5882643edbcc918123aff56203614bf4d6a0e63035aa42db7
+   R6             d20      True      Gqr/G+q+r      phase-limited         1        0       355      7.77    0.9781
+   R6             d20      True      Gqr/G+q-r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q+r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q-r      bound only            1        0      30.3      0.56    0.9816
+# input unit_s-1e-8-R7.pkl sha256 82be2fe498d5f3f7a47304cc1aefafd5e073d9db3e1f3ea8755a9479b05d294f
+   R7             d20      True      Gqr/G+q+r      phase-limited         1        0       482      85.6    0.8223
+   R7             d20      True      Gqr/G+q-r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q+r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q-r      bound only            1        0      39.3     0.438    0.9888
+# input unit_s-1e-8-low-G+r-1.pkl sha256 044fba15a99b3aebeb161b35b389a4a916c0d8911c8ae1ad37ad6bb6814023fc
+# input unit_s-1e-8-low-G+r-2.pkl sha256 ac555694d6ea1c76e40992348b7f7e4c59e8120749b1a97800d8b263798dd0b4
+   low-G+r-2      d20      False     Gqr/G+q+r      bound only            1        0       inf   0.00135       nan
+# input unit_s-1e-8-low-G+r-3.pkl sha256 5ba59c589a1dad817590bd5e1d4030c2d5c9081eb0388155039138b61d146d28
+   low-G+r-3      d20      True      G/G            resolution           21        9      1.48      1.48    0.0000
+   low-G+r-3      d20      True      Gr/G+r         resolution           14        5      2.77      2.77    0.0000
+   low-G+r-3      d20      True      Gr/G-r         resolution           21        5        43        43    0.0000
+   low-G+r-3      d20      True      Gqr/G+q+r      phase-limited         1        0       372       1.5    0.9960
+   low-G+r-3      d20      True      Gqr/G+q-r      phase-limited         1        0       400      3.13    0.9922
+   low-G+r-3      d20      True      Gqr/G-q+r      phase-limited         1        0       345      2.04    0.9941
+   low-G+r-3      d20      True      Gqr/G-q-r      phase-limited         1        0       455      2.09    0.9954
+# input unit_s-1e-8-low-G-1.pkl sha256 c6ddc2f1d70491f86cd94a572ab72c83cd9ae963528e69c0206a4a3176f1f15e
+   low-G-1        d20      True      G/G            resolution           18        9      1.95      1.95    0.0001
+   low-G-1        d20      True      Gqr/G+q-r      phase-limited         1        0  4.87e+03       277    0.9432
+   low-G-1        d20      True      Gqr/G-q+r      phase-limited         1        0  4.87e+03       277    0.9432
+   low-G-1        d20      True      Gqr/G-q-r      phase-limited         1        0       696      22.5    0.9676
+# input unit_s-1e-8-low-G-2.pkl sha256 b22dc85eadab0034951ec0198372f70dcff38a4c8ba71cdca76f96ca2e339b1e
+   low-G-2        d20      False     G/G            resolution           23        9      2.31      2.31    0.0000
+   low-G-2        d20      False     Gqr/G+q+r      phase-limited         1        0       741       295    0.6019
+   low-G-2        d20      False     Gqr/G+q-r      phase-limited         1        0       463      34.2    0.9262
+   low-G-2        d20      False     Gqr/G-q+r      phase-limited         1        0       463      34.2    0.9262
+   low-G-2        d20      False     Gqr/G-q-r      phase-limited         1        0       454      29.7    0.9346
+# input unit_s-1e-8-low-G-3.pkl sha256 587983da768c822e634055afaae4d2698c5a7f7e4a0fc72f76807a2cc682d2d4
+   low-G-3        d20      True      Gqr/G+q+r      bound only            1        0      1.45    0.0748    0.9484
+   low-G-3        d20      True      Gqr/G+q-r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q+r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q-r      bound only            1        0      2.67     0.111    0.9585
+# input unit_s-1e-8-low-G-r-1.pkl sha256 661c16f0b7dcce54a7ef6b1b2614e4a91db6da5630ac0c34f0114be895b92a93
+   low-G-r-1      d20      False     Gqr/G+q+r      bound only            1        0       inf  3.32e-05       nan
+# input unit_s-1e-8-low-G-r-2.pkl sha256 cb73fe851483e50327ad7dd4453c5d03e81d981b19a97887cf42445343e71e28
+   low-G-r-2      d20      True      G/G            resolution           20        9      2.69      2.69    0.0001
+   low-G-r-2      d20      True      Gr/G+r         resolution           14        6       1.2       1.2    0.0000
+   low-G-r-2      d20      True      Gr/G-r         resolution           23        6      1.27      1.27    0.0000
+   low-G-r-2      d20      True      Gqr/G+q+r      phase-limited         1        0       676      98.1    0.8549
+   low-G-r-2      d20      True      Gqr/G+q-r      phase-limited         1        0       423      1.42    0.9967
+   low-G-r-2      d20      True      Gqr/G-q+r      phase-limited         1        0  1.31e+03        24    0.9817
+   low-G-r-2      d20      True      Gqr/G-q-r      phase-limited         1        0       359         3    0.9916
+# input unit_s-1e-8-low-G-r-3.pkl sha256 b50c83c3a4c8f813dc480e0ad3b8d1eb40678a3a8bbff71a9e6b906e14b9b2f5
+   low-G-r-3      d20      True      G/G            resolution           21        9      2.74      2.74    0.0000
+   low-G-r-3      d20      True      Gr/G+r         resolution           16        5      1.47      1.47    0.0000
+   low-G-r-3      d20      True      Gr/G-r         resolution           21        5      2.03      2.03    0.0000
+   low-G-r-3      d20      True      Gqr/G+q+r      phase-limited         1        0  1.08e+03      81.1    0.9250
+   low-G-r-3      d20      True      Gqr/G+q-r      phase-limited         1        0       845      1.51    0.9982
+   low-G-r-3      d20      True      Gqr/G-q+r      phase-limited         1        0       999      7.72    0.9923
+   low-G-r-3      d20      True      Gqr/G-q-r      bound only            1        0       678    0.0867    0.9999
+# input unit_s-1e-8-low-Gqr-1.pkl sha256 ca91ed6d0007574f3bf019ce3c4bb04b07b611f662503f7248828ecaaaea331d
+# input unit_s-1e-8-low-Gqr-2.pkl sha256 80f79bc835fabd0201049fc200d4d8d11e67b6e6bfc99fbda565e7067ad016fb
+# input unit_s-1e-8-low-Gqr-3.pkl sha256 02ee489bf4ece17855f1d5a172576c970a06f33fe0fd48756b191bb9c96236da
+   low-Gqr-3      d20      False     Gqr/G+q-r      bound only            1        0       inf     0.448       nan
+   low-Gqr-3      d20      False     Gqr/G-q+r      bound only            1        0       inf     0.448       nan
+# input unit_s-1e-8-mid-G+r-1.pkl sha256 5c4ebd42873bc84cf7096521ff98445170411f2d21baa48634c2d42d09194b71
+# input unit_s-1e-8-mid-G+r-2.pkl sha256 e6e1ce1e5eca03f9d3452e9897683f3ba82bf65f1efe5000503a42b772f7152d
+# input unit_s-1e-8-mid-G+r-3.pkl sha256 79fa55939ff008af97779fd1caecb0513426bd2e3569bb5b51b13df65cf0863b
+# input unit_s-1e-8-mid-G-1.pkl sha256 9fb40aad7ca85e62e5f8310444868dceae2d7943a326ffa3743c76f18c237d09
+   mid-G-1        d20      False     Gqr/G+q+r      phase-limited         1        0        14      9.54    0.3201
+   mid-G-1        d20      False     Gqr/G+q-r      phase-limited         1        0      22.6      12.5    0.4492
+   mid-G-1        d20      False     Gqr/G-q+r      phase-limited         1        0      22.6      12.5    0.4492
+   mid-G-1        d20      False     Gqr/G-q-r      phase-limited         1        0      31.6      11.6    0.6330
+# input unit_s-1e-8-mid-G-2.pkl sha256 48970175f1b60e834dab5c4affda998446e47e8fc2273c063c45ab2b78b04e02
+# input unit_s-1e-8-mid-G-3.pkl sha256 eaa9acfe96a2eded220ac634a5faa33fe5fdd4ad7689087258a06e6192bb5523
+   mid-G-3        d20      False     Gqr/G+q+r      phase-limited         1        0      13.6      1.09    0.9197
+   mid-G-3        d20      False     Gqr/G-q-r      phase-limited         1        0      17.5      1.15    0.9345
+# input unit_s-1e-8-mid-G-r-1.pkl sha256 8963f3d13688ddf271cdbe03be60b5b6def163fad02e25a5407bfd58ebc16c37
+# input unit_s-1e-8-mid-G-r-2.pkl sha256 08d9fa1cea2c2dcaf30e9350527ac4b9d09e9e543527256328a075a357724181
+   mid-G-r-2      d20      False     G/G            resolution           17        9      3.87      3.87    0.0000
+   mid-G-r-2      d20      False     Gr/G+r         resolution           27        6      16.8      16.8    0.0000
+   mid-G-r-2      d20      False     Gr/G-r         resolution           37        7      28.9      28.9    0.0000
+   mid-G-r-2      d20      False     Gqr/G+q-r      bound only            1        0      2.26   0.00683    0.9970
+   mid-G-r-2      d20      False     Gqr/G-q-r      bound only            1        0      2.25   0.00319    0.9986
+# input unit_s-1e-8-mid-G-r-3.pkl sha256 863b7ab824167ee8477a4c4dec62dfae85b449ac4ddab0dd5da8dc1e9c74f831
+# input unit_s-1e-8-mid-Gqr-1.pkl sha256 8d925e5ab7b231940f14d48ffe5ed42fd99303b7e7afba4b685f8e0e21304c7a
+   mid-Gqr-1      d20      False     Gqr/G+q+r      phase-limited         1        0      13.4      1.29    0.9036
+   mid-Gqr-1      d20      False     Gqr/G-q-r      phase-limited         1        0      16.3      1.28    0.9216
+# input unit_s-1e-8-mid-Gqr-2.pkl sha256 d424669029bdebc51e1df4bbb56cfebc458b5fc8f78c5c7a03cda1a27cf68238
+   mid-Gqr-2      d20      False     Gqr/G+q+r      bound only            1        0       1.8     0.168    0.9067
+   mid-Gqr-2      d20      False     Gqr/G-q-r      bound only            1        0       1.9    0.0993    0.9477
+# input unit_s-1e-8-mid-Gqr-3.pkl sha256 724cf0d014ffa39d52aa6a5d29b606a6abefb172af4bba1c922227510769b46e
+   mid-Gqr-3      d20      False     Gqr/G+q+r      bound only            1        0      1.66    0.0187    0.9888
+   mid-Gqr-3      d20      False     Gqr/G-q-r      bound only            1        0      1.67   0.00415    0.9975
+   kinds, every row: {'resolution': 20, 'bound only': 25, 'phase-limited': 32}
+   kinds, rows capped under p: {'resolution': 16, 'bound only': 15, 'phase-limited': 20}
+# ----
+# end 2026-10-26T23:27:46Z
+# exit 0

@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source measurements:**
 [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md) §3.5, §3.6, §3.7
 **Baseline commit:** `9daa2cb` (`gktk-remedial`, clean — the `GkTk-remedial` close-out)
-**Last updated:** 2026-09-13 — **CLOSED at 1 / 2.** Prompt 01 resolved its defect; prompt 02
+**Last updated:** 2026-10-27 — `[02-consumer-phi-below-the-storage-granularity]`, assigned to `levin-phase-floor`, closed there by its prompt 06 (§4). Before that: 2026-09-13 — **CLOSED at 1 / 2.** Prompt 01 resolved its defect; prompt 02
 stopped and the README §7 D2 decision it required has been taken (§1). Prompt 01 landed: `WKB_mod_2pi` and `simple_mod_2pi` derive their cycle count from the
 exact `fmod` remainder instead of a second rounded division, so on the production geometry
 LambdaCDM $G_k$ at $k=3\times10^8$ is **0 inconsistent of 77,975** (was 1), the
@@ -69,7 +69,39 @@ non-production status of `WKB_product_mod_2pi`, a restatement of the `GkTk-remed
 note 14 on this machine's wall-clock noise, and the pre-existing `black --check` state of `docs/`
 and `AdaptiveLevin/`.
 
-Two opened by prompt 02:
+Two opened by prompt 02. The first, `[02-consumer-phi-below-the-storage-granularity]`, was closed on
+2026-10-27 by `levin-phase-floor` prompt 06 and is in §4:
+
+- **[02-verify-script-builds-its-own-Gk-consumer]** *(opened by prompt 02, 2026-09-13; not this
+  campaign's file)* — `docs/gktk-remedial/verify_production_path.py` constructs `PrimitivePhase`
+  directly at `:557` (the §3.5 $G_k$ consumer) and `:1173` (the §5 throughput section), rather than
+  going through `GkSourcePolicyData._build_phase`. Its $T_k$ half does go through the production
+  `TkSourceFunctions`. **Impact:** any change to what the $G_k$ production call site *passes* to
+  `PrimitivePhase` is invisible to six of §3.5's twelve rows and to both `theta_deriv` $G_k$
+  columns, so half of prompt 02's own acceptance table could not have moved however the prompt was
+  executed. Prompt 02 therefore took its §3.5/§3.6 measurements on a harness reproducing that
+  script's geometry exactly and varying only the knot vector. **Next step:** a few lines in the
+  script for whoever next has `docs/gktk-remedial/` in scope — build the $G_k$ phase through
+  `_build_phase` with a stand-in `GkSource`, or at minimum forward whatever the production call
+  site forwards. Same class as `[13-scoped-run-driver-k-grid-literal]`: a verification driver that
+  has drifted from the thing it verifies.
+
+**Not opened, but seen:** `test_tk_wkb_phase.TestCost.test_wall_time_per_object` fails on this
+machine at `0c61799` with no `.py` file changed — 0.0638–0.0979 s against its 0.06 s limit, four
+runs of four. That is `[07-tk-per-object-cost-is-all-setup]` on the `GkTk-remedial` board, already
+open, now straddling the test's threshold as well as prompt 07's. Log 02, observation 5.
+
+The defect this campaign exists to fix — `[13-consumer-spline-crosses-eos-break-points]`,
+prompt 02's — **remains open** on the
+[`GkTk-remedial` board](../GkTk-remedial/IMPLEMENTATION_STATE.md) §3, which owns its measurements
+and its history and carries the `**Assigned (2026-09-13):**` line naming this campaign
+(README §0.2). Prompt 02 narrowed it and re-attributed it rather than closing it; the entry there
+now says so. Issues **opened** by a prompt here are recorded in this section, with a row in
+[`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) in the same commit.
+
+---
+
+## 4. Resolved issues
 
 - **[02-consumer-phi-below-the-storage-granularity]** *(opened by prompt 02, 2026-09-13)* — the
   residual $\varphi$ a `PrimitivePhase` splines is recovered as
@@ -125,36 +157,24 @@ Two opened by prompt 02:
   the residual, so no $\varphi$ is a difference of two numbers of size $k\tau$. This entry closes
   when 06's §5 and §6 hold; its S1 and S2 re-measure 04's metric on A3 v2's R1–R7.
 
-- **[02-verify-script-builds-its-own-Gk-consumer]** *(opened by prompt 02, 2026-09-13; not this
-  campaign's file)* — `docs/gktk-remedial/verify_production_path.py` constructs `PrimitivePhase`
-  directly at `:557` (the §3.5 $G_k$ consumer) and `:1173` (the §5 throughput section), rather than
-  going through `GkSourcePolicyData._build_phase`. Its $T_k$ half does go through the production
-  `TkSourceFunctions`. **Impact:** any change to what the $G_k$ production call site *passes* to
-  `PrimitivePhase` is invisible to six of §3.5's twelve rows and to both `theta_deriv` $G_k$
-  columns, so half of prompt 02's own acceptance table could not have moved however the prompt was
-  executed. Prompt 02 therefore took its §3.5/§3.6 measurements on a harness reproducing that
-  script's geometry exactly and varying only the knot vector. **Next step:** a few lines in the
-  script for whoever next has `docs/gktk-remedial/` in scope — build the $G_k$ phase through
-  `_build_phase` with a stand-in `GkSource`, or at minimum forward whatever the production call
-  site forwards. Same class as `[13-scoped-run-driver-k-grid-literal]`: a verification driver that
-  has drifted from the thing it verifies.
-
-**Not opened, but seen:** `test_tk_wkb_phase.TestCost.test_wall_time_per_object` fails on this
-machine at `0c61799` with no `.py` file changed — 0.0638–0.0979 s against its 0.06 s limit, four
-runs of four. That is `[07-tk-per-object-cost-is-all-setup]` on the `GkTk-remedial` board, already
-open, now straddling the test's threshold as well as prompt 07's. Log 02, observation 5.
-
-The defect this campaign exists to fix — `[13-consumer-spline-crosses-eos-break-points]`,
-prompt 02's — **remains open** on the
-[`GkTk-remedial` board](../GkTk-remedial/IMPLEMENTATION_STATE.md) §3, which owns its measurements
-and its history and carries the `**Assigned (2026-09-13):**` line naming this campaign
-(README §0.2). Prompt 02 narrowed it and re-attributed it rather than closing it; the entry there
-now says so. Issues **opened** by a prompt here are recorded in this section, with a row in
-[`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) in the same commit.
-
----
-
-## 4. Resolved issues
+  **Closed (2026-10-27)** by [`levin-phase-floor`](../levin-phase-floor/IMPLEMENTATION_STATE.md)
+  prompt 06, on the user's word (code `dc9d28c`; records in its records commit). Each
+  `GkWKBIntegration` and `TkWKBIntegration` value now stores its residual
+  $r = \Delta\theta - \rho.\delta$ from those two small terms, its remainder is reduced exactly
+  against $2\pi$, and the consumers build $\varphi$ from $r$, so no $\varphi$ is a difference of
+  two numbers of size $k\tau$.
+  - **Measured on A3 v2's R1–R7** (06 §6, S1, scored on pure-WKB windows by the user's reading):
+    in 6,700 of 6,700 $G$ windows production's $\varphi_G$ had window RMS exactly 0, quantised, and
+    after 06 at most $8.8\times10^{-14}F$.
+  - **S2 fails as written**, in 2,115 of 12,862 $T$ windows, all at $z \ge 1.75\times10^7$. There
+    the metric measures $\varphi_T$'s own shape, equal under both trees, not storage noise;
+    the user closed this entry on that reading. `levin-phase-floor`'s
+    `[06-s2-window-metric-floors-on-phi-t-structure]` holds it.
+  - `theta_deriv` at $T$'s windows moves by at most $4.6\times10^{-14}$ relative; at $G$'s
+    pure-WKB windows by a median $1.4\times10^{-16}$.
+  - Rehearsals R13 and R14 give `1b332ffa…`, with every value table outside the five classes 06
+    changes identical.
+  [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.
 
 - **`[13-wkb-mod-2pi-cycle-count-inconsistent]`** — closed by **prompt 01**, 2026-09-13. The
   closure itself is recorded on the

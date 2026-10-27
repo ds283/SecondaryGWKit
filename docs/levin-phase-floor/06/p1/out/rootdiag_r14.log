@@ -1,0 +1,67 @@
+# command: PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/rootdiag.py r14
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:15:03Z
+# script sha256 af48204f85c8f9a84e979e440a5a33220f3334777ec1b06e950a5ceba25b0658  analyse.py
+# script sha256 2d0b461f04a4b37fd19c05eb05b6f1563fc205eefc010b78ac4aa20402cb59bf  compare.py
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 fbb85121c4e66174e89fbc1502f00078f0e8c02edf079327f842109b4bd7ae75  reference.py
+# script sha256 c2862dfc7ead8054dc22a8e1b5634d518fa7cd2515f3e91bd5de815dd9fe7099  rootdiag.py
+# script sha256 c78be44eaf2bc197f37cd8f6c50c2597ea5ad9d8ff9073d1e9f4c513e514f0cc  samples.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+# p1 r14: reads /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite (read-only)
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# p1 r14: context in 0.4 s
+# p1 r14 row1: total np.float64(5.927866035235912e-20) (stored 5.927866035235912e-20); all identical True; compute 0.4 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+# p1 r14 row2: total np.float64(-3.3962843526143793e-19) (stored -3.3962843526143793e-19); all identical True; compute 0.3 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+== r14 row1 G+q+r (x_s 9.231349907086202)
+   d0 [5.525453,22.413545] xs-in True Levin: est -5.373287957651e-23 resid 3.232e-30 relerr 6.014e-08 floor 1.024e-29 resolved True phase_limited False
+   d1 [5.525453,13.969499] xs-in True Levin: est -1.157699345018e-26 resid 1.157e-32 relerr 9.995e-07 floor 1.079e-33 resolved False phase_limited False
+   d1 [13.969499,22.413545] xs-in False Levin: est -5.372130581460e-23 resid 9.067e-31 relerr 1.688e-08 floor 9.208e-34 resolved True phase_limited False
+   d2 [5.525453,9.747476] xs-in True Levin: est -3.850888138343e-28 resid 7.413e-34 relerr 1.925e-06 floor 1.434e-34 resolved False phase_limited False
+   d2 [9.747476,13.969499] xs-in False Levin: est -1.119189306490e-26 resid 6.865e-37 relerr 6.134e-11 floor 2.382e-36 resolved True phase_limited False
+   d3 [5.525453,7.636464] xs-in False Levin: est 6.367098968851e-30 resid 5.101e-38 relerr 8.011e-09 floor 1.953e-37 resolved True phase_limited False
+   d3 [7.636464,9.747476] xs-in True Levin: est -3.914551714892e-28 resid 1.328e-32 relerr 3.392e-05 floor 6.008e-36 resolved False phase_limited False
+   d4 [7.636464,8.691970] xs-in False Levin: est 9.748591833822e-29 resid 6.245e-38 relerr 6.406e-10 floor 1.469e-37 resolved True phase_limited False
+   d4 [8.691970,9.747476] xs-in True Levin: est -4.889278104638e-28 resid 1.348e-29 relerr 2.836e-02 floor 9.010e-37 resolved False phase_limited False
+   d5 [8.691970,9.219723] xs-in False Levin: est -1.007793097217e-26 resid 1.384e-31 relerr 1.373e-05 floor 8.255e-37 resolved False phase_limited False
+   d5 [9.219723,9.747476] xs-in True Levin: est 9.602487223131e-27 resid 9.127e-29 relerr 9.505e-03 floor 1.579e-36 resolved False phase_limited False
+   d6 [9.219723,9.483599] xs-in True Levin: est 1.048901839983e-26 resid 3.202e-28 relerr 3.149e-02 floor 1.347e-36 resolved False phase_limited False
+   d6 [9.483599,9.747476] xs-in False Levin: est -7.952642226020e-28 resid 1.565e-39 relerr 1.968e-12 floor 1.045e-38 resolved True phase_limited False
+== r14 row2 G+q+r (x_s 5.620431994441799)
+   d0 [5.525453,22.413545] xs-in True Levin: est 3.130296649474e-23 resid 2.193e-30 relerr 7.005e-08 floor 9.510e-31 resolved True phase_limited False
+   d1 [5.525453,13.969499] xs-in True Levin: est 6.559642216351e-27 resid 1.723e-33 relerr 2.626e-07 floor 1.021e-34 resolved False phase_limited False
+   d1 [13.969499,22.413545] xs-in False Levin: est 3.129640465965e-23 resid 9.042e-31 relerr 2.889e-08 floor 2.864e-33 resolved True phase_limited False
+   d2 [5.525453,9.747476] xs-in True Levin: est 1.755644651895e-29 resid 3.676e-33 relerr 2.094e-04 floor 1.315e-35 resolved False phase_limited False
+   d2 [9.747476,13.969499] xs-in False Levin: est 6.542087492618e-27 resid 2.278e-36 relerr 3.482e-10 floor 1.703e-35 resolved True phase_limited False
+   d3 [5.525453,7.636464] xs-in True Levin: est 2.819509388217e-29 resid 3.916e-33 relerr 1.389e-04 floor 7.449e-36 resolved False phase_limited False
+   d3 [7.636464,9.747476] xs-in False Levin: est -1.064232369222e-29 resid 4.409e-36 relerr 4.143e-07 floor 4.639e-37 resolved True phase_limited False
+   d4 [5.525453,6.580959] xs-in True Levin: est 2.034962233100e-29 resid 8.116e-34 relerr 3.989e-05 floor 6.254e-37 resolved False phase_limited False
+   d4 [6.580959,7.636464] xs-in False Levin: est 7.849387121259e-30 resid 5.692e-37 relerr 7.252e-08 floor 5.964e-38 resolved True phase_limited False
+   d5 [5.525453,6.053206] xs-in True Levin: est 1.280185441377e-29 resid 4.265e-33 relerr 3.332e-04 floor 1.835e-37 resolved False phase_limited False
+   d5 [6.053206,6.580959] xs-in False Levin: est 7.548579567071e-30 resid 5.939e-37 relerr 7.867e-08 floor 1.943e-38 resolved True phase_limited False
+   d6 [5.525453,5.789329] xs-in True Levin: est 7.708500564443e-30 resid 7.730e-32 relerr 1.013e-02 floor 4.903e-38 resolved False phase_limited False
+   d6 [5.789329,6.053206] xs-in False Levin: est 5.089089227445e-30 resid 2.710e-42 relerr 5.325e-13 floor 7.761e-39 resolved True phase_limited False
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/rootdiag_r14.json sha256 b1c06d63448ad658f0e898e480fd3a49ce2335020b3f8841cbf4fc7b5d212013
+# exit 0 at 2026-10-27T00:15:07Z

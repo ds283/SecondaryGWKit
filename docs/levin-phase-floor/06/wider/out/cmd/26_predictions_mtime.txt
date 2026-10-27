@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport os,datetime\nfor p in [\'out/U0_a.txt\',\'out/U0.txt\',\'state/predictions.md\']:\n    print(datetime.datetime.fromtimestamp(os.stat(p).st_mtime, datetime.timezone.utc).isoformat(), p)'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T22:32:58Z
+# ----
+2026-10-26T22:23:59.302153+00:00 out/U0_a.txt
+2026-10-26T22:32:12.206155+00:00 out/U0.txt
+2026-10-26T22:32:53.969652+00:00 state/predictions.md
+# ----
+# end 2026-10-26T22:32:58Z
+# exit 0

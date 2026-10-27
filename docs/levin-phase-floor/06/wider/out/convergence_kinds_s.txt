@@ -1,0 +1,172 @@
+$ ./venv/bin/python -I var/levin-phase-floor-06/wider/scripts/convergence_kinds.py var/runs/levin-phase-floor-06-wider-20261026T223634 --tree s --capped-run var/runs/levin-phase-floor-05-wider-20261026T020005
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:27:46Z
+# ----
+# convergence_kinds.py, run 2026-10-26T23:27:46+00:00
+# host mps026298.phys.susx.ac.uk; python 3.13.16; git HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff
+# script sha256 49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b
+# tree s; capped: tree p at rtol 1e-7 in var/runs/levin-phase-floor-05-wider-20261026T020005
+# input var/runs/levin-phase-floor-06-wider-20261026T223634/checkpoint.jsonl sha256 134ef9aeed6938e339c0d2ddf1edcc69f9e186b8f040116685b7ab181f15b0a1
+# run var/runs/levin-phase-floor-06-wider-20261026T223634: git_head 28ebaf0743e0555fb2c4512ce714884005a60eff
+# input var/runs/levin-phase-floor-05-wider-20261026T020005/checkpoint.jsonl sha256 909ebe3ee1c7e5665f8f8af22e5dac76b726c2b92bdbfc47ca1b1e4910064aee
+# run var/runs/levin-phase-floor-05-wider-20261026T020005: git_head 53084dcb14f7835e22fe8ffde8c0ac09c20a6fca
+
+== tree s at rtol 1e-7: every unconverged Levin call
+   row            role     capped_p  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+   R1             d20      True      Gr/G+r         resolution           17        6      17.3      17.3    0.0000
+   R1             d20      True      Gr/G-r         resolution           24        8      13.1      13.1    0.0000
+   R1             d20      True      Gqr/G+q+r      bound only            1        0      75.1     0.034    0.9995
+   R1             d20      True      Gqr/G+q-r      bound only            1        0      34.8   0.00275    0.9999
+   R1             d20      True      Gqr/G-q+r      bound only            1        0      81.4    0.0283    0.9997
+   R1             d20      True      Gqr/G-q-r      bound only            1        0      34.1  0.000499    1.0000
+   R4             d20      True      G/G            resolution           10        7      2.16      2.16    0.0000
+   R4             d20      True      Gr/G+r         resolution           21        7      1.39      1.39    0.0000
+   R4             d20      True      Gr/G-r         resolution           35        8      2.69      2.69    0.0000
+   R4             d20      True      Gqr/G+q+r      bound only            1        0       143    0.0123    0.9999
+   R4             d20      True      Gqr/G+q-r      bound only            1        0      52.1   0.00444    0.9999
+   R4             d20      True      Gqr/G-q+r      bound only            1        0       128    0.0425    0.9997
+   R4             d20      True      Gqr/G-q-r      bound only            1        0        51   0.00446    0.9999
+   R6             d20      True      Gqr/G+q+r      phase-limited         1        0       108      2.35    0.9781
+   R6             d20      True      Gqr/G+q-r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q+r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q-r      bound only            1        0      30.3      0.56    0.9816
+   R7             d20      True      Gqr/G+q+r      phase-limited         1        0       276      49.1    0.8223
+   R7             d20      True      Gqr/G+q-r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q+r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q-r      bound only            1        0      39.3     0.438    0.9888
+   low-G+r-2      d20      False     Gqr/G+q+r      bound only            1        0       inf   0.00135       nan
+   low-G+r-3      d20      True      Gr/G+r         resolution            6        3      4.74      4.74    0.0000
+   low-G+r-3      d20      True      Gr/G-r         resolution           13        5      31.1      31.1    0.0000
+   low-G+r-3      d20      True      Gqr/G+q+r      bound only            1        0      37.2      0.15    0.9960
+   low-G+r-3      d20      True      Gqr/G+q-r      bound only            1        0        40     0.313    0.9922
+   low-G+r-3      d20      True      Gqr/G-q+r      bound only            1        0      34.5     0.204    0.9941
+   low-G+r-3      d20      True      Gqr/G-q-r      bound only            1        0      45.5     0.209    0.9954
+   low-G-1        d20      True      Gqr/G+q-r      phase-limited         1        0       487      27.7    0.9432
+   low-G-1        d20      True      Gqr/G-q+r      phase-limited         1        0       487      27.7    0.9432
+   low-G-1        d20      True      Gqr/G-q-r      phase-limited         1        0      69.6      2.25    0.9676
+   low-G-2        d20      False     G/G            resolution            9        7       1.5       1.5    0.0000
+   low-G-2        d20      False     Gqr/G+q+r      phase-limited         1        0      74.1      29.5    0.6019
+   low-G-2        d20      False     Gqr/G+q-r      phase-limited         1        0      46.3      3.42    0.9262
+   low-G-2        d20      False     Gqr/G-q+r      phase-limited         1        0      46.3      3.42    0.9262
+   low-G-2        d20      False     Gqr/G-q-r      phase-limited         1        0      45.4      2.97    0.9346
+   low-G-3        d20      True      Gqr/G+q+r      bound only            1        0      1.45    0.0748    0.9484
+   low-G-3        d20      True      Gqr/G+q-r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q+r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q-r      bound only            1        0      2.67     0.111    0.9585
+   low-G-r-1      d20      False     Gqr/G+q+r      bound only            1        0       inf  3.32e-05       nan
+   low-G-r-2      d20      True      G/G            resolution           10        7      2.15      2.15    0.0000
+   low-G-r-2      d20      True      Gqr/G+q+r      phase-limited         1        0      67.6      9.81    0.8549
+   low-G-r-2      d20      True      Gqr/G+q-r      bound only            1        0      42.3     0.142    0.9967
+   low-G-r-2      d20      True      Gqr/G-q+r      phase-limited         1        0       131       2.4    0.9817
+   low-G-r-2      d20      True      Gqr/G-q-r      bound only            1        0      35.9       0.3    0.9916
+   low-G-r-3      d20      True      G/G            resolution           10        8      2.82      2.82    0.0000
+   low-G-r-3      d20      True      Gqr/G+q+r      phase-limited         1        0       108      8.11    0.9250
+   low-G-r-3      d20      True      Gqr/G+q-r      bound only            1        0       199     0.356    0.9982
+   low-G-r-3      d20      True      Gqr/G-q+r      bound only            1        0      99.9     0.772    0.9923
+   low-G-r-3      d20      True      Gqr/G-q-r      bound only            1        0       161    0.0206    0.9999
+   low-Gqr-3      d20      False     Gqr/G+q-r      bound only            1        0       inf     0.448       nan
+   low-Gqr-3      d20      False     Gqr/G-q+r      bound only            1        0       inf     0.448       nan
+   mid-G+r-3      d20      False     Gr/G+r         resolution           35        8      1.58      1.58    0.0000
+   mid-G-1        d20      False     Gqr/G+q+r      bound only            1        0       1.4     0.954    0.3201
+   mid-G-1        d20      False     Gqr/G+q-r      phase-limited         1        0      2.26      1.25    0.4492
+   mid-G-1        d20      False     Gqr/G-q+r      phase-limited         1        0      2.26      1.25    0.4492
+   mid-G-1        d20      False     Gqr/G-q-r      phase-limited         1        0      3.16      1.16    0.6330
+   mid-G-3        d20      False     Gqr/G+q+r      phase-limited         1        0      13.6      1.09    0.9197
+   mid-G-3        d20      False     Gqr/G-q-r      phase-limited         1        0      17.5      1.15    0.9345
+   mid-G-r-2      d20      False     Gr/G+r         resolution           14        6      18.4      18.4    0.0000
+   mid-G-r-2      d20      False     Gr/G-r         resolution           28        6      12.6      12.6    0.0000
+   mid-Gqr-1      d20      False     Gqr/G+q+r      phase-limited         1        0      13.4      1.29    0.9036
+   mid-Gqr-1      d20      False     Gqr/G-q-r      phase-limited         1        0      16.3      1.28    0.9216
+   mid-Gqr-2      d20      False     G/G            resolution           13        7      1.01      1.01    0.0001
+   mid-Gqr-2      d20      False     Gqr/G+q+r      bound only            1        0       1.8     0.168    0.9067
+   mid-Gqr-2      d20      False     Gqr/G-q-r      bound only            1        0       1.9    0.0993    0.9477
+   mid-Gqr-3      d20      False     Gqr/G+q+r      bound only            1        0      1.66    0.0187    0.9888
+   mid-Gqr-3      d20      False     Gqr/G-q-r      bound only            1        0      1.67   0.00415    0.9975
+   kinds, every row: {'resolution': 14, 'bound only': 32, 'phase-limited': 23}
+   kinds, rows capped under p: {'resolution': 9, 'bound only': 23, 'phase-limited': 12}
+
+== tree s at rtol 1e-8: every unconverged Levin call
+   row            role     capped_p  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+   R1             d20      True      G/G            resolution           15        9       1.5       1.5    0.0000
+   R1             d20      True      Gr/G+r         resolution           37        7       7.5       7.5    0.0000
+   R1             d20      True      Gr/G-r         resolution           59        8       2.2       2.2    0.0000
+   R1             d20      True      Gqr/G+q+r      bound only            1        0       120    0.0541    0.9995
+   R1             d20      True      Gqr/G+q-r      bound only            1        0      34.8   0.00275    0.9999
+   R1             d20      True      Gqr/G-q+r      bound only            1        0       110    0.0382    0.9997
+   R1             d20      True      Gqr/G-q-r      bound only            1        0      34.1  0.000499    1.0000
+   R4             d20      True      G/G            resolution           22        9      1.41      1.41    0.0000
+   R4             d20      True      Gr/G+r         resolution           40        8      2.11      2.11    0.0000
+   R4             d20      True      Gr/G-r         resolution           62        9      3.71      3.71    0.0000
+   R4             d20      True      Gqr/G+q+r      bound only            1        0       186     0.016    0.9999
+   R4             d20      True      Gqr/G+q-r      bound only            1        0      52.1   0.00444    0.9999
+   R4             d20      True      Gqr/G-q+r      bound only            1        0       171    0.0565    0.9997
+   R4             d20      True      Gqr/G-q-r      bound only            1        0        51   0.00446    0.9999
+   R6             d20      True      Gqr/G+q+r      phase-limited         1        0       355      7.77    0.9781
+   R6             d20      True      Gqr/G+q-r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q+r      phase-limited         1        0      59.7      1.29    0.9784
+   R6             d20      True      Gqr/G-q-r      bound only            1        0      30.3      0.56    0.9816
+   R7             d20      True      Gqr/G+q+r      phase-limited         1        0       482      85.6    0.8223
+   R7             d20      True      Gqr/G+q-r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q+r      bound only            1        0        79     0.253    0.9968
+   R7             d20      True      Gqr/G-q-r      bound only            1        0      39.3     0.438    0.9888
+   low-G+r-2      d20      False     Gqr/G+q+r      bound only            1        0       inf   0.00135       nan
+   low-G+r-3      d20      True      G/G            resolution           21        9      1.48      1.48    0.0000
+   low-G+r-3      d20      True      Gr/G+r         resolution           14        5      2.77      2.77    0.0000
+   low-G+r-3      d20      True      Gr/G-r         resolution           21        5        43        43    0.0000
+   low-G+r-3      d20      True      Gqr/G+q+r      phase-limited         1        0       372       1.5    0.9960
+   low-G+r-3      d20      True      Gqr/G+q-r      phase-limited         1        0       400      3.13    0.9922
+   low-G+r-3      d20      True      Gqr/G-q+r      phase-limited         1        0       345      2.04    0.9941
+   low-G+r-3      d20      True      Gqr/G-q-r      phase-limited         1        0       455      2.09    0.9954
+   low-G-1        d20      True      G/G            resolution           18        9      1.95      1.95    0.0001
+   low-G-1        d20      True      Gqr/G+q-r      phase-limited         1        0  4.87e+03       277    0.9432
+   low-G-1        d20      True      Gqr/G-q+r      phase-limited         1        0  4.87e+03       277    0.9432
+   low-G-1        d20      True      Gqr/G-q-r      phase-limited         1        0       696      22.5    0.9676
+   low-G-2        d20      False     G/G            resolution           23        9      2.31      2.31    0.0000
+   low-G-2        d20      False     Gqr/G+q+r      phase-limited         1        0       741       295    0.6019
+   low-G-2        d20      False     Gqr/G+q-r      phase-limited         1        0       463      34.2    0.9262
+   low-G-2        d20      False     Gqr/G-q+r      phase-limited         1        0       463      34.2    0.9262
+   low-G-2        d20      False     Gqr/G-q-r      phase-limited         1        0       454      29.7    0.9346
+   low-G-3        d20      True      Gqr/G+q+r      bound only            1        0      1.45    0.0748    0.9484
+   low-G-3        d20      True      Gqr/G+q-r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q+r      phase-limited         1        0      37.1      5.62    0.8484
+   low-G-3        d20      True      Gqr/G-q-r      bound only            1        0      2.67     0.111    0.9585
+   low-G-r-1      d20      False     Gqr/G+q+r      bound only            1        0       inf  3.32e-05       nan
+   low-G-r-2      d20      True      G/G            resolution           20        9      2.69      2.69    0.0001
+   low-G-r-2      d20      True      Gr/G+r         resolution           14        6       1.2       1.2    0.0000
+   low-G-r-2      d20      True      Gr/G-r         resolution           23        6      1.27      1.27    0.0000
+   low-G-r-2      d20      True      Gqr/G+q+r      phase-limited         1        0       676      98.1    0.8549
+   low-G-r-2      d20      True      Gqr/G+q-r      phase-limited         1        0       423      1.42    0.9967
+   low-G-r-2      d20      True      Gqr/G-q+r      phase-limited         1        0  1.31e+03        24    0.9817
+   low-G-r-2      d20      True      Gqr/G-q-r      phase-limited         1        0       359         3    0.9916
+   low-G-r-3      d20      True      G/G            resolution           21        9      2.74      2.74    0.0000
+   low-G-r-3      d20      True      Gr/G+r         resolution           16        5      1.47      1.47    0.0000
+   low-G-r-3      d20      True      Gr/G-r         resolution           21        5      2.03      2.03    0.0000
+   low-G-r-3      d20      True      Gqr/G+q+r      phase-limited         1        0  1.08e+03      81.1    0.9250
+   low-G-r-3      d20      True      Gqr/G+q-r      phase-limited         1        0       845      1.51    0.9982
+   low-G-r-3      d20      True      Gqr/G-q+r      phase-limited         1        0       999      7.72    0.9923
+   low-G-r-3      d20      True      Gqr/G-q-r      bound only            1        0       678    0.0867    0.9999
+   low-Gqr-3      d20      False     Gqr/G+q-r      bound only            1        0       inf     0.448       nan
+   low-Gqr-3      d20      False     Gqr/G-q+r      bound only            1        0       inf     0.448       nan
+   mid-G-1        d20      False     Gqr/G+q+r      phase-limited         1        0        14      9.54    0.3201
+   mid-G-1        d20      False     Gqr/G+q-r      phase-limited         1        0      22.6      12.5    0.4492
+   mid-G-1        d20      False     Gqr/G-q+r      phase-limited         1        0      22.6      12.5    0.4492
+   mid-G-1        d20      False     Gqr/G-q-r      phase-limited         1        0      31.6      11.6    0.6330
+   mid-G-3        d20      False     Gqr/G+q+r      phase-limited         1        0      13.6      1.09    0.9197
+   mid-G-3        d20      False     Gqr/G-q-r      phase-limited         1        0      17.5      1.15    0.9345
+   mid-G-r-2      d20      False     G/G            resolution           17        9      3.87      3.87    0.0000
+   mid-G-r-2      d20      False     Gr/G+r         resolution           27        6      16.8      16.8    0.0000
+   mid-G-r-2      d20      False     Gr/G-r         resolution           37        7      28.9      28.9    0.0000
+   mid-G-r-2      d20      False     Gqr/G+q-r      bound only            1        0      2.26   0.00683    0.9970
+   mid-G-r-2      d20      False     Gqr/G-q-r      bound only            1        0      2.25   0.00319    0.9986
+   mid-Gqr-1      d20      False     Gqr/G+q+r      phase-limited         1        0      13.4      1.29    0.9036
+   mid-Gqr-1      d20      False     Gqr/G-q-r      phase-limited         1        0      16.3      1.28    0.9216
+   mid-Gqr-2      d20      False     Gqr/G+q+r      bound only            1        0       1.8     0.168    0.9067
+   mid-Gqr-2      d20      False     Gqr/G-q-r      bound only            1        0       1.9    0.0993    0.9477
+   mid-Gqr-3      d20      False     Gqr/G+q+r      bound only            1        0      1.66    0.0187    0.9888
+   mid-Gqr-3      d20      False     Gqr/G-q-r      bound only            1        0      1.67   0.00415    0.9975
+   kinds, every row: {'resolution': 20, 'bound only': 25, 'phase-limited': 32}
+   kinds, rows capped under p: {'resolution': 16, 'bound only': 15, 'phase-limited': 20}
+# ----
+# end 2026-10-26T23:27:46Z
+# exit 0

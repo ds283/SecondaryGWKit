@@ -1,0 +1,5 @@
+row mid-G-2 role d20 d20 tree_head 9f66622 vs 05a 149c393
+total 0x1.3a5d5e42eaae4p-81 0x1.3a5d5e42eaae4p-81 True
+total_abserr 0x1.d39df375a33dbp-103 0x1.d39df375a33dbp-103 True
+calls 5 5 call keys ['abserr', 'atol', 'converged', 'depth_hist_levin_cc', 'elapsed', 'evaluations', 'group', 'index', 'max_depth', 'n_depth_ge_18', 'notify_label', 'num_regions', 'num_simple_regions', 'phase_limited', 'regime', 'rtol', 'value', 'x_span']
+call fields compared 10 all equal

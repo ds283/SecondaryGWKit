@@ -1,0 +1,57 @@
+{
+ "tree": "s",
+ "units": [
+  {
+   "uid": "U0-s-1e-7-low-G+r-1-run1",
+   "tree": "s",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  },
+  {
+   "uid": "U0-s-1e-7-low-G+r-1-run2",
+   "tree": "s",
+   "rtol": "1e-7",
+   "row": "low-G+r-1",
+   "shard": 2,
+   "serial": 38302,
+   "role": "d20",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  },
+  {
+   "uid": "U0-s-1e-7-ctrl-low-1-run1",
+   "tree": "s",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  },
+  {
+   "uid": "U0-s-1e-7-ctrl-low-1-run2",
+   "tree": "s",
+   "rtol": "1e-7",
+   "row": "ctrl-low-1",
+   "shard": 2,
+   "serial": 2095,
+   "role": "control",
+   "budget": null,
+   "probe": true,
+   "rerun": true
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/U0/s",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/U0/s/ledger.jsonl",
+ "pickle_regions": true
+}

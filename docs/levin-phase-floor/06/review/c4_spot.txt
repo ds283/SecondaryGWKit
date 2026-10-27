@@ -1,0 +1,5 @@
+r13 levin-phase-floor-06-r13-shard0001.sqlite serial 45125 wkb 1049 z 1026 div -7459548 mod -0x1.5b3fd23b4506ep+1 G_WKB -0x1.c73b88e6e5ae2p+32
+r14 levin-phase-floor-06-r14-shard0001.sqlite serial 45927 wkb 638 z 1026 div -7459548 mod -0x1.5b3fd23835f08p+1 G_WKB -0x1.c73b88feb31f3p+32 residual 0x1.9226a80fa3980p+0 1.5709023512059446
+GkWKBValue rows 147642 null 0 min 0.0 max 1.571361215291544 outside 0
+TkWKBValue rows 2209 null 0 min 1.7001482424791894 max 1.7643169331352708 outside 0
+GkSourceValue rows 169653 null 22011 min 0.0 max 1.571361215291544 outside 0

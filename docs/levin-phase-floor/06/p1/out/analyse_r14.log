@@ -1,0 +1,126 @@
+# command: PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/scripts/analyse.py r14
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out; host mps026298.phys.susx.ac.uk; start 2026-10-27T00:05:56Z
+# script sha256 af48204f85c8f9a84e979e440a5a33220f3334777ec1b06e950a5ceba25b0658  analyse.py
+# script sha256 dc98975698f78e9ed962e3269c3b1954563830671657e4b40e2d409fcb7669a7  harness.py
+# script sha256 d7cc95c2b8f276df4a4cb096b6d66a264aa05314d38f91fa0701558a030be2ed  p1lib.py
+# script sha256 ec9fdd00ac3bdc052a8e768050af2a42feb6bb830f2f9e67a4b80e5b32b16140  prov.py
+# script sha256 a8249226a95a41e7f4926f759ba613a01009637df680d773f21bcc7c9f54c61b  rebuild.py
+# script sha256 61100b1819b06c5e72daa9da15a5a117a3f1f32412ee682f537e811b4993cacc  validate.py
+# script sha256 eee425a61712c2debd3485e10cf2afd1df7ece0347cfe6b4ba907cec509dc4eb  run.sh
+# p1 r14: reads /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite (read-only)
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# p1 r14: context in 0.4 s
+# p1 r14 row1: total np.float64(5.927866035235912e-20) (stored 5.927866035235912e-20); all identical True; compute 0.4 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+# p1 r14 row2: total np.float64(-3.3962843526143793e-19) (stored -3.3962843526143793e-19); all identical True; compute 0.3 s; 21 Levin calls; QuadSource recomputed vs stored differing columns 0
+== r14 row1 G+q+r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   stationary point z=10211.317891485687 theta''=1553661.8711426852 estimate -3.697433967293663e-25 |.| 3.7044773914434694e-25
+   total variation 111295174.43746543 rad
+   (b) rtol 1e-07: -5.373287957650585e-23 abserr 1.0235856699214647e-29 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-09: -5.373287957650585e-23 abserr 1.0235856699214647e-29 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-11: -5.373287957650585e-23 abserr 1.0235856699214647e-29 regions 1 evals 3 conv False [0.0 s]
+   (c) m=0: sum -5.373287957650585e-23 sum abserr 1.02e-29 regions 1 conv False [0.0 s]
+   (c) m=3: sum -5.410262605113054e-23 sum abserr 3.37e-31 regions 19 conv True [0.1 s]
+   (c) m=6: sum -5.410262592822933e-23 sum abserr 2.68e-31 regions 71 conv True [0.3 s]
+   (c) m=9: sum -5.410262575280688e-23 sum abserr 6.87e-34 regions 515 conv False [1.9 s]
+   (c) m=12: sum -5.410262575278377e-23 sum abserr 2.29e-33 regions 4098 conv False [15.4 s]
+== r14 row1 G+q-r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 242496882.49020508 rad
+   (b) rtol 1e-07: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-09: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-11: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (c) m=0: sum -8.317748018639095e-24 sum abserr 2.22e-30 regions 1 conv False [0.0 s]
+   (c) m=3: sum -8.31774785502687e-24 sum abserr 7.89e-32 regions 8 conv True [0.0 s]
+   (c) m=6: sum -8.317747739787066e-24 sum abserr 2.39e-31 regions 65 conv True [0.2 s]
+   (c) m=9: sum -8.317747769617445e-24 sum abserr 3.77e-34 regions 517 conv False [1.9 s]
+   (c) m=12: sum -8.317747769601256e-24 sum abserr 1.04e-33 regions 4131 conv False [15.6 s]
+== r14 row1 G-q+r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 242496882.49020508 rad
+   (b) rtol 1e-07: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-09: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-11: -8.317748018639095e-24 abserr 2.2191204128184556e-30 regions 1 evals 3 conv False [0.0 s]
+   (c) m=0: sum -8.317748018639095e-24 sum abserr 2.22e-30 regions 1 conv False [0.0 s]
+   (c) m=3: sum -8.31774785502687e-24 sum abserr 7.89e-32 regions 8 conv True [0.0 s]
+   (c) m=6: sum -8.317747739787066e-24 sum abserr 2.39e-31 regions 65 conv True [0.2 s]
+   (c) m=9: sum -8.317747769617445e-24 sum abserr 3.77e-34 regions 517 conv False [1.9 s]
+   (c) m=12: sum -8.317747769601256e-24 sum abserr 1.04e-33 regions 4131 conv False [15.6 s]
+== r14 row1 G-q-r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 375660708.21193594 rad
+   (b) rtol 1e-07: 3.885771381528602e-24 abserr 1.3334213209687413e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-09: 3.885771381528602e-24 abserr 1.3334213209687413e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-11: 3.885771381528602e-24 abserr 1.3334213209687413e-30 regions 1 evals 3 conv False [0.0 s]
+   (c) m=0: sum 3.885771381528602e-24 sum abserr 1.33e-30 regions 1 conv False [0.0 s]
+   (c) m=3: sum 3.885771465201477e-24 sum abserr 1.26e-31 regions 8 conv True [0.0 s]
+   (c) m=6: sum 3.885771638245785e-24 sum abserr 2.58e-31 regions 65 conv True [0.2 s]
+   (c) m=9: sum 3.885771637665333e-24 sum abserr 3.05e-34 regions 512 conv True [1.9 s]
+   (c) m=12: sum 3.8857716376258884e-24 sum abserr 7.3e-34 regions 4249 conv False [16.3 s]
+== r14 row2 G+q+r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   stationary point z=275.0085916617262 theta''=21269629.976525903 estimate 3.739432290961918e-26 |.| 3.861102769634962e-26
+   total variation 56675655.4236778 rad
+   (b) rtol 1e-07: 3.1302966494737344e-23 abserr 2.1928712696810757e-30 regions 1 evals 3 conv True [0.0 s]
+   (b) rtol 1e-09: 3.134035953025913e-23 abserr 9.365333380482216e-33 regions 24 evals 91 conv True [0.1 s]
+   (b) rtol 1e-11: 3.134035896071291e-23 abserr 2.0566262048480654e-33 regions 187 evals 497 conv False [1.2 s]
+   (c) m=0: sum 3.1302966494737344e-23 sum abserr 2.19e-30 regions 1 conv True [0.0 s]
+   (c) m=3: sum 3.134035952134292e-23 sum abserr 8.6e-31 regions 20 conv True [0.0 s]
+   (c) m=6: sum 3.134035930089976e-23 sum abserr 4.43e-31 regions 76 conv True [0.3 s]
+   (c) m=9: sum 3.134035896139387e-23 sum abserr 1.29e-33 regions 518 conv False [1.9 s]
+   (c) m=12: sum 3.134035896140931e-23 sum abserr 3.09e-33 regions 4124 conv False [15.5 s]
+== r14 row2 G+q-r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 76684247.415925 rad
+   (b) rtol 1e-07: 7.990230629942376e-23 abserr 2.7919558275823787e-31 regions 2 evals 7 conv True [0.0 s]
+   (b) rtol 1e-09: 7.990230659490003e-23 abserr 4.444831025503328e-32 regions 38 evals 113 conv True [0.2 s]
+   (b) rtol 1e-11: 7.990230629780979e-23 abserr 3.971784031925027e-33 regions 165 evals 395 conv False [1.0 s]
+   (c) m=0: sum 7.990230629942376e-23 sum abserr 2.79e-31 regions 2 conv True [0.0 s]
+   (c) m=3: sum 7.990230499944233e-23 sum abserr 2.13e-30 regions 8 conv True [0.0 s]
+   (c) m=6: sum 7.990230638384482e-23 sum abserr 7.7e-31 regions 66 conv True [0.2 s]
+   (c) m=9: sum 7.990230629786636e-23 sum abserr 1.14e-33 regions 512 conv False [1.9 s]
+   (c) m=12: sum 7.990230629802035e-23 sum abserr 2.7e-33 regions 4099 conv False [15.5 s]
+== r14 row2 G-q+r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 76684247.415925 rad
+   (b) rtol 1e-07: 7.990230629942376e-23 abserr 2.7919558275823787e-31 regions 2 evals 7 conv True [0.0 s]
+   (b) rtol 1e-09: 7.990230659490003e-23 abserr 4.444831025503328e-32 regions 38 evals 113 conv True [0.2 s]
+   (b) rtol 1e-11: 7.990230629780979e-23 abserr 3.971784031925027e-33 regions 165 evals 395 conv False [1.0 s]
+   (c) m=0: sum 7.990230629942376e-23 sum abserr 2.79e-31 regions 2 conv True [0.0 s]
+   (c) m=3: sum 7.990230499944233e-23 sum abserr 2.13e-30 regions 8 conv True [0.0 s]
+   (c) m=6: sum 7.990230638384482e-23 sum abserr 7.7e-31 regions 66 conv True [0.2 s]
+   (c) m=9: sum 7.990230629786636e-23 sum abserr 1.14e-33 regions 512 conv False [1.9 s]
+   (c) m=12: sum 7.990230629802035e-23 sum abserr 2.7e-33 regions 4099 conv False [15.6 s]
+== r14 row2 G-q-r: x_span (5.5254529391317835, 22.413544878488572), atol 1.617252502225453e-33, rtol 1e-07, order 24
+   phase grid 40001 pts in 1.3 s
+   total variation 209848073.13765585 rad
+   (b) rtol 1e-07: -1.798810312368605e-23 abserr 2.9374092912469358e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-09: -1.798810312368605e-23 abserr 2.9374092912469358e-30 regions 1 evals 3 conv False [0.0 s]
+   (b) rtol 1e-11: -1.798810312368605e-23 abserr 2.9374092912469358e-30 regions 1 evals 3 conv False [0.0 s]
+   (c) m=0: sum -1.798810312368605e-23 sum abserr 2.94e-30 regions 1 conv False [0.0 s]
+   (c) m=3: sum -1.7988103730056083e-23 sum abserr 9.3e-32 regions 8 conv True [0.0 s]
+   (c) m=6: sum -1.798810390509321e-23 sum abserr 6.47e-31 regions 64 conv True [0.2 s]
+   (c) m=9: sum -1.7988103415089716e-23 sum abserr 1.04e-33 regions 512 conv False [1.9 s]
+   (c) m=12: sum -1.7988103414983604e-23 sum abserr 2.36e-33 regions 4156 conv False [15.9 s]
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/analyse_r14.json sha256 222faecc7ea5593f210f4df44726f80ba03d3b094c401df468e9d11fb0bd7244
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/p1/out/analyse_r14_pieces.npz sha256 1690b553412a55e256f7215780912891254f359ac54547041b85162a5116cdc4
+# exit 0 at 2026-10-27T00:08:37Z

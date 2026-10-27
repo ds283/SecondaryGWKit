@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -c $'\nimport json, numpy as np\nW=json.load(open(\'state/probe_windows.json\'))\nfor tag in (True, False):\n    ws=[w for w in W if w[\'factor\']==\'G\' and w[\'matched\'] and bool(w.get(\'pure_I\'))==tag]\n    r=np.array([abs(w[\'theta_deriv_u_s\']-w[\'theta_deriv_u_t5\'])/abs(w[\'theta_deriv_u_t5\']) for w in ws])\n    print(\'pure\' if tag else \'seeded\', len(ws), \'relative theta_deriv change median %.3g p90 %.3g max %.3g\' % (np.median(r), np.percentile(r,90), r.max()))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-26T23:29:29Z
+# ----
+pure 6700 relative theta_deriv change median 1.38e-16 p90 6.92e-13 max 7.37e-08
+seeded 3594 relative theta_deriv change median 0.000431 p90 0.0695 max 4.92
+# ----
+# end 2026-10-26T23:29:29Z
+# exit 0

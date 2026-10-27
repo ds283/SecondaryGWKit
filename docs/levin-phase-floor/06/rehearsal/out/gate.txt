@@ -1,0 +1,74 @@
+=== gate re-check, 2026-10-26T21:55:23Z, host mps026298.phys.susx.ac.uk
+$ git -C <main> rev-parse HEAD; status --short
+28ebaf0743e0555fb2c4512ce714884005a60eff
+$ git -C <parent worktree> rev-parse HEAD; status --short --ignored
+9f66622d5ced82de9a6ec0c20baa9a2e715c6d27
+$ git -C <code worktree> rev-parse HEAD; status --short --ignored
+f5cee4c7a76e755119d923341f204f139b29be7e
+$ git worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622 9f66622 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c f5cee4c (detached HEAD)
+$ git -C <code worktree> show -s --format=%H%n%P dc9d28c
+dc9d28cbb8630eb38464abda7d38b1a4c7f17441 parent 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27
+$ git -C <code worktree> diff --stat dc9d28c f5cee4c
+ .../06-producers-store-the-residual.md             |  5 +-
+ prompts/levin-phase-floor/IMPLEMENTATION_STATE.md  |  2 +-
+ .../logs/06-producers-store-the-residual.md        |  4 +-
+ prompts/levin-phase-floor/orchestrator/README.md   |  2 +-
+ .../levin-phase-floor/orchestrator/prompt-06.md    | 79 +++++++++++++++++++++-
+ 5 files changed, 83 insertions(+), 9 deletions(-)
+$ ./venv/bin/python -m runregistrykit list | tail -3
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   handover-04-cost-growth-20261026T173720               done          60/60   4h 18m  handover prompt 04 (A4) on the Mac Studio (mps026298;
+   handover-04-cost-growth-20261026T152704               failed        60/60   6h 28m  handover prompt 04 (A4) on the Mac Studio (mps026298;
+   levin-phase-floor-05a-wider-20261026T123047           done        109/109   9h 24m  levin-phase-floor prompt 05a section 6 (T1 as amended
+21 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 21 finished; 0 with no host recorded.
+$ ls -la ~/.raypoolkit/ ; ls ~/ScienceData/.rehearsal-lock
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 26 12:32 .
+drwxr-x--- 159 ds283 staff 5088 Oct 26 21:52 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+$ ls var/datastores | grep levin-phase-floor-06
+(grep exit 1)
+$ ls var/levin-phase-floor-06
+rehearsal
+$ ls -l ~/.ray/auth_token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+$ df -h .
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  815G  112G  88% /
+$ uptime
+21:55  up 19 days, 12:32, 2 users, load averages: 7.88 9.96 9.40
+$ ./venv/bin/python --version
+Python 3.13.16
+$ shasum -a 256 RunDrivers/quadsource_atol_sweep.py (parent, code worktrees; main)
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit/RunDrivers/quadsource_atol_sweep.py
+$ git -C <code worktree> diff --stat 9f66622 f5cee4c -- . ":!docs" ":!prompts"
+ ComputeTargets/GkSource.py                         |   10 +
+ ComputeTargets/GkSourcePolicyData.py               |  109 +-
+ ComputeTargets/GkWKBIntegration.py                 |   53 +-
+ ComputeTargets/TkSourceFunctions.py                |  104 +-
+ ComputeTargets/TkWKBIntegration.py                 |   54 +-
+ ComputeTargets/primitive_phase.py                  |  172 ++-
+ ComputeTargets/tests/test_g_phase_reanchor.py      |   25 +-
+ ComputeTargets/tests/test_gk_source_policy.py      |   42 +-
+ ComputeTargets/tests/test_gk_wkb_phase.py          |    6 +-
+ ComputeTargets/tests/test_phase_groups.py          |   13 +-
+ ComputeTargets/tests/test_stored_phase_residual.py | 1158 ++++++++++++++++++++
+ ComputeTargets/tests/test_t_phase_reanchor.py      |    8 +-
+ ComputeTargets/tests/test_tk_source_functions.py   |  105 +-
+ ComputeTargets/tests/test_tk_wkb_phase.py          |   28 +-
+ LiouvilleGreen/WKBtools.py                         |   29 +-
+ ObjectFactories/GkSource.py                        |   11 +
+ ObjectFactories/GkWKBIntegration.py                |   13 +
+ ObjectFactories/TkWKBIntegration.py                |   13 +
+ Quadrature/integrators/WKB_phase_function.py       |   63 +-
+ tools/store_value_diff.py                          |  103 +-
+ tools/tests/test_store_value_diff_absent_column.py |  184 ++++
+ 21 files changed, 2173 insertions(+), 130 deletions(-)
+$ shasum -a 256 tools/store_value_diff.py, docs/dk-and-rpk-migration/rehearsal/run_readers.sh (code worktree)
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/tools/store_value_diff.py
+7c63a5ba45726c81561538acdb65711c5d98897f1ae7f0cc32b88a580042560a  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/dk-and-rpk-migration/rehearsal/run_readers.sh

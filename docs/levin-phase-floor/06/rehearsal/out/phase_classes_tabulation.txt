@@ -1,0 +1,112 @@
+# tabulate_phase_classes.py sha256 81effdbb4dde12ec345173a67a610f6473d2f9fa58c9db272d65e8bac5c918c8
+# git HEAD (cwd) f5cee4c7a76e755119d923341f204f139b29be7e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13-shard0000.sqlite sha256 f5e52b359826c4976834f12d8a60b41520b95430a3f6db19e11f2780acfe7326
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13-shard0001.sqlite sha256 dd2c2c41edecbf4da1665ffcc76468f68dbcdae218bd3b64fd1c69773e768182
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13-shard0002.sqlite sha256 742c324a1d4dbffb01ae30ece7aaf12d5dffa5a400cf24e5657d2eedd80cbf9b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13-shard0003.sqlite sha256 59b53f71d9a76a2667c7a3dde59e8bff4872aac991938b9d75afc153b81d83ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite sha256 766839d657e7f943f2e3ef1f3058268544b42ffcfeb1d8f753a68d9c768989c9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14-shard0000.sqlite sha256 1c0f3cf63cc95208c53e558d152255f34fa6b17c9b82f9270a2b43f2f126f7da
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14-shard0001.sqlite sha256 866511b7ef81f27da9bcf5306bd9a6efa9c367475f3c7959a23a78d07c943fcd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14-shard0002.sqlite sha256 dfaad9499d3d7f7364532cd5cb8091b1f32a51d1fed0a1a43f10213fdaff656b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14-shard0003.sqlite sha256 410bf34b370512c5426428f1c6f3c6ea6008e3bd9b0d371f60e08bbce9d12a57
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite sha256 fff6cf7fac9106897efba04547710ec99ce051f4f2457108dc8cdb6fd9689acd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/store_value_diff.json sha256 7e42eadcf3fc6a33b7ced1eed0dca813236d6e189e5aee051aa989bc644069de
+# A=R13 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (taken 9f66622d5ced82de9a6ec0c20baa9a2e715c6d27, /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/r13_status.json)
+# B=R14 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (taken f5cee4c7a76e755119d923341f204f139b29be7e, /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/r14_status.json)
+
+absent columns, read without: A {'TkWKBValue': ('theta_residual',), 'GkWKBValue': ('theta_residual',), 'GkSourceValue': ('theta_residual',)}; B {}
+== GkWKBIntegration
+  rows: A 3477, B 3477, paired 3477, only A 0, only B 0
+  row columns differing (rows): {'label': 3477, 'stage_1_compute_time': 3474, 'metadata': 25, 'stage_1_RHS_evaluations': 25}
+    metadata key rho_evals: 25 rows
+    metadata key rho_reused: 25 rows
+  GkWKBValue: columns only in A [], only in B ['theta_residual']
+  GkWKBValue: rows A 147642, B 147642, paired 147642, only A 0, only B 0, unmatched A 0 B 0
+  GkWKBValue: value columns differing (rows): {'G_WKB': 145772, 'theta_mod_2pi': 146251}
+  tool's JSON column counts: {'G_WKB': 145772, 'theta_mod_2pi': 146251}; equal to this read: True
+  theta_residual (R14 only): non-null 147642, null 0 (of rows with a stored remainder); max |r| 1.571e+00; |r| > pi + 2e-3: 0
+  R14 theta_mod_2pi outside (-2pi, 0]: 0
+    |theta| (from R14's div and mod): n 147642, median 7.651e+05, 90% 1.247e+08, 99% 6.429e+08, max 7.668e+08
+    |Δ theta_mod_2pi| (rad): n 147642, median 4.208e-11, 90% 7.787e-09, 99% 6.580e-08, max 2.280e-07
+    |Δ theta_mod_2pi| / (eps |theta|), rows with div unchanged: n 147642, median 3.240e-01, 90% 7.898e-01, 99% 1.260e+00, max 2.718e+02
+      > 0.5: 44113
+      > 1.0: 5442
+      > 2.0: 143
+      > 4.0: 52
+      bit-identical theta_mod_2pi: 1391
+  theta_div_2pi changes: 0
+    |Δ G_WKB|/|G_WKB_A|: n 147458, median 3.675e-11, 90% 1.075e-08, 99% 2.008e-07, max 3.584e-04
+    |Δ G_WKB|/(A |Δ theta_mod|) (≤ 1 if the remainder alone moved it): n 146251, median 7.016e-01, 90% 9.873e-01, 99% 9.999e-01, max 2.729e+00
+  per k: rows, median and max |Δ mod|/(eps|theta|) (div unchanged)
+    k=0x1.34d0f1066b7ccp+18: 49177 rows, median 3.234e-01, max 9.475e+01
+    k=0x1.86a0000000000p+16: 47373 rows, median 3.281e-01, max 1.070e+02
+    k=0x1.e848000000000p+19: 51092 rows, median 3.211e-01, max 2.718e+02
+== TkWKBIntegration
+  rows: A 3, B 3, paired 3, only A 0, only B 0
+  row columns differing (rows): {'label': 3, 'stage_1_compute_time': 3}
+  TkWKBValue: columns only in A [], only in B ['theta_residual']
+  TkWKBValue: rows A 2209, B 2209, paired 2209, only A 0, only B 0, unmatched A 0 B 0
+  TkWKBValue: value columns differing (rows): {'T_WKB': 2154, 'theta_mod_2pi': 2162}
+  tool's JSON column counts: {'T_WKB': 2154, 'theta_mod_2pi': 2162}; equal to this read: True
+  theta_residual (R14 only): non-null 2209, null 0 (of rows with a stored remainder); max |r| 1.764e+00; |r| > pi + 2e-3: 0
+  R14 theta_mod_2pi outside (-2pi, 0]: 0
+    |theta| (from R14's div and mod): n 2209, median 7.010e+04, 90% 3.054e+07, 99% 1.743e+08, max 2.106e+08
+    |Δ theta_mod_2pi| (rad): n 2209, median 5.388e-12, 90% 2.306e-09, 99% 2.613e-08, max 5.287e-08
+    |Δ theta_mod_2pi| / (eps |theta|), rows with div unchanged: n 2209, median 3.946e-01, 90% 8.768e-01, 99% 1.425e+00, max 8.408e+00
+      > 0.5: 853
+      > 1.0: 120
+      > 2.0: 6
+      > 4.0: 2
+      bit-identical theta_mod_2pi: 47
+  theta_div_2pi changes: 0
+    |Δ T_WKB|/|T_WKB_A|: n 2209, median 5.019e-12, 90% 3.162e-09, 99% 8.007e-08, max 7.710e-06
+    |Δ T_WKB|/(A |Δ theta_mod|) (≤ 1 if the remainder alone moved it): n 2162, median 7.219e-01, 90% 9.877e-01, 99% 1.000e+00, max 1.080e+00
+  per k: rows, median and max |Δ mod|/(eps|theta|) (div unchanged)
+    k=0x1.34d0f1066b7ccp+18: 734 rows, median 4.105e-01, max 6.791e+00
+    k=0x1.86a0000000000p+16: 684 rows, median 4.455e-01, max 8.408e+00
+    k=0x1.e848000000000p+19: 791 rows, median 3.552e-01, max 2.469e+00
+== GkSource
+  rows: A 291, B 291, paired 291, only A 0, only B 0
+  row columns differing (rows): {'label': 291, 'parents_digest': 291}
+  GkSourceValue: columns only in A [], only in B ['theta_residual']
+  GkSourceValue: rows A 169653, B 169653, paired 169653, only A 0, only B 0, unmatched A 0 B 0
+  GkSourceValue: value columns differing (rows): {'G_WKB': 145772, 'new_G_WKB': 145772, 'theta_mod_2pi': 146251}
+  tool's JSON column counts: {'G_WKB': 145772, 'new_G_WKB': 145772, 'theta_mod_2pi': 146251}; equal to this read: True
+  theta_residual (R14 only): non-null 147642, null 0 (of rows with a stored remainder); max |r| 1.571e+00; |r| > pi + 2e-3: 0
+  R14 theta_mod_2pi outside (-2pi, 0]: 0
+    |theta| (from R14's div and mod): n 147642, median 7.651e+05, 90% 1.247e+08, 99% 6.429e+08, max 7.668e+08
+    |Δ theta_mod_2pi| (rad): n 147642, median 4.208e-11, 90% 7.787e-09, 99% 6.580e-08, max 2.280e-07
+    |Δ theta_mod_2pi| / (eps |theta|), rows with div unchanged: n 147642, median 3.094e-01, 90% 7.661e-01, 99% 1.192e+00, max 7.183e+00
+      > 0.5: 41564
+      > 1.0: 4553
+      > 2.0: 3
+      > 4.0: 2
+      bit-identical theta_mod_2pi: 1391
+  theta_div_2pi changes: 0
+  raw_theta_div_2pi changes: 0
+    |Δ G_WKB|/|G_WKB_A|: n 147458, median 3.675e-11, 90% 1.075e-08, 99% 2.008e-07, max 3.584e-04
+    |Δ G_WKB|/(A |Δ theta_mod|) (≤ 1 if the remainder alone moved it): n 146251, median 7.016e-01, 90% 9.873e-01, 99% 9.999e-01, max 2.729e+00
+    |Δ new_G_WKB|/|new_G_WKB_A|: n 147458, median 3.675e-11, 90% 1.075e-08, 99% 2.008e-07, max 3.584e-04
+    |Δ new_G_WKB|/(A |Δ theta_mod|): n 146251, median 7.016e-01, 90% 9.873e-01, 99% 9.999e-01, max 2.729e+00
+  per k: rows, median and max |Δ mod|/(eps|theta|) (div unchanged)
+    k=0x1.34d0f1066b7ccp+18: 49177 rows, median 3.090e-01, max 1.907e+00
+    k=0x1.86a0000000000p+16: 47373 rows, median 3.122e-01, max 2.011e+00
+    k=0x1.e848000000000p+19: 51092 rows, median 3.074e-01, max 7.183e+00
+== GkSourcePolicyData
+  rows: A 291, B 291, paired 291, only A 0, only B 0
+  row columns differing (rows): {'metadata': 182}
+    metadata key Levin_z_dtheta_dlogz: 182 rows
+    |Δ|: n 182, median 2.966e-10, 90% 1.965e-07, 99% 3.055e-06, max 3.950e-06
+    |Δ|/|A|: n 182, median 1.957e-10, 90% 1.297e-07, 99% 2.016e-06, max 2.607e-06
+      rows where one side is null: 0
+      largest: A -1.5152858861265452 B -1.5152898358267775
+      largest: A -1.51528618962 B -1.5152898358267775
+      largest: A -1.5152867807369608 B -1.5152898358268105
+      largest: A -1.5152915985244486 B -1.5152898358267775
+      largest: A -1.5152883494567932 B -1.515289835826893
+    Levin_z: 0 rows differ
+    crossover_z: 0 rows differ
+    type: 0 rows differ
+    quality: 0 rows differ
+
+CSV: 297493 rows -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/rehearsal/out/phase_classes_rows.csv

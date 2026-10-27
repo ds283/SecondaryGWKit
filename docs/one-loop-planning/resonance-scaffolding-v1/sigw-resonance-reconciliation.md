@@ -14,6 +14,22 @@ and `main.py`, plus the transcribed derivation in `docs/spec/` (unsigned-off; th
 pass has not been run). Two arithmetic checks were run against the actual `main.py` grid. No
 repository files were modified other than this document.
 
+
+> **Correction (2026-10-27, `levin-phase-floor` prompt 06).** This document's claim that the
+> stationary-point hazard is "already closed" (the table in §0.1, §1.5 and §3.1) is wrong. The C2
+> total-variation gate diverts only a region whose phase varies by less than $6\pi$ to
+> Clenshaw–Curtis. A strongly oscillatory region with an interior stationary point goes to the
+> Levin solve, and nothing checks the sign of $\theta'$ there. C2's regression case puts its
+> stationary point at $x = 1/2$, the first bisection point, which hides the failure. On a
+> rehearsal build, two `QuadSourceIntegral` rows at $z_{\rm response} = 250$ were accepted as one
+> Levin region across the resonance of group G+q+r, missing exactly the stationary-phase term, with
+> errors $1.28\times10^4$ and 555 times their declared ones.
+> `[06-levin-accepts-a-region-across-a-stationary-point]`
+> ([board](../../../prompts/levin-phase-floor/IMPLEMENTATION_STATE.md) §3;
+> [`docs/levin-phase-floor/VERIFICATION.md`](../../levin-phase-floor/VERIFICATION.md) §6.3) holds
+> the fix: locate the stationary points from the closed-form $\theta'$ before integrating, and
+> guard the driver. The text below is left as written.
+
 ---
 
 ## 0. Summary
@@ -38,7 +54,7 @@ and — more importantly — the current object graph has no place to put them, 
 | **2** Uniform-asymptotic surrogate kernel | **absent**, and there is no kernel object to be a surrogate *for* | — |
 | **3** Equidistributed, per-`k` `(s,d)` grid | **absent, and contradicted**: one fixed `(q,r)` grid is shared by every `k` | `main.py:2489` |
 | **4** Levin/Filon inner time integral | **done for the Green's-function phase only**; the source is treated as a slowly varying amplitude | `QuadSourceIntegral.WKB_Levin_integral` |
-| **4** Stationary-point safety of the Levin rule | **done** (the C2 total-variation gate) | `AdaptiveLevin/levin_quadrature.py:1260`; `docs/adaptive-levin-verification.md` §4.2 |
+| **4** Stationary-point safety of the Levin rule | **done** (the C2 total-variation gate) *(wrong: see the correction above)* | `AdaptiveLevin/levin_quadrature.py:1260`; `docs/adaptive-levin-verification.md` §4.2 |
 | **5** Error control, inner | **done** (`abserr`, `converged`, `phase_limited`) | `adaptive_levin_sincos` |
 | **5** Error control, outer `(s,d)` | **absent** | `OneLoopIntegral` is a stub |
 | **6** Validation ladder | **partly** — a fixed-`w` analytic three-Bessel oracle exists and is computed alongside | `QuadSourceIntegral.analytic_integral` |
@@ -212,7 +228,7 @@ quadrature, and WKB Levin — with the boundaries chosen by `GkSourcePolicyData`
 `Levin_z`) and a `LEVIN_MIN_2PI_CYCLES = 10` gate. `AdaptiveLevin` is a full Bremer–Chen–Yang
 adaptive Levin implementation with a Clenshaw–Curtis fallback.
 
-Critically for this proposal, the **stationary-point hazard is already closed**. The audit finding
+Critically for this proposal, the **stationary-point hazard is already closed**. *(Wrong for a strongly oscillatory region: see the correction at the top, 2026-10-27.)* The audit finding
 C2 (`docs/adaptive-levin-audit-2026-09.md` §0.1) was that the weakly-oscillatory gate tested the
 *net* phase change, so a phase with an interior stationary point was handed wholesale to `quad` and
 came back 1590% wrong. The fix — gate on total variation
@@ -358,7 +374,7 @@ protect.
 deeply sub-horizon the modes are, and it makes the resonance an *explicit, locatable object*: the
 group `Ψ = θ_G − θ_q − θ_r` is stationary exactly where §1.2's frequency condition holds. The C2
 total-variation gate then routes the neighbourhood of `z_*` to Clenshaw–Curtis and bisects it,
-so the answer stays correct there without any special-casing. Tier 1 alone therefore gives a
+so the answer stays correct there without any special-casing. *(Wrong: see the correction at the top, 2026-10-27.)* Tier 1 alone therefore gives a
 trustworthy evaluator at any single `(k,q,r)` — but it does **not** give anything interpolable.
 
 ### 3.2 Tier 1.5 — the resonance map falls out for free

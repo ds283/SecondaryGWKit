@@ -1,0 +1,37 @@
+=== 2026-10-26T22:04:16Z SHA-256 of the scripts, beside 05's and 05a's records
+$ shasum -a 256 (copies here; 05 originals in C; 05a copies in C)
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  var/levin-phase-floor-06/rehearsal/scripts/classify_non_qsi.py
+b75083513507625ab788e99e6a04ae6c7443fac222e1846f3f09afdbe70b4525  var/levin-phase-floor-06/rehearsal/scripts/tabulate_qsi.py
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/levin-phase-floor/05/rehearsal/scripts/classify_non_qsi.py
+b75083513507625ab788e99e6a04ae6c7443fac222e1846f3f09afdbe70b4525  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/levin-phase-floor/05/rehearsal/scripts/tabulate_qsi.py
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/levin-phase-floor/05a/rehearsal/scripts/classify_non_qsi.py
+b75083513507625ab788e99e6a04ae6c7443fac222e1846f3f09afdbe70b4525  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/levin-phase-floor/05a/rehearsal/scripts/tabulate_qsi.py
+$ cmp copies against 05 originals
+identical
+identical
+$ 05's recorded SHA-256 (C/docs/levin-phase-floor/05/rehearsal/out/script_sha256.txt)
+# SHA-256 of the scripts as run (main checkout 53084dc)
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  scripts/classify_non_qsi.py
+5b0a6a75858bd288b72a49ca7451974406df2a4ccb6786990d6d36046fcb22ac  scripts/gkwkb_reuse_rows.py
+c33fd83e1d39f04b4ad7758343650e081009dc4a0e3e998828405c63b395fbe7  scripts/parent_serials.py
+b75083513507625ab788e99e6a04ae6c7443fac222e1846f3f09afdbe70b4525  scripts/tabulate_qsi.py
+5c92d8e3c31556a467dc5935b7291a46b7c77b73d80b31742fdd15e327a47a28  tools/store_value_diff.py
+7c63a5ba45726c81561538acdb65711c5d98897f1ae7f0cc32b88a580042560a  docs/dk-and-rpk-migration/rehearsal/run_readers.sh
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf05-e648951/RunDrivers/quadsource_atol_sweep.py
+$ shasum -a 256 tools/store_value_diff.py and run_readers.sh in C, P and M; launcher in P and C
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/tools/store_value_diff.py
+5c92d8e3c31556a467dc5935b7291a46b7c77b73d80b31742fdd15e327a47a28  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/tools/store_value_diff.py
+5c92d8e3c31556a467dc5935b7291a46b7c77b73d80b31742fdd15e327a47a28  /Users/ds283/Documents/Code/SecondaryGWKit/tools/store_value_diff.py
+7c63a5ba45726c81561538acdb65711c5d98897f1ae7f0cc32b88a580042560a  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/docs/dk-and-rpk-migration/rehearsal/run_readers.sh
+7c63a5ba45726c81561538acdb65711c5d98897f1ae7f0cc32b88a580042560a  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/docs/dk-and-rpk-migration/rehearsal/run_readers.sh
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-f5cee4c/RunDrivers/quadsource_atol_sweep.py
+5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06-9f66622/RunDrivers/quadsource_atol_sweep.py
+
+=== 2026-10-26T22:15:32Z SHA-256 of this agent's new scripts (as run; examine_outliers.py after its one fix)
+726106ddd51baea623b61d930f92a12fcc8790a7fe709097fcc403e4eacc7e6f  scripts/peek_structure.py
+81effdbb4dde12ec345173a67a610f6473d2f9fa58c9db272d65e8bac5c918c8  scripts/tabulate_phase_classes.py
+1f1a5dd32ff1591647ebc0a3dde47e0f3183d75e6461024b837835d1e99f6d80  scripts/examine_outliers.py
+33459876ce316d8e6aa5682c495cbffbde44b0a27deff81c72083907488c75f1  scripts/summarise_diff.py
+0d1c564c578488fea24f718b2da2f9fa6d8a4cb0fa2c54339203fd725560297e  scripts/qsi_extra_counts.py
+ec96cf0915b486718763b3a5d73177516e8dd32775906e86e2e6bb5006cddb72  scripts/run_readers_worktree.sh
