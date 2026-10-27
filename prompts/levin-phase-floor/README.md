@@ -157,8 +157,12 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | 05 | [`05-reanchor-g-phase.md`](05-reanchor-g-phase.md) | layer 1(a): $G$'s remainder exact per table node, against $2\pi$; adds `tools/store_value_diff.py`; R9/R10 compared with it; a wider re-measurement on A3 v2 | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26 |
 | 05a | [`05a-reanchor-t-phase.md`](05a-reanchor-t-phase.md) | layer 1(a) and the $2\pi$ modulus for $T$, as 05 did them for $G$: `TkSourceFunctions` turns on the node-anchored remainder; R11/R12 compared with `tools/store_value_diff.py`; 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26, on the user's decision the same day |
 | 06 | [`06-producers-store-the-residual.md`](06-producers-store-the-residual.md) | the producers' stored phase (G1 Q3), for $G$ and $T$: each value stores its small residual $\Delta\theta - \rho.\delta$ exactly, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from the residual; R13/R14 compared with `tools/store_value_diff.py`; 05's 39 rows re-run with the producers re-run in-process, with 04's $\varphi$ metric on R1–R7 | laptop; Mac Studio for §5–§6 | Opus | landed 2026-10-27: S1 and S3 hold, S2, S4 and S5 fail; opened `[06-levin-accepts-a-region-across-a-stationary-point]` for G2 |
-| 07+ | remedy | layer 2 as G2 decides | — | — | ⬜ not written |
-| **G2** | gate | the user decides whether layer 2 is needed (§6.3 L2), layer 3 (Q4), now with the stationary-point guard, and the `rtol` question (Q5); written up on the board, §2.3 | — | — | ⬜ |
+| **G2** | gate | the user decides whether layer 2 is needed (§6.3 L2), layer 3 (Q4), now with the stationary-point guard, and the `rtol` question (Q5); written up on the board, §2.3 | — | — | 🟡 answered in part 2026-10-27: L2 after 06a, Q4 (i)–(ii) is 07, the rest at G3 |
+| 06a | the depth census at the current code | L2 (b): A3 v2's rows re-run in-process at `HEAD`, Ray-free, for the distribution of Levin depth; the user then decides layer 2 | Mac Studio | Opus | ⬜ not written |
+| 07 | the stationary-point guard | Q4 (i)–(ii): `[06-levin-accepts-a-region-across-a-stationary-point]`, generically; stationary points located in advance from the closed-form $\theta'$, and a guard in the driver | laptop; Mac Studio for its rehearsals | Opus | ⬜ not written |
+| 08 | fact-finding for layer 3 and `rtol` | Q4 (iii)–(v) and Q5, measured with 07's guard in place | Mac Studio | Opus | ⬜ not written |
+| 08+ | remedy | layer 2 if 06a's census calls for it; layer 3 and `rtol` as G3 decides | — | — | ⬜ not written |
+| **G3** | gate | the user answers Q4 (iii)–(v) and Q5 on 08's measurements | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
 anything still to be measured: 01 reads what is stored, and 02 runs on fixtures. 03's rows and the
