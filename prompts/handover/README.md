@@ -357,6 +357,8 @@ Orchestration is [`orchestrator/`](orchestrator/README.md). **A3 and A4 were ref
 2026-10-25 and run in parallel**, A3 on the Mac Studio on A3 v2 and A4 on the laptop at `98e68d3`;
 that file says why (until then it read "A4 next, before A3").
 
+**B2 was written on 2026-10-27 as prompt 13** ([`13-score-the-unmasked-residue.md`](13-score-the-unmasked-residue.md)), after B1 (prompt 12), A2 and A4 had landed. It runs on the laptop, Ray-free: with production's $G$ phase the realistic cells cost seconds, so the Mac Studio is not needed. Part A makes the realistic flavour production's; Part B splits the residue B1 unmasked into five terms.
+
 **A4 was added after A2 landed** and is not in the original plan. A2's realistic fixture builds the
 Green's-function phase as a raw `phase_spline`, the construction `GkSourcePolicyData._build_phase`
 abandoned at `GkTk-remedial` prompt 09, so its representation term and its Levin cost curve are
