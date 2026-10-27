@@ -1,8 +1,8 @@
 # levin-phase-floor campaign — implementation state
 
 **Last updated:** 2026-10-27 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
-landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 open, and now also holds
-`[06-levin-accepts-a-region-across-a-stationary-point]`.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 open, written up with its
+evidence on 2026-10-27 (§2.3), and now also holds `[06-levin-accepts-a-region-across-a-stationary-point]`.** 01 ran on the Mac Studio on 2026-10-25, in parallel with
 `handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
 the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
 issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
@@ -199,7 +199,7 @@ VERIFICATION §4. The worktree is kept until the user agrees to remove it.
 | Gate | Holds when | After | State |
 |---|---|---|---|
 | **G1** | the user has read 01–04 and answered README §6.3 Q1–Q3: which hypothesis stands, which layer 1, and where it lands | 04 | ✅ **answered 2026-10-26** (Decisions above): H-anchor; layer 1(a) here; the producers after it |
-| **G2** | the user has answered Q4: the depth cap, the acceptance test and `total_converged` | the layer 1–2 prompts | ⬜ |
+| **G2** | the user has answered L2, Q4 and Q5 (§2.3): whether layer 2 is needed; layer 3, the acceptance test with the stationary-point guard, the depth cap and `total_converged`; and `rtol` | 06 | ⬜ **open, written up 2026-10-27** (§2.3) |
 
 ### 2.1 The hypotheses
 
@@ -241,6 +241,104 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
   inference.
 - **What G1 still decides.** How M3's verdict is recorded; the re-run is the evidence for that
   ruling.
+
+### 2.3 Gate G2: the questions, and the evidence after 06
+
+*Written up 2026-10-27 by the laptop orchestrator, at the user's request, after 06 landed. The
+questions are the user's to answer. The orchestrator's recommendation is at the end, apart from
+the evidence.*
+
+05, 05a and 06 landed layer 1 for $G$ and $T$ and the producers' stored phase. G1 deferred layer
+2 to this gate, "decided after layer 1 and the wider re-measurement" (Decisions, **Layer 2**). That
+re-measurement is 06's §6, on 05's 39 rows of A3 v2. They are 31 stored at depth 20, of which 11
+were still capped under B1's code, and 8 controls.
+
+**The evidence.**
+
+| tree, `rtol` | rows | largest depth | rows with a region at depth ≥ 18 | regions | unconverged |
+|---|---|---|---|---|---|
+| $t_5$ (05a's code), `1e-7` | 39 | 11 | 0 | 901 | 21 |
+| $s$ (06's code), `1e-7` | 39 | 11 | 0 | 742 | 20 |
+| $s$ (06's code), `1e-8` | 31 | 11 | 0 | 1,053 | 19 |
+
+- **Before layer 1** these rows included 11 at the cap under B1's code. 03's seven reached
+  22,147–52,909 regions each. The cap is now reached by no row at either tolerance, and
+  `[04-x-at-1e-8-still-reaches-depth-20]` is not seen at the current code (§3).
+- **The kinds of non-convergence** (`convergence_kinds.py`, under $s$):
+
+  | `rtol` | resolution | bound only | phase-limited |
+  |---|---|---|---|
+  | `1e-7` | 14 | 32 | 23 |
+  | `1e-8` | 20 | 25 | 32 |
+
+  These are against 05a's $t$: 18, 32, 17 and 21, 24, 27. Removing the stored noise moved
+  non-convergence toward the round-off-limited exit.
+- **S5.** $|{\rm total}_s(10^{-7}) - {\rm total}_s(10^{-8})| \le$ `total_abserr`$_s(10^{-7})$
+  holds on 28 of 31 rows. The ratio's median is $1.4\times10^{-3}$, its 90th percentile 0.82, and
+  its largest 1.57 (`mid-G-3`).
+- **S4.** On 5 of 39 rows the stored noise moved the total beyond its declared error, by up to 10.8×
+  (`low-G-3`). The median relative change is $1.3\times10^{-6}$.
+- **P1** (`[06-levin-accepts-a-region-across-a-stationary-point]`). A region containing an interior
+  stationary point is accepted with an error estimate about $10^4$ too small. At tighter `rtol` it
+  is accepted through the round-off-limited exit instead, because the eq. (151) floor with a small
+  but finite $G_0 = \min|\theta'|$ exceeds the residual. Whether P1 causes any of S4's or S5's
+  failures is not separated.
+- **Infinite declared errors.** 26 of R13's and R14's 864 rows store `total_abserr` = $+\infty$
+  (`[04-roundoff-floor-can-be-infinite]`, `levin-refactor`).
+- **The caveat.** The 39 rows were drawn by A3 v2's stored depth, which describes the code before
+  B1 (`[05-b1-uncaps-most-cheap-depth-20-rows]`). No census of depth has been taken at the current
+  code.
+
+**L2: is layer 2 needed?** Layer 2 tells the driver its input's round-off floor, so that it stops
+bisecting there. To act where the cap was reached it must also reach the Clenshaw–Curtis branch
+(`[03-depth20-regions-are-all-clenshaw-curtis]`).
+- (a) **Not needed.** No row reaches depth 18 at `1e-7` or `1e-8` under 06's code. Close
+  `[04-x-at-1e-8-still-reaches-depth-20]` as not reproduced, and close or narrow
+  `[03-depth20-regions-are-all-clenshaw-curtis]` with it.
+- (b) **A census at the current code first.** Re-run A3 v2's rows in-process, Ray-free, as 05, 05a
+  and 06 did, for the distribution of depth, then decide.
+- (c) **Layer 2 anyway,** as a safety net for inputs this sample does not cover.
+
+**Q4: layer 3, the acceptance test.**
+- **(i) The stationary-point guard.** Decided in principle (Decisions, **06 P1**): a generic fix,
+  the points located in advance from the closed-form $\theta'$, and a guard in the driver. Open
+  within it:
+  - (α) where the location lives: in `adaptive_levin_sincos`, from the `theta_deriv` it is handed,
+    so that the integrator is correct for any caller; in `QuadSourceIntegral`'s partition, which
+    knows the physics; or both;
+  - (β) the rule for the window around each point: which resolved rule, and how wide, by phase
+    span;
+  - (γ) the threshold below which a near-zero minimum of $|\theta'|$ counts as a coalescing pair,
+    the QCD and $e^+e^-$ caustics.
+- **(ii) The round-off-limited exit.** P1 shows it accepting a region at any `rtol` where
+  $|\theta'|$ is small. Should it be barred wherever the guard of (i) fires?
+- **(iii) `DEFAULT_LEVIN_MAX_DEPTH`**, 20, never chosen. No sampled row now reaches it. Is it a cost
+  guard only, and should reaching it mark the row unconverged?
+- **(iv) The per-region acceptance test's dead length-share `local_atol` branch.**
+- **(v) What `total_converged` means,** and whether a consumer gate reads
+  `total_abserr/|total|` (findings §2.5). It bears on the 20 rows unconverged under $s$ at `1e-7`,
+  on the 23 phase-limited non-convergences `convergence_kinds.py` counts there, and on infinite
+  declared errors.
+
+**Q5: is `rtol = 1e-7` right for accuracy?** (README §6.3.)
+- Under 06's code, going from `1e-7` to `1e-8` adds 42 % to the regions on these rows. Neither
+  tolerance reaches the cap.
+- The accuracy given up at `1e-7` is S5's: a median of $1.4\times10^{-3}$ of the declared error, at
+  most 1.57×.
+- Cost is not an argument either way (README §5 rule 4).
+- Options: keep `1e-7`; move to `1e-8`; or decide after the guard, since the guard changes the
+  declared errors S5 compares against.
+
+**The orchestrator's recommendation** (not a decision):
+1. **L2:** (b), then (a). On present evidence layer 2 is not needed; a census at the current code
+   would show it beyond 05's sample.
+2. **07: the stationary-point guard, Q4 (i) with (ii).** It is the one known correctness defect, it
+   has a known remedy and regression cases (06's P1 rows and reference), and it changes the declared
+   error of every resonant row.
+3. **Then Q4 (iii)–(v) and Q5, in one prompt, measured with the guard in place,** on 05's 39 rows,
+   or on the census if L2 (b) is taken. Each of those questions turns on declared errors the guard
+   changes.
+4. **Close `[04-x-at-1e-8-still-reaches-depth-20]` at G2.**
 
 ## 3. Active and unresolved issues
 
@@ -366,6 +464,12 @@ Every factor's remainder was reduced exactly (arm X), and nothing else changed.
 
   [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
   `docs/levin-phase-floor/05/wider/out/wider_05.txt`.
+
+  **Narrowed again (2026-10-27, prompt 06 §6): not seen at `HEAD`.** With 06's code ($s$) at `1e-8`,
+  on the same 31 rows, the largest depth is 11, and no row has a region at depth 18 or more. So the
+  re-check at the current code that the last narrowing asked for is made, by a tree that contains
+  both B1 and 05. **Next step:** close it at G2 (§2.3).
+  `docs/levin-phase-floor/06/wider/state/analysis.json`.
 
 - **[05-store-value-diff-compares-volatile-columns]** *(opened 2026-10-26 by prompt 05, its §5
   rehearsal agent's P1 and P2)* — `tools/store_value_diff.py` compares every row column except a

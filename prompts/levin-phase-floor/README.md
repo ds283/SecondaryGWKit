@@ -158,7 +158,7 @@ That note also warns to check `theta_deriv` rather than assume this. 01 checks i
 | 05a | [`05a-reanchor-t-phase.md`](05a-reanchor-t-phase.md) | layer 1(a) and the $2\pi$ modulus for $T$, as 05 did them for $G$: `TkSourceFunctions` turns on the node-anchored remainder; R11/R12 compared with `tools/store_value_diff.py`; 05's 39 rows re-run, $c$ against $t$, with a probe of $T$'s jitter | laptop; Mac Studio for §5–§6 | Opus | written 2026-10-26, on the user's decision the same day |
 | 06 | [`06-producers-store-the-residual.md`](06-producers-store-the-residual.md) | the producers' stored phase (G1 Q3), for $G$ and $T$: each value stores its small residual $\Delta\theta - \rho.\delta$ exactly, its remainder is reduced exactly against $2\pi$, and the consumers build $\varphi$ from the residual; R13/R14 compared with `tools/store_value_diff.py`; 05's 39 rows re-run with the producers re-run in-process, with 04's $\varphi$ metric on R1–R7 | laptop; Mac Studio for §5–§6 | Opus | landed 2026-10-27: S1 and S3 hold, S2, S4 and S5 fail; opened `[06-levin-accepts-a-region-across-a-stationary-point]` for G2 |
 | 07+ | remedy | layer 2 as G2 decides | — | — | ⬜ not written |
-| **G2** | gate | the user decides layer 3 (§6.3 Q4), now with the stationary-point guard, and the `rtol` question (Q5) | — | — | ⬜ |
+| **G2** | gate | the user decides whether layer 2 is needed (§6.3 L2), layer 3 (Q4), now with the stationary-point guard, and the `rtol` question (Q5); written up on the board, §2.3 | — | — | ⬜ |
 
 **Why 01 and 02 are written now and 03 and 04 are not.** Neither 01's task nor 02's depends on
 anything still to be measured: 01 reads what is stored, and 02 runs on fixtures. 03's rows and the
@@ -316,8 +316,8 @@ These are the orchestrator's choices, and the user can reverse any of them.
 
 ### 6.3 Open, for the user at the gates
 
-*Q1–Q3 were answered at G1 on 2026-10-26; the answers are on the board, under Decisions. Q4 and Q5
-remain for G2.*
+*Q1–Q3 were answered at G1 on 2026-10-26; the answers are on the board, under Decisions. L2, Q4 and
+Q5 remain for G2, written up with their evidence on the board, §2.3 (2026-10-27).*
 
 - **Q1 (G1): which hypothesis stands.** H-cancel, H-anchor, both or neither.
 - **Q2 (G1): which layer 1 is wanted.**
@@ -338,6 +338,8 @@ remain for G2.*
     interior stationary point of a region's phase. It is fixed here, generically: the points are
     located in advance from the closed-form $\theta'$ and split out, and the driver refuses a
     region whose $\theta'$ changes sign or nearly vanishes.
+- **L2 (G2): whether layer 2 is needed at all,** now that layer 1 and the producers' stored phase
+  have landed. G1 deferred it here. The evidence after 06 is on the board, §2.3.
 - **Q5 (G2): whether `rtol = 1e-7` is right for accuracy.** Added 2026-10-25 at the user's request.
   - `a3-v2-readiness` prompt 01 (D1, D2) moved `DEFAULT_QUADRATURE_RTOL` from `1e-8` to `1e-7` as
     the loosest rung the 2026-09 tolerance sweep found self-converged, partly on cost.
