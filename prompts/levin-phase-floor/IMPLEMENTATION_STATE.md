@@ -2,9 +2,10 @@
 
 **Last updated:** 2026-10-27 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
 landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 written up and answered in
-part on 2026-10-27 (§2.3); 06a's depth census landed the same day (C1 and C2 hold): next are the
-user's layer-2 decision on it, 07 (the stationary-point guard,
-`[06-levin-accepts-a-region-across-a-stationary-point]`) and 08 (fact-finding for gate G3).** 01 ran on the Mac Studio on 2026-10-25, in parallel with
+part on 2026-10-27 (§2.3); 06a's depth census landed the same day (C1 and C2 hold), and G2 is
+answered: layer 2 is not needed at this code. Next are 07 (the stationary-point guard,
+`[06-levin-accepts-a-region-across-a-stationary-point]`, the generic Levin integrator only) and 08
+(fact-finding for gate G3).** 01 ran on the Mac Studio on 2026-10-25, in parallel with
 `handover` 11. Its review stopped at check 9, a records defect, and was corrected on committing by
 the user's decision. **H-cancel fails P1 and P2; H-anchor holds P1–P3** (§2.1). 01 opened two
 issues (§3). 03 ran on the Mac Studio the same day, Ray-free, and its review passed 9/9. **M1, M2,
@@ -175,6 +176,9 @@ records in `docs/levin-phase-floor/NN/` ·
 |---|---|
 | **G2 L2** | **A census first, then the decision:** *"L2 (b) first, then make a decision whether layer 2 is needed. As you say, it doesn't look to be required."* Prompt 06a re-runs A3 v2's rows at the current code for the depth distribution; the user decides layer 2 on it |
 | **G2 Q4 (i)–(ii)** | **"Prompt 07 becomes the stationary point guard."** `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically (Decisions, **06 P1**). The round-off-limited exit where the guard fires is part of it. Its open choices, (α)–(γ) in §2.3, are proposed in 07's prompt and settled when it is written |
+| **G2 L2, decided** | **Layer 2 is not needed at this code; revisit after 07 or later.** On 06a's census no Levin call bisects to the cap: the deepest row is at 12 (`1e-7`) and 13 (`1e-8`), and what depth remains is at stationary points. *"What we need is layer 3 to fix the error estimates. When that happens we may find that some of these regions need to be bisected more aggressively, and then the layer 2 question becomes open again."* Layer 3 is 07 and what G3 decides on 08. `[04-x-at-1e-8-still-reaches-depth-20]`, `[03-depth20-regions-are-all-clenshaw-curtis]` and `[05-b1-uncaps-most-cheap-depth-20-rows]` are closed (§4) |
+| **07 scope** | **07 is the generic Levin integrator only.** 06 P1's requirement that the time integrals run late enough to include the QCD crossover and $e^+e^-$ annihilation, for the configurations that resonate during them, is physics: *"Leave this out of 07 and we'll make that change in a separate prompt."* Opened as `[06-time-integrals-must-reach-late-resonances]` (§3) |
+| **A3 v2's scratch copy** | **Kept for now** (`var/levin-phase-floor-06/wider/state/a3v2_copy/` on the Mac Studio, 06's route (B)). It is how a tree after 06 reads A3 v2's rows, for 07's and 08's re-measurements. The user is to be reminded to retire it later; A3 v2 itself is likely to be rebuilt after 07, depending on `handover` |
 | **06a check 9** | **The record is accepted as it stands:** *"Yes, just accept as it stands."* `out/cmd/17` names the first, superseded `c0.py` (`b33229d8…`), whose text was not kept (deviation 15); C0's verdict rests on `out/cmd/18` |
 | **G2 Q4 (iii)–(v), Q5** | **Fact-finding after 07:** *"After that we have the next fact-finding exercise to answer Q4(iii)-(v) and Q5."* Prompt 08 measures them with 07's guard in place, and the user answers them at a new gate, G3 |
 
@@ -225,7 +229,7 @@ VERIFICATION §4. The worktree is kept until the user agrees to remove it.
 | Gate | Holds when | After | State |
 |---|---|---|---|
 | **G1** | the user has read 01–04 and answered README §6.3 Q1–Q3: which hypothesis stands, which layer 1, and where it lands | 04 | ✅ **answered 2026-10-26** (Decisions above): H-anchor; layer 1(a) here; the producers after it |
-| **G2** | the user has answered L2, Q4 and Q5 (§2.3): whether layer 2 is needed; layer 3, the acceptance test with the stationary-point guard, the depth cap and `total_converged`; and `rtol` | 06 | 🟡 **answered in part 2026-10-27** (Decisions, **G2**): L2 waits on 06a's census; Q4 (i)–(ii) is 07; Q4 (iii)–(v) and Q5 move to G3, after 08 |
+| **G2** | the user has answered L2, Q4 and Q5 (§2.3): whether layer 2 is needed; layer 3, the acceptance test with the stationary-point guard, the depth cap and `total_converged`; and `rtol` | 06 | ✅ **answered 2026-10-27** (Decisions, **G2**): L2, after 06a's census, not needed at this code, to be revisited after 07 or later; Q4 (i)–(ii) is 07; Q4 (iii)–(v) and Q5 move to G3, after 08 |
 | **G3** | the user has answered Q4 (iii)–(v) and Q5 on 08's measurements, with 07's guard in place | 08 | ⬜ |
 
 ### 2.1 The hypotheses
@@ -399,6 +403,10 @@ A3 v2 stored 145,313,734 regions. 2,489 rows have no Levin call.
 **For L2:** C1 and C2 hold, so no row of A3 v2 needs layer 2 at either tolerance at this code. What
 depth remains is at stationary points, which are 07's.
 
+**The user's decision on L2, 2026-10-27** (Decisions, **G2 L2, decided**): not needed at this
+code; revisit after 07 or later, once layer 3 has fixed the error estimates and may bisect some
+regions harder.
+
 ## 3. Active and unresolved issues
 
 - **[01-slow-group-leading-terms-do-not-cancel]** *(opened 2026-10-25 by prompt 01, its I1)* —
@@ -426,34 +434,6 @@ depth remains is at stationary points, which are 07's.
   +0.34 %. So `G+r` oscillates at about 0.27 of `G-r`'s rate, and the cancellation is not exact. R6
   and R7 (`q == r == k`) have no `Gr` sub-interval. What remains is the correction note on the
   findings document. VERIFICATION §3.2.
-- **[03-depth20-regions-are-all-clenshaw-curtis]** *(opened 2026-10-25 by prompt 03, its I2)* —
-  every depth-20 region on the seven rows is a Clenshaw–Curtis fallback region.
-  - 189,196 of 189,196 in the 29 scored groups; no group, scored or not, has a Levin region at
-    depth 20.
-  - So the bisection to `DEFAULT_LEVIN_MAX_DEPTH` is entirely in `_adaptive_levin`'s `is_direct`
-    branch (`levin_quadrature.py:1975-2064`). There `abserr` is the nested-pair estimate, at
-    D/σ_θ ≈ 0.1, and `phase_err` (eq. 151) reaches it in 0.85 % of the regions (M4).
-
-  **Impact:**
-  - findings §2.7 layer 2 must act on the Clenshaw–Curtis branch's acceptance test; acting on the
-    Levin branch alone would not reach these regions;
-  - that branch is the subject of `[10-levin-wholesale-cc-fallback]` (`source-remediation`;
-    OPEN_ISSUES §1.3), which README §0.1 puts out of scope;
-  - 01's "most" depth-20 regions in the expensive groups being `simple_regions` is, on these rows,
-    all of them.
-
-  **Next step:** a scope question for G1.
-
-  **Narrowed (2026-10-25, prompt 04):** with the floor removed (arm X or arm A), no group of the
-  seven rows reaches depth 20 at `rtol = 1e-7`. So the Clenshaw–Curtis regions at the cap there
-  were the floor's. Layer 2's scope question stands for what is left:
-  - at `1e-8` a single short chain per group still reaches the cap
-    (`[04-x-at-1e-8-still-reaches-depth-20]`);
-  - A3 v2's other depth-20 rows are unmeasured.
-
-  **G1 (2026-10-26): deferred to G2** by the user. Layer 1 lands first, then a wider re-measurement,
-  and G2 decides whether layer 2 is needed and whether it must reach this branch.
-
 - **[03-storefixtures-standin-pickle-and-exit-rows]** *(opened 2026-10-25 by prompt 03, its I3)* —
   `StoreFixtures` cannot carry A3 v2's objects as they stand.
   - `standin_pool`'s `StandinRef` and `_copy` serialise with standard `pickle`, which cannot carry
@@ -498,38 +478,6 @@ depth remains is at stationary points, which are 07's.
   step:** whether a phase evaluated in $u$ without an `expm1` round trip is wanted. That means a
   leading term in $u$, a producer-side change, so it falls to G1 Q3's 06+. `docs/levin-phase-floor/05a/wider/issues.md`
   X2; [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5a.2.
-
-- **[04-x-at-1e-8-still-reaches-depth-20]** *(opened 2026-10-25 by prompt 04, its I6)* — with every
-  remainder exact, arm X at `rtol = 1e-8` still sends one short chain of regions to
-  `DEFAULT_LEVIN_MAX_DEPTH`.
-  - It does so on R1 and R4–R7, always with exactly 2 regions at depth 20 and 4 at depth 18 or more
-    in each affected group: up to five groups, and 4–10 depth-20 regions, per row.
-  - At `1e-7` no group reaches depth 20.
-  - The pattern is a bisection to the cap at a single point. The candidates are a kink in the
-    integrand (a clamp edge, at this pre-B1 tree, or a sub-interval boundary) or the remaining
-    abscissa-rounding jitter, at about $\varepsilon|d\theta/du|$. **Not investigated.**
-
-  **Impact:** it costs nothing measurable here (1–3 s a row), and R2 holds with every ratio at most
-  0.47. It bears on G2's Q4 (the depth cap) and on layer 2. **Next step:** locate the point on one
-  row before layer 2 is written. Measurement: `issues.md` I6; [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
-
-  **Narrowed (2026-10-26, prompt 05 §6): not seen at the current code.**
-  - **The measurement.** With B1's code and 05's change ($c$) at `1e-8`, the maximum depth is 2–11
-    on every one of the 31 sampled depth-20 rows of A3 v2. On R1 and R4–R7 it is 9, 9, 5, 8 and 9,
-    so no chain reaches the cap.
-  - **The candidate.** This fits the pre-B1 clamp edge, which B1 removed. It is not separated from
-    05's own change, since $p$ was not run at `1e-8`.
-  - **What it means.** It is likely closable on a re-check at `HEAD`. It bears on G2's Q4.
-
-  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
-  `docs/levin-phase-floor/05/wider/out/wider_05.txt`.
-
-  **Narrowed again (2026-10-27, prompt 06 §6): not seen at `HEAD`.** With 06's code ($s$) at `1e-8`,
-  on the same 31 rows, the largest depth is 11, and no row has a region at depth 18 or more. So the
-  re-check at the current code that the last narrowing asked for is made, by a tree that contains
-  both B1 and 05. **Next step:** close it with the user's decision on layer 2, after 06a's census
-  (G2, §2.3).
-  `docs/levin-phase-floor/06/wider/state/analysis.json`.
 
 - **[05-store-value-diff-compares-volatile-columns]** *(opened 2026-10-26 by prompt 05, its §5
   rehearsal agent's P1 and P2)* — `tools/store_value_diff.py` compares every row column except a
@@ -590,26 +538,6 @@ depth remains is at stationary points, which are 07's.
   next step is unchanged. `VERIFICATION.md` §6a;
   `docs/levin-phase-floor/06a/issues.md` X3.
 
-- **[05-b1-uncaps-most-cheap-depth-20-rows]** *(opened 2026-10-26 by prompt 05, its §6 agent's
-  W2)* — under B1's code, 20 of the 31 sampled stored depth-20 rows no longer reach the cap.
-  - **Which rows:** all 12 drawn mid-band rows, all 6 drawn `Gqr` rows, four low-band rows and 03's
-    R2.
-  - **How far they fall:** to maximum depth 2–10 and 9–72 regions, against 39–29,782 stored. R2
-    falls from 29,782 regions to 15.
-  - **What stays capped:** 11 rows, 5 in the low band and 6 of 03's seven.
-  - **The likely mechanism,** not investigated, is the pre-B1 clamp at the hand-over: a kink in
-    the integrand, which 04's I6 named as a candidate for a short chain to the cap.
-
-  **Impact:** A3 v2's stored `WKB_Levin_max_depth`, and 01's census built from it, describe the
-  pre-B1 code. A sample drawn from them by stored depth is mostly not capped at `HEAD`. That is why
-  05's L1, L1q and L3 fail as written. It also changes which rows layer 2 and G2's Q4 (the depth
-  cap) are about.
-
-  **Next step:** any later census or sample is taken at the current code, not read from A3 v2's
-  stored depth. G2 reads 05's capped-under-$p$ table, not the stored one.
-  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
-  `docs/levin-phase-floor/05/wider/issues.md` W2.
-
 - **[06-levin-accepts-a-region-across-a-stationary-point]** *(opened 2026-10-27 by prompt 06, its
   rehearsal agent's P1, investigated from the laptop)* — `adaptive_levin_sincos` accepts a Levin
   region that contains an interior stationary point of its phase, with an error estimate far too
@@ -652,8 +580,9 @@ depth remains is at stationary points, which are 07's.
     resolves the phase directly.
   - **Guard the driver,** as a safety net: no Levin acceptance, and no round-off-limited exit, for a
     region whose $\theta'$ changes sign or nearly vanishes on its nodes.
-  - **The located points also set how late the time integral must run,** for the configurations
-    that resonate during the QCD crossover and $e^+e^-$ annihilation.
+  - *(Moved out of 07 on 2026-10-27, by the user: how late the time integral must run, for the
+    configurations that resonate during the QCD crossover and $e^+e^-$ annihilation, is physics,
+    and is `[06-time-integrals-must-reach-late-resonances]`.)*
   - **Regression cases:** the two R14 rows with 06's reference, and a synthetic case with the
     stationary point off any bisection point.
   [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.3;
@@ -672,6 +601,23 @@ depth remains is at stationary points, which are 07's.
     $\log(1+z')$) are not seen.
   - **For 07:** `docs/levin-phase-floor/06a/out/scan_listed_regions.csv` lists every such region.
     The next step is unchanged.
+
+- **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
+  from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals
+  must run late enough to include the QCD crossover and $e^+e^-$ annihilation, for the
+  configurations that resonate during them.
+  - **Why it matters.** A triangle resonates where $c_s(z_*) = 1/\Sigma$. During the QCD crossover
+    and $e^+e^-$ annihilation $c_s$ dips below $1/\sqrt3$, so some configurations resonate then,
+    and the stationary points can coalesce in caustics there.
+  - **Why not in 07.** It changes the physics range of the integral, not how the integrator
+    handles it. 07's advance location of the stationary points makes it possible to see which
+    configurations need it.
+
+  **Impact:** an integral that stops before its configuration's resonance omits the term the
+  signal is expected to come from. Not measured.
+
+  **Next step:** a separate physics prompt, after 07 (the user, 2026-10-27). Its scope is set
+  when it is written: which integrals, in which model, and how late is late enough.
 
 - **[06-s2-window-metric-floors-on-phi-t-structure]** *(opened 2026-10-27 by prompt 06, its §6
   agent's W4)* — 04's φ metric, the RMS residual of a degree-4 fit over 9 consecutive samples,
@@ -770,6 +716,103 @@ depth remains is at stationary points, which are 07's.
 01 confirms whether it reaches A3 v2, and narrows it there.
 
 ## 4. Resolved issues
+
+- **[04-x-at-1e-8-still-reaches-depth-20]** *(opened 2026-10-25 by prompt 04, its I6)* — with every
+  remainder exact, arm X at `rtol = 1e-8` still sends one short chain of regions to
+  `DEFAULT_LEVIN_MAX_DEPTH`.
+  - It does so on R1 and R4–R7, always with exactly 2 regions at depth 20 and 4 at depth 18 or more
+    in each affected group: up to five groups, and 4–10 depth-20 regions, per row.
+  - At `1e-7` no group reaches depth 20.
+  - The pattern is a bisection to the cap at a single point. The candidates are a kink in the
+    integrand (a clamp edge, at this pre-B1 tree, or a sub-interval boundary) or the remaining
+    abscissa-rounding jitter, at about $\varepsilon|d\theta/du|$. **Not investigated.**
+
+  **Impact:** it costs nothing measurable here (1–3 s a row), and R2 holds with every ratio at most
+  0.47. It bears on G2's Q4 (the depth cap) and on layer 2. **Next step:** locate the point on one
+  row before layer 2 is written. Measurement: `issues.md` I6; [`docs/levin-phase-floor/VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §4.
+
+  **Narrowed (2026-10-26, prompt 05 §6): not seen at the current code.**
+  - **The measurement.** With B1's code and 05's change ($c$) at `1e-8`, the maximum depth is 2–11
+    on every one of the 31 sampled depth-20 rows of A3 v2. On R1 and R4–R7 it is 9, 9, 5, 8 and 9,
+    so no chain reaches the cap.
+  - **The candidate.** This fits the pre-B1 clamp edge, which B1 removed. It is not separated from
+    05's own change, since $p$ was not run at `1e-8`.
+  - **What it means.** It is likely closable on a re-check at `HEAD`. It bears on G2's Q4.
+
+  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
+  `docs/levin-phase-floor/05/wider/out/wider_05.txt`.
+
+  **Narrowed again (2026-10-27, prompt 06 §6): not seen at `HEAD`.** With 06's code ($s$) at `1e-8`,
+  on the same 31 rows, the largest depth is 11, and no row has a region at depth 18 or more. So the
+  re-check at the current code that the last narrowing asked for is made, by a tree that contains
+  both B1 and 05. **Next step:** close it with the user's decision on layer 2, after 06a's census
+  (G2, §2.3).
+  `docs/levin-phase-floor/06/wider/state/analysis.json`.
+
+  **Closed 2026-10-27 at G2, on the user's layer-2 decision, by prompt 06a's census:** not
+  reproduced. On all 9,280 rows of A3 v2 at the current code, no row has a region at depth 18 or
+  more at `1e-8`; the deepest is 13, at a stationary point. `VERIFICATION.md` §6a;
+  `prompts/levin-phase-floor/logs/06a-depth-census.md`.
+
+- **[03-depth20-regions-are-all-clenshaw-curtis]** *(opened 2026-10-25 by prompt 03, its I2)* —
+  every depth-20 region on the seven rows is a Clenshaw–Curtis fallback region.
+  - 189,196 of 189,196 in the 29 scored groups; no group, scored or not, has a Levin region at
+    depth 20.
+  - So the bisection to `DEFAULT_LEVIN_MAX_DEPTH` is entirely in `_adaptive_levin`'s `is_direct`
+    branch (`levin_quadrature.py:1975-2064`). There `abserr` is the nested-pair estimate, at
+    D/σ_θ ≈ 0.1, and `phase_err` (eq. 151) reaches it in 0.85 % of the regions (M4).
+
+  **Impact:**
+  - findings §2.7 layer 2 must act on the Clenshaw–Curtis branch's acceptance test; acting on the
+    Levin branch alone would not reach these regions;
+  - that branch is the subject of `[10-levin-wholesale-cc-fallback]` (`source-remediation`;
+    OPEN_ISSUES §1.3), which README §0.1 puts out of scope;
+  - 01's "most" depth-20 regions in the expensive groups being `simple_regions` is, on these rows,
+    all of them.
+
+  **Next step:** a scope question for G1.
+
+  **Narrowed (2026-10-25, prompt 04):** with the floor removed (arm X or arm A), no group of the
+  seven rows reaches depth 20 at `rtol = 1e-7`. So the Clenshaw–Curtis regions at the cap there
+  were the floor's. Layer 2's scope question stands for what is left:
+  - at `1e-8` a single short chain per group still reaches the cap
+    (`[04-x-at-1e-8-still-reaches-depth-20]`);
+  - A3 v2's other depth-20 rows are unmeasured.
+
+  **G1 (2026-10-26): deferred to G2** by the user. Layer 1 lands first, then a wider re-measurement,
+  and G2 decides whether layer 2 is needed and whether it must reach this branch.
+
+  **Closed 2026-10-27 at G2, on the user's layer-2 decision, by prompt 06a's census:** no region of
+  A3 v2 reaches depth 20 at the current code, at `1e-7` or `1e-8`. At depth ≥ 12 the split is 13
+  Levin / 25 Clenshaw–Curtis at `1e-7` and 17 / 44 at `1e-8`, all at stationary points. The scope
+  question, whether layer 2 must reach the Clenshaw–Curtis branch, reopens only if layer 2 does,
+  after 07 or later. `VERIFICATION.md` §6a.
+
+- **[05-b1-uncaps-most-cheap-depth-20-rows]** *(opened 2026-10-26 by prompt 05, its §6 agent's
+  W2)* — under B1's code, 20 of the 31 sampled stored depth-20 rows no longer reach the cap.
+  - **Which rows:** all 12 drawn mid-band rows, all 6 drawn `Gqr` rows, four low-band rows and 03's
+    R2.
+  - **How far they fall:** to maximum depth 2–10 and 9–72 regions, against 39–29,782 stored. R2
+    falls from 29,782 regions to 15.
+  - **What stays capped:** 11 rows, 5 in the low band and 6 of 03's seven.
+  - **The likely mechanism,** not investigated, is the pre-B1 clamp at the hand-over: a kink in
+    the integrand, which 04's I6 named as a candidate for a short chain to the cap.
+
+  **Impact:** A3 v2's stored `WKB_Levin_max_depth`, and 01's census built from it, describe the
+  pre-B1 code. A sample drawn from them by stored depth is mostly not capped at `HEAD`. That is why
+  05's L1, L1q and L3 fail as written. It also changes which rows layer 2 and G2's Q4 (the depth
+  cap) are about.
+
+  **Next step:** any later census or sample is taken at the current code, not read from A3 v2's
+  stored depth. G2 reads 05's capped-under-$p$ table, not the stored one.
+  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §5.2;
+  `docs/levin-phase-floor/05/wider/issues.md` W2.
+
+  **Closed 2026-10-27 at G2, on the user's layer-2 decision:** its next step, a census at the
+  current code, is prompt 06a's. All 2,265 rows stored at depth 20 fall to depths 1–12 at `1e-7`,
+  1,248 of them to depth 7, and no row of the store reaches depth 18 at either tolerance. Any later
+  sample is to be drawn from 06a's census (`docs/levin-phase-floor/06a/out/census_rows.csv.gz`),
+  not from A3 v2's stored depth. `VERIFICATION.md` §6a.
 
 - **[04-g-phase-is-reduced-against-the-double-two-pi]** *(opened 2026-10-25 by prompt 04, its I3)* —
   `PrimitivePhase.theta_mod_2pi` reduces with `WKB_mod_2pi`, an exact `fmod` against the double
