@@ -266,6 +266,11 @@ readers' extract, and the worktrees `SecondaryGWKit-lpf06b-da5c24d` and `-92bc62
 ([`KEPT_ON_MAC_STUDIO.md`](../../../docs/levin-phase-floor/06b/KEPT_ON_MAC_STUDIO.md)). The stores
 and the worktrees go only on the user's word.
 
+**After the records commit (2026-10-28),** on the user's word (*"Yes, keep the stores, and remove
+the worktrees."*): both worktrees were checked clean (`git status --short --ignored` empty) and
+removed with `git worktree remove` on the Mac Studio, whose main checkout is again one worktree,
+clean, at `28ebaf0`. The ten store files of R15 and R16 are kept.
+
 ## 5. Stop and ask the user
 
 As 07's note §5, with prompt 06b's §7 in place of 07's §8. **Never touch 07's stash or its saved

@@ -8,6 +8,8 @@ stop**), when 07's §2 found that no rung of $\Phi_w$ passes its rule:
   rather than dealing with the actual cause."*
 - *"Yes, please go ahead with 06c. I realise all existing computed values will move under this
   change."*
+- on the rule for splits that do not help (§0.2), added before dispatch: *"Sounds like we should
+  have it. We don't want refinements that are harmful."*
 
 It lands after 06b's records commit and before 07's §2. 07's §1, built and uncommitted, is set aside
 before 06c runs, as it was for 06b, and rebased onto 06c's code afterwards (07 §9 point 6).
@@ -126,9 +128,27 @@ stops on exactly the quantity the call reports as `abserr`**, and `converged` ke
   lower its error materially. The premise is checked as 06b checks it: from `dataL`/`dataR` on the
   Levin branch, from halves solved on demand and carried forward on the fallback branch, and **only
   for the leaf chosen**, so a leaf never chosen costs nothing extra.
+- **it is stalled:** splitting has stopped helping along its line. A split of a leaf $P$ into $L$
+  and $R$ **fails** if $e_L + e_R \ge \rho\, e_P$, with the same $\rho = \tfrac12$. A leaf is
+  stalled when the split that made it failed **and** the split that made its parent failed too.
+  - **Why it is needed.** Where a leaf's error does not fall with $h$ (a residual flat in $h$,
+    `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`), each split leaves two leaves with
+    about the parent's error each, so $E$ rises with every split. Without the rule the loop would
+    chase such a leaf to `depth_max` and make the sum worse on the way. QUADPACK's round-off
+    detection answers the same case.
+  - **Why two successive failures, not one.** A leaf that is not yet resolved can fail to halve its
+    error on one split before refinement takes hold. One failure would stop it too early; two in a
+    row along one line is the evidence that splitting does not help. The log records, on §2's tests
+    and draws, how often one failure without a second occurred.
+  - **Infinite errors.** If $e_P = +\infty$, the split fails only if a child's error is also
+    infinite, which the inequality already gives.
+  - **The floor-limited test is its predictive special case:** it decides from the halves already
+    in hand, before splitting. The stall test decides after splitting, from what the split did.
 
 A leaf found not refinable is marked and never chosen again. **`phase_limited` keeps its meaning,
-made exact:** a leaf the loop chose while the budget was unmet, and found floor-limited.
+made exact:** a leaf the loop chose while the budget was unmet, and found floor-limited. A stalled
+leaf is flagged separately (`used_interval.stalled`), and counted in a new result key,
+`num_stalled_regions`.
 
 **What follows, by construction:**
 - **Cancellation is handled.** The target is `rtol` times the current total, not each leaf's own
@@ -140,6 +160,8 @@ made exact:** a leaf the loop chose while the budget was unmet, and found floor-
   it reaches `depth_max`. Today such a region can be accepted as resolved and make the call's
   `abserr` infinite.
 - **The budget goes where the error is,** not by length. `_local_atol` goes.
+- **A split that does not help is not repeated.** A leaf whose error stops falling is stalled after
+  two failed splits, not chased to `depth_max`.
 - **Termination:** every bisection deepens a leaf, and a leaf at `depth_max` is never chosen.
 
 ### 0.3 What this changes, and what it does not
@@ -154,7 +176,8 @@ made exact:** a leaf the loop chose while the budget was unmet, and found floor-
   - `_adaptive_levin_subregion`, `_adaptive_levin_subregion_impl`, `_adaptive_levin_subregion_cc`,
     the C2 gate, the p-mode `rtol` gate and `abserr_truncation`;
   - `DEFAULT_LEVIN_MAX_DEPTH`, the Chebyshev order, the input validation;
-  - the result dict's keys and types, and the meanings of the solve and region counters;
+  - the result dict's keys and types, apart from the one new key `num_stalled_regions`, and the
+    meanings of the solve and region counters;
   - any caller's code. **One exception:** a comment in a caller that describes how
     `adaptive_levin_sincos` shares `atol` by length is corrected, comment-only, and the module's
     AST without comments and docstrings is checked unchanged.
@@ -195,7 +218,9 @@ made exact:** a leaf the loop chose while the budget was unmet, and found floor-
 4. **Bisection.** A Levin leaf's halves are its `dataL`/`dataR`, carried forward as today, each
    then solving its own halves for its residual. A fallback leaf's halves are evaluated fresh, or
    carried from a premise check. The counters count each solve once, as today.
-5. **Floor-limited and capped leaves.** As §0.2. Each is recorded with its flag, and the loop never
+5. **Floor-limited, stalled and capped leaves.** As §0.2. Each leaf keeps the outcome of the split
+   that made it, so that the stall test reads its own and its parent's. Each is recorded with its
+   flag, and the loop never
    chooses it again.
 6. **Removed:** `_local_atol` and every use of it; the per-region `resolved` test as an acceptance
    test. Each region's `relerr` stays as a diagnostic, its error over its own value, with the
@@ -261,13 +286,24 @@ them in its comment, with the parent's SHA.
       both, and the calls that reach `depth_max` under either (06b found one: seed 15).
     - The harness lives in `docs/levin-phase-floor/06c/calibration/scripts/`, its output in `out/`.
 11. **Cost, descriptive.** On every problem `test_levin_quadrature.py` drives: regions, solves and
-    maximum depth under both codes. Cost is not an argument (README §5 rule 4).
+    maximum depth under both codes. Cost is not an argument (README §5 rule 4). **The stall rule
+    must not fire where refinement works:** no leaf is stalled on any of these problems on which the
+    parent converges. A stall there is a stop.
+12. **A split that does not help stops.** A problem whose residual does not fall with $h$. One
+    construction: prompt 02's deterministic phase noise, of amplitude $\delta$ above what `rtol`
+    asks, added to the phase handed to the driver; 02 found that it drives every call to the cap.
+    Use a `depth_max` small enough (e.g. 12) that the parent's run is affordable.
+    - **The parent** reaches `depth_max`. Record it.
+    - **Under the new code:** the call returns with stalled leaves and none at `depth_max`;
+      `converged` False; and the value is honest against the **noisy** integrand's own reference,
+      computed by a method that resolves the noise (the agent's, recorded).
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** a leaf leaves the candidate set once its own relative error is below `rtol` (the local
   test, restored inside the loop): test 1 must fail;
 - **(ii)** floor-limited leaves stay refinable: test 4 must fail;
-- **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail.
+- **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail;
+- **(iv)** the stall rule removed: test 12 must fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -372,8 +408,10 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 - **Cost:** regions, solves and wall time against 06b. Cost is not an argument (README §5 rule 4).
 - **Where the budget went:** per call, the share of $E$ from residual, floor and truncation, and
   how many calls stop with truncation the largest share.
-- **Flat residuals:** calls that reach `depth_max` with a residual flat over their last five levels,
-  as `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`.
+- **Stalls and flat residuals:** stalled leaves per call and the calls holding them; how many of
+  those calls end `converged`; and calls that still reach `depth_max` with a residual flat over
+  their last five levels, as `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`. 06b's
+  three depth-20 calls (`2-1704`, `2-13964`, `3-34987` at `1e-8`) are reported by name.
 - **Totals:** how they moved against 06b, relative and against `total_abserr`$_{06b}$, by band and
   $k$.
 - **Stationary-point rows:** how the 720 rows of 06a's scan moved. They are 07's, and not scored
@@ -382,7 +420,7 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 ## 6. Acceptance
 
 1. **§1–§3 as written:**
-   - every test passing, the three breakages caught;
+   - every test passing, the four breakages caught;
    - every changed existing assertion of the kinds §2 test 9 allows, and listed;
    - the LiouvilleGreen draws with no new failure;
    - the seven roots rising only by the tests added.
@@ -399,13 +437,15 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 ## 7. Stop conditions — stop and ask
 
 - **The Gate** fails.
-- **A test cannot be built as written:** the parent does not show test 1's or test 3's miss, or
-  test 4 cannot find a leaf flagged under the new code.
+- **A test cannot be built as written:** the parent does not show test 1's, test 3's or test 12's
+  miss, or test 4 cannot find a leaf flagged under the new code.
+- **The stall rule fires where refinement works:** a leaf is stalled on a problem of test 11 on
+  which the parent converges.
 - **The construction reaches outside its file.** It needs a change outside
   `AdaptiveLevin/levin_quadrature.py` beyond §0.3's comment-only exception: to `ComputeTargets/`,
   `LiouvilleGreen/`, the eq. (151) formula, what `"phase_err"` holds, 06b's premise or $\rho$, the
   subregion solvers, the C2 gate, the p-mode gate, `DEFAULT_LEVIN_MAX_DEPTH`, or the result dict's
-  keys.
+  keys beyond `num_stalled_regions`.
 - **A test moves beyond §2 test 9's allowance:**
   - an honesty, accuracy, convergence or value assertion has to change;
   - a test in `LiouvilleGreen/tests/` fails, or a seeded draw fails under the new code that passes
