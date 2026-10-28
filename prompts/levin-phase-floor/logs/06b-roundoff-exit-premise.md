@@ -15,7 +15,7 @@
 - No Ray was started, no run was registered or launched, no store was opened, and nothing was
   written under `var/`.
 
-**Commit:** the code commit, one commit, not pushed. Its hash is recorded by the records commit.
+**Commit:** `4ddc3c2`, the code commit, pushed 2026-10-28 after the orchestrator's review passed all eight checks (orchestrator note `prompt-06b.md` §A.3, recorded in its §B.5).
 
 **Result:**
 - **§1.** `_adaptive_levin`'s round-off-limited exit fires only if the region's two halves' floors

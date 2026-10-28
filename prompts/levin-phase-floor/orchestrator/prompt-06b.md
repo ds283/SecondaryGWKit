@@ -162,10 +162,41 @@ As 07's note §B, with these differences:
 - **The header issue closes** in the records commit if §4 holds and W0–W3 hold. Otherwise, ask the
   user. W4 failing is a finding, not by itself a reason to keep it open.
 
-### B.5 Addendum: Part B's dispatch
+### B.5 Addendum, 2026-10-28: Part A landed
 
-*(Written at Part A's landing: the code commit and its parent; §B.0 re-checked as 07's note §B.0
-gives it, with 06b's paths; anything Part A's review found that Part B must carry.)*
+**Part A** is the code commit **`4ddc3c2`**, whose parent is **`da5c24d`**. It passed all eight
+checks of §A.3 on the laptop, and is pushed.
+- **Scope.** Only §A.2's paths. By AST without docstrings, the module changed only in
+  `_adaptive_levin`, plus `_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5` and
+  `_roundoff_exit_premise_holds`. `adaptive_levin_sincos` is unchanged. The stash and
+  `var/levin-phase-floor-07/wip/` are intact by SHA-256.
+- **The roots,** re-run by the laptop at `4ddc3c2`: AdaptiveLevin 38 (32 + the new module's 6),
+  ComputeTargets 780, CosmologyModels 39, LiouvilleGreen 148 (1 skipped), ObjectFactories 280,
+  RunDrivers 127, tools 58, all OK. The flake did not fire.
+- **Test 1, re-run by the laptop against the parent's own module,** extracted from `da5c24d`. Its
+  value `0x1.18d9a35c68fc4p-7` and abserr `0x1.047898c70661ep-20` (1 region, phase-limited) are
+  bit-identical to the bypass and to the test's comment. Under the new code there are 2 regions,
+  the call converges, and the error is $1.5\times10^{-11}$.
+- **Test 5's 20 seeded draws, re-run by the laptop** in a scratch worktree at `4ddc3c2`, equal the
+  committed `lg_seeded_draws.jsonl` on all 160 units, timings aside. Every recorded SHA-256 matches
+  its committed file.
+- **Breakage (i), re-applied by the laptop** (the premise always holds): tests 1 and 3 fail, and
+  so does the infinite-half contract test. It was reverted, and the tree is clean.
+
+**What Part B must carry:**
+- **The census's W4 may fail.** One seeded LiouvilleGreen call, seed 15 `test_JJJ`, runs to
+  depth 20 under the new code: from depth 5 and 23 solves to 2,295 solves, with abserr unchanged
+  and the call unconverged in both. Its step-(4) residual is flat at 1–2e-15 while the eq. (151)
+  floor falls to 8e-20 (`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`). W4 is
+  scored as written, and a failure is a finding for the user.
+- **Evaluation counters** differ only in calls that had a phase-limited **fallback** region at the
+  parent. There the halves are now solved. Such a row is phase-limited in R15, so §4.3's
+  bit-identity rule does not reach it.
+- **The trees, by SHA:** R15 and W0's reproduction at `da5c24d`, in the parent worktree. R16 and
+  $b$ at the dispatch commit of Part B, whose code is `4ddc3c2`'s.
+
+**Part B starts on the user's word.** §B.0's Mac Studio facts are re-checked by the laptop at that
+point, and added here.
 
 ## 5. Stop and ask the user
 
