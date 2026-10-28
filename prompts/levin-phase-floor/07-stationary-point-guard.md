@@ -29,8 +29,9 @@ The records of §5 and §6 are committed on the laptop afterwards, in 07's recor
 **Recommended model:** **Opus**.
 
 **Amended 2026-10-28, before §2 runs (§9).** 06b, the round-off-limited exit's premise, lands
-first. §2's reference and its $\omega$ are settled by the user. The rehearsals become R17 and R18.
-§6's "before" is 06b's census.
+first. §2's reference and its $\omega$ are settled by the user. **Amended again the same day, after
+§2 stopped on its rule (§9 point 6):** 06c, global error control, lands first; the rehearsals
+become R19 and R20, and §6's "before" is 06c's census.
 
 **Read first:**
 1. The board's §3 entry `[06-levin-accepts-a-region-across-a-stationary-point]`, with its 06a
@@ -597,3 +598,29 @@ differ, this section holds.**
    - **V1** compares with 06b's calls and rows. **V4's** "errors before" are 06b's.
    - **V2 and V3** keep 06a's scan. The scan reads $\theta'$ alone, which 06b does not change.
    - The harness is copied from 06b's census copy, and its diff is saved against that copy.
+6. **06c runs first, and §2 is re-run on it** (the board's Decisions, **07 §2 stop**). §2 ran on
+   2026-10-28 at 06b's code with §1 rebased, and no rung of $\Phi_w$ passed its rule. Every (R)
+   case was honest at every rung, but 1–3 per rung reported unconverged, all at $x_s = 0.7236$,
+   $\omega = 0$, where the total cancels. The cause is the driver's per-region acceptance, each
+   window piece judged at `rtol` against its own value, not $\Phi_w$
+   (`[07-per-region-acceptance-misses-a-cancelling-total]`). The user: *"The fully global scheme
+   sounds like the right problem to solve, for the CC algorithm around the stationary point, and
+   the Levin scheme in general … Otherwise we are just treating the symptoms rather than dealing
+   with the actual cause."* That is [`06c-global-error-control.md`](06c-global-error-control.md).
+   - **§1's uncommitted work** is set aside before 06c runs, as for 06b, and rebased onto 06c's
+     code afterwards. That rebase is a deviation, recorded as `STRUCTURALLY REQUIRED`.
+   - **Window pieces are leaves** of 06c's loop, with the pieces of every window and the Levin
+     ranges between them in one budget for the call. §1.2's "a piece whose nested-pair estimate
+     misses its tolerance is bisected" becomes "a piece is bisected when the loop chooses it".
+     §0.2's rule (ii), the round-off-limited exit barred in window pieces and guarded regions,
+     becomes: such a leaf is never floor-limited, so it stays refinable until `depth_max`.
+   - **§2 is re-run in full,** both families and the LiouvilleGreen draws, on 06c's code and §1
+     together, under its rules as written. Its earlier tables stay in the records, as measured on
+     06b's code.
+   - **§0.3's** "the per-region `resolved` test" and "`_local_atol`" are 06c's, and are as 06c
+     leaves them; 07 does not change them further.
+   - **The rehearsals are renamed again.** 06c takes R17 and R18. §5's rehearsals are **R19** (at
+     the code commit's parent, which now carries 06c's code) and **R20**, with slugs `r19-parent`
+     and `r20-guard`. Both fingerprints must still equal `1b332ffa…`.
+   - **§6's "before" is 06c's census,** not 06b's: point 5 holds with 06c's code commit, 06c's
+     census and its harness copy in place of 06b's. V1's bit-identity is against 06c's calls.
