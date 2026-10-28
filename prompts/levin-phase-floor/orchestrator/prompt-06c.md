@@ -14,7 +14,7 @@ names:**
 - `var/levin-phase-floor-06c/`;
 - R17 and R18 (slugs `r17-parent` and `r18-global`);
 - the tree $g$;
-- X0–X5 in place of W0–W4, and Y1 for the rehearsals.
+- X0–X6 in place of W0–W4, and Y1 for the rehearsals.
 
 The user's word to dispatch, 2026-10-28: *"Yes, please dispatch 06c"*, after choosing to land 06c
 before diagnosing `[06b-moved-calls-declare-less-than-their-error]`: *"Isn't it worth landing 06c
@@ -139,7 +139,7 @@ the baselines and §A.0. It does not read `orchestrator/`. Tell it plainly:
    and the region list by bit pattern.
 8. **The records.**
    - The log has README §5.1's headings, and classifies every deviation.
-   - Its **Predictions and verdicts** holds prompt §4's Y1 and §5's X1–X5 word for word (check by
+   - Its **Predictions and verdicts** holds prompt §4's Y1 and §5's X1–X6 word for word (check by
      substring), marked not yet scored.
    - The board's 06c row says the code landed and §4–§5 are pending. The header issues have not
      moved.
@@ -158,6 +158,22 @@ If the review passes, push the code commit. Then make one residue commit, and pu
    `git apply --3way`. Leave any conflict markers for its agent: resolving them is code, and not
    yours.
 2. Send 07's agent 07 §9 point 6 and the user's words on 06c, verbatim, with 06c's two commits.
+
+### A.5 Addendum, 2026-10-28: Part A's stop, and the amendment
+
+Part A's agent stopped before committing, on prompt §7's "the stall rule fires where refinement
+works", with the checkout returned clean at `3f2a36d` and its driver kept as a patch in the
+orchestrator's scratchpad (`06c-driver-wip.patch`, `fed7097a…`). The orchestrator verified:
+- the checkout clean, both stashes at `1278f4e5…` and `a89ac9be…`, `var/` untouched since the marker;
+- **SincIntegral under the rule as written,** by applying the patch in a throwaway worktree (since
+  removed): 4 leaves, 2 stalled, depth 2, unconverged, true error $6.55\times10^{-6}$ against a
+  declared $4.85\times10^{-6}$;
+- **(b2), by re-running the agent's measurement script:** every figure in prompt §8.
+
+The user chose (b2) and X6 (prompt §8, the board's Decisions, **06c stall rule**). The agent is
+resumed with the amendment commit and the user's words verbatim, and continues §1–§3 from its
+patch. §A.3's checks stand, with prompt §2 test 9's widened allowance and X6 among the predictions
+to copy.
 
 ## B. Part B — R17, R18 and the census, on the Mac Studio
 
