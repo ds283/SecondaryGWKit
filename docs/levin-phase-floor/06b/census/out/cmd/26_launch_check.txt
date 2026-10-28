@@ -1,0 +1,33 @@
+$ /bin/bash -c cat\ \$R/status.json\;\ echo\;\ echo\ \"==\ checkpoint\ lines:\ \$\(wc\ -l\ \<\ \$R/checkpoint.jsonl\ 2\>/dev/null\)\"\;\ head\ -c\ 400\ \$R/checkpoint.jsonl\ 2\>/dev/null\;\ echo\;\ echo\ \"==\ stdout\"\;\ head\ -c\ 1500\ \$R/stdout.log\ \|\ grep\ -v\ \"run_census\ header\"\;\ echo\ \"==\ stderr\ bytes\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ P=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ echo\ \"==\ status\ pid\ \$P\"\;\ kill\ -0\ \$P\ \&\&\ echo\ \"pid\ \$P\ answers\ kill\ -0\"\;\ kill\ -0\ 8931\ \&\&\ echo\ \"sh\ 8931\ answers\ kill\ -0\"\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ \$P\,8931\ \|\ cut\ -c1-200
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T16:12:18Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-28T16:12:12+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 8935,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+/bin/bash: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl: No such file or directory
+== checkpoint lines: 
+
+== stdout
+== stderr bytes 0
+== status pid 8935
+pid 8935 answers kill -0
+sh 8931 answers kill -0
+  PID  PPID ELAPSED COMMAND
+ 8931     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/scripts/run_census.py --run-dir /Use
+ 8935  8931   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/cens
+# ----
+# end 2026-10-28T16:12:18Z
+# exit 0

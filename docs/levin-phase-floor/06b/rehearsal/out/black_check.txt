@@ -1,0 +1,6 @@
+would reformat /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/scripts/classify_non_qsi.py
+would reformat /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/scripts/tabulate_qsi_phase_limited.py
+
+Oh no! 💥 💔 💥
+2 files would be reformatted.
+exit 1

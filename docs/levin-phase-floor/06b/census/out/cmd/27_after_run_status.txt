@@ -1,0 +1,44 @@
+$ /bin/bash -c $'cat /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/status.json; echo; shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl; /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c "\nimport json,collections\nc=collections.Counter(); t=collections.Counter(); heads=collections.Counter(); scr=collections.Counter(); ray=0\nfor l in open(\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl\'):\n    r=json.loads(l); d=r[\'data\']; c[(d[\'rtol\'],d[\'status\'])]+=1; heads[(d[\'tree_head\'],d[\'tree_status_short\'])]+=1; scr[r[\'script_sha256\']]+=1\n    t[tuple(sorted(d[\'modules\'][\'counts_by_root\'].items()))]+=1\n    if d[\'modules\'][\'foreign\']: print(\'FOREIGN\', d[\'unit\'], d[\'modules\'][\'foreign\'])\nprint(dict(c)); print(dict(heads)); print(dict(scr)); print(len(t), \'module-root patterns\', list(t.items())[:3])\n"; for f in /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/worker_*_bye.json; do /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -c "import json,sys; d=json.load(open(sys.argv[1])); print(sys.argv[1].split(\'/\')[-1], d[\'ray_initialized\'], d[\'modules_foreign\'])" $f; done; ls /tmp/ray-sgk | wc -l'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T17:03:54Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-28T17:02:46+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 8935,
+  "stage": "18560 units recorded; last b-1e-8-3-39148 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl
+{('1e-7', 'done'): 9280, ('1e-8', 'done'): 9280}
+{('92bc62f09711d10ef0035663d4bbe5629e145e17', ''): 18560}
+{'5d47334e3a816e059379ecb1bb50b72bcf44f96572f9267411badba35f93266d': 18560}
+1 module-root patterns [((('no file', 41), ('own tree', 102), ('python', 265), ('scripts', 8), ('venv', 1438)), 18560)]
+worker_1e-7-k0_101_bye.json False []
+worker_1e-7-k0_202_bye.json False []
+worker_1e-7-k1_102_bye.json False []
+worker_1e-7-k1_301_bye.json False []
+worker_1e-7-k2_2_bye.json False []
+worker_1e-7-k2_302_bye.json False []
+worker_1e-7-k3_1_bye.json False []
+worker_1e-7-k3_201_bye.json False []
+worker_1e-8-k0_101_bye.json False []
+worker_1e-8-k0_202_bye.json False []
+worker_1e-8-k1_102_bye.json False []
+worker_1e-8-k1_301_bye.json False []
+worker_1e-8-k2_2_bye.json False []
+worker_1e-8-k2_302_bye.json False []
+worker_1e-8-k3_1_bye.json False []
+worker_1e-8-k3_201_bye.json False []
+67
+# ----
+# end 2026-10-28T17:03:58Z
+# exit 0

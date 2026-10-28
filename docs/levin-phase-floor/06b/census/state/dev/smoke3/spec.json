@@ -1,0 +1,42 @@
+{
+ "tree": "p",
+ "name": "S3",
+ "units": [
+  {
+   "uid": "p-1e-7-1-34599",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "1-34599",
+   "names05": null,
+   "shard": 1,
+   "serial": 34599,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q+r"
+    ],
+    [
+     2,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G-q+r"
+    ],
+    [
+     4,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/dev/smoke3",
+ "emit_fd": null,
+ "emit_file": "state/dev/smoke3/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": "217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2"
+}

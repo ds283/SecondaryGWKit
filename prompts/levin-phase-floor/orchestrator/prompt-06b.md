@@ -228,6 +228,44 @@ The records go in the main checkout's `var/levin-phase-floor-06b/`, and the stor
 `var/datastores/levin-phase-floor-06b-r15*` and `-r16*`, with `--job-name levin-phase-floor-06b`,
 `--campaign levin-phase-floor --prompt 06b`.
 
+### B.6 Addendum, 2026-10-28: Part B ran, and its review
+
+**Part B** ran on the Mac Studio from `92bc62f` in two worktrees, orchestrated by a Mac Studio
+session. The rehearsals ran first and the census after them, so that the two did not share the six
+cores: the session's choice, stricter than 07's note, which allows them together.
+- **R15 and R16** (`levin-phase-floor-06b-r15-parent-20261028T135349`, `…-r16-premise-20261028T135745`)
+  both `done` with `1b332ffa…`. §4 holds.
+- **The census** (`levin-phase-floor-06b-census-20261028T161212`), 18,560 of 18,560 units in 51 min,
+  none over budget. W0, W1 and W3 hold; W2 and W4 fail.
+- **One ruling before the launch,** relayed verbatim: the census agent read W1 and W4 on the
+  analytic-block calls, which 06a never recorded, from the code's own premise checks. The user:
+  *"For 06b, that reading is reasonable. I don't think it's worth spending a lot of time worrying
+  about it."*
+- **The census agent's deviation 17** comes from the laptop's brief to the Mac Studio session, which
+  said "no census process imports ray" where this note's rule is that no Ray session appears. No
+  worker initialised Ray.
+
+**The review** ([`docs/levin-phase-floor/06b/review.md`](../../../docs/levin-phase-floor/06b/review.md))
+passed checks 1–9 and stopped on check 10 alone, the census log's form: no **What shipped** section,
+and deviation 19 unclassified. The user accepted it as it stands (the board's Decisions, **06b
+close**).
+
+**The laptop's re-checks,** over `ssh macstudio-tunnel`, with readers of its own:
+- one moved rehearsal row other than the review's: $(k, q, r) = (10^6, 3.162\times10^5, 10^6)$,
+  $z_{\rm response} = 573.1$, `total` `0x1.7ee4bd7f61ebap-69` in R15 and `0x1.7ee4bdf5de672p-69` in
+  R16, as `rehearsal/out/qsi_rows.csv` tabulates;
+- one census unit against 06a's, `1e-8-2-32862`: every computed value bit-identical, the
+  differences only provenance and the fields 06b added.
+
+**The header issue stays open** on the user's word, until W2 is fixed. W2 opened
+`[06b-moved-calls-declare-less-than-their-error]`; W4 narrows
+`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`.
+
+**Left on the Mac Studio:** the census's run directory (1.7 GB), the stores of R15 and R16, the
+readers' extract, and the worktrees `SecondaryGWKit-lpf06b-da5c24d` and `-92bc62f`
+([`KEPT_ON_MAC_STUDIO.md`](../../../docs/levin-phase-floor/06b/KEPT_ON_MAC_STUDIO.md)). The stores
+and the worktrees go only on the user's word.
+
 ## 5. Stop and ask the user
 
 As 07's note §5, with prompt 06b's §7 in place of 07's §8. **Never touch 07's stash or its saved

@@ -1,0 +1,24 @@
+[
+ {
+  "unit": "b-1e-7-1-34599",
+  "index": 1,
+  "dir": "state/dev/smoke1",
+  "pickle": "inputs_S1.pkl",
+  "offset": 0,
+  "length": 1336905,
+  "sha256": "174e71b4fd4f41e4bd87aa183cef93d8414dea10db62c6d7bb98e3753f36b033",
+  "value_06a": "-0x1.d18c96e623e88p-87",
+  "abserr_06a": "0x1.b70133dbf893bp-107"
+ },
+ {
+  "unit": "b-1e-7-1-34599",
+  "index": 2,
+  "dir": "state/dev/smoke1",
+  "pickle": "inputs_S1.pkl",
+  "offset": 1336905,
+  "length": 1336908,
+  "sha256": "a560782723b77496db5754dd4244c2f3204763dc5860f8b2f4529cdd16911e79",
+  "value_06a": "-0x1.393a49c4506d5p-85",
+  "abserr_06a": "0x1.11ee86a068236p-104"
+ }
+]

@@ -1,0 +1,30 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-28T14:08:41Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal; diff $R/state/r16_store_sha256_before_reads.txt $R/state/r16_store_sha256_after_reads.txt && echo "R16 store: identical before and after the readers"; sed -n 6,10p $R/state/store_sha256_before_diff.txt > $R/state/tmp_a.txt; head -5 $R/state/r16_store_sha256_after_reads.txt > $R/state/tmp_b.txt; diff $R/state/tmp_a.txt $R/state/tmp_b.txt && echo "R16 hashes equal those taken before the comparison"; rm $R/state/tmp_a.txt $R/state/tmp_b.txt; echo "== Traceback counts"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c; echo "== files per reader"; for d in $R/extract/*/; do echo "$(find $d -type f | wc -l) $d"; done; du -sh $R/extract; echo "== worktrees"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f; do git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer $R/state/r15_launch_marker -not -path "*/.git*" | head; done
+# output:
+R16 store: identical before and after the readers
+R16 hashes equal those taken before the comparison
+== Traceback counts
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_GkSource_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_GkWKB_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_Gk_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_TkWKB_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_tensor_source_data.log:0
+== WARNING lines
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+== files per reader
+180 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_GkSource_data/
+2436 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_GkWKB_data/
+468 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_Gk_data/
+76 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_QuadSourceIntegral_data/
+27 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_TkWKB_data/
+27 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract/extract_tensor_source_data/
+180M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/extract
+== worktrees
+da5c24deb430172f68d983f56577fa48def19903
+92bc62f09711d10ef0035663d4bbe5629e145e17
+# exit: 0
+# end: 2026-10-28T14:08:41Z

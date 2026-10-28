@@ -1,0 +1,48 @@
+not_compared: []
+version: rows identical 1, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+store_tag: rows identical 10, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+redshift: rows identical 1159, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+wavenumber: rows identical 3, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+tolerance: rows identical 7, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+LambdaCDM: rows identical 1, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+QCD_Cosmology: rows identical 1, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+IntegrationSolver: rows identical 7, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+GkSourcePolicy: rows identical 2, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+QuadSourcePolicy: rows identical 2, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+wavenumber_exit_time: rows identical 0, differ 3; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+    compute_time: {'timing': 3}
+BackgroundModel: rows identical 0, differ 1; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 1159; value tables not identical none
+    compute_time: {'timing': 1}
+    max_RHS_time: {'timing': 1}
+    mean_RHS_time: {'timing': 1}
+TkNumericIntegration: rows identical 0, differ 3; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 1478; value tables not identical none
+    compute_time: {'timing': 3}
+    label: {'label': 3}
+    max_RHS_time: {'timing': 3}
+    mean_RHS_time: {'timing': 3}
+    min_RHS_time: {'timing': 2}
+TkWKBIntegration: rows identical 0, differ 3; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 2209; value tables not identical none
+    label: {'label': 3}
+    stage_1_compute_time: {'timing': 3}
+GkNumericIntegration: rows identical 0, differ 1368; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 35874; value tables not identical none
+    compute_time: {'timing': 1368}
+    label: {'label': 1368}
+    max_RHS_time: {'timing': 1368}
+    mean_RHS_time: {'timing': 1368}
+    min_RHS_time: {'timing': 1022}
+GkWKBIntegration: rows identical 0, differ 3477; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 147642; value tables not identical none
+    label: {'label': 3477}
+    metadata: {'rho_reuse': 23}
+    stage_1_RHS_evaluations: {'rho_reuse': 23}
+    stage_1_compute_time: {'timing': 3474}
+GkSource: rows identical 0, differ 291; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 169653; value tables not identical none
+    label: {'label': 291}
+    parents_digest: {'parents_digest': 291}
+GkSourcePolicyData: rows identical 291, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+QuadSource: rows identical 0, differ 6; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 2447; value tables not identical none
+    compute_time: {'timing': 6}
+    label: {'label': 6}
+OneLoopIntegral: rows identical 0, differ 0; only-A/only-B/unmatched/unresolvable (0, 0, 0, 0); value-table rows identical 0; value tables not identical none
+
+UNCLASSIFIED differences or structural problems outside QuadSourceIntegral: 0
+exit 0

@@ -1,0 +1,80 @@
+# Every command of the rehearsal agent (levin-phase-floor 06b, prompt section 4), verbatim or by its exact form, in order. Outputs are in the files named.
+# Main checkout M=/Users/ds283/Documents/Code/SecondaryGWKit at 28ebaf0 (venv, var/, stores, registry; no tree runs there).
+# Parent worktree P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d at da5c24d (R15). Code worktree C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f at 92bc62f (code 4ddc3c2; R16, comparison, readers).
+# R = $M/var/levin-phase-floor-06b/rehearsal.
+# scripts/rec.sh NAME CMD runs CMD via sh -c and records command, cwd, times, output and exit code in out/NAME.txt (read-only checks only; never lock commands or launches).
+## --- turn 1 ---
+## sha256 of the dispatch brief (scratchpad dispatch_rehearsal.md): 74b7853011b1d0323ef74ef72ff8a89fd0fa8411cbe4dbe16eba2438d728ab89 (matches the brief given)
+## read: C/prompts/levin-phase-floor/06b-roundoff-exit-premise.md, C/CLAUDE.md (differs from M's only in the black-exemption list), C/docs/levin-phase-floor/06/rehearsal/{state/launch_r13.txt,out/r13_launch_check.txt,out/lock.log,out/gate.txt,out/commands.log}
+## mkdir -p $R/out $R/scripts $R/state ; wrote scripts/rec.sh (Write tool)
+## (cwd M) scripts/rec.sh 00-gate-trees ... -> out/00-gate-trees.txt (HEAD, branch, status --short --ignored of the three trees; worktree list; diff --stat 4ddc3c2 92bc62f outside docs/prompts: empty; 4ddc3c2^ = da5c24d)
+## (cwd M) scripts/rec.sh 01-gate-registry-lock ... -> out/01-gate-registry-lock.txt (runregistrykit list: 25, all finished; lock status: free; ~/.raypoolkit empty; no ~/ScienceData/.rehearsal-lock; auth_token 600; df 109G; uptime; venv 3.13.16 and pins)
+## (cwd M) scripts/rec.sh 02-gate-launcher ... -> out/02-gate-launcher.txt (launcher SHA-256 5b984c75 in P, C and M; tool 7997af85 and run_readers.sh 7c63a5ba in C; diff --stat da5c24d 92bc62f code paths: levin_quadrature.py and the new test module only; no 06b store or run; R13's manifest argv; R8's status.json fingerprint 1b332ffa)
+## lock 1 (look): (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-06b/rehearsal/state/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-06b/rehearsal/state/lock.log   -> nothing listed, exit 0
+## lock 2: (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 06b section 4, rehearsals R15 (worktree da5c24d, parent of code commit 4ddc3c2) and R16 (worktree 92bc62f, code 4ddc3c2) on the Mac Studio (mps026298), then the value comparison and readers" --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> var/levin-phase-floor-06b/rehearsal/state/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-06b/rehearsal/state/lock.log   -> acquired, exit 0
+## touch state/r15_launch_marker   (reference mtime for find -newer over both worktrees)
+## R15 launch (cwd = parent worktree P; nothing written there):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite \
+    --job-name levin-phase-floor-06b --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r15-parent --purpose \"\$0\" --campaign levin-phase-floor --prompt 06b; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R15>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-r15.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/state/launch_r15.txt; disown
+##   <PURPOSE_R15> as launched: "levin-phase-floor prompt 06b, R15 on the Mac Studio (mps026298; tree da5c24d in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d, the parent of the code commit 4ddc3c2; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R15/R16 value comparison"
+##   result: state/launch_r15.txt (sh pid 96490, 13:53:48Z); pgrep -P 96490 -> 96498 (driver); ps -o pid,ppid,command -p 96498 (ppid 96490, venv Python -B -u RunDrivers/quadsource_atol_sweep.py --build --rehearsal ...)
+## lock 3: (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 96498 >> var/levin-phase-floor-06b/rehearsal/state/lock.log 2>&1; echo "exit $?" >> var/levin-phase-floor-06b/rehearsal/state/lock.log   -> recorded, exit 0
+## (cwd M) scripts/rec.sh r15_launch_check ... -> out/r15_launch_check.txt (the one check: lock.log, registry head, run dir and status.json, launch log head, Traceback count 0, kill -0 of driver and sh, lsof cwd of driver = P, manifest fields, both worktrees status --short --ignored (empty), store files)
+## --- end of turn 1 (R15 running; driver 96498, sh 96490) ---
+## --- turn 2 (resumed: R15 driver 96498 exited 13:57:07Z; status done, exit 0, 1b332ffa…) ---
+## (cwd M) cp var/runs/levin-phase-floor-06b-r15-parent-20261028T135349/status.json R/out/r15_status.json
+## (cwd M) scripts/rec.sh r15_end_check ... -> out/r15_end_check.txt (status.json fields; digest 1b332ffa equal to R8's and the literal; per-class object equal to R8's; problems {}; taken at da5c24d, git_dirty false; kill -0 96498/96490: gone; launch-log tail "** driver exit status 0"; Traceback 0 in launch log, stdout.log, stderr.log; run dir; both worktrees HEAD, status --short --ignored and find -newer state/r15_launch_marker: empty; store listing; registry head; main HEAD/status)
+## lock 4 (look): (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-06b/rehearsal/state/lock.log 2>&1; echo "exit $?" >> ...   -> nothing listed, exit 0
+## (cwd M) shasum -a 256 var/datastores/levin-phase-floor-06b-r15*.sqlite; /usr/bin/stat -f '%N %z %m'; journal/wal/shm look (none) -> state/r15_store_sha256_after_build.txt
+## touch state/r16_launch_marker
+## R16 launch (cwd = code worktree C; nothing written there):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite \
+    --job-name levin-phase-floor-06b --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r16-premise --purpose \"\$0\" --campaign levin-phase-floor --prompt 06b; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R16>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-r16.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/state/launch_r16.txt; disown
+##   <PURPOSE_R16> as launched: "levin-phase-floor prompt 06b, R16 on the Mac Studio (mps026298; tree 92bc62f in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f, whose code is the code commit 4ddc3c2; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R15/R16 value comparison, and QuadSourceIntegral alone is expected to differ, only in rows with a phase-limited flag in R15"
+##   result: state/launch_r16.txt (sh pid 97356, 13:57:43Z); pgrep -P 97356 -> 97360 (driver); ps -o pid,ppid,command -p 97360
+## lock 5: (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 97360 >> var/levin-phase-floor-06b/rehearsal/state/lock.log 2>&1; echo "exit $?" >> ...   -> recorded, exit 0
+## (cwd M) scripts/rec.sh r16_launch_check ... -> out/r16_launch_check.txt (the one check: lock.log, registry head, run dir and status.json, launch log head, Traceback 0, kill -0 of driver and sh, lsof cwd = C, manifest fields at 92bc62f clean, both worktrees status --ignored empty, store files)
+## --- end of turn 2 (R16 running; driver 97360, sh 97356) ---
+## --- turn 3 (resumed: R16 driver 97360 exited 14:01:13Z; status done, exit 0, 1b332ffa…) ---
+## (cwd M) cp var/runs/levin-phase-floor-06b-r16-premise-20261028T135745/status.json R/out/r16_status.json
+## (cwd M) scripts/rec.sh r16_end_check ... -> out/r16_end_check.txt (status.json fields; digest equal to R8's and the literal; classes equal R8's and R15's; problems {}; taken at 92bc62f clean; kill -0 97360/97356 gone; launch-log tail "** driver exit status 0"; Traceback 0 in both launch logs, R16 stdout.log, stderr.log; '!! WARNING' 0 in both launch logs; run dir; worktrees HEAD/status --ignored/find -newer r15 marker: empty; store listing; registry; main HEAD/status)
+## lock 6 (look): (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> R/state/lock.log 2>&1; echo "exit $?" >> R/state/lock.log   -> nothing listed, exit 0
+## (cwd M) shasum -a 256 + /usr/bin/stat -f '%N %z %m' of both stores' 10 files, journal look -> state/store_sha256_before_diff.txt; R15's five equal state/r15_store_sha256_after_build.txt
+## cp C/docs/levin-phase-floor/05/rehearsal/scripts/classify_non_qsi.py R/scripts/ ; cmp -> identical
+## comparison (cwd C, so -m imports C's tool):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f && /usr/bin/time -p env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -m tools.store_value_diff /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite --json > R/out/store_value_diff.json 2> R/out/store_value_diff.json.stderr   # exit 1 (QuadSourceIntegral differs; out/store_value_diff.meta.txt); 18 s; 40.3 MB
+## (cwd M) /usr/bin/time -p ./venv/bin/python -I R/scripts/classify_non_qsi.py R/out/store_value_diff.json > R/out/classify_non_qsi.txt 2> R/out/classify_non_qsi.stderr   # exit 0: 0 unclassified, no structural problem
+## inline read-only look at the tool's QuadSourceIntegral section (keys, column counts, metadata json_keys): ./venv/bin/python -I -c "..." R/out/store_value_diff.json   (output not saved; its counts are restated by out/qsi_tabulation.txt's cross-check)
+## code reading (read-only, C): grep/sed of ComputeTargets/QuadSourceIntegral.py (evaluate_QuadSource_integral 670-838, phase_group_Levin_integral 884-971, _three_bessel_integrals 974-1103, _three_bessel_Levin 1105-1327, analytic_integral 1399-1503, _aggregate_LevinData 533-552) and ObjectFactories/QuadSourceIntegral.py (columns 247-288, json.dumps 595, json.loads 452/931); sqlite3 mode=ro look at R15's primary (shards, tables)
+## wrote scripts/tabulate_qsi_phase_limited.py (Write tool)
+## attempt 1: (cwd M) /usr/bin/time -p ./venv/bin/python -I R/scripts/tabulate_qsi_phase_limited.py var/datastores/levin-phase-floor-06b-r15.sqlite var/datastores/levin-phase-floor-06b-r16.sqlite R/out/store_value_diff.json R/out/qsi_rows.csv > R/out/qsi_tabulation.txt 2> R/out/qsi_tabulation.stderr   # exit 1: it counted the store-bookkeeping columns (serial, *_serial, timestamp) as values; kept as out/qsi_tabulation.attempt1.{txt,stderr}, out/qsi_rows.attempt1.csv, script as state/tabulate_qsi_phase_limited.attempt1.py
+## script edited (python3 -I inline replace): an `identity` kind for serial, *_serial, timestamp, not compared -> out/tabulate_qsi_phase_limited.attempt1_to_2.diff
+## attempt 2: the same command   # exit 0; rule holds (0 of 782); 82 rows tabulated
+## (cwd M) scripts/rec.sh qsi_set_check ... -> out/qsi_set_check.txt (moved totals = rows with a group flag, 26; moved analytic_rad = rows with an analytic-block flag, 70)
+## hashes after the comparison -> state/store_sha256_after_diff.txt; diff with before: identical
+## cp C/docs/levin-phase-floor/06/rehearsal/scripts/run_readers_worktree.sh R/scripts/ (cmp identical to 06's); diff C/docs/dk-and-rpk-migration/rehearsal/run_readers.sh R/scripts/run_readers_worktree.sh > R/out/run_readers_worktree.diff (equal to 06's diff)
+## hashes before reads -> state/r16_store_sha256_before_reads.txt; touch state/readers_marker
+## readers (lock held; cwd of each reader C; output in R/extract, 180 MB, not for copying back):
+READERS_TREE=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f READERS_PYTHON=/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python bash R/scripts/run_readers_worktree.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite R/extract > R/out/readers.txt 2>&1; echo "exit $?" >> R/out/readers.txt   # exit 0
+## hashes after reads -> state/r16_store_sha256_after_reads.txt
+## (cwd M) scripts/rec.sh readers_check ... first form used bash process substitution under sh: syntax error, exit 2, nothing run (the file was overwritten by the second form); second form -> out/readers_check.txt (before/after reads identical; equal to before-diff hashes; Traceback 0 in all six logs; 6 '!! WARNING: number of shards ... (=4) ... (=10)'; files per reader; worktrees clean)
+## read-only: diff of file-name patterns between var/levin-phase-floor-06/rehearsal/extract and R/extract for three readers; grep -n "random|sample(" in C's extract_{Gk,QuadSourceIntegral,GkSource}_data.py (unseeded random.sample of k, z and (q,r)) -- output not saved; see log, observations
+## lock 7 (look): ray-processes --ray-temp-dir /tmp/ray-sgk >> R/state/lock.log   -> nothing, exit 0
+## lock 8: ./venv/bin/python -B -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk >> R/state/lock.log 2>&1; echo "exit $?" >> R/state/lock.log   -> released, exit 0
+## lock 9 (look): status --ray-temp-dir /tmp/ray-sgk   -> free; no Ray processes; exit 0
+## lock 10 (look): ray-processes --ray-temp-dir /tmp/ray-sgk   -> nothing, exit 0
+## final hashes -> state/stores_sha256_final.txt; (cwd M) scripts/rec.sh final_check ... -> out/final_check.txt (final = before-diff; registry 27 finished; main 28ebaf0 clean; worktree list; worktrees clean, nothing newer than the r15 marker; ~/.raypoolkit empty; store listing; SHA-256 of every script and the reference copies; SHA-256 of the main outputs)
+## (cwd M) ./venv/bin/python -B -m black --check R/scripts/tabulate_qsi_phase_limited.py R/scripts/classify_non_qsi.py > R/out/black_check.txt   # exit 1: both would be reformatted; left as run (records)
+## records written: log.md, verification.md, issues.md (Write tool); state/progress.md updated. End of turn 3.

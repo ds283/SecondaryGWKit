@@ -1,0 +1,11 @@
+$ grep -rn job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:08:28Z
+# ----
+Binary file /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/__pycache__/ShardedPool.cpython-313.pyc matches
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py:117:        job_name: Optional[str] = None,
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py:149:        self._job_name: Optional[str] = job_name
+# ----
+# end 2026-10-28T14:08:28Z
+# exit 0

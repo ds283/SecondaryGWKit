@@ -1,0 +1,45 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w2_reference.py state/w2_selection.json out/w2_reference.json --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T17:06:49Z
+# ----
+# levin-phase-floor 06b: W2's reference
+# written 2026-10-28T17:06:50Z on mps026298.phys.susx.ac.uk
+# script w2_reference.py sha256 47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/w2_selection.json sha256 666f30f44ba539e5940ff5e0d7563dfe4defa108cb917e4bdd2a80cb2a6c96c9
+# AdaptiveLevin.levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py (tree b); host mps026298.phys.susx.ac.uk
+# depths [9, 10]; 24 calls; 6 worker processes
+
+unit               idx rerun= agree holds err_b/abserr_b  |S9-S10|/abserr_b floor_sum_10 direct10 err06a/abserr06a      s
+b-1e-7-3-38376       4   True  True False          9.201           0.004649     3.69e-34      137            0.049    4.3
+b-1e-7-0-35070       4   True  True False          1.473          0.0008151     1.78e-37      131           0.1346    4.3
+b-1e-7-1-2174        2   True  True False          2.543          0.0006186     2.35e-37      204           0.0627    4.6
+b-1e-7-2-14345       3   True  True False          5.677           0.003708     7.26e-38      103        0.0006713    4.2
+b-1e-7-3-38538       3   True  True False           1.47          0.0009492     3.09e-39      156          0.01223    4.4
+b-1e-7-3-35004       3   True  True False          1.206          0.0001424      2.4e-34      220           0.6301    4.6
+b-1e-7-0-38940       3   True  True False          4.878          0.0006339      1.1e-34      198           0.1403    2.7
+b-1e-7-1-2155        3   True  True False          1.061          0.0007009     3.46e-36      190          0.06803    2.6
+b-1e-7-2-39035       2   True  True  True         0.1543           0.001182     2.27e-38      141          0.01422    2.5
+b-1e-7-3-14587       4   True  True  True        0.07871          0.0008816      5.9e-38      126           0.1315    2.4
+b-1e-7-0-38352       4   True  True False          2.717            0.00127     1.58e-36      135          0.06313    2.5
+b-1e-7-1-14233       4   True  True False          2.219           0.004105     3.46e-37      116          0.02627    2.4
+b-1e-7-3-37351       1   True  True  True          0.664          8.125e-06     8.71e-36      204           0.4687    2.7
+b-1e-7-0-1949        4   True  True  True         0.6222           0.002731     2.16e-37      170          0.04767    2.5
+b-1e-7-1-37655       2   True  True  True         0.6543           2.48e-06     8.94e-37      196          0.03193    2.7
+b-1e-7-2-34816       2   True  True False          1.793          1.477e-05     8.38e-39      229           0.2226    2.8
+b-1e-7-3-34739       4   True  True False          3.201           0.006635     6.33e-36      160           0.2805    2.5
+b-1e-7-0-12977       5   True  True False          1.476          0.0005519     6.01e-35      231            0.306    2.8
+b-1e-7-1-34769       2   True  True False          3.719          5.851e-05     8.47e-37      182          0.04146    2.6
+b-1e-7-2-34728       3   True  True  True         0.5389          0.0009651     2.59e-38      167          0.02187    2.5
+b-1e-7-3-34455       1   True  True False          19.65           0.003104     1.12e-36      293            1.134    3.0
+b-1e-7-0-2106        2   True  True False          6.231          0.0005285     2.77e-35      194          0.08694    2.6
+b-1e-7-1-34769       3   True  True False          3.719          5.851e-05     8.47e-37      182          0.04146    2.6
+b-1e-7-2-34473       3   True  True  True         0.4831           2.97e-06     1.45e-37      269           0.1704    2.9
+
+wrote out/w2_reference.json sha256 4178395291167c5960859d8b7fe785f79039dfbc61bee09ab663abf7bf766140
+# ----
+# end 2026-10-28T17:07:03Z
+# exit 0

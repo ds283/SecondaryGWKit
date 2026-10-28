@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/make_capture.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:01:14Z
+# ----
+# levin-phase-floor 06b: W2's capture list
+# written 2026-10-28T14:01:15Z on mps026298.phys.susx.ac.uk
+# script make_capture.py sha256 60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+06a phase-limited calls at 1e-7: 1213; scan missing 0
+captured: 975 calls on 529 units (no sign change of theta' in 06a's scan)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_capture.json sha256 217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2
+# ----
+# end 2026-10-28T14:01:15Z
+# exit 0

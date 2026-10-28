@@ -1,0 +1,65 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:14:19Z
+# ----
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  analyse06a.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  characterise_s2.py
+0a6b6e4e22bf185029008d3032953f845c44c699299ea8df82ca96de761dfcd3  check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  checks_after.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  convergence_kinds_06a.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  draw_sample.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  fingerprint_copy.py
+bb055b2302dd4b49f9e172e105e32fef958a4340190496d0e067763b02097ed8  harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  l0.py
+3917b7a43f2f2200d3fe009448c7ca778dd8b08f27f1927d24d901f25e37c32a  launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  probe.py
+bdef00ad251d374d2f086e737cc59bc4b4a54dbefc13a5f8745ef920a5e3a3e6  prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  rebuild.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  rescore_t1.py
+5d47334e3a816e059379ecb1bb50b72bcf44f96572f9267411badba35f93266d  run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  run_wider.py
+892a121fdd08708d756eeb95654b68e1f9ba5bc69e0c037da1bf25b03338f303  scripts_equal.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  w0_clause1.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  w2_reference.py
+3d9de701df8c06fe80c78ea7d3df2982d4b904e4634700db14898c251108a4ab  worker.py
+state/W0/B1/emit.jsonl (hello): 9 scripts; differing now: none
+state/W0/B1/emit.jsonl (unit): 9 scripts; differing now: none
+state/W0/B2/emit.jsonl (hello): 9 scripts; differing now: none
+state/W0/B2/emit.jsonl (unit): 9 scripts; differing now: none
+state/W0/P1/emit.jsonl (hello): 9 scripts; differing now: none
+state/W0/P1/emit.jsonl (unit): 9 scripts; differing now: none
+state/W0/P2/emit.jsonl (hello): 9 scripts; differing now: none
+state/W0/P2/emit.jsonl (unit): 9 scripts; differing now: none
+state/W0/P3/emit.jsonl (hello): 9 scripts; differing now: none
+state/W0/P3/emit.jsonl (unit): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (b-1e-7-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (b-1e-7-1-34599): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (b-1e-8-1-34599): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (b-1e-8-3-13829): 9 scripts; differing now: none
+ALL EQUAL
+# ----
+# end 2026-10-28T14:14:19Z
+# exit 0

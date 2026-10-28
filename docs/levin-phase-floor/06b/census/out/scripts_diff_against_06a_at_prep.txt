@@ -1,0 +1,762 @@
+Only in scripts: check_predictions.py
+diff -ru state/scripts_06a_reference/harness.py scripts/harness.py
+--- state/scripts_06a_reference/harness.py	2026-10-28 13:48:05
++++ scripts/harness.py	2026-10-28 14:08:28
+@@ -1,4 +1,9 @@
+ """
++levin-phase-floor prompt 06b section 5 (copied from prompt 06a's scripts/harness.py, itself 06's
++unchanged; a record, not edited). Changed here, marked "prompt 06b", only in the ShardedPool's
++``job_name``, which Part B's dispatch brief names ``levin-phase-floor-06b``. datastorekit 0.5.0's
++ShardedPool stores it (``self._job_name``) and reads it nowhere (out/cmd/11). 06's text follows.
++
+ levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/harness.py,
+ docs/levin-phase-floor/05a/wider/scripts/harness.py, itself 05's unchanged; a record, not edited).
+ Changed here, each change marked "prompt 06": this paragraph; and, for the
+@@ -189,7 +194,7 @@
+             sharded_tables=sharded_tables,
+             timeout=timeout,
+             profile_agent=None,
+-            job_name="levin-phase-floor-05-wider",  # prompt 05
++            job_name="levin-phase-floor-06b",  # prompt 06b (the dispatch brief); stored, never read
+             read_only=True,
+             read_table_config=read_table_config,
+             factories=factories,
+diff -ru state/scripts_06a_reference/launch.py scripts/launch.py
+--- state/scripts_06a_reference/launch.py	2026-10-28 13:48:05
++++ scripts/launch.py	2026-10-28 14:08:04
+@@ -1,4 +1,13 @@
+ """
++levin-phase-floor prompt 06b section 5 (copied from prompt 06a's scripts/launch.py,
++docs/levin-phase-floor/06a/scripts/launch.py, a record that is not edited; its copy is kept in
++state/scripts_06a_reference/). Changed here, each change marked "prompt 06b": the prompt (``06b``)
++under which the run is registered (slug ``census``, as 06a's), the purpose and scope (the tree b,
++its SHA and the code commit's, the copy's fingerprint, the row count, the two rtols, W3's evidence
++and W2's capture), and the names imported from prov.py. The manifest's git_head is the main
++checkout's (``28ebaf0``), where no tree code runs; the tree is the worktree b, which the purpose
++names and every checkpoint payload records. 06a's text follows, unchanged; read its h as b.
++
+ levin-phase-floor prompt 06a (copied from prompt 06's scripts/launch.py,
+ docs/levin-phase-floor/06/wider/scripts/launch.py, a record that is not edited). Changed here, each
+ change marked "prompt 06a": the prompt (``06a``) and slug (``census``) under which the run is
+@@ -55,7 +64,7 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ 
+-from prov import A3V2_DIGEST, H_SHA, H_TREE, PYTHON, S06_SHA, WIDER, sha256  # noqa: E402  prompt 06a
++from prov import A3V2_DIGEST, B_SHA, B_TREE, CODE_SHA, P_SHA, PYTHON, RUN06A, WIDER, sha256  # noqa: E402  prompt 06b
+ 
+ import runregistrykit  # noqa: E402
+ 
+@@ -63,24 +72,27 @@
+ 
+ ROWS = WIDER / "state" / "rows.json"  # prompt 06a
+ N_ROWS = len(__import__("json").loads(ROWS.read_text())["rows"])
+-PURPOSE = (  # prompt 06a
+-    "levin-phase-floor prompt 06a on the Mac Studio (mps026298; Python 3.13.16): the depth census, "
+-    f"every A3 v2 QuadSourceIntegral row ({N_ROWS}) re-run in-process at the current code at rtol "
+-    "1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock. One tree, h, the git worktree at the dispatch SHA "
+-    f"{H_SHA[:7]} ({H_TREE}; its code outside docs/ and prompts/ is 06's s tree {S06_SHA[:7]}'s byte "
+-    "for byte). It reads, read-only, 06's certified scratch copy of A3 v2 "
+-    f"(var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint {A3V2_DIGEST[:8]}) on a stand-in "
+-    "ShardedPool; each producer re-run once per worker (each GkWKBIntegration of a k once, each "
+-    "TkWKBIntegration once), each GkSource/GkSourcePolicyData once per (k, z_response), each "
+-    "QuadSource once per (q, r). One worker per k per rtol, at most six at once; every 1e-7 unit "
+-    "before any 1e-8 unit; 300 s budget per unit; the stationary-point scan in every 1e-7 unit, "
+-    "after its timed section. The manifest's git_head is the main checkout's (28ebaf0), where no "
+-    "tree code runs; pilot projection about 0.85 h"
++PURPOSE = (  # prompt 06b
++    "levin-phase-floor prompt 06b section 5 on the Mac Studio (mps026298; Python 3.13.16): 06a's "
++    f"depth census re-run at the code commit {CODE_SHA} (the round-off-limited exit checks its "
++    f"premise), every A3 v2 QuadSourceIntegral row ({N_ROWS}) re-run in-process at rtol 1e-7 and "
++    "1e-8 (atol 1e-32), Ray-free, no lock, against 06a's run "
++    f"{RUN06A.name} as the before. One tree, b, the git worktree at Part B's dispatch SHA "
++    f"{B_SHA[:7]} ({B_TREE}; its code outside docs/ and prompts/ is {CODE_SHA}'s, whose parent "
++    f"{P_SHA[:7]} Gate W0 showed reproduces 06a). It reads, read-only, 06's certified scratch copy "
++    f"of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint {A3V2_DIGEST[:8]}) on a "
++    "stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at "
++    "once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; in every 1e-7 unit, after "
++    "its timed section, 06a's stationary-point scan, W3's recomputed floors of every phase-limited "
++    "region and its halves, and the inputs of 06a's 975 phase-limited calls with no sign change "
++    "(W2). The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; "
++    "06a's run took 45.5 min"
+ )
+-SCOPE = (  # prompt 06a
++SCOPE = (  # prompt 06b
+     f"all {N_ROWS} QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's "
+-    "certified scratch copy), listed in var/levin-phase-floor-06a/state/rows.json; tree h (worktree "
+-    f"{H_SHA[:7]}); rtol 1e-7 and 1e-8; no store write, no Ray, no lock"
++    "certified scratch copy), listed in var/levin-phase-floor-06b/census/state/rows.json (06a's, "
++    f"sha256 aa523d28); tree b (worktree {B_SHA[:7]}, code {CODE_SHA}); rtol 1e-7 and 1e-8; no store "
++    "write, no Ray, no lock"
+ )
+ HEARTBEAT_MEANS = (
+     "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at "
+@@ -95,7 +107,7 @@
+     child_argv = [str(PYTHON), "-B", str(SCRIPT), "--run-dir", "<run dir>"]
+     run = runregistrykit.begin(
+         campaign="levin-phase-floor",
+-        prompt="06a",  # prompt 06a
++        prompt="06b",  # prompt 06b
+         slug="census",
+         purpose=PURPOSE,
+         argv=child_argv,
+Only in scripts: make_capture.py
+diff -ru state/scripts_06a_reference/prov.py scripts/prov.py
+--- state/scripts_06a_reference/prov.py	2026-10-28 13:48:05
++++ scripts/prov.py	2026-10-28 13:55:50
+@@ -1,4 +1,22 @@
+-"""levin-phase-floor prompt 06a (the depth census of every A3 v2 QuadSourceIntegral row at the
++"""levin-phase-floor prompt 06b section 5 (06a's census re-run at the code commit, on the Mac Studio):
++provenance shared by every script. Copied from prompt 06a's ``scripts/prov.py``
++(docs/levin-phase-floor/06a/scripts/prov.py, a record, not edited; its copy is kept unchanged in
++state/scripts_06a_reference/); changed here only in its trees and its paths (prompt 06b section 5:
++"Change only: the tree and its paths; ..."), each change marked "prompt 06b".
++
++Two trees take part, both detached git worktrees (the dispatch note, B.5 addendum):
++- ``p``, the code commit 4ddc3c2's parent ``da5c24d``
++  (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d``): Gate W0's reproduction of 06a;
++- ``b``, Part B's dispatch SHA ``92bc62f``, whose code is the code commit 4ddc3c2's
++  (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f``): the census.
++06a's own tree was ``e05c34f`` (06a's h); it is read only through git history.
++The main checkout (``MAIN``, at ``28ebaf0``) holds the venv, the stores, ``var/`` and the registry,
++and no tree code runs from it. Nothing is written in either worktree. Both trees read, read-only,
++06's certified scratch copy of A3 v2 (route (B), as in 06 and 06a).
++
++(06a's text follows, unchanged.)
++
++levin-phase-floor prompt 06a (the depth census of every A3 v2 QuadSourceIntegral row at the
+ current code, on the Mac Studio): provenance shared by every script. Copied from prompt 06's
+ ``scripts/prov.py`` (docs/levin-phase-floor/06/wider/scripts/prov.py, a record, not edited; its copy
+ is kept unchanged in state/scripts_06_reference/); changed here only in its tree and its paths
+@@ -52,16 +70,27 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # prompt 06a: var/levin-phase-floor-06a (the name WIDER kept for the scripts)
++WIDER = HERE.parent  # prompt 06b: var/levin-phase-floor-06b/census (the name WIDER kept)
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+-assert HERE.parents[2] == MAIN, HERE  # prompt 06a: one directory shallower than 06's
++assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's
+ 
+ # prompt 06a: one tree, h, the worktree at the dispatch SHA (code = 06's s tree's, f5cee4c)
+ H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f")
+ H_SHA = "e05c34f2fcc6ef20fc3323cb3a6f81d130c5a01c"
+ S06_SHA = "f5cee4c7a76e755119d923341f204f139b29be7e"  # 06's s tree, whose code h's equals
+-TREES = {"h": (H_TREE, H_SHA)}
++# prompt 06b: the two trees of 06b section 5 (06a's h is kept above, by name, for the record)
++P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d")
++P_SHA = "da5c24deb430172f68d983f56577fa48def19903"  # the code commit 4ddc3c2's parent
++B_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f")
++B_SHA = "92bc62f09711d10ef0035663d4bbe5629e145e17"  # Part B's dispatch SHA; code = 4ddc3c2's
++CODE_SHA = "4ddc3c2"  # the code commit (short), for the record
++TREES = {"p": (P_TREE, P_SHA), "b": (B_TREE, B_SHA)}
+ 
++# prompt 06b: 06a's run (the "before") and records, read only
++RUN06A = MAIN / "var" / "runs" / "levin-phase-floor-06a-census-20261027T023143"
++REC06A = MAIN / "var" / "levin-phase-floor-06a"
++ROWS06A_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
++
+ # prompt 06a: 06's run (C0 (c) and C4 compare against its s units), 06's records (read only)
+ RUN06 = MAIN / "var" / "runs" / "levin-phase-floor-06-wider-20261026T223634"
+ REC06 = MAIN / "var" / "levin-phase-floor-06" / "wider"
+@@ -77,7 +106,7 @@
+ # route (B), as in 06 (the user's decision, 2026-10-26): h opens, read-only, 06's certified scratch
+ # copy of A3 v2. prompt 06a: the copy is 06's, under var/levin-phase-floor-06/wider/state/.
+ COPY_DIR = REC06 / "state" / "a3v2_copy"
+-STORE_DIR_BY_TREE = {"h": COPY_DIR}
++STORE_DIR_BY_TREE = {"p": COPY_DIR, "b": COPY_DIR}  # prompt 06b: both trees read the copy
+ 
+ 
+ def sha256(path):
+diff -ru state/scripts_06a_reference/run_census.py scripts/run_census.py
+--- state/scripts_06a_reference/run_census.py	2026-10-28 13:48:05
++++ scripts/run_census.py	2026-10-28 14:00:58
+@@ -1,4 +1,17 @@
+ """
++levin-phase-floor prompt 06b section 5: the registered run (slug ``census``), 06a's census re-run
++at the code commit. Copied from prompt 06a's scripts/run_census.py
++(docs/levin-phase-floor/06a/scripts/run_census.py, a record that is not edited; its copy is kept in
++state/scripts_06a_reference/). Changed here, each change marked "prompt 06b":
++- **the tree** is ``b`` (prov.TREES: the worktree at Part B's dispatch SHA, whose code is the code
++  commit's) by default, ``--tree p`` for a run at the parent; the units are
++  ``<tree>-<rtol>-<shard>-<serial>``;
++- **every 1e-7 unit** also carries ``"w3": true`` (W3's evidence, worker.py), and, if it is listed in
++  state/w2_capture.json (06a's phase-limited 1e-7 calls with no sign change of theta' in 06a's scan;
++  make_capture.py), ``"capture"``: the [call index, notify_label] pairs whose inputs the worker
++  pickles for W2's reference. The file's SHA-256 is in the header and in every spec.
++06a's text follows, unchanged; read its ``h`` as the tree.
++
+ levin-phase-floor prompt 06a: the registered run (slug ``census``). The driver. Copied from
+ prompt 06's scripts/run_wider.py (docs/levin-phase-floor/06/wider/scripts/run_wider.py, a record
+ that is not edited; prompt 06a section 2 item 4: "run_wider.py becomes run_census.py"), and
+@@ -70,8 +83,11 @@
+ RTOLS = ("1e-7", "1e-8")
+ 
+ 
+-def plan(rows_doc, names=None, rtols=RTOLS, k_keys=None, skip=()):
+-    """Worker specs, per rtol, in launch order: {rtol: [(worker_name, [unit, ...]), ...]}."""
++def plan(rows_doc, names=None, rtols=RTOLS, k_keys=None, skip=(), tree="b", capture=None):
++    """Worker specs, per rtol, in launch order: {rtol: [(worker_name, [unit, ...]), ...]}.
++    prompt 06b: ``tree`` names the tree; ``capture`` maps "<rtol>-<shard>-<serial>" to the
++    [index, notify_label] pairs of W2's inputs."""
++    capture = capture or {}
+     rows = rows_doc["rows"]
+     if names is not None:
+         names = set(names)
+@@ -82,13 +98,13 @@
+     for rtol in rtols:
+         by_k = {}
+         for r in rows:
+-            uid = f"h-{rtol}-{r['shard']}-{r['serial']}"
++            uid = f"{tree}-{rtol}-{r['shard']}-{r['serial']}"  # prompt 06b
+             if uid in skip:
+                 continue
+             by_k.setdefault(r["k_key"], []).append(
+                 {
+                     "uid": uid,
+-                    "tree": "h",
++                    "tree": tree,  # prompt 06b
+                     "rtol": rtol,
+                     "row": r["name"],
+                     "names05": r["names05"],
+@@ -97,6 +113,8 @@
+                     "k_key": r["k_key"],
+                     "budget": BUDGET_S,
+                     "scan": rtol == "1e-7",
++                    "w3": rtol == "1e-7",  # prompt 06b
++                    "capture": capture.get(f"{rtol}-{r['shard']}-{r['serial']}"),  # prompt 06b
+                 }
+             )
+         workers = sorted(by_k.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+@@ -106,9 +124,9 @@
+     return out
+ 
+ 
+-def worker_env():
++def worker_env(tree="b"):  # prompt 06b
+     env = dict(os.environ)
+-    env["PYTHONPATH"] = str(TREES["h"][0])
++    env["PYTHONPATH"] = str(TREES[tree][0])
+     env["PYTHONDONTWRITEBYTECODE"] = "1"
+     env["OMP_NUM_THREADS"] = "1"
+     return env
+@@ -124,6 +142,7 @@
+     parser.add_argument("--rtols", default="1e-7,1e-8")
+     parser.add_argument("--max-workers", type=int, default=6)
+     parser.add_argument("--skip-recorded-in", default=None)
++    parser.add_argument("--tree", default="b", choices=sorted(TREES))  # prompt 06b
+     args = parser.parse_args()
+     if args.max_workers > 6:
+         raise SystemExit("at most six workers (the Mac Studio's --cpus 6 rule)")
+@@ -139,12 +158,16 @@
+     rtols = tuple(args.rtols.split(","))
+     names = None if args.rows is None else args.rows.split(",")
+     k_keys = None if args.k_keys is None else args.k_keys.split(",")
+-    plans = plan(rows_doc, names, rtols, k_keys, skip)
++    # prompt 06b: W2's inputs to capture (state/w2_capture.json, make_capture.py)
++    capture_path = WIDER / "state" / "w2_capture.json"
++    capture_doc = json.loads(capture_path.read_text())
++    capture_sha = sha256(capture_path)
++    plans = plan(rows_doc, names, rtols, k_keys, skip, tree=args.tree, capture=capture_doc["capture"])
+ 
+     run = None
+     children = {}
+     if args.run_dir is not None:
+-        if args.rows or args.k_keys or args.rtols != "1e-7,1e-8":
++        if args.rows or args.k_keys or args.rtols != "1e-7,1e-8" or args.tree != "b":  # prompt 06b
+             raise SystemExit("--rows/--k-keys/--rtols are for the smoke test only")
+         import runregistrykit
+ 
+@@ -187,6 +210,8 @@
+         "script_sha256": script_hashes["run_census.py"],
+         "scripts_sha256": script_hashes,
+         "rows_sha256": rows_sha,
++        "w2_capture_sha256": capture_sha,  # prompt 06b
++        "tree": args.tree,  # prompt 06b
+         "trees": {k: [str(v[0]), v[1]] for k, v in TREES.items()},
+         "host": socket.gethostname(),
+         "python": sys.version,
+@@ -229,13 +254,14 @@
+ 
+         def start(name, units):
+             spec = {
+-                "tree": "h",
++                "tree": args.tree,  # prompt 06b
+                 "name": name,
+                 "units": units,
+                 "out_dir": str(out_dir),
+                 "emit_fd": None,
+                 "emit_file": None,
+                 "rows_sha256": rows_sha,
++                "w2_capture_sha256": capture_sha,  # prompt 06b
+             }
+             r_fd, w_fd = os.pipe()
+             spec["emit_fd"] = w_fd
+@@ -246,7 +272,7 @@
+             child = subprocess.Popen(
+                 [str(PYTHON), "-B", str(HERE / "worker.py"), str(spec_path)],
+                 cwd=str(WIDER),
+-                env=worker_env(),
++                env=worker_env(args.tree),  # prompt 06b
+                 stdin=subprocess.DEVNULL,
+                 stdout=log,
+                 stderr=subprocess.STDOUT,
+@@ -285,13 +311,13 @@
+             kind = msg.pop("kind")
+             if kind == "unit":
+                 data = msg["data"]
+-                data["worker_tree"] = "h"
++                data["worker_tree"] = args.tree  # prompt 06b
+                 uid = data["unit"]
+                 if uid not in expected or uid in got:
+                     problems.append(f"unexpected unit {uid} from the {name} worker")
+                 got.append(uid)
+                 seen.append(uid)
+-                if data["tree_head"] != TREES["h"][1] or data["tree_status_short"].strip():
++                if data["tree_head"] != TREES[args.tree][1] or data["tree_status_short"].strip():  # prompt 06b
+                     problems.append(f"{uid}: tree {data['tree_head']} status {data['tree_status_short']!r}")
+                 if data["status"] == "error":
+                     problems.append(f"{uid}: error")
+Only in scripts: w0.py
+Only in scripts: w0_clause1.py
+Only in scripts: w2_reference.py
+diff -ru state/scripts_06a_reference/worker.py scripts/worker.py
+--- state/scripts_06a_reference/worker.py	2026-10-28 13:48:05
++++ scripts/worker.py	2026-10-28 14:01:14
+@@ -1,4 +1,37 @@
+ """
++levin-phase-floor prompt 06b section 5 (06a's census re-run at the code commit; copied from prompt
++06a's scripts/worker.py, docs/levin-phase-floor/06a/scripts/worker.py, a record that is not edited;
++its copy is kept unchanged in state/scripts_06a_reference/). Changed here, each change marked
++"prompt 06b" (prompt 06b section 5: "Change only: the tree and its paths; what section 4's and W2's
++comparisons need recorded per call; the reference for W2"):
++- **the trees** ``p`` (the code commit's parent, Gate W0's reproduction of 06a) and ``b`` (the
++  census), prov.TREES; the tree evidence also names ``AdaptiveLevin.levin_quadrature`` and whether
++  it has the premise check;
++- **every unit records where its modules were loaded from** (``modules``): every module in
++  ``sys.modules`` at the unit's end classified by root (its own tree, the other tree, the main
++  checkout outside the venv, the venv, the scripts, the standard library), with any module from the
++  other tree or the main checkout listed; the ``bye`` message lists every module loaded from the
++  tree (Gate W0's first clause);
++- **per call** (group calls in ``calls`` as 06a, and now the other Levin calls, the analytic
++  blocks, in ``other_calls``): the number of phase-limited regions, and the number of times the
++  code's premise check ``_roundoff_exit_premise_holds`` was asked and failed in the call (a
++  pass-through counter at the module attribute, installed with the other wrappers for the timed
++  section only; absent at ``p``). The other calls' region arrays go to the pickle
++  (``other_regions``);
++- **W3's evidence** (a unit whose spec has ``"w3": true``, every 1e-7 unit): after the timed section,
++  with the dispatcher and every wrapper uninstalled, for every region a call accepted as
++  phase-limited, the region's own floor and its two halves' floors are recomputed by the module's
++  own ``_adaptive_levin_subregion`` on the region and on its halves (the halves' own samples), with
++  the call's arguments; the summary goes to the checkpoint (``w3``), the per-region numbers (hex)
++  to the pickle (``w3``);
++- **W2's inputs** (a unit whose spec has ``"capture"``, a list of [call index, notify_label] from
++  06a's records): after the timed section, each listed call's span, integrand ``f``, phase dict
++  ``theta`` and keyword arguments as the call saw them, with its value and abserr, are pickled
++  (harness._GroupPickler) to ``inputs_<worker>.pkl``, one record per call (offset, length and
++  SHA-256 in the checkpoint's ``w2_inputs``), for w2_reference.py to reload.
++
++(06a's text follows, unchanged.)
++
+ levin-phase-floor prompt 06a (the depth census; copied from prompt 06's scripts/worker.py,
+ docs/levin-phase-floor/06/wider/scripts/worker.py, a record that is not edited). Changed here, each
+ change marked "prompt 06a" or confined to ``main()``, which is rewritten from 06's:
+@@ -307,6 +340,7 @@
+     tkw = importlib.import_module("ComputeTargets.TkWKBIntegration")  # prompt 06
+     gks = importlib.import_module("ComputeTargets.GkSource")  # prompt 06
+     wpf = importlib.import_module("Quadrature.integrators.WKB_phase_function")  # prompt 06
++    lq = importlib.import_module("AdaptiveLevin.levin_quadrature")  # prompt 06b
+     from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+ 
+     import dispatch
+@@ -326,6 +360,7 @@
+         "ComputeTargets.TkWKBIntegration": tkw.__file__,  # prompt 06
+         "ComputeTargets.GkSource": gks.__file__,  # prompt 06
+         "Quadrature.integrators.WKB_phase_function": wpf.__file__,  # prompt 06
++        "AdaptiveLevin.levin_quadrature": lq.__file__,  # prompt 06b
+         "WKB_phase_function (the producers' remote's function)": (
+             gkw.WKB_phase_function._function.__code__.co_filename
+         ),  # prompt 06
+@@ -366,6 +401,13 @@
+         },
+         "GkWKBValue_has_theta_residual": "theta_residual"
+         in inspect.signature(gkw.GkWKBValue.__init__).parameters,
++        # prompt 06b: the premise check (absent at p, present at b) and its ratio
++        "levin_has_roundoff_exit_premise_holds": hasattr(lq, "_roundoff_exit_premise_holds"),
++        "levin_roundoff_exit_min_floor_ratio": getattr(
++            lq, "_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO", None
++        ),
++        "levin_adaptive_levin_has_bypass": "_test_only_bypass_roundoff_premise"
++        in inspect.signature(lq._adaptive_levin).parameters,
+         "PYTHONPATH": os.environ.get("PYTHONPATH"),
+         "PYTHONDONTWRITEBYTECODE": os.environ.get("PYTHONDONTWRITEBYTECODE"),
+         "dont_write_bytecode": sys.dont_write_bytecode,
+@@ -377,6 +419,19 @@
+     }
+ 
+ 
++def _summarise_call_06b(call):
++    """prompt 06b: 06a's per-call summary, plus the number of phase-limited regions and the code's
++    premise checks in the call (None where the tree has no premise check)."""
++    out = summarise_call(call)
++    out["n_phase_limited_regions"] = int(
++        sum(1 for r in call["result"]["regions"] if r.phase_limited)
++    )
++    log_ = call["premise_log"]  # None where the tree has no premise check (p)
++    out["premise_checks"] = None if log_ is None else len(log_)
++    out["premise_failed"] = None if log_ is None else sum(1 for x in log_ if not x)
++    return out
++
++
+ def _region_arrays_06a(call):
+     """prompt 06a: 06's region arrays, plus each region's relerr, phase_err and phase_limited."""
+     regs = call["result"]["regions"]
+@@ -417,6 +472,113 @@
+     }
+ 
+ 
++def _module_roots(tree_name):
++    """prompt 06b: where every module in sys.modules was loaded from, by root. Returns
++    (counts by root, the modules from a foreign root, the sorted (name, file) of the tree's own)."""
++    own_tree = str(TREES[tree_name][0]) + os.sep
++    others = {
++        n: str(t) + os.sep for n, (t, _sha) in TREES.items() if n != tree_name
++    }
++    main_dir = str(Path("/Users/ds283/Documents/Code/SecondaryGWKit")) + os.sep
++    venv_dir = main_dir + "venv" + os.sep
++    scripts_dir = str(HERE) + os.sep
++    std_dirs = tuple(
++        sorted({str(Path(p).resolve()) + os.sep for p in (sys.base_prefix, sys.prefix)})
++    )
++    counts = {}
++    foreign = []
++    own = []
++    for name, mod in sorted(list(sys.modules.items())):
++        f = getattr(mod, "__file__", None)
++        if not f:
++            root = "no file"
++        else:
++            rp = str(Path(f).resolve())
++            if rp.startswith(own_tree):
++                root = "own tree"
++                own.append((name, rp))
++            elif any(rp.startswith(o) for o in others.values()):
++                root = "OTHER TREE"
++                foreign.append((name, rp))
++            elif rp.startswith(venv_dir):
++                root = "venv"
++            elif rp.startswith(scripts_dir):
++                root = "scripts"
++            elif rp.startswith(main_dir):
++                root = "MAIN CHECKOUT"
++                foreign.append((name, rp))
++            elif rp.startswith(std_dirs):
++                root = "python"
++            else:
++                root = "other"
++                foreign.append((name, rp))
++        counts[root] = counts.get(root, 0) + 1
++    return counts, foreign, own
++
++
++def _w3_region_floors(LQ, call):
++    """prompt 06b, W3: for every region the call accepted as phase-limited, the region's own floor
++    and its two halves' floors, each recomputed by the module's own _adaptive_levin_subregion on
++    its own samples, with the call's arguments (as _adaptive_levin calls it), and the premise
++    (halves' sum >= 1/2 of the region's own) evaluated here, not read from the code's flag. The
++    break point is _levin_interval.break_point's, (end + start) / 2.0."""
++    kw = call["kw"]
++    rtol = kw.get("rtol", LQ.DEFAULT_LEVIN_RELTOL)
++    order = kw.get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
++    bps = kw.get("build_p_sample", False)
++    dpath = kw.get("diagnostics_path")
++    dpath = Path(dpath) if dpath is not None else LQ.DEFAULT_LEVIN_DIAGNOSTICS_PATH
++    basis = LQ._Basis_SinCos(call["theta"])
++    vcache = {}
++
++    def solve(span):
++        d = LQ._adaptive_levin_subregion(
++            span,
++            call["f"],
++            basis,
++            id_label=LQ._LazyUUID(),
++            chebyshev_order=order,
++            rtol=rtol,
++            notify_label=call["notify_label"],
++            build_p_sample=bps,
++            diagnostics_path=dpath,
++            vectorize_cache=vcache,
++        )
++        return d.get("phase_err", 0.0) or 0.0, bool(d.get("is_direct", False))
++
++    out = []
++    for r in call["result"]["regions"]:
++        if not r.phase_limited:
++            continue
++        a, b = r.start, r.end
++        c = (b + a) / 2.0
++        own, own_direct = solve((a, b))
++        pl, l_direct = solve((a, c))
++        pr, r_direct = solve((c, b))
++        stored = r.phase_err if r.phase_err is not None else float("nan")
++        s_halves = pl + pr
++        out.append(
++            {
++                "start": float(a).hex(),
++                "end": float(b).hex(),
++                "depth": int(r.depth),
++                "type": r.type,
++                "phase_err_stored": float(stored).hex(),
++                "phase_err_own": float(own).hex(),
++                "own_equals_stored": float(own).hex() == float(stored).hex(),
++                "own_is_direct": own_direct,
++                "phase_err_L": float(pl).hex(),
++                "phase_err_R": float(pr).hex(),
++                "L_is_direct": l_direct,
++                "R_is_direct": r_direct,
++                "halves_sum": float(s_halves).hex(),
++                "ratio": (s_halves / own) if own != 0 else None,
++                "premise_holds": bool(s_halves >= 0.5 * own),
++            }
++        )
++    return out
++
++
+ def main():
+     spec = json.loads(Path(sys.argv[1]).read_text())
+     tree_name = spec["tree"]
+@@ -458,7 +620,12 @@
+ 
+     import dispatch as DP
+     import spscan as SP  # prompt 06a: the stationary-point scan
++    import importlib as _il  # prompt 06b
+ 
++    LQ = _il.import_module("AdaptiveLevin.levin_quadrature")  # prompt 06b
++    inputs_path = out_dir / f"inputs_{worker_name}.pkl"  # prompt 06b: W2's inputs
++    inputs_handle = None
++
+     # prompt 06a: one pickle per worker, a stream of one record per unit, appended and flushed as
+     # each unit ends (its offset, length and sha256 go in the unit's checkpoint record)
+     pkl_path = out_dir / f"regions_{worker_name}.pkl"
+@@ -466,14 +633,37 @@
+ 
+     orig_levin = QSI_MOD.adaptive_levin_sincos
+     orig_eval = QSI_MOD.evaluate_QuadSource_integral
+-    holder = {"calls": None, "disp": None, "deadline": None}
++    holder = {"calls": None, "disp": None, "deadline": None, "premise_log": None}
++    # prompt 06b: the code's premise check, counted per call by a pass-through (b only)
++    orig_premise = getattr(LQ, "_roundoff_exit_premise_holds", None)
+ 
++    def w_premise(phase_err, phase_err_L, phase_err_R):
++        r_ = orig_premise(phase_err, phase_err_L, phase_err_R)
++        log_ = holder["premise_log"]
++        if log_ is not None:
++            log_.append(bool(r_))
++        return r_
++
++    def install_premise():
++        if orig_premise is not None:
++            LQ._roundoff_exit_premise_holds = w_premise
++
++    def restore_premise():
++        if orig_premise is not None:
++            LQ._roundoff_exit_premise_holds = orig_premise
++
+     def w_levin(*a, **kw):
+-        result = orig_levin(*a, **kw)
++        plog = []  # prompt 06b
++        holder["premise_log"] = plog
++        try:
++            result = orig_levin(*a, **kw)
++        finally:
++            holder["premise_log"] = None
+         calls = holder["calls"]
+         if calls is not None:
+             x_span = a[0] if len(a) > 0 else kw.get("x_span")
+             theta = a[2] if len(a) > 2 else kw.get("theta")  # prompt 06a: kept for the scan
++            f_ = a[1] if len(a) > 1 else kw.get("f")  # prompt 06b: kept for W3 and W2's inputs
+             calls.append(
+                 {
+                     "index": len(calls),
+@@ -484,6 +674,10 @@
+                     "rtol": kw.get("rtol"),
+                     "result": result,
+                     "theta_deriv": None if theta is None else theta.get("theta_deriv"),
++                    "theta": theta,  # prompt 06b
++                    "f": f_,  # prompt 06b
++                    "kw": {k_: v_ for k_, v_ in kw.items() if k_ not in ("x_span", "f", "theta")},
++                    "premise_log": plog if orig_premise is not None else None,  # prompt 06b
+                 }
+             )
+         return result
+@@ -547,6 +741,7 @@
+                         holder.update(calls=calls)
+                         QSI_MOD.adaptive_levin_sincos = w_levin
+                         QSI_MOD.evaluate_QuadSource_integral = w_eval
++                        install_premise()  # prompt 06b
+                         t0 = time.perf_counter()
+                         budget = u.get("budget")
+                         holder["deadline"] = None if budget is None else t0 + budget
+@@ -561,6 +756,7 @@
+                             holder.update(calls=None, deadline=None)
+                             QSI_MOD.adaptive_levin_sincos = orig_levin
+                             QSI_MOD.evaluate_QuadSource_integral = orig_eval
++                            restore_premise()  # prompt 06b
+                     except Exception:
+                         status = "error"
+                         err = traceback.format_exc()
+@@ -569,9 +765,11 @@
+                     finally:
+                         QSI_MOD.adaptive_levin_sincos = orig_levin
+                         QSI_MOD.evaluate_QuadSource_integral = orig_eval
++                        restore_premise()  # prompt 06b
+                         sys.stdout = warn._stream
+                     assert QSI_MOD.adaptive_levin_sincos is orig_levin
+                     assert QSI_MOD.evaluate_QuadSource_integral is orig_eval
++                    assert orig_premise is None or LQ._roundoff_exit_premise_holds is orig_premise
+                     assert DP.PrimitivePhase.__dict__["theta_mod_2pi"] is DP.ORIG_THETA_MOD_2PI
+                     disp = holder["disp"]
+                     group_calls = [
+@@ -602,9 +800,14 @@
+                         "tree_status_short": status_now,
+                         "scripts_sha256": script_hashes,
+                         "rows_sha256": spec.get("rows_sha256"),
++                        "w2_capture_sha256": spec.get("w2_capture_sha256"),  # prompt 06b
+                         "worker": worker_name,
+                         "worker_pid": os.getpid(),
+-                        "calls": [summarise_call(c) for c in group_calls],
++                        "calls": [_summarise_call_06b(c) for c in group_calls],  # prompt 06b
++                        # prompt 06b: the other Levin calls (the analytic blocks), as the group calls
++                        "other_calls": [
++                            _summarise_call_06b(c) for c in calls if id(c) not in {id(g) for g in group_calls}
++                        ],
+                         "n_calls_total": len(calls),
+                         "cache_built": [
+                             {k_: v for k_, v in e.items() if k_ in ("kind", "k_serial", "z_response_serial", "mode_serial", "q_serial", "r_serial")}
+@@ -659,8 +862,94 @@
+                             }
+                             for c, s in zip(group_calls, scans)
+                         ]
++                    # prompt 06b, W3: the halves' floors of every phase-limited region, recomputed
++                    w3_detail = None
++                    data["w3"] = None
++                    if u.get("w3") and status != "error":
++                        t_w3 = time.perf_counter()
++                        w3_detail = []
++                        n_reg = n_viol = n_mis = n_err = 0
++                        min_ratio = None
++                        for c in calls:
++                            if not any(r.phase_limited for r in c["result"]["regions"]):
++                                continue
++                            try:
++                                regs = _w3_region_floors(LQ, c)
++                            except Exception:
++                                w3_detail.append({"index": c["index"], "error": traceback.format_exc()})
++                                n_err += 1
++                                continue
++                            w3_detail.append({"index": c["index"], "notify_label": c["notify_label"], "regions": regs})
++                            for g in regs:
++                                n_reg += 1
++                                n_viol += not g["premise_holds"]
++                                n_mis += not g["own_equals_stored"]
++                                if g["ratio"] is not None:
++                                    min_ratio = g["ratio"] if min_ratio is None else min(min_ratio, g["ratio"])
++                        data["w3"] = {
++                            "n_regions": n_reg,
++                            "n_premise_fails": n_viol,
++                            "n_own_floor_differs_from_stored": n_mis,
++                            "n_errors": n_err,
++                            "min_ratio": min_ratio,
++                            "seconds": time.perf_counter() - t_w3,
++                        }
++                    # prompt 06b, W2's inputs: each listed call's span, f, theta and arguments
++                    data["w2_inputs"] = None
++                    if u.get("capture") and status != "error":
++                        import hashlib as _hl2
++                        import io as _io2
++                        from harness import _GroupPickler as _GP2
++
++                        data["w2_inputs"] = []
++                        by_index = {c["index"]: c for c in calls}
++                        if inputs_handle is None:
++                            inputs_handle = open(inputs_path, "ab")
++                        for idx, label in u["capture"]:
++                            c = by_index.get(idx)
++                            if c is None or c["notify_label"] != label:
++                                data["w2_inputs"].append({"index": idx, "error": "call not found or its label differs",
++                                                          "label_found": None if c is None else c["notify_label"]})
++                                continue
++                            try:
++                                buf2 = _io2.BytesIO()
++                                _GP2(buf2, protocol=5).dump(
++                                    {
++                                        "unit": uid,
++                                        "tree": tree_name,
++                                        "index": idx,
++                                        "notify_label": c["notify_label"],
++                                        "x_span": c["x_span"],
++                                        "f": c["f"],
++                                        "theta": c["theta"],
++                                        "kw": c["kw"],
++                                        "value": float(c["result"]["value"]).hex(),
++                                        "abserr": float(c["result"]["abserr"]).hex(),
++                                        "num_regions": int(c["result"]["num_regions"]),
++                                    }
++                                )
++                                blob2 = buf2.getvalue()
++                                off2 = inputs_handle.tell()
++                                inputs_handle.write(blob2)
++                                inputs_handle.flush()
++                                os.fsync(inputs_handle.fileno())
++                                data["w2_inputs"].append({"index": idx, "pickle": inputs_path.name, "offset": off2,
++                                                          "length": len(blob2), "sha256": _hl2.sha256(blob2).hexdigest()})
++                            except Exception:
++                                data["w2_inputs"].append({"index": idx, "error": traceback.format_exc()})
++                    # prompt 06b: where this unit's modules were loaded from
++                    m_counts, m_foreign, m_own = _module_roots(tree_name)
++                    data["modules"] = {
++                        "counts_by_root": m_counts,
++                        "foreign": m_foreign,
++                        "n_own_tree": len(m_own),
++                        "files": ev["files"],
++                        "all_in_tree": ev["all_in_tree"],
++                    }
+                     for c in calls:
+                         c["theta_deriv"] = None
++                        c["theta"] = None  # prompt 06b
++                        c["f"] = None  # prompt 06b
+                     if status != "error":
+                         rec = {
+                             "unit": uid,
+@@ -676,6 +965,18 @@
+                             ],
+                             "scan": scans,
+                             "result_full": None if result is None else summarise_result(result),
++                            # prompt 06b: the other Levin calls' region arrays, and W3's numbers
++                            "other_regions": [
++                                {
++                                    "index": c["index"],
++                                    "notify_label": c["notify_label"],
++                                    "x_span": c["x_span"],
++                                    **_region_arrays_06a(c),
++                                }
++                                for c in calls
++                                if id(c) not in {id(g) for g in group_calls}
++                            ],
++                            "w3": w3_detail,
+                         }
+                         import io as _io
+ 
+@@ -716,7 +1017,11 @@
+         QSI_MOD.adaptive_levin_sincos = orig_levin
+         QSI_MOD.evaluate_QuadSource_integral = orig_eval
+         pkl_handle.close()
+-    emit("bye", {"ray_initialized": ray.is_initialized()})
++        if inputs_handle is not None:  # prompt 06b
++            inputs_handle.close()
++    _c, _f, _own = _module_roots(tree_name)  # prompt 06b: Gate W0's first clause
++    emit("bye", {"ray_initialized": ray.is_initialized(),
++                 "modules_by_root": _c, "modules_foreign": _f, "modules_own_tree": _own})
+     emit_handle.close()
+     if ray.is_initialized():
+         raise SystemExit("worker: Ray was initialised")

@@ -1,0 +1,4 @@
+ray-processes exit 0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+status exit 0

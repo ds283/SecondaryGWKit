@@ -1,0 +1,60 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-28T13:57:27Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+D=var/runs/levin-phase-floor-06b-r15-parent-20261028T135349; ./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]+\"/status.json\")); r8=json.load(open(\"var/runs/handover-12-r8-reference-20261025T210551/status.json\"))
+print({k:v for k,v in s.items() if k!=\"fingerprint\"})
+f=s[\"fingerprint\"]; print(\"digest\", f[\"digest\"], \"problems\", f[\"problems\"], \"taken\", f[\"taken\"])
+print(\"equals R8 digest:\", f[\"digest\"]==r8[\"fingerprint\"][\"digest\"]==\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\")
+print(\"classes equal R8:\", f[\"classes\"]==r8[\"fingerprint\"][\"classes\"])
+" $D; echo "== kill -0"; kill -0 96498 2>&1; echo "rc $?"; kill -0 96490 2>&1; echo "rc $?"; echo "== launch log tail"; tail -8 var/runs/levin-phase-floor-06b-r15.launch.log; echo "== Traceback counts"; grep -c Traceback var/runs/levin-phase-floor-06b-r15.launch.log $D/stdout.log $D/stderr.log; echo "== run dir"; ls -la $D; echo "== worktrees"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f; do git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer var/levin-phase-floor-06b/rehearsal/state/r15_launch_marker -not -path "*/.git*" | head; done; echo "== stores"; ls -la var/datastores | grep 06b; echo "== registry"; ./venv/bin/python -B -m runregistrykit list | head -3 | cut -c1-160; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short
+# output:
+{'exit_code': 0, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-10-28T13:56:59+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 96498, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 problems {} taken {'git_dirty': False, 'git_head': 'da5c24deb430172f68d983f56577fa48def19903', 'run_id': 'levin-phase-floor-06b-r15-parent-20261028T135349', 'when': '2026-10-28T13:56:57+00:00'}
+equals R8 digest: True
+classes equal R8: True
+== kill -0
+sh: line 7: kill: (96498) - No such process
+rc 1
+sh: line 7: kill: (96490) - No such process
+rc 1
+== launch log tail
+[36m(Datastore pid=96583)[0m |  Omega_cc = 0.6889[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=96583)[0m |  Omega_r = 9.129e-05[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=96583)[0m |  present-day energy density = 8.6e-24 g/m^3[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=96583)[0m |  matter-radiation equality at z = 3407[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=96583)[0m |  matter-Lambda equality at z = 0.3034[32m [repeated 7x across cluster][0m
+[36m(Datastore pid=96583)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"[32m [repeated 3x across cluster][0m
+[36m(Datastore pid=96583)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20[32m [repeated 3x across cluster][0m
+** driver exit status 0
+== Traceback counts
+var/runs/levin-phase-floor-06b-r15.launch.log:0
+var/runs/levin-phase-floor-06b-r15-parent-20261028T135349/stdout.log:0
+var/runs/levin-phase-floor-06b-r15-parent-20261028T135349/stderr.log:0
+== run dir
+total 28
+drwxr-xr-x  6 ds283 staff   192 Oct 28 13:56 .
+drwxr-xr-x 46 ds283 staff  1472 Oct 28 13:53 ..
+-rw-r--r--  1 ds283 staff  4613 Oct 28 13:53 manifest.json
+-rw-r--r--  1 ds283 staff 10324 Oct 28 13:56 status.json
+-rw-r--r--  1 ds283 staff     0 Oct 28 13:53 stderr.log
+-rw-r--r--  1 ds283 staff  8005 Oct 28 13:56 stdout.log
+== worktrees
+da5c24deb430172f68d983f56577fa48def19903
+92bc62f09711d10ef0035663d4bbe5629e145e17
+== stores
+-rw-r--r--  1 ds283 staff  24997888 Oct 28 13:56 levin-phase-floor-06b-r15-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25169920 Oct 28 13:56 levin-phase-floor-06b-r15-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Oct 28 13:54 levin-phase-floor-06b-r15-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24526848 Oct 28 13:56 levin-phase-floor-06b-r15-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Oct 28 13:54 levin-phase-floor-06b-r15.sqlite
+== registry
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06b-r15-parent-20261028T135349      done              -       4m  levin-phase-floor prompt 06b, R15 on the Mac Studio (mps026298; tree da5c
+   levin-phase-floor-06a-census-20261027T023143          done      18560/18560   1d 11h  levin-phase-floor prompt 06a on the Mac Studio (mps026298; Python 3.13.
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+# exit: 0
+# end: 2026-10-28T13:57:27Z

@@ -1,0 +1,88 @@
+{
+ "tree": "b",
+ "name": "S2",
+ "units": [
+  {
+   "uid": "b-1e-7-1-1747",
+   "tree": "b",
+   "rtol": "1e-7",
+   "row": "1-1747",
+   "names05": null,
+   "shard": 1,
+   "serial": 1747,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     2,
+     "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=914.24, z in (1.6711e+10, 914.24), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=914.24, z in (1.6711e+10, 914.24), regime Gqr, group G-q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "b-1e-7-1-1750",
+   "tree": "b",
+   "rtol": "1e-7",
+   "row": "1-1750",
+   "names05": null,
+   "shard": 1,
+   "serial": 1750,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     2,
+     "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=526.01, z in (1.6711e+10, 526.01), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=526.01, z in (1.6711e+10, 526.01), regime Gqr, group G-q+r"
+    ],
+    [
+     4,
+     "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=526.01, z in (1.6711e+10, 526.01), regime Gqr, group G-q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "b-1e-7-1-1853",
+   "tree": "b",
+   "rtol": "1e-7",
+   "row": "1-1853",
+   "names05": null,
+   "shard": 1,
+   "serial": 1853,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     2,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=229.56, z in (5.2861e+10, 229.56), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=229.56, z in (5.2861e+10, 229.56), regime Gqr, group G-q+r"
+    ],
+    [
+     4,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=229.56, z in (5.2861e+10, 229.56), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/dev/smoke2",
+ "emit_fd": null,
+ "emit_file": "state/dev/smoke2/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": "217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2"
+}

@@ -1,0 +1,43 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-28T13:52:38Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+for t in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t rev-parse --abbrev-ref HEAD; git --no-optional-locks -C $t status --short --ignored | head -20; done; git --no-optional-locks worktree list; echo "== diff 4ddc3c2 92bc62f outside docs/prompts"; git --no-optional-locks diff --stat 4ddc3c2 92bc62f -- . ":!docs" ":!prompts"; echo "== parent of 4ddc3c2"; git --no-optional-locks rev-parse 4ddc3c2^
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d
+da5c24deb430172f68d983f56577fa48def19903
+HEAD
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f
+92bc62f09711d10ef0035663d4bbe5629e145e17
+HEAD
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f 92bc62f (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d da5c24d (detached HEAD)
+== diff 4ddc3c2 92bc62f outside docs/prompts
+== parent of 4ddc3c2
+da5c24deb430172f68d983f56577fa48def19903
+# exit: 0
+# end: 2026-10-28T13:52:39Z

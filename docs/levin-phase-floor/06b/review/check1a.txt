@@ -1,0 +1,33 @@
+## check1 trees
+== . 28ebaf0743e0555fb2c4512ce714884005a60eff
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+== ../SecondaryGWKit-lpf06b-da5c24d da5c24deb430172f68d983f56577fa48def19903
+== ../SecondaryGWKit-lpf06b-92bc62f 92bc62f09711d10ef0035663d4bbe5629e145e17
+## worktrees newer than marker
+## var newer than marker (top dirs)
+      1 var/datastores/levin-phase-floor-06b-r15-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06b-r15-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06b-r15-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06b-r15-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06b-r15.sqlite
+      1 var/datastores/levin-phase-floor-06b-r16-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06b-r16-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06b-r16-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06b-r16-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06b-r16.sqlite
+    148 var/levin-phase-floor-06b/census
+   3269 var/levin-phase-floor-06b/rehearsal
+    138 var/runs/levin-phase-floor-06b-census-20261028T161212
+      4 var/runs/levin-phase-floor-06b-r15-parent-20261028T135349
+      1 var/runs/levin-phase-floor-06b-r15.launch.log
+      4 var/runs/levin-phase-floor-06b-r16-premise-20261028T135745
+      1 var/runs/levin-phase-floor-06b-r16.launch.log

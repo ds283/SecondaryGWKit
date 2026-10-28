@@ -1,0 +1,42 @@
+{
+ "tree": "b",
+ "name": "1e-7-k3_1",
+ "units": [
+  {
+   "uid": "b-1e-7-3-13829",
+   "tree": "b",
+   "rtol": "1e-7",
+   "row": "3-13829",
+   "names05": null,
+   "shard": 3,
+   "serial": 13829,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8.3275, z in (1.6721e+11, 8.3275), regime Gqr, group G+q+r"
+    ],
+    [
+     2,
+     "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8.3275, z in (1.6721e+11, 8.3275), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8.3275, z in (1.6721e+11, 8.3275), regime Gqr, group G-q+r"
+    ],
+    [
+     4,
+     "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8.3275, z in (1.6721e+11, 8.3275), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/smoke",
+ "emit_fd": 5,
+ "emit_file": null,
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": "217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2"
+}

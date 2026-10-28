@@ -1,0 +1,52 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w0.py check state/W0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:10:01Z
+# ----
+# levin-phase-floor 06b: Gate W0 clauses 2 and 3
+# written 2026-10-28T14:10:01Z on mps026298.phys.susx.ac.uk
+# script w0.py sha256 a9ff9383173784fd628f98af0e752e1e74afb5c426aaabda9957e87e01f9b16c
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_capture.json sha256 217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+
+== tree evidence (each worker's hello) and each unit's module roots
+   P1: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-7-2-38302: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P2: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-7-2-2095: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P3: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-8-0-1971: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   B1: tree b head 92bc62f09711d10ef0035663d4bbe5629e145e17 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py; premise check True ratio 0.5
+      b-1e-7-1-34599: status done; tree_head 92bc62f09711d10ef0035663d4bbe5629e145e17; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   B2: tree b head 92bc62f09711d10ef0035663d4bbe5629e145e17 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py; premise check True ratio 0.5
+      b-1e-7-1-34599: status done; tree_head 92bc62f09711d10ef0035663d4bbe5629e145e17; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+
+== clause 2: the harness at the parent reproduces 06a's units bit for bit
+   P1 p-1e-7-2-38302 vs 06a h-1e-7-2-38302 (2-38302): IDENTICAL in every computed value; C0 (c) terms identical (14 call values/abserrs, 9 regions x 5 arrays)
+      total 0x1.5e6b3999d1ab2p-101 abserr 0x1.d520cf11c3e94p-111 | 06a 0x1.5e6b3999d1ab2p-101 0x1.d520cf11c3e94p-111; group calls 7, phase-limited []; region arrays 7 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 426, 'T': 66, 'other': 0} | 06a {'G': 426, 'T': 66, 'other': 0}: equal; W3 at p: {'n_regions': 0, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': None, 'seconds': 2.4624867364764214e-05}
+   P2 p-1e-7-2-2095 vs 06a h-1e-7-2-2095 (2-2095): IDENTICAL in every computed value; C0 (c) terms identical (14 call values/abserrs, 8 regions x 5 arrays)
+      total -0x1.e3272e29a4c5dp-102 abserr 0x1.ef96f9f3976bcp-107 | 06a -0x1.e3272e29a4c5dp-102 0x1.ef96f9f3976bcp-107; group calls 7, phase-limited []; region arrays 7 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 234, 'T': 66, 'other': 0} | 06a {'G': 234, 'T': 66, 'other': 0}: equal; W3 at p: {'n_regions': 7, 'n_premise_fails': 7, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 1.4602237698177808e-05, 'seconds': 0.034382208017632365}
+   P3 p-1e-8-0-1971 vs 06a h-1e-8-0-1971 (0-1971): IDENTICAL in every computed value; C0 (c) terms identical (10 call values/abserrs, 38 regions x 5 arrays)
+      total 0x1.6b3058aae2397p-66 abserr 0x1.40b29ccb8ec49p-90 | 06a 0x1.6b3058aae2397p-66 0x1.40b29ccb8ec49p-90; group calls 5, phase-limited [2, 3, 4]; region arrays 5 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 3778, 'T': 1210, 'other': 0} | 06a {'G': 3778, 'T': 1210, 'other': 0}: equal; W3 at p: None
+   clause 2 holds
+
+== clause 3: the new code is deterministic (one b unit, two fresh workers)
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/scripts/w0.py", line 410, in <module>
+    sys.exit({"run": cmd_run, "check": cmd_check}[cmd](arg))
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/scripts/w0.py", line 358, in cmd_check
+    ra = pickle.loads(load_input_record(out_dir / "B1", ea))
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/scripts/harness.py", line 70, in <module>
+    import StoreFixtures.standin_pool as standin_pool_mod
+ModuleNotFoundError: No module named 'StoreFixtures'
+# ----
+# end 2026-10-28T14:10:04Z
+# exit 1

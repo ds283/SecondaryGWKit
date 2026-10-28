@@ -1,0 +1,21 @@
+levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py
+
+== b-1e-7-3-34455 call 1  span 0x1.67b026a6c5e18p+3 .. 0x1.8b0e134cd0b2cp+4
+  re-run value 0x1.a296398fb6f2dp-89 abserr 0x1.2a2e585485596p-112 equal to census: True
+  S9 = 0x1.a29667546b16bp-89  (2.6416586028461413e-27)  floor sum 5.679e-37
+  S10 = 0x1.a296675645038p-89  (2.6416586035425116e-27)  floor sum 1.116e-36
+  S11 = 0x1.a296675756b14p-89  (2.6416586039446463e-27)  floor sum 2.212e-36
+  |S9-S10| / abserr_b = 0.003104;  |S10-S11| / abserr_b = 0.001793
+  |value_b - S10| / abserr_b = 19.65  -> holds: False
+  |value_b - S11| / abserr_b = 19.65
+  06a: |value_06a - S10| / abserr_06a = 1.134
+
+== b-1e-7-2-39035 call 2  span 0x1.a68751f28a87ap-3 .. 0x1.8b0e134cd0b2cp+4
+  re-run value 0x1.618614299573ep-87 abserr 0x1.000544f741ae4p-113 equal to census: True
+  S9 = 0x1.6186143388f51p-87  (8.924193986800013e-27)  floor sum 1.179e-38
+  S10 = 0x1.6186143375987p-87  (8.924193986686214e-27)  floor sum 2.275e-38
+  S11 = 0x1.6186143378051p-87  (8.924193986700463e-27)  floor sum 4.469e-38
+  |S9-S10| / abserr_b = 0.001182;  |S10-S11| / abserr_b = 0.000148
+  |value_b - S10| / abserr_b = 0.1543  -> holds: True
+  |value_b - S11| / abserr_b = 0.1544
+  06a: |value_06a - S10| / abserr_06a = 0.01422

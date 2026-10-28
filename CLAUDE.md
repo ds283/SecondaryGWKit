@@ -222,9 +222,11 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   `wider/state/scripts_05a_reference/`, `review/`, `p1/scripts/` and `laptop_rechecks/` under
   `docs/levin-phase-floor/06/`, and 06a's `scripts/`, `state/scripts_06_reference/`,
   `state/dev/` and `laptop_rechecks/` under `docs/levin-phase-floor/06a/`, and `handover` B2's
-  `docs/handover/b2/scripts/`. Each is byte-identical to the run it records; the outputs of the
-  first four, of 05's and 05a's `scripts/`, of A4's, of 06's, of 06a's and of B2's record its
-  SHA-256.
+  `docs/handover/b2/scripts/`, and 06b's `rehearsal/scripts/`, `rehearsal/state/`,
+  `census/scripts/`, `census/state/scripts_06a_reference/`, `census/state/dev/` and `review/`
+  under `docs/levin-phase-floor/06b/`. Each is byte-identical to the run it records; the outputs
+  of the first four, of 05's and 05a's `scripts/`, of A4's, of 06's, of 06a's, of B2's and of
+  06b's record its SHA-256.
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
   `RunDrivers/scoped_pipeline_run.py`; to extract one of its functions

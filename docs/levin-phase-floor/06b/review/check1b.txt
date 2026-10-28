@@ -1,0 +1,8 @@
+## files removed from var since dispatch
+## protected hashes (A3 v2, scratch copy, 06 and 06a var and run dirs)
+checked 3878 files; non-OK lines above (none = all OK)
+handover-A3-v2-lambdacdm-shard0000.sqlite
+handover-A3-v2-lambdacdm-shard0001.sqlite
+handover-A3-v2-lambdacdm-shard0002.sqlite
+handover-A3-v2-lambdacdm-shard0003.sqlite
+handover-A3-v2-lambdacdm.sqlite

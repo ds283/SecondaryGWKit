@@ -1,0 +1,8 @@
+$ /bin/bash -c sed\ -n\ 296\,319p\ \"\$B/prompts/levin-phase-floor/06b-roundoff-exit-premise.md\"\ \>\ /tmp/__x\ 2\>/dev/null\;\ true
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:13:38Z
+# ----
+# ----
+# end 2026-10-28T14:13:38Z
+# exit 0

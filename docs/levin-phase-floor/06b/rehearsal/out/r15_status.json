@@ -1,0 +1,319 @@
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": {
+      "BackgroundModel": {
+        "count": 1,
+        "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2"
+            ]
+          }
+        ]
+      },
+      "GkNumericIntegration": {
+        "count": 1368,
+        "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+        "tag_sets": [
+          {
+            "count": 1368,
+            "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "GkSource": {
+        "count": 291,
+        "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+        "tag_sets": [
+          {
+            "count": 291,
+            "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "GkSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "GkSourcePolicyData": {
+        "count": 291,
+        "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+        "tag_sets": [
+          {
+            "count": 291,
+            "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+            "tags": []
+          }
+        ]
+      },
+      "GkWKBIntegration": {
+        "count": 3477,
+        "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+        "tag_sets": [
+          {
+            "count": 3477,
+            "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "IntegrationSolver": {
+        "count": 7,
+        "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+            "tags": []
+          }
+        ]
+      },
+      "LambdaCDM": {
+        "count": 1,
+        "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+            "tags": []
+          }
+        ]
+      },
+      "OneLoopIntegral": {
+        "count": 0,
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sets": []
+      },
+      "QCD_Cosmology": {
+        "count": 1,
+        "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+            "tags": []
+          }
+        ]
+      },
+      "QuadSource": {
+        "count": 6,
+        "digest": "e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e",
+        "tag_sets": [
+          {
+            "count": 6,
+            "digest": "e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourceIntegral": {
+        "count": 864,
+        "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+        "tag_sets": [
+          {
+            "count": 864,
+            "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "TkNumericIntegration": {
+        "count": 3,
+        "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "TkWKBIntegration": {
+        "count": 3,
+        "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "redshift": {
+        "count": 1159,
+        "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+        "tag_sets": [
+          {
+            "count": 1159,
+            "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+            "tags": []
+          }
+        ]
+      },
+      "store_tag": {
+        "count": 10,
+        "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+        "tag_sets": [
+          {
+            "count": 10,
+            "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+            "tags": []
+          }
+        ]
+      },
+      "tolerance": {
+        "count": 7,
+        "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+            "tags": []
+          }
+        ]
+      },
+      "version": {
+        "count": 1,
+        "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber": {
+        "count": 3,
+        "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber_exit_time": {
+        "count": 3,
+        "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+            "tags": []
+          }
+        ]
+      }
+    },
+    "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "da5c24deb430172f68d983f56577fa48def19903",
+      "run_id": "levin-phase-floor-06b-r15-parent-20261028T135349",
+      "when": "2026-10-28T13:56:57+00:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-10-28T13:56:59+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 96498,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}

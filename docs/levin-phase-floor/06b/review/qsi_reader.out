@@ -1,0 +1,14 @@
+rows R15 864 R16 864
+identity sets equal: True
+replicated wavenumber_exit_time equal: False 3
+replicated redshift equal: True 1159
+replicated tolerance equal: False 7
+R15 flagged rows: 82 (a) 26 (b) 26 flags 48 (c) 70 flags 143
+R16 flagged rows: 0
+violations among unflagged rows: 0
+rows whose total moved: 26
+  all have (b) flag: True
+  max |dT|/abserr15 = 0.3598, /abserr16 = 0.597
+  spot-check (largest): R15 total 0x1.13fa730737be4p-67 abserr 0x1.1afeca4a03b83p-90
+                        R16 total 0x1.13fa723b8dee4p-67 abserr 0x1.69f54490326c6p-91
+                        shard 0 serial R15 10286 R16 10091

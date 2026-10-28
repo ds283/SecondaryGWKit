@@ -1,0 +1,15 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w0.py run state/W0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:08:55Z
+# ----
+P1: tree p, pid 951, units ['p-1e-7-2-38302']
+P2: tree p, pid 952, units ['p-1e-7-2-2095']
+P3: tree p, pid 953, units ['p-1e-8-0-1971']
+B1: tree b, pid 954, units ['b-1e-7-1-34599']
+B2: tree b, pid 955, units ['b-1e-7-1-34599']
+exit codes {'P1': 0, 'P2': 0, 'P3': 0, 'B1': 0, 'B2': 0}
+/tmp/ray-sgk entries before 67, after 67, new []
+# ----
+# end 2026-10-28T14:09:58Z
+# exit 0

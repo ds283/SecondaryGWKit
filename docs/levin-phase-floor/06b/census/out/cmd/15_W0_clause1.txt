@@ -1,0 +1,43 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w0_clause1.py state/W0/p_tree_modules.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:10:23Z
+# ----
+# levin-phase-floor 06b: Gate W0 clause 1
+# written 2026-10-28T14:10:23Z on mps026298.phys.susx.ac.uk
+# script w0_clause1.py sha256 90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/W0/p_tree_modules.json sha256 025b4333a0349a019adf4c30c3caea4b360497b97c9032409ebae45f6215b487
+
+$ git diff --stat e05c34f da5c24d -- . ':!docs' ':!prompts'
+ CLAUDE.md                                        |   7 +-
+ ComputeTargets/primitive_phase.py                |   7 +-
+ ComputeTargets/tests/test_g_phase_reanchor.py    | 104 +++----
+ ComputeTargets/tests/test_phase_groups.py        | 139 ++++++++--
+ ComputeTargets/tests/test_primitive_phase.py     |   5 +-
+ ComputeTargets/tests/test_quadsource_integral.py | 336 +++++++++++++++++------
+ ComputeTargets/tests/test_tk_source_functions.py |  14 +
+ main.py                                          |  12 +-
+ 8 files changed, 445 insertions(+), 179 deletions(-)
+
+8 files
+
+the harness's imports from the parent tree (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d): 102 modules
+  of them in a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== each changed file
+  M CLAUDE.md: CLAUDE.md -- allowed
+  M ComputeTargets/primitive_phase.py: AST without docstrings EQUAL to e05c34f's -- allowed (imported by the harness: True)
+  M ComputeTargets/tests/test_g_phase_reanchor.py: AST differs; a test module, ComputeTargets.tests.test_g_phase_reanchor, NOT imported by the harness -- allowed
+  M ComputeTargets/tests/test_phase_groups.py: AST differs; a test module, ComputeTargets.tests.test_phase_groups, NOT imported by the harness -- allowed
+  M ComputeTargets/tests/test_primitive_phase.py: AST without docstrings EQUAL to e05c34f's -- allowed (imported by the harness: False)
+  M ComputeTargets/tests/test_quadsource_integral.py: AST differs; a test module, ComputeTargets.tests.test_quadsource_integral, NOT imported by the harness -- allowed
+  M ComputeTargets/tests/test_tk_source_functions.py: AST differs; a test module, ComputeTargets.tests.test_tk_source_functions, NOT imported by the harness -- allowed
+  M main.py: AST without docstrings EQUAL to e05c34f's -- allowed (imported by the harness: False)
+
+== W0 clause 1: HOLDS
+# ----
+# end 2026-10-28T14:10:24Z
+# exit 0

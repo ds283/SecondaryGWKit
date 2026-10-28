@@ -1,0 +1,64 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w0.py check state/W0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:10:14Z
+# ----
+# levin-phase-floor 06b: Gate W0 clauses 2 and 3
+# written 2026-10-28T14:10:14Z on mps026298.phys.susx.ac.uk
+# script w0.py sha256 f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_capture.json sha256 217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+
+== tree evidence (each worker's hello) and each unit's module roots
+   P1: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-7-2-38302: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P2: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-7-2-2095: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P3: tree p head da5c24deb430172f68d983f56577fa48def19903 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d/AdaptiveLevin/levin_quadrature.py; premise check False ratio None
+      p-1e-8-0-1971: status done; tree_head da5c24deb430172f68d983f56577fa48def19903; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   B1: tree b head 92bc62f09711d10ef0035663d4bbe5629e145e17 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py; premise check True ratio 0.5
+      b-1e-7-1-34599: status done; tree_head 92bc62f09711d10ef0035663d4bbe5629e145e17; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   B2: tree b head 92bc62f09711d10ef0035663d4bbe5629e145e17 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py; premise check True ratio 0.5
+      b-1e-7-1-34599: status done; tree_head 92bc62f09711d10ef0035663d4bbe5629e145e17; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+
+== clause 2: the harness at the parent reproduces 06a's units bit for bit
+   P1 p-1e-7-2-38302 vs 06a h-1e-7-2-38302 (2-38302): IDENTICAL in every computed value; C0 (c) terms identical (14 call values/abserrs, 9 regions x 5 arrays)
+      total 0x1.5e6b3999d1ab2p-101 abserr 0x1.d520cf11c3e94p-111 | 06a 0x1.5e6b3999d1ab2p-101 0x1.d520cf11c3e94p-111; group calls 7, phase-limited []; region arrays 7 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 426, 'T': 66, 'other': 0} | 06a {'G': 426, 'T': 66, 'other': 0}: equal; W3 at p: {'n_regions': 0, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': None, 'seconds': 2.4624867364764214e-05}
+   P2 p-1e-7-2-2095 vs 06a h-1e-7-2-2095 (2-2095): IDENTICAL in every computed value; C0 (c) terms identical (14 call values/abserrs, 8 regions x 5 arrays)
+      total -0x1.e3272e29a4c5dp-102 abserr 0x1.ef96f9f3976bcp-107 | 06a -0x1.e3272e29a4c5dp-102 0x1.ef96f9f3976bcp-107; group calls 7, phase-limited []; region arrays 7 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 234, 'T': 66, 'other': 0} | 06a {'G': 234, 'T': 66, 'other': 0}: equal; W3 at p: {'n_regions': 7, 'n_premise_fails': 7, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 1.4602237698177808e-05, 'seconds': 0.034382208017632365}
+   P3 p-1e-8-0-1971 vs 06a h-1e-8-0-1971 (0-1971): IDENTICAL in every computed value; C0 (c) terms identical (10 call values/abserrs, 38 regions x 5 arrays)
+      total 0x1.6b3058aae2397p-66 abserr 0x1.40b29ccb8ec49p-90 | 06a 0x1.6b3058aae2397p-66 0x1.40b29ccb8ec49p-90; group calls 5, phase-limited [2, 3, 4]; region arrays 5 calls x ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 3778, 'T': 1210, 'other': 0} | 06a {'G': 3778, 'T': 1210, 'other': 0}: equal; W3 at p: None
+   clause 2 holds
+
+== clause 3: the new code is deterministic (one b unit, two fresh workers)
+   b-1e-7-1-34599 (1-34599): B1 vs B2 IDENTICAL in every computed value
+      total -0x1.069910573a5b0p-71 abserr 0x1.9a208e33bb93cp-96; 06a -0x1.069911c32c810p-71 0x1.d0d20bd46ed1cp-94
+      call 0 G: b value -0x1.d16ade4fd528dp-81 abserr 0x1.4685367d9bfbep-105 regions 9 depth 7 phase-limited regions 0 premise checks 0 failed 0 | 06a value -0x1.d16ade4fd528dp-81 abserr 0x1.4685367d9bfbep-105 regions 9 depth 7 phase_limited False
+      call 1 G+q+r: b value -0x1.d18c8a330e46cp-87 abserr 0x1.917aa8171b582p-111 regions 2 depth 1 phase-limited regions 0 premise checks 1 failed 1 | 06a value -0x1.d18c96e623e88p-87 abserr 0x1.b70133dbf893bp-107 regions 1 depth 0 phase_limited True
+      call 2 G+q-r: b value -0x1.393a35c90123cp-85 abserr 0x1.01648a004f9acp-108 regions 2 depth 1 phase-limited regions 0 premise checks 1 failed 1 | 06a value -0x1.393a49c4506d5p-85 abserr 0x1.11ee86a068236p-104 regions 1 depth 0 phase_limited True
+      call 3 G-q+r: b value -0x1.393a35c90123cp-85 abserr 0x1.01648a004f9acp-108 regions 2 depth 1 phase-limited regions 0 premise checks 1 failed 1 | 06a value -0x1.393a49c4506d5p-85 abserr 0x1.11ee86a068236p-104 regions 1 depth 0 phase_limited True
+      call 4 G-q-r: b value 0x1.9c18ac51ccdcdp-89 abserr 0x1.4d85c46eeff39p-113 regions 2 depth 1 phase-limited regions 0 premise checks 1 failed 1 | 06a value 0x1.9c189b5fc145ap-89 abserr 0x1.12522203d9ac2p-105 regions 1 depth 0 phase_limited True
+      other calls: [('analytic J1', 2, 1, 0, 1, 1), ('analytic Y1', 2, 1, 0, 0, 0), ('analytic J2', 3, 2, 0, 0, 0), ('analytic Y2', 3, 2, 0, 0, 0), ('analytic J3', 3, 2, 0, 0, 0), ('analytic Y3', 3, 2, 0, 0, 0), ('analytic J4', 3, 2, 0, 0, 0), ('analytic Y4', 2, 1, 0, 0, 0), ('analytic J1', 3, 2, 0, 0, 0), ('analytic Y1', 2, 1, 0, 1, 1), ('analytic J2', 2, 1, 0, 0, 0), ('analytic Y2', 2, 1, 0, 0, 0), ('analytic J3', 2, 1, 0, 0, 0), ('analytic Y3', 2, 1, 0, 0, 0), ('analytic J4', 2, 1, 0, 0, 0), ('analytic Y4', 2, 1, 0, 0, 0)]
+      W3 {'n_regions': 0, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': None, 'seconds': 2.270890399813652e-05}
+      captured calls (index, value, abserr, equal in B1 and B2, blob sha256 equal, blob bytes): [(1, '-0x1.d18c8a330e46cp-87', '0x1.917aa8171b582p-111', True, False, 1336905), (2, '-0x1.393a35c90123cp-85', '0x1.01648a004f9acp-108', True, False, 1336908), (3, '-0x1.393a35c90123cp-85', '0x1.01648a004f9acp-108', True, False, 1336908), (4, '0x1.9c18ac51ccdcdp-89', '0x1.4d85c46eeff39p-113', True, False, 1336910)]
+      wall 0.35 s and 0.35 s (timings, not compared)
+   clause 3 holds
+
+== no Ray
+   workers' ray_initialized at exit: {'P1': False, 'P2': False, 'P3': False, 'B1': False, 'B2': False}: none initialised Ray
+   (descriptive; R15/R16 use /tmp/ray-sgk in this period) /tmp/ray-sgk entries before 67, after 67, new []
+
+== the parent tree's modules imported by the harness (P1-P3, union): 102; written to state/W0/p_tree_modules.json
+   of them under a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== W0 clauses 2 and 3 (and no Ray): HOLD
+# ----
+# end 2026-10-28T14:10:17Z
+# exit 0

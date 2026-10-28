@@ -1,0 +1,31 @@
+   levin-phase-floor-06b-census-20261028T161212          done      18560/18560   1h 01m  levin-phase-floor prompt 06b section 5 on the Mac Studio (mps026298; Python 3.13.16): 06a's depth census re-run at the code commit 4ddc3c2 (the round-off-limited exit checks its premise), every A3 v2 QuadSourceIntegral row (9280) re-run in-process at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock, against 06a's run levin-phase-floor-06a-census-20261027T023143 as the before. One tree, b, the git worktree at Part B's dispatch SHA 92bc62f (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f; its code outside docs/ and prompts/ is 4ddc3c2's, whose parent da5c24d Gate W0 showed reproduces 06a). It reads, read-only, 06's certified scratch copy of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint 0e32f24a) on a stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; in every 1e-7 unit, after its timed section, 06a's stationary-point scan, W3's recomputed floors of every phase-limited region and its halves, and the inputs of 06a's 975 phase-limited calls with no sign change (W2). The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; 06a's run took 45.5 min  · 18560 units recorded; last b-1e-8-3-39148 done
+   levin-phase-floor-06b-r16-premise-20261028T135745     done              -   3h 16m  levin-phase-floor prompt 06b, R16 on the Mac Studio (mps026298; tree 92bc62f in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f, whose code is the code commit 4ddc3c2; Python 3.13.16): reference rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R15/R16 value comparison, and QuadSourceIntegral alone is expected to differ, only in rows with a phase-limited flag in R15  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   levin-phase-floor-06b-r15-parent-20261028T135349      done              -   3h 20m  levin-phase-floor prompt 06b, R15 on the Mac Studio (mps026298; tree da5c24d in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d, the parent of the code commit 4ddc3c2; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R15/R16 value comparison  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+28 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 28 finished; 0 with no host recorded.
+== levin-phase-floor-06b-r15-parent-20261028T135349
+   campaign = levin-phase-floor
+   cwd = /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d
+   git_dirty = False
+   git_head = da5c24deb430172f68d983f56577fa48def19903
+   prompt = 06b
+   run_id = levin-phase-floor-06b-r15-parent-20261028T135349
+   status done 0 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+28K
+== levin-phase-floor-06b-r16-premise-20261028T135745
+   campaign = levin-phase-floor
+   cwd = /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f
+   git_dirty = False
+   git_head = 92bc62f09711d10ef0035663d4bbe5629e145e17
+   prompt = 06b
+   run_id = levin-phase-floor-06b-r16-premise-20261028T135745
+   status done 0 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+28K
+== levin-phase-floor-06b-census-20261028T161212
+   campaign = levin-phase-floor
+   cwd = /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+   git_dirty = False
+   git_head = 28ebaf0743e0555fb2c4512ce714884005a60eff
+   prompt = 06b
+   run_id = levin-phase-floor-06b-census-20261028T161212
+   status done 0 None
+1.8G

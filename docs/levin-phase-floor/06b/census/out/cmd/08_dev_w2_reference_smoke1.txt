@@ -1,0 +1,23 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w2_reference.py state/dev/smoke1/w2_sel_dev.json state/dev/smoke1/w2_ref_dev.json --workers 2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:04:52Z
+# ----
+# levin-phase-floor 06b: W2's reference
+# written 2026-10-28T14:04:52Z on mps026298.phys.susx.ac.uk
+# script w2_reference.py sha256 47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/smoke1/w2_sel_dev.json sha256 9cab5f5620783ff1b1f1841c4b5d02fd88546fb3f12f59a764bcd4bd84d814cc
+# AdaptiveLevin.levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f/AdaptiveLevin/levin_quadrature.py (tree b); host mps026298.phys.susx.ac.uk
+# depths [9, 10]; 2 calls; 2 worker processes
+
+unit               idx rerun= agree holds err_b/abserr_b  |S9-S10|/abserr_b floor_sum_10 direct10 err06a/abserr06a      s
+b-1e-7-1-34599       1   True  True  True         0.8051          0.0005295     1.12e-37      213           0.5089    4.4
+b-1e-7-1-34599       2   True  True  True         0.3052          5.993e-05     2.92e-37      267           0.5656    4.6
+
+wrote state/dev/smoke1/w2_ref_dev.json sha256 33e84656c2313f900170cb06823c63d10f32722e4221cf8a2ffb1611b58e08fd
+# ----
+# end 2026-10-28T14:04:58Z
+# exit 0

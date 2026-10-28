@@ -1,0 +1,29 @@
+units 06a 18560 b 18560 same keys True
+b status Counter({'done': 18560})
+b tree_head Counter({'92bc62f09711d10ef0035663d4bbe5629e145e17': 18560}) status_short Counter({'': 18560})
+not done / over budget: []
+max unit wall_s b 158.9 ; 06a 1.0
+
+=== rtol 1e-7: units 9280
+W1 calls not PL in 06a: 36112/36112 equal; rows with no PL call: 6777/6777 equal; failures 0 []
+cross-check (premise asked in b) vs (06a phase_limited) on group calls: disagreements 0
+PL group calls 06a 1213 on rows(any PL incl analytic) 2503; PL group calls b 0; analytic calls reaching old exit 12633, PL in b 32
+moved calls 13846 (group 1213, analytic 12633); reaching depth 20: 0
+row depth (group calls) 06a: {-1: 2489, 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 511, 7: 2010, 8: 732, 9: 29, 10: 3, 11: 31, 12: 19}
+row depth (group calls) b  : {-1: 2489, 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 510, 7: 2006, 8: 707, 9: 29, 10: 3, 11: 36, 12: 38, 13: 3, 14: 3}
+row depth (group+analytic) b: {-1: 2215, 0: 538, 1: 432, 2: 1723, 3: 747, 4: 160, 5: 105, 6: 514, 7: 2010, 8: 708, 9: 35, 10: 5, 11: 37, 12: 39, 13: 5, 14: 6, 18: 1}
+
+=== rtol 1e-8: units 9280
+W1 calls not PL in 06a: 35605/35605 equal; rows with no PL call: 6177/6177 equal; failures 0 []
+cross-check (premise asked in b) vs (06a phase_limited) on group calls: disagreements 0
+PL group calls 06a 1720 on rows(any PL incl analytic) 3103; PL group calls b 0; analytic calls reaching old exit 17722, PL in b 800
+moved calls 19442 (group 1720, analytic 17722); reaching depth 20: 3
+   W4 violator: (('1e-8', '2-1704'), 'analytic', 16, 20, 'analytic Y1') unit wall_s 6.1
+   W4 violator: (('1e-8', '2-13964'), 'analytic', 5, 20, 'analytic J1') unit wall_s 158.9
+   W4 violator: (('1e-8', '3-34987'), 'analytic', 9, 20, 'analytic J2') unit wall_s 69.4
+row depth (group calls) 06a: {-1: 2489, 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1565, 9: 923, 10: 8, 11: 24, 12: 28, 13: 1}
+row depth (group calls) b  : {-1: 2489, 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1564, 9: 890, 10: 8, 11: 31, 12: 46, 13: 7, 14: 3}
+row depth (group+analytic) b: {-1: 2215, 0: 503, 1: 396, 2: 1330, 3: 702, 4: 342, 5: 144, 6: 419, 7: 540, 8: 1572, 9: 919, 10: 29, 11: 43, 12: 59, 13: 23, 14: 18, 15: 11, 17: 1, 18: 8, 19: 3, 20: 3}
+
+W3 (csv): regions 44, violations 0, own!=stored 0, ratio min 0.5045 max 0.8908
+W3 checkpoint: PL regions counted in calls 44; w3.n_regions 44; premise fails 0; errors 0

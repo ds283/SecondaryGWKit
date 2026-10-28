@@ -1,0 +1,165 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06b.py report /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212 out/w2_reference.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T17:07:57Z
+# ----
+# levin-phase-floor 06b: the census's scores and descriptive items
+# written 2026-10-28T17:07:57Z on mps026298.phys.susx.ac.uk
+# script analyse06b.py sha256 6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_capture.json sha256 217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+# input out/w2_reference.json sha256 4178395291167c5960859d8b7fe785f79039dfbc61bee09ab663abf7bf766140
+
+units: {('1e-7', 'done'): 9280, ('1e-8', 'done'): 9280}; 06a units 18560
+over budget 0, in error 0
+
+== the reading (Part B): 'phase-limited in 06a' == 'b asked the premise' on group calls
+   (rtol, 06a phase-limited, b asked premise): {('1e-7', False, False): 36112, ('1e-7', True, True): 1213, ('1e-8', False, False): 35605, ('1e-8', True, True): 1720}; disagreements 0 []
+
+== W1 -- nothing else moves
+   rtol 1e-7: group calls with no phase-limited region in 06a 36112, equal to 06a's (value, abserr, regions, max depth) 36112; rows all of whose calls are such 6777, equal in total and total_abserr 6777 (rows excluded only by an analytic block's call phase-limited in 06a: 1918)
+   rtol 1e-8: group calls with no phase-limited region in 06a 35605, equal to 06a's (value, abserr, regions, max depth) 35605; rows all of whose calls are such 6177, equal in total and total_abserr 6177 (rows excluded only by an analytic block's call phase-limited in 06a: 2358)
+   W1 HOLDS
+
+== W3 -- the exit now fires only where bisection would not help (1e-7)
+   regions b accepted as phase-limited at 1e-7: 44 (in 27 units; the region arrays hold 44); recomputation errors 0
+   own floor recomputed != stored phase_err: 0
+   premise violated (worker's bool) 0; re-scored from the hex floors 0
+   (halves' sum)/(own floor): min 0.504482466463075; n=44 q0=0.504 q0.01=0.504 q0.5=0.581 q0.99=0.891 q1=0.891
+   by (call kind, region type, depth): {('analytic', 'Levin', 4): 33, ('analytic', 'Levin', 5): 10, ('analytic', 'Levin', 6): 1}
+   halves on the fallback branch (L, R is_direct): Counter({(False, False, False): 44})
+   W3 HOLDS
+   wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/out/w3_regions.csv (44 regions) sha256 c8fb4a5eaa82292202926d707ac99ea1ee83163fe0b29361e06190c4a5702cd5
+
+== W4 -- the cap
+   moved calls: {('1e-7', 'analytic'): 12633, ('1e-7', 'group'): 1213, ('1e-8', 'analytic'): 17722, ('1e-8', 'group'): 1720}; their largest depth: {('1e-7', 'analytic'): 18, ('1e-7', 'group'): 14, ('1e-8', 'analytic'): 20, ('1e-8', 'group'): 14}; largest depth of any b call: {'1e-7': 18, '1e-8': 20}
+   moved calls at depth >= 20: 3 [('b-1e-8-2-1704', 16), ('b-1e-8-2-13964', 5), ('b-1e-8-3-34987', 9)]; units over budget 0
+      b-1e-8-2-1704 (2-1704) call 16 analytic Y1: value 5.38559469544279e-15 abserr 1.4703211832379162e-24 converged True regions 1136 evaluations 4543 depth hist {'2': [3, 0], '4': [2, 0], '9': [16, 0], '18': [240, 0], '20': [640, 0], '15': [40, 0], '13': [20, 0], '11': [10, 0], '6': [3, 0], '17': [120, 0], '14': [20, 0], '12': [10, 0], '10': [5, 0], '8': [7, 0]} premise asked 7 failed 5; unit wall 6.1 s; row total_converged True
+      b-1e-8-2-13964 (2-13964) call 5 analytic J1: value 1.5528701228391119e-13 abserr 8.280374425913717e-22 converged True regions 31885 evaluations 127539 depth hist {'1': [1, 0], '2': [1, 0], '4': [2, 0], '18': [9154, 0], '20': [21840, 0], '5': [2, 0], '17': [885, 0]} premise asked 4 failed 4; unit wall 158.9 s; row total_converged True
+      b-1e-8-3-34987 (3-34987) call 9 analytic J2: value 9.128026226040072e-12 abserr 2.5821973866924067e-20 converged True regions 14293 evaluations 57171 depth hist {'1': [1, 0], '2': [1, 0], '4': [1, 0], '12': [172, 0], '19': [7134, 0], '20': [6960, 0], '15': [2, 0], '16': [4, 0], '18': [11, 0], '17': [5, 0], '14': [1, 0], '3': [1, 0]} premise asked 4 failed 4; unit wall 69.4 s; row total_converged False
+   W4 FAILS
+
+== W2 -- honest where it moved
+   calls 24; reference errors 0; re-run differs from b 0; dropped (|S9-S10| > abserr_b/100) 0; left 24; failing 17
+   low  3:1    b-1e-7-3-38376     4 rerun True agree True |S9-S10|/abserr_b 0.00465 err_b/abserr_b 9.2 holds False; before: err_06a/abserr_06a 0.049; abserr_06a/abserr_b 554; floor sum (2^10 pieces)/abserr_b 0.00152; direct pieces 51/137
+   low  0:101  b-1e-7-0-35070     4 rerun True agree True |S9-S10|/abserr_b 0.000815 err_b/abserr_b 1.47 holds False; before: err_06a/abserr_06a 0.135; abserr_06a/abserr_b 549; floor sum (2^10 pieces)/abserr_b 0.000279; direct pieces 51/131
+   low  1:102  b-1e-7-1-2174      2 rerun True agree True |S9-S10|/abserr_b 0.000619 err_b/abserr_b 2.54 holds False; before: err_06a/abserr_06a 0.0627; abserr_06a/abserr_b 724; floor sum (2^10 pieces)/abserr_b 0.000255; direct pieces 87/204
+   low  2:2    b-1e-7-2-14345     3 rerun True agree True |S9-S10|/abserr_b 0.00371 err_b/abserr_b 5.68 holds False; before: err_06a/abserr_06a 0.000671; abserr_06a/abserr_b 5.08e+03; floor sum (2^10 pieces)/abserr_b 0.000433; direct pieces 35/103
+   low  3:201  b-1e-7-3-38538     3 rerun True agree True |S9-S10|/abserr_b 0.000949 err_b/abserr_b 1.47 holds False; before: err_06a/abserr_06a 0.0122; abserr_06a/abserr_b 1.65e+04; floor sum (2^10 pieces)/abserr_b 0.000356; direct pieces 63/156
+   low  3:1    b-1e-7-3-35004     3 rerun True agree True |S9-S10|/abserr_b 0.000142 err_b/abserr_b 1.21 holds False; before: err_06a/abserr_06a 0.63; abserr_06a/abserr_b 110; floor sum (2^10 pieces)/abserr_b 0.000287; direct pieces 94/220
+   low  0:101  b-1e-7-0-38940     3 rerun True agree True |S9-S10|/abserr_b 0.000634 err_b/abserr_b 4.88 holds False; before: err_06a/abserr_06a 0.14; abserr_06a/abserr_b 1.01e+03; floor sum (2^10 pieces)/abserr_b 0.00125; direct pieces 81/198
+   low  1:102  b-1e-7-1-2155      3 rerun True agree True |S9-S10|/abserr_b 0.000701 err_b/abserr_b 1.06 holds False; before: err_06a/abserr_06a 0.068; abserr_06a/abserr_b 3.25e+03; floor sum (2^10 pieces)/abserr_b 0.00147; direct pieces 78/190
+   low  2:2    b-1e-7-2-39035     2 rerun True agree True |S9-S10|/abserr_b 0.00118 err_b/abserr_b 0.154 holds True; before: err_06a/abserr_06a 0.0142; abserr_06a/abserr_b 3.6e+03; floor sum (2^10 pieces)/abserr_b 0.000236; direct pieces 56/141
+   low  3:1    b-1e-7-3-14587     4 rerun True agree True |S9-S10|/abserr_b 0.000882 err_b/abserr_b 0.0787 holds True; before: err_06a/abserr_06a 0.131; abserr_06a/abserr_b 314; floor sum (2^10 pieces)/abserr_b 0.000152; direct pieces 49/126
+   low  0:101  b-1e-7-0-38352     4 rerun True agree True |S9-S10|/abserr_b 0.00127 err_b/abserr_b 2.72 holds False; before: err_06a/abserr_06a 0.0631; abserr_06a/abserr_b 870; floor sum (2^10 pieces)/abserr_b 0.000586; direct pieces 52/135
+   low  1:102  b-1e-7-1-14233     4 rerun True agree True |S9-S10|/abserr_b 0.0041 err_b/abserr_b 2.22 holds False; before: err_06a/abserr_06a 0.0263; abserr_06a/abserr_b 1.53e+03; floor sum (2^10 pieces)/abserr_b 0.000348; direct pieces 43/116
+   mid  3:1    b-1e-7-3-37351     1 rerun True agree True |S9-S10|/abserr_b 8.13e-06 err_b/abserr_b 0.664 holds True; before: err_06a/abserr_06a 0.469; abserr_06a/abserr_b 10.9; floor sum (2^10 pieces)/abserr_b 0.000197; direct pieces 83/204
+   mid  0:101  b-1e-7-0-1949      4 rerun True agree True |S9-S10|/abserr_b 0.00273 err_b/abserr_b 0.622 holds True; before: err_06a/abserr_06a 0.0477; abserr_06a/abserr_b 581; floor sum (2^10 pieces)/abserr_b 0.00122; direct pieces 68/170
+   mid  1:102  b-1e-7-1-37655     2 rerun True agree True |S9-S10|/abserr_b 2.48e-06 err_b/abserr_b 0.654 holds True; before: err_06a/abserr_06a 0.0319; abserr_06a/abserr_b 90.7; floor sum (2^10 pieces)/abserr_b 0.000199; direct pieces 79/196
+   mid  2:2    b-1e-7-2-34816     2 rerun True agree True |S9-S10|/abserr_b 1.48e-05 err_b/abserr_b 1.79 holds False; before: err_06a/abserr_06a 0.223; abserr_06a/abserr_b 439; floor sum (2^10 pieces)/abserr_b 0.000286; direct pieces 97/229
+   mid  3:1    b-1e-7-3-34739     4 rerun True agree True |S9-S10|/abserr_b 0.00664 err_b/abserr_b 3.2 holds False; before: err_06a/abserr_06a 0.28; abserr_06a/abserr_b 338; floor sum (2^10 pieces)/abserr_b 0.00121; direct pieces 63/160
+   mid  0:101  b-1e-7-0-12977     5 rerun True agree True |S9-S10|/abserr_b 0.000552 err_b/abserr_b 1.48 holds False; before: err_06a/abserr_06a 0.306; abserr_06a/abserr_b 9.96; floor sum (2^10 pieces)/abserr_b 0.000482; direct pieces 91/231
+   mid  1:102  b-1e-7-1-34769     2 rerun True agree True |S9-S10|/abserr_b 5.85e-05 err_b/abserr_b 3.72 holds False; before: err_06a/abserr_06a 0.0415; abserr_06a/abserr_b 627; floor sum (2^10 pieces)/abserr_b 0.000709; direct pieces 73/182
+   mid  2:2    b-1e-7-2-34728     3 rerun True agree True |S9-S10|/abserr_b 0.000965 err_b/abserr_b 0.539 holds True; before: err_06a/abserr_06a 0.0219; abserr_06a/abserr_b 2.07e+03; floor sum (2^10 pieces)/abserr_b 0.000572; direct pieces 67/167
+   mid  3:1    b-1e-7-3-34455     1 rerun True agree True |S9-S10|/abserr_b 0.0031 err_b/abserr_b 19.7 holds False; before: err_06a/abserr_06a 1.13; abserr_06a/abserr_b 30.5; floor sum (2^10 pieces)/abserr_b 0.00497; direct pieces 120/293
+   mid  0:101  b-1e-7-0-2106      2 rerun True agree True |S9-S10|/abserr_b 0.000528 err_b/abserr_b 6.23 holds False; before: err_06a/abserr_06a 0.0869; abserr_06a/abserr_b 599; floor sum (2^10 pieces)/abserr_b 0.00202; direct pieces 78/194
+   mid  1:102  b-1e-7-1-34769     3 rerun True agree True |S9-S10|/abserr_b 5.85e-05 err_b/abserr_b 3.72 holds False; before: err_06a/abserr_06a 0.0415; abserr_06a/abserr_b 627; floor sum (2^10 pieces)/abserr_b 0.000709; direct pieces 73/182
+   mid  2:2    b-1e-7-2-34473     3 rerun True agree True |S9-S10|/abserr_b 2.97e-06 err_b/abserr_b 0.483 holds True; before: err_06a/abserr_06a 0.17; abserr_06a/abserr_b 18.6; floor sum (2^10 pieces)/abserr_b 0.00027; direct pieces 112/269
+   err_b/abserr_b n=24 q0=0.0787 q0.5=1.79 q1=19.7; before, err_06a/abserr_06a n=24 q0=0.000671 q0.5=0.068 q1=1.13; 06a calls outside their own abserr: 1
+   W2 FAILS
+
+== descriptive: how often the exit fired
+   rtol 1e-7: phase-limited group calls 06a 1213 on 585 rows -> b 0 on 0 rows; total_phase_limited rows 06a 585 -> b 0; b's analytic-block calls phase-limited 32 (rows with any phase-limited call, group or analytic, 27)
+      06a's phase-limited group calls: premise asked 1217 times in b, failed 1217; calls with a failed premise 1213, calls with a premise that held 0
+      analytic-block calls phase-limited in 06a (by the reading) 12633: premise asked 13075, failed 13031; calls with a failed premise 12633
+   rtol 1e-8: phase-limited group calls 06a 1720 on 745 rows -> b 0 on 0 rows; total_phase_limited rows 06a 745 -> b 0; b's analytic-block calls phase-limited 800 (rows with any phase-limited call, group or analytic, 442)
+      06a's phase-limited group calls: premise asked 1733 times in b, failed 1733; calls with a failed premise 1720, calls with a premise that held 0
+      analytic-block calls phase-limited in 06a (by the reading) 17722: premise asked 24989, failed 23544; calls with a failed premise 17722
+
+   06a's phase-limited regions (group calls; region arrays matched by start and end, as hex):
+   rtol 1e-7: 06a phase-limited regions 1213: still phase-limited in b 0; bisected in b (premise failed) 1213
+   rtol 1e-8: 06a phase-limited regions 1720: still phase-limited in b 0; bisected in b (premise failed) 1720
+
+== descriptive: depth (row depth = largest max_depth over the row's group calls, as 06a; b also with the analytic blocks)
+   rtol 1e-7: 06a {None: 2489, 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 511, 7: 2010, 8: 732, 9: 29, 10: 3, 11: 31, 12: 19}
+              b   {None: 2489, 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 510, 7: 2006, 8: 707, 9: 29, 10: 3, 11: 36, 12: 38, 13: 3, 14: 3}
+              b with analytic blocks {None: 2215, 0: 538, 1: 432, 2: 1723, 3: 747, 4: 160, 5: 105, 6: 514, 7: 2010, 8: 708, 9: 35, 10: 5, 11: 37, 12: 39, 13: 5, 14: 6, 18: 1}
+   rtol 1e-8: 06a {None: 2489, 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1565, 9: 923, 10: 8, 11: 24, 12: 28, 13: 1}
+              b   {None: 2489, 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1564, 9: 890, 10: 8, 11: 31, 12: 46, 13: 7, 14: 3}
+              b with analytic blocks {None: 2215, 0: 503, 1: 396, 2: 1330, 3: 702, 4: 342, 5: 144, 6: 419, 7: 540, 8: 1572, 9: 919, 10: 29, 11: 43, 12: 59, 13: 23, 14: 18, 15: 11, 17: 1, 18: 8, 19: 3, 20: 3}
+
+== descriptive: totals against 06a, by band and k (rows whose total moved)
+   rtol 1e-7: rows whose total moved 585
+      low  3:1    n=  99  |dtotal|/|total_06a| max 0.00694 median 5.88e-09;  |dtotal|/total_abserr_06a max 1.29e+04 median 0.0639; >1: 9
+      low  0:101  n=  82  |dtotal|/|total_06a| max 0.00433 median 5.99e-08;  |dtotal|/total_abserr_06a max 2.43e+03 median 0.0881; >1: 16
+      low  1:102  n=  74  |dtotal|/|total_06a| max 2.76e-06 median 1.37e-07;  |dtotal|/total_abserr_06a max 0.431 median 0.0454; >1: 0
+      low  2:2    n=  58  |dtotal|/|total_06a| max 0.000251 median 4.95e-07;  |dtotal|/total_abserr_06a max 0.647 median 0.0389; >1: 0
+      low  3:201  n=   6  |dtotal|/|total_06a| max 1.47e-06 median 8.05e-07;  |dtotal|/total_abserr_06a max 0.0415 median 0.0267; >1: 0
+      mid  3:1    n=  89  |dtotal|/|total_06a| max 4.86e-07 median 1.64e-09;  |dtotal|/total_abserr_06a max 0.525 median 0.0318; >1: 0
+      mid  0:101  n=  71  |dtotal|/|total_06a| max 0.00418 median 6.43e-09;  |dtotal|/total_abserr_06a max 5.51e+03 median 0.0548; >1: 4
+      mid  1:102  n=  52  |dtotal|/|total_06a| max 0.00226 median 8.12e-08;  |dtotal|/total_abserr_06a max 1.74e+03 median 0.167; >1: 2
+      mid  2:2    n=  41  |dtotal|/|total_06a| max 0.000507 median 1.86e-07;  |dtotal|/total_abserr_06a max 246 median 0.0982; >1: 1
+      mid  3:201  n=  12  |dtotal|/|total_06a| max 6.76e-06 median 6.27e-07;  |dtotal|/total_abserr_06a max 0.316 median 0.0792; >1: 0
+      seam 3:1    n=   1  |dtotal|/|total_06a| max 1.23e-12 median 1.23e-12;  |dtotal|/total_abserr_06a max 2.32e-05 median 2.32e-05; >1: 0
+      total_abserr_b/total_abserr_06a on the moved rows: n=585 q0=0.00228 q0.5=0.361 q1=1
+   rtol 1e-8: rows whose total moved 745
+      low  3:1    n=  99  |dtotal|/|total_06a| max 0.00694 median 5.88e-09;  |dtotal|/total_abserr_06a max 1.71e+04 median 0.116; >1: 11
+      low  0:101  n=  85  |dtotal|/|total_06a| max 0.00433 median 4.26e-08;  |dtotal|/total_abserr_06a max 2.58e+03 median 0.0971; >1: 16
+      low  1:102  n=  86  |dtotal|/|total_06a| max 2.92e-06 median 7.16e-08;  |dtotal|/total_abserr_06a max 0.431 median 0.0421; >1: 0
+      low  2:2    n=  60  |dtotal|/|total_06a| max 0.000251 median 4.91e-07;  |dtotal|/total_abserr_06a max 0.647 median 0.0378; >1: 0
+      low  3:201  n=   6  |dtotal|/|total_06a| max 1.47e-06 median 8.05e-07;  |dtotal|/total_abserr_06a max 0.0417 median 0.0268; >1: 0
+      mid  3:1    n= 132  |dtotal|/|total_06a| max 4.77e-07 median 1.41e-09;  |dtotal|/total_abserr_06a max 0.767 median 0.0611; >1: 0
+      mid  0:101  n= 119  |dtotal|/|total_06a| max 0.00418 median 4.8e-09;  |dtotal|/total_abserr_06a max 2.16e+04 median 0.0679; >1: 6
+      mid  1:102  n=  95  |dtotal|/|total_06a| max 0.00226 median 1.55e-08;  |dtotal|/total_abserr_06a max 1.77e+03 median 0.0759; >1: 2
+      mid  2:2    n=  49  |dtotal|/|total_06a| max 0.000507 median 1.19e-07;  |dtotal|/total_abserr_06a max 248 median 0.0777; >1: 1
+      mid  3:201  n=  12  |dtotal|/|total_06a| max 6.76e-06 median 6.27e-07;  |dtotal|/total_abserr_06a max 0.357 median 0.0793; >1: 0
+      seam 3:1    n=   1  |dtotal|/|total_06a| max 1.54e-10 median 1.54e-10;  |dtotal|/total_abserr_06a max 0.0501 median 0.0501; >1: 0
+      seam 0:101  n=   1  |dtotal|/|total_06a| max 5.21e-10 median 5.21e-10;  |dtotal|/total_abserr_06a max 0.0349 median 0.0349; >1: 0
+      total_abserr_b/total_abserr_06a on the moved rows: n=745 q0=0.00068 q0.5=0.215 q1=1.01
+
+== descriptive: rows whose total moved by more than total_abserr_06a -- which component moved
+   rtol 1e-7: 32 rows; components that moved: {('WKB_Levin',): 15, ('WKB_Levin', 'analytic_rad'): 17}
+      |dtotal|/abserr_06a 1.29e+04 b-1e-7-3-38029 moved ('WKB_Levin',): total 06a -5.45247e-20 b -5.43332e-20; analytic_rad 06a -5.48906e-19 b -5.48906e-19; abserr 06a 1.49e-26 b 6.71e-27
+      |dtotal|/abserr_06a 6.44e+03 b-1e-7-3-34854 moved ('WKB_Levin',): total 06a -1.4006e-20 b -1.39719e-20; analytic_rad 06a -3.08903e-19 b -3.08903e-19; abserr 06a 5.3e-27 b 6.46e-28
+      |dtotal|/abserr_06a 6.16e+03 b-1e-7-3-14148 moved ('WKB_Levin', 'analytic_rad'): total 06a -6.84746e-21 b -6.89495e-21; analytic_rad 06a -1.06871e-19 b -1.06872e-19; abserr 06a 7.71e-27 b 5.29e-28
+      |dtotal|/abserr_06a 5.51e+03 b-1e-7-0-1794 moved ('WKB_Levin',): total 06a -1.44149e-20 b -1.43761e-20; analytic_rad 06a -3.58235e-20 b -3.58235e-20; abserr 06a 7.03e-27 b 4.49e-27
+      |dtotal|/abserr_06a 4.05e+03 b-1e-7-0-2106 moved ('WKB_Levin', 'analytic_rad'): total 06a -2.02911e-21 b -2.0376e-21; analytic_rad 06a -1.26338e-20 b -1.26338e-20; abserr 06a 2.1e-27 b 2.9e-28
+      |dtotal|/abserr_06a 3.13e+03 b-1e-7-0-2010 moved ('WKB_Levin',): total 06a -2.28759e-21 b -2.29214e-21; analytic_rad 06a -2.04619e-20 b -2.04619e-20; abserr 06a 1.45e-27 b 1.56e-28
+      |dtotal|/abserr_06a 3.06e+03 b-1e-7-3-38377 moved ('WKB_Levin',): total 06a -1.15733e-20 b -1.15593e-20; analytic_rad 06a -2.89959e-19 b -2.89959e-19; abserr 06a 4.58e-27 b 7.68e-28
+      |dtotal|/abserr_06a 2.43e+03 b-1e-7-0-14157 moved ('WKB_Levin',): total 06a -1.52314e-21 b -1.5259e-21; analytic_rad 06a -1.72138e-20 b -1.72138e-20; abserr 06a 1.14e-27 b 3.29e-28
+   rtol 1e-8: 36 rows; components that moved: {('WKB_Levin',): 18, ('WKB_Levin', 'analytic_rad'): 18}
+      |dtotal|/abserr_06a 2.16e+04 b-1e-8-0-1867 moved ('WKB_Levin',): total 06a -9.94499e-20 b -9.9282e-20; analytic_rad 06a -1.46935e-19 b -1.46935e-19; abserr 06a 7.79e-27 b 2.73e-27
+      |dtotal|/abserr_06a 1.71e+04 b-1e-8-3-38029 moved ('WKB_Levin',): total 06a -5.45247e-20 b -5.43331e-20; analytic_rad 06a -5.48906e-19 b -5.48906e-19; abserr 06a 1.12e-26 b 5.33e-28
+      |dtotal|/abserr_06a 1.38e+04 b-1e-8-0-1968 moved ('WKB_Levin',): total 06a 2.02122e-20 b 2.02616e-20; analytic_rad 06a 6.22102e-20 b 6.22102e-20; abserr 06a 3.59e-27 b 2.6e-28
+      |dtotal|/abserr_06a 1.31e+04 b-1e-8-3-34969 moved ('WKB_Levin', 'analytic_rad'): total 06a -3.43773e-20 b -3.42587e-20; analytic_rad 06a -4.34644e-19 b -4.34644e-19; abserr 06a 9.05e-27 b 3.4e-28
+      |dtotal|/abserr_06a 8.68e+03 b-1e-8-0-1794 moved ('WKB_Levin',): total 06a -1.44149e-20 b -1.43762e-20; analytic_rad 06a -3.58235e-20 b -3.58235e-20; abserr 06a 4.46e-27 b 5.3e-28
+      |dtotal|/abserr_06a 7.06e+03 b-1e-8-3-34854 moved ('WKB_Levin',): total 06a -1.4006e-20 b -1.39719e-20; analytic_rad 06a -3.08903e-19 b -3.08903e-19; abserr 06a 4.84e-27 b 9.56e-29
+      |dtotal|/abserr_06a 6.48e+03 b-1e-8-3-14148 moved ('WKB_Levin', 'analytic_rad'): total 06a -6.84747e-21 b -6.89496e-21; analytic_rad 06a -1.06871e-19 b -1.06872e-19; abserr 06a 7.33e-27 b 1.5e-28
+      |dtotal|/abserr_06a 6.22e+03 b-1e-8-3-2326 moved ('WKB_Levin',): total 06a 9.35876e-21 b 9.33883e-21; analytic_rad 06a 2.67328e-19 b 2.67328e-19; abserr 06a 3.2e-27 b 7.5e-29
+
+== descriptive: the 720 stationary-point rows of 06a's scan (07's; not scored)
+   rtol 1e-7: rows 720; total moved 323; row depth change b-06a {0: 690, 3: 3, 4: 19, 5: 4, 6: 4}; rows with a phase-limited group call 06a 323 -> b 0
+   rtol 1e-8: rows 720; total moved 370; row depth change b-06a {0: 686, 2: 7, 3: 18, 4: 5, 5: 4}; rows with a phase-limited group call 06a 370 -> b 0
+
+== descriptive: convergence (total_converged)
+   rtol 1e-7: total_converged False on 06a 2578 -> b 2349 rows; unconverged group calls 06a 6964 -> b 5788
+   rtol 1e-8: total_converged False on 06a 2638 -> b 2388 rows; unconverged group calls 06a 7647 -> b 6186
+
+== descriptive: cost
+   06a rtol 1e-7: Levin wall (timed section) sum 2399 s, n=9280 q0.5=0.252 q0.99=0.659 q1=0.785; rebuild sum 1060 s
+   06a rtol 1e-8: Levin wall (timed section) sum 2760 s, n=9280 q0.5=0.273 q0.99=0.799 q1=1.03; rebuild sum 1066 s
+   b rtol 1e-7: Levin wall (timed section) sum 2477 s, n=9280 q0.5=0.259 q0.99=0.687 q1=2.37; rebuild sum 1016 s
+   b rtol 1e-8: Levin wall (timed section) sum 3375 s, n=9280 q0.5=0.301 q0.99=0.932 q1=159; rebuild sum 1008 s
+   b, W3's recomputation (outside the timed section) sum 0.3 s
+
+wrote out/census_rows_06b.csv.gz and out/moved_calls.csv
+
+== verdicts: W1 HOLDS; W2 FAILS; W3 HOLDS; W4 FAILS
+# ----
+# end 2026-10-28T17:08:03Z
+# exit 0

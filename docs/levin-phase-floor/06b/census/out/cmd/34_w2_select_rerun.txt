@@ -1,0 +1,49 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06b.py select /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T17:06:40Z
+# ----
+# levin-phase-floor 06b: W2's sample
+# written 2026-10-28T17:06:40Z on mps026298.phys.susx.ac.uk
+# script analyse06b.py sha256 c701ae82d2856fa74db22a78a2f7df141d6b8d07d84cdf43a8ca949f0e7146f4
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d HEAD da5c24deb430172f68d983f56577fa48def19903 (status --short: empty)
+# tree b: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f HEAD 92bc62f09711d10ef0035663d4bbe5629e145e17 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_capture.json sha256 217723d1baf5576a7ec09d823b3f0f6fa4a6d35846122550d76bd721c362d7d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+captured calls 975; band low/mid 974; b unit done 974; moved 974; inputs captured 974
+captured low/mid calls that did not move: 0 []
+band low: strata 3:1 (k 1e+05): 182, 0:101 (k 3.139e+05): 154, 1:102 (k 9.851e+05): 133, 2:2 (k 3.092e+06): 99, 3:201 (k 9.703e+06): 1
+band mid: strata 3:1 (k 1e+05): 130, 0:101 (k 3.139e+05): 120, 1:102 (k 9.851e+05): 112, 2:2 (k 3.092e+06): 43
+
+selected 24 (low 12, mid 12); shortfall 0
+   1 low  3:1    b-1e-7-3-38376     call 4   Gqr, group G-q-r
+   2 low  0:101  b-1e-7-0-35070     call 4   Gqr, group G-q-r
+   3 low  1:102  b-1e-7-1-2174      call 2   Gqr, group G+q-r
+   4 low  2:2    b-1e-7-2-14345     call 3   Gqr, group G+q+r
+   5 low  3:201  b-1e-7-3-38538     call 3   Gqr, group G+q+r
+   6 low  3:1    b-1e-7-3-35004     call 3   Gqr, group G-q+r
+   7 low  0:101  b-1e-7-0-38940     call 3   Gqr, group G+q+r
+   8 low  1:102  b-1e-7-1-2155      call 3   Gqr, group G+q+r
+   9 low  2:2    b-1e-7-2-39035     call 2   Gqr, group G+q-r
+  10 low  3:1    b-1e-7-3-14587     call 4   Gqr, group G-q-r
+  11 low  0:101  b-1e-7-0-38352     call 4   Gqr, group G-q-r
+  12 low  1:102  b-1e-7-1-14233     call 4   Gqr, group G-q-r
+  13 mid  3:1    b-1e-7-3-37351     call 1   Gqr, group G+q+r
+  14 mid  0:101  b-1e-7-0-1949      call 4   Gqr, group G-q-r
+  15 mid  1:102  b-1e-7-1-37655     call 2   Gqr, group G+q-r
+  16 mid  2:2    b-1e-7-2-34816     call 2   Gqr, group G+q-r
+  17 mid  3:1    b-1e-7-3-34739     call 4   Gqr, group G-q-r
+  18 mid  0:101  b-1e-7-0-12977     call 5   Gqr, group G-q+r
+  19 mid  1:102  b-1e-7-1-34769     call 2   Gqr, group G+q-r
+  20 mid  2:2    b-1e-7-2-34728     call 3   Gqr, group G-q+r
+  21 mid  3:1    b-1e-7-3-34455     call 1   Gqr, group G+q+r
+  22 mid  0:101  b-1e-7-0-2106      call 2   Gqr, group G+q-r
+  23 mid  1:102  b-1e-7-1-34769     call 3   Gqr, group G-q+r
+  24 mid  2:2    b-1e-7-2-34473     call 3   Gqr, group G+q+r
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census/state/w2_selection.json sha256 666f30f44ba539e5940ff5e0d7563dfe4defa108cb917e4bdd2a80cb2a6c96c9
+# ----
+# end 2026-10-28T17:06:45Z
+# exit 0

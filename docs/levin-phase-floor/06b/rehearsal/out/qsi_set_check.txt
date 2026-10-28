@@ -1,0 +1,26 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-28T14:09:31Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -I -c "
+import csv,sys
+rows=list(csv.DictReader(open(sys.argv[1])))
+T=lambda s: s==\"True\"
+moved={(r[\"k\"],r[\"q\"],r[\"r\"],r[\"z_response\"]) for r in rows if not T(r[\"total_bit_identical\"])}
+grp={(r[\"k\"],r[\"q\"],r[\"r\"],r[\"z_response\"]) for r in rows if int(r[\"group_pl_R15\"])>0}
+an_moved={(r[\"k\"],r[\"q\"],r[\"r\"],r[\"z_response\"]) for r in rows if not T(r[\"analytic_rad_bit_identical\"])}
+an={(r[\"k\"],r[\"q\"],r[\"r\"],r[\"z_response\"]) for r in rows if int(r[\"analytic_pl_R15\"])>0}
+print(\"rows whose total moved:\", len(moved), \"; rows with a group flag in R15:\", len(grp), \"; equal sets:\", moved==grp)
+print(\"rows whose analytic_rad moved:\", len(an_moved), \"; rows with an analytic-block flag in R15:\", len(an), \"; equal sets:\", an_moved==an)
+ev=[(int(r[\"WKB_Levin_evaluations_R15\"]),int(r[\"WKB_Levin_evaluations_R16\"])) for r in rows if int(r[\"group_pl_R15\"])>0]
+print(\"WKB_Levin_evaluations over the 26 rows: R15\", sum(a for a,b in ev), \"R16\", sum(b for a,b in ev), \"; rows where it changed\", sum(a!=b for a,b in ev))
+gr=[r for r in rows if int(r[\"group_pl_R15\"])>0]
+print(\"converged R15->R16 over the 26:\", sorted(set((r[\"converged_R15\"],r[\"converged_R16\"]) for r in gr)), [ (r[\"converged_R15\"],r[\"converged_R16\"]) for r in gr].count((\"False\",\"True\")), \"False->True\")
+" /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/rehearsal/out/qsi_rows.csv
+# output:
+rows whose total moved: 26 ; rows with a group flag in R15: 26 ; equal sets: True
+rows whose analytic_rad moved: 70 ; rows with an analytic-block flag in R15: 70 ; equal sets: True
+WKB_Levin_evaluations over the 26 rows: R15 1314 R16 1638 ; rows where it changed 26
+converged R15->R16 over the 26: [('0', '0'), ('0', '1')] 0 False->True
+# exit: 0
+# end: 2026-10-28T14:09:32Z

@@ -1,0 +1,29 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ echo\ \'status\ --short:\'\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\;\ done\;\ echo\ \'==\ worktrees\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ worktree\ list\;\ echo\ \'==\ registry\'\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -4\;\ echo\ \'==\ free\'\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-28T14:14:29Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status --short:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d
+da5c24deb430172f68d983f56577fa48def19903
+status --short:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f
+92bc62f09711d10ef0035663d4bbe5629e145e17
+status --short:
+== worktrees
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-92bc62f 92bc62f (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d da5c24d (detached HEAD)
+== registry
+   handover-06-resumed-a-20261022T195718                 killed            -   5d 19h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228                 done              -   5d 19h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+27 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 27 finished; 0 with no host recorded.
+== free
+/dev/disk3s3s1  927G  818G  109G  89% /
+14:14  up 21 days,  4:51, 2 users, load averages: 5.92 13.99 16.43
+# ----
+# end 2026-10-28T14:14:29Z
+# exit 0

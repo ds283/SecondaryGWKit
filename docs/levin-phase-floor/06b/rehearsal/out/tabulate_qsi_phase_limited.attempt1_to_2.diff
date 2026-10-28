@@ -1,0 +1,16 @@
+29a30,33
+>   - identity: store bookkeeping, not a computed value: the column `serial`, every column ending
+>     `_serial` (a row's own and its parents' serials, which each store assigns for itself; rows
+>     are paired by physical key instead), and `timestamp` (the write time). Not compared.
+>     (Added after attempt 1, which counted these as values; see the log.)
+147a152,153
+>     if c == "serial" or c.endswith("_serial") or c == "timestamp":
+>         return "identity"
+244c250
+<             for k in ("timing", "label", "counter")
+---
+>             for k in ("timing", "label", "identity", "counter")
+294c300
+<             if kind in ("timing", "label"):
+---
+>             if kind in ("timing", "label", "identity"):
