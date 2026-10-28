@@ -1,0 +1,228 @@
+# levin-phase-floor 06b: section 2 tests 1-4 against the parent commit's own module
+# written 2026-10-28T10:31:45+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script parent_demo.py sha256 4285b12a1404c75cfa92f4c0e21f9742d60af962687696261b68ada800a7faac
+# prov.py sha256 52cdd1ab692febd505fd6d35dc44877731c9992f84f9e78cea52f863b80d5615
+# AdaptiveLevin/levin_quadrature.py sha256 1ba4635e1b478700b05c80ba3e926a480c814ccb7c2096ccd53ecc9f747e503a
+# input AdaptiveLevin/tests/test_levin_roundoff_exit.py sha256 62105049e1b840b87b29181360dd7833a2b40b4aec47638f9fde90bfbff43c62
+# input AdaptiveLevin/tests/test_levin_quadrature.py sha256 3c6a4729916256669743e215e053993de115d141fb25de651a143d7ba75a2330
+# HEAD da5c24deb430172f68d983f56577fa48def19903
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#     ?? AdaptiveLevin/tests/test_levin_roundoff_exit.py
+#     ?? docs/levin-phase-floor/06b/
+# uptime at start: 10:31  up 23 days,  9:16, 2 users, load averages: 8.17 12.61 13.64
+# parent module: git show da5c24deb430172f68d983f56577fa48def19903:AdaptiveLevin/levin_quadrature.py, sha256 bc402243b9fb71a4c503608cafade066cbd6df9bad23bd08540d46aebec1cec3
+
+== test 1 (Levin, theta = 100 e^x on [0, 20])
+   span (0.0, 20.0) kwargs {'atol': 1e-15, 'rtol': 1e-07}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    False
+   parent  value 0.008570866361715342 abserr 9.703303918195807e-07 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value 0.008570859939533229 abserr 4.4053931589613436e-11 regions 2 phase-limited 0 max depth 1 evaluations 7 converged True
+   reference 0.008570859924939634 (its own error estimate 5.27e-32); true error parent 6.4368e-09 (relative 7.5101e-07), new 1.4594e-11 (relative 1.7027e-09)
+   parent region (0, 20), depth=0 | Levin, abserr=6.4221821e-09, relerr=7.4930429e-07, phase_err=9.7033039e-07 (PHASE LIMITED) | p-ratios=[0.009996, 1]
+   new region (0, 10), depth=1 | Levin, abserr=1.4696249e-11, relerr=1.7147526e-09, phase_err=2.2026966e-11 | p-ratios=[0.009996, 1]
+   new region (10, 20), depth=1 | Levin, abserr=6.0412507e-18, relerr=1.5823331e-11, phase_err=2.2026966e-11 | p-ratios=[4.54e-07, 1]
+== test 2a (constant theta')
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104646665e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104646665e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   reference -3.347268411459556e-07 (its own error estimate 6.55e-38); true error parent 9.9489e-17 (relative 2.9722e-10), new 9.9489e-17 (relative 2.9722e-10)
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.335358e-16, relerr=3.9893963e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.335358e-16, relerr=3.9893963e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 2b (theta' = 5e5 e^{x/2} on [0, 2])
+   span (0.0, 2.0) kwargs {'atol': 1e-24, 'rtol': 1e-16, 'chebyshev_order': 16}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 1.1392801098487795e-06 abserr 6.43656365691809e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value 1.1392801098487795e-06 abserr 6.43656365691809e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   reference 1.139280109833722e-06 (its own error estimate 1.27e-31); true error parent 1.5057e-17 (relative 1.3217e-11), new 1.5057e-17 (relative 1.3217e-11)
+   parent region (0, 2), depth=0 | Levin, abserr=8.4703295e-22, relerr=7.4348085e-16, phase_err=6.4365637e-16 (PHASE LIMITED) | p-ratios=[8.3e-07, 1]
+   new region (0, 2), depth=0 | Levin, abserr=8.4703295e-22, relerr=7.4348085e-16, phase_err=6.4365637e-16 (PHASE LIMITED) | p-ratios=[8.3e-07, 1]
+== test 3 (fallback, theta = 1e-6 e^x on [0, 6])
+   span (0.0, 6.0) kwargs {'atol': 1e-20, 'rtol': 1e-10}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    False
+   parent  value 0.08137689460578854 abserr 1.0327826060880082e-05 regions 1 phase-limited 1 max depth 0 evaluations 1 converged False
+   new     value 0.08137689460578855 abserr 1.0283808299712664e-06 regions 2 phase-limited 0 max depth 1 evaluations 3 converged False
+   reference 0.08137689460578854 (its own error estimate 1.46e-26); true error parent 0.0000e+00 (relative 0.0000e+00), new 1.3878e-17 (relative 1.7054e-16)
+   parent region (0, 6), depth=0 | direct, abserr=2.2159927e-11, relerr=2.7231227e-10, phase_err=1.0327826e-05 (PHASE LIMITED) | p-ratios=[]
+   new region (0, 3), depth=1 | direct, abserr=5.3396957e-18, relerr=2.6537344e-14, phase_err=5.1418981e-07 | p-ratios=[]
+   new region (3, 6), depth=1 | direct, abserr=2.1649349e-15, relerr=2.6669748e-14, phase_err=5.1419102e-07 | p-ratios=[]
+== test 4: SinIntegral
+   span (1.0, 50000.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.5581795618346952 abserr 7.499881225022657e-12 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 0.5581795618346952 abserr 7.499881225022657e-12 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: CosIntegral
+   span (1.0, 500000.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -0.6636397832896364 abserr 7.499985273761128e-11 regions 1 phase-limited 0 max depth 0 evaluations 3 converged False
+   new     value -0.6636397832896364 abserr 7.499985273761128e-11 regions 1 phase-limited 0 max depth 0 evaluations 3 converged False
+== test 4: SincIntegral
+   span (1.0, 100.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.008666078496808147 abserr 1.565349990535462e-13 regions 10 phase-limited 0 max depth 8 evaluations 39 converged True
+   new     value 0.008666078496808147 abserr 1.565349990535462e-13 regions 10 phase-limited 0 max depth 8 evaluations 39 converged True
+== test 4: GRZIntegral(10)
+   span (-1.0, 1.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.20000000000000007 abserr 4.5368239409276833e-13 regions 8 phase-limited 0 max depth 3 evaluations 15 converged True
+   new     value 0.20000000000000007 abserr 4.5368239409276833e-13 regions 8 phase-limited 0 max depth 3 evaluations 15 converged True
+== test 4: GRZIntegral(100)
+   span (-1.0, 1.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -2.822271496366602e-13 abserr 4.400688424882392e-12 regions 24 phase-limited 0 max depth 6 evaluations 51 converged False
+   new     value -2.822271496366602e-13 abserr 4.400688424882392e-12 regions 24 phase-limited 0 max depth 6 evaluations 51 converged False
+== test 4: GRZIntegral(1000)
+   span (-1.0, 1.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -1.020248338937102e-13 abserr 2.9205877625192167e-13 regions 4 phase-limited 0 max depth 2 evaluations 15 converged False
+   new     value -1.020248338937102e-13 abserr 2.9205877625192167e-13 regions 4 phase-limited 0 max depth 2 evaluations 15 converged False
+== test 4: nan_amplitude
+   span (1.0, 2.0) kwargs {}
+   parent: ValueError; bypass: ValueError; new: ValueError
+== test 4: all_nan_amplitude
+   span (1.0, 2.0) kwargs {}
+   parent: ValueError; bypass: ValueError; new: ValueError
+== test 4: input_validation_order_clamp
+   span (1.0, 50.0) kwargs {'chebyshev_order': 4}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -0.4246637226239688 abserr 1.697037167530658e-14 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value -0.4246637226239688 abserr 1.697037167530658e-14 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: lstsq_path
+   span (0.0, 1.0) kwargs {'atol': 1e-15, 'rtol': 1e-12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.02010065609084416 abserr 9.551557758923682e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 0.02010065609084416 abserr 9.551557758923682e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: direct_solve_path
+   span (0.0, 1.0) kwargs {'atol': 1e-15, 'rtol': 1e-12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.00670625245401996 abserr 3.879873020235274e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 0.00670625245401996 abserr 3.879873020235274e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: converged_flag_bump
+   span (0.0, 3.0) kwargs {'atol': 1e-10}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.4370186682624975e-12 abserr 1.888081936279938e-11 regions 4 phase-limited 0 max depth 3 evaluations 15 converged True
+   new     value -3.4370186682624975e-12 abserr 1.888081936279938e-11 regions 4 phase-limited 0 max depth 3 evaluations 15 converged True
+== test 4: stationary_phase
+   span (0.0, 1.0) kwargs {'atol': 1e-10, 'rtol': 1e-10}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -0.0006879079717046606 abserr inf regions 20 phase-limited 0 max depth 10 evaluations 67 converged False
+   new     value -0.0006879079717046606 abserr inf regions 20 phase-limited 0 max depth 10 evaluations 67 converged False
+== test 4: roundoff_floor_raw(1e+06)
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104646384e-07 abserr 2.1495939317214157e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104646384e-07 abserr 2.1495939317214157e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: roundoff_floor_reduced(1e+06)
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.347268410408778e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.347268410408778e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3353586e-16, relerr=3.9893979e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3353586e-16, relerr=3.9893979e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: roundoff_floor_raw(1e+12)
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -2.9701896642525725e-13 abserr 2.149593931721415e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -2.9701896642525725e-13 abserr 2.149593931721415e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.668905e-16, relerr=0.00056220088, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-12, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.668905e-16, relerr=0.00056220088, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-12, 1]
+== test 4: roundoff_floor_reduced(1e+12)
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -2.970231621698786e-13 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -2.970231621698786e-13 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.6688982e-16, relerr=0.00056219064, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-12, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.6688982e-16, relerr=0.00056219064, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-12, 1]
+== test 4: theta_abserr_scalar
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104646384e-07 abserr 8.350000312578765e-15 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104646384e-07 abserr 8.350000312578765e-15 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=8.3500003e-15 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=8.3500003e-15 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: theta_abserr_callable
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104646384e-07 abserr 8.350000312578765e-15 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104646384e-07 abserr 8.350000312578765e-15 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=8.3500003e-15 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354523e-16, relerr=3.9896778e-10, phase_err=8.3500003e-15 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: mode_filter_loose
+   span (1.0, 1.0003) kwargs {'atol': 1e-20, 'rtol': 0.01, 'chebyshev_order': 16, 'depth_max': 20}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 4.809096874481584e-07 abserr 7.358970938842164e-13 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 4.809096874481584e-07 abserr 7.358970938842164e-13 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: mode_filter_tight
+   span (1.0, 1.0003) kwargs {'atol': 1e-20, 'rtol': 1e-08, 'chebyshev_order': 16, 'depth_max': 20}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 4.809099003166193e-07 abserr 2.0701876983633205e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 4.809099003166193e-07 abserr 2.0701876983633205e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: theta_mod_2pi_path_only
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104087496e-07 abserr 2.1495939317214157e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104087496e-07 abserr 2.1495939317214157e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354533e-16, relerr=3.989681e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.3354533e-16, relerr=3.989681e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: theta_deriv_path_only
+   span (0.3333333333333333, 2.3333333333333335) kwargs {'atol': 1e-18, 'rtol': 1e-13, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -3.3472684104646665e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   new     value -3.3472684104646665e-07 abserr 2.1495939317213671e-16 regions 1 phase-limited 1 max depth 0 evaluations 3 converged False
+   parent region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.335358e-16, relerr=3.9893963e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+   new region (0.33333333, 2.3333333), depth=0 | Levin, abserr=1.335358e-16, relerr=3.9893963e-10, phase_err=2.1495939e-16 (PHASE LIMITED) | p-ratios=[1e-06, 1]
+== test 4: reversed_span_forward
+   span (1.0, 5.0) kwargs {'atol': 1e-13, 'rtol': 1e-11}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.01746168145719191 abserr 8.177629641348545e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value 0.01746168145719191 abserr 8.177629641348545e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: reversed_span_reversed
+   span (5.0, 1.0) kwargs {'atol': 1e-13, 'rtol': 1e-11}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -0.017461681457191625 abserr 6.66408340855863e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value -0.017461681457191625 abserr 6.66408340855863e-16 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: generic_m4_basis
+   span (1.0, 50.0) kwargs {'atol': 1e-13, 'rtol': 1e-11, 'chebyshev_order': 16}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value -1.1324952565916957 abserr 4.424646893955162e-14 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+   new     value -1.1324952565916957 abserr 4.424646893955162e-14 regions 1 phase-limited 0 max depth 0 evaluations 3 converged True
+== test 4: vectorized_sinc
+   span (1.0, 100.0) kwargs {'atol': 1e-15, 'rtol': 1e-10, 'chebyshev_order': 12}
+   parent == bypass, bit for bit: True
+   bypass == new, bit for bit:    True
+   parent  value 0.008666078496808147 abserr 1.565349990535462e-13 regions 10 phase-limited 0 max depth 8 evaluations 39 converged True
+   new     value 0.008666078496808147 abserr 1.565349990535462e-13 regions 10 phase-limited 0 max depth 8 evaluations 39 converged True
+
+== parent vs bypass: problems that differ none

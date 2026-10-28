@@ -48,6 +48,16 @@ deliberate departures are:
     production code path and has been replaced -- see prompts/levin-refactor
     /logs/04-roundoff-floor.md.)
 
+    A region whose floor is finite and above tolerance, and whose residual
+    is already down at it, is accepted without bisection as round-off-limited
+    (phase_limited) -- but only if bisecting it would not lower the floor:
+    its two halves' floors must sum to at least
+    _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own. That premise used
+    to be assumed, and it fails where max|theta'| / min|theta'| is large,
+    because there the floor comes from fitting one region over many decades
+    of frequency rather than from the integrand. See that constant's comment
+    and prompts/levin-phase-floor/06b-roundoff-exit-premise.md.
+
   * Weakly oscillatory regions (total variation of the phase, mean|theta'| * width,
     below 6*pi) are handed to a nested Clenshaw-Curtis rule rather than to the Levin
     rule. The extremal Chebyshev grid the Levin solve already uses *is* the
@@ -222,6 +232,36 @@ _LEVIN_PHASE_ERROR_SAFETY = 1.0
 # a fall-through to depth_max), never force a wrong early acceptance.
 _LEVIN_ROUNDOFF_G0_NOISE_FLOOR = 1.0e-10
 
+# The round-off-limited exit's premise (prompts/levin-phase-floor/06b-roundoff-exit-premise.md).
+# _adaptive_levin() accepts a region without bisecting it when its eq. (151) floor is finite and
+# above tolerance and its residual is already down at that floor (phase_limited). That exit rests
+# on one premise: that bisecting cannot lower the floor. It is now checked, not assumed: the exit
+# fires only if the floors of the region's two halves sum to at least this fraction of its own,
+#
+#     phase_err_L + phase_err_R >= _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO * phase_err_parent.
+#
+# Why the premise can fail. The floor is roughly eps * ||f|| * (h/2) * (1 + G1/G0 + max(G1, k^2)/G0)
+# with G0 = min|theta'| and G1 = max|theta'| on the rescaled region. Where G1/G0 is large, the floor
+# is set by fitting one region over many decades of frequency, not by the integrand: halving the
+# region cuts that ratio, roughly to its square root when theta' grows exponentially, so the
+# halves' floors sum to far less than the parent's. Found on a seeded LiouvilleGreen three-Bessel
+# draw ([07-roundoff-exit-assumes-bisection-cannot-help]): a Levin region with G1/G0 ~ 1e9 was
+# accepted at depth 0 on a floor of 9e-7 that bisection would have cut by ~1e4, outside the test's
+# tolerance.
+#
+# Why 1/2.
+#   * Where the floor is genuinely round-off it does not fall under bisection: the summed floor is
+#     roughly invariant under subdivision (see _roundoff_floor()), and where the k^2 term dominates
+#     it grows.
+#   * Where it comes from a wide range of theta', the halves' sum falls like the ratio's square
+#     root -- (1 + 2 sqrt(R)) / (1 + 2 R) of the parent's for R = G1/G0 with theta' exponential and
+#     G1 above k^2: a factor ~1e4 at R = 1e9.
+#   * 1/2 separates the two with a margin either way: R = 3 gives a halves' sum of about 0.64 of the
+#     parent's, and the exit fires; R = 10 gives about 0.35, and the region is bisected.
+#   * Not 1: that would never let the exit fire while G1/G0 > 1, however slowly the floor fell,
+#     and would drive every such region on towards depth_max.
+_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5
+
 # minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
 # conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
@@ -393,6 +433,16 @@ def _roundoff_floor(
     full numerical consequence of this choice, including the regression this specific threshold
     fixes.
 
+    A *finite* floor could, until prompts/levin-phase-floor/06b-roundoff-exit-premise.md. The exit
+    assumed that bisecting a region leaves its floor where it is. That holds where the floor is
+    genuinely round-off -- the summed floor is roughly invariant under subdivision, as above, and
+    grows where the k^2 term dominates -- but not where G1/G0 is large: there the floor comes from
+    fitting one region over many decades of theta', halving the region cuts G1/G0 roughly to its
+    square root when theta' grows exponentially, and the halves' floors sum to far less than the
+    region's own. A finite floor now freezes a region only if its halves' floors sum to at least
+    _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own (_roundoff_exit_premise_holds(); see
+    that constant's comment for why 1/2).
+
     :param f_scale: max_grid |f| for this region -- max sqrt(f_1(x)^2 + f_2(x)^2) over the grid
         already sampled to build the region's estimate (see prompt 04, note (c), for why the
         Euclidean combination of the two components was chosen over max_i max_grid|f_i| or their
@@ -445,6 +495,25 @@ def _declared_endpoint_phase_err(
         err += _phase_error(theta_abserr_b, p_endpoint_l1_b)
 
     return err
+
+
+def _roundoff_exit_premise_holds(
+    phase_err: float, phase_err_L: float, phase_err_R: float
+) -> bool:
+    """
+    The round-off-limited exit's premise: would bisecting this region leave its floor materially
+    where it is? True if its two halves' floors ("phase_err", as each half's own subregion solve
+    reports it) sum to at least _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO times its own -- see that
+    constant's comment for the argument and the value.
+
+    _adaptive_levin() asks this only once every other condition of the exit holds, so phase_err is
+    always finite here. A half's floor can be +inf (an interior stationary point at or near one of
+    its nodes; see _roundoff_floor()); the sum is then +inf, the premise holds and the exit may
+    fire, exactly as it did before the premise was checked.
+    """
+    return (
+        phase_err_L + phase_err_R
+    ) >= _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO * phase_err
 
 
 class used_interval:
@@ -560,8 +629,10 @@ class used_interval:
     def phase_limited(self) -> bool:
         """
         True if this region was accepted because the round-off floor, not lack of resolution, set
-        the achievable accuracy. Subdividing such a region cannot improve it. Never True when
-        phase_err is not finite -- see _adaptive_levin()'s phase_limited computation.
+        the achievable accuracy, and its two halves' floors sum to at least
+        _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own, so subdividing it would not lower
+        the floor materially. Never True when phase_err is not finite -- see _adaptive_levin()'s
+        phase_limited computation.
         """
         return self._phase_limited
 
@@ -1704,7 +1775,15 @@ def _adaptive_levin(
     notify_label: str = None,
     emit_diagnostics: bool = False,
     diagnostics_path: Optional[Union[str, Path]] = None,
+    _test_only_bypass_roundoff_premise: bool = False,
 ):
+    # _test_only_bypass_roundoff_premise: TEST-ONLY. True restores the round-off-limited exit as it
+    # was before prompts/levin-phase-floor/06b-roundoff-exit-premise.md, accepting a region on its
+    # floor without checking that bisection would not lower it (_roundoff_exit_premise_holds()).
+    # It exists so the tests and calibration scripts can run the parent behaviour beside the new;
+    # it is read only by the two phase_limited tests below, and adaptive_levin_sincos() does not
+    # expose it. Never set it in production code.
+    #
     # Input validation (rec 4, C8, C9). This module cannot deliver a purely relative-error
     # contract: the phase-rounding floor computed by _phase_error() is absolute by nature, so a
     # caller asking for atol=0 leaves the relative-error denominator floor at :relerr_denom inert
@@ -1976,10 +2055,11 @@ def _adaptive_levin(
             # Nested Clenshaw-Curtis fallback (C2, C7). Unlike the Levin branch below, this
             # region's error estimate -- |CC_{2N-1} - CC_N| -- comes from a nested pair evaluated
             # entirely within this one region, not from a comparison against children. So there is
-            # no dataL/dataR to compute here, and none of the "reuse the comparison estimate as the
-            # child's own estimate" bookkeeping applies: a bisected fallback region's children are
-            # freshly evaluated (and independently re-gated on their own, roughly-halved phase span)
-            # when they are popped.
+            # no dataL/dataR to compute here for the residual: a bisected fallback region's children
+            # are freshly evaluated (and independently re-gated on their own, roughly-halved phase
+            # span) when they are popped. The one exception is a region that reaches the
+            # round-off-limited exit: its halves are solved to check the exit's premise (below),
+            # and if it is then bisected they are carried forward as the children's estimates.
             estimate = data["value"]
             abserr = data["abserr_direct"]
 
@@ -2005,6 +2085,62 @@ def _adaptive_levin(
                 and abserr <= phase_err
             )
             phase_limited = phase_limited and not resolved
+
+            # The exit's premise -- that bisecting cannot lower the floor -- is checked, not
+            # assumed (_roundoff_exit_premise_holds(), _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2;
+            # prompts/levin-phase-floor/06b-roundoff-exit-premise.md). A fallback region has no
+            # comparison halves of its own, so they are computed here, and only here, where every
+            # other condition of the exit holds: a call in which no region reaches the exit does
+            # no extra work. Each half is a full subregion solve on its own samples -- the same
+            # call that would produce it if it were popped as a region, so its "phase_err" is the
+            # floor it would carry -- and if the premise fails the halves are carried forward as
+            # the children's own estimates, as the Levin branch carries dataL/dataR, rather than
+            # evaluated a second time when the children are popped.
+            halves = None
+            if phase_limited and not _test_only_bypass_roundoff_premise:
+                halves = []
+                for half_span, half_name in (((a, c), "left"), ((c, b), "right")):
+                    try:
+                        half = _adaptive_levin_subregion(
+                            half_span,
+                            f,
+                            BasisData,
+                            id_label=id_label,
+                            chebyshev_order=chebyshev_order,
+                            rtol=rtol,
+                            notify_label=notify_label,
+                            build_p_sample=build_p_sample,
+                            diagnostics_path=resolved_diagnostics_path,
+                            vectorize_cache=vectorize_cache,
+                        )
+                    except LinAlgError as e:
+                        _logger.warning(
+                            "!! adaptive_levin (%s): linear algebra error when estimating the "
+                            "%s half (%s, %s) of fallback region (%s, %s) for its round-off "
+                            "premise",
+                            _format_label(notify_label, id_label),
+                            half_name,
+                            half_span[0],
+                            half_span[1],
+                            a,
+                            b,
+                        )
+                        raise e
+                    halves.append(half)
+
+                num_evaluations += 2
+                # True-solve accounting (rec 11, C10), as for dataL/dataR below: counted once,
+                # here, and not again if a half is carried forward and popped as a child.
+                for _solve_data in halves:
+                    num_solves_direct += _solve_data["metadata"].get("direct_solve", 0)
+                    num_solves_lstsq += _solve_data["metadata"].get("lstsq_solve", 0)
+                    num_solves_pinv += _solve_data["metadata"].get("pinv_solve", 0)
+
+                phase_limited = _roundoff_exit_premise_holds(
+                    phase_err,
+                    halves[0].get("phase_err", 0.0) or 0.0,
+                    halves[1].get("phase_err", 0.0) or 0.0,
+                )
 
             if resolved or phase_limited or current_region.depth >= depth_max:
                 val = val + estimate
@@ -2049,6 +2185,7 @@ def _adaptive_levin(
                             abserr_history=new_abs_history,
                             relerr_history=new_rel_history,
                             p_ratios_history=new_p_ratios_history,
+                            estimate=halves[0] if halves is not None else None,
                         ),
                         _levin_interval(
                             start=c,
@@ -2057,6 +2194,7 @@ def _adaptive_levin(
                             abserr_history=new_abs_history,
                             relerr_history=new_rel_history,
                             p_ratios_history=new_p_ratios_history,
+                            estimate=halves[1] if halves is not None else None,
                         ),
                     ]
                 )
@@ -2148,10 +2286,18 @@ def _adaptive_levin(
 
         # Is this region precision-limited rather than under-resolved? All of the following must
         # hold: the round-off floor is finite, it exceeds what the caller asked for, AND the
-        # step-(4) resolution residual has already come down to that floor. In that case
-        # bisecting cannot help -- the children inherit essentially the same round-off floor (see
-        # _roundoff_floor()), so subdivision buys additional cost and no accuracy. Accept and flag
-        # it.
+        # step-(4) resolution residual has already come down to that floor -- and, below, the
+        # tolerance was not met by resolution, and bisecting would not lower the floor. Then
+        # subdivision buys additional cost and no accuracy. Accept and flag it.
+        #
+        # The last condition is the exit's premise. It used to be assumed ("the children inherit
+        # essentially the same round-off floor"), and it fails wherever G1/G0 = max|theta'| /
+        # min|theta'| is large: there the floor is set by fitting one region over many decades of
+        # frequency, and halving the region cuts it by orders of magnitude
+        # ([07-roundoff-exit-assumes-bisection-cannot-help]). It is now checked from the halves the
+        # step-(4) residual has already solved: dataL["phase_err"] + dataR["phase_err"] must be at
+        # least _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of this region's floor -- see that
+        # constant's comment for why 1/2 -- and only once every other condition holds.
         #
         # The finiteness guard matters as of prompt 04: _roundoff_floor() returns +inf when G0 =
         # min|theta'| lands on (or numerically at) a sampled node -- an interior stationary point,
@@ -2185,6 +2331,15 @@ def _adaptive_levin(
         # produce a warning about a result that in fact met its tolerance. The conservative bound
         # is still carried into the aggregate abserr either way; this only governs the diagnostic.
         phase_limited = phase_limited and not resolved
+
+        # The exit's premise (see the comment above the first phase_limited test): its halves'
+        # floors are already in hand, so checking it costs no evaluation.
+        if phase_limited and not _test_only_bypass_roundoff_premise:
+            phase_limited = _roundoff_exit_premise_holds(
+                phase_err,
+                dataL.get("phase_err", 0.0) or 0.0,
+                dataR.get("phase_err", 0.0) or 0.0,
+            )
 
         if resolved or phase_limited or current_region.depth >= depth_max:
             val = val + estimate
@@ -2403,8 +2558,9 @@ def _adaptive_levin(
         # round-off floor exceeding a region's share of atol).
         "converged": bool(converged),
         # True if at least one accepted region was limited by the round-off floor rather than by
-        # resolution. When this is set, the requested tolerance was not attainable at this
-        # Chebyshev order and interval geometry, and tightening atol/rtol will not help.
+        # resolution, on a floor its halves would not lower (_roundoff_exit_premise_holds()). When
+        # this is set, the requested tolerance was not attainable at this Chebyshev order and
+        # interval geometry, and tightening atol/rtol will not help.
         "phase_limited": num_phase_limited > 0,
         "num_phase_limited_regions": num_phase_limited,
         "p_points": p_points,
@@ -2833,8 +2989,9 @@ def adaptive_levin_sincos(
           * "converged" -- True if "abserr" <= max(atol, rtol*|value|), i.e. whether the request
             was actually met in aggregate. Usually True as of prompt 05 (see the atol note above).
           * "phase_limited" -- True if at least one accepted region's achievable accuracy was set
-            by the round-off floor rather than by lack of resolution; tightening atol/rtol will
-            not help such regions -- see abserr_roundoff above.
+            by the round-off floor rather than by lack of resolution, on a floor that bisecting
+            the region would not lower (its halves' floors sum to at least half its own);
+            tightening atol/rtol will not help such regions -- see abserr_roundoff above.
           * "num_phase_limited_regions" -- count of such regions.
           * "num_regions" -- number of accepted subintervals (Levin + direct quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather
