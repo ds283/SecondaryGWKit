@@ -558,3 +558,32 @@ Relay verbatim; do not adjudicate. Stop at:
 
 **Never write to A3 v2 or its scratch copy,** or to 05's, 05a's, 06's or 06a's records on the
 Mac Studio. **Never move the Mac Studio's main checkout,** and never end another session's run.
+
+---
+
+## Addendum, 2026-10-28: Part A stopped, and 06b runs first
+
+**Part A stopped before §2** on 2026-10-27, on two of §8's conditions:
+- §2's reference, as written, is impractical (§0.2 item 3, as foreseen);
+- a LiouvilleGreen draw moves (§0.2 item 1).
+
+Its §1 is built and uncommitted. Its 21 deviations and five observations are in its log. The
+laptop checked its records against its report before relaying: every Levin-dependent output was
+recorded at the working file's SHA-256 `bb6e000…`, and nothing under `var/` changed.
+
+**The user's rulings** are in prompt 07 §9 and the board's Decisions, **07 §2 reference** and
+**07 LG stop**. The LiouvilleGreen draw failed because the round-off-limited exit accepted the
+Levin range beyond a window on a floor bisection would have cut by about $10^4$. That defect is in
+the existing code. On the user's word, a new prompt, 06b, fixes it first
+([`prompt-06b.md`](prompt-06b.md)).
+
+**What changes here:**
+- **Part A** resumes after 06b's code commit, as `prompt-06b.md` §A.4 says. Its review, §A.3, is
+  run as written. Its baselines are re-taken at the commit Part A resumes from, which carries 06b's
+  code and test module.
+- **§0.2 item 2 is moot.** V0 now compares 07's parent with 06b's code commit (07 §9 point 5), and
+  06b's own Gate W0 is written to allow test modules the harness does not import.
+- **§0.2 item 1 still stands for Part B.** The user rules on how §5.3 reads "located nothing" for
+  the analytic columns before Part B's dispatch.
+- **Part B's names** become R17 and R18, with slugs `r17-parent` and `r18-guard`. Its census
+  compares with 06b's census, which must be over first.

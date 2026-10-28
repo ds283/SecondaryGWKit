@@ -28,6 +28,10 @@ The records of §5 and §6 are committed on the laptop afterwards, in 07's recor
 
 **Recommended model:** **Opus**.
 
+**Amended 2026-10-28, before §2 runs (§9).** 06b, the round-off-limited exit's premise, lands
+first. §2's reference and its $\omega$ are settled by the user. The rehearsals become R17 and R18.
+§6's "before" is 06b's census.
+
 **Read first:**
 1. The board's §3 entry `[06-levin-accepts-a-region-across-a-stationary-point]`, with its 06a
    measurement. Then [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md)
@@ -544,3 +548,52 @@ As 06 §5. Records go under `var/levin-phase-floor-07/rehearsal/`.
 - **The re-measurement:** V0 fails.
 - **Any store file** changes.
 - **The lock** is held, or will not release.
+
+## 9. Amendments, 2026-10-28, before §2 runs
+
+Part A stopped before §2 on 2026-10-27, on two of §8's conditions, with §1 built and uncommitted.
+The user's rulings, quoted, and what follows from them. **Where this section and the text above
+differ, this section holds.**
+
+1. **A new prompt runs first** (the board's Decisions, **07 LG stop**). A `LiouvilleGreen` draw
+   moved because the round-off-limited exit accepted the Levin range beyond a window at depth 0,
+   on a floor that bisection would have cut by about $10^4$
+   (`[07-roundoff-exit-assumes-bisection-cannot-help]`). The user: *"Fix it now. A prompt that runs
+   before 07's §2."* That is [`06b-roundoff-exit-premise.md`](06b-roundoff-exit-premise.md).
+   - **§1's uncommitted work** is set aside before 06b runs, with nothing lost, and restored after
+     06b's code commit. The agent rebases it onto 06b's code. That rebase is a deviation, recorded
+     as `STRUCTURALLY REQUIRED`.
+   - **§2 runs on 06b's code and 07's §1 together.**
+   - **The LiouvilleGreen stop is re-tested before §2's report.** The agent re-runs the 20 seeded
+     draws, seeds 0–19, at the rebased tree. Any draw that fails under the new code and passes at
+     06b's code is still §8's stop.
+2. **§2's reference** (the user, 2026-10-28): *"we can compute the integral by any acceptable
+   method"*, and *"Testing (R) using contour integration also: yes, please. I would like to be sure
+   we are getting this part of the integrator right. It is the science-critical step."*
+   - **Family (R)** is computed twice, by the closed form in the complex error function and by
+     contour integration. The two must agree, to well below the precision §2's rules need. The
+     log records the largest disagreement, and a case where they disagree is a stop.
+   - **Family (C)** is computed by contour integration.
+   - Both are validated against `mpmath.quad`, subdivided until it converges, wherever that takes
+     minutes, as Part A did.
+   - "`mpmath.quad` at 30 digits" in §2 and §3 means a reference of this kind.
+3. **$\omega$ in family (R)** (the user, 2026-10-28): *"we should have some cases where `omega` is
+   zero, and some where it is not … With this many digits precision, it should be possible to pick
+   out the shift in the root against the value of `x_s`. A few cases with `omega=1` seem
+   sufficient, since the amplitude of `omega` otherwise trades off against the value of `c`."*
+   - Every case of §2's (R) grid runs at $\omega = 0$.
+   - A few run also at $\omega = 1$, chosen by the agent and recorded. Their root lies at
+     $x_s - 1/c$, and the location must find it there, not at $x_s$.
+   - §2's rule for $\Phi_w$ covers every (R) case, those at $\omega = 1$ included.
+4. **The rehearsals are renamed.** 06b takes R15 and R16. §5's rehearsals are **R17** (at the code
+   commit's parent, which now carries 06b's code) and **R18**, with slugs `r17-parent` and
+   `r18-guard`. Both fingerprints must still equal `1b332ffa…`.
+5. **§6's "before" is 06b's census,** not 06a's. 06b's code changes values wherever the exit fired
+   against its premise, so 06a's run is no longer the parent's.
+   - **V0's first clause:** `git diff --stat <06b's code commit> <07's code commit's parent> --
+     . ':!docs' ':!prompts'` shows nothing but `CLAUDE.md`. So 06b's census is the parent's.
+   - **V0's second clause:** the harness reproduces **06b's** census units bit for bit, on the same
+     three rows.
+   - **V1** compares with 06b's calls and rows. **V4's** "errors before" are 06b's.
+   - **V2 and V3** keep 06a's scan. The scan reads $\theta'$ alone, which 06b does not change.
+   - The harness is copied from 06b's census copy, and its diff is saved against that copy.
