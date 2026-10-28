@@ -198,6 +198,36 @@ checks of §A.3 on the laptop, and is pushed.
 **Part B starts on the user's word.** §B.0's Mac Studio facts are re-checked by the laptop at that
 point, and added here.
 
+**The user gave it on 2026-10-28:** "Please dispatch 06b's Mac Studio part. That is safe to go."
+Part B is dispatched from **this addendum's commit**, which adds only records under `prompts/`:
+`git diff --stat 4ddc3c2 <this commit> -- . ':!docs' ':!prompts'` is empty. 07's §2 stop is
+waiting on the user, and 07's work stays uncommitted in the laptop's checkout and in its stash.
+Neither is on the Mac Studio, and Part B does not read them.
+
+**§B.0 re-checked on the Mac Studio at 13:47 UTC**, read-only:
+- the main checkout is `handover-remedial` at `28ebaf0`, `git status --short` empty, one
+  worktree, itself;
+- the registry holds 25 runs, all finished, nothing `running` or stale; 06a's run
+  `levin-phase-floor-06a-census-20261027T023143` is `done`, 18,560 of 18,560 units, exit 0;
+- the lock is free (`~/.raypoolkit/rehearsal-lock` does not exist), and `ray-processes
+  --ray-temp-dir /tmp/ray-sgk` lists none;
+- there is no `var/levin-phase-floor-06b*` and no `var/datastores/levin-phase-floor-06b*`;
+- the scratch copy's five files match `copy_files_certified.txt` by SHA-256, with no journal,
+  `-wal` or `-shm` file beside them;
+- `~/.ray/auth_token` is mode 600; 109 GiB free on the data volume. The load is about 9, all
+  macOS and desktop processes (WindowServer, ChronoSync, `fileproviderd`, the Claude app), no
+  Python.
+
+**The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
+- `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-da5c24d` at `da5c24d`: R15 and W0's
+  reproduction of 06a;
+- `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06b-<this commit's short SHA>`: R16, $b$, the
+  value comparison and the readers. This note and the prompt are read here.
+
+The records go in the main checkout's `var/levin-phase-floor-06b/`, and the stores are
+`var/datastores/levin-phase-floor-06b-r15*` and `-r16*`, with `--job-name levin-phase-floor-06b`,
+`--campaign levin-phase-floor --prompt 06b`.
+
 ## 5. Stop and ask the user
 
 As 07's note §5, with prompt 06b's §7 in place of 07's §8. **Never touch 07's stash or its saved
