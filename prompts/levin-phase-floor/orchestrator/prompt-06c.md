@@ -187,6 +187,42 @@ test 12, breakage (iv), test 11's stall check and X6 are withdrawn (prompt §8).
 adjusted to match: tests 1–11, breakages (i)–(iii), X1–X5. The agent is resumed with the user's words
 and the amendment commit, and continues from its patch with the stall rule removed.
 
+### A.7 Addendum, 2026-10-28: the review of `79ae8c7`, and the trust check
+
+The agent's code commit `79ae8c7` (not pushed) passed all nine checks of §A.3:
+- scope and stashes as left; nothing under `var/`;
+- by AST, only `_adaptive_levin`, its two progress helpers and the loop's new helpers changed,
+  `_local_atol` and `_levin_interval` went, the result keys are unchanged, both caller files are
+  comment-only;
+- the seven roots: AdaptiveLevin 48 (+10, the new module), the other six equal, all OK;
+- tests 1 and 3's parent numbers re-run by the orchestrator, equal to the docstrings;
+- breakage (i) re-applied in a throwaway worktree: tests 1, 2, 3, 5 and 6 fail;
+- test 3 bit-identical across two fresh processes;
+- the 20 LiouvilleGreen draws re-run at the commit in a throwaway worktree: 160 units, 130,720
+  compared values, 0 differences (timings aside);
+- the log's predictions copied word for word; `black` clean; the commit message as `CLAUDE.md`.
+
+Its records also showed the budget dishonest where the parent was honest (prompt §8, the third
+amendment), which the orchestrator reproduced on the Gaussian bump. The user chose a trust check one
+level down, folded into 06c before anything is pushed: *"Yes, please do that. We want the Part B
+census to be measuring the final scheme."*
+
+**So the branch was moved back.** `79ae8c7` was saved as `git format-patch` output in the
+orchestrator's scratchpad (`06c-79ae8c7.patch`, `0ddc2726…`), and stays reachable by its hash; the
+branch, never pushed past `cf7913b`, was reset to it, and the amendment committed on top. The agent
+rebuilds one code commit from `79ae8c7` with the check added.
+
+**The review of the rebuilt commit** is §A.3 again, with:
+- in check 2, `used_interval` may change by the trust check's fields, and the result keys gain
+  `num_untrusted_regions`;
+- in check 3, the check read against prompt §8: $\Delta_1$, $\Delta_2$, $r$; the widening
+  $\max(\epsilon_P, \Delta_1)/(1-r)$; untrusted leaves refined first, the loop not stopping on one;
+  floor-limited leaves exempt; every returned leaf checked, floor-limited or at the cap;
+- in check 5, tests 12a–12e; **re-run 12a, 12c and the bump's parent figures yourself**;
+- in check 6, **re-apply (iv) yourself** as well as (i);
+- the LiouvilleGreen draws re-run again, and 12e's table of calls honest at the parent and
+  dishonest under the new code read in full.
+
 ## B. Part B — R17, R18 and the census, on the Mac Studio
 
 As 06b's note §B, with these differences:

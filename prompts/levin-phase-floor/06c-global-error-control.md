@@ -9,7 +9,10 @@ stop**), when 07's §2 found that no rung of $\Phi_w$ passes its rule:
 - *"Yes, please go ahead with 06c. I realise all existing computed values will move under this
   change."*
 - a rule for splits that do not help was added before dispatch and **withdrawn** after Part A's
-  second stop (§8): *"(A). Let's remeasure the stall question after 07"*.
+  second stop (§8): *"(A). Let's remeasure the stall question after 07"*;
+- a trust check one level down, added after Part A's code was reviewed and before it was pushed
+  (§8, the third amendment): *"Yes, please do that. We want the Part B census to be measuring the
+  final scheme."*
 
 It lands after 06b's records commit and before 07's §2. 07's §1, built and uncommitted, is set aside
 before 06c runs, as it was for 06b, and rebased onto 06c's code afterwards (07 §9 point 6).
@@ -137,6 +140,12 @@ fall with $h$ is chased to `depth_max` if it holds the total back, as today. Tha
 correctness: its value and declared error stay honest. The question is re-measured after 07
 (`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`).
 
+**A leaf's estimate is checked one level down before the loop may stop on it** (§8, the third
+amendment, which specifies it). The loop's budget trusts each leaf's error estimate, and an
+estimate taken before the leaf is resolved can understate its error. So a leaf's convergence rate
+is measured from its grandchildren, its declared error is widened by that rate, and a leaf whose
+rate shows it is not converging is refined whatever the budget says.
+
 **What follows, by construction:**
 - **Cancellation is handled.** The target is `rtol` times the current total, not each leaf's own
   value.
@@ -161,7 +170,8 @@ correctness: its value and declared error stay honest. The question is re-measur
   - `_adaptive_levin_subregion`, `_adaptive_levin_subregion_impl`, `_adaptive_levin_subregion_cc`,
     the C2 gate, the p-mode `rtol` gate and `abserr_truncation`;
   - `DEFAULT_LEVIN_MAX_DEPTH`, the Chebyshev order, the input validation;
-  - the result dict's keys and types, and the meanings of the solve and region counters;
+  - the result dict's keys and types, and the meanings of the solve and region counters, apart from
+    the one new key `num_untrusted_regions` and the trust check's fields on `used_interval` (§8);
   - any caller's code. **One exception:** a comment in a caller that describes how
     `adaptive_levin_sincos` shares `atol` by length is corrected, comment-only, and the module's
     AST without comments and docstrings is checked unchanged.
@@ -273,12 +283,15 @@ them in its comment, with the parent's SHA.
     - The harness lives in `docs/levin-phase-floor/06c/calibration/scripts/`, its output in `out/`.
 11. **Cost, descriptive.** On every problem `test_levin_quadrature.py` drives: regions, solves and
     maximum depth under both codes. Cost is not an argument (README §5 rule 4).
+12. **The trust check** (§8, the third amendment): tests 12a–12e there.
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** a leaf leaves the candidate set once its own relative error is below `rtol` (the local
   test, restored inside the loop): test 1 must fail;
 - **(ii)** floor-limited leaves stay refinable: test 4 must fail;
-- **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail.
+- **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail;
+- **(iv)** the trust check removed (every leaf trusted, its error undeclared-widened): test 12a must
+  fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -382,6 +395,10 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 - **Cost:** regions, solves and wall time against 06b. Cost is not an argument (README §5 rule 4).
 - **Where the budget went:** per call, the share of $E$ from residual, floor and truncation, and
   how many calls stop with truncation the largest share.
+- **The trust check:** the distribution of the convergence ratio $r$ over every leaf the call
+  returns, by branch (Levin, fallback) and by band; the number of leaves found untrusted during the
+  run, and of untrusted leaves returned (at `depth_max`); the widening $1/(1-r)$'s effect on
+  `abserr`; and the solves the check cost.
 - **Flat residuals:** calls that reach `depth_max` with a residual flat over their last five
   levels, as `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`, and for each, the ratio
   $(e_L+e_R)/e_P$ along its deepest line. 06b's three depth-20 calls (`2-1704`, `2-13964`,
@@ -395,7 +412,7 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 ## 6. Acceptance
 
 1. **§1–§3 as written:**
-   - every test passing, the three breakages caught;
+   - every test passing, the four breakages caught;
    - every changed existing assertion of the kinds §2 test 9 allows, and listed;
    - the LiouvilleGreen draws with no new failure;
    - the seven roots rising only by the tests added.
@@ -413,7 +430,8 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 
 - **The Gate** fails.
 - **A test cannot be built as written:** the parent does not show test 1's or test 3's miss, or
-  test 4 cannot find a leaf flagged under the new code.
+  test 4 cannot find a leaf flagged under the new code, or one of §8's tests 12a–12d cannot be made
+  to hold.
 - **The construction reaches outside its file.** It needs a change outside
   `AdaptiveLevin/levin_quadrature.py` beyond §0.3's comment-only exception: to `ComputeTargets/`,
   `LiouvilleGreen/`, the eq. (151) formula, what `"phase_err"` holds, 06b's premise or $\rho$, the
@@ -498,3 +516,80 @@ to `depth_max`, at a cost in work but not in honesty.
 test 12, breakage (iv), test 11's stall check, X6 and its stop are withdrawn; the flat-residual
 descriptive item records the ratios the re-measurement will need. §2 test 9's allowance for 06b test
 3's phase-limited count stays: that change comes from the budget, not the stall rule.
+
+### The third amendment: a trust check one level down
+
+Part A then committed (`79ae8c7`, reviewed, never pushed; kept as a patch and by its hash). Its
+review passed, but its records showed the global budget **dishonest where the parent was honest**:
+- `test_converged_flag`'s Gaussian bump, $e^{-400(x-1.1)^2}\sin(3\times10^4x)$ on $[0, 3]$ at
+  `atol` $10^{-10}$, whose integral is $\approx 2\times10^{-215}$: the parent returns
+  $-3.4\times10^{-12}$ with `abserr` $1.9\times10^{-11}$, honest; the budget stops on three leaves
+  at $-8.563\times10^{-11}$ with `abserr` $8.219\times10^{-11}$, `converged`, dishonest. One leaf's
+  residual sits just under the whole budget, and its halves carry a further $3.4\times10^{-12}$ of
+  error in the same direction. The orchestrator reproduced it
+  (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`).
+- In the LiouvilleGreen draws' `test_YJJ_log_singularity`, dishonest results flagged `converged`
+  rose from 44 to 221.
+
+The cause is the stall rule's: an estimate taken before a leaf is resolved can understate its
+error, and one budget for the call lets a single such leaf carry it. The user, offered a check one
+level down: *"Yes, please do that. We want the Part B census to be measuring the final scheme."*
+
+**The check.** For a leaf $P$ with halves $L$, $R$ and grandchildren $LL, LR, RL, RR$, each valued
+by its own branch's rule ($V$: the region's own solve on the Levin branch, $CC_{2N-1}$ on the
+fallback):
+- $\Delta_1 = |V_P - (V_L + V_R)|$ and $\Delta_2 = |(V_L + V_R) - (V_{LL} + V_{LR} + V_{RL} + V_{RR})|$;
+- the observed convergence ratio $r = \Delta_2 / \Delta_1$ ($r = 0$ if both are 0; $r = +\infty$ if
+  only $\Delta_1$ is 0, or either is not finite).
+
+**Why the widening is not a tuned number.** If the error falls from this level on at least as
+fast as observed, the parent's error is at most $\Delta_1(1 + r + r^2 + \dots) = \Delta_1/(1 - r)$.
+For $r \ge 1$ no such bound exists.
+
+**The rules:**
+1. **Trusted** ($r < 1$): the leaf's resolution estimate becomes $\max(\epsilon_P, \Delta_1)/(1 - r)$,
+   where $\epsilon_P$ is today's (the step-(4) residual on the Levin branch, which equals
+   $\Delta_1$; the nested pair on the fallback). Its `total_err` is then formed as today: the max
+   with the floor, plus truncation.
+2. **Untrusted** ($r \ge 1$): the leaf is refinable whatever the budget says, and is chosen before
+   every trusted leaf. **The loop does not stop while a refinable leaf is untrusted.** An untrusted
+   leaf that cannot be refined (at `depth_max`) declares $\max(\epsilon_P, \Delta_1 + \Delta_2)$,
+   is flagged, and the call is not `converged` while one remains.
+3. **Floor-limited leaves are exempt.** Their differences are round-off noise, and the floor
+   bounds them. The check is not taken on them.
+4. **When it is taken: lazily, and on every leaf returned.** When the budget test passes, every
+   leaf not yet checked is checked; any widening or untrusted finding reopens the loop, which
+   continues and checks again at the next pass. A call returns only with every leaf checked,
+   floor-limited, or at `depth_max`.
+5. **Nothing is solved twice.** The grandchildren are carried forward as the children's halves if
+   the leaf is later bisected.
+6. **The value is unchanged:** a leaf still contributes $V_P$.
+7. **Recorded:** each returned `used_interval` carries $\Delta_1$, $\Delta_2$, $r$ and whether it is
+   trusted; the result gains one key, `num_untrusted_regions` (untrusted leaves returned).
+
+**Tests 12a–12e** (§2's honesty assertions apply to each):
+- **12a, the bump:** `test_converged_flag`'s Gaussian bump. Honest under the new code, and if
+  `converged`, its true error within the request.
+- **12b, before resolution:** SincIntegral, $\int_1^{100}\sin(100x)/x$, `rtol` $10^{-10}$, order 12:
+  converged and honest; the log records $r$ along its leftmost line.
+- **12c, a stationary-point line, unwindowed:** 07 §2's family (R) with cancelling amplitudes,
+  $x_s = 0.382$, $c = 10^5$, `rtol` $10^{-7}$, `theta_deriv` supplied (the case the stall rule broke):
+  converged and honest.
+- **12d, an untrusted leaf at the cap:** a problem and a small `depth_max` that leave a leaf
+  untrusted at the cap: `converged` False, the leaf flagged, honest.
+- **12e, nothing honest becomes dishonest:** on every problem `test_levin_quadrature.py` drives
+  that has a reference, no call honest at the parent is dishonest under the new code (asserted). In
+  test 10's draws the log tabulates every call dishonest under either code, and names each one honest
+  at the parent and dishonest under the new code, with whether it is flagged `converged`; that
+  table is a finding for the user, not a stop, since `test_YJJ_log_singularity`'s own comments put
+  its dishonesty in near-singular conditioning.
+
+**Breakage (iv):** the check removed, every leaf trusted and unwidened: test 12a must fail.
+
+**What it does not do.** It does not reach an error common to a leaf and all its descendants,
+`[06b-moved-calls-declare-less-than-their-error]`'s; the grandchildren share it. That issue stays
+open, and §5's X1 measures it.
+
+**What changed above, this time:** a pointer in §0.2; §0.3's keys; test 12 and breakage (iv) in §2;
+the four breakages in §6; a stop in §7; and the trust check's descriptive item in §5. The agent
+rebuilds its code commit from `79ae8c7` with the check added, as **one** commit.
