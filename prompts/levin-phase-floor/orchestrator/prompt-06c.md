@@ -14,7 +14,7 @@ names:**
 - `var/levin-phase-floor-06c/`;
 - R17 and R18 (slugs `r17-parent` and `r18-global`);
 - the tree $g$;
-- X0–X6 in place of W0–W4, and Y1 for the rehearsals.
+- X0–X5 in place of W0–W4, and Y1 for the rehearsals.
 
 The user's word to dispatch, 2026-10-28: *"Yes, please dispatch 06c"*, after choosing to land 06c
 before diagnosing `[06b-moved-calls-declare-less-than-their-error]`: *"Isn't it worth landing 06c
@@ -59,8 +59,6 @@ Pass them on.
 - **Test 3's parent numbers** are on the board's `[06b-resolved-region-keeps-a-floor-bisection-would-cut]`:
   $\theta = 1000e^x$ on $[0, 20]$, $f = (1, 0)$, `rtol` $10^{-7}$, declared
   $9.7\times10^{-7}$ against a true $2.1\times10^{-11}$, `converged` False.
-- **Test 12's construction** is prompt 02's phase noise: `docs/levin-phase-floor/02/` and
-  `logs/02-phase-noise-injection.md`.
 - **The known flake** is `test_tk_wkb_phase … test_wall_time_per_object`. Re-run it alone and record
   it; it is not a stop.
 
@@ -109,13 +107,13 @@ the baselines and §A.0. It does not read `orchestrator/`. Tell it plainly:
      `_roundoff_floor`, `_levin_G0_G1`, `_roundoff_exit_premise_holds`, `_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO`,
      the three subregion functions and `DEFAULT_LEVIN_MAX_DEPTH`.
    - **In every caller file touched, the AST without comments and docstrings is unchanged.**
-   - The result dict's keys are today's plus `num_stalled_regions`.
+   - The result dict's keys are today's.
 3. **The construction, read** against prompt §0.2 and §1:
    - the stop test is $\sum e_i \le \max(\texttt{atol}, \texttt{rtol}|\sum v_i|)$ with
      $e_i$ = `total_err`, and nothing else accepts a leaf;
    - the leaf chosen is the refinable one with the largest $e_i$, ties by the smaller start;
-   - not refinable: `depth_max`; floor-limited (06b's premise, checked only for the leaf chosen);
-     stalled (two successive failed splits along its line, $\rho = \tfrac12$);
+   - not refinable: `depth_max`; floor-limited (06b's premise, checked only for the leaf chosen).
+     No stall rule (prompt §8);
    - the returned `value` and `abserr` are summed in ascending $x$, and `converged` keeps its
      formula;
    - the counters count each solve once; the carry-forward of halves is kept;
@@ -124,22 +122,21 @@ the baselines and §A.0. It does not read `orchestrator/`. Tell it plainly:
    which case each difference is accounted for by the log's list. `AdaptiveLevin` rises by exactly
    the new module's test methods. All OK, with the flake re-run alone.
 5. **The tests, read and run.**
-   - Tests 1–12 each exist, named in the log.
-   - **Tests 1, 3 and 12's comments** record the parent's numbers. Re-run each problem at the
+   - Tests 1–11 each exist, named in the log.
+   - **Tests 1 and 3's comments** record the parent's numbers. Re-run each problem at the
      parent yourself, from the module extracted from the dispatch SHA, and compare.
    - **Every changed existing assertion** is of prompt §2 test 9's kinds. Read each.
    - **Test 10's output** shows 20 seeds at both codes with no new failure. Re-run its harness
      yourself and compare field by field, timings aside.
-   - **Test 11:** no leaf stalled on a problem the parent converges on.
    - Run the new module alone, with `-v`, and keep its numbers.
-6. **The breakages.** (i)–(iv) each name the test that failed, and were reverted. **Re-apply (i) and
-   (iv) yourself in any case**, and (ii) or (iii) if its record is thin. Revert with `git checkout
+6. **The breakages.** (i)–(iii) each name the test that failed, and were reverted. **Re-apply (i)
+   yourself in any case**, and (ii) or (iii) if its record is thin. Revert with `git checkout
    -- <file>`; the tree is clean afterwards.
 7. **Determinism, by you:** run test 3's problem twice in fresh processes and compare value, abserr
    and the region list by bit pattern.
 8. **The records.**
    - The log has README §5.1's headings, and classifies every deviation.
-   - Its **Predictions and verdicts** holds prompt §4's Y1 and §5's X1–X6 word for word (check by
+   - Its **Predictions and verdicts** holds prompt §4's Y1 and §5's X1–X5 word for word (check by
      substring), marked not yet scored.
    - The board's 06c row says the code landed and §4–§5 are pending. The header issues have not
      moved.
@@ -174,6 +171,21 @@ The user chose (b2) and X6 (prompt §8, the board's Decisions, **06c stall rule*
 resumed with the amendment commit and the user's words verbatim, and continues §1–§3 from its
 patch. §A.3's checks stand, with prompt §2 test 9's widened allowance and X6 among the predictions
 to copy.
+
+### A.6 Addendum, 2026-10-28: the second stop, and the stall rule withdrawn
+
+The resumed agent stopped again before committing, on the same condition: (b2) stalls on lines
+through a stationary point, where Levin leaves' error estimates rise under bisection until the
+fallback takes over (prompt §8). The orchestrator applied its patch (`06c-b2-wip.patch`,
+`5ff7fd4e…`) in a throwaway worktree, since removed, and reproduced two cases against its own erf
+reference at $c = 10^5$, `rtol` $10^{-7}$: at $x_s = 0.382$ the parent converges with true error
+$1.07\times10^{-12}$ and (b2) stalls at depth 3, true $4.27\times10^{-3}$ against declared
+$4.11\times10^{-3}$ (dishonest); at $x_s = 0.724$, (b2) stalls at depth 6, true $4.82\times10^{-5}$.
+
+The user chose (A): *"(A). Let's remeasure the stall question after 07"*. The stall rule, its key,
+test 12, breakage (iv), test 11's stall check and X6 are withdrawn (prompt §8). §A.3's checks are
+adjusted to match: tests 1–11, breakages (i)–(iii), X1–X5. The agent is resumed with the user's words
+and the amendment commit, and continues from its patch with the stall rule removed.
 
 ## B. Part B — R17, R18 and the census, on the Mac Studio
 
