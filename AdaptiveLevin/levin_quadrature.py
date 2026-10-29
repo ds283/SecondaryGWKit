@@ -42,10 +42,15 @@ deliberate departures are:
     the observed convergence ratio r, and a leaf with r >= 1 is refined
     whatever the budget says (the trust check; see _adaptive_levin()).
 
-  * The returned error estimate accounts for a round-off floor -- Chen et
-    al.'s own eq. (151), see _roundoff_floor() -- as well as the step-(4)
-    resolution residual (or, for a Clenshaw-Curtis fallback region, its
-    nested-pair estimate). See the extended discussion in _adaptive_levin();
+  * The returned error estimate accounts for a round-off floor -- on a Levin
+    region Chen et al.'s own eq. (151), see _roundoff_floor(); on a
+    Clenshaw-Curtis fallback region the rule's own, see _cc_roundoff_floor()
+    -- as well as the step-(4) resolution residual (or, for a fallback
+    region, its nested-pair estimate). Eq. (151) bounds the conditioning of
+    the Levin collocation solve, with a 1/min|theta'| that grows at a
+    stationary point of the phase; a fallback region solves no such system,
+    so it carries a floor derived from the weighted sum it computes instead
+    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md). See the extended discussion in _adaptive_levin();
     the short version is that the step-(4) residual is a *resolution*
     criterion and is blind, by construction, to round-off, which is
     dominated by eps * ||f||_inf and the phase's local conditioning rather
@@ -189,8 +194,9 @@ MACHINE_EPSILON = 1e-16
 
 SIX_PI = 6.0 * np.pi
 
-# Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every region's
-# estimate (Levin or Clenshaw-Curtis fallback alike):
+# Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+# estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+# prompts/levin-phase-floor/06d-cc-roundoff-floor.md):
 #
 #   round_off_err = C * eps * ||f||_inf * (h/2) * (1 + G1/G0 + max(G1, k^2)/G0)
 #
@@ -278,6 +284,39 @@ _LEVIN_ROUNDOFF_G0_NOISE_FLOOR = 1.0e-10
 #   * Not 1: that would never let the exit fire while G1/G0 > 1, however slowly the floor fell,
 #     and would drive every such region on towards depth_max.
 _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5
+
+# The unit round-off of IEEE double precision, u = 2^-53: the bound on the relative error of one
+# correctly rounded floating-point operation. Used by _cc_roundoff_floor(), the round-off floor of a
+# Clenshaw-Curtis fallback solve (prompts/levin-phase-floor/06d-cc-roundoff-floor.md), which counts
+# roundings term by term and so needs the exact unit, not MACHINE_EPSILON's approximate 1e-16.
+_UNIT_ROUNDOFF = 2.0**-53
+
+# The per-term rounding count added to the n-term dot product's gamma_n in _cc_roundoff_floor():
+# each term w_k * sum_i f_ik b_ik carries about one u from each of
+#   1. the product of the weight with the node's integrand value;
+#   2. the weight's own computation (_cc_weights_base()'s cosine sum and _cc_weights()'s rescale);
+#   3. the basis evaluation, sin or cos of the argument a_k;
+#   4. the amplitude f_ik, correct to its last bit;
+# so the computed value's rounding is bounded by (n + 4) u S, S = sum_k |w_k| sum_i |f_ik b_ik|.
+# Derived, not fitted.
+_CC_ROUNDOFF_PER_TERM_COUNT = 4
+
+# The node-rounding count c_x in _cc_node_error_bound(): the computed fine-grid node x^_k against
+# the exact one x_k, with M = max(|a|, |b|) and h = |b - a|. chebyshev_matrices() forms
+#     x^_k = fl( fl(fl(a + b) / 2) + fl( fl(fl(b - a) / 2) * t^_k ) ),
+# and _chebyshev_base() forms t^_k = fl(sin(fl(fl(pi * j) / (2 (N - 1))))), j an exact integer:
+#   * t^_k: pi's representation, the product and the quotient each err by at most u relatively,
+#     so the sine's argument (|z| <= pi/2) errs by at most 3u * pi/2 ~ 4.7u, which moves sin by at
+#     most as much; the sine itself is correct to 1 ulp, 2u: |t^_k - t_k| <= 6.7u, counted as 7u;
+#   * the midpoint: fl(a + b) errs by u|a + b|, halving is exact: at most u M;
+#   * the half-width: fl(b - a) errs by u h, halving is exact: at most u h / 2;
+#   * the product (h/2) t^_k: the half-width's error times |t| <= 1, (h/2) times t^_k's 7u, and its
+#     own rounding u h/2: at most (1/2 + 7/2 + 1/2) u h = 4.5 u h;
+#   * the final sum: its own rounding, u |x_k| <= u M.
+# Together |x^_k - x_k| <= 2 u M + 4.5 u h <= c_x u (M + h) with c_x = 5, the larger of the two
+# counts (prompts/levin-phase-floor/06d-cc-roundoff-floor.md, section 5 point 1). Derived, not
+# fitted.
+_CC_NODE_ROUNDING_COUNT = 5
 
 # minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
@@ -416,12 +455,20 @@ def _roundoff_floor(
     (unlike the endpoint model) aggregates to a total that is roughly invariant under how finely
     an interval is subdivided rather than growing with the region count.
 
+    Levin regions only, since prompts/levin-phase-floor/06d-cc-roundoff-floor.md. The bound models
+    the conditioning of the Levin collocation solve p' + i theta' p = f -- its 1/G0 is that solve's
+    sensitivity where theta' is small. From levin-refactor prompt 04 until 06d the Clenshaw-Curtis
+    fallback used it too; but the fallback solves no such system, and there G0 is theta' at the
+    node nearest a stationary point, so the "floor" grew as a region shrank round the point and was
+    +inf when one sat at a node ([07-cc-solves-use-the-levin-roundoff-floor]). The fallback now
+    carries its own floor, _cc_roundoff_floor(), with no theta' in it.
+
     G0 = min|theta'| can be exactly, or numerically, zero at an interior stationary point that
     happens to coincide with (or land extremely close to) a sampled collocation node -- reachable
     (see prompt 04, note (b)) for a Levin region with large total variation but a turning point
     strictly inside it (a region with *small* total variation and a turning point is routed to the
-    Clenshaw-Curtis fallback by the total-variation gate before this function is ever called on it
-    -- see _adaptive_levin_subregion_impl()).
+    Clenshaw-Curtis fallback by the total-variation gate, and so never reaches this function --
+    see _adaptive_levin_subregion_impl()).
 
     This is treated as +inf, not merely as a large finite number, whenever
     G0 <= _LEVIN_ROUNDOFF_G0_NOISE_FLOOR * G1 -- i.e. whenever G0 sits at or below a generous
@@ -484,6 +531,95 @@ def _roundoff_floor(
         * f_scale
         * half_width
         * (1.0 + G1 / G0 + max(G1, k2) / G0)
+    )
+
+
+def _cc_node_error_bound(x_span: Tuple[float, float]) -> float:
+    """
+    delta, a bound on |x^_k - x_k| for every node of chebyshev_matrices(x_span, n): the computed
+    node against the exact one, c_x u (max(|a|, |b|) + |b - a|). See _CC_NODE_ROUNDING_COUNT for
+    the count, term by term.
+    """
+    a, b = x_span
+    return _CC_NODE_ROUNDING_COUNT * _UNIT_ROUNDOFF * (max(abs(a), abs(b)) + abs(b - a))
+
+
+def _cc_roundoff_floor(
+    weights: np.ndarray,
+    f_sample: np.ndarray,
+    basis_sample: np.ndarray,
+    argument_sample: np.ndarray,
+    node_error: float,
+    theta_prime_bound: float,
+    f_prime_sample: np.ndarray,
+) -> float:
+    """
+    Round-off floor for a Clenshaw-Curtis fallback solve
+    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md), derived from what the rule computes:
+
+        phi_CC = (n + 4) u S  +  u sum_k |w_k| sum_i |f_ik| |a_ik|
+                 +  sum_k |w_k| delta_k sum_i ( |theta'| |f_ik| + |f'_ik| ),
+        S = sum_k |w_k| sum_i |f_ik b_ik|,
+
+    with w_k (k = 1 ... n) the fine rule's weights, f_ik = f_i(x_k) the amplitudes, b_ik the basis
+    values and a_ik the argument handed to the basis function that gives b_ik (for the (sin, cos)
+    basis, one argument per node for both components), and u = _UNIT_ROUNDOFF.
+
+    * The first term bounds the rounding of the computed value. The n-term dot product contributes
+      n u S (the standard gamma_n bound), and each term about one u from each of four further
+      roundings -- see _CC_ROUNDOFF_PER_TERM_COUNT for the count.
+    * The second term is the rounding of the argument: an error u |a_ik| in it moves sin or cos by
+      at most that much. With a range-reduced phase (theta_mod_2pi) |a| < 2 pi and the term is
+      negligible; with a raw phase it is u |theta(x_k)|, which is real.
+    * The third term is the rounding of the nodes (added by 06d's section 5, after the first two
+      were measured short by up to 3.4e9 on a range-reduced phase): the computed node x^_k is
+      displaced from the exact one by up to delta_k (_cc_node_error_bound()), and a rule whose
+      weights are fixed while its nodes move commits sum_k w_k g'(x_k) (x^_k - x_k), with
+      g' = (f' + i theta' f) e^{i theta} for g = f e^{i theta}. Both parts are kept. |theta'| is
+      bounded by its maximum over the region's coarse sample (theta_prime_bound), the conservative
+      side; f' is the fine grid's Chebyshev derivative of the samples, per node. With a raw phase
+      theta ~ theta' x this is about the second term again; with a reduced phase it is what the
+      second term no longer carries. Summed over leaves it is about u |x| ||f|| TV(theta), so it
+      does not grow under subdivision.
+
+    Why not eq. (151) (_roundoff_floor()). Eq. (151) bounds the conditioning of the Levin
+    collocation solve p' + i theta' p = f, whose sensitivity grows like 1/theta' where theta' is
+    small. A fallback solve solves no such system: it is a weighted sum of 2N - 1 samples of
+    sum_i f_i w_i(theta), whose rounding has no 1/theta' in it. Carried over from the Levin branch
+    (prompts/levin-refactor/logs/04-roundoff-floor.md), eq. (151)'s G0 = min|theta'| made a fallback
+    region's floor grow as the region shrank round a stationary point, and become +inf when one sat
+    at a node ([07-cc-solves-use-the-levin-roundoff-floor]). This floor has no 1/theta' in it:
+    theta' enters only the node term, as a factor.
+
+    What it does not carry: an error in the phase function's own value, e.g. a theta_mod_2pi
+    computed by rounding a large raw phase. That belongs in the caller's theta_abserr, as the
+    module's contract says, and enters through _declared_endpoint_phase_err().
+
+    :param weights: the fine rule's weights, shape (n,).
+    :param f_sample: amplitudes, shape (m, n).
+    :param basis_sample: basis values, shape (m, n).
+    :param argument_sample: the arguments the basis values were computed from, shape (m, n).
+    :param node_error: delta, the bound on every node's rounding (_cc_node_error_bound()).
+    :param theta_prime_bound: a bound on |theta'| over the region: max|theta'| on its sample.
+    :param f_prime_sample: the amplitudes' derivatives at the nodes, shape (m, n).
+    """
+    abs_weights = np.fabs(weights)
+    n = abs_weights.shape[0]
+    abs_f = np.fabs(f_sample)
+    S = float(np.dot(abs_weights, np.sum(np.fabs(f_sample * basis_sample), axis=0)))
+    argument_term = float(
+        np.dot(abs_weights, np.sum(abs_f * np.fabs(argument_sample), axis=0))
+    )
+    node_term = node_error * float(
+        np.dot(
+            abs_weights,
+            np.sum(theta_prime_bound * abs_f + np.fabs(f_prime_sample), axis=0),
+        )
+    )
+    return (
+        (n + _CC_ROUNDOFF_PER_TERM_COUNT) * _UNIT_ROUNDOFF * S
+        + _UNIT_ROUNDOFF * argument_term
+        + node_term
     )
 
 
@@ -609,8 +745,9 @@ class used_interval:
         # *resolution* residual: |val0 - valL - valR|. For a Clenshaw-Curtis fallback region
         # (type == INTERVAL_TYPE_DIRECT) there is no such comparison; abserr/relerr are instead
         # the nested-pair estimate |CC_{2N-1} - CC_N| (see _adaptive_levin_subregion_cc()).
-        # phase_err is the round-off floor from Chen et al. eq. (151) (_roundoff_floor()), plus
-        # any declared-theta_abserr endpoint contribution (_declared_endpoint_phase_err()) -- an
+        # phase_err is the round-off floor -- Chen et al. eq. (151) (_roundoff_floor()) on a Levin
+        # region, the rule's own (_cc_roundoff_floor()) on a fallback region -- plus any
+        # declared-theta_abserr endpoint contribution (_declared_endpoint_phase_err()) -- an
         # error source neither the resolution residual nor the nested-pair estimate can see (see
         # _adaptive_levin()). abserr_truncation (prompt 06, rec 9) is a third, independent source:
         # the endpoint contribution of p-modes the rtol gate in _adaptive_levin_subregion_impl()
@@ -707,10 +844,12 @@ class used_interval:
     @property
     def phase_err(self) -> Optional[float]:
         """
-        Round-off floor for this region (Chen et al. eq. (151), _roundoff_floor()), plus any
-        declared-theta_abserr endpoint contribution. This is *not* included in abserr; the total
-        error of the region is max(abserr, phase_err) -- see total_err. Can be +inf; see
-        _roundoff_floor()'s docstring for when and why.
+        Round-off floor for this region -- Chen et al. eq. (151) (_roundoff_floor()) on a Levin
+        region, the Clenshaw-Curtis rule's own (_cc_roundoff_floor()) on a fallback region -- plus
+        any declared-theta_abserr endpoint contribution. This is *not* included in abserr; the
+        total error of the region is max(abserr, phase_err) -- see total_err. Can be +inf on a
+        Levin region; see _roundoff_floor()'s docstring for when and why. A fallback region's is
+        finite whenever its samples are.
         """
         return self._phase_err
 
@@ -821,7 +960,8 @@ class used_interval:
     @property
     def abserr_roundoff(self) -> Optional[float]:
         """
-        Round-off floor (Chen et al. eq. (151), plus any declared-theta_abserr endpoint term).
+        Round-off floor (Chen et al. eq. (151) on a Levin region, _cc_roundoff_floor() on a
+        fallback region, plus any declared-theta_abserr endpoint term).
         Defined for every region type -- an alias for phase_err, named to match
         abserr_resolution/abserr_fallback for the aggregate breakdown in _adaptive_levin()'s
         returned dict.
@@ -1357,6 +1497,20 @@ class _Basis_SinCos:
 
         return [np.sin(self._theta(x)), np.cos(self._theta(x))]
 
+    def eval_basis_and_arguments(self, x):
+        """
+        The basis at x, as eval_basis(), together with the argument handed to each component's
+        sin or cos: (values, arguments), each a list with one entry per component. The phase is
+        evaluated once, not once per component. Used by the Clenshaw-Curtis fallback, whose
+        round-off floor counts the rounding of the argument (_cc_roundoff_floor()); the values are
+        bit-identical to eval_basis(x)'s.
+        """
+        if hasattr(self, "_theta_mod_2pi"):
+            argument = self._theta_mod_2pi(x)
+        else:
+            argument = self._theta(x)
+        return [np.sin(argument), np.cos(argument)], [argument, argument]
+
 
 def _adaptive_levin_subregion(
     x_span: Tuple[float, float],
@@ -1811,10 +1965,15 @@ def _adaptive_levin_subregion_cc(
 
     :param phase_span: total phase variation across x_span, already computed by the caller's
         call to BasisData.build_Levin_data() -- passed in rather than recomputed.
+    The round-off floor, "phase_err", is this rule's own (_cc_roundoff_floor(), since
+    prompts/levin-phase-floor/06d-cc-roundoff-floor.md): the rounding of the weighted sum, of
+    the argument handed to sin and cos, and of the nodes, from the fine-grid samples -- plus the
+    declared-phase term. It is not Chen et al. eq. (151), which the Levin branch uses: that bound is the
+    conditioning of the Levin collocation solve, with a 1/min|theta'| this rule does not have.
+
     :param theta_prime_Cheb: theta' sampled at the order-chebyshev_order collocation points,
-        likewise already computed by the caller's call to build_Levin_data() -- used for the
-        round-off floor's G0/G1 (see _levin_G0_G1()), not recomputed on the fine grid because the
-        coarse sample is what the gate above already paid for.
+        likewise already computed by the caller's call to build_Levin_data(). Its maximum bounds
+        |theta'| in the round-off floor's node term (until 06d it gave eq. (151)'s G0/G1).
     :return: a dict with the same "value"/"phase_span"/"phase_err"/"metadata" keys as the Levin
         path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
         "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
@@ -1829,7 +1988,7 @@ def _adaptive_levin_subregion_cc(
     # the nesting test in AdaptiveLevin/tests/test_levin_quadrature.py), so the coarse rule below
     # is formed from a subset of these same samples rather than by evaluating f or the basis a
     # second time.
-    fine_grid, _ = chebyshev_matrices(x_span, fine_order)
+    fine_grid, D_fine = chebyshev_matrices(x_span, fine_order)
 
     f_fine = np.vstack(
         [
@@ -1851,8 +2010,14 @@ def _adaptive_levin_subregion_cc(
     # w_i(x) = (sin theta(x), cos theta(x)) at each of the 2*N - 1 nodes. Unlike the Levin path,
     # which needs only theta' on the grid and theta at the two endpoints, the CC rule integrates
     # the full integrand sum_i f_i(x) w_i(x) and therefore needs w_i sampled at every node.
-    # eval_basis() already prefers theta_mod_2pi when the caller supplied one.
-    basis_fine = np.array([BasisData.eval_basis(x) for x in fine_grid]).T
+    # eval_basis_and_arguments() prefers theta_mod_2pi when the caller supplied one, as
+    # eval_basis() does, and also returns the argument it handed to sin and cos, which the
+    # round-off floor below needs -- from the same single evaluation of the phase per node.
+    basis_and_arguments = [BasisData.eval_basis_and_arguments(x) for x in fine_grid]
+    basis_fine = np.array([values for values, _ in basis_and_arguments]).T
+    arguments_fine = np.array(
+        [arguments for _, arguments in basis_and_arguments], dtype=float
+    ).T
 
     integrand_fine = np.sum(f_fine * basis_fine, axis=0)
 
@@ -1864,24 +2029,38 @@ def _adaptive_levin_subregion_cc(
 
     abserr_direct = float(np.fabs(value_fine - value_coarse))
 
-    # Round-off floor, Chen et al. eq. (151) -- the same model as the Levin branch
-    # (_roundoff_floor()), replacing this fallback's own former endpoint-phase estimate (pending
-    # prompt 04 note in earlier versions of this comment). f_scale = max_grid sqrt(sum_i f_i^2)
-    # over the fine-grid samples already in hand, matching the Levin branch's choice (note (c) of
-    # prompt 04) rather than the previous max_i sum_grid|f_i| L1-style estimate -- no extra
-    # evaluations either way. G0/G1 reuse the *coarse* theta_prime_Cheb sample the phase_span gate
-    # above already paid for, rather than resampling theta' on the fine grid.
-    width = np.fabs(x_span[1] - x_span[0])
-    G0, G1 = _levin_G0_G1(theta_prime_Cheb, width)
-    f_scale = float(np.max(np.sqrt(np.sum(f_fine * f_fine, axis=0))))
-    round_off_err = _roundoff_floor(f_scale, width, G0, G1, chebyshev_order)
+    # Round-off floor of this rule, derived from what it computes (_cc_roundoff_floor();
+    # prompts/levin-phase-floor/06d-cc-roundoff-floor.md), from the fine-grid samples already in
+    # hand: no extra evaluation of anything. Not Chen et al. eq. (151) (_roundoff_floor()), which
+    # this branch used from levin-refactor prompt 04 until 06d: that bound models the conditioning
+    # of the Levin collocation solve, with its 1/min|theta'|, and this branch solves no such
+    # system; carried over, it made a fallback region's floor grow, or become +inf, at a
+    # stationary point of the phase.
+    #
+    # Its node term takes |theta'| as its maximum over the coarse theta_prime_Cheb the phase_span
+    # gate already paid for, and f' from the fine grid's own Chebyshev differentiation matrix
+    # applied to the samples in hand.
+    f_prime_fine = np.vstack([np.matmul(D_fine, f_row) for f_row in f_fine])
+    round_off_err = _cc_roundoff_floor(
+        w_fine,
+        f_fine,
+        basis_fine,
+        arguments_fine,
+        _cc_node_error_bound(x_span),
+        float(np.max(np.fabs(theta_prime_Cheb))),
+        f_prime_fine,
+    )
 
     # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict
     # supplied "theta_abserr". This fallback has no Levin antiderivative p to weight by, so it
     # reuses the same f_scale * (width / 2) proxy per endpoint that the pre-prompt-04 code used
     # for the whole interval (a crude sup-norm bound, not a per-endpoint quantity) -- see prompt
     # 04's log for why this, rather than the Levin branch's true per-endpoint p_endpoint_l1, was
-    # judged an acceptable approximation here.
+    # judged an acceptable approximation here. With f_scale = max_grid sqrt(sum_i f_i^2) over the
+    # fine-grid samples, it bounds sum_k |w_k| |f_k| delta(theta) from above per endpoint, since
+    # the weights are positive and sum to the width.
+    width = np.fabs(x_span[1] - x_span[0])
+    f_scale = float(np.max(np.sqrt(np.sum(f_fine * f_fine, axis=0))))
     endpoint_proxy = 0.5 * f_scale * width
     declared_err = _declared_endpoint_phase_err(
         BasisData, x_span[0], x_span[1], endpoint_proxy, endpoint_proxy
@@ -1900,6 +2079,72 @@ def _adaptive_levin_subregion_cc(
         "metadata": {},
         "is_direct": True,
     }
+
+
+def _history_improvement(previous: float, current: float) -> Optional[float]:
+    """
+    previous / current for the depth-18 history log, or None where the ratio is not defined: the
+    denominator zero or not finite. An ancestor's abserr can be exactly 0 -- under the global
+    budget a leaf with a zero residual can still be split, by the trust check or a dominating floor
+    -- and the plain division raised ZeroDivisionError from logging code
+    ([07-depth18-diagnostic-divides-by-zero]; prompts/levin-phase-floor/06d-cc-roundoff-floor.md).
+    """
+    if current is None or previous is None:
+        return None
+    if current == 0.0 or not np.isfinite(current):
+        return None
+    return previous / current
+
+
+def _log_depth_history(
+    depth: int,
+    abserr_history: "ErrorHistoryType",
+    relerr_history: "ErrorHistoryType",
+    p_ratios_history: "PScaleHistoryType",
+) -> None:
+    """
+    The depth-18 diagnostic: log a deep leaf's ancestry, level by level, with each level's abserr
+    and relerr and their improvement on the level above. An improvement whose denominator is zero
+    or not finite is logged as not defined (_history_improvement()). Logging only: no value,
+    error or decision depends on it.
+    """
+
+    def _format_improvement(improvement: Optional[float]) -> str:
+        return "not defined" if improvement is None else f"{improvement:.3g}"
+
+    prev_abs = None
+    prev_rel = None
+
+    for i in range(0, depth):
+        this_abs = abserr_history[i]
+        this_rel = relerr_history[i]
+        this_p_ratios = p_ratios_history[i]
+
+        if i == 0:
+            _logger.info(
+                "   -- %d. abserr=%.5g, relerr=%.5g, p-ratios=[%s]",
+                i + 1,
+                this_abs,
+                this_rel,
+                ", ".join(f"{p:.4g}" for p in this_p_ratios),
+            )
+
+        else:
+            abs_improvement = _history_improvement(prev_abs, this_abs)
+            rel_improvement = _history_improvement(prev_rel, this_rel)
+            _logger.info(
+                "   -- %d. abserr=%.5g (improvement=%s), relerr=%.5g "
+                "(improvement=%s), p-ratios=[%s]",
+                i + 1,
+                this_abs,
+                _format_improvement(abs_improvement),
+                this_rel,
+                _format_improvement(rel_improvement),
+                ", ".join(f"{p:.3g}" for p in this_p_ratios),
+            )
+
+        prev_abs = this_abs
+        prev_rel = this_rel
 
 
 def _sum_leaves_ascending(leaves_ascending) -> Tuple[float, float]:
@@ -2179,39 +2424,7 @@ def _adaptive_levin(
                 num_history_messages,
             )
 
-            prev_abs = None
-            prev_rel = None
-
-            for i in range(0, depth):
-                this_abs = abserr_history[i]
-                this_rel = relerr_history[i]
-                this_p_ratios = p_ratios_history[i]
-
-                if i == 0:
-                    _logger.info(
-                        "   -- %d. abserr=%.5g, relerr=%.5g, p-ratios=[%s]",
-                        i + 1,
-                        this_abs,
-                        this_rel,
-                        ", ".join(f"{p:.4g}" for p in this_p_ratios),
-                    )
-
-                else:
-                    abs_improvement = prev_abs / this_abs
-                    rel_improvement = prev_rel / this_rel
-                    _logger.info(
-                        "   -- %d. abserr=%.5g (improvement=%.3g), relerr=%.5g "
-                        "(improvement=%.3g), p-ratios=[%s]",
-                        i + 1,
-                        this_abs,
-                        abs_improvement,
-                        this_rel,
-                        rel_improvement,
-                        ", ".join(f"{p:.3g}" for p in this_p_ratios),
-                    )
-
-                prev_abs = this_abs
-                prev_rel = this_rel
+            _log_depth_history(depth, abserr_history, relerr_history, p_ratios_history)
 
         # Chen et al. (172). A leaf made by bisecting a parent carries its own solve forward from
         # the parent's halves, and only the root is solved here. This single call also makes the
@@ -3241,11 +3454,16 @@ def adaptive_levin_sincos(
             range-reduced value instead of the raw phase, which is handed an O(2*pi) argument
             rather than an O(theta) one and so has O(eps) absolute rounding error instead of
             O(eps*theta). This keeps the *values* handed to sin/cos well-conditioned, but as of
-            prompt 04 does NOT lower the reported error floor: the floor is now Chen et al. eq.
-            (151) (see "abserr_roundoff" below), which is independent of how the phase is
+            prompt 04 does NOT lower a Levin region's reported error floor: that floor is Chen et
+            al. eq. (151) (see "abserr_roundoff" below), which is independent of how the phase is
             presented (C4 -- an earlier version of this module inferred the floor from whether
             this key was supplied, and that inference was optimistic by up to 8.1e9 at high
-            frequency; see prompts/levin-refactor/logs/04-roundoff-floor.md).
+            frequency; see prompts/levin-refactor/logs/04-roundoff-floor.md). On a
+            Clenshaw-Curtis fallback region, whose floor is the rule's own (as of
+            prompts/levin-phase-floor/06d-cc-roundoff-floor.md), it does: there sin and cos are
+            evaluated at every node, and the rounding of their argument, u*|theta(x)| with a raw
+            phase, is a real error that the floor counts. An error in this function's own value
+            belongs in "theta_abserr".
           * "theta_deriv" (optional) -- callable, theta'(x). When supplied, it is used directly
             instead of differentiating a sampled theta(x) with the spectral differentiation
             matrix; this avoids inheriting rounding error from the magnitude of the raw phase
@@ -3305,8 +3523,10 @@ def adaptive_levin_sincos(
             tested on; it is an estimate, not a proven bound.
           * "abserr_resolution", "abserr_roundoff", "abserr_fallback", "abserr_truncation" --
             "abserr" broken down by source: the summed step-(4) residual over Levin regions (new
-            as of prompt 04), the summed round-off floor (Chen et al. eq. 151, plus any declared
-            theta_abserr endpoint term) over every region (new as of prompt 04), the summed
+            as of prompt 04), the summed round-off floor (Chen et al. eq. 151 on Levin regions,
+            the Clenshaw-Curtis rule's own on fallback regions as of
+            prompts/levin-phase-floor/06d-cc-roundoff-floor.md, plus any declared theta_abserr
+            endpoint term) over every region (new as of prompt 04), the summed
             nested-pair estimate over Clenshaw-Curtis fallback regions (new as of prompt 04), and
             the summed endpoint contribution of p-modes dropped by the rtol gate on Levin regions
             (new as of prompt 06, rec 9), respectively. A caller that cannot get more digits can

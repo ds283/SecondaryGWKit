@@ -1,0 +1,71 @@
+# levin-phase-floor 06d: breakages (i)-(iv), each applied to AdaptiveLevin/levin_quadrature.py, AdaptiveLevin.tests.test_levin_cc_floor run, then reverted
+# script scripts/breakages.py sha256 d6069ae8f945a81069294cacc7d535b98ab86fbb2719eb939fec043728d5af58 (run from the session scratchpad, byte-identical)
+# clean AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1, restored and checked by cmp after the run
+# HEAD da043b901b327c289a350a4d1cdb04ea23000871, tree dirty (06d's uncommitted work); command: PYTHONPATH=. ./venv/bin/python breakages.py <clean copy>
+== (i) floor back to eq. (151)
+   FAILED (failures=17, errors=2)
+    test_calls_below_roundoff_are_honest (family='L', reduced=False, scale=1000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=False, scale=1000000000000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=False, scale=1000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=False, scale=1000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=False, scale=1000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=False, scale=1000000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000000000.0)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000.0)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000000.0)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000000000.0)
+    test_floor_finite_at_a_stationary_node 
+    test_nested_leaves_round_a_stationary_point 
+       AssertionError: 4.3639137442541553e-17 not less than or equal to 1.9155418383045282e-17 : test 2 call L reduced=False scale=1e+03: value 0.00021558186243131666 is not within 1.916e-17 of the reference 0.00021558186243127
+       AssertionError: 3.743208000506204e-17 not less than or equal to 1.9155418383045282e-17 : test 2 call L reduced=True scale=1e+03: value 0.00021558186243131046 is not within 1.916e-17 of the reference 0.0002155818624312730
+       AssertionError: 3.364054877491498e-17 not less than or equal to 1.7143846857313002e-18 : test 2 call L reduced=True scale=1e+06: value 7.03807862520561e-07 is not within 1.714e-18 of the reference 7.038078624869205e-07
+       AssertionError: 1.3605888060396718e-18 not less than or equal to 6.460563609104491e-20 : test 2 call L reduced=True scale=1e+09: value 4.576361963997754e-10 is not within 6.461e-20 of the reference 4.576361950391866e-10
+       AssertionError: 9.131692797759161e-17 not less than or equal to np.float64(9.785593135268358e-18) : L reduced=False scale=1e+03: true 9.132e-17, floor 9.786e-18, pair 1.837e-13
+       AssertionError: 1.9408383557793004e-17 not less than or equal to np.float64(9.785593140775328e-21) : L reduced=False scale=1e+06: true 1.941e-17, floor 9.786e-21, pair 7.018e-16
+       AssertionError: 2.0111582928016557e-18 not less than or equal to np.float64(9.785657324488379e-24) : L reduced=False scale=1e+09: true 2.011e-18, floor 9.786e-24, pair 4.165e-18
+       AssertionError: 7.46464302953791e-17 not less than or equal to np.float64(9.820104820123322e-27) : L reduced=False scale=1e+12: true 7.465e-17, floor 9.820e-27, pair 3.105e-17
+       AssertionError: 7.112366251504909e-17 not less than or equal to np.float64(9.785593135268358e-18) : L reduced=True scale=1e+03: true 7.112e-17, floor 9.786e-18, pair 1.837e-13
+       AssertionError: 2.3915445870133136e-17 not less than or equal to np.float64(9.785593140775328e-21) : L reduced=True scale=1e+06: true 2.392e-17, floor 9.786e-21, pair 7.029e-16
+       AssertionError: 6.6344398947957945e-18 not less than or equal to np.float64(9.785657324488379e-24) : L reduced=True scale=1e+09: true 6.634e-18, floor 9.786e-24, pair 2.768e-18
+       AssertionError: 3.412100326978158e-17 not less than or equal to np.float64(9.820104820123322e-27) : L reduced=True scale=1e+12: true 3.412e-17, floor 9.820e-27, pair 2.754e-17
+== (ii) argument term removed
+   FAILED (failures=3)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000.0)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000000.0)
+    test_floor_bounds_a_single_solve (family='O', reduced=False, scale=1000000000000.0)
+       AssertionError: 4.65180671760379e-12 not less than or equal to 9.195699880527599e-15 : O reduced=False scale=1e+06: true 4.652e-12, floor 9.196e-15, pair 1.261e-11
+       AssertionError: 4.207935458411249e-09 not less than or equal to 9.342598642009197e-15 : O reduced=False scale=1e+09: true 4.208e-09, floor 9.343e-15, pair 4.068e-09
+       AssertionError: 1.4099718972371278e-06 not less than or equal to 9.215310261850015e-15 : O reduced=False scale=1e+12: true 1.410e-06, floor 9.215e-15, pair 7.103e-06
+== (iii) guard removed
+   FAILED (errors=1)
+    test_zero_abserr_in_history 
+       ZeroDivisionError: float division by zero
+== (iv) node term removed
+   FAILED (failures=8, errors=1)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000000.0)
+    test_calls_below_roundoff_are_honest (family='L', reduced=True, scale=1000000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000000.0)
+    test_floor_bounds_a_single_solve (family='L', reduced=True, scale=1000000000000.0)
+    test_nested_leaves_round_a_stationary_point 
+       AssertionError: 6.123031769111886e-17 not less than or equal to 1.0531376005247988e-17 : test 2 call L reduced=True scale=1e+03: value 0.0002155818624312118 is not within 1.053e-17 of the reference 0.00021558186243127302
+       AssertionError: 5.882643818681116e-19 not less than or equal to 9.827924261674442e-21 : test 2 call L reduced=True scale=1e+06: value 7.038078624863322e-07 is not within 9.828e-21 of the reference 7.038078624869205e-07
+       AssertionError: 3.5247251575438485e-20 not less than or equal to 6.199820592805689e-23 : test 2 call L reduced=True scale=1e+09: value 4.5763619507443384e-10 is not within 6.200e-23 of the reference 4.576361950391866e-10
+       AssertionError: 7.112366251504909e-17 not less than or equal to 1.056324681745287e-17 : L reduced=True scale=1e+03: true 7.112e-17, floor 1.056e-17, pair 1.837e-13
+       AssertionError: 2.3915445870133136e-17 not less than or equal to 9.82551176375109e-21 : L reduced=True scale=1e+06: true 2.392e-17, floor 9.826e-21, pair 7.029e-16
+       AssertionError: 6.6344398947957945e-18 not less than or equal to 1.0411239360519784e-23 : L reduced=True scale=1e+09: true 6.634e-18, floor 1.041e-23, pair 2.768e-18
+       AssertionError: 3.412100326978158e-17 not less than or equal to 9.963149577451002e-27 : L reduced=True scale=1e+12: true 3.412e-17, floor 9.963e-27, pair 2.754e-17
+       AssertionError: 1.7618285302889447e-18 not less than or equal to 1.3823577699190182e-18 : test 3 level 2: value -0.00012847944946617806 is not within 1.382e-18 of the reference -0.0001284794494661763
+restored
+
+[exited with code 0]

@@ -157,6 +157,40 @@ def _test3_reference():
     )
 
 
+# Test 3 (b), since prompts/levin-phase-floor 06d: a fallback problem whose floor is 06d's
+# node-rounding term. theta = A e^(x - X0) on [X0, X0 + 6], A = 0.025 (total phase ~10 rad), f =
+# (e^-2(x - X0), 0), X0 = 1e6: the node rounding delta ~ 5u (X0 + h) is large, max|theta'| sits at
+# the right end and ||f|| at the left, so the halves' floors sum to ~0.2 of the root's. The integral
+# is int_0^6 e^-2t sin(A e^t) dt.
+TEST3B_X0 = 1.0e6
+TEST3B_A = 0.025
+TEST3B_GAMMA = 2.0
+TEST3B_SPAN = (TEST3B_X0, TEST3B_X0 + 6.0)
+TEST3B_RTOL = 1e-16
+TEST3B_ATOL = 1e-30
+
+
+def _test3b_problem():
+    f = [lambda x: exp(-TEST3B_GAMMA * (x - TEST3B_X0)), lambda x: 0.0]
+    theta = {
+        "theta": lambda x: TEST3B_A * exp(x - TEST3B_X0),
+        "theta_deriv": lambda x: TEST3B_A * exp(x - TEST3B_X0),
+    }
+    return f, theta
+
+
+def _test3b_reference():
+    def expression():
+        A = mpmath.mpf(TEST3B_A)
+        g = mpmath.mpf(TEST3B_GAMMA)
+        return mpmath.quad(
+            lambda t: mpmath.exp(-g * t) * mpmath.sin(A * mpmath.exp(t)),
+            mpmath.linspace(0, 6, 13),
+        )
+
+    return _reference(expression)
+
+
 # Test 2's two problems, each with G1/G0 below 3 on every region.
 #  (a) int_{1/3}^{7/3} e^-x sin(omega x) dx at omega = 1e6 -- the problem of
 #      test_levin_quadrature.py's test_roundoff_floor_independent_of_theta_presentation, with
@@ -595,58 +629,83 @@ class TestRoundoffExitPremise(unittest.TestCase):
 
     def test_exit_against_its_premise_fallback_branch(self):
         """
-        Test 3. theta = 1e-6 e^x on [0, 6], f = (e^x, 0): every region takes the nested
-        Clenshaw-Curtis fallback (total phase ~4e-4 rad), and theta' > 0 throughout.
+        Test 3. The round-off-limited exit on the nested Clenshaw-Curtis fallback, against its
+        premise.
 
-        At the parent (the bypass) the whole span is accepted at depth 0 through the exit, on a
-        floor of 1.03e-5 with a nested-pair estimate of 2.2e-11 (relerr 2.7e-10 against rtol
-        1e-10). Its halves' floors are 5.1e-7 each, ~0.1 of the parent's together, so under the
-        new code it is bisected; the halves are then resolved.
+        (a) theta = 1e-6 e^x on [0, 6], f = (e^x, 0): every region takes the fallback (total phase
+        ~4e-4 rad), and theta' > 0 throughout. Until prompts/levin-phase-floor 06d the fallback
+        carried the Levin rule's eq. (151) floor, whose 1/min|theta'| made the root's floor 1.03e-5
+        against halves' floors of 5.1e-7 each: the bypass (06b's parent) accepted the root at depth
+        0 through the exit, the premise check bisected it. Before (06c, ad9a5f4): the bypass 1
+        direct region at depth 0, phase-limited, abserr 1.03e-5; the new code 4 direct regions at
+        depth 2, all phase-limited, abserr 4.59e-7. Under 06d the fallback's floor is the rule's
+        own (_cc_roundoff_floor()), which has no 1/theta': the call is bit-identical across the
+        bypass -- 2 direct regions at depth 1, the left one phase-limited, abserr 1.98e-12,
+        converged -- and honest. The assertions on (a) were changed to that outcome (06d section 5
+        point 3: region count, depth, which rule, the phase-limited count, bit-identity across the
+        bypass); its honesty assertions are unchanged.
 
-        Under prompts/levin-phase-floor 06c's global budget the floors still hold the total above
-        the request after the bisection, so the leaves are chosen again: at depth 2 their halves'
-        floors sum to at least half their own, and the four leaves are flagged phase-limited (a
-        leaf the loop chose while the budget was unmet, and found floor-limited). The assertion
-        num_phase_limited_regions == 0 (06b) is replaced, by the user's decision recorded in 06c's
-        section 8, with: every phase-limited region satisfies 06b's premise, checked from its own
-        halves. Before (06b, 4ddc3c2): 2 direct regions at depth 1, none phase-limited, abserr
-        1.03e-6. After (06c): 4 direct regions at depth 2, all phase-limited, abserr 4.59e-7. The
-        depth and honesty assertions are unchanged.
+        (b) The assertion that the premise check at least halves the declared error moves to a
+        problem where 06d's floor binds and the premise fails at the root: theta = A e^(x - X0),
+        A = 0.025, f = (e^-2(x - X0), 0) on [X0, X0 + 6] with X0 = 1e6, total phase 10 rad, a
+        request below round-off. The floor is the node-rounding term, delta ~ 5u (X0 + h) times
+        max|theta'| sum|w||f| + sum|w||f'|: max|theta'| sits at the right end, ||f|| at the left,
+        so the halves' floors sum to ~0.2 of the root's. The bypass accepts the root at depth 0
+        through the exit (abserr 3.35e-9); the new code bisects, and the exit fires at depth 2 on
+        leaves whose premise holds (abserr 6.96e-10, 0.21 of the bypass's). Both honest.
         """
+        # (a)
         f, theta = _test3_problem()
         ref, ref_err = _test3_reference()
         kwargs = dict(atol=TEST3_ATOL, rtol=TEST3_RTOL)
 
         parent = _run(TEST3_SPAN, f, theta, bypass=True, **kwargs)
+        self.assertEqual(parent["num_regions"], 2)
+        self.assertEqual(parent["num_simple_regions"], 2)
+        self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
+        self.assertEqual(parent["max_depth"], 1)
+        self.assertEqual(parent["num_phase_limited_regions"], 1)
+        self._assert_honest(parent, ref, ref_err, "test 3a parent")
+
+        new = _run(TEST3_SPAN, f, theta, **kwargs)
+        self.assertEqual(_call_signature(new), _call_signature(parent))
+        self._assert_honest(new, ref, ref_err, "test 3a new")
+
+        # (b)
+        f, theta = _test3b_problem()
+        ref, ref_err = _test3b_reference()
+        kwargs = dict(atol=TEST3B_ATOL, rtol=TEST3B_RTOL)
+
+        parent = _run(TEST3B_SPAN, f, theta, bypass=True, **kwargs)
         self.assertEqual(parent["num_regions"], 1)
-        self.assertEqual(parent["num_simple_regions"], 1)
         self.assertEqual(parent["regions"][0].type, "direct")
         self.assertEqual(parent["regions"][0].depth, 0)
         self.assertTrue(parent["regions"][0].phase_limited)
-        self._assert_honest(parent, ref, ref_err, "test 3 parent")
+        self._assert_honest(parent, ref, ref_err, "test 3b parent")
 
-        new = _run(TEST3_SPAN, f, theta, **kwargs)
+        new = _run(TEST3B_SPAN, f, theta, **kwargs)
         # it bisects: no region is accepted at depth 0, and every region is still a fallback
-        # region
+        # region; the exit fires below the root
         self.assertGreaterEqual(new["max_depth"], 1)
         self.assertTrue(all(r.depth >= 1 for r in new["regions"]))
         self.assertEqual(new["num_simple_regions"], new["num_regions"])
+        self.assertGreater(new["num_phase_limited_regions"], 0)
         # every region flagged phase-limited satisfies the premise, from its own halves
         basis = _Basis_SinCos(theta)
         for region in new["regions"]:
             if region.phase_limited:
                 c = 0.5 * (region.start + region.end)
                 floor_L = _adaptive_levin_subregion(
-                    (region.start, c), f, basis, None, rtol=TEST3_RTOL
+                    (region.start, c), f, basis, None, rtol=TEST3B_RTOL
                 )["phase_err"]
                 floor_R = _adaptive_levin_subregion(
-                    (c, region.end), f, basis, None, rtol=TEST3_RTOL
+                    (c, region.end), f, basis, None, rtol=TEST3B_RTOL
                 )["phase_err"]
                 self.assertTrue(
                     _roundoff_exit_premise_holds(region.phase_err, floor_L, floor_R),
-                    f"test 3 new: {region}",
+                    f"test 3b new: {region}",
                 )
-        self._assert_honest(new, ref, ref_err, "test 3 new")
+        self._assert_honest(new, ref, ref_err, "test 3b new")
         # the declared error falls with the floor
         self.assertLess(new["abserr"], 0.5 * parent["abserr"])
 

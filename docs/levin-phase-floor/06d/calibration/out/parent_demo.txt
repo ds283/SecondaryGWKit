@@ -1,0 +1,121 @@
+# levin-phase-floor 06d: the numbers 06d's tests and log quote
+# written 2026-10-29T10:23:28+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script parent_demo.py sha256 77fffe0a1ae7eb4fe6a437e85219e076179401d6889c018585e878cdc8f1047a
+# prov.py sha256 c5ddb43fc52b4d73249fb65ffbccd59f2c942095844253c0c81470c1a0893107
+# AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# input AdaptiveLevin/tests/test_levin_cc_floor.py sha256 3824b2368893ee5e0d236505e3de0d7ee0c7fba6767aa9f0dcc79ac196711724
+# input AdaptiveLevin/tests/test_levin_roundoff_exit.py sha256 0a9584616c2c47f87efa5fc7b51a3f6934c90193497c2d524bdfa7f172c2a17a
+# input AdaptiveLevin/tests/test_levin_global_budget.py sha256 530f0c8c5ae597dbb44bcc3c0cf0d9f7be9d847cf10ed4b0a7fc4b0b1b831f01
+# input LiouvilleGreen/tests/test_three_bessel.py sha256 0cf57ae416362dc81bb699072e2f0404f2c860179d19b85e63c4fbb56d4d4f50
+# HEAD da043b901b327c289a350a4d1cdb04ea23000871
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_roundoff_exit.py
+#      M LiouvilleGreen/tests/test_three_bessel.py
+#     ?? AdaptiveLevin/tests/test_levin_cc_floor.py
+#     ?? docs/levin-phase-floor/06d/
+# uptime at start: 10:23  up 24 days,  9:08, 2 users, load averages: 6.74 8.47 12.32
+# parent 4bbeadea2cecdbd59d3bf6dd45c0012e8360b56f (06c's code ad9a5f4), module sha256 4161004e9353ce6c14b44d83d2402b96193c98ea27c45e09ed161854625d531c
+
+== A. test 6: the problems test_levin_quadrature.py drives
+   name | parent: fallback leaves, regions, depth, solves, value, abserr, true, honest | 06d: the same | in-process parent == parent module | 06d == parent
+   SinIntegral | 0, 1, 0, 7, 0.5581795618346952, 7.4999e-12, 8.882e-16, honest, conv True | 0, 1, 0, 7, 0.5581795618346952, 7.4999e-12, 8.882e-16, honest, conv True | True | True (0.0 s at the parent)
+   CosIntegral | 0, 1, 0, 3, -0.6636397832896364, 7.5000e-11, 1.221e-15, honest, conv False | 0, 1, 0, 3, -0.6636397832896364, 7.5000e-11, 1.221e-15, honest, conv False | True | True (0.0 s at the parent)
+   SincIntegral | 0, 9, 8, 71, 0.00866607849685356, 2.1595e-13, 5.206e-14, honest, conv True | 0, 9, 8, 71, 0.00866607849685356, 2.1595e-13, 5.206e-14, honest, conv True | True | True (0.0 s at the parent)
+   GRZIntegral(10) | 11, 11, 4, 87, 0.20000000000000007, 3.0774e-13, 5.551e-17, honest, conv True | 11, 11, 4, 87, 0.20000000000000007, 3.0029e-13, 5.551e-17, honest, conv True | True | False (0.0 s at the parent)
+   GRZIntegral(100) | 102, 102, 7, 407, -1.1796119636642288e-16, 1.5049e-14, 1.180e-16, honest, conv False | 92, 92, 7, 367, -5.204170427930421e-17, 4.0616e-14, 5.204e-17, honest, conv False | True | False (0.0 s at the parent)
+   GRZIntegral(1000) | 376, 382, 11, 1527, 7.32920668600201e-17, 6.4752e-15, 7.329e-17, honest, conv False | 222, 228, 10, 911, 4.623038063478191e-16, 1.5275e-13, 4.623e-16, honest, conv False | True | False (0.1 s at the parent)
+   nan_amplitude: raises ValueError (not compared)
+   all_nan_amplitude: raises ValueError (not compared)
+   input_validation_order_clamp | 0, 1, 0, 7, -0.4246637226239688, 1.6970e-14, 4.774e-15, honest, conv True | 0, 1, 0, 7, -0.4246637226239688, 1.6970e-14, 4.774e-15, honest, conv True | True | True (0.0 s at the parent)
+   lstsq_path | 0, 1, 0, 7, 0.02010065609084416, 9.5516e-16, 4.510e-17, honest, conv True | 0, 1, 0, 7, 0.02010065609084416, 9.5516e-16, 4.510e-17, honest, conv True | True | True (0.0 s at the parent)
+   direct_solve_path | 0, 1, 0, 7, 0.00670625245401996, 3.8799e-16, 1.787e-16, honest, conv True | 0, 1, 0, 7, 0.00670625245401996, 3.8799e-16, 1.787e-16, honest, conv True | True | True (0.0 s at the parent)
+   converged_flag_bump | 0, 5, 3, 39, -8.562612177253725e-11, 8.5641e-11, 8.563e-11, honest, conv True | 0, 5, 3, 39, -8.562612177253725e-11, 8.5641e-11, 8.563e-11, honest, conv True | True | True (0.0 s at the parent)
+   stationary_phase | 96935, 96941, 20, 218735, -0.0006879079716843766, 4.2664e-09, 2.665e-15, honest, conv False | 12, 76, 14, 607, -0.0006879079717056785, 2.5241e-11, 1.864e-14, honest, conv True | True | False (20.8 s at the parent)
+   roundoff_floor_raw(1e+06) | 0, 1, 0, 3, -3.3472684104646384e-07, 2.1496e-16, 9.949e-17, honest, conv False | 0, 1, 0, 3, -3.3472684104646384e-07, 2.1496e-16, 9.949e-17, honest, conv False | True | True (0.0 s at the parent)
+   roundoff_floor_reduced(1e+06) | 0, 1, 0, 3, -3.347268410408778e-07, 2.1496e-16, 1.051e-16, honest, conv False | 0, 1, 0, 3, -3.347268410408778e-07, 2.1496e-16, 1.051e-16, honest, conv False | True | True (0.0 s at the parent)
+   roundoff_floor_raw(1e+12) | 0, 1, 0, 3, -2.9701896642525725e-13, 2.1496e-16, 1.231e-16, honest, conv False | 0, 1, 0, 3, -2.9701896642525725e-13, 2.1496e-16, 1.231e-16, honest, conv False | True | True (0.0 s at the parent)
+   roundoff_floor_reduced(1e+12) | 0, 1, 0, 3, -2.970231621698786e-13, 2.1496e-16, 1.273e-16, honest, conv False | 0, 1, 0, 3, -2.970231621698786e-13, 2.1496e-16, 1.273e-16, honest, conv False | True | True (0.0 s at the parent)
+   theta_abserr_scalar | 0, 1, 0, 3, -3.3472684104646384e-07, 8.3500e-15, 9.949e-17, honest, conv False | 0, 1, 0, 3, -3.3472684104646384e-07, 8.3500e-15, 9.949e-17, honest, conv False | True | True (0.0 s at the parent)
+   theta_abserr_callable | 0, 1, 0, 3, -3.3472684104646384e-07, 8.3500e-15, 9.949e-17, honest, conv False | 0, 1, 0, 3, -3.3472684104646384e-07, 8.3500e-15, 9.949e-17, honest, conv False | True | True (0.0 s at the parent)
+   mode_filter_loose | 0, 1, 0, 7, 4.809096874481584e-07, 7.3595e-13, 2.130e-13, honest, conv True | 0, 1, 0, 7, 4.809096874481584e-07, 7.3595e-13, 2.130e-13, honest, conv True | True | True (0.0 s at the parent)
+   mode_filter_tight | 1279, 1279, 15, 10231, 4.809099004715304e-07, 4.8082e-15, 4.012e-17, honest, conv True | 32, 32, 5, 127, 4.809098999201388e-07, 7.3518e-14, 5.113e-16, honest, conv False | True | False (0.8 s at the parent)
+   theta_mod_2pi_path_only | 0, 1, 0, 3, -3.3472684104087496e-07, 2.1496e-16, 1.051e-16, honest, conv False | 0, 1, 0, 3, -3.3472684104087496e-07, 2.1496e-16, 1.051e-16, honest, conv False | True | True (0.0 s at the parent)
+   theta_deriv_path_only | 0, 1, 0, 3, -3.3472684104646665e-07, 2.1496e-16, 9.949e-17, honest, conv False | 0, 1, 0, 3, -3.3472684104646665e-07, 2.1496e-16, 9.949e-17, honest, conv False | True | True (0.0 s at the parent)
+   reversed_span_forward | 0, 1, 0, 7, 0.01746168145719191, 8.1776e-16, 2.914e-16, honest, conv True | 0, 1, 0, 7, 0.01746168145719191, 8.1776e-16, 2.914e-16, honest, conv True | True | True (0.0 s at the parent)
+   reversed_span_reversed | 0, 1, 0, 7, -0.017461681457191625, 6.6641e-16, 6.939e-18, honest, conv True | 0, 1, 0, 7, -0.017461681457191625, 6.6641e-16, 6.939e-18, honest, conv True | True | True (0.0 s at the parent)
+   generic_m4_basis | 0, 1, 0, 7, -1.1324952565916957, 4.4246e-14, 1.998e-15, honest, conv True | 0, 1, 0, 7, -1.1324952565916957, 4.4246e-14, 1.998e-15, honest, conv True | True | True (0.0 s at the parent)
+   vectorized_sinc | 0, 9, 8, 71, 0.00866607849685356, 2.1595e-13, 5.206e-14, honest, conv True | 0, 9, 8, 71, 0.00866607849685356, 2.1595e-13, 5.206e-14, honest, conv True | True | True (0.0 s at the parent)
+   parent calls with a fallback leaf: ['GRZIntegral(10)', 'GRZIntegral(100)', 'GRZIntegral(1000)', 'stationary_phase', 'mode_filter_tight']
+
+== B. test 2: one fallback solve per cell (true error against the floor alone), and the call under 06d (atol 1e-40, rtol 1e-17)
+   family reduced scale | true | phi_CC = sum + arg + node(theta') + node(f') | pair | parent eq.(151) | true/phi | true/parent || call: regions, depth, phase-limited, abserr, true, true/abserr
+   L False 1e+00 | 5.551e-17 | 9.821e-15 = 1.16e-15 + 8.17e-17 + 4.29e-15 + 4.29e-15 | 1.594e-09 | 9.786e-15 | 0.00565 | 0.00567 || 4, 2, 4, 3.786e-15, 5.551e-17, 0.0147
+   L False 1e+03 | 9.132e-17 | 2.492e-15 = 9.35e-18 + 4.08e-16 + 2.07e-15 + 2.07e-18 | 1.837e-13 | 9.786e-18 | 0.0366 | 9.33 || 2, 1, 2, 2.477e-15, 4.364e-17, 0.0176
+   L False 1e+06 | 1.941e-17 | 2.451e-15 = 8.67e-21 + 4.08e-16 + 2.04e-15 + 2.04e-21 | 7.018e-16 | 9.786e-21 | 0.00792 | 1.98e+03 || 1, 0, 1, 2.451e-15, 1.941e-17, 0.00792
+   L False 1e+09 | 2.011e-18 | 2.451e-15 = 9.22e-24 + 4.08e-16 + 2.04e-15 + 2.04e-24 | 4.165e-18 | 9.786e-24 | 0.000821 | 2.06e+05 || 1, 0, 1, 2.451e-15, 2.011e-18, 0.000821
+   L False 1e+12 | 7.465e-17 | 2.452e-15 = 8.87e-27 + 4.08e-16 + 2.04e-15 + 2.04e-27 | 3.105e-17 | 9.820e-27 | 0.0304 | 7.6e+09 || 1, 0, 1, 2.452e-15, 7.465e-17, 0.0304
+   L True  1e+00 | 5.551e-17 | 9.819e-15 = 1.16e-15 + 8.04e-17 + 4.29e-15 + 4.29e-15 | 1.594e-09 | 9.786e-15 | 0.00565 | 0.00567 || 4, 2, 4, 3.785e-15, 5.551e-17, 0.0147
+   L True  1e+03 | 7.112e-17 | 2.085e-15 = 9.35e-18 + 1.22e-18 + 2.07e-15 + 2.07e-18 | 1.837e-13 | 9.786e-18 | 0.0341 | 7.27 || 2, 1, 2, 2.070e-15, 3.743e-17, 0.0181
+   L True  1e+06 | 2.392e-17 | 2.042e-15 = 8.67e-21 + 1.16e-21 + 2.04e-15 + 2.04e-21 | 7.029e-16 | 9.786e-21 | 0.0117 | 2.44e+03 || 1, 0, 1, 2.042e-15, 2.392e-17, 0.0117
+   L True  1e+09 | 6.634e-18 | 2.042e-15 = 9.22e-24 + 1.20e-24 + 2.04e-15 + 2.04e-24 | 2.768e-18 | 9.786e-24 | 0.00325 | 6.78e+05 || 1, 0, 1, 2.042e-15, 6.634e-18, 0.00325
+   L True  1e+12 | 3.412e-17 | 2.044e-15 = 8.87e-27 + 1.09e-27 + 2.04e-15 + 2.04e-27 | 2.754e-17 | 9.820e-27 | 0.0167 | 3.47e+09 || 1, 0, 1, 2.044e-15, 3.412e-17, 0.0167
+   O False 1e+00 | 1.388e-17 | 9.720e-15 = 1.64e-15 + 3.64e-16 + 7.02e-15 + 7.02e-16 | 1.072e-10 | 2.660e-15 | 0.00143 | 0.00522 || 2, 1, 2, 6.587e-15, 5.551e-17, 0.00843
+   O False 1e+03 | 1.749e-15 | 7.983e-14 = 1.64e-15 + 7.05e-14 + 7.02e-15 + 7.02e-16 | 1.062e-10 | 2.660e-15 | 0.0219 | 0.657 || 2, 1, 2, 7.670e-14, 6.661e-16, 0.00869
+   O False 1e+06 | 4.652e-12 | 7.019e-11 = 1.48e-15 + 7.02e-11 + 7.02e-15 + 7.02e-16 | 1.261e-11 | 2.660e-15 | 0.0663 | 1.75e+03 || 1, 0, 1, 7.019e-11, 4.652e-12, 0.0663
+   O False 1e+09 | 4.208e-09 | 7.018e-08 = 1.62e-15 + 7.02e-08 + 7.02e-15 + 7.02e-16 | 4.068e-09 | 2.660e-15 | 0.06 | 1.58e+06 || 1, 0, 1, 7.018e-08, 4.208e-09, 0.06
+   O False 1e+12 | 1.410e-06 | 7.018e-05 = 1.49e-15 + 7.02e-05 + 7.02e-15 + 7.02e-16 | 7.103e-06 | 2.662e-15 | 0.0201 | 5.3e+08 || 1, 0, 1, 7.018e-05, 1.410e-06, 0.0201
+   O True  1e+00 | 4.163e-17 | 9.565e-15 = 1.64e-15 + 2.08e-16 + 7.02e-15 + 7.02e-16 | 1.072e-10 | 2.660e-15 | 0.00435 | 0.0157 || 2, 1, 2, 6.432e-15, 4.163e-17, 0.00647
+   O True  1e+03 | 5.551e-17 | 9.566e-15 = 1.64e-15 + 2.06e-16 + 7.02e-15 + 7.02e-16 | 1.062e-10 | 2.660e-15 | 0.0058 | 0.0209 || 2, 1, 2, 6.429e-15, 2.776e-17, 0.00432
+   O True  1e+06 | 5.551e-17 | 9.390e-15 = 1.48e-15 + 1.94e-16 + 7.02e-15 + 7.02e-16 | 1.541e-11 | 2.660e-15 | 0.00591 | 0.0209 || 2, 1, 2, 6.261e-15, 0.000e+00, 0
+   O True  1e+09 | 4.163e-17 | 9.542e-15 = 1.62e-15 + 1.99e-16 + 7.02e-15 + 7.02e-16 | 8.182e-11 | 2.660e-15 | 0.00436 | 0.0157 || 2, 1, 2, 6.408e-15, 2.776e-17, 0.00433
+   O True  1e+12 | 5.551e-17 | 9.402e-15 = 1.49e-15 + 1.87e-16 + 7.02e-15 + 7.02e-16 | 4.814e-11 | 2.662e-15 | 0.0059 | 0.0209 || 2, 1, 2, 6.294e-15, 2.776e-17, 0.00441
+
+== C. test 1 and test 3: the floor's terms
+   test 1 (0.5, 0.50390625): parent inf; 06d 5.2142e-15 = 5.309e-18 + 5.910e-19 + 5.208e-15 + 6.666e-19; pair 1.184e-08; true 2.797e-17
+   test 3 level 0 [0.72265625, 0.7265625]: parent eq.(151) 1.9803e-16; 06d 4.5519e-15 = 3.668e-18 + 3.341e-19 + 4.547e-15 + 7.674e-19; halves 3.0413e-15 (0.668 of the leaf's); pair 9.092e-10; true 2.277e-17
+   test 3 level 1 [0.72265625, 0.724609375]: parent eq.(151) 9.0449e-17; 06d 7.7277e-16 = 1.098e-18 + 3.354e-20 + 7.713e-16 + 3.820e-19; halves 7.4619e-16 (0.966 of the leaf's); pair 3.270e-16; true 2.656e-18
+   test 3 level 2 [0.72265625, 0.7236328125]: parent eq.(151) 6.6334e-16; 06d 3.6047e-16 = 4.992e-19 + 1.510e-20 + 3.598e-16 + 1.906e-19; halves 2.6712e-16 (0.741 of the leaf's); pair 1.382e-18; true 1.762e-18
+   test 3 level 3 [0.72314453125, 0.7236328125]: parent eq.(151) 5.3107e-16; 06d 8.6890e-17 = 5.922e-20 + 1.697e-21 + 8.673e-17 + 9.521e-20; halves 6.3611e-17 (0.732 of the leaf's); pair 2.575e-19; true 1.033e-19
+
+== D. test 4: the stationary-phase oracle, atol = rtol = 1e-10
+   parent: leaves 96941 (fallback 96935), depth 20, solves 218735, phase-limited 12427, converged False, value -0.0006879079716843766, abserr 4.2664e-09, true 2.6646e-15, honest (20.2 s)
+   06d: leaves 76 (fallback 12), depth 14, solves 607, phase-limited 8, converged True, value -0.0006879079717056785, abserr 2.5241e-11, true 1.8637e-14, honest (0.1 s)
+
+== E. 06b's test 3: (a) theta = 1e-6 e^x on [0, 6]; (b) the node-floor problem
+   (a) parent bypass=True: regions 1 (fallback 1), depth 0, phase-limited 1, converged False, abserr 1.0328e-05, true 0.000e+00, honest
+   (a) parent bypass=False: regions 4 (fallback 4), depth 2, phase-limited 4, converged False, abserr 4.5893e-07, true 0.000e+00, honest
+   (a) 06d bypass=True: regions 2 (fallback 2), depth 1, phase-limited 1, converged True, abserr 1.9799e-12, true 1.388e-17, honest
+   (a) 06d bypass=False: regions 2 (fallback 2), depth 1, phase-limited 1, converged True, abserr 1.9799e-12, true 1.388e-17, honest
+   (b) parent bypass=True: regions 160 (fallback 160), depth 12, phase-limited 160, converged False, abserr 1.0275e-12, true 2.132e-13, honest
+   (b) parent bypass=False: regions 160 (fallback 160), depth 12, phase-limited 160, converged False, abserr 1.0275e-12, true 2.132e-13, honest
+   (b) 06d bypass=True: regions 1 (fallback 1), depth 0, phase-limited 1, converged False, abserr 3.3545e-09, true 9.747e-14, honest
+   (b) 06d bypass=False: regions 3 (fallback 3), depth 2, phase-limited 3, converged False, abserr 6.9594e-10, true 2.123e-13, honest
+
+== F. the node term's f' part over every 06d fallback solve above: node(f') against node(theta') and against the whole floor
+   solves 437
+   node(f') / (node(theta') + node(f')): median 0.00168, max 1, min 9.99e-13
+   node(f') / phi_CC: median 0.00128, max 1; solves where it exceeds 1/2 of phi_CC: 5
+      06b test 3(a) bypass=True: node(f') 6.357e-14, node(theta') 1.277e-18, phi 6.357e-14
+      06b test 3(a) bypass=False: node(f') 6.357e-14, node(theta') 1.277e-18, phi 6.357e-14
+      06b test 3(a) bypass=True: node(f') 1.915e-12, node(theta') 7.726e-16, phi 1.916e-12
+      06b test 3(a) bypass=False: node(f') 1.915e-12, node(theta') 7.726e-16, phi 1.916e-12
+      06b test 3(b) bypass=False: node(f') 5.537e-10, node(theta') 1.390e-10, phi 6.928e-10
+      06b test 3(b) bypass=False: node(f') 1.307e-12, node(theta') 1.471e-12, phi 2.779e-12
+      test 2 solve L True 1e+00: node(f') 4.288e-15, node(theta') 4.288e-15, phi 9.819e-15
+      test 2 solve L False 1e+00: node(f') 4.288e-15, node(theta') 4.288e-15, phi 9.821e-15
+
+== G. the three-Bessel refinement test's rungs (quad_JJJ, k, q, s = 1.3, 1.7, 2.1)
+   parent rtol 1e-08: value np.float64(0.16923037336815183), true 1.2839e-10, abserr 1.6559e-09, phase_limited True
+   parent rtol 1e-10: value np.float64(0.16923037349655146), true 1.0131e-14, abserr 2.3337e-10, phase_limited True
+   parent rtol 1e-12: value np.float64(0.16923037349655146), true 1.0131e-14, abserr 2.3337e-10, phase_limited True
+   parent rtol 1e-13: value np.float64(0.16923037349655146), true 1.0131e-14, abserr 2.3337e-10, phase_limited True
+   parent rtol 1e-14: value np.float64(0.16923037349655146), true 1.0131e-14, abserr 2.3337e-10, phase_limited True
+   06d rtol 1e-08: value np.float64(0.16923037336815183), true 1.2839e-10, abserr 1.4241e-09, phase_limited True
+   06d rtol 1e-10: value np.float64(0.16923037349941694), true 2.8756e-12, abserr 1.8757e-11, phase_limited True
+   06d rtol 1e-12: value np.float64(0.16923037349650413), true 3.7192e-14, abserr 2.7987e-13, phase_limited True
+   06d rtol 1e-13: value np.float64(0.16923037349655107), true 9.7422e-15, abserr 4.1999e-14, phase_limited True
+   06d rtol 1e-14: value np.float64(0.1692303734965514), true 1.0075e-14, abserr 3.8162e-14, phase_limited True
+
+# uptime at end: 10:24  up 24 days,  9:09, 2 users, load averages: 5.33 7.62 11.63

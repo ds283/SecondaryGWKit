@@ -695,12 +695,22 @@ class TestPhaseGroups(unittest.TestCase):
         Refining the quadrature tolerance stops improving the answer (DRAFT-PLAN.md 9 Stage 4,
         README 6).
 
-        The positive statement is the one asserted: the value converges to a floor, the driver
-        reports ``phase_limited`` there -- meaning the region's achievable accuracy was set by the
-        round-off-plus-declared-phase floor rather than by the Levin rule -- and the residual
-        spread of the last three tolerances is consistent with that floor, not with the requested
-        tolerance. Reading "the integral matches to 1e-12" as evidence that the phases are good is
-        the error this test exists to prevent.
+        The positive statement is the one asserted: the true error against the closed form
+        improves from rtol 1e-8 to the tightest rung, 1e-14, and there it stays well above
+        rtol * |analytic| -- the accuracy the phases support, not the accuracy requested; the
+        declared abserr is at least the true error at every rung; and the driver reports
+        ``phase_limited`` at the tightest rung -- the region's achievable accuracy was set by the
+        round-off-plus-declared-phase floor rather than by the Levin rule. Reading "the integral
+        matches to 1e-12" as evidence that the phases are good is the error this test exists to
+        prevent.
+
+        Restated by prompts/levin-phase-floor/06d-cc-roundoff-floor.md, section 5 point 2. Until
+        06d it asserted that the value froze from rtol 1e-10 on (coarse gap above ten times the
+        spread of the last three rungs, spread below 1e-14 |analytic|). The freeze was an
+        artefact: the Clenshaw-Curtis fallback carried the Levin rule's eq. (151) floor, which
+        declared 2.3e-10 against a true error of 1.0e-14 and stopped refinement. With the rule's
+        own floor the value keeps moving with rtol and its true error stalls near 1e-14 (3.7e-14,
+        9.7e-15 and 1.0e-14 at 1e-12, 1e-13 and 1e-14), honestly declared.
 
         J000's closed form is re-derived here rather than imported from test_3bessel_analytic.py
         (prompt 08's file): int_0^inf j_0(kx) j_0(qx) j_0(sx) x^2 dx = (pi/4)/(kqs) for a triangle
@@ -738,14 +748,17 @@ class TestPhaseGroups(unittest.TestCase):
             )
 
         tightest = results[1.0e-14].value
-        coarse_gap = abs(results[1.0e-8].value - tightest)
-        floor_gap = max(
-            abs(results[rtol].value - tightest) for rtol in (1.0e-12, 1.0e-13)
-        )
 
-        # it improved, and then it stopped improving
-        self.assertGreater(coarse_gap, 10.0 * floor_gap)
-        self.assertLess(floor_gap, 1.0e-14 * abs(analytic) + 1.0e-20)
+        # honest at every rung: the declared abserr is at least the true error
+        for rtol, result in results.items():
+            self.assertGreaterEqual(
+                result.abserr, abs(result.value - analytic), f"rtol {rtol:.0e}"
+            )
+
+        # it improved from the coarsest rung to the tightest
+        self.assertGreater(
+            abs(results[1.0e-8].value - analytic), 10.0 * abs(tightest - analytic)
+        )
 
         # and the driver says why it stopped: the floor, not the rule
         self.assertTrue(results[1.0e-14].phase_limited)
@@ -755,8 +768,7 @@ class TestPhaseGroups(unittest.TestCase):
         true_error = abs(tightest - analytic)
         self.assertGreater(true_error, 1.0e-14 * abs(analytic))
         print(
-            f"\n@@ floor: |value(1e-12..1e-14) spread| = {floor_gap:.4e}, "
-            f"|value - analytic| = {true_error:.4e} "
+            f"\n@@ floor: |value - analytic| = {true_error:.4e} "
             f"({true_error / abs(analytic):.4e} relative), reported abserr "
             f"{results[1.0e-14].abserr:.4e}"
         )

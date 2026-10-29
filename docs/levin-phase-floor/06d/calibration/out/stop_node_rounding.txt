@@ -1,0 +1,32 @@
+# levin-phase-floor 06d: the stop's measurement (log, 'The stop'), re-run on the final tree: theta = c x on [1, 1+10/c], f = (1, 0), one fallback solve; the error of the rule at the float nodes against the exact nodes, in mpmath; phi as section 0.2 wrote it (two terms, computed in the script), and the candidate node term
+# script scripts/stop_node_rounding.py sha256 1dd6e2907fee0baad272991cd928d41c1277222cbc6a9d75d6ec361027b37a57; AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# HEAD da043b901b327c289a350a4d1cdb04ea23000871, tree dirty (06d's uncommitted work); command: PYTHONPATH=. ./venv/bin/python docs/levin-phase-floor/06d/calibration/scripts/stop_node_rounding.py
+theta = c x on [1, 1+10/c]
+ red=False c=1e+03 err=+2.496e-16 node_shift=+1.940e-16 rule_exact_nodes=+1.461e-19 phi=1.141e-15 |err|/phi=0.219
+ red=False c=1e+06 err=-5.276e-17 node_shift=-6.501e-17 rule_exact_nodes=+5.403e-22 phi=1.110e-15 |err|/phi=0.0475
+ red=False c=1e+09 err=+5.467e-18 node_shift=-1.803e-17 rule_exact_nodes=+3.776e-25 phi=1.110e-15 |err|/phi=0.00492
+ red=False c=1e+12 err=+2.029e-16 node_shift=+9.275e-17 rule_exact_nodes=+3.877e-28 phi=1.110e-15 |err|/phi=0.183
+ red=True c=1e+03 err=+1.941e-16 node_shift=+1.940e-16 rule_exact_nodes=+1.461e-19 phi=2.885e-17 |err|/phi=6.73
+ red=True c=1e+06 err=-6.501e-17 node_shift=-6.501e-17 rule_exact_nodes=+5.403e-22 phi=2.671e-20 |err|/phi=2.43e+03
+ red=True c=1e+09 err=-1.803e-17 node_shift=-1.803e-17 rule_exact_nodes=+3.776e-25 phi=2.830e-23 |err|/phi=6.37e+05
+ red=True c=1e+12 err=+9.275e-17 node_shift=+9.275e-17 rule_exact_nodes=+3.877e-28 phi=2.708e-26 |err|/phi=3.42e+09
+theta = Theta + 10 x on [0, 1]  (large |theta|, small theta' x)
+ red=False Theta=1e+03 err=+3.082e-15 node_shift=+4.375e-17 rule=+1.803e-18 phi=1.141e-13 |err|/phi=0.027
+ red=False Theta=1e+06 err=-7.596e-12 node_shift=+1.622e-17 rule=+4.553e-17 phi=1.110e-10 |err|/phi=0.0684
+ red=False Theta=1e+09 err=-5.501e-09 node_shift=+4.268e-17 rule=+1.958e-17 phi=1.110e-07 |err|/phi=0.0495
+ red=False Theta=1e+12 err=-2.280e-06 node_shift=+3.359e-18 rule=+4.624e-17 phi=1.110e-04 |err|/phi=0.0205
+ red=True Theta=1e+03 err=+5.680e-17 node_shift=+4.375e-17 rule=+1.803e-18 phi=2.885e-15 |err|/phi=0.0197
+ red=True Theta=1e+06 err=+2.302e-17 node_shift=+1.622e-17 rule=+4.553e-17 phi=2.671e-15 |err|/phi=0.00862
+ red=True Theta=1e+09 err=+7.133e-17 node_shift=+4.268e-17 rule=+1.958e-17 phi=2.830e-15 |err|/phi=0.0252
+ red=True Theta=1e+12 err=+5.660e-17 node_shift=+3.359e-18 rule=+4.624e-17 phi=2.708e-15 |err|/phi=0.0209
+candidate node term: 2u * max|theta'_coarse| * sum_k |w_k| (max(|a|,|b|)+h) sum_i|f_ik|
+ red=False c=1e+00 |err|=4.248e-16 phi=3.217e-14 node=4.663e-14 |err|/(phi+node)=0.00539
+ red=False c=1e+03 |err|=2.496e-16 phi=1.141e-15 node=2.265e-15 |err|/(phi+node)=0.0733
+ red=False c=1e+06 |err|=5.276e-17 phi=1.110e-15 node=2.220e-15 |err|/(phi+node)=0.0158
+ red=False c=1e+09 |err|=5.467e-18 phi=1.110e-15 node=2.220e-15 |err|/(phi+node)=0.00164
+ red=False c=1e+12 |err|=2.029e-16 phi=1.110e-15 node=2.220e-15 |err|/(phi+node)=0.0609
+ red=True c=1e+00 |err|=2.027e-16 phi=2.886e-14 node=4.663e-14 |err|/(phi+node)=0.00269
+ red=True c=1e+03 |err|=1.941e-16 phi=2.885e-17 node=2.265e-15 |err|/(phi+node)=0.0846
+ red=True c=1e+06 |err|=6.501e-17 phi=2.671e-20 node=2.220e-15 |err|/(phi+node)=0.0293
+ red=True c=1e+09 |err|=1.803e-17 phi=2.830e-23 node=2.220e-15 |err|/(phi+node)=0.00812
+ red=True c=1e+12 |err|=9.275e-17 phi=2.708e-26 node=2.220e-15 |err|/(phi+node)=0.0418
