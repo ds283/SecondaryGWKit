@@ -316,6 +316,22 @@ orchestrator on `ad9a5f4` (AdaptiveLevin 53, the other six equal, all OK). Pushe
 **The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
 `SecondaryGWKit-lpf06c-fef401c` and `SecondaryGWKit-lpf06c-<this commit's short SHA>`.
 
+### B.6 Addendum, 2026-10-29: Part B waits for 06d
+
+Before Part B was started, 07's Part A, rebased onto 06c, stopped a third time and found two
+defects in code 06c's census would run: the Clenshaw–Curtis fallback carries the Levin solve's
+eq. (151) floor, which grows at a stationary point, and the depth-18 diagnostic can divide by zero
+under 06c's loop (prompt 06d §0.1). The user: *"06d prompt before Part B"*, and *"Yes, go with that
+ordering."* So:
+- **Part B runs after 06d's code lands,** on 06c's and 06d's code together, and its census
+  measures both; 06d has no Part B of its own.
+- **R17** still runs at `fef401c` (06b's code), and X0 still reproduces 06b's census there.
+- **R18 and $g$** run at the commit that records 06d's landing, whose code is 06c's plus 06d's. The
+  worktree `SecondaryGWKit-lpf06c-ad63e8a` made for §B.5 is **not** used for them; it is removed
+  and a new one made at that commit.
+- **The header issues of both prompts** close in 06c's records commit, if 06c's §4 holds and X0–X4
+  hold; otherwise ask the user.
+
 ## 5. Stop and ask the user
 
 As 06b's note §5, with prompt 06c's §7 in place of 06b's. **Never touch 07's stashes or its saved

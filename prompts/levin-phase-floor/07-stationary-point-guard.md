@@ -31,7 +31,8 @@ The records of §5 and §6 are committed on the laptop afterwards, in 07's recor
 **Amended 2026-10-28, before §2 runs (§9).** 06b, the round-off-limited exit's premise, lands
 first. §2's reference and its $\omega$ are settled by the user. **Amended again the same day, after
 §2 stopped on its rule (§9 point 6):** 06c, global error control, lands first; the rehearsals
-become R19 and R20, and §6's "before" is 06c's census.
+become R19 and R20, and §6's "before" is 06c's census. **And again (§9 point 7):** 06d, a
+round-off floor for the Clenshaw–Curtis rule, lands before 06c's Part B and before §2 is re-run.
 
 **Read first:**
 1. The board's §3 entry `[06-levin-accepts-a-region-across-a-stationary-point]`, with its 06a
@@ -624,3 +625,20 @@ differ, this section holds.**
      and `r20-guard`. Both fingerprints must still equal `1b332ffa…`.
    - **§6's "before" is 06c's census,** not 06b's: point 5 holds with 06c's code commit, 06c's
      census and its harness copy in place of 06b's. V1's bit-identity is against 06c's calls.
+7. **06d runs first, and §2 is re-run on it** (the board's Decisions, **07 third stop**). Rebased
+   onto 06c, Part A stopped a third time: window leaves are never floor-limited, but the eq. (151)
+   floor they carried, the Levin solve's model with its $1/\min|\theta'|$, **grows** as a leaf holding
+   the stationary point shrinks, so 06c's budget is never met and the loop chases every window leaf
+   towards depth 20; and the depth-18 diagnostic divided by a zero `abserr`
+   (`[07-cc-solves-use-the-levin-roundoff-floor]`, `[07-depth18-diagnostic-divides-by-zero]`). The
+   user: *"I assumed we had updated the error model, not just taken over the Levin model intact. As
+   you say this needs fixing for every CC solve."* That is
+   [`06d-cc-roundoff-floor.md`](06d-cc-roundoff-floor.md), for every Clenshaw–Curtis solve.
+   - **§1's uncommitted work,** rebased onto 06c, is set aside before 06d runs, and rebased onto
+     06d afterwards: a deviation, `STRUCTURALLY REQUIRED`.
+   - **Window pieces** are Clenshaw–Curtis solves, so they carry 06d's floor. §0.2's rule (ii),
+     never floor-limited, stands as written.
+   - **§2 is re-run in full** on 06d's code and §1 together, under its rules as written, with the 20
+     LiouvilleGreen draws. The tables of the second and third stops stay in the records.
+   - **The rehearsals stay R19 and R20.** §6's "before" is 06c's census, which runs on 06c's and
+     06d's code together.
