@@ -359,6 +359,8 @@ that file says why (until then it read "A4 next, before A3").
 
 **B2 was written on 2026-10-27 as prompt 13** ([`13-score-the-unmasked-residue.md`](13-score-the-unmasked-residue.md)), after B1 (prompt 12), A2 and A4 had landed. It runs on the laptop, Ray-free: with production's $G$ phase the realistic cells cost seconds, so the Mac Studio is not needed. Part A makes the realistic flavour production's; Part B splits the residue B1 unmasked into five terms.
 
+**B2a was added on 2026-10-29 as prompt 14** ([`14-self-consistent-realistic-t.md`](14-self-consistent-realistic-t.md)), between B2 and E1 and not in the original plan. B2's fixture paired an exact $T$ phase and amplitude with Liouville–Green `omega` and `dlnM_dz`, and the Levin driver's result depended on the mismatch (`[13-the-tlg-term-depends-on-the-levin-subdivision]`). E1 and E2 trade the source spline against the Liouville–Green truncation, so the fixture's $T$ is made production's first, and B2's attribution re-taken on it.
+
 **A4 was added after A2 landed** and is not in the original plan. A2's realistic fixture builds the
 Green's-function phase as a raw `phase_spline`, the construction `GkSourcePolicyData._build_phase`
 abandoned at `GkTk-remedial` prompt 09, so its representation term and its Levin cost curve are
