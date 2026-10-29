@@ -289,12 +289,17 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             "so the Levin rule should never be invoked)",
         )
 
-        data100 = self._GRZIntegral(100.0)
-        self.assertLess(
-            data100["num_simple_regions"],
-            data100["num_regions"],
-            "GRZIntegral(100.0): expected at least one region to take the Levin rule",
-        )
+        # lambda = 100 is run for its value and its honesty only. Until prompts/levin-phase-floor
+        # 06c it also asserted num_simple_regions < num_regions (some *accepted* region takes the
+        # Levin rule): 24 regions, some of them Levin, at the parent 3f2a36d. Under 06c's global
+        # budget that is no longer a property of the final partition: the integral is
+        # (2/100) sin(25 pi) ~ 1e-17, so the budget is atol = 1e-15, and refinement continues
+        # until every leaf has dropped below the SIX_PI gate (102 leaves, all fallback, depth 7).
+        # The Levin rule is still exercised -- the root and its upper levels carry ~157 rad of
+        # phase -- but it no longer survives into the returned regions; lambda = 1000 below
+        # carries the assertion that the Levin rule is reached. This is an assertion of which rule
+        # the regions take, which 06c's section 2 test 9 allows to change.
+        self._GRZIntegral(100.0)
 
         data1000 = self._GRZIntegral(1000.0)
         self.assertLess(
@@ -443,9 +448,10 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # C3: before prompt 05, this reproduced at HEAD as reporting abserr=1.26e-10 at
         # atol=1e-10, exceeding what was requested, with nothing previously indicating it (the
         # per-region acceptance test compared each region's residual against atol directly, so
-        # the summed abserr scaled with the number of accepted regions). As of prompt 05, atol is
-        # distributed across regions by length share, so the summed abserr is bounded by atol by
-        # construction and this now converges.
+        # the summed abserr scaled with the number of accepted regions). Prompt 05 distributed
+        # atol across regions by length share; as of prompts/levin-phase-floor 06c the driver
+        # instead refines until the summed abserr meets max(atol, rtol*|value|), one budget for
+        # the whole call, so this converges by construction.
         def gaussian_bump(x):
             return exp(-400.0 * (x - 1.1) ** 2)
 
@@ -737,7 +743,12 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         )
 
         self.assertEqual(loose["num_regions"], 1)
-        self.assertEqual(tight["num_regions"], 1)
+        # The tight call was also asserted to be one region until prompts/levin-phase-floor 06c's
+        # trust check one level down: its single region's residual (~2e-16) is round-off noise
+        # that eq. (151)'s floor (~1e-20) does not bound, so the region is not floor-limited, the
+        # noise's convergence ratio can exceed 1, and the call refines (to 1,279 leaves, depth
+        # 15) until the noise is spread below its budget of rtol*|value| = 4.8e-15. It stays
+        # converged and honest. A region count, which 06c's section 2 test 9 allows to change.
 
         jump = fabs(loose["value"] - tight["value"])
         self.assertGreater(jump, 0.0)

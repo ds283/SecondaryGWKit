@@ -602,6 +602,16 @@ class TestRoundoffExitPremise(unittest.TestCase):
         floor of 1.03e-5 with a nested-pair estimate of 2.2e-11 (relerr 2.7e-10 against rtol
         1e-10). Its halves' floors are 5.1e-7 each, ~0.1 of the parent's together, so under the
         new code it is bisected; the halves are then resolved.
+
+        Under prompts/levin-phase-floor 06c's global budget the floors still hold the total above
+        the request after the bisection, so the leaves are chosen again: at depth 2 their halves'
+        floors sum to at least half their own, and the four leaves are flagged phase-limited (a
+        leaf the loop chose while the budget was unmet, and found floor-limited). The assertion
+        num_phase_limited_regions == 0 (06b) is replaced, by the user's decision recorded in 06c's
+        section 8, with: every phase-limited region satisfies 06b's premise, checked from its own
+        halves. Before (06b, 4ddc3c2): 2 direct regions at depth 1, none phase-limited, abserr
+        1.03e-6. After (06c): 4 direct regions at depth 2, all phase-limited, abserr 4.59e-7. The
+        depth and honesty assertions are unchanged.
         """
         f, theta = _test3_problem()
         ref, ref_err = _test3_reference()
@@ -621,7 +631,21 @@ class TestRoundoffExitPremise(unittest.TestCase):
         self.assertGreaterEqual(new["max_depth"], 1)
         self.assertTrue(all(r.depth >= 1 for r in new["regions"]))
         self.assertEqual(new["num_simple_regions"], new["num_regions"])
-        self.assertEqual(new["num_phase_limited_regions"], 0)
+        # every region flagged phase-limited satisfies the premise, from its own halves
+        basis = _Basis_SinCos(theta)
+        for region in new["regions"]:
+            if region.phase_limited:
+                c = 0.5 * (region.start + region.end)
+                floor_L = _adaptive_levin_subregion(
+                    (region.start, c), f, basis, None, rtol=TEST3_RTOL
+                )["phase_err"]
+                floor_R = _adaptive_levin_subregion(
+                    (c, region.end), f, basis, None, rtol=TEST3_RTOL
+                )["phase_err"]
+                self.assertTrue(
+                    _roundoff_exit_premise_holds(region.phase_err, floor_L, floor_R),
+                    f"test 3 new: {region}",
+                )
         self._assert_honest(new, ref, ref_err, "test 3 new")
         # the declared error falls with the floor
         self.assertLess(new["abserr"], 0.5 * parent["abserr"])
@@ -635,6 +659,14 @@ class TestRoundoffExitPremise(unittest.TestCase):
         Where it has one, both results are tabulated in the log
         (docs/levin-phase-floor/06b/calibration/out/parent_demo.txt); at this commit every such
         problem is bit-identical too, and is asserted so.
+
+        Under prompts/levin-phase-floor 06c's global budget the evaluation count is no longer
+        compared: a fallback leaf the loop chooses solves its halves for the premise, which the
+        bypass skips, so on GRZIntegral(100) (203 bypassed, 407 not) and the stationary-phase
+        oracle (193,893 and 218,735) the counts differ while value, abserr and every region are
+        bit-identical. Both are of the kinds 06c's section 2 test 9 allows to change (an
+        evaluation count; bit-identity across the bypass). The count is asserted no smaller
+        without the bypass.
         """
         for name, span, f, theta, kwargs, basis, raises in levin_quadrature_problems():
             with self.subTest(problem=name):
@@ -647,7 +679,15 @@ class TestRoundoffExitPremise(unittest.TestCase):
 
                 parent = _run(span, f, theta, bypass=True, basis=basis, **kwargs)
                 new = _run(span, f, theta, basis=basis, **kwargs)
-                self.assertEqual(_call_signature(new), _call_signature(parent), name)
+                new_signature = _call_signature(new)
+                parent_signature = _call_signature(parent)
+                # element 2 is the evaluation count (see the docstring)
+                self.assertEqual(
+                    new_signature[:2] + new_signature[3:],
+                    parent_signature[:2] + parent_signature[3:],
+                    name,
+                )
+                self.assertGreaterEqual(new["evaluations"], parent["evaluations"], name)
 
 
 if __name__ == "__main__":

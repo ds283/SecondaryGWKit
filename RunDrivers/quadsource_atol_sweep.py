@@ -23,9 +23,12 @@ It could not see the thing this script measures, for two reasons. Its instrument
 ``(k, q, r)`` triangle**: the fixture is a single constant-$w$ configuration, so the squeezed
 geometry $r \approx k \gg q$ that the production work list is a quarter full of does not occur in
 it. And its statistic is the residual, not the **cost**: ``atol`` that changes no digit of
-``total`` can still change the region count by four orders, because ``_adaptive_levin`` accepts a
-region on ``abserr < local_atol or relerr < rtol`` and ``local_atol`` is ``atol`` divided by the
-region's share of the interval. On production's squeezed triples that denominator reaches 1.5e6,
+``total`` can still change the region count by four orders, because ``_adaptive_levin`` accepted a
+region on ``abserr < local_atol or relerr < rtol`` and ``local_atol`` was ``atol`` divided by the
+region's share of the interval. (That was the driver when this sweep was written, 2026-09-23. Since
+``prompts/levin-phase-floor`` 06c it holds one budget for the call, ``max(atol, rtol*|value|)``
+against the summed error of its regions, and ``local_atol`` is gone; what follows is the
+measurement that motivated the sweep.) On production's squeezed triples that denominator reaches 1.5e6,
 so ``local_atol`` is around 1e-38, the first branch is dead, and every region must clear
 ``rtol = 1e-8`` against a phase the representation cannot deliver to eight digits. The bisection
 then runs to ``DEFAULT_LEVIN_MAX_DEPTH = 20`` -- which

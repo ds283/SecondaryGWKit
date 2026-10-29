@@ -689,8 +689,12 @@ def evaluate_QuadSource_integral(
             z_hi = item["z_max"]
             z_lo = item["z_min"]
             # the caller's atol bounds the whole integral; each sub-interval gets its share by
-            # length in log(1+z'), matching how adaptive_levin_sincos itself distributes atol
-            # over its sub-regions (prompts/levin-refactor prompt 05, audit C3)
+            # length in log(1+z') (prompts/levin-refactor prompt 05, audit C3). This once matched
+            # how adaptive_levin_sincos distributed atol over its own sub-regions; since
+            # prompts/levin-phase-floor 06c it does not -- the driver holds one budget,
+            # max(atol, rtol*|value|), for each call, met by the summed error of its regions.
+            # The share here is this caller's own, across its calls, and rtol is still applied
+            # per call ([07-quadsource-applies-rtol-per-call-against-a-cancelling-total]).
             atol_sub = atol * item["log_width"] / total_log_width
 
             if item["method"] == "quad":
