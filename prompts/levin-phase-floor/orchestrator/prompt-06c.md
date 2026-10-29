@@ -332,6 +332,19 @@ ordering."* So:
 - **The header issues of both prompts** close in 06c's records commit, if 06c's §4 holds and X0–X4
   hold; otherwise ask the user.
 
+**06d landed** on 2026-10-29: code `3d70db9`, reviewed and pushed, then the residue commit that
+records it. **R18 and $g$ run at that residue commit**, whose code is `3d70db9`'s (06c's plus
+06d's); R17 stays at `fef401c`. The worktree for R18 and $g$ is
+`SecondaryGWKit-lpf06c-<the residue commit's short SHA>`, made by the laptop after it is pushed;
+`SecondaryGWKit-lpf06c-ad63e8a` is removed first. What Part B must also carry, from 06d's log:
+- **The cost moves down where stationary points were chased:** in the laptop's draws, solves
+  5.94 M → 3.38 M and depth-20 calls 230 → 101.
+- **The node term is a worst-case bound** (06d's log, Observations 2): on `mode_filter_tight` it
+  runs about 100× above the realised error and turns a converged call unconverged, honestly.
+  Where $|x|$ is large it may bind; X5 and the depth distribution will show it.
+- **X1's honesty count** includes the near-singular cases 06d uncovered, if A3 v2 reaches them
+  (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`, widened by 06d).
+
 ## 5. Stop and ask the user
 
 As 06b's note §5, with prompt 06c's §7 in place of 06b's. **Never touch 07's stashes or its saved

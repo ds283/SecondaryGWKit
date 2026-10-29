@@ -100,3 +100,17 @@ The review adds to §A.3:
 - **Check 5** reads the three-Bessel restatement and 06b's test 3 against prompt §5 points 2 and 3,
   and re-runs test 2's reduced-phase cells myself, with the node term and with it removed.
 - **Check 6** names breakage (iv) with its catching test.
+
+## A.6 The review and the landing, 2026-10-29
+
+Code `3d70db9`. §A.3 and §A.5's checks, run by the orchestrator: scope as dispatched, stashes and
+`var/levin-phase-floor-07/wip/` unchanged by SHA-256; by AST only `_adaptive_levin_subregion_cc`,
+the depth-18 log (factored into `_log_depth_history`), `_Basis_SinCos` (one method added) and the
+new helpers and constants move; tests 1, 2 and 4 re-run at the parent and the commit (test 2's
+reduced cells true/$\phi_{\rm CC}$ ≤ 0.041, and 6.2 to $8.5\times10^9$ with the node term
+removed); breakage (i) re-applied, caught by tests 1, 2 and 3; the seven roots all OK (AdaptiveLevin
+60, the other six equal); the 20 draws re-run in a throwaway worktree, 160 units identical; test 4
+bit-identical in two fresh processes. `black` holds outside `calibration/scripts/`, which the
+prompt exempts and `CLAUDE.md` now lists. The user landed it (the board's Decisions, **06d lands**).
+07's work is restored for its agent from `stash@{0}`; 06c's Part B is still to run (06c's note
+§B.6).

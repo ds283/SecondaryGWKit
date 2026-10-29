@@ -17,7 +17,9 @@
 - No Ray was started, no run was registered, no store was opened, and nothing was written under
   `var/`.
 
-**Commit:** this log's own; its hash is recorded on the board's 06d row by the orchestrator.
+**Commit:** `3d70db9` (recorded by the orchestrator in the residue commit), reviewed and pushed
+2026-10-29; landed by the user with the near-singular cases recorded on
+`[06c-budget-can-stop-on-a-pre-asymptotic-residual]` (the board's Decisions, **06d lands**).
 
 **Result:** every fallback (Clenshaw–Curtis) solve carries a round-off floor derived from what the
 rule computes, three terms with no $1/\theta'$, in place of eq. (151); the depth-18 history log no
