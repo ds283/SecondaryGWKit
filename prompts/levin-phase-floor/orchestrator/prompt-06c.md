@@ -223,6 +223,31 @@ rebuilds one code commit from `79ae8c7` with the check added.
 - the LiouvilleGreen draws re-run again, and 12e's table of calls honest at the parent and
   dishonest under the new code read in full.
 
+### A.8 Addendum, 2026-10-29: the review of `c85f753`, and the noise level
+
+The rebuilt commit `c85f753` (not pushed) passed §A.3 with §A.7's additions:
+- scope and stashes as left; by AST only the loop, its helpers and `used_interval` changed, and the
+  result keys gained `num_untrusted_regions` alone;
+- the seven roots: AdaptiveLevin 53 (+15), the other six equal, all OK;
+- the orchestrator's re-runs: tests 1 and 3 as recorded; the Gaussian bump honest (declared
+  $8.5641\times10^{-11}$ against a true $8.5626\times10^{-11}$); 07 §2's (R) at $c = 10^5$, both
+  $x_s$, converged and honest;
+- breakages (i) (7 tests fail) and (iv) (12a, 12d, 12e fail) re-applied; test 3 bit-identical
+  across fresh processes;
+- the LiouvilleGreen draws re-run at the commit: 160 units, 165,280 values, 0 differences.
+
+Its records' findings went to the user (prompt §8, the fourth amendment): 5 `test_YJJ_log_singularity`
+cases honest at the parent and dishonest under the new code, dishonest-and-converged 44 → 228 there,
+and round-off read as non-convergence. The user: *"Let's try (b) first and see what it does to item
+1."* `c85f753` was saved as a patch (`06c-c85f753.patch`, `f38f0c53…`) and stays reachable; the
+branch, never pushed past `9486375`, was reset to it and the amendment committed on top. The agent
+rebuilds one commit from `c85f753` with the noise level.
+
+**The review of that commit** is §A.3 with §A.7's additions and: in check 2 `used_interval` gains
+`noise_limited` and the keys `num_noise_limited_regions`; in check 3 the noise level read against
+prompt §8 ($\nu = 8uM$, max of both differences); in check 5 test 12f and the item-1 table, and
+re-run 12f yourself; in check 6 re-apply (v) yourself.
+
 ## B. Part B — R17, R18 and the census, on the Mac Studio
 
 As 06b's note §B, with these differences:

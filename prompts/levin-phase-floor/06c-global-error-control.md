@@ -12,7 +12,9 @@ stop**), when 07's §2 found that no rung of $\Phi_w$ passes its rule:
   second stop (§8): *"(A). Let's remeasure the stall question after 07"*;
 - a trust check one level down, added after Part A's code was reviewed and before it was pushed
   (§8, the third amendment): *"Yes, please do that. We want the Part B census to be measuring the
-  final scheme."*
+  final scheme."*;
+- a noise level for the check, added after its code was reviewed and before it was pushed (§8,
+  the fourth amendment): *"Let's try (b) first and see what it does to item 1."*
 
 It lands after 06b's records commit and before 07's §2. 07's §1, built and uncommitted, is set aside
 before 06c runs, as it was for 06b, and rebased onto 06c's code afterwards (07 §9 point 6).
@@ -171,7 +173,8 @@ rate shows it is not converging is refined whatever the budget says.
     the C2 gate, the p-mode `rtol` gate and `abserr_truncation`;
   - `DEFAULT_LEVIN_MAX_DEPTH`, the Chebyshev order, the input validation;
   - the result dict's keys and types, and the meanings of the solve and region counters, apart from
-    the one new key `num_untrusted_regions` and the trust check's fields on `used_interval` (§8);
+    the new keys `num_untrusted_regions` and `num_noise_limited_regions` and the trust check's
+    fields on `used_interval` (§8);
   - any caller's code. **One exception:** a comment in a caller that describes how
     `adaptive_levin_sincos` shares `atol` by length is corrected, comment-only, and the module's
     AST without comments and docstrings is checked unchanged.
@@ -283,7 +286,7 @@ them in its comment, with the parent's SHA.
     - The harness lives in `docs/levin-phase-floor/06c/calibration/scripts/`, its output in `out/`.
 11. **Cost, descriptive.** On every problem `test_levin_quadrature.py` drives: regions, solves and
     maximum depth under both codes. Cost is not an argument (README §5 rule 4).
-12. **The trust check** (§8, the third amendment): tests 12a–12e there.
+12. **The trust check** (§8, the third and fourth amendments): tests 12a–12g there.
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** a leaf leaves the candidate set once its own relative error is below `rtol` (the local
@@ -291,7 +294,9 @@ them in its comment, with the parent's SHA.
 - **(ii)** floor-limited leaves stay refinable: test 4 must fail;
 - **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail;
 - **(iv)** the trust check removed (every leaf trusted, its error undeclared-widened): test 12a must
-  fail.
+  fail;
+- **(v)** the noise level removed (differences at round-off read as a convergence rate): test 12f
+  must fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -412,7 +417,7 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 ## 6. Acceptance
 
 1. **§1–§3 as written:**
-   - every test passing, the four breakages caught;
+   - every test passing, the five breakages caught;
    - every changed existing assertion of the kinds §2 test 9 allows, and listed;
    - the LiouvilleGreen draws with no new failure;
    - the seven roots rising only by the tests added.
@@ -593,3 +598,50 @@ open, and §5's X1 measures it.
 **What changed above, this time:** a pointer in §0.2; §0.3's keys; test 12 and breakage (iv) in §2;
 the four breakages in §6; a stop in §7; and the trust check's descriptive item in §5. The agent
 rebuilds its code commit from `79ae8c7` with the check added, as **one** commit.
+
+### The fourth amendment: the check's noise level
+
+The third amendment's code (`c85f753`, reviewed, never pushed; kept as a patch and by its hash)
+passed its review. Its records showed:
+1. **In `test_YJJ_log_singularity`,** 5 cases honest at the parent and dishonest under the new code
+   (true error 1.06–2.2× the declared), all flagged `converged`; 29 the other way. Over the test's
+   800 cases, those dishonest **and** flagged `converged` rose from 44 to 228. The dishonesty
+   itself is the test's known near-singular conditioning: at $\varepsilon = 10^{-10}$ the true
+   error is up to $5.5\times10^5$ times the declared under the new code ($8.1\times10^5$ at the
+   parent), but the parent did not flag those `converged`.
+2. **Round-off read as non-convergence.** In `test_mode_filter_truncation_visible_in_abserr` a
+   residual of $2.1\times10^{-16}$, round-off far above the eq. (151) floor of $2\times10^{-20}$,
+   gives $r = 1.96$; the leaf is untrusted and refined from 1 region to 1,279 leaves.
+
+The user chose to treat round-off-level differences as the floor is treated, and to see what that
+does to item 1: *"Let's try (b) first and see what it does to item 1."*
+
+**The noise level.** For a leaf $P$, let $M = |V_P| + |V_L| + |V_R| + |V_{LL}| + |V_{LR}| +
+|V_{RL}| + |V_{RR}|$, and $\nu = 8\,u\,M$ with $u$ the unit round-off ($2^{-53}$).
+- **Why $8u M$.** $\Delta_1$ and $\Delta_2$ are formed from seven computed values by at most four
+  additions and two subtractions; each value carries at least its own last-bit rounding, and the
+  sums add about one rounding each. Differences below a few units of $uM$ cannot be told from that
+  rounding. 8 is the smallest round count covering those operations, and the generous end for
+  refinement: a smaller $\nu$ refines more.
+- **The rule.** If $\max(\Delta_1, \Delta_2) \le \nu$, the leaf is **noise-limited**: its differences
+  carry no convergence information. It is trusted, is not refinable (as a floor-limited leaf), and
+  declares $\max(\epsilon_P, \Delta_1, \Delta_2, \nu)$ as its resolution error. It is flagged
+  (`used_interval.noise_limited`) and counted (`num_noise_limited_regions`).
+- **Otherwise** the third amendment's rules hold unchanged.
+
+**Tests:**
+- **12f, noise is not chased:** `test_mode_filter_truncation_visible_in_abserr`'s tight call is
+  converged and honest, with at least one noise-limited leaf and no more than a few regions; the
+  test records the count, and 06c's change to its `num_regions == 1` assertion is revisited.
+- **12g, the earlier checks still hold:** 12a–12e, unchanged.
+
+**Breakage (v):** the noise level removed: test 12f must fail.
+
+**Item 1, measured, not scored:** the log tables `test_YJJ_log_singularity`'s cases under the
+parent, under `c85f753` and under this code side by side: honest/dishonest, the true/declared
+ratio, and `converged`, with the counts of dishonest-and-converged under each. It is a finding for
+the user, not a stop.
+
+**What changed above, this time:** the header; §0.3's keys; test 12's pointer; breakage (v); the
+five breakages in §6. The agent rebuilds its code commit from `c85f753` with the noise level added,
+as **one** commit.
