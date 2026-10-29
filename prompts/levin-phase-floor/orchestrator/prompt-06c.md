@@ -279,8 +279,42 @@ As 06b's note §B, with these differences:
 
 ### B.5 Addendum: Part B's dispatch
 
-*(Written at Part A's landing: the code commit and its parent; §B.0 re-checked on the Mac Studio;
-anything Part A's review found that Part B must carry.)*
+**Part A** is the code commit **`ad9a5f4`**, whose parent is **`fef401c`**. It re-lands `c85f753`'s
+code byte for byte (`git diff c85f753 ad9a5f4 -- AdaptiveLevin ComputeTargets RunDrivers
+docs/levin-phase-floor/06c` is empty), so `c85f753`'s review (§A.8) carries over: the tests, the
+four breakages, the 20 LiouvilleGreen draws re-run by the orchestrator to 0 differences. §A.9's
+re-review: scope as dispatched, stashes and `var/` untouched, the seven roots re-run by the
+orchestrator on `ad9a5f4` (AdaptiveLevin 53, the other six equal, all OK). Pushed.
+
+**The trees, by SHA:**
+- **R17 and X0's reproduction** at **`fef401c`**, in the parent worktree. Its code is 06b's:
+  `git diff --stat 92bc62f fef401c -- . ':!docs' ':!prompts'` shows only `CLAUDE.md`, so X0's
+  first clause holds against 06b's census tree.
+- **R18 and $g$** at **this addendum's commit**, in the code worktree. Its code is `ad9a5f4`'s:
+  the commit adds only records.
+
+**What Part B must carry:**
+- **Cost.** On the laptop's draws solves rose ×45 and 230 of 4,320 calls reached depth 20. Where
+  a request cannot be met, or round-off sits above the floor, the loop refines to exhaustion.
+  06b's 300 s per unit may be exceeded; an over-budget unit counts against X5 as the prompt
+  says. **R17 and R18 may run much longer than R15/R16 did.**
+- **X1 is the honesty question.** The trust check narrows but does not close
+  `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`; an error common to a leaf and its
+  descendants, `[06b-moved-calls-declare-less-than-their-error]`'s, is out of its reach.
+- **The trust check's descriptive item** reads `used_interval`'s `delta1`, `delta2`,
+  `convergence_ratio`, `trusted` and `declared_resolution`, and `num_untrusted_regions`.
+
+**§B.0 re-checked on the Mac Studio at 01:46 UTC, 2026-10-29,** read-only:
+- the main checkout is `handover-remedial` at `28ebaf0`, `git status --short` empty, one worktree;
+- the registry holds 28 runs, all finished, nothing `running` or stale;
+- the lock is free, and `ray-processes --ray-temp-dir /tmp/ray-sgk` lists none;
+- there is no `var/levin-phase-floor-06c*` and no `var/datastores/levin-phase-floor-06c*`;
+- the scratch copy's five files match their certification by SHA-256, with no `-wal` or `-shm`;
+- 06b's census checkpoint is `f934ea24…`, as `06b/KEPT_ON_MAC_STUDIO.md` records;
+- 108 GiB free; load about 5.
+
+**The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
+`SecondaryGWKit-lpf06c-fef401c` and `SecondaryGWKit-lpf06c-<this commit's short SHA>`.
 
 ## 5. Stop and ask the user
 

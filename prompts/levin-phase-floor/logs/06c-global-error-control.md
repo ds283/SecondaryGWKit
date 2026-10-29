@@ -673,7 +673,7 @@ for after 07. In production both callers supply `theta_mod_2pi`, so arguments ar
 
 ## State handed on
 
-- **The code commit** is made and not pushed; its parent is `fef401c`. §4 (R17 at that parent,
+- **The code commit** is `ad9a5f4`, reviewed by the orchestrator and pushed on 2026-10-29; its parent is `fef401c`. §4 (R17 at that parent,
   whose code is `3f2a36d`'s; R18 at the code commit) and §5 run on the Mac Studio after the push.
   The board's 06c row says the code landed and §4–§5 are pending.
 - **For §4 and §5:** every call can move. Expect much higher cost where a request cannot be met

@@ -961,7 +961,7 @@ remains in this section.**
 cost cliff and the honesty of what a `QuadSourceIntegral` row stores about its error and
 convergence. Its plan opened no issue; its prompt 01 opened two, its prompt 03 three (one closed at gate G1 on 2026-10-26, one at G2 on 2026-10-27), its prompt
 04 two (one closed by its prompt 05a on 2026-10-26, the other at G2 on 2026-10-27), its prompt 05 three (one closed at G2), the writing of its prompt 05a one (closed by
-05a the same day), its prompt 05a one, its prompt 06 three, the user's decision on 06's P1 one, its prompt 07's Part A one, its prompt 06b three, and its prompt 07's §2 two: the last sixteen rows. The three rows above them were assigned to it from §1.1 on 2026-10-25. Two more were assigned and are closed: `[00-consumer-anchoring-floor]` from §1.4, closed for $G_k$ by its prompt 05 on 2026-10-26, and `[02-consumer-phi-below-the-storage-granularity]` from §1.6, closed by its prompt 06 on 2026-10-27. **Each stays on its own board**, which is the record and is where it
+05a the same day), its prompt 05a one, its prompt 06 three, the user's decision on 06's P1 one, its prompt 07's Part A one, its prompt 06b three, and its prompt 07's §2 two, and its prompt 06c one: the last seventeen rows. The three rows above them were assigned to it from §1.1 on 2026-10-25. Two more were assigned and are closed: `[00-consumer-anchoring-floor]` from §1.4, closed for $G_k$ by its prompt 05 on 2026-10-26, and `[02-consumer-phi-below-the-storage-granularity]` from §1.6, closed by its prompt 06 on 2026-10-27. **Each stays on its own board**, which is the record and is where it
 is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; this campaign's prompt
 01 measures whether it reaches A3 v2.
 
