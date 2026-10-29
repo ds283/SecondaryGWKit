@@ -248,6 +248,18 @@ rebuilds one commit from `c85f753` with the noise level.
 prompt §8 ($\nu = 8uM$, max of both differences); in check 5 test 12f and the item-1 table, and
 re-run 12f yourself; in check 6 re-apply (v) yourself.
 
+### A.9 Addendum, 2026-10-29: the noise level withdrawn
+
+The agent stopped before writing code on the fourth amendment: $\nu = 8uM$ falls $10^5$–$10^6$ short
+of 12f's residual (phase-argument rounding), which the orchestrator reproduced. A phase-scaled
+variant (b′), measured in scratch and never committed, fixed 12f but made five converged calls
+unconverged and left item 1 at 225 dishonest-and-converged; the orchestrator reproduced its 12f and
+SinIntegral figures. The user chose (ii): *"Yes, please go ahead with (ii)."* 06c ships `c85f753`'s
+code, re-landed unchanged on top of the fifth amendment. **Its review** is check 1 (scope), check 2
+extended to *the code files' ASTs equal `c85f753`'s*, check 4 (the seven roots), check 8 (the log
+and board record both noise attempts), and check 9; the rest of `c85f753`'s review (§A.8) carries
+over.
+
 ## B. Part B — R17, R18 and the census, on the Mac Studio
 
 As 06b's note §B, with these differences:

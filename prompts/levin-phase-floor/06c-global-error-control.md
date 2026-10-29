@@ -13,8 +13,8 @@ stop**), when 07's §2 found that no rung of $\Phi_w$ passes its rule:
 - a trust check one level down, added after Part A's code was reviewed and before it was pushed
   (§8, the third amendment): *"Yes, please do that. We want the Part B census to be measuring the
   final scheme."*;
-- a noise level for the check, added after its code was reviewed and before it was pushed (§8,
-  the fourth amendment): *"Let's try (b) first and see what it does to item 1."*
+- a noise level for the check, added after its code was reviewed and **withdrawn** before any code
+  was built on it (§8, the fourth and fifth amendments): *"Yes, please go ahead with (ii)."*
 
 It lands after 06b's records commit and before 07's §2. 07's §1, built and uncommitted, is set aside
 before 06c runs, as it was for 06b, and rebased onto 06c's code afterwards (07 §9 point 6).
@@ -173,8 +173,7 @@ rate shows it is not converging is refined whatever the budget says.
     the C2 gate, the p-mode `rtol` gate and `abserr_truncation`;
   - `DEFAULT_LEVIN_MAX_DEPTH`, the Chebyshev order, the input validation;
   - the result dict's keys and types, and the meanings of the solve and region counters, apart from
-    the new keys `num_untrusted_regions` and `num_noise_limited_regions` and the trust check's
-    fields on `used_interval` (§8);
+    the one new key `num_untrusted_regions` and the trust check's fields on `used_interval` (§8);
   - any caller's code. **One exception:** a comment in a caller that describes how
     `adaptive_levin_sincos` shares `atol` by length is corrected, comment-only, and the module's
     AST without comments and docstrings is checked unchanged.
@@ -286,7 +285,7 @@ them in its comment, with the parent's SHA.
     - The harness lives in `docs/levin-phase-floor/06c/calibration/scripts/`, its output in `out/`.
 11. **Cost, descriptive.** On every problem `test_levin_quadrature.py` drives: regions, solves and
     maximum depth under both codes. Cost is not an argument (README §5 rule 4).
-12. **The trust check** (§8, the third and fourth amendments): tests 12a–12g there.
+12. **The trust check** (§8, the third amendment): tests 12a–12e there.
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** a leaf leaves the candidate set once its own relative error is below `rtol` (the local
@@ -294,9 +293,7 @@ them in its comment, with the parent's SHA.
 - **(ii)** floor-limited leaves stay refinable: test 4 must fail;
 - **(iii)** the stop test uses the residual alone, without the floor: test 3 must fail;
 - **(iv)** the trust check removed (every leaf trusted, its error undeclared-widened): test 12a must
-  fail;
-- **(v)** the noise level removed (differences at round-off read as a convergence rate): test 12f
-  must fail.
+  fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -417,7 +414,7 @@ As 06b §4. Records go under `var/levin-phase-floor-06c/rehearsal/`.
 ## 6. Acceptance
 
 1. **§1–§3 as written:**
-   - every test passing, the five breakages caught;
+   - every test passing, the four breakages caught;
    - every changed existing assertion of the kinds §2 test 9 allows, and listed;
    - the LiouvilleGreen draws with no new failure;
    - the seven roots rising only by the tests added.
@@ -645,3 +642,34 @@ the user, not a stop.
 **What changed above, this time:** the header; §0.3's keys; test 12's pointer; breakage (v); the
 five breakages in §6. The agent rebuilds its code commit from `c85f753` with the noise level added,
 as **one** commit.
+
+### The fifth amendment: the noise level withdrawn
+
+Part A stopped before writing code: $\nu = 8uM$ does not reach 12f's residual. On
+$e^{-x}\sin(10^6x)$ the differences are rounding of the **phase argument**, about $u|\theta||V|$
+with $|\theta| \approx 10^6$, not of the values: at the root $\nu = 1.3\times10^{-21}$ against
+differences of $2.1$–$4.1\times10^{-16}$, and no leaf of the 1,279 is within $\nu$. The
+orchestrator reproduced this.
+
+A phase-scaled level, $\nu = 8u\,A\,P$ ($A$ the largest argument handed to sin/cos, $P$ the
+summed endpoint magnitudes over the seven solves), was then measured as a scratch variant, nothing
+committed:
+- it restores 12f to 1 leaf, converged and honest, and keeps 12a–12e honest;
+- but $\nu$ overstates the noise by $10^2$–$10^6$, and the noise-limited leaves' declared $\nu$ makes
+  five converged calls unconverged (SinIntegral, the lstsq and direct-solve paths, tests 2 and 3),
+  existing convergence assertions §2 test 9 does not allow to change;
+- item 1 barely moves: dishonest-and-converged 44 (parent), 228 (`c85f753`), 225 (variant). That
+  dishonesty is the test's near-singular conditioning, an input error shared by a region and its
+  pieces, which no noise rule reaches.
+
+**The user's decision, 2026-10-29:** *"Yes, please go ahead with (ii)"*: 06c ships the third
+amendment's code, `c85f753`, with **no noise rule**. Round-off read as non-convergence costs work,
+not honesty. The fourth amendment above is withdrawn: no `noise_limited`, no
+`num_noise_limited_regions`, no test 12f or 12g, no breakage (v). Item 1 and the noise question
+stay open (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`), for after 07. In production both
+callers supply `theta_mod_2pi`, so arguments are at most $2\pi$ and argument rounding of this kind
+does not arise there.
+
+**What changed above, this time:** the header; §0.3's keys; test 12's pointer; breakage (v)
+removed; four breakages in §6. The agent re-lands `c85f753`'s content unchanged in code, as one
+commit on top of this amendment.
