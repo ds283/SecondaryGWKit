@@ -12,6 +12,9 @@ rehearsals and census then measure 06c and 06d together. It has no Part B of its
 rebased onto 06c and uncommitted, is set aside before 06d runs, and rebased onto 06d afterwards
 (07 §9 point 7).
 
+**Amended** 2026-10-29, before the code commit (§5): a node-rounding term in $\phi_{\rm CC}$,
+the three-Bessel test restated, 06b's test 3 kept under test, test 3's parent assertion withdrawn.
+
 **Where it runs:** on the laptop only, by a fresh-context subagent, in the main checkout at
 `HEAD`. One commit.
 
@@ -203,3 +206,75 @@ name), and a test that quotes its numbers records them in its comment.
   premise, 06c's loop or trust check, or the result dict's keys.
 - **A test moves beyond §2 test 8's allowance,** a LiouvilleGreen test fails under 06d that passes
   under 06c, or a seven-roots count falls.
+
+## 5. Amendments, 2026-10-29, before the code commit
+
+Part A stopped before committing, under §4, with the floor, the guard and tests 1, 2, 3 and 5
+built and uncommitted in the main checkout. It is resumed on that work: **the Gate is not re-run**
+(it passed at dispatch, and the checkout now holds only the agent's own changes). The user agreed
+all three points below, the same day: *"I agree with all three"*.
+
+**What it measured.** On test 2's cells, $\theta = c\,x$ on $[1, 1 + 10/c]$, one fallback solve,
+the reduced phase computed exactly in `mpmath`, the true error exceeds $\phi_{\rm CC}$ by 6.7 at
+$c = 10^3$, $2.4\times10^3$ at $10^6$, $6.4\times10^5$ at $10^9$ and $3.4\times10^9$ at $10^{12}$
+(eq. (151) is short by the same amounts, so 06c is equally dishonest there). The cause is the
+**rounding of the nodes**: $x_k = (a+b)/2 + (b-a)/2\cdot t_k$ is displaced by about $u|x_k|$, and a
+rule whose weights are fixed and whose nodes move commits $\sum_k w_k\,g'(x_k)\,\delta x_k$, with
+$g' \sim \theta' f$. The same rule evaluated in `mpmath` at the float nodes and at the exact nodes
+reproduces the observed error to every printed digit. A control family, $\theta = \Theta + 10x$ on
+$[0, 1]$ with $\Theta$ to $10^{12}$, is honest raw and reduced: it is $\theta' x$ that matters, not
+$|\theta|$. It also shows at a stationary point, at nesting level 2 of test 3's harness. §0.2
+counted the rounding of the sum, the products, the weights, the basis, the amplitude and the
+argument, and **omitted the abscissae**: the defect is the derivation's, not a tuning.
+
+1. **A third term in $\phi_{\rm CC}$: the rounding of the nodes.**
+   $$\phi_{\rm CC} = (n + 4)\,u\,S \;+\; u\,\sum_k |w_k|\,|a_k| \sum_i |f_{ik}|
+   \;+\; \sum_k |w_k|\,\delta_k\,\sum_i \bigl(|\theta'|\,|f_{ik}| + |f'_{ik}|\bigr),$$
+   - $\delta_k$ bounds $|\hat x_k - x_k|$, the computed node against the exact one. It is
+     **derived from how the code forms the nodes**, each rounding counted term by term in a
+     comment, as the $(n+4)$ is; of the form $c_x\,u\,(\max(|a|,|b|) + h)$, with $c_x$ that count.
+   - **The derivative is $g' = (f' + i\theta' f)\,e^{i\theta}$, so both parts are included.** $|\theta'|$
+     and $|f'|$ come from data the solve already holds (for $\theta'$, `theta_prime_Cheb`; for $f'$,
+     a Chebyshev derivative of the fine-grid samples), per node or as a maximum over the region,
+     the agent's choice, recorded; the maximum is the conservative side. The $f'$ part may not be
+     dropped: if the agent finds it always negligible, the log shows the numbers, and it stays.
+   - **No $1/\theta'$**, so §0.2's third bullet holds. Its sum over leaves is about
+     $u\,|x|\,\|f\|\,{\rm TV}(\theta)$, so it does not grow under subdivision; a leaf it dominates is
+     genuinely limited, since refining cannot remove it, and 06c's floor-limited exemption is then
+     correct.
+   - **§0.3's scope is unchanged**: this is the fallback's floor. Test 2 must bound every cell with
+     the three terms; a cell it does not bound is still a §4 stop. Breakage **(iv)**, the node term
+     removed, must fail test 2 on a reduced-phase cell.
+2. **The three-Bessel test,**
+   `LiouvilleGreen.tests.test_three_bessel.TestPhaseGroups.test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy`,
+   **is restated.** Its "the value freezes" checks rested on 06c's inflated fallback floor (a
+   declared $2.3\times10^{-10}$ against a true $1.0\times10^{-14}$), which stopped refinement; under
+   06d the value keeps moving and its true error stalls near $10^{-14}$, honestly declared. Its
+   thesis stands, in this form:
+   - the true error improves from `rtol` $10^{-8}$ to the tightest rung, and then **stops improving
+     well above** $\mathrm{rtol}\cdot|{\rm analytic}|$ (the existing `true_error` assertion is kept);
+   - **honesty at every rung**: `abserr` at least the true error;
+   - **the driver says it fell short**: `phase_limited` at $10^{-14}$ if it holds; if it does not,
+     the log records the per-rung values and the assertion becomes that `abserr` at $10^{-14}$
+     exceeds the requested tolerance.
+   - `coarse_gap > 10·floor_gap` and `floor_gap < 1e-14·|analytic|` are removed. The docstring is
+     rewritten to say what is asserted and why the frozen value was an artefact. The log lists the
+     change with its numbers under both codes.
+3. **06b's test 3, `test_levin_roundoff_exit.test_exit_against_its_premise_fallback_branch`,
+   keeps its exit under test.** On its problem ($\theta = 10^{-6}e^x$ on $[0, 6]$) the exit no
+   longer fires under 06d: the call is identical across the bypass and honest.
+   - On that problem, its assertions change to 06d's outcome, as §2 test 8's kinds allow
+     (region count, depth, which rule, the phase-limited count, bit-identity across the bypass),
+     with honesty kept.
+   - The assertion that the exit at least halves the declared error **moves to a problem where
+     $\phi_{\rm CC}$ binds**, such as a reduced-phase cell of test 2 at large $\theta' x$, where a
+     fallback leaf is floor-limited by the node term and 06b's premise holds. There the test asserts
+     what it asserted before: the exit fires, `abserr` falls by at least half against the bypass,
+     and the result is honest.
+   - **If no problem makes the exit fire on the fallback branch** under 06d, stop and report the
+     search: that would mean the exit is unreachable there, which is the user's to decide.
+4. **Test 3's parent assertion is withdrawn.** "The parent's floor rises level on level" is not
+   what the data show (eq. (151) went $1.98\times10^{-16}$, $9.0\times10^{-17}$, $6.6\times10^{-16}$,
+   $5.3\times10^{-16}$ over the four levels; the growth §0.1 cites is from depth 2 to 8). The
+   parent's floors are recorded in the log; the test asserts 06d's side only: at every level the
+   halves' floors sum to at most a few times the leaf's, and every solve is honest.

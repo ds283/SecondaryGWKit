@@ -88,3 +88,15 @@ dispatched on the user's word, and 07's work is restored for its agent from the 
 
 As 06c's note §5, with prompt 06d's §4 in place of 06c's §7. **Never touch 07's stashes or saved
 work** except to restore the newest stash as §A.4 says.
+
+## A.5 Addendum, 2026-10-29: the stop and the amendment
+
+Part A stopped under prompt §4 with nothing committed: $\phi_{\rm CC}$ missed the rounding of the
+nodes, and two existing tests rested on premises 06d removes. The user agreed the three remedies
+(*"I agree with all three"*), written as prompt §5; the same agent resumes on its uncommitted work.
+The review adds to §A.3:
+- **Check 3** reads the node term: $\delta_k$ counted against how the code forms the nodes, both
+  parts of $g'$ present, no $1/\theta'$.
+- **Check 5** reads the three-Bessel restatement and 06b's test 3 against prompt §5 points 2 and 3,
+  and re-runs test 2's reduced-phase cells myself, with the node term and with it removed.
+- **Check 6** names breakage (iv) with its catching test.
