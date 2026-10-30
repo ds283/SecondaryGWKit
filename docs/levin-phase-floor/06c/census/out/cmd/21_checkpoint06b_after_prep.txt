@@ -1,0 +1,9 @@
+$ shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:59:07Z
+# ----
+f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl
+# ----
+# end 2026-10-29T12:59:08Z
+# exit 0

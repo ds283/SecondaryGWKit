@@ -1,0 +1,51 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/draw_sample.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T21:54:24Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29
+# tree g status --short: []
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts
+# ----
+# depth20-tiling: the sample, drawn by sampling_rule.md
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T21:54:24Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script draw_sample.py sha256 55a4d66cb991f98e883d658412c5136610b398abf6d0b98062ab68d5d1b7f731
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/sampling_rule.md sha256 d47a35db9b11330a1b4e7000a9af06ab77fe25442f5a5bc5d367b4e1b2772edc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/inventory.json sha256 208b72c2749b955cd2aada45cc0dd73d08f5ed5dfa4c81fc75ccdbc1ffeb1889
+ # cell           unit               idx   wall_s  elig  drawn_by
+ 0 1e-7 G+q+r     g-1e-7-1-2174        1      1.8  True  rule 1: eligible, smallest key
+ 1 1e-7 G+q-r     g-1e-7-2-1444        4      8.7  True  rule 1: eligible, smallest key
+ 2 1e-7 G-q+r     g-1e-7-2-1627        3      3.6  True  rule 1: eligible, smallest key
+ 3 1e-7 G-q-r     g-1e-7-3-34370       4      2.9  True  rule 1: eligible, smallest key
+ 4 1e-7 J1        g-1e-7-3-13510       5      4.6  True  rule 1: eligible, smallest key
+ 5 1e-7 J2        g-1e-7-2-34485      17      8.5  True  rule 1: eligible, smallest key
+ 6 1e-7 J3        g-1e-7-1-38737      11     13.9  True  rule 1: eligible, smallest key
+ 7 1e-7 J4        g-1e-7-2-34718      11      4.8  True  rule 1: eligible, smallest key
+ 8 1e-7 Y1        g-1e-7-3-37319       6      4.7  True  rule 1: eligible, smallest key
+ 9 1e-7 Y2        g-1e-7-1-35340      18      4.1  True  rule 1: eligible, smallest key
+10 1e-7 Y3        g-1e-7-1-35332      10      4.9  True  rule 1: eligible, smallest key
+11 1e-7 Y4        g-1e-7-3-36020      20      4.3  True  rule 1: eligible, smallest key
+12 1e-8 G+q+r     g-1e-8-1-2174        1      2.0  True  rule 1: eligible, smallest key
+13 1e-8 G+q-r     g-1e-8-3-34220       4      7.3  True  rule 1: eligible, smallest key
+14 1e-8 G-q+r     g-1e-8-2-1627        3      4.0  True  rule 1: eligible, smallest key
+15 1e-8 G-q-r     g-1e-8-2-1549        4      2.1  True  rule 1: eligible, smallest key
+16 1e-8 J1        g-1e-8-2-34708       5     10.9  True  rule 1: eligible, smallest key
+17 1e-8 J2        g-1e-8-3-13913       9     20.4  True  rule 1: eligible, smallest key
+18 1e-8 J3        g-1e-8-1-2368        9      5.1  True  rule 1: eligible, smallest key
+19 1e-8 J4        g-1e-8-3-36019      19     82.7  True  rule 1: eligible, smallest key
+20 1e-8 Y1        g-1e-8-0-12932      14      7.3  True  rule 1: eligible, smallest key
+21 1e-8 Y2        g-1e-8-1-14572       8     12.0  True  rule 1: eligible, smallest key
+22 1e-8 Y3        g-1e-8-2-21874      12      6.7  True  rule 1: eligible, smallest key
+23 1e-8 Y4        g-1e-8-2-1402       12      6.4  True  rule 1: eligible, smallest key
+24 1e-8 J1        g-1e-8-2-34718       5      4.7  True  rule 2: stratified fill
+25 1e-8 Y4        g-1e-8-0-33962      12     40.0  True  rule 2: stratified fill
+26 1e-8 Y1        g-1e-8-0-37212       8      8.3  True  rule 2: stratified fill
+27 1e-8 J4        g-1e-8-3-34419      21      6.8  True  rule 2: stratified fill
+28 1e-7 J1        g-1e-7-2-34708       5     11.1  True  rule 2: stratified fill
+29 1e-7 J3        g-1e-7-1-14572       9     16.2  True  rule 2: stratified fill
+cells with no eligible call: []
+sample 30 calls on 30 units; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/sample.json sha256 09c9a47f67f8abef9ded8d532964d53292d49c02e8c20d0a97918ec1319381c6
+# ----
+# end 2026-10-29T21:54:25Z
+# exit 0

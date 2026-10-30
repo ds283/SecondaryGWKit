@@ -1,0 +1,6 @@
+# Progress (rehearsal agent, levin-phase-floor 06c section 4)
+- turn 1 (2026-10-29 12:36-12:38Z): gate checks out/00-02; lock acquired; R17 launched 12:37:19Z (sh 96787, driver 96791, run levin-phase-floor-06c-r17-parent-20261029T123720); set-pid 96791; one launch check out/r17_launch_check.txt. Waiting on R17.
+- next: on R17's status.json -> r17_end_check, hashes, launch R18 from C (slug r18-global), set-pid, one check.
+- turn 2 (12:40-12:41Z): R17 done, exit 0, 1b332ffa (= R8, classes equal); out/r17_end_check.txt; Ray processes none; R17 store hashed (state/r17_store_sha256_after_build.txt). R18 launched 12:40:57Z (sh 97466, driver 97470, run levin-phase-floor-06c-r18-global-20261029T124058); set-pid 97470; one check out/r18_launch_check.txt. Waiting on R18.
+- next: on R18's status.json -> r18_end_check, hashes, store_value_diff, classify_non_qsi, QSI tabulation + Y1, readers, release.
+- turn 3 (12:46-12:58Z): R18 done, exit 0, 1b332ffa (= R8 = R17 classes). Comparison: outside QSI all value tables identical, 0 unclassified. QSI 864 rows tabulated; Y1 FAILS 30/838 (12 large, 336-16,763x, each one G+q+r call on equilateral rows); 26 rows inf in R17 counted separately. R16(06b) vs R17 values identical (determinism of the before). Readers 6/6 exit 0, R18 unchanged. Lock released; ray-processes empty. Records written. Done.

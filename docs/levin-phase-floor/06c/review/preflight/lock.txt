@@ -1,0 +1,8 @@
+usage: python -m raypoolkit.rehearsal_lock [-h]
+                                           {acquire,set-pid,release,status,ray-processes} ...
+python -m raypoolkit.rehearsal_lock: error: unrecognized arguments: --project SecondaryGWKit
+status exit=2
+ray-processes exit=0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+status(2) exit=0

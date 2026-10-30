@@ -1,0 +1,22 @@
+== the 26 rows with total_abserr infinite in R17: |dT|/abserr18
+  n 26 min 0 median 0.0017 max 0.0869; > 1: 0
+  R17 abserr values: ['inf']
+== rows unconverged in R18
+   {'k': '1000000.0', 'q': '316227.7660168379', 'r': '1000000.0', 'z_response': '3971.4125591760326', 'total_R17': '0x1.9b15238ab9f86p-66', 'total_R18': '0x1.9b15234636caep-66', 'total_abserr_R17_hex': '0x1.374bd39004b7cp-88', 'total_abserr_R18_hex': '0x1.92c5f72caeb63p-89', 'Y1': 'holds', 'Y1_ratio_dtotal_over_sum': '0.03340876979044248', 'total_converged_R17': '0', 'WKB_Levin_num_regions_R17': '31', 'WKB_Levin_num_regions_R18': '394', 'WKB_Levin_max_depth_R17': '6', 'WKB_Levin_max_depth_R18': '20', 'groups_unconverged_R18': '2', 'groups_phase_limited_R18': '2'}
+== rows at max depth >= 16 in R18
+   {'k': '100000.0', 'q': '100000.0', 'r': '100000.0', 'z_response': '9104.29882234871', 'WKB_Levin_max_depth_R17': '10', 'WKB_Levin_max_depth_R18': '16', 'WKB_Levin_num_regions_R17': '26', 'WKB_Levin_num_regions_R18': '185', 'total_converged_R17': '1', 'total_converged_R18': '1', 'Y1': 'holds', 'Y1_ratio_dtotal_over_sum': '0.07882755984215589'}
+   {'k': '316227.7660168379', 'q': '316227.7660168379', 'r': '316227.7660168379', 'z_response': '3971.4125591760326', 'WKB_Levin_max_depth_R17': '11', 'WKB_Levin_max_depth_R18': '18', 'WKB_Levin_num_regions_R17': '28', 'WKB_Levin_num_regions_R18': '220', 'total_converged_R17': '1', 'total_converged_R18': '1', 'Y1': 'holds', 'Y1_ratio_dtotal_over_sum': '0.21115003535973412'}
+   {'k': '316227.7660168379', 'q': '316227.7660168379', 'r': '316227.7660168379', 'z_response': '15828.782186747456', 'WKB_Levin_max_depth_R17': '7', 'WKB_Levin_max_depth_R18': '16', 'WKB_Levin_num_regions_R17': '19', 'WKB_Levin_num_regions_R18': '59', 'total_converged_R17': '0', 'total_converged_R18': '1', 'Y1': 'holds', 'Y1_ratio_dtotal_over_sum': '0.024903938091007237'}
+   {'k': '1000000.0', 'q': '100000.0', 'r': '1000000.0', 'z_response': '2297505.163844306', 'WKB_Levin_max_depth_R17': '7', 'WKB_Levin_max_depth_R18': '16', 'WKB_Levin_num_regions_R17': '37', 'WKB_Levin_num_regions_R18': '148', 'total_converged_R17': '0', 'total_converged_R18': '1', 'Y1': 'VIOLATES', 'Y1_ratio_dtotal_over_sum': '3.45352040720244'}
+   {'k': '1000000.0', 'q': '316227.7660168379', 'r': '1000000.0', 'z_response': '3971.4125591760326', 'WKB_Levin_max_depth_R17': '6', 'WKB_Levin_max_depth_R18': '20', 'WKB_Levin_num_regions_R17': '31', 'WKB_Levin_num_regions_R18': '394', 'total_converged_R17': '0', 'total_converged_R18': '0', 'Y1': 'holds', 'Y1_ratio_dtotal_over_sum': '0.03340876979044248'}
+   {'k': '1000000.0', 'q': '1000000.0', 'r': '1000000.0', 'z_response': '1313.8415928578513', 'WKB_Levin_max_depth_R17': '7', 'WKB_Levin_max_depth_R18': '16', 'WKB_Levin_num_regions_R17': '15', 'WKB_Levin_num_regions_R18': '143', 'total_converged_R17': '0', 'total_converged_R18': '1', 'Y1': 'VIOLATES', 'Y1_ratio_dtotal_over_sum': '2816.827483970892'}
+== Y1 violations by (k,q,r)
+  {('100000.0', '100000.0', '100000.0'): 6, ('100000.0', '316227.7', '316227.7'): 1, ('100000.0', '1000000.', '1000000.'): 4, ('316227.7', '100000.0', '316227.7'): 2, ('316227.7', '316227.7', '316227.7'): 9, ('316227.7', '1000000.', '1000000.'): 1, ('1000000.', '100000.0', '1000000.'): 4, ('1000000.', '316227.7', '1000000.'): 1, ('1000000.', '1000000.', '1000000.'): 2}
+== Y1 violations by total_converged R17>R18: {('0', '1'): 19, ('1', '1'): 11}
+== total bit-identical among rows with a Levin call:
+   100000.0 316227.7660168379 316227.7660168379 5297494147.272005 regions 2 2 abserr identical False
+   100000.0 1000000.0 1000000.0 13627426843.66573 regions 2 2 abserr identical False
+   316227.7660168379 100000.0 316227.7660168379 5297494147.272005 regions 1 1 abserr identical False
+   316227.7660168379 316227.7660168379 316227.7660168379 5297494147.272005 regions 2 2 abserr identical False
+== rows with no Levin call whose value fields differ: which fields? see qsi_tabulation (analytic metadata)
+  of 291 no-Levin rows: analytic_rad bit-identical 269

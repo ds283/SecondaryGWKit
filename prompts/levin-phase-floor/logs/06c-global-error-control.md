@@ -274,14 +274,17 @@ parent is `3f2a36d`'s own module (`1ba4635e…`, 06b's driver); the new code's i
 with the stall rule by the second.) §5 also gains a descriptive item on the trust check (the third
 amendment).
 
-**§4, Y1 — not yet scored:**
+**Scored 2026-10-29 on the Mac Studio** (Part B, below): **Y1 fails; X0 and X3 hold; X1, X2, X4
+and X5 fail.** The rules as copied before the run:
+
+**§4, Y1:**
 
    - **Y1 — consistency.** **Rule:** every row with finite `total_abserr` in both stores has
      $|{\rm total}_{18} - {\rm total}_{17}| \le {\rm total\_abserr}_{17} + {\rm
      total\_abserr}_{18}$. Rows with an infinite `total_abserr` in either are counted separately.
      **Holds** if no row violates it. A violation is a finding for the user, not by itself a stop.
 
-**§5, X1–X5 — not yet scored:**
+**§5, X1–X5:**
 
 **Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
 "Moved" means the call's value, abserr, region count or maximum depth differs from 06b's.
@@ -689,3 +692,56 @@ for after 07. In production both callers supply `theta_mod_2pi`, so arguments ar
   floor-limited" there. The bypass keyword stays last.
 - `docs/levin-phase-floor/06c/calibration/` holds the scripts and outputs; nothing is kept on the
   Mac Studio from this part.
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-10-30)
+
+Part B ran on 2026-10-29 on the Mac Studio (`mps026298`), on 06c's code and 06d's together (06c's
+note §B.6): R17 at `fef401c` (06b's code), R18 and the census at `e5764a6` (`ad9a5f4` + `3d70db9`).
+The Mac Studio orchestrator dispatched a rehearsal agent and a census agent, and reviewed both:
+**all ten review checks pass, and no §7 stop condition was met.** The full records are in
+`docs/levin-phase-floor/06c/`: `review.md` (the review), `rehearsal/` and `census/` (each agent's
+log, verification, issues, scripts and outputs). What stays on the Mac Studio is listed in
+`06c/KEPT_ON_MAC_STUDIO.md`.
+
+**§4.** R17 `levin-phase-floor-06c-r17-parent-20261029T123720` and R18
+`levin-phase-floor-06c-r18-global-20261029T124058`, both `done`, both `1b332ffa…`. Outside
+`QuadSourceIntegral`, 7 value tables and 360,462 rows bit-identical. Inside, 864 rows: `total`
+bit-identical in 295, `total_converged` 516 → 863, regions 13,577 → 34,892, maximum row depth
+12 → 20. **Y1 fails** on 30 of 838 rows scored (26 more with a non-finite R17 error, apart).
+Readers exit 0; the lock released.
+
+**§5.** Census `levin-phase-floor-06c-census-20261029T130214`: 18,560 of 18,560 units `done` in
+2 h 30 min, none in error. Nine ran past 300 s unmarked (census deviation 22).
+
+| | `1e-7` | `1e-8` | verdict |
+|---|---|---|---|
+| X0 | all three clauses | | holds |
+| X1 | 22 of 23 within; `g-1e-7-0-14127` call 3 at 1.375× | — | fails |
+| X2 | 53 of 20,425 unconverged | 127 of 22,442 | fails |
+| X3 | no non-finite abserr | none | holds |
+| X4 | 263 of 8,092 rows | 302 | fails |
+| X5 | 109 moved calls at depth 20 | 153 | fails |
+
+**What the failures are, as the review and the follow-ups found** (`06c/review.md`, findings 1–4;
+`06c/y1-references/`; `06c/depth20-tiling/`):
+- **Y1.** The 12 worst rows hold a stationary point of `G+q+r` at $z \approx 10211$; on each one
+  code is wrong by $4.5\times10^3$–$1.6\times10^6$× its declared error while reporting converged.
+  That is 07's. On the other 18 rows R18 is within its error and R17 is not: 06b's
+  under-declaration, which 06c removed.
+- **X1.** A 7-leaf answer, every leaf trusted or floor-limited, 1.375× short; the error is
+  reachable by refinement. The census agent's reading (an error shared by a leaf and its
+  descendants) is wrong: its rtol-only re-run left the call's atol binding.
+- **X2 and X5.** The depth-20 lines carry a residual flat in $h$, a median $2\times10^4$ above the
+  floor. The depth-20 check traced it to the Chebyshev end nodes, which miss the span by an ulp
+  (`[06c-chebyshev-end-nodes-miss-the-span]`), prompt 06e's.
+- **X4.** On the four worst rows' calls, referenced, 06b's error is 116–445× its declared error and
+  06c's 0.11–0.61×.
+
+**The user's rulings** (2026-10-30, the board's Decisions, **06c Part B lands**): the header issues
+of 06c and 06d close, *"If there's a real, substantive reason to keep them open, I don't mind. If
+this is just an argument about words, I don't care."* Census C1 narrows
+`[06c-budget-can-stop-on-a-pre-asymptotic-residual]` (reworded as the review asked), C3 narrows
+`[06b-moved-calls-declare-less-than-their-error]`, C5 opens
+`[06c-census-budget-is-not-enforced-inside-a-levin-call]`; C2 and C4 are carried by
+`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`, narrowed in 06e's prompt commit; the
+rehearsal's N1 is carried by `[06-levin-accepts-a-region-across-a-stationary-point]`.

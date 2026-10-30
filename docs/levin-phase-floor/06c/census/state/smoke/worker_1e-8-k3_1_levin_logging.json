@@ -1,0 +1,9 @@
+{
+ "worker": "1e-8-k3_1",
+ "logger": "AdaptiveLevin.levin_quadrature",
+ "pass_level": 30,
+ "handlers": [
+  "NullHandler"
+ ],
+ "root_handlers": []
+}

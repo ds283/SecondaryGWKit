@@ -1,0 +1,81 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x0.py check state/X0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:50:19Z
+# ----
+# levin-phase-floor 06c: Gate X0 clauses 2 and 3
+# written 2026-10-29T12:50:20Z on mps026298.phys.susx.ac.uk
+# script x0.py sha256 757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+
+== tree evidence (each worker's hello) and each unit's module roots
+   P1: tree p head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c/AdaptiveLevin/levin_quadrature.py; premise check True; trust check False; CC floor False; _local_atol True; default depth_max 20
+      p-1e-7-2-38302: status done; wall 0.32 s; tree_head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P2: tree p head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c/AdaptiveLevin/levin_quadrature.py; premise check True; trust check False; CC floor False; _local_atol True; default depth_max 20
+      p-1e-7-2-2095: status done; wall 0.28 s; tree_head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P3: tree p head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c/AdaptiveLevin/levin_quadrature.py; premise check True; trust check False; CC floor False; _local_atol True; default depth_max 20
+      p-1e-8-0-1971: status done; wall 0.74 s; tree_head fef401c2614da3dbbf1b4261edd31f5f7f80cdbf; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   G1: tree g head e5764a6708757cb11704b95bcd66825baab4ba29 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      g-1e-7-0-14164: status done; wall 1.53 s; tree_head e5764a6708757cb11704b95bcd66825baab4ba29; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   G2: tree g head e5764a6708757cb11704b95bcd66825baab4ba29 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      g-1e-7-0-14164: status done; wall 1.50 s; tree_head e5764a6708757cb11704b95bcd66825baab4ba29; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+
+== clause 2: the harness at the parent reproduces 06b's units bit for bit
+   P1 p-1e-7-2-38302 vs 06b b-1e-7-2-38302 (2-38302): IDENTICAL in every value 06b recorded; C0 (c) terms identical (14 group-call values/abserrs, 9 group-call regions)
+      total 0x1.5e6b3999d1ab2p-101 abserr 0x1.d520cf11c3e94p-111 | 06b 0x1.5e6b3999d1ab2p-101 0x1.d520cf11c3e94p-111; group calls 7, analytic-block calls 16 (34 regions); region arrays compared on 06b's keys ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 426, 'T': 66, 'other': 0} | 06b {'G': 426, 'T': 66, 'other': 0}: equal; W3 {'n_regions': 0, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': None}
+   P2 p-1e-7-2-2095 vs 06b b-1e-7-2-2095 (2-2095): IDENTICAL in every value 06b recorded; C0 (c) terms identical (14 group-call values/abserrs, 8 group-call regions)
+      total -0x1.e3272e29a4c5dp-102 abserr 0x1.ef96f9f3976bcp-107 | 06b -0x1.e3272e29a4c5dp-102 0x1.ef96f9f3976bcp-107; group calls 7, analytic-block calls 16 (26 regions); region arrays compared on 06b's keys ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 234, 'T': 66, 'other': 0} | 06b {'G': 234, 'T': 66, 'other': 0}: equal; W3 {'n_regions': 0, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': None}
+   P3 p-1e-8-0-1971 vs 06b b-1e-8-0-1971 (0-1971): IDENTICAL in every value 06b recorded; C0 (c) terms identical (10 group-call values/abserrs, 41 group-call regions)
+      total 0x1.6b3058bb2e6a9p-66 abserr 0x1.7253aa2d63ba2p-93 | 06b 0x1.6b3058bb2e6a9p-66 0x1.7253aa2d63ba2p-93; group calls 5, analytic-block calls 16 (52 regions); region arrays compared on 06b's keys ['abserr', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'type', 'x_span']
+      (descriptive) dispatcher counts {'G': 3802, 'T': 1258, 'other': 0} | 06b {'G': 3802, 'T': 1258, 'other': 0}: equal; W3 None
+   clause 2 holds
+
+== clause 3: the new code is deterministic (one g unit, two fresh workers)
+   g-1e-7-0-14164 (0-14164): G1 vs G2 IDENTICAL in every computed value
+      total -0x1.96dd7901882f6p-91 abserr 0x1.810bd5b280d1dp-107 converged True; 06b -0x1.96dc2dc74e494p-91 0x1.118b69cc36cb7p-104 converged False
+      call 0 G: g value -0x1.08b22c5a3c629p-93 abserr 0x1.71525840e0477p-109 conv True regions 6 depth 4 untrusted 0 leaves {'levin': 0, 'cc': 6, 'trusted': 6, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 6} E_share-largest resolution budget {'num_leaves': 6, 'num_splits': 5, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 7, 'num_check_passes': 2, 'num_untrusted_found': 1, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 4, 'Levin right-comparison region': 4, 'fallback half, for _check_leaf': 10, 'trust check: a quarter': 28} | 06b value -0x1.08b0cbac536f0p-93 abserr 0x1.3b7f64c974000p-114 conv True regions 9 depth 7
+      call 1 G+r: g value -0x1.ea0d5b4068618p-94 abserr 0x1.3780311be128ep-112 conv True regions 2 depth 1 untrusted 0 leaves {'levin': 2, 'cc': 0, 'trusted': 2, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 2} E_share-largest resolution budget {'num_leaves': 2, 'num_splits': 1, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 2, 'num_check_passes': 1, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 8} | 06b value -0x1.ea0d5b4068618p-94 abserr 0x1.1939d09700000p-112 conv True regions 2 depth 1
+      call 2 G-r: g value 0x1.46ad59ef3280ep-95 abserr 0x1.b435d8df62d17p-117 conv True regions 2 depth 1 untrusted 0 leaves {'levin': 2, 'cc': 0, 'trusted': 2, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 2} E_share-largest resolution budget {'num_leaves': 2, 'num_splits': 1, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 2, 'num_check_passes': 1, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 8} | 06b value 0x1.46ad59ef3280ep-95 abserr 0x1.9540bcee00000p-117 conv True regions 2 depth 1
+      call 3 G+q+r: g value 0x1.7c2951e61a89cp-97 abserr 0x1.0f333534e96c8p-125 conv True regions 7 depth 4 untrusted 0 leaves {'levin': 7, 'cc': 0, 'trusted': 4, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 3, 'widened': 4} E_share-largest resolution budget {'num_leaves': 7, 'num_splits': 6, 'num_floor_limited': 3, 'num_at_depth_max': 0, 'num_checks': 12, 'num_check_passes': 6, 'num_untrusted_found': 8, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 48} | 06b value 0x1.7c2951e6b3080p-97 abserr 0x1.c080c20088528p-108 conv False regions 1 depth 0
+      call 4 G+q-r: g value 0x1.2dc45722baa69p-101 abserr 0x1.65e70a4bac322p-127 conv True regions 14 depth 6 untrusted 0 leaves {'levin': 14, 'cc': 0, 'trusted': 10, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 4, 'widened': 10} E_share-largest floor budget {'num_leaves': 14, 'num_splits': 13, 'num_floor_limited': 4, 'num_at_depth_max': 0, 'num_checks': 26, 'num_check_passes': 13, 'num_untrusted_found': 16, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 104} | 06b value 0x1.2dc4572532a53p-101 abserr 0x1.f1e30b43ad782p-110 conv False regions 1 depth 0
+      call 5 G-q+r: g value -0x1.f5083b111385fp-97 abserr 0x1.3d9d064fee8f6p-125 conv True regions 15 depth 6 untrusted 0 leaves {'levin': 15, 'cc': 0, 'trusted': 9, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 6, 'widened': 9} E_share-largest resolution budget {'num_leaves': 15, 'num_splits': 14, 'num_floor_limited': 6, 'num_at_depth_max': 0, 'num_checks': 28, 'num_check_passes': 14, 'num_untrusted_found': 19, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 112} | 06b value -0x1.f5083b0892ac1p-97 abserr 0x1.bc983cc4dc662p-108 conv False regions 1 depth 0
+      call 6 G-q-r: g value 0x1.35c494827736cp-101 abserr 0x1.a0801f54a4aa9p-124 conv True regions 9 depth 4 untrusted 0 leaves {'levin': 9, 'cc': 0, 'trusted': 7, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 2, 'widened': 7} E_share-largest resolution budget {'num_leaves': 9, 'num_splits': 8, 'num_floor_limited': 2, 'num_at_depth_max': 0, 'num_checks': 16, 'num_check_passes': 8, 'num_untrusted_found': 9, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 64} | 06b value 0x1.35c4947fa4724p-101 abserr 0x1.f0bb2e2f8e99cp-110 conv False regions 1 depth 0
+      analytic-block calls (index, label, g: conv, regions, depth, untrusted; 06b: conv, regions, depth):
+         7 analytic J1: True 7 4 0 | (False, 1, 0)
+         8 analytic Y1: True 12 5 0 | (False, 1, 0)
+         9 analytic J2: True 6 4 0 | (False, 1, 0)
+         10 analytic Y2: True 6 4 0 | (False, 1, 0)
+         11 analytic J3: True 9 4 0 | (False, 1, 0)
+         12 analytic Y3: True 9 4 0 | (False, 1, 0)
+         13 analytic J4: True 6 4 0 | (False, 1, 0)
+         14 analytic Y4: True 6 4 0 | (False, 1, 0)
+         15 analytic J1: True 2 1 0 | (False, 1, 0)
+         16 analytic Y1: True 9 6 0 | (False, 1, 0)
+         17 analytic J2: True 2 1 0 | (False, 1, 0)
+         18 analytic Y2: True 18 7 0 | (False, 2, 1)
+         19 analytic J3: True 6 4 0 | (False, 1, 0)
+         20 analytic Y3: True 2 1 0 | (False, 1, 0)
+         21 analytic J4: True 2 1 0 | (False, 1, 0)
+         22 analytic Y4: True 2 1 0 | (False, 1, 0)
+      W3 {'n_regions': 32, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 0.5635360060006122}; deep lines {'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0}
+      captured calls: [{'index': 3, 'notify_label': 'k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (1.709e+09, 2.7567), regime Gqr, group G+q+r', 'value': '0x1.7c2951e61a89cp-97', 'abserr': '0x1.0f333534e96c8p-125', 'num_regions': 7, 'max_depth': 4, 'converged': True, 'equal_in_G1_G2': True, 'blob_sha256_equal': False, 'blob_bytes': 1356677}]
+      wall 1.53 s and 1.50 s (timings, not compared)
+   clause 3 holds
+
+== no Ray
+   workers' ray_initialized at exit: {'P1': False, 'P2': False, 'P3': False, 'G1': False, 'G2': False}: none initialised Ray
+   (descriptive; R17/R18 use /tmp/ray-sgk in this period) /tmp/ray-sgk entries before 69, after 69, new []
+
+== the parent tree's modules imported by the harness (P1-P3, union): 102; written to state/X0/p_tree_modules.json
+   of them under a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== X0 clauses 2 and 3 (and no Ray): HOLD
+# ----
+# end 2026-10-29T12:50:22Z
+# exit 0

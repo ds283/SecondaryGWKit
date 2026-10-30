@@ -1,0 +1,86 @@
+# Y1 references: batch of 19 calls
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:32:56Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/batch.py sha256 eb789877abdc49297dde2f73c35e2e223d3fef7e782d4b9b8ecc8732069d280f
+# PYTHONPATH 
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+Y01-00: panels rc 0 in 2 s
+Y01-00: integrate rc 0 in 8 s
+Y01-00: compare rc 0 in 4 s
+Y01-00: ref -0x1.639f5e404a355p-67 conv_diff 0x1.0000000000000p-118 panels 2075 nodes {'192': 398400, '384': 796800} R17 sample identical True (74880 nodes)
+Y02-00: panels rc 0 in 2 s
+Y02-00: integrate rc 0 in 8 s
+Y02-00: compare rc 0 in 4 s
+Y02-00: ref 0x1.687f57d8f155ap-67 conv_diff 0x1.0000000000000p-119 panels 2075 nodes {'192': 398400, '384': 796800} R17 sample identical True (74880 nodes)
+Y03-00: panels rc 0 in 2 s
+Y03-00: integrate rc 0 in 8 s
+Y03-00: compare rc 0 in 4 s
+Y03-00: ref -0x1.554f9e84efc82p-72 conv_diff 0x1.0000000000000p-123 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y04-00: panels rc 0 in 2 s
+Y04-00: integrate rc 0 in 8 s
+Y04-00: compare rc 0 in 4 s
+Y04-00: ref 0x1.3291d0a915249p-72 conv_diff 0x1.0000000000000p-123 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y05-00: panels rc 0 in 2 s
+Y05-00: integrate rc 0 in 8 s
+Y05-00: compare rc 0 in 4 s
+Y05-00: ref -0x1.72c05b7cff5c1p-72 conv_diff 0x1.0000000000000p-124 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y06-00: panels rc 0 in 2 s
+Y06-00: integrate rc 0 in 7 s
+Y06-00: compare rc 0 in 4 s
+Y06-00: ref 0x1.49d52e1caa597p-72 conv_diff 0x1.0000000000000p-124 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y07-00: panels rc 0 in 2 s
+Y07-00: integrate rc 0 in 7 s
+Y07-00: compare rc 0 in 4 s
+Y07-00: ref 0x1.831b7b6d88846p-73 conv_diff 0x1.0000000000000p-125 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y08-00: panels rc 0 in 2 s
+Y08-00: integrate rc 0 in 8 s
+Y08-00: compare rc 0 in 4 s
+Y08-00: ref -0x1.6cdd1a1f9b977p-67 conv_diff 0x1.0000000000000p-119 panels 2075 nodes {'192': 398400, '384': 796800} R17 sample identical True (74880 nodes)
+Y09-00: panels rc 0 in 2 s
+Y09-00: integrate rc 0 in 8 s
+Y09-00: compare rc 0 in 4 s
+Y09-00: ref 0x1.8e5923c2aa780p-73 conv_diff 0x1.0000000000000p-125 panels 1844 nodes {'192': 354048, '384': 708096} R17 sample identical True (66816 nodes)
+Y10-00: panels rc 0 in 2 s
+Y10-00: integrate rc 0 in 8 s
+Y10-00: compare rc 0 in 4 s
+Y10-00: ref -0x1.9c36321c42bf1p-68 conv_diff 0x1.0000000000000p-120 panels 2075 nodes {'192': 398400, '384': 796800} R17 sample identical True (74880 nodes)
+Y11-00: panels rc 0 in 2 s
+Y11-00: integrate rc 0 in 7 s
+Y11-00: compare rc 0 in 4 s
+Y11-00: ref -0x1.39b4acb4472e1p-78 conv_diff 0x1.0000000000000p-130 panels 1614 nodes {'192': 309888, '384': 619776} R17 sample identical True (58176 nodes)
+Y12-00: panels rc 0 in 2 s
+Y12-00: integrate rc 0 in 8 s
+Y12-00: compare rc 0 in 4 s
+Y12-00: ref -0x1.0f85b7ffe7170p-67 conv_diff 0x1.0000000000000p-119 panels 2075 nodes {'192': 398400, '384': 796800} R17 sample identical True (74880 nodes)
+Y01-01: panels rc 0 in 2 s
+Y01-01: integrate rc 0 in 25 s
+Y01-01: compare rc 0 in 6 s
+Y01-01: ref 0x1.035b115081574p-69 conv_diff 0x1.ee00000000000p-109 panels 3507 nodes {'192': 673344, '384': 1346688} R17 sample identical True (126720 nodes)
+Y12-01: panels rc 0 in 2 s
+Y12-01: integrate rc 0 in 23 s
+Y12-01: compare rc 0 in 6 s
+Y12-01: ref 0x1.172b1a1ca2b0ap-70 conv_diff 0x1.5f00000000000p-110 panels 3191 nodes {'192': 612672, '384': 1225344} R17 sample identical True (115200 nodes)
+Y10-01: panels rc 0 in 2 s
+Y10-01: integrate rc 0 in 28 s
+Y10-01: compare rc 0 in 6 s
+Y10-01: ref 0x1.54ad890b9ce80p-71 conv_diff 0x1.0d2c000000000p-109 panels 4092 nodes {'192': 785664, '384': 1571328} R17 sample identical True (147456 nodes)
+Y09-01: panels rc 0 in 2 s
+Y09-01: integrate rc 0 in 33 s
+Y09-01: compare rc 0 in 7 s
+Y09-01: ref -0x1.4458fec156cd1p-76 conv_diff 0x1.56f6000000000p-113 panels 4948 nodes {'192': 950016, '384': 1900032} R17 sample identical True (178560 nodes)
+Y06-01: panels rc 0 in 2 s
+Y06-01: integrate rc 0 in 39 s
+Y06-01: compare rc 0 in 7 s
+Y06-01: ref -0x1.fc25bec474d9cp-75 conv_diff 0x1.b9bc000000000p-113 panels 5829 nodes {'192': 1119168, '384': 2238336} R17 sample identical True (210240 nodes)
+Y02-01: panels rc 0 in 2 s
+Y02-01: integrate rc 0 in 105 s
+Y02-01: compare rc 0 in 13 s
+Y02-01: ref -0x1.033ceb9883307p-69 conv_diff 0x1.4700000000000p-112 panels 17040 nodes {'192': 3271680, '384': 6543360} R17 sample identical True (613440 nodes)
+Y05-01: panels rc 0 in 2 s
+Y05-01: integrate rc 0 in 292 s
+Y05-01: compare rc 0 in 31 s
+Y05-01: ref 0x1.e6b93b33e6262p-75 conv_diff 0x1.e1b4000000000p-113 panels 47905 nodes {'192': 9197760, '384': 18395520} R17 sample identical True (1725120 nodes)
+batch done: {'Y01-00': 'ok', 'Y02-00': 'ok', 'Y03-00': 'ok', 'Y04-00': 'ok', 'Y05-00': 'ok', 'Y06-00': 'ok', 'Y07-00': 'ok', 'Y08-00': 'ok', 'Y09-00': 'ok', 'Y10-00': 'ok', 'Y11-00': 'ok', 'Y12-00': 'ok', 'Y01-01': 'ok', 'Y12-01': 'ok', 'Y10-01': 'ok', 'Y09-01': 'ok', 'Y06-01': 'ok', 'Y02-01': 'ok', 'Y05-01': 'ok'}

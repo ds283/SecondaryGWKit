@@ -1,0 +1,36 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_worker_functions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:51:07Z
+# ----
+# levin-phase-floor 06c: development check of worker.py's new functions
+# written 2026-10-29T12:51:08Z on mps026298.phys.susx.ac.uk
+# script dev_worker_functions.py sha256 012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# AdaptiveLevin.levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+
+== test 5: kwargs {'atol': 1e-20, 'rtol': 1e-12, 'depth_max': 6}; converged False, regions 11, untrusted 0
+   summary: {"max_depth": 6, "depth_max": 6, "n_at_depth_max": 2, "abserr": {"repr": "1.467128051391759e-07", "hex": "0x1.3b1037b47132ep-23"}, "abserr_finite": true, "num_untrusted_regions": 0, "E_share": {"resolution": {"repr": "1.4671280422496864e-07", "hex": "0x1.3b10379381200p-23"}, "floor": {"repr": "9.142072784165037e-16", "hex": "0x1.0780973d6de84p-50"}, "truncation": {"repr": "0.0", "hex": "0x0.0p+0"}}, "E_largest_share": "resolution", "E_unwidened": {"repr": "1.467128051391759e-07", "hex": "0x1.3b1037b47132ep-23"}, "leaves": {"levin": 2, "cc": 9, "trusted": 0, "untrusted": 0, "unchecked": 2, "floor_limited": 9, "widened": 0}, "r_max_finite": null, "n_r_not_finite": 0}
+   region arrays: ['abserr', 'abserr_truncation', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'phase_err', 'phase_limited', 'relerr', 'start', 'total_err', 'trusted', 'type']; trusted [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; r [nan, nan, nan, nan, nan, nan, nan, nan]
+   deep line: max_depth 6, leaves there 2, leaf [0x1.4000000000000p-2, 0x1.5000000000000p-2], reproduces True, solves 31
+      depth 0: P Levin resid 0x1.c821c4308c000p-15 floor 0x1.11a06fa859967p-52 trunc 0x0.0p+0 e 0x1.c821c4308c000p-15; (eL+eR)/eP 5.472299553554045; delta1 0x1.c821c4308c000p-15 delta2 0x1.3802e47dc2640p-12 r 0x1.5e3a27e81a50ap+2
+      depth 1: P Levin resid 0x1.3802e47dc28c0p-12 floor 0x1.d664586671bd8p-54 trunc 0x0.0p+0 e 0x1.3802e47dc28c0p-12; (eL+eR)/eP 0.1051977732410225; delta1 0x1.3802e47dc28c0p-12 delta2 0x1.069549630e180p-15 r 0x1.aee3dc3ae4d12p-4
+      depth 2: P Levin resid 0x1.069549630e180p-15 floor 0x1.aff614f151060p-55 trunc 0x0.0p+0 e 0x1.069549630e180p-15; (eL+eR)/eP 0.3990317354380789; delta1 0x1.069549630e180p-15 delta2 0x1.4dff44c7e0000p-23 r 0x1.459fa3aefce31p-8
+      depth 3: P direct resid 0x1.a31cdbab79500p-17 floor 0x1.9ce059b0834c5p-53 trunc None e 0x1.a31cdbab79500p-17; (eL+eR)/eP 0.18376267758863857; delta1 0x1.4dff44c7f6000p-23 delta2 0x1.3c2515d80f800p-23 r 0x1.e4a22668bdab2p-1
+      depth 4: P direct resid 0x1.3411b106fa900p-19 floor 0x1.bb3a69dacc162p-55 trunc None e 0x1.3411b106fa900p-19; (eL+eR)/eP 0.27163206947698093; delta1 0x1.3c2515d811800p-23 delta2 0x1.93ed9bdfd8000p-26 r 0x1.47153f1aaaae2p-3
+      depth 5: P direct resid 0x1.4eb9cdd1b4d80p-21 floor 0x1.f09fa3c2245c0p-57 trunc None e 0x1.4eb9cdd1b4d80p-21; (eL+eR)/eP 0.23531451045394583; delta1 0x1.93ed9bdfe0000p-26 delta2 0x1.032294420c000p-27 r 0x1.48779b7f58869p-2
+      depth 6: P direct resid 0x1.4000000000000p-64 floor 0x1.24451bb27b217p-57 trunc None e 0x1.24451bb27b217p-57; (eL+eR)/eP 0.9687734343218495; delta1 0x1.0000000000000p-66 delta2 0x1.0000000000000p-66 r 0x1.0000000000000p+0
+
+== test 12d: kwargs {'atol': 1e-06, 'rtol': 1e-06, 'depth_max': 0}; converged False, regions 1, untrusted 1
+   summary: {"max_depth": 0, "depth_max": 0, "n_at_depth_max": 1, "abserr": {"repr": "0.00481073971126193", "hex": "0x1.3b46d1babc7adp-8"}, "abserr_finite": true, "num_untrusted_regions": 1, "E_share": {"resolution": {"repr": "0.00481073971126193", "hex": "0x1.3b46d1babc7adp-8"}, "floor": {"repr": "0.0", "hex": "0x0.0p+0"}, "truncation": {"repr": "0.0", "hex": "0x0.0p+0"}}, "E_largest_share": "resolution", "E_unwidened": {"repr": "8.182591027154845e-09", "hex": "0x1.1926d4f34e0f9p-27"}, "leaves": {"levin": 0, "cc": 1, "trusted": 0, "untrusted": 1, "unchecked": 0, "floor_limited": 0, "widened": 0}, "r_max_finite": 2559.656398762757, "n_r_not_finite": 0}
+   region arrays: ['abserr', 'abserr_truncation', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'phase_err', 'phase_limited', 'relerr', 'start', 'total_err', 'trusted', 'type']; trusted [0]; r [2559.656398762757]
+   deep line: max_depth 0, leaves there 1, leaf [0x0.0p+0, 0x1.0000000000000p+0], reproduces True, solves 7
+      depth 0: P direct resid 0x1.1926d4f34e0f9p-27 floor 0x1.3abaf58c56286p-70 trunc None e 0x1.1926d4f34e0f9p-27; (eL+eR)/eP 230.59884961926969; delta1 0x1.f850352ed11f8p-20 delta2 0x1.3b274cb7698dcp-8 r 0x1.3ff50137fa65ap+11
+   the leaf's own delta1/delta2 equal the line's last level: True
+
+== ALL HOLD
+# ----
+# end 2026-10-29T12:51:08Z
+# exit 0

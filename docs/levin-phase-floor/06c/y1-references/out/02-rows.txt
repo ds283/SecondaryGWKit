@@ -1,0 +1,41 @@
+# Y1 references: the violating rows, from the copies
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:17:03Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/rows.py sha256 f301346fe921ba2e31c9f3b5e6f0aa987d3c51e5b9b16a7682c8696e244b738b
+# PYTHONPATH 
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+rows R17 864 R18 864 same keys True
+Y1 scored 838 violations 30
+Y01  1.676e+04 k=1e+05 q=1e+05 r=1e+05 z=5236.55 R17 shard 3 serial 198  R18 shard 3 serial 20346  T17=-0x1.5ff6eb7403dbcp-55 T18=-0x1.60d489de69404p-55
+Y02  1.558e+04 k=1e+05 q=1e+05 r=1e+05 z=996.42 R17 shard 3 serial 150  R18 shard 3 serial 20391  T17=0x1.110e451bca18ep-57 T18=0x1.11b17b51de892p-57
+Y03  1.446e+04 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=434.651 R17 shard 0 serial 20050  R18 shard 0 serial 277  T17=-0x1.bbf876534bbe7p-64 T18=-0x1.bcb9578284ea8p-64
+Y04  1.062e+04 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=573.115 R17 shard 0 serial 20163  R18 shard 0 serial 261  T17=0x1.016380e5a91d2p-63 T18=0x1.01dcb4297e172p-63
+Y05       9250 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=996.42 R17 shard 0 serial 20222  R18 shard 0 serial 126  T17=-0x1.2113280851b99p-62 T18=-0x1.2179faec403c6p-62
+Y06       8300 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=5236.55 R17 shard 0 serial 20286  R18 shard 0 serial 275  T17=0x1.401a99770300cp-60 T18=0x1.40a9a35d8a67cp-60
+Y07       8298 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=755.687 R17 shard 0 serial 20108  R18 shard 0 serial 145  T17=0x1.8a536fc07907ap-64 T18=0x1.8b49c5436bdb8p-64
+Y08       8177 k=1e+05 q=1e+05 r=1e+05 z=250 R17 shard 3 serial 252  R18 shard 3 serial 20308  T17=-0x1.1f665c9de3ef8p-59 T18=-0x1.1ef6b1cc980fcp-59
+Y09       7092 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=6904.72 R17 shard 0 serial 20246  R18 shard 0 serial 142  T17=0x1.2b4c92ceeba1cp-60 T18=0x1.2b84336944252p-60
+Y10       4738 k=1e+05 q=1e+05 r=1e+05 z=3971.41 R17 shard 3 serial 129  R18 shard 3 serial 20319  T17=-0x1.6264c900be5d0p-56 T18=-0x1.620fef0efb5f6p-56
+Y11       2817 k=1e+06 q=1e+06 r=1e+06 z=1313.84 R17 shard 1 serial 10105  R18 shard 1 serial 10323  T17=-0x1.08c020a313789p-68 T18=-0x1.0869375451f53p-68
+Y12      336.3 k=1e+05 q=1e+05 r=1e+05 z=6904.72 R17 shard 3 serial 128  R18 shard 3 serial 20300  T17=-0x1.85621ce6cb140p-55 T18=-0x1.856721d9b941ep-55
+Y13      20.36 k=1e+06 q=1e+05 r=1e+06 z=20871.2 R17 shard 1 serial 10088  R18 shard 1 serial 10319  T17=-0x1.aa7cf3c0e8a36p-66 T18=-0x1.aa807936c73efp-66
+Y14      16.56 k=1e+05 q=1e+06 r=1e+06 z=1313.84 R17 shard 3 serial 149  R18 shard 3 serial 20303  T17=0x1.df6eb998d5465p-63 T18=0x1.df6f01e11512ap-63
+Y15      15.62 k=1e+05 q=1e+06 r=1e+06 z=1.0022e+06 R17 shard 3 serial 108  R18 shard 3 serial 82  T17=-0x1.6701211832295p-53 T18=-0x1.6701572b04a47p-53
+Y16      8.262 k=1e+06 q=1e+05 r=1e+06 z=1.45467e+08 R17 shard 1 serial 10272  R18 shard 1 serial 10286  T17=0x1.fb68f2375b738p-52 T18=0x1.fb6947b8833dcp-52
+Y17      5.925 k=1e+05 q=1e+06 r=1e+06 z=4.8124e+07 R17 shard 3 serial 54  R18 shard 3 serial 77  T17=-0x1.a36e11be51188p-47 T18=-0x1.a36dff6d5e1e5p-47
+Y18      5.125 k=1e+05 q=3.162e+05 r=3.162e+05 z=3.33477e+08 R17 shard 3 serial 26  R18 shard 3 serial 38  T17=0x1.a99b8d2c359f2p-42 T18=0x1.a99b7c697e4ebp-42
+Y19      4.832 k=3.162e+05 q=1e+05 r=3.162e+05 z=9104.3 R17 shard 0 serial 20161  R18 shard 0 serial 141  T17=-0x1.b34ed232a832bp-62 T18=-0x1.b34f505c020d5p-62
+Y20      4.571 k=3.162e+05 q=1e+05 r=3.162e+05 z=1.00802e+09 R17 shard 0 serial 20143  R18 shard 0 serial 159  T17=0x1.e92fda2518486p-44 T18=0x1.e92fa94f75c88p-44
+Y21      3.565 k=1e+05 q=1e+06 r=1e+06 z=1.91807e+08 R17 shard 3 serial 30  R18 shard 3 serial 20338  T17=-0x1.cd2ada9ff15f3p-45 T18=-0x1.cd2ae581d4ad6p-45
+Y22      3.454 k=1e+06 q=1e+05 r=1e+06 z=2.29751e+06 R17 shard 1 serial 10175  R18 shard 1 serial 10387  T17=0x1.d52fce73c6ddbp-58 T18=0x1.d52f67d6bf154p-58
+Y23      1.975 k=3.162e+05 q=1e+06 r=1e+06 z=5.79784e+08 R17 shard 0 serial 20215  R18 shard 0 serial 10071  T17=0x1.935596bc66d35p-50 T18=0x1.93557dfd4b7b4p-50
+Y24      1.414 k=1e+06 q=3.162e+05 r=1e+06 z=4.01763e+09 R17 shard 1 serial 10169  R18 shard 1 serial 10330  T17=0x1.7148411561972p-46 T18=0x1.7148397644980p-46
+Y25      1.391 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=2.31084e+09 R17 shard 0 serial 20190  R18 shard 0 serial 10069  T17=0x1.3d3ee09d2736ep-43 T18=0x1.3d3ee67c70dc5p-43
+Y26      1.328 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=1.00802e+09 R17 shard 0 serial 20070  R18 shard 0 serial 267  T17=-0x1.39f64cec8c235p-46 T18=-0x1.39f639b979314p-46
+Y27      1.099 k=1e+05 q=1e+05 r=1e+05 z=15828.8 R17 shard 3 serial 56  R18 shard 3 serial 20344  T17=-0x1.0f1207363350cp-53 T18=-0x1.0f1209662228bp-53
+Y28      1.048 k=1e+06 q=1e+05 r=1e+06 z=3.04698e+09 R17 shard 1 serial 10038  R18 shard 1 serial 10331  T17=0x1.fba5be134f509p-47 T18=0x1.fba5c88a29a61p-47
+Y29      1.028 k=3.162e+05 q=3.162e+05 r=3.162e+05 z=3.04698e+09 R17 shard 0 serial 20069  R18 shard 0 serial 157  T17=0x1.5ecb81f759ae1p-45 T18=0x1.5ecb671dbfa51p-45
+Y30      1.007 k=1e+06 q=1e+06 r=1e+06 z=1.59206e+07 R17 shard 1 serial 10237  R18 shard 1 serial 10226  T17=-0x1.797d8c6e5c8bep-56 T18=-0x1.797d82332b0f1p-56
+wrote state/rows.json

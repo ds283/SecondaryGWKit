@@ -1,0 +1,65 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_crosscheck.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 g-1e-7-0-14127:3\,g-1e-7-3-38436:5\,g-1e-7-3-39140:2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:41:55Z
+# ----
+# levin-phase-floor 06c: X1's reference cross-checked (descriptive)
+# written 2026-10-29T15:41:55Z on mps026298.phys.susx.ac.uk
+# script x1_crosscheck.py sha256 5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/x1_captured.json sha256 2a5a1674f5c919eb5fe1121de5c2561889017848bbce81b76bde56c8fb3bff1f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/out/x1_reference.json sha256 c9d6d0816fad61d4065216669d1a4a652d5e10af6f35825b8d65f0ce4eea8144
+# levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+
+== g-1e-7-0-14127 call 3 (low, 0:202, category 2)  Gqr, group G-q+r; span (1.323534118140985, 28.122706595425193)
+   S10 -2.5429941071577796e-30; S11 -2.5429941071584656e-30; S12 -2.5429941071629385e-30: |S10-S11|/abserr_g 3.94e-06, |S11-S12|/abserr_g 2.57e-05
+   adaptive at rtol 1e-11: value -2.5429938680021403e-30 abserr 1.74e-37 regions 5 depth 4 converged True: |tight-S10|/abserr_g 1.37, |tight-S12|/abserr_g 1.37
+   g:   value -2.5429938680022187e-30 abserr 1.74e-37: |g-S10| 2.39e-37 = 1.37 abserr_g = 9.4e-08 relative = 0.000129 of the call's request 1.86e-33 (rtol 1e-07, atol 1.8604346136322783e-33); |g-S12|/abserr_g 1.37
+   06b: value -0x1.9ca020464d764p-99 abserr inf: |06b-S10|/|S10| 2.68e-06
+   g's call record: budget {'num_leaves': 7, 'num_splits': 6, 'num_floor_limited': 1, 'num_at_depth_max': 0, 'num_checks': 12, 'num_check_passes': 6, 'num_untrusted_found': 6, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0}; E_share {'resolution': '1.739360890429567e-37', 'floor': '4.00945042531101e-43', 'truncation': '4.120870514454166e-44'}; E_unwidened 1.6012463482482922e-37; leaves {'levin': 7, 'cc': 0, 'trusted': 6, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 1, 'widened': 6}
+   g's leaves (start, end, depth, type 0 Levin/1 CC, residual, floor, total_err, delta1, delta2, r, trusted, declared_resolution):
+      1.32353 8.02333  2 0 3.87e-52 3.72e-43 3.72e-43 3.87e-52 0 0 1 3.87e-52
+      8.02333 9.69828  4 0 1.57e-53 1.72e-44 1.72e-44 1.57e-53 1.04e-53 0.667 1 4.7e-53
+      9.69828 11.3732  4 0 4.61e-44 2.32e-44 4.71e-44 4.61e-44 4.18e-53 9.07e-10 1 4.61e-44
+      11.3732 12.2107  5 0 1.67e-52 6.03e-45 1.24e-44 1.67e-52 8.35e-53 0.5 1 3.34e-52
+      12.2107 13.0482  5 0 1e-51 6.1e-45 3.99e-44 1e-51 6.05e-44 6.04e+07 -1 nan
+      13.0482 14.7231  4 0 1.07e-43 2.55e-44 1.07e-43 1.07e-43 2.54e-48 2.38e-05 1 1.07e-43
+      14.7231 28.1227  1 0 1.6e-37 2.33e-38 1.74e-37 1.6e-37 1.27e-38 0.0794 1 1.74e-37
+
+== g-1e-7-3-38436 call 5 (low, 3:201, category 1)  Gqr, group G-q+r; span (1.323534118140985, 22.410766899373517)
+   S10 -5.103965618991211e-29; S11 -5.103965618018558e-29; S12 -5.103965619544427e-29: |S10-S11|/abserr_g 0.00217, |S11-S12|/abserr_g 0.0034
+   adaptive at rtol 1e-11: value -5.10396583404085e-29 abserr 3.8e-36 regions 24 depth 7 converged True: |tight-S10|/abserr_g 0.479, |tight-S12|/abserr_g 0.478
+   g:   value -5.103965834001509e-29 abserr 4.49e-36: |g-S10| 2.15e-36 = 0.479 abserr_g = 4.21e-08 relative = 0.00147 of the call's request 1.46e-33 (rtol 1e-07, atol 1.4639040740970644e-33); |g-S12|/abserr_g 0.478
+   06b: value -0x1.02cd434934c83p-94 abserr 0x1.18fc4da7112a4p-104: |06b-S10|/|S10| 1.83e-08
+   g's call record: budget {'num_leaves': 12, 'num_splits': 11, 'num_floor_limited': 3, 'num_at_depth_max': 0, 'num_checks': 22, 'num_check_passes': 11, 'num_untrusted_found': 13, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0}; E_share {'resolution': '3.789220982933029e-36', 'floor': '6.98599892239212e-37', 'truncation': '0.0'}; E_unwidened 3.9491909577874814e-36; leaves {'levin': 12, 'cc': 0, 'trusted': 9, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 3, 'widened': 9}
+   g's leaves (start, end, depth, type 0 Levin/1 CC, residual, floor, total_err, delta1, delta2, r, trusted, declared_resolution):
+      1.32353 11.8672  1 0 4.01e-43 6.98e-37 6.98e-37 4.01e-43 5.73e-44 0.143 1 4.68e-43
+      11.8672 12.5261  5 0 8.17e-45 3.92e-41 3.92e-41 8.17e-45 3.84e-40 4.7e+04 -1 nan
+      12.5261 12.8556  6 0 4.09e-40 1.52e-41 6.52e-40 4.09e-40 1.53e-40 0.373 1 6.52e-40
+      12.8556 13.0204  7 0 1.21e-44 6.78e-42 6.78e-42 1.21e-44 1.34e-45 0.11 1 1.36e-44
+      13.0204 13.1851  7 0 7.03e-40 6.78e-42 7.03e-40 7.03e-40 1.69e-45 2.41e-06 1 7.03e-40
+      13.1851 14.5031  4 0 7.81e-40 1.37e-40 7.81e-40 7.81e-40 3.84e-43 0.000491 1 7.81e-40
+      14.5031 14.8325  6 0 8.64e-40 1.53e-41 1.93e-39 8.64e-40 4.78e-40 0.553 1 1.93e-39
+      14.8325 15.162  6 0 8.64e-40 1.53e-41 2.56e-38 8.64e-40 8.35e-40 0.966 1 2.56e-38
+      15.162 15.821  5 0 2.2e-42 3.95e-41 3.95e-41 2.2e-42 7.66e-40 347 -1 nan
+      15.821 16.48  5 0 3.04e-43 3.95e-41 3.95e-41 3.04e-43 2.02e-39 6.64e+03 -1 nan
+      16.48 17.139  5 0 1.19e-39 3.95e-41 1.78e-38 1.19e-39 1.11e-39 0.933 1 1.78e-38
+      17.139 22.4108  2 0 3.25e-36 2.54e-38 3.74e-36 3.25e-36 4.3e-37 0.133 1 3.74e-36
+
+== g-1e-7-3-39140 call 2 (low, 3:1, category 2)  Gqr, group G+q-r; span (0.12384058498638308, 26.971105850217633)
+   S10 -1.0148712315842e-25; S11 -1.0148712315842445e-25; S12 -1.0148712315844019e-25: |S10-S11|/abserr_g 6.09e-07, |S11-S12|/abserr_g 2.15e-06
+   adaptive at rtol 1e-11: value -1.0148712289021311e-25 abserr 3.94e-34 regions 9 depth 4 converged True: |tight-S10|/abserr_g 0.0366, |tight-S12|/abserr_g 0.0366
+   g:   value -1.0148711590219533e-25 abserr 7.32e-33: |g-S10| 7.26e-33 = 0.991 abserr_g = 7.15e-08 relative = 0.715 of the call's request 1.01e-32 (rtol 1e-07, atol 1.8036857686315274e-33); |g-S12|/abserr_g 0.991
+   06b: value -0x1.f68a34117343dp-84 abserr 0x1.22891c0956124p-107: |06b-S10|/|S10| 7.15e-08
+   g's call record: budget {'num_leaves': 5, 'num_splits': 4, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 7, 'num_check_passes': 3, 'num_untrusted_found': 2, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0}; E_share {'resolution': '7.317909546814712e-33', 'floor': '8.723216460137953e-37', 'truncation': '0.0'}; E_unwidened 7.002178572043761e-33; leaves {'levin': 5, 'cc': 0, 'trusted': 5, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 5}
+   g's leaves (start, end, depth, type 0 Levin/1 CC, residual, floor, total_err, delta1, delta2, r, trusted, declared_resolution):
+      0.123841 13.5475  1 0 1.12e-41 8.72e-37 8.72e-37 1.12e-41 5.28e-42 0.471 1 2.12e-41
+      13.5475 16.9034  3 0 1.99e-38 7.67e-40 1.36e-37 1.99e-38 1.69e-38 0.854 1 1.36e-37
+      16.9034 18.5813  4 0 9.01e-37 7.71e-41 1.91e-36 9.01e-37 4.77e-37 0.529 1 1.91e-36
+      18.5813 20.2593  4 0 1.24e-35 1.03e-40 1.39e-35 1.24e-35 1.4e-36 0.113 1 1.39e-35
+      20.2593 26.9711  2 0 6.99e-33 7.27e-38 7.3e-33 6.99e-33 3e-34 0.043 1 7.3e-33
+# ----
+# end 2026-10-29T15:42:27Z
+# exit 0

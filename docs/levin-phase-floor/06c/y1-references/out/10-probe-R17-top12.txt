@@ -1,0 +1,122 @@
+# Y1 references: replay and phase probe in tree R17
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:23:58Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/probe.py sha256 b811ff7518055827a8ca73525420d5f3f59a6611fa1c4122bdca62741da076f6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R17-00.pkl sha256 e20b9d2eb8c2c57ff0e993ae3e9476d99d5ec733f971323e425874ea1eea068a
+# input inputs/Y01-R17-01.pkl sha256 77bbb537076d04fa807484455b90732c85b8caca5cf233ea78bfefda0ff50276
+# input inputs/Y01-R17-04.pkl sha256 1606521500541171869c83256d49fe2619a6ec94e4f9bfe322cdb45aafdf3718
+# input inputs/Y02-R17-00.pkl sha256 ee0f1f3eeefd3b4730dff3aec2a41c3c2e02d3558d42147f579281aa937662a7
+# input inputs/Y02-R17-01.pkl sha256 0d670182d7b17a304a5f54daa95c7c82841f03df6fd7e2dd1e907457f6c72bb3
+# input inputs/Y02-R17-02.pkl sha256 794378badb26e1bcb0772aa88eb55505559166ad147fce267981181a74930de3
+# input inputs/Y02-R17-03.pkl sha256 f4c1edb417afd228d02321c21a736fff9db724001c7e3e27a26e362a339ff879
+# input inputs/Y02-R17-04.pkl sha256 f63ab813161cd7bc824d18461d2e9ea07354845754e319373f5bd0a4979ebb2b
+# input inputs/Y03-R17-00.pkl sha256 f84f6fedbf6f0b821898b8de41865bd26def70a6fd022eac0de1f35e1cdbf7cb
+# input inputs/Y03-R17-01.pkl sha256 6f7f800de2f1bc34fbceb873f98eae9e6fafae39b9b96e849adf2dc70a1ba7a4
+# input inputs/Y03-R17-02.pkl sha256 c5aad5a58f377ddb98e9cc4853fbeccccf0ebdf15f6b2a9ab363c9626664dd85
+# input inputs/Y03-R17-03.pkl sha256 166726f46881dcc42ab688e61f4d60fe2b1adf2b3b723d3b95d47865f7a84ca0
+# input inputs/Y03-R17-04.pkl sha256 d888a4569b0f8903b3443b03f58378a545b9cff05da05801458baef0f93bfb3a
+# input inputs/Y04-R17-00.pkl sha256 f05471f36c103e4e0c447bbc81bb866db7544e7f9292ca8d1218b68aec2f7053
+# input inputs/Y04-R17-01.pkl sha256 28c3c50a39d8b129814ccdd788816c370846993166776bd537dbd88095053039
+# input inputs/Y04-R17-02.pkl sha256 2ffe24d15798c4117efc1e412165ab93194a02c36617d3ce40e122958feba454
+# input inputs/Y04-R17-03.pkl sha256 78cb143536902cfffe94691e7f3c75cce4034920f3bc2f7ef54cf6a22ba89b33
+# input inputs/Y04-R17-04.pkl sha256 f7390b93776d51b6b24c41ba6b2c0d067081d4636434c4246c9ebbce3455eaa2
+# input inputs/Y05-R17-00.pkl sha256 708cfcd4062b07dd20924f15f49bda89ffe78125c02f5944582a727eb041a381
+# input inputs/Y05-R17-01.pkl sha256 daa756f75b33ec24a17f51b8d1507febddc1eb70474090b13db23d9e3bbe9c9b
+# input inputs/Y05-R17-02.pkl sha256 e6e5d8e08a160c53c94a5234c91dba0cc63d6a793f0ce6f5c458cead7e391ccf
+# input inputs/Y05-R17-03.pkl sha256 ffb67b314ea0763123639f4b3795b32ba7368d06fc1b7b0dc7db344db66f6888
+# input inputs/Y05-R17-04.pkl sha256 ef28fd6c19863fded1524943949e22447168b01229d609b357910103c7bab599
+# input inputs/Y06-R17-00.pkl sha256 977a14b026c1e25aaa41b591ec25ae731e96acd5ed1ea0f60d0641bf23feb458
+# input inputs/Y06-R17-01.pkl sha256 2e309c26ca7c15c18e6ce9229517b919fca6745ce24315d20f0f2db74f962268
+# input inputs/Y06-R17-02.pkl sha256 b7db12873dbc099eceec350733a2fc1d14a0e6af6bcd26a4849067784d7339d7
+# input inputs/Y06-R17-03.pkl sha256 73d021e71ec5910deca5b7530a1da078aff215114474e9e574badf7f6bd5c7d4
+# input inputs/Y06-R17-04.pkl sha256 97cc4f81dfdb6d85e25bae6dae99a52241d4e5b13f023fef0b7dae607a82a01a
+# input inputs/Y07-R17-00.pkl sha256 05a8df17e103d72f040ccd09c59fd516fc59fb3f460e94e444fa584fe7ce6bf6
+# input inputs/Y07-R17-01.pkl sha256 e324ac5e7bc921193456ac53499807a3cd70ff1dddbc2d7735e49d3068a2e179
+# input inputs/Y07-R17-02.pkl sha256 a1ca008148db31bc0437ed2608c62b06b846f165377826a5cbc86a3ca6a5691e
+# input inputs/Y07-R17-03.pkl sha256 2ebee787c2bc574f636df6a78d3fb419c6046e04c76ee84f7a1efd98015019f4
+# input inputs/Y07-R17-04.pkl sha256 e88a9806df8c360fc4bf6c288907b81236908ba83e2b38ca96adf47a33fd9b0d
+# input inputs/Y08-R17-00.pkl sha256 6b3ce3216c91e14502b69744c5843157a5bd0ac12757597eabd545ae82a4e290
+# input inputs/Y08-R17-01.pkl sha256 164d49bab0aa748c42c3ee9566cafd0e1b98fe237eb3d0ef12ba0d45fd5c913f
+# input inputs/Y08-R17-04.pkl sha256 d25db4e8d5193c825d774747cfb852c7ac07b863fc5246a92f588bf58cd45e8c
+# input inputs/Y09-R17-00.pkl sha256 b56e39e64ade487c9b56faf5f25d85672da8a99af0959b9f2d10f60e1f8415c9
+# input inputs/Y09-R17-01.pkl sha256 0230e221c5b1323e9518e5518a22fadf82f09de00d2d3884201bd139b3f1ece9
+# input inputs/Y09-R17-02.pkl sha256 d0a46ccdcb814077e132c34fe355c38caab0469b59f952e32b6a5ee2b1716ffd
+# input inputs/Y09-R17-03.pkl sha256 c67f83e0785eac7add95ffee87f9c3d551d9938e355c25d0d4a2bd21ac7a8979
+# input inputs/Y09-R17-04.pkl sha256 b3a97b0738e8104288f9ea1242c7ab2efde4a7f3895d6fc5f90b8b7a1437dd84
+# input inputs/Y10-R17-00.pkl sha256 8be35889aea66ed48edb2ad6099261ca249f11f685a4470e052e872db1524067
+# input inputs/Y10-R17-01.pkl sha256 b9e9976b3b54e9aaabb8efb310830efebe12a598424ad6aacd5d28a13edb92f6
+# input inputs/Y10-R17-02.pkl sha256 31254a0a5061261bd3fa39f5a4d7a48bb35ae43a2097aa9b44c5a457e5c01083
+# input inputs/Y10-R17-03.pkl sha256 0d3acc1971ccad578fab4b61ad5477d7515e1aab2d97946f4e9af5f31d7368e4
+# input inputs/Y10-R17-04.pkl sha256 2684d856f4f416f706d2de9132910266fc055b14e40dc575d9808c86085e465a
+# input inputs/Y11-R17-00.pkl sha256 253df1fe678e5d64d1ed5b68740d283919dc728ff82be152d99c563b42d2b7e6
+# input inputs/Y11-R17-01.pkl sha256 17bc1c123654ff16b6b34d092f9450313c312d5db6ccd4f0bfe2b5e0bc38acba
+# input inputs/Y11-R17-02.pkl sha256 372707957d875837a8e448142bef5171c2ea089053b807bae23bf5656d6ac985
+# input inputs/Y11-R17-03.pkl sha256 dc3e007bc11f4e5f21e22230bf1f49fd1888e1a53f8eef34adb1d2e172bea877
+# input inputs/Y11-R17-04.pkl sha256 e63ac99251789358b4c5029815754ac87258ca81b32943aa64243bdb9866380f
+# input inputs/Y12-R17-00.pkl sha256 c17c13b79cb9875d8a12367abb0991f7969eb999fa330eaf9a6cf3c1853f6fbf
+# input inputs/Y12-R17-01.pkl sha256 72a64c7abf32fcd0e06e095d6171b4115c649c42d95acdf71f61aff679953a4e
+# input inputs/Y12-R17-02.pkl sha256 94338bb7c89d6f1137f738ca2fe586395d9d7c944db8760a30b7a3cd3d81ca41
+# input inputs/Y12-R17-03.pkl sha256 88dc821fe46c2ff74860144284fbadc4ca477120e357a4ee51939ad3f3f6ede0
+# input inputs/Y12-R17-04.pkl sha256 7ea1c7ffe7bc5c914dfff9a7157aff5215fb045dc73f1a89eee79e025624de58
+# AdaptiveLevin.levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c/AdaptiveLevin/levin_quadrature.py
+Y01 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 20.3 us  replay 0.03 s
+Y01 1 G+q+r  replay=capture True =store True reg/depth True  span [8.56361,21.26129]  osc 1.994e+04  int|th'|/2pi 7.881e+04  min|th'| 4.058 at z=1.7126e+09 (max 6.962e+05, signchg 1)  node 78.3 us  replay 0.06 s
+Y01 4 G-q-r  replay=capture True =store True reg/depth True  span [8.56361,21.26129]  osc -2.486e+06  int|th'|/2pi 2.486e+06  min|th'| 58.18 at z=1.7126e+09 (max 1.308e+07, signchg 0)  node 77.5 us  replay 0.00 s
+Y02 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 20.9 us  replay 0.03 s
+Y02 1 G+q+r  replay=capture True =store True reg/depth True  span [6.90517,21.26129]  osc -1.056e+06  int|th'|/2pi 1.154e+06  min|th'| 4.058 at z=1.7126e+09 (max 9.961e+06, signchg 1)  node 80.3 us  replay 0.06 s
+Y02 2 G+q-r  replay=capture True =store True reg/depth True  span [6.90517,21.26129]  osc -4.77e+06  int|th'|/2pi 4.77e+06  min|th'| 27.06 at z=1.7126e+09 (max 2.212e+07, signchg 0)  node 79.7 us  replay 0.00 s
+Y02 3 G-q+r  replay=capture True =store True reg/depth True  span [6.90517,21.26129]  osc -4.77e+06  int|th'|/2pi 4.77e+06  min|th'| 27.06 at z=1.7126e+09 (max 2.212e+07, signchg 0)  node 79.8 us  replay 0.00 s
+Y02 4 G-q-r  replay=capture True =store True reg/depth True  span [6.90517,21.26129]  osc -8.485e+06  int|th'|/2pi 8.485e+06  min|th'| 58.18 at z=1.7126e+09 (max 3.428e+07, signchg 0)  node 79.4 us  replay 0.00 s
+Y03 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.0 us  replay 0.01 s
+Y03 1 G+q+r  replay=capture True =store True reg/depth True  span [6.07684,22.41354]  osc -9.762e+06  int|th'|/2pi 1.007e+07  min|th'| 4.054 at z=5.421e+09 (max 6.925e+07, signchg 1)  node 83.5 us  replay 0.06 s
+Y03 2 G+q-r  replay=capture True =store True reg/depth True  span [6.07684,22.41354]  osc -2.698e+07  int|th'|/2pi 2.698e+07  min|th'| 27.04 at z=5.421e+09 (max 1.133e+08, signchg 0)  node 83.6 us  replay 0.00 s
+Y03 3 G-q+r  replay=capture True =store True reg/depth True  span [6.07684,22.41354]  osc -2.698e+07  int|th'|/2pi 2.698e+07  min|th'| 27.04 at z=5.421e+09 (max 1.133e+08, signchg 0)  node 83.3 us  replay 0.00 s
+Y03 4 G-q-r  replay=capture True =store True reg/depth True  span [6.07684,22.41354]  osc -4.42e+07  int|th'|/2pi 4.42e+07  min|th'| 58.13 at z=5.421e+09 (max 1.574e+08, signchg 0)  node 83.8 us  replay 0.00 s
+Y04 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.4 us  replay 0.02 s
+Y04 1 G+q+r  replay=capture True =store True reg/depth True  span [6.35283,22.41354]  osc -7.055e+06  int|th'|/2pi 7.367e+06  min|th'| 4.054 at z=5.421e+09 (max 5.444e+07, signchg 1)  node 82.8 us  replay 0.09 s
+Y04 2 G+q-r  replay=capture True =store True reg/depth True  span [6.35283,22.41354]  osc -2.237e+07  int|th'|/2pi 2.237e+07  min|th'| 27.04 at z=5.421e+09 (max 9.698e+07, signchg 0)  node 81.8 us  replay 0.00 s
+Y04 3 G-q+r  replay=capture True =store True reg/depth True  span [6.35283,22.41354]  osc -2.237e+07  int|th'|/2pi 2.237e+07  min|th'| 27.04 at z=5.421e+09 (max 9.698e+07, signchg 0)  node 83.4 us  replay 0.00 s
+Y04 4 G-q-r  replay=capture True =store True reg/depth True  span [6.35283,22.41354]  osc -3.769e+07  int|th'|/2pi 3.769e+07  min|th'| 58.13 at z=5.421e+09 (max 1.395e+08, signchg 0)  node 83.1 us  replay 0.00 s
+Y05 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.3 us  replay 0.03 s
+Y05 1 G+q+r  replay=capture True =store True reg/depth True  span [6.90517,22.41354]  osc -3.339e+06  int|th'|/2pi 3.651e+06  min|th'| 4.054 at z=5.421e+09 (max 3.15e+07, signchg 1)  node 82.9 us  replay 0.06 s
+Y05 2 G+q-r  replay=capture True =store True reg/depth True  span [6.90517,22.41354]  osc -1.509e+07  int|th'|/2pi 1.509e+07  min|th'| 27.04 at z=5.421e+09 (max 6.995e+07, signchg 0)  node 81.9 us  replay 0.00 s
+Y05 3 G-q+r  replay=capture True =store True reg/depth True  span [6.90517,22.41354]  osc -1.509e+07  int|th'|/2pi 1.509e+07  min|th'| 27.04 at z=5.421e+09 (max 6.995e+07, signchg 0)  node 82.4 us  replay 0.00 s
+Y05 4 G-q-r  replay=capture True =store True reg/depth True  span [6.90517,22.41354]  osc -2.683e+07  int|th'|/2pi 2.683e+07  min|th'| 58.13 at z=5.421e+09 (max 1.084e+08, signchg 0)  node 82.0 us  replay 0.00 s
+Y06 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.5 us  replay 0.02 s
+Y06 1 G+q+r  replay=capture True =store True reg/depth True  span [8.56361,22.41354]  osc 6.307e+04  int|th'|/2pi 2.492e+05  min|th'| 4.054 at z=5.421e+09 (max 2.201e+06, signchg 1)  node 80.0 us  replay 0.07 s
+Y06 2 G+q-r  replay=capture True =store True reg/depth True  span [8.56361,22.41354]  osc -3.899e+06  int|th'|/2pi 3.899e+06  min|th'| 27.04 at z=5.421e+09 (max 2.179e+07, signchg 0)  node 78.9 us  replay 0.00 s
+Y06 3 G-q+r  replay=capture True =store True reg/depth True  span [8.56361,22.41354]  osc -3.899e+06  int|th'|/2pi 3.899e+06  min|th'| 27.04 at z=5.421e+09 (max 2.179e+07, signchg 0)  node 79.7 us  replay 0.00 s
+Y06 4 G-q-r  replay=capture True =store True reg/depth True  span [8.56361,22.41354]  osc -7.861e+06  int|th'|/2pi 7.861e+06  min|th'| 58.13 at z=5.421e+09 (max 4.137e+07, signchg 0)  node 82.0 us  replay 0.00 s
+Y07 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.6 us  replay 0.03 s
+Y07 1 G+q+r  replay=capture True =store True reg/depth True  span [6.62895,22.41354]  osc -4.945e+06  int|th'|/2pi 5.258e+06  min|th'| 4.054 at z=5.421e+09 (max 4.193e+07, signchg 1)  node 83.0 us  replay 0.06 s
+Y07 2 G+q-r  replay=capture True =store True reg/depth True  span [6.62895,22.41354]  osc -1.843e+07  int|th'|/2pi 1.843e+07  min|th'| 27.04 at z=5.421e+09 (max 8.26e+07, signchg 0)  node 83.1 us  replay 0.00 s
+Y07 3 G-q+r  replay=capture True =store True reg/depth True  span [6.62895,22.41354]  osc -1.843e+07  int|th'|/2pi 1.843e+07  min|th'| 27.04 at z=5.421e+09 (max 8.26e+07, signchg 0)  node 83.3 us  replay 0.00 s
+Y07 4 G-q-r  replay=capture True =store True reg/depth True  span [6.62895,22.41354]  osc -3.192e+07  int|th'|/2pi 3.192e+07  min|th'| 58.13 at z=5.421e+09 (max 1.233e+08, signchg 0)  node 82.7 us  replay 0.00 s
+Y08 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 21.6 us  replay 0.02 s
+Y08 1 G+q+r  replay=capture True =store True reg/depth True  span [5.52545,21.26129]  osc -5.503e+06  int|th'|/2pi 5.601e+06  min|th'| 4.058 at z=1.7126e+09 (max 3.375e+07, signchg 1)  node 84.4 us  replay 0.01 s
+Y08 4 G-q-r  replay=capture True =store True reg/depth True  span [5.52545,21.26129]  osc -1.891e+07  int|th'|/2pi 1.891e+07  min|th'| 58.18 at z=1.7126e+09 (max 6.303e+07, signchg 0)  node 82.8 us  replay 0.00 s
+Y09 0 G      replay=capture True =store True reg/depth True  span [22.41354,31.63160]  osc -4.303  int|th'|/2pi 4.303  min|th'| 0.002683 at z=5.463e+13 (max 27.04, signchg 0)  node 21.7 us  replay 0.04 s
+Y09 1 G+q+r  replay=capture True =store True reg/depth True  span [8.84011,22.41354]  osc 1.304e+05  int|th'|/2pi 1.819e+05  min|th'| 4.054 at z=5.421e+09 (max 9.548e+05, signchg 1)  node 80.4 us  replay 0.06 s
+Y09 2 G+q-r  replay=capture True =store True reg/depth True  span [8.84011,22.41354]  osc -3.041e+06  int|th'|/2pi 3.041e+06  min|th'| 27.04 at z=5.421e+09 (max 1.737e+07, signchg 0)  node 79.4 us  replay 0.00 s
+Y09 3 G-q+r  replay=capture True =store True reg/depth True  span [8.84011,22.41354]  osc -3.041e+06  int|th'|/2pi 3.041e+06  min|th'| 27.04 at z=5.421e+09 (max 1.737e+07, signchg 0)  node 79.9 us  replay 0.00 s
+Y09 4 G-q-r  replay=capture True =store True reg/depth True  span [8.84011,22.41354]  osc -6.212e+06  int|th'|/2pi 6.212e+06  min|th'| 58.13 at z=5.421e+09 (max 3.379e+07, signchg 0)  node 81.0 us  replay 0.00 s
+Y10 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 21.3 us  replay 0.03 s
+Y10 1 G+q+r  replay=capture True =store True reg/depth True  span [8.28713,21.26129]  osc -2.321e+04  int|th'|/2pi 1.22e+05  min|th'| 4.058 at z=1.7126e+09 (max 1.307e+06, signchg 1)  node 78.7 us  replay 0.05 s
+Y10 2 G+q-r  replay=capture True =store True reg/depth True  span [8.28713,21.26129]  osc -1.572e+06  int|th'|/2pi 1.572e+06  min|th'| 27.06 at z=1.7126e+09 (max 8.562e+06, signchg 0)  node 78.7 us  replay 0.00 s
+Y10 3 G-q+r  replay=capture True =store True reg/depth True  span [8.28713,21.26129]  osc -1.572e+06  int|th'|/2pi 1.572e+06  min|th'| 27.06 at z=1.7126e+09 (max 8.562e+06, signchg 0)  node 78.3 us  replay 0.00 s
+Y10 4 G-q-r  replay=capture True =store True reg/depth True  span [8.28713,21.26129]  osc -3.121e+06  int|th'|/2pi 3.121e+06  min|th'| 58.18 at z=1.7126e+09 (max 1.582e+07, signchg 0)  node 78.6 us  replay 0.00 s
+Y11 0 G      replay=capture True =store True reg/depth True  span [23.56580,31.63160]  osc -4.298  int|th'|/2pi 4.298  min|th'| 0.008484 at z=5.463e+13 (max 27.01, signchg 0)  node 21.4 us  replay 0.03 s
+Y11 1 G+q+r  replay=capture True =store True reg/depth True  span [7.18147,23.56580]  osc -6.791e+06  int|th'|/2pi 7.778e+06  min|th'| 4.05 at z=1.7159e+10 (max 7.266e+07, signchg 1)  node 84.4 us  replay 0.00 s
+Y11 2 G+q-r  replay=capture True =store True reg/depth True  span [7.18147,23.56580]  osc -3.877e+07  int|th'|/2pi 3.877e+07  min|th'| 27.01 at z=1.7159e+10 (max 1.861e+08, signchg 0)  node 84.5 us  replay 0.00 s
+Y11 3 G-q+r  replay=capture True =store True reg/depth True  span [7.18147,23.56580]  osc -3.877e+07  int|th'|/2pi 3.877e+07  min|th'| 27.01 at z=1.7159e+10 (max 1.861e+08, signchg 0)  node 86.7 us  replay 0.00 s
+Y11 4 G-q-r  replay=capture True =store True reg/depth True  span [7.18147,23.56580]  osc -7.074e+07  int|th'|/2pi 7.074e+07  min|th'| 58.07 at z=1.7159e+10 (max 2.995e+08, signchg 0)  node 87.5 us  replay 0.00 s
+Y12 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 21.4 us  replay 0.03 s
+Y12 1 G+q+r  replay=capture True =store True reg/depth True  span [8.84011,21.26129]  osc 4.123e+04  int|th'|/2pi 5.753e+04  min|th'| 4.058 at z=1.7126e+09 (max 3.019e+05, signchg 1)  node 78.4 us  replay 0.09 s
+Y12 2 G+q-r  replay=capture True =store True reg/depth True  span [8.84011,21.26129]  osc -9.615e+05  int|th'|/2pi 9.615e+05  min|th'| 27.06 at z=1.7126e+09 (max 5.493e+06, signchg 0)  node 77.2 us  replay 0.00 s
+Y12 3 G-q+r  replay=capture True =store True reg/depth True  span [8.84011,21.26129]  osc -9.615e+05  int|th'|/2pi 9.615e+05  min|th'| 27.06 at z=1.7126e+09 (max 5.493e+06, signchg 0)  node 77.4 us  replay 0.00 s
+Y12 4 G-q-r  replay=capture True =store True reg/depth True  span [8.84011,21.26129]  osc -1.964e+06  int|th'|/2pi 1.964e+06  min|th'| 58.18 at z=1.7126e+09 (max 1.068e+07, signchg 0)  node 91.0 us  replay 0.00 s
+calls 56; every replay reproduces capture and store bit for bit: True

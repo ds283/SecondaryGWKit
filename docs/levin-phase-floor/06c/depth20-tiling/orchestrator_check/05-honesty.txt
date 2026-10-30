@@ -1,0 +1,10 @@
+orchestrator honesty check: three resolutions; ref = S128 (P=64)
+s25: P128n64 -3.377752083837561e-16 P128n96 -3.3777520582134153e-16 P64n96 -3.3777520701737925e-16 P64n128 -3.3777520562946797e-16
+   |S128-S96(P64)|/min_abserr 65.7  |S128-S96(P128)|/min_abserr 9.09  (census abserr 8.88e-22, pinned abserr 2.11e-26)
+   census |v-ref|/abserr 4.88e-05   pinned |v-ref|/abserr 9.19
+s09: P128n64 1.884990979116876e-10 P128n96 1.8849909791120178e-10 P64n96 1.8849909791148242e-10 P64n128 1.8849909791129223e-10
+   |S128-S96(P64)|/min_abserr 0.00452  |S128-S96(P128)|/min_abserr 0.00215  (census abserr 4.24e-20, pinned abserr 4.21e-20)
+   census |v-ref|/abserr 0.991   pinned |v-ref|/abserr 0.998
+s01: P128n64 2.8535010939140787e-27 P128n96 2.8535011162561684e-27 P64n96 2.853501107539877e-27 P64n128 2.853501112827863e-27
+   |S128-S96(P64)|/min_abserr 0.583  |S128-S96(P128)|/min_abserr 0.378  (census abserr 4.58e-35, pinned abserr 9.07e-36)
+   census |v-ref|/abserr 0.122   pinned |v-ref|/abserr 0.626

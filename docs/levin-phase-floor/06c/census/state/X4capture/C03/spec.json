@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "C03",
+ "units": [
+  {
+   "uid": "g-1e-8-2-21568",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "2-21568",
+   "names05": null,
+   "shard": 2,
+   "serial": 21568,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     0,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=1.3427e+10, z in (3.1219e+15, 5.2861e+10), regime G, group G"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/X4capture/C03",
+ "emit_fd": null,
+ "emit_file": "state/X4capture/C03/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

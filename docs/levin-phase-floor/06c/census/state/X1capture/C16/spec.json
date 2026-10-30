@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "C16",
+ "units": [
+  {
+   "uid": "g-1e-7-3-14094",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "3-14094",
+   "names05": null,
+   "shard": 3,
+   "serial": 14094,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     3,
+     "k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14.474, z in (1.6721e+11, 14.474), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/X1capture/C16",
+ "emit_fd": null,
+ "emit_file": "state/X1capture/C16/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

@@ -1,0 +1,283 @@
+violating rows: 30
+
+k=100000 q=100000 r=100000 z=5236.553  Y1 ratio 1.676e+04; total -3.8160070831e-17 -> -3.8253930049e-17; abserr 1.855e-24 -> 3.744e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -3.8160070831e-17 -> -3.8253930049e-17; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value -4.9302392078e-17 -> -4.9302396502e-17 |dV| 4.424e-24; abserr 1.802e-24 -> 3.327e-24; |dV|/sum 0.863; conv 1>1 pl 0>0 regions 13>13
+  sub 1 z(1.7126e+09,5236.6) [True, True, True] group G+q+r      value +8.9890669721e-18 -> +8.8952121790e-18 |dV| 9.385e-20; abserr 1.701e-26 -> 3.848e-25; |dV|/sum 2.34e+05; conv 1>1 pl 0>0 regions 12>2
+  sub 1 z(1.7126e+09,5236.6) [True, True, True] group G+q-r      value +1.4020752341e-18 -> +1.4020752341e-18 |dV| 0.000e+00; abserr 1.243e-26 -> 1.243e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,5236.6) [True, True, True] group G-q+r      value +1.4020752341e-18 -> +1.4020752341e-18 |dV| 0.000e+00; abserr 1.243e-26 -> 1.243e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,5236.6) [True, True, True] group G-q-r      value -6.5089619382e-19 -> -6.5089619363e-19 |dV| 1.934e-28; abserr 1.089e-26 -> 7.819e-27; |dV|/sum 0.0103; conv 1>1 pl 0>1 regions 1>31
+
+k=100000 q=100000 r=100000 z=996.42016  Y1 ratio 1.558e+04; total 7.4011907175e-18 -> 7.4184714350e-18; abserr 3.804e-25 -> 7.289e-25
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 7.4011907175e-18 -> 7.4184714350e-18; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value +9.5176692875e-18 -> +9.5176701461e-18 |dV| 8.587e-25; abserr 3.478e-25 -> 6.378e-25; |dV|/sum 0.871; conv 1>1 pl 0>0 regions 12>13
+  sub 1 z(1.7126e+09,996.42) [True, True, True] group G+q+r      value -1.7110672892e-18 -> -1.6937874394e-18 |dV| 1.728e-20; abserr 9.185e-27 -> 6.557e-26; |dV|/sum 2.31e+05; conv 1>1 pl 0>0 regions 13>7
+  sub 1 z(1.7126e+09,996.42) [True, True, True] group G+q-r      value -2.6446937585e-19 -> -2.6446937016e-19 |dV| 5.687e-27; abserr 8.593e-27 -> 8.164e-27; |dV|/sum 0.339; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7126e+09,996.42) [True, True, True] group G-q+r      value -2.6446937585e-19 -> -2.6446937016e-19 |dV| 5.687e-27; abserr 8.593e-27 -> 8.164e-27; |dV|/sum 0.339; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7126e+09,996.42) [True, True, True] group G-q-r      value +1.2352747088e-19 -> +1.2352746863e-19 |dV| 2.248e-27; abserr 6.143e-27 -> 9.222e-27; |dV|/sum 0.146; conv 1>1 pl 0>0 regions 1>10
+
+k=316228 q=316228 r=316228 z=434.65133  Y1 ratio 1.446e+04; total -9.4014422030e-20 -> -9.4173968318e-20; abserr 4.775e-27 -> 6.260e-27
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -9.4014422030e-20 -> -9.4173968318e-20; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value -1.2299562827e-19 -> -1.2299562827e-19 |dV| 1.829e-30; abserr 2.724e-27 -> 5.483e-27; |dV|/sum 0.000223; conv 1>1 pl 0>0 regions 7>9
+  sub 1 z(5.421e+09,434.65) [True, True, True] group G+q+r      value +2.3230905271e-20 -> +2.3071359204e-20 |dV| 1.595e-22; abserr 2.226e-28 -> 2.673e-28; |dV|/sum 3.26e+05; conv 1>1 pl 0>0 regions 13>2
+  sub 1 z(5.421e+09,434.65) [True, True, True] group G+q-r      value +3.7314347899e-21 -> +3.7314347341e-21 |dV| 5.575e-29; abserr 6.926e-28 -> 2.013e-28; |dV|/sum 0.0624; conv 0>1 pl 0>0 regions 1>11
+  sub 1 z(5.421e+09,434.65) [True, True, True] group G-q+r      value +3.7314347899e-21 -> +3.7314347341e-21 |dV| 5.575e-29; abserr 6.926e-28 -> 2.013e-28; |dV|/sum 0.0624; conv 0>1 pl 0>0 regions 1>11
+  sub 1 z(5.421e+09,434.65) [True, True, True] group G-q-r      value -1.7125686124e-21 -> -1.7125687197e-21 |dV| 1.073e-28; abserr 4.437e-28 -> 1.073e-28; |dV|/sum 0.195; conv 0>1 pl 0>1 regions 1>17
+
+k=316228 q=316228 r=316228 z=573.11465  Y1 ratio 1.062e+04; total 1.0900834846e-19 -> 1.0920885746e-19; abserr 8.743e-27 -> 1.014e-26
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 1.0900834846e-19 -> 1.0920885746e-19; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value +1.4558882471e-19 -> +1.4558882472e-19 |dV| 1.432e-30; abserr 6.612e-27 -> 9.174e-27; |dV|/sum 9.07e-05; conv 1>1 pl 0>0 regions 9>10
+  sub 1 z(5.421e+09,573.11) [True, True, True] group G+q+r      value -2.9059769315e-20 -> -2.8859260728e-20 |dV| 2.005e-22; abserr 8.490e-29 -> 5.062e-28; |dV|/sum 3.39e+05; conv 1>1 pl 0>0 regions 13>8
+  sub 1 z(5.421e+09,573.11) [True, True, True] group G+q-r      value -4.8576682240e-21 -> -4.8576680731e-21 |dV| 1.510e-28; abserr 7.679e-28 -> 1.365e-28; |dV|/sum 0.167; conv 0>1 pl 0>1 regions 1>12
+  sub 1 z(5.421e+09,573.11) [True, True, True] group G-q+r      value -4.8576682240e-21 -> -4.8576680731e-21 |dV| 1.510e-28; abserr 7.679e-28 -> 1.365e-28; |dV|/sum 0.167; conv 0>1 pl 0>1 regions 1>12
+  sub 1 z(5.421e+09,573.11) [True, True, True] group G-q-r      value +2.1946295100e-21 -> +2.1946296204e-21 |dV| 1.104e-28; abserr 5.096e-28 -> 1.865e-28; |dV|/sum 0.159; conv 0>1 pl 0>0 regions 1>16
+
+k=316228 q=316228 r=316228 z=996.42016  Y1 ratio 9250; total -2.4485590489e-19 -> -2.4519612027e-19; abserr 1.451e-26 -> 2.227e-26
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -2.4485590489e-19 -> -2.4519612027e-19; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value -3.0588718698e-19 -> -3.0588718004e-19 |dV| 6.937e-27; abserr 1.192e-26 -> 1.985e-26; |dV|/sum 0.218; conv 1>1 pl 0>0 regions 12>11
+  sub 1 z(5.421e+09,996.42) [True, True, True] group G+q+r      value +5.0196204217e-20 -> +4.9855982052e-20 |dV| 3.402e-22; abserr 6.418e-29 -> 1.203e-27; |dV|/sum 2.69e+05; conv 1>1 pl 0>0 regions 13>10
+  sub 1 z(5.421e+09,996.42) [True, True, True] group G+q-r      value +7.1406991843e-21 -> +7.1406991236e-21 |dV| 6.062e-29; abserr 9.292e-28 -> 5.820e-28; |dV|/sum 0.0401; conv 0>1 pl 0>0 regions 1>4
+  sub 1 z(5.421e+09,996.42) [True, True, True] group G-q+r      value +7.1406991843e-21 -> +7.1406991236e-21 |dV| 6.062e-29; abserr 9.292e-28 -> 5.820e-28; |dV|/sum 0.0401; conv 0>1 pl 0>0 regions 1>4
+  sub 1 z(5.421e+09,996.42) [True, True, True] group G-q-r      value -3.4463204972e-21 -> -3.4463205310e-21 |dV| 3.387e-29; abserr 6.642e-28 -> 5.678e-29; |dV|/sum 0.047; conv 0>1 pl 0>1 regions 1>6
+
+k=316228 q=316228 r=316228 z=5236.553  Y1 ratio 8300; total 1.0845542136e-18 -> 1.0864473147e-18; abserr 9.726e-26 -> 1.308e-25
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 1.0845542136e-18 -> 1.0864473147e-18; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value +1.4289680566e-18 -> +1.4289680627e-18 |dV| 6.160e-27; abserr 9.249e-26 -> 1.167e-25; |dV|/sum 0.0295; conv 1>1 pl 0>0 regions 8>8
+  sub 1 z(5.421e+09,5236.6) [True, True, True] group G+q+r      value -2.7518739349e-19 -> -2.7329429826e-19 |dV| 1.893e-21; abserr 8.670e-28 -> 1.020e-26; |dV|/sum 1.71e+05; conv 1>1 pl 0>0 regions 13>3
+  sub 1 z(5.421e+09,5236.6) [True, True, True] group G+q-r      value -4.4845242262e-20 -> -4.4845242262e-20 |dV| 0.000e+00; abserr 1.357e-27 -> 1.708e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,5236.6) [True, True, True] group G-q+r      value -4.4845242262e-20 -> -4.4845242262e-20 |dV| 0.000e+00; abserr 1.357e-27 -> 1.708e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,5236.6) [True, True, True] group G-q-r      value +2.0464035010e-20 -> +2.0464034708e-20 |dV| 3.021e-28; abserr 1.189e-27 -> 5.214e-28; |dV|/sum 0.177; conv 1>1 pl 0>0 regions 1>9
+
+k=316228 q=316228 r=316228 z=755.6871  Y1 ratio 8298; total 8.3501762385e-20 -> 8.3705525118e-20; abserr 1.340e-26 -> 1.116e-26
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 8.3501762385e-20 -> 8.3705525118e-20; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value +1.2114851554e-19 -> +1.2114851608e-19 |dV| 5.436e-28; abserr 1.066e-26 -> 8.950e-27; |dV|/sum 0.0277; conv 1>1 pl 0>0 regions 11>12
+  sub 1 z(5.421e+09,755.69) [True, True, True] group G+q+r      value -2.9126913123e-20 -> -2.8923151348e-20 |dV| 2.038e-22; abserr 4.589e-28 -> 2.015e-27; |dV|/sum 8.24e+04; conv 1>1 pl 0>0 regions 13>4
+  sub 1 z(5.421e+09,755.69) [True, True, True] group G+q-r      value -5.4382277101e-21 -> -5.4382275357e-21 |dV| 1.744e-28; abserr 8.472e-28 -> 7.205e-29; |dV|/sum 0.19; conv 0>1 pl 0>0 regions 1>3
+  sub 1 z(5.421e+09,755.69) [True, True, True] group G-q+r      value -5.4382277101e-21 -> -5.4382275357e-21 |dV| 1.744e-28; abserr 8.472e-28 -> 7.205e-29; |dV|/sum 0.19; conv 0>1 pl 0>0 regions 1>3
+  sub 1 z(5.421e+09,755.69) [True, True, True] group G-q-r      value +2.3566153899e-21 -> +2.3566154555e-21 |dV| 6.561e-29; abserr 5.833e-28 -> 4.987e-29; |dV|/sum 0.104; conv 0>1 pl 0>1 regions 1>6
+
+k=100000 q=100000 r=100000 z=250  Y1 ratio 8177; total -1.9474971408e-18 -> -1.9445413331e-18; abserr 8.694e-26 -> 2.746e-25
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -1.9474971408e-18 -> -1.9445413331e-18; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value -2.4241229439e-18 -> -2.4241231834e-18 |dV| 2.396e-25; abserr 7.163e-26 -> 2.423e-25; |dV|/sum 0.763; conv 1>1 pl 0>0 regions 10>11
+  sub 1 z(1.7126e+09,250) [True, True, True] group G+q+r      value +3.9106544884e-19 -> +3.9402149593e-19 |dV| 2.956e-21; abserr 1.826e-27 -> 1.979e-26; |dV|/sum 1.37e+05; conv 1>1 pl 0>1 regions 2>21
+  sub 1 z(1.7126e+09,250) [True, True, True] group G+q-r      value +5.6679637395e-20 -> +5.6679637395e-20 |dV| 0.000e+00; abserr 5.185e-27 -> 5.185e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,250) [True, True, True] group G-q+r      value +5.6679637395e-20 -> +5.6679637395e-20 |dV| 0.000e+00; abserr 5.185e-27 -> 5.185e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,250) [True, True, True] group G-q-r      value -2.7798920542e-20 -> -2.7798920381e-20 |dV| 1.608e-28; abserr 3.115e-27 -> 2.091e-27; |dV|/sum 0.0309; conv 0>1 pl 0>1 regions 1>27
+
+k=316228 q=316228 r=316228 z=6904.7189  Y1 ratio 7092; total 1.0140648464e-18 -> 1.0148010683e-18; abserr 4.130e-26 -> 6.251e-26
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 1.0140648464e-18 -> 1.0148010683e-18; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value +1.1377376005e-18 -> +1.1377376016e-18 |dV| 1.082e-27; abserr 3.149e-26 -> 5.245e-26; |dV|/sum 0.0129; conv 1>1 pl 0>0 regions 15>13
+  sub 1 z(5.421e+09,6904.7) [True, True, True] group G+q+r      value -1.1579772209e-19 -> -1.1506150014e-19 |dV| 7.362e-22; abserr 5.764e-27 -> 8.581e-27; |dV|/sum 5.13e+04; conv 1>1 pl 0>0 regions 12>2
+  sub 1 z(5.421e+09,6904.7) [True, True, True] group G+q-r      value -6.5445175229e-21 -> -6.5445181386e-21 |dV| 6.157e-28; abserr 1.398e-27 -> 4.942e-28; |dV|/sum 0.325; conv 0>1 pl 0>1 regions 1>52
+  sub 1 z(5.421e+09,6904.7) [True, True, True] group G-q+r      value -6.5445175229e-21 -> -6.5445181386e-21 |dV| 6.157e-28; abserr 1.398e-27 -> 4.942e-28; |dV|/sum 0.325; conv 0>1 pl 0>1 regions 1>52
+  sub 1 z(5.421e+09,6904.7) [True, True, True] group G-q-r      value +5.2140029582e-21 -> +5.2140030706e-21 |dV| 1.123e-28; abserr 1.254e-27 -> 4.933e-28; |dV|/sum 0.0643; conv 0>1 pl 0>1 regions 1>31
+
+k=100000 q=100000 r=100000 z=3971.4126  Y1 ratio 4738; total -1.9211720542e-17 -> -1.9193752571e-17; abserr 1.597e-24 -> 2.195e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -1.9211720542e-17 -> -1.9193752571e-17; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value -2.1671798196e-17 -> -2.1671800224e-17 |dV| 2.028e-24; abserr 1.543e-24 -> 1.952e-24; |dV|/sum 0.58; conv 1>1 pl 0>0 regions 11>15
+  sub 1 z(1.7126e+09,3971.4) [True, True, True] group G+q+r      value +2.2388686707e-18 -> +2.2568386597e-18 |dV| 1.797e-20; abserr 1.936e-26 -> 2.025e-25; |dV|/sum 8.1e+04; conv 1>1 pl 0>0 regions 12>2
+  sub 1 z(1.7126e+09,3971.4) [True, True, True] group G+q-r      value +1.7859447306e-19 -> +1.7859447869e-19 |dV| 5.634e-27; abserr 1.197e-26 -> 1.597e-26; |dV|/sum 0.202; conv 1>1 pl 0>1 regions 1>34
+  sub 1 z(1.7126e+09,3971.4) [True, True, True] group G-q+r      value +1.7859447306e-19 -> +1.7859447869e-19 |dV| 5.634e-27; abserr 1.197e-26 -> 1.597e-26; |dV|/sum 0.202; conv 1>1 pl 0>1 regions 1>34
+  sub 1 z(1.7126e+09,3971.4) [True, True, True] group G-q-r      value -1.3597996335e-19 -> -1.3597996412e-19 |dV| 7.756e-28; abserr 1.020e-26 -> 9.086e-27; |dV|/sum 0.0402; conv 1>1 pl 0>0 regions 1>24
+
+k=1e+06 q=1e+06 r=1e+06 z=1313.8416  Y1 ratio 2817; total -3.5039436658e-21 -> -3.4994504539e-21; abserr 1.070e-27 -> 5.248e-28
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -3.5039436658e-21 -> -3.4994504539e-21; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value -5.3310936826e-21 -> -5.3310937008e-21 |dV| 1.821e-29; abserr 4.902e-28 -> 3.875e-28; |dV|/sum 0.0207; conv 1>1 pl 0>0 regions 11>12
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G+q+r      value +1.3897920831e-21 -> +1.3942853621e-21 |dV| 4.493e-24; abserr 2.814e-28 -> 9.426e-29; |dV|/sum 1.2e+04; conv 0>1 pl 0>1 regions 1>66
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G+q-r      value +2.8032645610e-22 -> +2.8032643034e-22 |dV| 2.576e-29; abserr 1.090e-28 -> 1.605e-29; |dV|/sum 0.206; conv 0>1 pl 0>0 regions 1>21
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G-q+r      value +2.8032645610e-22 -> +2.8032643034e-22 |dV| 2.576e-29; abserr 1.090e-28 -> 1.605e-29; |dV|/sum 0.206; conv 0>1 pl 0>0 regions 1>21
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G-q-r      value -1.2329497845e-22 -> -1.2329497584e-22 |dV| 2.609e-30; abserr 8.090e-29 -> 1.089e-29; |dV|/sum 0.0284; conv 0>1 pl 0>1 regions 1>23
+
+k=100000 q=100000 r=100000 z=6904.7189  Y1 ratio 336.3; total -4.2217016938e-17 -> -4.2219142707e-17; abserr 1.531e-24 -> 4.790e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -4.2217016938e-17 -> -4.2219142707e-17; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value -4.9632339497e-17 -> -4.9632344136e-17 |dV| 4.639e-24; abserr 1.465e-24 -> 4.248e-24; |dV|/sum 0.812; conv 1>1 pl 0>0 regions 12>13
+  sub 1 z(1.7126e+09,6904.7) [True, True, True] group G+q+r      value +6.3787480300e-18 -> +6.3766268918e-18 |dV| 2.121e-21; abserr 2.002e-26 -> 4.729e-25; |dV|/sum 4.3e+03; conv 1>1 pl 0>0 regions 18>7
+  sub 1 z(1.7126e+09,6904.7) [True, True, True] group G+q-r      value +7.2884594708e-19 -> +7.2884594708e-19 |dV| 0.000e+00; abserr 1.722e-26 -> 1.983e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,6904.7) [True, True, True] group G-q+r      value +7.2884594708e-19 -> +7.2884594708e-19 |dV| 0.000e+00; abserr 1.722e-26 -> 1.983e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,6904.7) [True, True, True] group G-q-r      value -4.2111736521e-19 -> -4.2111735772e-19 |dV| 7.491e-27; abserr 1.147e-26 -> 2.966e-26; |dV|/sum 0.182; conv 1>1 pl 0>0 regions 1>8
+
+k=1e+06 q=100000 r=1e+06 z=20871.228  Y1 ratio 20.36; total -2.2578091722e-20 -> -2.2578819916e-20; abserr 2.819e-26 -> 7.568e-27
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -2.2578091722e-20 -> -2.2578819916e-20; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value +1.5411935717e-20 -> +1.5411206613e-20 |dV| 7.291e-25; abserr 1.045e-26 -> 1.512e-27; |dV|/sum 60.9; conv 0>1 pl 0>0 regions 3>21
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G+r        value -4.8849197720e-20 -> -4.8849196931e-20 |dV| 7.885e-28; abserr 1.283e-26 -> 4.065e-27; |dV|/sum 0.0467; conv 0>1 pl 0>0 regions 15>19
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G-r        value +1.3741705057e-20 -> +1.3741705145e-20 |dV| 8.775e-29; abserr 4.367e-27 -> 1.300e-27; |dV|/sum 0.0155; conv 0>1 pl 0>0 regions 28>33
+  sub 2 z(1.7126e+09,20871) [True, True, True] group G+q+r      value -8.3579828798e-21 -> -8.3579828920e-21 |dV| 1.217e-29; abserr 1.473e-28 -> 3.642e-28; |dV|/sum 0.0238; conv 1>1 pl 0>0 regions 1>6
+  sub 2 z(1.7126e+09,20871) [True, True, True] group G+q-r      value +2.9838090994e-21 -> +2.9838091008e-21 |dV| 1.399e-30; abserr 1.277e-28 -> 3.244e-29; |dV|/sum 0.00874; conv 1>1 pl 0>0 regions 1>2
+  sub 2 z(1.7126e+09,20871) [True, True, True] group G-q+r      value +5.4344706156e-21 -> +5.4344706567e-21 |dV| 4.114e-29; abserr 1.413e-28 -> 2.605e-28; |dV|/sum 0.102; conv 1>1 pl 0>0 regions 1>3
+  sub 2 z(1.7126e+09,20871) [True, True, True] group G-q-r      value -2.9428316113e-21 -> -2.9428316082e-21 |dV| 3.060e-30; abserr 1.272e-28 -> 3.426e-29; |dV|/sum 0.019; conv 1>1 pl 0>0 regions 1>5
+
+k=100000 q=1e+06 r=1e+06 z=1313.8416  Y1 ratio 16.56; total 2.0304756999e-19 -> 2.0304803711e-19; abserr 7.024e-27 -> 2.118e-26
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 2.0304756999e-19 -> 2.0304803711e-19; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value +2.3548770084e-19 -> +2.3548816900e-19 |dV| 4.682e-25; abserr 6.494e-27 -> 1.844e-26; |dV|/sum 18.8; conv 1>1 pl 0>0 regions 4>11
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G+q+r      value -7.9991377567e-22 -> -7.9991381673e-22 |dV| 4.106e-29; abserr 2.356e-30 -> 3.671e-29; |dV|/sum 1.05; conv 1>1 pl 0>1 regions 2>14
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G+q-r      value -1.6157068944e-20 -> -1.6157069449e-20 |dV| 5.043e-28; abserr 2.493e-28 -> 1.333e-27; |dV|/sum 0.319; conv 1>1 pl 0>1 regions 2>15
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G-q+r      value -1.6157068944e-20 -> -1.6157069449e-20 |dV| 5.043e-28; abserr 2.493e-28 -> 1.333e-27; |dV|/sum 0.319; conv 1>1 pl 0>1 regions 2>15
+  sub 1 z(1.7159e+10,1313.8) [True, True, True] group G-q-r      value +6.7392082331e-22 -> +6.7392082331e-22 |dV| 1.885e-34; abserr 2.871e-29 -> 3.554e-29; |dV|/sum 2.93e-06; conv 1>1 pl 0>0 regions 2>5
+
+k=100000 q=1e+06 r=1e+06 z=1002201.4  Y1 ratio 15.62; total -1.5569334504e-16 -> -1.5569370286e-16; abserr 7.357e-24 -> 1.556e-23
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -1.5569334504e-16 -> -1.5569370286e-16; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value -1.8056822270e-16 -> -1.8056857872e-16 |dV| 3.560e-22; abserr 5.502e-24 -> 1.406e-23; |dV|/sum 18.2; conv 1>1 pl 0>0 regions 4>11
+  sub 1 z(1.7159e+10,1.0022e+06) [True, True, True] group G+q+r      value +6.1861289778e-19 -> +6.1861286669e-19 |dV| 3.109e-26; abserr 3.646e-27 -> 5.857e-26; |dV|/sum 0.5; conv 1>1 pl 0>1 regions 1>18
+  sub 1 z(1.7159e+10,1.0022e+06) [True, True, True] group G+q-r      value +1.2388707952e-17 -> +1.2388707040e-17 |dV| 9.115e-25; abserr 9.233e-25 -> 6.966e-25; |dV|/sum 0.563; conv 1>1 pl 0>0 regions 3>12
+  sub 1 z(1.7159e+10,1.0022e+06) [True, True, True] group G-q+r      value +1.2388707952e-17 -> +1.2388707040e-17 |dV| 9.115e-25; abserr 9.233e-25 -> 6.966e-25; |dV|/sum 0.563; conv 1>1 pl 0>0 regions 3>12
+  sub 1 z(1.7159e+10,1.0022e+06) [True, True, True] group G-q-r      value -5.2115114077e-19 -> -5.2115108715e-19 |dV| 5.363e-26; abserr 5.242e-27 -> 4.307e-26; |dV|/sum 1.11; conv 1>1 pl 0>0 regions 1>11
+
+k=1e+06 q=100000 r=1e+06 z=1.4546684e+08  Y1 ratio 8.262; total 4.4010797257e-16 -> 4.4010910421e-16; abserr 8.723e-23 -> 4.973e-23
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 4.4010797257e-16 -> 4.4010910421e-16; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value +1.5630251299e-16 -> +1.5630250209e-16 |dV| 1.089e-23; abserr 2.628e-23 -> 1.032e-23; |dV|/sum 0.298; conv 0>1 pl 0>0 regions 11>21
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G+r        value +3.1771852369e-16 -> +3.1771852114e-16 |dV| 2.548e-24; abserr 5.380e-23 -> 2.744e-23; |dV|/sum 0.0314; conv 0>1 pl 0>0 regions 16>19
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G-r        value -8.0082328683e-17 -> -8.0081183532e-17 |dV| 1.145e-21; abserr 5.966e-24 -> 7.562e-24; |dV|/sum 84.6; conv 1>1 pl 0>0 regions 1>32
+  sub 2 z(1.7126e+09,1.4547e+08) [True, True, True] group G+q+r      value +9.7671478384e-17 -> +9.7671478384e-17 |dV| 0.000e+00; abserr 4.315e-25 -> 1.825e-24; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(1.7126e+09,1.4547e+08) [True, True, True] group G+q-r      value -1.0877190113e-17 -> -1.0877190170e-17 |dV| 5.661e-26; abserr 2.584e-27 -> 2.298e-25; |dV|/sum 0.244; conv 1>1 pl 0>0 regions 1>4
+  sub 2 z(1.7126e+09,1.4547e+08) [True, True, True] group G-q+r      value -5.6501012198e-17 -> -5.6501012198e-17 |dV| 0.000e+00; abserr 7.433e-25 -> 1.451e-24; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(1.7126e+09,1.4547e+08) [True, True, True] group G-q-r      value +1.5875988505e-17 -> +1.5875988493e-17 |dV| 1.135e-26; abserr 9.498e-27 -> 9.090e-25; |dV|/sum 0.0124; conv 1>1 pl 0>0 regions 1>5
+
+k=100000 q=1e+06 r=1e+06 z=48124030  Y1 ratio 5.925; total -1.1641519921e-14 -> -1.1641512164e-14; abserr 5.838e-22 -> 7.255e-22
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -1.1641519921e-14 -> -1.1641512164e-14; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value -1.3513689649e-14 -> -1.3513681875e-14 |dV| 7.774e-21; abserr 5.580e-22 -> 6.558e-22; |dV|/sum 6.4; conv 1>1 pl 0>0 regions 3>11
+  sub 1 z(1.7159e+10,4.8124e+07) [True, True, True] group G+q+r      value +7.2818861838e-17 -> +7.2818865197e-17 |dV| 3.360e-24; abserr 1.294e-24 -> 4.044e-24; |dV|/sum 0.629; conv 1>1 pl 0>0 regions 1>7
+  sub 1 z(1.7159e+10,4.8124e+07) [True, True, True] group G+q-r      value +9.3028530587e-16 -> +9.3028529479e-16 |dV| 1.108e-23; abserr 1.108e-23 -> 3.177e-23; |dV|/sum 0.259; conv 1>1 pl 0>0 regions 1>2
+  sub 1 z(1.7159e+10,4.8124e+07) [True, True, True] group G-q+r      value +9.3028530587e-16 -> +9.3028529479e-16 |dV| 1.108e-23; abserr 1.108e-23 -> 3.177e-23; |dV|/sum 0.259; conv 1>1 pl 0>0 regions 1>2
+  sub 1 z(1.7159e+10,4.8124e+07) [True, True, True] group G-q-r      value -6.1219746063e-17 -> -6.1219743742e-17 |dV| 2.321e-24; abserr 2.321e-24 -> 2.038e-24; |dV|/sum 0.532; conv 1>1 pl 0>0 regions 1>2
+
+k=100000 q=316228 r=316228 z=3.334767e+08  Y1 ratio 5.125; total 3.7801550590e-13 -> 3.7801527875e-13; abserr 7.529e-21 -> 3.680e-20
+  numeric_quad -0x1.242ba3215bc00p-58 -> -0x1.242ba3215bc00p-58 (identical True); WKB_Levin 3.7801946554e-13 -> 3.7801923840e-13; numeric_quad abserr 9.388e-27 -> 9.388e-27
+  sub 0 z(1.3706e+13,5.421e+09) [True, False, False] group G          value +3.7114883422e-13 -> +3.7114860750e-13 |dV| 2.267e-19; abserr 6.216e-21 -> 3.621e-20; |dV|/sum 5.34; conv 1>1 pl 0>0 regions 4>8
+  sub 1 z(5.421e+09,3.3348e+08) [True, True, True] group G+q+r      value +7.3662062848e-16 -> +7.3662064039e-16 |dV| 1.191e-23; abserr 9.108e-23 -> 7.162e-23; |dV|/sum 0.0732; conv 0>1 pl 0>0 regions 2>16
+  sub 1 z(5.421e+09,3.3348e+08) [True, True, True] group G+q-r      value +3.1115979991e-15 -> +3.1115977623e-15 |dV| 2.368e-22; abserr 5.955e-22 -> 2.504e-22; |dV|/sum 0.28; conv 0>1 pl 0>0 regions 2>8
+  sub 1 z(5.421e+09,3.3348e+08) [True, True, True] group G-q+r      value +3.1115979991e-15 -> +3.1115977623e-15 |dV| 2.368e-22; abserr 5.955e-22 -> 2.504e-22; |dV|/sum 0.28; conv 0>1 pl 0>0 regions 2>8
+  sub 1 z(5.421e+09,3.3348e+08) [True, True, True] group G-q-r      value -8.9185297066e-17 -> -8.9185264080e-17 |dV| 3.299e-23; abserr 3.119e-23 -> 8.487e-24; |dV|/sum 0.831; conv 0>1 pl 0>1 regions 3>23
+
+k=316228 q=100000 r=316228 z=9104.2988  Y1 ratio 4.832; total -3.6872012915e-19 -> -3.6872175975e-19; abserr 1.274e-25 -> 2.101e-25
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -3.6872012915e-19 -> -3.6872175975e-19; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,5.421e+09) [True, False, False] group G          value -1.1511947270e-18 -> -1.1511963579e-18 |dV| 1.631e-24; abserr 5.826e-26 -> 1.095e-25; |dV|/sum 9.72; conv 1>1 pl 0>0 regions 8>11
+  sub 1 z(5.421e+09,1.7126e+09) [True, False, True] group G+r        value +9.6192853981e-19 -> +9.6192853981e-19 |dV| 0.000e+00; abserr 4.841e-26 -> 6.575e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 7>7
+  sub 1 z(5.421e+09,1.7126e+09) [True, False, True] group G-r        value -2.4503002454e-19 -> -2.4503002410e-19 |dV| 4.414e-28; abserr 1.147e-26 -> 2.324e-26; |dV|/sum 0.0127; conv 1>1 pl 0>0 regions 16>13
+  sub 2 z(1.7126e+09,9104.3) [True, True, True] group G+q+r      value +1.0187711847e-19 -> +1.0187711847e-19 |dV| 0.000e+00; abserr 5.354e-27 -> 7.512e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(1.7126e+09,9104.3) [True, True, True] group G+q-r      value -5.2350463719e-20 -> -5.2350463375e-20 |dV| 3.440e-28; abserr 1.241e-27 -> 1.901e-27; |dV|/sum 0.109; conv 1>1 pl 0>1 regions 1>4
+  sub 2 z(1.7126e+09,9104.3) [True, True, True] group G-q+r      value -2.6503903666e-20 -> -2.6503903666e-20 |dV| 0.000e+00; abserr 1.421e-27 -> 1.421e-27; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(1.7126e+09,9104.3) [True, True, True] group G-q-r      value +4.2553331447e-20 -> +4.2553331036e-20 |dV| 4.111e-28; abserr 1.211e-27 -> 7.567e-28; |dV|/sum 0.209; conv 1>1 pl 0>1 regions 1>9
+
+k=316228 q=100000 r=316228 z=1.0080161e+09  Y1 ratio 4.571; total 1.0862131691e-13 -> 1.0862115146e-13; abserr 1.888e-20 -> 1.732e-20
+  numeric_quad -0x1.3acf06e26856bp-58 -> -0x1.3acf06e26856bp-58 (identical True); WKB_Levin 1.0862558337e-13 -> 1.0862541791e-13; numeric_quad abserr 3.878e-27 -> 3.878e-27
+  sub 0 z(1.3706e+13,5.421e+09) [True, False, False] group G          value +1.8233883338e-13 -> +1.8233882534e-13 |dV| 8.040e-21; abserr 9.216e-21 -> 1.083e-20; |dV|/sum 0.401; conv 1>1 pl 0>0 regions 9>11
+  sub 1 z(5.421e+09,1.7126e+09) [True, False, True] group G+r        value -5.0825770070e-14 -> -5.0825927377e-14 |dV| 1.573e-19; abserr 3.304e-21 -> 4.015e-21; |dV|/sum 21.5; conv 1>1 pl 0>0 regions 5>10
+  sub 1 z(5.421e+09,1.7126e+09) [True, False, True] group G-r        value +2.2262614976e-14 -> +2.2262615062e-14 |dV| 8.586e-23; abserr 5.850e-21 -> 1.747e-21; |dV|/sum 0.0113; conv 0>1 pl 0>0 regions 13>14
+  sub 2 z(1.7126e+09,1.008e+09) [True, True, True] group G+q+r      value -4.5690053680e-14 -> -4.5690053680e-14 |dV| 0.000e+00; abserr 2.055e-22 -> 3.893e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(1.7126e+09,1.008e+09) [True, True, True] group G+q-r      value +7.9963628960e-16 -> +7.9963609279e-16 |dV| 1.968e-22; abserr 4.956e-23 -> 5.749e-23; |dV|/sum 1.84; conv 1>1 pl 0>0 regions 1>3
+  sub 2 z(1.7126e+09,1.008e+09) [True, True, True] group G-q+r      value +5.0488722433e-15 -> +5.0488722433e-15 |dV| 0.000e+00; abserr 1.825e-22 -> 1.846e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 2>2
+  sub 2 z(1.7126e+09,1.008e+09) [True, True, True] group G-q-r      value -5.3085497687e-15 -> -5.3085497687e-15 |dV| 0.000e+00; abserr 6.741e-23 -> 1.010e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+k=100000 q=1e+06 r=1e+06 z=1.9180702e+08  Y1 ratio 3.565; total -5.1199866396e-14 -> -5.1199884832e-14; abserr 1.175e-21 -> 3.996e-21
+  numeric_quad -0x1.fceb5a9fa8bc0p-61 -> -0x1.fceb5a9fa8bc0p-61 (identical True); WKB_Levin -5.1199004254e-14 -> -5.1199022689e-14; numeric_quad abserr 2.675e-29 -> 2.675e-29
+  sub 0 z(1.3706e+13,1.7159e+10) [True, False, False] group G          value -5.9457695753e-14 -> -5.9457714189e-14 |dV| 1.844e-20; abserr 1.165e-21 -> 3.810e-21; |dV|/sum 3.71; conv 1>1 pl 0>0 regions 3>6
+  sub 1 z(1.7159e+10,1.9181e+08) [True, True, True] group G+q+r      value +4.7737587953e-16 -> +4.7737587828e-16 |dV| 1.257e-24; abserr 8.198e-25 -> 8.951e-24; |dV|/sum 0.129; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7159e+10,1.9181e+08) [True, True, True] group G+q-r      value +4.0910851876e-15 -> +4.0910851883e-15 |dV| 7.247e-25; abserr 1.893e-24 -> 8.427e-23; |dV|/sum 0.00841; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7159e+10,1.9181e+08) [True, True, True] group G-q+r      value +4.0910851876e-15 -> +4.0910851883e-15 |dV| 7.247e-25; abserr 1.893e-24 -> 8.427e-23; |dV|/sum 0.00841; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7159e+10,1.9181e+08) [True, True, True] group G-q-r      value -4.0085475530e-16 -> -4.0085475530e-16 |dV| 0.000e+00; abserr 5.423e-24 -> 8.937e-24; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+k=1e+06 q=100000 r=1e+06 z=2297505.2  Y1 ratio 3.454; total 6.3586660888e-18 -> 6.3586448689e-18; abserr 4.935e-24 -> 1.209e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin 6.3586660888e-18 -> 6.3586448689e-18; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value +8.5945530610e-18 -> +8.5945530715e-18 |dV| 1.043e-26; abserr 3.154e-24 -> 7.113e-25; |dV|/sum 0.0027; conv 0>1 pl 0>0 regions 9>21
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G+r        value -3.5133817115e-18 -> -3.5133815055e-18 |dV| 2.060e-25; abserr 1.512e-24 -> 3.163e-25; |dV|/sum 0.113; conv 0>1 pl 0>0 regions 17>23
+  sub 1 z(1.7159e+10,1.7126e+09) [True, False, True] group G-r        value +1.2596307916e-18 -> +1.2596093411e-18 |dV| 2.145e-23; abserr 2.576e-25 -> 1.136e-25; |dV|/sum 57.8; conv 0>1 pl 0>0 regions 7>35
+  sub 2 z(1.7126e+09,2.2975e+06) [True, True, True] group G+q+r      value +4.1135782438e-19 -> +4.1135783355e-19 |dV| 9.171e-27; abserr 6.618e-27 -> 3.702e-26; |dV|/sum 0.21; conv 1>1 pl 0>1 regions 1>25
+  sub 2 z(1.7126e+09,2.2975e+06) [True, True, True] group G+q-r      value +3.9926150940e-19 -> +3.9926151041e-19 |dV| 1.014e-27; abserr 8.251e-29 -> 2.025e-26; |dV|/sum 0.0499; conv 1>1 pl 0>1 regions 1>41
+  sub 2 z(1.7126e+09,2.2975e+06) [True, True, True] group G-q+r      value -4.2971688332e-19 -> -4.2971687937e-19 |dV| 3.948e-27; abserr 3.948e-27 -> 1.072e-26; |dV|/sum 0.269; conv 1>1 pl 0>0 regions 1>2
+  sub 2 z(1.7126e+09,2.2975e+06) [True, True, True] group G-q-r      value -3.6303850280e-19 -> -3.6303850280e-19 |dV| 0.000e+00; abserr 8.246e-29 -> 8.246e-29; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+k=316228 q=1e+06 r=1e+06 z=5.7978435e+08  Y1 ratio 1.975; total 1.3993470663e-15 -> 1.3993457563e-15; abserr 5.002e-22 -> 1.633e-22
+  numeric_quad -0x1.d25bf448b0c7bp-59 -> -0x1.d25bf448b0c7bp-59 (identical True); WKB_Levin 1.4025072392e-15 -> 1.4025059291e-15; numeric_quad abserr 1.885e-28 -> 1.885e-28
+  sub 0 z(1.3706e+13,1.7159e+10) [True, False, False] group G          value -1.0749311209e-15 -> -1.0749324521e-15 |dV| 1.331e-21; abserr 4.553e-22 -> 8.172e-23; |dV|/sum 2.48; conv 0>1 pl 0>0 regions 8>17
+  sub 1 z(1.7159e+10,5.7978e+08) [True, True, True] group G+q+r      value +3.9342904855e-16 -> +3.9342906966e-16 |dV| 2.111e-23; abserr 2.443e-24 -> 2.550e-23; |dV|/sum 0.755; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(1.7159e+10,5.7978e+08) [True, True, True] group G+q-r      value +1.1544680983e-15 -> +1.1544680983e-15 |dV| 0.000e+00; abserr 1.840e-23 -> 2.342e-23; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7159e+10,5.7978e+08) [True, True, True] group G-q+r      value +1.1544680983e-15 -> +1.1544680983e-15 |dV| 0.000e+00; abserr 1.840e-23 -> 2.342e-23; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7159e+10,5.7978e+08) [True, True, True] group G-q-r      value -2.2492688508e-16 -> -2.2492688508e-16 |dV| 0.000e+00; abserr 5.578e-24 -> 9.199e-24; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+k=1e+06 q=316228 r=1e+06 z=4.0176304e+09  Y1 ratio 1.414; total 2.0499282444e-14 -> 2.0499275988e-14; abserr 3.058e-21 -> 1.507e-21
+  numeric_quad -0x1.922d3e86e5256p-58 -> -0x1.922d3e86e5256p-58 (identical True); WKB_Levin 2.0504732955e-14 -> 2.0504726499e-14; numeric_quad abserr 4.778e-27 -> 4.778e-27
+  sub 0 z(1.3706e+13,1.7159e+10) [True, False, False] group G          value +7.9510744599e-15 -> +7.9510680686e-15 |dV| 6.391e-21; abserr 1.499e-21 -> 7.826e-22; |dV|/sum 2.8; conv 0>1 pl 0>0 regions 7>15
+  sub 1 z(1.7159e+10,5.421e+09) [True, False, True] group G+r        value +1.2350892465e-14 -> +1.2350892402e-14 |dV| 6.298e-23; abserr 9.369e-22 -> 5.207e-22; |dV|/sum 0.0432; conv 1>1 pl 0>0 regions 8>8
+  sub 1 z(1.7159e+10,5.421e+09) [True, False, True] group G-r        value -1.5216817362e-15 -> -1.5216817375e-15 |dV| 1.339e-24; abserr 5.454e-22 -> 1.218e-22; |dV|/sum 0.00201; conv 0>1 pl 0>0 regions 12>18
+  sub 2 z(5.421e+09,4.0176e+09) [True, True, True] group G+q+r      value +2.0602788259e-16 -> +2.0602788259e-16 |dV| 0.000e+00; abserr 1.065e-23 -> 1.257e-23; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(5.421e+09,4.0176e+09) [True, True, True] group G+q-r      value -6.6545068948e-16 -> -6.6545068948e-16 |dV| 0.000e+00; abserr 1.470e-23 -> 1.548e-23; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(5.421e+09,4.0176e+09) [True, True, True] group G-q+r      value +1.2712732456e-15 -> +1.2712732456e-15 |dV| 0.000e+00; abserr 4.244e-23 -> 4.452e-23; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 2 z(5.421e+09,4.0176e+09) [True, True, True] group G-q-r      value +9.1259732692e-16 -> +9.1259732692e-16 |dV| 0.000e+00; abserr 8.723e-24 -> 9.130e-24; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+k=316228 q=316228 r=316228 z=2.3108353e+09  Y1 ratio 1.391; total 1.4088535442e-13 -> 1.4088539421e-13; abserr 1.946e-20 -> 9.140e-21
+  numeric_quad -0x1.02faa3b1efd5bp-57 -> -0x1.02faa3b1efd5bp-57 (identical True); WKB_Levin 1.4089237406e-13 -> 1.4089241385e-13; numeric_quad abserr 1.601e-26 -> 1.601e-26
+  sub 0 z(1.3706e+13,5.421e+09) [True, False, False] group G          value +1.0855373883e-13 -> +1.0855377864e-13 |dV| 3.981e-20; abserr 1.874e-20 -> 8.687e-21; |dV|/sum 1.45; conv 0>1 pl 0>0 regions 9>13
+  sub 1 z(5.421e+09,2.3108e+09) [True, True, True] group G+q+r      value +4.1262248377e-14 -> +4.1262248377e-14 |dV| 0.000e+00; abserr 9.457e-23 -> 1.027e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,2.3108e+09) [True, True, True] group G+q-r      value -2.5756032288e-15 -> -2.5756032173e-15 |dV| 1.151e-23; abserr 2.027e-22 -> 6.715e-23; |dV|/sum 0.0427; conv 1>1 pl 0>0 regions 1>3
+  sub 1 z(5.421e+09,2.3108e+09) [True, True, True] group G-q+r      value -2.5756032288e-15 -> -2.5756032173e-15 |dV| 1.151e-23; abserr 2.027e-22 -> 6.715e-23; |dV|/sum 0.0427; conv 1>1 pl 0>0 regions 1>3
+  sub 1 z(5.421e+09,2.3108e+09) [True, True, True] group G-q-r      value -3.7724066846e-15 -> -3.7724067299e-15 |dV| 4.530e-23; abserr 2.214e-22 -> 2.152e-22; |dV|/sum 0.104; conv 1>1 pl 0>0 regions 2>3
+
+k=316228 q=316228 r=316228 z=1.0080161e+09  Y1 ratio 1.328; total -1.7428398239e-14 -> -1.7428381977e-14; abserr 7.363e-21 -> 4.882e-21
+  numeric_quad -0x1.3aceed8dc7a1ap-58 -> -0x1.3aceed8dc7a1ap-58 (identical True); WKB_Levin -1.7424131791e-14 -> -1.7424115529e-14; numeric_quad abserr 1.005e-26 -> 1.005e-26
+  sub 0 z(1.3706e+13,5.421e+09) [True, False, False] group G          value -4.4202654738e-14 -> -4.4202637901e-14 |dV| 1.684e-20; abserr 6.838e-21 -> 4.260e-21; |dV|/sum 1.52; conv 0>1 pl 0>0 regions 9>14
+  sub 1 z(5.421e+09,1.008e+09) [True, True, True] group G+q+r      value +2.2355331312e-14 -> +2.2355331312e-14 |dV| 0.000e+00; abserr 1.054e-22 -> 1.177e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,1.008e+09) [True, True, True] group G+q-r      value +3.2314901533e-15 -> +3.2314899323e-15 |dV| 2.210e-22; abserr 1.776e-22 -> 1.778e-22; |dV|/sum 0.622; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(5.421e+09,1.008e+09) [True, True, True] group G-q+r      value +3.2314901533e-15 -> +3.2314899323e-15 |dV| 2.210e-22; abserr 1.776e-22 -> 1.778e-22; |dV|/sum 0.622; conv 1>1 pl 0>0 regions 1>4
+  sub 1 z(5.421e+09,1.008e+09) [True, True, True] group G-q-r      value -2.0397886715e-15 -> -2.0397888037e-15 |dV| 1.323e-22; abserr 6.508e-23 -> 1.480e-22; |dV|/sum 0.621; conv 1>1 pl 0>0 regions 1>8
+
+k=100000 q=100000 r=100000 z=15828.782  Y1 ratio 1.099; total -1.1755805641e-16 -> -1.1755807088e-16; abserr 4.591e-24 -> 8.577e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -1.1755805641e-16 -> -1.1755807088e-16; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7126e+09) [True, False, False] group G          value -1.4365101278e-16 -> -1.4365102727e-16 |dV| 1.449e-23; abserr 3.786e-24 -> 7.458e-24; |dV|/sum 1.29; conv 1>1 pl 0>0 regions 11>11
+  sub 1 z(1.7126e+09,15829) [True, True, True] group G+q+r      value +2.1678780014e-17 -> +2.1678780014e-17 |dV| 0.000e+00; abserr 7.451e-25 -> 9.368e-25; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,15829) [True, True, True] group G+q-r      value +2.9628616994e-18 -> +2.9628616994e-18 |dV| 0.000e+00; abserr 2.385e-26 -> 3.306e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,15829) [True, True, True] group G-q+r      value +2.9628616994e-18 -> +2.9628616994e-18 |dV| 0.000e+00; abserr 2.385e-26 -> 3.306e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(1.7126e+09,15829) [True, True, True] group G-q-r      value -1.5115470407e-18 -> -1.5115470198e-18 |dV| 2.091e-26; abserr 1.249e-26 -> 1.168e-25; |dV|/sum 0.162; conv 1>1 pl 0>0 regions 1>9
+
+k=1e+06 q=100000 r=1e+06 z=3.0469792e+09  Y1 ratio 1.048; total 1.4090046673e-14 -> 1.4090051105e-14; abserr 2.869e-21 -> 1.362e-21
+  numeric_quad -0x1.76ff3e01f07a3p-58 -> -0x1.76ff3e01f07a3p-58 (identical True); WKB_Levin 1.4095128831e-14 -> 1.4095133262e-14; numeric_quad abserr 4.610e-28 -> 4.610e-28
+  sub 0 z(1.3706e+13,1.7159e+10) [True, False, False] group G          value +1.0961052962e-14 -> +1.0961059476e-14 |dV| 6.514e-21; abserr 1.836e-21 -> 1.035e-21; |dV|/sum 2.27; conv 0>1 pl 0>0 regions 9>14
+  sub 1 z(1.7159e+10,3.047e+09) [True, False, True] group G+r        value +3.4758521267e-15 -> +3.4758503974e-15 |dV| 1.729e-21; abserr 7.590e-22 -> 2.952e-22; |dV|/sum 1.64; conv 0>1 pl 0>0 regions 7>11
+  sub 1 z(1.7159e+10,3.047e+09) [True, False, True] group G-r        value -3.4177625790e-16 -> -3.4177661106e-16 |dV| 3.532e-22; abserr 2.737e-22 -> 3.186e-23; |dV|/sum 1.16; conv 0>1 pl 0>0 regions 9>24
+
+k=316228 q=316228 r=316228 z=3.0469792e+09  Y1 ratio 1.028; total 3.8946063250e-14 -> 3.8946017764e-14; abserr 2.957e-20 -> 1.469e-20
+  numeric_quad 0x1.fcec6c814d062p-57 -> 0x1.fcec6c814d062p-57 (identical True); WKB_Levin 3.8932268850e-14 -> 3.8932223364e-14; numeric_quad abserr 3.272e-26 -> 3.272e-26
+  sub 0 z(1.3706e+13,5.421e+09) [True, False, False] group G          value +2.1650854470e-13 -> +2.1650849848e-13 |dV| 4.623e-20; abserr 2.854e-20 -> 1.413e-20; |dV|/sum 1.08; conv 0>1 pl 0>0 regions 8>12
+  sub 1 z(5.421e+09,3.047e+09) [True, True, True] group G+q+r      value -1.2654848810e-13 -> -1.2654848810e-13 |dV| 4.374e-25; abserr 4.810e-23 -> 3.513e-23; |dV|/sum 0.00526; conv 1>1 pl 0>0 regions 1>2
+  sub 1 z(5.421e+09,3.047e+09) [True, True, True] group G+q-r      value -3.1082504219e-14 -> -3.1082504219e-14 |dV| 0.000e+00; abserr 1.198e-22 -> 1.214e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,3.047e+09) [True, True, True] group G-q+r      value -3.1082504219e-14 -> -3.1082504219e-14 |dV| 0.000e+00; abserr 1.198e-22 -> 1.214e-22; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+  sub 1 z(5.421e+09,3.047e+09) [True, True, True] group G-q-r      value +1.1137220681e-14 -> +1.1137221424e-14 |dV| 7.429e-22; abserr 7.429e-22 -> 2.801e-22; |dV|/sum 0.726; conv 1>1 pl 0>0 regions 1>2
+
+k=1e+06 q=1e+06 r=1e+06 z=15920621  Y1 ratio 1.007; total -2.0463796893e-17 -> -2.0463788430e-17; abserr 4.570e-24 -> 3.833e-24
+  numeric_quad 0x0.0p+0 -> 0x0.0p+0 (identical True); WKB_Levin -2.0463796893e-17 -> -2.0463788430e-17; numeric_quad abserr 0.000e+00 -> 0.000e+00
+  sub 0 z(5.463e+13,1.7159e+10) [True, False, False] group G          value -3.7615534341e-17 -> -3.7615526723e-17 |dV| 7.618e-24; abserr 3.862e-24 -> 2.773e-24; |dV|/sum 1.15; conv 0>1 pl 0>0 regions 8>15
+  sub 1 z(1.7159e+10,1.5921e+07) [True, True, True] group G+q+r      value +1.2689846625e-17 -> +1.2689847247e-17 |dV| 6.214e-25; abserr 6.395e-25 -> 5.325e-25; |dV|/sum 0.53; conv 1>1 pl 0>0 regions 1>6
+  sub 1 z(1.7159e+10,1.5921e+07) [True, True, True] group G+q-r      value +2.8463879907e-18 -> +2.8463881024e-18 |dV| 1.118e-25; abserr 2.363e-26 -> 2.501e-25; |dV|/sum 0.408; conv 1>1 pl 0>0 regions 1>14
+  sub 1 z(1.7159e+10,1.5921e+07) [True, True, True] group G-q+r      value +2.8463879907e-18 -> +2.8463881024e-18 |dV| 1.118e-25; abserr 2.363e-26 -> 2.501e-25; |dV|/sum 0.408; conv 1>1 pl 0>0 regions 1>14
+  sub 1 z(1.7159e+10,1.5921e+07) [True, True, True] group G-q-r      value -1.2308851583e-18 -> -1.2308851583e-18 |dV| 0.000e+00; abserr 2.171e-26 -> 2.695e-26; |dV|/sum 0; conv 1>1 pl 0>0 regions 1>1
+
+per violating row, the call with the largest |dV|/(abserr17+abserr18):
+  k=100000 q=100000 r=100000 z=5236.553: row ratio 1.676e+04; call sub 1 [True, True, True] group G+q+r ratio 2.336e+05
+  k=100000 q=100000 r=100000 z=996.42016: row ratio 1.558e+04; call sub 1 [True, True, True] group G+q+r ratio 2.312e+05
+  k=316228 q=316228 r=316228 z=434.65133: row ratio 1.446e+04; call sub 1 [True, True, True] group G+q+r ratio 3.257e+05
+  k=316228 q=316228 r=316228 z=573.11465: row ratio 1.062e+04; call sub 1 [True, True, True] group G+q+r ratio 3.392e+05
+  k=316228 q=316228 r=316228 z=996.42016: row ratio 9250; call sub 1 [True, True, True] group G+q+r ratio 2.686e+05
+  k=316228 q=316228 r=316228 z=5236.553: row ratio 8300; call sub 1 [True, True, True] group G+q+r ratio 1.71e+05
+  k=316228 q=316228 r=316228 z=755.6871: row ratio 8298; call sub 1 [True, True, True] group G+q+r ratio 8.238e+04
+  k=100000 q=100000 r=100000 z=250: row ratio 8177; call sub 1 [True, True, True] group G+q+r ratio 1.368e+05
+  k=316228 q=316228 r=316228 z=6904.7189: row ratio 7092; call sub 1 [True, True, True] group G+q+r ratio 5.132e+04
+  k=100000 q=100000 r=100000 z=3971.4126: row ratio 4738; call sub 1 [True, True, True] group G+q+r ratio 8.1e+04
+  k=1e+06 q=1e+06 r=1e+06 z=1313.8416: row ratio 2817; call sub 1 [True, True, True] group G+q+r ratio 1.196e+04
+  k=100000 q=100000 r=100000 z=6904.7189: row ratio 336.3; call sub 1 [True, True, True] group G+q+r ratio 4303
+  k=1e+06 q=100000 r=1e+06 z=20871.228: row ratio 20.36; call sub 0 [True, False, False] group G ratio 60.94
+  k=100000 q=1e+06 r=1e+06 z=1313.8416: row ratio 16.56; call sub 0 [True, False, False] group G ratio 18.78
+  k=100000 q=1e+06 r=1e+06 z=1002201.4: row ratio 15.62; call sub 0 [True, False, False] group G ratio 18.2
+  k=1e+06 q=100000 r=1e+06 z=1.4546684e+08: row ratio 8.262; call sub 1 [True, False, True] group G-r ratio 84.65
+  k=100000 q=1e+06 r=1e+06 z=48124030: row ratio 5.925; call sub 0 [True, False, False] group G ratio 6.404
+  k=100000 q=316228 r=316228 z=3.334767e+08: row ratio 5.125; call sub 0 [True, False, False] group G ratio 5.343
+  k=316228 q=100000 r=316228 z=9104.2988: row ratio 4.832; call sub 0 [True, False, False] group G ratio 9.722
+  k=316228 q=100000 r=316228 z=1.0080161e+09: row ratio 4.571; call sub 1 [True, False, True] group G+r ratio 21.49
+  k=100000 q=1e+06 r=1e+06 z=1.9180702e+08: row ratio 3.565; call sub 0 [True, False, False] group G ratio 3.706
+  k=1e+06 q=100000 r=1e+06 z=2297505.2: row ratio 3.454; call sub 1 [True, False, True] group G-r ratio 57.79
+  k=316228 q=1e+06 r=1e+06 z=5.7978435e+08: row ratio 1.975; call sub 0 [True, False, False] group G ratio 2.479
+  k=1e+06 q=316228 r=1e+06 z=4.0176304e+09: row ratio 1.414; call sub 0 [True, False, False] group G ratio 2.801
+  k=316228 q=316228 r=316228 z=2.3108353e+09: row ratio 1.391; call sub 0 [True, False, False] group G ratio 1.452
+  k=316228 q=316228 r=316228 z=1.0080161e+09: row ratio 1.328; call sub 0 [True, False, False] group G ratio 1.517
+  k=100000 q=100000 r=100000 z=15828.782: row ratio 1.099; call sub 0 [True, False, False] group G ratio 1.289
+  k=1e+06 q=100000 r=1e+06 z=3.0469792e+09: row ratio 1.048; call sub 0 [True, False, False] group G ratio 2.269
+  k=316228 q=316228 r=316228 z=3.0469792e+09: row ratio 1.028; call sub 0 [True, False, False] group G ratio 1.083
+  k=1e+06 q=1e+06 r=1e+06 z=15920621: row ratio 1.007; call sub 0 [True, False, False] group G ratio 1.148

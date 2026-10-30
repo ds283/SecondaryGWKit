@@ -1,0 +1,141 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07-leaves/scripts/endnodes.py",
+  "script_sha256": "b85a78b890886ead5aa98ffa9b5c5738d6a68129ed9abd90edb223cdf0ddb5fa",
+  "scripts_sha256": {
+   "endnodes.py": "b85a78b890886ead5aa98ffa9b5c5738d6a68129ed9abd90edb223cdf0ddb5fa",
+   "lc.py": "0cb32bb4e1d62d37f8875e9355d270cbf365a7ba34c1370329ac5f05cc0e01a7",
+   "lg_capture.py": "45e3bc2ce89b7792d9752b973ca2ea388ce4d56fd904427488d38dc85217a420",
+   "q12_outside.py": "28b85dbe730d265da906a4707154e18355bf910f71935c02caa2b85ecc005d67",
+   "q3_decompose.py": "2a4106d93df518d07b4c9e381cd1e4ffecbed43267c8c154b81e0ec66a3d725c",
+   "q4_window.py": "32887fd8f477296790c1ce8f7b50684bd03feec391fdc066abdfb8b2197b540a",
+   "tables.py": "1403202e6cc6c1164ecac33bb5928120f781c4e05564bbc73495e358478661cc"
+  },
+  "base_sha": "e5764a6708757cb11704b95bcd66825baab4ba29",
+  "worktree_head": "e5764a6708757cb11704b95bcd66825baab4ba29",
+  "worktree_status": [
+   " M AdaptiveLevin/levin_quadrature.py",
+   " M AdaptiveLevin/tests/test_levin_quadrature.py",
+   " M ComputeTargets/QuadSourceIntegral.py"
+  ],
+  "patch_sha256": "722c7a477f8038946dc3bfb18ed3bbc41b3a574317022012aecc28203207e365",
+  "levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-07leaves/AdaptiveLevin/levin_quadrature.py",
+  "levin_quadrature_sha256": "4e4c22530b91f46ba4f68ec8e534261f89926614dfa4d04757d8496456916495",
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-10-29T20:00:33.745936+00:00",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "mp_dps": 50
+ },
+ "files": {
+  "q3_c1e6w0.json": {
+   "residual<=10floor | computed end nodes do not tile | halves Levin": {
+    "n": 17,
+    "max_residual": 2.032616493196672e-16,
+    "parent_ends_off": 6
+   },
+   "residual<=10floor | computed end nodes tile | halves Levin": {
+    "n": 120,
+    "max_residual": 1.2197274440461925e-18,
+    "parent_ends_off": 110
+   },
+   "residual>10floor | computed end nodes do not tile | halves Levin": {
+    "n": 301,
+    "max_residual": 3.00967746818398e-16,
+    "parent_ends_off": 181
+   },
+   "residual<=10floor | computed end nodes do not tile | halves CC": {
+    "n": 4,
+    "max_residual": 5.37823569859118e-18,
+    "parent_ends_off": 1
+   },
+   "residual<=10floor | computed end nodes tile | halves CC": {
+    "n": 4,
+    "max_residual": 1.870248747537495e-17,
+    "parent_ends_off": 4
+   },
+   "residual>10floor | computed end nodes tile | halves CC": {
+    "n": 90,
+    "max_residual": 1.553119612085485e-16,
+    "parent_ends_off": 89
+   },
+   "residual>10floor | computed end nodes do not tile | halves CC": {
+    "n": 95,
+    "max_residual": 2.7656218650915984e-16,
+    "parent_ends_off": 27
+   },
+   "residual>10floor | computed end nodes tile | halves Levin": {
+    "n": 1,
+    "max_residual": 2.2278321765503706e-16,
+    "parent_ends_off": 0
+   }
+  },
+  "q3_c1e8w0.json": {
+   "residual<=10floor | computed end nodes do not tile | halves Levin": {
+    "n": 4,
+    "max_residual": 7.477138343262013e-17,
+    "parent_ends_off": 1
+   },
+   "residual<=10floor | computed end nodes tile | halves Levin": {
+    "n": 51,
+    "max_residual": 1.0452386569118066e-18,
+    "parent_ends_off": 37
+   },
+   "residual>10floor | computed end nodes do not tile | halves Levin": {
+    "n": 60,
+    "max_residual": 1.991702287215227e-16,
+    "parent_ends_off": 28
+   },
+   "residual>10floor | computed end nodes tile | halves Levin": {
+    "n": 1,
+    "max_residual": 1.6883526572793704e-16,
+    "parent_ends_off": 1
+   },
+   "residual>10floor | computed end nodes tile | halves CC": {
+    "n": 4,
+    "max_residual": 4.497702598272972e-17,
+    "parent_ends_off": 1
+   },
+   "residual>10floor | computed end nodes do not tile | halves CC": {
+    "n": 8,
+    "max_residual": 2.3928341946755083e-16,
+    "parent_ends_off": 5
+   }
+  },
+  "q3_c1e8w1.json": {
+   "residual<=10floor | computed end nodes do not tile | halves Levin": {
+    "n": 11,
+    "max_residual": 6.776593126790444e-17,
+    "parent_ends_off": 5
+   },
+   "residual<=10floor | computed end nodes tile | halves Levin": {
+    "n": 107,
+    "max_residual": 1.602162819731509e-18,
+    "parent_ends_off": 91
+   },
+   "residual>10floor | computed end nodes do not tile | halves Levin": {
+    "n": 64,
+    "max_residual": 2.036453552447734e-16,
+    "parent_ends_off": 30
+   },
+   "residual>10floor | computed end nodes tile | halves CC": {
+    "n": 5,
+    "max_residual": 2.5288168640277137e-17,
+    "parent_ends_off": 0
+   },
+   "residual>10floor | computed end nodes do not tile | halves CC": {
+    "n": 7,
+    "max_residual": 1.3010510773120779e-16,
+    "parent_ends_off": 3
+   },
+   "residual>10floor | computed end nodes tile | halves Levin": {
+    "n": 1,
+    "max_residual": 1.7906784724724262e-16,
+    "parent_ends_off": 0
+   }
+  }
+ }
+}

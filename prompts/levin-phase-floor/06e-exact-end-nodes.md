@@ -48,12 +48,11 @@ The records of §4 and §5 are committed on the laptop afterwards, in 06e's reco
      same float), the step-(4) residual, the floor-limited test and the trust check.
 3. `prompts/levin-phase-floor/06d-cc-roundoff-floor.md` §5 and `logs/06d-cc-roundoff-floor.md`, for
    the node term this prompt tightens and the tests it must keep passing.
-4. The records this prompt rests on, on the laptop (uncommitted until 06c's records commit, which
-   carries them):
-   - `var/levin-phase-floor-07-leaves/out/tables.md`: the leaf study of 07's stuck cases;
-   - `var/levin-phase-floor-06c/depth20-tiling/results.md` and its `orchestrator_check/README.md`:
+4. The records this prompt rests on, committed with 06c's records:
+   - `docs/levin-phase-floor/06e/investigations/07-leaves/out/tables.md`: the leaf study of 07's stuck cases;
+   - `docs/levin-phase-floor/06c/depth20-tiling/results.md` and its `orchestrator_check/README.md`:
      the production depth-20 calls, the end nodes pinned by hand, and three references;
-   - `var/levin-phase-floor-floor-breakdown/tables.md`: how 06d's floor divides between its terms.
+   - `docs/levin-phase-floor/06e/investigations/floor-breakdown/tables.md`: how 06d's floor divides between its terms.
 
 **Gate:**
 - 06c's records commit has landed (the board's 06c row is ✅);

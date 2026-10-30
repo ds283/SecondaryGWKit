@@ -2399,3 +2399,74 @@ no **What shipped** section, and its deviation 19 is unclassified. The laptop re
 - **W2's failure** is opened as `[06b-moved-calls-declare-less-than-their-error]`. W4's three calls
   narrow `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]` rather than opening a
   duplicate. The agents' other proposals (C3, C4, N1, N2) are not opened.
+
+## 6c. Global error control, with 06d's Clenshaw–Curtis floor
+
+*Prompts 06c and 06d: the code on the laptop (06c `ad9a5f4`, 06d `3d70db9`), the rehearsals and
+the census on the Mac Studio on 2026-10-29, on the two together (06c's orchestrator note §B.6). The
+records are under [`06c/`](06c/); what stays on the Mac Studio is in
+[`06c/KEPT_ON_MAC_STUDIO.md`](06c/KEPT_ON_MAC_STUDIO.md).*
+
+### 6c.1 The code
+
+06c: `_adaptive_levin` keeps every leaf of its partition and stops when
+$\sum e_i \le \max(\texttt{atol}, \texttt{rtol}|\sum v_i|)$, bisecting the refinable leaf with the
+largest error, with a trust check one level down when the budget passes. 06d: the Clenshaw–Curtis
+fallback's round-off floor is derived from the rule, $\phi_{\rm CC}$ = sum, argument and node terms,
+with no $1/\theta'$, and the depth-18 log is guarded. The tests, breakages and LiouvilleGreen draws
+are in [`logs/06c-global-error-control.md`](../../prompts/levin-phase-floor/logs/06c-global-error-control.md)
+and [`logs/06d-cc-roundoff-floor.md`](../../prompts/levin-phase-floor/logs/06d-cc-roundoff-floor.md),
+with the draws' records in [`06c/calibration/`](06c/calibration/) and
+[`06d/calibration/`](06d/calibration/).
+
+### 6c.2 Rehearsals R17 and R18 (prompt 06c §4)
+
+R17 `levin-phase-floor-06c-r17-parent-20261029T123720` at `fef401c` (06b's code) and R18
+`levin-phase-floor-06c-r18-global-20261029T124058` at `e5764a6`, both `done`, both fingerprinted
+`1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`. Outside `QuadSourceIntegral`, 7
+value tables, 360,462 rows, bit-identical. Inside, of 864 rows, `total` is bit-identical in 295;
+`total_converged` 516 → 863; regions 13,577 → 34,892; maximum row depth 12 → 20.
+- **Y1 fails** on 30 of 838 rows. The 12 worst, all equilateral, hold a stationary point of
+  `G+q+r` at $z \approx 10211$ ($c_s = 1/2$), where one code or the other is wrong by
+  $4.5\times10^3$–$1.6\times10^6$× its declared error while reporting converged; 07's. On the other
+  18, against the orchestrator's references, R18 is within its error (0.006–0.37) and R17 is not
+  (1.5–68×) ([`06c/y1-references/`](06c/y1-references/)).
+- The agent's full record: [`06c/rehearsal/verification.md`](06c/rehearsal/verification.md).
+
+### 6c.3 The census: 06b's census re-run at the code (prompt 06c §5)
+
+`levin-phase-floor-06c-census-20261029T130214`: 18,560 of 18,560 units `done`, none in error, in
+2 h 30 min against 06b's 51 min; nine units ran past 300 s unmarked.
+- **X0 holds** (06b's units reproduced bit for bit at the parent; $g$ deterministic). **X3 holds.**
+- **X1 fails:** 22 of 23 calls within their error; `g-1e-7-0-14127` call 3 at 1.375×, a 7-leaf
+  answer the trust check passed, its error reachable by refinement.
+- **X2 fails:** 53 of 20,425 and 127 of 22,442 of 06b's budget misses stay unconverged, most at
+  depth 20.
+- **X4 fails:** 263 and 302 of 8,092 rows. On the four worst rows' calls, referenced, 06b's error
+  is 116–445× its declared error, 06c's 0.11–0.61×.
+- **X5 fails:** 109 and 153 moved calls reach depth 20. On their last five levels the residual
+  dominates and sits a median $2\times10^4$ above the floor.
+- The agent's full record: [`06c/census/verification.md`](06c/census/verification.md).
+
+### 6c.4 The depth-20 calls: the Chebyshev end nodes (2026-10-29)
+
+On the Mac Studio, a check of X5's 262 depth-20 calls ([`06c/depth20-tiling/results.md`](06c/depth20-tiling/results.md),
+its orchestrator's re-check in [`orchestrator_check/`](06c/depth20-tiling/orchestrator_check/)):
+over their last five levels, 1,179 of the 1,222 Levin levels whose residual exceeds 10× its floor
+have end nodes that do not tile, against a base rate of 93% over all levels. On 30 sampled calls,
+pinning only the end nodes to the span brings 127 of 138 flagged levels within 10× of the floor;
+maximum depth 20 → 1–7 on 29, regions 10,181 → 274, converged 1 → 29. Honesty after pinning is
+shown on one call (0.998 of its declared error); sample 25's references do not settle at the pinned
+error. This is prompt 06e's case (`[06c-chebyshev-end-nodes-miss-the-span]`).
+
+### 6c.5 The review, and the user's rulings
+
+The Mac Studio orchestrator's review ([`06c/review.md`](06c/review.md)) passed all ten checks,
+re-scoring Y1 and X1–X5 with its own readers. It corrected the census agent's reading of X1. The
+user, 2026-10-30, on closing the four header issues of 06c and 06d despite the failed predictions:
+*"If there's a real, substantive reason to keep them open, I don't mind. If this is just an
+argument about words, I don't care."* None of the failures is any of the four (the board's
+Decisions, **06c Part B lands**), and they close:
+`[07-per-region-acceptance-misses-a-cancelling-total]`,
+`[06b-resolved-region-keeps-a-floor-bisection-would-cut]`,
+`[07-cc-solves-use-the-levin-roundoff-floor]` and `[07-depth18-diagnostic-divides-by-zero]`.

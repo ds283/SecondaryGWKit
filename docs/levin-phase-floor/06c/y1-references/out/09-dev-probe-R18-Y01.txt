@@ -1,0 +1,16 @@
+# Y1 references: replay and phase probe in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:22:19Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/probe.py sha256 b811ff7518055827a8ca73525420d5f3f59a6611fa1c4122bdca62741da076f6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R18-00.pkl sha256 8ee4711d994799cc0f6d47ece49b2bcd5df1b6a87cb509ce8cbbacf9f6c37254
+# input inputs/Y01-R18-01.pkl sha256 047df0a1a743b3c7e74a1c67b5ee9e9e401b9bb0bce0ef1dfb90d76529976b70
+# input inputs/Y01-R18-04.pkl sha256 8d84cd9751c24aeece645720ac22c9d5b6786a30fc20d6b11b6bcdf104046979
+# AdaptiveLevin.levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+Y01 0 G      replay=capture True =store True reg/depth True  span [21.26129,31.63160]  osc -4.307  int|th'|/2pi 4.307  min|th'| 0.0008484 at z=5.463e+13 (max 27.06, signchg 0)  node 17.7 us  replay 0.11 s
+Y01 1 G+q+r  replay=capture True =store True reg/depth True  span [8.56361,21.26129]  osc 1.994e+04  int|th'|/2pi 7.881e+04  min|th'| 4.058 at z=1.7126e+09 (max 6.962e+05, signchg 1)  node 70.8 us  replay 0.02 s
+Y01 4 G-q-r  replay=capture True =store True reg/depth True  span [8.56361,21.26129]  osc -2.486e+06  int|th'|/2pi 2.486e+06  min|th'| 58.18 at z=1.7126e+09 (max 1.308e+07, signchg 0)  node 71.0 us  replay 0.27 s
+calls 3; every replay reproduces capture and store bit for bit: True

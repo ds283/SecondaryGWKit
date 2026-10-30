@@ -1,0 +1,25 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/inventory.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T21:53:47Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29
+# tree g status --short: []
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts
+# ----
+# depth20-tiling: inventory of the depth-20 calls
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T21:53:47Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script inventory.py sha256 30103a3bf5acb93630f583bf328fffe3e42b124b9490a3bfd043a37b4edcf67c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/out/deep_lines_06c.json sha256 79bb9348f3fb5bad23ffda199fbb4088108e564c08c7c2749366b6b5f52add9a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+calls 262; units 144
+calls by (rtol, block):
+  1e-7: G+q+r 6, G+q-r 4, G-q+r 2, G-q-r 2, J1 14, J2 8, J3 14, J4 12, Y1 14, Y2 12, Y3 8, Y4 13
+  1e-8: G+q+r 5, G+q-r 3, G-q+r 2, G-q-r 2, J1 26, J2 13, J3 12, J4 19, Y1 23, Y2 9, Y3 13, Y4 26
+  other blocks: {}
+unit wall_s over the calls: min 1.8 median 9.1 max 1184.7
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/inventory.json sha256 208b72c2749b955cd2aada45cc0dd73d08f5ed5dfa4c81fc75ccdbc1ffeb1889
+# ----
+# end 2026-10-29T21:53:48Z
+# exit 0

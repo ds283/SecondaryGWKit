@@ -1,0 +1,55 @@
+$ /bin/bash -c $'cat $R/status.json; echo; ls -la $R | head -5; du -sh $R; wc -l < $R/checkpoint.jsonl; echo "stderr bytes $(wc -c < $R/stderr.log)"; tail -c 600 $R/stdout.log; /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -c "\nimport json,collections\nst=collections.Counter(); sha=collections.Counter(); heads=collections.Counter(); foreign=0; maxw=0\nfor l in open(\\"$R/checkpoint.jsonl\\"):\n    r=json.loads(l); d=r[\\"data\\"]; st[(d[\\"rtol\\"],d[\\"status\\"])]+=1; heads[(d[\\"tree_head\\"],d[\\"tree_status_short\\"])]+=1; foreign+=len(d[\\"modules\\"][\\"foreign\\"]); sha[r.get(\\"script_sha256\\") or r.get(\\"script\\",{}).get(\\"sha256\\") if isinstance(r.get(\\"script\\"),dict) else r.get(\\"script_sha256\\")]+=1; maxw=max(maxw,d[\\"wall_s\\"] or 0)\nprint(st); print(heads); print(\\"foreign modules\\",foreign); print(\\"script sha\\",sha); print(\\"max wall\\",maxw)\nprint(sorted(r.keys()))\n"; for f in $R/worker_*_bye.json; do grep -h ray_initialized $f; done | sort | uniq -c'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:33:07Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-29T15:32:44+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 1756,
+  "stage": "18560 units recorded; last g-1e-8-2-35099 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+total 1300048
+drwxr-xr-x 151 ds283 staff      4832 Oct 29 15:32 .
+drwxr-xr-x  54 ds283 staff      1728 Oct 29 13:02 ..
+-rw-r--r--   1 ds283 staff 774763232 Oct 29 15:32 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff    258463 Oct 29 13:41 events_1e-7-k0_101.jsonl
+1.3G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214
+18560
+stderr bytes 0
+
+# worker 1e-8-k0_202 pid 22764 (1160 units)
+# worker 1e-8-k1_102 pid 22765 (1160 units)
+# worker 1e-8-k1_301 pid 22766 (1160 units)
+# worker 1e-8-k2_2 pid 22767 (1160 units)
+# worker 1e-8-k2_302 pid 22768 (1160 units)
+# worker 1e-8-k0_202 exit 0
+# worker 1e-8-k3_1 pid 36014 (1160 units)
+# worker 1e-8-k2_2 exit 0
+# worker 1e-8-k3_201 pid 37800 (1160 units)
+# worker 1e-8-k1_301 exit 0
+# worker 1e-8-k1_102 exit 0
+# worker 1e-8-k0_101 exit 0
+# worker 1e-8-k3_201 exit 0
+# worker 1e-8-k3_1 exit 0
+# worker 1e-8-k2_302 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+Counter({('1e-7', 'done'): 9280, ('1e-8', 'done'): 9280})
+Counter({('e5764a6708757cb11704b95bcd66825baab4ba29', ''): 18560})
+foreign modules 0
+script sha Counter({'ae11f6bc466062d297a2abd09799af86f98b91e64234593b699c6e9c2995c81f': 18560})
+max wall 1184.7445797501132
+['data', 'git_dirty', 'git_head', 'recorded', 'script_sha256', 'unit']
+     16  "ray_initialized": false,
+# ----
+# end 2026-10-29T15:33:12Z
+# exit 0

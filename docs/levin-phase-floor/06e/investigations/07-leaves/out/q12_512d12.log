@@ -1,0 +1,2 @@
+c1e6w0 512pi d12: 488.2s abserr 3.81e-11 true -2.15e-16 window 1.36e-12 outside 3.68e-11 (true sum -2.14e-16) comps floor(phase_limited)=1.5e-13, floor=8e-13, nested_pair=3.6e-11
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07-leaves/out/q12_c1e6w0_512d12.json

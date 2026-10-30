@@ -1,0 +1,104 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x4_detail.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:44:23Z
+# ----
+# levin-phase-floor 06c: X4's violating rows, call by call (descriptive)
+# written 2026-10-29T15:44:23Z on mps026298.phys.susx.ac.uk
+# script x4_detail.py sha256 54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+
+== 1e-7: violating rows 263
+   band: low -> 4
+   band: mid -> 80
+   band: seam -> 179
+   largest-moving call kind: analytic -> 214
+   largest-moving call kind: group -> 49
+   largest-moving call violates the call-level test: False -> 214
+   largest-moving call violates the call-level test: True -> 49
+   largest-moving call: 06b converged: False -> 72
+   largest-moving call: 06b converged: True -> 191
+   largest-moving call: 06b max_depth: False -> 263
+   largest-moving call: dvalue share of dtotal >= 0.5: False -> 153
+   largest-moving call: dvalue share of dtotal >= 0.5: True -> 110
+   largest-moving call: g converged: False -> 1
+   largest-moving call: g converged: True -> 262
+   most-violating call kind: group -> 263
+   most-violating call: 06b converged: False -> 48
+   most-violating call: 06b converged: True -> 215
+   most-violating call: g converged: True -> 263
+   rows with any call violating the call-level test: True -> 263
+   the ten worst rows: (row ratio, row, kind, call, label, call ratio, g value, g abserr, 06b value, 06b abserr, conv g, conv 06b, depth g, depth 06b)
+      29.9 0-37218 analytic 19 analytic J4 7.68e-06 -0x1.f6f685bdb5bd6p-34 0x1.9356110d7a5fap-60 -0x1.f6f685bdb5579p-34 0x1.95a7147ad23d9p-60 True True 5 1
+      28.9 0-36814 analytic 14 analytic Y1 0.0633 0x1.842d387c45c2ep-34 0x1.37d2190e7bf66p-62 0x1.842d39c532ed6p-34 0x1.435af83dff800p-54 True False 5 0
+      28.4 0-33975 group 0 in (1.6391e+16, 5.406e+09), regime G, group G 52.6 -0x1.5a7ae99f9e8eep-73 0x1.e31b4792e8845p-97 -0x1.5a7a4506f274dp-73 0x1.3ddea38f72529p-97 True True 8 4
+      26.3 3-34253 analytic 7 analytic J1 0.00381 0x1.390e6fe8ebb98p-40 0x1.debce16682eadp-74 0x1.390e6febc7efep-40 0x1.7754a8625e620p-63 True False 6 0
+      24.8 2-21568 analytic 20 analytic Y4 8.58e-06 0x1.2b55f786c1521p-32 0x1.c74abb8a2624fp-71 0x1.2b55f786c1520p-32 0x1.8e756c2949db0p-68 True True 2 1
+      23.9 3-1115 group 0 in (3.1219e+15, 1.709e+09), regime G, group G 28.4 0x1.caa2a4111f653p-70 0x1.5c07d1606641ap-93 0x1.caa138c5d1dd4p-70 0x1.430f32363a731p-91 True False 8 4
+      18.5 3-1090 analytic 7 analytic J1 0.00329 0x1.3a0626b9359c2p-40 0x1.7bc7e253c8577p-79 0x1.3a0626b9352cap-40 0x1.0274b318daae2p-73 True True 3 0
+      17.4 3-936 analytic 11 analytic J3 0.00785 -0x1.61cef88bdd82bp-39 0x1.4628840e06536p-79 -0x1.61cef88bdd6d5p-39 0x1.2b8f6269c3f60p-76 True True 4 0
+      14.3 0-12695 group 0 n (1.6391e+16, 5.2861e+10), regime G, group G 16.4 -0x1.1a1b7c7616a55p-79 0x1.7087000069326p-103 -0x1.1a1bb68a2081cp-79 0x1.0d2d5981f3ae1p-102 True False 7 3
+      14.2 0-34034 analytic 7 analytic J2 1.58e-05 0x1.9d5c26057c3b9p-32 0x1.33b2aeba19e0ep-67 0x1.9d5c26057c3b4p-32 0x1.348562c674d1fp-67 True True 2 1
+   the most-violating call of each of the ten worst rows: (row, call, label, call ratio)
+      0-37218 0 n (1.6391e+16, 1.6711e+10), regime G, group G 37.1
+      0-36814 0 n (1.6391e+16, 1.6711e+10), regime G, group G 36.8
+      0-33975 0 in (1.6391e+16, 5.406e+09), regime G, group G 52.6
+      3-34253 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 262
+      2-21568 0 n (3.1219e+15, 5.2861e+10), regime G, group G 25.5
+      3-1115 0 in (3.1219e+15, 1.709e+09), regime G, group G 28.4
+      3-1090 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 139
+      3-936 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 104
+      0-12695 0 n (1.6391e+16, 5.2861e+10), regime G, group G 16.4
+      0-34034 0 n (1.6391e+16, 5.2861e+10), regime G, group G 16.2
+
+== 1e-8: violating rows 302
+   band: low -> 6
+   band: mid -> 106
+   band: seam -> 190
+   largest-moving call kind: analytic -> 270
+   largest-moving call kind: group -> 32
+   largest-moving call violates the call-level test: False -> 270
+   largest-moving call violates the call-level test: True -> 32
+   largest-moving call: 06b converged: False -> 72
+   largest-moving call: 06b converged: True -> 230
+   largest-moving call: 06b max_depth: False -> 302
+   largest-moving call: dvalue share of dtotal >= 0.5: False -> 133
+   largest-moving call: dvalue share of dtotal >= 0.5: True -> 169
+   largest-moving call: g converged: False -> 1
+   largest-moving call: g converged: True -> 301
+   most-violating call kind: group -> 302
+   most-violating call: 06b converged: False -> 62
+   most-violating call: 06b converged: True -> 240
+   most-violating call: g converged: True -> 302
+   rows with any call violating the call-level test: True -> 302
+   the ten worst rows: (row ratio, row, kind, call, label, call ratio, g value, g abserr, 06b value, 06b abserr, conv g, conv 06b, depth g, depth 06b)
+      71.5 2-21568 analytic 20 analytic Y4 8.58e-06 0x1.2b55f786c1521p-32 0x1.c74abb8a2624fp-71 0x1.2b55f786c1520p-32 0x1.8e756c2949db0p-68 True True 2 1
+      52.6 0-12976 analytic 16 analytic Y2 1e-07 -0x1.8561dde30f3c1p-34 0x1.c7b4b10ff5719p-61 -0x1.8561dde30f3cdp-34 0x1.c8a09056d56c2p-61 True True 4 1
+      41.5 3-994 analytic 14 analytic Y1 0.0673 -0x1.87f3e2ad8926fp-38 0x1.bc8a78d36b9d0p-77 -0x1.87f3e2ad89fb3p-38 0x1.1b5b0c5292450p-75 True True 2 0
+      35.6 0-1955 analytic 13 analytic J1 3.25e-05 0x1.3596dc936937dp-42 0x1.c03093a6e51d6p-76 0x1.3596dcb5c9e91p-42 0x1.028a308e831eep-54 True False 9 0
+      33.7 3-1253 group 0 n (1.6391e+16, 1.6711e+10), regime G, group G 40.6 -0x1.43aad06503ca9p-72 0x1.5977b6dfc476fp-99 -0x1.43aad9a455ff2p-72 0x1.e522be88415ccp-101 True True 8 4
+      33.7 3-38023 analytic 5 analytic J1 1.63e-05 -0x1.9d51cc3708029p-34 0x1.67302e0d56bd1p-63 -0x1.9d51cc3707e85p-34 0x1.ad4dce3bb4111p-63 True True 7 1
+      32.8 3-34253 analytic 11 analytic J3 0.00711 -0x1.603bfd8f5cf05p-39 0x1.c2d758e3ee203p-73 -0x1.603bfd8cb0fa0p-39 0x1.7754a86c5dc8cp-63 True False 1 0
+      25.4 0-33538 analytic 6 analytic Y1 0.0333 -0x1.284e92f48922bp-42 0x1.ca688ccc3e40ap-78 -0x1.284e92f488086p-42 0x1.1c483daa8ed1ep-80 True True 7 0
+      23 3-1090 analytic 7 analytic J1 0.00329 0x1.3a0626b9359c2p-40 0x1.7bc7e253c8577p-79 0x1.3a0626b9352cap-40 0x1.0274b318daae2p-73 True True 3 0
+      21.4 3-936 analytic 11 analytic J3 0.00785 -0x1.61cef88bdd82bp-39 0x1.4628840e06536p-79 -0x1.61cef88bdd6d5p-39 0x1.2b8f6269c3f60p-76 True True 4 0
+   the most-violating call of each of the ten worst rows: (row, call, label, call ratio)
+      2-21568 0 n (3.1219e+15, 5.2861e+10), regime G, group G 77.3
+      0-12976 0 n (1.6391e+16, 5.2861e+10), regime G, group G 132
+      3-994 0 n (3.1219e+15, 5.2861e+10), regime G, group G 48.8
+      0-1955 0 n (1.6391e+16, 1.6721e+11), regime G, group G 52.9
+      3-1253 0 n (1.6391e+16, 1.6711e+10), regime G, group G 40.6
+      3-38023 0 n (1.6391e+16, 1.6711e+10), regime G, group G 40.7
+      3-34253 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 262
+      0-33538 0 in (3.1219e+15, 5.169e+11), regime G, group G 32.7
+      3-1090 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 212
+      3-936 1 (1.6721e+11, 5.406e+09), regime Gr, group G+r 135
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/x4_worst_calls.json sha256 ccd04cba58190f5d4e56488130411a5999f762fb312ed5ef6d0033d2f180b1bd
+# ----
+# end 2026-10-29T15:44:37Z
+# exit 0

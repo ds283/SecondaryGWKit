@@ -1,0 +1,31 @@
+orchestrator re-derivation of each row's verdict from results.json (exact rationals); scale = 1+z_response
+Y01 k=1e+05 q=1e+05 z=5236.55 moved 3 ref'd 3 consistency 1.2e-09  R17 2.16/2.16  R18 2.51e+04/2.51e+04  G+q+r 2.27/2.44e+05  -> neither   agent: neither  OK
+Y02 k=1e+05 q=1e+05 z=996.42 moved 5 ref'd 5 consistency 1.1e-09  R17 2.1/2.1  R18 2.37e+04/2.37e+04  G+q+r 0.0775/2.64e+05  -> neither   agent: neither  OK
+Y03 k=3.16e+05 q=3.16e+05 z=434.651 moved 5 ref'd 2 consistency 3.1e-10  R17 0.7/0.746  R18 2.55e+04/2.55e+04  G+q+r 0.433/5.97e+05  -> R17 within   agent: R17 within  OK
+Y04 k=3.16e+05 q=3.16e+05 z=573.115 moved 5 ref'd 2 consistency 2.3e-09  R17 0.238/0.285  R18 1.98e+04/1.98e+04  G+q+r 1.69/3.96e+05  -> R17 within   agent: R17 within  OK
+Y05 k=3.16e+05 q=3.16e+05 z=996.42 moved 5 ref'd 2 consistency 1.6e-09  R17 0.0104/0.0211  R18 1.53e+04/1.53e+04  G+q+r 10.9/2.83e+05  -> R17 within   agent: R17 within  OK
+Y06 k=3.16e+05 q=3.16e+05 z=5236.55 moved 5 ref'd 5 consistency 6.3e-10  R17 0.481/0.481  R18 1.45e+04/1.45e+04  G+q+r 0.551/1.86e+05  -> R17 within   agent: R17 within  OK
+Y07 k=3.16e+05 q=3.16e+05 z=755.687 moved 5 ref'd 2 consistency 4e-10  R17 0.0754/0.106  R18 1.83e+04/1.83e+04  G+q+r 0.601/1.01e+05  -> R17 within   agent: R17 within  OK
+Y08 k=1e+05 q=1e+05 z=250 moved 3 ref'd 3 consistency 1e-09  R17 3.4e+04/3.4e+04  R18 0.105/0.105  G+q+r 1.62e+06/0.283  -> R18 within   agent: R18 within  OK
+Y09 k=3.16e+05 q=3.16e+05 z=6904.72 moved 5 ref'd 5 consistency 6.6e-10  R17 0.0495/0.0495  R18 1.18e+04/1.18e+04  G+q+r 0.723/8.58e+04  -> R17 within   agent: R17 within  OK
+Y10 k=1e+05 q=1e+05 z=3971.41 moved 5 ref'd 5 consistency 2.5e-10  R17 1.41/1.41  R18 8.19e+03/8.19e+03  G+q+r 1.06/8.87e+04  -> neither   agent: neither  OK
+Y11 k=1e+06 q=1e+06 z=1313.84 moved 5 ref'd 2 consistency 3e-10  R17 4.2e+03/4.2e+03  R18 0.392/0.299  G+q+r 1.6e+04/0.403  -> R18 within   agent: R18 within  OK
+Y12 k=1e+05 q=1e+05 z=6904.72 moved 5 ref'd 5 consistency 6.3e-10  R17 3.2/3.2  R18 443/443  G+q+r 3.5/4.49e+03  -> neither   agent: neither  OK
+Y13 k=1e+06 q=1e+05 z=20871.2 moved 7 ref'd 7 consistency 2.9e-10  R17 25.8/25.8  R18 0.0454/0.0454  G+q+r 2.87/1.19  -> R18 within   agent: R18 within  OK
+Y14 k=1e+05 q=1e+06 z=1313.84 moved 5 ref'd 3 consistency 4.9e-10  R17 67.6/67.6  R18 0.369/0.367  G+q+r -  -> R18 within   agent: R18 within  OK
+Y15 k=1e+05 q=1e+06 z=1.0022e+06 moved 5 ref'd 5 consistency 1.2e-09  R17 49.3/49.3  R18 0.301/0.301  G+q+r 8.7/0.0109  -> R18 within   agent: R18 within  OK
+Y16 k=1e+06 q=1e+05 z=1.45467e+08 moved 7 ref'd 7 consistency 3.7e-10  R17 13/13  R18 0.0331/0.0331  G+q+r 7.36/1.74  -> R18 within   agent: R18 within  OK
+Y17 k=1e+05 q=1e+06 z=4.8124e+07 moved 5 ref'd 5 consistency 1.3e-09  R17 13/13  R18 0.196/0.196  G+q+r 0.668/1.04  -> R18 within   agent: R18 within  OK
+Y18 k=1e+05 q=3.16e+05 z=3.33477e+08 moved 5 ref'd 5 consistency 1.3e-09  R17 28.4/28.4  R18 0.361/0.361  G+q+r 0.057/0.239  -> R18 within   agent: R18 within  OK
+Y19 k=3.16e+05 q=1e+05 z=9104.3 moved 6 ref'd 6 consistency 6.2e-12  R17 12.4/12.4  R18 0.233/0.233  G+q+r 0.268/0.191  -> R18 within   agent: R18 within  OK
+Y20 k=3.16e+05 q=1e+05 z=1.00802e+09 moved 7 ref'd 7 consistency 5.7e-10  R17 8.66/8.66  R18 0.119/0.119  G+q+r 0.0089/0.0047  -> R18 within   agent: R18 within  OK
+Y21 k=1e+05 q=1e+06 z=1.91807e+08 moved 5 ref'd 5 consistency 1e-09  R17 14.9/14.9  R18 0.233/0.233  G+q+r 6.82/0.484  -> R18 within   agent: R18 within  OK
+Y22 k=1e+06 q=1e+05 z=2.29751e+06 moved 6 ref'd 6 consistency 3.2e-10  R17 4.31/4.31  R18 0.03/0.03  G+q+r 2.93/0.772  -> R18 within   agent: R18 within  OK
+Y23 k=3.16e+05 q=1e+06 z=5.79784e+08 moved 5 ref'd 5 consistency 1.6e-10  R17 2.62/2.62  R18 0.0058/0.0058  G+q+r 3.65/1.18  -> R18 within   agent: R18 within  OK
+Y24 k=1e+06 q=3.16e+05 z=4.01763e+09 moved 7 ref'd 7 consistency 1.5e-10  R17 1.99/1.99  R18 0.236/0.236  G+q+r 0.00999/0.00846  -> R18 within   agent: R18 within  OK
+Y25 k=3.16e+05 q=3.16e+05 z=2.31084e+09 moved 5 ref'd 5 consistency 4.7e-10  R17 2.03/2.03  R18 0.0302/0.0302  G+q+r 0.275/0.253  -> R18 within   agent: R18 within  OK
+Y26 k=3.16e+05 q=3.16e+05 z=1.00802e+09 moved 5 ref'd 5 consistency 6.3e-10  R17 2.27/2.27  R18 0.0879/0.0879  G+q+r 1.17/1.05  -> R18 within   agent: R18 within  OK
+Y27 k=1e+05 q=1e+05 z=15828.8 moved 5 ref'd 5 consistency 1.4e-09  R17 2.69/2.69  R18 0.248/0.248  G+q+r 1.07/0.855  -> R18 within   agent: R18 within  OK
+Y28 k=1e+06 q=1e+05 z=3.04698e+09 moved 3 ref'd 3 consistency 3.6e-10  R17 1.53/1.53  R18 0.0364/0.0364  G+q+r -  -> R18 within   agent: R18 within  OK
+Y29 k=3.16e+05 q=3.16e+05 z=3.04698e+09 moved 5 ref'd 5 consistency 9.9e-10  R17 1.72/1.72  R18 0.374/0.374  G+q+r 0.0235/0.0197  -> R18 within   agent: R18 within  OK
+Y30 k=1e+06 q=1e+06 z=1.59206e+07 moved 5 ref'd 5 consistency 8.1e-10  R17 1.84/1.84  R18 0.0161/0.0161  G+q+r 0.604/0.441  -> R18 within   agent: R18 within  OK

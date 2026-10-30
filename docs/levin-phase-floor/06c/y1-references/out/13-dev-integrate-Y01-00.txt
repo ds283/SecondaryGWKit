@@ -1,0 +1,61 @@
+# Y1 references: refquad integrate in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:28:38Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R18-00.pkl sha256 8ee4711d994799cc0f6d47ece49b2bcd5df1b6a87cb509ce8cbbacf9f6c37254
+{
+ "pickle": "inputs/Y01-R18-00.pkl",
+ "pickle_sha256": "8ee4711d994799cc0f6d47ece49b2bcd5df1b6a87cb509ce8cbbacf9f6c37254",
+ "row": "Y01",
+ "index": 0,
+ "label": "G",
+ "tree": "R18",
+ "replay": {
+  "value": "-0x1.639f5e6f9ea0dp-67",
+  "abserr": "0x1.929a2855494b3p-91",
+  "equals_capture": true,
+  "equals_store": true,
+  "regions_depth_equal": true
+ },
+ "replay_seconds": 0.11062458297237754,
+ "x_span": [
+  "0x1.542e3c75ed00ep+4",
+  "0x1.fa1b076db42d0p+4"
+ ],
+ "npanels": 2075,
+ "nlow": 192,
+ "nhigh": 384,
+ "nodes": {
+  "192": 398400,
+  "384": 796800
+ },
+ "S_low": "-0x1.639f5e404a353p-67",
+ "S_high": "-0x1.639f5e404a355p-67",
+ "ref": "-0x1.639f5e404a355p-67",
+ "ref_repr": "-9.413250041006072e-21",
+ "conv_diff": "0x1.0000000000000p-118",
+ "absum_low": "0x1.0540a203bb548p-65",
+ "absum_high": "0x1.0540a22a60c71p-65",
+ "rounding_bound_linear": "0x1.0540a22a60c71p-115",
+ "cancellation": 2.9385368024682337,
+ "wall_seconds": 6.1305770829785615,
+ "cpu_seconds": 24.018794911447912,
+ "workers": 6,
+ "chunks": 48,
+ "sample_every": 16,
+ "sample_nodes": 74880,
+ "sample_sha256": "691dc7e8445a95bdc1746982c26ced2a42b781445015684c3eaec39e656190d1",
+ "theta_deriv_consistency": {
+  "panels": 130,
+  "max_abs_mismatch_rad": 3.1502578323738817e-15,
+  "mean_signed_mismatch_rad": 1.1348116743637628e-16,
+  "max_abs_mismatch_per_rad_of_phase": 2.1836921580167937e-10
+ },
+ "this_tree_value": "-0x1.639f5e6f9ea0dp-67",
+ "this_tree_abserr": "0x1.929a2855494b3p-91",
+ "this_tree_err_over_abserr": 0.1175596355752029
+}

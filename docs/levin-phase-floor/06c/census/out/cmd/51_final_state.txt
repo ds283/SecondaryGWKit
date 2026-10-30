@@ -1,0 +1,26 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ echo\ \"==\ registry\"\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ echo\ \"==\ predictions\"\;\ shasum\ -a\ 256\ var/levin-phase-floor-06c/census/state/predictions.md\;\ stat\ -f\ \"%Sm\ %m\"\ -t\ \"%Y-%m-%dT%H:%M:%S\"\ var/levin-phase-floor-06c/census/state/predictions.md\;\ echo\ \"==\ run\ dir\"\;\ du\ -sh\ var/runs/levin-phase-floor-06c-census-20261029T130214\;\ ls\ var/runs/levin-phase-floor-06c-census-20261029T130214\ \|\ wc\ -l\;\ echo\ \"==\ __pycache__\ under\ the\ census\ dir\"\;\ find\ var/levin-phase-floor-06c/census\ -name\ __pycache__\ \|\ wc\ -l
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:46:46Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c
+fef401c2614da3dbbf1b4261edd31f5f7f80cdbf
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6
+e5764a6708757cb11704b95bcd66825baab4ba29
+== registry
+31 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 31 finished; 0 with no host recorded.
+== predictions
+2672dd5c725eb7617a8f8e80af10aeeaecede10fe623b13a7d75817d3d88e0fb  var/levin-phase-floor-06c/census/state/predictions.md
+stat: cannot read file system information for '%Sm %m': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+var/levin-phase-floor-06c/census/state/predictions.md 100000d0000001a ? 1a 4096 4096 242837545 27483358 27483358 1106142867 1099334320
+== run dir
+1.3G	var/runs/levin-phase-floor-06c-census-20261029T130214
+149
+== __pycache__ under the census dir
+0
+# ----
+# end 2026-10-29T15:46:46Z
+# exit 0

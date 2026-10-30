@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "C12",
+ "units": [
+  {
+   "uid": "g-1e-7-2-13636",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-13636",
+   "names05": null,
+   "shard": 2,
+   "serial": 13636,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     6,
+     "k=3.09e+06/Mpc, q=3.14e+05/Mpc, r=3.09e+06/Mpc @ z_response=2761.8, z in (5.406e+09, 2761.8), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/X1capture/C12",
+ "emit_fd": null,
+ "emit_file": "state/X1capture/C12/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

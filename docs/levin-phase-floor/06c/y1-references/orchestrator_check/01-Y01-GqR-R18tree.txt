@@ -1,0 +1,16 @@
+host mps026298.phys.susx.ac.uk utc 2026-10-29T21:37:19+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 e5764a6708757cb11704b95bcd66825baab4ba29 status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/state/inputs/Y01-R18-01.pkl sha256 047df0a1a743b3c7e74a1c67b5ee9e9e401b9bb0bce0ef1dfb90d76529976b70
+span 0x1.1209172e186c4p+3 0x1.542e3c75ed00ep+4 kw {'atol': 1.3761145732146624e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=1e+05/Mpc, q=1e+05/Mpc, r=1e+05/Mpc @ z_response=5236.6, z in (1.7126e+09, 5236.6), regime Gqr, group G+q+r'}
+driver replay value 0x1.00a5d63c50710p-69 abserr 0x1.7489f9368ff0fp-94 regions 2 depth 1 converged True
+  equals captured True
+  scaled by 0x1.4758d923cb576p+12 -> 0x1.482ce759249c8p-57 8.89521217897009e-18
+cells 12698; total |dtheta| 495163 rad; theta extrema between cells at x = [9.231592769849204]
+  near x=9.231592769849204: theta_deriv at x0-cell, x0, x0+cell = -372.3, 119.3, 609.7; max|theta_deriv| on cell grid sample 6.962e+05
+sub-panels 14635 nodes 2341600
+wall 24.6 s
+S64 = 0x1.035b115084cafp-69 (1.7162722723971866e-21)
+S96 = 0x1.035b115081929p-69 (1.716272272392225e-21)   |S2-S1| = 4.962e-33   sum|terms| 5.715e-20
+driver (this tree) |value - S96| / abserr = 2.439e+05
+PYTHONPATH=$G:$Y/scripts $PY -B orch_ref.py $Y/state/inputs/Y01-R18-01.pkl  143.47s user 3.47s system 547% cpu 26.855 total

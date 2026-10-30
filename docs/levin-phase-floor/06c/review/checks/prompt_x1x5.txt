@@ -1,0 +1,30 @@
+**Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
+"Moved" means the call's value, abserr, region count or maximum depth differs from 06b's.
+- **X1 — honest where it moved.**
+  - **The sample:** 24 calls at `1e-7` that moved, with no sign change of $\theta'$ in 06a's scan
+    (`spscan.py`): 12 that 06b reported unconverged with no region at `depth_max`, none
+    phase-limited and a finite abserr (or all such, if fewer), and the rest stratified by band
+    (low, mid) and by $k$. The selection rule is fixed in `state/predictions.md` before the run.
+  - **The reference:** W2's, Levin forced to $2^9$ and to $2^{10}$ equal pieces, with each piece's
+    own floor reported. The two must agree to within a hundredth of $g$'s `abserr`; a call where
+    they do not is reported, and dropped from the rule.
+  - **The rule:** $|{\rm value}_g - {\rm ref}| \le$ `abserr`$_g$ for every call left in the sample.
+- **X2 — budget misses converge.**
+  - **The rule:** every Levin call that 06b reported unconverged, with no region at `depth_max`, no
+    phase-limited region and a finite abserr, is `converged` under $g$, outside 06a's stationary-
+    point rows.
+  - **Holds** if true at both rtols.
+- **X3 — no infinite declared error.**
+  - **The rule:** no call under $g$ declares an infinite abserr unless one of its leaves is at
+    `depth_max`.
+  - **Holds** if true at both rtols.
+- **X4 — the rows agree.**
+  - **The rule:** outside 06a's 720 stationary-point rows, every row with finite `total_abserr`
+    under both has $|{\rm total}_g - {\rm total}_{06b}| \le {\rm total\_abserr}_{06b} + {\rm
+    total\_abserr}_g$.
+  - **Holds** if true at both rtols.
+- **X5 — the cap.**
+  - **The rule:** at both rtols, no call that moved reaches `depth_max`. An over-budget unit counts
+    as false.
+  - A failure is a finding for the user, not a fault. It bears on G2's L2 (Decisions, **G2 L2,
+    decided**).

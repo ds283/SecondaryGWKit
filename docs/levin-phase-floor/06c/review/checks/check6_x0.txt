@@ -1,0 +1,31 @@
+P1 p-1e-7-2-38302 vs 06b b-1e-7-2-38302 calls 7 7 per-call (index,value,abserr,converged,regions,depth) equal: True
+   p   (0, '0x1.33b607aff5b94p-104', '0x1.9d6586de0a000p-118', True, 3, 2)
+   p   (1, '0x1.49fdca43229adp-103', '0x1.29c92ed5dd000p-115', True, 1, 0)
+   p   (2, '-0x1.1bf3f0e6d632dp-106', '0x1.e047ef6b0c000p-119', True, 1, 0)
+   p   (3, '-0x1.dbd0b282a714dp-109', '0x1.a27dfb092d50ep-114', True, 1, 0)
+   p   (4, '0x1.f92063c08f9d0p-108', '0x1.c16b830d4a168p-116', True, 1, 0)
+   p   (5, '0x1.944a1525721dcp-108', '0x1.7fc47ac9a2242p-114', True, 1, 0)
+   p   (6, '-0x1.fbbf00b348b00p-108', '0x1.b74dd6617df6bp-116', True, 1, 0)
+P2 p-1e-7-2-2095 vs 06b b-1e-7-2-2095 calls 7 7 per-call (index,value,abserr,converged,regions,depth) equal: True
+   p   (0, '0x1.66a59f1651de7p-103', '0x1.75a24c51fe506p-110', True, 2, 1)
+   p   (1, '-0x1.3b529897bdd63p-102', '0x1.1516cb408c000p-114', True, 1, 0)
+   p   (2, '0x1.4562671053cadp-104', '0x1.21bab23680000p-123', True, 1, 0)
+   p   (3, '-0x1.8079a7f768bf5p-106', '0x1.ae2645ebb0d62p-115', True, 1, 0)
+   p   (4, '-0x1.4127c78f24b43p-109', '0x1.e4be389cb3c79p-117', True, 1, 0)
+   p   (5, '0x1.9d445537c9575p-106', '0x1.a2915172a916bp-115', True, 1, 0)
+   p   (6, '0x1.c82987e943575p-109', '0x1.e15aa1e19a8d0p-117', True, 1, 0)
+P3 p-1e-8-0-1971 vs 06b b-1e-8-0-1971 calls 5 5 per-call (index,value,abserr,converged,regions,depth) equal: True
+   p   (0, '0x1.7dd479a9f3633p-72', '0x1.cd6909f5bc000p-100', True, 19, 9)
+   p   (1, '-0x1.06274d95f0209p-74', '0x1.b81111c7f8cadp-102', True, 16, 13)
+   p   (2, '-0x1.2778f1f2ef7dcp-77', '0x1.389ec485e9521p-104', True, 2, 1)
+   p   (3, '-0x1.2778f1f2ef7dcp-77', '0x1.389ec485e9521p-104', True, 2, 1)
+   p   (4, '0x1.04dbf81428dd8p-78', '0x1.4a7444445c866p-106', True, 2, 1)
+G1 g-1e-7-0-14164 G2 g-1e-7-0-14164 per-call equal: True n calls 7
+   g   (0, '-0x1.08b22c5a3c629p-93', '0x1.71525840e0477p-109', True, 6, 4)
+   g   (1, '-0x1.ea0d5b4068618p-94', '0x1.3780311be128ep-112', True, 2, 1)
+   g   (2, '0x1.46ad59ef3280ep-95', '0x1.b435d8df62d17p-117', True, 2, 1)
+   g   (3, '0x1.7c2951e61a89cp-97', '0x1.0f333534e96c8p-125', True, 7, 4)
+   g   (4, '0x1.2dc45722baa69p-101', '0x1.65e70a4bac322p-127', True, 14, 6)
+   g   (5, '-0x1.f5083b111385fp-97', '0x1.3d9d064fee8f6p-125', True, 15, 6)
+   g   (6, '0x1.35c494827736cp-101', '0x1.a0801f54a4aa9p-124', True, 9, 4)
+X0 clauses 2 and 3 (independent): HOLD

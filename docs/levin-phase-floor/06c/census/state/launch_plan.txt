@@ -1,0 +1,18 @@
+# levin-phase-floor 06c section 5: the launch, as prepared on 2026-10-29 (not yet run).
+# Run only when the orchestrator says to (after R17/R18 are over and the lock is released).
+# Every command from the census directory:
+cd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+
+# 1. pre-launch state (each its own recorded command)
+scripts/rec.sh 24_prelaunch_state /bin/bash -c 'for t in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; echo "status --short --ignored (worktrees) / --short (main):"; git --no-optional-locks -C $t status --short $([ $t != /Users/ds283/Documents/Code/SecondaryGWKit ] && echo --ignored); done; echo "== worktrees"; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit worktree list; echo "== registry"; cd /Users/ds283/Documents/Code/SecondaryGWKit && ./venv/bin/python -m runregistrykit list | tail -6; echo "== free"; df -h /Users/ds283/Documents/Code/SecondaryGWKit | tail -1; uptime'
+scripts/rec.sh 25_prelaunch_lock_status /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m raypoolkit.rehearsal_lock status
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/26_prelaunch_ray_processes.txt 2>&1
+scripts/rec.sh 27_copy_files_prelaunch /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_prelaunch /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+scripts/rec.sh 28_copy_prelaunch_vs_certified scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/27_copy_files_prelaunch.txt
+scripts/rec.sh 29_scripts_equal_prelaunch /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+scripts/rec.sh 30_predictions_check_prelaunch /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+
+# 2. the launch (registered, detached: nohup sh -c, new session, manifest first)
+scripts/rec.sh 31_launch /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch.py
+
+# 3. one check (status.json, checkpoint head, stdout/stderr, kill -0 of the driver and of sh), then end the turn

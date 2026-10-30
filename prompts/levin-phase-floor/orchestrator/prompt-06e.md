@@ -21,7 +21,7 @@ note §A, Part B as 06c's note §B.
    - as `stash@{0}`, `19eb784e…`, naming 07, 06e and its base `f5def2f`.
 
    The earlier three stashes are kept.
-2. **06c's records commit lands**, on the user's word: the prompt's Gate. It carries the census
+2. **06c's records commit lands** (done 2026-10-30), on the user's word: the prompt's Gate. It carries the census
    harness that §5 copies, and the `depth20-tiling` and `y1-references` records the prompt cites.
 3. **Part A** is the code on the laptop, one commit, reviewed here.
 4. **Part B**, R19, R20 and the census, runs on the Mac Studio after Part A is pushed.

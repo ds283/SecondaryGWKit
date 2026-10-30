@@ -1,0 +1,23 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I scripts/convergence_kinds_06a.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 --tree g --capped-run /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 --capped-tree g
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:43:12Z
+# ----
+# convergence_kinds.py, run 2026-10-29T15:43:12+00:00
+# host mps026298.phys.susx.ac.uk; python 3.13.16; git HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff
+# script sha256 e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d
+# tree g; capped: tree g at rtol 1e-7 in /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214
+# run /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214: git_head 28ebaf0743e0555fb2c4512ce714884005a60eff
+
+== tree g at rtol 1e-7: every unconverged Levin call
+   row            role     capped_g  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+   kinds, every row: {'cap': 13, 'phase-limited': 2}
+   kinds, rows capped under g: {'cap': 13}
+
+== tree g at rtol 1e-8: every unconverged Levin call
+   row            role     capped_g  regime/group   kind            regions maxdepth   E/req     R/req   (E-R)/E
+   kinds, every row: {'phase-limited': 37, 'cap': 12}
+   kinds, rows capped under g: {'cap': 11}
+# ----
+# end 2026-10-29T15:43:28Z
+# exit 0

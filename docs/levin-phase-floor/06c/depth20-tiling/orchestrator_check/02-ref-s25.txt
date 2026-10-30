@@ -1,0 +1,15 @@
+host mps026298.phys.susx.ac.uk utc 2026-10-29T22:30:28+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 e5764a6708757cb11704b95bcd66825baab4ba29 status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s25.pkl sha256 696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42
+span -0x1.999df80104b87p+3 -0x1.469cb932731a6p+2 kw {'atol': 1e-32, 'rtol': 1e-08, 'chebyshev_order': 24, 'notify_label': 'analytic Y4'}
+driver replay value -0x1.856da4f5d0ee7p-52 abserr 0x1.0c4b38939c8e0p-70 regions 5394 depth 20 converged False
+  equals captured True
+  scaled by None -> None None
+cells 7698; total |dtheta| 2.10212e+06 rad; theta extrema between cells at x = []
+sub-panels 21811 nodes 3489760
+wall 40.0 s
+S64 = -0x1.856da52a40dbbp-52 (-3.377752083837561e-16)
+S96 = -0x1.856da4f8b0655p-52 (-3.3777520582134153e-16)   |S2-S1| = 2.562e-24   sum|terms| 2.565e-11
+driver (this tree) |value - S96| / abserr = 0.0001673
+PYTHONPATH= /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B    269.15s user 2.86s system 352% cpu 1:17.08 total

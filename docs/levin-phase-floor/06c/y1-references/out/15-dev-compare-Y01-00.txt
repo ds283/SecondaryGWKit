@@ -1,0 +1,51 @@
+# Y1 references: refquad compare in tree R17
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:29:39Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R17-00.pkl sha256 e20b9d2eb8c2c57ff0e993ae3e9476d99d5ec733f971323e425874ea1eea068a
+{
+ "pickle": "inputs/Y01-R17-00.pkl",
+ "pickle_sha256": "e20b9d2eb8c2c57ff0e993ae3e9476d99d5ec733f971323e425874ea1eea068a",
+ "tree": "R17",
+ "replay": {
+  "value": "-0x1.639f5c58341efp-67",
+  "abserr": "0x1.b41e45edf0000p-92",
+  "equals_capture": true,
+  "equals_store": true,
+  "regions_depth_equal": true
+ },
+ "sample_npz": "ref/Y01-00.sample.npz",
+ "sample_sha256": "691dc7e8445a95bdc1746982c26ced2a42b781445015684c3eaec39e656190d1",
+ "columns": {
+  "f_sin": {
+   "nodes": 74880,
+   "bit_differences": 0
+  },
+  "f_cos": {
+   "nodes": 74880,
+   "bit_differences": 0
+  },
+  "theta_mod_2pi": {
+   "nodes": 74880,
+   "bit_differences": 0
+  },
+  "theta": {
+   "nodes": 74880,
+   "bit_differences": 0
+  },
+  "theta_deriv": {
+   "nodes": 74880,
+   "bit_differences": 0
+  }
+ },
+ "panel_end_theta_mod_2pi": {
+  "values": 260,
+  "bit_differences": 0
+ },
+ "all_bit_identical": true,
+ "seconds": 2.3521218749228865
+}

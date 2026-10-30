@@ -1,0 +1,41 @@
+$ bash -c for\ n\ in\ \$\(seq\ 0\ 29\)\;\ do\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ scripts/refq.py\ size\ state/captured.json\ \$n\ \|\ grep\ -E\ \"\\\"\(sample_no\|npanels\|Phi_rad\|per_node_s\|est_wall_s_at_workers\|max_abs_theta_prime\)\\\"\"\ \|\ tr\ -d\ \"\\n\"\;\ echo\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T22:09:58Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29
+# tree g status --short: []
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts
+# ----
+ "sample_no": 0, "Phi_rad": 4231887364.3741803, "max_abs_theta_prime": 2748132038.265298, "npanels": 8269992, "per_node_s": 0.00010210762498900294, "est_wall_s_at_workers": 105384.76937639719,
+ "sample_no": 1, "Phi_rad": 7337181.537969392, "max_abs_theta_prime": 7310767.695610972, "npanels": 16058, "per_node_s": 8.237864600960165e-05, "est_wall_s_at_workers": 165.08996994324846,
+ "sample_no": 2, "Phi_rad": 93610918.92568725, "max_abs_theta_prime": 88927387.74919842, "npanels": 186773, "per_node_s": 9.752085409127176e-05, "est_wall_s_at_workers": 2273.1399576523995,
+ "sample_no": 3, "Phi_rad": 324713866.9258563, "max_abs_theta_prime": 292909938.22734046, "npanels": 637459, "per_node_s": 8.82049580104649e-05, "est_wall_s_at_workers": 7017.13513218344,
+ "sample_no": 4, "Phi_rad": 110627266120.53954, "max_abs_theta_prime": 110627259902.70451, "npanels": 216072364, "per_node_s": 6.322495848871768e-05, "est_wall_s_at_workers": 1704913.5473084953,
+ "sample_no": 5, "Phi_rad": 17065608976.759218, "max_abs_theta_prime": 17065612937.798903, "npanels": 33334262, "per_node_s": 7.571745850145816e-05, "est_wall_s_at_workers": 314993.4028377844,
+ "sample_no": 6, "Phi_rad": 953243799021.4869, "max_abs_theta_prime": 953243720002.9847, "npanels": 1861808606, "per_node_s": 6.852752109989524e-05, "est_wall_s_at_workers": 15922624.040747618,
+ "sample_no": 7, "Phi_rad": 114144787771.82675, "max_abs_theta_prime": 114144778260.00783, "npanels": 222944533, "per_node_s": 6.258556246757508e-05, "est_wall_s_at_workers": 1741348.0028101064,
+ "sample_no": 8, "Phi_rad": 147629807.08501524, "max_abs_theta_prime": 147629798.78744254, "npanels": 291825, "per_node_s": 6.298218748997897e-05, "est_wall_s_at_workers": 2293.7961526600366,
+ "sample_no": 9, "Phi_rad": 8132011.873180005, "max_abs_theta_prime": 8132020.066170613, "npanels": 18648, "per_node_s": 8.531068754382432e-05, "est_wall_s_at_workers": 198.54103792439105,
+ "sample_no": 10, "Phi_rad": 145706822.83195108, "max_abs_theta_prime": 145706811.55580905, "npanels": 288372, "per_node_s": 6.268291652668268e-05, "est_wall_s_at_workers": 2255.884550978141,
+ "sample_no": 11, "Phi_rad": 46589437450.01446, "max_abs_theta_prime": 46589448260.49999, "npanels": 90997989, "per_node_s": 6.330668739974499e-05, "est_wall_s_at_workers": 718945.4992048285,
+ "sample_no": 12, "Phi_rad": 4231887364.3741803, "max_abs_theta_prime": 2748132038.265298, "npanels": 8269992, "per_node_s": 9.752866707276553e-05, "est_wall_s_at_workers": 100658.84979851182,
+ "sample_no": 13, "Phi_rad": 23215902.559327517, "max_abs_theta_prime": 23131990.663853936, "npanels": 47071, "per_node_s": 8.161150000523776e-05, "est_wall_s_at_workers": 479.423557609969,
+ "sample_no": 14, "Phi_rad": 93610918.92568725, "max_abs_theta_prime": 88927387.74919842, "npanels": 186773, "per_node_s": 9.590722899883986e-05, "est_wall_s_at_workers": 2235.5275340486796,
+ "sample_no": 15, "Phi_rad": 415296946.45139116, "max_abs_theta_prime": 378960982.72630936, "npanels": 814379, "per_node_s": 9.099422907456756e-05, "est_wall_s_at_workers": 9248.152902083753,
+ "sample_no": 16, "Phi_rad": 53978006485.72398, "max_abs_theta_prime": 53978001991.79314, "npanels": 105430459, "per_node_s": 6.26753750257194e-05, "est_wall_s_at_workers": 824665.11590845,
+ "sample_no": 17, "Phi_rad": 22224153741.65937, "max_abs_theta_prime": 22224151891.390778, "npanels": 43411216, "per_node_s": 6.38739374699071e-05, "est_wall_s_at_workers": 346051.0929753235,
+ "sample_no": 18, "Phi_rad": 1299459047443.1628, "max_abs_theta_prime": 1299458939157.2524, "npanels": 2538011560, "per_node_s": 7.344860443845391e-05, "est_wall_s_at_workers": 23264393.209906787,
+ "sample_no": 19, "Phi_rad": 14835001210.50585, "max_abs_theta_prime": 14835004652.781223, "npanels": 28977606, "per_node_s": 6.292225001379847e-05, "est_wall_s_at_workers": 227552.35395776166,
+ "sample_no": 20, "Phi_rad": 4718610470.910366, "max_abs_theta_prime": 4718614764.669352, "npanels": 9218801, "per_node_s": 6.342224997933955e-05, "est_wall_s_at_workers": 72967.70227116683,
+ "sample_no": 21, "Phi_rad": 1282995395175.6396, "max_abs_theta_prime": 1282995288267.4087, "npanels": 2505855987, "per_node_s": 7.256564544513822e-05, "est_wall_s_at_workers": 22693514.32473452,
+ "sample_no": 22, "Phi_rad": 34179868.59074246, "max_abs_theta_prime": 34179907.4756442, "npanels": 69481, "per_node_s": 6.412760401144624e-05, "est_wall_s_at_workers": 556.0651267790481,
+ "sample_no": 23, "Phi_rad": 53698695.646693654, "max_abs_theta_prime": 53698691.306227244, "npanels": 108843, "per_node_s": 6.312516692560167e-05, "est_wall_s_at_workers": 857.4674214516712,
+ "sample_no": 24, "Phi_rad": 1589831801762.6697, "max_abs_theta_prime": 1589831669280.123, "npanels": 3105145732, "per_node_s": 7.251568755600602e-05, "est_wall_s_at_workers": 28101437.859153688,
+ "sample_no": 25, "Phi_rad": 2102122.0321952803, "max_abs_theta_prime": 2103076.84081388, "npanels": 5646, "per_node_s": 6.500433303881437e-05, "est_wall_s_at_workers": 45.80340514927582,
+ "sample_no": 26, "Phi_rad": 15355149010.431644, "max_abs_theta_prime": 15355148147.391397, "npanels": 29994010, "per_node_s": 6.561910407617689e-05, "est_wall_s_at_workers": 245628.87196871592,
+ "sample_no": 27, "Phi_rad": 53347194.34050435, "max_abs_theta_prime": 53347241.66161381, "npanels": 106959, "per_node_s": 7.978991651907563e-05, "est_wall_s_at_workers": 1065.0743601842835,
+ "sample_no": 28, "Phi_rad": 53978006485.72398, "max_abs_theta_prime": 53978001991.79314, "npanels": 105430459, "per_node_s": 6.257952051237226e-05, "est_wall_s_at_workers": 823403.8889380913,
+ "sample_no": 29, "Phi_rad": 1282995395175.6396, "max_abs_theta_prime": 1282995288267.4087, "npanels": 2505855987, "per_node_s": 7.151577051263302e-05, "est_wall_s_at_workers": 22365186.06865914,
+# ----
+# end 2026-10-29T22:23:28Z
+# exit 0

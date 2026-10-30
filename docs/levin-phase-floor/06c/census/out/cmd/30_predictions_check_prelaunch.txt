@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T13:02:09Z
+# ----
+prompt /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/prompts/levin-phase-floor/06c-global-error-control.md sha256 f5f2f85515a644f717b5549c8d01c01f875540ad26b28148fcf2461367a5d288; lines 363-392: 1952 bytes
+predictions /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/predictions.md: Part A 1952 bytes; equal to the prompt's bytes: True
+predictions sha256 2672dd5c725eb7617a8f8e80af10aeeaecede10fe623b13a7d75817d3d88e0fb size 10329 mtime 2026-10-29T12:58:35.208807+00:00
+# ----
+# end 2026-10-29T13:02:09Z
+# exit 0

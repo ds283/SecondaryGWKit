@@ -1,0 +1,2 @@
+sample 01 conv_diff 2.7209433343957533e-36 min abserr 9.069994260877289e-36 ratio 0.2999939422379052 converged False
+STOP: sample 01 reference did not converge

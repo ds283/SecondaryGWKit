@@ -1,0 +1,52 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-29T12:36:36Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+for d in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do echo "== $d"; git --no-optional-locks -C $d rev-parse HEAD; git --no-optional-locks -C $d rev-parse --abbrev-ref HEAD; echo "-- status --short"; git --no-optional-locks -C $d status --short; done; for d in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do echo "-- status --short --ignored $d"; git --no-optional-locks -C $d status --short --ignored; done; echo "== worktree list"; git --no-optional-locks worktree list; echo "== diff --stat 3d70db9 e5764a6 code paths"; git --no-optional-locks diff --stat 3d70db9 e5764a6 -- . ":!docs" ":!prompts"; echo "== diff --stat 92bc62f fef401c code paths"; git --no-optional-locks diff --stat 92bc62f fef401c -- . ":!docs" ":!prompts"; echo "== ad9a5f4^"; git --no-optional-locks rev-parse ad9a5f4^; echo "== log fef401c..e5764a6"; git --no-optional-locks log --oneline fef401c..e5764a6; echo "== diff --stat fef401c e5764a6 code paths"; git --no-optional-locks diff --stat fef401c e5764a6 -- . ":!docs" ":!prompts"
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+-- status --short
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c
+fef401c2614da3dbbf1b4261edd31f5f7f80cdbf
+HEAD
+-- status --short
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6
+e5764a6708757cb11704b95bcd66825baab4ba29
+HEAD
+-- status --short
+-- status --short --ignored /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c
+-- status --short --ignored /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 e5764a6 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c fef401c (detached HEAD)
+== diff --stat 3d70db9 e5764a6 code paths
+ CLAUDE.md | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+== diff --stat 92bc62f fef401c code paths
+ CLAUDE.md | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+== ad9a5f4^
+fef401c2614da3dbbf1b4261edd31f5f7f80cdbf
+== log fef401c..e5764a6
+e5764a6 Record levin-phase-floor 06d's landing and its near-singular cases
+3d70db9 Give the Clenshaw-Curtis fallback a round-off floor of its own
+da043b9 Amend levin-phase-floor 06d with a node-rounding term
+4bbeade Write levin-phase-floor prompt 06d, a Clenshaw-Curtis round-off floor
+ad63e8a Record levin-phase-floor 06c's code commit and dispatch Part B
+ad9a5f4 Give the Levin driver one error budget, checked one level down
+== diff --stat fef401c e5764a6 code paths
+ AdaptiveLevin/levin_quadrature.py               | 2020 +++++++++++++++--------
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |  521 ++++++
+ AdaptiveLevin/tests/test_levin_global_budget.py |  779 +++++++++
+ AdaptiveLevin/tests/test_levin_quadrature.py    |   31 +-
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  127 +-
+ CLAUDE.md                                       |    6 +-
+ ComputeTargets/QuadSourceIntegral.py            |    8 +-
+ LiouvilleGreen/tests/test_three_bessel.py       |   42 +-
+ RunDrivers/quadsource_atol_sweep.py             |    9 +-
+ 9 files changed, 2766 insertions(+), 777 deletions(-)
+# exit: 0
+# end: 2026-10-29T12:36:36Z

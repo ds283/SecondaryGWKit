@@ -1,0 +1,4 @@
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c/AdaptiveLevin/levin_quadrature.py
+Y01-R17-01 replay 0x1.035b113dc871bp-69 0x1.078668ec5b000p-98 12 10 eq capture True scaled 8.989066972119288e-18 1.701260336279934e-26
+Y08-R17-01 replay 0x1.d6e2b51b30efdp-70 0x1.2729b262d0000p-97 2 1 eq capture True scaled 3.9106544884291656e-19 1.8263580086633266e-27
+Y01 G+q+r R17 |v-myref|/e17 2.2735640440544658  agent ref vs mine 0.00010989916482038995

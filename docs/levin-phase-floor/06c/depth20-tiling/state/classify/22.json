@@ -1,0 +1,1180 @@
+{
+ "sample_no": 22,
+ "unit": "g-1e-8-2-21874",
+ "index": 12,
+ "notify_label": "analytic Y3",
+ "rtol": "1e-8",
+ "block": "Y3",
+ "order": 24,
+ "levels": [
+  {
+   "depth": 0,
+   "a": "-0x1.03b5973c55a61p+4",
+   "b": "-0x1.4ed878ffd3d9bp+1",
+   "c": "-0x1.2d90a65c50214p+3",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.8125000000000p-81",
+   "census_floor": "0x1.3d4cebe0778cdp-70",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.8125000000000p-81",
+   "floor_computed": "0x1.3d4cebe0778cdp-70",
+   "resid_pinned_double": "0x1.8114000000000p-81",
+   "floor_pinned": "0x1.3d4cebe0778cap-70",
+   "values_double_computed": {
+    "P": "-0x1.35f74745cd572p-46",
+    "L": "-0x1.35f2108493494p-46",
+    "R": "-0x1.4db0427a4ff32p-60"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.35f74745cd561p-46",
+    "L": "-0x1.35f2108493494p-46",
+    "R": "-0x1.4db0427a93d7bp-60"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 0.0005926838074437152,
+   "resid_pinned_over_floor_pinned": 0.0005925816174711347
+  },
+  {
+   "depth": 1,
+   "a": "-0x1.2d90a65c50214p+3",
+   "b": "-0x1.4ed878ffd3d9bp+1",
+   "c": "-0x1.8146c49c4517bp+2",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 0.0,
+    "L_top": -1.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.be50000000000p-96",
+   "census_floor": "0x1.6739618a09d26p-81",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.be50000000000p-96",
+   "floor_computed": "0x1.6739618a09d26p-81",
+   "resid_pinned_double": "0x1.0000000000000p-111",
+   "floor_pinned": "0x1.6739618a09d29p-81",
+   "values_double_computed": {
+    "P": "-0x1.4db0427a4ff32p-60",
+    "L": "-0x1.1b5ef92b88454p-59",
+    "R": "0x1.d21b5fb9b8f8cp-61"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.4db0427a93d7bp-60",
+    "L": "-0x1.1b5ef92bda1c6p-59",
+    "R": "0x1.d21b5fba40c1ep-61"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 3.791609442853209e-05,
+   "resid_pinned_over_floor_pinned": 6.637042155953661e-10
+  },
+  {
+   "depth": 2,
+   "a": "-0x1.8146c49c4517bp+2",
+   "b": "-0x1.4ed878ffd3d9bp+1",
+   "c": "-0x1.1459808e17824p+2",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": -1.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.be52800000000p-96",
+   "census_floor": "0x1.84402ac31e9e2p-87",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.be52800000000p-96",
+   "floor_computed": "0x1.84402ac31e9e2p-87",
+   "resid_pinned_double": "0x1.8000000000000p-112",
+   "floor_pinned": "0x1.84402ac31e9dfp-87",
+   "values_double_computed": {
+    "P": "0x1.d21b5fb9b8f8cp-61",
+    "L": "0x1.ca022f214da1bp-61",
+    "R": "0x1.0326130671972p-66"
+   },
+   "values_double_pinned": {
+    "P": "0x1.d21b5fba40c1ep-61",
+    "L": "0x1.ca022f2294fe2p-61",
+    "R": "0x1.032612f57872ep-66"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 0.002245258750854721,
+   "resid_pinned_over_floor_pinned": 2.9476040087013943e-08
+  },
+  {
+   "depth": 3,
+   "a": "-0x1.1459808e17824p+2",
+   "b": "-0x1.4ed878ffd3d9bp+1",
+   "c": "-0x1.bbc5bd0e016f2p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.0f924b0000000p-93",
+   "census_floor": "0x1.2fe83e6d0e15cp-90",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.0f924b0000000p-93",
+   "floor_computed": "0x1.2fe83e6d0e15cp-90",
+   "resid_pinned_double": "0x1.c000000000000p-115",
+   "floor_pinned": "0x1.2fe83e6d0e15ep-90",
+   "values_double_computed": {
+    "P": "0x1.0326130671972p-66",
+    "L": "0x1.81bd43a91dac9p-65",
+    "R": "-0x1.002a3a36de05bp-65"
+   },
+   "values_double_pinned": {
+    "P": "0x1.032612f57872ep-66",
+    "L": "0x1.81bd43a91dac9p-65",
+    "R": "-0x1.002a3a2e61739p-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 0.11169999206783836,
+   "resid_pinned_over_floor_pinned": 4.393262258305905e-08
+  },
+  {
+   "depth": 4,
+   "a": "-0x1.1459808e17824p+2",
+   "b": "-0x1.bbc5bd0e016f2p+1",
+   "c": "-0x1.f23c5f151839dp+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": true,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 0.0,
+    "L_lo": 0.0,
+    "L_top": 1.0,
+    "R_bot": -1.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.17f8656000000p-90",
+   "census_floor": "0x1.20a128359e701p-92",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.17f8656000000p-90",
+   "floor_computed": "0x1.20a128359e701p-92",
+   "resid_pinned_double": "0x1.0000000000000p-115",
+   "floor_pinned": "0x1.20a128359e701p-92",
+   "values_double_computed": {
+    "P": "0x1.81bd43a91dac9p-65",
+    "L": "0x1.029eea3d4a0c2p-66",
+    "R": "0x1.006dcf1674d93p-65"
+   },
+   "values_double_pinned": {
+    "P": "0x1.81bd43a91dac9p-65",
+    "L": "0x1.029ee9954e9c6p-66",
+    "R": "0x1.006dcede765eap-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 3.8799953248880166,
+   "resid_pinned_over_floor_pinned": 1.057326989505824e-07
+  },
+  {
+   "depth": 5,
+   "a": "-0x1.1459808e17824p+2",
+   "b": "-0x1.f23c5f151839dp+1",
+   "c": "-0x1.06bbd80c51cf9p+2",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 1.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.bdcc748000000p-92",
+   "census_floor": "0x1.9c67e8fdf8e5ap-94",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.bdcc748000000p-92",
+   "floor_computed": "0x1.9c67e8fdf8e5ap-94",
+   "resid_pinned_double": "0x1.8000000000000p-116",
+   "floor_pinned": "0x1.9c67e8fdf8e56p-94",
+   "values_double_computed": {
+    "P": "0x1.029eea3d4a0c2p-66",
+    "L": "0x1.377961f6e6f2cp-63",
+    "R": "-0x1.172584bd2c14ep-63"
+   },
+   "values_double_pinned": {
+    "P": "0x1.029ee9954e9c6p-66",
+    "L": "0x1.377961e1d649cp-63",
+    "R": "-0x1.172584af2c764p-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 4.323882406229588,
+   "resid_pinned_over_floor_pinned": 2.219966654531495e-07
+  },
+  {
+   "depth": 6,
+   "a": "-0x1.06bbd80c51cf9p+2",
+   "b": "-0x1.f23c5f151839dp+1",
+   "c": "-0x1.ffda0796ddec8p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 1.0,
+    "L_top": 1.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.ced7400000000p-95",
+   "census_floor": "0x1.60d6ac1f603c7p-95",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.ced7400000000p-95",
+   "floor_computed": "0x1.60d6ac1f603c7p-95",
+   "resid_pinned_double": "0x1.0000000000000p-114",
+   "floor_pinned": "0x1.60d6ac1f603c8p-95",
+   "values_double_computed": {
+    "P": "-0x1.172584bd2c14ep-63",
+    "L": "-0x1.31fd289defc00p-64",
+    "R": "-0x1.f89bc1c00c30ap-65"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.172584af2c764p-63",
+    "L": "-0x1.31fd285453f88p-64",
+    "R": "-0x1.f89bc21409e88p-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 1.3117637007145835,
+   "resid_pinned_over_floor_pinned": 1.383865880838005e-06
+  },
+  {
+   "depth": 7,
+   "a": "-0x1.ffda0796ddec8p+1",
+   "b": "-0x1.f23c5f151839dp+1",
+   "c": "-0x1.f90b3355fb132p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.17f8650000000p-90",
+   "census_floor": "0x1.477ccdd86ffc6p-96",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.17f8650000000p-90",
+   "floor_computed": "0x1.477ccdd86ffc6p-96",
+   "resid_pinned_double": "0x1.0000000000000p-116",
+   "floor_pinned": "0x1.477ccdd86ffc4p-96",
+   "values_double_computed": {
+    "P": "-0x1.f89bc1c00c30ap-65",
+    "L": "0x1.0efe4e952b5cep-65",
+    "R": "-0x1.83cd087099e00p-64"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.f89bc21409e88p-65",
+    "L": "0x1.0efe4e952b5cep-65",
+    "R": "-0x1.83cd08549aa2cp-64"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 54.71383719987352,
+   "resid_pinned_over_floor_pinned": 7.454959749838517e-07
+  },
+  {
+   "depth": 8,
+   "a": "-0x1.ffda0796ddec8p+1",
+   "b": "-0x1.f90b3355fb132p+1",
+   "c": "-0x1.fc729d766c7fdp+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": true,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 0.0,
+    "L_lo": 0.0,
+    "L_top": 1.0,
+    "R_bot": -1.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.6ddb4f0000000p-92",
+   "census_floor": "0x1.3bcc29491b207p-97",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.6ddb4f0000000p-92",
+   "floor_computed": "0x1.3bcc29491b207p-97",
+   "resid_pinned_double": "0x1.0000000000000p-114",
+   "floor_pinned": "0x1.3bcc29491b207p-97",
+   "values_double_computed": {
+    "P": "0x1.0efe4e952b5cep-65",
+    "L": "0x1.5b621c8cb1863p-64",
+    "R": "-0x1.a7c5ea567c45ap-65"
+   },
+   "values_double_pinned": {
+    "P": "0x1.0efe4e952b5cep-65",
+    "L": "0x1.5b621c8142abbp-64",
+    "R": "-0x1.a7c5ea6d59fa0p-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 37.07253347493116,
+   "resid_pinned_over_floor_pinned": 6.184738540600908e-06
+  },
+  {
+   "depth": 9,
+   "a": "-0x1.ffda0796ddec8p+1",
+   "b": "-0x1.fc729d766c7fdp+1",
+   "c": "-0x1.fe265286a5362p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.6ddb4a0000000p-92",
+   "census_floor": "0x1.363318e6819afp-98",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.6ddb4a0000000p-92",
+   "floor_computed": "0x1.363318e6819afp-98",
+   "resid_pinned_double": "0x1.0000000000000p-116",
+   "floor_pinned": "0x1.363318e6819afp-98",
+   "values_double_computed": {
+    "P": "0x1.5b621c8cb1863p-64",
+    "L": "0x1.95649166ccd2bp-66",
+    "R": "0x1.ec11f0384139cp-65"
+   },
+   "values_double_pinned": {
+    "P": "0x1.5b621c8142abbp-64",
+    "L": "0x1.95649166ccd2bp-66",
+    "R": "0x1.ec11f04f1eedep-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 75.48308367818424,
+   "resid_pinned_over_floor_pinned": 3.1481746078720103e-06
+  },
+  {
+   "depth": 10,
+   "a": "-0x1.fe265286a5362p+1",
+   "b": "-0x1.fc729d766c7fdp+1",
+   "c": "-0x1.fd4c77fe88db0p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.6ddb500000000p-92",
+   "census_floor": "0x1.337d9602c48c7p-99",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.6ddb500000000p-92",
+   "floor_computed": "0x1.337d9602c48c7p-99",
+   "resid_pinned_double": "0x1.c000000000000p-114",
+   "floor_pinned": "0x1.337d9602c48cap-99",
+   "values_double_computed": {
+    "P": "0x1.ec11f0384139cp-65",
+    "L": "-0x1.2f554fb39498fp-63",
+    "R": "0x1.aa59cbcd13c1ep-63"
+   },
+   "values_double_pinned": {
+    "P": "0x1.ec11f04f1eedep-65",
+    "L": "-0x1.2f554fb39498fp-63",
+    "R": "0x1.aa59cbc75c54ap-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 152.29623534297178,
+   "resid_pinned_over_floor_pinned": 4.446274560428129e-05
+  },
+  {
+   "depth": 11,
+   "a": "-0x1.fd4c77fe88db0p+1",
+   "b": "-0x1.fc729d766c7fdp+1",
+   "c": "-0x1.fcdf8aba7aad6p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.6ddb4a0000000p-92",
+   "census_floor": "0x1.323815094f33ap-100",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.6ddb4a0000000p-92",
+   "floor_computed": "0x1.323815094f33ap-100",
+   "resid_pinned_double": "0x1.0000000000000p-115",
+   "floor_pinned": "0x1.323815094f337p-100",
+   "values_double_computed": {
+    "P": "0x1.aa59cbcd13c1ep-63",
+    "L": "0x1.aa4bef89f57a4p-63",
+    "R": "0x1.bb86f5edaa000p-76"
+   },
+   "values_double_pinned": {
+    "P": "0x1.aa59cbc75c54ap-63",
+    "L": "0x1.aa4bef89f57a4p-63",
+    "R": "0x1.bb87acdb4a000p-76"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 305.8571393344929,
+   "resid_pinned_over_floor_pinned": 2.5512780685919772e-05
+  },
+  {
+   "depth": 12,
+   "a": "-0x1.fd4c77fe88db0p+1",
+   "b": "-0x1.fcdf8aba7aad6p+1",
+   "c": "-0x1.fd16015c81c43p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": true,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 0.0,
+    "L_lo": 0.0,
+    "L_top": -1.0,
+    "R_bot": 1.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.0c26300000000p-91",
+   "census_floor": "0x1.31ba03eb5309ep-101",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.0c26300000000p-91",
+   "floor_computed": "0x1.31ba03eb5309ep-101",
+   "resid_pinned_double": "0x1.0000000000000p-114",
+   "floor_pinned": "0x1.31ba03eb5309ep-101",
+   "values_double_computed": {
+    "P": "0x1.aa4bef89f57a4p-63",
+    "L": "-0x1.8568fdf2bf6b8p-67",
+    "R": "0x1.c2a27f79e3d40p-63"
+   },
+   "values_double_pinned": {
+    "P": "0x1.aa4bef89f57a4p-63",
+    "L": "-0x1.8568febbdc0f8p-67",
+    "R": "0x1.c2a27f75b33b5p-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 898.1381730245604,
+   "resid_pinned_over_floor_pinned": 0.00010221550143268157
+  },
+  {
+   "depth": 13,
+   "a": "-0x1.fd4c77fe88db0p+1",
+   "b": "-0x1.fd16015c81c43p+1",
+   "c": "-0x1.fd313cad854fap+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.0c26318000000p-91",
+   "census_floor": "0x1.31c2ac55f5b28p-102",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.0c26318000000p-91",
+   "floor_computed": "0x1.31c2ac55f5b28p-102",
+   "resid_pinned_double": "0x1.8000000000000p-115",
+   "floor_pinned": "0x1.31c2ac55f5b2bp-102",
+   "values_double_computed": {
+    "P": "-0x1.8568fdf2bf6b8p-67",
+    "L": "0x1.b7e7b6b4a6341p-63",
+    "R": "-0x1.d03e46a4948dep-63"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.8568febbdc0f8p-67",
+    "L": "0x1.b7e7b6b4a6341p-63",
+    "R": "-0x1.d03e46a063f52p-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 1796.0778151673258,
+   "resid_pinned_over_floor_pinned": 0.0001533062932295691
+  },
+  {
+   "depth": 14,
+   "a": "-0x1.fd4c77fe88db0p+1",
+   "b": "-0x1.fd313cad854fap+1",
+   "c": "-0x1.fd3eda5607155p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": true,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 0.0,
+    "L_lo": 0.0,
+    "L_top": 1.0,
+    "R_bot": -1.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.e60eb70000000p-91",
+   "census_floor": "0x1.3256018f8bed6p-103",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e60eb70000000p-91",
+   "floor_computed": "0x1.3256018f8bed6p-103",
+   "resid_pinned_double": "0x1.8000000000000p-114",
+   "floor_pinned": "0x1.3256018f8bed6p-103",
+   "values_double_computed": {
+    "P": "0x1.b7e7b6b4a6341p-63",
+    "L": "0x1.08fe387d76574p-63",
+    "R": "0x1.5dd2fc319de2cp-64"
+   },
+   "values_double_pinned": {
+    "P": "0x1.b7e7b6b4a6341p-63",
+    "L": "0x1.08fe388ca6cd1p-63",
+    "R": "0x1.5dd2fc4ffece5p-64"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 6499.045782789727,
+   "resid_pinned_over_floor_pinned": 0.0006120730951574419
+  },
+  {
+   "depth": 15,
+   "a": "-0x1.fd4c77fe88db0p+1",
+   "b": "-0x1.fd3eda5607155p+1",
+   "c": "-0x1.fd45a92a47f82p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": -1.0
+   },
+   "census_resid": "0x1.e60eb80000000p-91",
+   "census_floor": "0x1.33bd96060324cp-104",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e60eb80000000p-91",
+   "floor_computed": "0x1.33bd96060324cp-104",
+   "resid_pinned_double": "0x1.0000000000000p-115",
+   "floor_pinned": "0x1.33bd96060324bp-104",
+   "values_double_computed": {
+    "P": "0x1.08fe387d76574p-63",
+    "L": "0x1.76e41b9869c93p-63",
+    "R": "-0x1.b7978bf24a19cp-65"
+   },
+   "values_double_pinned": {
+    "P": "0x1.08fe388ca6cd1p-63",
+    "L": "0x1.76e41b9869c93p-63",
+    "R": "-0x1.b7978c2f0bf0ep-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 12938.765254378975,
+   "resid_pinned_over_floor_pinned": 0.00040618628810193126
+  },
+  {
+   "depth": 16,
+   "a": "-0x1.fd45a92a47f82p+1",
+   "b": "-0x1.fd3eda5607155p+1",
+   "c": "-0x1.fd4241c02786cp+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": -1.0,
+    "L_lo": 0.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 1.0
+   },
+   "census_resid": "0x1.e60eba0000000p-91",
+   "census_floor": "0x1.36acdcd554d03p-105",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e60eba0000000p-91",
+   "floor_computed": "0x1.36acdcd554d03p-105",
+   "resid_pinned_double": "0x1.8000000000000p-115",
+   "floor_pinned": "0x1.36acdcd554d03p-105",
+   "values_double_computed": {
+    "P": "-0x1.b7978bf24a19cp-65",
+    "L": "-0x1.b05544f1e0537p-63",
+    "R": "0x1.426f61d6ece16p-63"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.b7978c2f0bf0ep-65",
+    "L": "-0x1.b05544f1e0537p-63",
+    "R": "0x1.426f61e61d572p-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 25633.08997790885,
+   "resid_pinned_over_floor_pinned": 0.0012070482166144803,
+   "s_double_computed": 7.668635593234527e-28,
+   "s_double_pinned": 3.611118645726067e-35,
+   "s_mp_computed": 7.668635327567642e-28,
+   "s_mp_pinned": 1.1800838741079848e-35,
+   "dS_measured": 7.668635209559254e-28,
+   "dS_predicted": 7.999689195615434e-28,
+   "dS_mismatch": 3.3105398605618e-29,
+   "offsets": {
+    "P": 3.999844597807717e-28,
+    "L": 0.0,
+    "R": -3.999844597807717e-28
+   },
+   "values_mp_computed": {
+    "P": -4.6543611212500565e-20,
+    "L": -1.8310018285657888e-19,
+    "R": 1.3655657087721476e-19
+   },
+   "values_mp_pinned": {
+    "P": -4.6543611595932326e-20,
+    "L": -1.8310018285657888e-19,
+    "R": 1.3655657126064652e-19
+   },
+   "dbl_minus_mp_computed": 2.6566688576215763e-35,
+   "dbl_minus_mp_pinned": 2.4310347716180825e-35,
+   "flagged": true,
+   "tests": {
+    "i_no_tile": true,
+    "ii_pinned_le_10floor": true,
+    "iii_change_matches_offsets": true
+   },
+   "attributed_to_tiling": true,
+   "largest_component": "end-node offset (mp, computed - pinned)",
+   "components": {
+    "resolution of the scheme (mp, pinned ends)": 1.1800838741079848e-35,
+    "solve rounding (double - mp, computed ends)": 2.6566688576215763e-35,
+    "end-node offset (mp, computed - pinned)": 7.668635209559254e-28
+   }
+  },
+  {
+   "depth": 17,
+   "a": "-0x1.fd45a92a47f82p+1",
+   "b": "-0x1.fd4241c02786cp+1",
+   "c": "-0x1.fd43f57537bf7p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": true,
+   "ulps": {
+    "P_lo": 0.0,
+    "P_hi": 0.0,
+    "L_lo": 0.0,
+    "L_top": 1.0,
+    "R_bot": -1.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.e736a50000000p-91",
+   "census_floor": "0x1.57c52c1538352p-106",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e736a50000000p-91",
+   "floor_computed": "0x1.57c52c1538352p-106",
+   "resid_pinned_double": "0x0.0p+0",
+   "floor_pinned": "0x1.57c52c1538352p-106",
+   "values_double_computed": {
+    "P": "-0x1.b05544f1e0537p-63",
+    "L": "-0x1.bebdffac6c52bp-65",
+    "R": "-0x1.40a5c52538a91p-63"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.b05544f1e0537p-63",
+    "L": "-0x1.bebdff5112143p-65",
+    "R": "-0x1.40a5c51d9bce6p-63"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 46440.937343639845,
+   "resid_pinned_over_floor_pinned": 0.0,
+   "s_double_computed": 7.686872885916348e-28,
+   "s_double_pinned": -6.018531076210112e-36,
+   "s_mp_computed": 7.686873066508747e-28,
+   "s_mp_pinned": 5.691216410590189e-36,
+   "dS_measured": 7.686873009596582e-28,
+   "dS_predicted": 8.017464612269826e-28,
+   "dS_mismatch": 3.3059160267324284e-29,
+   "offsets": {
+    "P": 0.0,
+    "L": -4.008732306134913e-28,
+    "R": -4.008732306134913e-28
+   },
+   "values_mp_computed": {
+    "P": -1.8310018285657888e-19,
+    "L": -4.730066844017564e-20,
+    "R": -1.3579951518509054e-19
+   },
+   "values_mp_pinned": {
+    "P": -1.8310018285657888e-19,
+    "L": -4.73006678636602e-20,
+    "R": -1.3579951499291868e-19
+   },
+   "dbl_minus_mp_computed": -1.8059239819072313e-35,
+   "dbl_minus_mp_pinned": -1.17097474868003e-35,
+   "flagged": true,
+   "tests": {
+    "i_no_tile": true,
+    "ii_pinned_le_10floor": true,
+    "iii_change_matches_offsets": true
+   },
+   "attributed_to_tiling": true,
+   "largest_component": "end-node offset (mp, computed - pinned)",
+   "components": {
+    "resolution of the scheme (mp, pinned ends)": 5.691216410590189e-36,
+    "solve rounding (double - mp, computed ends)": 1.8059239819072313e-35,
+    "end-node offset (mp, computed - pinned)": 7.686873009596582e-28
+   }
+  },
+  {
+   "depth": 18,
+   "a": "-0x1.fd43f57537bf7p+1",
+   "b": "-0x1.fd4241c02786cp+1",
+   "c": "-0x1.fd431b9aafa32p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": -1.0,
+    "P_hi": 0.0,
+    "L_lo": 1.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.e736ae0000000p-91",
+   "census_floor": "0x1.e46438eb8153ap-107",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e736ae0000000p-91",
+   "floor_computed": "0x1.e46438eb8153ap-107",
+   "resid_pinned_double": "0x1.8000000000000p-113",
+   "floor_pinned": "0x1.e46438eb81538p-107",
+   "values_double_computed": {
+    "P": "-0x1.40a5c52538a91p-63",
+    "L": "-0x1.e8257017a648cp-64",
+    "R": "-0x1.324c33ebc8674p-65"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.40a5c51d9bce6p-63",
+    "L": "-0x1.e825704553686p-64",
+    "R": "-0x1.324c33ebc8674p-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 65917.81735750622,
+   "resid_pinned_over_floor_pinned": 0.012386674993573054,
+   "s_double_computed": -7.6868751127728466e-28,
+   "s_double_pinned": -1.4444474582904269e-34,
+   "s_mp_computed": -7.686874775216475e-28,
+   "s_mp_pinned": -1.2203337539176837e-34,
+   "dS_measured": -7.686873554882721e-28,
+   "dS_predicted": -8.017464612269826e-28,
+   "dS_mismatch": 3.305910573871047e-29,
+   "offsets": {
+    "P": -4.008732306134913e-28,
+    "L": 4.008732306134913e-28,
+    "R": 0.0
+   },
+   "values_mp_computed": {
+    "P": -1.3579951518509054e-19,
+    "L": -1.0336898743770636e-19,
+    "R": -3.24305269786967e-20
+   },
+   "values_mp_pinned": {
+    "P": -1.3579951499291868e-19,
+    "L": -1.0336898801422185e-19,
+    "R": -3.24305269786967e-20
+   },
+   "dbl_minus_mp_computed": -3.3755637204246207e-35,
+   "dbl_minus_mp_pinned": -2.2411370437274325e-35,
+   "flagged": true,
+   "tests": {
+    "i_no_tile": true,
+    "ii_pinned_le_10floor": true,
+    "iii_change_matches_offsets": true
+   },
+   "attributed_to_tiling": true,
+   "largest_component": "end-node offset (mp, computed - pinned)",
+   "components": {
+    "resolution of the scheme (mp, pinned ends)": 1.2203337539176837e-34,
+    "solve rounding (double - mp, computed ends)": 3.3755637204246207e-35,
+    "end-node offset (mp, computed - pinned)": 7.686873554882721e-28
+   }
+  },
+  {
+   "depth": 19,
+   "a": "-0x1.fd43f57537bf7p+1",
+   "b": "-0x1.fd431b9aafa32p+1",
+   "c": "-0x1.fd438887f3b14p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": 1.0,
+    "P_hi": 0.0,
+    "L_lo": -1.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.e736b40000000p-91",
+   "census_floor": "0x1.7ed40b52a84d4p-107",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e736b40000000p-91",
+   "floor_computed": "0x1.7ed40b52a84d4p-107",
+   "resid_pinned_double": "0x1.e000000000000p-112",
+   "floor_pinned": "0x1.7ed40b52a84d8p-107",
+   "values_double_computed": {
+    "P": "-0x1.e8257017a648cp-64",
+    "L": "-0x1.029ecb6a99e1cp-64",
+    "R": "-0x1.cb0d49d3e67afp-65"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.e825704553686p-64",
+    "L": "-0x1.029ecb5b602ccp-64",
+    "R": "-0x1.cb0d49d3e67afp-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 83405.63167797969,
+   "resid_pinned_over_floor_pinned": 0.03918205651787222,
+   "s_double_computed": 7.686876497034994e-28,
+   "s_double_pinned": 3.550933334963966e-34,
+   "s_mp_computed": 7.686875281394242e-28,
+   "s_mp_pinned": 2.236671656381681e-34,
+   "dS_measured": 7.686873044722586e-28,
+   "dS_predicted": 8.017464612269826e-28,
+   "dS_mismatch": 3.3059156754723974e-29,
+   "offsets": {
+    "P": 4.008732306134913e-28,
+    "L": -4.008732306134913e-28,
+    "R": 0.0
+   },
+   "values_mp_computed": {
+    "P": -1.0336898743770636e-19,
+    "L": -5.476497690855727e-20,
+    "R": -4.860401129783661e-20
+   },
+   "values_mp_pinned": {
+    "P": -1.0336898801422185e-19,
+    "L": -5.476497671638547e-20,
+    "R": -4.860401129783661e-20
+   },
+   "dbl_minus_mp_computed": 1.215640752182868e-34,
+   "dbl_minus_mp_pinned": 1.314261678582285e-34,
+   "flagged": true,
+   "tests": {
+    "i_no_tile": true,
+    "ii_pinned_le_10floor": true,
+    "iii_change_matches_offsets": true
+   },
+   "attributed_to_tiling": true,
+   "largest_component": "end-node offset (mp, computed - pinned)",
+   "components": {
+    "resolution of the scheme (mp, pinned ends)": 2.236671656381681e-34,
+    "solve rounding (double - mp, computed ends)": 1.215640752182868e-34,
+    "end-node offset (mp, computed - pinned)": 7.686873044722586e-28
+   }
+  },
+  {
+   "depth": 20,
+   "a": "-0x1.fd43f57537bf7p+1",
+   "b": "-0x1.fd438887f3b14p+1",
+   "c": "-0x1.fd43befe95b86p+1",
+   "types": [
+    "Levin",
+    "Levin",
+    "Levin"
+   ],
+   "tile": false,
+   "parent_exact": false,
+   "ulps": {
+    "P_lo": -1.0,
+    "P_hi": 0.0,
+    "L_lo": 1.0,
+    "L_top": 0.0,
+    "R_bot": 0.0,
+    "R_hi": 0.0
+   },
+   "census_resid": "0x1.e736990000000p-91",
+   "census_floor": "0x1.4c0c3558e7c5bp-107",
+   "reproduces_census_resid_and_floor": true,
+   "resid_computed_double": "0x1.e736990000000p-91",
+   "floor_computed": "0x1.4c0c3558e7c5bp-107",
+   "resid_pinned_double": "0x1.4000000000000p-112",
+   "floor_pinned": "0x1.4c0c3558e7c5ap-107",
+   "values_double_computed": {
+    "P": "-0x1.029ecb6a99e1cp-64",
+    "L": "-0x1.0169ab8109143p-65",
+    "R": "-0x1.03d3eada5d091p-65"
+   },
+   "values_double_pinned": {
+    "P": "-0x1.029ecb5b602ccp-64",
+    "L": "-0x1.0169abdc6352ep-65",
+    "R": "-0x1.03d3eada5d091p-65"
+   },
+   "branch_pinned": {
+    "P": "Levin",
+    "L": "Levin",
+    "R": "Levin"
+   },
+   "resid_over_floor": 96160.91319508712,
+   "resid_pinned_over_floor_pinned": 0.030116155994533902,
+   "s_double_computed": -7.6868700572067425e-28,
+   "s_double_pinned": 2.3472271197219437e-34,
+   "s_mp_computed": -7.686873505331713e-28,
+   "s_mp_pinned": -7.705490399853719e-35,
+   "dS_measured": -7.686872734782673e-28,
+   "dS_predicted": -8.017464612269826e-28,
+   "dS_mismatch": 3.3059187748715205e-29,
+   "offsets": {
+    "P": -4.008732306134913e-28,
+    "L": 4.008732306134913e-28,
+    "R": 0.0
+   },
+   "values_mp_computed": {
+    "P": -5.476497690855727e-20,
+    "L": -2.725463749243153e-20,
+    "R": -2.75103386474384e-20
+   },
+   "values_mp_pinned": {
+    "P": -5.476497671638547e-20,
+    "L": -2.725463806894699e-20,
+    "R": -2.75103386474384e-20
+   },
+   "dbl_minus_mp_computed": 3.448124970681605e-34,
+   "dbl_minus_mp_pinned": 3.1177761597073155e-34,
+   "flagged": true,
+   "tests": {
+    "i_no_tile": true,
+    "ii_pinned_le_10floor": true,
+    "iii_change_matches_offsets": true
+   },
+   "attributed_to_tiling": true,
+   "largest_component": "end-node offset (mp, computed - pinned)",
+   "components": {
+    "resolution of the scheme (mp, pinned ends)": 7.705490399853719e-35,
+    "solve rounding (double - mp, computed ends)": 3.448124970681605e-34,
+    "end-node offset (mp, computed - pinned)": 7.686872734782673e-28
+   }
+  }
+ ],
+ "stationary": {
+  "max_abs_theta_prime_span": 34179907.4756442,
+  "span_sign_changes": [],
+  "region16": [
+   "-0x1.fd45a92a47f82p+1",
+   "-0x1.fd3eda5607155p+1"
+  ],
+  "region16_points": 20250,
+  "region16_min_abs_theta_prime": 8748924.800529845,
+  "region16_min_at_x": -3.9786883789492444,
+  "region16_min_at_z": null,
+  "region16_theta_prime_at_min": 8748924.800529845,
+  "region16_theta_second_at_min": 8748924.801126122,
+  "region16_min_over_span_max": 0.25596689536869355,
+  "region16_sign_changes": [],
+  "holds": false
+ },
+ "summary": {
+  "n_deep_flagged": 5,
+  "n_deep_attributed": 5,
+  "is_a": true,
+  "is_b": false,
+  "class": "a",
+  "class_c_component": null,
+  "all_levels_reproduce_census": true,
+  "deep_flagged_not_attributed": [],
+  "seconds": 8.691848749993369
+ },
+ "header": [
+  "# depth20-tiling step 3: classification re-solves",
+  "# host mps026298.phys.susx.ac.uk",
+  "# utc 2026-10-29T22:08:21Z",
+  "# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)",
+  "# script classify.py sha256 333c27d1aff0a5c5ab4519e761f06856f2380cf4f1a2b1167ae75f4c7cb06f6c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/cheap_pass.json sha256 88684b297f40efc39b6b3b4460a25eedf431211a3c855d3119032ae7649ca1f1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts/dcommon.py sha256 dcd23cc215e7951504db4c9aebbb5cf2d655c8d3b33b137f7d739d8d2e699c76",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1"
+ ]
+}

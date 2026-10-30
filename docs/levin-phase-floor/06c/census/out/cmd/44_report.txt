@@ -1,0 +1,238 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06c.py report /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 out/x1_reference.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:42:35Z
+# ----
+# levin-phase-floor 06c: the census's scores and descriptive items
+# written 2026-10-29T15:42:35Z on mps026298.phys.susx.ac.uk
+# script analyse06c.py sha256 c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+# input out/x1_reference.json sha256 c9d6d0816fad61d4065216669d1a4a652d5e10af6f35825b8d65f0ce4eea8144
+
+06a's stationary-point rows: 720
+
+== X1 — honest where it moved (rtol 1e-7; state/x1_selection.json, out/x1_reference.json)
+   g-1e-7-0-12856 call 2 (cat 2, mid, 0:101): |S9-S10|/abserr_g 3.04e-05; err_g/abserr_g 0.02494 -> holds; err_06b/abserr_06b 0.15352824308796154
+   g-1e-7-0-13758 call 1 (cat 2, mid, 0:202): |S9-S10|/abserr_g 2.26e-10; err_g/abserr_g 0.001986 -> holds; err_06b/abserr_06b 5.644460007459907
+   g-1e-7-0-14050 call 3 (cat 1, mid, 0:202): |S9-S10|/abserr_g 0.000132; err_g/abserr_g 0.2365 -> holds; err_06b/abserr_06b 0.0014302030135205804
+   g-1e-7-0-14127 call 3 (cat 2, low, 0:202): |S9-S10|/abserr_g 0.000254; err_g/abserr_g 1.375 -> FAILS; err_06b/abserr_06b 0.0
+   g-1e-7-0-2003 call 4 (cat 1, mid, 0:101): |S9-S10|/abserr_g 0.000603; err_g/abserr_g 0.9704 -> holds; err_06b/abserr_06b 0.10344750077899617
+   g-1e-7-0-35112 call 4 (cat 1, low, 0:202): |S9-S10|/abserr_g 0.00169; err_g/abserr_g 0.122 -> holds; err_06b/abserr_06b 0.002353061863921292
+   g-1e-7-0-38345 call 0 (cat 2, low, 0:101): |S9-S10|/abserr_g 9.83e-07; err_g/abserr_g 0.2268 -> holds; err_06b/abserr_06b 0.21349258662439008
+   g-1e-7-0-38458 call 1 (cat 1, low, 0:101): |S9-S10|/abserr_g 6.13e-05; err_g/abserr_g 0.1102 -> holds; err_06b/abserr_06b 0.08348919418907286
+   g-1e-7-1-2207 call 1 (cat 1, low, 1:102): |S9-S10|/abserr_g 3.81e-08; err_g/abserr_g 0.002974 -> holds; err_06b/abserr_06b 0.0020231458249850747
+   g-1e-7-1-2292 call 3 (cat 2, low, 1:102): |S9-S10|/abserr_g 0.000507; err_g/abserr_g 0.2775 -> holds; err_06b/abserr_06b 0.49372327894541246
+   g-1e-7-1-34558 call 4 (cat 1, mid, 1:102): |S9-S10|/abserr_g 0.00405; err_g/abserr_g 0.3392 -> holds; err_06b/abserr_06b 0.02217152675693667
+   g-1e-7-1-34624 call 0 (cat 2, mid, 1:102): |S9-S10|/abserr_g 2.1e-08; err_g/abserr_g 0.0281 -> holds; err_06b/abserr_06b 0.21618273308430627
+   g-1e-7-2-13636 call 6 (cat 1, mid, 2:2): |S9-S10|/abserr_g 0.00521; err_g/abserr_g 0.3387 -> holds; err_06b/abserr_06b 0.00708674661705273
+   g-1e-7-2-1681 call 0 (cat 2, mid, 2:2): |S9-S10|/abserr_g 4.27e-08; err_g/abserr_g 0.2234 -> holds; err_06b/abserr_06b 0.8963284934264387
+   g-1e-7-2-34894 call 2 (cat 2, low, 2:2): |S9-S10|/abserr_g 9.72e-06; err_g/abserr_g 0.465 -> holds; err_06b/abserr_06b 0.667016336095461
+   g-1e-7-2-39037 call 1 (cat 1, low, 2:2): |S9-S10|/abserr_g 8.39e-06; err_g/abserr_g 0.2029 -> holds; err_06b/abserr_06b 2.253884414859297
+   g-1e-7-3-14094 call 3 (cat 1, mid, 3:201): |S9-S10|/abserr_g 0.000133; err_g/abserr_g 0.05349 -> holds; err_06b/abserr_06b 0.007304737734415977
+   g-1e-7-3-14503 call 1 (cat 1, low, 3:1): |S9-S10|/abserr_g 0.00117; err_g/abserr_g 0.2786 -> holds; err_06b/abserr_06b 0.04814723461531729
+   g-1e-7-3-14507 call 1 (cat 2, low, 3:201): |S9-S10|/abserr_g 3.73e-07; err_g/abserr_g 0.009606 -> holds; err_06b/abserr_06b 0.009978524866818116
+   g-1e-7-3-1922 call 3 (cat 2, mid, 3:1): |S9-S10|/abserr_g 4.37e-05; err_g/abserr_g 0.8462 -> holds; err_06b/abserr_06b 1.2436346096195137
+   g-1e-7-3-34301 call 4 (cat 2, mid, 3:201): |S9-S10|/abserr_g 0.000639; err_g/abserr_g 0.2216 -> holds; err_06b/abserr_06b 0.010036163828047671
+   g-1e-7-3-37325 call 2 (cat 1, mid, 3:1): |S9-S10|/abserr_g 2.5e-05; err_g/abserr_g 0.4684 -> holds; err_06b/abserr_06b 1.5795800597715481
+   g-1e-7-3-38436 call 5 (cat 1, low, 3:201): DROPPED (|S9-S10| = 0.0215 abserr_g > 1/100); err_g/abserr_g 0.479 (descriptive); err_06b/abserr_06b 1.725203353333562e-05
+   g-1e-7-3-39140 call 2 (cat 2, low, 3:1): |S9-S10|/abserr_g 1.15e-05; err_g/abserr_g 0.9915 -> holds; err_06b/abserr_06b 1.0371620562455226
+   calls left in the rule: 23 of 24
+   X1 FAILS
+
+== unmatched calls or differing call counts: 0
+== units whose wall time exceeded 300 s but which the dispatcher's budget did not stop (status done): 9 [('g-1e-7-0-38939', 425.6), ('g-1e-8-0-38939', 875.4), ('g-1e-8-1-35477', 331.6), ('g-1e-8-1-38737', 382.2), ('g-1e-8-2-1574', 359.8), ('g-1e-8-2-1578', 314.0), ('g-1e-8-2-1605', 686.1), ('g-1e-8-2-38298', 1184.7), ('g-1e-8-3-34271', 317.3)]
+
+== X2 — budget misses converge
+   1e-7: 06b X2-type calls outside the 720 rows: 20425; unconverged under g: 53; in over-budget units 0
+      unconverged by cause: {'untrusted at cap': 49, 'budget unmet': 2, 'depth_max': 2}; first: [('g-1e-7-0-12875', 13, 'analytic J1', '0x1.5a5a9dec98159p-72', 20, 8), ('g-1e-7-0-12875', 14, 'analytic Y1', '0x1.87ebfb834b7dbp-74', 20, 1), ('g-1e-7-0-12875', 19, 'analytic J4', '0x1.739e20f4fa8b5p-64', 20, 4), ('g-1e-7-0-12896', 18, 'analytic Y2', '0x1.321666afaaa73p-71', 20, 10), ('g-1e-7-0-12932', 14, 'analytic Y1', '0x1.b0c487d2392aap-78', 20, 4), ('g-1e-7-0-12932', 19, 'analytic J4', '0x1.59397b42b97a9p-80', 20, 1)]
+   1e-8: 06b X2-type calls outside the 720 rows: 22442; unconverged under g: 127; in over-budget units 0
+      unconverged by cause: {'budget unmet': 37, 'untrusted at cap': 63, 'depth_max': 27}; first: [('g-1e-8-0-12591', 4, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.4527e+07, z in (1.709e+09, 1.4527e+07), regime Gqr, group G+q-r', '0x1.7dfd6c63d1863p-104', 12, 0), ('g-1e-8-0-12689', 4, 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=2.7669e+06, z in (5.406e+09, 2.7669e+06), regime Gqr, group G-q-r', '0x1.4fab40a11ac32p-106', 14, 0), ('g-1e-8-0-12720', 4, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r', '0x1.3c67c21a9de59p-100', 18, 0), ('g-1e-8-0-12762', 4, 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=6.9475e+05, z in (5.406e+09, 6.9475e+05), regime Gqr, group G-q-r', '0x1.8a173a82133b8p-106', 14, 0), ('g-1e-8-0-12780', 6, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.3232e+05, z in (1.709e+09, 1.3232e+05), regime Gqr, group G-q-r', '0x1.0609d35c6b898p-104', 13, 0), ('g-1e-8-0-12783', 4, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=3.9973e+05, z in (1.709e+09, 3.9973e+05), regime Gqr, group G+q-r', '0x1.11dfdd2fe212ep-104', 13, 0)]
+   X2 FAILS
+
+== X3 — no infinite declared error
+   1e-7: calls with abserr +inf: 0, of them with no leaf at depth_max: 0 []; NaN abserr: 0 []
+   1e-8: calls with abserr +inf: 0, of them with no leaf at depth_max: 0 []; NaN abserr: 0 []
+   X3 HOLDS
+
+== X4 — the rows agree (outside the 720 rows; exact)
+   1e-7: rows scored 8092; violations 263; rows with a non-finite total_abserr in either 468; over budget 0
+      ('g-1e-7-0-37218', '-0x1.feee9d56e74b3p-66', '-0x1.feeee472e74a5p-66', '1.2227177428593336e-27', '6.988809956474915e-28', 29.89265889978594)
+      ('g-1e-7-0-36814', '0x1.c9705a58787f2p-65', '0x1.c970987adb1c0p-65', '2.1839742162856065e-27', '1.2919070328164696e-27', 28.87998647437411)
+      ('g-1e-7-0-33975', '-0x1.94c4b8dad630ep-49', '-0x1.94c309e3b73f9p-49', '9.368040461016318e-22', '6.698076197846307e-22', 28.401528931951162)
+      ('g-1e-7-3-34253', '0x1.3b89341f89aa5p-72', '0x1.3b7aaa3e9b929p-72', '1.224588182115789e-27', '5.6309985578797375e-28', 26.277914135397015)
+      ('g-1e-7-2-21568', '0x1.9fd216c078d19p-49', '0x1.9fd25bab5db78p-49', '2.6452563542328093e-22', '2.938386680152397e-23', 24.82713193371053)
+      ('g-1e-7-3-1115', '0x1.5159e1deb7bacp-44', '0x1.515713e428de4p-44', '2.886472014504124e-20', '7.299703846949269e-20', 23.881451037367135)
+      ('g-1e-7-3-1090', '-0x1.0be805297153bp-62', '-0x1.0bdd7db35fc91p-62', '1.3615120648716426e-24', '5.174464892826558e-25', 18.54113251551379)
+      ('g-1e-7-3-936', '0x1.b4ff6ac03f6b4p-60', '0x1.b4f1b7cd640d6p-60', '7.450196646303736e-24', '2.9736526378114945e-24', 17.39328642851578)
+      ('g-1e-7-0-12695', '-0x1.6202c6087b9d9p-61', '-0x1.62031edfcaa46p-61', '6.902561331367503e-26', '9.119993647837255e-26', 14.332840861617463)
+      ('g-1e-7-0-34034', '-0x1.87c1dc41b500ep-56', '-0x1.87c240b1b6f7dp-56', '2.572724281195218e-24', '3.2793032264678444e-24', 14.196785210123686)
+   1e-8: rows scored 8092; violations 302; rows with a non-finite total_abserr in either 468; over budget 0
+      ('g-1e-8-2-21568', '0x1.9fd2175dbae95p-49', '0x1.9fd25baad397bp-49', '7.593961364825385e-23', '2.5132076794936335e-23', 71.5498706718649)
+      ('g-1e-8-0-12976', '0x1.2fb54a6a632d1p-68', '0x1.2fb57157b5fdep-68', '5.358245886500115e-29', '9.575132780829987e-29', 52.64216686089444)
+      ('g-1e-8-3-994', '-0x1.8aeacd6baebfdp-48', '-0x1.8aeabc7ea78ffp-48', '6.126767837694364e-23', '2.5102116586912977e-23', 41.498267052497745)
+      ('g-1e-8-0-1955', '0x1.38f520354b6e8p-78', '0x1.38f55b50bb5d2p-78', '2.1535705323037755e-31', '1.118639882704322e-31', 35.62373365552222)
+      ('g-1e-8-3-1253', '-0x1.ddc201fe8323cp-47', '-0x1.ddc211f2083ccp-47', '1.4598061610117279e-22', '5.445028591148667e-23', 33.70546626151134)
+      ('g-1e-8-3-38023', '-0x1.201850fd40e89p-65', '-0x1.20185a97c6ca4p-65', '3.332301736864353e-28', '1.2748273015403002e-28', 33.67707122371306)
+      ('g-1e-8-3-34253', '0x1.3b89341f89aa5p-72', '0x1.3b7ae09c88b81p-72', '1.224588182115789e-27', '1.8742810656712683e-28', 32.783266300147055)
+      ('g-1e-8-0-33538', '-0x1.a807f54d7cfe5p-51', '-0x1.a807dfee021abp-51', '1.662138577875721e-23', '5.6632031343089056e-24', 25.386951410824718)
+      ('g-1e-8-3-1090', '-0x1.0be805297153bp-62', '-0x1.0bdd9ce52b44fp-62', '1.3615120648716426e-24', '1.3548227568187513e-25', 23.002652050024285)
+      ('g-1e-8-3-936', '0x1.b4ff6ac03f6b4p-60', '0x1.b4f1df680bb7cp-60', '7.450196646303736e-24', '9.36643530803439e-25', 21.37366486551083)
+   X4 FAILS
+
+== X5 — the cap
+   1e-7: calls that moved 124543 ({'analytic': 92565, 'group': 31978, 'analytic (not moved)': 14851, 'group (not moved)': 5347}); moved calls reaching depth_max 109; units over budget 0
+      depth_max calls by kind {'group': 14, 'analytic': 95}; converged 8; with an untrusted leaf 99
+      ('g-1e-7-0-38939', 12, 'analytic Y4', 64131, 234625, False, 5)
+      ('g-1e-7-3-34271', 13, 'analytic J1', 11916, 45643, False, 0)
+      ('g-1e-7-2-1605', 17, 'analytic J2', 11924, 44295, False, 0)
+      ('g-1e-7-2-37523', 7, 'analytic J1', 1282, 10255, False, 68)
+      ('g-1e-7-3-13913', 11, 'analytic J3', 625, 4999, False, 48)
+      ('g-1e-7-0-13776', 13, 'analytic J4', 606, 4847, False, 50)
+      ('g-1e-7-2-34708', 5, 'analytic J1', 591, 4727, False, 35)
+      ('g-1e-7-0-13776', 7, 'analytic J1', 544, 4351, False, 31)
+   1e-8: calls that moved 125860 ({'analytic': 93838, 'group': 32022, 'analytic (not moved)': 13578, 'group (not moved)': 5303}); moved calls reaching depth_max 153; units over budget 0
+      depth_max calls by kind {'group': 12, 'analytic': 141}; converged 7; with an untrusted leaf 117
+      ('g-1e-8-0-38939', 5, 'analytic J1', 74941, 277395, False, 0)
+      ('g-1e-8-2-38298', 8, 'analytic Y1', 71823, 271603, False, 0)
+      ('g-1e-8-2-38298', 11, 'analytic J3', 67267, 246777, False, 0)
+      ('g-1e-8-0-38939', 12, 'analytic Y4', 64131, 234185, False, 0)
+      ('g-1e-8-2-38298', 9, 'analytic J2', 55256, 213455, False, 0)
+      ('g-1e-8-1-38737', 7, 'analytic J1', 57314, 207455, False, 13)
+      ('g-1e-8-2-1578', 18, 'analytic Y2', 52462, 193819, False, 0)
+      ('g-1e-8-1-35477', 20, 'analytic Y4', 48212, 180555, False, 0)
+   X5 FAILS  (with the 9-unit wall-time reading too: 9 units exceeded 300 s)
+
+== descriptive: convergence (calls and rows), g against 06b
+   1e-7 group   : g converged 37310, unconverged 15 | 06b converged 31537, unconverged 5788
+   1e-7 analytic: g converged 107327, unconverged 89 | 06b converged 89681, unconverged 17735
+   1e-7 rows    : g converged 9267, unconverged 13 | 06b converged 6931, unconverged 2349
+   1e-8 group   : g converged 37276, unconverged 49 | 06b converged 31139, unconverged 6186
+   1e-8 analytic: g converged 107265, unconverged 151 | 06b converged 87565, unconverged 19851
+   1e-8 rows    : g converged 9235, unconverged 45 | 06b converged 6892, unconverged 2388
+
+== descriptive: depth (row depth over every Levin call; over group calls in brackets), g against 06b
+   1e-7 g:   {0: 2474, 1: 226, 2: 210, 3: 261, 4: 422, 5: 543, 6: 767, 7: 1101, 8: 978, 9: 617, 10: 372, 11: 279, 12: 247, 13: 236, 14: 182, 15: 91, 16: 82, 17: 61, 18: 39, 19: 29, 20: 63}
+   1e-7 06b: {0: 2753, 1: 432, 2: 1723, 3: 747, 4: 160, 5: 105, 6: 514, 7: 2010, 8: 708, 9: 35, 10: 5, 11: 37, 12: 39, 13: 5, 14: 6, 18: 1}
+   1e-7 [group] g {-1: 2489, 0: 124, 1: 309, 2: 388, 3: 934, 4: 671, 5: 586, 6: 807, 7: 1169, 8: 818, 9: 321, 10: 150, 11: 139, 12: 87, 13: 87, 14: 71, 15: 39, 16: 35, 17: 20, 18: 16, 19: 8, 20: 12} | 06b {-1: 2489, 0: 291, 1: 530, 2: 1786, 3: 654, 4: 99, 5: 96, 6: 510, 7: 2006, 8: 707, 9: 29, 10: 3, 11: 36, 12: 38, 13: 3, 14: 3}
+   1e-8 g:   {0: 2468, 1: 207, 2: 211, 3: 239, 4: 383, 5: 504, 6: 656, 7: 764, 8: 1046, 9: 837, 10: 478, 11: 299, 12: 293, 13: 245, 14: 200, 15: 127, 16: 94, 17: 71, 18: 50, 19: 27, 20: 81}
+   1e-8 06b: {0: 2718, 1: 396, 2: 1330, 3: 702, 4: 342, 5: 144, 6: 419, 7: 540, 8: 1572, 9: 919, 10: 29, 11: 43, 12: 59, 13: 23, 14: 18, 15: 11, 17: 1, 18: 8, 19: 3, 20: 3}
+   1e-8 [group] g {-1: 2489, 0: 121, 1: 303, 2: 388, 3: 935, 4: 683, 5: 589, 6: 665, 7: 755, 8: 948, 9: 555, 10: 263, 11: 140, 12: 96, 13: 97, 14: 85, 15: 58, 16: 48, 17: 22, 18: 23, 19: 6, 20: 11} | 06b {-1: 2489, 0: 284, 1: 516, 2: 1790, 3: 567, 4: 69, 5: 91, 6: 396, 7: 529, 8: 1564, 9: 890, 10: 8, 11: 31, 12: 46, 13: 7, 14: 3}
+
+== descriptive: cost
+   1e-7 group   : regions g 283762 vs 06b 110743; solves g 2227007 vs 06b 273305
+   1e-7 analytic: regions g 689936 vs 06b 181668; solves g 5028150 vs 06b 606628
+   1e-7 unit wall: g sum 3.21 h, max 425.6 s, n 9280: p0 0.0618, p10 0.0694, p50 0.947, p90 2.46, p99 5.72, p100 426 | 06b sum 0.69 h, max 2.4 s
+   1e-8 group   : regions g 430926 vs 06b 163779; solves g 3165643 vs 06b 393649
+   1e-8 analytic: regions g 1655420 vs 06b 301555; solves g 9278948 vs 06b 1084004
+   1e-8 unit wall: g sum 5.77 h, max 1184.7 s, n 9280: p0 0.0596, p10 0.0693, p50 1.19, p90 3.35, p99 9.27, p100 1.18e+03 | 06b sum 0.94 h, max 158.9 s
+
+== descriptive: where the budget went (per call, the largest share of E; and the summed shares)
+   1e-7 group   : calls by largest share {'resolution': 31159, 'floor': 6166}; summed shares {'resolution': '5.37e-26', 'floor': '4.74e-29', 'truncation': '8.31e-34'}
+   1e-7 analytic: calls by largest share {'resolution': 66540, 'floor': 40854, 'truncation': 22}; summed shares {'resolution': '3.93e-13', 'floor': '8.54e-16', 'truncation': '8.63e-20'}
+   1e-8 group   : calls by largest share {'resolution': 31163, 'floor': 6162}; summed shares {'resolution': '6.89e-27', 'floor': '1.55e-29', 'truncation': '1.48e-37'}
+   1e-8 analytic: calls by largest share {'floor': 47425, 'resolution': 59991}; summed shares {'resolution': '2.53e-14', 'floor': '3.76e-16', 'truncation': '9.87e-22'}
+
+== descriptive: the trust check (leaves returned, counters, cost; r distribution below)
+   1e-7 group   : {'cc': 94445, 'check passes': 182591, 'checks': 441165, 'floor_limited': 22744, 'levin': 189317, 'resum rejections': 0, 'running/returned disagree': 0, 'solves: Levin left-comparison region': 107428, 'solves: Levin right-comparison region': 107428, 'solves: Levin subregion': 37325, 'solves: fallback half, for _adaptive_levin': 66228, 'solves: fallback half, for _check_leaf': 143938, 'solves: trust check: a quarter': 1764660, 'trusted': 260908, 'unchecked': 0, 'untrusted': 110, 'untrusted found during the call': 170761, 'untrusted returned': 110, 'widened': 260908}
+      solves the check made: 1908598 of 2227007 (0.857)
+   1e-7 analytic: {'cc': 52986, 'check passes': 506050, 'checks': 1001502, 'floor_limited': 178396, 'levin': 636950, 'resum rejections': 0, 'running/returned disagree': 0, 'solves: Levin left-comparison region': 430067, 'solves: Levin right-comparison region': 430067, 'solves: Levin subregion': 107416, 'solves: fallback half, for _adaptive_levin': 41950, 'solves: fallback half, for _check_leaf': 12642, 'solves: trust check: a quarter': 4006008, 'trusted': 471009, 'unchecked': 39526, 'untrusted': 1005, 'untrusted found during the call': 528991, 'untrusted returned': 1005, 'widened': 471009}
+      solves the check made: 4018650 of 5028150 (0.799)
+   1e-7 abserr / E_unwidened (the widening's effect): n 144741: p0 1, p10 1, p50 1, p90 1.7, p99 11, p100 3.53e+06; calls unconverged though E_unwidened met the request (no untrusted leaf): 0
+   1e-8 group   : {'cc': 203102, 'check passes': 185501, 'checks': 552766, 'floor_limited': 86323, 'levin': 227824, 'resum rejections': 0, 'running/returned disagree': 0, 'solves: Levin left-comparison region': 223224, 'solves: Levin right-comparison region': 223224, 'solves: Levin subregion': 37325, 'solves: fallback half, for _adaptive_levin': 226356, 'solves: fallback half, for _check_leaf': 244450, 'solves: trust check: a quarter': 2211064, 'trusted': 343713, 'unchecked': 768, 'untrusted': 122, 'untrusted found during the call': 189672, 'untrusted returned': 122, 'widened': 343713}
+      solves the check made: 2455514 of 3165643 (0.776)
+   1e-8 analytic: {'cc': 312030, 'check passes': 615258, 'checks': 1264211, 'floor_limited': 678877, 'levin': 1343390, 'resum rejections': 0, 'running/returned disagree': 0, 'solves: Levin left-comparison region': 1877411, 'solves: Levin right-comparison region': 1877411, 'solves: Levin subregion': 107416, 'solves: fallback half, for _adaptive_levin': 344998, 'solves: fallback half, for _check_leaf': 14868, 'solves: trust check: a quarter': 5056844, 'trusted': 572225, 'unchecked': 403034, 'untrusted': 1284, 'untrusted found during the call': 686328, 'untrusted returned': 1284, 'widened': 572225}
+      solves the check made: 5071712 of 9278948 (0.547)
+   1e-8 abserr / E_unwidened (the widening's effect): n 144741: p0 1, p10 1, p50 1, p90 1.74, p99 12.9, p100 1.38e+06; calls unconverged though E_unwidened met the request (no untrusted leaf): 0
+
+== descriptive: totals against 06b, outside the 720 rows, by (band, k): |dtotal|/total_abserr_06b, |dtotal|/|total_06b|, total_abserr_g/total_abserr_06b
+   1e-7 ('low', '0:101'): rows 74; median 0.0157, max 1.07, >1: 1; rel median 3.46e-09 max 2.01e-06; abserr ratio median 0.321
+   1e-7 ('low', '0:202'): rows 85; median 0.0985, max 0.575, >1: 0; rel median 1.83e-05 max 0.000106; abserr ratio median 0.158
+   1e-7 ('low', '1:102'): rows 74; median 0.0234, max 1.1, >1: 1; rel median 7.39e-08 max 2.32e-06; abserr ratio median 0.342
+   1e-7 ('low', '1:301'): rows 85; median 0.0332, max 1.24, >1: 1; rel median 1.47e-05 max 0.00167; abserr ratio median 1.06
+   1e-7 ('low', '2:2'): rows 71; median 0.0192, max 2.58, >1: 2; rel median 1.82e-07 max 0.000117; abserr ratio median 0.0181
+   1e-7 ('low', '2:302'): rows 88; median 1.41e-06, max 7.86, >1: 15; rel median 2.18e-09 max 0.04; abserr ratio median 1
+   1e-7 ('low', '3:1'): rows 74; median 0.0175, max 9.9, >1: 4; rel median 3.33e-09 max 1.38e-06; abserr ratio median 0.888
+   1e-7 ('low', '3:201'): rows 68; median 0.00679, max 0.36, >1: 0; rel median 2.94e-07 max 2.03e-05; abserr ratio median 0.0195
+   1e-7 ('mid', '0:101'): rows 223; median 0.0723, max 82.2, >1: 30; rel median 6.36e-09 max 1.73e-05; abserr ratio median 1.22
+   1e-7 ('mid', '0:202'): rows 220; median 0.776, max 30.8, >1: 94; rel median 1.09e-05 max 0.000139; abserr ratio median 2.37
+   1e-7 ('mid', '1:102'): rows 223; median 0.112, max 38.1, >1: 44; rel median 3.27e-08 max 1.52e-05; abserr ratio median 1.33
+   1e-7 ('mid', '1:301'): rows 226; median 0.132, max 5.5, >1: 12; rel median 9.44e-06 max 0.00236; abserr ratio median 1.21
+   1e-7 ('mid', '2:2'): rows 223; median 0.094, max 11.8, >1: 39; rel median 8.59e-08 max 2.67e-05; abserr ratio median 0.95
+   1e-7 ('mid', '2:302'): rows 231; median 0.0623, max 1.03e+03, >1: 100; rel median 5.73e-06 max 0.291; abserr ratio median 1.45
+   1e-7 ('mid', '3:1'): rows 223; median 0.0403, max 37, >1: 54; rel median 3.39e-09 max 3.79e-06; abserr ratio median 1.41
+   1e-7 ('mid', '3:201'): rows 216; median 0.0524, max 41.1, >1: 34; rel median 1.3e-07 max 0.000198; abserr ratio median 1.18
+   1e-7 ('seam', '0:101'): rows 664; median 0, max 68.1, >1: 84; rel median 0 max 1.62e-05; abserr ratio median 1
+   1e-7 ('seam', '0:202'): rows 745; median 0.00052, max 48.8, >1: 235; rel median 2.22e-09 max 0.00345; abserr ratio median 2.19
+   1e-7 ('seam', '1:102'): rows 689; median 0, max 58.1, >1: 90; rel median 0 max 4.32e-05; abserr ratio median 1
+   1e-7 ('seam', '1:301'): rows 754; median 6.99e-06, max 88.4, >1: 32; rel median 2.91e-10 max 0.0145; abserr ratio median 1.09
+   1e-7 ('seam', '2:2'): rows 710; median 9.42e-06, max 248, >1: 71; rel median 2.93e-11 max 4.68e-05; abserr ratio median 1
+   1e-7 ('seam', '2:302'): rows 759; median 5.09e-08, max 3.3e+03, >1: 147; rel median 2.41e-10 max 0.149; abserr ratio median 1
+   1e-7 ('seam', '3:1'): rows 635; median 0, max 88.2, >1: 111; rel median 0 max 3.25e-05; abserr ratio median 1
+   1e-7 ('seam', '3:201'): rows 732; median 7.04e-05, max 83.4, >1: 143; rel median 1.58e-10 max 0.00018; abserr ratio median 1.76
+   1e-8 ('low', '0:101'): rows 74; median 0.0306, max 2.19, >1: 3; rel median 4.71e-09 max 2.01e-06; abserr ratio median 0.293
+   1e-8 ('low', '0:202'): rows 85; median 0.0985, max 0.575, >1: 0; rel median 1.83e-05 max 0.000106; abserr ratio median 0.157
+   1e-8 ('low', '1:102'): rows 74; median 0.0105, max 6.31, >1: 3; rel median 6.86e-09 max 2.27e-06; abserr ratio median 0.528
+   1e-8 ('low', '1:301'): rows 85; median 0.0332, max 1.24, >1: 1; rel median 1.47e-05 max 0.00167; abserr ratio median 1.05
+   1e-8 ('low', '2:2'): rows 71; median 0.00158, max 2.69, >1: 1; rel median 1.31e-08 max 0.000118; abserr ratio median 0.00569
+   1e-8 ('low', '2:302'): rows 88; median 1.41e-06, max 7.86, >1: 15; rel median 2.18e-09 max 0.04; abserr ratio median 1
+   1e-8 ('low', '3:1'): rows 74; median 0.0876, max 10.7, >1: 6; rel median 2.94e-09 max 1.38e-06; abserr ratio median 0.264
+   1e-8 ('low', '3:201'): rows 68; median 0.00465, max 0.356, >1: 0; rel median 2.32e-07 max 1.94e-05; abserr ratio median 0.0194
+   1e-8 ('mid', '0:101'): rows 223; median 0.106, max 104, >1: 45; rel median 4.21e-09 max 1.73e-05; abserr ratio median 0.925
+   1e-8 ('mid', '0:202'): rows 220; median 0.776, max 30.8, >1: 94; rel median 1.09e-05 max 0.000139; abserr ratio median 2.37
+   1e-8 ('mid', '1:102'): rows 223; median 0.111, max 11.3, >1: 42; rel median 1.06e-08 max 1.52e-05; abserr ratio median 0.676
+   1e-8 ('mid', '1:301'): rows 226; median 0.132, max 5.5, >1: 12; rel median 9.44e-06 max 0.00236; abserr ratio median 1.21
+   1e-8 ('mid', '2:2'): rows 223; median 0.0481, max 11.8, >1: 41; rel median 1.73e-08 max 8.04e-06; abserr ratio median 1.01
+   1e-8 ('mid', '2:302'): rows 231; median 0.0623, max 1.03e+03, >1: 100; rel median 5.73e-06 max 0.291; abserr ratio median 1.45
+   1e-8 ('mid', '3:1'): rows 223; median 0.118, max 122, >1: 55; rel median 3.1e-09 max 1.58e-06; abserr ratio median 1.2
+   1e-8 ('mid', '3:201'): rows 216; median 0.0532, max 41.1, >1: 42; rel median 1.08e-07 max 0.000195; abserr ratio median 1.32
+   1e-8 ('seam', '0:101'): rows 664; median 0, max 99.9, >1: 100; rel median 0 max 2.39e-06; abserr ratio median 1
+   1e-8 ('seam', '0:202'): rows 745; median 0.00052, max 48.8, >1: 235; rel median 2.22e-09 max 0.00345; abserr ratio median 2.19
+   1e-8 ('seam', '1:102'): rows 689; median 0, max 16.1, >1: 91; rel median 0 max 4.08e-05; abserr ratio median 1
+   1e-8 ('seam', '1:301'): rows 754; median 6.99e-06, max 88.4, >1: 32; rel median 2.91e-10 max 0.0145; abserr ratio median 1.09
+   1e-8 ('seam', '2:2'): rows 710; median 9.74e-06, max 288, >1: 95; rel median 2.82e-11 max 8.8e-06; abserr ratio median 1
+   1e-8 ('seam', '2:302'): rows 759; median 5.09e-08, max 3.3e+03, >1: 147; rel median 2.41e-10 max 0.149; abserr ratio median 1
+   1e-8 ('seam', '3:1'): rows 635; median 0, max 143, >1: 101; rel median 0 max 9.38e-06; abserr ratio median 1
+   1e-8 ('seam', '3:201'): rows 732; median 6.23e-05, max 254, >1: 198; rel median 1.49e-10 max 0.000177; abserr ratio median 2.64
+
+== descriptive: the 720 stationary-point rows (07's; not scored)
+   1e-7: rows 720, total moved 711, |dtotal| > total_abserr_06b on 160; |dtotal|/total_abserr_06b n 554: p0 0, p10 0.00115, p50 0.106, p90 763, p99 3.27e+04, p100 9.4e+04
+   1e-8: rows 720, total moved 710, |dtotal| > total_abserr_06b on 172; |dtotal|/total_abserr_06b n 554: p0 0, p10 0.00169, p50 0.183, p90 43.9, p99 1.33e+05, p100 2.64e+05
+
+== descriptive: 06b's three depth-20 calls, by name
+   1e-8 2-13964 call 5: {"g": {"notify_label": "analytic J1", "converged": true, "num_regions": 9, "max_depth": 5, "evaluations": 71, "num_untrusted_regions": 0, "n_at_depth_max": 0, "value": "0x1.5dacde304793bp-43", "abserr": "0x1.ac79a1d39d065p-71", "wall_unit": 6.491004874929786}, "06b": {"converged": true, "num_regions": 31885, "max_depth": 20, "evaluations": 127539, "value": "0x1.5dacde3046acbp-43", "abserr": "0x1.f4849688e6323p-71", "wall_unit": 158.909536666004}}
+   1e-8 2-1704 call 16: {"g": {"notify_label": "analytic Y1", "converged": true, "num_regions": 3, "max_depth": 2, "evaluations": 23, "num_untrusted_regions": 0, "n_at_depth_max": 0, "value": "0x1.8412afe14f5d4p-48", "abserr": "0x1.8ee4f25ae7272p-76", "wall_unit": 1.4540960830636322}, "06b": {"converged": true, "num_regions": 1136, "max_depth": 20, "evaluations": 4543, "value": "0x1.8412afe14ce55p-48", "abserr": "0x1.c70ad87cc3710p-80", "wall_unit": 6.10339824995026}}
+   1e-8 3-34987 call 9: {"g": {"notify_label": "analytic J2", "converged": true, "num_regions": 2, "max_depth": 1, "evaluations": 15, "num_untrusted_regions": 0, "n_at_depth_max": 0, "value": "0x1.4129f37613688p-37", "abserr": "0x1.42e0d423deb00p-65", "wall_unit": 7.118208084022626}, "06b": {"converged": true, "num_regions": 14293, "max_depth": 20, "evaluations": 57171, "value": "0x1.4129f376136a6p-37", "abserr": "0x1.e7c36757def90p-66", "wall_unit": 69.42883462505415}}
+
+== descriptive: flat residuals -- calls at depth_max, their deepest line (leftmost leaf at the greatest depth)
+   lines: 262 ({'1e-7': 109, '1e-8': 153}); errors 0; not reproducing the leaf 0; flat over the last five levels: 217
+      g-1e-7-0-12875 call 13 analytic J1: residuals last5 ['1.5e-26', '8e-26', '8e-26', '8e-26', '8.1e-26']; (eL+eR)/eP along the line [0.001, 0.032, 0.691, 0.986, 2.235, 2.29, 2.112, 2.48, 1.918, 2.0, 1.301, 2.0, 1.282, 2.0, 1.98, 2.0, 2.96, 2.0, 2.384, 1.325]
+      g-1e-7-0-12875 call 14 analytic Y1: residuals last5 ['5.6e-26', '7e-26', '7e-26', '1.8e-26', '1.1e-26']; (eL+eR)/eP along the line [0.001, 0.032, 0.19, 1.705, 2.325, 2.0, 1.354, 2.0, 2.687, 2.0, 1.156, 2.0, 1.67, 1.373, 2.0, 3.325, 1.242, 2.0, 2.302, 280.149]
+      g-1e-7-0-12875 call 19 analytic J4: residuals last5 ['1.5e-26', '1.3e-25', '1.3e-25', '1.2e-25', '2.5e-26']; (eL+eR)/eP along the line [0.001, 0.032, 0.19, 0.65, 2.22, 2.718, 1.821, 2.0, 2.754, 2.0, 1.004, 2.0, 1.551, 2.0, 1.166, 2.0, 8.408, 2.0, 1.54, 50.303]
+      g-1e-7-0-12896 call 18 analytic Y2: residuals last5 ['1.1e-26', '1.1e-26', '2e-26', '2e-26', '3e-26']; (eL+eR)/eP along the line [0.006, 0.032, 0.19, 0.623, 2.882, 1.645, 1.724, 1.346, 2.0, 5.293, 2.0, 2.048, 2.0, 1.216, 2.0, 4.403, 2.0, 1.879, 2.0, 2.889]
+      g-1e-7-0-12932 call 14 analytic Y1: residuals last5 ['5.9e-28', '8.5e-28', '8.5e-28', '8.5e-28', '3.6e-27']; (eL+eR)/eP along the line [0.001, 0.032, 0.94, 1.098, 1.708, 1.733, 1.961, 2.251, 1.771, 2.0, 1.876, 2.0, 1.782, 2.0, 1.796, 2.0, 1.948, 2.0, 2.632, 2.287]
+      g-1e-7-0-12932 call 19 analytic J4: residuals last5 ['1.2e-27', '1.2e-27', '1.3e-27', '1.3e-27', '1.3e-27']; (eL+eR)/eP along the line [0.001, 0.032, 0.739, 1.287, 1.775, 1.89, 2.008, 1.835, 1.999, 1.797, 2.0, 1.954, 2.0, 1.75, 1.766, 2.0, 2.048, 1.775, 2.0, 2.303]
+      g-1e-7-0-12932 call 20 analytic Y4: residuals last5 ['8.9e-28', '8.9e-28', '9.9e-28', '9.9e-28', '9.9e-28']; (eL+eR)/eP along the line [0.001, 0.032, 0.743, 1.058, 1.624, 1.761, 1.827, 1.995, 2.105, 1.969, 2.0, 2.012, 2.0, 1.699, 2.0, 2.357, 1.899, 1.832, 2.0, 2.354]
+      g-1e-7-0-13776 call 7 analytic J1: residuals last5 ['1.1e-26', '1.1e-26', '3e-26', '3e-26', '3e-26']; (eL+eR)/eP along the line [0.0, 0.003, 0.056, 0.255, 1.474, 2.0, 3.27, 2.605, 1.774, 2.0, 3.442, 2.0, 1.683, 2.0, 1.614, 2.0, 3.512, 2.72, 2.0, 2.007]
+      g-1e-7-0-13776 call 12 analytic Y3: residuals last5 ['2.5e-27', '2.5e-27', '7.2e-27', '7.2e-27', '2.6e-26']; (eL+eR)/eP along the line [0.0, 0.003, 0.056, 0.412, 1.638, 2.0, 2.1, 1.461, 1.465, 1.659, 2.0, 2.315, 1.059, 2.0, 29.07, 3.279, 2.0, 2.931, 2.0, 4.638]
+      g-1e-7-0-13776 call 13 analytic J4: residuals last5 ['1.6e-26', '1.6e-26', '2.1e-26', '2.1e-26', '2.1e-26']; (eL+eR)/eP along the line [0.0, 0.003, 0.056, 0.289, 2.353, 1.181, 1.033, 2.0, 33.712, 2.0, 2.003, 2.0, 1.684, 2.0, 1.772, 2.0, 1.96, 1.33, 2.0, 1.902]
+      g-1e-7-0-13776 call 14 analytic Y4: residuals last5 ['7.5e-27', '7.5e-27', '8.1e-27', '8.1e-27', '8.1e-27']; (eL+eR)/eP along the line [0.0, 0.003, 0.056, 0.568, 1.22, 2.0, 1.387, 2.0, 1.911, 3.436, 3.79, 2.0, 1.244, 2.0, 3.871, 4.719, 4.22, 1.084, 2.0, 2.588]
+      g-1e-7-0-14118 call 3 06e+09, 10.979), regime Gqr, group G+q+r: residuals last5 ['8.4e-41', '8.4e-41', '8.4e-41', '8.5e-41', '8.5e-41']; (eL+eR)/eP along the line [0.0, 0.089, 0.086, 0.565, 2.0, 2.559, 2.0, 1.067, 2.7, 1.647, 2.0, 1.917, 2.0, 1.168, 2.0, 1.959, 2.0, 2.09, 1.011, 2.0]
+      g-1e-7-0-1891 call 22 analytic Y4: residuals last5 ['2.2e-24', '1.5e-23', '1.5e-23', '1.5e-23', '1.5e-23']; (eL+eR)/eP along the line [0.007, 0.024, 0.164, 1.236, 1.626, 2.0, 2.156, 2.0, 6.912, 1.119, 2.0, 1.467, 1.096, 2.0, 1.538, 2.0, 6.499, 2.0, 1.044, 2.0]
+      g-1e-7-0-1898 call 16 analytic Y1: residuals last5 ['5.2e-26', '5.2e-26', '6.3e-26', '6.3e-26', '7.5e-26']; (eL+eR)/eP along the line [0.0, 0.024, 0.166, 0.733, 1.996, 1.488, 2.0, 1.944, 2.0, 1.333, 1.066, 2.0, 2.096, 1.461, 2.0, 1.379, 2.0, 1.222, 2.0, 1.198]
+      g-1e-7-0-2278 call 1 1e+10, 0.91255), regime Gqr, group G+q+r: residuals last5 ['7e-40', '7e-40', '7e-40', '6.1e-40', '6.4e-40']; (eL+eR)/eP along the line [0.003, 0.052, 0.225, 2313.221, 2.417, 2.761, 4.91, 0.841, 43.873, 2.32, 2.074, 253.803, 2.0, 1.08, 2.001, 1.219, 2.002, 6.06, 4.791, 235.855]
+      g-1e-7-0-36803 call 11 analytic J3: residuals last5 ['7.9e-27', '5.5e-27', '5.5e-27', '8e-27', '6e-27']; (eL+eR)/eP along the line [0.006, 0.005, 0.098, 0.337, 1.527, 1.559, 1.554, 2.0, 1.564, 2.0, 1.518, 2.0, 2.557, 2.0, 2.219, 2.0, 1.696, 2.0, 1.44, 1.728]
+      g-1e-7-0-37212 call 8 analytic Y1: residuals last5 ['1.2e-28', '8.4e-26', '8.4e-26', '1.6e-25', '1.6e-25']; (eL+eR)/eP along the line [0.0, 0.013, 0.12, 0.974, 2.0, 1.097, 2.0, 2.053, 1.908, 2.0, 1.03, 2.0, 1.95, 1.001, 2.0, 1357.307, 697.636, 2.0, 2.945, 2.0]
+      g-1e-7-0-38939 call 12 analytic Y4: residuals last5 ['3.3e-27', '3.3e-27', '6.1e-27', '4.4e-27', '2.6e-27']; (eL+eR)/eP along the line [0.0, 0.005, 0.07, 0.714, 2.137, 2.142, 2.0, 1.792, 1.861, 2.0, 1.955, 0.173, 2.0, 2.321, 3.495, 2.0, 2.055, 2.986, 60.504, 82.481]
+      g-1e-7-1-14540 call 7 analytic J2: residuals last5 ['5.4e-28', '5.4e-28', '5.4e-28', '5.4e-28', '3.2e-28']; (eL+eR)/eP along the line [0.0, 0.002, 0.031, 0.186, 0.662, 2.0, 1.515, 2.0, 2.924, 2.0, 1.708, 2.0, 1.301, 2.0, 4.11, 4.296, 2.0, 1.994, 1.005, 1.112]
+      g-1e-7-1-14540 call 9 analytic J3: residuals last5 ['5.4e-28', '5.4e-28', '5.4e-28', '5.4e-28', '3.2e-28']; (eL+eR)/eP along the line [0.0, 0.002, 0.031, 0.186, 0.662, 2.0, 1.515, 2.0, 2.924, 2.0, 1.708, 2.0, 1.301, 2.0, 4.11, 4.296, 2.0, 1.994, 1.005, 1.112]
+   wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/out/deep_lines_06c.json sha256 79bb9348f3fb5bad23ffda199fbb4088108e564c08c7c2749366b6b5f52add9a
+   wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/out/census_rows_06c.csv.gz sha256 b32c7b756eeeb38a4613b77db354711b87f5877895b5b9d40e371d8367658b33
+# ----
+# end 2026-10-29T15:42:52Z
+# exit 0

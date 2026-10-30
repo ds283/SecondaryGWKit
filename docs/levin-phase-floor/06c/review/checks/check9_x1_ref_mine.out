@@ -1,0 +1,40 @@
+levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+
+== g-1e-7-0-14127 call 3  span 0x1.52d321c88e446p+0 .. 0x1.c1f69b30e5acep+4  rtol 1e-07
+  census value -0x1.9c9fd523c0fa6p-99 abserr 0x1.d980121a7d210p-123
+  re-run value -0x1.9c9fd523c0fa6p-99 abserr 0x1.d980121a7d210p-123 equal to census: True
+  S9 = -0x1.9c9fd7aead51ep-99  (-2.5429941071136426e-30)  floor sum 1.317e-40  max 6.620e-42
+  S10 = -0x1.9c9fd7aecc143p-99  (-2.5429941071577796e-30)  floor sum 2.589e-40  max 6.500e-42
+  S11 = -0x1.9c9fd7aecc8e9p-99  (-2.5429941071584656e-30)  floor sum 5.027e-40  max 6.304e-42
+  S12 = -0x1.9c9fd7aecfac9p-99  (-2.5429941071629385e-30)  floor sum 9.761e-40  max 6.112e-42
+  |S9-S10| / abserr_g = 0.0002538  -> agree (<= 1/100): True
+  |S10-S11| / abserr_g = 3.944e-06
+  |S10-S12| / abserr_g = 2.966e-05
+  |value_g - S10| / abserr_g = 1.375  -> holds: False
+  06b: value -0x1.9ca020464d764p-99 abserr inf; |value_06b - S10| = 6.827e-36 (/abserr_06b n/a)
+  driver at rtol 1e-11: value -0x1.9c9fd523c0ec6p-99 abserr 0x1.d980220ab4664p-123 regions 5; |v - S10|/abserr_g 1.375; v - value_g = 7.847e-44
+
+== g-1e-7-3-38436 call 5  span 0x1.52d321c88e446p+0 .. 0x1.6692804ff16adp+4  rtol 1e-07
+  census value -0x1.02cd43b0b1afcp-94 abserr 0x1.7dc815755e025p-118
+  re-run value -0x1.02cd43b0b1afcp-94 abserr 0x1.7dc815755e025p-118 equal to census: True
+  S9 = -0x1.02cd42f19327dp-94  (-5.103965609341897e-29)  floor sum 2.781e-37  max 5.956e-38
+  S10 = -0x1.02cd42f9c8971p-94  (-5.103965618991211e-29)  floor sum 1.704e-36  max 5.655e-38
+  S11 = -0x1.02cd42f8f4c3ep-94  (-5.103965618018558e-29)  floor sum 4.418e-36  max 5.435e-38
+  |S9-S10| / abserr_g = 0.0215  -> agree (<= 1/100): False
+  |S10-S11| / abserr_g = 0.002167
+  |value_g - S10| / abserr_g = 0.4791  -> holds: True  (dropped from the rule: S9 and S10 disagree)
+  06b: value -0x1.02cd434934c83p-94 abserr 0x1.18fc4da7112a4p-104; |value_06b - S10| = 9.336e-37 (/abserr_06b 1.725203353333562e-05)
+
+== g-1e-7-3-39140 call 2  span 0x1.fb4043e6f1c31p-4 .. 0x1.af89a649ba396p+4  rtol 1e-07
+  census value -0x1.f68a34114aaa4p-84 abserr 0x1.3002a35661592p-107
+  re-run value -0x1.f68a34114aaa4p-84 abserr 0x1.3002a35661592p-107 equal to census: True
+  S9 = -0x1.f68a366c1f48dp-84  (-1.0148712315850406e-25)  floor sum 3.167e-37  max 1.528e-38
+  S10 = -0x1.f68a366c1d7f2p-84  (-1.0148712315842e-25)  floor sum 6.084e-37  max 1.487e-38
+  S11 = -0x1.f68a366c1d976p-84  (-1.0148712315842445e-25)  floor sum 1.163e-36  max 1.429e-38
+  |S9-S10| / abserr_g = 1.149e-05  -> agree (<= 1/100): True
+  |S10-S11| / abserr_g = 6.086e-07
+  |value_g - S10| / abserr_g = 0.9915  -> holds: True
+  06b: value -0x1.f68a34117343dp-84 abserr 0x1.22891c0956124p-107; |value_06b - S10| = 7.254e-33 (/abserr_06b 1.0371620562455226)
+real 24.40
+user 23.60
+sys 0.44

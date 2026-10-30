@@ -1,0 +1,44 @@
+host mps026298.phys.susx.ac.uk utc 2026-10-29T22:29:22+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 e5764a6708757cb11704b95bcd66825baab4ba29 status lines 0
+script sha256 006e42381faafac38f839cc3853504d3621e4c81d8f882d340c3cd07091cc804
+patch check: interior nodes and D unchanged, ends exact, on 4 spans x 2 orders
+
+== inputs/s01.pkl sha256 7f162791c9b19f1c  span 0x1.93e8c4308d6d0p+3 .. 0x1.54258b68e15fbp+4
+  as is : value 0x1.c427c1ab729c6p-89 abserr 0x1.e75e77abcc7b6p-115 regions 234 depth 20 conv False 3.01s  equals capture True
+  pinned: value 0x1.c427c1ab41d00p-89 abserr 0x1.81cb7dded8c1ap-117 regions 2 depth 1 conv True 0.02s
+  |dv|/abserr_census 0.00156   |dv|/abserr_pinned 0.00791
+
+== inputs/s02.pkl sha256 0100f98a9e46f490  span 0x1.329fc5ed4906ap+3 .. 0x1.d463901811304p+4
+  as is : value -0x1.8274be9da55efp-95 abserr 0x1.f350a57b8ff13p-115 regions 101 depth 20 conv False 0.94s  equals capture True
+  pinned: value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 conv True 0.06s
+  |dv|/abserr_census 5.97e-10   |dv|/abserr_pinned 5.97e-10
+
+== inputs/s08.pkl sha256 861bc871a2ff585d  span -0x1.75043b2e77dc9p+3 .. 0x1.71064d683ba06p+2
+  as is : value -0x1.5957d1ae87874p-30 abserr 0x1.fec7202556ba5p-56 regions 141 depth 20 conv False 1.42s  equals capture True
+  pinned: value -0x1.5957d1ae877cbp-30 abserr 0x1.feb0798665f4ep-56 regions 3 depth 2 conv True 0.03s
+  |dv|/abserr_census 1.26e-06   |dv|/abserr_pinned 1.26e-06
+
+== inputs/s09.pkl sha256 cbe9cb72607d7c19  span -0x1.66c4a907e05e8p+3 .. 0x1.4e2cc669a9b0cp+1
+  as is : value 0x1.9e838ef109fc4p-33 abserr 0x1.90820b21d2a6ep-65 regions 67 depth 20 conv False 0.72s  equals capture True
+  pinned: value 0x1.9e838ef109ff8p-33 abserr 0x1.8dc0e9e93e321p-65 regions 8 depth 4 conv True 0.09s
+  |dv|/abserr_census 3.17e-05   |dv|/abserr_pinned 3.19e-05
+
+== inputs/s12.pkl sha256 18cae4ef44f04656  span 0x1.c1a02530aec6fp+0 .. 0x1.8b0e134cd0b2cp+4
+  as is : value 0x1.0c5f181ecdc0bp-86 abserr 0x1.758384c2f61c3p-110 regions 48 depth 20 conv False 0.60s  equals capture True
+  pinned: value 0x1.0c6c2cd926acfp-86 abserr 0x1.febd253628d92p-110 regions 18 depth 7 conv True 0.08s
+  |dv|/abserr_census 2.3e+03   |dv|/abserr_pinned 1.68e+03
+
+== inputs/s13.pkl sha256 54bd746d5ac6a1fd  span 0x1.93e8c4308d6d0p+3 .. 0x1.54258b68e15fbp+4
+  as is : value 0x1.f022b8fa455f2p-94 abserr 0x1.8e28ba0bdd213p-116 regions 364 depth 20 conv False 3.44s  equals capture True
+  pinned: value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 regions 2 depth 1 conv True 0.02s
+  |dv|/abserr_census 0.000385   |dv|/abserr_pinned 0.0586
+
+== inputs/s22.pkl sha256 ad6a6a065ead3616  span -0x1.03b5973c55a61p+4 .. -0x1.4ed878ffd3d9bp+1
+  as is : value -0x1.35f747459e2b1p-46 abserr 0x1.343feabeaf356p-78 regions 146 depth 20 conv False 1.40s  equals capture True
+  pinned: value -0x1.35f747459d339p-46 abserr 0x1.6e343f1eb5419p-81 regions 5 depth 4 conv True 0.05s
+  |dv|/abserr_census 0.00314   |dv|/abserr_pinned 0.0211
+
+== inputs/s25.pkl sha256 696768378bfba3f5  span -0x1.999df80104b87p+3 .. -0x1.469cb932731a6p+2
+  as is : value -0x1.856da4f5d0ee7p-52 abserr 0x1.0c4b38939c8e0p-70 regions 5394 depth 20 conv False 36.10s  equals capture True
+  pinned: value -0x1.856da4f8bbbc3p-52 abserr 0x1.a2517359ee192p-86 regions 6 depth 3 conv True 0.06s
+  |dv|/abserr_census 0.00017   |dv|/abserr_pinned 7.14

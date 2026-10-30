@@ -1,0 +1,7 @@
+would reformat var/levin-phase-floor-06c/rehearsal/scripts/classify_non_qsi.py
+would reformat var/levin-phase-floor-06c/rehearsal/scripts/y1_violations_groups.py
+would reformat var/levin-phase-floor-06c/rehearsal/scripts/tabulate_qsi_global.py
+
+Oh no! 💥 💔 💥
+3 files would be reformatted.
+exit 1

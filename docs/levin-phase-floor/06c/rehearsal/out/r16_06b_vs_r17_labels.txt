@@ -1,0 +1,3 @@
+label differences 6012 differing after removing the stamp and the job name 0
+value tables not identical: {'BackgroundModel': [], 'TkNumericIntegration': [], 'TkWKBIntegration': [], 'GkNumericIntegration': [], 'GkWKBIntegration': [], 'GkSource': [], 'QuadSource': []}
+QSI differing columns ['WKB_Levin_elapsed', 'analytic_compute_time', 'compute_time', 'label', 'metadata', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time'] metadata leaves ['compute_time', 'elapsed']

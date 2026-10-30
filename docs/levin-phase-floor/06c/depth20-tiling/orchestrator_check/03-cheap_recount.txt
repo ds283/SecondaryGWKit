@@ -1,0 +1,17 @@
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py script sha256 b67b87fd528f2642b272e69bb586369af9ebe9a6bc357554f1b5de5bb0721f02
+spans found 262 of 262
+lineage reproduces recorded leaf: 262 of 262
+last five levels:
+   ('Levin', 'res<=10floor', 'tile') 17
+   ('Levin', 'res>10floor', 'no tile') 1179
+   ('Levin', 'res>10floor', 'tile') 43
+   ('direct', 'res<=10floor', 'no tile') 38
+   ('direct', 'res<=10floor', 'tile') 33
+all levels:
+   ('Levin', 'res<=10floor', 'no tile') 1284
+   ('Levin', 'res<=10floor', 'tile') 280
+   ('Levin', 'res>10floor', 'no tile') 3777
+   ('Levin', 'res>10floor', 'tile') 90
+   ('direct', 'res<=10floor', 'no tile') 38
+   ('direct', 'res<=10floor', 'tile') 33
+Levin residual/floor last five: n 1239 median 2.19e+04 max 8.28e+05

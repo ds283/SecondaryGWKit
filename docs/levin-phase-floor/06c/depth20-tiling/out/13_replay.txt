@@ -1,0 +1,202 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_calls.py state/captured.json replay state/runs/replay --timeout 1800
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T22:07:01Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29
+# tree g status --short: []
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts
+# ----
+# depth20-tiling: runcall replay over the sample
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T22:07:01Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script run_calls.py sha256 ba08151ce1541e8f194c9eab1633ccb4a4df6702010ef4757512b3da9b834175
+# input state/captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts/runcall.py sha256 d8662a637da4456467b4fedb52a94d1d13e179446dcacd127644f65b04f3ecfc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts/dcommon.py sha256 dcd23cc215e7951504db4c9aebbb5cf2d655c8d3b33b137f7d739d8d2e699c76
+sample 29: pid 74589
+sample 0: pid 74590
+sample 10: pid 74591
+sample 9: pid 74592
+sample 6: pid 74593
+sample 1: pid 74594
+sample 9: exit 0 after 3.3 s
+sample 2: pid 74623
+sample 10: exit 0 after 3.7 s
+sample 5: pid 74626
+sample 0: exit 0 after 4.1 s
+sample 28: pid 74631
+sample 29: exit 0 after 5.6 s
+sample 7: pid 74640
+sample 5: exit 0 after 1.9 s
+sample 4: pid 74641
+sample 6: exit 0 after 6.0 s
+sample 3: pid 74644
+sample 2: exit 0 after 2.9 s
+sample 11: pid 74653
+sample 1: exit 0 after 6.6 s
+sample 8: pid 74655
+sample 7: exit 0 after 2.1 s
+sample 4: exit 0 after 1.9 s
+sample 20: pid 74668
+sample 25: pid 74669
+sample 11: exit 0 after 2.5 s
+sample 26: pid 74678
+sample 8: exit 0 after 2.9 s
+sample 21: pid 74683
+sample 3: exit 0 after 3.7 s
+sample 12: pid 74685
+sample 20: exit 0 after 2.5 s
+sample 18: pid 74695
+sample 26: exit 0 after 2.3 s
+sample 23: pid 74700
+sample 28: exit 0 after 7.5 s
+sample 15: pid 74701
+sample 12: exit 0 after 2.5 s
+sample 14: pid 74710
+sample 18: exit 0 after 2.5 s
+sample 22: pid 74714
+sample 23: exit 0 after 2.5 s
+sample 16: pid 74720
+sample 21: exit 0 after 4.6 s
+sample 24: pid 74721
+sample 15: exit 0 after 2.7 s
+sample 17: pid 74724
+sample 14: exit 0 after 2.9 s
+sample 13: pid 74735
+sample 22: exit 0 after 2.9 s
+sample 27: pid 74738
+sample 24: exit 0 after 2.3 s
+sample 19: pid 74745
+sample 27: exit 0 after 2.3 s
+sample 19: exit 0 after 2.5 s
+sample 13: exit 0 after 5.4 s
+sample 17: exit 0 after 6.6 s
+sample 16: exit 0 after 7.5 s
+sample 25: exit 0 after 38.2 s
+{
+ "9": {
+  "rc": 0,
+  "wall": 3.2762410640716553
+ },
+ "10": {
+  "rc": 0,
+  "wall": 3.7005608081817627
+ },
+ "0": {
+  "rc": 0,
+  "wall": 4.113095998764038
+ },
+ "29": {
+  "rc": 0,
+  "wall": 5.56878399848938
+ },
+ "5": {
+  "rc": 0,
+  "wall": 1.8709139823913574
+ },
+ "6": {
+  "rc": 0,
+  "wall": 5.98137903213501
+ },
+ "2": {
+  "rc": 0,
+  "wall": 2.9170281887054443
+ },
+ "1": {
+  "rc": 0,
+  "wall": 6.608774185180664
+ },
+ "7": {
+  "rc": 0,
+  "wall": 2.0817019939422607
+ },
+ "4": {
+  "rc": 0,
+  "wall": 1.8727421760559082
+ },
+ "11": {
+  "rc": 0,
+  "wall": 2.4984400272369385
+ },
+ "8": {
+  "rc": 0,
+  "wall": 2.9105679988861084
+ },
+ "3": {
+  "rc": 0,
+  "wall": 3.743617057800293
+ },
+ "20": {
+  "rc": 0,
+  "wall": 2.504531145095825
+ },
+ "26": {
+  "rc": 0,
+  "wall": 2.2762670516967773
+ },
+ "28": {
+  "rc": 0,
+  "wall": 7.4871532917022705
+ },
+ "12": {
+  "rc": 0,
+  "wall": 2.480691909790039
+ },
+ "18": {
+  "rc": 0,
+  "wall": 2.4674408435821533
+ },
+ "23": {
+  "rc": 0,
+  "wall": 2.4803342819213867
+ },
+ "21": {
+  "rc": 0,
+  "wall": 4.5609657764434814
+ },
+ "15": {
+  "rc": 0,
+  "wall": 2.6998000144958496
+ },
+ "14": {
+  "rc": 0,
+  "wall": 2.91446590423584
+ },
+ "22": {
+  "rc": 0,
+  "wall": 2.9133570194244385
+ },
+ "24": {
+  "rc": 0,
+  "wall": 2.2901360988616943
+ },
+ "27": {
+  "rc": 0,
+  "wall": 2.2823421955108643
+ },
+ "19": {
+  "rc": 0,
+  "wall": 2.4733009338378906
+ },
+ "13": {
+  "rc": 0,
+  "wall": 5.395526170730591
+ },
+ "17": {
+  "rc": 0,
+  "wall": 6.645331144332886
+ },
+ "16": {
+  "rc": 0,
+  "wall": 7.483773946762085
+ },
+ "25": {
+  "rc": 0,
+  "wall": 38.205050230026245
+ }
+}
+done; non-zero or killed: []
+# ----
+# end 2026-10-29T22:07:48Z
+# exit 0

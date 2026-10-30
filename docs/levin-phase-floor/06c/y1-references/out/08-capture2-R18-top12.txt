@@ -1,0 +1,110 @@
+# Y1 references: capture in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:21:12Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/capture.py sha256 0307021ee09ee8401d59e937763b3555baa1ed47a30b7c5d8b1e380037fd64f8
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input rows.json sha256 443f226667945cdffce362c2c5e7c72c4d423e4c8bb7435276b0d5ee8fc8432c
+# input moved.json sha256 a6cb870ec4913ed700d4a9f0d19e9d475674ca49b6e603fe7e438c4ce024187d
+# AdaptiveLevin.levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+# ComputeTargets.QuadSourceIntegral /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/ComputeTargets/QuadSourceIntegral.py
+# rebuild /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/rebuild.py; K sample [100000.0, 316227.7660168379, 1000000.0]; zend 250.0
+# store copy /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/store_copies/levin-phase-floor-06c-r18.sqlite
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/store_copies/levin-phase-floor-06c-r18.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# context built in 0.4 s; checks [('one LambdaCDM model', True, '1'), ('exit times available', True, ''), ('rebuilt redshifts equal stored z exactly', True, '[]'), ('background model available', True, '1')]
+Y01: 5 group calls (16 others), 1.7 s; total -0x1.60d489de69404p-55 abserr 0x1.21b46d538f125p-78 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.639f5e6f9ea0dp-67 abserr 0x1.929a2855494b3p-91 regions 13 depth 8 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.00a5d63c50710p-69 abserr 0x1.7489f9368ff0fp-94 regions 2 depth 1 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.43a0173f137bep-72 abserr 0x1.811078046a16cp-99 regions 1 depth 0 conv 1 store-equal True
+     3 sub 1 G-q+r  value 0x1.43a0173f137bep-72 abserr 0x1.811078046a16cp-99 regions 1 depth 0 conv 1 store-equal True
+     4 sub 1 G-q-r  value -0x1.2c7a6a671ece6p-73 abserr 0x1.e47d7693c7046p-100 regions 31 depth 11 conv 1 store-equal True pickled
+Y02: 5 group calls (16 others), 1.8 s; total 0x1.11b17b51de892p-57 abserr 0x1.c32b74fe71003p-81 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value 0x1.687f580529325p-67 abserr 0x1.954a9d5443d06p-91 regions 13 depth 8 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value -0x1.009eb5a06960dp-69 abserr 0x1.4d51eeec83688p-94 regions 7 depth 5 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value -0x1.408d027c6c405p-72 abserr 0x1.4c07d372e3297p-97 regions 4 depth 3 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value -0x1.408d027c6c405p-72 abserr 0x1.4c07d372e3297p-97 regions 4 depth 3 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value 0x1.2b71905289489p-73 abserr 0x1.7710399d90bcdp-97 regions 10 depth 6 conv 1 store-equal True pickled
+Y03: 5 group calls (16 others), 2.3 s; total -0x1.bcb9578284ea8p-64 abserr 0x1.eff606159e34cp-88 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.554f9de4d7244p-72 abserr 0x1.fe85f5ea6a982p-97 regions 9 depth 6 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.0017374bd25c6p-74 abserr 0x1.8e2856864848fp-101 regions 2 depth 1 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.4b597ef411ba2p-77 abserr 0x1.2bdc99d37b6e5p-101 regions 11 depth 6 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value 0x1.4b597ef411ba2p-77 abserr 0x1.2bdc99d37b6e5p-101 regions 11 depth 6 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value -0x1.302689f06abf7p-78 abserr 0x1.3f9fadf4d09aap-102 regions 17 depth 6 conv 1 store-equal True pickled
+Y04: 5 group calls (16 others), 1.8 s; total 0x1.01dcb4297e172p-63 abserr 0x1.91b0a1cec2e72p-87 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value 0x1.3291d05ab1586p-72 abserr 0x1.441d699815f98p-96 regions 10 depth 6 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value -0x1.e62819158fb4fp-75 abserr 0x1.1e1cdda27e4cep-100 regions 8 depth 6 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value -0x1.4753229cfad2cp-77 abserr 0x1.34a6719257dc3p-102 regions 12 depth 5 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value -0x1.4753229cfad2cp-77 abserr 0x1.34a6719257dc3p-102 regions 12 depth 5 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value 0x1.27c30c4cbd7a1p-78 abserr 0x1.a5a28b3b69a94p-102 regions 16 depth 6 conv 1 store-equal True pickled
+Y05: 5 group calls (16 others), 1.7 s; total -0x1.2179faec403c6p-62 abserr 0x1.b91a982874997p-86 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.72c05afb23d22p-72 abserr 0x1.9393de0419298p-96 regions 11 depth 6 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.e36cb4794d25cp-75 abserr 0x1.874dbd909f8e6p-100 regions 10 depth 7 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.14f4f8c9e7826p-77 abserr 0x1.7ab8a0d177468p-101 regions 4 depth 2 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value 0x1.14f4f8c9e7826p-77 abserr 0x1.7ab8a0d177468p-101 regions 4 depth 2 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value -0x1.0b55f839dd67bp-78 abserr 0x1.278e7f163e1c9p-104 regions 6 depth 5 conv 1 store-equal True pickled
+Y06: 5 group calls (16 others), 1.7 s; total 0x1.40a9a35d8a67cp-60 abserr 0x1.43df3fa895a51p-83 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value 0x1.49d52d83d74eep-72 abserr 0x1.c3cf063825119p-96 regions 8 depth 6 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value -0x1.f8a6d8c5410fcp-75 abserr 0x1.3c170f8bc4f74p-99 regions 3 depth 2 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value -0x1.4b3c6ca145478p-77 abserr 0x1.a738a301c4f84p-102 regions 1 depth 0 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value -0x1.4b3c6ca145478p-77 abserr 0x1.a738a301c4f84p-102 regions 1 depth 0 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value 0x1.2e4d917fa00cdp-78 abserr 0x1.027481a8edac6p-103 regions 9 depth 6 conv 1 store-equal True pickled
+Y07: 5 group calls (16 others), 5.5 s; total 0x1.8b49c5436bdb8p-64 abserr 0x1.ba0b406921906p-87 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value 0x1.831b7b6344429p-73 abserr 0x1.dfcefbab1bbc2p-97 regions 12 depth 7 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value -0x1.71ac8c171154ep-75 abserr 0x1.affc25b4b443cp-99 regions 4 depth 3 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value -0x1.160784dc98409p-77 abserr 0x1.ee6bae81460c5p-104 regions 3 depth 2 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value -0x1.160784dc98409p-77 abserr 0x1.ee6bae81460c5p-104 regions 3 depth 2 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value 0x1.e1ed86f24c79fp-79 abserr 0x1.563847e507d2cp-104 regions 6 depth 3 conv 1 store-equal True pickled
+Y08: 5 group calls (16 others), 3.7 s; total -0x1.1ef6b1cc980fcp-59 abserr 0x1.53e20a83ca157p-82 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.6cdd1a5db8351p-67 abserr 0x1.31efef4f3087ap-90 regions 11 depth 7 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.da71ea3571e91p-70 abserr 0x1.8fbb219727630p-94 regions 21 depth 10 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.10fe725e99e00p-72 abserr 0x1.a2f892926c088p-96 regions 1 depth 0 conv 1 store-equal True
+     3 sub 1 G-q+r  value 0x1.10fe725e99e00p-72 abserr 0x1.a2f892926c088p-96 regions 1 depth 0 conv 1 store-equal True
+     4 sub 1 G-q-r  value -0x1.0bc8953560ce1p-73 abserr 0x1.51f488ef917cdp-97 regions 27 depth 7 conv 1 store-equal True pickled
+Y09: 5 group calls (16 others), 2.6 s; total 0x1.2b84336944252p-60 abserr 0x1.3587f7fe3b363p-84 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value 0x1.8e5923d78bc52p-73 abserr 0x1.3413b6fdfdbbdp-97 regions 13 depth 7 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value -0x1.424916b13a5bap-76 abserr 0x1.933cd98d619cdp-100 regions 2 depth 1 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value -0x1.254c2a849339cp-80 abserr 0x1.73931619000eap-104 regions 52 depth 12 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value -0x1.254c2a849339cp-80 abserr 0x1.73931619000eap-104 regions 52 depth 12 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value 0x1.d356c6de41d30p-81 abserr 0x1.72eb21b6deaffp-104 regions 31 depth 8 conv 1 store-equal True pickled
+Y10: 5 group calls (16 others), 2.5 s; total -0x1.620fef0efb5f6p-56 abserr 0x1.53b5e1d07e408p-79 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.9c3631dee4f14p-68 abserr 0x1.376c7a0edfda9p-91 regions 15 depth 8 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.57698b554fa03p-71 abserr 0x1.027af1fc8e1c7p-94 regions 2 depth 1 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.b2d05565e838ap-75 abserr 0x1.4621a63783bbfp-98 regions 34 depth 7 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value 0x1.b2d05565e838ap-75 abserr 0x1.4621a63783bbfp-98 regions 34 depth 7 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value -0x1.4b100b47ba3d0p-75 abserr 0x1.7324fa5c7ca2ap-99 regions 24 depth 9 conv 1 store-equal True pickled
+Y11: 5 group calls (16 others), 2.7 s; total -0x1.0869375451f53p-68 abserr 0x1.4c9a92756a0d9p-91 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.39b4ad74c2b97p-78 abserr 0x1.7e8e37f02e9edp-102 regions 12 depth 7 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.482f30d68efe1p-80 abserr 0x1.743716e77b35ap-104 regions 66 depth 16 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.07ee4ed35eb0dp-82 abserr 0x1.fb319d67b119ep-107 regions 21 depth 7 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value 0x1.07ee4ed35eb0dp-82 abserr 0x1.fb319d67b119ep-107 regions 21 depth 7 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value -0x1.d055cb6d77004p-84 abserr 0x1.582c5a3cc15cdp-107 regions 23 depth 7 conv 1 store-equal True pickled
+Y12: 5 group calls (16 others), 2.2 s; total -0x1.856721d9b941ep-55 abserr 0x1.729e32dc982afp-78 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.0f85b7efde56dp-67 abserr 0x1.85e1fa86927d0p-91 regions 13 depth 7 conv 1 store-equal True pickled
+     1 sub 1 G+q+r  value 0x1.171356724b599p-70 abserr 0x1.5b3e7a97c9d88p-94 regions 7 depth 4 conv 1 store-equal True pickled
+     2 sub 1 G+q-r  value 0x1.fe5f206911389p-74 abserr 0x1.d1dbc9fa3520fp-99 regions 1 depth 0 conv 1 store-equal True pickled
+     3 sub 1 G-q+r  value 0x1.fe5f206911389p-74 abserr 0x1.d1dbc9fa3520fp-99 regions 1 depth 0 conv 1 store-equal True pickled
+     4 sub 1 G-q-r  value -0x1.26e2c5188b0dfp-74 abserr 0x1.5c80e0334dfd4p-98 regions 8 depth 6 conv 1 store-equal True pickled
+
+# ray initialised at the end: False
+rows 12; every row and call reproduces the store bit for bit: True
+wrote capture2_R18_top12.json

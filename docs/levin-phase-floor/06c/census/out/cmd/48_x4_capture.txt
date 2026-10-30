@@ -1,0 +1,27 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_capture.py state/x4_worst_calls.json state/X4capture state/x4_captured.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:44:44Z
+# ----
+# levin-phase-floor 06c: X1's inputs, captured at g
+# written 2026-10-29T15:44:44Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/x4_worst_calls.json sha256 ccd04cba58190f5d4e56488130411a5999f762fb312ed5ef6d0033d2f180b1bd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 45899
+C01: pid 45900
+C02: pid 45901
+C03: pid 45902
+exit codes {'C03': 0, 'C00': 0, 'C01': 0, 'C02': 0}
+captured and matching the census bit for bit: 4 of 4
+   g-1e-7-0-36814 0: matches True; error None; ray_initialized False
+   g-1e-7-0-37218 0: matches True; error None; ray_initialized False
+   g-1e-8-0-12976 0: matches True; error None; ray_initialized False
+   g-1e-8-2-21568 0: matches True; error None; ray_initialized False
+wrote state/x4_captured.json sha256 648e36afacbcd211117bc07f24329856e76de022b73517c7e9e00b7176ada727
+# ----
+# end 2026-10-29T15:45:47Z
+# exit 0

@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ sys\;\ sys.path.insert\(0\,\ \'scripts\'\)\;\ import\ launch\;\ print\(\'PURPOSE:\'\,\ launch.PURPOSE\)\;\ print\(\'SCOPE:\'\,\ launch.SCOPE\)\;\ print\(\'SCRIPT:\'\,\ launch.SCRIPT\)\;\ print\(\'N_ROWS:\'\,\ launch.N_ROWS\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:59:19Z
+# ----
+PURPOSE: levin-phase-floor prompt 06c section 5 on the Mac Studio (mps026298; Python 3.13.16): 06b's census re-run under the global error budget, at 06c's code ad9a5f4 (one budget for the call, the trust check one level down) with 06d's 3d70db9 (the Clenshaw-Curtis round-off floor), every A3 v2 QuadSourceIntegral row (9280) re-run in-process at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock, against 06b's run levin-phase-floor-06b-census-20261028T161212 as the before. One tree, g, the git worktree at Part B's dispatch SHA e5764a6 (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; its code outside docs/ and prompts/ is ad9a5f4's plus 3d70db9's; the parent fef401c, Gate X0 showed, reproduces 06b). It reads, read-only, 06's certified scratch copy of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint 0e32f24a) on a stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; per call, the global budget's counters, the solves by purpose and every returned leaf's trust-check numbers; in every unit, after its timed section, the deepest line of each call that reaches depth_max; in every 1e-7 unit, 06a's stationary-point scan and 06b's recomputed floors of every phase-limited region. The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; 06b's run took 51 min, and this one may take much longer
+SCOPE: all 9280 QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's certified scratch copy), listed in var/levin-phase-floor-06c/census/state/rows.json (06a's, sha256 aa523d28); tree g (worktree e5764a6, code ad9a5f4 + 3d70db9); rtol 1e-7 and 1e-8; no store write, no Ray, no lock
+SCRIPT: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/scripts/run_census.py
+N_ROWS: 9280
+# ----
+# end 2026-10-29T12:59:19Z
+# exit 0

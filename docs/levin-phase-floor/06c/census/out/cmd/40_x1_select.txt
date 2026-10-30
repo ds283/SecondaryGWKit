@@ -1,0 +1,82 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06c.py select /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:36:28Z
+# ----
+# levin-phase-floor 06c: X1's sample
+# written 2026-10-29T15:36:28Z on mps026298.phys.susx.ac.uk
+# script analyse06c.py sha256 c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+
+counts: {'group calls': 37325, 'eligible but seam, not category 1': 16865, 'eligible, category 1': 4757, 'not moved': 5347, 'eligible, category 2': 9802, 'sign change or no scan': 554}
+category 1 strata (band, k_key): eligible
+   ('low', '3:1'): 110
+   ('low', '0:101'): 161
+   ('low', '1:102'): 239
+   ('low', '2:2'): 362
+   ('low', '3:201'): 421
+   ('low', '0:202'): 344
+   ('mid', '3:1'): 320
+   ('mid', '0:101'): 362
+   ('mid', '1:102'): 527
+   ('mid', '2:2'): 649
+   ('mid', '3:201'): 387
+   ('mid', '0:202'): 58
+   ('seam', '3:1'): 64
+   ('seam', '0:101'): 116
+   ('seam', '1:102'): 241
+   ('seam', '2:2'): 330
+   ('seam', '3:201'): 66
+category 2 strata (band, k_key): eligible
+   ('low', '3:1'): 506
+   ('low', '0:101'): 454
+   ('low', '1:102'): 380
+   ('low', '2:2'): 300
+   ('low', '3:201'): 292
+   ('low', '0:202'): 375
+   ('low', '1:301'): 467
+   ('low', '2:302'): 569
+   ('mid', '3:1'): 906
+   ('mid', '0:101'): 850
+   ('mid', '1:102'): 697
+   ('mid', '2:2'): 590
+   ('mid', '3:201'): 743
+   ('mid', '0:202'): 814
+   ('mid', '1:301'): 883
+   ('mid', '2:302'): 976
+
+drawn: category 1 12 (n1 12); category 2 12 (low 6, mid 6); shortfall 0
+   # 1 cat 1 g-1e-7-3-14503 call 1 (low, 3:1): g value -0x1.3e4d4dba597afp-92 abserr 0x1.1dc111ae00259p-116 regions 2 depth 1 conv True | 06b -0x1.3e4d231ac34f2p-92 0x1.b767e8fe7880cp-107 conv False regions 1 depth 0
+   # 2 cat 1 g-1e-7-0-38458 call 1 (low, 0:101): g value -0x1.e100f94ed43f2p-91 abserr 0x1.8ebc57c66b802p-116 regions 9 depth 6 conv True | 06b -0x1.e100d8f1e035cp-91 0x1.829ac403e1616p-107 conv False regions 1 depth 0
+   # 3 cat 1 g-1e-7-1-2207 call 1 (low, 1:102): g value -0x1.cab1d1ea1461dp-81 abserr 0x1.5224449cfe175p-104 regions 13 depth 5 conv True | 06b -0x1.cab1d1efee1e2p-81 0x1.e5be26f500000p-102 conv False regions 8 depth 4
+   # 4 cat 1 g-1e-7-2-39037 call 1 (low, 2:2): g value 0x1.6a8e4d2bdb58ep-84 abserr 0x1.29448718de77dp-107 regions 31 depth 7 conv True | 06b 0x1.6a8e3c030cdc4p-84 0x1.f4a0a45000000p-106 conv False regions 18 depth 7
+   # 5 cat 1 g-1e-7-3-38436 call 5 (low, 3:201): g value -0x1.02cd43b0b1afcp-94 abserr 0x1.7dc815755e025p-118 regions 12 depth 7 conv True | 06b -0x1.02cd434934c83p-94 0x1.18fc4da7112a4p-104 conv False regions 1 depth 0
+   # 6 cat 1 g-1e-7-0-35112 call 4 (low, 0:202): g value 0x1.3db7707ed8ecap-98 abserr 0x1.2bbe418880731p-122 regions 6 depth 4 conv True | 06b 0x1.3db75978f70fep-98 0x1.33a7dcbd543e0p-109 conv False regions 1 depth 0
+   # 7 cat 1 g-1e-7-3-37325 call 2 (mid, 3:1): g value -0x1.2397ddf45ebc8p-84 abserr 0x1.b1154f1fbbb5cp-109 regions 11 depth 5 conv True | 06b -0x1.2397da0ef05a3p-84 0x1.1b9efd9d97b12p-107 conv False regions 3 depth 2
+   # 8 cat 1 g-1e-7-0-2003 call 4 (mid, 0:101): g value 0x1.e2aa31e3fa346p-79 abserr 0x1.469c38ece2451p-102 regions 12 depth 6 conv True | 06b 0x1.e2aa31eb37e94p-79 0x1.7a965d6bd17d2p-99 conv False regions 1 depth 0
+   # 9 cat 1 g-1e-7-1-34558 call 4 (mid, 1:102): g value 0x1.f4c3fa6a7c189p-84 abserr 0x1.c6d1922975884p-109 regions 41 depth 10 conv True | 06b 0x1.f4c3fa80882efp-84 0x1.369319ed080d1p-105 conv False regions 1 depth 0
+   #10 cat 1 g-1e-7-2-13636 call 6 (mid, 2:2): g value 0x1.7de9762c779e2p-88 abserr 0x1.85b038e5c9868p-114 regions 10 depth 6 conv True | 06b 0x1.7de97627a8095p-88 0x1.4d73c217bb5a9p-108 conv False regions 1 depth 0
+   #11 cat 1 g-1e-7-3-14094 call 3 (mid, 3:201): g value -0x1.55d9223bbcbddp-92 abserr 0x1.124bfc0715ddcp-115 regions 60 depth 15 conv True | 06b -0x1.55d92a8940321p-92 0x1.183c0176f6448p-106 conv False regions 1 depth 0
+   #12 cat 1 g-1e-7-0-14050 call 3 (mid, 0:202): g value 0x1.5f3df0614b57ap-95 abserr 0x1.bc99401758db2p-119 regions 13 depth 5 conv True | 06b 0x1.5f3dee0a799fbp-95 0x1.e0acbe418ca37p-109 conv False regions 1 depth 0
+   #13 cat 2 g-1e-7-3-39140 call 2 (low, 3:1): g value -0x1.f68a34114aaa4p-84 abserr 0x1.3002a35661592p-107 regions 5 depth 4 conv True | 06b -0x1.f68a34117343dp-84 0x1.22891c0956124p-107 conv True regions 3 depth 2
+   #14 cat 2 g-1e-7-0-38345 call 0 (low, 0:101): g value 0x1.bde1e347b2130p-80 abserr 0x1.5bdc6ef10a51ep-103 regions 9 depth 6 conv True | 06b 0x1.bde1e29839198p-80 0x1.4bf394f4f8f5dp-106 conv True regions 14 depth 7
+   #15 cat 2 g-1e-7-1-2292 call 3 (low, 1:102): g value -0x1.fddff301f733cp-84 abserr 0x1.aaa2fed1dd82cp-107 regions 29 depth 7 conv True | 06b -0x1.fddff24f2062ep-84 0x1.d5223a6a692a4p-110 conv True regions 2 depth 1
+   #16 cat 2 g-1e-7-2-34894 call 2 (low, 2:2): g value -0x1.eb891c0b24e40p-90 abserr 0x1.9055ac241a134p-112 regions 5 depth 4 conv True | 06b -0x1.eb891c0b24e26p-90 0x1.17161bb25e9dep-112 conv True regions 2 depth 1
+   #17 cat 2 g-1e-7-3-14507 call 1 (low, 3:201): g value 0x1.c5346a67ade34p-92 abserr 0x1.8892c87b7f099p-112 regions 19 depth 6 conv True | 06b 0x1.c5346a658b7fep-92 0x1.874833d400000p-112 conv True regions 18 depth 6
+   #18 cat 2 g-1e-7-0-14127 call 3 (low, 0:202): g value -0x1.9c9fd523c0fa6p-99 abserr 0x1.d980121a7d210p-123 regions 7 depth 5 conv True | 06b -0x1.9ca020464d764p-99 inf conv False regions 1 depth 0
+   #19 cat 2 g-1e-7-3-1922 call 3 (mid, 3:1): g value -0x1.a6e2104c978ebp-76 abserr 0x1.910a9453a44c0p-101 regions 18 depth 6 conv True | 06b -0x1.a6e20d95209fep-76 0x1.5bd440619633fp-99 conv True regions 2 depth 1
+   #20 cat 2 g-1e-7-0-12856 call 2 (mid, 0:101): g value -0x1.3bc0ca51071dap-77 abserr 0x1.96e0725f9426ep-101 regions 1 depth 0 conv True | 06b -0x1.3bc0ca51071dap-77 0x1.085480c000000p-103 conv True regions 1 depth 0
+   #21 cat 2 g-1e-7-1-34624 call 0 (mid, 1:102): g value -0x1.0bf61d0fceab5p-91 abserr 0x1.73fe467c7f0b4p-109 regions 7 depth 3 conv True | 06b -0x1.0bf61d102c9dap-91 0x1.828a9d80a56c9p-112 conv True regions 3 depth 2
+   #22 cat 2 g-1e-7-2-1681 call 0 (mid, 2:2): g value -0x1.223c16988f4edp-93 abserr 0x1.a51bf8501f9cfp-109 regions 5 depth 3 conv True | 06b -0x1.223c1697fa216p-93 0x1.a3dde0cb27625p-111 conv True regions 3 depth 2
+   #23 cat 2 g-1e-7-3-34301 call 4 (mid, 3:201): g value -0x1.b31b109fd320cp-93 abserr 0x1.686917bffbf77p-117 regions 13 depth 7 conv True | 06b -0x1.b31b1058c3725p-93 0x1.b6092b54ece6dp-116 conv True regions 1 depth 0
+   #24 cat 2 g-1e-7-0-13758 call 1 (mid, 0:202): g value -0x1.e25ca97d12f72p-96 abserr 0x1.ce492ab2cba60p-114 regions 6 depth 3 conv True | 06b -0x1.e25c51b3ff6fbp-96 0x1.f2fb406a00000p-117 conv True regions 1 depth 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/x1_selection.json sha256 1b45083c69d6267d57f1a695a49d373cfa9928b591a57c1897f98e3739a84880
+# ----
+# end 2026-10-29T15:36:36Z
+# exit 0

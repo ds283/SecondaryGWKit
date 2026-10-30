@@ -1,0 +1,2 @@
+QSI identical 0 differ 864 only 0 0 0
+{'WKB_Levin_elapsed': 573, 'analytic_compute_time': 864, 'compute_time': 864, 'label': 864, 'metadata': 864, 'numeric_quad_compute_time': 396, 'numeric_quad_max_RHS_time': 390, 'numeric_quad_mean_RHS_time': 395, 'numeric_quad_min_RHS_time': 350}

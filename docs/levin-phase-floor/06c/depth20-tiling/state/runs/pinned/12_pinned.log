@@ -1,0 +1,64 @@
+# depth20-tiling: sample 12, mode pinned
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T22:08:07Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script runcall.py sha256 d8662a637da4456467b4fedb52a94d1d13e179446dcacd127644f65b04f3ecfc
+# input state/captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/cheap_pass.json sha256 88684b297f40efc39b6b3b4460a25eedf431211a3c855d3119032ae7649ca1f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts/dcommon.py sha256 dcd23cc215e7951504db4c9aebbb5cf2d655c8d3b33b137f7d739d8d2e699c76
+{
+ "sample_no": 12,
+ "unit": "g-1e-8-1-2174",
+ "index": 1,
+ "notify_label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r",
+ "mode": "pinned",
+ "x_span": [
+  "0x1.c1a02530aec6fp+0",
+  "0x1.8b0e134cd0b2cp+4"
+ ],
+ "kw": {
+  "atol": 1.6115181451409274e-33,
+  "rtol": 1e-08,
+  "chebyshev_order": 24,
+  "notify_label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r"
+ },
+ "census": {
+  "value": "0x1.0c5f181ecdc0bp-86",
+  "abserr": "0x1.758384c2f61c3p-110",
+  "num_regions": 48,
+  "max_depth": 20,
+  "converged": false,
+  "call_elapsed_s": 0.8497106251306832
+ },
+ "result": {
+  "value": "0x1.0c6c2cd926acfp-86",
+  "abserr": "0x1.febd253628d92p-110",
+  "value_repr": "1.3551876040624034e-26",
+  "abserr_repr": "1.5369488174277068e-33",
+  "num_regions": 18,
+  "max_depth": 7,
+  "converged": true,
+  "num_at_depth_20": 0,
+  "num_phase_limited_regions": 1,
+  "num_untrusted_regions": 0,
+  "num_subregion_solves": 143,
+  "num_simple_regions": 0,
+  "abserr_resolution": "0x1.e7a80ecefe200p-110",
+  "abserr_roundoff": "0x1.8290ba7ed491dp-120",
+  "abserr_fallback": "0x0.0p+0",
+  "abserr_truncation": "0x0.0p+0",
+  "depth_hist": {
+   "1": 1,
+   "4": 4,
+   "5": 6,
+   "6": 1,
+   "7": 6
+  },
+  "elapsed_driver": 0.22744349995628
+ },
+ "wall_s": 0.22768833301961422,
+ "equals_census": false,
+ "capture_record_equals_census": true
+}
+patch self-check: {"spans_x_orders": 44, "all_interior_nodes_and_D_bit_identical": true, "all_pinned_ends_exact": true, "original_untouched": true, "n_original_top_off": 8, "n_original_bottom_off": 24}

@@ -1,0 +1,10 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-29T12:54:13Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06c/rehearsal; diff $R/state/r18_store_sha256_before_reads.txt $R/state/r18_store_sha256_after_reads.txt && echo "R18 before/after reads: identical"; grep r18 $R/state/store_sha256_before_diff.txt > /tmp/../$R/state/.tmp_r18_before_diff 2>/dev/null; diff $R/state/r18_store_sha256_after_reads.txt <(true) >/dev/null 2>&1; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-200; echo "== files per reader"; for d in $R/extract/*/; do echo "$(find $d -type f | wc -l) $d"; done; du -sh $R/extract; echo "== worktrees"; for w in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do git --no-optional-locks -C $w status --short --ignored; find $w -newer $R/state/r17_launch_marker -not -path "*/.git/*" | head; done; echo end
+# output:
+sh: -c: line 0: syntax error near unexpected token `('
+sh: -c: line 0: `R=var/levin-phase-floor-06c/rehearsal; diff $R/state/r18_store_sha256_before_reads.txt $R/state/r18_store_sha256_after_reads.txt && echo "R18 before/after reads: identical"; grep r18 $R/state/store_sha256_before_diff.txt > /tmp/../$R/state/.tmp_r18_before_diff 2>/dev/null; diff $R/state/r18_store_sha256_after_reads.txt <(true) >/dev/null 2>&1; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-200; echo "== files per reader"; for d in $R/extract/*/; do echo "$(find $d -type f | wc -l) $d"; done; du -sh $R/extract; echo "== worktrees"; for w in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do git --no-optional-locks -C $w status --short --ignored; find $w -newer $R/state/r17_launch_marker -not -path "*/.git/*" | head; done; echo end'
+# exit: 2
+# end: 2026-10-29T12:54:13Z

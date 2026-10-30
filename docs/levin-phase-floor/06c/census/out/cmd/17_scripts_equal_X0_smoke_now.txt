@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:58:47Z
+# ----
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/scripts/scripts_equal.py", line 17
+    for src in sorted((WIDER / "state" / "X0")  # prompt 06c.glob("*/emit.jsonl")) + [WIDER / "state" / "smoke" / "ledger.jsonl"]:
+                     ^
+SyntaxError: '(' was never closed
+# ----
+# end 2026-10-29T12:58:47Z
+# exit 1

@@ -1,0 +1,4 @@
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+status exit=0
+ray-processes exit=0

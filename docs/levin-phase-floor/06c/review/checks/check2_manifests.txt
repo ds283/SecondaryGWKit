@@ -1,0 +1,229 @@
+## var/runs/levin-phase-floor-06c-census-20261029T130214
+{
+ "campaign": "levin-phase-floor",
+ "checkpoint": "var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl",
+ "created": "2026-10-29T13:02:14+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census",
+ "expected_units": 18560,
+ "git_dirty": false,
+ "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+ "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each worker's start and each unit's record, and every 60 s by a thread of the driver while its process lives. A unit's ledger record means it finished, done, over budget or in error, and its region pickle was written.",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "packages": {
+  "SQLAlchemy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.0.55"
+  },
+  "datastorekit": {
+   "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+   "editable": false,
+   "requested_revision": "v0.5.0",
+   "url": "https://github.com/ds283/DatastoreKit",
+   "version": "0.5.0"
+  },
+  "numpy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.2.4"
+  },
+  "ray": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.59.0"
+  },
+  "raypoolkit": {
+   "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+   "editable": false,
+   "requested_revision": "v0.3.0",
+   "url": "https://github.com/ds283/RayPoolKit",
+   "version": "0.3.0"
+  },
+  "runregistrykit": {
+   "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+   "editable": false,
+   "requested_revision": "v0.2.0",
+   "url": "https://github.com/ds283/RunRegistryKit",
+   "version": "0.2.0"
+  },
+  "scipy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "1.16.3"
+  }
+ },
+ "prompt": "06c",
+ "results": null,
+ "results_store_id": null,
+ "run_id": "levin-phase-floor-06c-census-20261029T130214",
+ "scope": "all 9280 QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's certified scratch copy), listed in var/levin-phase-floor-06c/census/state/rows.json (06a's, sha256 aa523d28); tree g (worktree e5764a6, code ad9a5f4 + 3d70db9); rtol 1e-7 and 1e-8; no store write, no Ray, no lock",
+ "script": "var/levin-phase-floor
+argv: ['/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python', '-B', '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/scripts/run_census.py', '--run-dir', '<run dir>']
+status: {'state': 'done', 'exit_code': 0, 'pid': 1756, 'stage': '18560 units recorded; last g-1e-8-2-35099 done', 'units_done': 18560, 'units_total': 18560}
+## var/runs/levin-phase-floor-06c-r17-parent-20261029T123720
+{
+ "campaign": "levin-phase-floor",
+ "checkpoint": null,
+ "created": "2026-10-29T12:37:20+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c",
+ "expected_units": null,
+ "git_dirty": false,
+ "git_head": "fef401c2614da3dbbf1b4261edd31f5f7f80cdbf",
+ "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "packages": {
+  "SQLAlchemy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.0.55"
+  },
+  "datastorekit": {
+   "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+   "editable": false,
+   "requested_revision": "v0.5.0",
+   "url": "https://github.com/ds283/DatastoreKit",
+   "version": "0.5.0"
+  },
+  "numpy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.2.4"
+  },
+  "ray": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.59.0"
+  },
+  "raypoolkit": {
+   "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+   "editable": false,
+   "requested_revision": "v0.3.0",
+   "url": "https://github.com/ds283/RayPoolKit",
+   "version": "0.3.0"
+  },
+  "runregistrykit": {
+   "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+   "editable": false,
+   "requested_revision": "v0.2.0",
+   "url": "https://github.com/ds283/RunRegistryKit",
+   "version": "0.2.0"
+  },
+  "scipy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "1.16.3"
+  }
+ },
+ "prompt": "06c",
+ "results": "var/datastores/levin-phase-floor-06c-r17.sqlite",
+ "results_store_id": null,
+ "run_id": "levin-phase-floor-06c-r17-parent-20261029T123720",
+ "scope": "REHEARSAL build, not A3 v2: main.py's 
+argv: ['RunDrivers/quadsource_atol_sweep.py', '--build', '--rehearsal', '--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06c-r17.sqlite', '--job-name', 'levin-phase-floor-06c', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'r17-parent', '--purpose', "levin-phase-floor prompt 06c, R17 on the Mac Studio (mps026298; tree fef401c in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c, the parent of 06c's code commit ad9a5f4, whose code is 06b's; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R17/R18 value comparison, whose after side R18 runs at e5764a6 with the code of 06c ad9a5f4 and 06d 3d70db9", '--campaign', 'levin-phase-floor', '--prompt', '06c']
+status: {'state': 'done', 'exit_code': 0, 'pid': 96791, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'units_done': 0, 'units_total': None}
+## var/runs/levin-phase-floor-06c-r18-global-20261029T124058
+{
+ "campaign": "levin-phase-floor",
+ "checkpoint": null,
+ "created": "2026-10-29T12:40:58+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6",
+ "expected_units": null,
+ "git_dirty": false,
+ "git_head": "e5764a6708757cb11704b95bcd66825baab4ba29",
+ "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "packages": {
+  "SQLAlchemy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.0.55"
+  },
+  "datastorekit": {
+   "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+   "editable": false,
+   "requested_revision": "v0.5.0",
+   "url": "https://github.com/ds283/DatastoreKit",
+   "version": "0.5.0"
+  },
+  "numpy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.2.4"
+  },
+  "ray": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.59.0"
+  },
+  "raypoolkit": {
+   "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+   "editable": false,
+   "requested_revision": "v0.3.0",
+   "url": "https://github.com/ds283/RayPoolKit",
+   "version": "0.3.0"
+  },
+  "runregistrykit": {
+   "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+   "editable": false,
+   "requested_revision": "v0.2.0",
+   "url": "https://github.com/ds283/RunRegistryKit",
+   "version": "0.2.0"
+  },
+  "scipy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "1.16.3"
+  }
+ },
+ "prompt": "06c",
+ "results": "var/datastores/levin-phase-floor-06c-r18.sqlite",
+ "results_store_id": null,
+ "run_id": "levin-phase-floor-06c-r18-global-20261029T124058",
+ "scope": "REHEARSAL build, not A3 v2: main.py's 
+argv: ['RunDrivers/quadsource_atol_sweep.py', '--build', '--rehearsal', '--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06c-r18.sqlite', '--job-name', 'levin-phase-floor-06c', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'r18-global', '--purpose', "levin-phase-floor prompt 06c, R18 on the Mac Studio (mps026298; tree e5764a6 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6, whose code is 06c's code commit ad9a5f4 plus 06d's code commit 3d70db9; Python 3.13.16): rehearsal build at the code commits (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R17/R18 value comparison (R17 at fef401c, 06b's code), and only QuadSourceIntegral is expected to differ", '--campaign', 'levin-phase-floor', '--prompt', '06c']
+status: {'state': 'done', 'exit_code': 0, 'pid': 97470, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'units_done': 0, 'units_total': None}

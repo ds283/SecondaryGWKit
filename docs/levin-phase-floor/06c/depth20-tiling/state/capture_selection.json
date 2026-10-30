@@ -1,0 +1,572 @@
+[
+ {
+  "unit": "g-1e-7-1-2174",
+  "index": 1,
+  "notify_label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r",
+  "sample_no": 0,
+  "rtol": "1e-7",
+  "block": "G+q+r",
+  "census_value": "0x1.0c5f181ecdbffp-86",
+  "census_abserr": "0x1.75833833809f1p-110",
+  "census_num_regions": 50,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.c1a02530aec6fp+0",
+   "0x1.8b0e134cd0b2cp+4"
+  ],
+  "unit_wall_s": 1.756003791000694,
+  "call_elapsed_s": 0.6773693328723311
+ },
+ {
+  "unit": "g-1e-7-2-1444",
+  "index": 4,
+  "notify_label": "k=3.09e+06/Mpc, q=1e+05/Mpc, r=3.09e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+  "sample_no": 1,
+  "rtol": "1e-7",
+  "block": "G+q-r",
+  "census_value": "0x1.c427c1ab729c6p-89",
+  "census_abserr": "0x1.e75e77abcc7b6p-115",
+  "census_num_regions": 234,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.93e8c4308d6d0p+3",
+   "0x1.54258b68e15fbp+4"
+  ],
+  "unit_wall_s": 8.749534250004217,
+  "call_elapsed_s": 3.205385417211801
+ },
+ {
+  "unit": "g-1e-7-2-1627",
+  "index": 3,
+  "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+  "sample_no": 2,
+  "rtol": "1e-7",
+  "block": "G-q+r",
+  "census_value": "-0x1.8274be9da55efp-95",
+  "census_abserr": "0x1.f350a57b8ff13p-115",
+  "census_num_regions": 101,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.d463901811304p+4"
+  ],
+  "unit_wall_s": 3.6095273338723928,
+  "call_elapsed_s": 0.9726948328316212
+ },
+ {
+  "unit": "g-1e-7-3-34370",
+  "index": 4,
+  "notify_label": "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+  "sample_no": 3,
+  "rtol": "1e-7",
+  "block": "G-q-r",
+  "census_value": "0x1.2549f2489da62p-88",
+  "census_abserr": "0x1.ddc88087c8490p-112",
+  "census_num_regions": 103,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.9d7b0833fb59fp+4"
+  ],
+  "unit_wall_s": 2.9223907499108464,
+  "call_elapsed_s": 1.9646983749698848
+ },
+ {
+  "unit": "g-1e-7-3-13510",
+  "index": 5,
+  "notify_label": "analytic J1",
+  "sample_no": 4,
+  "rtol": "1e-7",
+  "block": "J1",
+  "census_value": "-0x1.63f97fdd91ecfp-49",
+  "census_abserr": "0x1.01b82debfe9c4p-79",
+  "census_num_regions": 48,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.75043b2e77dc9p+3",
+   "0x1.71064d683ba06p+2"
+  ],
+  "unit_wall_s": 4.61132699996233,
+  "call_elapsed_s": 0.47601916594430804
+ },
+ {
+  "unit": "g-1e-7-2-34485",
+  "index": 17,
+  "notify_label": "analytic J2",
+  "sample_no": 5,
+  "rtol": "1e-7",
+  "block": "J2",
+  "census_value": "-0x1.676baac06a186p-54",
+  "census_abserr": "0x1.75b944db98124p-80",
+  "census_num_regions": 55,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.422aec355382ap+3",
+   "0x1.39b700908ea7ep+2"
+  ],
+  "unit_wall_s": 8.477582541992888,
+  "call_elapsed_s": 0.5741397920064628
+ },
+ {
+  "unit": "g-1e-7-1-38737",
+  "index": 11,
+  "notify_label": "analytic J3",
+  "sample_no": 6,
+  "rtol": "1e-7",
+  "block": "J3",
+  "census_value": "0x1.e0c532935ac56p-46",
+  "census_abserr": "0x1.22955c1cb99dbp-73",
+  "census_num_regions": 214,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.999df80104b87p+3",
+   "0x1.18191eb34ff1ep+3"
+  ],
+  "unit_wall_s": 13.872771915979683,
+  "call_elapsed_s": 3.268916750093922
+ },
+ {
+  "unit": "g-1e-7-2-34718",
+  "index": 11,
+  "notify_label": "analytic J4",
+  "sample_no": 7,
+  "rtol": "1e-7",
+  "block": "J4",
+  "census_value": "-0x1.11ee760ebdd3fp-42",
+  "census_abserr": "0x1.707f83c1a5e7bp-74",
+  "census_num_regions": 67,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.3a9c327828efdp+4",
+   "0x1.f3b16e1a0eac4p+2"
+  ],
+  "unit_wall_s": 4.7818613750860095,
+  "call_elapsed_s": 0.7140222920570523
+ },
+ {
+  "unit": "g-1e-7-3-37319",
+  "index": 6,
+  "notify_label": "analytic Y1",
+  "sample_no": 8,
+  "rtol": "1e-7",
+  "block": "Y1",
+  "census_value": "-0x1.5957d1ae87874p-30",
+  "census_abserr": "0x1.fec7202556ba5p-56",
+  "census_num_regions": 141,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.75043b2e77dc9p+3",
+   "0x1.71064d683ba06p+2"
+  ],
+  "unit_wall_s": 4.659715582849458,
+  "call_elapsed_s": 1.449497333029285
+ },
+ {
+  "unit": "g-1e-7-1-35340",
+  "index": 18,
+  "notify_label": "analytic Y2",
+  "sample_no": 9,
+  "rtol": "1e-7",
+  "block": "Y2",
+  "census_value": "0x1.9e838ef109fc4p-33",
+  "census_abserr": "0x1.90820b21d2a6ep-65",
+  "census_num_regions": 67,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.66c4a907e05e8p+3",
+   "0x1.4e2cc669a9b0cp+1"
+  ],
+  "unit_wall_s": 4.084995999932289,
+  "call_elapsed_s": 0.7476848748046905
+ },
+ {
+  "unit": "g-1e-7-1-35332",
+  "index": 10,
+  "notify_label": "analytic Y3",
+  "sample_no": 10,
+  "rtol": "1e-7",
+  "block": "Y3",
+  "census_value": "0x1.53f0186022c00p-44",
+  "census_abserr": "0x1.0892b0dd35d3ap-77",
+  "census_num_regions": 77,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.284f540ee281ep+4",
+   "0x1.afb2df750cbadp-2"
+  ],
+  "unit_wall_s": 4.8518062920775265,
+  "call_elapsed_s": 1.0713036658708006
+ },
+ {
+  "unit": "g-1e-7-3-36020",
+  "index": 20,
+  "notify_label": "analytic Y4",
+  "sample_no": 11,
+  "rtol": "1e-7",
+  "block": "Y4",
+  "census_value": "0x1.714f485ba5c17p-52",
+  "census_abserr": "0x1.e037d82ed6005p-78",
+  "census_num_regions": 112,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.422aec355382ap+3",
+   "0x1.39b700908ea7ep+2"
+  ],
+  "unit_wall_s": 4.30104716680944,
+  "call_elapsed_s": 1.0955057500395924
+ },
+ {
+  "unit": "g-1e-8-1-2174",
+  "index": 1,
+  "notify_label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r",
+  "sample_no": 12,
+  "rtol": "1e-8",
+  "block": "G+q+r",
+  "census_value": "0x1.0c5f181ecdc0bp-86",
+  "census_abserr": "0x1.758384c2f61c3p-110",
+  "census_num_regions": 48,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.c1a02530aec6fp+0",
+   "0x1.8b0e134cd0b2cp+4"
+  ],
+  "unit_wall_s": 2.025142624974251,
+  "call_elapsed_s": 0.8497106251306832
+ },
+ {
+  "unit": "g-1e-8-3-34220",
+  "index": 4,
+  "notify_label": "k=9.7e+06/Mpc, q=1e+05/Mpc, r=9.7e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+  "sample_no": 13,
+  "rtol": "1e-8",
+  "block": "G+q-r",
+  "census_value": "0x1.f022b8fa455f2p-94",
+  "census_abserr": "0x1.8e28ba0bdd213p-116",
+  "census_num_regions": 364,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.93e8c4308d6d0p+3",
+   "0x1.54258b68e15fbp+4"
+  ],
+  "unit_wall_s": 7.30908316699788,
+  "call_elapsed_s": 3.44881400000304
+ },
+ {
+  "unit": "g-1e-8-2-1627",
+  "index": 3,
+  "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+  "sample_no": 14,
+  "rtol": "1e-8",
+  "block": "G-q+r",
+  "census_value": "-0x1.8274be9da55e1p-95",
+  "census_abserr": "0x1.f350a0c941ba3p-115",
+  "census_num_regions": 102,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.d463901811304p+4"
+  ],
+  "unit_wall_s": 3.974901624955237,
+  "call_elapsed_s": 0.968326749978587
+ },
+ {
+  "unit": "g-1e-8-2-1549",
+  "index": 4,
+  "notify_label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+  "sample_no": 15,
+  "rtol": "1e-8",
+  "block": "G-q-r",
+  "census_value": "-0x1.38011d9663c89p-91",
+  "census_abserr": "0x1.a6a5ba739c9cbp-116",
+  "census_num_regions": 86,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.9d7b0833fb59fp+4"
+  ],
+  "unit_wall_s": 2.1479095418471843,
+  "call_elapsed_s": 0.7927765408530831
+ },
+ {
+  "unit": "g-1e-8-2-34708",
+  "index": 5,
+  "notify_label": "analytic J1",
+  "sample_no": 16,
+  "rtol": "1e-8",
+  "block": "J1",
+  "census_value": "-0x1.526e64cfec909p-37",
+  "census_abserr": "0x1.9a6c1160f6134p-69",
+  "census_num_regions": 592,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.e2d171a61e703p+3",
+   "0x1.07900b00b6e63p+3"
+  ],
+  "unit_wall_s": 10.949270958080888,
+  "call_elapsed_s": 5.980706834001467
+ },
+ {
+  "unit": "g-1e-8-3-13913",
+  "index": 9,
+  "notify_label": "analytic J2",
+  "sample_no": 17,
+  "rtol": "1e-8",
+  "block": "J2",
+  "census_value": "0x1.131542d88bb7bp-37",
+  "census_abserr": "0x1.8e45dd4c0f674p-66",
+  "census_num_regions": 437,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.e2d171a61e703p+3",
+   "0x1.07900b00b6e63p+3"
+  ],
+  "unit_wall_s": 20.447361834114417,
+  "call_elapsed_s": 5.226837249938399
+ },
+ {
+  "unit": "g-1e-8-1-2368",
+  "index": 9,
+  "notify_label": "analytic J3",
+  "sample_no": 18,
+  "rtol": "1e-8",
+  "block": "J3",
+  "census_value": "0x1.88383b7f1dd4dp-41",
+  "census_abserr": "0x1.87cfbff6b54a6p-81",
+  "census_num_regions": 106,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.284f540ee281ep+4",
+   "0x1.308ee451f0632p+3"
+  ],
+  "unit_wall_s": 5.096370291896164,
+  "call_elapsed_s": 1.2447841670364141
+ },
+ {
+  "unit": "g-1e-8-3-36019",
+  "index": 19,
+  "notify_label": "analytic J4",
+  "sample_no": 19,
+  "rtol": "1e-8",
+  "block": "J4",
+  "census_value": "0x1.6db5f5ecfadb1p-48",
+  "census_abserr": "0x1.adabbade77fffp-76",
+  "census_num_regions": 99,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.422aec355382ap+3",
+   "0x1.39b700908ea7ep+2"
+  ],
+  "unit_wall_s": 82.68990079197101,
+  "call_elapsed_s": 1.2159003340639174
+ },
+ {
+  "unit": "g-1e-8-0-12932",
+  "index": 14,
+  "notify_label": "analytic Y1",
+  "sample_no": 20,
+  "rtol": "1e-8",
+  "block": "Y1",
+  "census_value": "-0x1.986e91189e408p-52",
+  "census_abserr": "0x1.2b5e67536288cp-79",
+  "census_num_regions": 89,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.66c4a907e05e8p+3",
+   "0x1.4e2cc669a9b0cp+1"
+  ],
+  "unit_wall_s": 7.3378809578716755,
+  "call_elapsed_s": 0.8933155001141131
+ },
+ {
+  "unit": "g-1e-8-1-14572",
+  "index": 8,
+  "notify_label": "analytic Y2",
+  "sample_no": 21,
+  "rtol": "1e-8",
+  "block": "Y2",
+  "census_value": "0x1.0abac5abbf371p-42",
+  "census_abserr": "0x1.e625586ed3c0ap-70",
+  "census_num_regions": 210,
+  "census_max_depth": 20,
+  "census_converged": true,
+  "x_span": [
+   "-0x1.284f540ee281ep+4",
+   "0x1.302670730551dp+3"
+  ],
+  "unit_wall_s": 11.960008083144203,
+  "call_elapsed_s": 3.142965165898204
+ },
+ {
+  "unit": "g-1e-8-2-21874",
+  "index": 12,
+  "notify_label": "analytic Y3",
+  "sample_no": 22,
+  "rtol": "1e-8",
+  "block": "Y3",
+  "census_value": "-0x1.35f747459e2b1p-46",
+  "census_abserr": "0x1.343feabeaf356p-78",
+  "census_num_regions": 146,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.03b5973c55a61p+4",
+   "-0x1.4ed878ffd3d9bp+1"
+  ],
+  "unit_wall_s": 6.74909008317627,
+  "call_elapsed_s": 1.4487605409231037
+ },
+ {
+  "unit": "g-1e-8-2-1402",
+  "index": 12,
+  "notify_label": "analytic Y4",
+  "sample_no": 23,
+  "rtol": "1e-8",
+  "block": "Y4",
+  "census_value": "-0x1.1202ddb9e5bd6p-42",
+  "census_abserr": "0x1.a8cef17512fefp-80",
+  "census_num_regions": 103,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.3a9c327828efdp+4",
+   "0x1.2abdfe78f36d0p-3"
+  ],
+  "unit_wall_s": 6.408870124956593,
+  "call_elapsed_s": 1.0465105827897787
+ },
+ {
+  "unit": "g-1e-8-2-34718",
+  "index": 5,
+  "notify_label": "analytic J1",
+  "sample_no": 24,
+  "rtol": "1e-8",
+  "block": "J1",
+  "census_value": "0x1.7059b3f13e60fp-48",
+  "census_abserr": "0x1.0f4ed55763796p-83",
+  "census_num_regions": 83,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.3a9c327828efdp+4",
+   "0x1.f3b16e1a0eac4p+2"
+  ],
+  "unit_wall_s": 4.670002541970462,
+  "call_elapsed_s": 0.8605790829751641
+ },
+ {
+  "unit": "g-1e-8-0-33962",
+  "index": 12,
+  "notify_label": "analytic Y4",
+  "sample_no": 25,
+  "rtol": "1e-8",
+  "block": "Y4",
+  "census_value": "-0x1.856da4f5d0ee7p-52",
+  "census_abserr": "0x1.0c4b38939c8e0p-70",
+  "census_num_regions": 5394,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.999df80104b87p+3",
+   "-0x1.469cb932731a6p+2"
+  ],
+  "unit_wall_s": 39.98618670809083,
+  "call_elapsed_s": 37.55767016601749
+ },
+ {
+  "unit": "g-1e-8-0-37212",
+  "index": 8,
+  "notify_label": "analytic Y1",
+  "sample_no": 26,
+  "rtol": "1e-8",
+  "block": "Y1",
+  "census_value": "0x1.dd62f5b583ec1p-43",
+  "census_abserr": "0x1.30d14947287b0p-71",
+  "census_num_regions": 91,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.75043b2e77dc9p+3",
+   "0x1.71064d683ba06p+2"
+  ],
+  "unit_wall_s": 8.341367000015453,
+  "call_elapsed_s": 0.9247348750941455
+ },
+ {
+  "unit": "g-1e-8-3-34419",
+  "index": 21,
+  "notify_label": "analytic J4",
+  "sample_no": 27,
+  "rtol": "1e-8",
+  "block": "J4",
+  "census_value": "0x1.b5ae337651871p-42",
+  "census_abserr": "0x1.faa615e5ea6fcp-74",
+  "census_num_regions": 87,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.66c4a907e05e8p+3",
+   "0x1.4e2cc669a9b0cp+1"
+  ],
+  "unit_wall_s": 6.763467541895807,
+  "call_elapsed_s": 0.9123893340583891
+ },
+ {
+  "unit": "g-1e-7-2-34708",
+  "index": 5,
+  "notify_label": "analytic J1",
+  "sample_no": 28,
+  "rtol": "1e-7",
+  "block": "J1",
+  "census_value": "-0x1.526e64cfec909p-37",
+  "census_abserr": "0x1.9a76934cff23ep-69",
+  "census_num_regions": 591,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.e2d171a61e703p+3",
+   "0x1.07900b00b6e63p+3"
+  ],
+  "unit_wall_s": 11.081196000101045,
+  "call_elapsed_s": 5.973271416965872
+ },
+ {
+  "unit": "g-1e-7-1-14572",
+  "index": 9,
+  "notify_label": "analytic J3",
+  "sample_no": 29,
+  "rtol": "1e-7",
+  "block": "J3",
+  "census_value": "0x1.88383b27a9b0cp-41",
+  "census_abserr": "0x1.5e09144a13fddp-67",
+  "census_num_regions": 284,
+  "census_max_depth": 20,
+  "census_converged": false,
+  "x_span": [
+   "-0x1.284f540ee281ep+4",
+   "0x1.302670730551dp+3"
+  ],
+  "unit_wall_s": 16.24109712499194,
+  "call_elapsed_s": 2.939677457790822
+ }
+]

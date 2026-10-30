@@ -681,6 +681,6 @@ differ, this section holds.**
      stationary point of `G+q+r` at $z \approx 10211$ that §5 item 4 locates in P1's row. On each,
      06b's code or 06c's reported converged while wrong by $4.5\times10^3$–$1.6\times10^6$× its
      declared error. Their references were computed for 06c's Part B
-     (`y1-references/`, in 06c's records). **§5 adds Y1′:** on R22, every one of the 12 rows has
+     (`docs/levin-phase-floor/06c/y1-references/`). **§5 adds Y1′:** on R22, every one of the 12 rows has
      $|{\rm total} - {\rm ref}| \le$ `total_abserr`. **Holds** if no row violates it. A violation
      is a finding for the user, not by itself a stop.

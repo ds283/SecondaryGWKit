@@ -1,0 +1,30 @@
+# Y1 references: batch of 5 calls
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T20:09:48Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/batch.py sha256 eb789877abdc49297dde2f73c35e2e223d3fef7e782d4b9b8ecc8732069d280f
+# PYTHONPATH 
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+Y06-02: panels rc 0 in 2 s
+Y06-02: integrate rc 0 in 311 s
+Y06-02: compare rc 0 in 31 s
+Y06-02: ref -0x1.4b3c6c6127452p-77 conv_diff 0x1.0a8a500000000p-109 panels 50620 nodes {'192': 9719040, '384': 19438080} R17 sample identical True (1715328 nodes)
+Y06-03: panels rc 0 in 2 s
+Y06-03: integrate rc 0 in 309 s
+Y06-03: compare rc 0 in 31 s
+Y06-03: ref -0x1.4b3c6c6127452p-77 conv_diff 0x1.0a8a500000000p-109 panels 50620 nodes {'192': 9719040, '384': 19438080} R17 sample identical True (1715328 nodes)
+Y06-04: panels rc 0 in 2 s
+Y06-04: integrate rc 0 in 597 s
+Y06-04: compare rc 0 in 30 s
+Y06-04: ref 0x1.2e4d926a94683p-78 conv_diff 0x1.5127680000000p-109 panels 99244 nodes {'192': 19054848, '384': 38109696} R17 sample identical True (1681344 nodes)
+Y02-02: panels rc 0 in 2 s
+Y02-02: integrate rc 0 in 376 s
+Y02-02: compare rc 0 in 31 s
+Y02-02: ref -0x1.408d02b5e228dp-72 conv_diff 0x1.27dc000000000p-108 panels 61413 nodes {'192': 11791296, '384': 23582592} R17 sample identical True (1684800 nodes)
+Y02-03: panels rc 0 in 2 s
+Y02-03: integrate rc 0 in 372 s
+Y02-03: compare rc 0 in 30 s
+Y02-03: ref -0x1.408d02b5e228dp-72 conv_diff 0x1.27dc000000000p-108 panels 61413 nodes {'192': 11791296, '384': 23582592} R17 sample identical True (1684800 nodes)
+batch done: {'Y06-02': 'ok', 'Y06-03': 'ok', 'Y06-04': 'ok', 'Y02-02': 'ok', 'Y02-03': 'ok'}

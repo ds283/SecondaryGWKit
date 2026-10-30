@@ -1,0 +1,43 @@
+# Y1 references: capture in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:19:35Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/capture.py sha256 0307021ee09ee8401d59e937763b3555baa1ed47a30b7c5d8b1e380037fd64f8
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input rows.json sha256 443f226667945cdffce362c2c5e7c72c4d423e4c8bb7435276b0d5ee8fc8432c
+# AdaptiveLevin.levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+# ComputeTargets.QuadSourceIntegral /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/ComputeTargets/QuadSourceIntegral.py
+# rebuild /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/rebuild.py; K sample [100000.0, 316227.7660168379, 1000000.0]; zend 250.0
+# store copy /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/store_copies/levin-phase-floor-06c-r18.sqlite
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/store_copies/levin-phase-floor-06c-r18.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+# context built in 0.4 s; checks [('one LambdaCDM model', True, '1'), ('exit times available', True, ''), ('rebuilt redshifts equal stored z exactly', True, '[]'), ('background model available', True, '1')]
+Y01: 5 group calls (16 others), 1.7 s; total -0x1.60d489de69404p-55 abserr 0x1.21b46d538f125p-78 equal to store True; every call equal to the store's metadata True
+     0 sub 0 G      value -0x1.639f5e6f9ea0dp-67 abserr 0x1.929a2855494b3p-91 regions 13 depth 8 conv 1 store-equal True
+     1 sub 1 G+q+r  value 0x1.00a5d63c50710p-69 abserr 0x1.7489f9368ff0fp-94 regions 2 depth 1 conv 1 store-equal True
+     2 sub 1 G+q-r  value 0x1.43a0173f137bep-72 abserr 0x1.811078046a16cp-99 regions 1 depth 0 conv 1 store-equal True
+     3 sub 1 G-q+r  value 0x1.43a0173f137bep-72 abserr 0x1.811078046a16cp-99 regions 1 depth 0 conv 1 store-equal True
+     4 sub 1 G-q-r  value -0x1.2c7a6a671ece6p-73 abserr 0x1.e47d7693c7046p-100 regions 31 depth 11 conv 1 store-equal True
+
+# ray initialised at the end: False
+rows 1; every row and call reproduces the store bit for bit: True
+wrote dev_capture_R18_Y01.json

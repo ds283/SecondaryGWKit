@@ -1,0 +1,141 @@
+# Files of prompt 06c's Part B kept outside this directory
+
+These stay in the Mac Studio's main checkout, under
+`/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/` (paths below are relative
+to it), and those in the hashed list below also in the laptop's `var/levin-phase-floor-06c/`. They
+were left out of this directory as 06b's were: every pickle, every file over 2 MB, and the readers'
+`rehearsal/extract/`.
+
+**Kept on the Mac Studio only, never copied to the laptop:**
+- `rehearsal/extract/` (177 MB);
+- the captured-input pickles under `census/state/{X0,X1capture,X4capture,dev,smoke}`;
+- `y1-references/state/` (2.6 GB: the pickled inputs, 262 MB, and the reference samples and logs
+  under `state/ref`, 2.3 GB). Its log says these can be deleted once no longer needed.
+
+**The census's run directory** `var/runs/levin-phase-floor-06c-census-20261029T130214/` (1.3 GB,
+149 files) stays there in full: the checkpoint, 16 region pickles, the events and the worker logs.
+Prompt 06e's §5 and 07's §6 compare against it. Its `checkpoint.jsonl` has SHA-256
+`b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7`.
+
+**The rehearsal stores** `var/datastores/levin-phase-floor-06c-r17*` and `-r18*` are kept until the
+user says otherwise; their SHA-256 are in `rehearsal/state/` in this directory. The run directories
+`levin-phase-floor-06c-r17-parent-20261029T123720` and
+`levin-phase-floor-06c-r18-global-20261029T124058` stay in `var/runs/`.
+
+**Added past the laptop's `*.csv` exclusion:** `rehearsal/out/qsi_rows.csv`, the per-row
+tabulation of all 864 rows.
+
+The scratch copy of A3 v2 that the census, the depth-20 check and the Y1 references read,
+`var/levin-phase-floor-06/wider/state/a3v2_copy/`, is 06's (`06/KEPT_ON_MAC_STUDIO.md`), and is
+still kept until the user says otherwise.
+
+**Left out of this directory, on both machines**, by SHA-256 taken on the laptop on 2026-10-30:
+
+```
+135d87c445bd1919d36c57361dbc45056c06007c4e23e4ca6d1e69dcf24eb191  census/out/cmd/45_convergence_kinds.txt
+182455c5b31c67ff683c1f612020e7a8bac130d6d7e3744c0061cc79bfa03521  census/out/commands.log
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  census/state/rows.json
+7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0  depth20-tiling/orchestrator_check/inputs/s01.pkl
+0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183  depth20-tiling/orchestrator_check/inputs/s02.pkl
+861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80  depth20-tiling/orchestrator_check/inputs/s08.pkl
+cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3  depth20-tiling/orchestrator_check/inputs/s09.pkl
+18cae4ef44f046560cbf073be2e04ea2b6128050df63e20b2b161111132db0e4  depth20-tiling/orchestrator_check/inputs/s12.pkl
+54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56  depth20-tiling/orchestrator_check/inputs/s13.pkl
+ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1  depth20-tiling/orchestrator_check/inputs/s22.pkl
+696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42  depth20-tiling/orchestrator_check/inputs/s25.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C00/regions_C00.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C01/regions_C01.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C02/regions_C02.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C03/regions_C03.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C04/regions_C04.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C05/regions_C05.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C06/regions_C06.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C07/regions_C07.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C08/regions_C08.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C09/regions_C09.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C10/regions_C10.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C11/regions_C11.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C12/regions_C12.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C13/regions_C13.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C14/regions_C14.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C15/regions_C15.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C16/regions_C16.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C17/regions_C17.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C18/regions_C18.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C19/regions_C19.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C20/regions_C20.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C21/regions_C21.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C22/regions_C22.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C23/regions_C23.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C24/regions_C24.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C25/regions_C25.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C26/regions_C26.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C27/regions_C27.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C28/regions_C28.pkl
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  depth20-tiling/state/capture_attempt1_failed/C29/regions_C29.pkl
+cb2363cd1f2870c45dc1c272f619c275d1b2fb78a9ba0c8f48b1656ece81fd8c  depth20-tiling/state/capture/C00/inputs_C00.pkl
+8065a3c1c344f42e997e6f7a9aa1bd78eeda77f41a0c375b4c90563f5b7c09b2  depth20-tiling/state/capture/C00/regions_C00.pkl
+5ed7cdc59458f0efa47a840adac8959e460bb5470ef68a98a9c3fc9e384d90d4  depth20-tiling/state/capture/C01/inputs_C01.pkl
+18ecea930ee9adc09afd586e75168f5317ad46efa83860cbaa8121bd83ffc43d  depth20-tiling/state/capture/C01/regions_C01.pkl
+08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af  depth20-tiling/state/capture/C02/inputs_C02.pkl
+e04e5787e41de504b0ca0006813f7efff2decba7df5192a6b736ccc7d2649afb  depth20-tiling/state/capture/C02/regions_C02.pkl
+cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3  depth20-tiling/state/capture/C03/inputs_C03.pkl
+de2dfd2681f699faa323c80045dd72294a2191df01fde35a4d6d855cea61f17a  depth20-tiling/state/capture/C03/regions_C03.pkl
+1a0a702d5a298776fc3fc7c3713d8d9fe92cdb9a9e21c32dca93ede1e26eb928  depth20-tiling/state/capture/C04/inputs_C04.pkl
+94dcc657b96e91720943f54759a90078b5d8c28a11a1d7064ccb5d6f1de0c09b  depth20-tiling/state/capture/C04/regions_C04.pkl
+7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0  depth20-tiling/state/capture/C05/inputs_C05.pkl
+5797914e70b25d56c7e2d2fec38ebb35ddcc2e5a97b3b7ed7ce171adeaeb3925  depth20-tiling/state/capture/C05/regions_C05.pkl
+0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183  depth20-tiling/state/capture/C06/inputs_C06.pkl
+010af9c217cabdde12f735bcab33bcef6909b4b18538bb3e0f89639c934590e1  depth20-tiling/state/capture/C06/regions_C06.pkl
+ebbcb85bafa9696ca30c778428254b33ae1d2dad9f7c9d8076a0e6c9c0718d20  depth20-tiling/state/capture/C07/inputs_C07.pkl
+06bd0d8ace2cebac51d7584c25edeef04077509308a7f0907ca24d1b54103fc4  depth20-tiling/state/capture/C07/regions_C07.pkl
+39d894ca25b1e353c8b67a0e6302edd95e4892c7268067b993fa29fc4a141895  depth20-tiling/state/capture/C08/inputs_C08.pkl
+c52c19a0a416b84273091fbde37b210f8675826c643b8f88535477cec53ebaf7  depth20-tiling/state/capture/C08/regions_C08.pkl
+5add1e261b0baff044e08c353813453c2fc50968e374d3980644567fad3b3d58  depth20-tiling/state/capture/C09/inputs_C09.pkl
+d4462c92a91e121c6874100c724afb24fbf2c822f7682c45b5ff28f2cb4cab80  depth20-tiling/state/capture/C09/regions_C09.pkl
+9bcc089a9f16f37c4f715ed7a74d38817b588d383a6fc6a22bad920c162bdba2  depth20-tiling/state/capture/C10/inputs_C10.pkl
+27b1a8cb4816e075aef3fef33216b9a5f9eba7f01b2496de88f5a4a15caf295f  depth20-tiling/state/capture/C10/regions_C10.pkl
+81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892  depth20-tiling/state/capture/C11/inputs_C11.pkl
+a88f1855f78a51d362bcae447fe3cff10ef1afeb2c695d287b0458330811866b  depth20-tiling/state/capture/C11/regions_C11.pkl
+a1ec581b0b97970320257698eb66ffc588fdbf31b28b73e7d5b35e9c9782e188  depth20-tiling/state/capture/C12/inputs_C12.pkl
+479d9be2a7230340cccf0b0db89d382ba56005d8514ef440cdf89791a94ddec9  depth20-tiling/state/capture/C12/regions_C12.pkl
+861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80  depth20-tiling/state/capture/C13/inputs_C13.pkl
+3741c8b51c4aadba36edbbc75de8459a3c5af3ec3cee04dc4015fa0025664c5c  depth20-tiling/state/capture/C13/regions_C13.pkl
+aa1d6dedd3152d0771cda8914feaae1e65115c36104b8b215d90ad2420e67e11  depth20-tiling/state/capture/C14/inputs_C14.pkl
+5a092488b8479f2d20e69529b895f7dad10ac47989bf260de6b1bfeef8b1e2e9  depth20-tiling/state/capture/C14/regions_C14.pkl
+696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42  depth20-tiling/state/capture/C15/inputs_C15.pkl
+f354e7927ab03d64da6e71437c32dcdab4c336b2908bc97fb23d149925d87d4b  depth20-tiling/state/capture/C15/regions_C15.pkl
+b4abe5b46968921036b146976c91a869393aa215914e71b35063bb986c2c3ba1  depth20-tiling/state/capture/C16/inputs_C16.pkl
+76bed03b85820897499f45d72bbdceae2b396d88416b3a2a6bf696d3b118e174  depth20-tiling/state/capture/C16/regions_C16.pkl
+76d4e05c3b44701ff7fb2c7c1d85211c42b68f2d605309461078197128a05e7b  depth20-tiling/state/capture/C17/inputs_C17.pkl
+9414081da73c4b721999ec97dbd628d39245f3802b6a19adf011071a961e8f7c  depth20-tiling/state/capture/C17/regions_C17.pkl
+18cae4ef44f046560cbf073be2e04ea2b6128050df63e20b2b161111132db0e4  depth20-tiling/state/capture/C18/inputs_C18.pkl
+0e62f8e02cc4397de38cdf59c089a50f0dada0b1aaf3745b4dea9d54022dfbc6  depth20-tiling/state/capture/C18/regions_C18.pkl
+dcac7448f0ebcee96653fd89fe399db762983d377e4da6c1b845af9383ed1d1c  depth20-tiling/state/capture/C19/inputs_C19.pkl
+bd790be4c35a9abe44815edbe64bc6650c1105b5cfdf5a209db1cb7039f18d3f  depth20-tiling/state/capture/C19/regions_C19.pkl
+1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba  depth20-tiling/state/capture/C20/inputs_C20.pkl
+83c986b7db72a4c0fdfeb5974b68b4847b7fea92f32fcb687e35b815d88e0f57  depth20-tiling/state/capture/C20/regions_C20.pkl
+e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd  depth20-tiling/state/capture/C21/inputs_C21.pkl
+1db53e57c326a61ed11515fe27f699f051dfa4f2d1b912725c6a69380fcf3368  depth20-tiling/state/capture/C21/regions_C21.pkl
+9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942  depth20-tiling/state/capture/C22/inputs_C22.pkl
+f0d5038624a6393215d6348018d80c4810fee65173905a11b8cb6421b42fe07f  depth20-tiling/state/capture/C22/regions_C22.pkl
+ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1  depth20-tiling/state/capture/C23/inputs_C23.pkl
+26b111200d09a093e5c87fa018f48e65170180497e04d14dc531315e57985ced  depth20-tiling/state/capture/C23/regions_C23.pkl
+f4244cbf9ed1f867b58b940407519025ec2cfc10a328a494e0f48eb1c4c478fb  depth20-tiling/state/capture/C24/inputs_C24.pkl
+8f5c6ff1d06da80a941cc44e77cf9d7fc422c300eb825693c052af492f1dc397  depth20-tiling/state/capture/C24/regions_C24.pkl
+249fe5d6f96f7d8d168ae5185c48eaab6e636a84602b6997bce0568de664879a  depth20-tiling/state/capture/C25/inputs_C25.pkl
+9d3702f1208d194427fb38aba2e91f7c5961c218d077e44805ef8f475ed6edee  depth20-tiling/state/capture/C25/regions_C25.pkl
+226ec537cf56a49b295e5d23c543e91a5ccef2d7b3f53d0ba3a2eb4bff8f2f03  depth20-tiling/state/capture/C26/inputs_C26.pkl
+4796ea67e9f9a881ec18d1996ef162752aef6542096f96b147154a4554b42280  depth20-tiling/state/capture/C26/regions_C26.pkl
+54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56  depth20-tiling/state/capture/C27/inputs_C27.pkl
+80193d66fdf98f1b1f1482d410fb898056f93dc296a6c41f561014d630e9bf03  depth20-tiling/state/capture/C27/regions_C27.pkl
+d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c  depth20-tiling/state/capture/C28/inputs_C28.pkl
+80e9816def413b06f5b689136f419e4c876181d5f2431509a65f0564b0cd2a32  depth20-tiling/state/capture/C28/regions_C28.pkl
+8d25d67b5742fee6318af88ae9848bae6f108a206c55c1f57b293d7d9daf1c95  depth20-tiling/state/capture/C29/inputs_C29.pkl
+266f770b03000a3f4252f474ea17ab6be14f480d3605c1fca7311f34bfebab03  depth20-tiling/state/capture/C29/regions_C29.pkl
+88684b297f40efc39b6b3b4460a25eedf431211a3c855d3119032ae7649ca1f1  depth20-tiling/state/cheap_pass.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  depth20-tiling/state/rows.json
+03c4b79e624798fc1408812aa99c5f61bdefabfeda0a51f291bb989901811610  rehearsal/out/store_value_diff_r16_06b_vs_r17.json
+57313b0190da0c93166b03fdbf4c341bc913b02769dd58721574d55096bc6675  rehearsal/out/store_value_diff.json
+1d8111239f412302ff8dc248d80a622f876efa52f8bb8ef4bed2de840a82e7e4  review/preflight/protected_before.sha256
+```

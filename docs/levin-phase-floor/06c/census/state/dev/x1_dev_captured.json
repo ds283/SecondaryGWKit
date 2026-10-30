@@ -1,0 +1,32 @@
+[
+ {
+  "unit": "g-1e-7-0-14164",
+  "index": 3,
+  "notify_label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (1.709e+09, 2.7567), regime Gqr, group G+q+r",
+  "census_value": "0x1.7c2951e61a89cp-97",
+  "census_abserr": "0x1.0f333534e96c8p-125",
+  "census_num_regions": 7,
+  "census_max_depth": 4,
+  "census_converged": true,
+  "value_06b": "0x1.7c2951e6b3080p-97",
+  "abserr_06b": "0x1.c080c20088528p-108",
+  "dev_note": "Gate X0's G1 record stands in for the census",
+  "capture_worker": "C00",
+  "capture_unit_status": "done",
+  "capture_ray_initialized": false,
+  "dir": "state/dev/x1_capture_2/C00",
+  "pickle": "inputs_C00.pkl",
+  "offset": 0,
+  "length": 1356677,
+  "sha256": "19c6d8fd6dfedcb04a671ddd6f5d8aa1cb77802746de60799a1334555f7f09a7",
+  "capture_record": {
+   "value": "0x1.7c2951e61a89cp-97",
+   "abserr": "0x1.0f333534e96c8p-125",
+   "num_regions": 7,
+   "max_depth": 4,
+   "converged": true
+  },
+  "capture_matches_census": true,
+  "capture_error": null
+ }
+]

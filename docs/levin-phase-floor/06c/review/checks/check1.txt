@@ -1,0 +1,30 @@
+## SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status lines: 0
+## SecondaryGWKit-lpf06c-e5764a6
+e5764a6708757cb11704b95bcd66825baab4ba29
+status lines: 0
+## SecondaryGWKit-lpf06c-fef401c
+fef401c2614da3dbbf1b4261edd31f5f7f80cdbf
+status lines: 0
+## worktrees newer than marker (excluding __pycache__)
+## main checkout newer than marker, outside var/ and .git (excl __pycache__)
+SecondaryGWKit/var
+SecondaryGWKit/.git
+## var newer than marker: top-level groups
+      1 var/datastores/levin-phase-floor-06c-r17-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06c-r17-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06c-r17-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06c-r17-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06c-r17.sqlite
+      1 var/datastores/levin-phase-floor-06c-r18-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06c-r18-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06c-r18-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06c-r18-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06c-r18.sqlite
+   3512 var/levin-phase-floor-06c
+    149 var/runs/levin-phase-floor-06c-census-<ts>
+      4 var/runs/levin-phase-floor-06c-r17-parent-<ts>
+      1 var/runs/levin-phase-floor-06c-r17.launch.log
+      4 var/runs/levin-phase-floor-06c-r18-global-<ts>
+      1 var/runs/levin-phase-floor-06c-r18.launch.log

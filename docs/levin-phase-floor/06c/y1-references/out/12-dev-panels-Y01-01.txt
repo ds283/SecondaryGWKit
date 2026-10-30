@@ -1,0 +1,46 @@
+# Y1 references: refquad panels in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:28:36Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R18-01.pkl sha256 047df0a1a743b3c7e74a1c67b5ee9e9e401b9bb0bce0ef1dfb90d76529976b70
+{
+ "pickle": "inputs/Y01-R18-01.pkl",
+ "pickle_sha256": "047df0a1a743b3c7e74a1c67b5ee9e9e401b9bb0bce0ef1dfb90d76529976b70",
+ "row": "Y01",
+ "index": 1,
+ "label": "G+q+r",
+ "tree": "R18",
+ "x_span": [
+  "0x1.1209172e186c4p+3",
+  "0x1.542e3c75ed00ep+4"
+ ],
+ "D": 512.0,
+ "hmax": 0.005,
+ "cell": 0.001,
+ "ncell": 12698,
+ "npanels": 3507,
+ "phase_variation_rad": 495162.8711669673,
+ "oscillations_total_variation": 78807.61858179819,
+ "theta_deriv_max_abs": 696174.8102769684,
+ "theta_deriv_at_ends": [
+  -696174.8102769684,
+  4.058401858143313
+ ],
+ "zeros_of_theta_deriv": [
+  {
+   "x": 9.231349907087822,
+   "x_hex": "0x1.276737eb9bfeap+3",
+   "z": 10211.31789150223,
+   "theta_deriv_lo": -9.313225746154785e-10,
+   "theta_deriv_hi": 0.0,
+   "theta_second_deriv": 491311.02208048105,
+   "stationary_width_x": 0.0014266641440984964
+  }
+ ],
+ "edges_sha256": "efb82da78a633baa6fbecb59c5085744ec6e5901075f82f2a57e8a597708c913"
+}
+replay {'value': '0x1.00a5d63c50710p-69', 'abserr': '0x1.7489f9368ff0fp-94', 'equals_capture': True, 'equals_store': True, 'regions_depth_equal': True}

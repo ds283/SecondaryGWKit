@@ -1,0 +1,73 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/explore06b_pool.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:44:06Z
+# ----
+# levin-phase-floor 06c: 06b's X2-type calls, X1's first stratum, X0's determinism unit
+# written 2026-10-29T12:44:06Z on mps026298.phys.susx.ac.uk
+# script explore06b_pool.py sha256 ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06b-census-20261028T161212/checkpoint.jsonl sha256 f934ea245c0086529fb9372a9ad457d4d8668114ce346dca5440404c766646ad
+
+06a's stationary-point rows (1e-7 rows with a group call whose scan has a sign change): 720
+
+== rtol 1e-7: 06b units by status {'done': 9280}
+   all analytic calls           107416
+   all group calls              37325
+   analytic             non-sp  16274
+   analytic             sp      489
+   group                non-sp  4151
+   group                sp      719
+   units outside the stationary-point rows with the most X2-type calls (total, group, analytic, rows.json order, unit, 06b wall s):
+      (20, 4, 16, 2216, 'b-1e-7-0-14164', 0.2634866249281913)
+      (20, 4, 16, 2224, 'b-1e-7-0-2124', 0.26404670788906515)
+      (20, 4, 16, 2232, 'b-1e-7-0-2249', 0.2641414999961853)
+      (20, 4, 16, 2240, 'b-1e-7-0-14198', 0.2831779159605503)
+      (20, 4, 16, 2248, 'b-1e-7-0-34918', 0.5040739590767771)
+      (20, 4, 16, 2256, 'b-1e-7-0-14304', 0.2680217088200152)
+      (19, 4, 15, 2264, 'b-1e-7-0-34921', 0.25460479198955)
+      (19, 4, 15, 2272, 'b-1e-7-0-38933', 0.280904958024621)
+   X0's determinism unit, by rule: b-1e-7-0-14164 (20 X2-type calls; 06b wall 0.26 s)
+
+   X1's first stratum before the run (1e-7 group calls, X2-type in 06b, 06a scan no sign change), by (band, k_key): total 4757
+      ('low', '0:101'): 161
+      ('low', '0:202'): 344
+      ('low', '1:102'): 239
+      ('low', '2:2'): 362
+      ('low', '3:1'): 110
+      ('low', '3:201'): 421
+      ('mid', '0:101'): 362
+      ('mid', '0:202'): 58
+      ('mid', '1:102'): 527
+      ('mid', '2:2'): 649
+      ('mid', '3:1'): 320
+      ('mid', '3:201'): 387
+      ('seam', '0:101'): 116
+      ('seam', '1:102'): 241
+      ('seam', '2:2'): 330
+      ('seam', '3:1'): 64
+      ('seam', '3:201'): 66
+
+== rtol 1e-8: 06b units by status {'done': 9280}
+   all analytic calls           107416
+   all group calls              37325
+   analytic             non-sp  17968
+   analytic             sp      1063
+   group                non-sp  4474
+   group                sp      794
+   units outside the stationary-point rows with the most X2-type calls (total, group, analytic, rows.json order, unit, 06b wall s):
+      (20, 4, 16, 2224, 'b-1e-8-0-2124', 0.514065665891394)
+      (20, 4, 16, 2248, 'b-1e-8-0-34918', 0.3079664590768516)
+      (20, 4, 16, 2256, 'b-1e-8-0-14304', 0.2828767078462988)
+      (20, 4, 16, 2272, 'b-1e-8-0-38933', 0.29175324994139373)
+      (20, 4, 16, 2280, 'b-1e-8-0-38951', 0.5007235410157591)
+      (20, 4, 16, 2288, 'b-1e-8-0-35108', 0.28909658291377127)
+      (20, 4, 16, 2304, 'b-1e-8-0-14528', 0.2935397080145776)
+      (19, 4, 15, 2216, 'b-1e-8-0-14164', 0.29484766721725464)
+# ----
+# end 2026-10-29T12:44:11Z
+# exit 0

@@ -1,0 +1,45 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_reference.py state/x1_captured.json out/x1_reference.json --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:41:08Z
+# ----
+# levin-phase-floor 06c: X1's reference
+# written 2026-10-29T15:41:08Z on mps026298.phys.susx.ac.uk
+# script x1_reference.py sha256 86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/x1_captured.json sha256 2a5a1674f5c919eb5fe1121de5c2561889017848bbce81b76bde56c8fb3bff1f
+# AdaptiveLevin.levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py (tree g); host mps026298.phys.susx.ac.uk
+# depths [9, 10]; 24 calls; 6 worker processes
+
+unit               idx rerun= agree holds err_g/abserr_g  |S9-S10|/abserr_g floor_sum_10 direct10 err06b/abserr06b      s
+g-1e-7-0-12856       2   True  True  True        0.02494          3.043e-05     4.01e-33      349           0.1535    4.2
+g-1e-7-0-13758       1   True  True  True       0.001986          2.256e-10     5.35e-40     1024            5.644    4.8
+g-1e-7-0-14050       3   True  True  True         0.2365          0.0001322     8.99e-39      175          0.00143    3.9
+g-1e-7-0-14127       3   True  True False          1.375          0.0002538     2.59e-40      169                0    3.9
+g-1e-7-0-2003        4   True  True  True         0.9704          0.0006026     8.81e-33      144           0.1034    3.8
+g-1e-7-0-35112       4   True  True  True          0.122           0.001691     2.46e-39       95         0.002353    3.6
+g-1e-7-0-38345       0   True  True  True         0.2268          9.828e-07     1.29e-37     1024           0.2135    1.7
+g-1e-7-0-38458       1   True  True  True         0.1102          6.133e-05      2.5e-37      123          0.08349    2.3
+g-1e-7-1-2207        1   True  True  True       0.002974          3.807e-08     1.38e-35     1024         0.002023    3.6
+g-1e-7-1-2292        3   True  True  True         0.2775          0.0005065     7.26e-35      152           0.4937    2.6
+g-1e-7-1-34558       4   True  True  True         0.3392           0.004046     9.42e-34      101          0.02217    2.4
+g-1e-7-1-34624       0   True  True  True         0.0281          2.099e-08     4.57e-41     1024           0.2162    1.8
+g-1e-7-2-13636       6   True  True  True         0.3387           0.005209     2.74e-35       79         0.007087    2.1
+g-1e-7-2-1681        0   True  True  True         0.2234          4.269e-08     1.39e-40     1024           0.8963    1.8
+g-1e-7-2-34894       2   True  True  True          0.465          9.724e-06     2.39e-37      181            0.667    2.4
+g-1e-7-2-39037       1   True  True  True         0.2029          8.389e-06     3.91e-35     1024            2.254    3.8
+g-1e-7-3-14094       3   True  True  True        0.05349          0.0001326      8.4e-38      152         0.007305    3.1
+g-1e-7-3-14503       1   True  True  True         0.2786           0.001172     7.78e-38      113          0.04815    2.2
+g-1e-7-3-14507       1   True  True  True       0.009606          3.729e-07     1.53e-37     1024         0.009979    3.6
+g-1e-7-3-1922        3   True  True  True         0.8462          4.373e-05     7.65e-34      304            1.244    2.8
+g-1e-7-3-34301       4   True  True  True         0.2216          0.0006393     1.19e-36      112          0.01004    2.2
+g-1e-7-3-37325       2   True  True  True         0.4684            2.5e-05     7.66e-36      408             1.58    3.2
+g-1e-7-3-38436       5   True False  True         0.4791             0.0215      1.7e-36       44        1.725e-05    2.0
+g-1e-7-3-39140       2   True  True  True         0.9915          1.149e-05     6.08e-37      343            1.037    2.9
+
+wrote out/x1_reference.json sha256 c9d6d0816fad61d4065216669d1a4a652d5e10af6f35825b8d65f0ce4eea8144
+# ----
+# end 2026-10-29T15:41:22Z
+# exit 0

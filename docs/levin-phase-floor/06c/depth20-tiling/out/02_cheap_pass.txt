@@ -1,0 +1,113 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/cheap_pass.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T21:56:00Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29
+# tree g status --short: []
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts
+# ----
+# depth20-tiling step 1: the cheap pass
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T21:56:00Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script cheap_pass.py sha256 2019365c839f24cee3d74ea3d373e3dbadaa3ab826f0460a7bb7add32cbaadd9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/out/deep_lines_06c.json sha256 79bb9348f3fb5bad23ffda199fbb4088108e564c08c7c2749366b6b5f52add9a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/inventory.json sha256 208b72c2749b955cd2aada45cc0dd73d08f5ed5dfa4c81fc75ccdbc1ffeb1889
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py
+lines 262; reconstruction reproduces the recorded leaf bit for bit: 262; every level's (start, end) equals the census pickle's full line: 262
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/cheap_pass.json sha256 88684b297f40efc39b6b3b4460a25eedf431211a3c855d3119032ae7649ca1f1
+
+== all levels: 5502 levels
+   ('Levin', 'res<=10floor', 'no tile'): 1284
+   ('Levin', 'res<=10floor', 'tile'): 280
+   ('Levin', 'res>10floor', 'no tile'): 3777
+   ('Levin', 'res>10floor', 'tile'): 90
+   ('direct', 'res<=10floor', 'no tile'): 38
+   ('direct', 'res<=10floor', 'tile'): 33
+   parent's computed ends equal a and b: 2381; not: 3121
+   tile at each solve's own order equals tile at order 24 on every level: True
+   residual/floor: median 229, p10 0.000837, p90 3.1e+04, max 1.1e+12, min 0
+   Levin parents with residual > 10 floor: 3867; of these not tiling 3777 (97.7 %)
+   Levin parents with residual <= 10 floor: 1564; of these tiling 280 (17.9 %)
+
+== last five levels (depths 16-20): 1310 levels
+   ('Levin', 'res<=10floor', 'tile'): 17
+   ('Levin', 'res>10floor', 'no tile'): 1179
+   ('Levin', 'res>10floor', 'tile'): 43
+   ('direct', 'res<=10floor', 'no tile'): 38
+   ('direct', 'res<=10floor', 'tile'): 33
+   parent's computed ends equal a and b: 567; not: 743
+   tile at each solve's own order equals tile at order 24 on every level: True
+   residual/floor: median 1.97e+04, p10 861, p90 2.52e+05, max 8.28e+05, min 3.63e-06
+   Levin parents with residual > 10 floor: 1222; of these not tiling 1179 (96.5 %)
+   Levin parents with residual <= 10 floor: 17; of these tiling 17 (100.0 %)
+
+== depths 0-15: 4192 levels
+   ('Levin', 'res<=10floor', 'no tile'): 1284
+   ('Levin', 'res<=10floor', 'tile'): 263
+   ('Levin', 'res>10floor', 'no tile'): 2598
+   ('Levin', 'res>10floor', 'tile'): 47
+   parent's computed ends equal a and b: 1814; not: 2378
+   tile at each solve's own order equals tile at order 24 on every level: True
+   residual/floor: median 47.6, p10 3.49e-05, p90 3.33e+03, max 1.1e+12, min 0
+   Levin parents with residual > 10 floor: 2645; of these not tiling 2598 (98.2 %)
+   Levin parents with residual <= 10 floor: 1547; of these tiling 263 (17.0 %)
+
+== last five levels, rtol 1e-7: 545 levels
+   ('Levin', 'res<=10floor', 'tile'): 7
+   ('Levin', 'res>10floor', 'no tile'): 503
+   ('Levin', 'res>10floor', 'tile'): 14
+   ('direct', 'res<=10floor', 'no tile'): 12
+   ('direct', 'res<=10floor', 'tile'): 9
+   parent's computed ends equal a and b: 231; not: 314
+   tile at each solve's own order equals tile at order 24 on every level: True
+   residual/floor: median 2.41e+04, p10 2.11e+03, p90 3.07e+05, max 8.28e+05, min 1.21e-05
+   Levin parents with residual > 10 floor: 517; of these not tiling 503 (97.3 %)
+   Levin parents with residual <= 10 floor: 7; of these tiling 7 (100.0 %)
+
+== last five levels, rtol 1e-8: 765 levels
+   ('Levin', 'res<=10floor', 'tile'): 10
+   ('Levin', 'res>10floor', 'no tile'): 676
+   ('Levin', 'res>10floor', 'tile'): 29
+   ('direct', 'res<=10floor', 'no tile'): 26
+   ('direct', 'res<=10floor', 'tile'): 24
+   parent's computed ends equal a and b: 336; not: 429
+   tile at each solve's own order equals tile at order 24 on every level: True
+   residual/floor: median 1.66e+04, p10 541, p90 2.1e+05, max 7.7e+05, min 3.63e-06
+   Levin parents with residual > 10 floor: 705; of these not tiling 676 (95.9 %)
+   Levin parents with residual <= 10 floor: 10; of these tiling 10 (100.0 %)
+
+== per call, last five levels: Levin levels with residual > 10 floor that do not tile / Levin levels with residual > 10 floor
+   all of them fail to tile: 222 calls
+   some fail to tile: 40 calls
+
+== by rtol and block, last five levels: Levin residual>10floor levels (not tiling) | direct levels | median residual/floor
+   1e-7 G+q+r  calls   6:  24 ( 20 not tiling) | direct   3 | median r/f 1.08e+04
+   1e-7 G+q-r  calls   4:  19 ( 18 not tiling) | direct   0 | median r/f 1.16e+05
+   1e-7 G-q+r  calls   2:  10 ( 10 not tiling) | direct   0 | median r/f 1.51e+05
+   1e-7 G-q-r  calls   2:   9 (  9 not tiling) | direct   1 | median r/f 5.59e+04
+   1e-7 J1     calls  14:  68 ( 68 not tiling) | direct   2 | median r/f 4.15e+04
+   1e-7 J2     calls   8:  39 ( 36 not tiling) | direct   1 | median r/f 1.97e+04
+   1e-7 J3     calls  14:  68 ( 64 not tiling) | direct   2 | median r/f 2.51e+04
+   1e-7 J4     calls  12:  58 ( 58 not tiling) | direct   1 | median r/f 3.55e+04
+   1e-7 Y1     calls  14:  66 ( 66 not tiling) | direct   4 | median r/f 1.66e+04
+   1e-7 Y2     calls  12:  58 ( 58 not tiling) | direct   2 | median r/f 1.87e+04
+   1e-7 Y3     calls   8:  36 ( 36 not tiling) | direct   4 | median r/f 1.13e+04
+   1e-7 Y4     calls  13:  62 ( 60 not tiling) | direct   1 | median r/f 4.02e+04
+   1e-8 G+q+r  calls   5:  20 ( 18 not tiling) | direct   2 | median r/f 2.87e+04
+   1e-8 G+q-r  calls   3:  14 ( 13 not tiling) | direct   0 | median r/f 1.26e+05
+   1e-8 G-q+r  calls   2:  10 ( 10 not tiling) | direct   0 | median r/f 1.38e+05
+   1e-8 G-q-r  calls   2:   9 (  9 not tiling) | direct   1 | median r/f 5.59e+04
+   1e-8 J1     calls  26: 120 (116 not tiling) | direct  10 | median r/f 1.66e+04
+   1e-8 J2     calls  13:  61 ( 57 not tiling) | direct   3 | median r/f 1.37e+04
+   1e-8 J3     calls  12:  56 ( 53 not tiling) | direct   4 | median r/f 1.6e+04
+   1e-8 J4     calls  19:  89 ( 88 not tiling) | direct   4 | median r/f 2.9e+04
+   1e-8 Y1     calls  23: 106 (103 not tiling) | direct   9 | median r/f 9.37e+03
+   1e-8 Y2     calls   9:  43 ( 41 not tiling) | direct   2 | median r/f 1.34e+04
+   1e-8 Y3     calls  13:  58 ( 57 not tiling) | direct   6 | median r/f 1.32e+04
+   1e-8 Y4     calls  26: 119 (111 not tiling) | direct   9 | median r/f 1.87e+04
+# ----
+# end 2026-10-29T21:56:01Z
+# exit 0

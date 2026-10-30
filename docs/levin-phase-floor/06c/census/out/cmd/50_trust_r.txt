@@ -1,0 +1,43 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06c.py trust_r /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T15:45:56Z
+# ----
+# levin-phase-floor 06c: the trust check's r over every returned leaf
+# written 2026-10-29T15:45:56Z on mps026298.phys.susx.ac.uk
+# script analyse06c.py sha256 c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+records read 18560
+rtol  branch    band     not taken          r=0     (0,1e-6)  [1e-6,1e-4)  [1e-4,1e-2)   [1e-2,0.1)    [0.1,0.5)      [0.5,1)   >=1 or inf
+1e-7  Levin     low          41907        10002        22923        12684        17531        18027        40483        40814        41495
+1e-7  Levin     mid          12124        10141        25037        24758        36968        32134        68755        68778        61016
+1e-7  Levin     seam           583         4557         7566        26255        40257        25414        50143        49731        36184
+1e-7  fallback  low          22114           29            0           21         1359         8201         5406         1968         1632
+1e-7  fallback  mid          12415           75            1           50         2523        16466        10944         3547         3436
+1e-7  fallback  seam          1286          633            4           56         3609        22220        15810         6372         7254
+1e-8  Levin     low         285045        11316        23663        16678        20794        19473        48756        50360        52924
+1e-8  Levin     mid         339148        12404        28144        31514        43750        34024        83644        89053        78977
+1e-8  Levin     seam          7800         6004         8236        29291        48064        30978        61362        61560        48252
+1e-8  fallback  low         124493           51            0           33         2316        13595         9359         3101         3583
+1e-8  fallback  mid         165285          106            1           60         4310        26607        18755         5505         6853
+1e-8  fallback  seam         46739          720            1           91         5708        34341        24787         8375        10357
+trusted codes (-1 not taken / floor-limited, 0 untrusted, 1 trusted):
+   ('1e-7', 'Levin', -1): 192576
+   ('1e-7', 'Levin', 0): 999
+   ('1e-7', 'Levin', 1): 632692
+   ('1e-7', 'fallback', -1): 48090
+   ('1e-7', 'fallback', 0): 116
+   ('1e-7', 'fallback', 1): 99225
+   ('1e-8', 'Levin', -1): 811303
+   ('1e-8', 'Levin', 0): 1287
+   ('1e-8', 'Levin', 1): 758624
+   ('1e-8', 'fallback', -1): 357699
+   ('1e-8', 'fallback', 0): 119
+   ('1e-8', 'fallback', 1): 157314
+# ----
+# end 2026-10-29T15:46:24Z
+# exit 0

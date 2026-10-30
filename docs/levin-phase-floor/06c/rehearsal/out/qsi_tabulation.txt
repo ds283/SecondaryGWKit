@@ -1,0 +1,108 @@
+rows: R17 864, R18 864; same (k,q,r,z_response) set: True
+columns equal: True; 48 columns
+tolerances (log10 atol, log10 rtol) R17: [((-32.0, -7.0), 864)]; R18: [((-32.0, -7.0), 864)]
+tolerances equal row by row: True
+column kinds: timing: ['WKB_Levin_elapsed', 'analytic_compute_time', 'compute_time', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time']; label: ['label']; identity: ['Tq_WKB_serial', 'Tq_numeric_serial', 'Tr_WKB_serial', 'Tr_numeric_serial', 'atol_serial', 'data_serial', 'k_wavenumber_exit_serial', 'model_serial', 'policy_serial', 'q_wavenumber_exit_serial', 'quad_policy_serial', 'r_wavenumber_exit_serial', 'rtol_serial', 'serial', 'source_serial', 'timestamp', 'z_response_serial', 'z_source_max_serial']; counter: ['WKB_Levin_SVD_errors', 'WKB_Levin_chebyshev_min_order', 'WKB_Levin_evaluations', 'WKB_Levin_max_depth', 'WKB_Levin_num_regions', 'WKB_Levin_order_changes', 'WKB_Levin_simple_regions', 'numeric_quad_RHS_evaluations', 'numeric_quad_compute_steps']; value: ['WKB_Levin', 'WKB_phase_spline_chunks', 'analytic_rad', 'b', 'eta_response', 'eta_source_max', 'numeric_quad', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'version']
+tool: 864 rows differ, 0 identical, only_in_a 0, only_in_b 0, unmatched 0; its keys equal the stores' set: True
+cross-check of `total` against the tool: 0 mismatches
+
+rows whose column/metadata field sets differ between R17 and R18: 0
+rows with a WKB Levin call: 573 (calls R17 3105, R18 3105; rows whose call count differs: 0); with none: 291
+
+== bit-identity (float.hex), every row
+  total bit-identical: 295/864 (rows with a Levin call 4/573, rows with none 291/291)
+  total_abserr bit-identical: 291/864
+  every value field (columns and metadata, timings/labels/identity/counters excluded) bit-identical: 205/864 (rows with a Levin call 0, rows with none 205)
+  rows with no Levin call whose value fields differ: 86
+  analytic_rad bit-identical: 455/864; max |d analytic_rad|/(analytic abserr17+18) 7.074e-01
+  value fields differing, by field (indices folded), rows: {'meta:WKB_Levin.subintervals[].groups[].abserr': 3071, 'meta:WKB_Levin.subintervals[].groups[].value': 2527, 'meta:WKB_Levin.subintervals[].abserr': 1295, 'meta:WKB_Levin.subintervals[].value': 1259, 'meta:WKB_Levin.subintervals[].groups[].converged': 828, 'meta:analytic.abserr': 655, 'meta:analytic.0pt5.Levin.Y2_data.abserr': 631, 'meta:analytic.0pt5.Levin.J2_data.abserr': 624, 'meta:analytic.0pt5.Levin.Y4_data.abserr': 620, 'meta:analytic.0pt5.Levin.J4_data.abserr': 615, 'meta:analytic.0pt5.Levin.Y3_data.abserr': 611, 'meta:analytic.0pt5.Levin.J3_data.abserr': 597, 'meta:analytic.0pt5.Levin.J1_data.abserr': 575, 'col:total_abserr': 573, 'meta:WKB_Levin.abserr': 573, 'col:WKB_Levin': 569, 'col:total': 569, 'meta:analytic.0pt5.Levin.Y1_data.abserr': 557, 'meta:analytic.2pt5.Levin.J2_data.abserr': 530, 'meta:WKB_Levin.subintervals[].converged': 526, 'meta:analytic.2pt5.Levin.Y2_data.abserr': 525, 'meta:analytic.2pt5.Levin.J4_data.abserr': 520, 'meta:analytic.2pt5.Levin.Y3_data.abserr': 515, 'meta:analytic.2pt5.Levin.Y4_data.abserr': 515, 'meta:analytic.2pt5.Levin.J3_data.abserr': 515, 'meta:analytic.2pt5.Levin.Y1_data.abserr': 502, 'meta:analytic.2pt5.Levin.J1_data.abserr': 488, 'meta:WKB_Levin.subintervals[].groups[].phase_limited': 474, 'col:analytic_rad': 409, 'meta:WKB_Levin.converged': 347, 'col:total_converged': 347, 'meta:analytic.2pt5.Levin.J4_data.phase_limited': 315, 'meta:analytic.2pt5.Levin.Y4_data.phase_limited': 268, 'meta:WKB_Levin.subintervals[].phase_limited': 247, 'meta:analytic.2pt5.Levin.Y1_data.phase_limited': 245, 'meta:analytic.2pt5.Levin.J1_data.phase_limited': 243, 'col:total_phase_limited': 231, 'meta:WKB_Levin.phase_limited': 231, 'meta:analytic.0pt5.Levin.Y4_data.phase_limited': 227, 'meta:analytic.0pt5.Levin.J4_data.phase_limited': 226, 'meta:analytic.0pt5.Levin.Y2_data.phase_limited': 226, 'meta:analytic.0pt5.Levin.J2_data.phase_limited': 224, 'meta:analytic.0pt5.Levin.Y3_data.phase_limited': 220, 'meta:analytic.0pt5.Levin.J1_data.phase_limited': 218, 'meta:analytic.2pt5.Levin.J2_data.phase_limited': 204, 'meta:analytic.0pt5.Levin.J3_data.phase_limited': 194, 'meta:analytic.2pt5.Levin.Y2_data.phase_limited': 193, 'meta:analytic.0pt5.Levin.Y1_data.phase_limited': 174, 'meta:analytic.2pt5.Levin.Y3_data.phase_limited': 167, 'meta:analytic.2pt5.Levin.J3_data.phase_limited': 162, 'meta:analytic.converged': 50, 'meta:analytic.2pt5.Levin.Y1_data.converged': 29, 'meta:analytic.0pt5.Levin.Y1_data.converged': 24, 'meta:analytic.0pt5.Levin.Y3_data.converged': 15, 'meta:analytic.2pt5.Levin.Y4_data.converged': 14, 'meta:analytic.2pt5.Levin.J4_data.converged': 14, 'meta:analytic.2pt5.Levin.J1_data.converged': 14, 'meta:analytic.2pt5.Levin.J3_data.converged': 8, 'meta:analytic.0pt5.Levin.J3_data.converged': 6, 'meta:analytic.0pt5.Levin.Y4_data.converged': 3, 'meta:analytic.0pt5.Levin.J1_data.converged': 3, 'meta:analytic.2pt5.Levin.J2_data.converged': 1, 'meta:analytic.0pt5.Levin.J2_data.converged': 1, 'meta:analytic.0pt5.Levin.J4_data.converged': 1, 'meta:analytic.2pt5.Levin.Y3_data.converged': 1}
+
+== Y1: |total_18 - total_17| <= total_abserr_17 + total_abserr_18, rows with both finite
+  rows with finite total_abserr in both: 838; violations: 30
+  rows with a non-finite total_abserr, counted separately: {'nonfinite:17': 26}
+  |dT|/(abserr17+abserr18) over the finite rows: p0 0, p50 0.014, p90 0.309, p99 7.09e+03, p100 1.68e+04
+  over the finite rows whose total moved: p0 3.16e-10, p50 0.0465, p90 0.663, p99 8.3e+03, p100 1.68e+04
+    VIOLATION k=100000 q=100000 r=100000 z=250: total17 -0x1.1f665c9de3ef8p-59 total18 -0x1.1ef6b1cc980fcp-59 abserr17 0x1.ae7f4aca32bf7p-84 abserr18 0x1.53e20a83ca157p-82 ratio 8176.65
+    VIOLATION k=100000 q=100000 r=100000 z=996.42016: total17 0x1.110e451bca18ep-57 total18 0x1.11b17b51de892p-57 abserr17 0x1.d6ddab0116744p-82 abserr18 0x1.c32b74fe71003p-81 ratio 15578.5
+    VIOLATION k=100000 q=100000 r=100000 z=3971.4126: total17 -0x1.6264c900be5d0p-56 total18 -0x1.620fef0efb5f6p-56 abserr17 0x1.ee2d677c61e9dp-80 abserr18 0x1.53b5e1d07e408p-79 ratio 4738.26
+    VIOLATION k=100000 q=100000 r=100000 z=5236.553: total17 -0x1.5ff6eb7403dbcp-55 total18 -0x1.60d489de69404p-55 abserr17 0x1.1eff05d8001dfp-79 abserr18 0x1.21b46d538f125p-78 ratio 16763.5
+    VIOLATION k=100000 q=100000 r=100000 z=6904.7189: total17 -0x1.85621ce6cb140p-55 total18 -0x1.856721d9b941ep-55 abserr17 0x1.d9ca6b773d84fp-80 abserr18 0x1.729e32dc982afp-78 ratio 336.301
+    VIOLATION k=100000 q=100000 r=100000 z=15828.782: total17 -0x1.0f1207363350cp-53 total18 -0x1.0f1209662228bp-53 abserr17 0x1.633691dad4480p-78 abserr18 0x1.4bd29cf48d360p-77 ratio 1.09914
+    VIOLATION k=100000 q=316228 r=316228 z=3.334767e+08: total17 0x1.a99b8d2c359f2p-42 total18 0x1.a99b7c697e4ebp-42 abserr17 0x1.1c724e6b84b58p-67 abserr18 0x1.5b86a58d7ebb5p-65 ratio 5.12462
+    VIOLATION k=100000 q=1e+06 r=1e+06 z=1313.8416: total17 0x1.df6eb998d5465p-63 total18 0x1.df6f01e11512ap-63 abserr17 0x1.163c2363fb8e8p-87 abserr18 0x1.a37ba4d4faa58p-86 ratio 16.563
+    VIOLATION k=100000 q=1e+06 r=1e+06 z=1002201.4: total17 -0x1.6701211832295p-53 total18 -0x1.6701572b04a47p-53 abserr17 0x1.1c9fcbe70cebdp-77 abserr18 0x1.2ce9aa628dd72p-76 ratio 15.616
+    VIOLATION k=100000 q=1e+06 r=1e+06 z=48124030: total17 -0x1.a36e11be51188p-47 total18 -0x1.a36dff6d5e1e5p-47 abserr17 0x1.60dd62a1f3a95p-71 abserr18 0x1.b68328a2f3d0dp-71 ratio 5.92505
+    VIOLATION k=100000 q=1e+06 r=1e+06 z=1.9180702e+08: total17 -0x1.cd2ada9ff15f3p-45 total18 -0x1.cd2ae581d4ad6p-45 abserr17 0x1.631b3bc720a07p-70 abserr18 0x1.2def607fa441cp-68 ratio 3.56515
+    VIOLATION k=316228 q=100000 r=316228 z=9104.2988: total17 -0x1.b34ed232a832bp-62 total18 -0x1.b34f505c020d5p-62 abserr17 0x1.3b58a13d8be54p-83 abserr18 0x1.0414195a21fbap-82 ratio 4.83202
+    VIOLATION k=316228 q=100000 r=316228 z=1.0080161e+09: total17 0x1.e92fda2518486p-44 total18 0x1.e92fa94f75c88p-44 abserr17 0x1.648db800a46c4p-66 abserr18 0x1.4740ce160c8b5p-66 ratio 4.5706
+    VIOLATION k=316228 q=316228 r=316228 z=434.65133: total17 -0x1.bbf876534bbe7p-64 total18 -0x1.bcb9578284ea8p-64 abserr17 0x1.7a511e406f480p-88 abserr18 0x1.eff606159e34cp-88 ratio 14458.3
+    VIOLATION k=316228 q=316228 r=316228 z=573.11465: total17 0x1.016380e5a91d2p-63 total18 0x1.01dcb4297e172p-63 abserr17 0x1.5a56140032da0p-87 abserr18 0x1.91b0a1cec2e72p-87 ratio 10618.6
+    VIOLATION k=316228 q=316228 r=316228 z=755.6871: total17 0x1.8a536fc07907ap-64 total18 0x1.8b49c5436bdb8p-64 abserr17 0x1.095f9dc4289bap-86 abserr18 0x1.ba0b406921906p-87 ratio 8297.64
+    VIOLATION k=316228 q=316228 r=316228 z=996.42016: total17 -0x1.2113280851b99p-62 total18 -0x1.2179faec403c6p-62 abserr17 0x1.1f600bf70b9a6p-86 abserr18 0x1.b91a982874997p-86 ratio 9250.31
+    VIOLATION k=316228 q=316228 r=316228 z=5236.553: total17 0x1.401a99770300cp-60 total18 0x1.40a9a35d8a67cp-60 abserr17 0x1.e19fd602e30ffp-84 abserr18 0x1.43df3fa895a51p-83 ratio 8300.38
+    VIOLATION k=316228 q=316228 r=316228 z=6904.7189: total17 0x1.2b4c92ceeba1cp-60 total18 0x1.2b84336944252p-60 abserr17 0x1.990c7776135d7p-85 abserr18 0x1.3587f7fe3b363p-84 ratio 7091.83
+    VIOLATION k=316228 q=316228 r=316228 z=1.0080161e+09: total17 -0x1.39f64cec8c235p-46 total18 -0x1.39f639b979314p-46 abserr17 0x1.162da554a4d3ep-67 abserr18 0x1.70dcd5bc89064p-68 ratio 1.32808
+    VIOLATION k=316228 q=316228 r=316228 z=2.3108353e+09: total17 0x1.3d3ee09d2736ep-43 total18 0x1.3d3ee67c70dc5p-43 abserr17 0x1.6f8f6af1f34cfp-66 abserr18 0x1.5949b7557471fp-67 ratio 1.39141
+    VIOLATION k=316228 q=316228 r=316228 z=3.0469792e+09: total17 0x1.5ecb81f759ae1p-45 total18 0x1.5ecb671dbfa51p-45 abserr17 0x1.1750906b9601fp-65 abserr18 0x1.1583a5dda55c9p-66 ratio 1.02757
+    VIOLATION k=316228 q=1e+06 r=1e+06 z=5.7978435e+08: total17 0x1.935596bc66d35p-50 total18 0x1.93557dfd4b7b4p-50 abserr17 0x1.2e534cbf6a9fbp-71 abserr18 0x1.8ac2944a35befp-73 ratio 1.97471
+    VIOLATION k=1e+06 q=100000 r=1e+06 z=20871.228: total17 -0x1.aa7cf3c0e8a36p-66 total18 -0x1.aa807936c73efp-66 abserr17 0x1.173a78ea202bap-85 abserr18 0x1.2bc89eaeb66a7p-87 ratio 20.362
+    VIOLATION k=1e+06 q=100000 r=1e+06 z=2297505.2: total17 0x1.d52fce73c6ddbp-58 total18 0x1.d52f67d6bf154p-58 abserr17 0x1.7dd6c60edcaf4p-78 abserr18 0x1.7641b50bcbc78p-80 ratio 3.45352
+    VIOLATION k=1e+06 q=100000 r=1e+06 z=1.4546684e+08: total17 0x1.fb68f2375b738p-52 total18 0x1.fb6947b8833dcp-52 abserr17 0x1.a5d4435528fbfp-74 abserr18 0x1.e0f765a996738p-75 ratio 8.2624
+    VIOLATION k=1e+06 q=100000 r=1e+06 z=3.0469792e+09: total17 0x1.fba5be134f509p-47 total18 0x1.fba5c88a29a61p-47 abserr17 0x1.b17be8f50dfd5p-69 abserr18 0x1.9bad505fae8cap-70 ratio 1.04754
+    VIOLATION k=1e+06 q=316228 r=1e+06 z=4.0176304e+09: total17 0x1.7148411561972p-46 total18 0x1.7148397644980p-46 abserr17 0x1.ce2865b566500p-69 abserr18 0x1.c75ee524f21c4p-70 ratio 1.41417
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=1313.8416: total17 -0x1.08c020a313789p-68 total18 -0x1.0869375451f53p-68 abserr17 0x1.533734023797ap-90 abserr18 0x1.4c9a92756a0d9p-91 ratio 2816.83
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=15920621: total17 -0x1.797d8c6e5c8bep-56 total18 -0x1.797d82332b0f1p-56 abserr17 0x1.6199136abf359p-78 abserr18 0x1.288f23d4d96d7p-78 ratio 1.00714
+    non-finite nonfinite:17: k=100000 q=100000 r=100000 z=1.3291316e+09: total17 -0x1.2a4fbc80099d1p-38 total18 -0x1.2a4fbc75fd9d9p-38 abserr17 inf abserr18 0x1.a44c622fecc1ap-61 conv 0>1 depth 3>3 regions 12>12
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=1.3291316e+09: total17 -0x1.28e79e90d4074p-39 total18 -0x1.28e79e9356dbcp-39 abserr17 inf abserr18 0x1.8e0c76dc22f59p-63 conv 0>1 depth 6>7 regions 48>116
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=1.7525422e+09: total17 0x1.1b2a39732bd00p-41 total18 0x1.1b2a39597d23fp-41 abserr17 inf abserr18 0x1.a32f93247fed0p-65 conv 0>1 depth 5>6 regions 28>47
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=2.3108353e+09: total17 0x1.1daa10b25ab05p-40 total18 0x1.1daa10d77d263p-40 abserr17 inf abserr18 0x1.ab8bfc56cbd97p-64 conv 0>1 depth 5>5 regions 20>32
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=3.0469792e+09: total17 -0x1.5599941cbfccep-38 total18 -0x1.55999414a4e98p-38 abserr17 inf abserr18 0x1.16284ac3e1d16p-61 conv 0>1 depth 3>4 regions 8>15
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=4.0176304e+09: total17 0x1.c3f4bcc23e18ap-39 total18 0x1.c3f4bcc12575cp-39 abserr17 inf abserr18 0x1.f69b30706e318p-62 conv 0>1 depth 1>2 regions 4>5
+    non-finite nonfinite:17: k=100000 q=316228 r=316228 z=5.2974941e+09: total17 -0x1.1a9bea9cc9d7cp-37 total18 -0x1.1a9bea9cc9d7cp-37 abserr17 inf abserr18 0x1.bfccdcf9813f5p-61 conv 0>1 depth 0>0 regions 2>2
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=1.3291316e+09: total17 -0x1.c9e2d6e8824eep-43 total18 -0x1.c9e2d6dcf05bbp-43 abserr17 inf abserr18 0x1.9cf94da486701p-66 conv 0>1 depth 8>8 regions 69>110
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=1.7525422e+09: total17 -0x1.1c73aa1be154ep-42 total18 -0x1.1c73aa1feb74bp-42 abserr17 inf abserr18 0x1.05fe36347eeedp-65 conv 0>1 depth 6>8 regions 42>94
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=2.3108353e+09: total17 -0x1.305537f0b6443p-42 total18 -0x1.305537f01cc59p-42 abserr17 inf abserr18 0x1.0838279ef45edp-65 conv 0>1 depth 6>8 regions 29>105
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=3.0469792e+09: total17 -0x1.01fac7871c2bbp-40 total18 -0x1.01fac787002bap-40 abserr17 inf abserr18 0x1.c7f4580372cb4p-64 conv 0>1 depth 5>7 regions 19>32
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=4.0176304e+09: total17 0x1.36a67cedef04cp-40 total18 0x1.36a67cee1d3eap-40 abserr17 inf abserr18 0x1.5dd257d03bfacp-63 conv 0>1 depth 4>5 regions 14>22
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=5.2974941e+09: total17 -0x1.d6c1d0820f692p-40 total18 -0x1.d6c1d08219eaap-40 abserr17 inf abserr18 0x1.acbe935045652p-63 conv 0>1 depth 4>4 regions 12>15
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=6.9850736e+09: total17 0x1.ce32cead88c60p-41 total18 0x1.ce32cead27a58p-41 abserr17 inf abserr18 0x1.052297c406ab1p-63 conv 0>1 depth 2>3 regions 4>7
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=9.2102514e+09: total17 0x1.2f4f1ca0c40fep-39 total18 0x1.2f4f1ca114a12p-39 abserr17 inf abserr18 0x1.e6b61829ad7ffp-63 conv 0>1 depth 1>2 regions 3>5
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=1.2144286e+10: total17 -0x1.19add820b103cp-40 total18 -0x1.19add820b83b5p-40 abserr17 inf abserr18 0x1.1eea4423f3fbcp-64 conv 0>1 depth 0>1 regions 2>3
+    non-finite nonfinite:17: k=100000 q=1e+06 r=1e+06 z=1.3627427e+10: total17 -0x1.81d01ed08ddccp-39 total18 -0x1.81d01ed08ddccp-39 abserr17 inf abserr18 0x1.c7fbff0b20d00p-63 conv 0>1 depth 0>0 regions 2>2
+    non-finite nonfinite:17: k=316228 q=316228 r=316228 z=4.0176304e+09: total17 0x1.ea96739586b3ap-41 total18 0x1.ea96739b423c1p-41 abserr17 inf abserr18 0x1.fc50051fd0e44p-64 conv 0>1 depth 3>3 regions 15>17
+    non-finite nonfinite:17: k=316228 q=316228 r=316228 z=5.2974941e+09: total17 -0x1.c2cf2b2cdd01ep-40 total18 -0x1.c2cf2b2cdd01ep-40 abserr17 inf abserr18 0x1.5354a98db1b22p-63 conv 0>1 depth 0>0 regions 2>2
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=4.0176304e+09: total17 0x1.5c9f17f433d7bp-44 total18 0x1.5c9f1800268b3p-44 abserr17 inf abserr18 0x1.91c882f6e4543p-67 conv 0>1 depth 6>6 regions 50>70
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=5.2974941e+09: total17 -0x1.13af9fdd5163fp-42 total18 -0x1.13af9fe1f8e6dp-42 abserr17 inf abserr18 0x1.c06a9d664063cp-66 conv 0>1 depth 5>6 regions 28>48
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=6.9850736e+09: total17 -0x1.fd0588d2f801dp-43 total18 -0x1.fd0588baf8829p-43 abserr17 inf abserr18 0x1.dcc1d131beae8p-66 conv 0>1 depth 5>5 regions 21>32
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=9.2102514e+09: total17 -0x1.154bd798c53e0p-41 total18 -0x1.154bd798084fdp-41 abserr17 inf abserr18 0x1.b30640c11eccdp-65 conv 0>1 depth 3>4 regions 9>18
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=1.2144286e+10: total17 0x1.26be36c8b9173p-41 total18 0x1.26be36c893605p-41 abserr17 inf abserr18 0x1.2079ea05da4f6p-64 conv 0>1 depth 3>2 regions 8>7
+    non-finite nonfinite:17: k=316228 q=1e+06 r=1e+06 z=1.3627427e+10: total17 -0x1.aed36b557da28p-43 total18 -0x1.aed36b5628b7ap-43 abserr17 inf abserr18 0x1.718aa49dba2f0p-67 conv 0>1 depth 1>2 regions 3>5
+    non-finite nonfinite:17: k=1e+06 q=1e+06 r=1e+06 z=1.3627427e+10: total17 -0x1.edecd57e42726p-44 total18 -0x1.edecd57ce682dp-44 abserr17 inf abserr18 0x1.098214a1aa95fp-66 conv 0>1 depth 3>4 regions 11>16
+
+== total_abserr and the totals, rows with a Levin call
+  abserr18/abserr17 (both finite, nonzero): p0 0.0351, p50 1.05, p90 2.31, p99 3.75, p100 5.92
+  |dT|/abserr17: p0 0, p50 0.0886, p90 1.54, p99 2.29e+04, p100 5.06e+04
+  |dT|/abserr18: p0 0, p50 0.0949, p90 1.13, p99 1.45e+04, p100 2.55e+04
+  |dT|/|T17|: p0 0, p50 1.15e-08, p90 1.31e-07, p99 0.00152, p100 0.00246
+  abserr18 > abserr17: 287; abserr18 < abserr17: 260
+
+== total_converged, R17 -> R18 (every row)
+  {(0, 1): 347, (1, 1): 516, (0, 0): 1}
+  converged R17 516, R18 863 of 864; Levin calls unconverged R17 830, R18 2
+  total_phase_limited R17 -> R18: {(0, 1): 231, (0, 0): 633}
+  Levin calls phase-limited R17 0, R18 474
+
+== region counts and maximum depths (rows with a Levin call)
+  WKB_Levin_num_regions summed: R17 13577, R18 34892; evaluations R17 30231, R18 276031
+  rows: regions equal 10, more in R18 555, fewer in R18 8
+  regions R18/R17 per row: p0 0.833, p50 2.26, p90 4.58, p99 8.73, p100 13.7
+  WKB_Levin_max_depth R17: {0: 5, 1: 3, 2: 3, 3: 12, 4: 2, 5: 17, 6: 231, 7: 259, 8: 17, 10: 2, 11: 13, 12: 9}
+  WKB_Levin_max_depth R18: {0: 4, 1: 1, 2: 4, 3: 6, 4: 4, 5: 21, 6: 132, 7: 228, 8: 83, 9: 24, 10: 12, 11: 8, 12: 15, 13: 12, 14: 9, 15: 4, 16: 4, 18: 1, 20: 1}
+  rows at depth_max (20): R17 0, R18 1
+  max depth: equal 230, deeper in R18 279, shallower 64
+  analytic-block regions summed: R17 16405, R18 35996 (of 10072 blocks); blocks phase-limited R17 0, R18 3506; blocks unconverged R17 132, R18 2
+
+== by tolerance, rows with a Levin call
+  (log10 atol, log10 rtol) (-32.0, -7.0): rows 573; total moved 569; conv R17 225 R18 572; Y1 violations 30; non-finite 26; regions R17 13577 R18 34892; depth20 R17 0 R18 1
+
+VERDICT Y1: VIOLATED (30 violations of 838 rows with finite total_abserr in both; 26 rows non-finite in either, counted separately)

@@ -1,0 +1,36 @@
+06a stationary-point rows: 720
+units g 18560 06b 18560 same keys True
+== check 7: provenance of every 06c record
+   records : 18560
+   script : {'ae11f6bc466062d297a2abd09799af86f98b91e64234593b699c6e9c2995c81f': 18560}
+   tree_head : {'e5764a6708757cb11704b95bcd66825baab4ba29': 18560}
+   status_short : {"''": 18560}
+   status : {'done': 18560}
+   foreign_nonempty : 0
+   levin_quadrature : {'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py': 18560}
+   own_files_outside_g : 0
+   wall_over_budget : [('g-1e-7-0-38939', 425.6, 'done'), ('g-1e-8-2-1574', 359.8, 'done'), ('g-1e-8-1-35477', 331.6, 'done'), ('g-1e-8-2-1578', 314.0, 'done'), ('g-1e-8-1-38737', 382.2, 'done'), ('g-1e-8-2-1605', 686.1, 'done'), ('g-1e-8-0-38939', 875.4, 'done'), ('g-1e-8-3-34271', 317.3, 'done'), ('g-1e-8-2-38298', 1184.7, 'done')]
+== 1e-7
+   units 9280, not done 0, call label mismatches 0
+   rows total_converged false: 06b 2349, g 13
+   X2: 06b X2-type calls outside SP rows 20425 (group 4151); unconverged under g 53 (group 4); kinds {'untrusted leaf at cap': 49, 'below depth_max (floor/other)': 2, 'depth_max, all trusted': 2} -> FAILS
+   X3: g calls with non-finite abserr 0 (NaN 0); of them with no leaf at depth_max 0 -> holds
+   X4: rows scored 8092, non-finite apart 468, violations 263, worst ratio 29.89 -> FAILS
+   X5: moved calls 124543; moved calls at depth_max 109 by kind {'group': 14, 'analytic': 95}; converged 8; largest ('g-1e-7-0-38939', 12, 'analytic', 64131, False) -> FAILS
+== 1e-8
+   units 9280, not done 0, call label mismatches 0
+   rows total_converged false: 06b 2388, g 45
+   X2: 06b X2-type calls outside SP rows 22442 (group 4474); unconverged under g 127 (group 28); kinds {'below depth_max (floor/other)': 37, 'untrusted leaf at cap': 63, 'depth_max, all trusted': 27} -> FAILS
+   X3: g calls with non-finite abserr 0 (NaN 0); of them with no leaf at depth_max 0 -> holds
+   X4: rows scored 8092, non-finite apart 468, violations 302, worst ratio 71.55 -> FAILS
+   X5: moved calls 125860; moved calls at depth_max 153 by kind {'group': 12, 'analytic': 141}; converged 7; largest ('g-1e-8-0-38939', 5, 'analytic', 74941, False) -> FAILS
+units with wall_s over budget_s (all rtols): 9
+    ('g-1e-8-2-38298', 1184.7, 'done')
+    ('g-1e-8-0-38939', 875.4, 'done')
+    ('g-1e-8-2-1605', 686.1, 'done')
+    ('g-1e-7-0-38939', 425.6, 'done')
+    ('g-1e-8-1-38737', 382.2, 'done')
+    ('g-1e-8-2-1574', 359.8, 'done')
+    ('g-1e-8-1-35477', 331.6, 'done')
+    ('g-1e-8-3-34271', 317.3, 'done')
+    ('g-1e-8-2-1578', 314.0, 'done')

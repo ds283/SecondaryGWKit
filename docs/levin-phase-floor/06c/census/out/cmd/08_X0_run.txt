@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x0.py run state/X0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:49:14Z
+# ----
+determinism unit g-1e-7-0-14164 (0-14164); capture [[3, 'k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (1.709e+09, 2.7567), regime Gqr, group G+q+r']]
+P1: tree p, pid 98526, units ['p-1e-7-2-38302']
+P2: tree p, pid 98527, units ['p-1e-7-2-2095']
+P3: tree p, pid 98528, units ['p-1e-8-0-1971']
+G1: tree g, pid 98529, units ['g-1e-7-0-14164']
+G2: tree g, pid 98530, units ['g-1e-7-0-14164']
+exit codes {'P1': 0, 'P2': 0, 'P3': 0, 'G1': 0, 'G2': 0}
+/tmp/ray-sgk entries before 69, after 69, new [] (descriptive)
+# ----
+# end 2026-10-29T12:50:15Z
+# exit 0

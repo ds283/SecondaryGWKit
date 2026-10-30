@@ -1,0 +1,71 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-29T12:36:46Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+hostname; date -u; echo "== registry"; ./venv/bin/python -B -m runregistrykit list | cut -c1-160; echo "== lock status"; ./venv/bin/python -B -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process; echo "status exit $?"; echo "== ~/.raypoolkit"; ls -la ~/.raypoolkit; ls -la ~/ScienceData/.rehearsal-lock 2>&1; echo "== auth token"; ls -l ~/.ray/auth_token; echo "== disk"; df -h /Users/ds283; uptime; echo "== venv"; ./venv/bin/python -c "import sys; print(sys.version)"; ./venv/bin/pip freeze 2>/dev/null | grep -iE "^(ray|sqlalchemy|datastorekit|raypoolkit|runregistrykit|numpy|scipy|mpmath)"; echo "== 06c paths"; ls -d var/levin-phase-floor-06c* var/datastores/levin-phase-floor-06c* var/runs/levin-phase-floor-06c* 2>&1
+# output:
+mps026298.phys.susx.ac.uk
+Thu Oct 29 12:36:46 UTC 2026
+== registry
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06b-census-20261028T161212          done      18560/18560  20h 24m  levin-phase-floor prompt 06b section 5 on the Mac Studio (mps026298; Py
+   levin-phase-floor-06b-r16-premise-20261028T135745     done              -  22h 39m  levin-phase-floor prompt 06b, R16 on the Mac Studio (mps026298; tree 92bc
+   levin-phase-floor-06b-r15-parent-20261028T135349      done              -  22h 42m  levin-phase-floor prompt 06b, R15 on the Mac Studio (mps026298; tree da5c
+   levin-phase-floor-06a-census-20261027T023143          done      18560/18560   2d 10h  levin-phase-floor prompt 06a on the Mac Studio (mps026298; Python 3.13.
+   levin-phase-floor-06-wider-20261026T223634            done        109/109   2d 14h  levin-phase-floor prompt 06 section 6 on the Mac Studio (mps026298; Pytho
+   levin-phase-floor-06-r14-residual-20261026T215945     done              -   2d 14h  levin-phase-floor prompt 06, R14 on the Mac Studio (mps026298; tree f5cee
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -   2d 14h  levin-phase-floor prompt 06, R13 on the Mac Studio (mps026298; tree 9f666
+   handover-04-cost-growth-20261026T173720               done          60/60   2d 18h  handover prompt 04 (A4) on the Mac Studio (mps026298; Python 3.13.16), ma
+   handover-04-cost-growth-20261026T152704               failed        60/60   2d 21h  handover prompt 04 (A4) on the Mac Studio (mps026298; Python 3.13.16), ma
+   levin-phase-floor-05a-wider-20261026T123047           done        109/109   3d 00h  levin-phase-floor prompt 05a section 6 (T1 as amended by section 9) on th
+   levin-phase-floor-05a-r12-reanchor-t-20261026T122434  done              -   3d 00h  levin-phase-floor prompt 05a, R12 on the Mac Studio (mps026298; main chec
+   levin-phase-floor-05a-r11-parent-20261026T122041      done              -   3d 00h  levin-phase-floor prompt 05a, R11 on the Mac Studio (mps026298; tree c4ea
+   levin-phase-floor-05-wider-20261026T020005            done        109/109   3d 10h  levin-phase-floor prompt 05 section 6 on the Mac Studio (mps026298; Pytho
+   levin-phase-floor-05-r10-reanchor-20261026T015120     done              -   3d 10h  levin-phase-floor prompt 05, R10 on the Mac Studio (mps026298; main check
+   levin-phase-floor-05-r9-parent-20261026T014729        done              -   3d 10h  levin-phase-floor prompt 05, R9 on the Mac Studio (mps026298; tree e64895
+   levin-phase-floor-04-remove-20261025T231110           done          28/28   3d 13h  levin-phase-floor prompt 04 on the Mac Studio (mps026298; Python 3.13.16)
+   handover-12-r8-reference-20261025T210551              done              -   3d 15h  handover prompt 12, R8 on the Mac Studio (mps026298; tree 8a02f0c, B1 cod
+   levin-phase-floor-03-instrument-20261025T194950       done            7/7   3d 16h  levin-phase-floor prompt 03 on the Mac Studio (mps026298; tree 98e68d3; P
+   py313-venv-02-resumed-c-20261025T165549               done              -   3d 19h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Pyth
+   py313-venv-02-resumed-b-20261025T165402               killed            -   3d 19h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Pyth
+   py313-venv-02-resumed-a-20261025T165114               killed            -   3d 19h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Pyth
+   py313-venv-02-reference-20261025T164631               done              -   3d 19h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Pyth
+   py313-venv-02-reference-20261025T163202               failed            -   3d 20h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Pyth
+   handover-07-a3-v2-20261022T211155                     done              -   6d 16h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at Qu
+   handover-06-resumed-c-20261022T200159                 done              -   6d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datast
+   handover-06-resumed-b-20261022T200009                 killed            -   6d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datast
+   handover-06-resumed-a-20261022T195718                 killed            -   6d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datast
+   handover-06-reference-20261022T195228                 done              -   6d 17h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datast
+
+28 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 28 finished; 0 with no host recorded.
+== lock status
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+status exit 0
+== ~/.raypoolkit
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 28 14:08 .
+drwxr-x--- 159 ds283 staff 5088 Oct 29 12:31 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== auth token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+== disk
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  819G  108G  89% /
+12:36  up 22 days,  3:13, 2 users, load averages: 4.53 5.78 5.20
+== venv
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+datastorekit @ git+https://github.com/ds283/DatastoreKit@f47b9a255e9ad58e0d0eaf85644f53b575884d31
+mpmath==1.3.0
+numpy==2.2.4
+ray==2.59.0
+raypoolkit @ git+https://github.com/ds283/RayPoolKit@67a75b97a656accb98195a4bda93f64e6a5f3fb2
+runregistrykit @ git+https://github.com/ds283/RunRegistryKit@0bae3a3c501a8264ee4be5bc24f06422af38720f
+scipy==1.16.3
+SQLAlchemy==2.0.55
+== 06c paths
+ls: cannot access 'var/datastores/levin-phase-floor-06c*': No such file or directory
+ls: cannot access 'var/runs/levin-phase-floor-06c*': No such file or directory
+var/levin-phase-floor-06c
+# exit: 2
+# end: 2026-10-29T12:36:48Z

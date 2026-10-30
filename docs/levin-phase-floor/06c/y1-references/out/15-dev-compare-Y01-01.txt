@@ -1,0 +1,51 @@
+# Y1 references: refquad compare in tree R17
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:29:43Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R17-01.pkl sha256 77bbb537076d04fa807484455b90732c85b8caca5cf233ea78bfefda0ff50276
+{
+ "pickle": "inputs/Y01-R17-01.pkl",
+ "pickle_sha256": "77bbb537076d04fa807484455b90732c85b8caca5cf233ea78bfefda0ff50276",
+ "tree": "R17",
+ "replay": {
+  "value": "0x1.035b113dc871bp-69",
+  "abserr": "0x1.078668ec5b000p-98",
+  "equals_capture": true,
+  "equals_store": true,
+  "regions_depth_equal": true
+ },
+ "sample_npz": "ref/Y01-01.sample.npz",
+ "sample_sha256": "bf694b422b5708ef7362631b43f7df5150f3c8caec54927fdcdf0050df75b74c",
+ "columns": {
+  "f_sin": {
+   "nodes": 126720,
+   "bit_differences": 0
+  },
+  "f_cos": {
+   "nodes": 126720,
+   "bit_differences": 0
+  },
+  "theta_mod_2pi": {
+   "nodes": 126720,
+   "bit_differences": 0
+  },
+  "theta": {
+   "nodes": 126720,
+   "bit_differences": 0
+  },
+  "theta_deriv": {
+   "nodes": 126720,
+   "bit_differences": 0
+  }
+ },
+ "panel_end_theta_mod_2pi": {
+  "values": 440,
+  "bit_differences": 0
+ },
+ "all_bit_identical": true,
+ "seconds": 4.059993250062689
+}

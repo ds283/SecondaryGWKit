@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "C07",
+ "units": [
+  {
+   "uid": "g-1e-7-2-34485",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34485",
+   "names05": null,
+   "shard": 2,
+   "serial": 34485,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     17,
+     "analytic J2"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/capture/C07",
+ "emit_fd": null,
+ "emit_file": "state/capture/C07/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

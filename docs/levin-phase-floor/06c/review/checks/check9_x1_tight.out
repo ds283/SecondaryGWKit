@@ -1,0 +1,5 @@
+levin_quadrature from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py ; call atol 1.8604346136322783e-33 rtol 1e-07
+atol 1.86e-33 rtol 1e-07: value -0x1.9c9fd523c0fa6p-99 abserr 1.739e-37 regions 7 max_depth 5 converged True untrusted 0; |v-S10| = 2.392e-37 = 1.375 abserr_g; |v-S10|/abserr = 1.375
+atol 1e-40 rtol 1e-07: value -0x1.9c9fd523c0fa6p-99 abserr 1.739e-37 regions 7 max_depth 5 converged True untrusted 0; |v-S10| = 2.392e-37 = 1.375 abserr_g; |v-S10|/abserr = 1.375
+atol 1e-42 rtol 1e-09: value -0x1.9c9fd7aeeefd3p-99 abserr 2.469e-39 regions 48 max_depth 9 converged True untrusted 0; |v-S10| = 5.009e-41 = 0.000288 abserr_g; |v-S10|/abserr = 0.02029
+atol 1e-45 rtol 1e-11: value -0x1.9c9fd7aece965p-99 abserr 3.855e-39 regions 1378 max_depth 17 converged False untrusted 0; |v-S10| = 3.599e-42 = 2.069e-05 abserr_g; |v-S10|/abserr = 0.0009337

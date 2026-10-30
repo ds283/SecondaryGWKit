@@ -1,0 +1,75 @@
+# depth20-tiling: sample 13, mode replay
+# host mps026298.phys.susx.ac.uk
+# utc 2026-10-29T22:07:18Z
+# tree g /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# script runcall.py sha256 d8662a637da4456467b4fedb52a94d1d13e179446dcacd127644f65b04f3ecfc
+# input state/captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/state/cheap_pass.json sha256 88684b297f40efc39b6b3b4460a25eedf431211a3c855d3119032ae7649ca1f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/scripts/dcommon.py sha256 dcd23cc215e7951504db4c9aebbb5cf2d655c8d3b33b137f7d739d8d2e699c76
+{
+ "sample_no": 13,
+ "unit": "g-1e-8-3-34220",
+ "index": 4,
+ "notify_label": "k=9.7e+06/Mpc, q=1e+05/Mpc, r=9.7e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+ "mode": "replay",
+ "x_span": [
+  "0x1.93e8c4308d6d0p+3",
+  "0x1.54258b68e15fbp+4"
+ ],
+ "kw": {
+  "atol": 8.737183291570628e-34,
+  "rtol": 1e-08,
+  "chebyshev_order": 24,
+  "notify_label": "k=9.7e+06/Mpc, q=1e+05/Mpc, r=9.7e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r"
+ },
+ "census": {
+  "value": "0x1.f022b8fa455f2p-94",
+  "abserr": "0x1.8e28ba0bdd213p-116",
+  "num_regions": 364,
+  "max_depth": 20,
+  "converged": false,
+  "call_elapsed_s": 3.44881400000304
+ },
+ "result": {
+  "value": "0x1.f022b8fa455f2p-94",
+  "abserr": "0x1.8e28ba0bdd213p-116",
+  "value_repr": "9.78455015414294e-29",
+  "abserr_repr": "1.8721350386488226e-35",
+  "num_regions": 364,
+  "max_depth": 20,
+  "converged": false,
+  "num_at_depth_20": 14,
+  "num_phase_limited_regions": 81,
+  "num_untrusted_regions": 6,
+  "num_subregion_solves": 2911,
+  "num_simple_regions": 0,
+  "abserr_resolution": "0x1.db79c094dc000p-121",
+  "abserr_roundoff": "0x1.1a656aa7fe335p-125",
+  "abserr_fallback": "0x0.0p+0",
+  "abserr_truncation": "0x0.0p+0",
+  "depth_hist": {
+   "1": 1,
+   "4": 6,
+   "5": 2,
+   "7": 3,
+   "8": 4,
+   "9": 2,
+   "10": 6,
+   "11": 4,
+   "12": 11,
+   "13": 16,
+   "14": 68,
+   "15": 48,
+   "16": 66,
+   "17": 30,
+   "18": 30,
+   "19": 53,
+   "20": 14
+  },
+  "elapsed_driver": 3.6167659999337047
+ },
+ "wall_s": 3.6180413749534637,
+ "equals_census": true,
+ "capture_record_equals_census": true
+}

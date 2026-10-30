@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_after_X0_and_smoke /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-29T12:59:06Z
+# ----
+# store files copy_after_X0_and_smoke
+# written 2026-10-29T12:59:06Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-29T12:59:07Z
+# exit 0

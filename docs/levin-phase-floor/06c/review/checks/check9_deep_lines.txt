@@ -1,0 +1,6 @@
+lines 262 levels examined (last five per line) 1310
+branch {'Levin': 1239, 'direct': 71}
+dominant term of e {'residual': 1179, 'floor': 81, 'truncation': 50}
+residual/floor: median 1.97e+04, p10 861, p90 2.52e+05, min 3.63e-06
+residual mantissa trailing zero bits (of 52): median 28.0 p10 16 p90 33
+levels with (e_L+e_R)/e_P exactly 2.0: 27

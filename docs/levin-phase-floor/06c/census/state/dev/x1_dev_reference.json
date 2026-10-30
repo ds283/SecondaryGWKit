@@ -1,0 +1,94 @@
+{
+ "header": [
+  "# levin-phase-floor 06c: X1's reference",
+  "# written 2026-10-29T12:54:44Z on mps026298.phys.susx.ac.uk",
+  "# script x1_reference.py sha256 86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/dev/x1_dev_captured.json sha256 94b6c53c0f3143392263fe6774f6b36588b9d49f8fc7c13ca2b5776f3462a7c9"
+ ],
+ "depths": [
+  9,
+  10
+ ],
+ "tree": "g",
+ "tree_state": [
+  "e5764a6708757cb11704b95bcd66825baab4ba29",
+  ""
+ ],
+ "results": [
+  {
+   "unit": "g-1e-7-0-14164",
+   "index": 3,
+   "notify_label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (1.709e+09, 2.7567), regime Gqr, group G+q+r",
+   "census_value": "0x1.7c2951e61a89cp-97",
+   "census_abserr": "0x1.0f333534e96c8p-125",
+   "census_num_regions": 7,
+   "census_max_depth": 4,
+   "census_converged": true,
+   "value_06b": "0x1.7c2951e6b3080p-97",
+   "abserr_06b": "0x1.c080c20088528p-108",
+   "dev_note": "Gate X0's G1 record stands in for the census",
+   "capture_worker": "C00",
+   "capture_unit_status": "done",
+   "capture_ray_initialized": false,
+   "dir": "state/dev/x1_capture_2/C00",
+   "pickle": "inputs_C00.pkl",
+   "offset": 0,
+   "length": 1356677,
+   "sha256": "19c6d8fd6dfedcb04a671ddd6f5d8aa1cb77802746de60799a1334555f7f09a7",
+   "capture_record": {
+    "value": "0x1.7c2951e61a89cp-97",
+    "abserr": "0x1.0f333534e96c8p-125",
+    "num_regions": 7,
+    "max_depth": 4,
+    "converged": true
+   },
+   "capture_matches_census": true,
+   "capture_error": null,
+   "levin_quadrature_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6/AdaptiveLevin/levin_quadrature.py",
+   "pid": 443,
+   "x_span": [
+    "0x1.52d321c88e446p+0",
+    "0x1.54258b68e15fbp+4"
+   ],
+   "kw": {
+    "atol": 1.3839584008288732e-33,
+    "rtol": 1e-07,
+    "chebyshev_order": 24,
+    "notify_label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (1.709e+09, 2.7567), regime Gqr, group G+q+r"
+   },
+   "value_g": "0x1.7c2951e61a89cp-97",
+   "abserr_g": "0x1.0f333534e96c8p-125",
+   "capture_equals_census": true,
+   "rerun_value": "0x1.7c2951e61a89cp-97",
+   "rerun_abserr": "0x1.0f333534e96c8p-125",
+   "rerun_equals_census": true,
+   "S9": "0x1.7c2951e64a3efp-97",
+   "S9_repr": "9.371702213079858e-30",
+   "floor_sum_9": "0x1.ffe5e24ef2feap-133",
+   "floor_max_9": "0x1.1fc0d937ffeadp-139",
+   "n_pieces_9": 512,
+   "n_direct_9": 0,
+   "S10": "0x1.7c2951e705e73p-97",
+   "S10_repr": "9.371702214156958e-30",
+   "floor_sum_10": "0x1.27e14978dc0a8p-132",
+   "floor_max_10": "0x1.03abd43ba76bap-139",
+   "n_pieces_10": 1024,
+   "n_direct_10": 0,
+   "ref": "0x1.7c2951e705e73p-97",
+   "ref_repr": "9.371702214156958e-30",
+   "S_diff": "0x1.7750800000000p-130",
+   "agree": false,
+   "err_g": "0x1.d6bae00000000p-130",
+   "err_g_over_abserr_g": 0.05424155689083007,
+   "holds": true,
+   "err_06b": "0x1.4b7cc00000000p-131",
+   "err_06b_over_abserr_06b": 8.810725812385907e-08,
+   "within_06b": true,
+   "error": null,
+   "seconds": 3.1706962920725346
+  }
+ ]
+}

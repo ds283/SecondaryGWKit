@@ -1,0 +1,34 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-29T12:54:20Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06c/rehearsal; diff $R/state/r18_store_sha256_before_reads.txt $R/state/r18_store_sha256_after_reads.txt && echo "R18 before/after reads: identical"; grep r18 $R/state/store_sha256_before_diff.txt > $R/state/r18_store_sha256_before_diff_extract.txt; diff $R/state/r18_store_sha256_before_diff_extract.txt $R/state/r18_store_sha256_after_reads.txt && echo "R18 after reads equals before the comparison"; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-200; echo "== files per reader"; for d in $R/extract/*/; do echo "$(find $d -type f | wc -l) $d"; done; du -sh $R/extract; echo "== worktrees"; for w in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6; do git --no-optional-locks -C $w status --short --ignored; find $w -newer $R/state/r17_launch_marker -not -path "*/.git/*" | head; done; echo end
+# output:
+10a11,12
+> journal/wal/shm:
+> none
+10a11,12
+> journal/wal/shm:
+> none
+== Traceback in reader logs
+var/levin-phase-floor-06c/rehearsal/extract/extract_GkSource_data.log:0
+var/levin-phase-floor-06c/rehearsal/extract/extract_GkWKB_data.log:0
+var/levin-phase-floor-06c/rehearsal/extract/extract_Gk_data.log:0
+var/levin-phase-floor-06c/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+var/levin-phase-floor-06c/rehearsal/extract/extract_TkWKB_data.log:0
+var/levin-phase-floor-06c/rehearsal/extract/extract_tensor_source_data.log:0
+== WARNING lines
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+== files per reader
+156 var/levin-phase-floor-06c/rehearsal/extract/extract_GkSource_data/
+2436 var/levin-phase-floor-06c/rehearsal/extract/extract_GkWKB_data/
+432 var/levin-phase-floor-06c/rehearsal/extract/extract_Gk_data/
+71 var/levin-phase-floor-06c/rehearsal/extract/extract_QuadSourceIntegral_data/
+27 var/levin-phase-floor-06c/rehearsal/extract/extract_TkWKB_data/
+27 var/levin-phase-floor-06c/rehearsal/extract/extract_tensor_source_data/
+177M	var/levin-phase-floor-06c/rehearsal/extract
+== worktrees
+end
+# exit: 0
+# end: 2026-10-29T12:54:21Z
+first 10 lines (5 SHA-256 + 5 size/mtime) identical

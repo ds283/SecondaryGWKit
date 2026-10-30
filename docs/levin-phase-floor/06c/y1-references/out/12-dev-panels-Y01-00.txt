@@ -1,0 +1,36 @@
+# Y1 references: refquad panels in tree R18
+# host mps026298.phys.susx.ac.uk
+# written 2026-10-29T17:28:34Z (UTC)
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts/refquad.py sha256 0e292159b2eb260c1ce2628a8209054ce2f21d1b4040567b58d5217a39c9ad87
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/y1-references/scripts
+# tree R17: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c HEAD fef401c2614da3dbbf1b4261edd31f5f7f80cdbf (expected fef401c2614da3dbbf1b4261edd31f5f7f80cdbf: True) git status --short: empty
+# tree R18: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 HEAD e5764a6708757cb11704b95bcd66825baab4ba29 (expected e5764a6708757cb11704b95bcd66825baab4ba29: True) git status --short: empty
+# main checkout /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff git status --short: empty
+# input inputs/Y01-R18-00.pkl sha256 8ee4711d994799cc0f6d47ece49b2bcd5df1b6a87cb509ce8cbbacf9f6c37254
+{
+ "pickle": "inputs/Y01-R18-00.pkl",
+ "pickle_sha256": "8ee4711d994799cc0f6d47ece49b2bcd5df1b6a87cb509ce8cbbacf9f6c37254",
+ "row": "Y01",
+ "index": 0,
+ "label": "G",
+ "tree": "R18",
+ "x_span": [
+  "0x1.542e3c75ed00ep+4",
+  "0x1.fa1b076db42d0p+4"
+ ],
+ "D": 512.0,
+ "hmax": 0.005,
+ "cell": 0.001,
+ "ncell": 10371,
+ "npanels": 2075,
+ "phase_variation_rad": 27.062398178210696,
+ "oscillations_total_variation": 4.307114441983336,
+ "theta_deriv_max_abs": 27.06323094271546,
+ "theta_deriv_at_ends": [
+  -27.06323094271546,
+  -0.0008483644079699069
+ ],
+ "zeros_of_theta_deriv": [],
+ "edges_sha256": "76d9a0085da402c5a7f44ac3003d57f01544b4e0c9f2f8c17244ab5bbc833d8b"
+}
+replay {'value': '-0x1.639f5e6f9ea0dp-67', 'abserr': '0x1.929a2855494b3p-91', 'equals_capture': True, 'equals_store': True, 'regions_depth_equal': True}
