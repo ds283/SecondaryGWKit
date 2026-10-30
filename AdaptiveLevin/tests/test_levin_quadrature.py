@@ -742,13 +742,23 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             (a, b), f, theta, atol=1e-20, rtol=1e-8, chebyshev_order=16, depth_max=20
         )
 
-        self.assertEqual(loose["num_regions"], 1)
+        # The loose call was one region until prompts/levin-phase-floor 06e's exact end nodes.
+        # Under 06d its root's step-(4) residual, 2.2e-16, was the end-node offset (its halves'
+        # ends did not tile), against grandchildren 4.2e-17 apart: the trust check's ratio 0.19
+        # passed it. With the ends exact the residual is 2.1e-17 of noise against 5.9e-17, ratio
+        # 2.8, so the root is untrusted and refined: 8 regions at depth 3, converged, abserr
+        # 6.1e-12 against a true error of 2.1e-13 (06d: 7.4e-13 against 2.1e-13). A region count,
+        # which 06e's section 2 test 8 allows to change.
+        self.assertEqual(loose["num_regions"], 8)
         # The tight call was also asserted to be one region until prompts/levin-phase-floor 06c's
         # trust check one level down: its single region's residual (~2e-16) is round-off noise
         # that eq. (151)'s floor (~1e-20) does not bound, so the region is not floor-limited, the
         # noise's convergence ratio can exceed 1, and the call refines (to 1,279 leaves, depth
         # 15) until the noise is spread below its budget of rtol*|value| = 4.8e-15. It stays
         # converged and honest. A region count, which 06c's section 2 test 9 allows to change.
+        # (That residual was the end-node offset: under 06e the tight call is one region again,
+        # converged, abserr 6.9e-17 against a true error of 2.6e-17; 06d: 32 regions,
+        # unconverged.)
 
         jump = fabs(loose["value"] - tight["value"])
         self.assertGreater(jump, 0.0)

@@ -50,7 +50,12 @@ deliberate departures are:
     the Levin collocation solve, with a 1/min|theta'| that grows at a
     stationary point of the phase; a fallback region solves no such system,
     so it carries a floor derived from the weighted sum it computes instead
-    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md). See the extended discussion in _adaptive_levin();
+    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md), whose node term is,
+    since prompts/levin-phase-floor/06e-exact-end-nodes.md, the first-order
+    error of the displacement each node actually has, signed, with bounded
+    remainders, in place of 06d's worst case. The grid's end nodes are the
+    region's endpoints exactly (chebyshev_matrices()), so every solve
+    integrates its own region and a region and its halves tile. See the extended discussion in _adaptive_levin();
     the short version is that the step-(4) residual is a *resolution*
     criterion and is blind, by construction, to round-off, which is
     dominated by eps * ||f||_inf and the phase's local conditioning rather
@@ -301,22 +306,58 @@ _UNIT_ROUNDOFF = 2.0**-53
 # Derived, not fitted.
 _CC_ROUNDOFF_PER_TERM_COUNT = 4
 
-# The node-rounding count c_x in _cc_node_error_bound(): the computed fine-grid node x^_k against
-# the exact one x_k, with M = max(|a|, |b|) and h = |b - a|. chebyshev_matrices() forms
-#     x^_k = fl( fl(fl(a + b) / 2) + fl( fl(fl(b - a) / 2) * t^_k ) ),
-# and _chebyshev_base() forms t^_k = fl(sin(fl(fl(pi * j) / (2 (N - 1))))), j an exact integer:
-#   * t^_k: pi's representation, the product and the quotient each err by at most u relatively,
-#     so the sine's argument (|z| <= pi/2) errs by at most 3u * pi/2 ~ 4.7u, which moves sin by at
-#     most as much; the sine itself is correct to 1 ulp, 2u: |t^_k - t_k| <= 6.7u, counted as 7u;
-#   * the midpoint: fl(a + b) errs by u|a + b|, halving is exact: at most u M;
-#   * the half-width: fl(b - a) errs by u h, halving is exact: at most u h / 2;
-#   * the product (h/2) t^_k: the half-width's error times |t| <= 1, (h/2) times t^_k's 7u, and its
-#     own rounding u h/2: at most (1/2 + 7/2 + 1/2) u h = 4.5 u h;
-#   * the final sum: its own rounding, u |x_k| <= u M.
-# Together |x^_k - x_k| <= 2 u M + 4.5 u h <= c_x u (M + h) with c_x = 5, the larger of the two
-# counts (prompts/levin-phase-floor/06d-cc-roundoff-floor.md, section 5 point 1). Derived, not
-# fitted.
-_CC_NODE_ROUNDING_COUNT = 5
+# The node term of _cc_roundoff_floor() (prompts/levin-phase-floor/06e-exact-end-nodes.md, which
+# replaces 06d's worst case c_x u (max(|a|, |b|) + h) max|theta'| ... with the displacement each
+# node actually has): phi_node = |E| + R_g + R_2 + R_c, E = sum_k w_k g'(x^_k) Delta_k, from the
+# signed displacements Delta_k = x^_k - x_k (_chebyshev_node_displacements()). The constants below
+# are its relative-error bounds and counts; see _cc_node_term_parts() for the terms.
+#
+# eta_theta, when theta' at the fine nodes is the caller's own theta_deriv, evaluated at each node
+# (_Basis_SinCos.theta_prime_on_fine_grid()). Not derivable here: the module does nothing to that
+# value but evaluate the caller's function, whose rounding it cannot see. So it is measured (prompt
+# 06e, section 2 test 4): on every cell of that test whose theta' is supplied, the relative error of
+# the supplied theta' against theta' evaluated in mpmath at the same float node is at most a few u
+# (the log records the worst). It is taken at 2^-10, a margin of more than 10^12 over the worst
+# measured, so that it also covers a caller whose theta' is a fit good to three digits rather than
+# a closed form. A theta' worse than that is an error in the phase the Levin branch also builds its
+# collocation operator from, and belongs in the caller's theta_abserr, as an error in theta does.
+_CC_THETA_PRIME_REL_ERROR_SUPPLIED = 2.0**-10
+
+# eta_theta, when theta' at the fine nodes is the fine grid's spectral derivative of a sampled raw
+# theta (no theta_deriv supplied). Its error is set by how well 2N - 1 samples resolve theta and by
+# the rounding of a raw phase of size |theta|, amplified by the differentiation matrix: neither is
+# bounded relative to theta' by anything the solve holds, so no basis below 1 can be stated, and it
+# is 1 -- a triangle-inequality bound on the exact displacements (section 0.2 item 2).
+_CC_THETA_PRIME_REL_ERROR_SPECTRAL = 1.0
+
+# eta_f, for f' at the fine nodes, the fine grid's Chebyshev derivative of the amplitude samples
+# (as 06d took it). Its error is set by how well the samples resolve f, which nothing the solve
+# holds bounds relative to f' (an amplitude near a singularity is resolved worst, and that is where
+# f' matters). No basis below 1 can be stated, so it is 1, as above.
+_CC_F_PRIME_REL_ERROR = 1.0
+
+# The second-order remainder R_2 = (1/2) sum_k |w_k| Delta_k^2 |g''(xi_k)|, xi_k between x_k and
+# x^_k, is bounded with |g''| <= max over the nodes of
+#     sum_i ( |f''_i| + 2 |f'_i| |theta'| + |f_i| |theta''| + |f_i| theta'^2 )
+# from the same data (f'' and theta'' the fine grid's Chebyshev derivatives of f' and theta'), times
+# this factor: the derivatives taken good to within 100 %, as eta = 1 takes f' above, and the
+# maximum over the nodes for that over the region. R_2 is of relative size u |x| theta' against
+# E, so the factor never decides the floor; it keeps R_2 a bound.
+_CC_NODE_SECOND_ORDER_SAFETY = 2.0
+
+# The rounding count in R_c, the rounding of E itself, beyond the n of its weighted sum: E is formed
+# as sum_k w_k (Delta_k g'_k), g'_k = sum_i ( f'_ik b_ik + (f_ik theta'_k) b'_ik ) over m components,
+# so each of its n terms carries
+#   * 2m + 1 roundings in g'_k: at most two products in each of its 2m summands, and 2m - 1 sums;
+#   * 1 in the product with Delta_k, and n in the dot product with w_k (its product and n - 1 sums);
+#   * 2 from Delta_k's own error (_chebyshev_node_displacements(): 2u |Delta_k| beyond its absolute
+#     part, which R_c adds separately);
+#   * 1 from the amplitude f_ik, correct to its last bit, as in 06d's count;
+# so gamma_K with K = (2m + 1) + 1 + n + 2 + 1 = n + 2m + 5, this constant being the 5 beyond
+# n + 2m. The weights carry none: the node error
+# is that of the rule as computed, with its own float weights. The basis values' error, u (|a| + 2)
+# per value, is added separately. Derived, not fitted.
+_CC_NODE_TERM_ROUNDING_COUNT = 5
 
 # minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
@@ -534,14 +575,111 @@ def _roundoff_floor(
     )
 
 
-def _cc_node_error_bound(x_span: Tuple[float, float]) -> float:
+def _cc_node_term_parts(
+    weights: np.ndarray,
+    displacements: np.ndarray,
+    displacement_err_abs: float,
+    f_sample: np.ndarray,
+    f_prime_sample: np.ndarray,
+    f_second_sample: np.ndarray,
+    basis_sample: np.ndarray,
+    basis_prime_sample: np.ndarray,
+    argument_sample: np.ndarray,
+    theta_prime_sample: np.ndarray,
+    theta_second_sample: np.ndarray,
+    eta_theta: float,
+) -> Tuple[float, float, float, float]:
     """
-    delta, a bound on |x^_k - x_k| for every node of chebyshev_matrices(x_span, n): the computed
-    node against the exact one, c_x u (max(|a|, |b|) + |b - a|). See _CC_NODE_ROUNDING_COUNT for
-    the count, term by term.
+    The node term of a Clenshaw-Curtis fallback solve's round-off floor, in its four parts
+    (prompts/levin-phase-floor/06e-exact-end-nodes.md, section 0.2 item 2):
+
+        phi_node = |E| + R_g + R_2 + R_c,      E = sum_k w_k g'(x^_k) Delta_k,
+
+    with g = sum_i f_i b_i(theta), g' = sum_i ( f'_i b_i(theta) + f_i theta' b'_i(theta) ), and
+    Delta_k = x^_k - x_k the signed displacement of each computed node from the exact one
+    (_chebyshev_node_displacements()). Returns (E, R_g, R_2, R_c); E is signed.
+
+    What it bounds. The rule as computed, sum_k w_k g(x^_k), differs from the same rule at the exact
+    nodes by sum_k w_k (g(x^_k) - g(x_k)) = E - (1/2) sum_k w_k g''(xi_k) Delta_k^2. E is formed
+    from the data the solve holds, so it errs; each part below bounds one source:
+      * R_g = sum_k |w_k| |Delta_k| sum_i ( eta_theta |theta'_k| |f_ik| + eta_f |f'_ik| ): the
+        error from using approximate theta'_k and f'_ik, whose relative errors are at most
+        eta_theta (passed in; it depends on how theta' reached the nodes) and eta_f =
+        _CC_F_PRIME_REL_ERROR. |b_i| and |b'_i| are at most 1 for the (sin, cos) basis.
+      * R_2 = (1/2) sum_k |w_k| Delta_k^2 max|g''|, the second-order remainder, |g''| bounded from
+        the same data; see _CC_NODE_SECOND_ORDER_SAFETY.
+      * R_c, the rounding in computing E: gamma_K times sum_k |w_k| |Delta_k| sum_i |f'_ik b_ik| +
+        |f_ik theta'_k b'_ik|, K = n + 2m + _CC_NODE_TERM_ROUNDING_COUNT (the count is that
+        constant's comment); plus the basis values' error, u (|a_ik| + 2) per value (the argument
+        to its last bit, and the sine or cosine to 1 ulp), at most 2, against the same sums with
+        |b| replaced by 1; plus Delta's absolute error, displacement_err_abs, against
+        sum_k |w_k| sum_i |f'_ik b_ik| + |f_ik theta'_k b'_ik|.
+
+    The terms are summed in floating point, with relative errors of order n u of themselves, which
+    no part of the bound depends on. No 1/theta' appears, as in 06d: theta' enters only as a factor.
+
+    :param weights: the fine rule's weights, shape (n,).
+    :param displacements: Delta_k for every node, shape (n,).
+    :param displacement_err_abs: the absolute part of Delta's error bound.
+    :param f_sample: amplitudes, shape (m, n).
+    :param f_prime_sample: their derivatives at the nodes, shape (m, n).
+    :param f_second_sample: their second derivatives at the nodes, shape (m, n).
+    :param basis_sample: basis values b_i(theta(x^_k)), shape (m, n).
+    :param basis_prime_sample: the basis values' derivatives with respect to theta, shape (m, n).
+    :param argument_sample: the arguments the basis values were computed from, shape (m, n).
+    :param theta_prime_sample: theta' at the nodes, shape (n,).
+    :param theta_second_sample: theta'' at the nodes, shape (n,).
+    :param eta_theta: the bound on theta_prime_sample's relative error.
     """
-    a, b = x_span
-    return _CC_NODE_ROUNDING_COUNT * _UNIT_ROUNDOFF * (max(abs(a), abs(b)) + abs(b - a))
+    m, n = f_sample.shape
+    abs_w = np.fabs(weights)
+    abs_wd = abs_w * np.fabs(displacements)
+    abs_f = np.fabs(f_sample)
+    abs_fp = np.fabs(f_prime_sample)
+    abs_tp = np.fabs(theta_prime_sample)
+
+    g_prime = np.sum(
+        f_prime_sample * basis_sample
+        + (f_sample * theta_prime_sample) * basis_prime_sample,
+        axis=0,
+    )
+    E = float(np.dot(weights, displacements * g_prime))
+
+    R_g = float(
+        np.dot(
+            abs_wd,
+            np.sum(eta_theta * abs_tp * abs_f + _CC_F_PRIME_REL_ERROR * abs_fp, axis=0),
+        )
+    )
+
+    g_second_bound = np.sum(
+        np.fabs(f_second_sample)
+        + 2.0 * abs_fp * abs_tp
+        + abs_f * np.fabs(theta_second_sample)
+        + abs_f * abs_tp * abs_tp,
+        axis=0,
+    )
+    R_2 = (
+        0.5
+        * _CC_NODE_SECOND_ORDER_SAFETY
+        * float(np.max(g_second_bound))
+        * float(np.dot(abs_w, displacements * displacements))
+    )
+
+    g_prime_abs = np.sum(
+        abs_fp * np.fabs(basis_sample) + abs_f * abs_tp * np.fabs(basis_prime_sample),
+        axis=0,
+    )
+    K = n + 2 * m + _CC_NODE_TERM_ROUNDING_COUNT
+    gamma_K = K * _UNIT_ROUNDOFF / (1.0 - K * _UNIT_ROUNDOFF)
+    basis_err = np.minimum(2.0, _UNIT_ROUNDOFF * (np.fabs(argument_sample) + 2.0))
+    R_c = (
+        gamma_K * float(np.dot(abs_wd, g_prime_abs))
+        + float(np.dot(abs_wd, np.sum(basis_err * (abs_fp + abs_f * abs_tp), axis=0)))
+        + displacement_err_abs * float(np.dot(abs_w, g_prime_abs))
+    )
+
+    return E, R_g, R_2, R_c
 
 
 def _cc_roundoff_floor(
@@ -549,16 +687,14 @@ def _cc_roundoff_floor(
     f_sample: np.ndarray,
     basis_sample: np.ndarray,
     argument_sample: np.ndarray,
-    node_error: float,
-    theta_prime_bound: float,
-    f_prime_sample: np.ndarray,
+    node_term: float,
 ) -> float:
     """
     Round-off floor for a Clenshaw-Curtis fallback solve
-    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md), derived from what the rule computes:
+    (prompts/levin-phase-floor/06d-cc-roundoff-floor.md; its node term since
+    prompts/levin-phase-floor/06e-exact-end-nodes.md), derived from what the rule computes:
 
-        phi_CC = (n + 4) u S  +  u sum_k |w_k| sum_i |f_ik| |a_ik|
-                 +  sum_k |w_k| delta_k sum_i ( |theta'| |f_ik| + |f'_ik| ),
+        phi_CC = (n + 4) u S  +  u sum_k |w_k| sum_i |f_ik| |a_ik|  +  phi_node,
         S = sum_k |w_k| sum_i |f_ik b_ik|,
 
     with w_k (k = 1 ... n) the fine rule's weights, f_ik = f_i(x_k) the amplitudes, b_ik the basis
@@ -571,16 +707,20 @@ def _cc_roundoff_floor(
     * The second term is the rounding of the argument: an error u |a_ik| in it moves sin or cos by
       at most that much. With a range-reduced phase (theta_mod_2pi) |a| < 2 pi and the term is
       negligible; with a raw phase it is u |theta(x_k)|, which is real.
-    * The third term is the rounding of the nodes (added by 06d's section 5, after the first two
-      were measured short by up to 3.4e9 on a range-reduced phase): the computed node x^_k is
-      displaced from the exact one by up to delta_k (_cc_node_error_bound()), and a rule whose
-      weights are fixed while its nodes move commits sum_k w_k g'(x_k) (x^_k - x_k), with
-      g' = (f' + i theta' f) e^{i theta} for g = f e^{i theta}. Both parts are kept. |theta'| is
-      bounded by its maximum over the region's coarse sample (theta_prime_bound), the conservative
-      side; f' is the fine grid's Chebyshev derivative of the samples, per node. With a raw phase
-      theta ~ theta' x this is about the second term again; with a reduced phase it is what the
-      second term no longer carries. Summed over leaves it is about u |x| ||f|| TV(theta), so it
-      does not grow under subdivision.
+    * The third, phi_node (node_term, from _cc_node_term_parts()), is the rounding of the nodes:
+      each computed node x^_k is displaced from the exact one by Delta_k, and a rule whose weights
+      are fixed while its nodes move commits sum_k w_k g'(x^_k) Delta_k to first order, with
+      g' = (f' + i theta' f) e^{i theta} for g = f e^{i theta}. Since 06e it is that first-order
+      error itself, from the displacement each node actually has, signed, with theta' at each node,
+      plus bounded remainders (its parts are _cc_node_term_parts()'s). 06d added the term (after
+      the first two were measured short by up to 3.4e9 on a range-reduced phase) as a worst case:
+      one displacement 5u (max(|a|, |b|) + h) for every node, the region's largest |theta'| at
+      every node, and absolute values throughout. That bounded the node error by 20-1000 x, was
+      98.8-99.7 % of the declared error on 07's leaves, and was flat under splitting, so a leaf it
+      dominated was floor-limited far above its true error ([06d-cc-node-term-is-pessimistic]).
+      With the end nodes exact (chebyshev_matrices()), Delta_0 = Delta_{n-1} = 0. Summed over
+      leaves the term is still of order u |x| ||f|| TV(theta), so it does not grow under
+      subdivision.
 
     Why not eq. (151) (_roundoff_floor()). Eq. (151) bounds the conditioning of the Levin
     collocation solve p' + i theta' p = f, whose sensitivity grows like 1/theta' where theta' is
@@ -599,9 +739,7 @@ def _cc_roundoff_floor(
     :param f_sample: amplitudes, shape (m, n).
     :param basis_sample: basis values, shape (m, n).
     :param argument_sample: the arguments the basis values were computed from, shape (m, n).
-    :param node_error: delta, the bound on every node's rounding (_cc_node_error_bound()).
-    :param theta_prime_bound: a bound on |theta'| over the region: max|theta'| on its sample.
-    :param f_prime_sample: the amplitudes' derivatives at the nodes, shape (m, n).
+    :param node_term: phi_node, from _cc_node_term_parts().
     """
     abs_weights = np.fabs(weights)
     n = abs_weights.shape[0]
@@ -609,12 +747,6 @@ def _cc_roundoff_floor(
     S = float(np.dot(abs_weights, np.sum(np.fabs(f_sample * basis_sample), axis=0)))
     argument_term = float(
         np.dot(abs_weights, np.sum(abs_f * np.fabs(argument_sample), axis=0))
-    )
-    node_term = node_error * float(
-        np.dot(
-            abs_weights,
-            np.sum(theta_prime_bound * abs_f + np.fabs(f_prime_sample), axis=0),
-        )
     )
     return (
         (n + _CC_ROUNDOFF_PER_TERM_COUNT) * _UNIT_ROUNDOFF * S
@@ -1144,6 +1276,18 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
 
     Note the returned grid is in *descending* order: x[0] is the upper endpoint of x_span and x[-1]
     is the lower endpoint. The Levin endpoint extraction depends on this convention.
+
+    The end nodes are the endpoints exactly: x[0] == b and x[-1] == a, bit for bit (since
+    prompts/levin-phase-floor/06e-exact-end-nodes.md). The affine map
+    fl((a + b)/2 + fl((b - a)/2 * x_base)) does not give them, although x_base[0] = 1 and
+    x_base[-1] = -1 exactly: the rounding of the midpoint, of the half-width and of their sum leaves
+    an end node one ulp off its endpoint in about a third of spans
+    ([06c-chebyshev-end-nodes-miss-the-span]). A Levin solve then integrates a shifted interval, an
+    error of about |f| ulp(x) that is no round-off floor's, and a parent's ends and its halves' fail
+    to tile, so the step-(4) residual sees that offset at every depth and _adaptive_levin() chased
+    it to depth_max. So the two end nodes are set after the map. The interior nodes and D are the
+    map's, unchanged. Since _adaptive_levin() hands both halves of a bisected region the same float
+    midpoint, a region and its halves tile exactly.
     :param x_span:
     :param N:
     :return:
@@ -1155,6 +1299,11 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     a, b = x_span
     x = (a + b) / 2.0 + (b - a) / 2.0 * x_base
     D = 2.0 * D_base / (b - a)
+
+    # the end nodes are the endpoints exactly (see above): x is a new array, so this cannot touch
+    # the cached base.
+    x[0] = b
+    x[-1] = a
 
     return x, D
 
@@ -1216,6 +1365,139 @@ def _cc_weights(x_span: Tuple[float, float], N: int):
     """
     a, b = x_span
     return _cc_weights_base(N) * (np.fabs(b - a) / 2.0)
+
+
+@lru_cache(maxsize=32)
+def _chebyshev_base_corrections(N: int):
+    """
+    The base nodes of _chebyshev_base(N) in double-double: corr[k] = fl(t_k - x_base[k]), with
+    t_k = cos(pi k / (N - 1)) the exact node, so that t_k = x_base[k] + corr[k] to within
+    u |corr[k]| (prompts/levin-phase-floor/06e-exact-end-nodes.md, section 0.2 item 2). Returns
+    (corr, max_k |corr[k]|).
+
+    Computed once per order in a private mpmath context at 160 bits -- t_k to about 1e-48, far
+    below the u^2 ~ 1e-32 the double-double holds -- and rounded to the nearest double. Cached, and
+    read-only, as _chebyshev_base() is, for the same reason. corr[0] = corr[-1] = 0, since
+    x_base[0] = 1 and x_base[-1] = -1 exactly. mpmath is imported here, not at module scope: it is
+    needed only on the first fallback solve at each order.
+    """
+    import mpmath
+
+    x_base, _ = _chebyshev_base(N)
+    ctx = mpmath.MPContext()
+    ctx.prec = 160
+    corr = np.array(
+        [
+            float(ctx.cos(ctx.pi * k / (N - 1)) - ctx.mpf(float(x_base[k])))
+            for k in range(N)
+        ]
+    )
+    corr.setflags(write=False)
+    return corr, float(np.max(np.fabs(corr)))
+
+
+# Veltkamp's splitter, 2^27 + 1, for _two_product().
+_DEKKER_SPLITTER = 134217729.0
+
+
+def _two_sum(a, b):
+    """
+    Knuth's TwoSum, elementwise: (s, e) with s = fl(a + b) and a + b = s + e exactly, for any
+    floats a, b (barring overflow).
+    """
+    s = a + b
+    bb = s - a
+    return s, (a - (s - bb)) + (b - bb)
+
+
+def _two_product(a, b):
+    """
+    Dekker's TwoProduct with Veltkamp's split, elementwise: (p, e) with p = fl(a b) and a b = p + e
+    exactly, provided nothing overflows (|a|, |b| below about 1e300) or underflows (e above the
+    smallest normal float, about 2e-308). Spans whose coordinates and widths are within 1e-280 ...
+    1e300 of unity satisfy this by a wide margin.
+    """
+    p = a * b
+    c = _DEKKER_SPLITTER * a
+    a_hi = c - (c - a)
+    a_lo = a - a_hi
+    c = _DEKKER_SPLITTER * b
+    b_hi = c - (c - b)
+    b_lo = b - b_hi
+    return p, ((a_hi * b_hi - p) + a_hi * b_lo + a_lo * b_hi) + a_lo * b_lo
+
+
+def _chebyshev_node_displacements(x_span: Tuple[float, float], N: int):
+    """
+    Delta_k = x^_k - x_k for every node of chebyshev_matrices(x_span, N): the computed node against
+    the exact one, x_k = (a + b)/2 + (b - a)/2 cos(pi k / (N - 1)) in exact arithmetic, signed
+    (prompts/levin-phase-floor/06e-exact-end-nodes.md, section 0.2 item 2). Returns
+    (Delta, err_abs): every computed Delta^_k satisfies
+
+        |Delta^_k - Delta_k| <= 2 u |Delta^_k| + err_abs,
+        err_abs = u (u (M + h) + h max_k |corr_k|),   M = max(|a|, |b|), h = |b - a|,
+
+    so Delta is known to a few u of itself wherever |Delta_k| is above about u (M + h) times u.
+
+    The construction, by error-free transformations (_two_sum(), _two_product()), with the base
+    nodes in double-double, t_k = x_base[k] + corr[k] (_chebyshev_base_corrections()):
+      * s + s_e = a + b and d + d_e = b - a exactly (TwoSum); chebyshev_matrices() forms the
+        midpoint m^ = s/2 and the half-width r^ = d/2, both halvings exact;
+      * p + p_e = r^ x_base[k] exactly (TwoProduct), p being the product chebyshev_matrices() forms;
+      * x^_k + x_e = m^ + p exactly (TwoSum), x^_k being the node it returns;
+      * so x_k = m^ + s_e/2 + (r^ + d_e/2)(x_base[k] + corr[k]) expands into x^_k and eight small
+        terms, x_e, s_e/2, p_e, q + q_e = r^ corr[k], r + r_e = (d_e/2) x_base[k] (each pair exact by
+        TwoProduct) and fl((d_e/2) corr[k]), and Delta_k is minus their sum.
+    The eight terms are summed by Ogita, Rump and Oishi's Sum2 (cascaded TwoSum), which errs by at
+    most u |sum| + gamma_7^2 sum |terms|; the terms are each at most about u (M + h), so the second
+    part is below u^2 (M + h) u. The other errors: fl((d_e/2) corr[k]) by u of a term of size
+    u^2 h; and corr[k] itself by at most u |corr[k]|, times r^ <= h/2. err_abs covers them all with
+    a wide margin.
+
+    The end nodes are the endpoints exactly (chebyshev_matrices()), so Delta_0 = Delta_{N-1} = 0.
+    x_span's entries are taken as the floats chebyshev_matrices() is handed.
+    """
+    a, b = x_span
+    a = float(a)
+    b = float(b)
+    x_base, _ = _chebyshev_base(N)
+    corr, corr_max = _chebyshev_base_corrections(N)
+
+    s, s_err = _two_sum(a, b)
+    d, d_err = _two_sum(b, -a)
+    midpoint = s / 2.0
+    half_width = d / 2.0
+    half_d_err = d_err / 2.0
+
+    p, p_err = _two_product(half_width, x_base)
+    _, x_err = _two_sum(midpoint, p)
+    q, q_err = _two_product(half_width, corr)
+    r, r_err = _two_product(half_d_err, x_base)
+    tail = half_d_err * corr
+
+    terms = (
+        x_err,
+        np.full_like(x_base, s_err / 2.0),
+        p_err,
+        q,
+        q_err,
+        r,
+        r_err,
+        tail,
+    )
+    total = terms[0]
+    compensation = np.zeros_like(x_base)
+    for term in terms[1:]:
+        total, e = _two_sum(total, term)
+        compensation = compensation + e
+    delta = -(total + compensation)
+    delta[0] = 0.0
+    delta[-1] = 0.0
+
+    M = max(abs(a), abs(b))
+    h = abs(b - a)
+    err_abs = _UNIT_ROUNDOFF * (_UNIT_ROUNDOFF * (M + h) + h * corr_max)
+    return delta, err_abs
 
 
 def _detect_vectorized(func, grid: np.ndarray) -> bool:
@@ -1510,6 +1792,66 @@ class _Basis_SinCos:
         else:
             argument = self._theta(x)
         return [np.sin(argument), np.cos(argument)], [argument, argument]
+
+    @staticmethod
+    def basis_derivative(basis_values: np.ndarray) -> np.ndarray:
+        """
+        The basis functions' derivatives with respect to theta, at the points whose basis values
+        are given (shape (2, n), as the Clenshaw-Curtis fallback holds them): d sin/d theta = cos and
+        d cos/d theta = -sin, so (b_1, -b_0). Exact: a permutation and a sign, no rounding. Used by
+        the fallback's node term (_cc_node_term_parts()).
+        """
+        return np.vstack([basis_values[1], -basis_values[0]])
+
+    def theta_prime_on_fine_grid(
+        self,
+        fine_grid: np.ndarray,
+        D_fine: np.ndarray,
+        theta_prime_coarse: np.ndarray,
+        arguments_fine: np.ndarray,
+        vectorize_cache: dict,
+    ) -> Tuple[np.ndarray, float]:
+        """
+        theta' at every node of the Clenshaw-Curtis fallback's fine grid, for its node term
+        (_cc_node_term_parts(); prompts/levin-phase-floor/06e-exact-end-nodes.md), with a bound on
+        its relative error: (theta_prime_fine, eta_theta).
+
+        * With "theta_deriv" supplied, the caller's theta' at each node: the even nodes are the
+          coarse grid's (fine_grid[::2] is chebyshev_matrices(x_span, N)'s grid, bit for bit), where
+          theta_prime_coarse already holds it, and the odd ones are evaluated here, one evaluation
+          per node, N - 1 in all. eta_theta = _CC_THETA_PRIME_REL_ERROR_SUPPLIED.
+        * Without it, the fine grid's spectral derivative of the raw theta sampled at the fine
+          nodes, as build_Levin_data() takes theta' on the coarse grid. Without "theta_mod_2pi"
+          the raw theta at the fine nodes is the argument the basis was evaluated from, already in
+          hand (no evaluation); with it, theta is evaluated at each fine node, 2N - 1 in all.
+          eta_theta = _CC_THETA_PRIME_REL_ERROR_SPECTRAL.
+
+        :param theta_prime_coarse: theta' on the coarse grid fine_grid[::2], as build_Levin_data()
+            returned it.
+        :param arguments_fine: the arguments the fine-grid basis values were computed from, shape
+            (2, n), as eval_basis_and_arguments() returned them.
+        """
+        if hasattr(self, "_theta_deriv"):
+            theta_prime_fine = np.empty_like(fine_grid)
+            theta_prime_fine[0::2] = theta_prime_coarse
+            theta_prime_fine[1::2] = _sample_vectorized(
+                self._theta_deriv,
+                fine_grid[1::2],
+                vectorize_cache,
+                ("theta_deriv", id(self)),
+            )
+            eta_theta = _CC_THETA_PRIME_REL_ERROR_SUPPLIED
+        else:
+            if hasattr(self, "_theta_mod_2pi"):
+                theta_fine = _sample_vectorized(
+                    self._theta, fine_grid, vectorize_cache, ("theta", id(self))
+                )
+            else:
+                theta_fine = np.asarray(arguments_fine[0], dtype=float)
+            theta_prime_fine = np.matmul(D_fine, theta_fine)
+            eta_theta = _CC_THETA_PRIME_REL_ERROR_SPECTRAL
+
+        return theta_prime_fine, eta_theta
 
 
 def _adaptive_levin_subregion(
@@ -1961,7 +2303,10 @@ def _adaptive_levin_subregion_cc(
     formed from that one sample: CC_{2N-1} is returned as the region's value, and
     |CC_{2N-1} - CC_N| is returned as its error estimate -- a genuine nested-pair estimate, not a
     resolution proxy. Cost is exactly 2*N - 1 evaluations of each f_i and of the phase, always,
-    against scipy.quad's unbounded panel count under a tight global tolerance.
+    against scipy.quad's unbounded panel count under a tight global tolerance. Its round-off floor
+    adds N - 1 evaluations of the caller's theta_deriv, at the odd fine nodes, where one is
+    supplied (with none, 2N - 1 of the raw phase if theta_mod_2pi is supplied, else none):
+    see _Basis_SinCos.theta_prime_on_fine_grid().
 
     :param phase_span: total phase variation across x_span, already computed by the caller's
         call to BasisData.build_Levin_data() -- passed in rather than recomputed.
@@ -1972,8 +2317,9 @@ def _adaptive_levin_subregion_cc(
     conditioning of the Levin collocation solve, with a 1/min|theta'| this rule does not have.
 
     :param theta_prime_Cheb: theta' sampled at the order-chebyshev_order collocation points,
-        likewise already computed by the caller's call to build_Levin_data(). Its maximum bounds
-        |theta'| in the round-off floor's node term (until 06d it gave eq. (151)'s G0/G1).
+        likewise already computed by the caller's call to build_Levin_data(). It gives theta' at
+        the even fine nodes, which are those points, in the round-off floor's node term (until 06d
+        it gave eq. (151)'s G0/G1; under 06d its maximum bounded |theta'| at every node).
     :return: a dict with the same "value"/"phase_span"/"phase_err"/"metadata" keys as the Levin
         path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
         "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
@@ -2037,18 +2383,51 @@ def _adaptive_levin_subregion_cc(
     # system; carried over, it made a fallback region's floor grow, or become +inf, at a
     # stationary point of the phase.
     #
-    # Its node term takes |theta'| as its maximum over the coarse theta_prime_Cheb the phase_span
-    # gate already paid for, and f' from the fine grid's own Chebyshev differentiation matrix
-    # applied to the samples in hand.
+    # Its node term (since prompts/levin-phase-floor/06e-exact-end-nodes.md) is the first-order
+    # error of the displacement each fine node actually has, signed (_chebyshev_node_displacements()),
+    # with bounded remainders (_cc_node_term_parts()). It takes theta' at each fine node -- the
+    # caller's theta_deriv at the odd nodes, the coarse sample at the even ones, or a spectral
+    # derivative where none is supplied (_Basis_SinCos.theta_prime_on_fine_grid()) -- and f', f''
+    # and theta'' from the fine grid's own Chebyshev differentiation matrix applied to the samples
+    # in hand.
     f_prime_fine = np.vstack([np.matmul(D_fine, f_row) for f_row in f_fine])
+    f_second_fine = np.vstack([np.matmul(D_fine, f_row) for f_row in f_prime_fine])
+    theta_prime_fine, eta_theta = BasisData.theta_prime_on_fine_grid(
+        fine_grid, D_fine, theta_prime_Cheb, arguments_fine, vectorize_cache
+    )
+    if not np.isfinite(theta_prime_fine).all():
+        _logger.warning(
+            "!! WARNING (adaptive_levin_subregion, %s): sampled phase derivative theta' "
+            "contains non-numeric values (np.nan, np.inf, or np.-inf)",
+            _format_label(notify_label, id_label),
+        )
+        raise ValueError(
+            "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+    theta_second_fine = np.matmul(D_fine, theta_prime_fine)
+    displacements, displacement_err_abs = _chebyshev_node_displacements(
+        x_span, fine_order
+    )
+    E, R_g, R_2, R_c = _cc_node_term_parts(
+        w_fine,
+        displacements,
+        displacement_err_abs,
+        f_fine,
+        f_prime_fine,
+        f_second_fine,
+        basis_fine,
+        BasisData.basis_derivative(basis_fine),
+        arguments_fine,
+        theta_prime_fine,
+        theta_second_fine,
+        eta_theta,
+    )
     round_off_err = _cc_roundoff_floor(
         w_fine,
         f_fine,
         basis_fine,
         arguments_fine,
-        _cc_node_error_bound(x_span),
-        float(np.max(np.fabs(theta_prime_Cheb))),
-        f_prime_fine,
+        abs(E) + R_g + R_2 + R_c,
     )
 
     # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict

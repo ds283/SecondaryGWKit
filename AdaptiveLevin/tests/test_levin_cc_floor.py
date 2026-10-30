@@ -47,7 +47,6 @@ from AdaptiveLevin.levin_quadrature import (
     _Basis_SinCos,
     _adaptive_levin,
     _adaptive_levin_subregion_cc,
-    _cc_node_error_bound,
     _cc_weights,
     _declared_endpoint_phase_err,
     _history_improvement,
@@ -255,7 +254,9 @@ class TestNoInverseThetaPrime(_HonestyMixin, unittest.TestCase):
         phi = data["phase_err"]
         S, F, Fp = _sums(span, f, theta, f_prime)
         h = span[1] - span[0]
-        delta = _cc_node_error_bound(span)
+        # 06d's node displacement bound, 5 u (max(|a|, |b|) + h); its helper
+        # _cc_node_error_bound() was removed by 06e, whose node term is at most this one
+        delta = 5.0 * _UNIT_ROUNDOFF * (max(abs(span[0]), abs(span[1])) + h)
         upper = (
             (N_FINE + 4) * _UNIT_ROUNDOFF * S
             + 2.0 * math.pi * _UNIT_ROUNDOFF * F
@@ -504,7 +505,13 @@ class TestNothingElseMoves(_HonestyMixin, unittest.TestCase):
                     continue
                 new = _adaptive_levin(span, f, basis_object, **kwargs)
                 if name in PARENT_HAS_FALLBACK_LEAF:
-                    self.assertGreater(new["num_simple_regions"], 0)
+                    if name == "mode_filter_tight":
+                        # since prompts/levin-phase-floor 06e's exact end nodes, one Levin
+                        # region, converged (06d: 32 fallback regions, unconverged): which rule
+                        # its regions take, which 06e's section 2 test 8 allows to change
+                        self.assertEqual(new["num_simple_regions"], 0)
+                    else:
+                        self.assertGreater(new["num_simple_regions"], 0)
                     ref, ref_err = _reference(references[name])
                     self._assert_honest(
                         new["value"], new["abserr"], ref, ref_err, f"test 6 {name}"

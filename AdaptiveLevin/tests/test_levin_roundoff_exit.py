@@ -653,6 +653,19 @@ class TestRoundoffExitPremise(unittest.TestCase):
         so the halves' floors sum to ~0.2 of the root's. The bypass accepts the root at depth 0
         through the exit (abserr 3.35e-9); the new code bisects, and the exit fires at depth 2 on
         leaves whose premise holds (abserr 6.96e-10, 0.21 of the bypass's). Both honest.
+
+        Since prompts/levin-phase-floor 06e the node term is the first-order error of each node's
+        actual displacement, nearly additive under bisection, and the root's floor no longer binds
+        (its nested pair, 1.79e-9, is above it): the bypass bisects too, to 4 direct regions at
+        depth 3, all phase-limited, abserr 2.51e-11, and the call is bit-identical across the
+        bypass but for the evaluation count (15 solves against 7). Under 06d the bypass was 1 region
+        at depth 0. The assertions on (b) were changed to that outcome as 06d changed (a)'s (region
+        count, depth, which rule, the phase-limited count, bit-identity across the bypass), and the
+        assertion that the premise check at least halves the declared error was withdrawn, on the
+        user's ruling: "Looks like (a) to me. The halving assertion looks to me like it was just
+        made up, so no reason to worry about it." (06e's log, test 8; over 72 problems of this
+        family the premise check halves the declared error on 12 under 06d and on none under 06e,
+        docs/levin-phase-floor/06e/calibration/out/exit_search.txt). Honesty is unchanged.
         """
         # (a)
         f, theta = _test3_problem()
@@ -677,10 +690,11 @@ class TestRoundoffExitPremise(unittest.TestCase):
         kwargs = dict(atol=TEST3B_ATOL, rtol=TEST3B_RTOL)
 
         parent = _run(TEST3B_SPAN, f, theta, bypass=True, **kwargs)
-        self.assertEqual(parent["num_regions"], 1)
-        self.assertEqual(parent["regions"][0].type, "direct")
-        self.assertEqual(parent["regions"][0].depth, 0)
-        self.assertTrue(parent["regions"][0].phase_limited)
+        self.assertEqual(parent["num_regions"], 4)
+        self.assertEqual(parent["num_simple_regions"], 4)
+        self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
+        self.assertEqual(parent["max_depth"], 3)
+        self.assertEqual(parent["num_phase_limited_regions"], 4)
         self._assert_honest(parent, ref, ref_err, "test 3b parent")
 
         new = _run(TEST3B_SPAN, f, theta, **kwargs)
@@ -706,8 +720,14 @@ class TestRoundoffExitPremise(unittest.TestCase):
                     f"test 3b new: {region}",
                 )
         self._assert_honest(new, ref, ref_err, "test 3b new")
-        # the declared error falls with the floor
-        self.assertLess(new["abserr"], 0.5 * parent["abserr"])
+        # bit-identical across the bypass, but for the evaluation count (element 2 of the
+        # signature; see test 4): the premise check solves fallback halves the bypass skips
+        new_signature = _call_signature(new)
+        parent_signature = _call_signature(parent)
+        self.assertEqual(
+            new_signature[:2] + new_signature[3:],
+            parent_signature[:2] + parent_signature[3:],
+        )
 
     def test_nothing_else_moves(self):
         """

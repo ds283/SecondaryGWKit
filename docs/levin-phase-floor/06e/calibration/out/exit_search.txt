@@ -1,0 +1,92 @@
+# levin-phase-floor 06e: 06b's premise on the fallback branch under 06e
+# written 2026-10-30T02:28:58+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script exit_search.py sha256 6632f0084d20d580e20334b5c4c0302efb91a1aa9fd97e2b21ea8f1a99a61e8e
+# prov.py sha256 308ff5926dc78d5453c9ddb61bb73bff0c25ad6c21cc880582c33cde983d83e4
+# AdaptiveLevin/levin_quadrature.py sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# HEAD 50277f3e019bb37df6d91a5c2340877755498508
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_cc_floor.py
+#      M AdaptiveLevin/tests/test_levin_quadrature.py
+#     ?? AdaptiveLevin/tests/test_levin_end_nodes.py
+#     ?? docs/levin-phase-floor/06e/calibration/
+#     ?? prompts/levin-phase-floor/logs/06e-exact-end-nodes.md
+# uptime at start: 2:28  up 25 days,  1:14, 2 users, load averages: 48.76 71.52 57.07
+# parent module 50277f3e019bb37df6d91a5c2340877755498508, sha256 ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1
+# X0 A gamma L | 06d: abserr bypass, abserr premise, ratio, identical | 06e: the same
+   1e+03 0.025 1 4 | 06d: 1.299e-12 1.299e-12 1 identical | 06e: 2.409e-14 2.409e-14 1 identical
+   1e+03 0.025 1 6 | 06d: 9.038e-13 9.038e-13 1 identical | 06e: 2.337e-14 2.337e-14 1 identical
+   1e+03 0.025 2 4 | 06d: 9.412e-13 9.412e-13 1 identical | 06e: 3.091e-14 3.091e-14 1 identical
+   1e+03 0.025 2 6 | 06d: 7.001e-13 7.001e-13 1 identical | 06e: 2.470e-14 2.470e-14 1 identical
+   1e+03 0.025 3 4 | 06d: 8.142e-13 8.142e-13 1 identical | 06e: 3.261e-14 3.261e-14 1 identical
+   1e+03 0.025 3 6 | 06d: 6.520e-13 6.520e-13 1 identical | 06e: 2.510e-14 2.510e-14 1 identical
+   1e+03 0.04 1 4 | 06d: 8.330e-13 8.330e-13 1 identical | 06e: 2.432e-14 2.432e-14 1 identical
+   1e+03 0.04 1 6 | 06d: 1.107e-12 1.107e-12 1 identical | 06e: 2.353e-14 2.353e-14 1 identical
+   1e+03 0.04 2 4 | 06d: 1.170e-12 1.170e-12 1 identical | 06e: 3.116e-14 3.116e-14 1 identical
+   1e+03 0.04 2 6 | 06d: 7.850e-13 7.850e-13 1 identical | 06e: 2.484e-14 2.484e-14 1 identical
+   1e+03 0.04 3 4 | 06d: 9.670e-13 9.670e-13 1 identical | 06e: 3.292e-14 3.292e-14 1 identical
+   1e+03 0.04 3 6 | 06d: 7.081e-13 7.081e-13 1 identical | 06e: 2.528e-14 2.528e-14 1 identical
+   1e+03 0.3 1 4 | 06d: 2.122e-12 2.122e-12 1 identical | 06e: 2.697e-14 2.697e-14 1 identical
+   1e+03 0.3 1 6 | 06d: 2.086e-12 2.086e-12 1 identical | 06e: 2.351e-14 2.299e-14 0.978 DIFFER
+   1e+03 0.3 2 4 | 06d: 1.198e-12 1.198e-12 1 identical | 06e: 2.451e-14 2.451e-14 1 identical
+   1e+03 0.3 2 6 | 06d: 1.004e-12 1.004e-12 1 identical | 06e: 1.985e-14 1.985e-14 1 DIFFER
+   1e+03 0.3 3 4 | 06d: 9.716e-13 9.716e-13 1 identical | 06e: 2.271e-14 2.271e-14 1 identical
+   1e+03 0.3 3 6 | 06d: 8.167e-13 8.167e-13 1 identical | 06e: 2.001e-14 2.001e-14 1 DIFFER
+   1e+04 0.025 1 4 | 06d: 1.290e-11 1.290e-11 1 identical | 06e: 3.156e-13 3.156e-13 1 identical
+   1e+04 0.025 1 6 | 06d: 8.985e-12 8.985e-12 1 identical | 06e: 3.942e-13 3.942e-13 1 identical
+   1e+04 0.025 2 4 | 06d: 9.344e-12 9.344e-12 1 identical | 06e: 4.045e-13 4.045e-13 1 identical
+   1e+04 0.025 2 6 | 06d: 6.962e-12 6.962e-12 1 identical | 06e: 3.644e-13 3.644e-13 1 identical
+   1e+04 0.025 3 4 | 06d: 8.083e-12 8.083e-12 1 identical | 06e: 3.893e-13 3.893e-13 1 identical
+   1e+04 0.025 3 6 | 06d: 2.424e-11 6.485e-12 0.267 DIFFER | 06e: 3.333e-13 3.333e-13 1 identical
+   1e+04 0.04 1 4 | 06d: 8.291e-12 8.291e-12 1 identical | 06e: 3.180e-13 3.180e-13 1 identical
+   1e+04 0.04 1 6 | 06d: 1.101e-11 1.101e-11 1 identical | 06e: 3.955e-13 3.955e-13 1 DIFFER
+   1e+04 0.04 2 4 | 06d: 1.162e-11 1.162e-11 1 identical | 06e: 4.046e-13 4.046e-13 1 identical
+   1e+04 0.04 2 6 | 06d: 7.807e-12 7.807e-12 1 identical | 06e: 3.653e-13 3.653e-13 1 identical
+   1e+04 0.04 3 4 | 06d: 9.600e-12 9.600e-12 1 identical | 06e: 3.893e-13 3.893e-13 1 identical
+   1e+04 0.04 3 6 | 06d: 7.043e-12 7.043e-12 1 identical | 06e: 3.344e-13 3.344e-13 1 identical
+   1e+04 0.3 1 4 | 06d: 2.112e-11 2.112e-11 1 identical | 06e: 3.652e-13 3.550e-13 0.972 DIFFER
+   1e+04 0.3 1 6 | 06d: 2.320e-11 2.320e-11 1 identical | 06e: 3.494e-13 3.225e-13 0.923 DIFFER
+   1e+04 0.3 2 4 | 06d: 1.193e-11 1.193e-11 1 identical | 06e: 3.331e-13 3.330e-13 1 DIFFER
+   1e+04 0.3 2 6 | 06d: 1.000e-11 1.000e-11 1 identical | 06e: 2.999e-13 2.997e-13 1 DIFFER
+   1e+04 0.3 3 4 | 06d: 9.676e-12 9.676e-12 1 identical | 06e: 3.407e-13 3.407e-13 1 identical
+   1e+04 0.3 3 6 | 06d: 1.671e-11 8.140e-12 0.487 DIFFER | 06e: 3.061e-13 3.061e-13 1 DIFFER
+   1e+06 0.025 1 4 | 06d: 1.289e-09 1.289e-09 1 identical | 06e: 2.009e-11 2.009e-11 1 identical
+   1e+06 0.025 1 6 | 06d: 9.152e-10 9.152e-10 1 identical | 06e: 2.447e-11 2.447e-11 1 identical
+   1e+06 0.025 2 4 | 06d: 9.337e-10 9.337e-10 1 identical | 06e: 2.229e-11 2.229e-11 1 identical
+   1e+06 0.025 2 6 | 06d: 3.354e-09 6.959e-10 0.207 DIFFER | 06e: 2.512e-11 2.512e-11 1 identical
+   1e+06 0.025 3 4 | 06d: 8.077e-10 8.077e-10 1 identical | 06e: 2.260e-11 2.260e-11 1 identical
+   1e+06 0.025 3 6 | 06d: 2.421e-09 6.481e-10 0.268 DIFFER | 06e: 3.022e-11 3.022e-11 1 identical
+   1e+06 0.04 1 4 | 06d: 1.735e-09 8.287e-10 0.478 DIFFER | 06e: 2.018e-11 2.018e-11 1 identical
+   1e+06 0.04 1 6 | 06d: 1.104e-09 1.104e-09 1 identical | 06e: 2.464e-11 2.455e-11 0.996 DIFFER
+   1e+06 0.04 2 4 | 06d: 1.161e-09 1.161e-09 1 identical | 06e: 2.235e-11 2.235e-11 1 identical
+   1e+06 0.04 2 6 | 06d: 7.802e-10 7.802e-10 1 identical | 06e: 2.524e-11 2.524e-11 1 identical
+   1e+06 0.04 3 4 | 06d: 9.592e-10 9.592e-10 1 identical | 06e: 2.265e-11 2.265e-11 1 identical
+   1e+06 0.04 3 6 | 06d: 7.038e-10 7.038e-10 1 identical | 06e: 2.680e-11 2.680e-11 1 identical
+   1e+06 0.3 1 4 | 06d: 2.181e-09 2.181e-09 1 identical | 06e: 3.374e-11 3.106e-11 0.92 DIFFER
+   1e+06 0.3 1 6 | 06d: 4.348e-09 2.330e-09 0.536 DIFFER | 06e: 2.488e-11 2.471e-11 0.993 DIFFER
+   1e+06 0.3 2 4 | 06d: 1.195e-09 1.195e-09 1 identical | 06e: 3.274e-11 3.274e-11 1 identical
+   1e+06 0.3 2 6 | 06d: 2.234e-09 9.998e-10 0.447 DIFFER | 06e: 2.464e-11 2.464e-11 1 DIFFER
+   1e+06 0.3 3 4 | 06d: 9.673e-10 9.673e-10 1 identical | 06e: 3.474e-11 3.474e-11 1 identical
+   1e+06 0.3 3 6 | 06d: 1.670e-09 8.137e-10 0.487 DIFFER | 06e: 3.078e-11 3.078e-11 1 DIFFER
+   1e+08 0.025 1 4 | 06d: 1.289e-07 1.289e-07 1 identical | 06e: 2.137e-09 2.137e-09 1 identical
+   1e+08 0.025 1 6 | 06d: 1.083e-07 9.152e-08 0.845 DIFFER | 06e: 3.397e-09 3.397e-09 1 identical
+   1e+08 0.025 2 4 | 06d: 9.336e-08 9.336e-08 1 identical | 06e: 2.453e-09 2.453e-09 1 identical
+   1e+08 0.025 2 6 | 06d: 3.354e-07 6.959e-08 0.207 DIFFER | 06e: 3.303e-09 3.303e-09 1 identical
+   1e+08 0.025 3 4 | 06d: 8.077e-08 8.077e-08 1 identical | 06e: 2.712e-09 2.712e-09 1 identical
+   1e+08 0.025 3 6 | 06d: 2.421e-07 6.481e-08 0.268 DIFFER | 06e: 3.170e-09 3.170e-09 1 identical
+   1e+08 0.04 1 4 | 06d: 1.735e-07 8.287e-08 0.478 DIFFER | 06e: 2.157e-09 2.157e-09 1 identical
+   1e+08 0.04 1 6 | 06d: 1.132e-07 1.132e-07 1 identical | 06e: 3.380e-09 3.380e-09 1 identical
+   1e+08 0.04 2 4 | 06d: 1.161e-07 1.161e-07 1 identical | 06e: 2.465e-09 2.465e-09 1 identical
+   1e+08 0.04 2 6 | 06d: 7.886e-08 7.804e-08 0.99 DIFFER | 06e: 3.862e-09 3.862e-09 1 DIFFER
+   1e+08 0.04 3 4 | 06d: 9.592e-08 9.592e-08 1 identical | 06e: 2.731e-09 2.731e-09 1 identical
+   1e+08 0.04 3 6 | 06d: 7.041e-08 7.038e-08 1 DIFFER | 06e: 4.240e-09 4.240e-09 1 DIFFER
+   1e+08 0.3 1 4 | 06d: 2.181e-07 2.181e-07 1 identical | 06e: 3.874e-09 3.874e-09 1 identical
+   1e+08 0.3 1 6 | 06d: 4.391e-07 2.373e-07 0.54 DIFFER | 06e: 3.697e-09 3.635e-09 0.983 DIFFER
+   1e+08 0.3 2 4 | 06d: 1.241e-07 1.241e-07 1 identical | 06e: 3.618e-09 3.618e-09 1 identical
+   1e+08 0.3 2 6 | 06d: 2.235e-07 1.001e-07 0.448 DIFFER | 06e: 4.057e-09 4.056e-09 1 DIFFER
+   1e+08 0.3 3 4 | 06d: 9.718e-08 9.672e-08 0.995 DIFFER | 06e: 3.662e-09 3.662e-09 1 identical
+   1e+08 0.3 3 6 | 06d: 1.670e-07 8.137e-08 0.487 DIFFER | 06e: 4.537e-09 4.537e-09 1 DIFFER
+
+problems 72; calls that differ across the bypass: 06d 18, 06e 19; premise abserr at most half the bypass's: 06d 12, 06e 0
+06e fallback regions with both halves solved: 3214; premise ratio (halves' floors / own) min 0.0829, median 1.012, max 11.71; below 1/2: 481
