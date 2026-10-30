@@ -33,6 +33,8 @@ first. §2's reference and its $\omega$ are settled by the user. **Amended again
 §2 stopped on its rule (§9 point 6):** 06c, global error control, lands first; the rehearsals
 become R19 and R20, and §6's "before" is 06c's census. **And again (§9 point 7):** 06d, a
 round-off floor for the Clenshaw–Curtis rule, lands before 06c's Part B and before §2 is re-run.
+**And again (§9 point 8):** 06e, exact end nodes and a tighter node term, lands first; window
+leaves get QUADPACK's rule, written after §2 is re-run on 06e; the rehearsals become R21 and R22.
 
 **Read first:**
 1. The board's §3 entry `[06-levin-accepts-a-region-across-a-stationary-point]`, with its 06a
@@ -642,3 +644,43 @@ differ, this section holds.**
      LiouvilleGreen draws. The tables of the second and third stops stay in the records.
    - **The rehearsals stay R19 and R20.** §6's "before" is 06c's census, which runs on 06c's and
      06d's code together.
+8. **06e runs first, and window leaves get QUADPACK's rule** (the board's Decisions, **07 fourth
+   stop**). Rebased onto 06d, Part A stopped a fourth time: §2 could not complete. Window leaves,
+   never floor-limited under point 6, carry an error flat in depth (06d's node term, or on
+   LiouvilleGreen seed 0's call 15 the caller's `theta_abserr`, 4.55e-12 against a request of
+   2.59e-12) and are chased to `depth_max`; outside the windows, Levin leaves with a residual flat in
+   $h$ are chased too. A leaf study found the common cause in the rounding of $x$: the Chebyshev
+   end nodes miss the span by an ulp (`[06c-chebyshev-end-nodes-miss-the-span]`), and 06d's node
+   term is a worst case (`[06d-cc-node-term-is-pessimistic]`). That is
+   [`06e-exact-end-nodes.md`](06e-exact-end-nodes.md). The user, on a stopping rule for leaves whose
+   error does not fall, after pinning left 07's window leaves as its only cases: *"Let's go for
+   (b)"*, that is, it belongs here.
+   - **§1's uncommitted work,** rebased onto 06d, is set aside before 06e runs, and rebased onto
+     06e afterwards: a deviation, `STRUCTURALLY REQUIRED`.
+   - **§2 is re-run on 06e's code and §1 together, up to its planned stop,** with the 20
+     LiouvilleGreen draws. The report adds, for every call that does not finish or reaches
+     `depth_max`: which leaves hold the unmet error, inside a window or outside, and that error's
+     sequence over depth.
+   - **Point 6's "never floor-limited" is replaced by a QUADPACK-style rule** for window leaves (and
+     guarded regions): a leaf whose error bisection leaves flat is declared round-off-limited and
+     stops being refinable, declaring what it carries; the round-off-limited exit of 06b stays
+     barred there. **The rule's form, its constants and the regime in which it could fire falsely
+     are written as a further amendment after §2's re-run**, from the cases that run measures, and
+     shown to the user before any test is written. Its basis is QUADPACK's own: `dqage`'s `iroff1`
+     counts a bisection whose halves change the value by at most $10^{-5}$ relatively while their
+     summed error is at least 0.99 of the parent's, and gives `ier = 2` at 6 such; `iroff2` counts
+     a rise in error after 10 subintervals and gives up at 20 (`dqagse`: `iroff1 + iroff2` ≥ 10, or
+     `iroff3` ≥ 20). QUADPACK stops the whole call; it does not mark a leaf, so the adaptation is
+     the amendment's to justify. Its thresholds start at the generous end.
+   - **The rehearsals are renamed again.** 06e takes R19 and R20. §5's rehearsals are **R21** (at
+     the code commit's parent, which now carries 06e's code) and **R22**, with slugs `r21-parent`
+     and `r22-guard`. Both fingerprints must still equal `1b332ffa…`.
+   - **§6's "before" is 06e's census,** not 06c's: point 5 holds with 06e's code commit, 06e's
+     census and its harness copy in place of 06b's.
+   - **Y1's rows are scored.** 06c §4's Y1 failed worst on 12 equilateral rows, each holding the
+     stationary point of `G+q+r` at $z \approx 10211$ that §5 item 4 locates in P1's row. On each,
+     06b's code or 06c's reported converged while wrong by $4.5\times10^3$–$1.6\times10^6$× its
+     declared error. Their references were computed for 06c's Part B
+     (`y1-references/`, in 06c's records). **§5 adds Y1′:** on R22, every one of the 12 rows has
+     $|{\rm total} - {\rm ref}| \le$ `total_abserr`. **Holds** if no row violates it. A violation
+     is a finding for the user, not by itself a stop.
