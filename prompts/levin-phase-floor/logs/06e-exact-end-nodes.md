@@ -22,7 +22,8 @@
 - No Ray was started, no run was registered, no store was opened, and nothing was written under
   `var/`.
 
-**Commit:** the code commit (this log's own; hash in the board's 06e row once pushed). Not pushed.
+**Commit:** `f4d8e17`, reviewed by the orchestrator and pushed 2026-10-30, landed by the user
+(the board's Decisions, **06e lands**).
 
 **Result:** `chebyshev_matrices` returns the endpoints exactly as its end nodes, so every solve
 integrates its own region and every region tiles with its halves; the Clenshaw–Curtis node term is
