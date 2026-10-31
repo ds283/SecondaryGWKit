@@ -194,6 +194,37 @@ stationary-point rows" are 06a's 720 (`spscan.py`).
     permission, and declining it is the smaller change; but it departs from the prompt's "become".
     The orchestrator may prefer to tighten them, or to have them measure `theta_mod_2pi`, which would
     be a change of a kind the prompt does not allow. **IMPLEMENTATION CHOICE** — for the orchestrator.
+
+    **Ruled 2026-10-31, after the orchestrator's review of `7172a8f`.** The orchestrator recommended
+    separating the two questions the old tests mixed: (1) whether the $Kx + C + R$ restructure beats
+    the legacy three-raw-phase route, which can only be compared on the raw single-double `theta`
+    and whose bound rightly keeps its one rounding of $Kx$; and (2) whether `theta_abserr` is an
+    honest declaration, which must be tested on `theta_mod_2pi`, the phase it declares. The user:
+    *"That recommendation sounds OK. Let's do that."* — and, on how to weigh it: *"I really don't
+    like these narrow legalistic readings of what prompts 'allow'. We are trying to produce a code
+    that does the right thing for the right reason. ... If the prompt doesn't allow the right
+    answer, the prompt is wrong."* Done in a follow-up commit on top of `7172a8f`:
+    - in both tests the raw-`theta` assertion, its `+ 2 EPS |K| x` term and the before/after
+      measurement are kept, and described as a check on the plain-double phase, which still rounds
+      $Kx$ and which the driver never evaluates when `theta_mod_2pi` and `theta_deriv` are supplied;
+    - at every point both tests already sample, a new assertion
+      $|\texttt{theta\_mod\_2pi} - \Theta| \le \texttt{theta\_abserr}$ alone, as angles modulo
+      $2\pi$ against the unrounded mpmath reference (each reference helper gains `as_mpf`: a double
+      holding a phase of $10^{11}$ rad is itself off by up to $7.6\times10^{-6}$). The reference is at
+      the evaluated $\hat x$, so the abscissa term is slack there and the constituents and
+      $\phi_{\rm eval}$ are what is exercised; a comment says so;
+    - in `test_the_bounded_angle_is_the_angle_of_the_group_not_a_sum_of_angles`, the generic case's
+      `worst_new <= worst_old` is replaced by a per-point bound on the new route's (sin, cos) error,
+      derived from the declaration: $|s - \sin\Theta| \le |\rho - 1| + |\phi - \Theta|$ with
+      $|\phi - \Theta| \le$ constituents + $\phi_{\rm eval}$, $|\rho - 1| \le 12u$ (the angle
+      addition's radial error, derived as its tangential one is) and $u$ for rounding the reference's
+      sin and cos. It is asserted in every case; the cancelling cases keep their gain assertions;
+    - the docstrings and comments that called the declared bound "the assertion that matters" or
+      the $Kx$ rounding one "no double-valued phase of that size can avoid" are corrected, and
+      `test_the_four_groups_reconstruct_the_triple_product`'s docstring, which attributed its
+      $4\,\varepsilon\max_i|K_i|x$ bound to the groups' product floor, now attributes it to the
+      direct side's rounded arguments ${\rm fl}(m_i x)$ (its bound unchanged).
+    Numbers are under Verification, test 9. The deviation is resolved.
 11. **The test cells add one:** "three non-zero residuals", orders $(5/2, 7/2, 3/2)$ (J231's) at
     $(1.3, 1.7, 2.1)$, signs $(+,-,-)$, since every listed cell has an order-1/2 factor whose residual
     is identically zero, leaving two terms in $R$ (where `sum()` and a plain sum agree). The
@@ -371,6 +402,24 @@ $2.66\times10^{-15}$ (the constituents' sum, asserted to $10^{-18}$) under the p
 $2.79\times10^{-10}$ under 06h, almost all the abscissa term ($\varepsilon_{\exp}|\hat K|\hat x$,
 $|\hat K|\hat x = 1.25\times10^6$); the test now rebuilds each of the three parts. The product-floor
 bounds are unchanged (deviation 10). No convergence assertion moved.
+
+After the ruling on deviation 10 (the follow-up commit), worst measured/bound, parent → 06h. The
+parent's numbers are scored by putting the dispatch commit's module in place of the working tree's,
+its declaration being the constituents' sum and its $\phi_{\rm eval}$ zero:
+
+| assertion | case | parent | 06h |
+|---|---|---|---|
+| `test_three_bessel` cancellation test, raw `theta` ≤ `theta_abserr` + 2 eps\|K\|x (kept) | $K=0$ / $10^{-6}$ / $10^{-10}$ / generic | 0.4812 / 0.4845 / 0.4812 / 0.4594 | 0.442 / 0.442 / 0.442 / 0.3873 |
+| same test, **new**: `theta_mod_2pi` ≤ `theta_abserr` | $K=0$ / $10^{-6}$ / $10^{-10}$ / generic | 0.480 / 0.4796 / 0.4788 / **$2.41\times10^9$** (33 of 41 points violate) | 0.441 / 0.4406 / 0.4398 / 0.4113 |
+| bounded-angle test, **new** per-point (sin, cos) bound (replaces generic new ≤ old) | $K=0$ / $10^{-6}$ / $10^{-10}$ / generic | 0.4684 / 0.4684 / 0.4684 / **$1.45\times10^9$** | 0.4312 / 0.4312 / 0.4312 / 0.3147 |
+| `TestThreeBesselPhaseGroups`, raw `theta` ≤ `theta_abserr` + 2 eps\|K\|η (kept) | near-resonant / generic | 0.4877 / 0.4895 | 0.4677 / 0.3752 |
+| same test, **new**: `theta_mod_2pi` ≤ `theta_abserr` | near-resonant / generic | 0.4876 / **$2.58\times10^6$** (23 of 31 violate) | 0.4676 / 0.4135 |
+
+The replaced generic assertion: 06h's pair error $1.41\times10^{-13}$ against the summed route's
+$1.49\times10^{-5}$ (the old assertion asked only new ≤ old). `test_the_four_groups_reconstruct_the_triple_product`
+(docstring only): worst $|{\rm direct} - {\rm groups}|$ $1.25\times10^{-4}$ (0.056 of the bound) at the
+parent, $3.00\times10^{-5}$ (0.033) under 06h. LiouvilleGreen 156 (1 skipped) and ComputeTargets 780,
+both OK and unchanged; no test method was added.
 
 **`black`** on `three_bessel_integrals.py`, `bessel_phase.py`, `test_group_phase_rounding.py` and
 `test_three_bessel.py`; the calibration scripts are left unformatted, as §3 says.

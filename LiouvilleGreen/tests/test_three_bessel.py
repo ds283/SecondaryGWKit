@@ -231,9 +231,14 @@ def _mpmath_theta_and_deriv(nu: float, argument, mpmath):
     return argument + c_nu + r, (2 / mpmath.pi) / (argument * (J * J + Y * Y))
 
 
-def _group_reference(orders, coefficients, signs, x):
+def _group_reference(orders, coefficients, signs, x, as_mpf=False):
     """
     ``(Theta(x), dTheta/dlog x)`` as doubles, from 60-digit ``mpmath`` at the exact products.
+
+    With ``as_mpf`` they are returned as ``mpmath`` numbers instead. A double holding a phase of
+    size ``|K| x`` is itself rounded by up to half an ulp of it -- 7.6e-6 rad at 1e11 -- so a
+    bounded angle (``theta_mod_2pi``) or a (sin, cos) pair must be scored against the unrounded
+    reference, reduced modulo 2 pi in ``mpmath``.
 
     ``dTheta/dlog x = sum_i e_i (m_i x) theta_i'(m_i x)``, formed without restructuring: at 60
     digits the cancellation of the leading terms costs a dozen digits out of sixty, so the
@@ -251,7 +256,18 @@ def _group_reference(orders, coefficients, signs, x):
             theta = theta + sign * value
             theta_log_deriv = theta_log_deriv + sign * argument * deriv
 
+        if as_mpf:
+            return theta, theta_log_deriv
         return float(theta), float(theta_log_deriv)
+
+
+def _angle_difference(angle, reference, mpmath):
+    """``angle - reference`` reduced into (-pi, pi], in ``mpmath`` at REFERENCE_DPS: the error of
+    a bounded double angle against an unrounded reference phase, as angles modulo 2 pi.
+    """
+    with mpmath.workdps(REFERENCE_DPS):
+        d = mpmath.mpf(float(angle)) - reference
+        return float(d - 2 * mpmath.pi * mpmath.nint(d / (2 * mpmath.pi)))
 
 
 def _legacy_group_theta(phases, coefficients, signs):
@@ -323,11 +339,21 @@ class TestPhaseGroups(unittest.TestCase):
         """
         |delta Theta| for exact, near and absent cancellation, against the route this replaced.
 
-        The assertion that matters is the *declaration*: the group's own theta_abserr, plus the
-        one rounding of the product K x that no double-valued phase of that size can avoid, must
-        bound the measured error at every point. The before/after ratio is measured and printed
+        Two questions, asserted separately (prompts/levin-phase-floor/06h, deviation 10, on the
+        user's ruling).
+
+        (1) **Does the K x + C + R restructure beat the legacy three-raw-phase route?** That can
+        only be compared on the raw single-double phase :meth:`theta`, the one thing the legacy
+        route has. ``theta`` still rounds K x into one double, and the Levin driver never evaluates
+        it when "theta_mod_2pi" and "theta_deriv" are supplied, so its bound rightly keeps that one
+        rounding: theta_abserr plus 2 eps |K| x. The before/after ratio is measured and printed
         rather than being the only claim -- DRAFT-PLAN.md 8.2's restructure is justified by an
         argument, and this is the number that makes it a measurement.
+
+        (2) **Is theta_abserr an honest declaration?** That is tested on :meth:`theta_mod_2pi`, the
+        phase it declares the error of and the one the driver integrates: at every point,
+        |theta_mod_2pi - Theta| <= theta_abserr alone, as angles modulo 2 pi. Since 06h,
+        ``sin_cos`` carries the rounding of K x exactly, so no product term is added.
         """
         for label, coefficients in GROUP_CASES.items():
             with self.subTest(case=label):
@@ -337,19 +363,24 @@ class TestPhaseGroups(unittest.TestCase):
                     phases, coefficients, GROUP_SIGNS
                 )
 
-                worst_new = worst_old = worst_ratio = 0.0
+                import mpmath
+
+                worst_new = worst_old = worst_ratio = worst_mod_ratio = 0.0
                 at_new = at_old = 0.0
                 for x in grid:
                     log_x = math.log(x)
                     x_used = math.exp(log_x)
-                    reference, _ = _group_reference(
-                        GROUP_ORDERS, coefficients, GROUP_SIGNS, x_used
+                    reference_mp, _ = _group_reference(
+                        GROUP_ORDERS, coefficients, GROUP_SIGNS, x_used, as_mpf=True
                     )
+                    reference = float(reference_mp)
 
                     new_error = abs(group.theta(log_x) - reference)
                     old_error = abs(legacy_theta(log_x) - reference)
 
-                    # the declared error of the group, plus one rounding of K x
+                    # (1) the raw single-double theta: the group's declaration plus the one
+                    # rounding of K x that a phase held in one double carries. Not the phase the
+                    # driver integrates.
                     bound = (
                         group.theta_abserr(log_x) + 2.0 * EPS * abs(group.K) * x_used
                     )
@@ -364,6 +395,29 @@ class TestPhaseGroups(unittest.TestCase):
                     )
 
                     worst_ratio = max(worst_ratio, new_error / bound)
+
+                    # (2) the declaration, on the phase it declares: theta_mod_2pi against the
+                    # reference, theta_abserr alone. The reference is at x_used = fl(exp(log_x)),
+                    # the abscissa the group evaluates at, so the declaration's abscissa term,
+                    # eps_exp |dTheta/dlog x| (the rounding of exp), is not exercised here and is
+                    # slack; the constituents' declarations and phi_eval are what is tested.
+                    # LiouvilleGreen/tests/test_group_phase_rounding.py scores the abscissa term
+                    # against the exact e^u.
+                    declared = group.theta_abserr(log_x)
+                    mod_error = abs(
+                        _angle_difference(
+                            group.theta_mod_2pi(log_x), reference_mp, mpmath
+                        )
+                    )
+                    self.assertLessEqual(
+                        mod_error,
+                        declared,
+                        msg=(
+                            f"{label}: |theta_mod_2pi - Theta| = {mod_error:.6e} at x = "
+                            f"{x_used:.6e} exceeds theta_abserr {declared:.6e}"
+                        ),
+                    )
+                    worst_mod_ratio = max(worst_mod_ratio, mod_error / declared)
                     if new_error > worst_new:
                         worst_new, at_new = new_error, x_used
                     if old_error > worst_old:
@@ -374,13 +428,15 @@ class TestPhaseGroups(unittest.TestCase):
                     f"   |delta Theta| new {worst_new:.4e} (x={at_new:.5g}), "
                     f"old {worst_old:.4e} (x={at_old:.5g}), "
                     f"ratio old/new {worst_old / worst_new:.4g}; "
-                    f"worst error/declared-bound {worst_ratio:.4g}"
+                    f"worst error/declared-bound {worst_ratio:.4g}; theta_mod_2pi worst "
+                    f"error/theta_abserr {worst_mod_ratio:.4g}"
                 )
 
                 if label == "generic":
-                    # no cancellation to preserve: the group phase is genuinely ~1e11 rad, and
-                    # both routes sit at one ulp of it. Pin the floor model rather than claim an
-                    # improvement -- see [07-generic-K-product-rounding].
+                    # no cancellation to preserve: the raw group phase is genuinely ~1e11 rad, and
+                    # both routes' single-double values sit at one ulp of it. Pin that floor model
+                    # for the raw value rather than claim an improvement -- see
+                    # [07-generic-K-product-rounding]. theta_mod_2pi does not carry it (06h).
                     self.assertLessEqual(
                         worst_new, 4.0 * EPS * abs(group.K) * GROUP_X_MAX
                     )
@@ -486,6 +542,21 @@ class TestPhaseGroups(unittest.TestCase):
 
         This is the metric a Levin consumer actually sees: ``theta_mod_2pi`` reaches it only
         through sin and cos (levin_quadrature.py:1103-1105, :1120-1121).
+
+        **The bound on the new route's pair, at every point, derived from the declaration**
+        (prompts/levin-phase-floor/06h; it replaces a "generic" assertion of new <= old, written
+        when both routes sat at the product floor that 06h removed from ``sin_cos``). Write the
+        computed pair as (s, c) = rho (sin phi, cos phi), phi = atan2(s, c) exactly. Then
+        |s - sin Theta| <= |rho - 1| + |phi - Theta|, and the same for c, with:
+        - |phi - Theta| <= the constituents' declarations + phi_eval, the bound
+          test_group_phase_rounding's test 1 asserts on the same quantity (the reference is at the
+          evaluated x, so the declaration's abscissa term is not needed);
+        - |rho - 1| <= |(delta s, delta c)| <= 4 eps_t + 2 sqrt(2) u, the angle addition's error
+          with sin and cos at two ulps, the same bound three_bessel_integrals'
+          _ANGLE_ADDITION_PHASE_ERR derives for its tangential part, here for the radial one;
+        - plus u for rounding the reference's sin and cos to doubles.
+        The reference is the unrounded mpmath phase: a double holding a phase of ~1e11 rad would
+        itself be off by up to 7.6e-6.
         """
         for label, coefficients in GROUP_CASES.items():
             with self.subTest(case=label):
@@ -497,19 +568,39 @@ class TestPhaseGroups(unittest.TestCase):
                     phases, coefficients, GROUP_SIGNS
                 )
 
-                worst_new = worst_old = 0.0
+                worst_new = worst_old = worst_pair_ratio = 0.0
                 for x in grid:
                     log_x = math.log(x)
                     x_used = math.exp(log_x)
-                    reference, _ = _group_reference(
-                        GROUP_ORDERS, coefficients, GROUP_SIGNS, x_used
+                    reference_mp, _ = _group_reference(
+                        GROUP_ORDERS, coefficients, GROUP_SIGNS, x_used, as_mpf=True
                     )
                     with mpmath.workdps(REFERENCE_DPS):
-                        reference_mp = mpmath.mpf(reference)
                         sin_reference = float(mpmath.sin(reference_mp))
                         cos_reference = float(mpmath.cos(reference_mp))
 
                     sin_new, cos_new = group.sin_cos(log_x)
+                    constituents, _, phi_eval = group._declared_error_parts(log_x)
+                    pair_bound = (
+                        constituents
+                        + phi_eval
+                        + three_bessel_module._ANGLE_ADDITION_PHASE_ERR
+                        + EPS / 2.0
+                    )
+                    pair_error = max(
+                        abs(sin_new - sin_reference), abs(cos_new - cos_reference)
+                    )
+                    self.assertLessEqual(
+                        pair_error,
+                        pair_bound,
+                        msg=(
+                            f"{label}: (sin, cos) error {pair_error:.6e} at x = {x_used:.6e} "
+                            f"exceeds the declared bound {pair_bound:.6e} (constituents "
+                            f"{constituents:.6e} + phi_eval {phi_eval:.6e} + radial and "
+                            f"reference rounding)"
+                        ),
+                    )
+                    worst_pair_ratio = max(worst_pair_ratio, pair_error / pair_bound)
                     legacy_angle = legacy_mod(log_x)
                     worst_new = max(
                         worst_new,
@@ -530,11 +621,12 @@ class TestPhaseGroups(unittest.TestCase):
 
                 print(
                     f"\n@@ group (sin, cos), {label}: new {worst_new:.4e}, old {worst_old:.4e}, "
-                    f"ratio old/new {worst_old / worst_new:.4g}"
+                    f"ratio old/new {worst_old / worst_new:.4g}; new worst error/declared "
+                    f"bound {worst_pair_ratio:.4g}"
                 )
-                if label == "generic":
-                    self.assertLessEqual(worst_new, worst_old)
-                else:
+                if label != "generic":
+                    # the cancellation gain over the summed-angle route; the generic case has no
+                    # cancellation to gain from, and is held by the declared bound above
                     self.assertLess(worst_new, 1.0e-9)
                     self.assertLess(worst_new, worst_old / 1.0e5)
 
@@ -555,12 +647,16 @@ class TestPhaseGroups(unittest.TestCase):
         a slip in ``e_nu``/``e_sigma``, in a combination sign, or in the ``J = A sin theta`` /
         ``Y = -A cos theta`` convention cannot hide.
 
-        The identity is checked against ``4 eps max_i |K_i| x`` rather than against a constant:
-        the ``(+, +)`` group has ``K = k + q + s``, so its phase is ~4e12 rad at the top of the
-        grid and one ulp of it is 1e-3. That floor is the subject of
-        [07-generic-K-product-rounding] and is not what this test is about, so the bound carries it
-        explicitly and the strict part of the test is at the bottom of the grid, where a sign slip
-        would have nowhere to hide.
+        The identity is checked against ``4 eps max_i |K_i| x`` rather than against a constant.
+        Until prompts/levin-phase-floor/06h that was the group side's floor: the ``(+, +)`` group
+        has ``K = k + q + s``, so its phase is ~4e12 rad at the top of the grid, and ``sin_cos``
+        rounded it to one ulp, 1e-3 ([07-generic-K-product-rounding]). Since 06h ``sin_cos``
+        carries that rounding exactly, and the floor that remains is on the *direct* side: each
+        factor's ``sin_cos_theta`` is handed the double ``fl(m_i x)``, up to ``u m_i x`` from the
+        exact product the groups use, so the triple product's phase is off by up to
+        ``u (k + q + s) x = u max_i |K_i| x``. That is not what this test is about, so the bound
+        carries it explicitly (with a generous factor) and the strict part of the test is at the
+        bottom of the grid, where a sign slip would have nowhere to hide.
         """
         coefficients = (2.1, 1.5, 0.5)
         phases, grid = self._build(coefficients)

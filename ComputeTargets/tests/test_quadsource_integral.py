@@ -1765,9 +1765,13 @@ def _phase_group_coefficients():
     }
 
 
-def _phase_group_reference(coefficients, eta):
+def _phase_group_reference(coefficients, eta, as_mpf=False):
     """
     ``(Theta(eta), dTheta/dlog eta)`` as doubles, from 60-digit mpmath at the exact products.
+
+    With ``as_mpf`` they are returned as mpmath numbers instead: a bounded angle
+    (``theta_mod_2pi``) must be scored against the unrounded phase reduced modulo 2 pi in mpmath,
+    since a double holding a phase of size |K| eta is itself rounded by up to half an ulp of it.
 
     ``theta = y + c_nu + r`` with ``r`` the principal value of ``atan2(J, -Y) - (y + c_nu)``;
     ``theta' = (2/pi)/(y (J^2 + Y^2))`` is the exact Wronskian oracle, and
@@ -1800,6 +1804,8 @@ def _phase_group_reference(coefficients, eta):
             theta = theta + sign * (y + c_nu + residual)
             theta_log_deriv = theta_log_deriv + sign * (2 / mpmath.pi) / (J * J + Y * Y)
 
+        if as_mpf:
+            return theta, theta_log_deriv
         return float(theta), float(theta_log_deriv)
 
 
@@ -1941,10 +1947,21 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
         would be a bug in the test even where it happened to pass. See
         test_the_group_derivative_has_no_relative_scale_at_resonance.
 
-        The generic group carries no cancellation for the restructure to preserve, and what it is
-        asserted against is the floor model rather than a gain: each route is at one rounding of
-        its own leading scale. prompts/transfer-remedial's [07-generic-K-product-rounding]
-        measured 1.5e-5 rad for *both* routes at K = 0.1, x = 1e12, where K/max = 0.048; at this
+        Two questions are asserted separately (prompts/levin-phase-floor/06h, deviation 10, on the
+        user's ruling). (1) Whether the restructure beats the summed route is measured on the raw
+        single-double phase ``theta``, the one thing the summed route has; ``theta`` still rounds
+        K eta into one double, and the Levin driver never evaluates it when "theta_mod_2pi" and
+        "theta_deriv" are supplied, so its bound keeps that one rounding (theta_abserr plus
+        2 eps |K| eta). (2) Whether theta_abserr is an honest declaration is tested on
+        ``theta_mod_2pi``, the phase it declares: |theta_mod_2pi - Theta| <= theta_abserr alone at
+        every point, as angles modulo 2 pi. Since 06h, ``sin_cos`` carries the rounding of K eta
+        exactly.
+
+        On the raw value, the generic group carries no cancellation for the restructure to
+        preserve, and what it is asserted against is the floor model rather than a gain: each
+        route's single double is at one rounding of its own leading scale.
+        prompts/transfer-remedial's [07-generic-K-product-rounding] measured 1.5e-5 rad for
+        *both* routes at K = 0.1, x = 1e12, where K/max = 0.048; at this
         call site's K/max = 0.27 the two floors differ by max/|K| rather than coinciding, so the
         ratio is ~16 in the phase and 1.00 in the derivative. Neither number is the cancellation
         gain, which is three to four orders larger.
@@ -1970,14 +1987,18 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
                 }
                 at = dict(worst)
                 worst_scaled_new = worst_scaled_old = 0.0
-                worst_over_bound = 0.0
+                worst_over_bound = worst_mod_over_declared = 0.0
+
+                import mpmath
 
                 for eta in grid:
                     log_eta = float(np.log(eta))
                     eta_used = float(np.exp(log_eta))
-                    reference, reference_deriv = _phase_group_reference(
-                        coefficients, eta_used
+                    reference_mp, reference_deriv_mp = _phase_group_reference(
+                        coefficients, eta_used, as_mpf=True
                     )
+                    reference = float(reference_mp)
+                    reference_deriv = float(reference_deriv_mp)
                     scale = scale_coefficient * eta_used
 
                     errors = {
@@ -1997,8 +2018,9 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
                         worst_scaled_old, errors["deriv_old"] / scale
                     )
 
-                    # the group's own declaration, plus the one rounding of the product K eta that
-                    # no double-valued phase of that size can avoid
+                    # (1) the raw single-double theta: the group's declaration plus the one rounding
+                    # of K eta that a phase held in one double carries. Not the phase the driver
+                    # integrates.
                     bound = (
                         group.theta_abserr(log_eta)
                         + 2.0 * EPS * abs(group.K) * eta_used
@@ -2017,12 +2039,45 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
                         worst_over_bound, errors["theta_new"] / bound
                     )
 
+                    # (2) the declaration, on the phase it declares: theta_mod_2pi against the
+                    # unrounded reference modulo 2 pi, theta_abserr alone. The reference is at
+                    # eta_used = fl(exp(log_eta)), the abscissa the group evaluates at, so the
+                    # declaration's abscissa term (eps_exp |dTheta/dlog eta|, the rounding of exp)
+                    # is slack here, and what is tested is the constituents' declarations and
+                    # phi_eval; LiouvilleGreen/tests/test_group_phase_rounding.py scores the
+                    # abscissa term against the exact e^u.
+                    declared = group.theta_abserr(log_eta)
+                    with mpmath.workdps(PHASE_GROUP_DPS):
+                        difference = (
+                            mpmath.mpf(group.theta_mod_2pi(log_eta)) - reference_mp
+                        )
+                        mod_error = abs(
+                            float(
+                                difference
+                                - 2
+                                * mpmath.pi
+                                * mpmath.nint(difference / (2 * mpmath.pi))
+                            )
+                        )
+                    self.assertLessEqual(
+                        mod_error,
+                        declared,
+                        msg=(
+                            f"{label}: |theta_mod_2pi - Theta| = {mod_error:.6e} at eta = "
+                            f"{eta_used:.6e} exceeds theta_abserr {declared:.6e}"
+                        ),
+                    )
+                    worst_mod_over_declared = max(
+                        worst_mod_over_declared, mod_error / declared
+                    )
+
                 print(
                     f"\n@@ QSI group ({label}): K={group.K!r}, |K|/max={abs(group.K) / scale_coefficient:.3e}\n"
                     f"   |delta Theta|              new {worst['theta_new']:.4e} (eta={at['theta_new']:.5g}), "
                     f"old {worst['theta_old']:.4e} (eta={at['theta_old']:.5g}), "
                     f"ratio old/new {worst['theta_old'] / worst['theta_new']:.4g}; "
-                    f"worst error/declared-bound {worst_over_bound:.4g}\n"
+                    f"worst error/declared-bound {worst_over_bound:.4g}; theta_mod_2pi worst "
+                    f"error/theta_abserr {worst_mod_over_declared:.4g}\n"
                     f"   |delta dTheta/dlog eta|    new {worst['deriv_new']:.4e} (eta={at['deriv_new']:.5g}), "
                     f"old {worst['deriv_old']:.4e} (eta={at['deriv_old']:.5g}), "
                     f"ratio old/new {worst['deriv_old'] / worst['deriv_new']:.4g}\n"
@@ -2034,8 +2089,9 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
                 self.assertLess(worst_scaled_new, 1.0e-11)
 
                 if label == "generic":
-                    # There is no cancellation to preserve here, so what is asserted is the floor
-                    # *model*, not a gain: each route is at one rounding of its own leading scale,
+                    # There is no cancellation to preserve here, so what is asserted on the raw
+                    # single-double theta is the floor *model*, not a gain (theta_mod_2pi does not
+                    # carry this floor since 06h): each route is at one rounding of its own scale,
                     # eps |K| eta for the group and eps max(m_i) eta for the sum of raw phases, and
                     # the measured ratio is therefore just max / |K| = 3.7 times the three-term
                     # summation. Measured it is ~16 in the phase and 1.00 in the derivative. That
