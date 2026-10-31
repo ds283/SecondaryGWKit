@@ -17,8 +17,12 @@ were left out of this directory as 06b's were: every pickle, every file over 2 M
 Prompt 06e's §5 and 07's §6 compare against it. Its `checkpoint.jsonl` has SHA-256
 `b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7`.
 
-**The rehearsal stores** `var/datastores/levin-phase-floor-06c-r17*` and `-r18*` are kept until the
-user says otherwise; their SHA-256 are in `rehearsal/state/` in this directory. The run directories
+**The rehearsal stores** `var/datastores/levin-phase-floor-06c-r17*` and `-r18*` were kept until
+the user retired them on 2026-10-31 (`runregistrykit store retire`, after sidecars and
+fingerprints, `1b332ffa…`, were written from the worktree at `e5764a6`). Their sidecars, which
+record the retirement, stay in `var/datastores/`; their SHA-256 are in `rehearsal/state/` in this
+directory. The worktrees `SecondaryGWKit-lpf06c-e5764a6` and `-fef401c` were removed the same day.
+The run directories
 `levin-phase-floor-06c-r17-parent-20261029T123720` and
 `levin-phase-floor-06c-r18-global-20261029T124058` stay in `var/runs/`.
 
