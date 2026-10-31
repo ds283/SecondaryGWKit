@@ -1,0 +1,72 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/draw_sample_06f.py out/sample
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T20:36:38Z
+# ----
+# levin-phase-floor 06f: the population and the seeded samples
+# written 2026-10-31T20:36:38Z on mps026298.phys.susx.ac.uk
+# script draw_sample_06f.py sha256 4994da3d715c6f46333dd3ada197c10a7008057627570fbcc9bd71d4fa7e2ff9
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 HEAD f4770d13f86674381b3a0ef48b7ba05f8dda4934 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# seed 20261031
+06a's stationary-point rows: 720 (must be 720: True)
+per call, largest floor term among (n+4)uS, argument, node, declared (06e's report: node 491 / 1323, declared 2493 / 2785):
+   1e-7: {'t_value_rounding': 2644, 'node_term': 491, 'declared': 2493}
+   1e-8: {'t_value_rounding': 3216, 'node_term': 1323, 'declared': 2785, 't_argument': 2}
+Z2's call: largest term node_term, n_cc_leaves 8600, reproduced_all True, in the 720 False
+M1 1e-7: node-dominated eligible 457, of them with n_cc_leaves >= 100: 4; ineligible node-dominated (in the 720 or not reproduced): 34
+M1 1e-8: node-dominated eligible 1194, of them with n_cc_leaves >= 100: 18; ineligible node-dominated (in the 720 or not reproduced): 128
+M2 1e-7: declared-dominated eligible 2086 by kind {'analytic': 2086}; by block analytic J1: 81, analytic J2: 198, analytic J3: 171, analytic J4: 568, analytic Y1: 91, analytic Y2: 328, analytic Y3: 294, analytic Y4: 355
+M2 1e-8: declared-dominated eligible 2307 by kind {'analytic': 2307}; by block analytic J1: 81, analytic J2: 200, analytic J3: 173, analytic J4: 649, analytic Y1: 91, analytic Y2: 333, analytic Y3: 297, analytic Y4: 483
+
+M1:
+       g-1e-8-0-33995 #5  group    n_cc  8600 depth 20 conv False | Z2 | k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z 
+       g-1e-7-1-34778 #2  group    n_cc   101 depth 10 conv True | M1 1e-7 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=33.165, z in 
+       g-1e-7-1-11219 #2  group    n_cc   133 depth 11 conv True | M1 1e-7 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=1.1019e+07, z
+       g-1e-7-1-11222 #2  group    n_cc   100 depth  9 conv True | M1 1e-7 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=3.6477e+06, z
+         g-1e-7-3-983 #0  group    n_cc   110 depth 10 conv True | M1 1e-7 n_cc>=100 | k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=1.5949e+09, z
+       g-1e-7-2-33027 #7  analytic n_cc     1 depth  0 conv True | M1 1e-7 n_cc<100 | analytic Y4
+       g-1e-7-0-10676 #0  group    n_cc     5 depth  3 conv True | M1 1e-7 n_cc<100 | k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=4.3993e+11
+       g-1e-7-1-20400 #3  analytic n_cc     1 depth  0 conv True | M1 1e-7 n_cc<100 | analytic Y2
+       g-1e-7-1-34595 #2  group    n_cc    65 depth  9 conv True | M1 1e-7 n_cc<100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=1205.3, z in 
+       g-1e-7-2-21842 #2  group    n_cc     8 depth  9 conv True | M1 1e-7 n_cc<100 | k=3.09e+06/Mpc, q=1e+05/Mpc, r=3.09e+06/Mpc @ z_response=5.2796e+08, z
+        g-1e-7-1-2049 #3  group    n_cc     9 depth 11 conv True | M1 1e-7 n_cc<100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=10.979, z in 
+       g-1e-8-1-11219 #2  group    n_cc   133 depth 11 conv True | M1 1e-8 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=1.1019e+07, z
+       g-1e-8-1-11140 #2  group    n_cc   107 depth 10 conv True | M1 1e-8 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=6.34e+06, z i
+       g-1e-8-1-34778 #2  group    n_cc   149 depth 11 conv True | M1 1e-8 n_cc>=100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=33.165, z in 
+       g-1e-8-0-14312 #5  group    n_cc   125 depth 12 conv True | M1 1e-8 n_cc>=100 | k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=6.3166, z in 
+       g-1e-8-3-34155 #4  group    n_cc   101 depth 13 conv True | M1 1e-8 n_cc>=100 | k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=3.032e+05, z 
+       g-1e-8-1-11201 #1  group    n_cc    56 depth  8 conv True | M1 1e-8 n_cc<100 | k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.5249e+07, z
+       g-1e-8-0-12762 #2  group    n_cc    43 depth 10 conv True | M1 1e-8 n_cc<100 | k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=6.9475e+05
+       g-1e-8-0-12727 #1  group    n_cc    28 depth  6 conv True | M1 1e-8 n_cc<100 | k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=9.1593e+05, z
+        g-1e-8-0-1989 #4  group    n_cc   103 depth 12 conv True | M1 1e-8 n_cc>=100 | k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=14.474, z in 
+        g-1e-8-2-1565 #2  group    n_cc    46 depth  8 conv True | M1 1e-8 n_cc<100 | k=3.09e+06/Mpc, q=3.14e+05/Mpc, r=3.09e+06/Mpc @ z_response=8342.9, z 
+M2:
+       g-1e-7-0-33555 #13 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic Y3
+       g-1e-7-1-10824 #12 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic Y2
+        g-1e-7-3-1054 #20 analytic n_cc     1 depth  1 conv True | M2 1e-7 analytic Y4
+       g-1e-7-2-21508 #15 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic J3
+       g-1e-7-2-33311 #12 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic Y1
+         g-1e-7-3-668 #8  analytic n_cc     2 depth  1 conv True | M2 1e-7 analytic J1
+       g-1e-7-1-10895 #12 analytic n_cc     2 depth  1 conv True | M2 1e-7 analytic J2
+       g-1e-7-0-12689 #19 analytic n_cc     1 depth  2 conv True | M2 1e-7 analytic J4
+         g-1e-7-3-657 #15 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic Y3
+       g-1e-7-2-21613 #14 analytic n_cc     1 depth  0 conv True | M2 1e-7 analytic Y2
+       g-1e-8-1-20297 #13 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic Y3
+       g-1e-8-2-33275 #11 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic Y2
+       g-1e-8-0-10589 #1  analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic Y1
+       g-1e-8-0-33586 #12 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic J3
+       g-1e-8-0-33609 #16 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic Y4
+       g-1e-8-0-33599 #8  analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic J1
+       g-1e-8-1-10740 #12 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic J2
+         g-1e-8-3-914 #16 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic J4
+       g-1e-8-1-20245 #13 analytic n_cc     2 depth  1 conv True | M2 1e-8 analytic Y3
+       g-1e-8-0-33532 #12 analytic n_cc     1 depth  0 conv True | M2 1e-8 analytic Y2
+
+wrote out/sample/sample.json sha256 b1cd4ee9dc0e3b8fd65a6590a6bf0dcbffe51de4bddb02e587e8966a8851094d
+wrote out/sample/selection.json sha256 2c654660c814056bd19090b565246c55703feeded176f96700bc197ca383567e (41 calls in 41 units)
+# ----
+# end 2026-10-31T20:36:46Z
+# exit 0

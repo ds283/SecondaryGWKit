@@ -1,0 +1,30 @@
+[
+ {
+  "unit": "g-1e-7-1-11222",
+  "index": 2,
+  "notify_label": "k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=3.6477e+06, z in (1.6711e+10, 1.709e+09), regime Gr, group G-r",
+  "census_value": "0x1.f1fb028665a10p-87",
+  "census_abserr": "0x1.9dbb9dc7df89ap-110",
+  "census_num_regions": 100,
+  "census_max_depth": 9,
+  "census_converged": true,
+  "sample": "M1",
+  "stratum": "M1 1e-7 n_cc>=100",
+  "kind": "group",
+  "n_cc_leaves": 100
+ },
+ {
+  "unit": "g-1e-8-1-20245",
+  "index": 13,
+  "notify_label": "analytic Y3",
+  "census_value": "-0x1.b4a2f0c8d6d82p-44",
+  "census_abserr": "0x1.a5daf8ddffbbfp-80",
+  "census_num_regions": 2,
+  "census_max_depth": 1,
+  "census_converged": true,
+  "sample": "M2",
+  "stratum": "M2 1e-8 analytic Y3",
+  "kind": "analytic",
+  "n_cc_leaves": 2
+ }
+]

@@ -1,0 +1,11 @@
+# scope check, 2026-10-31T21:09:27Z on mps026298.phys.susx.ac.uk
+## files newer than marker outside var/levin-phase-floor-06f/ and var/runs/levin-phase-floor-06f-*
+## dirs newer than marker outside allowed
+var/runs
+## var listing compare
+before 66760 after 67344
+gone 0
+changed 1
+  C var/levin-phase-floor-06f/review/preflight/var_files_before.txt.gz ('0', '1793478446.745742895') ('1127906', '1793478448.604721869')
+new 584 outside allowed 0
+[('levin-phase-floor-06f/state', 312), ('levin-phase-floor-06f/out', 189), ('levin-phase-floor-06f/scripts', 70), ('runs/levin-phase-floor-06f-measure-20261031T204803', 5), ('levin-phase-floor-06f/review', 4), ('levin-phase-floor-06f/issues.md', 1), ('levin-phase-floor-06f/KEPT_ON_MAC_STUDIO.txt', 1), ('levin-phase-floor-06f/log.md', 1), ('levin-phase-floor-06f/verification.md', 1)]

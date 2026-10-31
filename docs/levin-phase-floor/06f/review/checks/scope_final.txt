@@ -1,0 +1,23 @@
+# final scope 2026-10-31T21:21:27Z
+## worktree
+f4770d13f86674381b3a0ef48b7ba05f8dda4934
+## __pycache__ under worktree or 06f dir:
+## main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+## scratch copy
+identical to preflight
+handover-A3-v2-lambdacdm-shard0000.sqlite
+handover-A3-v2-lambdacdm-shard0001.sqlite
+handover-A3-v2-lambdacdm-shard0002.sqlite
+handover-A3-v2-lambdacdm-shard0003.sqlite
+handover-A3-v2-lambdacdm.sqlite
+## 06e checkpoint
+a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c  var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+## newer than marker outside 06f dir and 06f run:
+## registry
+36 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 36 finished; 0 with no host recorded.
+## lock/ray
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+## var/levin-phase-floor-07*:
+var/levin-phase-floor-07-leaves

@@ -1,0 +1,97 @@
+$ sh -c diff\ -ru\ state/scripts_06e_reference/census_scripts\ scripts\;\ echo\ \'==\ new\ in\ 06f:\'\;\ ls\ scripts\ \|\ while\ read\ f\;\ do\ \[\ -e\ state/scripts_06e_reference/census_scripts/\$f\ \]\ \|\|\ echo\ \$f\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T20:47:57Z
+# ----
+Only in scripts: draw_sample_06f.py
+Only in scripts: launch_06f.py
+Only in scripts: method_check_06f.py
+diff -ru state/scripts_06e_reference/census_scripts/prov.py scripts/prov.py
+--- state/scripts_06e_reference/census_scripts/prov.py	2026-10-31 20:18:08
++++ scripts/prov.py	2026-10-31 20:34:21
+@@ -1,4 +1,19 @@
+-"""levin-phase-floor prompt 06e section 5 (06c's census re-run at 06e's code, exact end nodes and
++"""levin-phase-floor prompt 06f section 1 (a measurement of two Clenshaw-Curtis floor terms on calls
++captured from 06e's census, on the Mac Studio): provenance shared by every script. Copied from
++prompt 06e's census ``scripts/prov.py`` (docs/levin-phase-floor/06e/census/scripts/prov.py, a
++record, not edited; its copy is kept unchanged in state/scripts_06e_reference/census_scripts/);
++changed here only in its tree and its paths, each change marked "prompt 06f":
++- one tree, ``g``, the detached worktree at 06f's dispatch SHA ``f4770d13``
++  (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1``), whose code is 06e's code commit
++  f4d8e17's (``git diff --stat f4d8e17 f4770d13`` outside docs/ and prompts/ shows CLAUDE.md
++  only); 06e's ``p`` and ``g`` worktrees are named below for the record and not used;
++- the scripts sit one directory shallower than 06e's (``var/levin-phase-floor-06f/scripts``), so
++  ``WIDER`` is ``var/levin-phase-floor-06f`` and the depth assertion is one level less;
++- 06e's census run, its records and its ``rows.json``, read only.
++
++(06e's text follows, unchanged.)
++
++levin-phase-floor prompt 06e section 5 (06c's census re-run at 06e's code, exact end nodes and
+ the measured node term, on the Mac Studio): provenance shared by every script. Copied from prompt
+ 06c's census ``scripts/prov.py`` (docs/levin-phase-floor/06c/census/scripts/prov.py, a record, not
+ edited; its copy is kept unchanged in state/scripts_06c_reference/); changed here only in its trees
+@@ -113,7 +128,7 @@
+ HERE = Path(__file__).resolve().parent
+ WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+-assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's
++assert HERE.parents[2] == MAIN, HERE  # prompt 06f: var/levin-phase-floor-06f/scripts (06b-06e: parents[3])
+ 
+ # prompt 06a: one tree, h, the worktree at the dispatch SHA (code = 06's s tree's, f5cee4c)
+ H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f")
+@@ -143,6 +158,18 @@
+ G_SHA = "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab"  # Part B's dispatch SHA; code = f4d8e17's
+ CODE_SHA_06E = "f4d8e17"  # 06e's code commit (short), for the record
+ TREES = {"p": (P_TREE, P_SHA), "g": (G_TREE, G_SHA)}  # prompt 06e
++# prompt 06f: 06e's trees are kept above, by name, for the record; the one tree of 06f section 1
++P06E_TREE, P06E_SHA = P_TREE, P_SHA  # 06e's parent tree (50277f3), not used
++G06E_TREE, G06E_SHA = G_TREE, G_SHA  # 06e's census tree (6d81fad), not used
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1")
++G_SHA = "f4770d13f86674381b3a0ef48b7ba05f8dda4934"  # 06f's dispatch SHA; code = f4d8e17's
++TREES = {"g": (G_TREE, G_SHA)}  # prompt 06f
++# prompt 06f: 06e's census run (the population) and its records, read only
++RUN06E = MAIN / "var" / "runs" / "levin-phase-floor-06e-census-20261030T081318"
++CHECKPOINT06E_SHA256 = "a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c"
++REC06E = MAIN / "var" / "levin-phase-floor-06e" / "census"
++ROWS06E = REC06E / "state" / "rows.json"
++ROWS06E_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+ 
+ # prompt 06e: 06c's census run (the "before") and records, read only
+ RUN06C = MAIN / "var" / "runs" / "levin-phase-floor-06c-census-20261029T130214"
+Only in scripts: replay06f.py
+Only in scripts: run_06f.py
+diff -ru state/scripts_06e_reference/census_scripts/x1_capture.py scripts/x1_capture.py
+--- state/scripts_06e_reference/census_scripts/x1_capture.py	2026-10-31 20:18:08
++++ scripts/x1_capture.py	2026-10-31 20:34:29
+@@ -1,4 +1,8 @@
+-"""levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
++"""levin-phase-floor prompt 06f section 1: copied from prompt 06e's census scripts/x1_capture.py (a record, not
++edited; its copy is in state/scripts_06e_reference/census_scripts/), changed only in ROWS_JSON, which is
++06e's census state/rows.json, read only; marked "prompt 06f". 06e's text follows.
++
++levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
+ run. New in 06c.
+ 
+ X1's 24 calls are known only once g has run ("moved" compares g with 06b), and capturing every
+@@ -33,10 +37,10 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+-from prov import PYTHON, TREES, WIDER, header, sha256  # noqa: E402
++from prov import PYTHON, ROWS06E, TREES, WIDER, header, sha256  # noqa: E402
+ 
+ BUDGET_S = 300.0
+-ROWS_JSON = WIDER / "state" / "rows.json"
++ROWS_JSON = ROWS06E  # prompt 06f: 06e's census rows.json, read only (06e: WIDER / "state" / "rows.json")
+ 
+ 
+ def main():
+== new in 06f:
+draw_sample_06f.py
+launch_06f.py
+method_check_06f.py
+replay06f.py
+run_06f.py
+# ----
+# end 2026-10-31T20:47:57Z
+# exit 0

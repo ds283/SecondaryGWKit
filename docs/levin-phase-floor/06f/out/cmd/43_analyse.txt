@@ -1,0 +1,176 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06f.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T21:02:56Z
+# ----
+# levin-phase-floor 06f: F0, M1, M2 and F1-F6
+# written 2026-10-31T21:02:56Z on mps026298.phys.susx.ac.uk
+# script analyse06f.py sha256 03df18d92a33c83495301d6227bddef552f5e563b478b98537b18a41d9456cc8
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 HEAD f4770d13f86674381b3a0ef48b7ba05f8dda4934 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/sample/sample.json sha256 b1cd4ee9dc0e3b8fd65a6590a6bf0dcbffe51de4bddb02e587e8966a8851094d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/capture.json sha256 2dc57c00c01c786c3ca830fee08d3c17ce8e644f253d4a7185e184c60a9c50c7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/cmd/31_method_check.txt sha256 0498c5c45ebc989037ed873f83bbbdef825ea929a57d250ffade2954f6487675
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-0-10676_0/result.json sha256 61e51b0bbc935726877ced7232ead02fb3d7934f2ff92ebaf49de2daef70f73e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-0-12689_19/result.json sha256 e40a86b5c0da7f80c0dd2e947dedbea50f51753a7c1be981a6678301cec2c7cf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-0-33555_13/result.json sha256 08255f1ce46d770bbbce9e8bd28f9f0174a4b867c9a9a84121b6f4e50ca5b071
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-10824_12/result.json sha256 c5a47d98308d79e6774e862ad6714cdae960a0c75696095b95ebcee29a109fb9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-10895_12/result.json sha256 d17ae0cd6831d869d3791e26fd51f4d96066bcebbd7d3f919cf3a9457fa046f4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-11219_2/result.json sha256 49b118262671a77f3605b3ae0723a39c2dd71879e0c96d9a1760ef0b24718c7b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-11222_2/result.json sha256 1980af0e0fd6d86037611651c456a11aae9394fbbaaea1ef057c806f401733ae
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-20400_3/result.json sha256 17da52455e2838aade9f345b3c23131c43f57ba6528f289ea647ff88cf4ce5c3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-2049_3/result.json sha256 23f1fa4ec4c2de58c3e421ecf0f0e071f688c98d28e2d0396e1b956c7903a58c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-34595_2/result.json sha256 6708d29724aae8940685c5e6d59f00eb888c6befce2f54b1b4794616f2a1339c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-34778_2/result.json sha256 cf7d309daf076c508a31e736c8f31cf3efd8849e39795df4a5c63b2bd8689d3b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-21508_15/result.json sha256 fa9734b61bb33fe9355307d541c8d76616369ac0733b58ee42901ca33a982f39
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-21613_14/result.json sha256 2ac9ba770ac04fd9056fa0d957b6794c6a0e7a07a3b422030e31fa183b9006ac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-21842_2/result.json sha256 4ffec14b6c3556e2c661938679c4753632b9b792acbeb33773f3e6d3e1253fe8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-33027_7/result.json sha256 9da07a8d5152275ea6109da89237e4dd8c28e68e846b82ca47f2cef6bbcea880
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-33311_12/result.json sha256 8b33bd9972cd41004e2b05041cd632d5271e7a9809efa2cfe75793bfa02f920c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-1054_20/result.json sha256 12c4173836fda472e8a296ec81b0580e49e428b705a8d9ef0bfe5b429f071313
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-657_15/result.json sha256 0587e376d03d59bb84bc5ef7a8db7e8c94f1b5e704fb74873574bf2078450949
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-668_8/result.json sha256 346860cb531151b3e1f2c879173b788fcc44c8d46613818da79828bab78bd251
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-983_0/result.json sha256 0c25698ddba02e08e49f2c62a28f6ba9017952cd28744243b1b844f3e55c1d80
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-10589_1/result.json sha256 fa27b696fa1a8dedd079a93ecb7c8eb274126c4e144889b3b6f54a70b825e8dc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-12727_1/result.json sha256 fcc3a259f9421eae3a75301f47820d4cf9d785397a08734a6928cfdb32259479
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-12762_2/result.json sha256 2f9025aa621a87182a9c3e838f5e66d5cc72d1ef2901eb53ca737c7d029c1a34
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-14312_5/result.json sha256 a5754d4a97007f21a9614f336eb7552d4e8d76aaf85f70ff4a4731377a57a6df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-1989_4/result.json sha256 913b5f9eb3651c82f6f457ab887630e5f0db9438506b991d137217b638ad4e02
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33532_12/result.json sha256 ecf3ae1b66e4267573dcdd69dee4945e2c9bd15d5f0549c4e0854e6ca2b8d45c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33586_12/result.json sha256 f4bbc87e74a5ee85ecdcfce4cdb4cd5538db405e50e8b13f15f2ea413aa019c1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33599_8/result.json sha256 a4c4616178f61c24967be1049f76054a66be3173d08685e355f7267adcfc0b77
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33609_16/result.json sha256 6da7ff091bccfbc022759ed7212c00a638f1b94b92c7e3768474e5ffea53b389
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33995_5/result.json sha256 a0cc70b8853c31201f7c8e4db92494f00d2ff8a5efdf26f3659a5545ddc9beb2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33995_5_det2/result.json sha256 9b10058ca77476cf64ef93e66349b33c3387001df13fea86c2e941858fd64e64
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-10740_12/result.json sha256 bad44901408998079887a3fdfcee60de430c48c0370e26d4b0e89145b0f9610b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-11140_2/result.json sha256 a3bb0f069c16ba4a69c24decbf4e7fb9dbf828c3796d9c03062269354ec03c4d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-11201_1/result.json sha256 5a30b744458ade2c0fb7f409cec915e9f19085992dde1655ffce16940078bd5d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-11219_2/result.json sha256 d324b0ef24f0a58c897069bb206d9ba38d062a0e5d7b9e78cbc84d8e81e9d9d8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-20245_13/result.json sha256 7d7bed8c4f59e7dda266839c32eedaf5913122406cea44a58d540678e7444ab7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-20297_13/result.json sha256 6cd014e9e1210d0e3343f01cd0e930cdeb073b18b4d56f17d25cac99157b772b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-34778_2/result.json sha256 324b3e9da4cba318ed9e6c830606c15686686cdaf9fa8f64252940ec20150309
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-2-1565_2/result.json sha256 8d0d75de4c32fc125f9d9e35857f102711fad2f45cabbad5544782dfd1e7a8a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-2-33275_11/result.json sha256 e604d4cd3e0a06ef497ef8e2d43e5edb18ff333fd3d6aff5790c9853549587fc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-3-34155_4/result.json sha256 662f03726c34dc80c0b004c18f2a4a0ef17c54e74c0e50922d6881cffa6965df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-3-914_16/result.json sha256 38cd3d142d53c646fc2240f6cc6ce03d7348897f6422697ceda475e6a90c30e7
+
+== Gate F0
+calls 41; capture and replay equal 06e's census record, terms equal the checkpoint's sums: 41; failing 0
+Z2's call twice in fresh processes (pids 55078, 55415): digest e82e8ff181be58ee / e82e8ff181be58ee; per-leaf table and every CC solve's E identical: True
+F0 holds; replacements: none
+
+== M1
+unit | # | N_cc | sum|E| | |sumE| | ratio | sqrtN | |sumE|/(sqrtN rms) | sumR | request | declared | signed | signed(pairs) | runs/exp (z)
+g-1e-8-0-33995 | 5 | 8600 | 1.312e-33 | 2.431e-35 | 53.98 | 92.7 | 0.599 | 5.988e-36 | 6.689e-34 | 1.333e-33 | 1.759e-34 | 1.114e-33 | 3129/4288.9 (-25.09)
+g-1e-7-1-34778 | 2 | 101 | 1.211e-35 | 6.899e-37 | 17.55 | 10.0 | 0.382 | 1.829e-36 | 1.186e-33 | 1.173e-33 | 1.173e-33 | 1.183e-33 | 41/51.4 (-2.08)
+g-1e-7-1-11219 | 2 | 133 | 1.661e-35 | 7.972e-37 | 20.84 | 11.5 | 0.376 | 1.978e-36 | 5.398e-34 | 5.158e-34 | 5.150e-34 | 5.295e-34 | 49/66.7 (-3.11)
+g-1e-7-1-11222 | 2 | 100 | 1.245e-35 | 1.552e-37 | 80.21 | 10.0 | 0.084 | 1.843e-36 | 1.257e-33 | 1.245e-33 | 1.244e-33 | 1.255e-33 | 37/50.9 (-2.8)
+g-1e-7-3-983 | 0 | 110 | 1.676e-36 | 4.622e-38 | 36.27 | 10.5 | 0.216 | 3.066e-37 | 1.877e-33 | 1.803e-33 | 1.803e-33 | 1.804e-33 | 48/55.8 (-1.51)
+g-1e-7-2-33027 | 7 | 1 | 1.680e-27 | 1.680e-27 | 1.0 | 1.0 | 1.0 | 2.235e-30 | 1.206e-20 | 3.586e-27 | 4.005e-27 | 4.005e-27 | None/None (None)
+g-1e-7-0-10676 | 0 | 5 | 1.621e-41 | 1.621e-41 | 1.0 | 2.2 | 1.641 | 2.621e-41 | 1.532e-34 | 2.860e-36 | 2.860e-36 | 2.860e-36 | 1/None (None)
+g-1e-7-1-20400 | 3 | 1 | 9.461e-29 | 9.461e-29 | 1.0 | 1.0 | 1.0 | 9.282e-32 | 3.015e-22 | 2.033e-28 | 2.635e-28 | 2.635e-28 | None/None (None)
+g-1e-7-1-34595 | 2 | 65 | 5.848e-36 | 1.093e-36 | 5.35 | 8.1 | 1.065 | 1.546e-36 | 4.897e-33 | 4.607e-33 | 4.607e-33 | 4.611e-33 | 37/33.5 (0.88)
+g-1e-7-2-21842 | 2 | 8 | 1.150e-37 | 4.607e-38 | 2.5 | 2.8 | 0.861 | 6.020e-39 | 4.821e-33 | 4.276e-33 | 4.276e-33 | 4.276e-33 | 4/4.8 (-0.62)
+g-1e-7-1-2049 | 3 | 9 | 6.636e-37 | 6.379e-37 | 1.04 | 3.0 | 1.8 | 5.138e-39 | 3.502e-33 | 3.123e-33 | 3.123e-33 | 3.123e-33 | 4/5.4 (-1.04)
+g-1e-8-1-11219 | 2 | 133 | 1.661e-35 | 7.972e-37 | 20.84 | 11.5 | 0.376 | 1.978e-36 | 5.398e-34 | 5.158e-34 | 5.150e-34 | 5.295e-34 | 49/66.7 (-3.11)
+g-1e-8-1-11140 | 2 | 107 | 1.258e-35 | 1.614e-36 | 7.8 | 10.3 | 0.873 | 1.816e-36 | 1.087e-33 | 1.066e-33 | 1.066e-33 | 1.076e-33 | 49/54.5 (-1.07)
+g-1e-8-1-34778 | 2 | 149 | 1.927e-35 | 3.256e-37 | 59.19 | 12.2 | 0.144 | 1.997e-36 | 3.373e-34 | 3.225e-34 | 3.211e-34 | 3.384e-34 | 57/75.1 (-2.99)
+g-1e-8-0-14312 | 5 | 125 | 1.036e-34 | 1.257e-35 | 8.25 | 11.2 | 0.894 | 5.611e-37 | 2.015e-33 | 1.976e-33 | 1.968e-33 | 2.055e-33 | 48/63.0 (-2.72)
+g-1e-8-3-34155 | 4 | 101 | 9.982e-35 | 1.386e-35 | 7.2 | 10.0 | 1.045 | 5.931e-37 | 6.221e-33 | 5.840e-33 | 5.845e-33 | 5.925e-33 | 46/51.5 (-1.1)
+g-1e-8-1-11201 | 1 | 56 | 3.767e-36 | 9.039e-37 | 4.17 | 7.5 | 0.998 | 1.431e-36 | 4.902e-33 | 4.657e-33 | 4.658e-33 | 4.660e-33 | 31/28.9 (0.58)
+g-1e-8-0-12762 | 2 | 43 | 9.004e-36 | 6.366e-37 | 14.14 | 6.6 | 0.348 | 5.203e-38 | 4.044e-33 | 3.867e-33 | 3.867e-33 | 3.874e-33 | 20/21.9 (-0.61)
+g-1e-8-0-12727 | 1 | 28 | 1.647e-35 | 5.936e-36 | 2.77 | 5.3 | 1.228 | 1.391e-35 | 1.262e-31 | 1.228e-31 | 1.228e-31 | 1.228e-31 | 15/14.9 (0.03)
+g-1e-8-0-1989 | 4 | 103 | 1.187e-34 | 1.137e-35 | 10.44 | 10.1 | 0.77 | 5.281e-37 | 1.997e-33 | 1.939e-33 | 1.932e-33 | 2.025e-33 | 42/52.5 (-2.08)
+g-1e-8-2-1565 | 2 | 46 | 1.274e-37 | 3.033e-38 | 4.2 | 6.8 | 1.083 | 4.049e-38 | 4.028e-34 | 3.776e-34 | 3.776e-34 | 3.777e-34 | 21/23.6 (-0.79)
+
+Z2's call: N_cc 8600, sum|E| 1.312326e-33, |sum E| 2.431343e-35, ratio 53.98, sqrt N 92.74; sum R 5.9883e-36
+   request max(atol, rtol|v|) = 6.689402e-34 (atol 6.689402e-34, rtol|v| 2.726725e-34); declared 1.332666e-33
+   signed-combination error 1.758852e-34 (leafwise: each leaf's floor without |E|, max'd with its resolution term as the code does, summed, plus |sum E|); linear form abserr - sum|E| + |sum E| 4.465291e-35; with |E| per sibling pair 1.113555e-33 (2484 pairs, 3632 unpaired); the rest alone 1.515717e-34
+   signs along the call: {'n': 8600, 'n_positive': 4528, 'n_negative': 4072, 'runs': 3129, 'longest_run': 49, 'runs_expected_if_random': 4288.910697674419, 'runs_z': -25.087272320182826}
+   by depth (returned CC leaves): depth n sum|E| |sumE|
+      8 51 4.9127e-35 4.7334e-36
+      9 88 1.0983e-34 1.0923e-35
+      10 199 1.8990e-34 4.9752e-36
+      11 170 9.1969e-35 8.8251e-36
+      12 83 5.3132e-35 3.9396e-37
+      13 477 4.2713e-34 6.0568e-36
+      14 218 7.9930e-35 9.8964e-36
+      15 139 1.1905e-35 3.5205e-36
+      16 993 1.9602e-34 6.9067e-36
+      17 702 1.4630e-35 1.8221e-37
+      18 996 3.2462e-35 1.4954e-36
+      19 1420 2.1055e-35 1.7965e-37
+      20 3064 3.5234e-35 1.1711e-36
+   subtrees (all-CC) against their root's own |E| (8191 subtrees): root depth: n, median leaves, median sum|E|/|E_root| [p10, p90], median |sumE|/|E_root|
+      5: 4, 17.5, 5.58 [1.7, 22.5], 4.73
+      6: 15, 11.0, 5.98 [0.613, 17.8], 2.84
+      7: 45, 5.0, 3.38 [0.144, 78.5], 1.46
+      8: 70, 3.5, 3.65 [0.399, 197], 1.94
+      9: 112, 4.5, 2.09 [0.0268, 26.2], 0.4
+      10: 145, 26.0, 3.57 [0.102, 34.3], 0.564
+      11: 224, 31.5, 12.8 [0.534, 202], 3.75
+      12: 433, 14.0, 7.6 [1.74, 60.7], 3.85
+      13: 389, 20.0, 0.685 [0.167, 15.1], 0.258
+      14: 560, 12.0, 26.8 [0.344, 579], 8.36
+      15: 981, 7.0, 4.61e+03 [0.102, 6.01e+04], 2.43e+03
+      16: 969, 6.0, 0.362 [0.055, 1], 0.12
+      17: 1236, 4.0, 0.747 [0.118, 2.49e+03], 0.237
+      18: 1476, 3.0, 0.751 [0.242, 1.01e+04], 0.25
+      19: 1532, 2.0, 0.498 [0.489, 3.88e+03], 0.498
+   the ten largest all-CC subtrees: root depth, leaves, |E_root|, sum|E|, |sumE|
+      9 216 2.614e-36 7.911e-36 1.552e-38
+      9 213 1.124e-36 1.246e-35 3.761e-36
+      9 176 3.607e-36 5.830e-36 1.026e-36
+      9 167 3.338e-36 6.886e-36 1.326e-36
+      9 147 1.734e-36 9.430e-36 1.097e-36
+      10 140 8.619e-40 5.384e-36 1.390e-36
+      9 140 1.239e-37 7.915e-36 3.976e-36
+      9 139 2.346e-36 5.065e-36 2.646e-37
+      10 138 4.505e-37 4.704e-36 6.260e-37
+      9 134 3.676e-37 7.464e-36 5.145e-37
+
+F1: sum|E| 1.3123e-33 >= 10 |sum E| = 2.4313e-34? -> holds
+F2: signed-combination error 1.7589e-34 <= request 6.6894e-34? -> holds (linear form 4.4653e-35: holds)
+F3: 11 sampled node-dominated calls with N_cc >= 100 (Z2's included); ratios [7.2, 7.8, 8.25, 10.44, 17.55, 20.84, 20.84, 36.27, 53.98, 59.19, 80.21]; median 20.84; without Z2's call median 19.19 -> holds
+
+== M2
+unit | # | block | leaves (cc) | D | |dI| | sum|dI_l| | D/|dI| | sum/|dI| | D_honest/|dI| | dI_meas | request | declared | |theta(b)-theta(a)| | max|dth| | med|dth| | max ratio | med ratio | conv
+g-1e-7-0-33555 | 13 | analytic Y3 | 1 (1) | 8.216e-21 | 1.145e-21 | 1.145e-21 | 7.18 | 1 | 5.3 | -3.11e-25 | 7.108e-17 | 8.240e-21 | 6.59 | 8.02e-16 | 1.98e-16 | 0.000801 | 0.000198 | 1.1e-14
+g-1e-7-1-10824 | 12 | analytic Y2 | 1 (1) | 2.031e-21 | 1.625e-22 | 1.625e-22 | 12.5 | 1 | 10.6 | -3.67e-25 | 1.160e-17 | 2.038e-21 | 12.1 | 3.15e-15 | 7.59e-16 | 0.00315 | 0.000759 | 3.1e-14
+g-1e-7-3-1054 | 20 | analytic Y4 | 2 (1) | 1.189e-19 | 7.583e-21 | 7.583e-21 | 15.7 | 1 | 10.4 | 1.23e-23 | 4.523e-15 | 1.196e-19 | 68.3 | 1.67e-13 | 7.68e-16 | 1.83 | 0.000767 | 1.5e-07
+g-1e-7-2-21508 | 15 | analytic J3 | 1 (1) | 8.083e-23 | 1.318e-23 | 1.318e-23 | 6.13 | 1 | 5.94 | 8.11e-27 | 8.562e-19 | 8.175e-23 | 8.19 | 8.02e-15 | 3.62e-15 | 0.00801 | 0.00362 | 6.0e-14
+g-1e-7-2-33311 | 12 | analytic Y1 | 1 (1) | 6.273e-26 | 6.902e-27 | 6.902e-27 | 9.09 | 1 | 8.96 | 4.77e-29 | 5.915e-22 | 6.502e-26 | 10.7 | 1.60e-14 | 8.16e-15 | 0.016 | 0.00816 | 2.1e-13
+g-1e-7-3-668 | 8 | analytic J1 | 2 (2) | 5.827e-24 | 7.774e-25 | 7.774e-25 | 7.5 | 1 | 7.42 | -2.47e-28 | 9.589e-22 | 5.870e-24 | 15.9 | 3.97e-15 | 1.05e-15 | 0.00396 | 0.00105 | 1.4e-15
+g-1e-7-1-10895 | 12 | analytic J2 | 2 (2) | 1.000e-23 | 2.149e-24 | 2.324e-24 | 4.65 | 1.08 | 4.65 | 5.39e-28 | 2.644e-19 | 1.023e-23 | 10.8 | 9.75e-16 | 2.72e-16 | 0.234 | 0.00575 | 1.9e-07
+g-1e-7-0-12689 | 19 | analytic J4 | 4 (1) | 2.148e-20 | 8.192e-21 | 8.192e-21 | 2.62 | 1 | 1.73 | 4.08e-24 | 1.418e-16 | 2.160e-20 | 8.13e+03 | 4.50e-13 | 1.86e-15 | 148 | 0.107 | 1.4e-08
+g-1e-7-3-657 | 15 | analytic Y3 | 1 (1) | 4.743e-26 | 4.428e-26 | 4.428e-26 | 1.07 | 1 | 1.07 | 3.35e-30 | 1.671e-21 | 4.771e-26 | 0.219 | 6.08e-16 | 1.60e-16 | 0.000607 | 0.00016 | 2.6e-16
+g-1e-7-2-21613 | 14 | analytic Y2 | 1 (1) | 2.672e-22 | 3.475e-23 | 3.475e-23 | 7.69 | 1 | 7.04 | -5.04e-26 | 4.180e-18 | 2.691e-22 | 9.45 | 2.88e-15 | 8.65e-16 | 0.00288 | 0.000865 | 6.8e-16
+g-1e-8-1-20297 | 13 | analytic Y3 | 1 (1) | 2.007e-25 | 3.761e-26 | 3.761e-26 | 5.34 | 1 | 5.2 | 5.11e-30 | 1.665e-21 | 2.017e-25 | 1.78 | 3.02e-15 | 8.84e-16 | 0.00302 | 0.000883 | 1.7e-15
+g-1e-8-2-33275 | 11 | analytic Y2 | 1 (1) | 9.750e-23 | 3.175e-23 | 3.175e-23 | 3.07 | 1 | 2.87 | 9.22e-28 | 6.773e-19 | 9.796e-23 | 2.14 | 1.56e-15 | 5.98e-16 | 0.00156 | 0.000597 | 1.1e-15
+g-1e-8-0-10589 | 1 | analytic Y1 | 1 (1) | 1.903e-24 | 1.720e-24 | 1.720e-24 | 1.11 | 1 | 1.11 | 1.37e-26 | 2.999e-18 | 3.761e-24 | 0.286 | 2.10e-16 | 7.97e-17 | 0.0788 | 0.0299 | 0.0e+00
+g-1e-8-0-33586 | 12 | analytic J3 | 1 (1) | 6.660e-22 | 2.534e-22 | 2.534e-22 | 2.63 | 1 | 2.59 | 9.12e-27 | 4.826e-18 | 6.705e-22 | 2.06 | 5.37e-16 | 2.59e-16 | 0.000536 | 0.000259 | 1.9e-16
+g-1e-8-0-33609 | 16 | analytic Y4 | 1 (1) | 1.108e-23 | 5.238e-25 | 5.238e-25 | 21.2 | 1 | 18 | 2.63e-28 | 1.890e-20 | 1.112e-23 | 5.38 | 2.25e-15 | 6.07e-16 | 0.00225 | 0.000607 | 4.2e-14
+g-1e-8-0-33599 | 8 | analytic J1 | 1 (1) | 2.015e-22 | 1.418e-22 | 1.418e-22 | 1.42 | 1 | 1.41 | -1.51e-25 | 6.304e-19 | 2.048e-22 | 2.41 | 3.74e-15 | 1.50e-15 | 0.00374 | 0.0015 | 1.3e-15
+g-1e-8-1-10740 | 12 | analytic J2 | 1 (1) | 3.820e-22 | 6.455e-23 | 6.455e-23 | 5.92 | 1 | 5.72 | -2.11e-26 | 2.838e-19 | 3.835e-22 | 10.8 | 7.90e-16 | 3.01e-16 | 0.000789 | 0.0003 | 1.7e-14
+g-1e-8-3-914 | 16 | analytic J4 | 1 (1) | 9.377e-20 | 5.183e-20 | 5.183e-20 | 1.81 | 1 | 1.2 | 2.35e-23 | 8.434e-17 | 9.399e-20 | 1.83 | 2.01e-15 | 6.03e-16 | 0.00201 | 0.000602 | 3.5e-16
+g-1e-8-1-20245 | 13 | analytic Y3 | 2 (2) | 1.353e-24 | 9.528e-26 | 1.496e-25 | 14.2 | 1.57 | 13.3 | 6.36e-29 | 9.695e-22 | 1.363e-24 | 17 | 5.34e-15 | 1.16e-15 | 0.00533 | 0.00116 | 2.4e-14
+g-1e-8-0-33532 | 12 | analytic Y2 | 1 (1) | 9.862e-21 | 1.618e-21 | 1.618e-21 | 6.1 | 1 | 5.21 | -4.31e-25 | 1.166e-17 | 9.905e-21 | 9.81 | 2.11e-15 | 4.85e-16 | 0.0021 | 0.000484 | 2.4e-15
+
+F4: nodes sampled 1177 (every node of every returned leaf); violating 49; largest |dtheta|/theta_abserr 148 -> fails (dense descriptive sample: 473 of 20000 violate; largest ratio 165.9)
+F5: D/max_s|dI| sorted [1.071, 1.106, 1.421, 1.809, 2.622, 2.628, 3.07, 4.654, 5.336, 5.918, 6.095, 6.131, 7.179, 7.495, 7.689, 9.089, 12.502, 14.201, 15.677, 21.161]; median 6.006 -> fails
+F6: sum|dI_l|/max_s|dI| sorted [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0816, 1.5695]; median 1 -> fails
+item 3 convergence: worst relative change on doubling the resolution 1.89e-07 (two figures need < 5e-3)
+descriptive: D_honest/max|dI| median 5.254; D/D_honest median 1.049 [min 1, max 1.515]; |dI_measured|/max|dI| median 0.000476; D/declared error median 0.9941; D/request median 0.000141 [max 0.00608]; rule response to the declared size vs Gauss-Legendre: worst relative difference 4.10e-02
+method check (out/cmd/31): passes
+
+scores: {"F0": "holds", "F1": "holds", "F2": "holds", "F3": "holds", "F4": "fails", "F5": "fails", "F6": "fails"}
+wrote out/f0.csv sha256 7ad85ccb726caffc06b9f3131eebc1d5cb86037ce853b43a80202706829d67e2
+wrote out/m1_calls.csv sha256 25f7a9d9f055abe7c930d2a7953f457b9bd2b7b57c16e2df22ce2d91c010a3e8
+wrote out/m1_z2_by_depth.csv sha256 11c6bffed8924810db4c4168bbe8c37ce214cdfef14bb4bbd48dc68c234aa7e9
+wrote out/m1_z2_subtrees.csv sha256 e0a2a0b32f934eedc354079b4a4a2936f217e9feefd5ec5a49911b880ebd92ba
+wrote out/m2_calls.csv sha256 1143022c18c562be797fa5281f1e8d3ad3a425c481adddabe9f7d1e19894b741
+wrote out/m2_leaves.csv sha256 d7c60ba003489a4aaa7af091674de53b79ce20dfd6562d44ac6d928a57f6342b
+wrote out/scores.json sha256 12972b1f3c02ffa1915ee526cb2a8125c697bc4243251e6723a393aab65ecbf2
+# ----
+# end 2026-10-31T21:02:57Z
+# exit 0

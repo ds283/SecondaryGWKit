@@ -1,0 +1,8 @@
+# KEPT_ON_MAC_STUDIO.txt checked 2026-10-31T21:20:41Z
+listed: 90
+hash mismatches: 0
+required (every pickle, every file > 2 MB) not listed:
+listed but not required:
+files > 2 MB outside review/:
+./out/replay/g-1e-8-0-33995_5_det2/leaves.json.gz
+./out/replay/g-1e-8-0-33995_5/leaves.json.gz

@@ -1,0 +1,13 @@
+# predictions vs prompt §4, 2026-10-31T21:19:00Z
+9af76379c2d44b450a1976898ee0c7d0d832201efb9d83fcd5d9b79f1e1b7352  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1/prompts/levin-phase-floor/06f-cc-floor-terms-across-leaves.md
+## diff prompt §4 vs state file (blank-line trailing ignored)
+IDENTICAL
+## log.md contains each F-rule line verbatim:
+199
+1
+1
+1
+1
+1
+1
+## earliest outputs carrying a measured number: out/cmd/20 (sample, 20:36:46Z), 21 (dev capture, 20:38:07Z); predictions file 20:33:33Z

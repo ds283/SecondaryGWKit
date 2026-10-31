@@ -1,0 +1,11 @@
+# script sha256 c1dfebf9f495fd1dcd02157a3eb4056441108791049307b1b56a9aa1a2d8d71d
+# m1_calls.csv 25f7a9d9f055abe7c930d2a7953f457b9bd2b7b57c16e2df22ce2d91c010a3e8
+# m2_calls.csv 1143022c18c562be797fa5281f1e8d3ad3a425c481adddabe9f7d1e19894b741
+F1: sum|E|/|sum E| = 53.98 (rule >= 10) -> holds
+F2: signed-combination 1.759e-34 (literal 4.465e-35) vs request 6.689e-34 -> holds
+F3: 11 M1 calls with N_cc >= 100 (by rtol: ['1e-07', '1e-07', '1e-07', '1e-07', '1e-08', '1e-08', '1e-08', '1e-08', '1e-08', '1e-08', '1e-08']); ratios [7.204, 7.795, 8.246, 10.443, 17.553, 20.836, 20.836, 36.267, 53.975, 59.194, 80.205]
+    median 20.84; without Z2's call (10) 19.19 -> holds
+F4: 20 M2 calls, 1177 nodes, 49 with |dtheta| > theta_abserr, on 2 calls: [('g-1e-7-3-1054_20', 4, 71, 1.829944360821384), ('g-1e-7-0-12689_19', 45, 119, 147.9792865458528)] -> fails
+F5: D/max|dI| median 6.006 (range 1.07-21.2) -> fails
+F6: sum|dI_leaf|/max|dI| median 1 (range 1-1.57) -> fails
+exit 0

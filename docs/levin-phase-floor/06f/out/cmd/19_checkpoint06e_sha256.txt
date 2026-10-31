@@ -1,0 +1,50 @@
+$ sh -c shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ \|\ head\ -40\;\ wc\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T20:35:32Z
+# ----
+a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+total 1586108
+drwxr-xr-x 151 ds283 staff       4832 Oct 30 09:59 .
+drwxr-xr-x  60 ds283 staff       1920 Oct 30 19:27 ..
+-rw-r--r--   1 ds283 staff 1082282238 Oct 30 09:59 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff     258431 Oct 30 08:39 events_1e-7-k0_101.jsonl
+-rw-r--r--   1 ds283 staff     269790 Oct 30 08:38 events_1e-7-k0_202.jsonl
+-rw-r--r--   1 ds283 staff     261117 Oct 30 08:40 events_1e-7-k1_102.jsonl
+-rw-r--r--   1 ds283 staff     272475 Oct 30 08:38 events_1e-7-k1_301.jsonl
+-rw-r--r--   1 ds283 staff     263861 Oct 30 08:42 events_1e-7-k2_2.jsonl
+-rw-r--r--   1 ds283 staff     274995 Oct 30 08:39 events_1e-7-k2_302.jsonl
+-rw-r--r--   1 ds283 staff     254993 Oct 30 09:02 events_1e-7-k3_1.jsonl
+-rw-r--r--   1 ds283 staff     266973 Oct 30 09:04 events_1e-7-k3_201.jsonl
+-rw-r--r--   1 ds283 staff     258450 Oct 30 09:41 events_1e-8-k0_101.jsonl
+-rw-r--r--   1 ds283 staff     269782 Oct 30 09:28 events_1e-8-k0_202.jsonl
+-rw-r--r--   1 ds283 staff     261116 Oct 30 09:39 events_1e-8-k1_102.jsonl
+-rw-r--r--   1 ds283 staff     272471 Oct 30 09:28 events_1e-8-k1_301.jsonl
+-rw-r--r--   1 ds283 staff     263874 Oct 30 09:37 events_1e-8-k2_2.jsonl
+-rw-r--r--   1 ds283 staff     274974 Oct 30 09:28 events_1e-8-k2_302.jsonl
+-rw-r--r--   1 ds283 staff     255005 Oct 30 09:58 events_1e-8-k3_1.jsonl
+-rw-r--r--   1 ds283 staff     266995 Oct 30 09:53 events_1e-8-k3_201.jsonl
+-rw-r--r--   1 ds283 staff       4515 Oct 30 08:13 manifest.json
+-rw-r--r--   1 ds283 staff   32258793 Oct 30 08:39 regions_1e-7-k0_101.pkl
+-rw-r--r--   1 ds283 staff   33989369 Oct 30 08:38 regions_1e-7-k0_202.pkl
+-rw-r--r--   1 ds283 staff   33613409 Oct 30 08:40 regions_1e-7-k1_102.pkl
+-rw-r--r--   1 ds283 staff   34438104 Oct 30 08:38 regions_1e-7-k1_301.pkl
+-rw-r--r--   1 ds283 staff   35087529 Oct 30 08:42 regions_1e-7-k2_2.pkl
+-rw-r--r--   1 ds283 staff   35757116 Oct 30 08:39 regions_1e-7-k2_302.pkl
+-rw-r--r--   1 ds283 staff   31434769 Oct 30 09:02 regions_1e-7-k3_1.pkl
+-rw-r--r--   1 ds283 staff   34736129 Oct 30 09:05 regions_1e-7-k3_201.pkl
+-rw-r--r--   1 ds283 staff   34535644 Oct 30 09:41 regions_1e-8-k0_101.pkl
+-rw-r--r--   1 ds283 staff   29359794 Oct 30 09:28 regions_1e-8-k0_202.pkl
+-rw-r--r--   1 ds283 staff   34511406 Oct 30 09:39 regions_1e-8-k1_102.pkl
+-rw-r--r--   1 ds283 staff   29356631 Oct 30 09:28 regions_1e-8-k1_301.pkl
+-rw-r--r--   1 ds283 staff   33973270 Oct 30 09:37 regions_1e-8-k2_2.pkl
+-rw-r--r--   1 ds283 staff   30128449 Oct 30 09:28 regions_1e-8-k2_302.pkl
+-rw-r--r--   1 ds283 staff   31290310 Oct 30 09:59 regions_1e-8-k3_1.pkl
+-rw-r--r--   1 ds283 staff   30805684 Oct 30 09:54 regions_1e-8-k3_201.pkl
+-rw-r--r--   1 ds283 staff     278428 Oct 30 08:13 spec_1e-7-k0_101.json
+-rw-r--r--   1 ds283 staff     278311 Oct 30 08:13 spec_1e-7-k0_202.json
+-rw-r--r--   1 ds283 staff     278339 Oct 30 08:13 spec_1e-7-k1_102.json
+18560 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+# ----
+# end 2026-10-31T20:35:36Z
+# exit 0

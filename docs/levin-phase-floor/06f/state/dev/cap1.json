@@ -1,0 +1,33 @@
+[
+ {
+  "unit": "g-1e-8-0-33532",
+  "index": 12,
+  "notify_label": "analytic Y2",
+  "census_value": "0x1.409d42e91793bp-30",
+  "census_abserr": "0x1.763529132983dp-67",
+  "census_num_regions": 1,
+  "census_max_depth": 0,
+  "census_converged": true,
+  "sample": "M2",
+  "stratum": "M2 1e-8 analytic Y2",
+  "kind": "analytic",
+  "n_cc_leaves": 1,
+  "capture_worker": "C00",
+  "capture_unit_status": "done",
+  "capture_ray_initialized": false,
+  "dir": "state/dev/cap1/C00",
+  "pickle": "inputs_C00.pkl",
+  "offset": 0,
+  "length": 22397,
+  "sha256": "d0bbcb2772f6244ea38995935c3cf05b6fa9e450e9e96902341c86b3300a1209",
+  "capture_record": {
+   "value": "0x1.409d42e91793bp-30",
+   "abserr": "0x1.763529132983dp-67",
+   "num_regions": 1,
+   "max_depth": 0,
+   "converged": true
+  },
+  "capture_matches_census": true,
+  "capture_error": null
+ }
+]

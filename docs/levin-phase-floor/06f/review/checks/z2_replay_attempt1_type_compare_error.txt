@@ -1,0 +1,26 @@
+# host mps026298.phys.susx.ac.uk utc 2026-10-31T21:12:34+00:00
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 f4770d13f86674381b3a0ef48b7ba05f8dda4934 status lines 0
+# script sha256 819b55eda3cb00fc8859a49429857500f14e7ad7b48b4d9536ef55def076c643
+# levin_quadrature sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# 06e checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# capture /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/capture/C29 inputs_C29.pkl sha256 2e4c4368b76e2af99c17fe5037f70e64d4426fff18697679162508d8e67c7ee9 matches capture.json True
+# capture keys ['abserr', 'atol', 'converged', 'f', 'index', 'kw', 'max_depth', 'notify_label', 'num_regions', 'rtol', 'theta', 'tree', 'unit', 'value', 'x_span']
+# replay wall_s 94.4
+replay  {"value": "-0x1.0e0aae8560300p-85", "abserr": "0x1.badaaed87034dp-110", "num_regions": 8706, "max_depth": 20, "converged": false}
+census  {"value": "-0x1.0e0aae8560300p-85", "abserr": "0x1.badaaed87034dp-110", "num_regions": 8706, "max_depth": 20, "converged": false}
+scalars equal: True
+x_span equal: True label equal: True
+# census regions record sha256 matches checkpoint: True
+regions: replay 8706 census 8706
+  start          mismatches 0
+  end            mismatches 0
+  depth          mismatches 0
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/review/scripts/orch_z2_replay.py", line 108, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/review/scripts/orch_z2_replay.py", line 92, in main
+    same = int(a) == int(b)
+           ~~~^^^
+ValueError: invalid literal for int() with base 10: 'Levin'
+exit 1

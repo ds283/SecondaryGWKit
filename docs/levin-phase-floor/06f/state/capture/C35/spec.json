@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "C35",
+ "units": [
+  {
+   "uid": "g-1e-8-1-20297",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "1-20297",
+   "names05": null,
+   "shard": 1,
+   "serial": 20297,
+   "k_key": "1:301",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     13,
+     "analytic Y3"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/capture/C35",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/capture/C35/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

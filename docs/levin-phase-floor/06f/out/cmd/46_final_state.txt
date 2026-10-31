@@ -1,0 +1,43 @@
+$ sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ raypoolkit.rehearsal_lock\ status\;\ echo\ \'==\ ray-processes\'\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ raypoolkit.rehearsal_lock\ ray-processes\ --ray-temp-dir\ /tmp/ray-sgk\;\ echo\ \'==\ registry\'\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ PYTHONDONTWRITEBYTECODE=1\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ head\ -3\;\ echo\ \'==\ var/datastores\ entries\ modified\ since\ 20:30Z\ today\'\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ -newer\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/predictions_20261031T203333Z.md\ \|\ head\;\ echo\ \'==\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ status\ --short\ --ignored\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ -name\ __pycache__\;\ echo\ \'==\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'==\ pycache\ under\ records\'\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f\ -name\ __pycache__\;\ echo\ \'==\ capture\ workers\ ray_initialized\'\;\ grep\ -h\ ray_initialized\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/capture/\*/emit.jsonl\ \|\ grep\ -o\ \'\"ray_initialized\":\ \[a-z\]\*\'\ \|\ sort\ \|\ uniq\ -c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T21:04:39Z
+# ----
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+== ray-processes
+== registry
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06f-measure-20261031T204803         done          44/44      17m  levin-phase-floor prompt 06f on the Mac Studio (mps026298; Python 3.13.16): how two Clenshaw-Curtis floor terms add up across a call's leaves. Captures the 41 sampled calls of 06e's census (levin-phase-floor-06e-census-20261030T081318, checkpoint a0dc4d7f) by 06e's x1_capture.py at the tree g (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1, dispatch SHA f4770d13, code f4d8e17's), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; replays each in its own process with pass-throughs at _adaptive_levin_subregion, _cc_node_term_parts, _cc_roundoff_floor and _declared_endpoint_phase_err (M1: Z2's call and 20 node-dominated calls; M2: 20 declared-dominated analytic-block calls, with mpmath phase references at 30 digits and Gauss-Legendre responses); Z2's call replayed twice; item 1's method check. At most six processes; Ray-free, no lock, no store built, no code changed  · replay g-1e-7-0-12689_19 exit 0
+   levin-phase-floor-06e-references-20261030T192730      done            4/4   1d 01h  levin-phase-floor prompt 06e section 5, Z3 on the Mac Studio: Gauss-Legendre references for depth20-tiling's samples 3 (g-1e-7-3-34370 call 4, G-q-r) and 15 (g-1e-8-2-1549 call 4, G-q-r), by 06c's orchestrator's orch_ref.py (copied unchanged, sha256 8a0d291d) on depth20-tiling's captured inputs, at P=128 with 64/96 nodes and P=64 with 96/128 nodes, six workers, one invocation at a time, at the tree g (worktree 6d81fad); Ray-free, no lock, no store  · s15-P64 exit 0
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 696, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 649, in main
+    print(
+    ~~~~~^
+        f"{marker:2} {entry['id']:{width}}  "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{str(entry['state'] or 'unknown'):9} {_progress(entry):>9} "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{_age(now - entry['created_epoch']):>8}  {purpose}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored on flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+== var/datastores entries modified since 20:30Z today
+== worktree
+f4770d13f86674381b3a0ef48b7ba05f8dda4934
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== pycache under records
+== capture workers ray_initialized
+     41 "ray_initialized": false
+# ----
+# end 2026-10-31T21:04:41Z
+# exit 0

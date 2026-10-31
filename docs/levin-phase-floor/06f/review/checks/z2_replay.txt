@@ -1,0 +1,25 @@
+# host mps026298.phys.susx.ac.uk utc 2026-10-31T21:14:24+00:00
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 f4770d13f86674381b3a0ef48b7ba05f8dda4934 status lines 0
+# script sha256 17d65563c9ba6c8939c58041eac0bf1bf26766cb119dea3d4f86e3a40a57d0e2
+# levin_quadrature sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# 06e checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# capture /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/state/capture/C29 inputs_C29.pkl sha256 2e4c4368b76e2af99c17fe5037f70e64d4426fff18697679162508d8e67c7ee9 matches capture.json True
+# capture keys ['abserr', 'atol', 'converged', 'f', 'index', 'kw', 'max_depth', 'notify_label', 'num_regions', 'rtol', 'theta', 'tree', 'unit', 'value', 'x_span']
+# replay wall_s 93.6
+replay  {"value": "-0x1.0e0aae8560300p-85", "abserr": "0x1.badaaed87034dp-110", "num_regions": 8706, "max_depth": 20, "converged": false}
+census  {"value": "-0x1.0e0aae8560300p-85", "abserr": "0x1.badaaed87034dp-110", "num_regions": 8706, "max_depth": 20, "converged": false}
+scalars equal: True
+x_span equal: True label equal: True
+# census regions record sha256 matches checkpoint: True
+regions: replay 8706 census 8706
+  start          mismatches 0
+  end            mismatches 0
+  depth          mismatches 0
+  type           mismatches 0
+  abserr         mismatches 0
+  phase_err      mismatches 0
+  phase_limited  mismatches 0
+  total_err      mismatches 0
+every region equal to the census, bit for bit: True
+agent's leaf table: rows 8706 spans equal to my replay's regions: True
+exit 0

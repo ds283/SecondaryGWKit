@@ -1,0 +1,22 @@
+$ sh -c cd\ out/replay\;\ for\ f\ in\ leaves.json.gz\ solves_cc.json.gz\;\ do\ shasum\ -a\ 256\ g-1e-8-0-33995_5/\$f\ g-1e-8-0-33995_5_det2/\$f\;\ cmp\ g-1e-8-0-33995_5/\$f\ g-1e-8-0-33995_5_det2/\$f\ \&\&\ echo\ \"\$f\ IDENTICAL\"\;\ done\;\ grep\ -h\ \'\"digest\"\\\|leaves_sha256\\\|solves_cc_sha256\'\ g-1e-8-0-33995_5/result.json\ g-1e-8-0-33995_5_det2/result.json\;\ grep\ -h\ \'\"pid\"\'\ g-1e-8-0-33995_5/result.json\ g-1e-8-0-33995_5_det2/result.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T21:01:48Z
+# ----
+8741e4fa30ff8be2ba069c7210501455aee3f60c6ab93daa83370e06f7cd5123  g-1e-8-0-33995_5/leaves.json.gz
+8741e4fa30ff8be2ba069c7210501455aee3f60c6ab93daa83370e06f7cd5123  g-1e-8-0-33995_5_det2/leaves.json.gz
+leaves.json.gz IDENTICAL
+09a67290c2e7b20f38281bb6f8b93912b3d647fdfee56154b5a81e6e383369de  g-1e-8-0-33995_5/solves_cc.json.gz
+09a67290c2e7b20f38281bb6f8b93912b3d647fdfee56154b5a81e6e383369de  g-1e-8-0-33995_5_det2/solves_cc.json.gz
+solves_cc.json.gz IDENTICAL
+ "leaves_sha256": "acd2f1eab230e0c4d32506c0cee09a5bd444d57887150e70701637848633e8c3",
+ "digest": "e82e8ff181be58eebe4809362cb17dc2f6ebd6821af935d52de4a9206f6a3f2c",
+ "solves_cc_sha256": "5a66fe42b59f33168dd507185804f164d20b5af4603d74cd873b8240bbb6c280"
+ "leaves_sha256": "acd2f1eab230e0c4d32506c0cee09a5bd444d57887150e70701637848633e8c3",
+ "digest": "e82e8ff181be58eebe4809362cb17dc2f6ebd6821af935d52de4a9206f6a3f2c",
+ "solves_cc_sha256": "5a66fe42b59f33168dd507185804f164d20b5af4603d74cd873b8240bbb6c280"
+  "pid": 55078,
+  "pid": 55415,
+# ----
+# end 2026-10-31T21:01:49Z
+# exit 0

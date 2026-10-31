@@ -1,0 +1,13 @@
+# host mps026298.phys.susx.ac.uk utc 2026-10-31T21:18:33+00:00 tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1
+# script sha256 007bc0ec67c7273ff3e132da2332c49544e460d0045a4b2dceaa3a04ca93090e
+== g-1e-7-0-12689_19: span (-11.211506381400753, -1.7870021169598915), cuts [-7.612264047062559], agent dI_plus -8.191673764023135e-21 dI_minus 8.191673764023135e-21 (converged rel 1.4488211669300207e-08); D 2.147555144601364e-20; sum|dI_leaf| 8.191975112004601e-21
+  driver rtol 1e-10: dI(+) -8.191673727161622e-21 +- 2.93e-33 conv True regions 24; dI(-) 8.191673727161622e-21 conv True
+     rel diff vs agent: + 4.50e-09, - 4.50e-09; D/max|dI| mine 2.6216316910677087 agent 2.621631679270692
+  driver rtol 1e-12: dI(+) -8.191673727160695e-21 +- 1.82e-33 conv True regions 26; dI(-) 8.191673727160695e-21 conv True
+     rel diff vs agent: + 4.50e-09, - 4.50e-09; D/max|dI| mine 2.6216316910680053 agent 2.621631679270692
+== g-1e-8-3-914_16: span (-10.067739586022146, -8.143530969972323), cuts [], agent dI_plus -5.1828071912465837e-20 dI_minus 5.1828071912465837e-20 (converged rel 3.483747815107811e-16); D 9.376841504565844e-20; sum|dI_leaf| 5.1828071912465837e-20
+  driver rtol 1e-10: dI(+) -5.182807191246588e-20 +- 2.24e-33 conv True regions 2; dI(-) 5.182807191246588e-20 conv True
+     rel diff vs agent: + 8.13e-16, - 8.13e-16; D/max|dI| mine 1.8092205938902566 agent 1.809220593890258
+  driver rtol 1e-12: dI(+) -5.182807191246588e-20 +- 2.24e-33 conv True regions 2; dI(-) 5.182807191246588e-20 conv True
+     rel diff vs agent: + 8.13e-16, - 8.13e-16; D/max|dI| mine 1.8092205938902566 agent 1.809220593890258
+exit 0

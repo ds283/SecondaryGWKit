@@ -1,0 +1,18 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/declared_vs_request_06f.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T21:04:18Z
+# ----
+# levin-phase-floor 06f: the declared term against the request
+# written 2026-10-31T21:04:18Z on mps026298.phys.susx.ac.uk
+# script declared_vs_request_06f.py sha256 21ab3d584ae1ab76adacaa3e7b6ea12ba1a7e30364d2fd1b8f846c18b107cd04
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 HEAD f4770d13f86674381b3a0ef48b7ba05f8dda4934 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+1e-7 any declared > 0 {'calls': 5224, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 1, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+1e-7 declared-dominated {'calls': 2493, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 1, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+1e-8 any declared > 0 {'calls': 6055, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 1, 'D_attr >= 0.01 request': 22, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+1e-8 declared-dominated {'calls': 2785, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 1, 'D_attr >= 0.01 request': 22, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+# ----
+# end 2026-10-31T21:04:25Z
+# exit 0

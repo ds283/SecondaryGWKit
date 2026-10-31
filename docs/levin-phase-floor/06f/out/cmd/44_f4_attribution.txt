@@ -1,0 +1,69 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/scripts PYTHONDONTWRITEBYTECODE=1 GIT_OPTIONAL_LOCKS=0 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/f4_attribution_06f.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T21:03:51Z
+# ----
+# levin-phase-floor 06f: F4's violations attributed
+# written 2026-10-31T21:03:51Z on mps026298.phys.susx.ac.uk
+# script f4_attribution_06f.py sha256 40050fd544099d4558b0ec981726e33f52a8bad08a3f63b5d419a88384d59499
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1 HEAD f4770d13f86674381b3a0ef48b7ba05f8dda4934 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/capture.json sha256 2dc57c00c01c786c3ca830fee08d3c17ce8e644f253d4a7185e184c60a9c50c7
+
+g-1e-7-3-1054_20: K -15470.053837925152 (K_double - K_exact = 0.000e+00); 4 nodes violate
+   leaf 1 (levin, interior node 2): K*eta -6.8272e+01; dtheta -6.100e-15 = K rounding +0.000e+00 + K*eta rounding -6.125e-15 + rest +2.494e-17; theta_abserr 3.334e-15 (ratio 1.83; |rest|/theta_abserr 0.00748)
+   leaf 1 (levin, interior node 1): K*eta -7.0531e+01; dtheta +5.407e-15 = K rounding +0.000e+00 + K*eta rounding +5.519e-15 + rest -1.120e-16; theta_abserr 3.198e-15 (ratio 1.69; |rest|/theta_abserr 0.035)
+   leaf 1 (levin, end node 0): K*eta -7.1305e+01; dtheta +4.220e-15 = K rounding +0.000e+00 + K*eta rounding +4.040e-15 + rest +1.802e-16; theta_abserr 3.159e-15 (ratio 1.34; |rest|/theta_abserr 0.057)
+   leaf 1 (levin, interior node 3): K*eta -6.4711e+01; dtheta +4.674e-15 = K rounding +0.000e+00 + K*eta rounding +4.610e-15 + rest +6.407e-17; theta_abserr 3.636e-15 (ratio 1.29; |rest|/theta_abserr 0.0176)
+
+g-1e-7-0-12689_19: K -48553.82323826663 (K_double - K_exact = 0.000e+00); 45 nodes violate
+   leaf 3 (levin, interior node 4): K*eta -6.8494e+03; dtheta -3.943e-13 = K rounding +0.000e+00 + K*eta rounding -3.941e-13 + rest -2.439e-16; theta_abserr 2.665e-15 (ratio 148; |rest|/theta_abserr 0.0915)
+   leaf 3 (levin, interior node 6): K*eta -5.5940e+03; dtheta +3.330e-13 = K rounding +0.000e+00 + K*eta rounding +3.332e-13 + rest -1.510e-16; theta_abserr 2.665e-15 (ratio 125; |rest|/theta_abserr 0.0567)
+   leaf 3 (levin, interior node 5): K*eta -6.2429e+03; dtheta +2.340e-13 = K rounding +0.000e+00 + K*eta rounding +2.338e-13 + rest +2.151e-16; theta_abserr 2.665e-15 (ratio 87.8; |rest|/theta_abserr 0.0807)
+   leaf 3 (levin, interior node 1): K*eta -8.0422e+03; dtheta +1.973e-13 = K rounding +0.000e+00 + K*eta rounding +1.973e-13 + rest +5.361e-17; theta_abserr 2.665e-15 (ratio 74.1; |rest|/theta_abserr 0.0201)
+   leaf 3 (levin, interior node 11): K*eta -2.7129e+03; dtheta +1.514e-13 = K rounding +0.000e+00 + K*eta rounding +1.519e-13 + rest -5.536e-16; theta_abserr 2.665e-15 (ratio 56.8; |rest|/theta_abserr 0.208)
+   leaf 3 (levin, end node 0): K*eta -8.1309e+03; dtheta +1.455e-13 = K rounding +0.000e+00 + K*eta rounding +1.457e-13 + rest -1.979e-16; theta_abserr 2.665e-15 (ratio 54.6; |rest|/theta_abserr 0.0743)
+   leaf 3 (levin, interior node 7): K*eta -4.9381e+03; dtheta +1.256e-13 = K rounding +0.000e+00 + K*eta rounding +1.255e-13 + rest +8.978e-17; theta_abserr 2.665e-15 (ratio 47.1; |rest|/theta_abserr 0.0337)
+   leaf 3 (levin, interior node 14): K*eta -1.6872e+03; dtheta +1.050e-13 = K rounding +0.000e+00 + K*eta rounding +1.056e-13 + rest -5.750e-16; theta_abserr 2.665e-15 (ratio 39.4; |rest|/theta_abserr 0.216)
+   leaf 3 (levin, interior node 8): K*eta -4.3042e+03; dtheta +9.441e-14 = K rounding +0.000e+00 + K*eta rounding +9.478e-14 + rest -3.720e-16; theta_abserr 2.665e-15 (ratio 35.4; |rest|/theta_abserr 0.14)
+   leaf 3 (levin, interior node 17): K*eta -1.1202e+03; dtheta +8.658e-14 = K rounding +0.000e+00 + K*eta rounding +8.729e-14 + rest -7.129e-16; theta_abserr 2.665e-15 (ratio 32.5; |rest|/theta_abserr 0.268)
+   leaf 3 (levin, interior node 3): K*eta -7.3753e+03; dtheta +8.540e-14 = K rounding +0.000e+00 + K*eta rounding +8.583e-14 + rest -4.238e-16; theta_abserr 2.665e-15 (ratio 32.1; |rest|/theta_abserr 0.159)
+   leaf 3 (levin, interior node 2): K*eta -7.7833e+03; dtheta +7.864e-14 = K rounding +0.000e+00 + K*eta rounding +7.861e-14 + rest +2.497e-17; theta_abserr 2.665e-15 (ratio 29.5; |rest|/theta_abserr 0.00937)
+   leaf 3 (levin, interior node 10): K*eta -3.1813e+03; dtheta -7.014e-14 = K rounding +0.000e+00 + K*eta rounding -6.985e-14 + rest -2.818e-16; theta_abserr 2.665e-15 (ratio 26.3; |rest|/theta_abserr 0.106)
+   leaf 2 (levin, interior node 1): K*eta -7.6229e+02; dtheta +5.417e-14 = K rounding +0.000e+00 + K*eta rounding +5.455e-14 + rest -3.817e-16; theta_abserr 2.665e-15 (ratio 20.3; |rest|/theta_abserr 0.143)
+   leaf 2 (levin, interior node 2): K*eta -7.3776e+02; dtheta -5.318e-14 = K rounding +0.000e+00 + K*eta rounding -5.337e-14 + rest +1.938e-16; theta_abserr 2.665e-15 (ratio 20; |rest|/theta_abserr 0.0727)
+   leaf 2 (levin, interior node 5): K*eta -5.9174e+02; dtheta +5.133e-14 = K rounding +0.000e+00 + K*eta rounding +5.154e-14 + rest -2.096e-16; theta_abserr 2.665e-15 (ratio 19.3; |rest|/theta_abserr 0.0787)
+   leaf 3 (levin, interior node 9): K*eta -3.7140e+03; dtheta +4.504e-14 = K rounding +0.000e+00 + K*eta rounding +4.567e-14 + rest -6.257e-16; theta_abserr 2.665e-15 (ratio 16.9; |rest|/theta_abserr 0.235)
+   leaf 2 (levin, interior node 3): K*eta -6.9908e+02; dtheta +4.195e-14 = K rounding +0.000e+00 + K*eta rounding +4.229e-14 + rest -3.395e-16; theta_abserr 2.665e-15 (ratio 15.7; |rest|/theta_abserr 0.127)
+   leaf 3 (levin, interior node 15): K*eta -1.4559e+03; dtheta -4.064e-14 = K rounding +0.000e+00 + K*eta rounding -4.010e-14 + rest -5.456e-16; theta_abserr 2.665e-15 (ratio 15.3; |rest|/theta_abserr 0.205)
+   leaf 3 (levin, interior node 21): K*eta -8.0512e+02; dtheta -3.931e-14 = K rounding +0.000e+00 + K*eta rounding -3.929e-14 + rest -2.142e-17; theta_abserr 2.665e-15 (ratio 14.8; |rest|/theta_abserr 0.00804)
+   leaf 3 (levin, interior node 19): K*eta -9.1489e+02; dtheta -3.806e-14 = K rounding +0.000e+00 + K*eta rounding -3.789e-14 + rest -1.735e-16; theta_abserr 2.665e-15 (ratio 14.3; |rest|/theta_abserr 0.0651)
+   leaf 2 (levin, interior node 4): K*eta -6.4924e+02; dtheta -3.310e-14 = K rounding +0.000e+00 + K*eta rounding -3.315e-14 + rest +4.400e-17; theta_abserr 2.665e-15 (ratio 12.4; |rest|/theta_abserr 0.0165)
+   leaf 2 (levin, interior node 10): K*eta -3.0155e+02; dtheta +2.663e-14 = K rounding +0.000e+00 + K*eta rounding +2.656e-14 + rest +6.546e-17; theta_abserr 2.666e-15 (ratio 9.99; |rest|/theta_abserr 0.0246)
+   leaf 2 (levin, interior node 6): K*eta -5.3024e+02; dtheta +2.507e-14 = K rounding +0.000e+00 + K*eta rounding +2.505e-14 + rest +1.870e-17; theta_abserr 2.665e-15 (ratio 9.41; |rest|/theta_abserr 0.00702)
+   leaf 2 (levin, end node 0): K*eta -7.7070e+02; dtheta +2.425e-14 = K rounding +0.000e+00 + K*eta rounding +2.424e-14 + rest +1.700e-17; theta_abserr 2.665e-15 (ratio 9.1; |rest|/theta_abserr 0.00638)
+   leaf 3 (levin, end node 23): K*eta -7.7070e+02; dtheta +2.425e-14 = K rounding +0.000e+00 + K*eta rounding +2.424e-14 + rest +1.700e-17; theta_abserr 2.665e-15 (ratio 9.1; |rest|/theta_abserr 0.00638)
+   leaf 2 (levin, interior node 9): K*eta -3.5204e+02; dtheta +2.173e-14 = K rounding +0.000e+00 + K*eta rounding +2.174e-14 + rest -1.853e-17; theta_abserr 2.666e-15 (ratio 8.15; |rest|/theta_abserr 0.00695)
+   leaf 2 (levin, interior node 7): K*eta -4.6806e+02; dtheta +1.461e-14 = K rounding +0.000e+00 + K*eta rounding +1.499e-14 + rest -3.859e-16; theta_abserr 2.665e-15 (ratio 5.48; |rest|/theta_abserr 0.145)
+   leaf 3 (levin, interior node 12): K*eta -2.3099e+03; dtheta -1.433e-14 = K rounding +0.000e+00 + K*eta rounding -1.397e-14 + rest -3.532e-16; theta_abserr 2.665e-15 (ratio 5.38; |rest|/theta_abserr 0.133)
+   leaf 2 (levin, interior node 14): K*eta -1.5993e+02; dtheta -1.288e-14 = K rounding +0.000e+00 + K*eta rounding -1.238e-14 + rest -4.959e-16; theta_abserr 2.668e-15 (ratio 4.83; |rest|/theta_abserr 0.186)
+   leaf 3 (levin, interior node 20): K*eta -8.4965e+02; dtheta -1.113e-14 = K rounding +0.000e+00 + K*eta rounding -1.085e-14 + rest -2.805e-16; theta_abserr 2.665e-15 (ratio 4.18; |rest|/theta_abserr 0.105)
+   leaf 2 (levin, interior node 11): K*eta -2.5714e+02; dtheta +1.001e-14 = K rounding +0.000e+00 + K*eta rounding +1.040e-14 + rest -3.893e-16; theta_abserr 2.666e-15 (ratio 3.75; |rest|/theta_abserr 0.146)
+   leaf 3 (levin, interior node 16): K*eta -1.2690e+03; dtheta +8.917e-15 = K rounding +0.000e+00 + K*eta rounding +8.973e-15 + rest -5.577e-17; theta_abserr 2.665e-15 (ratio 3.35; |rest|/theta_abserr 0.0209)
+   leaf 3 (levin, interior node 18): K*eta -1.0038e+03; dtheta -8.039e-15 = K rounding +0.000e+00 + K*eta rounding -7.882e-15 + rest -1.574e-16; theta_abserr 2.665e-15 (ratio 3.02; |rest|/theta_abserr 0.0591)
+   leaf 3 (levin, interior node 13): K*eta -1.9698e+03; dtheta +6.772e-15 = K rounding +0.000e+00 + K*eta rounding +6.762e-15 + rest +9.846e-18; theta_abserr 2.665e-15 (ratio 2.54; |rest|/theta_abserr 0.0037)
+   leaf 2 (levin, interior node 20): K*eta -8.0536e+01; dtheta +6.736e-15 = K rounding +0.000e+00 + K*eta rounding +6.721e-15 + rest +1.495e-17; theta_abserr 2.878e-15 (ratio 2.34; |rest|/theta_abserr 0.0052)
+   leaf 2 (levin, interior node 18): K*eta -9.5145e+01; dtheta -6.185e-15 = K rounding +0.000e+00 + K*eta rounding -6.008e-15 + rest -1.765e-16; theta_abserr 2.733e-15 (ratio 2.26; |rest|/theta_abserr 0.0646)
+   leaf 2 (levin, interior node 13): K*eta -1.8671e+02; dtheta +5.904e-15 = K rounding +0.000e+00 + K*eta rounding +6.240e-15 + rest -3.361e-16; theta_abserr 2.667e-15 (ratio 2.21; |rest|/theta_abserr 0.126)
+   leaf 2 (levin, interior node 21): K*eta -7.6314e+01; dtheta +6.582e-15 = K rounding +0.000e+00 + K*eta rounding +6.832e-15 + rest -2.503e-16; theta_abserr 2.974e-15 (ratio 2.21; |rest|/theta_abserr 0.0842)
+   leaf 2 (levin, interior node 12): K*eta -2.1895e+02; dtheta -5.702e-15 = K rounding +0.000e+00 + K*eta rounding -5.435e-15 + rest -2.670e-16; theta_abserr 2.666e-15 (ratio 2.14; |rest|/theta_abserr 0.1)
+   leaf 2 (levin, interior node 17): K*eta -1.0618e+02; dtheta +4.384e-15 = K rounding +0.000e+00 + K*eta rounding +4.215e-15 + rest +1.691e-16; theta_abserr 2.698e-15 (ratio 1.62; |rest|/theta_abserr 0.0627)
+   leaf 2 (levin, interior node 15): K*eta -1.3800e+02; dtheta +4.324e-15 = K rounding +0.000e+00 + K*eta rounding +4.825e-15 + rest -5.007e-16; theta_abserr 2.672e-15 (ratio 1.62; |rest|/theta_abserr 0.187)
+   leaf 2 (levin, interior node 8): K*eta -4.0798e+02; dtheta +4.272e-15 = K rounding +0.000e+00 + K*eta rounding +4.691e-15 + rest -4.185e-16; theta_abserr 2.665e-15 (ratio 1.6; |rest|/theta_abserr 0.157)
+   leaf 2 (levin, interior node 22): K*eta -7.3858e+01; dtheta +4.382e-15 = K rounding +0.000e+00 + K*eta rounding +4.733e-15 + rest -3.516e-16; theta_abserr 3.052e-15 (ratio 1.44; |rest|/theta_abserr 0.115)
+   leaf 1 (levin, interior node 1): K*eta -7.2255e+01; dtheta +3.639e-15 = K rounding +0.000e+00 + K*eta rounding +3.727e-15 + rest -8.839e-17; theta_abserr 3.116e-15 (ratio 1.17; |rest|/theta_abserr 0.0284)
+
+violating nodes 49: at a leaf end 4, interior 45
+# ----
+# end 2026-10-31T21:03:52Z
+# exit 0

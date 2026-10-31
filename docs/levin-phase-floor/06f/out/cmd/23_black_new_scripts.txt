@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m black scripts/draw_sample_06f.py scripts/replay06f.py scripts/method_check_06f.py scripts/run_06f.py scripts/launch_06f.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T20:47:27Z
+# ----
+reformatted scripts/launch_06f.py
+reformatted scripts/method_check_06f.py
+reformatted scripts/draw_sample_06f.py
+reformatted scripts/run_06f.py
+reformatted scripts/replay06f.py
+
+All done! ✨ 🍰 ✨
+5 files reformatted.
+# ----
+# end 2026-10-31T20:47:28Z
+# exit 0

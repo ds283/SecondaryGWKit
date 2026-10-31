@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch_06f.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# start 2026-10-31T20:48:03Z
+# ----
+run id      levin-phase-floor-06f-measure-20261031T204803
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06f-measure-20261031T204803
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/scripts/run_06f.py
+sh pid      54397
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/scripts/run_06f.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06f-measure-20261031T204803; exit $?
+launcher    pid 54393, exiting without waiting
+# exit 0

@@ -1,0 +1,21 @@
+$ sh -c echo\ \'==\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ status\ --short\;\ echo\ \'==\ diff\ --stat\ f4d8e17\ f4770d13\ outside\ docs\ and\ prompts\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ diff\ --stat\ f4d8e17\ f4770d13\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'==\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ --abbrev-ref\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'==\ board\ 06e\ row\'\;\ grep\ -n\ \'\^\|\ 06e\ \|\'\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1/prompts/levin-phase-floor/IMPLEMENTATION_STATE.md\ \|\ cut\ -c1-400\;\ echo\ \'==\ pycache\ in\ worktree\'\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1\ -name\ __pycache__\ \|\ head\;\ echo\ \'==\ df\'\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit\ \|\ tail\ -1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T20:34:47Z
+# ----
+== worktree
+f4770d13f86674381b3a0ef48b7ba05f8dda4934
+== diff --stat f4d8e17 f4770d13 outside docs and prompts
+ CLAUDE.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+== board 06e row
+225:| 06e | [Exact end nodes, and a node term that measures the displacement](06e-exact-end-nodes.md) | `[06c-chebyshev-end-nodes-miss-the-span]` and `[06d-cc-node-term-is-pessimistic]`, found by 07's fourth stop and the depth-20 check: `chebyshev_matrices` sets x[0] := b and x[−1] := a exactly, so leaves tile; 06d's node term replaced by the signed first-order error of the exact per-node displace
+== pycache in worktree
+== df
+/dev/disk3s3s1  927G  831G   97G  90% /
+# ----
+# end 2026-10-31T20:34:47Z
+# exit 0

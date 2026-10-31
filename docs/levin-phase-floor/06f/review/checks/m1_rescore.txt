@@ -1,0 +1,31 @@
+# script sha256 30fa55decaef536546c8f149c829ec98b8daf08b0ccda640e5e800f4089116df
+# 06e checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+== g-1e-8-0-33995_5  leaves.json.gz sha256 8741e4fa30ff8be2ba069c7210501455aee3f60c6ab93daa83370e06f7cd5123
+  leaves 8706, CC 8600; phase_err rebuild mismatches 0; total_err rebuild mismatches 0
+  sum of total_err (left to right) 1.3326659740371103e-33 vs abserr 1.3326659740371103e-33: equal True; fsum 1.3326659740371094e-33
+  sum|E| 1.3123264998786215e-33  |sum E| 2.4313432841972046e-35  ratio 53.97536861241432  sqrt(N) 92.73618495495704
+  request max(atol, rtol|v|) 6.689401715969813e-34  declared error 1.3326659740371103e-33
+  signed-combination (leafwise) 1.7588516133553608e-34  /request 0.26293107934546683  <= request True
+  signed-combination (literal: abserr - sum|E| + |sum E|) 4.4652907000460867e-35  /request 0.0667517199540575  <= request True
+  agent's result.json M1: {"sum_absE": 1.3123264998786215e-33, "abs_sumE": 2.4313432841972046e-35, "signed_combination_error": 1.7588516133553608e-34, "signed_combination_error_linear": 4.4652907000460867e-35}
+  equal to mine bit for bit: {'sum_absE': True, 'abs_sumE': True, 'signed_combination_error': True, 'signed_combination_error_linear': True}
+  checkpoint cc_floor.sums_all_cc_leaves.abs_E 0x1.b4186452c4a69p-110 vs my fsum 0x1.b4186452c4a69p-110: equal True
+== g-1e-8-0-14312_5  leaves.json.gz sha256 b7a0f3e0fc470b49b7fb96aec3988cab8a6316570cc1fc112b6b321cbc0dca36
+  leaves 176, CC 125; phase_err rebuild mismatches 0; total_err rebuild mismatches 0
+  sum of total_err (left to right) 1.975991958594538e-33 vs abserr 1.975991958594538e-33: equal True; fsum 1.975991958594539e-33
+  sum|E| 1.0361768360910636e-34  |sum E| 1.2565852472942623e-35  ratio 8.245973270195616  sqrt(N) 11.180339887498949
+  request max(atol, rtol|v|) 2.014577457055909e-33  declared error 1.975991958594538e-33
+  signed-combination (leafwise) 1.967776872672384e-33  /request 0.9767690320272325  <= request True
+  signed-combination (literal: abserr - sum|E| + |sum E|) 1.884940127458374e-33  /request 0.9356503622417247  <= request True
+  agent's result.json M1: {"sum_absE": 1.0361768360910636e-34, "abs_sumE": 1.2565852472942623e-35, "signed_combination_error": 1.967776872672384e-33, "signed_combination_error_linear": 1.884940127458374e-33}
+  equal to mine bit for bit: {'sum_absE': True, 'abs_sumE': True, 'signed_combination_error': True, 'signed_combination_error_linear': True}
+== g-1e-7-1-11219_2  leaves.json.gz sha256 5633cd66e3f34bc1a4b71e05d6a5bf140004324cc87b1ced18dbc85608bc0dc4
+  leaves 133, CC 133; phase_err rebuild mismatches 0; total_err rebuild mismatches 0
+  sum of total_err (left to right) 5.157966019274423e-34 vs abserr 5.157966019274423e-34: equal True; fsum 5.1579660192744196e-34
+  sum|E| 1.6610622956178313e-35  |sum E| 7.972075743429476e-37  ratio 20.836007447456407  sqrt(N) 11.532562594670797
+  request max(atol, rtol|v|) 5.398037099377168e-34  declared error 5.157966019274423e-34
+  signed-combination (leafwise) 5.150311508908816e-34  /request 0.954108208982681  <= request True
+  signed-combination (literal: abserr - sum|E| + |sum E|) 4.99983186545607e-34  /request 0.9262314751473191  <= request True
+  agent's result.json M1: {"sum_absE": 1.6610622956178313e-35, "abs_sumE": 7.972075743429476e-37, "signed_combination_error": 5.150311508908816e-34, "signed_combination_error_linear": 4.99983186545607e-34}
+  equal to mine bit for bit: {'sum_absE': True, 'abs_sumE': True, 'signed_combination_error': True, 'signed_combination_error_linear': True}
+exit 0

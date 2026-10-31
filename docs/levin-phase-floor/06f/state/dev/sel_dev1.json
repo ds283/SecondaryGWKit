@@ -1,0 +1,16 @@
+[
+ {
+  "unit": "g-1e-8-0-33532",
+  "index": 12,
+  "notify_label": "analytic Y2",
+  "census_value": "0x1.409d42e91793bp-30",
+  "census_abserr": "0x1.763529132983dp-67",
+  "census_num_regions": 1,
+  "census_max_depth": 0,
+  "census_converged": true,
+  "sample": "M2",
+  "stratum": "M2 1e-8 analytic Y2",
+  "kind": "analytic",
+  "n_cc_leaves": 1
+ }
+]

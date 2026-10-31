@@ -1,0 +1,79 @@
+## scratch copy after
+identical to preflight
+listing identical
+## 06e checkpoint
+a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c  var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+## datastores newer than marker
+0
+## main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+!! ObjectFactories/__pycache__/
+!! Omega_GW_sensitivity.pdf
+!! Omega_GW_sensitivity.png
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! RayTools/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! docs/handover/a3-v2/findings/__pycache__/
+!! profile-db.sqlite
+!! test-db-qcd-shard0000.sqlite
+!! test-db-qcd-shard0001.sqlite
+!! test-db-qcd-shard0002.sqlite
+!! test-db-qcd-shard0003.sqlite
+!! test-db-qcd-shard0004.sqlite
+!! test-db-qcd-shard0005.sqlite
+!! test-db-qcd-shard0006.sqlite
+!! test-db-qcd-shard0007.sqlite
+!! test-db-qcd-shard0008.sqlite
+!! test-db-qcd-shard0009.sqlite
+!! test-db-qcd-shard0010.sqlite
+!! test-db-qcd-shard0011.sqlite
+!! test-db-qcd-shard0012.sqlite
+!! test-db-qcd-shard0013.sqlite
+!! test-db-qcd-shard0014.sqlite
+!! test-db-qcd-shard0015.sqlite
+!! test-db-qcd-shard0016.sqlite
+!! test-db-qcd-shard0017.sqlite
+!! test-db-qcd-shard0018.sqlite
+!! test-db-qcd-shard0019.sqlite
+!! test-db-qcd.sqlite
+!! thirdparty/__pycache__/
+!! three_bessel_debug/
+!! tools/__pycache__/
+## worktree
+f4770d13f86674381b3a0ef48b7ba05f8dda4934
+## registry
+   levin-phase-floor-06f-measure-20261031T204803         done          44/44      22m  levin-phase-floor prompt 06f on the Mac Studio (mps026298; Python 3.13.16): how two Clenshaw-Curtis floor terms add up across a call's leaves. Captures the 41 sampled calls of 06e's census (levin-phase-floor-06e-census-20261030T081318, checkpoint a0dc4d7f) by 06e's x1_capture.py at the tree g (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1, dispatch SHA f4770d13, code f4d8e17's), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; replays each in its own process with pass-throughs at _adaptive_levin_subregion, _cc_node_term_parts, _cc_roundoff_floor and _declared_endpoint_phase_err (M1: Z2's call and 20 node-dominated calls; M2: 20 declared-dominated analytic-block calls, with mpmath phase references at 30 digits and Gauss-Legendre responses); Z2's call replayed twice; item 1's method check. At most six processes; Ray-free, no lock, no store built, no code changed  · replay g-1e-7-0-12689_19 exit 0
+36 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 36 finished; 0 with no host recorded.
+## lock / ray
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+## main checkout: anything newer than marker outside var/ and .git/
+./.git
+## git status --short (tracked/untracked, not ignored)
+(end)
+## .git: only the directory's own mtime moved (20:48:03.397, the run's begin); find .git -newer marker lists no file under it. The run's manifest records git_head 28ebaf0, git_dirty false, cwd var/levin-phase-floor-06f: runregistrykit's git probe in the main checkout at begin. No ref, index or object changed.

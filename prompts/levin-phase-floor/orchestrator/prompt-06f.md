@@ -86,3 +86,42 @@ worktree and anything kept. Report the results with what each implies for 06g an
 ## 5. Stop and ask the user
 
 As 06e's note §5, with prompt 06f's §7. **Never touch 07's stashes or saved work.**
+
+## B.5 Addendum, 2026-10-31: the run, the review and the records
+
+**Dispatched** 2026-10-31 on the user's word: *"Dispatch prompt 06f … and carry out the review of
+the agent's work when it is finished."* The laptop checked that `f4770d1` was pushed and that
+`git diff --stat f4d8e17 f4770d1 -- . ':!docs' ':!prompts'` showed only `CLAUDE.md`. It also checked
+that both registries showed nothing `running` or stale and that the Mac Studio's main checkout was
+clean at `28ebaf0`. It then made the worktree `SecondaryGWKit-lpf06f-f4770d1`, detached, and started
+a Mac Studio orchestrator session in it.
+
+**The run and the review on the Mac Studio.** §B.1's preflight passed: marker at 20:27:17 UTC and
+the lock free. One Opus agent was dispatched with §B.0 verbatim. Its registered run
+`levin-phase-floor-06f-measure-20261031T204803` ran 20:48–21:01 UTC: 44/44 units, exit 0. The
+review (`docs/levin-phase-floor/06f/review.md`) **passes** all six of §B.3's checks; there was no
+§7 stop, and the agent asked no question. Z2's call, re-run by the orchestrator with nothing
+wrapped, matched 06e's region pickle on all 8,706 regions.
+
+**The results:** F0 holds with no replacement. F1, F2 and F3 hold; F4, F5 and F6 fail
+(`VERIFICATION.md` §6f).
+
+**The laptop's checks.** The records were copied back by `rsync` without pickles or files over 2 MB:
+520 files, with the 90 that `KEPT_ON_MAC_STUDIO.txt` lists left behind. Every copied script matches
+the SHA-256 its outputs recorded. Two re-checks:
+- F2–F6 re-scored from `m1_calls.csv` and `m2_calls.csv`;
+- Z2's $\sum|E|$ recomputed over SSH from its kept leaf and solve tables, equal bit for bit to the
+  census checkpoint's `abs_E`.
+
+**Issues.** No user decision was needed for these, and none was taken:
+- **Narrowed:** `[06e-node-errors-add-in-absolute-value]` (M1) and
+  `[06e-cc-declared-phase-term-is-a-crude-proxy]` (M2).
+- **Opened:** `[06f-theta-abserr-omits-the-product-rounding]` (F4), unassigned.
+- **Closed:** nothing.
+
+**For the user:**
+- whether either term's remedy joins 06g, and who owns F4's issue;
+- the worktree `SecondaryGWKit-lpf06f-f4770d1`, kept until the user says;
+- the 90 kept files and the run directory, kept on the Mac Studio.
+
+06g is written only after the user has read these results; 07 resumes after it.

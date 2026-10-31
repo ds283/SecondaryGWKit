@@ -1,0 +1,27 @@
+{
+ "F0": "holds",
+ "F1": "holds",
+ "F2": "holds",
+ "F3": "holds",
+ "F4": "fails",
+ "F5": "fails",
+ "F6": "fails",
+ "numbers": {
+  "z2_sum_absE": 1.3123264998786215e-33,
+  "z2_abs_sumE": 2.4313432841972046e-35,
+  "z2_ratio": 53.97536861241432,
+  "z2_signed": 1.7588516133553608e-34,
+  "z2_signed_linear": 4.4652907000460867e-35,
+  "z2_signed_pairs": 1.1135546330114535e-33,
+  "z2_request": 6.689401715969813e-34,
+  "z2_declared": 1.3326659740371103e-33,
+  "F3_n": 11,
+  "F3_median": 20.836007447456407,
+  "F3_median_without_z2": 19.194606418205865,
+  "F4_violations": 49,
+  "F5_median": 6.006491523756385,
+  "F6_median": 1.0,
+  "method_check": true,
+  "item3_worst_convergence": 1.8903220060378105e-07
+ }
+}
